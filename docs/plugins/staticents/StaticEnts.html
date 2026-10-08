@@ -28,72 +28,64 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>StaticEnts <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/staticents/index.html">staticents</a></p></div>
+<div class="page-header"><h1>StaticEnts <span class="badge badge-plugin">plugin</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/staticents/index.html">Static Entities</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#InitPostEntity">InitPostEntity()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Runs the PersistenceLoad hook once the map's entities have been created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PersistenceLoad">PersistenceLoad()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Loads the saved static entities of every whitelisted class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PersistenceSave">PersistenceSave()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves every persistent entity to the plugin data of the current schema and map, one 'static/&lt;class&gt;' entry per entity class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerMakeStatic">PlayerMakeStatic(actor, is_static)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Makes the entity the player is looking at static, or removes its static status, and notifies the player about the outcome.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterPermissions">RegisterPermissions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the 'static_tool' permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Runs the PersistenceSave hook whenever the framework saves its data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShutDown">ShutDown()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Runs the PersistenceSave hook when the server shuts down.</div></div>
+</div>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#InitPostEntity">InitPostEntity()</a></div><div class="summary-synopsis">Runs the PersistenceLoad hook once the map's entities have been created.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#load_class">load_class(ent_class)</a></div><div class="summary-synopsis">Spawns the saved static entities of one class and marks them as persistent. Does nothing if there is no usable save for that class. Serverside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PersistenceLoad">PersistenceLoad()</a></div><div class="summary-synopsis">Loads the saved static entities of every whitelisted class.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PersistenceSave">PersistenceSave()</a></div><div class="summary-synopsis">Saves every persistent entity to the plugin data of the current schema and map, one 'static/&lt;class&gt;' entry per entity class. Runs the PrePersistenceSave hook first.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerMakeStatic">PlayerMakeStatic(actor, is_static)</a></div><div class="summary-synopsis">Makes the entity the player is looking at static, or removes its static status, and notifies the player about the outcome. The entity's class has to be whitelisted and the player needs the 'static' or 'unstatic' permission respectively.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RegisterPermissions">RegisterPermissions()</a></div><div class="summary-synopsis">Registers the 'static_tool' permission.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a></div><div class="summary-synopsis">Runs the PersistenceSave hook whenever the framework saves its data.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShutDown">ShutDown()</a></div><div class="summary-synopsis">Runs the PersistenceSave hook when the server shuts down.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#whitelist_ent">whitelist_ent(ent_class)</a></div><div class="summary-synopsis">Allows entities of a class to be made static and to be loaded from the saves. Serverside only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load_class">load_class(ent_class)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Spawns the saved static entities of one class and marks them as persistent.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#whitelist_ent">whitelist_ent(ent_class)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Allows entities of a class to be made static and to be loaded from the saves.</div></div>
 </div>
 </section>
-<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
 <section class="detail" id="InitPostEntity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>InitPostEntity<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>InitPostEntity<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#InitPostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L16" title="View source">plugins/staticents/plugin/sv_hooks.lua:16</a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:16</span>
 </div>
 <section class="docstring">
 <p>Runs the PersistenceLoad hook once the map's entities have been created.</p>
 </section>
 </section>
-<section class="detail" id="load_class">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>load_class<span class="params">(ent_class)</span></h3>
-<a href="#load_class" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L107" title="View source">plugins/staticents/plugin/sv_hooks.lua:107</a>
-</div>
-<section class="docstring">
-<p>Spawns the saved static entities of one class and marks them as persistent.
-Does nothing if there is no usable save for that class. Serverside only.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">ent_class</span> <span class="type">String</span> <span class="desc">entity class, e.g. 'prop_physics'</span></li></ul>
-</section>
-</section>
 <section class="detail" id="PersistenceLoad">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>PersistenceLoad<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>PersistenceLoad<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#PersistenceLoad" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L54" title="View source">plugins/staticents/plugin/sv_hooks.lua:54</a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:54</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/staticents/Hooks.html#PersistenceLoad"><code>PersistenceLoad</code></a></p>
 <p>Loads the saved static entities of every whitelisted class.</p>
 </section>
 </section>
 <section class="detail" id="PersistenceSave">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>PersistenceSave<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>PersistenceSave<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#PersistenceSave" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L27" title="View source">plugins/staticents/plugin/sv_hooks.lua:27</a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:27</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PersistenceSave"><code>PersistenceSave</code></a></p>
 <p>Saves every persistent entity to the plugin data of the current schema and map, one
 'static/&lt;class&gt;' entry per entity class. Runs the PrePersistenceSave hook first.</p>
 </section>
 </section>
 <section class="detail" id="PlayerMakeStatic">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>PlayerMakeStatic<span class="params">(actor, is_static)</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>PlayerMakeStatic<span class="params">(actor, is_static)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#PlayerMakeStatic" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L65" title="View source">plugins/staticents/plugin/sv_hooks.lua:65</a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:65</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/staticents/Hooks.html#PlayerMakeStatic"><code>PlayerMakeStatic</code></a></p>
 <p>Makes the entity the player is looking at static, or removes its static status, and
 notifies the player about the outcome. The entity's class has to be whitelisted and the
 player needs the 'static' or 'unstatic' permission respectively.</p>
@@ -103,39 +95,56 @@ player needs the 'static' or 'unstatic' permission respectively.</p>
 </section>
 <section class="detail" id="RegisterPermissions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>RegisterPermissions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>RegisterPermissions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#RegisterPermissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sh_plugin.lua#L6" title="View source">plugins/staticents/plugin/sh_plugin.lua:6</a>
+<span class="source-link">plugins/staticents/plugin/sh_plugin.lua:6</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/admin/Hooks.html#RegisterPermissions"><code>RegisterPermissions</code></a></p>
 <p>Registers the 'static_tool' permission.</p>
 </section>
 </section>
 <section class="detail" id="SaveData">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>SaveData<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>SaveData<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#SaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L100" title="View source">plugins/staticents/plugin/sv_hooks.lua:100</a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:100</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#SaveData"><code>SaveData</code></a></p>
 <p>Runs the PersistenceSave hook whenever the framework saves its data.</p>
 </section>
 </section>
 <section class="detail" id="ShutDown">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>ShutDown<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>ShutDown<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#ShutDown" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L21" title="View source">plugins/staticents/plugin/sv_hooks.lua:21</a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:21</span>
 </div>
 <section class="docstring">
 <p>Runs the PersistenceSave hook when the server shuts down.</p>
 </section>
 </section>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="load_class">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">StaticEnts:</span>load_class<span class="params">(ent_class)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#load_class" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:107</span>
+</div>
+<section class="docstring">
+<p>Spawns the saved static entities of one class and marks them as persistent.
+Does nothing if there is no usable save for that class. Serverside only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">ent_class</span> <span class="type">String</span> <span class="desc">entity class, e.g. 'prop_physics'</span></li></ul>
+</section>
+</section>
 <section class="detail" id="whitelist_ent">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">StaticEnts:</span>whitelist_ent<span class="params">(ent_class)</span></h3>
+<h3 class="signature"><span class="owner">StaticEnts:</span>whitelist_ent<span class="params">(ent_class)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#whitelist_ent" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua#L133" title="View source">plugins/staticents/plugin/sv_hooks.lua:133</a>
+<span class="source-link">plugins/staticents/plugin/sv_hooks.lua:133</span>
 </div>
 <section class="docstring">
 <p>Allows entities of a class to be made static and to be loaded from the saves.
@@ -145,11 +154,11 @@ Serverside only.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sh_plugin.lua" title="View source">plugins/staticents/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/staticents/plugin/sv_hooks.lua" title="View source">plugins/staticents/plugin/sv_hooks.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#InitPostEntity">InitPostEntity</a></li><li><a href="#load_class">load_class</a></li><li><a href="#PersistenceLoad">PersistenceLoad</a></li><li><a href="#PersistenceSave">PersistenceSave</a></li><li><a href="#PlayerMakeStatic">PlayerMakeStatic</a></li><li><a href="#RegisterPermissions">RegisterPermissions</a></li><li><a href="#SaveData">SaveData</a></li><li><a href="#ShutDown">ShutDown</a></li><li><a href="#whitelist_ent">whitelist_ent</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/staticents/plugin/sh_plugin.lua</span></li><li><span class="source-link">plugins/staticents/plugin/sv_hooks.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="server"><a href="#InitPostEntity">InitPostEntity</a></li><li data-realm="server"><a href="#PersistenceLoad">PersistenceLoad</a></li><li data-realm="server"><a href="#PersistenceSave">PersistenceSave</a></li><li data-realm="server"><a href="#PlayerMakeStatic">PlayerMakeStatic</a></li><li data-realm="shared"><a href="#RegisterPermissions">RegisterPermissions</a></li><li data-realm="server"><a href="#SaveData">SaveData</a></li><li data-realm="server"><a href="#ShutDown">ShutDown</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#load_class">load_class</a></li><li data-realm="server"><a href="#whitelist_ent">whitelist_ent</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

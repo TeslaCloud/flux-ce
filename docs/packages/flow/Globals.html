@@ -31,26 +31,26 @@
 <div class="page-header"><h1>Globals <span class="badge badge-globals">globals</span></h1><p class="subtitle">Global functions of Flow</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#callback">callback(data)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#callback-2">callback(data)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_template_namespace">get_template_namespace()</a></div><div class="summary-synopsis">Returns the prefix that render_template adds to the template IDs.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#render_javascript">render_javascript(id)</a></div><div class="summary-synopsis">Returns the contents of a script.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#render_partial">render_partial(id, locals)</a></div><div class="summary-synopsis">Renders a partial, a template whose name starts with an underscore. Meant to be called from other templates.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#render_stylesheet">render_stylesheet(id)</a></div><div class="summary-synopsis">Returns the contents of a stylesheet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#render_template">render_template(id, locals)</a></div><div class="summary-synopsis">Renders a template from the current template namespace to HTML.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#respond_to">respond_to(data)</a></div><div class="summary-synopsis">Sends a response to the player whose request is currently being handled. Can only be called from inside of an MVC.handler callback.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ScrC">ScrC()</a></div><div class="summary-synopsis">Returns the coordinates of the center of the screen. The values are computed once when the file loads.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ServerLog">ServerLog(...)</a></div><div class="summary-synopsis">Detour of the engine function that prints an empty line to the console after each log entry. The original function is kept as old_server_log.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_template_namespace">set_template_namespace(ns)</a></div><div class="summary-synopsis">Sets the prefix that render_template adds to the template IDs.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#t">t(phrase, args, force_lang)</a></div><div class="summary-synopsis">Translates a phrase to the current language. English is used if the language is not available, and the phrase itself is returned if it has no translation. Line breaks in the result are replaced with spaces.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#callback">callback(data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#callback-2">callback(data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_template_namespace">get_template_namespace()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the prefix that render_template adds to the template IDs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#render_javascript">render_javascript(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the contents of a script.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#render_partial">render_partial(id, locals)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Renders a partial, a template whose name starts with an underscore.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#render_stylesheet">render_stylesheet(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the contents of a stylesheet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#render_template">render_template(id, locals)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Renders a template from the current template namespace to HTML.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#respond_to">respond_to(data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sends a response to the player whose request is currently being handled.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ScrC">ScrC()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the coordinates of the center of the screen.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ServerLog">ServerLog(...)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Detour of the engine function that prints an empty line to the console after each log entry.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_template_namespace">set_template_namespace(ns)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the prefix that render_template adds to the template IDs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#t">t(phrase, args, force_lang)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Translates a phrase to the current language.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="callback">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>callback<span class="params">(data)</span></h3>
+<h3 class="signature"><span class="owner"></span>callback<span class="params">(data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#callback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_info_display.lua#L150" title="View source">packages/flow/lib/cl_info_display.lua:150</a>
+<span class="source-link">packages/flow/lib/cl_info_display.lua:150</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -58,9 +58,9 @@
 </section>
 <section class="detail" id="callback-2">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>callback<span class="params">(data)</span></h3>
+<h3 class="signature"><span class="owner"></span>callback<span class="params">(data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#callback-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_info_display.lua#L160" title="View source">packages/flow/lib/cl_info_display.lua:160</a>
+<span class="source-link">packages/flow/lib/cl_info_display.lua:160</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -68,9 +68,9 @@
 </section>
 <section class="detail" id="get_template_namespace">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>get_template_namespace<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner"></span>get_template_namespace<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_template_namespace" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L154" title="View source">packages/flow/lib/sh_html.lua:154</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:154</span>
 </div>
 <section class="docstring">
 <p>Returns the prefix that render_template adds to the template IDs.</p>
@@ -80,9 +80,9 @@
 </section>
 <section class="detail" id="render_javascript">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>render_javascript<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner"></span>render_javascript<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#render_javascript" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L211" title="View source">packages/flow/lib/sh_html.lua:211</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:211</span>
 </div>
 <section class="docstring">
 <p>Returns the contents of a script.</p>
@@ -94,9 +94,9 @@
 </section>
 <section class="detail" id="render_partial">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>render_partial<span class="params">(id, locals)</span></h3>
+<h3 class="signature"><span class="owner"></span>render_partial<span class="params">(id, locals)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#render_partial" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L190" title="View source">packages/flow/lib/sh_html.lua:190</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:190</span>
 </div>
 <section class="docstring">
 <p>Renders a partial, a template whose name starts with an underscore. Meant to be called
@@ -112,9 +112,9 @@ from other templates.</p>
 </section>
 <section class="detail" id="render_stylesheet">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>render_stylesheet<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner"></span>render_stylesheet<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#render_stylesheet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L204" title="View source">packages/flow/lib/sh_html.lua:204</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:204</span>
 </div>
 <section class="docstring">
 <p>Returns the contents of a stylesheet.</p>
@@ -126,9 +126,9 @@ from other templates.</p>
 </section>
 <section class="detail" id="render_template">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>render_template<span class="params">(id, locals)</span></h3>
+<h3 class="signature"><span class="owner"></span>render_template<span class="params">(id, locals)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#render_template" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L167" title="View source">packages/flow/lib/sh_html.lua:167</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:167</span>
 </div>
 <section class="docstring">
 <p>Renders a template from the current template namespace to HTML.</p>
@@ -144,9 +144,9 @@ from other templates.</p>
 </section>
 <section class="detail" id="respond_to">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>respond_to<span class="params">(data)</span></h3>
+<h3 class="signature"><span class="owner"></span>respond_to<span class="params">(data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#respond_to" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua#L118" title="View source">packages/flow/lib/sh_mvc.lua:118</a>
+<span class="source-link">packages/flow/lib/sh_mvc.lua:118</span>
 </div>
 <section class="docstring">
 <p>Sends a response to the player whose request is currently being handled. Can only
@@ -157,9 +157,9 @@ be called from inside of an MVC.handler callback.</p>
 </section>
 <section class="detail" id="ScrC">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>ScrC<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner"></span>ScrC<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#ScrC" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua#L18" title="View source">packages/flow/core/cl_core.lua:18</a>
+<span class="source-link">packages/flow/core/cl_core.lua:18</span>
 </div>
 <section class="docstring">
 <p>Returns the coordinates of the center of the screen. The values are computed once when
@@ -170,9 +170,9 @@ the file loads.</p>
 </section>
 <section class="detail" id="ServerLog">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>ServerLog<span class="params">(...)</span></h3>
+<h3 class="signature"><span class="owner"></span>ServerLog<span class="params">(...)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#ServerLog" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sv_core.lua#L8" title="View source">packages/flow/core/sv_core.lua:8</a>
+<span class="source-link">packages/flow/core/sv_core.lua:8</span>
 </div>
 <section class="docstring">
 <p>Detour of the engine function that prints an empty line to the console after each log
@@ -183,9 +183,9 @@ entry. The original function is kept as old_server_log.</p>
 </section>
 <section class="detail" id="set_template_namespace">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>set_template_namespace<span class="params">(ns)</span></h3>
+<h3 class="signature"><span class="owner"></span>set_template_namespace<span class="params">(ns)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_template_namespace" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L147" title="View source">packages/flow/lib/sh_html.lua:147</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:147</span>
 </div>
 <section class="docstring">
 <p>Sets the prefix that render_template adds to the template IDs.</p>
@@ -197,9 +197,9 @@ entry. The original function is kept as old_server_log.</p>
 </section>
 <section class="detail" id="t">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>t<span class="params">(phrase, args, force_lang)</span></h3>
+<h3 class="signature"><span class="owner"></span>t<span class="params">(phrase, args, force_lang)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#t" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_lang.lua#L41" title="View source">packages/flow/lib/sh_lang.lua:41</a>
+<span class="source-link">packages/flow/lib/sh_lang.lua:41</span>
 </div>
 <section class="docstring">
 <p>Translates a phrase to the current language. English is used if the language is not
@@ -216,11 +216,11 @@ in the result are replaced with spaces.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua" title="View source">packages/flow/core/cl_core.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sv_core.lua" title="View source">packages/flow/core/sv_core.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_info_display.lua" title="View source">packages/flow/lib/cl_info_display.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua" title="View source">packages/flow/lib/sh_html.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_lang.lua" title="View source">packages/flow/lib/sh_lang.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua" title="View source">packages/flow/lib/sh_mvc.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#callback">callback</a></li><li><a href="#callback-2">callback</a></li><li><a href="#get_template_namespace">get_template_namespace</a></li><li><a href="#render_javascript">render_javascript</a></li><li><a href="#render_partial">render_partial</a></li><li><a href="#render_stylesheet">render_stylesheet</a></li><li><a href="#render_template">render_template</a></li><li><a href="#respond_to">respond_to</a></li><li><a href="#ScrC">ScrC</a></li><li><a href="#ServerLog">ServerLog</a></li><li><a href="#set_template_namespace">set_template_namespace</a></li><li><a href="#t">t</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/core/cl_core.lua</span></li><li><span class="source-link">packages/flow/core/sv_core.lua</span></li><li><span class="source-link">packages/flow/lib/cl_info_display.lua</span></li><li><span class="source-link">packages/flow/lib/sh_html.lua</span></li><li><span class="source-link">packages/flow/lib/sh_lang.lua</span></li><li><span class="source-link">packages/flow/lib/sh_mvc.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="client"><a href="#callback">callback</a></li><li data-realm="client"><a href="#callback-2">callback</a></li><li data-realm="shared"><a href="#get_template_namespace">get_template_namespace</a></li><li data-realm="shared"><a href="#render_javascript">render_javascript</a></li><li data-realm="shared"><a href="#render_partial">render_partial</a></li><li data-realm="shared"><a href="#render_stylesheet">render_stylesheet</a></li><li data-realm="shared"><a href="#render_template">render_template</a></li><li data-realm="server"><a href="#respond_to">respond_to</a></li><li data-realm="client"><a href="#ScrC">ScrC</a></li><li data-realm="server"><a href="#ServerLog">ServerLog</a></li><li data-realm="shared"><a href="#set_template_namespace">set_template_namespace</a></li><li data-realm="shared"><a href="#t">t</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

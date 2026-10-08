@@ -37,22 +37,22 @@ For time intervals, please use Time.</p>
 </section>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#at">at(seconds, timezone)</a></div><div class="summary-synopsis">Returns the date-time at a specified point in time.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(year, month, day, hour, minute, second, timezone)</a></div><div class="summary-synopsis">Initializes a new DateTime object.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#iso">iso(time)</a></div><div class="summary-synopsis">Converts the DateTime object into an ISO-8601 string. If the first argument is given, converts the given UNIX time into the ISO date.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#now">now()</a></div><div class="summary-synopsis">Returns the current date-time.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#to_date">to_date()</a></div><div class="summary-synopsis">Converts the DateTime object to Date.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#to_time">to_time()</a></div><div class="summary-synopsis">Converts the DateTime object to Time.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#utc">utc(time)</a></div><div class="summary-synopsis">Get the UTC time, or alternatively a UTC time at a specified UNIX timestamp.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#zone">zone()</a></div><div class="summary-synopsis">Gets the timezone abbreviation / information string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#at">at(seconds, timezone)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the date-time at a specified point in time.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(year, month, day, hour, minute, second, timezone)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Initializes a new DateTime object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#iso">iso(time)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts the DateTime object into an ISO-8601 string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#now">now()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the current date-time.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_date">to_date()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts the DateTime object to Date.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_time">to_time()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts the DateTime object to Time.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#utc">utc(time)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get the UTC time, or alternatively a UTC time at a specified UNIX timestamp.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#zone">zone()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Gets the timezone abbreviation / information string.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="at">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>at<span class="params">(seconds, timezone)</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>at<span class="params">(seconds, timezone)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#at" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L61" title="View source">lib/stdlib/sh_datetime.lua:61</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:61</span>
 </div>
 <section class="docstring">
 <p>Returns the date-time at a specified point in time.</p>
@@ -64,9 +64,9 @@ For time intervals, please use Time.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>init<span class="params">(year, month, day, hour, minute, second, timezone)</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>init<span class="params">(year, month, day, hour, minute, second, timezone)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L17" title="View source">lib/stdlib/sh_datetime.lua:17</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:17</span>
 </div>
 <section class="docstring">
 <p>Initializes a new DateTime object.</p>
@@ -78,9 +78,9 @@ For time intervals, please use Time.</p>
 </section>
 <section class="detail" id="iso">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>iso<span class="params">(time)</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>iso<span class="params">(time)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#iso" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L100" title="View source">lib/stdlib/sh_datetime.lua:100</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:100</span>
 </div>
 <section class="docstring">
 <p>Converts the DateTime object into an ISO-8601 string.
@@ -96,9 +96,9 @@ If the first argument is given, converts the given UNIX time into the ISO date.<
 </section>
 <section class="detail" id="now">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>now<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>now<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#now" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L68" title="View source">lib/stdlib/sh_datetime.lua:68</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:68</span>
 </div>
 <section class="docstring">
 <p>Returns the current date-time.</p>
@@ -108,9 +108,9 @@ If the first argument is given, converts the given UNIX time into the ISO date.<
 </section>
 <section class="detail" id="to_date">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>to_date<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>to_date<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#to_date" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L82" title="View source">lib/stdlib/sh_datetime.lua:82</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:82</span>
 </div>
 <section class="docstring">
 <p>Converts the DateTime object to Date.</p>
@@ -120,9 +120,9 @@ If the first argument is given, converts the given UNIX time into the ISO date.<
 </section>
 <section class="detail" id="to_time">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>to_time<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>to_time<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#to_time" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L88" title="View source">lib/stdlib/sh_datetime.lua:88</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:88</span>
 </div>
 <section class="docstring">
 <p>Converts the DateTime object to Time.</p>
@@ -132,9 +132,9 @@ If the first argument is given, converts the given UNIX time into the ISO date.<
 </section>
 <section class="detail" id="utc">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>utc<span class="params">(time)</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>utc<span class="params">(time)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#utc" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L75" title="View source">lib/stdlib/sh_datetime.lua:75</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:75</span>
 </div>
 <section class="docstring">
 <p>Get the UTC time, or alternatively a UTC time at a specified UNIX timestamp.</p>
@@ -146,9 +146,9 @@ If the first argument is given, converts the given UNIX time into the ISO date.<
 </section>
 <section class="detail" id="zone">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">DateTime:</span>zone<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">DateTime:</span>zone<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#zone" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua#L53" title="View source">lib/stdlib/sh_datetime.lua:53</a>
+<span class="source-link">lib/stdlib/sh_datetime.lua:53</span>
 </div>
 <section class="docstring">
 <p>Gets the timezone abbreviation / information string.</p>
@@ -157,11 +157,11 @@ If the first argument is given, converts the given UNIX time into the ISO date.<
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_datetime.lua" title="View source">lib/stdlib/sh_datetime.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#at">at</a></li><li><a href="#init">init</a></li><li><a href="#iso">iso</a></li><li><a href="#now">now</a></li><li><a href="#to_date">to_date</a></li><li><a href="#to_time">to_time</a></li><li><a href="#utc">utc</a></li><li><a href="#zone">zone</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/stdlib/sh_datetime.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#at">at</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#iso">iso</a></li><li data-realm="shared"><a href="#now">now</a></li><li data-realm="shared"><a href="#to_date">to_date</a></li><li data-realm="shared"><a href="#to_time">to_time</a></li><li data-realm="shared"><a href="#utc">utc</a></li><li data-realm="shared"><a href="#zone">zone</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

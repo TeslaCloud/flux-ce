@@ -28,42 +28,282 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Factions <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/factions/index.html">factions</a></p></div>
+<div class="page-header"><h1>Factions <span class="badge badge-plugin">plugin</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/factions/index.html">Factions System</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds faction selection as the first stage of character creation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CharacterGenderChanged">CharacterGenderChanged(owner, char, new_gender, old_gender)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Gives the player a random model of their faction that matches the new gender.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CharPanelCreated">CharPanelCreated(id, panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Hides the gender, description and name controls of the 'ui.char_create.general' stage when the chosen faction does not have them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetCharacterCreationModels">GetCharacterCreationModels(char_data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the models of the chosen faction that match the chosen gender.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetCharCreationErrorText">GetCharCreationErrorText(success, status)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Supplies the error text shown when character creation fails for lack of a faction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnActiveCharacterSet">OnActiveCharacterSet(owner, char)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Networks the faction of the newly active character and sets the player's team to match.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers the faction selection panel with the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCreateCharacter">PlayerCreateCharacter(actor, data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Rejects character creation when no faction was chosen.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerRestored">PlayerRestored(actor, record)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Networks the IDs of the factions the player is whitelisted for.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PluginIncludeFolder">PluginIncludeFolder(extra, folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes a plugin's factions folder when the 'factions' extra is being loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostCreateCharacter">PostCreateCharacter(owner, char, char_data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Copies the faction, rank and class from the creation data to the new character, using the 'player' faction and rank 1 when they are missing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostPlayerSpawn">PostPlayerSpawn(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets the player's team from their faction and puts bots into a random faction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreCreateCharacter">PreCreateCharacter(actor, data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Generates a name from the faction's name template when the creation data has no name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreRebuildScoreboard">PreRebuildScoreboard(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Rebuilds the scoreboard with the players grouped into one collapsible category per faction, replacing the default player list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreStageChange">PreStageChange(id, panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Stops the player from leaving the 'char_create.general' stage without picking a gender when the chosen faction requires one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the 'faction' and 'rank' conditions, which compare a player's faction and their rank within a faction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldNameGenerate">ShouldNameGenerate(target)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prevents faction name generation for bots.</div></div>
+</div>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_faction">add_faction(id, data)</a></div><div class="summary-synopsis">Registers a faction: fills in the default name, description and color, sets up its team and assigns the animation class of each of its models.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a></div><div class="summary-synopsis">Returns every registered faction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find">find(name, strict)</a></div><div class="summary-synopsis">Finds a faction by its ID or name, ignoring letter case.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find_by_id">find_by_id(id)</a></div><div class="summary-synopsis">Returns the faction registered under the exact ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_players">get_players(id)</a></div><div class="summary-synopsis">Returns every connected player whose faction is the given one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_factions">include_factions(directory)</a></div><div class="summary-synopsis">Includes every file of a folder as a faction definition. Each file gets a fresh FACTION global, a Faction named after the file, that is registered once the file has run.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_faction">add_faction(id, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a faction: fills in the default name, description and color, sets up its team and assigns the animation class of each of its models.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns every registered faction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(name, strict)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Finds a faction by its ID or name, ignoring letter case.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_by_id">find_by_id(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the faction registered under the exact ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_players">get_players(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns every connected player whose faction is the given one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_factions">include_factions(directory)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes every file of a folder as a faction definition.</div></div>
 </div>
-<div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages(panel)</a></div><div class="summary-synopsis">Adds faction selection as the first stage of character creation.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CharacterGenderChanged">CharacterGenderChanged(owner, char, new_gender, old_gender)</a></div><div class="summary-synopsis">Gives the player a random model of their faction that matches the new gender.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CharPanelCreated">CharPanelCreated(id, panel)</a></div><div class="summary-synopsis">Hides the gender, description and name controls of the 'ui.char_create.general' stage when the chosen faction does not have them. Factions without gender get the 'universal' one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetCharacterCreationModels">GetCharacterCreationModels(char_data)</a></div><div class="summary-synopsis">Returns the models of the chosen faction that match the chosen gender.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetCharCreationErrorText">GetCharCreationErrorText(success, status)</a></div><div class="summary-synopsis">Supplies the error text shown when character creation fails for lack of a faction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnActiveCharacterSet">OnActiveCharacterSet(owner, char)</a></div><div class="summary-synopsis">Networks the faction of the newly active character and sets the player's team to match.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a></div><div class="summary-synopsis">Registers the faction selection panel with the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerCreateCharacter">PlayerCreateCharacter(actor, data)</a></div><div class="summary-synopsis">Rejects character creation when no faction was chosen.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerRestored">PlayerRestored(actor, record)</a></div><div class="summary-synopsis">Networks the IDs of the factions the player is whitelisted for.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PluginIncludeFolder">PluginIncludeFolder(extra, folder)</a></div><div class="summary-synopsis">Includes a plugin's factions folder when the 'factions' extra is being loaded.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostCreateCharacter">PostCreateCharacter(owner, char, char_data)</a></div><div class="summary-synopsis">Copies the faction, rank and class from the creation data to the new character, using the 'player' faction and rank 1 when they are missing.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostPlayerSpawn">PostPlayerSpawn(actor)</a></div><div class="summary-synopsis">Sets the player's team from their faction and puts bots into a random faction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PreCreateCharacter">PreCreateCharacter(actor, data)</a></div><div class="summary-synopsis">Generates a name from the faction's name template when the creation data has no name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PreRebuildScoreboard">PreRebuildScoreboard(panel, w, h)</a></div><div class="summary-synopsis">Rebuilds the scoreboard with the players grouped into one collapsible category per faction, replacing the default player list.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PreStageChange">PreStageChange(id, panel)</a></div><div class="summary-synopsis">Stops the player from leaving the 'char_create.general' stage without picking a gender when the chosen faction requires one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a></div><div class="summary-synopsis">Registers the 'faction' and 'rank' conditions, which compare a player's faction and their rank within a faction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShouldNameGenerate">ShouldNameGenerate(target)</a></div><div class="summary-synopsis">Prevents faction name generation for bots.</div></div>
+</section>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
+<section class="detail" id="AddCharacterCreationMenuStages">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>AddCharacterCreationMenuStages<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AddCharacterCreationMenuStages" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/cl_hooks.lua:69</span>
 </div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#AddCharacterCreationMenuStages"><code>AddCharacterCreationMenuStages</code></a></p>
+<p>Adds faction selection as the first stage of character creation.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the character creation menu</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CharacterGenderChanged">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>CharacterGenderChanged<span class="params">(owner, char, new_gender, old_gender)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CharacterGenderChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sv_hooks.lua:61</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#CharacterGenderChanged"><code>CharacterGenderChanged</code></a></p>
+<p>Gives the player a random model of their faction that matches the new gender.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span></li><li><span class="param-name">new_gender</span> <span class="type">Number</span> <span class="desc">CHAR_GENDER_* value</span></li><li><span class="param-name">old_gender</span> <span class="type">Number</span> <span class="desc">CHAR_GENDER_* value</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CharPanelCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>CharPanelCreated<span class="params">(id, panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#CharPanelCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/cl_hooks.lua:5</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#CharPanelCreated"><code>CharPanelCreated</code></a></p>
+<p>Hides the gender, description and name controls of the 'ui.char_create.general' stage
+when the chosen faction does not have them. Factions without gender get the 'universal' one.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">ID of the stage that has just been opened</span></li><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the panel of that stage</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetCharacterCreationModels">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>GetCharacterCreationModels<span class="params">(char_data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#GetCharacterCreationModels" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/cl_hooks.lua:76</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#GetCharacterCreationModels"><code>GetCharacterCreationModels</code></a></p>
+<p>Returns the models of the chosen faction that match the chosen gender.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">character data collected so far; needs faction and gender</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;String&gt;</span> <span class="desc">model paths</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetCharCreationErrorText">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>GetCharCreationErrorText<span class="params">(success, status)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#GetCharCreationErrorText" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/cl_hooks.lua:179</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#GetCharCreationErrorText"><code>GetCharCreationErrorText</code></a></p>
+<p>Supplies the error text shown when character creation fails for lack of a faction.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">success</span> <span class="type">Boolean</span></li><li><span class="param-name">status</span> <span class="type">Number</span> <span class="desc">CHAR_* status code sent by the server</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">translated error for CHAR_ERR_FACTION, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnActiveCharacterSet">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>OnActiveCharacterSet<span class="params">(owner, char)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnActiveCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sv_hooks.lua:22</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#OnActiveCharacterSet"><code>OnActiveCharacterSet</code></a></p>
+<p>Networks the faction of the newly active character and sets the player's team to match.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnThemeLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>OnThemeLoaded<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/cl_hooks.lua:61</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#OnThemeLoaded"><code>OnThemeLoaded</code></a></p>
+<p>Registers the faction selection panel with the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">current_theme</span> <span class="type">ThemeBase</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCreateCharacter">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PlayerCreateCharacter<span class="params">(actor, data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sv_hooks.lua:81</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PlayerCreateCharacter"><code>PlayerCreateCharacter</code></a></p>
+<p>Rejects character creation when no faction was chosen.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">CHAR_ERR_FACTION when the data has no faction, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerRestored">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PlayerRestored<span class="params">(actor, record)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerRestored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sv_hooks.lua:44</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerRestored"><code>PlayerRestored</code></a></p>
+<p>Networks the IDs of the factions the player is whitelisted for.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">record</span> <span class="type">User</span> <span class="desc">the player's database record</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PluginIncludeFolder">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PluginIncludeFolder<span class="params">(extra, folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PluginIncludeFolder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sh_plugin.lua:12</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../flux/Hooks.html#PluginIncludeFolder"><code>PluginIncludeFolder</code></a></p>
+<p>Includes a plugin's factions folder when the 'factions' extra is being loaded.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">extra</span> <span class="type">String</span> <span class="desc">name of the extra being loaded</span></li><li><span class="param-name">folder</span> <span class="type">String</span> <span class="desc">path of the plugin folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true when the extra was handled here, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostCreateCharacter">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PostCreateCharacter<span class="params">(owner, char, char_data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PostCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sv_hooks.lua:35</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PostCreateCharacter"><code>PostCreateCharacter</code></a></p>
+<p>Copies the faction, rank and class from the creation data to the new character, using
+the 'player' faction and rank 1 when they are missing.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span> <span class="desc">the character being created</span></li><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostPlayerSpawn">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PostPlayerSpawn<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PostPlayerSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sv_hooks.lua:3</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PostPlayerSpawn"><code>PostPlayerSpawn</code></a></p>
+<p>Sets the player's team from their faction and puts bots into a random faction.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreCreateCharacter">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PreCreateCharacter<span class="params">(actor, data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PreCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sv_hooks.lua:68</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PreCreateCharacter"><code>PreCreateCharacter</code></a></p>
+<p>Generates a name from the faction's name template when the creation data has no name.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">character creation data, modified in place</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreRebuildScoreboard">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PreRebuildScoreboard<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreRebuildScoreboard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/cl_hooks.lua:88</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PreRebuildScoreboard"><code>PreRebuildScoreboard</code></a></p>
+<p>Rebuilds the scoreboard with the players grouped into one collapsible category per
+faction, replacing the default player list.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the scoreboard</span></li><li><span class="param-name">w</span> <span class="type">Number</span></li><li><span class="param-name">h</span> <span class="type">Number</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">always true, which stops the default rebuild</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreStageChange">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>PreStageChange<span class="params">(id, panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreStageChange" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/cl_hooks.lua:46</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PreStageChange"><code>PreStageChange</code></a></p>
+<p>Stops the player from leaving the 'char_create.general' stage without picking a gender
+when the chosen faction requires one.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">ID of the stage being left</span></li><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the panel of that stage</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to block the change</span></li><li><span class="type">String</span> <span class="desc">translated error; nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="RegisterConditions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>RegisterConditions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#RegisterConditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sh_plugin.lua:31</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/conditions/Hooks.html#RegisterConditions"><code>RegisterConditions</code></a></p>
+<p>Registers the 'faction' and 'rank' conditions, which compare a player's faction and their
+rank within a faction.</p>
+</section>
+</section>
+<section class="detail" id="ShouldNameGenerate">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Factions:</span>ShouldNameGenerate<span class="params">(target)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#ShouldNameGenerate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/factions/plugin/sh_plugin.lua:23</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/factions/Hooks.html#ShouldNameGenerate"><code>ShouldNameGenerate</code></a></p>
+<p>Prevents faction name generation for bots.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false for bots, otherwise nil</span></li></ul>
+</section>
+</section>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="add_faction">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Factions.</span>add_faction<span class="params">(id, data)</span></h3>
+<h3 class="signature"><span class="owner">Factions.</span>add_faction<span class="params">(id, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_faction" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L24" title="View source">plugins/factions/plugin/lib/sh_faction.lua:24</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:24</span>
 </div>
 <section class="docstring">
 <p>Registers a faction: fills in the default name, description and color, sets up its team
@@ -84,9 +324,9 @@ Factions.<span class="hl-f">add_faction</span>(faction.faction_id, faction)
 </section>
 <section class="detail" id="all">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Factions.</span>all<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Factions.</span>all<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#all" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L94" title="View source">plugins/factions/plugin/lib/sh_faction.lua:94</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:94</span>
 </div>
 <section class="docstring">
 <p>Returns every registered faction.</p>
@@ -96,9 +336,9 @@ Factions.<span class="hl-f">add_faction</span>(faction.faction_id, faction)
 </section>
 <section class="detail" id="find">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Factions.</span>find<span class="params">(name, strict)</span></h3>
+<h3 class="signature"><span class="owner">Factions.</span>find<span class="params">(name, strict)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L76" title="View source">plugins/factions/plugin/lib/sh_faction.lua:76</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:76</span>
 </div>
 <section class="docstring">
 <p>Finds a faction by its ID or name, ignoring letter case.</p>
@@ -110,9 +350,9 @@ Factions.<span class="hl-f">add_faction</span>(faction.faction_id, faction)
 </section>
 <section class="detail" id="find_by_id">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Factions.</span>find_by_id<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Factions.</span>find_by_id<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L53" title="View source">plugins/factions/plugin/lib/sh_faction.lua:53</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:53</span>
 </div>
 <section class="docstring">
 <p>Returns the faction registered under the exact ID.</p>
@@ -124,9 +364,9 @@ Factions.<span class="hl-f">add_faction</span>(faction.faction_id, faction)
 </section>
 <section class="detail" id="get_players">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Factions.</span>get_players<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Factions.</span>get_players<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_players" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L60" title="View source">plugins/factions/plugin/lib/sh_faction.lua:60</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:60</span>
 </div>
 <section class="docstring">
 <p>Returns every connected player whose faction is the given one.</p>
@@ -138,9 +378,9 @@ Factions.<span class="hl-f">add_faction</span>(faction.faction_id, faction)
 </section>
 <section class="detail" id="include_factions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Factions.</span>include_factions<span class="params">(directory)</span></h3>
+<h3 class="signature"><span class="owner">Factions.</span>include_factions<span class="params">(directory)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_factions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L111" title="View source">plugins/factions/plugin/lib/sh_faction.lua:111</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:111</span>
 </div>
 <section class="docstring">
 <p>Includes every file of a folder as a faction definition. Each file gets a fresh FACTION
@@ -159,234 +399,11 @@ FACTION:<span class="hl-f">add_rank</span>(<span class="hl-s">&#39;officer&#39;<
 </section>
 </section>
 </section>
-<section class="details-group"><h2 id="methods">Methods</h2>
-<section class="detail" id="AddCharacterCreationMenuStages">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>AddCharacterCreationMenuStages<span class="params">(panel)</span></h3>
-<a href="#AddCharacterCreationMenuStages" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua#L69" title="View source">plugins/factions/plugin/cl_hooks.lua:69</a>
-</div>
-<section class="docstring">
-<p>Adds faction selection as the first stage of character creation.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the character creation menu</span></li></ul>
-</section>
-</section>
-<section class="detail" id="CharacterGenderChanged">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>CharacterGenderChanged<span class="params">(owner, char, new_gender, old_gender)</span></h3>
-<a href="#CharacterGenderChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua#L61" title="View source">plugins/factions/plugin/sv_hooks.lua:61</a>
-</div>
-<section class="docstring">
-<p>Gives the player a random model of their faction that matches the new gender.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span></li><li><span class="param-name">new_gender</span> <span class="type">Number</span> <span class="desc">CHAR_GENDER_* value</span></li><li><span class="param-name">old_gender</span> <span class="type">Number</span> <span class="desc">CHAR_GENDER_* value</span></li></ul>
-</section>
-</section>
-<section class="detail" id="CharPanelCreated">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>CharPanelCreated<span class="params">(id, panel)</span></h3>
-<a href="#CharPanelCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua#L5" title="View source">plugins/factions/plugin/cl_hooks.lua:5</a>
-</div>
-<section class="docstring">
-<p>Hides the gender, description and name controls of the 'ui.char_create.general' stage
-when the chosen faction does not have them. Factions without gender get the 'universal' one.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">ID of the stage that has just been opened</span></li><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the panel of that stage</span></li></ul>
-</section>
-</section>
-<section class="detail" id="GetCharacterCreationModels">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>GetCharacterCreationModels<span class="params">(char_data)</span></h3>
-<a href="#GetCharacterCreationModels" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua#L76" title="View source">plugins/factions/plugin/cl_hooks.lua:76</a>
-</div>
-<section class="docstring">
-<p>Returns the models of the chosen faction that match the chosen gender.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">character data collected so far; needs faction and gender</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">List&lt;String&gt;</span> <span class="desc">model paths</span></li></ul>
-</section>
-</section>
-<section class="detail" id="GetCharCreationErrorText">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>GetCharCreationErrorText<span class="params">(success, status)</span></h3>
-<a href="#GetCharCreationErrorText" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua#L179" title="View source">plugins/factions/plugin/cl_hooks.lua:179</a>
-</div>
-<section class="docstring">
-<p>Supplies the error text shown when character creation fails for lack of a faction.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">success</span> <span class="type">Boolean</span></li><li><span class="param-name">status</span> <span class="type">Number</span> <span class="desc">CHAR_* status code sent by the server</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">String</span> <span class="desc">translated error for CHAR_ERR_FACTION, otherwise nil</span></li></ul>
-</section>
-</section>
-<section class="detail" id="OnActiveCharacterSet">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>OnActiveCharacterSet<span class="params">(owner, char)</span></h3>
-<a href="#OnActiveCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua#L22" title="View source">plugins/factions/plugin/sv_hooks.lua:22</a>
-</div>
-<section class="docstring">
-<p>Networks the faction of the newly active character and sets the player's team to match.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span></li></ul>
-</section>
-</section>
-<section class="detail" id="OnThemeLoaded">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>OnThemeLoaded<span class="params">(current_theme)</span></h3>
-<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua#L61" title="View source">plugins/factions/plugin/cl_hooks.lua:61</a>
-</div>
-<section class="docstring">
-<p>Registers the faction selection panel with the theme.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">current_theme</span> <span class="type">ThemeBase</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerCreateCharacter">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PlayerCreateCharacter<span class="params">(actor, data)</span></h3>
-<a href="#PlayerCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua#L81" title="View source">plugins/factions/plugin/sv_hooks.lua:81</a>
-</div>
-<section class="docstring">
-<p>Rejects character creation when no faction was chosen.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Number</span> <span class="desc">CHAR_ERR_FACTION when the data has no faction, otherwise nil</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerRestored">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PlayerRestored<span class="params">(actor, record)</span></h3>
-<a href="#PlayerRestored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua#L44" title="View source">plugins/factions/plugin/sv_hooks.lua:44</a>
-</div>
-<section class="docstring">
-<p>Networks the IDs of the factions the player is whitelisted for.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">record</span> <span class="type">User</span> <span class="desc">the player's database record</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PluginIncludeFolder">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PluginIncludeFolder<span class="params">(extra, folder)</span></h3>
-<a href="#PluginIncludeFolder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sh_plugin.lua#L12" title="View source">plugins/factions/plugin/sh_plugin.lua:12</a>
-</div>
-<section class="docstring">
-<p>Includes a plugin's factions folder when the 'factions' extra is being loaded.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">extra</span> <span class="type">String</span> <span class="desc">name of the extra being loaded</span></li><li><span class="param-name">folder</span> <span class="type">String</span> <span class="desc">path of the plugin folder</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true when the extra was handled here, otherwise nil</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PostCreateCharacter">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PostCreateCharacter<span class="params">(owner, char, char_data)</span></h3>
-<a href="#PostCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua#L35" title="View source">plugins/factions/plugin/sv_hooks.lua:35</a>
-</div>
-<section class="docstring">
-<p>Copies the faction, rank and class from the creation data to the new character, using
-the 'player' faction and rank 1 when they are missing.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span> <span class="desc">the character being created</span></li><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PostPlayerSpawn">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PostPlayerSpawn<span class="params">(actor)</span></h3>
-<a href="#PostPlayerSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua#L3" title="View source">plugins/factions/plugin/sv_hooks.lua:3</a>
-</div>
-<section class="docstring">
-<p>Sets the player's team from their faction and puts bots into a random faction.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PreCreateCharacter">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PreCreateCharacter<span class="params">(actor, data)</span></h3>
-<a href="#PreCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua#L68" title="View source">plugins/factions/plugin/sv_hooks.lua:68</a>
-</div>
-<section class="docstring">
-<p>Generates a name from the faction's name template when the creation data has no name.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">character creation data, modified in place</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PreRebuildScoreboard">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PreRebuildScoreboard<span class="params">(panel, w, h)</span></h3>
-<a href="#PreRebuildScoreboard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua#L88" title="View source">plugins/factions/plugin/cl_hooks.lua:88</a>
-</div>
-<section class="docstring">
-<p>Rebuilds the scoreboard with the players grouped into one collapsible category per
-faction, replacing the default player list.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the scoreboard</span></li><li><span class="param-name">w</span> <span class="type">Number</span></li><li><span class="param-name">h</span> <span class="type">Number</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">always true, which stops the default rebuild</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PreStageChange">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>PreStageChange<span class="params">(id, panel)</span></h3>
-<a href="#PreStageChange" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua#L46" title="View source">plugins/factions/plugin/cl_hooks.lua:46</a>
-</div>
-<section class="docstring">
-<p>Stops the player from leaving the 'char_create.general' stage without picking a gender
-when the chosen faction requires one.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">ID of the stage being left</span></li><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the panel of that stage</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to block the change</span></li><li><span class="type">String</span> <span class="desc">translated error; nothing otherwise</span></li></ul>
-</section>
-</section>
-<section class="detail" id="RegisterConditions">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>RegisterConditions<span class="params">()</span></h3>
-<a href="#RegisterConditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sh_plugin.lua#L31" title="View source">plugins/factions/plugin/sh_plugin.lua:31</a>
-</div>
-<section class="docstring">
-<p>Registers the 'faction' and 'rank' conditions, which compare a player's faction and their
-rank within a faction.</p>
-</section>
-</section>
-<section class="detail" id="ShouldNameGenerate">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Factions:</span>ShouldNameGenerate<span class="params">(target)</span></h3>
-<a href="#ShouldNameGenerate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sh_plugin.lua#L23" title="View source">plugins/factions/plugin/sh_plugin.lua:23</a>
-</div>
-<section class="docstring">
-<p>Prevents faction name generation for bots.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false for bots, otherwise nil</span></li></ul>
-</section>
-</section>
-</section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/cl_hooks.lua" title="View source">plugins/factions/plugin/cl_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua" title="View source">plugins/factions/plugin/lib/sh_faction.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sh_plugin.lua" title="View source">plugins/factions/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/sv_hooks.lua" title="View source">plugins/factions/plugin/sv_hooks.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_faction">add_faction</a></li><li><a href="#all">all</a></li><li><a href="#find">find</a></li><li><a href="#find_by_id">find_by_id</a></li><li><a href="#get_players">get_players</a></li><li><a href="#include_factions">include_factions</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages</a></li><li><a href="#CharacterGenderChanged">CharacterGenderChanged</a></li><li><a href="#CharPanelCreated">CharPanelCreated</a></li><li><a href="#GetCharacterCreationModels">GetCharacterCreationModels</a></li><li><a href="#GetCharCreationErrorText">GetCharCreationErrorText</a></li><li><a href="#OnActiveCharacterSet">OnActiveCharacterSet</a></li><li><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li><a href="#PlayerCreateCharacter">PlayerCreateCharacter</a></li><li><a href="#PlayerRestored">PlayerRestored</a></li><li><a href="#PluginIncludeFolder">PluginIncludeFolder</a></li><li><a href="#PostCreateCharacter">PostCreateCharacter</a></li><li><a href="#PostPlayerSpawn">PostPlayerSpawn</a></li><li><a href="#PreCreateCharacter">PreCreateCharacter</a></li><li><a href="#PreRebuildScoreboard">PreRebuildScoreboard</a></li><li><a href="#PreStageChange">PreStageChange</a></li><li><a href="#RegisterConditions">RegisterConditions</a></li><li><a href="#ShouldNameGenerate">ShouldNameGenerate</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/factions/plugin/cl_hooks.lua</span></li><li><span class="source-link">plugins/factions/plugin/lib/sh_faction.lua</span></li><li><span class="source-link">plugins/factions/plugin/sh_plugin.lua</span></li><li><span class="source-link">plugins/factions/plugin/sv_hooks.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="client"><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages</a></li><li data-realm="server"><a href="#CharacterGenderChanged">CharacterGenderChanged</a></li><li data-realm="client"><a href="#CharPanelCreated">CharPanelCreated</a></li><li data-realm="client"><a href="#GetCharacterCreationModels">GetCharacterCreationModels</a></li><li data-realm="client"><a href="#GetCharCreationErrorText">GetCharCreationErrorText</a></li><li data-realm="server"><a href="#OnActiveCharacterSet">OnActiveCharacterSet</a></li><li data-realm="client"><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li data-realm="server"><a href="#PlayerCreateCharacter">PlayerCreateCharacter</a></li><li data-realm="server"><a href="#PlayerRestored">PlayerRestored</a></li><li data-realm="shared"><a href="#PluginIncludeFolder">PluginIncludeFolder</a></li><li data-realm="server"><a href="#PostCreateCharacter">PostCreateCharacter</a></li><li data-realm="server"><a href="#PostPlayerSpawn">PostPlayerSpawn</a></li><li data-realm="server"><a href="#PreCreateCharacter">PreCreateCharacter</a></li><li data-realm="client"><a href="#PreRebuildScoreboard">PreRebuildScoreboard</a></li><li data-realm="client"><a href="#PreStageChange">PreStageChange</a></li><li data-realm="shared"><a href="#RegisterConditions">RegisterConditions</a></li><li data-realm="shared"><a href="#ShouldNameGenerate">ShouldNameGenerate</a></li><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#add_faction">add_faction</a></li><li data-realm="shared"><a href="#all">all</a></li><li data-realm="shared"><a href="#find">find</a></li><li data-realm="shared"><a href="#find_by_id">find_by_id</a></li><li data-realm="shared"><a href="#get_players">get_players</a></li><li data-realm="shared"><a href="#include_factions">include_factions</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

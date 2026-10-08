@@ -28,76 +28,422 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Bolt <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/admin/index.html">admin</a></p></div>
+<div class="page-header"><h1>Bolt <span class="badge badge-plugin">plugin</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/admin/index.html">Admin Mod</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#ActiveRecordReady">ActiveRecordReady()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Loads all bans from the database into the ban cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AddAdminMenuItems">AddAdminMenuItems(panel, sidebar)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the player management and config editor pages to the admin panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AddTabMenuItems">AddTabMenuItems(menu)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the Admin entry to the tab menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CanTool">CanTool(actor, trace, tool_name)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Blocks tools that require a permission the player does not have.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxGetPlayerIcon">ChatboxGetPlayerIcon(speaker, text, team_chat)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Supplies the icon of the player's role for their chat messages.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CheckPassword">CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Checks connecting players against the ban cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CommandCheckImmunity">CommandCheckImmunity(actor, target, can_equal)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Checks role immunity for commands that target players, by way of Bolt:check_immunity.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#HUDPaint">HUDPaint()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the vanish indicator in the bottom right corner while the local player is hidden from other players.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnCommandCreated">OnCommandCreated(id, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a permission for every newly created command.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnPluginLoaded">OnPluginLoaded()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnPluginsLoaded">OnPluginsLoaded()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the RegisterPermissions hook, then allows each permission for the role it was registered for and for every role based on it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers the constructors of the admin panel's pages with the loaded theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCanHearPlayersVoice">PlayerCanHearPlayersVoice(listener, talker)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Mutes talkers that lack the 'voice' permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCreated">PlayerCreated(actor, record)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Defaults the banned flag of a newly created user record to false.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerHasPermission">PlayerHasPermission(actor, action, object)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Answers the permission checks made through actor:can by delegating to Bolt:can.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialSpawn">PlayerInitialSpawn(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Hides vanished and observing admins from a newly connected player, unless that player has the 'moderator' permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerIsRoot">PlayerIsRoot(target)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Reports whether the player was flagged as root, which happens when their SteamID is listed in the root_steamid config.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerOneMinute">PlayerOneMinute(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Removes the player's expired temporary permissions.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerPermissionChanged">PlayerPermissionChanged(target, perm_id, value)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Gives or strips the tool gun and the physgun when the matching permission changes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerRestored">PlayerRestored(actor, record)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Applies a loaded user record to the player: sets their role, makes the SteamIDs from the root_steamid config root admins, networks stored permissions and logs the connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerStartVoice">PlayerStartVoice(speaker)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns false for speakers that lack the 'voice' permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUserGroupChanged">PlayerUserGroupChanged(target, group, old_group)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Gives or strips the tool gun and the physgun to match the player's new role.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PluginIncludeFolder">PluginIncludeFolder(extra, folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Loads the role files of a plugin when its 'roles' folder is being included.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostRender">PostRender()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Switches to fullbright lighting when the local player's 'should_fullbright' net var is set.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreDrawHUD">PreDrawHUD()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Restores normal lighting before the HUD is drawn if fullbright was switched on.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the 'bolt_role' condition, which compares a player's role with a chosen one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterPermissions">RegisterPermissions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the built-in permissions: tools, spawning, voice, context menu, management and the staff / admin / super admin compatibility levels.</div></div>
+</div>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#ActiveRecordReady">ActiveRecordReady()</a></div><div class="summary-synopsis">Loads all bans from the database into the ban cache.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_ban">add_ban(steam_id, name, unban_time, duration, reason)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Creates or updates the ban record for a SteamID, saves it to the database and caches it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_permission">add_permission(id, category, data, force)</a></div><div class="summary-synopsis">Stores a permission data table under a category. A permission that already exists there is kept unless force is set.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#AddAdminMenuItems">AddAdminMenuItems(panel, sidebar)</a></div><div class="summary-synopsis">Adds the player management and config editor pages to the admin panel.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#AddTabMenuItems">AddTabMenuItems(menu)</a></div><div class="summary-synopsis">Adds the Admin entry to the tab menu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#allow_children">allow_children(role, perm_id)</a></div><div class="summary-synopsis">Allows a permission for a role and, recursively, for every role based on it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ban">ban(target, duration, reason, prevent_kick)</a></div><div class="summary-synopsis">Bans a player or a SteamID and saves the ban to the database. A player entity is also kicked, unless prevent_kick is set.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#can">can(actor, action, object)</a></div><div class="summary-synopsis">Checks whether a player may perform an action. Unexpired temporary permissions are consulted first, then the player's own permissions, then the player's role; invalid players (such as the server console) and root players are always allowed.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CanTool">CanTool(actor, trace, tool_name)</a></div><div class="summary-synopsis">Blocks tools that require a permission the player does not have.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ChatboxGetPlayerIcon">ChatboxGetPlayerIcon(speaker, text, team_chat)</a></div><div class="summary-synopsis">Supplies the icon of the player's role for their chat messages.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#check_immunity">check_immunity(actor, target, can_equal)</a></div><div class="summary-synopsis">Checks whether a player's role has enough immunity to act on another player. Passes when either player is invalid or either role has no numeric immunity.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CheckPassword">CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)</a></div><div class="summary-synopsis">Checks connecting players against the ban cache. A timed ban that passes the expiry check is lifted and the player let in; any other ban rejects the connection with its reason.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CommandCheckImmunity">CommandCheckImmunity(actor, target, can_equal)</a></div><div class="summary-synopsis">Checks role immunity for commands that target players, by way of Bolt:check_immunity.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_role">create_role(id, data)</a></div><div class="summary-synopsis">Stores a role under the given ID, inheriting the permissions and unset fields of the role named in data.base if that role is already registered. Does nothing unless id is a string, and never replaces an existing role.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#delete_temp_permission">delete_temp_permission(target, perm_id)</a></div><div class="summary-synopsis">Removes a temporary permission from a player, destroying its database record and updating the networked table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find_group">find_group(id)</a></div><div class="summary-synopsis">Returns the role registered under the given ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_all_permissions">get_all_permissions()</a></div><div class="summary-synopsis">Returns every registered permission in one flat table, ignoring categories.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_bans">get_bans()</a></div><div class="summary-synopsis">Returns the ban cache. It is only filled on the server, once the database is ready.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_permissions">get_permissions()</a></div><div class="summary-synopsis">Returns every registered permission, grouped by category.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_players">get_players()</a></div><div class="summary-synopsis">Returns the admin system's player table. Nothing in this plugin currently writes to it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_roles">get_roles()</a></div><div class="summary-synopsis">Returns every registered role.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_staff">get_staff()</a></div><div class="summary-synopsis">Get a list of all currently online staff members.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#group_exists">group_exists(id)</a></div><div class="summary-synopsis">Checks whether a role with the given ID is registered. The role itself is returned rather than a strict boolean.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#HUDPaint">HUDPaint()</a></div><div class="summary-synopsis">Draws the vanish indicator in the bottom right corner while the local player is hidden from other players.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_roles">include_roles(directory)</a></div><div class="summary-synopsis">Loads every role file in a folder through the 'role' pipeline. Each file fills in the ROLE global and is registered under its file name without the sh_/cl_/sv_ prefix.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#interpret_ban_time">interpret_ban_time(str)</a></div><div class="summary-synopsis">Converts a human-readable duration into seconds. Bare numbers are taken as minutes, and words such as 'perma' or 'forever' (as well as text with no recognizable duration) give 0, which bans treat as permanent.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnCommandCreated">OnCommandCreated(id, data)</a></div><div class="summary-synopsis">Registers a permission for every newly created command.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnPluginLoaded">OnPluginLoaded()</a></div><div class="summary-synopsis">Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnPluginsLoaded">OnPluginsLoaded()</a></div><div class="summary-synopsis">Runs the RegisterPermissions hook, then allows each permission for the role it was registered for and for every role based on it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a></div><div class="summary-synopsis">Registers the constructors of the admin panel's pages with the loaded theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#permission_from_command">permission_from_command(cmd)</a></div><div class="summary-synopsis">Registers a permission for a command, built from the command's id, name, description, category and permission (the role it is granted to) fields.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerCanHearPlayersVoice">PlayerCanHearPlayersVoice(listener, talker)</a></div><div class="summary-synopsis">Mutes talkers that lack the 'voice' permission.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerCreated">PlayerCreated(actor, record)</a></div><div class="summary-synopsis">Defaults the banned flag of a newly created user record to false.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerHasPermission">PlayerHasPermission(actor, action, object)</a></div><div class="summary-synopsis">Answers the permission checks made through actor:can by delegating to Bolt:can.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialSpawn">PlayerInitialSpawn(actor)</a></div><div class="summary-synopsis">Hides vanished and observing admins from a newly connected player, unless that player has the 'moderator' permission.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerIsRoot">PlayerIsRoot(target)</a></div><div class="summary-synopsis">Reports whether the player was flagged as root, which happens when their SteamID is listed in the root_steamid config.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerOneMinute">PlayerOneMinute(actor)</a></div><div class="summary-synopsis">Removes the player's expired temporary permissions.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerPermissionChanged">PlayerPermissionChanged(target, perm_id, value)</a></div><div class="summary-synopsis">Gives or strips the tool gun and the physgun when the matching permission changes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerRestored">PlayerRestored(actor, record)</a></div><div class="summary-synopsis">Applies a loaded user record to the player: sets their role, makes the SteamIDs from the root_steamid config root admins, networks stored permissions and logs the connection.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerStartVoice">PlayerStartVoice(speaker)</a></div><div class="summary-synopsis">Returns false for speakers that lack the 'voice' permission.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerUserGroupChanged">PlayerUserGroupChanged(target, group, old_group)</a></div><div class="summary-synopsis">Gives or strips the tool gun and the physgun to match the player's new role.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PluginIncludeFolder">PluginIncludeFolder(extra, folder)</a></div><div class="summary-synopsis">Loads the role files of a plugin when its 'roles' folder is being included.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostRender">PostRender()</a></div><div class="summary-synopsis">Switches to fullbright lighting when the local player's 'should_fullbright' net var is set.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PreDrawHUD">PreDrawHUD()</a></div><div class="summary-synopsis">Restores normal lighting before the HUD is drawn if fullbright was switched on.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#record_ban">record_ban(id, obj)</a></div><div class="summary-synopsis">Puts a ban record into the ban cache without touching the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register_permission">register_permission(id, name, description, category, role)</a></div><div class="summary-synopsis">Registers a permission that can then be checked with actor:can(id). Permissions registered before plugins finish loading (normally from a RegisterPermissions hook) are then allowed for the given role and for every role based on it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a></div><div class="summary-synopsis">Registers the 'bolt_role' condition, which compares a player's role with a chosen one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RegisterPermissions">RegisterPermissions()</a></div><div class="summary-synopsis">Registers the built-in permissions: tools, spawning, voice, context menu, management and the staff / admin / super admin compatibility levels.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_ban">remove_ban(steam_id)</a></div><div class="summary-synopsis">Deletes the ban record of a SteamID from the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_ban">add_ban(steam_id, name, unban_time, duration, reason)</a><span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Creates or updates the ban record for a SteamID, saves it to the database and caches it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_permission">add_permission(id, category, data, force)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Stores a permission data table under a category.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#allow_children">allow_children(role, perm_id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Allows a permission for a role and, recursively, for every role based on it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ban">ban(target, duration, reason, prevent_kick)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Bans a player or a SteamID and saves the ban to the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#can">can(actor, action, object)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a player may perform an action.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#check_immunity">check_immunity(actor, target, can_equal)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a player's role has enough immunity to act on another player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_role">create_role(id, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Stores a role under the given ID, inheriting the permissions and unset fields of the role named in data.base if that role is already registered.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete_temp_permission">delete_temp_permission(target, perm_id)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Removes a temporary permission from a player, destroying its database record and updating the networked table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_group">find_group(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role registered under the given ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_all_permissions">get_all_permissions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns every registered permission in one flat table, ignoring categories.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_bans">get_bans()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the ban cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_permissions">get_permissions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns every registered permission, grouped by category.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_players">get_players()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the admin system's player table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_roles">get_roles()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns every registered role.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_staff">get_staff()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Get a list of all currently online staff members.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#group_exists">group_exists(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a role with the given ID is registered.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_roles">include_roles(directory)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Loads every role file in a folder through the 'role' pipeline.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#interpret_ban_time">interpret_ban_time(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a human-readable duration into seconds.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#permission_from_command">permission_from_command(cmd)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a permission for a command, built from the command's id, name, description, category and permission (the role it is granted to) fields.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#record_ban">record_ban(id, obj)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Puts a ban record into the ban cache without touching the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_permission">register_permission(id, name, description, category, role)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a permission that can then be checked with actor:can(id).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_ban">remove_ban(steam_id)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Deletes the ban record of a SteamID from the database.</div></div>
 </div>
 </section>
-<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
 <section class="detail" id="ActiveRecordReady">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>ActiveRecordReady<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>ActiveRecordReady<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#ActiveRecordReady" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L57" title="View source">plugins/admin/plugin/sv_hooks.lua:57</a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:57</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/active_record/Hooks.html#ActiveRecordReady"><code>ActiveRecordReady</code></a></p>
 <p>Loads all bans from the database into the ban cache.</p>
 </section>
 </section>
+<section class="detail" id="AddAdminMenuItems">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>AddAdminMenuItems<span class="params">(panel, sidebar)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AddAdminMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/cl_hooks.lua:24</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/admin/Hooks.html#AddAdminMenuItems"><code>AddAdminMenuItems</code></a></p>
+<p>Adds the player management and config editor pages to the admin panel.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the admin panel</span></li><li><span class="param-name">sidebar</span> <span class="type">Panel</span> <span class="desc">the admin panel's sidebar</span></li></ul>
+</section>
+</section>
+<section class="detail" id="AddTabMenuItems">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>AddTabMenuItems<span class="params">(menu)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AddTabMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/cl_hooks.lua:12</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#AddTabMenuItems"><code>AddTabMenuItems</code></a></p>
+<p>Adds the Admin entry to the tab menu.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">menu</span> <span class="type">Panel</span> <span class="desc">the tab menu</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CanTool">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>CanTool<span class="params">(actor, trace, tool_name)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CanTool" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:31</span>
+</div>
+<section class="docstring">
+<p>Blocks tools that require a permission the player does not have.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">trace</span> <span class="type">Map</span> <span class="desc">trace result of the tool use</span></li><li><span class="param-name">tool_name</span> <span class="type">String</span> <span class="desc">tool ID</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to block the tool, nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ChatboxGetPlayerIcon">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>ChatboxGetPlayerIcon<span class="params">(speaker, text, team_chat)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#ChatboxGetPlayerIcon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:190</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/chatbox/Hooks.html#ChatboxGetPlayerIcon"><code>ChatboxGetPlayerIcon</code></a></p>
+<p>Supplies the icon of the player's role for their chat messages.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">speaker</span> <span class="type">Player</span> <span class="desc">the sender</span></li><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">message text</span></li><li><span class="param-name">team_chat</span> <span class="type">Boolean</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">icon data for the chatbox (icon, size, margin, is_data), or nothing if the player is invalid</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CheckPassword">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>CheckPassword<span class="params">(steam_id64, ip, sv_pass, cl_pass, name)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CheckPassword" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:10</span>
+</div>
+<section class="docstring">
+<p>Checks connecting players against the ban cache. A timed ban that passes the expiry check
+is lifted and the player let in; any other ban rejects the connection with its reason.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">steam_id64</span> <span class="type">String</span> <span class="desc">64-bit SteamID of the connecting player</span></li><li><span class="param-name">ip</span> <span class="type">String</span></li><li><span class="param-name">sv_pass</span> <span class="type">String</span> <span class="desc">server password</span></li><li><span class="param-name">cl_pass</span> <span class="type">String</span> <span class="desc">password entered by the client</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">player name</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true to allow or false to reject (nothing if there is no ban)</span></li><li><span class="type">String</span> <span class="desc">rejection message (only when rejecting)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CommandCheckImmunity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>CommandCheckImmunity<span class="params">(actor, target, can_equal)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CommandCheckImmunity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:121</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#CommandCheckImmunity"><code>CommandCheckImmunity</code></a></p>
+<p>Checks role immunity for commands that target players, by way of Bolt:check_immunity.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span> <span class="desc">the caller</span></li><li><span class="param-name">target</span> <span class="type">Player</span> <span class="desc">the player being targeted</span></li><li><span class="param-name">can_equal</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>false</code></span> <span class="desc">also pass when both roles have the same immunity</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the caller may not target that player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="HUDPaint">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>HUDPaint<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#HUDPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/cl_hooks.lua:43</span>
+</div>
+<section class="docstring">
+<p>Draws the vanish indicator in the bottom right corner while the local player is hidden
+from other players.</p>
+</section>
+</section>
+<section class="detail" id="OnCommandCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>OnCommandCreated<span class="params">(id, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OnCommandCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:46</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#OnCommandCreated"><code>OnCommandCreated</code></a></p>
+<p>Registers a permission for every newly created command.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">command ID</span></li><li><span class="param-name">data</span> <span class="type">Command</span> <span class="desc">command table</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnPluginLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>OnPluginLoaded<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OnPluginLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:9</span>
+</div>
+<section class="docstring">
+<p>Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.</p>
+</section>
+</section>
+<section class="detail" id="OnPluginsLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>OnPluginsLoaded<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OnPluginsLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:52</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../flux/Hooks.html#OnPluginsLoaded"><code>OnPluginsLoaded</code></a></p>
+<p>Runs the RegisterPermissions hook, then allows each permission for the role it was
+registered for and for every role based on it.</p>
+</section>
+</section>
+<section class="detail" id="OnThemeLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>OnThemeLoaded<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/cl_hooks.lua:31</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#OnThemeLoaded"><code>OnThemeLoaded</code></a></p>
+<p>Registers the constructors of the admin panel's pages with the loaded theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">current_theme</span> <span class="type">ThemeBase</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCanHearPlayersVoice">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerCanHearPlayersVoice<span class="params">(listener, talker)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCanHearPlayersVoice" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:43</span>
+</div>
+<section class="docstring">
+<p>Mutes talkers that lack the 'voice' permission.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">listener</span> <span class="type">Player</span> <span class="desc">the listener</span></li><li><span class="param-name">talker</span> <span class="type">Player</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the talker may not be heard, nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerCreated<span class="params">(actor, record)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:52</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerCreated"><code>PlayerCreated</code></a></p>
+<p>Defaults the banned flag of a newly created user record to false.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">record</span> <span class="type">User</span> <span class="desc">the player's database record</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerHasPermission">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerHasPermission<span class="params">(actor, action, object)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerHasPermission" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:31</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerHasPermission"><code>PlayerHasPermission</code></a></p>
+<p>Answers the permission checks made through actor:can by delegating to Bolt:can.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">action</span> <span class="type">String</span> <span class="desc">permission ID</span></li><li><span class="param-name">object</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">object name the permission was allowed for</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerInitialSpawn">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerInitialSpawn<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerInitialSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:128</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerInitialSpawn"><code>PlayerInitialSpawn</code></a></p>
+<p>Hides vanished and observing admins from a newly connected player, unless that player has
+the 'moderator' permission.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span> <span class="desc">the player that just connected</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerIsRoot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerIsRoot<span class="params">(target)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerIsRoot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:39</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerIsRoot"><code>PlayerIsRoot</code></a></p>
+<p>Reports whether the player was flagged as root, which happens when their SteamID is listed
+in the root_steamid config.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true for root players, nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerOneMinute">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerOneMinute<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerOneMinute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:138</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerOneMinute"><code>PlayerOneMinute</code></a></p>
+<p>Removes the player's expired temporary permissions.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerPermissionChanged">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerPermissionChanged<span class="params">(target, perm_id, value)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerPermissionChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:150</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/admin/Hooks.html#PlayerPermissionChanged"><code>PlayerPermissionChanged</code></a></p>
+<p>Gives or strips the tool gun and the physgun when the matching permission changes.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">perm_id</span> <span class="type">String</span> <span class="desc">permission ID</span></li><li><span class="param-name">value</span> <span class="type">Number</span> <span class="desc">new PERM_ value</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerRestored">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerRestored<span class="params">(actor, record)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerRestored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:69</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerRestored"><code>PlayerRestored</code></a></p>
+<p>Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
+root_steamid config root admins, networks stored permissions and logs the connection.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">record</span> <span class="type">User</span> <span class="desc">the player's database record</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerStartVoice">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerStartVoice<span class="params">(speaker)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PlayerStartVoice" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/cl_hooks.lua:4</span>
+</div>
+<section class="docstring">
+<p>Returns false for speakers that lack the 'voice' permission.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">speaker</span> <span class="type">Player</span> <span class="desc">the player that started talking</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the player lacks the permission, nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUserGroupChanged">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PlayerUserGroupChanged<span class="params">(target, group, old_group)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerUserGroupChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:170</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/admin/Hooks.html#PlayerUserGroupChanged"><code>PlayerUserGroupChanged</code></a></p>
+<p>Gives or strips the tool gun and the physgun to match the player's new role.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">group</span> <span class="type">Role</span> <span class="desc">the player's new role</span></li><li><span class="param-name">old_group</span> <span class="type">Role</span> <span class="desc">the player's previous role</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PluginIncludeFolder">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PluginIncludeFolder<span class="params">(extra, folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PluginIncludeFolder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:18</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../flux/Hooks.html#PluginIncludeFolder"><code>PluginIncludeFolder</code></a></p>
+<p>Loads the role files of a plugin when its 'roles' folder is being included.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">extra</span> <span class="type">String</span> <span class="desc">name of the extra folder being included</span></li><li><span class="param-name">folder</span> <span class="type">String</span> <span class="desc">path of the plugin folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if the folder was handled here, nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostRender">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PostRender<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PostRender" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/cl_hooks.lua:55</span>
+</div>
+<section class="docstring">
+<p>Switches to fullbright lighting when the local player's 'should_fullbright' net var is set.</p>
+</section>
+</section>
+<section class="detail" id="PreDrawHUD">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>PreDrawHUD<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreDrawHUD" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/cl_hooks.lua:63</span>
+</div>
+<section class="docstring">
+<p>Restores normal lighting before the HUD is drawn if fullbright was switched on.</p>
+</section>
+</section>
+<section class="detail" id="RegisterConditions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>RegisterConditions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#RegisterConditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:65</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/conditions/Hooks.html#RegisterConditions"><code>RegisterConditions</code></a></p>
+<p>Registers the 'bolt_role' condition, which compares a player's role with a chosen one.</p>
+</section>
+</section>
+<section class="detail" id="RegisterPermissions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Bolt:</span>RegisterPermissions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#RegisterPermissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/admin/plugin/sh_plugin.lua:97</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/admin/Hooks.html#RegisterPermissions"><code>RegisterPermissions</code></a></p>
+<p>Registers the built-in permissions: tools, spawning, voice, context menu, management and
+the staff / admin / super admin compatibility levels.</p>
+</section>
+</section>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="add_ban">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>add_ban<span class="params">(steam_id, name, unban_time, duration, reason)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">Bolt:</span>add_ban<span class="params">(steam_id, name, unban_time, duration, reason)</span></h3> <span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span>
 <a href="#add_ban" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L276" title="View source">plugins/admin/plugin/lib/sh_admin.lua:276</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:276</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p><p>Use Bolt:ban to ban somebody.</p></div>
@@ -108,9 +454,9 @@
 </section>
 <section class="detail" id="add_permission">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>add_permission<span class="params">(id, category, data, force)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>add_permission<span class="params">(id, category, data, force)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_permission" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L108" title="View source">plugins/admin/plugin/lib/sh_admin.lua:108</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:108</span>
 </div>
 <section class="docstring">
 <p>Stores a permission data table under a category. A permission that already exists there
@@ -121,35 +467,11 @@ is kept unless force is set.</p>
 <ul class="see-also"><li><a href="../../plugins/admin/Bolt.html#register_permission"><code>Bolt#register_permission</code></a></li></ul>
 </section>
 </section>
-<section class="detail" id="AddAdminMenuItems">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>AddAdminMenuItems<span class="params">(panel, sidebar)</span></h3>
-<a href="#AddAdminMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua#L24" title="View source">plugins/admin/plugin/cl_hooks.lua:24</a>
-</div>
-<section class="docstring">
-<p>Adds the player management and config editor pages to the admin panel.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the admin panel</span></li><li><span class="param-name">sidebar</span> <span class="type">Panel</span> <span class="desc">the admin panel's sidebar</span></li></ul>
-</section>
-</section>
-<section class="detail" id="AddTabMenuItems">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>AddTabMenuItems<span class="params">(menu)</span></h3>
-<a href="#AddTabMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua#L12" title="View source">plugins/admin/plugin/cl_hooks.lua:12</a>
-</div>
-<section class="docstring">
-<p>Adds the Admin entry to the tab menu.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">menu</span> <span class="type">Panel</span> <span class="desc">the tab menu</span></li></ul>
-</section>
-</section>
 <section class="detail" id="allow_children">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>allow_children<span class="params">(role, perm_id)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>allow_children<span class="params">(role, perm_id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#allow_children" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L91" title="View source">plugins/admin/plugin/lib/sh_admin.lua:91</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:91</span>
 </div>
 <section class="docstring">
 <p>Allows a permission for a role and, recursively, for every role based on it.</p>
@@ -159,9 +481,9 @@ is kept unless force is set.</p>
 </section>
 <section class="detail" id="ban">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>ban<span class="params">(target, duration, reason, prevent_kick)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>ban<span class="params">(target, duration, reason, prevent_kick)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#ban" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L305" title="View source">plugins/admin/plugin/lib/sh_admin.lua:305</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:305</span>
 </div>
 <section class="docstring">
 <p>Bans a player or a SteamID and saves the ban to the database. A player entity is also
@@ -177,9 +499,9 @@ Bolt:<span class="hl-f">ban</span>(<span class="hl-s">&#39;STEAM_0:1:12345&#39;<
 </section>
 <section class="detail" id="can">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>can<span class="params">(actor, action, object)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>can<span class="params">(actor, action, object)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#can" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L163" title="View source">plugins/admin/plugin/lib/sh_admin.lua:163</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:163</span>
 </div>
 <section class="docstring">
 <p>Checks whether a player may perform an action. Unexpired temporary permissions are consulted
@@ -191,39 +513,11 @@ the server console) and root players are always allowed.</p>
 <ul class="returns"><li><span class="type">Boolean</span> <span class="desc">whether the action is allowed (a role permission callback's return value is passed through as is)</span></li></ul>
 </section>
 </section>
-<section class="detail" id="CanTool">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>CanTool<span class="params">(actor, trace, tool_name)</span></h3>
-<a href="#CanTool" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L31" title="View source">plugins/admin/plugin/sv_hooks.lua:31</a>
-</div>
-<section class="docstring">
-<p>Blocks tools that require a permission the player does not have.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">trace</span> <span class="type">Map</span> <span class="desc">trace result of the tool use</span></li><li><span class="param-name">tool_name</span> <span class="type">String</span> <span class="desc">tool ID</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to block the tool, nothing otherwise</span></li></ul>
-</section>
-</section>
-<section class="detail" id="ChatboxGetPlayerIcon">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>ChatboxGetPlayerIcon<span class="params">(speaker, text, team_chat)</span></h3>
-<a href="#ChatboxGetPlayerIcon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L190" title="View source">plugins/admin/plugin/sv_hooks.lua:190</a>
-</div>
-<section class="docstring">
-<p>Supplies the icon of the player's role for their chat messages.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">speaker</span> <span class="type">Player</span> <span class="desc">the sender</span></li><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">message text</span></li><li><span class="param-name">team_chat</span> <span class="type">Boolean</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Map</span> <span class="desc">icon data for the chatbox (icon, size, margin, is_data), or nothing if the player is invalid</span></li></ul>
-</section>
-</section>
 <section class="detail" id="check_immunity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>check_immunity<span class="params">(actor, target, can_equal)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>check_immunity<span class="params">(actor, target, can_equal)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#check_immunity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L224" title="View source">plugins/admin/plugin/lib/sh_admin.lua:224</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:224</span>
 </div>
 <section class="docstring">
 <p>Checks whether a player's role has enough immunity to act on another player. Passes when
@@ -234,40 +528,11 @@ either player is invalid or either role has no numeric immunity.</p>
 <ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if the player may act on the target</span></li></ul>
 </section>
 </section>
-<section class="detail" id="CheckPassword">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>CheckPassword<span class="params">(steam_id64, ip, sv_pass, cl_pass, name)</span></h3>
-<a href="#CheckPassword" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L10" title="View source">plugins/admin/plugin/sv_hooks.lua:10</a>
-</div>
-<section class="docstring">
-<p>Checks connecting players against the ban cache. A timed ban that passes the expiry check
-is lifted and the player let in; any other ban rejects the connection with its reason.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">steam_id64</span> <span class="type">String</span> <span class="desc">64-bit SteamID of the connecting player</span></li><li><span class="param-name">ip</span> <span class="type">String</span></li><li><span class="param-name">sv_pass</span> <span class="type">String</span> <span class="desc">server password</span></li><li><span class="param-name">cl_pass</span> <span class="type">String</span> <span class="desc">password entered by the client</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">player name</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true to allow or false to reject (nothing if there is no ban)</span></li><li><span class="type">String</span> <span class="desc">rejection message (only when rejecting)</span></li></ul>
-</section>
-</section>
-<section class="detail" id="CommandCheckImmunity">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>CommandCheckImmunity<span class="params">(actor, target, can_equal)</span></h3>
-<a href="#CommandCheckImmunity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L121" title="View source">plugins/admin/plugin/sv_hooks.lua:121</a>
-</div>
-<section class="docstring">
-<p>Checks role immunity for commands that target players, by way of Bolt:check_immunity.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span> <span class="desc">the caller</span></li><li><span class="param-name">target</span> <span class="type">Player</span> <span class="desc">the player being targeted</span></li><li><span class="param-name">can_equal</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>false</code></span> <span class="desc">also pass when both roles have the same immunity</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the caller may not target that player</span></li></ul>
-</section>
-</section>
 <section class="detail" id="create_role">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>create_role<span class="params">(id, data)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>create_role<span class="params">(id, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_role" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L58" title="View source">plugins/admin/plugin/lib/sh_admin.lua:58</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:58</span>
 </div>
 <section class="docstring">
 <p>Stores a role under the given ID, inheriting the permissions and unset fields of the role
@@ -281,9 +546,9 @@ and never replaces an existing role.</p>
 </section>
 <section class="detail" id="delete_temp_permission">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>delete_temp_permission<span class="params">(target, perm_id)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>delete_temp_permission<span class="params">(target, perm_id)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#delete_temp_permission" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_plugin.lua#L5" title="View source">plugins/admin/plugin/sv_plugin.lua:5</a>
+<span class="source-link">plugins/admin/plugin/sv_plugin.lua:5</span>
 </div>
 <section class="docstring">
 <p>Removes a temporary permission from a player, destroying its database record and updating
@@ -294,9 +559,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="find_group">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>find_group<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>find_group<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find_group" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L202" title="View source">plugins/admin/plugin/lib/sh_admin.lua:202</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:202</span>
 </div>
 <section class="docstring">
 <p>Returns the role registered under the given ID.</p>
@@ -308,9 +573,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="get_all_permissions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>get_all_permissions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>get_all_permissions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_all_permissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L22" title="View source">plugins/admin/plugin/lib/sh_admin.lua:22</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:22</span>
 </div>
 <section class="docstring">
 <p>Returns every registered permission in one flat table, ignoring categories.</p>
@@ -320,9 +585,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="get_bans">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>get_bans<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>get_bans<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_bans" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L48" title="View source">plugins/admin/plugin/lib/sh_admin.lua:48</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:48</span>
 </div>
 <section class="docstring">
 <p>Returns the ban cache. It is only filled on the server, once the database is ready.</p>
@@ -332,9 +597,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="get_permissions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>get_permissions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>get_permissions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_permissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L16" title="View source">plugins/admin/plugin/lib/sh_admin.lua:16</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:16</span>
 </div>
 <section class="docstring">
 <p>Returns every registered permission, grouped by category.</p>
@@ -344,9 +609,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="get_players">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>get_players<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>get_players<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_players" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L42" title="View source">plugins/admin/plugin/lib/sh_admin.lua:42</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:42</span>
 </div>
 <section class="docstring">
 <p>Returns the admin system's player table. Nothing in this plugin currently writes to it.</p>
@@ -356,9 +621,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="get_roles">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>get_roles<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>get_roles<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_roles" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L36" title="View source">plugins/admin/plugin/lib/sh_admin.lua:36</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:36</span>
 </div>
 <section class="docstring">
 <p>Returns every registered role.</p>
@@ -368,9 +633,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="get_staff">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>get_staff<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>get_staff<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#get_staff" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L198" title="View source">plugins/admin/plugin/sv_hooks.lua:198</a>
+<span class="source-link">plugins/admin/plugin/sv_hooks.lua:198</span>
 </div>
 <section class="docstring">
 <p>Get a list of all currently online staff members.</p>
@@ -382,9 +647,9 @@ the networked table.</p>
 </section>
 <section class="detail" id="group_exists">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>group_exists<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>group_exists<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#group_exists" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L214" title="View source">plugins/admin/plugin/lib/sh_admin.lua:214</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:214</span>
 </div>
 <section class="docstring">
 <p>Checks whether a role with the given ID is registered. The role itself is returned rather
@@ -395,22 +660,11 @@ than a strict boolean.</p>
 <ul class="returns"><li><span class="type">Role</span> <span class="desc">the role (truthy), or nil if it does not exist</span></li></ul>
 </section>
 </section>
-<section class="detail" id="HUDPaint">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>HUDPaint<span class="params">()</span></h3>
-<a href="#HUDPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua#L43" title="View source">plugins/admin/plugin/cl_hooks.lua:43</a>
-</div>
-<section class="docstring">
-<p>Draws the vanish indicator in the bottom right corner while the local player is hidden
-from other players.</p>
-</section>
-</section>
 <section class="detail" id="include_roles">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>include_roles<span class="params">(directory)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>include_roles<span class="params">(directory)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_roles" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L251" title="View source">plugins/admin/plugin/lib/sh_admin.lua:251</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:251</span>
 </div>
 <section class="docstring">
 <p>Loads every role file in a folder through the 'role' pipeline. Each file fills in the ROLE
@@ -423,9 +677,9 @@ global and is registered under its file name without the sh_/cl_/sv_ prefix.</p>
 </section>
 <section class="detail" id="interpret_ban_time">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>interpret_ban_time<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>interpret_ban_time<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#interpret_ban_time" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L406" title="View source">plugins/admin/plugin/lib/sh_admin.lua:406</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:406</span>
 </div>
 <section class="docstring">
 <p>Converts a human-readable duration into seconds. Bare numbers are taken as minutes, and
@@ -444,56 +698,11 @@ Bolt:<span class="hl-f">interpret_ban_time</span>(<span class="hl-s">&#39;perma&
 <ul class="returns"><li><span class="type">Number/Boolean</span> <span class="desc">duration in seconds, or false if str is neither a string nor a number</span></li></ul>
 </section>
 </section>
-<section class="detail" id="OnCommandCreated">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>OnCommandCreated<span class="params">(id, data)</span></h3>
-<a href="#OnCommandCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L46" title="View source">plugins/admin/plugin/sh_plugin.lua:46</a>
-</div>
-<section class="docstring">
-<p>Registers a permission for every newly created command.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">command ID</span></li><li><span class="param-name">data</span> <span class="type">Command</span> <span class="desc">command table</span></li></ul>
-</section>
-</section>
-<section class="detail" id="OnPluginLoaded">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>OnPluginLoaded<span class="params">()</span></h3>
-<a href="#OnPluginLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L9" title="View source">plugins/admin/plugin/sh_plugin.lua:9</a>
-</div>
-<section class="docstring">
-<p>Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.</p>
-</section>
-</section>
-<section class="detail" id="OnPluginsLoaded">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>OnPluginsLoaded<span class="params">()</span></h3>
-<a href="#OnPluginsLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L52" title="View source">plugins/admin/plugin/sh_plugin.lua:52</a>
-</div>
-<section class="docstring">
-<p>Runs the RegisterPermissions hook, then allows each permission for the role it was
-registered for and for every role based on it.</p>
-</section>
-</section>
-<section class="detail" id="OnThemeLoaded">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>OnThemeLoaded<span class="params">(current_theme)</span></h3>
-<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua#L31" title="View source">plugins/admin/plugin/cl_hooks.lua:31</a>
-</div>
-<section class="docstring">
-<p>Registers the constructors of the admin panel's pages with the loaded theme.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">current_theme</span> <span class="type">ThemeBase</span></li></ul>
-</section>
-</section>
 <section class="detail" id="permission_from_command">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>permission_from_command<span class="params">(cmd)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>permission_from_command<span class="params">(cmd)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#permission_from_command" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L149" title="View source">plugins/admin/plugin/lib/sh_admin.lua:149</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:149</span>
 </div>
 <section class="docstring">
 <p>Registers a permission for a command, built from the command's id, name, description,
@@ -502,176 +711,11 @@ category and permission (the role it is granted to) fields.</p>
 <ul class="params"><li><span class="param-name">cmd</span> <span class="type">Command</span> <span class="desc">command table; nothing happens if it is nil</span></li></ul>
 </section>
 </section>
-<section class="detail" id="PlayerCanHearPlayersVoice">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerCanHearPlayersVoice<span class="params">(listener, talker)</span></h3>
-<a href="#PlayerCanHearPlayersVoice" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L43" title="View source">plugins/admin/plugin/sv_hooks.lua:43</a>
-</div>
-<section class="docstring">
-<p>Mutes talkers that lack the 'voice' permission.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">listener</span> <span class="type">Player</span> <span class="desc">the listener</span></li><li><span class="param-name">talker</span> <span class="type">Player</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the talker may not be heard, nothing otherwise</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerCreated">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerCreated<span class="params">(actor, record)</span></h3>
-<a href="#PlayerCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L52" title="View source">plugins/admin/plugin/sv_hooks.lua:52</a>
-</div>
-<section class="docstring">
-<p>Defaults the banned flag of a newly created user record to false.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">record</span> <span class="type">User</span> <span class="desc">the player's database record</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerHasPermission">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerHasPermission<span class="params">(actor, action, object)</span></h3>
-<a href="#PlayerHasPermission" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L31" title="View source">plugins/admin/plugin/sh_plugin.lua:31</a>
-</div>
-<section class="docstring">
-<p>Answers the permission checks made through actor:can by delegating to Bolt:can.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">action</span> <span class="type">String</span> <span class="desc">permission ID</span></li><li><span class="param-name">object</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">object name the permission was allowed for</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerInitialSpawn">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerInitialSpawn<span class="params">(actor)</span></h3>
-<a href="#PlayerInitialSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L128" title="View source">plugins/admin/plugin/sv_hooks.lua:128</a>
-</div>
-<section class="docstring">
-<p>Hides vanished and observing admins from a newly connected player, unless that player has
-the 'moderator' permission.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span> <span class="desc">the player that just connected</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerIsRoot">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerIsRoot<span class="params">(target)</span></h3>
-<a href="#PlayerIsRoot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L39" title="View source">plugins/admin/plugin/sh_plugin.lua:39</a>
-</div>
-<section class="docstring">
-<p>Reports whether the player was flagged as root, which happens when their SteamID is listed
-in the root_steamid config.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true for root players, nil otherwise</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerOneMinute">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerOneMinute<span class="params">(actor)</span></h3>
-<a href="#PlayerOneMinute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L138" title="View source">plugins/admin/plugin/sv_hooks.lua:138</a>
-</div>
-<section class="docstring">
-<p>Removes the player's expired temporary permissions.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerPermissionChanged">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerPermissionChanged<span class="params">(target, perm_id, value)</span></h3>
-<a href="#PlayerPermissionChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L150" title="View source">plugins/admin/plugin/sv_hooks.lua:150</a>
-</div>
-<section class="docstring">
-<p>Gives or strips the tool gun and the physgun when the matching permission changes.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">perm_id</span> <span class="type">String</span> <span class="desc">permission ID</span></li><li><span class="param-name">value</span> <span class="type">Number</span> <span class="desc">new PERM_ value</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerRestored">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerRestored<span class="params">(actor, record)</span></h3>
-<a href="#PlayerRestored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L69" title="View source">plugins/admin/plugin/sv_hooks.lua:69</a>
-</div>
-<section class="docstring">
-<p>Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
-root_steamid config root admins, networks stored permissions and logs the connection.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">record</span> <span class="type">User</span> <span class="desc">the player's database record</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerStartVoice">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerStartVoice<span class="params">(speaker)</span></h3>
-<a href="#PlayerStartVoice" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua#L4" title="View source">plugins/admin/plugin/cl_hooks.lua:4</a>
-</div>
-<section class="docstring">
-<p>Returns false for speakers that lack the 'voice' permission.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">speaker</span> <span class="type">Player</span> <span class="desc">the player that started talking</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the player lacks the permission, nothing otherwise</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerUserGroupChanged">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PlayerUserGroupChanged<span class="params">(target, group, old_group)</span></h3>
-<a href="#PlayerUserGroupChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua#L170" title="View source">plugins/admin/plugin/sv_hooks.lua:170</a>
-</div>
-<section class="docstring">
-<p>Gives or strips the tool gun and the physgun to match the player's new role.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">group</span> <span class="type">Role</span> <span class="desc">the player's new role</span></li><li><span class="param-name">old_group</span> <span class="type">Role</span> <span class="desc">the player's previous role</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PluginIncludeFolder">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PluginIncludeFolder<span class="params">(extra, folder)</span></h3>
-<a href="#PluginIncludeFolder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L18" title="View source">plugins/admin/plugin/sh_plugin.lua:18</a>
-</div>
-<section class="docstring">
-<p>Loads the role files of a plugin when its 'roles' folder is being included.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">extra</span> <span class="type">String</span> <span class="desc">name of the extra folder being included</span></li><li><span class="param-name">folder</span> <span class="type">String</span> <span class="desc">path of the plugin folder</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if the folder was handled here, nothing otherwise</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PostRender">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PostRender<span class="params">()</span></h3>
-<a href="#PostRender" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua#L55" title="View source">plugins/admin/plugin/cl_hooks.lua:55</a>
-</div>
-<section class="docstring">
-<p>Switches to fullbright lighting when the local player's 'should_fullbright' net var is set.</p>
-</section>
-</section>
-<section class="detail" id="PreDrawHUD">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>PreDrawHUD<span class="params">()</span></h3>
-<a href="#PreDrawHUD" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua#L63" title="View source">plugins/admin/plugin/cl_hooks.lua:63</a>
-</div>
-<section class="docstring">
-<p>Restores normal lighting before the HUD is drawn if fullbright was switched on.</p>
-</section>
-</section>
 <section class="detail" id="record_ban">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>record_ban<span class="params">(id, obj)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>record_ban<span class="params">(id, obj)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#record_ban" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L289" title="View source">plugins/admin/plugin/lib/sh_admin.lua:289</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:289</span>
 </div>
 <section class="docstring">
 <p>Puts a ban record into the ban cache without touching the database.</p>
@@ -681,9 +725,9 @@ root_steamid config root admins, networks stored permissions and logs the connec
 </section>
 <section class="detail" id="register_permission">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>register_permission<span class="params">(id, name, description, category, role)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>register_permission<span class="params">(id, name, description, category, role)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register_permission" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L134" title="View source">plugins/admin/plugin/lib/sh_admin.lua:134</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:134</span>
 </div>
 <section class="docstring">
 <p>Registers a permission that can then be checked with actor:can(id). Permissions registered
@@ -698,32 +742,11 @@ for the given role and for every role based on it.</p>
 <ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">permission ID; nothing happens if it is empty or not a string</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="default">optional, defaults to <code>id</code></span> <span class="desc">display name</span></li><li><span class="param-name">description</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;No description provided.&#39;</code></span></li><li><span class="param-name">category</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;general&#39;</code></span> <span class="desc">category name or language phrase</span></li><li><span class="param-name">role</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">ID of the role that is allowed this permission by default</span></li></ul>
 </section>
 </section>
-<section class="detail" id="RegisterConditions">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>RegisterConditions<span class="params">()</span></h3>
-<a href="#RegisterConditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L65" title="View source">plugins/admin/plugin/sh_plugin.lua:65</a>
-</div>
-<section class="docstring">
-<p>Registers the 'bolt_role' condition, which compares a player's role with a chosen one.</p>
-</section>
-</section>
-<section class="detail" id="RegisterPermissions">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>RegisterPermissions<span class="params">()</span></h3>
-<a href="#RegisterPermissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua#L97" title="View source">plugins/admin/plugin/sh_plugin.lua:97</a>
-</div>
-<section class="docstring">
-<p>Registers the built-in permissions: tools, spawning, voice, context menu, management and
-the staff / admin / super admin compatibility levels.</p>
-</section>
-</section>
 <section class="detail" id="remove_ban">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Bolt:</span>remove_ban<span class="params">(steam_id)</span></h3>
+<h3 class="signature"><span class="owner">Bolt:</span>remove_ban<span class="params">(steam_id)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#remove_ban" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua#L330" title="View source">plugins/admin/plugin/lib/sh_admin.lua:330</a>
+<span class="source-link">plugins/admin/plugin/lib/sh_admin.lua:330</span>
 </div>
 <section class="docstring">
 <p>Deletes the ban record of a SteamID from the database.</p>
@@ -734,11 +757,11 @@ the staff / admin / super admin compatibility levels.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/cl_hooks.lua" title="View source">plugins/admin/plugin/cl_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/sh_admin.lua" title="View source">plugins/admin/plugin/lib/sh_admin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sh_plugin.lua" title="View source">plugins/admin/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_hooks.lua" title="View source">plugins/admin/plugin/sv_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/sv_plugin.lua" title="View source">plugins/admin/plugin/sv_plugin.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#ActiveRecordReady">ActiveRecordReady</a></li><li><a href="#add_ban">add_ban</a></li><li><a href="#add_permission">add_permission</a></li><li><a href="#AddAdminMenuItems">AddAdminMenuItems</a></li><li><a href="#AddTabMenuItems">AddTabMenuItems</a></li><li><a href="#allow_children">allow_children</a></li><li><a href="#ban">ban</a></li><li><a href="#can">can</a></li><li><a href="#CanTool">CanTool</a></li><li><a href="#ChatboxGetPlayerIcon">ChatboxGetPlayerIcon</a></li><li><a href="#check_immunity">check_immunity</a></li><li><a href="#CheckPassword">CheckPassword</a></li><li><a href="#CommandCheckImmunity">CommandCheckImmunity</a></li><li><a href="#create_role">create_role</a></li><li><a href="#delete_temp_permission">delete_temp_permission</a></li><li><a href="#find_group">find_group</a></li><li><a href="#get_all_permissions">get_all_permissions</a></li><li><a href="#get_bans">get_bans</a></li><li><a href="#get_permissions">get_permissions</a></li><li><a href="#get_players">get_players</a></li><li><a href="#get_roles">get_roles</a></li><li><a href="#get_staff">get_staff</a></li><li><a href="#group_exists">group_exists</a></li><li><a href="#HUDPaint">HUDPaint</a></li><li><a href="#include_roles">include_roles</a></li><li><a href="#interpret_ban_time">interpret_ban_time</a></li><li><a href="#OnCommandCreated">OnCommandCreated</a></li><li><a href="#OnPluginLoaded">OnPluginLoaded</a></li><li><a href="#OnPluginsLoaded">OnPluginsLoaded</a></li><li><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li><a href="#permission_from_command">permission_from_command</a></li><li><a href="#PlayerCanHearPlayersVoice">PlayerCanHearPlayersVoice</a></li><li><a href="#PlayerCreated">PlayerCreated</a></li><li><a href="#PlayerHasPermission">PlayerHasPermission</a></li><li><a href="#PlayerInitialSpawn">PlayerInitialSpawn</a></li><li><a href="#PlayerIsRoot">PlayerIsRoot</a></li><li><a href="#PlayerOneMinute">PlayerOneMinute</a></li><li><a href="#PlayerPermissionChanged">PlayerPermissionChanged</a></li><li><a href="#PlayerRestored">PlayerRestored</a></li><li><a href="#PlayerStartVoice">PlayerStartVoice</a></li><li><a href="#PlayerUserGroupChanged">PlayerUserGroupChanged</a></li><li><a href="#PluginIncludeFolder">PluginIncludeFolder</a></li><li><a href="#PostRender">PostRender</a></li><li><a href="#PreDrawHUD">PreDrawHUD</a></li><li><a href="#record_ban">record_ban</a></li><li><a href="#register_permission">register_permission</a></li><li><a href="#RegisterConditions">RegisterConditions</a></li><li><a href="#RegisterPermissions">RegisterPermissions</a></li><li><a href="#remove_ban">remove_ban</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/admin/plugin/cl_hooks.lua</span></li><li><span class="source-link">plugins/admin/plugin/lib/sh_admin.lua</span></li><li><span class="source-link">plugins/admin/plugin/sh_plugin.lua</span></li><li><span class="source-link">plugins/admin/plugin/sv_hooks.lua</span></li><li><span class="source-link">plugins/admin/plugin/sv_plugin.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="server"><a href="#ActiveRecordReady">ActiveRecordReady</a></li><li data-realm="client"><a href="#AddAdminMenuItems">AddAdminMenuItems</a></li><li data-realm="client"><a href="#AddTabMenuItems">AddTabMenuItems</a></li><li data-realm="server"><a href="#CanTool">CanTool</a></li><li data-realm="server"><a href="#ChatboxGetPlayerIcon">ChatboxGetPlayerIcon</a></li><li data-realm="server"><a href="#CheckPassword">CheckPassword</a></li><li data-realm="server"><a href="#CommandCheckImmunity">CommandCheckImmunity</a></li><li data-realm="client"><a href="#HUDPaint">HUDPaint</a></li><li data-realm="shared"><a href="#OnCommandCreated">OnCommandCreated</a></li><li data-realm="shared"><a href="#OnPluginLoaded">OnPluginLoaded</a></li><li data-realm="shared"><a href="#OnPluginsLoaded">OnPluginsLoaded</a></li><li data-realm="client"><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li data-realm="server"><a href="#PlayerCanHearPlayersVoice">PlayerCanHearPlayersVoice</a></li><li data-realm="server"><a href="#PlayerCreated">PlayerCreated</a></li><li data-realm="shared"><a href="#PlayerHasPermission">PlayerHasPermission</a></li><li data-realm="server"><a href="#PlayerInitialSpawn">PlayerInitialSpawn</a></li><li data-realm="shared"><a href="#PlayerIsRoot">PlayerIsRoot</a></li><li data-realm="server"><a href="#PlayerOneMinute">PlayerOneMinute</a></li><li data-realm="server"><a href="#PlayerPermissionChanged">PlayerPermissionChanged</a></li><li data-realm="server"><a href="#PlayerRestored">PlayerRestored</a></li><li data-realm="client"><a href="#PlayerStartVoice">PlayerStartVoice</a></li><li data-realm="server"><a href="#PlayerUserGroupChanged">PlayerUserGroupChanged</a></li><li data-realm="shared"><a href="#PluginIncludeFolder">PluginIncludeFolder</a></li><li data-realm="client"><a href="#PostRender">PostRender</a></li><li data-realm="client"><a href="#PreDrawHUD">PreDrawHUD</a></li><li data-realm="shared"><a href="#RegisterConditions">RegisterConditions</a></li><li data-realm="shared"><a href="#RegisterPermissions">RegisterPermissions</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#add_ban">add_ban</a></li><li data-realm="shared"><a href="#add_permission">add_permission</a></li><li data-realm="shared"><a href="#allow_children">allow_children</a></li><li data-realm="server"><a href="#ban">ban</a></li><li data-realm="shared"><a href="#can">can</a></li><li data-realm="shared"><a href="#check_immunity">check_immunity</a></li><li data-realm="shared"><a href="#create_role">create_role</a></li><li data-realm="server"><a href="#delete_temp_permission">delete_temp_permission</a></li><li data-realm="shared"><a href="#find_group">find_group</a></li><li data-realm="shared"><a href="#get_all_permissions">get_all_permissions</a></li><li data-realm="shared"><a href="#get_bans">get_bans</a></li><li data-realm="shared"><a href="#get_permissions">get_permissions</a></li><li data-realm="shared"><a href="#get_players">get_players</a></li><li data-realm="shared"><a href="#get_roles">get_roles</a></li><li data-realm="server"><a href="#get_staff">get_staff</a></li><li data-realm="shared"><a href="#group_exists">group_exists</a></li><li data-realm="shared"><a href="#include_roles">include_roles</a></li><li data-realm="shared"><a href="#interpret_ban_time">interpret_ban_time</a></li><li data-realm="shared"><a href="#permission_from_command">permission_from_command</a></li><li data-realm="server"><a href="#record_ban">record_ban</a></li><li data-realm="shared"><a href="#register_permission">register_permission</a></li><li data-realm="server"><a href="#remove_ban">remove_ban</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

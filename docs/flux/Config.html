@@ -31,28 +31,27 @@
 <div class="page-header"><h1>Config <span class="badge badge-library">library</span></h1></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_to_menu">add_to_menu(category, key, name, description, data_type, data)</a></div><div class="summary-synopsis">Adds a config to a category of the config menu. Clientside only. Does nothing if category or key is nil.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a></div><div class="summary-synopsis">Returns the table of all stored configs.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cache">cache()</a></div><div class="summary-synopsis">Returns the value cache that Config.get reads from.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_category">create_category(id, name, description)</a></div><div class="summary-synopsis">Creates a category for the config menu, or returns the existing one with that ID. Clientside only. The returned table has the fields category (name and description), configs, and helper functions that add a config to this category: add_key, add_slider, add_table_editor, add_textbox, add_checkbox and add_dropdown. The helpers are called with a dot and take the same arguments as Config.add_to_menu without the category (and, except for add_key, without the data type).</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a></div><div class="summary-synopsis">Returns the stored data table of a config rather than just its value.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get">get(key, default)</a></div><div class="summary-synopsis">Returns the value of a config. The result is cached, and that includes the default when the config has no value.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_category">get_category(id)</a></div><div class="summary-synopsis">Returns a config menu category. Clientside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_menu_keys">get_menu_keys()</a></div><div class="summary-synopsis">Returns all config menu categories together with their configs. Clientside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#import">import(path, from_config)</a></div><div class="summary-synopsis">Imports config values from a YAML file or from a table and sets every one of them. Serverside only. The 'depends' key is skipped, and so is every key for which the ShouldConfigImport hook returns a non-nil value.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#load">load()</a></div><div class="summary-synopsis">Loads the saved configs from the 'config' data file and puts them over the stored ones. Serverside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#read">read(path, from_config)</a></div><div class="summary-synopsis">Reads config definitions (categories and configs) from a YAML file or from a table. On the server every config is set to its default_value and its definition is stored. On the client the categories and configs are added to the config menu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#save">save()</a></div><div class="summary-synopsis">Writes all stored configs to the 'config' data file. Serverside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set">set(key, value, hidden, from_config)</a></div><div class="summary-synopsis">Sets the value of a config, creating the config if it does not exist yet. Serverside variant: runs the OnConfigSet hook and sends the new value to all players unless the config is hidden. Does nothing if key is nil.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set-2">set(key, value)</a></div><div class="summary-synopsis">Sets the value of a config, creating the config if it does not exist yet. Clientside variant: runs the OnConfigSet hook and changes the local copy only, nothing is sent to the server. Does nothing if key is nil.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_to_menu">add_to_menu(category, key, name, description, data_type, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds a config to a category of the config menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the table of all stored configs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cache">cache()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the value cache that Config.get reads from.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_category">create_category(id, name, description)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates a category for the config menu, or returns the existing one with that ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the stored data table of a config rather than just its value.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get">get(key, default)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the value of a config.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_category">get_category(id)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns a config menu category.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_menu_keys">get_menu_keys()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns all config menu categories together with their configs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#import">import(path, from_config)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Imports config values from a YAML file or from a table and sets every one of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load">load()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Loads the saved configs from the 'config' data file and puts them over the stored ones.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#read">read(path, from_config)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Reads config definitions (categories and configs) from a YAML file or from a table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#save">save()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Writes all stored configs to the 'config' data file.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set">set(key, value, hidden, from_config)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the value of a config, creating the config if it does not exist yet.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="add_to_menu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>add_to_menu<span class="params">(category, key, name, description, data_type, data)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>add_to_menu<span class="params">(category, key, name, description, data_type, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#add_to_menu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L198" title="View source">lib/config.lua:198</a>
+<span class="source-link">lib/config.lua:198</span>
 </div>
 <section class="docstring">
 <p>Adds a config to a category of the config menu. Clientside only.
@@ -63,9 +62,9 @@ Does nothing if category or key is nil.</p>
 </section>
 <section class="detail" id="all">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>all<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>all<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#all" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L13" title="View source">lib/config.lua:13</a>
+<span class="source-link">lib/config.lua:13</span>
 </div>
 <section class="docstring">
 <p>Returns the table of all stored configs.</p>
@@ -75,9 +74,9 @@ Does nothing if category or key is nil.</p>
 </section>
 <section class="detail" id="cache">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>cache<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>cache<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#cache" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L19" title="View source">lib/config.lua:19</a>
+<span class="source-link">lib/config.lua:19</span>
 </div>
 <section class="docstring">
 <p>Returns the value cache that Config.get reads from.</p>
@@ -87,9 +86,9 @@ Does nothing if category or key is nil.</p>
 </section>
 <section class="detail" id="create_category">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>create_category<span class="params">(id, name, description)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>create_category<span class="params">(id, name, description)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#create_category" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L149" title="View source">lib/config.lua:149</a>
+<span class="source-link">lib/config.lua:149</span>
 </div>
 <section class="docstring">
 <p>Creates a category for the config menu, or returns the existing one with that ID.
@@ -114,9 +113,9 @@ category.<span class="hl-f">add_slider</span>(<span class="hl-s">&#39;walk_speed
 </section>
 <section class="detail" id="find">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>find<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>find<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L26" title="View source">lib/config.lua:26</a>
+<span class="source-link">lib/config.lua:26</span>
 </div>
 <section class="docstring">
 <p>Returns the stored data table of a config rather than just its value.</p>
@@ -128,9 +127,9 @@ category.<span class="hl-f">add_slider</span>(<span class="hl-s">&#39;walk_speed
 </section>
 <section class="detail" id="get">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>get<span class="params">(key, default)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>get<span class="params">(key, default)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L234" title="View source">lib/config.lua:234</a>
+<span class="source-link">lib/config.lua:234</span>
 </div>
 <section class="docstring">
 <p>Returns the value of a config.
@@ -143,9 +142,9 @@ The result is cached, and that includes the default when the config has no value
 </section>
 <section class="detail" id="get_category">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>get_category<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>get_category<span class="params">(id)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_category" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L183" title="View source">lib/config.lua:183</a>
+<span class="source-link">lib/config.lua:183</span>
 </div>
 <section class="docstring">
 <p>Returns a config menu category. Clientside only.</p>
@@ -157,9 +156,9 @@ The result is cached, and that includes the default when the config has no value
 </section>
 <section class="detail" id="get_menu_keys">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>get_menu_keys<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>get_menu_keys<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_menu_keys" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L216" title="View source">lib/config.lua:216</a>
+<span class="source-link">lib/config.lua:216</span>
 </div>
 <section class="docstring">
 <p>Returns all config menu categories together with their configs. Clientside only.</p>
@@ -169,9 +168,9 @@ The result is cached, and that includes the default when the config has no value
 </section>
 <section class="detail" id="import">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>import<span class="params">(path, from_config)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>import<span class="params">(path, from_config)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#import" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L260" title="View source">lib/config.lua:260</a>
+<span class="source-link">lib/config.lua:260</span>
 </div>
 <section class="docstring">
 <p>Imports config values from a YAML file or from a table and sets every one of them.
@@ -185,9 +184,9 @@ ShouldConfigImport hook returns a non-nil value.</p>
 </section>
 <section class="detail" id="load">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>load<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>load<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#load" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L34" title="View source">lib/config.lua:34</a>
+<span class="source-link">lib/config.lua:34</span>
 </div>
 <section class="docstring">
 <p>Loads the saved configs from the 'config' data file and puts them over the stored ones.
@@ -198,9 +197,9 @@ Serverside only.</p>
 </section>
 <section class="detail" id="read">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>read<span class="params">(path, from_config)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>read<span class="params">(path, from_config)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#read" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L315" title="View source">lib/config.lua:315</a>
+<span class="source-link">lib/config.lua:315</span>
 </div>
 <section class="docstring">
 <p>Reads config definitions (categories and configs) from a YAML file or from a table.
@@ -233,9 +232,9 @@ Config.<span class="hl-f">read</span>({
 </section>
 <section class="detail" id="save">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>save<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>save<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#save" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L46" title="View source">lib/config.lua:46</a>
+<span class="source-link">lib/config.lua:46</span>
 </div>
 <section class="docstring">
 <p>Writes all stored configs to the 'config' data file. Serverside only.</p>
@@ -243,38 +242,35 @@ Config.<span class="hl-f">read</span>({
 </section>
 <section class="detail" id="set">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>set<span class="params">(key, value, hidden, from_config)</span></h3>
+<h3 class="signature"><span class="owner">Config.</span>set<span class="params">(key, value, hidden, from_config)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L59" title="View source">lib/config.lua:59</a>
+<span class="source-link">lib/config.lua:59</span>
 </div>
 <section class="docstring">
+<div class="realm-doc realm-doc-server"><p class="realm-doc-title">On the server</p>
 <p>Sets the value of a config, creating the config if it does not exist yet.
 Serverside variant: runs the OnConfigSet hook and sends the new value to all players
 unless the config is hidden. Does nothing if key is nil.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">config key</span></li><li><span class="param-name">value</span> <span class="type">Any</span> <span class="desc">new value</span></li><li><span class="param-name">hidden</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">true to never send this config to clients; nil keeps the current setting</span></li><li><span class="param-name">from_config</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN; only used to label where a newly created config came from</span></li></ul>
-</section>
-</section>
-<section class="detail" id="set-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Config.</span>set<span class="params">(key, value)</span></h3>
-<a href="#set-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua#L120" title="View source">lib/config.lua:120</a>
 </div>
-<section class="docstring">
+<div class="realm-doc realm-doc-client"><p class="realm-doc-title">On the client</p>
 <p>Sets the value of a config, creating the config if it does not exist yet.
 Clientside variant: runs the OnConfigSet hook and changes the local copy only, nothing is
 sent to the server. Does nothing if key is nil.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">config key</span></li><li><span class="param-name">value</span> <span class="type">Any</span> <span class="desc">new value</span></li></ul>
+</div>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">lib/config.lua:59</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">lib/config.lua:120</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/config.lua" title="View source">lib/config.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_to_menu">add_to_menu</a></li><li><a href="#all">all</a></li><li><a href="#cache">cache</a></li><li><a href="#create_category">create_category</a></li><li><a href="#find">find</a></li><li><a href="#get">get</a></li><li><a href="#get_category">get_category</a></li><li><a href="#get_menu_keys">get_menu_keys</a></li><li><a href="#import">import</a></li><li><a href="#load">load</a></li><li><a href="#read">read</a></li><li><a href="#save">save</a></li><li><a href="#set">set</a></li><li><a href="#set-2">set</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/config.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="client"><a href="#add_to_menu">add_to_menu</a></li><li data-realm="shared"><a href="#all">all</a></li><li data-realm="shared"><a href="#cache">cache</a></li><li data-realm="client"><a href="#create_category">create_category</a></li><li data-realm="shared"><a href="#find">find</a></li><li data-realm="shared"><a href="#get">get</a></li><li data-realm="client"><a href="#get_category">get_category</a></li><li data-realm="client"><a href="#get_menu_keys">get_menu_keys</a></li><li data-realm="server"><a href="#import">import</a></li><li data-realm="server"><a href="#load">load</a></li><li data-realm="shared"><a href="#read">read</a></li><li data-realm="server"><a href="#save">save</a></li><li data-realm="shared"><a href="#set">set</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

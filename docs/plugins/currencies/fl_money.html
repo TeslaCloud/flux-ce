@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="fdoc">
-<title>fl_money — Flux v0.8.1</title>
+<title>Money — Flux v0.8.1</title>
 <link rel="stylesheet" href="../../assets/style.css">
 <script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
@@ -28,25 +28,25 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>fl_money <span class="badge badge-object">object</span></h1><p class="subtitle">ENT</p><p class="subtitle">Part of <a href="../../plugins/currencies/index.html">currencies</a></p></div>
+<div class="page-header"><h1>Money <span class="badge badge-object">object</span></h1><p class="subtitle">Object ENT in plugin/entities/entities/fl_money.lua</p><p class="subtitle">Part of <a href="../../plugins/currencies/index.html">Currencies</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#Draw">Draw()</a></div><div class="summary-synopsis">Draws the entity's model.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawTargetID">DrawTargetID(x, y, distance)</a></div><div class="summary-synopsis">Draws the currency name and amount when the local player looks at the entity, fading out with distance.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_currency">get_currency()</a></div><div class="summary-synopsis">Returns the currency this money entity holds.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_currency_amount">get_currency_amount()</a></div><div class="summary-synopsis">Returns how much money this entity holds.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Initialize">Initialize()</a></div><div class="summary-synopsis">Sets up physics, use type and collision group, and wakes the physics object.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_currency">set_currency(value)</a></div><div class="summary-synopsis">Sets the currency this money entity holds. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_currency_amount">set_currency_amount(value)</a></div><div class="summary-synopsis">Sets how much money this entity holds. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Use">Use(activator, caller, use_type, value)</a></div><div class="summary-synopsis">Lets the activator pick the money up: runs PlayerPickupMoney and removes the entity unless a CanPlayerPickupMoney hook returns false.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Draw">Draw()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the entity's model.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawTargetID">DrawTargetID(x, y, distance)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the currency name and amount when the local player looks at the entity, fading out with distance.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_currency">get_currency()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the currency this money entity holds.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_currency_amount">get_currency_amount()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns how much money this entity holds.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Initialize">Initialize()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets up physics, use type and collision group, and wakes the physics object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_currency">set_currency(value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the currency this money entity holds.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_currency_amount">set_currency_amount(value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets how much money this entity holds.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Use">Use(activator, caller, use_type, value)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Lets the activator pick the money up: runs PlayerPickupMoney and removes the entity unless a CanPlayerPickupMoney hook returns false.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="Draw">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>Draw<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>Draw<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#Draw" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L67" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:67</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:67</span>
 </div>
 <section class="docstring">
 <p>Draws the entity's model.</p>
@@ -54,9 +54,9 @@
 </section>
 <section class="detail" id="DrawTargetID">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>DrawTargetID<span class="params">(x, y, distance)</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>DrawTargetID<span class="params">(x, y, distance)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawTargetID" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L76" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:76</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:76</span>
 </div>
 <section class="docstring">
 <p>Draws the currency name and amount when the local player looks at the entity, fading
@@ -67,9 +67,9 @@ out with distance.</p>
 </section>
 <section class="detail" id="get_currency">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>get_currency<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>get_currency<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_currency" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L11" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:11</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:11</span>
 </div>
 <section class="docstring">
 <p>Returns the currency this money entity holds.</p>
@@ -79,9 +79,9 @@ out with distance.</p>
 </section>
 <section class="detail" id="get_currency_amount">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>get_currency_amount<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>get_currency_amount<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_currency_amount" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L17" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:17</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:17</span>
 </div>
 <section class="docstring">
 <p>Returns how much money this entity holds.</p>
@@ -91,9 +91,9 @@ out with distance.</p>
 </section>
 <section class="detail" id="Initialize">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>Initialize<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>Initialize<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#Initialize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L35" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:35</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:35</span>
 </div>
 <section class="docstring">
 <p>Sets up physics, use type and collision group, and wakes the physics object.</p>
@@ -101,9 +101,9 @@ out with distance.</p>
 </section>
 <section class="detail" id="set_currency">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>set_currency<span class="params">(value)</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>set_currency<span class="params">(value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_currency" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L23" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:23</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:23</span>
 </div>
 <section class="docstring">
 <p>Sets the currency this money entity holds. Server only.</p>
@@ -113,9 +113,9 @@ out with distance.</p>
 </section>
 <section class="detail" id="set_currency_amount">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>set_currency_amount<span class="params">(value)</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>set_currency_amount<span class="params">(value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_currency_amount" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L29" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:29</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:29</span>
 </div>
 <section class="docstring">
 <p>Sets how much money this entity holds. Server only.</p>
@@ -125,9 +125,9 @@ out with distance.</p>
 </section>
 <section class="detail" id="Use">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ENT:</span>Use<span class="params">(activator, caller, use_type, value)</span></h3>
+<h3 class="signature"><span class="owner">ENT:</span>Use<span class="params">(activator, caller, use_type, value)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#Use" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua#L56" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua:56</a>
+<span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua:56</span>
 </div>
 <section class="docstring">
 <p>Lets the activator pick the money up: runs PlayerPickupMoney and removes the entity
@@ -137,11 +137,11 @@ unless a CanPlayerPickupMoney hook returns false.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/entities/entities/fl_money.lua" title="View source">plugins/currencies/plugin/entities/entities/fl_money.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#Draw">Draw</a></li><li><a href="#DrawTargetID">DrawTargetID</a></li><li><a href="#get_currency">get_currency</a></li><li><a href="#get_currency_amount">get_currency_amount</a></li><li><a href="#Initialize">Initialize</a></li><li><a href="#set_currency">set_currency</a></li><li><a href="#set_currency_amount">set_currency_amount</a></li><li><a href="#Use">Use</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/currencies/plugin/entities/entities/fl_money.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#Draw">Draw</a></li><li data-realm="client"><a href="#DrawTargetID">DrawTargetID</a></li><li data-realm="shared"><a href="#get_currency">get_currency</a></li><li data-realm="shared"><a href="#get_currency_amount">get_currency_amount</a></li><li data-realm="server"><a href="#Initialize">Initialize</a></li><li data-realm="shared"><a href="#set_currency">set_currency</a></li><li data-realm="shared"><a href="#set_currency_amount">set_currency_amount</a></li><li data-realm="server"><a href="#Use">Use</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

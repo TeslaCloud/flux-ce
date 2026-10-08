@@ -29,22 +29,28 @@
 </div>
 <div class="content-inner" id="content-inner">
 <div class="page-header"><h1>Pipeline <span class="badge badge-library">library</span></h1></div>
+<section class="moduledoc">
+<p>The Pipeline library lets you create systems that register their stuff via folders.
+It automatically does the boring stuff like converting filenames for you,
+requiring you to write the real thing only.
+Check out the sh_item and sh_admin libraries for examples.</p>
+</section>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#abort">abort()</a></div><div class="summary-synopsis">Aborts the current pipeline action. To be handled by callbacks individually.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a></div><div class="summary-synopsis">Find a pipeline with a specified ID. Case-sensitive.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include">include(pipe, file_name)</a></div><div class="summary-synopsis">Include a filename using a specified pipeline. This automatically resolves server/client/shared realms, and automatically extracts the ID based on the filename (for example, &quot;sh_test_file.lua&quot; becomes &quot;test_file&quot; in the ID). After that if the pipe is a valid registered pipeline, the callback is called.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_folder">include_folder(id, directory)</a></div><div class="summary-synopsis">Include all files in a folder using a specific pipeline. See documentation for <a href="../flux/Pipeline.html#include"><code>Pipeline.include</code></a>.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_aborted">is_aborted()</a></div><div class="summary-synopsis">Checks if the current pipeline has been aborted.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register(id, callback)</a></div><div class="summary-synopsis">Registers a new pipeline with the specified ID and callback. The callback is called for every file included through the pipeline. It receives the ID extracted from the file name, the path of the file and the pipeline's data table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#abort">abort()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Aborts the current pipeline action.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Find a pipeline with a specified ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include">include(pipe, file_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Include a filename using a specified pipeline.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_folder">include_folder(id, directory)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Include all files in a folder using a specific pipeline.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_aborted">is_aborted()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks if the current pipeline has been aborted.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register(id, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a new pipeline with the specified ID and callback.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="abort">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Pipeline.</span>abort<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Pipeline.</span>abort<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#abort" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/pipeline.lua#L43" title="View source">lib/pipeline.lua:43</a>
+<span class="source-link">lib/pipeline.lua:43</span>
 </div>
 <section class="docstring">
 <p>Aborts the current pipeline action. To be handled by callbacks individually.</p>
@@ -52,9 +58,9 @@
 </section>
 <section class="detail" id="find">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Pipeline.</span>find<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Pipeline.</span>find<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/pipeline.lua#L38" title="View source">lib/pipeline.lua:38</a>
+<span class="source-link">lib/pipeline.lua:38</span>
 </div>
 <section class="docstring">
 <p>Find a pipeline with a specified ID. Case-sensitive.</p>
@@ -66,9 +72,9 @@
 </section>
 <section class="detail" id="include">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Pipeline.</span>include<span class="params">(pipe, file_name)</span></h3>
+<h3 class="signature"><span class="owner">Pipeline.</span>include<span class="params">(pipe, file_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/pipeline.lua#L67" title="View source">lib/pipeline.lua:67</a>
+<span class="source-link">lib/pipeline.lua:67</span>
 </div>
 <section class="docstring">
 <p>Include a filename using a specified pipeline.
@@ -82,9 +88,9 @@ After that if the pipe is a valid registered pipeline, the callback is called.</
 </section>
 <section class="detail" id="include_folder">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Pipeline.</span>include_folder<span class="params">(id, directory)</span></h3>
+<h3 class="signature"><span class="owner">Pipeline.</span>include_folder<span class="params">(id, directory)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_folder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/pipeline.lua#L97" title="View source">lib/pipeline.lua:97</a>
+<span class="source-link">lib/pipeline.lua:97</span>
 </div>
 <section class="docstring">
 <p>Include all files in a folder using a specific pipeline.
@@ -95,9 +101,9 @@ See documentation for <a href="../flux/Pipeline.html#include"><code>Pipeline.inc
 </section>
 <section class="detail" id="is_aborted">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Pipeline.</span>is_aborted<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Pipeline.</span>is_aborted<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_aborted" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/pipeline.lua#L49" title="View source">lib/pipeline.lua:49</a>
+<span class="source-link">lib/pipeline.lua:49</span>
 </div>
 <section class="docstring">
 <p>Checks if the current pipeline has been aborted.</p>
@@ -107,9 +113,9 @@ See documentation for <a href="../flux/Pipeline.html#include"><code>Pipeline.inc
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Pipeline.</span>register<span class="params">(id, callback)</span></h3>
+<h3 class="signature"><span class="owner">Pipeline.</span>register<span class="params">(id, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/pipeline.lua#L28" title="View source">lib/pipeline.lua:28</a>
+<span class="source-link">lib/pipeline.lua:28</span>
 </div>
 <section class="docstring">
 <p>Registers a new pipeline with the specified ID and callback.
@@ -130,11 +136,11 @@ extracted from the file name, the path of the file and the pipeline's data table
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/pipeline.lua" title="View source">lib/pipeline.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#abort">abort</a></li><li><a href="#find">find</a></li><li><a href="#include">include</a></li><li><a href="#include_folder">include_folder</a></li><li><a href="#is_aborted">is_aborted</a></li><li><a href="#register">register</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/pipeline.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#abort">abort</a></li><li data-realm="shared"><a href="#find">find</a></li><li data-realm="shared"><a href="#include">include</a></li><li data-realm="shared"><a href="#include_folder">include_folder</a></li><li data-realm="shared"><a href="#is_aborted">is_aborted</a></li><li data-realm="shared"><a href="#register">register</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

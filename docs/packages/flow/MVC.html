@@ -31,20 +31,19 @@
 <div class="page-header"><h1>MVC <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#handler">handler(name, handler)</a></div><div class="summary-synopsis">Registers a function that handles the requests clients send with MVC.push or MVC.request. Call respond_to inside the handler to send a response back. Serverside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#listen">listen(name, handler)</a></div><div class="summary-synopsis">Registers a permanent callback for the data that the server pushes under the specified name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#pull">pull(name, handler, prevent_remove)</a></div><div class="summary-synopsis">Registers a callback for the data that the server pushes under the specified name. The callback is removed after the first response unless prevent_remove is set.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#push">push(name, ...)</a></div><div class="summary-synopsis">Sends a request to the server, where it is passed to the handlers registered with MVC.handler. Clientside variant.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#push-2">push(target, name, ...)</a></div><div class="summary-synopsis">Sends data to the callbacks the clients have registered with MVC.pull, MVC.request or MVC.listen. Serverside variant.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#request">request(name, handler, ...)</a></div><div class="summary-synopsis">Sends a request to the server and calls the handler once the server responds to it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#handler">handler(name, handler)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Registers a function that handles the requests clients send with MVC.push or MVC.request.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#listen">listen(name, handler)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers a permanent callback for the data that the server pushes under the specified name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#pull">pull(name, handler, prevent_remove)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers a callback for the data that the server pushes under the specified name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#push">push(target, name, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sends data to the callbacks the clients have registered with MVC.pull, MVC.request or MVC.listen.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#request">request(name, handler, ...)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sends a request to the server and calls the handler once the server responds to it.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="handler">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">MVC.</span>handler<span class="params">(name, handler)</span></h3>
+<h3 class="signature"><span class="owner">MVC.</span>handler<span class="params">(name, handler)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#handler" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua#L94" title="View source">packages/flow/lib/sh_mvc.lua:94</a>
+<span class="source-link">packages/flow/lib/sh_mvc.lua:94</span>
 </div>
 <section class="docstring">
 <p>Registers a function that handles the requests clients send with MVC.push or MVC.request.
@@ -61,9 +60,9 @@ Call respond_to inside the handler to send a response back. Serverside only.</p>
 </section>
 <section class="detail" id="listen">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">MVC.</span>listen<span class="params">(name, handler)</span></h3>
+<h3 class="signature"><span class="owner">MVC.</span>listen<span class="params">(name, handler)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#listen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua#L56" title="View source">packages/flow/lib/sh_mvc.lua:56</a>
+<span class="source-link">packages/flow/lib/sh_mvc.lua:56</span>
 </div>
 <section class="docstring">
 <p>Registers a permanent callback for the data that the server pushes under the specified name.</p>
@@ -73,9 +72,9 @@ Call respond_to inside the handler to send a response back. Serverside only.</p>
 </section>
 <section class="detail" id="pull">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">MVC.</span>pull<span class="params">(name, handler, prevent_remove)</span></h3>
+<h3 class="signature"><span class="owner">MVC.</span>pull<span class="params">(name, handler, prevent_remove)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#pull" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua#L26" title="View source">packages/flow/lib/sh_mvc.lua:26</a>
+<span class="source-link">packages/flow/lib/sh_mvc.lua:26</span>
 </div>
 <section class="docstring">
 <p>Registers a callback for the data that the server pushes under the specified name.
@@ -86,37 +85,34 @@ The callback is removed after the first response unless prevent_remove is set.</
 </section>
 <section class="detail" id="push">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">MVC.</span>push<span class="params">(name, ...)</span></h3>
+<h3 class="signature"><span class="owner">MVC.</span>push<span class="params">(target, name, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#push" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua#L15" title="View source">packages/flow/lib/sh_mvc.lua:15</a>
+<span class="source-link">packages/flow/lib/sh_mvc.lua:107</span>
 </div>
 <section class="docstring">
+<div class="realm-doc realm-doc-server"><p class="realm-doc-title">On the server</p>
+<p>Sends data to the callbacks the clients have registered with MVC.pull, MVC.request
+or MVC.listen. Serverside variant.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player/List&lt;Player&gt;</span> <span class="desc">recipients, everyone if not a valid player</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">name of the request</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">data to pass to the callbacks</span></li></ul>
+</div>
+<div class="realm-doc realm-doc-client"><p class="realm-doc-title">On the client</p>
 <p>Sends a request to the server, where it is passed to the handlers registered with
 MVC.handler. Clientside variant.</p>
 <pre><code class="language-lua">MVC.<span class="hl-f">push</span>(<span class="hl-s">&#39;SpawnMenu::GiveItem&#39;</span>, PLAYER, item_obj.id, <span class="hl-n">1</span>)
 </code></pre>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">name of the request</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">data to pass to the handlers</span></li></ul>
-</section>
-</section>
-<section class="detail" id="push-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">MVC.</span>push<span class="params">(target, name, ...)</span></h3>
-<a href="#push-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua#L107" title="View source">packages/flow/lib/sh_mvc.lua:107</a>
 </div>
-<section class="docstring">
-<p>Sends data to the callbacks the clients have registered with MVC.pull, MVC.request
-or MVC.listen. Serverside variant.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">target</span> <span class="type">Player/List&lt;Player&gt;</span> <span class="desc">recipients, everyone if not a valid player</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">name of the request</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">data to pass to the callbacks</span></li></ul>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_mvc.lua:107</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">packages/flow/lib/sh_mvc.lua:15</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
 </section>
 </section>
 <section class="detail" id="request">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">MVC.</span>request<span class="params">(name, handler, ...)</span></h3>
+<h3 class="signature"><span class="owner">MVC.</span>request<span class="params">(name, handler, ...)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#request" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua#L48" title="View source">packages/flow/lib/sh_mvc.lua:48</a>
+<span class="source-link">packages/flow/lib/sh_mvc.lua:48</span>
 </div>
 <section class="docstring">
 <p>Sends a request to the server and calls the handler once the server responds to it.</p>
@@ -131,11 +127,11 @@ or MVC.listen. Serverside variant.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_mvc.lua" title="View source">packages/flow/lib/sh_mvc.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#handler">handler</a></li><li><a href="#listen">listen</a></li><li><a href="#pull">pull</a></li><li><a href="#push">push</a></li><li><a href="#push-2">push</a></li><li><a href="#request">request</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/sh_mvc.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="server"><a href="#handler">handler</a></li><li data-realm="client"><a href="#listen">listen</a></li><li data-realm="client"><a href="#pull">pull</a></li><li data-realm="shared"><a href="#push">push</a></li><li data-realm="client"><a href="#request">request</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

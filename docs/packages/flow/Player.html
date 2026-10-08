@@ -31,47 +31,47 @@
 <div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#can">can(action, object)</a></div><div class="summary-synopsis">Checks whether the player has a permission. The decision is made by the 'PlayerHasPermission' hook, which admin plugins implement.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#do_action">do_action(id)</a></div><div class="summary-synopsis">Runs the callback of an action registered with Flux.register_action.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find_best_position">find_best_position(margin, filter)</a></div><div class="summary-synopsis">Looks for unobstructed spots around the player that the player can be moved to.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#freeze_gun">freeze_gun()</a></div><div class="summary-synopsis">Stops the player from firing their active weapon for an hour and freezes the weapon.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#freeze_move">freeze_move()</a></div><div class="summary-synopsis">Stops the player from moving by setting their move type to MOVETYPE_NONE.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_action">get_action()</a></div><div class="summary-synopsis">Returns the action the player is currently doing.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_ammo_table">get_ammo_table()</a></div><div class="summary-synopsis">Returns the ammo the player has.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_data">get_data()</a></div><div class="summary-synopsis">Returns the networked data table of the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_player_data">get_player_data(key, default)</a></div><div class="summary-synopsis">Returns a value from the networked data table of the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_weapons_list">get_weapons_list()</a></div><div class="summary-synopsis">Returns the classes of all of the weapons the player has.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#give_weapons">give_weapons(weapons_table, no_ammo)</a></div><div class="summary-synopsis">Gives several weapons to the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_initialized">has_initialized()</a></div><div class="summary-synopsis">Checks whether the player has finished loading in and has been initialized by Flux.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_doing_action">is_doing_action(id)</a></div><div class="summary-synopsis">Checks whether the player is currently doing the specified action.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_root">is_root()</a></div><div class="summary-synopsis">Checks whether the player has root access, that is can do anything. The decision is made by the 'PlayerIsRoot' hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Name">Name(force_true_name)</a></div><div class="summary-synopsis">Returns the name of the player. Overrides the engine function, so that plugins can provide their own names (e.g. character names) with the 'GetPlayerName' hook. Also available as Player#name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#notify">notify(message, arguments, color)</a></div><div class="summary-synopsis">Displays a notification to the local player, both as a popup and in the chat. Clientside variant.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#notify-2">notify(message, arguments, color)</a></div><div class="summary-synopsis">Sends a notification to the player. Serverside variant.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#notify_admin">notify_admin(message, arguments)</a></div><div class="summary-synopsis">Sends a light red notification to the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#reset_action">reset_action()</a></div><div class="summary-synopsis">Resets the action of the player to 'none'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#restore_player">restore_player()</a></div><div class="summary-synopsis">Loads the database record of the player by their SteamID, creating and saving a new one if they have joined for the first time. The query is asynchronous: the record is put into self.record and the 'PlayerRestored' hook is run once it has loaded. Bots get a blank record that is never saved here.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#running">running()</a></div><div class="summary-synopsis">Checks whether the player is alive and moving on foot faster than the walk speed.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#save_player">save_player()</a></div><div class="summary-synopsis">Saves the database record of the player. Does nothing for bots. Can be prevented by returning true from the 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook afterward.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_action">set_action(id, force)</a></div><div class="summary-synopsis">Sets the action the player is currently doing. Does nothing if the player is already doing something, unless forced.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_animation">set_animation(animation, duration_override)</a></div><div class="summary-synopsis">Makes the player play the specified sequence instead of their regular animations. The override is removed once the sequence has finished.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_data">set_data(data)</a></div><div class="summary-synopsis">Replaces the networked data table of the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_initialized">set_initialized(initialized)</a></div><div class="summary-synopsis">Sets whether the player has been initialized by Flux.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_player_data">set_player_data(key, value)</a></div><div class="summary-synopsis">Sets a value in the networked data table of the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SetModel">SetModel(path)</a></div><div class="summary-synopsis">Sets the model of the player. Overrides the engine function to run the 'PlayerModelChanged' hook and, on the server, to tell the clients about the change.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#steam_name">steam_name()</a></div><div class="summary-synopsis">Returns the Steam name of the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#stop_animation">stop_animation()</a></div><div class="summary-synopsis">Stops the animation that was set with Player#set_animation.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#unfreeze_gun">unfreeze_gun()</a></div><div class="summary-synopsis">Lets the player fire their active weapon again and unfreezes the weapon.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#unfreeze_move">unfreeze_move()</a></div><div class="summary-synopsis">Lets the player move again by setting their move type to MOVETYPE_WALK.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#unstuck">unstuck(filter)</a></div><div class="summary-synopsis">Moves the player to the closest unobstructed spot nearby.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#can">can(action, object)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player has a permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#do_action">do_action(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the callback of an action registered with Flux.register_action.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_best_position">find_best_position(margin, filter)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Looks for unobstructed spots around the player that the player can be moved to.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#freeze_gun">freeze_gun()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Stops the player from firing their active weapon for an hour and freezes the weapon.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#freeze_move">freeze_move()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Stops the player from moving by setting their move type to MOVETYPE_NONE.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_action">get_action()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the action the player is currently doing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_ammo_table">get_ammo_table()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Returns the ammo the player has.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_data">get_data()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the networked data table of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_player_data">get_player_data(key, default)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Returns a value from the networked data table of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_weapons_list">get_weapons_list()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the classes of all of the weapons the player has.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#give_weapons">give_weapons(weapons_table, no_ammo)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Gives several weapons to the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_initialized">has_initialized()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player has finished loading in and has been initialized by Flux.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_doing_action">is_doing_action(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player is currently doing the specified action.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_root">is_root()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player has root access, that is can do anything.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Name">Name(force_true_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#notify">notify(message, arguments, color)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sends a notification to the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#notify_admin">notify_admin(message, arguments)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sends a light red notification to the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#play_gesture">play_gesture(animation)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Plays a gesture on top of the player's regular animations in the custom gesture slot.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reset_action">reset_action()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Resets the action of the player to 'none'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#restore_player">restore_player()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Loads the database record of the player by their SteamID, creating and saving a new one if they have joined for the first time.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#running">running()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player is alive and moving on foot faster than the walk speed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#save_player">save_player()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the database record of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_action">set_action(id, force)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the action the player is currently doing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_animation">set_animation(animation, duration_override)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Makes the player play the specified sequence instead of their regular animations.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_data">set_data(data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Replaces the networked data table of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_initialized">set_initialized(initialized)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets whether the player has been initialized by Flux.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_player_data">set_player_data(key, value)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets a value in the networked data table of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SetModel">SetModel(path)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the model of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#steam_name">steam_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the Steam name of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#stop_animation">stop_animation()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Stops the animation that was set with Player#set_animation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unfreeze_gun">unfreeze_gun()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Lets the player fire their active weapon again and unfreezes the weapon.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unfreeze_move">unfreeze_move()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Lets the player move again by setting their move type to MOVETYPE_WALK.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unstuck">unstuck(filter)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Moves the player to the closest unobstructed spot nearby.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="can">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>can<span class="params">(action, object)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>can<span class="params">(action, object)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#can" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L217" title="View source">packages/flow/lib/meta/sh_player.lua:217</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:217</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player has a permission. The decision is made by the
@@ -88,9 +88,9 @@
 </section>
 <section class="detail" id="do_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>do_action<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>do_action<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#do_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L169" title="View source">packages/flow/lib/meta/sh_player.lua:169</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:169</span>
 </div>
 <section class="docstring">
 <p>Runs the callback of an action registered with Flux.register_action.</p>
@@ -100,9 +100,9 @@
 </section>
 <section class="detail" id="find_best_position">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>find_best_position<span class="params">(margin, filter)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>find_best_position<span class="params">(margin, filter)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#find_best_position" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L117" title="View source">packages/flow/lib/meta/sv_player.lua:117</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:117</span>
 </div>
 <section class="docstring">
 <p>Looks for unobstructed spots around the player that the player can be moved to.</p>
@@ -114,9 +114,9 @@
 </section>
 <section class="detail" id="freeze_gun">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>freeze_gun<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>freeze_gun<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#freeze_gun" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L106" title="View source">packages/flow/lib/meta/sh_player.lua:106</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:106</span>
 </div>
 <section class="docstring">
 <p>Stops the player from firing their active weapon for an hour and freezes the weapon.</p>
@@ -126,9 +126,9 @@
 </section>
 <section class="detail" id="freeze_move">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>freeze_move<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>freeze_move<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#freeze_move" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L94" title="View source">packages/flow/lib/meta/sh_player.lua:94</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:94</span>
 </div>
 <section class="docstring">
 <p>Stops the player from moving by setting their move type to MOVETYPE_NONE.</p>
@@ -138,9 +138,9 @@
 </section>
 <section class="detail" id="get_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_action<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_action<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L151" title="View source">packages/flow/lib/meta/sh_player.lua:151</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:151</span>
 </div>
 <section class="docstring">
 <p>Returns the action the player is currently doing.</p>
@@ -150,9 +150,9 @@
 </section>
 <section class="detail" id="get_ammo_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_ammo_table<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_ammo_table<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#get_ammo_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L66" title="View source">packages/flow/lib/meta/sv_player.lua:66</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:66</span>
 </div>
 <section class="docstring">
 <p>Returns the ammo the player has.</p>
@@ -162,9 +162,9 @@
 </section>
 <section class="detail" id="get_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_data<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_data<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L11" title="View source">packages/flow/lib/meta/sh_player.lua:11</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:11</span>
 </div>
 <section class="docstring">
 <p>Returns the networked data table of the player.</p>
@@ -174,9 +174,9 @@
 </section>
 <section class="detail" id="get_player_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_player_data<span class="params">(key, default)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_player_data<span class="params">(key, default)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#get_player_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L37" title="View source">packages/flow/lib/meta/sv_player.lua:37</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:37</span>
 </div>
 <section class="docstring">
 <p>Returns a value from the networked data table of the player.</p>
@@ -188,9 +188,9 @@
 </section>
 <section class="detail" id="get_weapons_list">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_weapons_list<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_weapons_list<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_weapons_list" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L51" title="View source">packages/flow/lib/meta/sh_player.lua:51</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:51</span>
 </div>
 <section class="docstring">
 <p>Returns the classes of all of the weapons the player has.</p>
@@ -200,9 +200,9 @@
 </section>
 <section class="detail" id="give_weapons">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>give_weapons<span class="params">(weapons_table, no_ammo)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>give_weapons<span class="params">(weapons_table, no_ammo)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#give_weapons" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L184" title="View source">packages/flow/lib/meta/sv_player.lua:184</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:184</span>
 </div>
 <section class="docstring">
 <p>Gives several weapons to the player.</p>
@@ -212,9 +212,9 @@
 </section>
 <section class="detail" id="has_initialized">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>has_initialized<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>has_initialized<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_initialized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L5" title="View source">packages/flow/lib/meta/sh_player.lua:5</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:5</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player has finished loading in and has been initialized by Flux.</p>
@@ -224,9 +224,9 @@
 </section>
 <section class="detail" id="is_doing_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>is_doing_action<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>is_doing_action<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_doing_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L158" title="View source">packages/flow/lib/meta/sh_player.lua:158</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:158</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player is currently doing the specified action.</p>
@@ -238,9 +238,9 @@
 </section>
 <section class="detail" id="is_root">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>is_root<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>is_root<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_root" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L224" title="View source">packages/flow/lib/meta/sh_player.lua:224</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:224</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player has root access, that is can do anything. The decision
@@ -251,9 +251,9 @@ is made by the 'PlayerIsRoot' hook.</p>
 </section>
 <section class="detail" id="Name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>Name<span class="params">(force_true_name)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>Name<span class="params">(force_true_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L22" title="View source">packages/flow/lib/meta/sh_player.lua:22</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:22</span>
 </div>
 <section class="docstring">
 <p>Returns the name of the player. Overrides the engine function, so that plugins can provide
@@ -267,34 +267,31 @@ as Player#name.</p>
 </section>
 <section class="detail" id="notify">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>notify<span class="params">(message, arguments, color)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>notify<span class="params">(message, arguments, color)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#notify" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L68" title="View source">packages/flow/lib/meta/sh_player.lua:68</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:53</span>
 </div>
 <section class="docstring">
+<div class="realm-doc realm-doc-server"><p class="realm-doc-title">On the server</p>
+<p>Sends a notification to the player. Serverside variant.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text or language phrase</span></li><li><span class="param-name">arguments</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">values to substitute into the phrase</span></li><li><span class="param-name">color</span> <span class="type">Color</span> <span class="default">optional, defaults to <code>nil</code></span></li></ul>
+</div>
+<div class="realm-doc realm-doc-client"><p class="realm-doc-title">On the client</p>
 <p>Displays a notification to the local player, both as a popup and in the chat.
 Clientside variant.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text or language phrase</span></li><li><span class="param-name">arguments</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">values to substitute into the phrase; strings are translated, entities are replaced with their names</span></li><li><span class="param-name">color</span> <span class="type">Color</span> <span class="default">optional, defaults to <code>color_white</code></span></li></ul>
-</section>
-</section>
-<section class="detail" id="notify-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>notify<span class="params">(message, arguments, color)</span></h3>
-<a href="#notify-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L53" title="View source">packages/flow/lib/meta/sv_player.lua:53</a>
 </div>
-<section class="docstring">
-<p>Sends a notification to the player. Serverside variant.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text or language phrase</span></li><li><span class="param-name">arguments</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">values to substitute into the phrase</span></li><li><span class="param-name">color</span> <span class="type">Color</span> <span class="default">optional, defaults to <code>nil</code></span></li></ul>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sv_player.lua:53</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">packages/flow/lib/meta/sh_player.lua:68</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
 </section>
 </section>
 <section class="detail" id="notify_admin">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>notify_admin<span class="params">(message, arguments)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>notify_admin<span class="params">(message, arguments)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#notify_admin" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L60" title="View source">packages/flow/lib/meta/sv_player.lua:60</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:60</span>
 </div>
 <section class="docstring">
 <p>Sends a light red notification to the player.</p>
@@ -302,11 +299,28 @@ Clientside variant.</p>
 <ul class="params"><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text or language phrase</span></li><li><span class="param-name">arguments</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">values to substitute into the phrase</span></li></ul>
 </section>
 </section>
+<section class="detail" id="play_gesture">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>play_gesture<span class="params">(animation)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#play_gesture" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_animation.lua:437</span>
+</div>
+<section class="docstring">
+<p>Plays a gesture on top of the player's regular animations in the custom gesture slot.
+Called serverside, the gesture is sent to every client through the animation event
+system, so this is the way to make everyone see a one-off animation such as a punch,
+a wave or a weapon draw.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">animation</span> <span class="type">Number</span> <span class="desc">activity (ACT_ enum) or String sequence name</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the player's model has no such sequence</span></li></ul>
+</section>
+</section>
 <section class="detail" id="reset_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>reset_action<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>reset_action<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#reset_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L163" title="View source">packages/flow/lib/meta/sh_player.lua:163</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:163</span>
 </div>
 <section class="docstring">
 <p>Resets the action of the player to 'none'.</p>
@@ -314,9 +328,9 @@ Clientside variant.</p>
 </section>
 <section class="detail" id="restore_player">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>restore_player<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>restore_player<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#restore_player" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L84" title="View source">packages/flow/lib/meta/sv_player.lua:84</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:84</span>
 </div>
 <section class="docstring">
 <p>Loads the database record of the player by their SteamID, creating and saving a new one
@@ -327,9 +341,9 @@ a blank record that is never saved here.</p>
 </section>
 <section class="detail" id="running">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>running<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>running<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#running" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L191" title="View source">packages/flow/lib/meta/sh_player.lua:191</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:191</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player is alive and moving on foot faster than the walk speed.</p>
@@ -339,9 +353,9 @@ a blank record that is never saved here.</p>
 </section>
 <section class="detail" id="save_player">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>save_player<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>save_player<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#save_player" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L5" title="View source">packages/flow/lib/meta/sv_player.lua:5</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:5</span>
 </div>
 <section class="docstring">
 <p>Saves the database record of the player. Does nothing for bots. Can be prevented by returning
@@ -350,9 +364,9 @@ true from the 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook after
 </section>
 <section class="detail" id="set_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_action<span class="params">(id, force)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_action<span class="params">(id, force)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L141" title="View source">packages/flow/lib/meta/sh_player.lua:141</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:141</span>
 </div>
 <section class="docstring">
 <p>Sets the action the player is currently doing. Does nothing if the player is already
@@ -365,9 +379,9 @@ doing something, unless forced.</p>
 </section>
 <section class="detail" id="set_animation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_animation<span class="params">(animation, duration_override)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_animation<span class="params">(animation, duration_override)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_animation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_animation.lua#L202" title="View source">packages/flow/lib/sh_animation.lua:202</a>
+<span class="source-link">packages/flow/lib/sh_animation.lua:404</span>
 </div>
 <section class="docstring">
 <p>Makes the player play the specified sequence instead of their regular animations.
@@ -378,9 +392,9 @@ The override is removed once the sequence has finished.</p>
 </section>
 <section class="detail" id="set_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_data<span class="params">(data)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_data<span class="params">(data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L18" title="View source">packages/flow/lib/meta/sv_player.lua:18</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:18</span>
 </div>
 <section class="docstring">
 <p>Replaces the networked data table of the player.</p>
@@ -390,9 +404,9 @@ The override is removed once the sequence has finished.</p>
 </section>
 <section class="detail" id="set_initialized">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_initialized<span class="params">(initialized)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_initialized<span class="params">(initialized)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_initialized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L43" title="View source">packages/flow/lib/meta/sv_player.lua:43</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:43</span>
 </div>
 <section class="docstring">
 <p>Sets whether the player has been initialized by Flux.</p>
@@ -402,9 +416,9 @@ The override is removed once the sequence has finished.</p>
 </section>
 <section class="detail" id="set_player_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_player_data<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_player_data<span class="params">(key, value)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_player_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L25" title="View source">packages/flow/lib/meta/sv_player.lua:25</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:25</span>
 </div>
 <section class="docstring">
 <p>Sets a value in the networked data table of the player.</p>
@@ -414,9 +428,9 @@ The override is removed once the sequence has finished.</p>
 </section>
 <section class="detail" id="SetModel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>SetModel<span class="params">(path)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>SetModel<span class="params">(path)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#SetModel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L37" title="View source">packages/flow/lib/meta/sh_player.lua:37</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:37</span>
 </div>
 <section class="docstring">
 <p>Sets the model of the player. Overrides the engine function to run the 'PlayerModelChanged'
@@ -427,9 +441,9 @@ hook and, on the server, to tell the clients about the change.</p>
 </section>
 <section class="detail" id="steam_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>steam_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>steam_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#steam_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L30" title="View source">packages/flow/lib/meta/sh_player.lua:30</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:30</span>
 </div>
 <section class="docstring">
 <p>Returns the Steam name of the player.</p>
@@ -439,9 +453,9 @@ hook and, on the server, to tell the clients about the change.</p>
 </section>
 <section class="detail" id="stop_animation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>stop_animation<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>stop_animation<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#stop_animation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_animation.lua#L224" title="View source">packages/flow/lib/sh_animation.lua:224</a>
+<span class="source-link">packages/flow/lib/sh_animation.lua:426</span>
 </div>
 <section class="docstring">
 <p>Stops the animation that was set with Player#set_animation.</p>
@@ -449,9 +463,9 @@ hook and, on the server, to tell the clients about the change.</p>
 </section>
 <section class="detail" id="unfreeze_gun">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>unfreeze_gun<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>unfreeze_gun<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#unfreeze_gun" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L120" title="View source">packages/flow/lib/meta/sh_player.lua:120</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:120</span>
 </div>
 <section class="docstring">
 <p>Lets the player fire their active weapon again and unfreezes the weapon.</p>
@@ -461,9 +475,9 @@ hook and, on the server, to tell the clients about the change.</p>
 </section>
 <section class="detail" id="unfreeze_move">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>unfreeze_move<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>unfreeze_move<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#unfreeze_move" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua#L100" title="View source">packages/flow/lib/meta/sh_player.lua:100</a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:100</span>
 </div>
 <section class="docstring">
 <p>Lets the player move again by setting their move type to MOVETYPE_WALK.</p>
@@ -473,9 +487,9 @@ hook and, on the server, to tell the clients about the change.</p>
 </section>
 <section class="detail" id="unstuck">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>unstuck<span class="params">(filter)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>unstuck<span class="params">(filter)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#unstuck" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua#L165" title="View source">packages/flow/lib/meta/sv_player.lua:165</a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:165</span>
 </div>
 <section class="docstring">
 <p>Moves the player to the closest unobstructed spot nearby.</p>
@@ -484,11 +498,11 @@ hook and, on the server, to tell the clients about the change.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sh_player.lua" title="View source">packages/flow/lib/meta/sh_player.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/meta/sv_player.lua" title="View source">packages/flow/lib/meta/sv_player.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_animation.lua" title="View source">packages/flow/lib/sh_animation.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#can">can</a></li><li><a href="#do_action">do_action</a></li><li><a href="#find_best_position">find_best_position</a></li><li><a href="#freeze_gun">freeze_gun</a></li><li><a href="#freeze_move">freeze_move</a></li><li><a href="#get_action">get_action</a></li><li><a href="#get_ammo_table">get_ammo_table</a></li><li><a href="#get_data">get_data</a></li><li><a href="#get_player_data">get_player_data</a></li><li><a href="#get_weapons_list">get_weapons_list</a></li><li><a href="#give_weapons">give_weapons</a></li><li><a href="#has_initialized">has_initialized</a></li><li><a href="#is_doing_action">is_doing_action</a></li><li><a href="#is_root">is_root</a></li><li><a href="#Name">Name</a></li><li><a href="#notify">notify</a></li><li><a href="#notify-2">notify</a></li><li><a href="#notify_admin">notify_admin</a></li><li><a href="#reset_action">reset_action</a></li><li><a href="#restore_player">restore_player</a></li><li><a href="#running">running</a></li><li><a href="#save_player">save_player</a></li><li><a href="#set_action">set_action</a></li><li><a href="#set_animation">set_animation</a></li><li><a href="#set_data">set_data</a></li><li><a href="#set_initialized">set_initialized</a></li><li><a href="#set_player_data">set_player_data</a></li><li><a href="#SetModel">SetModel</a></li><li><a href="#steam_name">steam_name</a></li><li><a href="#stop_animation">stop_animation</a></li><li><a href="#unfreeze_gun">unfreeze_gun</a></li><li><a href="#unfreeze_move">unfreeze_move</a></li><li><a href="#unstuck">unstuck</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/meta/sh_player.lua</span></li><li><span class="source-link">packages/flow/lib/meta/sv_player.lua</span></li><li><span class="source-link">packages/flow/lib/sh_animation.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#can">can</a></li><li data-realm="shared"><a href="#do_action">do_action</a></li><li data-realm="server"><a href="#find_best_position">find_best_position</a></li><li data-realm="shared"><a href="#freeze_gun">freeze_gun</a></li><li data-realm="shared"><a href="#freeze_move">freeze_move</a></li><li data-realm="shared"><a href="#get_action">get_action</a></li><li data-realm="server"><a href="#get_ammo_table">get_ammo_table</a></li><li data-realm="shared"><a href="#get_data">get_data</a></li><li data-realm="server"><a href="#get_player_data">get_player_data</a></li><li data-realm="shared"><a href="#get_weapons_list">get_weapons_list</a></li><li data-realm="server"><a href="#give_weapons">give_weapons</a></li><li data-realm="shared"><a href="#has_initialized">has_initialized</a></li><li data-realm="shared"><a href="#is_doing_action">is_doing_action</a></li><li data-realm="shared"><a href="#is_root">is_root</a></li><li data-realm="shared"><a href="#Name">Name</a></li><li data-realm="shared"><a href="#notify">notify</a></li><li data-realm="server"><a href="#notify_admin">notify_admin</a></li><li data-realm="shared"><a href="#play_gesture">play_gesture</a></li><li data-realm="shared"><a href="#reset_action">reset_action</a></li><li data-realm="server"><a href="#restore_player">restore_player</a></li><li data-realm="shared"><a href="#running">running</a></li><li data-realm="server"><a href="#save_player">save_player</a></li><li data-realm="shared"><a href="#set_action">set_action</a></li><li data-realm="shared"><a href="#set_animation">set_animation</a></li><li data-realm="server"><a href="#set_data">set_data</a></li><li data-realm="server"><a href="#set_initialized">set_initialized</a></li><li data-realm="server"><a href="#set_player_data">set_player_data</a></li><li data-realm="shared"><a href="#SetModel">SetModel</a></li><li data-realm="shared"><a href="#steam_name">steam_name</a></li><li data-realm="shared"><a href="#stop_animation">stop_animation</a></li><li data-realm="shared"><a href="#unfreeze_gun">unfreeze_gun</a></li><li data-realm="shared"><a href="#unfreeze_move">unfreeze_move</a></li><li data-realm="server"><a href="#unstuck">unstuck</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

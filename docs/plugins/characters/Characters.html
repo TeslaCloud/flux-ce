@@ -28,58 +28,430 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Characters <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/characters/index.html">characters</a></p></div>
+<div class="page-header"><h1>Characters <span class="badge badge-plugin">plugin</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/characters/index.html">Characters System</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the general stage (gender, name, description and model) to character creation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AddMainMenuItems">AddMainMenuItems(panel, sidebar)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the continue, create character, load character and disconnect buttons to the main menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AddTabMenuItems">AddTabMenuItems(menu)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the main menu entry to the tab menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetDrawPlayerInfo">GetDrawPlayerInfo(target, x, y, distance, lines)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the physical description to the lines drawn when looking at a player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetLoadingScreenMessage">GetLoadingScreenMessage()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Holds the loading screen at 75% until the character list has arrived from the server.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnActiveCharacterSet">OnActiveCharacterSet(owner, character)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Spawns the player and applies the character's model, skin, health and ammo, then runs the PostCharacterLoaded hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnCharacterChange">OnCharacterChange(owner, new_char, old_char)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the player's current character before they switch to another one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnIntroPanelRemoved">OnIntroPanelRemoved()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Opens the main menu after the intro if the local player has no character, retrying on a timer until the panel can be created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers the main menu and character creation panels with the theme, and recreates the main menu if it is currently open.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PanelCharacterSet">PanelCharacterSet(panel, char_data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Applies the character's skin to the model shown in a character panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCreateCharacter">PlayerCreateCharacter(actor, data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Validates character creation data: name and description length, gender, model and the presence of the player's database record.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDeath">PlayerDeath(victim, inflictor, attacker)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the character of a player who died.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDisconnected">PlayerDisconnected(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the disconnecting player's character and stops any further saving of their data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialized">PlayerInitialized()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Opens the intro panel if the local player has no active character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerOneMinute">PlayerOneMinute(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the player's character; called once a minute for every player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerRestored">PlayerRestored(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sends the character list to the player as soon as they have initialized, then runs the PostRestoreCharacters hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostCharacterLoaded">PostCharacterLoaded(owner, character)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Forwards the PostCharacterLoaded hook to the player's client, passing the character ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostCreateCharacter">PostCreateCharacter(owner, char, char_data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Replaces line breaks in the new character's physical description with ' | '.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostPlayerSpawn">PostPlayerSpawn(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Hides, locks and silently kills players who spawn without an active character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RebuildScoreboardPlayerCard">RebuildScoreboardPlayerCard(card, target)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook returns false, the player's model icon and physical description.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the 'character' condition, which compares a player's active character ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the active character of every connected player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldDrawLoadingScreen">ShouldDrawLoadingScreen()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Keeps the loading screen visible until the intro panel has been created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldHUDPaint">ShouldHUDPaint()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Hides the HUD while the local player has no active character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldMapsceneRender">ShouldMapsceneRender()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Makes the mapscene render while the intro panel or main menu is open.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldScoreboardHide">ShouldScoreboardHide()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Lets the scoreboard hide only when the local player has an active character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldScoreboardShow">ShouldScoreboardShow()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Lets the scoreboard show only when the local player has an active character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Tick">Tick()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Mutes the menu music while the game window is unfocused and fades it out and stops it once the intro panel is gone.</div></div>
+</div>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#all_to_networkable">all_to_networkable(target)</a></div><div class="summary-synopsis">Returns the networkable data of every character of a player. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create">create(target, data)</a></div><div class="summary-synopsis">Creates a character for a player unless a PlayerCreateCharacter hook rejects the data. On the server the character is then saved and sent to its owner.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#delete">delete(target, id)</a></div><div class="summary-synopsis">Destroys one of the player's characters, removes it from their record and resends the character list to the player. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#save">save(target, character)</a></div><div class="summary-synopsis">Runs the SaveCharacterData hook and saves the player's record to the database, unless a PreSaveCharacter hook returns false. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#send_to_client">send_to_client(target)</a></div><div class="summary-synopsis">Sends the networkable data of all of a player's characters to that player. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_desc">set_desc(target, new_desc)</a></div><div class="summary-synopsis">Changes the physical description of the player's active character, networks it and runs the CharacterDescChanged hook. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_gender">set_gender(target, new_gender)</a></div><div class="summary-synopsis">Changes the gender of the player's active character, networks it and runs the CharacterGenderChanged hook. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_model">set_model(target, model)</a></div><div class="summary-synopsis">Changes the model of the player and of their active character, networks it and runs the CharacterModelChanged hook. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_name">set_name(target, new_name)</a></div><div class="summary-synopsis">Changes the name of the player's active character, networks it and runs the CharacterNameChanged hook. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#to_networkable">to_networkable(target, char)</a></div><div class="summary-synopsis">Builds the table of character fields that is sent to the owning client: id, user_id, steam_id, name, gender, phys_desc, model, skin and ammo. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#all_to_networkable">all_to_networkable(target)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Returns the networkable data of every character of a player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create">create(target, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a character for a player unless a PlayerCreateCharacter hook rejects the data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete">delete(target, id)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Destroys one of the player's characters, removes it from their record and resends the character list to the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#save">save(target, character)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Runs the SaveCharacterData hook and saves the player's record to the database, unless a PreSaveCharacter hook returns false.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#send_to_client">send_to_client(target)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sends the networkable data of all of a player's characters to that player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_desc">set_desc(target, new_desc)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Changes the physical description of the player's active character, networks it and runs the CharacterDescChanged hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_gender">set_gender(target, new_gender)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Changes the gender of the player's active character, networks it and runs the CharacterGenderChanged hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_model">set_model(target, model)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Changes the model of the player and of their active character, networks it and runs the CharacterModelChanged hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_name">set_name(target, new_name)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Changes the name of the player's active character, networks it and runs the CharacterNameChanged hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_networkable">to_networkable(target, char)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Builds the table of character fields that is sent to the owning client: id, user_id, steam_id, name, gender, phys_desc, model, skin and ammo.</div></div>
 </div>
-<div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages(panel)</a></div><div class="summary-synopsis">Adds the general stage (gender, name, description and model) to character creation.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#AddMainMenuItems">AddMainMenuItems(panel, sidebar)</a></div><div class="summary-synopsis">Adds the continue, create character, load character and disconnect buttons to the main menu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#AddTabMenuItems">AddTabMenuItems(menu)</a></div><div class="summary-synopsis">Adds the main menu entry to the tab menu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetDrawPlayerInfo">GetDrawPlayerInfo(target, x, y, distance, lines)</a></div><div class="summary-synopsis">Adds the physical description to the lines drawn when looking at a player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetLoadingScreenMessage">GetLoadingScreenMessage()</a></div><div class="summary-synopsis">Holds the loading screen at 75% until the character list has arrived from the server.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnActiveCharacterSet">OnActiveCharacterSet(owner, character)</a></div><div class="summary-synopsis">Spawns the player and applies the character's model, skin, health and ammo, then runs the PostCharacterLoaded hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnCharacterChange">OnCharacterChange(owner, new_char, old_char)</a></div><div class="summary-synopsis">Saves the player's current character before they switch to another one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnIntroPanelRemoved">OnIntroPanelRemoved()</a></div><div class="summary-synopsis">Opens the main menu after the intro if the local player has no character, retrying on a timer until the panel can be created.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a></div><div class="summary-synopsis">Registers the main menu and character creation panels with the theme, and recreates the main menu if it is currently open.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PanelCharacterSet">PanelCharacterSet(panel, char_data)</a></div><div class="summary-synopsis">Applies the character's skin to the model shown in a character panel.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerCreateCharacter">PlayerCreateCharacter(actor, data)</a></div><div class="summary-synopsis">Validates character creation data: name and description length, gender, model and the presence of the player's database record.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerDeath">PlayerDeath(victim, inflictor, attacker)</a></div><div class="summary-synopsis">Saves the character of a player who died.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerDisconnected">PlayerDisconnected(actor)</a></div><div class="summary-synopsis">Saves the disconnecting player's character and stops any further saving of their data.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialized">PlayerInitialized()</a></div><div class="summary-synopsis">Opens the intro panel if the local player has no active character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerOneMinute">PlayerOneMinute(actor)</a></div><div class="summary-synopsis">Saves the player's character; called once a minute for every player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerRestored">PlayerRestored(actor)</a></div><div class="summary-synopsis">Sends the character list to the player as soon as they have initialized, then runs the PostRestoreCharacters hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostCharacterLoaded">PostCharacterLoaded(char_id)</a></div><div class="summary-synopsis">Closes the main menu after a character has been loaded.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostCharacterLoaded-2">PostCharacterLoaded(owner, character)</a></div><div class="summary-synopsis">Forwards the PostCharacterLoaded hook to the player's client, passing the character ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostCreateCharacter">PostCreateCharacter(owner, char, char_data)</a></div><div class="summary-synopsis">Replaces line breaks in the new character's physical description with ' | '.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostPlayerSpawn">PostPlayerSpawn(actor)</a></div><div class="summary-synopsis">Hides, locks and silently kills players who spawn without an active character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RebuildScoreboardPlayerCard">RebuildScoreboardPlayerCard(card, target)</a></div><div class="summary-synopsis">Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook returns false, the player's model icon and physical description.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a></div><div class="summary-synopsis">Registers the 'character' condition, which compares a player's active character ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a></div><div class="summary-synopsis">Saves the active character of every connected player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShouldDrawLoadingScreen">ShouldDrawLoadingScreen()</a></div><div class="summary-synopsis">Keeps the loading screen visible until the intro panel has been created.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShouldHUDPaint">ShouldHUDPaint()</a></div><div class="summary-synopsis">Hides the HUD while the local player has no active character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShouldMapsceneRender">ShouldMapsceneRender()</a></div><div class="summary-synopsis">Makes the mapscene render while the intro panel or main menu is open.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShouldScoreboardHide">ShouldScoreboardHide()</a></div><div class="summary-synopsis">Lets the scoreboard hide only when the local player has an active character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShouldScoreboardShow">ShouldScoreboardShow()</a></div><div class="summary-synopsis">Lets the scoreboard show only when the local player has an active character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Tick">Tick()</a></div><div class="summary-synopsis">Mutes the menu music while the game window is unfocused and fades it out and stops it once the intro panel is gone.</div></div>
+</section>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
+<section class="detail" id="AddCharacterCreationMenuStages">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>AddCharacterCreationMenuStages<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AddCharacterCreationMenuStages" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:212</span>
 </div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#AddCharacterCreationMenuStages"><code>AddCharacterCreationMenuStages</code></a></p>
+<p>Adds the general stage (gender, name, description and model) to character creation.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the character creation menu</span></li></ul>
+</section>
+</section>
+<section class="detail" id="AddMainMenuItems">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>AddMainMenuItems<span class="params">(panel, sidebar)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AddMainMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:235</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#AddMainMenuItems"><code>AddMainMenuItems</code></a></p>
+<p>Adds the continue, create character, load character and disconnect buttons to the main
+menu.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the main menu</span></li><li><span class="param-name">sidebar</span> <span class="type">Panel</span> <span class="desc">the main menu sidebar</span></li></ul>
+</section>
+</section>
+<section class="detail" id="AddTabMenuItems">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>AddTabMenuItems<span class="params">(menu)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AddTabMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:107</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#AddTabMenuItems"><code>AddTabMenuItems</code></a></p>
+<p>Adds the main menu entry to the tab menu.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">menu</span> <span class="type">Panel</span> <span class="desc">the tab menu</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetDrawPlayerInfo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>GetDrawPlayerInfo<span class="params">(target, x, y, distance, lines)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#GetDrawPlayerInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:222</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#GetDrawPlayerInfo"><code>GetDrawPlayerInfo</code></a></p>
+<p>Adds the physical description to the lines drawn when looking at a player.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">x</span> <span class="type">Number</span></li><li><span class="param-name">y</span> <span class="type">Number</span></li><li><span class="param-name">distance</span> <span class="type">Number</span></li><li><span class="param-name">lines</span> <span class="type">Map</span> <span class="desc">line definitions keyed by ID, modified in place</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetLoadingScreenMessage">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>GetLoadingScreenMessage<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#GetLoadingScreenMessage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:41</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#GetLoadingScreenMessage"><code>GetLoadingScreenMessage</code></a></p>
+<p>Holds the loading screen at 75% until the character list has arrived from the server.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">message</span></li><li><span class="type">Number</span> <span class="desc">percentage; nothing once the characters have arrived</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnActiveCharacterSet">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>OnActiveCharacterSet<span class="params">(owner, character)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnActiveCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:73</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#OnActiveCharacterSet"><code>OnActiveCharacterSet</code></a></p>
+<p>Spawns the player and applies the character's model, skin, health and ammo, then runs the
+PostCharacterLoaded hook.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">character</span> <span class="type">Character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnCharacterChange">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>OnCharacterChange<span class="params">(owner, new_char, old_char)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnCharacterChange" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:94</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#OnCharacterChange"><code>OnCharacterChange</code></a></p>
+<p>Saves the player's current character before they switch to another one.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">new_char</span> <span class="type">Character</span></li><li><span class="param-name">old_char</span> <span class="type">Character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnIntroPanelRemoved">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>OnIntroPanelRemoved<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnIntroPanelRemoved" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:57</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#OnIntroPanelRemoved"><code>OnIntroPanelRemoved</code></a></p>
+<p>Opens the main menu after the intro if the local player has no character, retrying on a
+timer until the panel can be created.</p>
+</section>
+</section>
+<section class="detail" id="OnThemeLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>OnThemeLoaded<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:80</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#OnThemeLoaded"><code>OnThemeLoaded</code></a></p>
+<p>Registers the main menu and character creation panels with the theme, and recreates the
+main menu if it is currently open.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">current_theme</span> <span class="type">ThemeBase</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PanelCharacterSet">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PanelCharacterSet<span class="params">(panel, char_data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PanelCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:289</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PanelCharacterSet"><code>PanelCharacterSet</code></a></p>
+<p>Applies the character's skin to the model shown in a character panel.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the character panel</span></li><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">networked character data</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCreateCharacter">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PlayerCreateCharacter<span class="params">(actor, data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:116</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PlayerCreateCharacter"><code>PlayerCreateCharacter</code></a></p>
+<p>Validates character creation data: name and description length, gender, model and the
+presence of the player's database record.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">CHAR_ERR_* code when the data is rejected, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerDeath">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PlayerDeath<span class="params">(victim, inflictor, attacker)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerDeath" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:22</span>
+</div>
+<section class="docstring">
+<p>Saves the character of a player who died.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">victim</span> <span class="type">Player</span></li><li><span class="param-name">inflictor</span> <span class="type">Entity</span></li><li><span class="param-name">attacker</span> <span class="type">Entity</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerDisconnected">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PlayerDisconnected<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerDisconnected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:28</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerDisconnected"><code>PlayerDisconnected</code></a></p>
+<p>Saves the disconnecting player's character and stops any further saving of their data.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerInitialized">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PlayerInitialized<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PlayerInitialized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:29</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerInitialized"><code>PlayerInitialized</code></a></p>
+<p>Opens the intro panel if the local player has no active character.</p>
+</section>
+</section>
+<section class="detail" id="PlayerOneMinute">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PlayerOneMinute<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerOneMinute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:100</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerOneMinute"><code>PlayerOneMinute</code></a></p>
+<p>Saves the player's character; called once a minute for every player.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerRestored">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PlayerRestored<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerRestored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:36</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerRestored"><code>PlayerRestored</code></a></p>
+<p>Sends the character list to the player as soon as they have initialized, then runs the
+PostRestoreCharacters hook.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostCharacterLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PostCharacterLoaded<span class="params">(owner, character)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PostCharacterLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:65</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PostCharacterLoaded"><code>PostCharacterLoaded</code></a></p>
+<div class="realm-doc realm-doc-server"><p class="realm-doc-title">On the server</p>
+<p>Forwards the PostCharacterLoaded hook to the player's client, passing the character ID.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">character</span> <span class="type">Character</span></li></ul>
+</div>
+<div class="realm-doc realm-doc-client"><p class="realm-doc-title">On the client</p>
+<p>Closes the main menu after a character has been loaded.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">char_id</span> <span class="type">Number</span></li></ul>
+</div>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">plugins/characters/plugin/sv_hooks.lua:65</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/characters/plugin/cl_hooks.lua:121</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostCreateCharacter">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PostCreateCharacter<span class="params">(owner, char, char_data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PostCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:58</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PostCreateCharacter"><code>PostCreateCharacter</code></a></p>
+<p>Replaces line breaks in the new character's physical description with ' | '.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span> <span class="desc">the character being created</span></li><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostPlayerSpawn">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>PostPlayerSpawn<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PostPlayerSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:3</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PostPlayerSpawn"><code>PostPlayerSpawn</code></a></p>
+<p>Hides, locks and silently kills players who spawn without an active character.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="RebuildScoreboardPlayerCard">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>RebuildScoreboardPlayerCard<span class="params">(card, target)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#RebuildScoreboardPlayerCard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:159</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#RebuildScoreboardPlayerCard"><code>RebuildScoreboardPlayerCard</code></a></p>
+<p>Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook
+returns false, the player's model icon and physical description.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">card</span> <span class="type">Panel</span> <span class="desc">the scoreboard player card</span></li><li><span class="param-name">target</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="RegisterConditions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>RegisterConditions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#RegisterConditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sh_plugin.lua:9</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/conditions/Hooks.html#RegisterConditions"><code>RegisterConditions</code></a></p>
+<p>Registers the 'character' condition, which compares a player's active character ID.</p>
+</section>
+</section>
+<section class="detail" id="SaveData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>SaveData<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#SaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/sv_hooks.lua:105</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#SaveData"><code>SaveData</code></a></p>
+<p>Saves the active character of every connected player.</p>
+</section>
+</section>
+<section class="detail" id="ShouldDrawLoadingScreen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>ShouldDrawLoadingScreen<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldDrawLoadingScreen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:129</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#ShouldDrawLoadingScreen"><code>ShouldDrawLoadingScreen</code></a></p>
+<p>Keeps the loading screen visible until the intro panel has been created.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true while there is no intro panel, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldHUDPaint">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>ShouldHUDPaint<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldHUDPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:137</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#ShouldHUDPaint"><code>ShouldHUDPaint</code></a></p>
+<p>Hides the HUD while the local player has no active character.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false when no character is loaded, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldMapsceneRender">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>ShouldMapsceneRender<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldMapsceneRender" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:49</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/mapscenes/Hooks.html#ShouldMapsceneRender"><code>ShouldMapsceneRender</code></a></p>
+<p>Makes the mapscene render while the intro panel or main menu is open.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true while the panel is valid, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldScoreboardHide">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>ShouldScoreboardHide<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldScoreboardHide" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:145</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#ShouldScoreboardHide"><code>ShouldScoreboardHide</code></a></p>
+<p>Lets the scoreboard hide only when the local player has an active character.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldScoreboardShow">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>ShouldScoreboardShow<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldScoreboardShow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:151</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#ShouldScoreboardShow"><code>ShouldScoreboardShow</code></a></p>
+<p>Lets the scoreboard show only when the local player has an active character.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Tick">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Characters:</span>Tick<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#Tick" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/characters/plugin/cl_hooks.lua:6</span>
+</div>
+<section class="docstring">
+<p>Mutes the menu music while the game window is unfocused and fades it out and stops it
+once the intro panel is gone.</p>
+</section>
+</section>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="all_to_networkable">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>all_to_networkable<span class="params">(target)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>all_to_networkable<span class="params">(target)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#all_to_networkable" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L73" title="View source">plugins/characters/plugin/lib/sh_character.lua:73</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:73</span>
 </div>
 <section class="docstring">
 <p>Returns the networkable data of every character of a player. Server only.</p>
@@ -93,9 +465,9 @@
 </section>
 <section class="detail" id="create">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>create<span class="params">(target, data)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>create<span class="params">(target, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L33" title="View source">plugins/characters/plugin/lib/sh_character.lua:33</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:33</span>
 </div>
 <section class="docstring">
 <p>Creates a character for a player unless a PlayerCreateCharacter hook rejects the data.
@@ -120,9 +492,9 @@ On the server the character is then saved and sent to its owner.</p>
 </section>
 <section class="detail" id="delete">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>delete<span class="params">(target, id)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>delete<span class="params">(target, id)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#delete" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L122" title="View source">plugins/characters/plugin/lib/sh_character.lua:122</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:122</span>
 </div>
 <section class="docstring">
 <p>Destroys one of the player's characters, removes it from their record and resends the
@@ -133,9 +505,9 @@ character list to the player. Server only.</p>
 </section>
 <section class="detail" id="save">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>save<span class="params">(target, character)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>save<span class="params">(target, character)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#save" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L109" title="View source">plugins/characters/plugin/lib/sh_character.lua:109</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:109</span>
 </div>
 <section class="docstring">
 <p>Runs the SaveCharacterData hook and saves the player's record to the database, unless a
@@ -146,9 +518,9 @@ PreSaveCharacter hook returns false. Server only.</p>
 </section>
 <section class="detail" id="send_to_client">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>send_to_client<span class="params">(target)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>send_to_client<span class="params">(target)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#send_to_client" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L65" title="View source">plugins/characters/plugin/lib/sh_character.lua:65</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:65</span>
 </div>
 <section class="docstring">
 <p>Sends the networkable data of all of a player's characters to that player. Server only.</p>
@@ -158,9 +530,9 @@ PreSaveCharacter hook returns false. Server only.</p>
 </section>
 <section class="detail" id="set_desc">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>set_desc<span class="params">(target, new_desc)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>set_desc<span class="params">(target, new_desc)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_desc" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L164" title="View source">plugins/characters/plugin/lib/sh_character.lua:164</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:164</span>
 </div>
 <section class="docstring">
 <p>Changes the physical description of the player's active character, networks it and runs
@@ -171,9 +543,9 @@ the CharacterDescChanged hook. Server only.</p>
 </section>
 <section class="detail" id="set_gender">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>set_gender<span class="params">(target, new_gender)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>set_gender<span class="params">(target, new_gender)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_gender" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L205" title="View source">plugins/characters/plugin/lib/sh_character.lua:205</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:205</span>
 </div>
 <section class="docstring">
 <p>Changes the gender of the player's active character, networks it and runs the
@@ -184,9 +556,9 @@ CharacterGenderChanged hook. Server only.</p>
 </section>
 <section class="detail" id="set_model">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>set_model<span class="params">(target, model)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>set_model<span class="params">(target, model)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L184" title="View source">plugins/characters/plugin/lib/sh_character.lua:184</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:184</span>
 </div>
 <section class="docstring">
 <p>Changes the model of the player and of their active character, networks it and runs the
@@ -197,9 +569,9 @@ CharacterModelChanged hook. Server only.</p>
 </section>
 <section class="detail" id="set_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>set_name<span class="params">(target, new_name)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>set_name<span class="params">(target, new_name)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L144" title="View source">plugins/characters/plugin/lib/sh_character.lua:144</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:144</span>
 </div>
 <section class="docstring">
 <p>Changes the name of the player's active character, networks it and runs the
@@ -210,9 +582,9 @@ CharacterNameChanged hook. Server only.</p>
 </section>
 <section class="detail" id="to_networkable">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Characters.</span>to_networkable<span class="params">(target, char)</span></h3>
+<h3 class="signature"><span class="owner">Characters.</span>to_networkable<span class="params">(target, char)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#to_networkable" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L89" title="View source">plugins/characters/plugin/lib/sh_character.lua:89</a>
+<span class="source-link">plugins/characters/plugin/lib/sh_character.lua:89</span>
 </div>
 <section class="docstring">
 <p>Builds the table of character fields that is sent to the owning client: id, user_id,
@@ -224,361 +596,11 @@ steam_id, name, gender, phys_desc, model, skin and ammo. Server only.</p>
 </section>
 </section>
 </section>
-<section class="details-group"><h2 id="methods">Methods</h2>
-<section class="detail" id="AddCharacterCreationMenuStages">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>AddCharacterCreationMenuStages<span class="params">(panel)</span></h3>
-<a href="#AddCharacterCreationMenuStages" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L212" title="View source">plugins/characters/plugin/cl_hooks.lua:212</a>
-</div>
-<section class="docstring">
-<p>Adds the general stage (gender, name, description and model) to character creation.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the character creation menu</span></li></ul>
-</section>
-</section>
-<section class="detail" id="AddMainMenuItems">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>AddMainMenuItems<span class="params">(panel, sidebar)</span></h3>
-<a href="#AddMainMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L235" title="View source">plugins/characters/plugin/cl_hooks.lua:235</a>
-</div>
-<section class="docstring">
-<p>Adds the continue, create character, load character and disconnect buttons to the main
-menu.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the main menu</span></li><li><span class="param-name">sidebar</span> <span class="type">Panel</span> <span class="desc">the main menu sidebar</span></li></ul>
-</section>
-</section>
-<section class="detail" id="AddTabMenuItems">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>AddTabMenuItems<span class="params">(menu)</span></h3>
-<a href="#AddTabMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L107" title="View source">plugins/characters/plugin/cl_hooks.lua:107</a>
-</div>
-<section class="docstring">
-<p>Adds the main menu entry to the tab menu.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">menu</span> <span class="type">Panel</span> <span class="desc">the tab menu</span></li></ul>
-</section>
-</section>
-<section class="detail" id="GetDrawPlayerInfo">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>GetDrawPlayerInfo<span class="params">(target, x, y, distance, lines)</span></h3>
-<a href="#GetDrawPlayerInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L222" title="View source">plugins/characters/plugin/cl_hooks.lua:222</a>
-</div>
-<section class="docstring">
-<p>Adds the physical description to the lines drawn when looking at a player.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">x</span> <span class="type">Number</span></li><li><span class="param-name">y</span> <span class="type">Number</span></li><li><span class="param-name">distance</span> <span class="type">Number</span></li><li><span class="param-name">lines</span> <span class="type">Map</span> <span class="desc">line definitions keyed by ID, modified in place</span></li></ul>
-</section>
-</section>
-<section class="detail" id="GetLoadingScreenMessage">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>GetLoadingScreenMessage<span class="params">()</span></h3>
-<a href="#GetLoadingScreenMessage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L41" title="View source">plugins/characters/plugin/cl_hooks.lua:41</a>
-</div>
-<section class="docstring">
-<p>Holds the loading screen at 75% until the character list has arrived from the server.</p>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">String</span> <span class="desc">message</span></li><li><span class="type">Number</span> <span class="desc">percentage; nothing once the characters have arrived</span></li></ul>
-</section>
-</section>
-<section class="detail" id="OnActiveCharacterSet">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>OnActiveCharacterSet<span class="params">(owner, character)</span></h3>
-<a href="#OnActiveCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L73" title="View source">plugins/characters/plugin/sv_hooks.lua:73</a>
-</div>
-<section class="docstring">
-<p>Spawns the player and applies the character's model, skin, health and ammo, then runs the
-PostCharacterLoaded hook.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">character</span> <span class="type">Character</span></li></ul>
-</section>
-</section>
-<section class="detail" id="OnCharacterChange">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>OnCharacterChange<span class="params">(owner, new_char, old_char)</span></h3>
-<a href="#OnCharacterChange" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L94" title="View source">plugins/characters/plugin/sv_hooks.lua:94</a>
-</div>
-<section class="docstring">
-<p>Saves the player's current character before they switch to another one.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">new_char</span> <span class="type">Character</span></li><li><span class="param-name">old_char</span> <span class="type">Character</span></li></ul>
-</section>
-</section>
-<section class="detail" id="OnIntroPanelRemoved">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>OnIntroPanelRemoved<span class="params">()</span></h3>
-<a href="#OnIntroPanelRemoved" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L57" title="View source">plugins/characters/plugin/cl_hooks.lua:57</a>
-</div>
-<section class="docstring">
-<p>Opens the main menu after the intro if the local player has no character, retrying on a
-timer until the panel can be created.</p>
-</section>
-</section>
-<section class="detail" id="OnThemeLoaded">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>OnThemeLoaded<span class="params">(current_theme)</span></h3>
-<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L80" title="View source">plugins/characters/plugin/cl_hooks.lua:80</a>
-</div>
-<section class="docstring">
-<p>Registers the main menu and character creation panels with the theme, and recreates the
-main menu if it is currently open.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">current_theme</span> <span class="type">ThemeBase</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PanelCharacterSet">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PanelCharacterSet<span class="params">(panel, char_data)</span></h3>
-<a href="#PanelCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L289" title="View source">plugins/characters/plugin/cl_hooks.lua:289</a>
-</div>
-<section class="docstring">
-<p>Applies the character's skin to the model shown in a character panel.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the character panel</span></li><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">networked character data</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerCreateCharacter">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PlayerCreateCharacter<span class="params">(actor, data)</span></h3>
-<a href="#PlayerCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L116" title="View source">plugins/characters/plugin/sv_hooks.lua:116</a>
-</div>
-<section class="docstring">
-<p>Validates character creation data: name and description length, gender, model and the
-presence of the player's database record.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Number</span> <span class="desc">CHAR_ERR_* code when the data is rejected, otherwise nil</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerDeath">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PlayerDeath<span class="params">(victim, inflictor, attacker)</span></h3>
-<a href="#PlayerDeath" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L22" title="View source">plugins/characters/plugin/sv_hooks.lua:22</a>
-</div>
-<section class="docstring">
-<p>Saves the character of a player who died.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">victim</span> <span class="type">Player</span></li><li><span class="param-name">inflictor</span> <span class="type">Entity</span></li><li><span class="param-name">attacker</span> <span class="type">Entity</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerDisconnected">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PlayerDisconnected<span class="params">(actor)</span></h3>
-<a href="#PlayerDisconnected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L28" title="View source">plugins/characters/plugin/sv_hooks.lua:28</a>
-</div>
-<section class="docstring">
-<p>Saves the disconnecting player's character and stops any further saving of their data.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerInitialized">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PlayerInitialized<span class="params">()</span></h3>
-<a href="#PlayerInitialized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L29" title="View source">plugins/characters/plugin/cl_hooks.lua:29</a>
-</div>
-<section class="docstring">
-<p>Opens the intro panel if the local player has no active character.</p>
-</section>
-</section>
-<section class="detail" id="PlayerOneMinute">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PlayerOneMinute<span class="params">(actor)</span></h3>
-<a href="#PlayerOneMinute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L100" title="View source">plugins/characters/plugin/sv_hooks.lua:100</a>
-</div>
-<section class="docstring">
-<p>Saves the player's character; called once a minute for every player.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PlayerRestored">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PlayerRestored<span class="params">(actor)</span></h3>
-<a href="#PlayerRestored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L36" title="View source">plugins/characters/plugin/sv_hooks.lua:36</a>
-</div>
-<section class="docstring">
-<p>Sends the character list to the player as soon as they have initialized, then runs the
-PostRestoreCharacters hook.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PostCharacterLoaded">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PostCharacterLoaded<span class="params">(char_id)</span></h3>
-<a href="#PostCharacterLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L121" title="View source">plugins/characters/plugin/cl_hooks.lua:121</a>
-</div>
-<section class="docstring">
-<p>Closes the main menu after a character has been loaded.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">char_id</span> <span class="type">Number</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PostCharacterLoaded-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PostCharacterLoaded<span class="params">(owner, character)</span></h3>
-<a href="#PostCharacterLoaded-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L65" title="View source">plugins/characters/plugin/sv_hooks.lua:65</a>
-</div>
-<section class="docstring">
-<p>Forwards the PostCharacterLoaded hook to the player's client, passing the character ID.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">character</span> <span class="type">Character</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PostCreateCharacter">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PostCreateCharacter<span class="params">(owner, char, char_data)</span></h3>
-<a href="#PostCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L58" title="View source">plugins/characters/plugin/sv_hooks.lua:58</a>
-</div>
-<section class="docstring">
-<p>Replaces line breaks in the new character's physical description with ' | '.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span> <span class="desc">the character being created</span></li><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">character creation data</span></li></ul>
-</section>
-</section>
-<section class="detail" id="PostPlayerSpawn">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>PostPlayerSpawn<span class="params">(actor)</span></h3>
-<a href="#PostPlayerSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L3" title="View source">plugins/characters/plugin/sv_hooks.lua:3</a>
-</div>
-<section class="docstring">
-<p>Hides, locks and silently kills players who spawn without an active character.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
-</section>
-</section>
-<section class="detail" id="RebuildScoreboardPlayerCard">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>RebuildScoreboardPlayerCard<span class="params">(card, target)</span></h3>
-<a href="#RebuildScoreboardPlayerCard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L159" title="View source">plugins/characters/plugin/cl_hooks.lua:159</a>
-</div>
-<section class="docstring">
-<p>Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook
-returns false, the player's model icon and physical description.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">card</span> <span class="type">Panel</span> <span class="desc">the scoreboard player card</span></li><li><span class="param-name">target</span> <span class="type">Player</span></li></ul>
-</section>
-</section>
-<section class="detail" id="RegisterConditions">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>RegisterConditions<span class="params">()</span></h3>
-<a href="#RegisterConditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sh_plugin.lua#L9" title="View source">plugins/characters/plugin/sh_plugin.lua:9</a>
-</div>
-<section class="docstring">
-<p>Registers the 'character' condition, which compares a player's active character ID.</p>
-</section>
-</section>
-<section class="detail" id="SaveData">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>SaveData<span class="params">()</span></h3>
-<a href="#SaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua#L105" title="View source">plugins/characters/plugin/sv_hooks.lua:105</a>
-</div>
-<section class="docstring">
-<p>Saves the active character of every connected player.</p>
-</section>
-</section>
-<section class="detail" id="ShouldDrawLoadingScreen">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>ShouldDrawLoadingScreen<span class="params">()</span></h3>
-<a href="#ShouldDrawLoadingScreen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L129" title="View source">plugins/characters/plugin/cl_hooks.lua:129</a>
-</div>
-<section class="docstring">
-<p>Keeps the loading screen visible until the intro panel has been created.</p>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true while there is no intro panel, otherwise nil</span></li></ul>
-</section>
-</section>
-<section class="detail" id="ShouldHUDPaint">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>ShouldHUDPaint<span class="params">()</span></h3>
-<a href="#ShouldHUDPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L137" title="View source">plugins/characters/plugin/cl_hooks.lua:137</a>
-</div>
-<section class="docstring">
-<p>Hides the HUD while the local player has no active character.</p>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false when no character is loaded, otherwise nil</span></li></ul>
-</section>
-</section>
-<section class="detail" id="ShouldMapsceneRender">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>ShouldMapsceneRender<span class="params">()</span></h3>
-<a href="#ShouldMapsceneRender" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L49" title="View source">plugins/characters/plugin/cl_hooks.lua:49</a>
-</div>
-<section class="docstring">
-<p>Makes the mapscene render while the intro panel or main menu is open.</p>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true while the panel is valid, otherwise nil</span></li></ul>
-</section>
-</section>
-<section class="detail" id="ShouldScoreboardHide">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>ShouldScoreboardHide<span class="params">()</span></h3>
-<a href="#ShouldScoreboardHide" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L145" title="View source">plugins/characters/plugin/cl_hooks.lua:145</a>
-</div>
-<section class="docstring">
-<p>Lets the scoreboard hide only when the local player has an active character.</p>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span></li></ul>
-</section>
-</section>
-<section class="detail" id="ShouldScoreboardShow">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>ShouldScoreboardShow<span class="params">()</span></h3>
-<a href="#ShouldScoreboardShow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L151" title="View source">plugins/characters/plugin/cl_hooks.lua:151</a>
-</div>
-<section class="docstring">
-<p>Lets the scoreboard show only when the local player has an active character.</p>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Boolean</span></li></ul>
-</section>
-</section>
-<section class="detail" id="Tick">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Characters:</span>Tick<span class="params">()</span></h3>
-<a href="#Tick" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua#L6" title="View source">plugins/characters/plugin/cl_hooks.lua:6</a>
-</div>
-<section class="docstring">
-<p>Mutes the menu music while the game window is unfocused and fades it out and stops it
-once the intro panel is gone.</p>
-</section>
-</section>
-</section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/cl_hooks.lua" title="View source">plugins/characters/plugin/cl_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua" title="View source">plugins/characters/plugin/lib/sh_character.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sh_plugin.lua" title="View source">plugins/characters/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_hooks.lua" title="View source">plugins/characters/plugin/sv_hooks.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#all_to_networkable">all_to_networkable</a></li><li><a href="#create">create</a></li><li><a href="#delete">delete</a></li><li><a href="#save">save</a></li><li><a href="#send_to_client">send_to_client</a></li><li><a href="#set_desc">set_desc</a></li><li><a href="#set_gender">set_gender</a></li><li><a href="#set_model">set_model</a></li><li><a href="#set_name">set_name</a></li><li><a href="#to_networkable">to_networkable</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages</a></li><li><a href="#AddMainMenuItems">AddMainMenuItems</a></li><li><a href="#AddTabMenuItems">AddTabMenuItems</a></li><li><a href="#GetDrawPlayerInfo">GetDrawPlayerInfo</a></li><li><a href="#GetLoadingScreenMessage">GetLoadingScreenMessage</a></li><li><a href="#OnActiveCharacterSet">OnActiveCharacterSet</a></li><li><a href="#OnCharacterChange">OnCharacterChange</a></li><li><a href="#OnIntroPanelRemoved">OnIntroPanelRemoved</a></li><li><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li><a href="#PanelCharacterSet">PanelCharacterSet</a></li><li><a href="#PlayerCreateCharacter">PlayerCreateCharacter</a></li><li><a href="#PlayerDeath">PlayerDeath</a></li><li><a href="#PlayerDisconnected">PlayerDisconnected</a></li><li><a href="#PlayerInitialized">PlayerInitialized</a></li><li><a href="#PlayerOneMinute">PlayerOneMinute</a></li><li><a href="#PlayerRestored">PlayerRestored</a></li><li><a href="#PostCharacterLoaded">PostCharacterLoaded</a></li><li><a href="#PostCharacterLoaded-2">PostCharacterLoaded</a></li><li><a href="#PostCreateCharacter">PostCreateCharacter</a></li><li><a href="#PostPlayerSpawn">PostPlayerSpawn</a></li><li><a href="#RebuildScoreboardPlayerCard">RebuildScoreboardPlayerCard</a></li><li><a href="#RegisterConditions">RegisterConditions</a></li><li><a href="#SaveData">SaveData</a></li><li><a href="#ShouldDrawLoadingScreen">ShouldDrawLoadingScreen</a></li><li><a href="#ShouldHUDPaint">ShouldHUDPaint</a></li><li><a href="#ShouldMapsceneRender">ShouldMapsceneRender</a></li><li><a href="#ShouldScoreboardHide">ShouldScoreboardHide</a></li><li><a href="#ShouldScoreboardShow">ShouldScoreboardShow</a></li><li><a href="#Tick">Tick</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/characters/plugin/cl_hooks.lua</span></li><li><span class="source-link">plugins/characters/plugin/lib/sh_character.lua</span></li><li><span class="source-link">plugins/characters/plugin/sh_plugin.lua</span></li><li><span class="source-link">plugins/characters/plugin/sv_hooks.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="client"><a href="#AddCharacterCreationMenuStages">AddCharacterCreationMenuStages</a></li><li data-realm="client"><a href="#AddMainMenuItems">AddMainMenuItems</a></li><li data-realm="client"><a href="#AddTabMenuItems">AddTabMenuItems</a></li><li data-realm="client"><a href="#GetDrawPlayerInfo">GetDrawPlayerInfo</a></li><li data-realm="client"><a href="#GetLoadingScreenMessage">GetLoadingScreenMessage</a></li><li data-realm="server"><a href="#OnActiveCharacterSet">OnActiveCharacterSet</a></li><li data-realm="server"><a href="#OnCharacterChange">OnCharacterChange</a></li><li data-realm="client"><a href="#OnIntroPanelRemoved">OnIntroPanelRemoved</a></li><li data-realm="client"><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li data-realm="client"><a href="#PanelCharacterSet">PanelCharacterSet</a></li><li data-realm="server"><a href="#PlayerCreateCharacter">PlayerCreateCharacter</a></li><li data-realm="server"><a href="#PlayerDeath">PlayerDeath</a></li><li data-realm="server"><a href="#PlayerDisconnected">PlayerDisconnected</a></li><li data-realm="client"><a href="#PlayerInitialized">PlayerInitialized</a></li><li data-realm="server"><a href="#PlayerOneMinute">PlayerOneMinute</a></li><li data-realm="server"><a href="#PlayerRestored">PlayerRestored</a></li><li data-realm="shared"><a href="#PostCharacterLoaded">PostCharacterLoaded</a></li><li data-realm="server"><a href="#PostCreateCharacter">PostCreateCharacter</a></li><li data-realm="server"><a href="#PostPlayerSpawn">PostPlayerSpawn</a></li><li data-realm="client"><a href="#RebuildScoreboardPlayerCard">RebuildScoreboardPlayerCard</a></li><li data-realm="shared"><a href="#RegisterConditions">RegisterConditions</a></li><li data-realm="server"><a href="#SaveData">SaveData</a></li><li data-realm="client"><a href="#ShouldDrawLoadingScreen">ShouldDrawLoadingScreen</a></li><li data-realm="client"><a href="#ShouldHUDPaint">ShouldHUDPaint</a></li><li data-realm="client"><a href="#ShouldMapsceneRender">ShouldMapsceneRender</a></li><li data-realm="client"><a href="#ShouldScoreboardHide">ShouldScoreboardHide</a></li><li data-realm="client"><a href="#ShouldScoreboardShow">ShouldScoreboardShow</a></li><li data-realm="client"><a href="#Tick">Tick</a></li><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="server"><a href="#all_to_networkable">all_to_networkable</a></li><li data-realm="shared"><a href="#create">create</a></li><li data-realm="server"><a href="#delete">delete</a></li><li data-realm="server"><a href="#save">save</a></li><li data-realm="server"><a href="#send_to_client">send_to_client</a></li><li data-realm="server"><a href="#set_desc">set_desc</a></li><li data-realm="server"><a href="#set_gender">set_gender</a></li><li data-realm="server"><a href="#set_model">set_model</a></li><li data-realm="server"><a href="#set_name">set_name</a></li><li data-realm="server"><a href="#to_networkable">to_networkable</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

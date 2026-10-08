@@ -28,23 +28,23 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Attributes <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../plugins/attributes/index.html">attributes</a></p></div>
+<div class="page-header"><h1>Attributes <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../plugins/attributes/index.html">Attributes</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#destroy_timers">destroy_timers(character)</a></div><div class="summary-synopsis">Removes the expiry timers of every boost and multiplier on a character's attributes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a></div><div class="summary-synopsis">Returns the definition of a registered attribute.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_by_type">get_by_type(type)</a></div><div class="summary-synopsis">Returns the registered attribute definitions of a single type.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_stored">get_stored()</a></div><div class="summary-synopsis">Returns every registered attribute definition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_attributes">include_attributes(directory)</a></div><div class="summary-synopsis">Includes every file of a folder as an attribute definition. Each file gets a fresh ATTRIBUTE global, an AttributeBase named after the file, that is registered once the file has run.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register(id, data)</a></div><div class="summary-synopsis">Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get defaults: min 0, max 10, total_progress 100, geometric progression with coefficient 1.2.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#destroy_timers">destroy_timers(character)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes the expiry timers of every boost and multiplier on a character's attributes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the definition of a registered attribute.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_by_type">get_by_type(type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the registered attribute definitions of a single type.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_stored">get_stored()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns every registered attribute definition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_attributes">include_attributes(directory)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes every file of a folder as an attribute definition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register(id, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Stores an attribute definition and runs the AttributeRegistered hook.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="destroy_timers">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Attributes.</span>destroy_timers<span class="params">(character)</span></h3>
+<h3 class="signature"><span class="owner">Attributes.</span>destroy_timers<span class="params">(character)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#destroy_timers" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L93" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:93</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:93</span>
 </div>
 <section class="docstring">
 <p>Removes the expiry timers of every boost and multiplier on a character's attributes.</p>
@@ -54,9 +54,9 @@
 </section>
 <section class="detail" id="find">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Attributes.</span>find<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Attributes.</span>find<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L15" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:15</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:15</span>
 </div>
 <section class="docstring">
 <p>Returns the definition of a registered attribute.</p>
@@ -68,9 +68,9 @@
 </section>
 <section class="detail" id="get_by_type">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Attributes.</span>get_by_type<span class="params">(type)</span></h3>
+<h3 class="signature"><span class="owner">Attributes.</span>get_by_type<span class="params">(type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_by_type" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L22" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:22</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:22</span>
 </div>
 <section class="docstring">
 <p>Returns the registered attribute definitions of a single type.</p>
@@ -82,9 +82,9 @@
 </section>
 <section class="detail" id="get_stored">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Attributes.</span>get_stored<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Attributes.</span>get_stored<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_stored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L8" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:8</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:8</span>
 </div>
 <section class="docstring">
 <p>Returns every registered attribute definition.</p>
@@ -94,9 +94,9 @@
 </section>
 <section class="detail" id="include_attributes">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Attributes.</span>include_attributes<span class="params">(directory)</span></h3>
+<h3 class="signature"><span class="owner">Attributes.</span>include_attributes<span class="params">(directory)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_attributes" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L87" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:87</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:87</span>
 </div>
 <section class="docstring">
 <p>Includes every file of a folder as an attribute definition. Each file gets a fresh ATTRIBUTE
@@ -112,9 +112,9 @@ ATTRIBUTE.max = <span class="hl-n">20</span>
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Attributes.</span>register<span class="params">(id, data)</span></h3>
+<h3 class="signature"><span class="owner">Attributes.</span>register<span class="params">(id, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L48" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:48</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:48</span>
 </div>
 <section class="docstring">
 <p>Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get
@@ -134,11 +134,11 @@ Attributes.<span class="hl-f">register</span>(attribute.attribute_id, attribute)
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#destroy_timers">destroy_timers</a></li><li><a href="#find">find</a></li><li><a href="#get_by_type">get_by_type</a></li><li><a href="#get_stored">get_stored</a></li><li><a href="#include_attributes">include_attributes</a></li><li><a href="#register">register</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#destroy_timers">destroy_timers</a></li><li data-realm="shared"><a href="#find">find</a></li><li data-realm="shared"><a href="#get_by_type">get_by_type</a></li><li data-realm="shared"><a href="#get_stored">get_stored</a></li><li data-realm="shared"><a href="#include_attributes">include_attributes</a></li><li data-realm="shared"><a href="#register">register</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

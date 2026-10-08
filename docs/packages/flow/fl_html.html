@@ -28,23 +28,23 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>fl_html <span class="badge badge-object">object</span></h1><p class="subtitle">PANEL</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>fl_html <span class="badge badge-object">object</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Object table PANEL in views/base/cl_html.lua</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#render">render()</a></div><div class="summary-synopsis">Builds a complete HTML document from the head, CSS, body and JavaScript parts and displays it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_body">set_body(contents)</a></div><div class="summary-synopsis">Sets the markup placed inside the body element by the next call to render.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_css">set_css(contents)</a></div><div class="summary-synopsis">Sets the stylesheet placed in a style tag in the head by the next call to render.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_head">set_head(contents)</a></div><div class="summary-synopsis">Sets the markup placed inside the head element by the next call to render.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_html">set_html(contents)</a></div><div class="summary-synopsis">Replaces the whole document with the given HTML and displays it right away.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_javascript">set_javascript(contents)</a></div><div class="summary-synopsis">Sets the script placed in a script tag at the end of the body by the next call to render.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#render">render()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Builds a complete HTML document from the head, CSS, body and JavaScript parts and displays it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_body">set_body(contents)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the markup placed inside the body element by the next call to render.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_css">set_css(contents)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the stylesheet placed in a style tag in the head by the next call to render.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_head">set_head(contents)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the markup placed inside the head element by the next call to render.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_html">set_html(contents)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Replaces the whole document with the given HTML and displays it right away.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_javascript">set_javascript(contents)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the script placed in a script tag at the end of the body by the next call to render.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="render">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>render<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>render<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#render" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_html.lua#L49" title="View source">packages/flow/views/base/cl_html.lua:49</a>
+<span class="source-link">packages/flow/views/base/cl_html.lua:49</span>
 </div>
 <section class="docstring">
 <p>Builds a complete HTML document from the head, CSS, body and JavaScript parts and
@@ -59,9 +59,9 @@ displays it.</p>
 </section>
 <section class="detail" id="set_body">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_body<span class="params">(contents)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_body<span class="params">(contents)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_body" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_html.lua#L17" title="View source">packages/flow/views/base/cl_html.lua:17</a>
+<span class="source-link">packages/flow/views/base/cl_html.lua:17</span>
 </div>
 <section class="docstring">
 <p>Sets the markup placed inside the body element by the next call to render.</p>
@@ -71,9 +71,9 @@ displays it.</p>
 </section>
 <section class="detail" id="set_css">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_css<span class="params">(contents)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_css<span class="params">(contents)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_css" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_html.lua#L29" title="View source">packages/flow/views/base/cl_html.lua:29</a>
+<span class="source-link">packages/flow/views/base/cl_html.lua:29</span>
 </div>
 <section class="docstring">
 <p>Sets the stylesheet placed in a style tag in the head by the next call to render.</p>
@@ -83,9 +83,9 @@ displays it.</p>
 </section>
 <section class="detail" id="set_head">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_head<span class="params">(contents)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_head<span class="params">(contents)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_head" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_html.lua#L11" title="View source">packages/flow/views/base/cl_html.lua:11</a>
+<span class="source-link">packages/flow/views/base/cl_html.lua:11</span>
 </div>
 <section class="docstring">
 <p>Sets the markup placed inside the head element by the next call to render.</p>
@@ -95,9 +95,9 @@ displays it.</p>
 </section>
 <section class="detail" id="set_html">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_html<span class="params">(contents)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_html<span class="params">(contents)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_html" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_html.lua#L35" title="View source">packages/flow/views/base/cl_html.lua:35</a>
+<span class="source-link">packages/flow/views/base/cl_html.lua:35</span>
 </div>
 <section class="docstring">
 <p>Replaces the whole document with the given HTML and displays it right away.</p>
@@ -107,9 +107,9 @@ displays it.</p>
 </section>
 <section class="detail" id="set_javascript">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_javascript<span class="params">(contents)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_javascript<span class="params">(contents)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_javascript" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_html.lua#L23" title="View source">packages/flow/views/base/cl_html.lua:23</a>
+<span class="source-link">packages/flow/views/base/cl_html.lua:23</span>
 </div>
 <section class="docstring">
 <p>Sets the script placed in a script tag at the end of the body by the next call to render.</p>
@@ -118,11 +118,11 @@ displays it.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_html.lua" title="View source">packages/flow/views/base/cl_html.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#render">render</a></li><li><a href="#set_body">set_body</a></li><li><a href="#set_css">set_css</a></li><li><a href="#set_head">set_head</a></li><li><a href="#set_html">set_html</a></li><li><a href="#set_javascript">set_javascript</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/views/base/cl_html.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#render">render</a></li><li data-realm="client"><a href="#set_body">set_body</a></li><li data-realm="client"><a href="#set_css">set_css</a></li><li data-realm="client"><a href="#set_head">set_head</a></li><li data-realm="client"><a href="#set_html">set_html</a></li><li data-realm="client"><a href="#set_javascript">set_javascript</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

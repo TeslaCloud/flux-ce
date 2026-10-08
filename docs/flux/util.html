@@ -31,49 +31,49 @@
 <div class="page-header"><h1>util <span class="badge badge-library">library</span></h1></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#cache_url_material">cache_url_material(url)</a></div><div class="summary-synopsis">Downloads an image from a URL into data/flux/materials and caches it as a material. The download is asynchronous: the OnURLMatLoaded hook runs with the URL and the material once it finishes. Images that were downloaded before are loaded from disk right away.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in">cubic_ease_in(cur_step, steps, from, to)</a></div><div class="summary-synopsis">Calculates the value of a cubic ease-in interpolation at a given step.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in_out">cubic_ease_in_out(cur_step, steps, from, to)</a></div><div class="summary-synopsis">Calculates the value of a cubic ease-in-out interpolation at a given step. Uses util.cubic_ease_in for the first half of the steps and util.cubic_ease_out for the second half.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in_out_t">cubic_ease_in_out_t(steps, from, to)</a></div><div class="summary-synopsis">Precalculates every step of a cubic ease-in-out interpolation.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in_t">cubic_ease_in_t(steps, from, to)</a></div><div class="summary-synopsis">Precalculates every step of a cubic ease-in interpolation.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_out">cubic_ease_out(cur_step, steps, from, to)</a></div><div class="summary-synopsis">Calculates the value of a cubic ease-out interpolation at a given step.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_out_t">cubic_ease_out_t(steps, from, to)</a></div><div class="summary-synopsis">Precalculates every step of a cubic ease-out interpolation.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#door_is_opened">door_is_opened(entity)</a></div><div class="summary-synopsis">Checks whether a door is currently open.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#fit_to_aspect">fit_to_aspect(x, y, x2, y2)</a></div><div class="summary-synopsis">Adjusts x, y to fit inside x2, y2 while keeping the original aspect ratio.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#font_size">font_size(font)</a></div><div class="summary-synopsis">Returns the line height of a font, measured on the sample text 'Agw'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_equal_operators">get_equal_operators()</a></div><div class="summary-synopsis">Returns the equality operators together with their symbols.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_logical_operators">get_logical_operators()</a></div><div class="summary-synopsis">Returns the equality and logical operators together with their symbols.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_material">get_material(mat)</a></div><div class="summary-synopsis">Gets a material by its path. It caches the material automatically.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_operators">get_operators()</a></div><div class="summary-synopsis">Returns the names of all operators that util.process_operator supports.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_panel_class">get_panel_class(panel)</a></div><div class="summary-synopsis">Returns the class name a panel was registered under.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_relational_operators">get_relational_operators()</a></div><div class="summary-synopsis">Returns the comparison operators together with their symbols.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#hex_to_color">hex_to_color(hex)</a></div><div class="summary-synopsis">Converts a hexadecimal color to a color structure. Accepts 3 (rgb), 6 (rrggbb) or 8 (rrggbbaa) digits with an optional leading '#'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#hex_to_dec">hex_to_dec(hex)</a></div><div class="summary-synopsis">Converts a hexadecimal number to decimal.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#hex_to_decimal">hex_to_decimal(hex)</a></div><div class="summary-synopsis">Converts a single hexadecimal digit to decimal.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#list_to_string">list_to_string(callback, separator, ...)</a></div><div class="summary-synopsis">Joins the text representations of a list of objects into a single string.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#operator_to_symbol">operator_to_symbol(op)</a></div><div class="summary-synopsis">Returns the symbol of an operator, such as '&gt;=' for 'greater_equal'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#player_list_to_string">player_list_to_string(player_list)</a></div><div class="summary-synopsis">Joins the names of a list of players into a single comma-separated string. If the list consists of all players on the server (and there are at least two), returns the 'ui.chat.everyone' phrase instead.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#process_operator">process_operator(op, a, b)</a></div><div class="summary-synopsis">Applies an operator to two values by the name of the operator.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_newlines">remove_newlines(str)</a></div><div class="summary-synopsis">Removes the newlines and tabs from a string, except for those inside of double quotes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#text_color_from_base">text_color_from_base(base_color)</a></div><div class="summary-synopsis">Picks a text color that stays readable on top of the given background color.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#text_height">text_height(text, font)</a></div><div class="summary-synopsis">Returns the height a text takes up when drawn with the given font.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#text_size">text_size(text, font)</a></div><div class="summary-synopsis">Measures the size a text takes up when drawn with the given font. Results are cached, so this is cheap to call every frame.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#text_width">text_width(text, font)</a></div><div class="summary-synopsis">Returns the width a text takes up when drawn with the given font.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#to_b">to_b(value)</a></div><div class="summary-synopsis">Converts a value to a boolean. Only true, 'true', 1 and '1' count as true.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#validate">validate(...)</a></div><div class="summary-synopsis">Checks whether all of the arguments in vararg are valid (via IsValid).</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#vector_in_poly">vector_in_poly(point, poly_vertices)</a></div><div class="summary-synopsis">Determines whether a 2D point is inside of a 2D polygon.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#vector_obstructed">vector_obstructed(vec1, vec2, filter)</a></div><div class="summary-synopsis">Checks whether anything is in the way between two positions, using a line trace.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#vectors_intersect">vectors_intersect(from, to, from2, to2)</a></div><div class="summary-synopsis">Determines whether a vector from A to B intersects with a vector from C to D. Works in 2D, only the x and y components are used.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#wait_for_ent">wait_for_ent(ent_index, callback, delay, wait_time)</a></div><div class="summary-synopsis">Calls the callback as soon as the entity with the given index becomes valid, right away if it already is. Useful on the client, where an entity index can arrive before the entity itself does. Gives up without calling the callback once it runs out of attempts.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#wrap_text">wrap_text(text, font, width, initial_width)</a></div><div class="summary-synopsis">Splits a text into lines that fit into the given width when drawn with the given font. Words that are wider than a whole line are broken up with a dash. Newlines are removed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cache_url_material">cache_url_material(url)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Downloads an image from a URL into data/flux/materials and caches it as a material.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in">cubic_ease_in(cur_step, steps, from, to)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Calculates the value of a cubic ease-in interpolation at a given step.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in_out">cubic_ease_in_out(cur_step, steps, from, to)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Calculates the value of a cubic ease-in-out interpolation at a given step.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in_out_t">cubic_ease_in_out_t(steps, from, to)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Precalculates every step of a cubic ease-in-out interpolation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_in_t">cubic_ease_in_t(steps, from, to)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Precalculates every step of a cubic ease-in interpolation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_out">cubic_ease_out(cur_step, steps, from, to)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Calculates the value of a cubic ease-out interpolation at a given step.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cubic_ease_out_t">cubic_ease_out_t(steps, from, to)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Precalculates every step of a cubic ease-out interpolation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#door_is_opened">door_is_opened(entity)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a door is currently open.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#fit_to_aspect">fit_to_aspect(x, y, x2, y2)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adjusts x, y to fit inside x2, y2 while keeping the original aspect ratio.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#font_size">font_size(font)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the line height of a font, measured on the sample text 'Agw'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_equal_operators">get_equal_operators()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the equality operators together with their symbols.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_logical_operators">get_logical_operators()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the equality and logical operators together with their symbols.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_material">get_material(mat)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Gets a material by its path.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_operators">get_operators()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the names of all operators that util.process_operator supports.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_panel_class">get_panel_class(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the class name a panel was registered under.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_relational_operators">get_relational_operators()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the comparison operators together with their symbols.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hex_to_color">hex_to_color(hex)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a hexadecimal color to a color structure.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hex_to_dec">hex_to_dec(hex)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a hexadecimal number to decimal.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hex_to_decimal">hex_to_decimal(hex)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a single hexadecimal digit to decimal.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#list_to_string">list_to_string(callback, separator, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Joins the text representations of a list of objects into a single string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#operator_to_symbol">operator_to_symbol(op)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the symbol of an operator, such as '&gt;=' for 'greater_equal'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#player_list_to_string">player_list_to_string(player_list)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Joins the names of a list of players into a single comma-separated string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#process_operator">process_operator(op, a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Applies an operator to two values by the name of the operator.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_newlines">remove_newlines(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes the newlines and tabs from a string, except for those inside of double quotes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#text_color_from_base">text_color_from_base(base_color)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Picks a text color that stays readable on top of the given background color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#text_height">text_height(text, font)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the height a text takes up when drawn with the given font.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#text_size">text_size(text, font)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Measures the size a text takes up when drawn with the given font.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#text_width">text_width(text, font)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the width a text takes up when drawn with the given font.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_b">to_b(value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a value to a boolean.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#validate">validate(...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether all of the arguments in vararg are valid (via IsValid).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#vector_in_poly">vector_in_poly(point, poly_vertices)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Determines whether a 2D point is inside of a 2D polygon.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#vector_obstructed">vector_obstructed(vec1, vec2, filter)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether anything is in the way between two positions, using a line trace.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#vectors_intersect">vectors_intersect(from, to, from2, to2)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Determines whether a vector from A to B intersects with a vector from C to D.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#wait_for_ent">wait_for_ent(ent_index, callback, delay, wait_time)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Calls the callback as soon as the entity with the given index becomes valid, right away if it already is.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#wrap_text">wrap_text(text, font, width, initial_width)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Splits a text into lines that fit into the given width when drawn with the given font.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="cache_url_material">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>cache_url_material<span class="params">(url)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>cache_url_material<span class="params">(url)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#cache_url_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L197" title="View source">lib/stdlib/cl_utils.lua:197</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:197</span>
 </div>
 <section class="docstring">
 <p>Downloads an image from a URL into data/flux/materials and caches it as a material.
@@ -87,9 +87,9 @@ once it finishes. Images that were downloaded before are loaded from disk right 
 </section>
 <section class="detail" id="cubic_ease_in">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>cubic_ease_in<span class="params">(cur_step, steps, from, to)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>cubic_ease_in<span class="params">(cur_step, steps, from, to)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#cubic_ease_in" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L95" title="View source">lib/stdlib/cl_utils.lua:95</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:95</span>
 </div>
 <section class="docstring">
 <p>Calculates the value of a cubic ease-in interpolation at a given step.</p>
@@ -101,9 +101,9 @@ once it finishes. Images that were downloaded before are loaded from disk right 
 </section>
 <section class="detail" id="cubic_ease_in_out">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>cubic_ease_in_out<span class="params">(cur_step, steps, from, to)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>cubic_ease_in_out<span class="params">(cur_step, steps, from, to)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#cubic_ease_in_out" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L149" title="View source">lib/stdlib/cl_utils.lua:149</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:149</span>
 </div>
 <section class="docstring">
 <p>Calculates the value of a cubic ease-in-out interpolation at a given step.
@@ -117,9 +117,9 @@ the second half.</p>
 </section>
 <section class="detail" id="cubic_ease_in_out_t">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>cubic_ease_in_out_t<span class="params">(steps, from, to)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>cubic_ease_in_out_t<span class="params">(steps, from, to)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#cubic_ease_in_out_t" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L163" title="View source">lib/stdlib/cl_utils.lua:163</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:163</span>
 </div>
 <section class="docstring">
 <p>Precalculates every step of a cubic ease-in-out interpolation.</p>
@@ -133,9 +133,9 @@ the second half.</p>
 </section>
 <section class="detail" id="cubic_ease_in_t">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>cubic_ease_in_t<span class="params">(steps, from, to)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>cubic_ease_in_t<span class="params">(steps, from, to)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#cubic_ease_in_t" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L115" title="View source">lib/stdlib/cl_utils.lua:115</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:115</span>
 </div>
 <section class="docstring">
 <p>Precalculates every step of a cubic ease-in interpolation.</p>
@@ -149,9 +149,9 @@ the second half.</p>
 </section>
 <section class="detail" id="cubic_ease_out">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>cubic_ease_out<span class="params">(cur_step, steps, from, to)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>cubic_ease_out<span class="params">(cur_step, steps, from, to)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#cubic_ease_out" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L105" title="View source">lib/stdlib/cl_utils.lua:105</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:105</span>
 </div>
 <section class="docstring">
 <p>Calculates the value of a cubic ease-out interpolation at a given step.</p>
@@ -163,9 +163,9 @@ the second half.</p>
 </section>
 <section class="detail" id="cubic_ease_out_t">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>cubic_ease_out_t<span class="params">(steps, from, to)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>cubic_ease_out_t<span class="params">(steps, from, to)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#cubic_ease_out_t" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L131" title="View source">lib/stdlib/cl_utils.lua:131</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:131</span>
 </div>
 <section class="docstring">
 <p>Precalculates every step of a cubic ease-out interpolation.</p>
@@ -179,9 +179,9 @@ the second half.</p>
 </section>
 <section class="detail" id="door_is_opened">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>door_is_opened<span class="params">(entity)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>door_is_opened<span class="params">(entity)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#door_is_opened" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L231" title="View source">lib/stdlib/sh_utils.lua:231</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:231</span>
 </div>
 <section class="docstring">
 <p>Checks whether a door is currently open.</p>
@@ -193,9 +193,9 @@ the second half.</p>
 </section>
 <section class="detail" id="fit_to_aspect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>fit_to_aspect<span class="params">(x, y, x2, y2)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>fit_to_aspect<span class="params">(x, y, x2, y2)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#fit_to_aspect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L73" title="View source">lib/stdlib/cl_utils.lua:73</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:73</span>
 </div>
 <section class="docstring">
 <p>Adjusts x, y to fit inside x2, y2 while keeping the original aspect ratio.</p>
@@ -207,9 +207,9 @@ the second half.</p>
 </section>
 <section class="detail" id="font_size">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>font_size<span class="params">(font)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>font_size<span class="params">(font)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#font_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L50" title="View source">lib/stdlib/cl_utils.lua:50</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:50</span>
 </div>
 <section class="docstring">
 <p>Returns the line height of a font, measured on the sample text 'Agw'.</p>
@@ -221,9 +221,9 @@ the second half.</p>
 </section>
 <section class="detail" id="get_equal_operators">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>get_equal_operators<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">util.</span>get_equal_operators<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_equal_operators" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L344" title="View source">lib/stdlib/sh_utils.lua:344</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:344</span>
 </div>
 <section class="docstring">
 <p>Returns the equality operators together with their symbols.</p>
@@ -233,9 +233,9 @@ the second half.</p>
 </section>
 <section class="detail" id="get_logical_operators">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>get_logical_operators<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">util.</span>get_logical_operators<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_logical_operators" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L315" title="View source">lib/stdlib/sh_utils.lua:315</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:315</span>
 </div>
 <section class="docstring">
 <p>Returns the equality and logical operators together with their symbols.</p>
@@ -245,9 +245,9 @@ the second half.</p>
 </section>
 <section class="detail" id="get_material">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>get_material<span class="params">(mat)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>get_material<span class="params">(mat)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L179" title="View source">lib/stdlib/cl_utils.lua:179</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:179</span>
 </div>
 <section class="docstring">
 <p>Gets a material by its path. It caches the material automatically.</p>
@@ -259,9 +259,9 @@ the second half.</p>
 </section>
 <section class="detail" id="get_operators">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>get_operators<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">util.</span>get_operators<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_operators" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L303" title="View source">lib/stdlib/sh_utils.lua:303</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:303</span>
 </div>
 <section class="docstring">
 <p>Returns the names of all operators that util.process_operator supports.</p>
@@ -271,9 +271,9 @@ the second half.</p>
 </section>
 <section class="detail" id="get_panel_class">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>get_panel_class<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>get_panel_class<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_panel_class" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L57" title="View source">lib/stdlib/cl_utils.lua:57</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:57</span>
 </div>
 <section class="docstring">
 <p>Returns the class name a panel was registered under.</p>
@@ -285,9 +285,9 @@ the second half.</p>
 </section>
 <section class="detail" id="get_relational_operators">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>get_relational_operators<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">util.</span>get_relational_operators<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_relational_operators" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L329" title="View source">lib/stdlib/sh_utils.lua:329</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:329</span>
 </div>
 <section class="docstring">
 <p>Returns the comparison operators together with their symbols.</p>
@@ -297,9 +297,9 @@ the second half.</p>
 </section>
 <section class="detail" id="hex_to_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>hex_to_color<span class="params">(hex)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>hex_to_color<span class="params">(hex)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#hex_to_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L7" title="View source">lib/stdlib/sh_color.lua:7</a>
+<span class="source-link">lib/stdlib/sh_color.lua:7</span>
 </div>
 <section class="docstring">
 <p>Converts a hexadecimal color to a color structure.
@@ -312,9 +312,9 @@ Accepts 3 (rgb), 6 (rrggbb) or 8 (rrggbbaa) digits with an optional leading '#'.
 </section>
 <section class="detail" id="hex_to_dec">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>hex_to_dec<span class="params">(hex)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>hex_to_dec<span class="params">(hex)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#hex_to_dec" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L58" title="View source">lib/stdlib/sh_math.lua:58</a>
+<span class="source-link">lib/stdlib/sh_math.lua:58</span>
 </div>
 <section class="docstring">
 <p>Converts a hexadecimal number to decimal.</p>
@@ -326,9 +326,9 @@ Accepts 3 (rgb), 6 (rrggbb) or 8 (rrggbbaa) digits with an optional leading '#'.
 </section>
 <section class="detail" id="hex_to_decimal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>hex_to_decimal<span class="params">(hex)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>hex_to_decimal<span class="params">(hex)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#hex_to_decimal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L25" title="View source">lib/stdlib/sh_math.lua:25</a>
+<span class="source-link">lib/stdlib/sh_math.lua:25</span>
 </div>
 <section class="docstring">
 <p>Converts a single hexadecimal digit to decimal.</p>
@@ -340,9 +340,9 @@ Accepts 3 (rgb), 6 (rrggbb) or 8 (rrggbbaa) digits with an optional leading '#'.
 </section>
 <section class="detail" id="list_to_string">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>list_to_string<span class="params">(callback, separator, ...)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>list_to_string<span class="params">(callback, separator, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#list_to_string" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L86" title="View source">lib/stdlib/sh_utils.lua:86</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:86</span>
 </div>
 <section class="docstring">
 <p>Joins the text representations of a list of objects into a single string.</p>
@@ -357,9 +357,9 @@ util.<span class="hl-f">list_to_string</span>(<span class="hl-k">function</span>
 </section>
 <section class="detail" id="operator_to_symbol">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>operator_to_symbol<span class="params">(op)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>operator_to_symbol<span class="params">(op)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#operator_to_symbol" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L356" title="View source">lib/stdlib/sh_utils.lua:356</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:356</span>
 </div>
 <section class="docstring">
 <p>Returns the symbol of an operator, such as '&gt;=' for 'greater_equal'.</p>
@@ -371,9 +371,9 @@ util.<span class="hl-f">list_to_string</span>(<span class="hl-k">function</span>
 </section>
 <section class="detail" id="player_list_to_string">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>player_list_to_string<span class="params">(player_list)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>player_list_to_string<span class="params">(player_list)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#player_list_to_string" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L118" title="View source">lib/stdlib/sh_utils.lua:118</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:118</span>
 </div>
 <section class="docstring">
 <p>Joins the names of a list of players into a single comma-separated string.
@@ -387,9 +387,9 @@ the 'ui.chat.everyone' phrase instead.</p>
 </section>
 <section class="detail" id="process_operator">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>process_operator<span class="params">(op, a, b)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>process_operator<span class="params">(op, a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#process_operator" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L297" title="View source">lib/stdlib/sh_utils.lua:297</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:297</span>
 </div>
 <section class="docstring">
 <p>Applies an operator to two values by the name of the operator.</p>
@@ -405,9 +405,9 @@ the 'ui.chat.everyone' phrase instead.</p>
 </section>
 <section class="detail" id="remove_newlines">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>remove_newlines<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>remove_newlines<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_newlines" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L133" title="View source">lib/stdlib/sh_utils.lua:133</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:133</span>
 </div>
 <section class="docstring">
 <p>Removes the newlines and tabs from a string, except for those inside of double quotes.</p>
@@ -419,9 +419,9 @@ the 'ui.chat.everyone' phrase instead.</p>
 </section>
 <section class="detail" id="text_color_from_base">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>text_color_from_base<span class="params">(base_color)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>text_color_from_base<span class="params">(base_color)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#text_color_from_base" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L324" title="View source">lib/stdlib/sh_color.lua:324</a>
+<span class="source-link">lib/stdlib/sh_color.lua:324</span>
 </div>
 <section class="docstring">
 <p>Picks a text color that stays readable on top of the given background color.</p>
@@ -433,9 +433,9 @@ the 'ui.chat.everyone' phrase instead.</p>
 </section>
 <section class="detail" id="text_height">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>text_height<span class="params">(text, font)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>text_height<span class="params">(text, font)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#text_height" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L43" title="View source">lib/stdlib/cl_utils.lua:43</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:43</span>
 </div>
 <section class="docstring">
 <p>Returns the height a text takes up when drawn with the given font.</p>
@@ -449,9 +449,9 @@ the 'ui.chat.everyone' phrase instead.</p>
 </section>
 <section class="detail" id="text_size">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>text_size<span class="params">(text, font)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>text_size<span class="params">(text, font)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#text_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L9" title="View source">lib/stdlib/cl_utils.lua:9</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:9</span>
 </div>
 <section class="docstring">
 <p>Measures the size a text takes up when drawn with the given font.
@@ -464,9 +464,9 @@ Results are cached, so this is cheap to call every frame.</p>
 </section>
 <section class="detail" id="text_width">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>text_width<span class="params">(text, font)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>text_width<span class="params">(text, font)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#text_width" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L34" title="View source">lib/stdlib/cl_utils.lua:34</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:34</span>
 </div>
 <section class="docstring">
 <p>Returns the width a text takes up when drawn with the given font.</p>
@@ -480,9 +480,9 @@ Results are cached, so this is cheap to call every frame.</p>
 </section>
 <section class="detail" id="to_b">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>to_b<span class="params">(value)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>to_b<span class="params">(value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#to_b" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L41" title="View source">lib/stdlib/sh_utils.lua:41</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:41</span>
 </div>
 <section class="docstring">
 <p>Converts a value to a boolean. Only true, 'true', 1 and '1' count as true.</p>
@@ -494,9 +494,9 @@ Results are cached, so this is cheap to call every frame.</p>
 </section>
 <section class="detail" id="validate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>validate<span class="params">(...)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>validate<span class="params">(...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#validate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L17" title="View source">lib/stdlib/sh_utils.lua:17</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:17</span>
 </div>
 <section class="docstring">
 <p>Checks whether all of the arguments in vararg are valid (via IsValid).</p>
@@ -508,9 +508,9 @@ Results are cached, so this is cheap to call every frame.</p>
 </section>
 <section class="detail" id="vector_in_poly">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>vector_in_poly<span class="params">(point, poly_vertices)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>vector_in_poly<span class="params">(point, poly_vertices)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#vector_in_poly" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L112" title="View source">lib/stdlib/sh_math.lua:112</a>
+<span class="source-link">lib/stdlib/sh_math.lua:112</span>
 </div>
 <section class="docstring">
 <p>Determines whether a 2D point is inside of a 2D polygon.</p>
@@ -522,9 +522,9 @@ Results are cached, so this is cheap to call every frame.</p>
 </section>
 <section class="detail" id="vector_obstructed">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>vector_obstructed<span class="params">(vec1, vec2, filter)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>vector_obstructed<span class="params">(vec1, vec2, filter)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#vector_obstructed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L218" title="View source">lib/stdlib/sh_utils.lua:218</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:218</span>
 </div>
 <section class="docstring">
 <p>Checks whether anything is in the way between two positions, using a line trace.</p>
@@ -536,9 +536,9 @@ Results are cached, so this is cheap to call every frame.</p>
 </section>
 <section class="detail" id="vectors_intersect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>vectors_intersect<span class="params">(from, to, from2, to2)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>vectors_intersect<span class="params">(from, to, from2, to2)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#vectors_intersect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L80" title="View source">lib/stdlib/sh_math.lua:80</a>
+<span class="source-link">lib/stdlib/sh_math.lua:80</span>
 </div>
 <section class="docstring">
 <p>Determines whether a vector from A to B intersects with a vector from C to D.
@@ -551,9 +551,9 @@ Works in 2D, only the x and y components are used.</p>
 </section>
 <section class="detail" id="wait_for_ent">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>wait_for_ent<span class="params">(ent_index, callback, delay, wait_time)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>wait_for_ent<span class="params">(ent_index, callback, delay, wait_time)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#wait_for_ent" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L57" title="View source">lib/stdlib/sh_utils.lua:57</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:57</span>
 </div>
 <section class="docstring">
 <p>Calls the callback as soon as the entity with the given index becomes valid, right away if it
@@ -569,9 +569,9 @@ itself does. Gives up without calling the callback once it runs out of attempts.
 </section>
 <section class="detail" id="wrap_text">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">util.</span>wrap_text<span class="params">(text, font, width, initial_width)</span></h3>
+<h3 class="signature"><span class="owner">util.</span>wrap_text<span class="params">(text, font, width, initial_width)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#wrap_text" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L268" title="View source">lib/stdlib/cl_utils.lua:268</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:268</span>
 </div>
 <section class="docstring">
 <p>Splits a text into lines that fit into the given width when drawn with the given font.
@@ -583,11 +583,11 @@ Words that are wider than a whole line are broken up with a dash. Newlines are r
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua" title="View source">lib/stdlib/cl_utils.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua" title="View source">lib/stdlib/sh_color.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua" title="View source">lib/stdlib/sh_math.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua" title="View source">lib/stdlib/sh_utils.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#cache_url_material">cache_url_material</a></li><li><a href="#cubic_ease_in">cubic_ease_in</a></li><li><a href="#cubic_ease_in_out">cubic_ease_in_out</a></li><li><a href="#cubic_ease_in_out_t">cubic_ease_in_out_t</a></li><li><a href="#cubic_ease_in_t">cubic_ease_in_t</a></li><li><a href="#cubic_ease_out">cubic_ease_out</a></li><li><a href="#cubic_ease_out_t">cubic_ease_out_t</a></li><li><a href="#door_is_opened">door_is_opened</a></li><li><a href="#fit_to_aspect">fit_to_aspect</a></li><li><a href="#font_size">font_size</a></li><li><a href="#get_equal_operators">get_equal_operators</a></li><li><a href="#get_logical_operators">get_logical_operators</a></li><li><a href="#get_material">get_material</a></li><li><a href="#get_operators">get_operators</a></li><li><a href="#get_panel_class">get_panel_class</a></li><li><a href="#get_relational_operators">get_relational_operators</a></li><li><a href="#hex_to_color">hex_to_color</a></li><li><a href="#hex_to_dec">hex_to_dec</a></li><li><a href="#hex_to_decimal">hex_to_decimal</a></li><li><a href="#list_to_string">list_to_string</a></li><li><a href="#operator_to_symbol">operator_to_symbol</a></li><li><a href="#player_list_to_string">player_list_to_string</a></li><li><a href="#process_operator">process_operator</a></li><li><a href="#remove_newlines">remove_newlines</a></li><li><a href="#text_color_from_base">text_color_from_base</a></li><li><a href="#text_height">text_height</a></li><li><a href="#text_size">text_size</a></li><li><a href="#text_width">text_width</a></li><li><a href="#to_b">to_b</a></li><li><a href="#validate">validate</a></li><li><a href="#vector_in_poly">vector_in_poly</a></li><li><a href="#vector_obstructed">vector_obstructed</a></li><li><a href="#vectors_intersect">vectors_intersect</a></li><li><a href="#wait_for_ent">wait_for_ent</a></li><li><a href="#wrap_text">wrap_text</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/stdlib/cl_utils.lua</span></li><li><span class="source-link">lib/stdlib/sh_color.lua</span></li><li><span class="source-link">lib/stdlib/sh_math.lua</span></li><li><span class="source-link">lib/stdlib/sh_utils.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="client"><a href="#cache_url_material">cache_url_material</a></li><li data-realm="client"><a href="#cubic_ease_in">cubic_ease_in</a></li><li data-realm="client"><a href="#cubic_ease_in_out">cubic_ease_in_out</a></li><li data-realm="client"><a href="#cubic_ease_in_out_t">cubic_ease_in_out_t</a></li><li data-realm="client"><a href="#cubic_ease_in_t">cubic_ease_in_t</a></li><li data-realm="client"><a href="#cubic_ease_out">cubic_ease_out</a></li><li data-realm="client"><a href="#cubic_ease_out_t">cubic_ease_out_t</a></li><li data-realm="shared"><a href="#door_is_opened">door_is_opened</a></li><li data-realm="client"><a href="#fit_to_aspect">fit_to_aspect</a></li><li data-realm="client"><a href="#font_size">font_size</a></li><li data-realm="shared"><a href="#get_equal_operators">get_equal_operators</a></li><li data-realm="shared"><a href="#get_logical_operators">get_logical_operators</a></li><li data-realm="client"><a href="#get_material">get_material</a></li><li data-realm="shared"><a href="#get_operators">get_operators</a></li><li data-realm="client"><a href="#get_panel_class">get_panel_class</a></li><li data-realm="shared"><a href="#get_relational_operators">get_relational_operators</a></li><li data-realm="shared"><a href="#hex_to_color">hex_to_color</a></li><li data-realm="shared"><a href="#hex_to_dec">hex_to_dec</a></li><li data-realm="shared"><a href="#hex_to_decimal">hex_to_decimal</a></li><li data-realm="shared"><a href="#list_to_string">list_to_string</a></li><li data-realm="shared"><a href="#operator_to_symbol">operator_to_symbol</a></li><li data-realm="shared"><a href="#player_list_to_string">player_list_to_string</a></li><li data-realm="shared"><a href="#process_operator">process_operator</a></li><li data-realm="shared"><a href="#remove_newlines">remove_newlines</a></li><li data-realm="shared"><a href="#text_color_from_base">text_color_from_base</a></li><li data-realm="client"><a href="#text_height">text_height</a></li><li data-realm="client"><a href="#text_size">text_size</a></li><li data-realm="client"><a href="#text_width">text_width</a></li><li data-realm="shared"><a href="#to_b">to_b</a></li><li data-realm="shared"><a href="#validate">validate</a></li><li data-realm="shared"><a href="#vector_in_poly">vector_in_poly</a></li><li data-realm="shared"><a href="#vector_obstructed">vector_obstructed</a></li><li data-realm="shared"><a href="#vectors_intersect">vectors_intersect</a></li><li data-realm="shared"><a href="#wait_for_ent">wait_for_ent</a></li><li data-realm="client"><a href="#wrap_text">wrap_text</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

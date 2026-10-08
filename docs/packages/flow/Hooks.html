@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Hooks — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/flow" data-module="Hooks">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Hooks <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<p class="lead">Hooks called by Flow</p>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#AddTabMenuItems">AddTabMenuItems(self)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the scoreboard and help items to the tab menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AdjustBarInfo">AdjustBarInfo(k, stored[k])</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AdjustBarPos">AdjustBarPos(bar)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AdjustMenuItemPositions">AdjustMenuItemPositions(self)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxEntryPaint">ChatboxEntryPaint(self, 0, 0, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ClientIncludedSchema">ClientIncludedSchema(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CommandCheckImmunity">CommandCheckImmunity(actor, v, cmd_table.can_equal)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreateEntityInteractions">CreateEntityInteractions(interaction_menu, entity)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreateFonts">CreateFonts()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreatePlayerInteractions">CreatePlayerInteractions(interaction_menu, target)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawEntityTargetID">DrawEntityTargetID(ent, x, y, dist)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawPlayerTargetID">DrawPlayerTargetID(ent, x, y, dist)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Collects the target ID lines of a player through the GetDrawPlayerInfo hook and draws them in order of priority, fading out between 500 and 640 units of distance.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#EntityFreeze">EntityFreeze(self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#EntityUnfreeze">EntityUnfreeze(self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLGetFallDamage">FLGetFallDamage(actor, speed)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLHUDPaint">FLHUDPaint(cur_time, scrw, scrh)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the circular action progress indicator in the middle of the screen if a percentage was set with Flux.set_circle_percent.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLInitialize">FLInitialize()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLInitPostEntity">FLInitPostEntity()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerGiveSWEP">FLPlayerGiveSWEP(actor, weapon, swep)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerShouldTakeDamage">FLPlayerShouldTakeDamage(victim, attacker)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnEffect">FLPlayerSpawnEffect(actor, model)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnNPC">FLPlayerSpawnNPC(actor, npc, weapon)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnObject">FLPlayerSpawnObject(actor, model, skin)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnProp">FLPlayerSpawnProp(actor, model)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnRagdoll">FLPlayerSpawnRagdoll(actor, model)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnSENT">FLPlayerSpawnSENT(actor, class)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnSWEP">FLPlayerSpawnSWEP(actor, weapon, swep)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLPlayerSpawnVehicle">FLPlayerSpawnVehicle(actor, model, name, tab)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLSaveData">FLSaveData()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the config and runs the SaveData hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FLShouldSaveData">FLShouldSaveData()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FluxClientSchemaLoaded">FluxClientSchemaLoaded()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates the fonts once the schema has been loaded on the client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetDrawPlayerInfo">GetDrawPlayerInfo(target, x, y, distance, lines)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds the name of the player to the lines shown in their target ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetEntityName">GetEntityName(self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetLoadingScreenMessage">GetLoadingScreenMessage()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetPlayerName">GetPlayerName(self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#HalfSecond">HalfSecond()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#HUDPaintDeathBackground">HUDPaintDeathBackground(cur_time, scrw, scrh)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the red blood overlay behind the death screen.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#HUDPaintDeathForeground">HUDPaintDeathForeground(cur_time, scrw, scrh)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LazyTick">LazyTick()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LoadData">LoadData()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LogReplicate">LogReplicate(message, action, object, subject, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ModelWeaponRaised">ModelWeaponRaised(actor, actor.fl_anim_model)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnBarRegistered">OnBarRegistered(stored[id], id, force)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnCommandCreated">OnCommandCreated(id, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OneMinute">OneMinute()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OneSecond">OneSecond()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the FLSaveData hook every data_save_interval seconds, unless FLShouldSaveData returns false.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnIntroPanelCreated">OnIntroPanelCreated(self)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Flashes the game window in the taskbar when the intro panel appears.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnIntroPanelRemoved">OnIntroPanelRemoved()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnMenuPanelOpen">OnMenuPanelOpen(self, self.active_panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Centers a newly opened panel within the tab menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnResolutionChanged">OnResolutionChanged(new_w, new_h, scrw, scrh)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Recreates the fonts so that they fit the new resolution.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnThemeReloaded">OnThemeReloaded(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnThemeUnloaded">OnThemeUnloaded(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PersistenceSave">PersistenceSave()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCanRunCommand">PlayerCanRunCommand(actor, cmd_table, from_console)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCreated">PlayerCreated(self, obj)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDisconnected">PlayerDisconnected(Entity(ply_index))</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Saves the data of the player unless their should_save_data field is false, tells all clients about the disconnect and logs it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerEnterNoclip">PlayerEnterNoclip(actor)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerExitNoclip">PlayerExitNoclip(actor)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerHasPermission">PlayerHasPermission(self, action, object)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialized">PlayerInitialized(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Marks the player as initialized and, shortly after, runs PlayerInitialized on their client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialSpawn">PlayerInitialSpawn(Entity(ply_index))</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets up a newly connected player: assigns the flux_player class and the 'user' group, restores their saved data and announces the spawn to all clients.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerIsRoot">PlayerIsRoot(self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerModelChanged">PlayerModelChanged(v, model, model)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Assigns the compiled animation table of the new model to the player and, on the client, disables inverse kinematics for them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerOneMinute">PlayerOneMinute(v)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerOneSecond">PlayerOneSecond(v, cur_time)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Runs the PlayerPositionChanged hook if the player has moved since the previous check.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerPositionChanged">PlayerPositionChanged(actor, actor.last_pos, pos, cur_time)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerRestored">PlayerRestored(self, self.record)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerRunCommand">PlayerRunCommand(actor, cmd_table, args)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerSetModel">PlayerSetModel(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets the model of a player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerSetupDataTables">PlayerSetupDataTables(self.Player)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerTakeDamage">PlayerTakeDamage(ent, damage_info)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Notifies the client of the damaged player, which shows the damage flash on their HUD.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerThink">PlayerThink(v, cur_time)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Runs the current action of the player, unless it is 'idle' or 'spawning'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PopulateSpawnMenu">PopulateSpawnMenu()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PopulateToolMenu">PopulateToolMenu()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds every registered Flux tool to the tool list of the spawn menu, then runs the SynchronizeTools hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostDrawBar">PostDrawBar(bar_info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostDrawLoadingScreen">PostDrawLoadingScreen()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostPlayerLoadout">PostPlayerLoadout(self.Player, self.loadout)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Strips the weapons of the player, gives them the default loadout and selects the first weapon of it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostPlayerSpawn">PostPlayerSpawn(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Gives the player their loadout, plus the tool gun and the physics gun if they have the toolgun and physgun permissions, then runs PostPlayerSpawn on their client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostSavePlayerData">PostSavePlayerData(self)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreBarPrioritized">PreBarPrioritized(v)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreDrawBar">PreDrawBar(bar_info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreDrawInfoDisplay">PreDrawInfoDisplay(stored)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreDrawInfoDisplayItem">PreDrawInfoDisplayItem(info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreDrawPlayerInfo">PreDrawPlayerInfo(target, x, y, distance, lines)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreIncludeTool">PreIncludeTool(TOOL)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PrePlayerSetModel">PrePlayerSetModel(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreRebuildScoreboard">PreRebuildScoreboard(self, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreSavePlayerData">PreSavePlayerData(self)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RebuildScoreboard">RebuildScoreboard(self, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RebuildScoreboardPlayerCard">RebuildScoreboardPlayerCard(self, target)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldDrawBar">ShouldDrawBar(v)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldDrawLoadingScreen">ShouldDrawLoadingScreen()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldFillBar">ShouldFillBar(bar_info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldHUDPaint">ShouldHUDPaint()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldScoreboardHide">ShouldScoreboardHide()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldScoreboardShow">ShouldScoreboardShow()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldServerAutoRestart">ShouldServerAutoRestart()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldThemeCreatePanel">ShouldThemeCreatePanel(panel_id, current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldThemeLoad">ShouldThemeLoad(theme_table)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldThemeReload">ShouldThemeReload(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldThemeUnload">ShouldThemeUnload(current_theme)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SoftUndo">SoftUndo(client)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Asks the server to undo the last Flux undo entry of the local player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SynchronizeTools">SynchronizeTools()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Copies every registered Flux tool into the tool table of the tool gun.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#TargetFromString">TargetFromString(actor, str, start)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ToolPreCreateConvars">ToolPreCreateConvars(TOOL)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
+<section class="detail" id="AddTabMenuItems">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>AddTabMenuItems<span class="params">(self)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AddTabMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_tabmenu.lua:53</span>
+</div>
+<section class="docstring">
+<p>Adds the scoreboard and help items to the tab menu.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">menu</span> <span class="type">Panel</span> <span class="desc">the fl_tab_menu being built</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/fl_tab_menu.html#Init"><code>fl_tab_menu:Init</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_tabmenu.lua:53</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="AdjustBarInfo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>AdjustBarInfo<span class="params">(k, stored[k])</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AdjustBarInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:233</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>k</code></li><li><code>stored[k]</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Bars.html#LazyTick"><code>Bars:LazyTick</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:233</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="AdjustBarPos">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>AdjustBarPos<span class="params">(bar)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AdjustBarPos" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:157</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>bar</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Bars.html#position"><code>Flux.Bars:position</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:157</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="AdjustMenuItemPositions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>AdjustMenuItemPositions<span class="params">(self)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#AdjustMenuItemPositions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_tabmenu.lua:19</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/fl_tab_menu.html#Init"><code>fl_tab_menu:Init</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_tabmenu.lua:19</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ChatboxEntryPaint">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ChatboxEntryPaint<span class="params">(self, 0, 0, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ChatboxEntryPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/base/cl_textentry.lua:16</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>0</code></li><li><code>0</code></li><li><code>w</code></li><li><code>h</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/fl_text_entry.html#Paint"><code>fl_text_entry:Paint</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/base/cl_textentry.lua:16</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ClientIncludedSchema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ClientIncludedSchema<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#ClientIncludedSchema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_nethooks.lua:2</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_nethooks.lua:2</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CommandCheckImmunity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CommandCheckImmunity<span class="params">(actor, v, cmd_table.can_equal)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CommandCheckImmunity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_command.lua:349</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>v</code></li><li><code>cmd_table.can_equal</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Command.html#interpret"><code>Flux.Command:interpret</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_command.lua:349</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CreateEntityInteractions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CreateEntityInteractions<span class="params">(interaction_menu, entity)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#CreateEntityInteractions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_nethooks.lua:45</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>interaction_menu</code></li><li><code>entity</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_nethooks.lua:45</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CreateFonts">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CreateFonts<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#CreateFonts" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_font.lua:177</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Font.html#create_fonts"><code>Font.create_fonts</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_font.lua:177</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CreatePlayerInteractions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CreatePlayerInteractions<span class="params">(interaction_menu, target)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#CreatePlayerInteractions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_nethooks.lua:32</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>interaction_menu</code></li><li><code>target</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_nethooks.lua:32</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="DrawEntityTargetID">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>DrawEntityTargetID<span class="params">(ent, x, y, dist)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#DrawEntityTargetID" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:285</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>ent</code></li><li><code>x</code></li><li><code>y</code></li><li><code>dist</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDDrawTargetID"><code>GM:HUDDrawTargetID</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:285</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="DrawPlayerTargetID">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>DrawPlayerTargetID<span class="params">(ent, x, y, dist)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#DrawPlayerTargetID" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:281</span>
+</div>
+<section class="docstring">
+<p>Collects the target ID lines of a player through the GetDrawPlayerInfo hook and draws
+them in order of priority, fading out between 500 and 640 units of distance. Nothing is
+drawn if the PreDrawPlayerInfo hook returns false.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span> <span class="desc">the player being looked at</span></li><li><span class="param-name">x</span> <span class="type">Number</span> <span class="desc">screen x of the horizontal center of the text</span></li><li><span class="param-name">y</span> <span class="type">Number</span> <span class="desc">screen y of the first line</span></li><li><span class="param-name">distance</span> <span class="type">Number</span> <span class="desc">distance to the player in units</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDDrawTargetID"><code>GM:HUDDrawTargetID</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:281</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="EntityFreeze">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>EntityFreeze<span class="params">(self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#EntityFreeze" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sh_entity.lua:141</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Entity.html#freeze"><code>Entity:freeze</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sh_entity.lua:141</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="EntityUnfreeze">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>EntityUnfreeze<span class="params">(self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#EntityUnfreeze" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sh_entity.lua:157</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Entity.html#unfreeze"><code>Entity:unfreeze</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sh_entity.lua:157</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLGetFallDamage">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLGetFallDamage<span class="params">(actor, speed)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLGetFallDamage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:209</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>speed</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#GetFallDamage"><code>GM:GetFallDamage</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:209</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLHUDPaint">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLHUDPaint<span class="params">(cur_time, scrw, scrh)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#FLHUDPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:199</span>
+</div>
+<section class="docstring">
+<p>Draws the circular action progress indicator in the middle of the screen if a
+percentage was set with Flux.set_circle_percent.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">cur_time</span> <span class="type">Number</span> <span class="desc">current CurTime()</span></li><li><span class="param-name">scrw</span> <span class="type">Number</span> <span class="desc">screen width</span></li><li><span class="param-name">scrh</span> <span class="type">Number</span> <span class="desc">screen height</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDPaint"><code>GM:HUDPaint</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:199</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLInitialize">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLInitialize<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#FLInitialize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:39</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#Initialize"><code>GM:Initialize</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:39</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLInitPostEntity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLInitPostEntity<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#FLInitPostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:27</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#InitPostEntity"><code>GM:InitPostEntity</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:27</span> <span class="realm realm-client" title="Client-side">client</span></li><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:33</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerGiveSWEP">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerGiveSWEP<span class="params">(actor, weapon, swep)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerGiveSWEP" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:410</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>weapon</code></li><li><code>swep</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerGiveSWEP"><code>GM:PlayerGiveSWEP</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:410</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerShouldTakeDamage">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerShouldTakeDamage<span class="params">(victim, attacker)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerShouldTakeDamage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:228</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>victim</code></li><li><code>attacker</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerShouldTakeDamage"><code>GM:PlayerShouldTakeDamage</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:228</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnEffect">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnEffect<span class="params">(actor, model)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnEffect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:306</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>model</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnEffect"><code>GM:PlayerSpawnEffect</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:306</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnNPC">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnNPC<span class="params">(actor, npc, weapon)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnNPC" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:286</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>npc</code></li><li><code>weapon</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnNPC"><code>GM:PlayerSpawnNPC</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:286</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnObject">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnObject<span class="params">(actor, model, skin)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnObject" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:265</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>model</code></li><li><code>skin</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnObject"><code>GM:PlayerSpawnObject</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:265</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnProp">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnProp<span class="params">(actor, model)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnProp" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:244</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>model</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnProp"><code>GM:PlayerSpawnProp</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:244</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnRagdoll">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnRagdoll<span class="params">(actor, model)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnRagdoll" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:389</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>model</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnRagdoll"><code>GM:PlayerSpawnRagdoll</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:389</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnSENT">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnSENT<span class="params">(actor, class)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnSENT" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:369</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>class</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnSENT"><code>GM:PlayerSpawnSENT</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:369</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnSWEP">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnSWEP<span class="params">(actor, weapon, swep)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnSWEP" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:349</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>weapon</code></li><li><code>swep</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnSWEP"><code>GM:PlayerSpawnSWEP</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:349</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLPlayerSpawnVehicle">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLPlayerSpawnVehicle<span class="params">(actor, model, name, tab)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLPlayerSpawnVehicle" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:328</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>model</code></li><li><code>name</code></li><li><code>tab</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawnVehicle"><code>GM:PlayerSpawnVehicle</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:328</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLSaveData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLSaveData<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLSaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:458</span>
+</div>
+<section class="docstring">
+<p>Saves the config and runs the SaveData hook.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#OneSecond"><code>GM:OneSecond</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:458</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FLShouldSaveData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FLShouldSaveData<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#FLShouldSaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:457</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#OneSecond"><code>GM:OneSecond</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:457</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FluxClientSchemaLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>FluxClientSchemaLoaded<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#FluxClientSchemaLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/core/sh_core.lua:107</span>
+</div>
+<section class="docstring">
+<p>Creates the fonts once the schema has been loaded on the client.</p>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/core/sh_core.lua:107</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetDrawPlayerInfo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>GetDrawPlayerInfo<span class="params">(target, x, y, distance, lines)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#GetDrawPlayerInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:317</span>
+</div>
+<section class="docstring">
+<p>Adds the name of the player to the lines shown in their target ID.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span> <span class="desc">the player being looked at</span></li><li><span class="param-name">x</span> <span class="type">Number</span> <span class="desc">screen x of the target ID</span></li><li><span class="param-name">y</span> <span class="type">Number</span> <span class="desc">screen y of the target ID</span></li><li><span class="param-name">distance</span> <span class="type">Number</span> <span class="desc">distance to the player in units</span></li><li><span class="param-name">lines</span> <span class="type">Map</span> <span class="desc">lines to draw, keyed by ID. Each one is a table with the text, font, color and priority fields, and optionally offset_x and offset_y</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#DrawPlayerTargetID"><code>GM:DrawPlayerTargetID</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:317</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetEntityName">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>GetEntityName<span class="params">(self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#GetEntityName" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sh_entity.lua:101</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Entity.html#get_name"><code>Entity:get_name</code></a></li><li><a href="../../packages/flow/Player.html#notify"><code>Player:notify</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sh_entity.lua:101</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li><li><span class="source-link">packages/flow/lib/meta/sh_player.lua:77</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetLoadingScreenMessage">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>GetLoadingScreenMessage<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#GetLoadingScreenMessage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:144</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDDrawScoreBoard"><code>GM:HUDDrawScoreBoard</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:144</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetPlayerName">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>GetPlayerName<span class="params">(self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#GetPlayerName" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sh_entity.lua:100</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Entity.html#get_name"><code>Entity:get_name</code></a></li><li><a href="../../packages/flow/Player.html#Name"><code>Player:Name</code></a></li><li><a href="../../packages/flow/Player.html#notify"><code>Player:notify</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sh_entity.lua:100</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li><li><span class="source-link">packages/flow/lib/meta/sh_player.lua:23</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li><li><span class="source-link">packages/flow/lib/meta/sh_player.lua:75</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="HalfSecond">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>HalfSecond<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#HalfSecond" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:501</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:501</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="HUDPaintDeathBackground">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>HUDPaintDeathBackground<span class="params">(cur_time, scrw, scrh)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#HUDPaintDeathBackground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:189</span>
+</div>
+<section class="docstring">
+<p>Draws the red blood overlay behind the death screen.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">cur_time</span> <span class="type">Number</span> <span class="desc">current CurTime()</span></li><li><span class="param-name">w</span> <span class="type">Number</span> <span class="desc">screen width</span></li><li><span class="param-name">h</span> <span class="type">Number</span> <span class="desc">screen height</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDPaint"><code>GM:HUDPaint</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:189</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="HUDPaintDeathForeground">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>HUDPaintDeathForeground<span class="params">(cur_time, scrw, scrh)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#HUDPaintDeathForeground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:191</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>cur_time</code></li><li><code>scrw</code></li><li><code>scrh</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDPaint"><code>GM:HUDPaint</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:191</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="LazyTick">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>LazyTick<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#LazyTick" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:505</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:505</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="LoadData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>LoadData<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#LoadData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:25</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#InitPostEntity"><code>GM:InitPostEntity</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:25</span> <span class="realm realm-client" title="Client-side">client</span></li><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:32</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="LogReplicate">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>LogReplicate<span class="params">(message, action, object, subject, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#LogReplicate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/models/log.lua:163</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>message</code></li><li><code>action</code></li><li><code>object</code></li><li><code>subject</code></li><li><code>data</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/models/log.lua:163</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ModelWeaponRaised">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ModelWeaponRaised<span class="params">(actor, actor.fl_anim_model)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#ModelWeaponRaised" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:235</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>actor.fl_anim_model</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#TranslateActivity"><code>GM:TranslateActivity</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:235</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnBarRegistered">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnBarRegistered<span class="params">(stored[id], id, force)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnBarRegistered" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:69</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>stored[id]</code></li><li><code>id</code></li><li><code>force</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Bars.html#register"><code>Flux.Bars:register</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:69</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnCommandCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnCommandCreated<span class="params">(id, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OnCommandCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_command.lua:44</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>id</code></li><li><code>data</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Command.html#create"><code>Flux.Command:create</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_command.lua:44</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OneMinute">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OneMinute<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OneMinute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:481</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:481</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OneSecond">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OneSecond<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OneSecond" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:497</span>
+</div>
+<section class="docstring">
+<p>Runs the FLSaveData hook every data_save_interval seconds, unless FLShouldSaveData
+returns false. Also checks every half an hour whether the server is empty and reloads
+the map if it is, unless ShouldServerAutoRestart returns false.</p>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:497</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnIntroPanelCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnIntroPanelCreated<span class="params">(self)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnIntroPanelCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_intro.lua:15</span>
+</div>
+<section class="docstring">
+<p>Flashes the game window in the taskbar when the intro panel appears.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/intro.Panel.html#Init"><code>intro.Panel:Init</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_intro.lua:15</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnIntroPanelRemoved">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnIntroPanelRemoved<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnIntroPanelRemoved" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_intro.lua:99</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/intro.Panel.html#close_menu"><code>intro.Panel:close_menu</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_intro.lua:99</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnMenuPanelOpen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnMenuPanelOpen<span class="params">(self, self.active_panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnMenuPanelOpen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_tabmenu.lua:109</span>
+</div>
+<section class="docstring">
+<p>Centers a newly opened panel within the tab menu.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">menu_panel</span> <span class="type">Panel</span> <span class="desc">the tab menu</span></li><li><span class="param-name">active_panel</span> <span class="type">Panel</span> <span class="desc">the panel that has been opened</span></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_tabmenu.lua:109</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnResolutionChanged">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnResolutionChanged<span class="params">(new_w, new_h, scrw, scrh)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnResolutionChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:65</span>
+</div>
+<section class="docstring">
+<p>Recreates the fonts so that they fit the new resolution. Note that GM:Tick runs this
+hook with the new size first, so the values received are the reverse of what the
+parameter names say.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">old_w</span> <span class="type">Number</span> <span class="desc">receives the new screen width</span></li><li><span class="param-name">old_h</span> <span class="type">Number</span> <span class="desc">receives the new screen height</span></li><li><span class="param-name">new_w</span> <span class="type">Number</span> <span class="desc">receives the previous screen width</span></li><li><span class="param-name">new_h</span> <span class="type">Number</span> <span class="desc">receives the previous screen height</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#Tick"><code>GM:Tick</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:65</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnThemeLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnThemeLoaded<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:258</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>current_theme</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Theme.html#load_theme"><code>Theme.load_theme</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_theme.lua:258</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnThemeReloaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnThemeReloaded<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnThemeReloaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:291</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>current_theme</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Theme.html#reload"><code>Theme.reload</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_theme.lua:291</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnThemeUnloaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnThemeUnloaded<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnThemeUnloaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:272</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>current_theme</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Theme.html#unload_theme"><code>Theme.unload_theme</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_theme.lua:272</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PersistenceSave">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PersistenceSave<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PersistenceSave" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:454</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:454</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCanRunCommand">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerCanRunCommand<span class="params">(actor, cmd_table, from_console)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCanRunCommand" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_command.lua:293</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>cmd_table</code></li><li><code>from_console</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Command.html#interpret"><code>Flux.Command:interpret</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_command.lua:293</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerCreated<span class="params">(self, obj)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:104</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>obj</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sv_player.lua:104</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerDisconnected">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerDisconnected<span class="params">(Entity(ply_index))</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PlayerDisconnected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_nethooks.lua:10</span>
+</div>
+<section class="docstring">
+<p>Saves the data of the player unless their should_save_data field is false, tells all
+clients about the disconnect and logs it.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_nethooks.lua:10</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerEnterNoclip">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerEnterNoclip<span class="params">(actor)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerEnterNoclip" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:432</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerNoClip"><code>GM:PlayerNoClip</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:432</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerExitNoclip">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerExitNoclip<span class="params">(actor)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerExitNoclip" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:426</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerNoClip"><code>GM:PlayerNoClip</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:426</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerHasPermission">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerHasPermission<span class="params">(self, action, object)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerHasPermission" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:218</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>action</code></li><li><code>object</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Player.html#can"><code>Player:can</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sh_player.lua:218</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerInitialized">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerInitialized<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerInitialized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_nethooks.lua:12</span>
+</div>
+<section class="docstring">
+<p>Marks the player as initialized and, shortly after, runs PlayerInitialized on their client.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_nethooks.lua:12</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerInitialSpawn">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerInitialSpawn<span class="params">(Entity(ply_index))</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PlayerInitialSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_nethooks.lua:6</span>
+</div>
+<section class="docstring">
+<p>Sets up a newly connected player: assigns the flux_player class and the 'user' group,
+restores their saved data and announces the spawn to all clients. Bots are marked as
+initialized right away instead.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_nethooks.lua:6</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerIsRoot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerIsRoot<span class="params">(self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerIsRoot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sh_player.lua:225</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Player.html#is_root"><code>Player:is_root</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sh_player.lua:225</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerModelChanged">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerModelChanged<span class="params">(v, model, model)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerModelChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:21</span>
+</div>
+<section class="docstring">
+<p>Assigns the compiled animation table of the new model to the player and, on the client,
+disables inverse kinematics for them. Does nothing if no new model is given.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">new_model</span> <span class="type">String</span> <span class="desc">path of the new model</span></li><li><span class="param-name">old_model</span> <span class="type">String</span> <span class="desc">path of the previous model</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#InitPostEntity"><code>GM:InitPostEntity</code></a></li><li><a href="../../packages/flow/Player.html#SetModel"><code>Player:SetModel</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:21</span> <span class="realm realm-client" title="Client-side">client</span></li><li><span class="source-link">packages/flow/hooks/cl_nethooks.lua:15</span> <span class="realm realm-client" title="Client-side">client</span></li><li><span class="source-link">packages/flow/lib/meta/sh_player.lua:40</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerOneMinute">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerOneMinute<span class="params">(v)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerOneMinute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sh_hooks.lua:490</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>v</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sh_hooks.lua:490</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerOneSecond">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerOneSecond<span class="params">(v, cur_time)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerOneSecond" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:717</span>
+</div>
+<section class="docstring">
+<p>Runs the PlayerPositionChanged hook if the player has moved since the previous check.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">cur_time</span> <span class="type">Number</span> <span class="desc">current CurTime()</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#Tick"><code>GM:Tick</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:717</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerPositionChanged">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerPositionChanged<span class="params">(actor, actor.last_pos, pos, cur_time)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerPositionChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:586</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>actor.last_pos</code></li><li><code>pos</code></li><li><code>cur_time</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerOneSecond"><code>GM:PlayerOneSecond</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:586</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerRestored">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerRestored<span class="params">(self, self.record)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerRestored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:87</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>self.record</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Player.html#restore_player"><code>Player:restore_player</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sv_player.lua:87</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">packages/flow/lib/meta/sv_player.lua:94</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">packages/flow/lib/meta/sv_player.lua:108</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerRunCommand">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerRunCommand<span class="params">(actor, cmd_table, args)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerRunCommand" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_command.lua:374</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>cmd_table</code></li><li><code>args</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Command.html#interpret"><code>Flux.Command:interpret</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_command.lua:374</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerSetModel">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerSetModel<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerSetModel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:61</span>
+</div>
+<section class="docstring">
+<p>Sets the model of a player. A string returned by the PrePlayerSetModel hook is used as
+the model, and false defers to the base gamemode. Otherwise bots and initialized players
+get the model from their 'model' networked variable (a citizen model if it is not set),
+and anyone else is left to the base gamemode.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawn"><code>GM:PlayerSpawn</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:61</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerSetupDataTables">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerSetupDataTables<span class="params">(self.Player)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerSetupDataTables" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/classes/sh_player.lua:24</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self.Player</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/flux_player.html#SetupDataTables"><code>flux_player:SetupDataTables</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/classes/sh_player.lua:24</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerTakeDamage">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerTakeDamage<span class="params">(ent, damage_info)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerTakeDamage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:436</span>
+</div>
+<section class="docstring">
+<p>Notifies the client of the damaged player, which shows the damage flash on their HUD.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">victim</span> <span class="type">Player</span></li><li><span class="param-name">damage_info</span> <span class="type">CTakeDamageInfo</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#EntityTakeDamage"><code>GM:EntityTakeDamage</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:436</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerThink">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerThink<span class="params">(v, cur_time)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerThink" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:714</span>
+</div>
+<section class="docstring">
+<p>Runs the current action of the player, unless it is 'idle' or 'spawning'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">cur_time</span> <span class="type">Number</span> <span class="desc">current CurTime()</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#Tick"><code>GM:Tick</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:714</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PopulateSpawnMenu">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PopulateSpawnMenu<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PopulateSpawnMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:40</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerInitialized"><code>GM:PlayerInitialized</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:40</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PopulateToolMenu">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PopulateToolMenu<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PopulateToolMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:42</span>
+</div>
+<section class="docstring">
+<p>Adds every registered Flux tool to the tool list of the spawn menu, then runs the
+SynchronizeTools hook.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerInitialized"><code>GM:PlayerInitialized</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:42</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostDrawBar">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PostDrawBar<span class="params">(bar_info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PostDrawBar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:195</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>bar_info</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Bars.html#draw"><code>Flux.Bars:draw</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:195</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostDrawLoadingScreen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PostDrawLoadingScreen<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PostDrawLoadingScreen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:170</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDDrawScoreBoard"><code>GM:HUDDrawScoreBoard</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:170</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostPlayerLoadout">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PostPlayerLoadout<span class="params">(self.Player, self.loadout)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PostPlayerLoadout" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/classes/sh_player.lua:62</span>
+</div>
+<section class="docstring">
+<p>Strips the weapons of the player, gives them the default loadout and selects the first
+weapon of it.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">default_loadout</span> <span class="type">List&lt;String&gt;</span> <span class="desc">weapon classes to give</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/flux_player.html#Loadout"><code>flux_player:Loadout</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/classes/sh_player.lua:62</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostPlayerSpawn">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PostPlayerSpawn<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PostPlayerSpawn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:80</span>
+</div>
+<section class="docstring">
+<p>Gives the player their loadout, plus the tool gun and the physics gun if they have the
+toolgun and physgun permissions, then runs PostPlayerSpawn on their client.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSpawn"><code>GM:PlayerSpawn</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:80</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostSavePlayerData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PostSavePlayerData<span class="params">(self)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PostSavePlayerData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:13</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Player.html#save_player"><code>Player:save_player</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sv_player.lua:13</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreBarPrioritized">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreBarPrioritized<span class="params">(v)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreBarPrioritized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:133</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>v</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Bars.html#prioritize"><code>Flux.Bars:prioritize</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:133</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreDrawBar">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreDrawBar<span class="params">(bar_info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreDrawBar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:176</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>bar_info</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Bars.html#draw"><code>Flux.Bars:draw</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:176</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreDrawInfoDisplay">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreDrawInfoDisplay<span class="params">(stored)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreDrawInfoDisplay" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_info_display.lua:134</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>stored</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/InfoDisplay.html#draw_all"><code>InfoDisplay:draw_all</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_info_display.lua:134</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreDrawInfoDisplayItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreDrawInfoDisplayItem<span class="params">(info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreDrawInfoDisplayItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_info_display.lua:78</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>info</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/InfoDisplay.html#draw"><code>InfoDisplay:draw</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_info_display.lua:78</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreDrawPlayerInfo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreDrawPlayerInfo<span class="params">(target, x, y, distance, lines)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreDrawPlayerInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:319</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>target</code></li><li><code>x</code></li><li><code>y</code></li><li><code>distance</code></li><li><code>lines</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#DrawPlayerTargetID"><code>GM:DrawPlayerTargetID</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:319</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreIncludeTool">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreIncludeTool<span class="params">(TOOL)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PreIncludeTool" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_tool.lua:17</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>TOOL</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_tool.lua:17</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PrePlayerSetModel">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PrePlayerSetModel<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PrePlayerSetModel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:135</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerSetModel"><code>GM:PlayerSetModel</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:135</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreRebuildScoreboard">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreRebuildScoreboard<span class="params">(self, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreRebuildScoreboard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_scoreboard.lua:23</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>w</code></li><li><code>h</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/fl_scoreboard_player.html#rebuild"><code>fl_scoreboard_player:rebuild</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_scoreboard.lua:23</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreSavePlayerData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreSavePlayerData<span class="params">(self)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PreSavePlayerData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/meta/sv_player.lua:7</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Player.html#save_player"><code>Player:save_player</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/meta/sv_player.lua:7</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="RebuildScoreboard">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>RebuildScoreboard<span class="params">(self, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#RebuildScoreboard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_scoreboard.lua:54</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>w</code></li><li><code>h</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/fl_scoreboard_player.html#rebuild"><code>fl_scoreboard_player:rebuild</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_scoreboard.lua:54</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="RebuildScoreboardPlayerCard">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>RebuildScoreboardPlayerCard<span class="params">(self, target)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#RebuildScoreboardPlayerCard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/views/cl_scoreboard.lua:121</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>target</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/fl_scoreboard_player.html#rebuild"><code>fl_scoreboard_player:rebuild</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/views/cl_scoreboard.lua:121</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SaveData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>SaveData<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#SaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:576</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#FLSaveData"><code>GM:FLSaveData</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:576</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldDrawBar">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldDrawBar<span class="params">(v)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldDrawBar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:129</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>v</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Bars.html#prioritize"><code>Flux.Bars:prioritize</code></a></li><li><a href="../../packages/flow/Flux.Bars.html#draw"><code>Flux.Bars:draw</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:129</span> <span class="realm realm-client" title="Client-side">client</span></li><li><span class="source-link">packages/flow/lib/cl_bars.lua:179</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldDrawLoadingScreen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldDrawLoadingScreen<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldDrawLoadingScreen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:132</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDDrawScoreBoard"><code>GM:HUDDrawScoreBoard</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:132</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldFillBar">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldFillBar<span class="params">(bar_info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldFillBar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:185</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>bar_info</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Bars.html#draw"><code>Flux.Bars:draw</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_bars.lua:185</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldHUDPaint">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldHUDPaint<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldHUDPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:178</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#HUDPaint"><code>GM:HUDPaint</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:178</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldScoreboardHide">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldScoreboardHide<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldScoreboardHide" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:120</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#ScoreboardHide"><code>GM:ScoreboardHide</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:120</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldScoreboardShow">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldScoreboardShow<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldScoreboardShow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:105</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#ScoreboardShow"><code>GM:ScoreboardShow</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:105</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldServerAutoRestart">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldServerAutoRestart<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#ShouldServerAutoRestart" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/sv_hooks.lua:470</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#OneSecond"><code>GM:OneSecond</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/sv_hooks.lua:470</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldThemeCreatePanel">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldThemeCreatePanel<span class="params">(panel_id, current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldThemeCreatePanel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:47</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>panel_id</code></li><li><code>current_theme</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Theme.html#create_panel"><code>Theme.create_panel</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_theme.lua:47</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldThemeLoad">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldThemeLoad<span class="params">(theme_table)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldThemeLoad" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:236</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>theme_table</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Theme.html#load_theme"><code>Theme.load_theme</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_theme.lua:236</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldThemeReload">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldThemeReload<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldThemeReload" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:284</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>current_theme</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Theme.html#reload"><code>Theme.reload</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_theme.lua:284</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ShouldThemeUnload">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ShouldThemeUnload<span class="params">(current_theme)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#ShouldThemeUnload" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:265</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>current_theme</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Theme.html#unload_theme"><code>Theme.unload_theme</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/cl_theme.lua:265</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SoftUndo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>SoftUndo<span class="params">(client)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#SoftUndo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:465</span>
+</div>
+<section class="docstring">
+<p>Asks the server to undo the last Flux undo entry of the local player.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">client</span> <span class="type">Player</span> <span class="desc">unused, the local player is always used</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if the local player has entries in their undo queue, nil otherwise</span></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#PlayerBindPress"><code>GM:PlayerBindPress</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:465</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SynchronizeTools">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>SynchronizeTools<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#SynchronizeTools" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/hooks/cl_hooks.lua:24</span>
+</div>
+<section class="docstring">
+<p>Copies every registered Flux tool into the tool table of the tool gun.</p>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/GM.html#InitPostEntity"><code>GM:InitPostEntity</code></a></li><li><a href="../../packages/flow/GM.html#PopulateToolMenu"><code>GM:PopulateToolMenu</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:24</span> <span class="realm realm-client" title="Client-side">client</span></li><li><span class="source-link">packages/flow/hooks/cl_hooks.lua:390</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="TargetFromString">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>TargetFromString<span class="params">(actor, str, start)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#TargetFromString" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_command.lua:240</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>str</code></li><li><code>start</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../packages/flow/Flux.Command.html#str_to_player"><code>Flux.Command:str_to_player</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_command.lua:240</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ToolPreCreateConvars">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ToolPreCreateConvars<span class="params">(TOOL)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#ToolPreCreateConvars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">packages/flow/lib/sh_tool.lua:21</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>TOOL</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">packages/flow/lib/sh_tool.lua:21</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/core/sh_core.lua</span></li><li><span class="source-link">packages/flow/hooks/cl_hooks.lua</span></li><li><span class="source-link">packages/flow/hooks/cl_nethooks.lua</span></li><li><span class="source-link">packages/flow/lib/meta/sh_player.lua</span></li><li><span class="source-link">packages/flow/hooks/sv_hooks.lua</span></li><li><span class="source-link">packages/flow/hooks/sh_hooks.lua</span></li><li><span class="source-link">packages/flow/hooks/sv_nethooks.lua</span></li><li><span class="source-link">packages/flow/lib/cl_bars.lua</span></li><li><span class="source-link">packages/flow/lib/cl_font.lua</span></li><li><span class="source-link">packages/flow/lib/cl_info_display.lua</span></li><li><span class="source-link">packages/flow/lib/cl_theme.lua</span></li><li><span class="source-link">packages/flow/lib/classes/sh_player.lua</span></li><li><span class="source-link">packages/flow/lib/meta/sh_entity.lua</span></li><li><span class="source-link">packages/flow/lib/meta/sv_player.lua</span></li><li><span class="source-link">packages/flow/lib/sh_command.lua</span></li><li><span class="source-link">packages/flow/lib/sh_tool.lua</span></li><li><span class="source-link">packages/flow/models/log.lua</span></li><li><span class="source-link">packages/flow/views/base/cl_textentry.lua</span></li><li><span class="source-link">packages/flow/views/cl_intro.lua</span></li><li><span class="source-link">packages/flow/views/cl_scoreboard.lua</span></li><li><span class="source-link">packages/flow/views/cl_tabmenu.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="client"><a href="#AddTabMenuItems">AddTabMenuItems</a></li><li data-realm="client"><a href="#AdjustBarInfo">AdjustBarInfo</a></li><li data-realm="client"><a href="#AdjustBarPos">AdjustBarPos</a></li><li data-realm="client"><a href="#AdjustMenuItemPositions">AdjustMenuItemPositions</a></li><li data-realm="client"><a href="#ChatboxEntryPaint">ChatboxEntryPaint</a></li><li data-realm="server"><a href="#ClientIncludedSchema">ClientIncludedSchema</a></li><li data-realm="server"><a href="#CommandCheckImmunity">CommandCheckImmunity</a></li><li data-realm="client"><a href="#CreateEntityInteractions">CreateEntityInteractions</a></li><li data-realm="client"><a href="#CreateFonts">CreateFonts</a></li><li data-realm="client"><a href="#CreatePlayerInteractions">CreatePlayerInteractions</a></li><li data-realm="client"><a href="#DrawEntityTargetID">DrawEntityTargetID</a></li><li data-realm="client"><a href="#DrawPlayerTargetID">DrawPlayerTargetID</a></li><li data-realm="shared"><a href="#EntityFreeze">EntityFreeze</a></li><li data-realm="shared"><a href="#EntityUnfreeze">EntityUnfreeze</a></li><li data-realm="server"><a href="#FLGetFallDamage">FLGetFallDamage</a></li><li data-realm="client"><a href="#FLHUDPaint">FLHUDPaint</a></li><li data-realm="shared"><a href="#FLInitialize">FLInitialize</a></li><li data-realm="shared"><a href="#FLInitPostEntity">FLInitPostEntity</a></li><li data-realm="server"><a href="#FLPlayerGiveSWEP">FLPlayerGiveSWEP</a></li><li data-realm="server"><a href="#FLPlayerShouldTakeDamage">FLPlayerShouldTakeDamage</a></li><li data-realm="server"><a href="#FLPlayerSpawnEffect">FLPlayerSpawnEffect</a></li><li data-realm="server"><a href="#FLPlayerSpawnNPC">FLPlayerSpawnNPC</a></li><li data-realm="server"><a href="#FLPlayerSpawnObject">FLPlayerSpawnObject</a></li><li data-realm="server"><a href="#FLPlayerSpawnProp">FLPlayerSpawnProp</a></li><li data-realm="server"><a href="#FLPlayerSpawnRagdoll">FLPlayerSpawnRagdoll</a></li><li data-realm="server"><a href="#FLPlayerSpawnSENT">FLPlayerSpawnSENT</a></li><li data-realm="server"><a href="#FLPlayerSpawnSWEP">FLPlayerSpawnSWEP</a></li><li data-realm="server"><a href="#FLPlayerSpawnVehicle">FLPlayerSpawnVehicle</a></li><li data-realm="server"><a href="#FLSaveData">FLSaveData</a></li><li data-realm="server"><a href="#FLShouldSaveData">FLShouldSaveData</a></li><li data-realm="client"><a href="#FluxClientSchemaLoaded">FluxClientSchemaLoaded</a></li><li data-realm="client"><a href="#GetDrawPlayerInfo">GetDrawPlayerInfo</a></li><li data-realm="shared"><a href="#GetEntityName">GetEntityName</a></li><li data-realm="client"><a href="#GetLoadingScreenMessage">GetLoadingScreenMessage</a></li><li data-realm="shared"><a href="#GetPlayerName">GetPlayerName</a></li><li data-realm="shared"><a href="#HalfSecond">HalfSecond</a></li><li data-realm="client"><a href="#HUDPaintDeathBackground">HUDPaintDeathBackground</a></li><li data-realm="client"><a href="#HUDPaintDeathForeground">HUDPaintDeathForeground</a></li><li data-realm="shared"><a href="#LazyTick">LazyTick</a></li><li data-realm="shared"><a href="#LoadData">LoadData</a></li><li data-realm="client"><a href="#LogReplicate">LogReplicate</a></li><li data-realm="shared"><a href="#ModelWeaponRaised">ModelWeaponRaised</a></li><li data-realm="client"><a href="#OnBarRegistered">OnBarRegistered</a></li><li data-realm="shared"><a href="#OnCommandCreated">OnCommandCreated</a></li><li data-realm="shared"><a href="#OneMinute">OneMinute</a></li><li data-realm="shared"><a href="#OneSecond">OneSecond</a></li><li data-realm="client"><a href="#OnIntroPanelCreated">OnIntroPanelCreated</a></li><li data-realm="client"><a href="#OnIntroPanelRemoved">OnIntroPanelRemoved</a></li><li data-realm="client"><a href="#OnMenuPanelOpen">OnMenuPanelOpen</a></li><li data-realm="client"><a href="#OnResolutionChanged">OnResolutionChanged</a></li><li data-realm="client"><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li data-realm="client"><a href="#OnThemeReloaded">OnThemeReloaded</a></li><li data-realm="client"><a href="#OnThemeUnloaded">OnThemeUnloaded</a></li><li data-realm="server"><a href="#PersistenceSave">PersistenceSave</a></li><li data-realm="server"><a href="#PlayerCanRunCommand">PlayerCanRunCommand</a></li><li data-realm="server"><a href="#PlayerCreated">PlayerCreated</a></li><li data-realm="client"><a href="#PlayerDisconnected">PlayerDisconnected</a></li><li data-realm="shared"><a href="#PlayerEnterNoclip">PlayerEnterNoclip</a></li><li data-realm="shared"><a href="#PlayerExitNoclip">PlayerExitNoclip</a></li><li data-realm="shared"><a href="#PlayerHasPermission">PlayerHasPermission</a></li><li data-realm="server"><a href="#PlayerInitialized">PlayerInitialized</a></li><li data-realm="client"><a href="#PlayerInitialSpawn">PlayerInitialSpawn</a></li><li data-realm="shared"><a href="#PlayerIsRoot">PlayerIsRoot</a></li><li data-realm="shared"><a href="#PlayerModelChanged">PlayerModelChanged</a></li><li data-realm="shared"><a href="#PlayerOneMinute">PlayerOneMinute</a></li><li data-realm="server"><a href="#PlayerOneSecond">PlayerOneSecond</a></li><li data-realm="server"><a href="#PlayerPositionChanged">PlayerPositionChanged</a></li><li data-realm="server"><a href="#PlayerRestored">PlayerRestored</a></li><li data-realm="server"><a href="#PlayerRunCommand">PlayerRunCommand</a></li><li data-realm="server"><a href="#PlayerSetModel">PlayerSetModel</a></li><li data-realm="shared"><a href="#PlayerSetupDataTables">PlayerSetupDataTables</a></li><li data-realm="server"><a href="#PlayerTakeDamage">PlayerTakeDamage</a></li><li data-realm="server"><a href="#PlayerThink">PlayerThink</a></li><li data-realm="client"><a href="#PopulateSpawnMenu">PopulateSpawnMenu</a></li><li data-realm="client"><a href="#PopulateToolMenu">PopulateToolMenu</a></li><li data-realm="client"><a href="#PostDrawBar">PostDrawBar</a></li><li data-realm="client"><a href="#PostDrawLoadingScreen">PostDrawLoadingScreen</a></li><li data-realm="shared"><a href="#PostPlayerLoadout">PostPlayerLoadout</a></li><li data-realm="server"><a href="#PostPlayerSpawn">PostPlayerSpawn</a></li><li data-realm="server"><a href="#PostSavePlayerData">PostSavePlayerData</a></li><li data-realm="client"><a href="#PreBarPrioritized">PreBarPrioritized</a></li><li data-realm="client"><a href="#PreDrawBar">PreDrawBar</a></li><li data-realm="client"><a href="#PreDrawInfoDisplay">PreDrawInfoDisplay</a></li><li data-realm="client"><a href="#PreDrawInfoDisplayItem">PreDrawInfoDisplayItem</a></li><li data-realm="client"><a href="#PreDrawPlayerInfo">PreDrawPlayerInfo</a></li><li data-realm="shared"><a href="#PreIncludeTool">PreIncludeTool</a></li><li data-realm="server"><a href="#PrePlayerSetModel">PrePlayerSetModel</a></li><li data-realm="client"><a href="#PreRebuildScoreboard">PreRebuildScoreboard</a></li><li data-realm="server"><a href="#PreSavePlayerData">PreSavePlayerData</a></li><li data-realm="client"><a href="#RebuildScoreboard">RebuildScoreboard</a></li><li data-realm="client"><a href="#RebuildScoreboardPlayerCard">RebuildScoreboardPlayerCard</a></li><li data-realm="server"><a href="#SaveData">SaveData</a></li><li data-realm="client"><a href="#ShouldDrawBar">ShouldDrawBar</a></li><li data-realm="client"><a href="#ShouldDrawLoadingScreen">ShouldDrawLoadingScreen</a></li><li data-realm="client"><a href="#ShouldFillBar">ShouldFillBar</a></li><li data-realm="client"><a href="#ShouldHUDPaint">ShouldHUDPaint</a></li><li data-realm="client"><a href="#ShouldScoreboardHide">ShouldScoreboardHide</a></li><li data-realm="client"><a href="#ShouldScoreboardShow">ShouldScoreboardShow</a></li><li data-realm="server"><a href="#ShouldServerAutoRestart">ShouldServerAutoRestart</a></li><li data-realm="client"><a href="#ShouldThemeCreatePanel">ShouldThemeCreatePanel</a></li><li data-realm="client"><a href="#ShouldThemeLoad">ShouldThemeLoad</a></li><li data-realm="client"><a href="#ShouldThemeReload">ShouldThemeReload</a></li><li data-realm="client"><a href="#ShouldThemeUnload">ShouldThemeUnload</a></li><li data-realm="client"><a href="#SoftUndo">SoftUndo</a></li><li data-realm="client"><a href="#SynchronizeTools">SynchronizeTools</a></li><li data-realm="server"><a href="#TargetFromString">TargetFromString</a></li><li data-realm="shared"><a href="#ToolPreCreateConvars">ToolPreCreateConvars</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

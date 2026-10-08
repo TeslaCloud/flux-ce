@@ -28,39 +28,39 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>fl_button <span class="badge badge-object">object</span></h1><p class="subtitle">PANEL</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>fl_button <span class="badge badge-object">object</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Object table PANEL in views/base/cl_button.lua</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#get_background_color">get_background_color()</a></div><div class="summary-synopsis">Returns the background color of the button.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_draw_outline">get_draw_outline()</a></div><div class="summary-synopsis">Checks whether the outline of the button is drawn.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_text_offset">get_text_offset()</a></div><div class="summary-synopsis">Returns the horizontal offset of the title, which is always 0 for centered buttons.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_active">is_active()</a></div><div class="summary-synopsis">Checks whether the button is in the active (selected) state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnMousePressed">OnMousePressed(key)</a></div><div class="summary-synopsis">Calls DoClick on a left click and DoRightClick on a right click, if they are defined.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Paint">Paint(w, h)</a></div><div class="summary-synopsis">Delegates drawing of the button to the active theme's PaintButton hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_active">set_active(active)</a></div><div class="summary-synopsis">Sets the active (selected) state of the button, which themes use when painting it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_background_color">set_background_color(color)</a></div><div class="summary-synopsis">Sets the background color of the button. It is only drawn while the panel's draw_background field is enabled.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_centered">set_centered(centered)</a></div><div class="summary-synopsis">Sets whether the title is centered horizontally instead of placed at the text offset.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_draw_outline">set_draw_outline(should_draw)</a></div><div class="summary-synopsis">Sets whether a border in the theme's outline color is drawn around the button.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_enabled">set_enabled(enabled)</a></div><div class="summary-synopsis">Enables or disables the button. A disabled button ignores mouse input and gets darkened text; enabling it clears any text color set with set_text_color.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_icon">set_icon(icon, right)</a></div><div class="summary-synopsis">Sets the FontAwesome icon displayed next to the title.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_icon_size">set_icon_size(size)</a></div><div class="summary-synopsis">Sets a fixed icon size and stops the icon from being resized to fit the button height.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_text">set_text(new_text)</a></div><div class="summary-synopsis">Sets the title displayed on the button.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_text_autoposition">set_text_autoposition(autopos)</a></div><div class="summary-synopsis">Sets the text autoposition flag. The flag is only stored; nothing in the framework currently reads it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_text_color">set_text_color(color)</a></div><div class="summary-synopsis">Overrides the color of the title and the icon.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_text_offset">set_text_offset(pos)</a></div><div class="summary-synopsis">Sets the horizontal offset of the title from the left edge of the button.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SizeToContents">SizeToContents()</a></div><div class="summary-synopsis">Resizes the button to fit its title and icon in both dimensions.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SizeToContentsX">SizeToContentsX()</a></div><div class="summary-synopsis">Sets the width of the button to fit its title, icon and text offset.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SizeToContentsY">SizeToContentsY()</a></div><div class="summary-synopsis">Sets the height of the button to the height of its title text.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Think">Think()</a></div><div class="summary-synopsis">Updates the hover fade amount and, unless an icon size was set explicitly, fits the icon size to the height of the button.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#toggle">toggle()</a></div><div class="summary-synopsis">Flips the active state of the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_background_color">get_background_color()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the background color of the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_draw_outline">get_draw_outline()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Checks whether the outline of the button is drawn.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_text_offset">get_text_offset()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the horizontal offset of the title, which is always 0 for centered buttons.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_active">is_active()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Checks whether the button is in the active (selected) state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnMousePressed">OnMousePressed(key)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Calls DoClick on a left click and DoRightClick on a right click, if they are defined.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Paint">Paint(w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Delegates drawing of the button to the active theme's PaintButton hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_active">set_active(active)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the active (selected) state of the button, which themes use when painting it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_background_color">set_background_color(color)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the background color of the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_centered">set_centered(centered)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets whether the title is centered horizontally instead of placed at the text offset.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_draw_outline">set_draw_outline(should_draw)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets whether a border in the theme's outline color is drawn around the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_enabled">set_enabled(enabled)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Enables or disables the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_icon">set_icon(icon, right)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the FontAwesome icon displayed next to the title.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_icon_size">set_icon_size(size)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a fixed icon size and stops the icon from being resized to fit the button height.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_text">set_text(new_text)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the title displayed on the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_text_autoposition">set_text_autoposition(autopos)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the text autoposition flag.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_text_color">set_text_color(color)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Overrides the color of the title and the icon.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_text_offset">set_text_offset(pos)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the horizontal offset of the title from the left edge of the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SizeToContents">SizeToContents()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Resizes the button to fit its title and icon in both dimensions.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SizeToContentsX">SizeToContentsX()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the width of the button to fit its title, icon and text offset.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SizeToContentsY">SizeToContentsY()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the height of the button to the height of its title text.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Think">Think()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Updates the hover fade amount and, unless an icon size was set explicitly, fits the icon size to the height of the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#toggle">toggle()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Flips the active state of the button.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="get_background_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>get_background_color<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>get_background_color<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_background_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L172" title="View source">packages/flow/views/base/cl_button.lua:172</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:172</span>
 </div>
 <section class="docstring">
 <p>Returns the background color of the button.</p>
@@ -70,9 +70,9 @@
 </section>
 <section class="detail" id="get_draw_outline">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>get_draw_outline<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>get_draw_outline<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_draw_outline" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L184" title="View source">packages/flow/views/base/cl_button.lua:184</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:184</span>
 </div>
 <section class="docstring">
 <p>Checks whether the outline of the button is drawn.</p>
@@ -82,9 +82,9 @@
 </section>
 <section class="detail" id="get_text_offset">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>get_text_offset<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>get_text_offset<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_text_offset" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L134" title="View source">packages/flow/views/base/cl_button.lua:134</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:134</span>
 </div>
 <section class="docstring">
 <p>Returns the horizontal offset of the title, which is always 0 for centered buttons.</p>
@@ -94,9 +94,9 @@
 </section>
 <section class="detail" id="is_active">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>is_active<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>is_active<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#is_active" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L95" title="View source">packages/flow/views/base/cl_button.lua:95</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:95</span>
 </div>
 <section class="docstring">
 <p>Checks whether the button is in the active (selected) state.</p>
@@ -106,9 +106,9 @@
 </section>
 <section class="detail" id="OnMousePressed">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>OnMousePressed<span class="params">(key)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>OnMousePressed<span class="params">(key)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#OnMousePressed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L42" title="View source">packages/flow/views/base/cl_button.lua:42</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:42</span>
 </div>
 <section class="docstring">
 <p>Calls DoClick on a left click and DoRightClick on a right click, if they are defined.</p>
@@ -118,9 +118,9 @@
 </section>
 <section class="detail" id="Paint">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>Paint<span class="params">(w, h)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>Paint<span class="params">(w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#Paint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L18" title="View source">packages/flow/views/base/cl_button.lua:18</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:18</span>
 </div>
 <section class="docstring">
 <p>Delegates drawing of the button to the active theme's PaintButton hook.</p>
@@ -130,9 +130,9 @@
 </section>
 <section class="detail" id="set_active">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_active<span class="params">(active)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_active<span class="params">(active)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_active" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L89" title="View source">packages/flow/views/base/cl_button.lua:89</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:89</span>
 </div>
 <section class="docstring">
 <p>Sets the active (selected) state of the button, which themes use when painting it.</p>
@@ -142,9 +142,9 @@
 </section>
 <section class="detail" id="set_background_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_background_color<span class="params">(color)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_background_color<span class="params">(color)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_background_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L166" title="View source">packages/flow/views/base/cl_button.lua:166</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:166</span>
 </div>
 <section class="docstring">
 <p>Sets the background color of the button. It is only drawn while the panel's
@@ -155,9 +155,9 @@ draw_background field is enabled.</p>
 </section>
 <section class="detail" id="set_centered">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_centered<span class="params">(centered)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_centered<span class="params">(centered)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_centered" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L83" title="View source">packages/flow/views/base/cl_button.lua:83</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:83</span>
 </div>
 <section class="docstring">
 <p>Sets whether the title is centered horizontally instead of placed at the text offset.</p>
@@ -167,9 +167,9 @@ draw_background field is enabled.</p>
 </section>
 <section class="detail" id="set_draw_outline">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_draw_outline<span class="params">(should_draw)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_draw_outline<span class="params">(should_draw)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_draw_outline" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L178" title="View source">packages/flow/views/base/cl_button.lua:178</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:178</span>
 </div>
 <section class="docstring">
 <p>Sets whether a border in the theme's outline color is drawn around the button.</p>
@@ -179,9 +179,9 @@ draw_background field is enabled.</p>
 </section>
 <section class="detail" id="set_enabled">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_enabled<span class="params">(enabled)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_enabled<span class="params">(enabled)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_enabled" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L107" title="View source">packages/flow/views/base/cl_button.lua:107</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:107</span>
 </div>
 <section class="docstring">
 <p>Enables or disables the button. A disabled button ignores mouse input and gets darkened
@@ -192,9 +192,9 @@ text; enabling it clears any text color set with set_text_color.</p>
 </section>
 <section class="detail" id="set_icon">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_icon<span class="params">(icon, right)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_icon<span class="params">(icon, right)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_icon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L141" title="View source">packages/flow/views/base/cl_button.lua:141</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:141</span>
 </div>
 <section class="docstring">
 <p>Sets the FontAwesome icon displayed next to the title.</p>
@@ -204,9 +204,9 @@ text; enabling it clears any text color set with set_text_color.</p>
 </section>
 <section class="detail" id="set_icon_size">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_icon_size<span class="params">(size)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_icon_size<span class="params">(size)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_icon_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L151" title="View source">packages/flow/views/base/cl_button.lua:151</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:151</span>
 </div>
 <section class="docstring">
 <p>Sets a fixed icon size and stops the icon from being resized to fit the button height.</p>
@@ -216,9 +216,9 @@ text; enabling it clears any text color set with set_text_color.</p>
 </section>
 <section class="detail" id="set_text">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_text<span class="params">(new_text)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_text<span class="params">(new_text)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_text" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L122" title="View source">packages/flow/views/base/cl_button.lua:122</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:122</span>
 </div>
 <section class="docstring">
 <p>Sets the title displayed on the button.</p>
@@ -228,9 +228,9 @@ text; enabling it clears any text color set with set_text_color.</p>
 </section>
 <section class="detail" id="set_text_autoposition">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_text_autoposition<span class="params">(autopos)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_text_autoposition<span class="params">(autopos)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_text_autoposition" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L159" title="View source">packages/flow/views/base/cl_button.lua:159</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:159</span>
 </div>
 <section class="docstring">
 <p>Sets the text autoposition flag. The flag is only stored; nothing in the framework
@@ -241,9 +241,9 @@ currently reads it.</p>
 </section>
 <section class="detail" id="set_text_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_text_color<span class="params">(color)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_text_color<span class="params">(color)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_text_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L116" title="View source">packages/flow/views/base/cl_button.lua:116</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:116</span>
 </div>
 <section class="docstring">
 <p>Overrides the color of the title and the icon.</p>
@@ -253,9 +253,9 @@ currently reads it.</p>
 </section>
 <section class="detail" id="set_text_offset">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_text_offset<span class="params">(pos)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_text_offset<span class="params">(pos)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_text_offset" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L128" title="View source">packages/flow/views/base/cl_button.lua:128</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:128</span>
 </div>
 <section class="docstring">
 <p>Sets the horizontal offset of the title from the left edge of the button.</p>
@@ -265,9 +265,9 @@ currently reads it.</p>
 </section>
 <section class="detail" id="SizeToContents">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>SizeToContents<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>SizeToContents<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#SizeToContents" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L76" title="View source">packages/flow/views/base/cl_button.lua:76</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:76</span>
 </div>
 <section class="docstring">
 <p>Resizes the button to fit its title and icon in both dimensions.</p>
@@ -275,9 +275,9 @@ currently reads it.</p>
 </section>
 <section class="detail" id="SizeToContentsX">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>SizeToContentsX<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>SizeToContentsX<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#SizeToContentsX" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L55" title="View source">packages/flow/views/base/cl_button.lua:55</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:55</span>
 </div>
 <section class="docstring">
 <p>Sets the width of the button to fit its title, icon and text offset.</p>
@@ -285,9 +285,9 @@ currently reads it.</p>
 </section>
 <section class="detail" id="SizeToContentsY">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>SizeToContentsY<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>SizeToContentsY<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#SizeToContentsY" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L69" title="View source">packages/flow/views/base/cl_button.lua:69</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:69</span>
 </div>
 <section class="docstring">
 <p>Sets the height of the button to the height of its title text.</p>
@@ -295,9 +295,9 @@ currently reads it.</p>
 </section>
 <section class="detail" id="Think">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>Think<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>Think<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#Think" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L24" title="View source">packages/flow/views/base/cl_button.lua:24</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:24</span>
 </div>
 <section class="docstring">
 <p>Updates the hover fade amount and, unless an icon size was set explicitly, fits the icon
@@ -306,20 +306,20 @@ size to the height of the button.</p>
 </section>
 <section class="detail" id="toggle">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>toggle<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>toggle<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#toggle" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua#L100" title="View source">packages/flow/views/base/cl_button.lua:100</a>
+<span class="source-link">packages/flow/views/base/cl_button.lua:100</span>
 </div>
 <section class="docstring">
 <p>Flips the active state of the button.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/views/base/cl_button.lua" title="View source">packages/flow/views/base/cl_button.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#get_background_color">get_background_color</a></li><li><a href="#get_draw_outline">get_draw_outline</a></li><li><a href="#get_text_offset">get_text_offset</a></li><li><a href="#is_active">is_active</a></li><li><a href="#OnMousePressed">OnMousePressed</a></li><li><a href="#Paint">Paint</a></li><li><a href="#set_active">set_active</a></li><li><a href="#set_background_color">set_background_color</a></li><li><a href="#set_centered">set_centered</a></li><li><a href="#set_draw_outline">set_draw_outline</a></li><li><a href="#set_enabled">set_enabled</a></li><li><a href="#set_icon">set_icon</a></li><li><a href="#set_icon_size">set_icon_size</a></li><li><a href="#set_text">set_text</a></li><li><a href="#set_text_autoposition">set_text_autoposition</a></li><li><a href="#set_text_color">set_text_color</a></li><li><a href="#set_text_offset">set_text_offset</a></li><li><a href="#SizeToContents">SizeToContents</a></li><li><a href="#SizeToContentsX">SizeToContentsX</a></li><li><a href="#SizeToContentsY">SizeToContentsY</a></li><li><a href="#Think">Think</a></li><li><a href="#toggle">toggle</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/views/base/cl_button.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#get_background_color">get_background_color</a></li><li data-realm="client"><a href="#get_draw_outline">get_draw_outline</a></li><li data-realm="client"><a href="#get_text_offset">get_text_offset</a></li><li data-realm="client"><a href="#is_active">is_active</a></li><li data-realm="client"><a href="#OnMousePressed">OnMousePressed</a></li><li data-realm="client"><a href="#Paint">Paint</a></li><li data-realm="client"><a href="#set_active">set_active</a></li><li data-realm="client"><a href="#set_background_color">set_background_color</a></li><li data-realm="client"><a href="#set_centered">set_centered</a></li><li data-realm="client"><a href="#set_draw_outline">set_draw_outline</a></li><li data-realm="client"><a href="#set_enabled">set_enabled</a></li><li data-realm="client"><a href="#set_icon">set_icon</a></li><li data-realm="client"><a href="#set_icon_size">set_icon_size</a></li><li data-realm="client"><a href="#set_text">set_text</a></li><li data-realm="client"><a href="#set_text_autoposition">set_text_autoposition</a></li><li data-realm="client"><a href="#set_text_color">set_text_color</a></li><li data-realm="client"><a href="#set_text_offset">set_text_offset</a></li><li data-realm="client"><a href="#SizeToContents">SizeToContents</a></li><li data-realm="client"><a href="#SizeToContentsX">SizeToContentsX</a></li><li data-realm="client"><a href="#SizeToContentsY">SizeToContentsY</a></li><li data-realm="client"><a href="#Think">Think</a></li><li data-realm="client"><a href="#toggle">toggle</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

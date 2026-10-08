@@ -28,34 +28,34 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Role <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/admin/index.html">admin</a></p></div>
+<div class="page-header"><h1>Role <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/admin/index.html">Admin Mod</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#allow">allow(action, object, callback)</a></div><div class="summary-synopsis">Allows this role to perform an action, optionally only on one kind of object. If a callback is given, it decides the outcome of each check.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#allow_anything">allow_anything()</a></div><div class="summary-synopsis">Makes every permission check against this role pass.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#can">can(actor, action, object)</a></div><div class="summary-synopsis">Checks whether this role allows an action. Only the role's own permission table is consulted; use actor:can for the full check that includes per-player permissions.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#disallow">disallow(action, object)</a></div><div class="summary-synopsis">Explicitly denies an action for this role, overriding a permission inherited from its base.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_base">get_base()</a></div><div class="summary-synopsis">Returns the ID of the role this role is based on.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color()</a></div><div class="summary-synopsis">Returns the role's color.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_description">get_description()</a></div><div class="summary-synopsis">Returns the role's description, usually a language phrase.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_icon">get_icon()</a></div><div class="summary-synopsis">Returns the role's icon.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_id">get_id()</a></div><div class="summary-synopsis">Returns the role's ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_immunity">get_immunity()</a></div><div class="summary-synopsis">Returns the role's immunity level, which Bolt:check_immunity compares between roles.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_name">get_name()</a></div><div class="summary-synopsis">Returns the role's display name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_permissions">get_permissions()</a></div><div class="summary-synopsis">Returns the role's permission table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(id)</a></div><div class="summary-synopsis">Sets the role's ID and gives it an empty permission table. Does nothing without an ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_protected">is_protected()</a></div><div class="summary-synopsis">Checks whether the role is flagged as protected.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_role_set">on_role_set(target, old_group)</a></div><div class="summary-synopsis">Called when the player's role is being set to this role. Return any non-nil value to keep the new role from being saved to the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_role_taken">on_role_taken(target, new_group)</a></div><div class="summary-synopsis">Called when the player's role is taken or modified. Return any non-nil value to keep the new role from being saved to the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a></div><div class="summary-synopsis">Registers the role with Bolt. If the role has a define_permissions method, it is run first with the can, cannot and allow_anything globals temporarily bound to this role, followed by the OnDefinePermissions hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#allow">allow(action, object, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Allows this role to perform an action, optionally only on one kind of object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#allow_anything">allow_anything()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Makes every permission check against this role pass.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#can">can(actor, action, object)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether this role allows an action.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#disallow">disallow(action, object)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Explicitly denies an action for this role, overriding a permission inherited from its base.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_base">get_base()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the ID of the role this role is based on.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role's color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_description">get_description()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role's description, usually a language phrase.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_icon">get_icon()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role's icon.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_id">get_id()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role's ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_immunity">get_immunity()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role's immunity level, which Bolt:check_immunity compares between roles.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_name">get_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role's display name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_permissions">get_permissions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the role's permission table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the role's ID and gives it an empty permission table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_protected">is_protected()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the role is flagged as protected.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_role_set">on_role_set(target, old_group)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the player's role is being set to this role.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_role_taken">on_role_taken(target, new_group)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the player's role is taken or modified.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the role with Bolt.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="allow">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>allow<span class="params">(action, object, callback)</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>allow<span class="params">(action, object, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#allow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L34" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:34</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:34</span>
 </div>
 <section class="docstring">
 <p>Allows this role to perform an action, optionally only on one kind of object. If a callback
@@ -73,9 +73,9 @@ is given, it decides the outcome of each check.</p>
 </section>
 <section class="detail" id="allow_anything">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>allow_anything<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>allow_anything<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#allow_anything" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L66" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:66</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:66</span>
 </div>
 <section class="docstring">
 <p>Makes every permission check against this role pass.</p>
@@ -83,9 +83,9 @@ is given, it decides the outcome of each check.</p>
 </section>
 <section class="detail" id="can">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>can<span class="params">(actor, action, object)</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>can<span class="params">(actor, action, object)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#can" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L77" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:77</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:77</span>
 </div>
 <section class="docstring">
 <p>Checks whether this role allows an action. Only the role's own permission table is
@@ -98,9 +98,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="disallow">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>disallow<span class="params">(action, object)</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>disallow<span class="params">(action, object)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#disallow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L51" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:51</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:51</span>
 </div>
 <section class="docstring">
 <p>Explicitly denies an action for this role, overriding a permission inherited from its base.</p>
@@ -110,9 +110,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_base">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_base<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_base<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_base" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L162" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:162</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:162</span>
 </div>
 <section class="docstring">
 <p>Returns the ID of the role this role is based on.</p>
@@ -122,9 +122,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_color<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_color<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L132" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:132</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:132</span>
 </div>
 <section class="docstring">
 <p>Returns the role's color.</p>
@@ -134,9 +134,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_description">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_description<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_description<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_description" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L126" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:126</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:126</span>
 </div>
 <section class="docstring">
 <p>Returns the role's description, usually a language phrase.</p>
@@ -146,9 +146,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_icon">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_icon<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_icon<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_icon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L156" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:156</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:156</span>
 </div>
 <section class="docstring">
 <p>Returns the role's icon.</p>
@@ -158,9 +158,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_id">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_id<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_id<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L114" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:114</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:114</span>
 </div>
 <section class="docstring">
 <p>Returns the role's ID.</p>
@@ -170,9 +170,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_immunity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_immunity<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_immunity<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_immunity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L138" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:138</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:138</span>
 </div>
 <section class="docstring">
 <p>Returns the role's immunity level, which Bolt:check_immunity compares between roles.</p>
@@ -182,9 +182,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L120" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:120</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:120</span>
 </div>
 <section class="docstring">
 <p>Returns the role's display name.</p>
@@ -194,9 +194,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="get_permissions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>get_permissions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>get_permissions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_permissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L150" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:150</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:150</span>
 </div>
 <section class="docstring">
 <p>Returns the role's permission table.</p>
@@ -206,9 +206,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>init<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>init<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L13" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:13</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:13</span>
 </div>
 <section class="docstring">
 <p>Sets the role's ID and gives it an empty permission table. Does nothing without an ID.</p>
@@ -218,9 +218,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="is_protected">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>is_protected<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>is_protected<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_protected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L144" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:144</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:144</span>
 </div>
 <section class="docstring">
 <p>Checks whether the role is flagged as protected.</p>
@@ -230,9 +230,9 @@ consulted; use actor:can for the full check that includes per-player permissions
 </section>
 <section class="detail" id="on_role_set">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>on_role_set<span class="params">(target, old_group)</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>on_role_set<span class="params">(target, old_group)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_role_set" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L102" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:102</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:102</span>
 </div>
 <section class="docstring">
 <p>Called when the player's role is being set to this role. Return any non-nil value to keep the
@@ -243,9 +243,9 @@ new role from being saved to the database.</p>
 </section>
 <section class="detail" id="on_role_taken">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>on_role_taken<span class="params">(target, new_group)</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>on_role_taken<span class="params">(target, new_group)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_role_taken" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L108" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:108</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:108</span>
 </div>
 <section class="docstring">
 <p>Called when the player's role is taken or modified. Return any non-nil value to keep the new
@@ -256,9 +256,9 @@ role from being saved to the database.</p>
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Role:</span>register<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Role:</span>register<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L181" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:181</a>
+<span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua:181</span>
 </div>
 <section class="docstring">
 <p>Registers the role with Bolt. If the role has a define_permissions method, it is run first
@@ -279,11 +279,11 @@ ROLE.base = <span class="hl-s">&#39;user&#39;</span>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#allow">allow</a></li><li><a href="#allow_anything">allow_anything</a></li><li><a href="#can">can</a></li><li><a href="#disallow">disallow</a></li><li><a href="#get_base">get_base</a></li><li><a href="#get_color">get_color</a></li><li><a href="#get_description">get_description</a></li><li><a href="#get_icon">get_icon</a></li><li><a href="#get_id">get_id</a></li><li><a href="#get_immunity">get_immunity</a></li><li><a href="#get_name">get_name</a></li><li><a href="#get_permissions">get_permissions</a></li><li><a href="#init">init</a></li><li><a href="#is_protected">is_protected</a></li><li><a href="#on_role_set">on_role_set</a></li><li><a href="#on_role_taken">on_role_taken</a></li><li><a href="#register">register</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/admin/plugin/lib/classes/sh_role.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#allow">allow</a></li><li data-realm="shared"><a href="#allow_anything">allow_anything</a></li><li data-realm="shared"><a href="#can">can</a></li><li data-realm="shared"><a href="#disallow">disallow</a></li><li data-realm="shared"><a href="#get_base">get_base</a></li><li data-realm="shared"><a href="#get_color">get_color</a></li><li data-realm="shared"><a href="#get_description">get_description</a></li><li data-realm="shared"><a href="#get_icon">get_icon</a></li><li data-realm="shared"><a href="#get_id">get_id</a></li><li data-realm="shared"><a href="#get_immunity">get_immunity</a></li><li data-realm="shared"><a href="#get_name">get_name</a></li><li data-realm="shared"><a href="#get_permissions">get_permissions</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#is_protected">is_protected</a></li><li data-realm="shared"><a href="#on_role_set">on_role_set</a></li><li data-realm="shared"><a href="#on_role_taken">on_role_taken</a></li><li data-realm="shared"><a href="#register">register</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -28,39 +28,39 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Theme <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>Theme <span class="badge badge-library">library</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a></div><div class="summary-synopsis">Returns all of the registered themes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_panel">create_panel(panel_id, parent, ...)</a></div><div class="summary-synopsis">Creates a panel through the active theme, using the callback the theme has registered with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find_theme">find_theme(id)</a></div><div class="summary-synopsis">Finds a registered theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_active_theme">get_active_theme()</a></div><div class="summary-synopsis">Returns the ID of the theme that is currently loaded.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color(key, fallback)</a></div><div class="summary-synopsis">Returns a color of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_font">get_font(key, fallback)</a></div><div class="summary-synopsis">Returns the name of a font of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_material">get_material(key, fallback)</a></div><div class="summary-synopsis">Returns a material of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_option">get_option(key, fallback)</a></div><div class="summary-synopsis">Returns an option of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_sound">get_sound(key, fallback)</a></div><div class="summary-synopsis">Returns a sound of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#hook">hook(id, ...)</a></div><div class="summary-synopsis">Calls a method of the active theme in protected mode. Errors are printed to the console instead of being raised. Also available as Theme.call.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#initialized">initialized()</a></div><div class="summary-synopsis">Checks whether the default theme has been loaded for the local player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#load_theme">load_theme(theme_id, reloading)</a></div><div class="summary-synopsis">Makes the specified theme the active one. Calls on_loaded of every theme it derives from and of the theme itself, applies its Derma skin, and runs the 'OnThemeLoaded' hook. Unless reloading, it can be prevented with the 'ShouldThemeLoad' hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register_theme">register_theme(obj)</a></div><div class="summary-synopsis">Registers a theme. If the theme has a registered parent, it is replaced with a copy of the parent that has the theme merged on top of it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#reload">reload()</a></div><div class="summary-synopsis">Loads the active theme again, then calls its 'OnReloaded' method and the 'OnThemeReloaded' hook. Does nothing if the theme has should_reload set to false, or if the 'ShouldThemeReload' hook returns false.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_theme">remove_theme(id)</a></div><div class="summary-synopsis">Removes a theme from the list of registered themes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_color">set_color(key, value)</a></div><div class="summary-synopsis">Sets a color of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_derma_skin">set_derma_skin()</a></div><div class="summary-synopsis">Copies the skin overrides of the active theme into the 'Flux' Derma skin and refreshes the skins of all panels.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_font">set_font(key, value, scale, data)</a></div><div class="summary-synopsis">Sets a font of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_material">set_material(key, value)</a></div><div class="summary-synopsis">Sets a material of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_option">set_option(key, value)</a></div><div class="summary-synopsis">Sets an option of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_sound">set_sound(key, value)</a></div><div class="summary-synopsis">Sets a sound of the active theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#unload_theme">unload_theme()</a></div><div class="summary-synopsis">Unloads the active theme, calling its on_unloaded method and the 'OnThemeUnloaded' hook. Can be prevented with the 'ShouldThemeUnload' hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns all of the registered themes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_panel">create_panel(panel_id, parent, ...)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates a panel through the active theme, using the callback the theme has registered with ThemeBase#add_panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_theme">find_theme(id)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Finds a registered theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_active_theme">get_active_theme()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the ID of the theme that is currently loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color(key, fallback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns a color of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_font">get_font(key, fallback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the name of a font of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_material">get_material(key, fallback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns a material of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_option">get_option(key, fallback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns an option of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_sound">get_sound(key, fallback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns a sound of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hook">hook(id, ...)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Calls a method of the active theme in protected mode.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#initialized">initialized()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Checks whether the default theme has been loaded for the local player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load_theme">load_theme(theme_id, reloading)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Makes the specified theme the active one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_theme">register_theme(obj)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers a theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reload">reload()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Loads the active theme again, then calls its 'OnReloaded' method and the 'OnThemeReloaded' hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_theme">remove_theme(id)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Removes a theme from the list of registered themes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_color">set_color(key, value)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a color of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_derma_skin">set_derma_skin()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Copies the skin overrides of the active theme into the 'Flux' Derma skin and refreshes the skins of all panels.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_font">set_font(key, value, scale, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a font of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_material">set_material(key, value)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a material of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_option">set_option(key, value)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets an option of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_sound">set_sound(key, value)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a sound of the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unload_theme">unload_theme()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Unloads the active theme, calling its on_unloaded method and the 'OnThemeUnloaded' hook.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="all">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>all<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>all<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#all" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L14" title="View source">packages/flow/lib/cl_theme.lua:14</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:14</span>
 </div>
 <section class="docstring">
 <p>Returns all of the registered themes.</p>
@@ -70,9 +70,9 @@
 </section>
 <section class="detail" id="create_panel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>create_panel<span class="params">(panel_id, parent, ...)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>create_panel<span class="params">(panel_id, parent, ...)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#create_panel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L46" title="View source">packages/flow/lib/cl_theme.lua:46</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:46</span>
 </div>
 <section class="docstring">
 <p>Creates a panel through the active theme, using the callback the theme has registered
@@ -85,9 +85,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="find_theme">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>find_theme<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>find_theme<span class="params">(id)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#find_theme" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L201" title="View source">packages/flow/lib/cl_theme.lua:201</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:201</span>
 </div>
 <section class="docstring">
 <p>Finds a registered theme.</p>
@@ -99,9 +99,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="get_active_theme">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>get_active_theme<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>get_active_theme<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_active_theme" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L82" title="View source">packages/flow/lib/cl_theme.lua:82</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:82</span>
 </div>
 <section class="docstring">
 <p>Returns the ID of the theme that is currently loaded.</p>
@@ -111,9 +111,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="get_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>get_color<span class="params">(key, fallback)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>get_color<span class="params">(key, fallback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L134" title="View source">packages/flow/lib/cl_theme.lua:134</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:134</span>
 </div>
 <section class="docstring">
 <p>Returns a color of the active theme.</p>
@@ -125,9 +125,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="get_font">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>get_font<span class="params">(key, fallback)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>get_font<span class="params">(key, fallback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_font" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L146" title="View source">packages/flow/lib/cl_theme.lua:146</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:146</span>
 </div>
 <section class="docstring">
 <p>Returns the name of a font of the active theme.</p>
@@ -139,9 +139,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="get_material">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>get_material<span class="params">(key, fallback)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>get_material<span class="params">(key, fallback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L178" title="View source">packages/flow/lib/cl_theme.lua:178</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:178</span>
 </div>
 <section class="docstring">
 <p>Returns a material of the active theme.</p>
@@ -153,9 +153,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="get_option">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>get_option<span class="params">(key, fallback)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>get_option<span class="params">(key, fallback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_option" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L190" title="View source">packages/flow/lib/cl_theme.lua:190</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:190</span>
 </div>
 <section class="docstring">
 <p>Returns an option of the active theme.</p>
@@ -167,9 +167,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="get_sound">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>get_sound<span class="params">(key, fallback)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>get_sound<span class="params">(key, fallback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L100" title="View source">packages/flow/lib/cl_theme.lua:100</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:100</span>
 </div>
 <section class="docstring">
 <p>Returns a sound of the active theme.</p>
@@ -181,9 +181,9 @@ with ThemeBase#add_panel. Can be prevented with the 'ShouldThemeCreatePanel' hoo
 </section>
 <section class="detail" id="hook">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>hook<span class="params">(id, ...)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>hook<span class="params">(id, ...)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#hook" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L63" title="View source">packages/flow/lib/cl_theme.lua:63</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:63</span>
 </div>
 <section class="docstring">
 <p>Calls a method of the active theme in protected mode. Errors are printed to the console
@@ -200,9 +200,9 @@ instead of being raised. Also available as Theme.call.</p>
 </section>
 <section class="detail" id="initialized">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>initialized<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>initialized<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#initialized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L296" title="View source">packages/flow/lib/cl_theme.lua:296</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:296</span>
 </div>
 <section class="docstring">
 <p>Checks whether the default theme has been loaded for the local player.</p>
@@ -212,9 +212,9 @@ instead of being raised. Also available as Theme.call.</p>
 </section>
 <section class="detail" id="load_theme">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>load_theme<span class="params">(theme_id, reloading)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>load_theme<span class="params">(theme_id, reloading)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#load_theme" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L232" title="View source">packages/flow/lib/cl_theme.lua:232</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:232</span>
 </div>
 <section class="docstring">
 <p>Makes the specified theme the active one. Calls on_loaded of every theme it derives from
@@ -226,9 +226,9 @@ Unless reloading, it can be prevented with the 'ShouldThemeLoad' hook.</p>
 </section>
 <section class="detail" id="register_theme">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>register_theme<span class="params">(obj)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>register_theme<span class="params">(obj)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#register_theme" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L21" title="View source">packages/flow/lib/cl_theme.lua:21</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:21</span>
 </div>
 <section class="docstring">
 <p>Registers a theme. If the theme has a registered parent, it is replaced with a copy
@@ -239,9 +239,9 @@ of the parent that has the theme merged on top of it.</p>
 </section>
 <section class="detail" id="reload">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>reload<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>reload<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#reload" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L281" title="View source">packages/flow/lib/cl_theme.lua:281</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:281</span>
 </div>
 <section class="docstring">
 <p>Loads the active theme again, then calls its 'OnReloaded' method and the 'OnThemeReloaded'
@@ -251,9 +251,9 @@ hook. Does nothing if the theme has should_reload set to false, or if the
 </section>
 <section class="detail" id="remove_theme">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>remove_theme<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>remove_theme<span class="params">(id)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#remove_theme" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L207" title="View source">packages/flow/lib/cl_theme.lua:207</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:207</span>
 </div>
 <section class="docstring">
 <p>Removes a theme from the list of registered themes.</p>
@@ -263,9 +263,9 @@ hook. Does nothing if the theme has should_reload set to false, or if the
 </section>
 <section class="detail" id="set_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>set_color<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>set_color<span class="params">(key, value)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L112" title="View source">packages/flow/lib/cl_theme.lua:112</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:112</span>
 </div>
 <section class="docstring">
 <p>Sets a color of the active theme.</p>
@@ -277,9 +277,9 @@ hook. Does nothing if the theme has should_reload set to false, or if the
 </section>
 <section class="detail" id="set_derma_skin">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>set_derma_skin<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>set_derma_skin<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_derma_skin" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L215" title="View source">packages/flow/lib/cl_theme.lua:215</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:215</span>
 </div>
 <section class="docstring">
 <p>Copies the skin overrides of the active theme into the 'Flux' Derma skin
@@ -288,9 +288,9 @@ and refreshes the skins of all panels.</p>
 </section>
 <section class="detail" id="set_font">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>set_font<span class="params">(key, value, scale, data)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>set_font<span class="params">(key, value, scale, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_font" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L124" title="View source">packages/flow/lib/cl_theme.lua:124</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:124</span>
 </div>
 <section class="docstring">
 <p>Sets a font of the active theme.</p>
@@ -302,9 +302,9 @@ and refreshes the skins of all panels.</p>
 </section>
 <section class="detail" id="set_material">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>set_material<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>set_material<span class="params">(key, value)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L168" title="View source">packages/flow/lib/cl_theme.lua:168</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:168</span>
 </div>
 <section class="docstring">
 <p>Sets a material of the active theme.</p>
@@ -316,9 +316,9 @@ and refreshes the skins of all panels.</p>
 </section>
 <section class="detail" id="set_option">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>set_option<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>set_option<span class="params">(key, value)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_option" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L158" title="View source">packages/flow/lib/cl_theme.lua:158</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:158</span>
 </div>
 <section class="docstring">
 <p>Sets an option of the active theme.</p>
@@ -330,9 +330,9 @@ and refreshes the skins of all panels.</p>
 </section>
 <section class="detail" id="set_sound">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>set_sound<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>set_sound<span class="params">(key, value)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L90" title="View source">packages/flow/lib/cl_theme.lua:90</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:90</span>
 </div>
 <section class="docstring">
 <p>Sets a sound of the active theme.</p>
@@ -344,9 +344,9 @@ and refreshes the skins of all panels.</p>
 </section>
 <section class="detail" id="unload_theme">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Theme.</span>unload_theme<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Theme.</span>unload_theme<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#unload_theme" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua#L264" title="View source">packages/flow/lib/cl_theme.lua:264</a>
+<span class="source-link">packages/flow/lib/cl_theme.lua:264</span>
 </div>
 <section class="docstring">
 <p>Unloads the active theme, calling its on_unloaded method and the 'OnThemeUnloaded' hook.
@@ -354,11 +354,11 @@ Can be prevented with the 'ShouldThemeUnload' hook.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_theme.lua" title="View source">packages/flow/lib/cl_theme.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#all">all</a></li><li><a href="#create_panel">create_panel</a></li><li><a href="#find_theme">find_theme</a></li><li><a href="#get_active_theme">get_active_theme</a></li><li><a href="#get_color">get_color</a></li><li><a href="#get_font">get_font</a></li><li><a href="#get_material">get_material</a></li><li><a href="#get_option">get_option</a></li><li><a href="#get_sound">get_sound</a></li><li><a href="#hook">hook</a></li><li><a href="#initialized">initialized</a></li><li><a href="#load_theme">load_theme</a></li><li><a href="#register_theme">register_theme</a></li><li><a href="#reload">reload</a></li><li><a href="#remove_theme">remove_theme</a></li><li><a href="#set_color">set_color</a></li><li><a href="#set_derma_skin">set_derma_skin</a></li><li><a href="#set_font">set_font</a></li><li><a href="#set_material">set_material</a></li><li><a href="#set_option">set_option</a></li><li><a href="#set_sound">set_sound</a></li><li><a href="#unload_theme">unload_theme</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/cl_theme.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="client"><a href="#all">all</a></li><li data-realm="client"><a href="#create_panel">create_panel</a></li><li data-realm="client"><a href="#find_theme">find_theme</a></li><li data-realm="client"><a href="#get_active_theme">get_active_theme</a></li><li data-realm="client"><a href="#get_color">get_color</a></li><li data-realm="client"><a href="#get_font">get_font</a></li><li data-realm="client"><a href="#get_material">get_material</a></li><li data-realm="client"><a href="#get_option">get_option</a></li><li data-realm="client"><a href="#get_sound">get_sound</a></li><li data-realm="client"><a href="#hook">hook</a></li><li data-realm="client"><a href="#initialized">initialized</a></li><li data-realm="client"><a href="#load_theme">load_theme</a></li><li data-realm="client"><a href="#register_theme">register_theme</a></li><li data-realm="client"><a href="#reload">reload</a></li><li data-realm="client"><a href="#remove_theme">remove_theme</a></li><li data-realm="client"><a href="#set_color">set_color</a></li><li data-realm="client"><a href="#set_derma_skin">set_derma_skin</a></li><li data-realm="client"><a href="#set_font">set_font</a></li><li data-realm="client"><a href="#set_material">set_material</a></li><li data-realm="client"><a href="#set_option">set_option</a></li><li data-realm="client"><a href="#set_sound">set_sound</a></li><li data-realm="client"><a href="#unload_theme">unload_theme</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

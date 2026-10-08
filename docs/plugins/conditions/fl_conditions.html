@@ -28,25 +28,25 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>fl_conditions <span class="badge badge-object">object</span></h1><p class="subtitle">PANEL</p><p class="subtitle">Part of <a href="../../plugins/conditions/index.html">conditions</a></p></div>
+<div class="page-header"><h1>fl_conditions <span class="badge badge-object">object</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Object table PANEL in plugin/views/cl_conditions.lua</p><p class="subtitle">Part of <a href="../../plugins/conditions/index.html">Conditions</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_condition">add_condition(parent, id, data)</a></div><div class="summary-synopsis">Adds a node of the specified condition type under the parent node.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#clear">clear()</a></div><div class="summary-synopsis">Removes all condition nodes from the tree, leaving only the root node.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_selector">create_selector(title, message, default_value, choices, callback)</a></div><div class="summary-synopsis">Opens a selector popup and calls the callback once for every choice right away, so that it can add the choice to the selector.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_conditions">get_conditions(panel)</a></div><div class="summary-synopsis">Collects the condition tree into a table that can be networked, saved and passed to Conditions:check.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a></div><div class="summary-synopsis">Creates the root node of the condition tree and the buttons that save and load condition presets.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#node_options">node_options(panel, root, first)</a></div><div class="summary-synopsis">Opens the context menu of a node: adding a child condition and, for condition nodes, setting the parameter and the operator or deleting the condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_conditions">set_conditions(parent, conditions)</a></div><div class="summary-synopsis">Recreates the nodes of a condition tree under the parent node.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#update">update()</a></div><div class="summary-synopsis">Moves the save and load buttons to the top right corner of the panel. Should be called after the panel has been resized.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_condition">add_condition(parent, id, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds a node of the specified condition type under the parent node.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#clear">clear()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Removes all condition nodes from the tree, leaving only the root node.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_selector">create_selector(title, message, default_value, choices, callback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Opens a selector popup and calls the callback once for every choice right away, so that it can add the choice to the selector.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_conditions">get_conditions(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Collects the condition tree into a table that can be networked, saved and passed to Conditions:check.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates the root node of the condition tree and the buttons that save and load condition presets.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#node_options">node_options(panel, root, first)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Opens the context menu of a node: adding a child condition and, for condition nodes, setting the parameter and the operator or deleting the condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_conditions">set_conditions(parent, conditions)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Recreates the nodes of a condition tree under the parent node.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#update">update()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Moves the save and load buttons to the top right corner of the panel.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="add_condition">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>add_condition<span class="params">(parent, id, data)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>add_condition<span class="params">(parent, id, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#add_condition" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L137" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:137</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:137</span>
 </div>
 <section class="docstring">
 <p>Adds a node of the specified condition type under the parent node.</p>
@@ -58,9 +58,9 @@
 </section>
 <section class="detail" id="clear">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>clear<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>clear<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#clear" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L215" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:215</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:215</span>
 </div>
 <section class="docstring">
 <p>Removes all condition nodes from the tree, leaving only the root node.</p>
@@ -68,9 +68,9 @@
 </section>
 <section class="detail" id="create_selector">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>create_selector<span class="params">(title, message, default_value, choices, callback)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>create_selector<span class="params">(title, message, default_value, choices, callback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#create_selector" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L241" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:241</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:241</span>
 </div>
 <section class="docstring">
 <p>Opens a selector popup and calls the callback once for every choice right away,
@@ -92,9 +92,9 @@ so that it can add the choice to the selector.</p>
 </section>
 <section class="detail" id="get_conditions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>get_conditions<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>get_conditions<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_conditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L177" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:177</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:177</span>
 </div>
 <section class="docstring">
 <p>Collects the condition tree into a table that can be networked, saved
@@ -107,9 +107,9 @@ and passed to Conditions:check.</p>
 </section>
 <section class="detail" id="Init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>Init<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>Init<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#Init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L5" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:5</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:5</span>
 </div>
 <section class="docstring">
 <p>Creates the root node of the condition tree and the buttons
@@ -118,9 +118,9 @@ that save and load condition presets.</p>
 </section>
 <section class="detail" id="node_options">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>node_options<span class="params">(panel, root, first)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>node_options<span class="params">(panel, root, first)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#node_options" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L79" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:79</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:79</span>
 </div>
 <section class="docstring">
 <p>Opens the context menu of a node: adding a child condition and, for condition nodes,
@@ -131,9 +131,9 @@ setting the parameter and the operator or deleting the condition.</p>
 </section>
 <section class="detail" id="set_conditions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>set_conditions<span class="params">(parent, conditions)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>set_conditions<span class="params">(parent, conditions)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_conditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L203" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:203</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:203</span>
 </div>
 <section class="docstring">
 <p>Recreates the nodes of a condition tree under the parent node.</p>
@@ -143,9 +143,9 @@ setting the parameter and the operator or deleting the condition.</p>
 </section>
 <section class="detail" id="update">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>update<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>update<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#update" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua#L69" title="View source">plugins/conditions/plugin/views/cl_conditions.lua:69</a>
+<span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua:69</span>
 </div>
 <section class="docstring">
 <p>Moves the save and load buttons to the top right corner of the panel.
@@ -153,11 +153,11 @@ Should be called after the panel has been resized.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/views/cl_conditions.lua" title="View source">plugins/conditions/plugin/views/cl_conditions.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add_condition">add_condition</a></li><li><a href="#clear">clear</a></li><li><a href="#create_selector">create_selector</a></li><li><a href="#get_conditions">get_conditions</a></li><li><a href="#Init">Init</a></li><li><a href="#node_options">node_options</a></li><li><a href="#set_conditions">set_conditions</a></li><li><a href="#update">update</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/conditions/plugin/views/cl_conditions.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#add_condition">add_condition</a></li><li data-realm="client"><a href="#clear">clear</a></li><li data-realm="client"><a href="#create_selector">create_selector</a></li><li data-realm="client"><a href="#get_conditions">get_conditions</a></li><li data-realm="client"><a href="#Init">Init</a></li><li data-realm="client"><a href="#node_options">node_options</a></li><li data-realm="client"><a href="#set_conditions">set_conditions</a></li><li data-realm="client"><a href="#update">update</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -28,34 +28,34 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>inverters <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
+<div class="page-header"><h1>inverters <span class="badge badge-object">object</span></h1><p class="subtitle">Object table inverters in lib/migrator/command_recorder.lua</p><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_column">add_column(args)</a></div><div class="summary-synopsis">Inverts add_column into remove_column.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_foreign_key">add_foreign_key(args)</a></div><div class="summary-synopsis">Inverts add_foreign_key into remove_foreign_key.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_index">add_index(args)</a></div><div class="summary-synopsis">Inverts add_index into remove_index of the same columns. Understands both the positional and the table form of the arguments.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_reference">add_reference(args)</a></div><div class="summary-synopsis">Inverts add_reference into remove_reference.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_timestamps">add_timestamps(args)</a></div><div class="summary-synopsis">Inverts add_timestamps into remove_timestamps.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_reference">create_reference(args)</a></div><div class="summary-synopsis">Inverts create_reference into remove_foreign_key of the reference's key.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_table">create_table(args)</a></div><div class="summary-synopsis">Inverts create_table into drop_table. The table definition is kept, so that the drop_table can be inverted back.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#define_model">define_model(args)</a></div><div class="summary-synopsis">Inverts define_model into a drop_table of the model's table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#drop_table">drop_table(args)</a></div><div class="summary-synopsis">Inverts drop_table into create_table, or into define_model for a model's table. Raises an error if the table definition is not given.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#execute_block">execute_block(args)</a></div><div class="summary-synopsis">Inverts execute_block into itself: the block is run either way, and decides what to do from the direction of the migration.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_column">remove_column(args)</a></div><div class="summary-synopsis">Inverts remove_column into add_column. Raises an error if the type of the column is not given.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_foreign_key">remove_foreign_key(args)</a></div><div class="summary-synopsis">Inverts remove_foreign_key into add_foreign_key. Raises an error if the referenced table is not given.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_index">remove_index(args)</a></div><div class="summary-synopsis">Inverts remove_index into add_index. Raises an error if the column(s) of the index are not given.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_reference">remove_reference(args)</a></div><div class="summary-synopsis">Inverts remove_reference into add_reference.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_timestamps">remove_timestamps(args)</a></div><div class="summary-synopsis">Inverts remove_timestamps into add_timestamps.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rename_column">rename_column(args)</a></div><div class="summary-synopsis">Inverts rename_column by swapping the column names.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rename_table">rename_table(args)</a></div><div class="summary-synopsis">Inverts rename_table by swapping the names.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_column">add_column(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts add_column into remove_column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_foreign_key">add_foreign_key(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts add_foreign_key into remove_foreign_key.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_index">add_index(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts add_index into remove_index of the same columns.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_reference">add_reference(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts add_reference into remove_reference.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_timestamps">add_timestamps(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts add_timestamps into remove_timestamps.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_reference">create_reference(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts create_reference into remove_foreign_key of the reference's key.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_table">create_table(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts create_table into drop_table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#define_model">define_model(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts define_model into a drop_table of the model's table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#drop_table">drop_table(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts drop_table into create_table, or into define_model for a model's table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#execute_block">execute_block(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts execute_block into itself: the block is run either way, and decides what to do from the direction of the migration.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_column">remove_column(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts remove_column into add_column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_foreign_key">remove_foreign_key(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts remove_foreign_key into add_foreign_key.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_index">remove_index(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts remove_index into add_index.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_reference">remove_reference(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts remove_reference into add_reference.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_timestamps">remove_timestamps(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts remove_timestamps into add_timestamps.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_column">rename_column(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts rename_column by swapping the column names.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_table">rename_table(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inverts rename_table by swapping the names.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="add_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>add_column<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>add_column<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L73" title="View source">packages/active_record/lib/migrator/command_recorder.lua:73</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:73</span>
 </div>
 <section class="docstring">
 <p>Inverts add_column into remove_column.</p>
@@ -65,9 +65,9 @@
 </section>
 <section class="detail" id="add_foreign_key">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>add_foreign_key<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>add_foreign_key<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_foreign_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L161" title="View source">packages/active_record/lib/migrator/command_recorder.lua:161</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:161</span>
 </div>
 <section class="docstring">
 <p>Inverts add_foreign_key into remove_foreign_key.</p>
@@ -77,9 +77,9 @@
 </section>
 <section class="detail" id="add_index">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>add_index<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>add_index<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_index" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L120" title="View source">packages/active_record/lib/migrator/command_recorder.lua:120</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:120</span>
 </div>
 <section class="docstring">
 <p>Inverts add_index into remove_index of the same columns. Understands both the
@@ -90,9 +90,9 @@ positional and the table form of the arguments.</p>
 </section>
 <section class="detail" id="add_reference">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>add_reference<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>add_reference<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L109" title="View source">packages/active_record/lib/migrator/command_recorder.lua:109</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:109</span>
 </div>
 <section class="docstring">
 <p>Inverts add_reference into remove_reference.</p>
@@ -102,9 +102,9 @@ positional and the table form of the arguments.</p>
 </section>
 <section class="detail" id="add_timestamps">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>add_timestamps<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>add_timestamps<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_timestamps" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L99" title="View source">packages/active_record/lib/migrator/command_recorder.lua:99</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:99</span>
 </div>
 <section class="docstring">
 <p>Inverts add_timestamps into remove_timestamps.</p>
@@ -114,9 +114,9 @@ positional and the table form of the arguments.</p>
 </section>
 <section class="detail" id="create_reference">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>create_reference<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>create_reference<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L176" title="View source">packages/active_record/lib/migrator/command_recorder.lua:176</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:176</span>
 </div>
 <section class="docstring">
 <p>Inverts create_reference into remove_foreign_key of the reference's key.</p>
@@ -126,9 +126,9 @@ positional and the table form of the arguments.</p>
 </section>
 <section class="detail" id="create_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>create_table<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>create_table<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L29" title="View source">packages/active_record/lib/migrator/command_recorder.lua:29</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:29</span>
 </div>
 <section class="docstring">
 <p>Inverts create_table into drop_table. The table definition is kept, so that the
@@ -139,9 +139,9 @@ drop_table can be inverted back.</p>
 </section>
 <section class="detail" id="define_model">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>define_model<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>define_model<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#define_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L40" title="View source">packages/active_record/lib/migrator/command_recorder.lua:40</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:40</span>
 </div>
 <section class="docstring">
 <p>Inverts define_model into a drop_table of the model's table.</p>
@@ -151,9 +151,9 @@ drop_table can be inverted back.</p>
 </section>
 <section class="detail" id="drop_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>drop_table<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>drop_table<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#drop_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L46" title="View source">packages/active_record/lib/migrator/command_recorder.lua:46</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:46</span>
 </div>
 <section class="docstring">
 <p>Inverts drop_table into create_table, or into define_model for a model's table.
@@ -164,9 +164,9 @@ Raises an error if the table definition is not given.</p>
 </section>
 <section class="detail" id="execute_block">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>execute_block<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>execute_block<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#execute_block" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L187" title="View source">packages/active_record/lib/migrator/command_recorder.lua:187</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:187</span>
 </div>
 <section class="docstring">
 <p>Inverts execute_block into itself: the block is run either way, and decides what to
@@ -177,9 +177,9 @@ do from the direction of the migration.</p>
 </section>
 <section class="detail" id="remove_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>remove_column<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>remove_column<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L79" title="View source">packages/active_record/lib/migrator/command_recorder.lua:79</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:79</span>
 </div>
 <section class="docstring">
 <p>Inverts remove_column into add_column. Raises an error if the type of the column is
@@ -190,9 +190,9 @@ not given.</p>
 </section>
 <section class="detail" id="remove_foreign_key">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>remove_foreign_key<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>remove_foreign_key<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_foreign_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L167" title="View source">packages/active_record/lib/migrator/command_recorder.lua:167</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:167</span>
 </div>
 <section class="docstring">
 <p>Inverts remove_foreign_key into add_foreign_key. Raises an error if the referenced
@@ -203,9 +203,9 @@ table is not given.</p>
 </section>
 <section class="detail" id="remove_index">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>remove_index<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>remove_index<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_index" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L138" title="View source">packages/active_record/lib/migrator/command_recorder.lua:138</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:138</span>
 </div>
 <section class="docstring">
 <p>Inverts remove_index into add_index. Raises an error if the column(s) of the index
@@ -216,9 +216,9 @@ are not given.</p>
 </section>
 <section class="detail" id="remove_reference">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>remove_reference<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>remove_reference<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L114" title="View source">packages/active_record/lib/migrator/command_recorder.lua:114</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:114</span>
 </div>
 <section class="docstring">
 <p>Inverts remove_reference into add_reference.</p>
@@ -228,9 +228,9 @@ are not given.</p>
 </section>
 <section class="detail" id="remove_timestamps">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>remove_timestamps<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>remove_timestamps<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_timestamps" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L104" title="View source">packages/active_record/lib/migrator/command_recorder.lua:104</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:104</span>
 </div>
 <section class="docstring">
 <p>Inverts remove_timestamps into add_timestamps.</p>
@@ -240,9 +240,9 @@ are not given.</p>
 </section>
 <section class="detail" id="rename_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>rename_column<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>rename_column<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rename_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L94" title="View source">packages/active_record/lib/migrator/command_recorder.lua:94</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:94</span>
 </div>
 <section class="docstring">
 <p>Inverts rename_column by swapping the column names.</p>
@@ -252,9 +252,9 @@ are not given.</p>
 </section>
 <section class="detail" id="rename_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">inverters.</span>rename_table<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">inverters.</span>rename_table<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rename_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L68" title="View source">packages/active_record/lib/migrator/command_recorder.lua:68</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:68</span>
 </div>
 <section class="docstring">
 <p>Inverts rename_table by swapping the names.</p>
@@ -263,11 +263,11 @@ are not given.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua" title="View source">packages/active_record/lib/migrator/command_recorder.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_column">add_column</a></li><li><a href="#add_foreign_key">add_foreign_key</a></li><li><a href="#add_index">add_index</a></li><li><a href="#add_reference">add_reference</a></li><li><a href="#add_timestamps">add_timestamps</a></li><li><a href="#create_reference">create_reference</a></li><li><a href="#create_table">create_table</a></li><li><a href="#define_model">define_model</a></li><li><a href="#drop_table">drop_table</a></li><li><a href="#execute_block">execute_block</a></li><li><a href="#remove_column">remove_column</a></li><li><a href="#remove_foreign_key">remove_foreign_key</a></li><li><a href="#remove_index">remove_index</a></li><li><a href="#remove_reference">remove_reference</a></li><li><a href="#remove_timestamps">remove_timestamps</a></li><li><a href="#rename_column">rename_column</a></li><li><a href="#rename_table">rename_table</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/migrator/command_recorder.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#add_column">add_column</a></li><li data-realm="shared"><a href="#add_foreign_key">add_foreign_key</a></li><li data-realm="shared"><a href="#add_index">add_index</a></li><li data-realm="shared"><a href="#add_reference">add_reference</a></li><li data-realm="shared"><a href="#add_timestamps">add_timestamps</a></li><li data-realm="shared"><a href="#create_reference">create_reference</a></li><li data-realm="shared"><a href="#create_table">create_table</a></li><li data-realm="shared"><a href="#define_model">define_model</a></li><li data-realm="shared"><a href="#drop_table">drop_table</a></li><li data-realm="shared"><a href="#execute_block">execute_block</a></li><li data-realm="shared"><a href="#remove_column">remove_column</a></li><li data-realm="shared"><a href="#remove_foreign_key">remove_foreign_key</a></li><li data-realm="shared"><a href="#remove_index">remove_index</a></li><li data-realm="shared"><a href="#remove_reference">remove_reference</a></li><li data-realm="shared"><a href="#remove_timestamps">remove_timestamps</a></li><li data-realm="shared"><a href="#rename_column">rename_column</a></li><li data-realm="shared"><a href="#rename_table">rename_table</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

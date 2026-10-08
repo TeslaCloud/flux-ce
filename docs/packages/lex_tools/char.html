@@ -28,26 +28,26 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>char <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/lex_tools/index.html">Lexing Tools</a></p></div>
+<div class="page-header"><h1>char <span class="badge badge-object">object</span></h1><p class="subtitle">Object table char in lib/char.lua</p><p class="subtitle">Part of <a href="../../packages/lex_tools/index.html">Lexing Tools</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#is">is(c, t)</a></div><div class="summary-synopsis">Checks whether a character belongs to a character class.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_cntrl">is_cntrl(c)</a></div><div class="summary-synopsis">Checks whether a character is a control character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_hex">is_hex(c)</a></div><div class="summary-synopsis">Checks whether a character is a hexadecimal digit.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_ident">is_ident(c)</a></div><div class="summary-synopsis">Checks whether a character can be a part of an identifier: a letter, a digit, '_', '!', '?' or any byte above 127.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_lower">is_lower(c)</a></div><div class="summary-synopsis">Checks whether a character is a lowercase letter.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_num">is_num(c)</a></div><div class="summary-synopsis">Checks whether a character is a decimal digit.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_punct">is_punct(c)</a></div><div class="summary-synopsis">Checks whether a character is a punctuation character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_space">is_space(c)</a></div><div class="summary-synopsis">Checks whether a character is a space or a tab.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_upper">is_upper(c)</a></div><div class="summary-synopsis">Checks whether a character is an uppercase letter.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is">is(c, t)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character belongs to a character class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_cntrl">is_cntrl(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character is a control character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_hex">is_hex(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character is a hexadecimal digit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_ident">is_ident(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character can be a part of an identifier: a letter, a digit, '_', '!', '?' or any byte above 127.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_lower">is_lower(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character is a lowercase letter.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_num">is_num(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character is a decimal digit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_punct">is_punct(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character is a punctuation character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_space">is_space(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character is a space or a tab.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_upper">is_upper(c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a character is an uppercase letter.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="is">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is<span class="params">(c, t)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is<span class="params">(c, t)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L44" title="View source">packages/lex_tools/lib/char.lua:44</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:44</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character belongs to a character class.</p>
@@ -59,9 +59,9 @@
 </section>
 <section class="detail" id="is_cntrl">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_cntrl<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_cntrl<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_cntrl" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L89" title="View source">packages/lex_tools/lib/char.lua:89</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:89</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character is a control character.</p>
@@ -73,9 +73,9 @@
 </section>
 <section class="detail" id="is_hex">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_hex<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_hex<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_hex" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L58" title="View source">packages/lex_tools/lib/char.lua:58</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:58</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character is a hexadecimal digit.</p>
@@ -87,9 +87,9 @@
 </section>
 <section class="detail" id="is_ident">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_ident<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_ident<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_ident" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L64" title="View source">packages/lex_tools/lib/char.lua:64</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:64</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character can be a part of an identifier: a letter, a digit, '_',
@@ -102,9 +102,9 @@
 </section>
 <section class="detail" id="is_lower">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_lower<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_lower<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_lower" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L74" title="View source">packages/lex_tools/lib/char.lua:74</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:74</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character is a lowercase letter.</p>
@@ -116,9 +116,9 @@
 </section>
 <section class="detail" id="is_num">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_num<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_num<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_num" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L53" title="View source">packages/lex_tools/lib/char.lua:53</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:53</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character is a decimal digit.</p>
@@ -130,9 +130,9 @@
 </section>
 <section class="detail" id="is_punct">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_punct<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_punct<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_punct" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L84" title="View source">packages/lex_tools/lib/char.lua:84</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:84</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character is a punctuation character.</p>
@@ -144,9 +144,9 @@
 </section>
 <section class="detail" id="is_space">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_space<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_space<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_space" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L69" title="View source">packages/lex_tools/lib/char.lua:69</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:69</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character is a space or a tab.</p>
@@ -158,9 +158,9 @@
 </section>
 <section class="detail" id="is_upper">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">char.</span>is_upper<span class="params">(c)</span></h3>
+<h3 class="signature"><span class="owner">char.</span>is_upper<span class="params">(c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_upper" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua#L79" title="View source">packages/lex_tools/lib/char.lua:79</a>
+<span class="source-link">packages/lex_tools/lib/char.lua:79</span>
 </div>
 <section class="docstring">
 <p>Checks whether a character is an uppercase letter.</p>
@@ -171,11 +171,11 @@
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/lex_tools/lib/char.lua" title="View source">packages/lex_tools/lib/char.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#is">is</a></li><li><a href="#is_cntrl">is_cntrl</a></li><li><a href="#is_hex">is_hex</a></li><li><a href="#is_ident">is_ident</a></li><li><a href="#is_lower">is_lower</a></li><li><a href="#is_num">is_num</a></li><li><a href="#is_punct">is_punct</a></li><li><a href="#is_space">is_space</a></li><li><a href="#is_upper">is_upper</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/lex_tools/lib/char.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#is">is</a></li><li data-realm="shared"><a href="#is_cntrl">is_cntrl</a></li><li data-realm="shared"><a href="#is_hex">is_hex</a></li><li data-realm="shared"><a href="#is_ident">is_ident</a></li><li data-realm="shared"><a href="#is_lower">is_lower</a></li><li data-realm="shared"><a href="#is_num">is_num</a></li><li data-realm="shared"><a href="#is_punct">is_punct</a></li><li data-realm="shared"><a href="#is_space">is_space</a></li><li data-realm="shared"><a href="#is_upper">is_upper</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

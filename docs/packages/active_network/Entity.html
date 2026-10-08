@@ -31,19 +31,18 @@
 <div class="page-header"><h1>Entity <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_network/index.html">Active Network</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#clear_net_vars">clear_net_vars(recv)</a></div><div class="summary-synopsis">Flushes all of this entity's networked variables and tells clients to do the same.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_nv">get_nv(key, default)</a></div><div class="summary-synopsis">Returns the value of this entity's networked variable.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_nv-2">get_nv(key, default)</a></div><div class="summary-synopsis">Returns the value of this entity's networked variable.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#send_net_var">send_net_var(key, recv)</a></div><div class="summary-synopsis">Sends the current value of this entity's networked variable to a player (or players).</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_nv">set_nv(key, value, send)</a></div><div class="summary-synopsis">Sets this entity's networked variable and sends it to clients. Does nothing if a non-table value has not changed. Functions cannot be networked.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#clear_net_vars">clear_net_vars(recv)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Flushes all of this entity's networked variables and tells clients to do the same.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_nv">get_nv(key, default)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the value of this entity's networked variable.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#send_net_var">send_net_var(key, recv)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sends the current value of this entity's networked variable to a player (or players).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_nv">set_nv(key, value, send)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets this entity's networked variable and sends it to clients.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="clear_net_vars">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Entity:</span>clear_net_vars<span class="params">(recv)</span></h3>
+<h3 class="signature"><span class="owner">Entity:</span>clear_net_vars<span class="params">(recv)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#clear_net_vars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_network/lib/sv_active_network.lua#L70" title="View source">packages/active_network/lib/sv_active_network.lua:70</a>
+<span class="source-link">packages/active_network/lib/sv_active_network.lua:70</span>
 </div>
 <section class="docstring">
 <p>Flushes all of this entity's networked variables and tells clients to do the same.</p>
@@ -53,9 +52,9 @@
 </section>
 <section class="detail" id="get_nv">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Entity:</span>get_nv<span class="params">(key, default)</span></h3>
+<h3 class="signature"><span class="owner">Entity:</span>get_nv<span class="params">(key, default)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_nv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_network/lib/cl_active_network.lua#L31" title="View source">packages/active_network/lib/cl_active_network.lua:31</a>
+<span class="source-link">packages/active_network/lib/sv_active_network.lua:60</span>
 </div>
 <section class="docstring">
 <p>Returns the value of this entity's networked variable.</p>
@@ -63,27 +62,15 @@
 <ul class="params"><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">variable name</span></li><li><span class="param-name">default</span> <span class="type">Any</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">value to return if the variable is not set</span></li></ul>
 <h4>Returns</h4>
 <ul class="returns"><li><span class="type">Any</span> <span class="desc">variable value, or default</span></li></ul>
-</section>
-</section>
-<section class="detail" id="get_nv-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Entity:</span>get_nv<span class="params">(key, default)</span></h3>
-<a href="#get_nv-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_network/lib/sv_active_network.lua#L60" title="View source">packages/active_network/lib/sv_active_network.lua:60</a>
-</div>
-<section class="docstring">
-<p>Returns the value of this entity's networked variable.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">variable name</span></li><li><span class="param-name">default</span> <span class="type">Any</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">value to return if the variable is not set</span></li></ul>
-<h4>Returns</h4>
-<ul class="returns"><li><span class="type">Any</span> <span class="desc">variable value, or default</span></li></ul>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">packages/active_network/lib/sv_active_network.lua:60</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">packages/active_network/lib/cl_active_network.lua:31</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
 </section>
 </section>
 <section class="detail" id="send_net_var">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Entity:</span>send_net_var<span class="params">(key, recv)</span></h3>
+<h3 class="signature"><span class="owner">Entity:</span>send_net_var<span class="params">(key, recv)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#send_net_var" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_network/lib/sv_active_network.lua#L52" title="View source">packages/active_network/lib/sv_active_network.lua:52</a>
+<span class="source-link">packages/active_network/lib/sv_active_network.lua:52</span>
 </div>
 <section class="docstring">
 <p>Sends the current value of this entity's networked variable to a player (or players).</p>
@@ -93,9 +80,9 @@
 </section>
 <section class="detail" id="set_nv">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Entity:</span>set_nv<span class="params">(key, value, send)</span></h3>
+<h3 class="signature"><span class="owner">Entity:</span>set_nv<span class="params">(key, value, send)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_nv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_network/lib/sv_active_network.lua#L80" title="View source">packages/active_network/lib/sv_active_network.lua:80</a>
+<span class="source-link">packages/active_network/lib/sv_active_network.lua:80</span>
 </div>
 <section class="docstring">
 <p>Sets this entity's networked variable and sends it to clients.
@@ -105,11 +92,11 @@ Does nothing if a non-table value has not changed. Functions cannot be networked
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_network/lib/cl_active_network.lua" title="View source">packages/active_network/lib/cl_active_network.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_network/lib/sv_active_network.lua" title="View source">packages/active_network/lib/sv_active_network.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#clear_net_vars">clear_net_vars</a></li><li><a href="#get_nv">get_nv</a></li><li><a href="#get_nv-2">get_nv</a></li><li><a href="#send_net_var">send_net_var</a></li><li><a href="#set_nv">set_nv</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_network/lib/cl_active_network.lua</span></li><li><span class="source-link">packages/active_network/lib/sv_active_network.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#clear_net_vars">clear_net_vars</a></li><li data-realm="shared"><a href="#get_nv">get_nv</a></li><li data-realm="server"><a href="#send_net_var">send_net_var</a></li><li data-realm="server"><a href="#set_nv">set_nv</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

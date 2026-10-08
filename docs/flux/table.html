@@ -31,42 +31,42 @@
 <div class="page-header"><h1>table <span class="badge badge-library">library</span></h1></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#delete">delete(tab, callback)</a></div><div class="summary-synopsis">Removes the entries for which the callback returns true from the table itself.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#delete_if">delete_if(tab, callback)</a></div><div class="summary-synopsis">Returns a copy of the table without the entries for which the callback returns true. The entries keep their keys and the original table is not modified.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#deserialize">deserialize(data)</a></div><div class="summary-synopsis">Converts a string back into a table. Uses SFS at first, if it fails it falls back to JSON.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#equal">equal(tab1, tab2)</a></div><div class="summary-synopsis">Checks whether two tables have the same contents. Nested tables are compared recursively.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#first">first(tab)</a></div><div class="summary-synopsis">Returns the first element of an array.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#flatten">flatten(tab)</a></div><div class="summary-synopsis">Flattens the tables nested inside of a table into a single array. Tables that have a <a href="../flux/Globals.html#class"><code>class</code></a> field (objects) are treated as values.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#hash">hash(tab)</a></div><div class="summary-synopsis">Returns the memory address of a table, which identifies it uniquely while it exists.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#join">join(tab, sep)</a></div><div class="summary-synopsis">Concatenates all values of a table into a single string, including those of nested tables.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#keep">keep(tab, callback)</a></div><div class="summary-synopsis">Removes the entries for which the callback does not return true from the table itself.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#keep_if">keep_if(tab, callback)</a></div><div class="summary-synopsis">Returns a copy of the table that only has the entries for which the callback returns true. The entries keep their keys and the original table is not modified.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#last">last(tab)</a></div><div class="summary-synopsis">Returns the last element of an array.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#map">map(t, c)</a></div><div class="summary-synopsis">Creates an array out of the values a callback returns for every value of a table. Values for which the callback returns nil are left out.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#map_kv">map_kv(t, c)</a></div><div class="summary-synopsis">Creates an array out of the values a callback returns for every key-value pair of a table. Pairs for which the callback returns nil are left out.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Merge">Merge(dest, source)</a></div><div class="summary-synopsis">Recursively merges the source table into the destination table, overwriting existing keys. Replaces the built-in table.Merge. Unlike the built-in, a table stored under the <a href="../flux/Globals.html#class"><code>class</code></a> key is assigned by reference instead of being merged.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#none">none(tab, callback)</a></div><div class="summary-synopsis">Checks whether the callback returns a truthy value for none of the entries of the table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#one">one(tab, callback)</a></div><div class="summary-synopsis">Checks whether the callback returns a truthy value for exactly one entry of the table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#partition">partition(tab, callback)</a></div><div class="summary-synopsis">Splits the values of a table into two arrays: those for which the callback returns a truthy value and all the others.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#range">range(from, to)</a></div><div class="summary-synopsis">Creates an array of consecutive integers.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#reduce">reduce(tab, op)</a></div><div class="summary-synopsis">Combines all elements of an array into a single value, by applying an operator to the running result and each element in order. The running result starts at 0.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_functions">remove_functions(obj)</a></div><div class="summary-synopsis">Removes all functions from a table and from the tables nested in it. Modifies the table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#safe_merge">safe_merge(to, from)</a></div><div class="summary-synopsis">Merges a table into another one like table.Merge, but leaves <code>__index</code> of both tables alone and skips the <a href="../flux/Globals.html#class"><code>class</code></a> key and any field of <code>from</code> that refers to <code>from</code> itself.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#select">select(t, what)</a></div><div class="summary-synopsis">Filters the values of a table with a callback, or collects a single field from every table inside of it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#serialize">serialize(tab)</a></div><div class="summary-synopsis">Converts a table into the string format.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#slice">slice(t, from, to)</a></div><div class="summary-synopsis">Returns the part of an array between two indexes, both inclusive.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#sum">sum(tab)</a></div><div class="summary-synopsis">Adds up all elements of an array.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#to_array">to_array(tab)</a></div><div class="summary-synopsis">Converts a hash into an array of { key, value } pairs.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#to_hash">to_hash(tab)</a></div><div class="summary-synopsis">Converts an array of { key, value } pairs into a hash.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#uniq">uniq(tab, condition)</a></div><div class="summary-synopsis">Returns a copy of the table without duplicate values. The values keep their original keys, so the copy of an array can have gaps in it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete">delete(tab, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes the entries for which the callback returns true from the table itself.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete_if">delete_if(tab, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a copy of the table without the entries for which the callback returns true.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#deserialize">deserialize(data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a string back into a table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#equal">equal(tab1, tab2)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether two tables have the same contents.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#first">first(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the first element of an array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#flatten">flatten(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Flattens the tables nested inside of a table into a single array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hash">hash(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the memory address of a table, which identifies it uniquely while it exists.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#join">join(tab, sep)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Concatenates all values of a table into a single string, including those of nested tables.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#keep">keep(tab, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes the entries for which the callback does not return true from the table itself.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#keep_if">keep_if(tab, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a copy of the table that only has the entries for which the callback returns true.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#last">last(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the last element of an array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#map">map(t, c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates an array out of the values a callback returns for every value of a table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#map_kv">map_kv(t, c)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates an array out of the values a callback returns for every key-value pair of a table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Merge">Merge(dest, source)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Recursively merges the source table into the destination table, overwriting existing keys.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#none">none(tab, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the callback returns a truthy value for none of the entries of the table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#one">one(tab, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the callback returns a truthy value for exactly one entry of the table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#partition">partition(tab, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Splits the values of a table into two arrays: those for which the callback returns a truthy value and all the others.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#range">range(from, to)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates an array of consecutive integers.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reduce">reduce(tab, op)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Combines all elements of an array into a single value, by applying an operator to the running result and each element in order.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_functions">remove_functions(obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes all functions from a table and from the tables nested in it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#safe_merge">safe_merge(to, from)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Merges a table into another one like table.Merge, but leaves <code>__index</code> of both tables alone and skips the <a href="../flux/Globals.html#class"><code>class</code></a> key and any field of <code>from</code> that refers to <code>from</code> itself.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#select">select(t, what)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Filters the values of a table with a callback, or collects a single field from every table inside of it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#serialize">serialize(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a table into the string format.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#slice">slice(t, from, to)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the part of an array between two indexes, both inclusive.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sum">sum(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds up all elements of an array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_array">to_array(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a hash into an array of { key, value } pairs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_hash">to_hash(tab)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts an array of { key, value } pairs into a hash.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#uniq">uniq(tab, condition)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a copy of the table without duplicate values.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="delete">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>delete<span class="params">(tab, callback)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>delete<span class="params">(tab, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#delete" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L339" title="View source">lib/stdlib/sh_table.lua:339</a>
+<span class="source-link">lib/stdlib/sh_table.lua:339</span>
 </div>
 <section class="docstring">
 <p>Removes the entries for which the callback returns true from the table itself.</p>
@@ -80,9 +80,9 @@
 </section>
 <section class="detail" id="delete_if">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>delete_if<span class="params">(tab, callback)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>delete_if<span class="params">(tab, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#delete_if" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L322" title="View source">lib/stdlib/sh_table.lua:322</a>
+<span class="source-link">lib/stdlib/sh_table.lua:322</span>
 </div>
 <section class="docstring">
 <p>Returns a copy of the table without the entries for which the callback returns true.
@@ -97,9 +97,9 @@ The entries keep their keys and the original table is not modified.</p>
 </section>
 <section class="detail" id="deserialize">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>deserialize<span class="params">(data)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>deserialize<span class="params">(data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#deserialize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L520" title="View source">lib/stdlib/sh_table.lua:520</a>
+<span class="source-link">lib/stdlib/sh_table.lua:520</span>
 </div>
 <section class="docstring">
 <p>Converts a string back into a table. Uses SFS at first, if it fails it falls back to JSON.</p>
@@ -111,9 +111,9 @@ The entries keep their keys and the original table is not modified.</p>
 </section>
 <section class="detail" id="equal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>equal<span class="params">(tab1, tab2)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>equal<span class="params">(tab1, tab2)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L262" title="View source">lib/stdlib/sh_table.lua:262</a>
+<span class="source-link">lib/stdlib/sh_table.lua:262</span>
 </div>
 <section class="docstring">
 <p>Checks whether two tables have the same contents. Nested tables are compared recursively.</p>
@@ -125,9 +125,9 @@ The entries keep their keys and the original table is not modified.</p>
 </section>
 <section class="detail" id="first">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>first<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>first<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#first" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L385" title="View source">lib/stdlib/sh_table.lua:385</a>
+<span class="source-link">lib/stdlib/sh_table.lua:385</span>
 </div>
 <section class="docstring">
 <p>Returns the first element of an array.</p>
@@ -139,9 +139,9 @@ The entries keep their keys and the original table is not modified.</p>
 </section>
 <section class="detail" id="flatten">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>flatten<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>flatten<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#flatten" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L207" title="View source">lib/stdlib/sh_table.lua:207</a>
+<span class="source-link">lib/stdlib/sh_table.lua:207</span>
 </div>
 <section class="docstring">
 <p>Flattens the tables nested inside of a table into a single array.
@@ -154,9 +154,9 @@ Tables that have a <a href="../flux/Globals.html#class"><code>class</code></a> f
 </section>
 <section class="detail" id="hash">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>hash<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>hash<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#hash" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L293" title="View source">lib/stdlib/sh_table.lua:293</a>
+<span class="source-link">lib/stdlib/sh_table.lua:293</span>
 </div>
 <section class="docstring">
 <p>Returns the memory address of a table, which identifies it uniquely while it exists.</p>
@@ -168,9 +168,9 @@ Tables that have a <a href="../flux/Globals.html#class"><code>class</code></a> f
 </section>
 <section class="detail" id="join">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>join<span class="params">(tab, sep)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>join<span class="params">(tab, sep)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#join" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L301" title="View source">lib/stdlib/sh_table.lua:301</a>
+<span class="source-link">lib/stdlib/sh_table.lua:301</span>
 </div>
 <section class="docstring">
 <p>Concatenates all values of a table into a single string, including those of nested tables.</p>
@@ -182,9 +182,9 @@ Tables that have a <a href="../flux/Globals.html#class"><code>class</code></a> f
 </section>
 <section class="detail" id="keep">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>keep<span class="params">(tab, callback)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>keep<span class="params">(tab, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#keep" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L372" title="View source">lib/stdlib/sh_table.lua:372</a>
+<span class="source-link">lib/stdlib/sh_table.lua:372</span>
 </div>
 <section class="docstring">
 <p>Removes the entries for which the callback does not return true from the table itself.</p>
@@ -198,9 +198,9 @@ Tables that have a <a href="../flux/Globals.html#class"><code>class</code></a> f
 </section>
 <section class="detail" id="keep_if">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>keep_if<span class="params">(tab, callback)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>keep_if<span class="params">(tab, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#keep_if" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L355" title="View source">lib/stdlib/sh_table.lua:355</a>
+<span class="source-link">lib/stdlib/sh_table.lua:355</span>
 </div>
 <section class="docstring">
 <p>Returns a copy of the table that only has the entries for which the callback returns true.
@@ -215,9 +215,9 @@ The entries keep their keys and the original table is not modified.</p>
 </section>
 <section class="detail" id="last">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>last<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>last<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#last" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L392" title="View source">lib/stdlib/sh_table.lua:392</a>
+<span class="source-link">lib/stdlib/sh_table.lua:392</span>
 </div>
 <section class="docstring">
 <p>Returns the last element of an array.</p>
@@ -229,9 +229,9 @@ The entries keep their keys and the original table is not modified.</p>
 </section>
 <section class="detail" id="map">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>map<span class="params">(t, c)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>map<span class="params">(t, c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#map" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L59" title="View source">lib/stdlib/sh_table.lua:59</a>
+<span class="source-link">lib/stdlib/sh_table.lua:59</span>
 </div>
 <section class="docstring">
 <p>Creates an array out of the values a callback returns for every value of a table.
@@ -248,9 +248,9 @@ Values for which the callback returns nil are left out.</p>
 </section>
 <section class="detail" id="map_kv">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>map_kv<span class="params">(t, c)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>map_kv<span class="params">(t, c)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#map_kv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L81" title="View source">lib/stdlib/sh_table.lua:81</a>
+<span class="source-link">lib/stdlib/sh_table.lua:81</span>
 </div>
 <section class="docstring">
 <p>Creates an array out of the values a callback returns for every key-value pair of a table.
@@ -265,9 +265,9 @@ Pairs for which the callback returns nil are left out.</p>
 </section>
 <section class="detail" id="Merge">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>Merge<span class="params">(dest, source)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>Merge<span class="params">(dest, source)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Merge" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L7" title="View source">lib/stdlib/sh_table.lua:7</a>
+<span class="source-link">lib/stdlib/sh_table.lua:7</span>
 </div>
 <section class="docstring">
 <p>Recursively merges the source table into the destination table, overwriting existing keys.
@@ -281,9 +281,9 @@ key is assigned by reference instead of being merged.</p>
 </section>
 <section class="detail" id="none">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>none<span class="params">(tab, callback)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>none<span class="params">(tab, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#none" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L420" title="View source">lib/stdlib/sh_table.lua:420</a>
+<span class="source-link">lib/stdlib/sh_table.lua:420</span>
 </div>
 <section class="docstring">
 <p>Checks whether the callback returns a truthy value for none of the entries of the table.</p>
@@ -295,9 +295,9 @@ key is assigned by reference instead of being merged.</p>
 </section>
 <section class="detail" id="one">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>one<span class="params">(tab, callback)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>one<span class="params">(tab, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#one" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L400" title="View source">lib/stdlib/sh_table.lua:400</a>
+<span class="source-link">lib/stdlib/sh_table.lua:400</span>
 </div>
 <section class="docstring">
 <p>Checks whether the callback returns a truthy value for exactly one entry of the table.</p>
@@ -309,9 +309,9 @@ key is assigned by reference instead of being merged.</p>
 </section>
 <section class="detail" id="partition">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>partition<span class="params">(tab, callback)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>partition<span class="params">(tab, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#partition" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L438" title="View source">lib/stdlib/sh_table.lua:438</a>
+<span class="source-link">lib/stdlib/sh_table.lua:438</span>
 </div>
 <section class="docstring">
 <p>Splits the values of a table into two arrays: those for which the callback returns a truthy
@@ -326,9 +326,9 @@ value and all the others.</p>
 </section>
 <section class="detail" id="range">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>range<span class="params">(from, to)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>range<span class="params">(from, to)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#range" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L612" title="View source">lib/stdlib/sh_table.lua:612</a>
+<span class="source-link">lib/stdlib/sh_table.lua:612</span>
 </div>
 <section class="docstring">
 <p>Creates an array of consecutive integers.</p>
@@ -340,9 +340,9 @@ value and all the others.</p>
 </section>
 <section class="detail" id="reduce">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>reduce<span class="params">(tab, op)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>reduce<span class="params">(tab, op)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#reduce" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L181" title="View source">lib/stdlib/sh_table.lua:181</a>
+<span class="source-link">lib/stdlib/sh_table.lua:181</span>
 </div>
 <section class="docstring">
 <p>Combines all elements of an array into a single value, by applying an operator to the
@@ -358,9 +358,9 @@ table.<span class="hl-f">reduce</span>({ <span class="hl-n">1</span>, <span clas
 </section>
 <section class="detail" id="remove_functions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>remove_functions<span class="params">(obj)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>remove_functions<span class="params">(obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_functions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L146" title="View source">lib/stdlib/sh_table.lua:146</a>
+<span class="source-link">lib/stdlib/sh_table.lua:146</span>
 </div>
 <section class="docstring">
 <p>Removes all functions from a table and from the tables nested in it. Modifies the table.</p>
@@ -372,9 +372,9 @@ table.<span class="hl-f">reduce</span>({ <span class="hl-n">1</span>, <span clas
 </section>
 <section class="detail" id="safe_merge">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>safe_merge<span class="params">(to, from)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>safe_merge<span class="params">(to, from)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#safe_merge" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L24" title="View source">lib/stdlib/sh_table.lua:24</a>
+<span class="source-link">lib/stdlib/sh_table.lua:24</span>
 </div>
 <section class="docstring">
 <p>Merges a table into another one like table.Merge, but leaves <code>__index</code> of both tables
@@ -387,9 +387,9 @@ alone and skips the <a href="../flux/Globals.html#class"><code>class</code></a> 
 </section>
 <section class="detail" id="select">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>select<span class="params">(t, what)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>select<span class="params">(t, what)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#select" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L108" title="View source">lib/stdlib/sh_table.lua:108</a>
+<span class="source-link">lib/stdlib/sh_table.lua:108</span>
 </div>
 <section class="docstring">
 <p>Filters the values of a table with a callback, or collects a single field from every
@@ -410,9 +410,9 @@ table inside of it.</p>
 </section>
 <section class="detail" id="serialize">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>serialize<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>serialize<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#serialize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L494" title="View source">lib/stdlib/sh_table.lua:494</a>
+<span class="source-link">lib/stdlib/sh_table.lua:494</span>
 </div>
 <section class="docstring">
 <p>Converts a table into the string format.</p>
@@ -424,9 +424,9 @@ table inside of it.</p>
 </section>
 <section class="detail" id="slice">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>slice<span class="params">(t, from, to)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>slice<span class="params">(t, from, to)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#slice" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L133" title="View source">lib/stdlib/sh_table.lua:133</a>
+<span class="source-link">lib/stdlib/sh_table.lua:133</span>
 </div>
 <section class="docstring">
 <p>Returns the part of an array between two indexes, both inclusive.</p>
@@ -438,9 +438,9 @@ table inside of it.</p>
 </section>
 <section class="detail" id="sum">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>sum<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>sum<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#sum" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L199" title="View source">lib/stdlib/sh_table.lua:199</a>
+<span class="source-link">lib/stdlib/sh_table.lua:199</span>
 </div>
 <section class="docstring">
 <p>Adds up all elements of an array.</p>
@@ -452,9 +452,9 @@ table inside of it.</p>
 </section>
 <section class="detail" id="to_array">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>to_array<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>to_array<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#to_array" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L459" title="View source">lib/stdlib/sh_table.lua:459</a>
+<span class="source-link">lib/stdlib/sh_table.lua:459</span>
 </div>
 <section class="docstring">
 <p>Converts a hash into an array of { key, value } pairs.</p>
@@ -470,9 +470,9 @@ table inside of it.</p>
 </section>
 <section class="detail" id="to_hash">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>to_hash<span class="params">(tab)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>to_hash<span class="params">(tab)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#to_hash" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L476" title="View source">lib/stdlib/sh_table.lua:476</a>
+<span class="source-link">lib/stdlib/sh_table.lua:476</span>
 </div>
 <section class="docstring">
 <p>Converts an array of { key, value } pairs into a hash.</p>
@@ -488,9 +488,9 @@ table inside of it.</p>
 </section>
 <section class="detail" id="uniq">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">table.</span>uniq<span class="params">(tab, condition)</span></h3>
+<h3 class="signature"><span class="owner">table.</span>uniq<span class="params">(tab, condition)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#uniq" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L227" title="View source">lib/stdlib/sh_table.lua:227</a>
+<span class="source-link">lib/stdlib/sh_table.lua:227</span>
 </div>
 <section class="docstring">
 <p>Returns a copy of the table without duplicate values.
@@ -502,11 +502,11 @@ The values keep their original keys, so the copy of an array can have gaps in it
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua" title="View source">lib/stdlib/sh_table.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#delete">delete</a></li><li><a href="#delete_if">delete_if</a></li><li><a href="#deserialize">deserialize</a></li><li><a href="#equal">equal</a></li><li><a href="#first">first</a></li><li><a href="#flatten">flatten</a></li><li><a href="#hash">hash</a></li><li><a href="#join">join</a></li><li><a href="#keep">keep</a></li><li><a href="#keep_if">keep_if</a></li><li><a href="#last">last</a></li><li><a href="#map">map</a></li><li><a href="#map_kv">map_kv</a></li><li><a href="#Merge">Merge</a></li><li><a href="#none">none</a></li><li><a href="#one">one</a></li><li><a href="#partition">partition</a></li><li><a href="#range">range</a></li><li><a href="#reduce">reduce</a></li><li><a href="#remove_functions">remove_functions</a></li><li><a href="#safe_merge">safe_merge</a></li><li><a href="#select">select</a></li><li><a href="#serialize">serialize</a></li><li><a href="#slice">slice</a></li><li><a href="#sum">sum</a></li><li><a href="#to_array">to_array</a></li><li><a href="#to_hash">to_hash</a></li><li><a href="#uniq">uniq</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/stdlib/sh_table.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#delete">delete</a></li><li data-realm="shared"><a href="#delete_if">delete_if</a></li><li data-realm="shared"><a href="#deserialize">deserialize</a></li><li data-realm="shared"><a href="#equal">equal</a></li><li data-realm="shared"><a href="#first">first</a></li><li data-realm="shared"><a href="#flatten">flatten</a></li><li data-realm="shared"><a href="#hash">hash</a></li><li data-realm="shared"><a href="#join">join</a></li><li data-realm="shared"><a href="#keep">keep</a></li><li data-realm="shared"><a href="#keep_if">keep_if</a></li><li data-realm="shared"><a href="#last">last</a></li><li data-realm="shared"><a href="#map">map</a></li><li data-realm="shared"><a href="#map_kv">map_kv</a></li><li data-realm="shared"><a href="#Merge">Merge</a></li><li data-realm="shared"><a href="#none">none</a></li><li data-realm="shared"><a href="#one">one</a></li><li data-realm="shared"><a href="#partition">partition</a></li><li data-realm="shared"><a href="#range">range</a></li><li data-realm="shared"><a href="#reduce">reduce</a></li><li data-realm="shared"><a href="#remove_functions">remove_functions</a></li><li data-realm="shared"><a href="#safe_merge">safe_merge</a></li><li data-realm="shared"><a href="#select">select</a></li><li data-realm="shared"><a href="#serialize">serialize</a></li><li data-realm="shared"><a href="#slice">slice</a></li><li data-realm="shared"><a href="#sum">sum</a></li><li data-realm="shared"><a href="#to_array">to_array</a></li><li data-realm="shared"><a href="#to_hash">to_hash</a></li><li data-realm="shared"><a href="#uniq">uniq</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

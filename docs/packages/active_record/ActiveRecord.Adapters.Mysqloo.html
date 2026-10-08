@@ -31,23 +31,23 @@
 <div class="page-header"><h1>ActiveRecord.Adapters.Mysqloo <span class="badge badge-class">class</span></h1><p class="subtitle">Extends <a href="../../packages/active_record/ActiveRecord.Adapters.Abstract.html"><code>ActiveRecord.Adapters.Abstract</code></a></p><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#append_query">append_query(query, query_type, queue)</a></div><div class="summary-synopsis">Sets the table options (InnoDB engine and default charset) on a query before its SQL is built.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(config, on_connected)</a></div><div class="summary-synopsis">Connects to a MySQL server through MySQLOO and pings it every 30 seconds to keep the connection alive. Calls #on_connection_failed if the connection fails.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_column">create_column(query, column, args, obj, type, def)</a></div><div class="summary-synopsis">Makes the column the primary key of the table when a 'primary_key' column is created.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#disconnect">disconnect()</a></div><div class="summary-synopsis">Closes the MySQL connection, if there is one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a></div><div class="summary-synopsis">Escapes a string using the MySQL connection. Requires an established connection.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a></div><div class="summary-synopsis">Loads the 'mysqloo' binary module.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_mysql">is_mysql()</a></div><div class="summary-synopsis">Checks whether the adapter talks to a MySQL database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#quote_name">quote_name(str)</a></div><div class="summary-synopsis">Quotes an identifier such as a table or column name with backticks.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a></div><div class="summary-synopsis">Runs a raw SQL query on the MySQL server. In sync mode this blocks until the query is done; without a connection the query is put into the queue instead. A query that is given bindings is run as a prepared statement.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#append_query">append_query(query, query_type, queue)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the table options (InnoDB engine and default charset) on a query before its SQL is built.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(config, on_connected)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Connects to a MySQL server through MySQLOO and pings it every 30 seconds to keep the connection alive.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_column">create_column(query, column, args, obj, type, def)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Makes the column the primary key of the table when a 'primary_key' column is created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#disconnect">disconnect()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Closes the MySQL connection, if there is one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Escapes a string using the MySQL connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Loads the 'mysqloo' binary module.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_mysql">is_mysql()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the adapter talks to a MySQL database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote_name">quote_name(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Quotes an identifier such as a table or column name with backticks.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs a raw SQL query on the MySQL server.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="append_query">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>append_query<span class="params">(query, query_type, queue)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>append_query<span class="params">(query, query_type, queue)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#append_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L205" title="View source">packages/active_record/lib/adapters/mysqloo.lua:205</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:205</span>
 </div>
 <section class="docstring">
 <p>Sets the table options (InnoDB engine and default charset) on a query before its
@@ -58,9 +58,9 @@ SQL is built.</p>
 </section>
 <section class="detail" id="connect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>connect<span class="params">(config, on_connected)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>connect<span class="params">(config, on_connected)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#connect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L37" title="View source">packages/active_record/lib/adapters/mysqloo.lua:37</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:37</span>
 </div>
 <section class="docstring">
 <p>Connects to a MySQL server through MySQLOO and pings it every 30 seconds to keep
@@ -71,9 +71,9 @@ the connection alive. Calls #on_connection_failed if the connection fails.</p>
 </section>
 <section class="detail" id="create_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>create_column<span class="params">(query, column, args, obj, type, def)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>create_column<span class="params">(query, column, args, obj, type, def)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L216" title="View source">packages/active_record/lib/adapters/mysqloo.lua:216</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:216</span>
 </div>
 <section class="docstring">
 <p>Makes the column the primary key of the table when a 'primary_key' column is created.</p>
@@ -83,9 +83,9 @@ the connection alive. Calls #on_connection_failed if the connection fails.</p>
 </section>
 <section class="detail" id="disconnect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>disconnect<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>disconnect<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#disconnect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L87" title="View source">packages/active_record/lib/adapters/mysqloo.lua:87</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:87</span>
 </div>
 <section class="docstring">
 <p>Closes the MySQL connection, if there is one.</p>
@@ -93,9 +93,9 @@ the connection alive. Calls #on_connection_failed if the connection fails.</p>
 </section>
 <section class="detail" id="escape">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>escape<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>escape<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#escape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L98" title="View source">packages/active_record/lib/adapters/mysqloo.lua:98</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:98</span>
 </div>
 <section class="docstring">
 <p>Escapes a string using the MySQL connection. Requires an established connection.</p>
@@ -107,9 +107,9 @@ the connection alive. Calls #on_connection_failed if the connection fails.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>init<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>init<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L22" title="View source">packages/active_record/lib/adapters/mysqloo.lua:22</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:22</span>
 </div>
 <section class="docstring">
 <p>Loads the 'mysqloo' binary module.</p>
@@ -117,9 +117,9 @@ the connection alive. Calls #on_connection_failed if the connection fails.</p>
 </section>
 <section class="detail" id="is_mysql">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>is_mysql<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>is_mysql<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_mysql" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L28" title="View source">packages/active_record/lib/adapters/mysqloo.lua:28</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:28</span>
 </div>
 <section class="docstring">
 <p>Checks whether the adapter talks to a MySQL database.</p>
@@ -129,9 +129,9 @@ the connection alive. Calls #on_connection_failed if the connection fails.</p>
 </section>
 <section class="detail" id="quote_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>quote_name<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>quote_name<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#quote_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L105" title="View source">packages/active_record/lib/adapters/mysqloo.lua:105</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:105</span>
 </div>
 <section class="docstring">
 <p>Quotes an identifier such as a table or column name with backticks.</p>
@@ -143,9 +143,9 @@ the connection alive. Calls #on_connection_failed if the connection fails.</p>
 </section>
 <section class="detail" id="raw_query">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#raw_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L120" title="View source">packages/active_record/lib/adapters/mysqloo.lua:120</a>
+<span class="source-link">packages/active_record/lib/adapters/mysqloo.lua:120</span>
 </div>
 <section class="docstring">
 <p>Runs a raw SQL query on the MySQL server. In sync mode this blocks until the query
@@ -158,11 +158,11 @@ A query that is given bindings is run as a prepared statement.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua" title="View source">packages/active_record/lib/adapters/mysqloo.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#append_query">append_query</a></li><li><a href="#connect">connect</a></li><li><a href="#create_column">create_column</a></li><li><a href="#disconnect">disconnect</a></li><li><a href="#escape">escape</a></li><li><a href="#init">init</a></li><li><a href="#is_mysql">is_mysql</a></li><li><a href="#quote_name">quote_name</a></li><li><a href="#raw_query">raw_query</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/adapters/mysqloo.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#append_query">append_query</a></li><li data-realm="shared"><a href="#connect">connect</a></li><li data-realm="shared"><a href="#create_column">create_column</a></li><li data-realm="shared"><a href="#disconnect">disconnect</a></li><li data-realm="shared"><a href="#escape">escape</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#is_mysql">is_mysql</a></li><li data-realm="shared"><a href="#quote_name">quote_name</a></li><li data-realm="shared"><a href="#raw_query">raw_query</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

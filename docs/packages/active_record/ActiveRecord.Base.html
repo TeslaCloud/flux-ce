@@ -35,48 +35,48 @@ These objects are also referred to as &quot;models&quot;.</p>
 </section>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#class_extended">class_extended(new_class)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">When the ActiveRecord::Base class is extended, the new model is added to the global models list, and its table name is determined based on the class name. Make sure you create a table that is named as a lowercase plural of the class name, or else this will fail!</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#dump">dump()</a></div><div class="summary-synopsis">Dump the object as a simple data table. This simply dumps all the values of the variables defined in the schema.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_schema">get_schema()</a></div><div class="summary-synopsis">Returns the database schema, or attempts to get it from the global schema storage in case the object hasn't been properly initialized yet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Sets up basic variables and creates empty tables for relations that the object has many of.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#class_extended">class_extended(new_class)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">When the ActiveRecord::Base class is extended, the new model is added to the global models list, and its table name is determined based on the class name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#dump">dump()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Dump the object as a simple data table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_schema">get_schema()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the database schema, or attempts to get it from the global schema storage in case the object hasn't been properly initialized yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Sets up basic variables and creates empty tables for relations that the object has many of.</div></div>
 </div>
 <div class="summary-group"><h3>Query Engine</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#_create_restored">_create_restored(data)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Internal function to create a new instance of the object based on the data from the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#_fetch_relation">_fetch_relation(callback, objects, n, obj_id)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Internal function to fetch all relations when the object is fetched from the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#_process_child">_process_child(obj, target_class)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Internal function to process child objects or the current object as a child to another object.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a></div><div class="summary-synopsis">Returns all of the objects stored in the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#destroy">destroy()</a></div><div class="summary-synopsis">Deletes the current object from the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#expect">expect(callback)</a></div><div class="summary-synopsis">Used when a single return value is expected. Calls the callback with a single object when the object has finished loading from the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#fetch">fetch()</a></div><div class="summary-synopsis">Runs the query. Use this function to actually launch your queries.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find">find(id, callback)</a></div><div class="summary-synopsis">Finds an object in the database by its ID. Optionally can also call a callback right away.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find_by">find_by(column, value, callback)</a></div><div class="summary-synopsis">Finds an object in the database by a column value. Optionally can also call a callback right away.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#first">first()</a></div><div class="summary-synopsis">Returns the first object stored in the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get">get(callback)</a></div><div class="summary-synopsis">Used when multiple return values are expected. Calls the callback with all objects that were returned from the database once the object has finished loading.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#last">last()</a></div><div class="summary-synopsis">Returns the last object stored in the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#limit">limit(amt)</a></div><div class="summary-synopsis">Inserts a LIMIT condition into the query. The code in the example below will find the first 10 entries that have more than &quot;100&quot; money.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#order">order(column, direction)</a></div><div class="summary-synopsis">Inserts an ORDER BY condition into the query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rescue">rescue(callback)</a></div><div class="summary-synopsis">Used to catch errors during queries. This callback is called in case no object was found in the database. The callback's first argument is a new object of the same class pre-made for you.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#run_query">run_query(callback)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Runs the current query based on the query map and flushes the query map.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#save">save()</a></div><div class="summary-synopsis">Saves the object to the database. This is the function that actually commits data to the database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#skip">skip(amt)</a></div><div class="summary-synopsis">Inserts an OFFSET condition into the query. The code in the example below will return the SECOND entry in the database:</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where">where(condition, ...)</a></div><div class="summary-synopsis">Specifies a WHERE condition in the query. The values are passed to the database as bind parameters, so they need no escaping.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_not">where_not(condition, ...)</a></div><div class="summary-synopsis">Specifies a WHERE NOT condition in the query. Works exactly the same as #where, except that it does the opposite.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#_create_restored">_create_restored(data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Internal function to create a new instance of the object based on the data from the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#_fetch_relation">_fetch_relation(callback, objects, n, obj_id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Internal function to fetch all relations when the object is fetched from the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#_process_child">_process_child(obj, target_class)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Internal function to process child objects or the current object as a child to another object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns all of the objects stored in the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#destroy">destroy()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Deletes the current object from the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#expect">expect(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Used when a single return value is expected.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#fetch">fetch()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(id, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Finds an object in the database by its ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_by">find_by(column, value, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Finds an object in the database by a column value.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#first">first()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the first object stored in the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get">get(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Used when multiple return values are expected.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#last">last()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the last object stored in the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#limit">limit(amt)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inserts a LIMIT condition into the query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#order">order(column, direction)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inserts an ORDER BY condition into the query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rescue">rescue(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Used to catch errors during queries.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#run_query">run_query(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Runs the current query based on the query map and flushes the query map.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#save">save()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Saves the object to the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#skip">skip(amt)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Inserts an OFFSET condition into the query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where">where(condition, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Specifies a WHERE condition in the query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_not">where_not(condition, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Specifies a WHERE NOT condition in the query.</div></div>
 </div>
 <div class="summary-group"><h3>Database Relations</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#belongs_to">belongs_to(target, one)</a></div><div class="summary-synopsis">Specifies that the object belongs to a parent object.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has">has(what, many)</a></div><div class="summary-synopsis">Specifies that the object has one or many of another object. The object(s) will be stored in a field with the same name as the child's database table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_many">has_many(what)</a></div><div class="summary-synopsis">Specifies that the object has many instances of another object. The objects will be stored in a field with the same name as the child's database table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_one">has_one(what)</a></div><div class="summary-synopsis">Specifies that the object has one instance of another object. The object will be stored in a field with the same name as the child's database table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#invalid">invalid(column, err_code)</a></div><div class="summary-synopsis">Callback that is called if the object's validation fails.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#validates">validates(column, options)</a></div><div class="summary-synopsis">Specifies a validation for a column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#belongs_to">belongs_to(target, one)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Specifies that the object belongs to a parent object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has">has(what, many)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Specifies that the object has one or many of another object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_many">has_many(what)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Specifies that the object has many instances of another object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_one">has_one(what)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Specifies that the object has one instance of another object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#invalid">invalid(column, err_code)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Callback that is called if the object's validation fails.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#validates">validates(column, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Specifies a validation for a column.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="class_extended">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>class_extended<span class="params">(new_class)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>class_extended<span class="params">(new_class)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#class_extended" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L53" title="View source">packages/active_record/lib/base.lua:53</a>
+<span class="source-link">packages/active_record/lib/base.lua:53</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -91,9 +91,9 @@ of the class name, or else this will fail!</p>
 </section>
 <section class="detail" id="dump">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>dump<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>dump<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#dump" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L70" title="View source">packages/active_record/lib/base.lua:70</a>
+<span class="source-link">packages/active_record/lib/base.lua:70</span>
 </div>
 <section class="docstring">
 <p>Dump the object as a simple data table.
@@ -104,9 +104,9 @@ This simply dumps all the values of the variables defined in the schema.</p>
 </section>
 <section class="detail" id="get_schema">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>get_schema<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>get_schema<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L62" title="View source">packages/active_record/lib/base.lua:62</a>
+<span class="source-link">packages/active_record/lib/base.lua:62</span>
 </div>
 <section class="docstring">
 <p>Returns the database schema, or attempts to get it from the global schema
@@ -117,9 +117,9 @@ storage in case the object hasn't been properly initialized yet.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>init<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>init<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L35" title="View source">packages/active_record/lib/base.lua:35</a>
+<span class="source-link">packages/active_record/lib/base.lua:35</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -132,9 +132,9 @@ relations that the object has many of.</p>
 <p>Provides utility functions for abstracted database querying.</p>
 <section class="detail" id="_create_restored">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>_create_restored<span class="params">(data)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>_create_restored<span class="params">(data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#_create_restored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L433" title="View source">packages/active_record/lib/base.lua:433</a>
+<span class="source-link">packages/active_record/lib/base.lua:433</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -148,9 +148,9 @@ data from the database.</p>
 </section>
 <section class="detail" id="_fetch_relation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>_fetch_relation<span class="params">(callback, objects, n, obj_id)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>_fetch_relation<span class="params">(callback, objects, n, obj_id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#_fetch_relation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L313" title="View source">packages/active_record/lib/base.lua:313</a>
+<span class="source-link">packages/active_record/lib/base.lua:313</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -163,9 +163,9 @@ data from the database.</p>
 </section>
 <section class="detail" id="_process_child">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>_process_child<span class="params">(obj, target_class)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>_process_child<span class="params">(obj, target_class)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#_process_child" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L283" title="View source">packages/active_record/lib/base.lua:283</a>
+<span class="source-link">packages/active_record/lib/base.lua:283</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -178,9 +178,9 @@ data from the database.</p>
 </section>
 <section class="detail" id="all">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>all<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>all<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#all" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L201" title="View source">packages/active_record/lib/base.lua:201</a>
+<span class="source-link">packages/active_record/lib/base.lua:201</span>
 </div>
 <section class="docstring">
 <p>Returns all of the objects stored in the database.</p>
@@ -190,9 +190,9 @@ data from the database.</p>
 </section>
 <section class="detail" id="destroy">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>destroy<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>destroy<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#destroy" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L648" title="View source">packages/active_record/lib/base.lua:648</a>
+<span class="source-link">packages/active_record/lib/base.lua:648</span>
 </div>
 <section class="docstring">
 <div class="admonition warning"><p class="admonition-title">Once done, do not attempt saving the object again, since it will cause unpredictable behavior</p></div>
@@ -204,9 +204,9 @@ data from the database.</p>
 </section>
 <section class="detail" id="expect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>expect<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>expect<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#expect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L459" title="View source">packages/active_record/lib/base.lua:459</a>
+<span class="source-link">packages/active_record/lib/base.lua:459</span>
 </div>
 <section class="docstring">
 <p>Used when a single return value is expected.
@@ -222,9 +222,9 @@ finished loading from the database.</p>
 </section>
 <section class="detail" id="fetch">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>fetch<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>fetch<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#fetch" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L497" title="View source">packages/active_record/lib/base.lua:497</a>
+<span class="source-link">packages/active_record/lib/base.lua:497</span>
 </div>
 <section class="docstring">
 <p>Runs the query.
@@ -237,9 +237,9 @@ Use this function to actually launch your queries.</p>
 </section>
 <section class="detail" id="find">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>find<span class="params">(id, callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>find<span class="params">(id, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L227" title="View source">packages/active_record/lib/base.lua:227</a>
+<span class="source-link">packages/active_record/lib/base.lua:227</span>
 </div>
 <section class="docstring">
 <p>Finds an object in the database by its ID.
@@ -255,9 +255,9 @@ Object:<span class="hl-f">find</span>(<span class="hl-n">1</span>, <span class="
 </section>
 <section class="detail" id="find_by">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>find_by<span class="params">(column, value, callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>find_by<span class="params">(column, value, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find_by" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L245" title="View source">packages/active_record/lib/base.lua:245</a>
+<span class="source-link">packages/active_record/lib/base.lua:245</span>
 </div>
 <section class="docstring">
 <p>Finds an object in the database by a column value.
@@ -273,9 +273,9 @@ Object:<span class="hl-f">find_by</span>(<span class="hl-s">&#39;id&#39;</span>,
 </section>
 <section class="detail" id="first">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>first<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>first<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#first" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L189" title="View source">packages/active_record/lib/base.lua:189</a>
+<span class="source-link">packages/active_record/lib/base.lua:189</span>
 </div>
 <section class="docstring">
 <p>Returns the first object stored in the database.</p>
@@ -285,9 +285,9 @@ Object:<span class="hl-f">find_by</span>(<span class="hl-s">&#39;id&#39;</span>,
 </section>
 <section class="detail" id="get">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>get<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>get<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L476" title="View source">packages/active_record/lib/base.lua:476</a>
+<span class="source-link">packages/active_record/lib/base.lua:476</span>
 </div>
 <section class="docstring">
 <p>Used when multiple return values are expected.
@@ -303,9 +303,9 @@ the database once the object has finished loading.</p>
 </section>
 <section class="detail" id="last">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>last<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>last<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#last" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L195" title="View source">packages/active_record/lib/base.lua:195</a>
+<span class="source-link">packages/active_record/lib/base.lua:195</span>
 </div>
 <section class="docstring">
 <p>Returns the last object stored in the database.</p>
@@ -315,9 +315,9 @@ the database once the object has finished loading.</p>
 </section>
 <section class="detail" id="limit">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>limit<span class="params">(amt)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>limit<span class="params">(amt)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#limit" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L261" title="View source">packages/active_record/lib/base.lua:261</a>
+<span class="source-link">packages/active_record/lib/base.lua:261</span>
 </div>
 <section class="docstring">
 <p>Inserts a LIMIT condition into the query.
@@ -333,9 +333,9 @@ that have more than &quot;100&quot; money.</p>
 </section>
 <section class="detail" id="order">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>order<span class="params">(column, direction)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>order<span class="params">(column, direction)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#order" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L213" title="View source">packages/active_record/lib/base.lua:213</a>
+<span class="source-link">packages/active_record/lib/base.lua:213</span>
 </div>
 <section class="docstring">
 <p>Inserts an ORDER BY condition into the query.</p>
@@ -349,9 +349,9 @@ that have more than &quot;100&quot; money.</p>
 </section>
 <section class="detail" id="rescue">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>rescue<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>rescue<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rescue" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L524" title="View source">packages/active_record/lib/base.lua:524</a>
+<span class="source-link">packages/active_record/lib/base.lua:524</span>
 </div>
 <section class="docstring">
 <p>Used to catch errors during queries.
@@ -371,9 +371,9 @@ The callback's first argument is a new object of the same class pre-made for you
 </section>
 <section class="detail" id="run_query">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>run_query<span class="params">(callback)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>run_query<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#run_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L371" title="View source">packages/active_record/lib/base.lua:371</a>
+<span class="source-link">packages/active_record/lib/base.lua:371</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -386,9 +386,9 @@ The callback's first argument is a new object of the same class pre-made for you
 </section>
 <section class="detail" id="save">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>save<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>save<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#save" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L588" title="View source">packages/active_record/lib/base.lua:588</a>
+<span class="source-link">packages/active_record/lib/base.lua:588</span>
 </div>
 <section class="docstring">
 <p>Saves the object to the database.
@@ -403,9 +403,9 @@ obj:<span class="hl-f">save</span>()
 </section>
 <section class="detail" id="skip">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>skip<span class="params">(amt)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>skip<span class="params">(amt)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#skip" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L273" title="View source">packages/active_record/lib/base.lua:273</a>
+<span class="source-link">packages/active_record/lib/base.lua:273</span>
 </div>
 <section class="docstring">
 <p>Inserts an OFFSET condition into the query.
@@ -420,9 +420,9 @@ The code in the example below will return the SECOND entry in the database:</p>
 </section>
 <section class="detail" id="where">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>where<span class="params">(condition, ...)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>where<span class="params">(condition, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L105" title="View source">packages/active_record/lib/base.lua:105</a>
+<span class="source-link">packages/active_record/lib/base.lua:105</span>
 </div>
 <section class="docstring">
 <p>Specifies a WHERE condition in the query.
@@ -439,9 +439,9 @@ Object:<span class="hl-f">where</span>({ [<span class="hl-s">&#39;column&#39;</s
 </section>
 <section class="detail" id="where_not">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>where_not<span class="params">(condition, ...)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>where_not<span class="params">(condition, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_not" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L155" title="View source">packages/active_record/lib/base.lua:155</a>
+<span class="source-link">packages/active_record/lib/base.lua:155</span>
 </div>
 <section class="docstring">
 <p>Specifies a WHERE NOT condition in the query.
@@ -461,9 +461,9 @@ Object:<span class="hl-f">where_not</span>({ [<span class="hl-s">&#39;column&#39
 <p>Provides functions to bind multiple database-tied objects together.</p>
 <section class="detail" id="belongs_to">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>belongs_to<span class="params">(target, one)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>belongs_to<span class="params">(target, one)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#belongs_to" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L761" title="View source">packages/active_record/lib/base.lua:761</a>
+<span class="source-link">packages/active_record/lib/base.lua:761</span>
 </div>
 <section class="docstring">
 <p>Specifies that the object belongs to a parent object.</p>
@@ -477,9 +477,9 @@ Object:<span class="hl-f">where_not</span>({ [<span class="hl-s">&#39;column&#39
 </section>
 <section class="detail" id="has">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>has<span class="params">(what, many)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>has<span class="params">(what, many)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L676" title="View source">packages/active_record/lib/base.lua:676</a>
+<span class="source-link">packages/active_record/lib/base.lua:676</span>
 </div>
 <section class="docstring">
 <p>Specifies that the object has one or many of another object.
@@ -499,9 +499,9 @@ MyClass:<span class="hl-f">first</span>():<span class="hl-f">expect</span>(<span
 </section>
 <section class="detail" id="has_many">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>has_many<span class="params">(what)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>has_many<span class="params">(what)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_many" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L732" title="View source">packages/active_record/lib/base.lua:732</a>
+<span class="source-link">packages/active_record/lib/base.lua:732</span>
 </div>
 <section class="docstring">
 <p>Specifies that the object has many instances of another object.
@@ -521,9 +521,9 @@ MyClass:<span class="hl-f">first</span>():<span class="hl-f">expect</span>(<span
 </section>
 <section class="detail" id="has_one">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>has_one<span class="params">(what)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>has_one<span class="params">(what)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_one" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L748" title="View source">packages/active_record/lib/base.lua:748</a>
+<span class="source-link">packages/active_record/lib/base.lua:748</span>
 </div>
 <section class="docstring">
 <p>Specifies that the object has one instance of another object.
@@ -543,9 +543,9 @@ MyClass:<span class="hl-f">first</span>():<span class="hl-f">expect</span>(<span
 </section>
 <section class="detail" id="invalid">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>invalid<span class="params">(column, err_code)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>invalid<span class="params">(column, err_code)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#invalid" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L781" title="View source">packages/active_record/lib/base.lua:781</a>
+<span class="source-link">packages/active_record/lib/base.lua:781</span>
 </div>
 <section class="docstring">
 <p>Callback that is called if the object's validation fails.</p>
@@ -555,9 +555,9 @@ MyClass:<span class="hl-f">first</span>():<span class="hl-f">expect</span>(<span
 </section>
 <section class="detail" id="validates">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>validates<span class="params">(column, options)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Base:</span>validates<span class="params">(column, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#validates" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua#L794" title="View source">packages/active_record/lib/base.lua:794</a>
+<span class="source-link">packages/active_record/lib/base.lua:794</span>
 </div>
 <section class="docstring">
 <p>Specifies a validation for a column.</p>
@@ -571,11 +571,11 @@ MyClass:<span class="hl-f">first</span>():<span class="hl-f">expect</span>(<span
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/base.lua" title="View source">packages/active_record/lib/base.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#class_extended">class_extended</a></li><li><a href="#dump">dump</a></li><li><a href="#get_schema">get_schema</a></li><li><a href="#init">init</a></li><li class="sidebar-category" data-anchor="query_engine">Query Engine</li><li><a href="#_create_restored">_create_restored</a></li><li><a href="#_fetch_relation">_fetch_relation</a></li><li><a href="#_process_child">_process_child</a></li><li><a href="#all">all</a></li><li><a href="#destroy">destroy</a></li><li><a href="#expect">expect</a></li><li><a href="#fetch">fetch</a></li><li><a href="#find">find</a></li><li><a href="#find_by">find_by</a></li><li><a href="#first">first</a></li><li><a href="#get">get</a></li><li><a href="#last">last</a></li><li><a href="#limit">limit</a></li><li><a href="#order">order</a></li><li><a href="#rescue">rescue</a></li><li><a href="#run_query">run_query</a></li><li><a href="#save">save</a></li><li><a href="#skip">skip</a></li><li><a href="#where">where</a></li><li><a href="#where_not">where_not</a></li><li class="sidebar-category" data-anchor="database_relations">Database Relations</li><li><a href="#belongs_to">belongs_to</a></li><li><a href="#has">has</a></li><li><a href="#has_many">has_many</a></li><li><a href="#has_one">has_one</a></li><li><a href="#invalid">invalid</a></li><li><a href="#validates">validates</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/base.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#class_extended">class_extended</a></li><li data-realm="shared"><a href="#dump">dump</a></li><li data-realm="shared"><a href="#get_schema">get_schema</a></li><li data-realm="shared"><a href="#init">init</a></li><li class="sidebar-category" data-anchor="query_engine">Query Engine</li><li data-realm="shared"><a href="#_create_restored">_create_restored</a></li><li data-realm="shared"><a href="#_fetch_relation">_fetch_relation</a></li><li data-realm="shared"><a href="#_process_child">_process_child</a></li><li data-realm="shared"><a href="#all">all</a></li><li data-realm="shared"><a href="#destroy">destroy</a></li><li data-realm="shared"><a href="#expect">expect</a></li><li data-realm="shared"><a href="#fetch">fetch</a></li><li data-realm="shared"><a href="#find">find</a></li><li data-realm="shared"><a href="#find_by">find_by</a></li><li data-realm="shared"><a href="#first">first</a></li><li data-realm="shared"><a href="#get">get</a></li><li data-realm="shared"><a href="#last">last</a></li><li data-realm="shared"><a href="#limit">limit</a></li><li data-realm="shared"><a href="#order">order</a></li><li data-realm="shared"><a href="#rescue">rescue</a></li><li data-realm="shared"><a href="#run_query">run_query</a></li><li data-realm="shared"><a href="#save">save</a></li><li data-realm="shared"><a href="#skip">skip</a></li><li data-realm="shared"><a href="#where">where</a></li><li data-realm="shared"><a href="#where_not">where_not</a></li><li class="sidebar-category" data-anchor="database_relations">Database Relations</li><li data-realm="shared"><a href="#belongs_to">belongs_to</a></li><li data-realm="shared"><a href="#has">has</a></li><li data-realm="shared"><a href="#has_many">has_many</a></li><li data-realm="shared"><a href="#has_one">has_one</a></li><li data-realm="shared"><a href="#invalid">invalid</a></li><li data-realm="shared"><a href="#validates">validates</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

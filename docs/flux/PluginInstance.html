@@ -31,28 +31,28 @@
 <div class="page-header"><h1>PluginInstance <span class="badge badge-class">class</span></h1></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a></div><div class="summary-synopsis">Converts the plugin to a string of the form '#<a href="Plugin:name">Plugin:name</a>'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_author">get_author()</a></div><div class="summary-synopsis">Returns the author of the plugin.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_description">get_description()</a></div><div class="summary-synopsis">Returns the description of the plugin.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_folder">get_folder()</a></div><div class="summary-synopsis">Returns the folder that contains the plugin's code.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_name">get_name()</a></div><div class="summary-synopsis">Returns the name of the plugin.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_path">get_path()</a></div><div class="summary-synopsis">Returns the path the plugin was included from. Plugins are stored under this path.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(id, data)</a></div><div class="summary-synopsis">Class constructor. Fills in the basic plugin fields, then merges the whole data table into the object.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_schema">is_schema()</a></div><div class="summary-synopsis">Checks whether this plugin object is the schema.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a></div><div class="summary-synopsis">Registers the plugin with the Plugin library.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_author">set_author(author)</a></div><div class="summary-synopsis">Sets the author of the plugin.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_data">set_data(data)</a></div><div class="summary-synopsis">Merges the fields of a table into the plugin object.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_description">set_description(desc)</a></div><div class="summary-synopsis">Sets the description of the plugin.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_global">set_global(alias)</a></div><div class="summary-synopsis">Makes the plugin available as a global variable, unless a global table with that name already exists. Throws an error if the name starts with a lowercase letter.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_name">set_name(name)</a></div><div class="summary-synopsis">Sets the name of the plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts the plugin to a string of the form '#<a href="Plugin:name">Plugin:name</a>'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_author">get_author()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the author of the plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_description">get_description()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the description of the plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_folder">get_folder()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the folder that contains the plugin's code.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_name">get_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name of the plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_path">get_path()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the path the plugin was included from.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(id, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Class constructor.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_schema">is_schema()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether this plugin object is the schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the plugin with the Plugin library.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_author">set_author(author)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the author of the plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_data">set_data(data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Merges the fields of a table into the plugin object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_description">set_description(desc)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the description of the plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_global">set_global(alias)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Makes the plugin available as a global variable, unless a global table with that name already exists.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_name">set_name(name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the name of the plugin.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="__tostring">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>__tostring<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>__tostring<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#__tostring" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L97" title="View source">lib/plugin_instance.lua:97</a>
+<span class="source-link">lib/plugin_instance.lua:97</span>
 </div>
 <section class="docstring">
 <p>Converts the plugin to a string of the form '#<a href="Plugin:name">Plugin:name</a>'.</p>
@@ -62,9 +62,9 @@
 </section>
 <section class="detail" id="get_author">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>get_author<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>get_author<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_author" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L39" title="View source">lib/plugin_instance.lua:39</a>
+<span class="source-link">lib/plugin_instance.lua:39</span>
 </div>
 <section class="docstring">
 <p>Returns the author of the plugin.</p>
@@ -74,9 +74,9 @@
 </section>
 <section class="detail" id="get_description">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>get_description<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>get_description<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_description" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L45" title="View source">lib/plugin_instance.lua:45</a>
+<span class="source-link">lib/plugin_instance.lua:45</span>
 </div>
 <section class="docstring">
 <p>Returns the description of the plugin.</p>
@@ -86,9 +86,9 @@
 </section>
 <section class="detail" id="get_folder">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>get_folder<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>get_folder<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_folder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L27" title="View source">lib/plugin_instance.lua:27</a>
+<span class="source-link">lib/plugin_instance.lua:27</span>
 </div>
 <section class="docstring">
 <p>Returns the folder that contains the plugin's code.</p>
@@ -98,9 +98,9 @@
 </section>
 <section class="detail" id="get_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>get_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>get_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L21" title="View source">lib/plugin_instance.lua:21</a>
+<span class="source-link">lib/plugin_instance.lua:21</span>
 </div>
 <section class="docstring">
 <p>Returns the name of the plugin.</p>
@@ -110,9 +110,9 @@
 </section>
 <section class="detail" id="get_path">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>get_path<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>get_path<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_path" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L33" title="View source">lib/plugin_instance.lua:33</a>
+<span class="source-link">lib/plugin_instance.lua:33</span>
 </div>
 <section class="docstring">
 <p>Returns the path the plugin was included from. Plugins are stored under this path.</p>
@@ -122,9 +122,9 @@
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>init<span class="params">(id, data)</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>init<span class="params">(id, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L8" title="View source">lib/plugin_instance.lua:8</a>
+<span class="source-link">lib/plugin_instance.lua:8</span>
 </div>
 <section class="docstring">
 <p>Class constructor. Fills in the basic plugin fields, then merges the whole data table
@@ -135,9 +135,9 @@ into the object.</p>
 </section>
 <section class="detail" id="is_schema">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>is_schema<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>is_schema<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L91" title="View source">lib/plugin_instance.lua:91</a>
+<span class="source-link">lib/plugin_instance.lua:91</span>
 </div>
 <section class="docstring">
 <p>Checks whether this plugin object is the schema.</p>
@@ -147,9 +147,9 @@ into the object.</p>
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>register<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>register<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L103" title="View source">lib/plugin_instance.lua:103</a>
+<span class="source-link">lib/plugin_instance.lua:103</span>
 </div>
 <section class="docstring">
 <p>Registers the plugin with the Plugin library.</p>
@@ -159,9 +159,9 @@ into the object.</p>
 </section>
 <section class="detail" id="set_author">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>set_author<span class="params">(author)</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>set_author<span class="params">(author)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_author" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L57" title="View source">lib/plugin_instance.lua:57</a>
+<span class="source-link">lib/plugin_instance.lua:57</span>
 </div>
 <section class="docstring">
 <p>Sets the author of the plugin.</p>
@@ -171,9 +171,9 @@ into the object.</p>
 </section>
 <section class="detail" id="set_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>set_data<span class="params">(data)</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>set_data<span class="params">(data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L69" title="View source">lib/plugin_instance.lua:69</a>
+<span class="source-link">lib/plugin_instance.lua:69</span>
 </div>
 <section class="docstring">
 <p>Merges the fields of a table into the plugin object.</p>
@@ -183,9 +183,9 @@ into the object.</p>
 </section>
 <section class="detail" id="set_description">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>set_description<span class="params">(desc)</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>set_description<span class="params">(desc)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_description" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L63" title="View source">lib/plugin_instance.lua:63</a>
+<span class="source-link">lib/plugin_instance.lua:63</span>
 </div>
 <section class="docstring">
 <p>Sets the description of the plugin.</p>
@@ -195,9 +195,9 @@ into the object.</p>
 </section>
 <section class="detail" id="set_global">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>set_global<span class="params">(alias)</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>set_global<span class="params">(alias)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_global" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L76" title="View source">lib/plugin_instance.lua:76</a>
+<span class="source-link">lib/plugin_instance.lua:76</span>
 </div>
 <section class="docstring">
 <p>Makes the plugin available as a global variable, unless a global table with that name
@@ -208,9 +208,9 @@ already exists. Throws an error if the name starts with a lowercase letter.</p>
 </section>
 <section class="detail" id="set_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PluginInstance:</span>set_name<span class="params">(name)</span></h3>
+<h3 class="signature"><span class="owner">PluginInstance:</span>set_name<span class="params">(name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua#L51" title="View source">lib/plugin_instance.lua:51</a>
+<span class="source-link">lib/plugin_instance.lua:51</span>
 </div>
 <section class="docstring">
 <p>Sets the name of the plugin.</p>
@@ -219,11 +219,11 @@ already exists. Throws an error if the name starts with a lowercase letter.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin_instance.lua" title="View source">lib/plugin_instance.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#__tostring">__tostring</a></li><li><a href="#get_author">get_author</a></li><li><a href="#get_description">get_description</a></li><li><a href="#get_folder">get_folder</a></li><li><a href="#get_name">get_name</a></li><li><a href="#get_path">get_path</a></li><li><a href="#init">init</a></li><li><a href="#is_schema">is_schema</a></li><li><a href="#register">register</a></li><li><a href="#set_author">set_author</a></li><li><a href="#set_data">set_data</a></li><li><a href="#set_description">set_description</a></li><li><a href="#set_global">set_global</a></li><li><a href="#set_name">set_name</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/plugin_instance.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#__tostring">__tostring</a></li><li data-realm="shared"><a href="#get_author">get_author</a></li><li data-realm="shared"><a href="#get_description">get_description</a></li><li data-realm="shared"><a href="#get_folder">get_folder</a></li><li data-realm="shared"><a href="#get_name">get_name</a></li><li data-realm="shared"><a href="#get_path">get_path</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#is_schema">is_schema</a></li><li data-realm="shared"><a href="#register">register</a></li><li data-realm="shared"><a href="#set_author">set_author</a></li><li data-realm="shared"><a href="#set_data">set_data</a></li><li data-realm="shared"><a href="#set_description">set_description</a></li><li data-realm="shared"><a href="#set_global">set_global</a></li><li data-realm="shared"><a href="#set_name">set_name</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

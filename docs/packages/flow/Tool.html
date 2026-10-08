@@ -31,56 +31,56 @@
 <div class="page-header"><h1>Tool <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a></div><div class="summary-synopsis">Converts the tool to a string for printing.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Allowed">Allowed()</a></div><div class="summary-synopsis">Checks whether the tool is allowed to be used on the server. Always true on the client.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#BuildConVarList">BuildConVarList()</a></div><div class="summary-synopsis">Builds a list of the client console variables of the tool with their defaults.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CheckObjects">CheckObjects()</a></div><div class="summary-synopsis">Clears the selected objects if any of their entities has been removed.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ClearObjects">ClearObjects()</a></div><div class="summary-synopsis">Clears the selected objects, removes the ghost entity and resets the stage and operation.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CreateConVars">CreateConVars()</a></div><div class="summary-synopsis">Creates the console variables of the tool: the ones listed in ClientConVar on the client, and 'toolmode_allow_&lt;mode&gt;' on the server.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Deploy">Deploy()</a></div><div class="summary-synopsis">Called when the tool gun is deployed. Removes the ghost entity by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawHUD">DrawHUD()</a></div><div class="summary-synopsis">Gives the tool an opportunity to draw to the HUD. Does nothing by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawToolScreen">DrawToolScreen(w, h)</a></div><div class="summary-synopsis">Draws the scrolling name of the tool on the screen of the tool gun.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#FreezeMovement">FreezeMovement()</a></div><div class="summary-synopsis">Determines whether the view angles of the owner should be frozen while using the tool. Returns false by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetBone">GetBone(i)</a></div><div class="summary-synopsis">Returns the physics bone number of the numbered hit (for ragdolls).</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetClientInfo">GetClientInfo(property)</a></div><div class="summary-synopsis">Returns the value of a client console variable of the tool for its owner.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetClientNumber">GetClientNumber(property, default)</a></div><div class="summary-synopsis">Returns the value of a client console variable of the tool for its owner as a number.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetEnt">GetEnt(i)</a></div><div class="summary-synopsis">Returns the entity of the numbered hit.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetHelpText">GetHelpText()</a></div><div class="summary-synopsis">Returns the translated description of the tool.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetLocalPos">GetLocalPos(i)</a></div><div class="summary-synopsis">Returns the position of the numbered hit local to the entity that was hit.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetMode">GetMode()</a></div><div class="summary-synopsis">Returns the mode (ID) of the tool.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetNormal">GetNormal(i)</a></div><div class="summary-synopsis">Returns the surface normal of the numbered hit in world space.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetOperation">GetOperation()</a></div><div class="summary-synopsis">Returns the current operation of the tool.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetOwner">GetOwner()</a></div><div class="summary-synopsis">Returns the player who holds the tool gun.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetPhys">GetPhys(i)</a></div><div class="summary-synopsis">Returns the physics object of the numbered hit.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetPos">GetPos(i)</a></div><div class="summary-synopsis">Returns the world position of the numbered hit.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetServerInfo">GetServerInfo(property)</a></div><div class="summary-synopsis">Returns the value of a console variable of the tool.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetStage">GetStage()</a></div><div class="summary-synopsis">Returns the current stage of the tool.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetSWEP">GetSWEP()</a></div><div class="summary-synopsis">Returns the tool gun that this tool belongs to.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#GetWeapon">GetWeapon()</a></div><div class="summary-synopsis">Returns the weapon entity of the tool gun.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Holster">Holster()</a></div><div class="summary-synopsis">Called when the tool gun is holstered. Removes the ghost entity by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a></div><div class="summary-synopsis">Creates a new tool with the default values of its fields.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a></div><div class="summary-synopsis">Called when the tool gun initializes the tool. Does nothing by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#LeftClick">LeftClick()</a></div><div class="summary-synopsis">Called when the owner presses primary attack. Returns false by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#MakeGhostEntity">MakeGhostEntity(model, pos, angle)</a></div><div class="summary-synopsis">Creates a translucent ghost prop that previews the result of the tool, replacing the previous one. Ragdolls and effects cannot be ghosts.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#NumObjects">NumObjects()</a></div><div class="summary-synopsis">Returns the number of selected objects. On the client this is the stage of the tool.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ReleaseGhostEntity">ReleaseGhostEntity()</a></div><div class="summary-synopsis">Removes the ghost entity of the tool.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Reload">Reload()</a></div><div class="summary-synopsis">Called when the owner presses reload. Clears the selected objects by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RightClick">RightClick()</a></div><div class="summary-synopsis">Called when the owner presses secondary attack. Returns false by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SetObject">SetObject(i, ent, pos, phys, bone, norm)</a></div><div class="summary-synopsis">Stores a selected object. The position and the normal are converted to be local to the physics object (or the entity), so that they stay valid when it moves.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SetOperation">SetOperation(i)</a></div><div class="summary-synopsis">Sets the operation of the tool and networks it to the clients. Does nothing on the client.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SetStage">SetStage(i)</a></div><div class="summary-synopsis">Sets the stage of the tool and networks it to the clients. Does nothing on the client.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#StartGhostEntity">StartGhostEntity(ent)</a></div><div class="summary-synopsis">Creates a ghost entity that copies the model, position and angles of the specified entity.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Think">Think()</a></div><div class="summary-synopsis">Called every tick while the tool is active. Removes the ghost entity by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#UpdateData">UpdateData()</a></div><div class="summary-synopsis">Sets the stage of the tool to the number of selected objects.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#UpdateGhostEntity">UpdateGhostEntity()</a></div><div class="summary-synopsis">Moves the ghost entity to where the first selected object would end up if the tool was applied to the spot the owner is aiming at.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts the tool to a string for printing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Allowed">Allowed()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the tool is allowed to be used on the server.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#BuildConVarList">BuildConVarList()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Builds a list of the client console variables of the tool with their defaults.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CheckObjects">CheckObjects()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Clears the selected objects if any of their entities has been removed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ClearObjects">ClearObjects()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Clears the selected objects, removes the ghost entity and resets the stage and operation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreateConVars">CreateConVars()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates the console variables of the tool: the ones listed in ClientConVar on the client, and 'toolmode_allow_&lt;mode&gt;' on the server.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Deploy">Deploy()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the tool gun is deployed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawHUD">DrawHUD()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Gives the tool an opportunity to draw to the HUD.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawToolScreen">DrawToolScreen(w, h)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Draws the scrolling name of the tool on the screen of the tool gun.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FreezeMovement">FreezeMovement()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Determines whether the view angles of the owner should be frozen while using the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetBone">GetBone(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the physics bone number of the numbered hit (for ragdolls).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetClientInfo">GetClientInfo(property)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the value of a client console variable of the tool for its owner.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetClientNumber">GetClientNumber(property, default)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the value of a client console variable of the tool for its owner as a number.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetEnt">GetEnt(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the entity of the numbered hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetHelpText">GetHelpText()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the translated description of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetLocalPos">GetLocalPos(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the position of the numbered hit local to the entity that was hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetMode">GetMode()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the mode (ID) of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetNormal">GetNormal(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the surface normal of the numbered hit in world space.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetOperation">GetOperation()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the current operation of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetOwner">GetOwner()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the player who holds the tool gun.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetPhys">GetPhys(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the physics object of the numbered hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetPos">GetPos(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the world position of the numbered hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetServerInfo">GetServerInfo(property)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the value of a console variable of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetStage">GetStage()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the current stage of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetSWEP">GetSWEP()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the tool gun that this tool belongs to.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetWeapon">GetWeapon()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the weapon entity of the tool gun.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Holster">Holster()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the tool gun is holstered.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a new tool with the default values of its fields.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the tool gun initializes the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LeftClick">LeftClick()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the owner presses primary attack.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#MakeGhostEntity">MakeGhostEntity(model, pos, angle)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a translucent ghost prop that previews the result of the tool, replacing the previous one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#NumObjects">NumObjects()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the number of selected objects.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ReleaseGhostEntity">ReleaseGhostEntity()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes the ghost entity of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Reload">Reload()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the owner presses reload.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RightClick">RightClick()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the owner presses secondary attack.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SetObject">SetObject(i, ent, pos, phys, bone, norm)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Stores a selected object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SetOperation">SetOperation(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the operation of the tool and networks it to the clients.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SetStage">SetStage(i)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the stage of the tool and networks it to the clients.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#StartGhostEntity">StartGhostEntity(ent)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a ghost entity that copies the model, position and angles of the specified entity.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Think">Think()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called every tick while the tool is active.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#UpdateData">UpdateData()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the stage of the tool to the number of selected objects.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#UpdateGhostEntity">UpdateGhostEntity()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Moves the ghost entity to where the first selected object would end up if the tool was applied to the spot the owner is aiming at.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="__tostring">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>__tostring<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>__tostring<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#__tostring" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L453" title="View source">packages/flow/lib/classes/sh_tool.lua:453</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:453</span>
 </div>
 <section class="docstring">
 <p>Converts the tool to a string for printing.</p>
@@ -90,9 +90,9 @@
 </section>
 <section class="detail" id="Allowed">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>Allowed<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>Allowed<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Allowed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L389" title="View source">packages/flow/lib/classes/sh_tool.lua:389</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:389</span>
 </div>
 <section class="docstring">
 <p>Checks whether the tool is allowed to be used on the server. Always true on the client.</p>
@@ -102,9 +102,9 @@
 </section>
 <section class="detail" id="BuildConVarList">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>BuildConVarList<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>BuildConVarList<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#BuildConVarList" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L363" title="View source">packages/flow/lib/classes/sh_tool.lua:363</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:363</span>
 </div>
 <section class="docstring">
 <p>Builds a list of the client console variables of the tool with their defaults.</p>
@@ -114,9 +114,9 @@
 </section>
 <section class="detail" id="CheckObjects">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>CheckObjects<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>CheckObjects<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#CheckObjects" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L443" title="View source">packages/flow/lib/classes/sh_tool.lua:443</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:443</span>
 </div>
 <section class="docstring">
 <p>Clears the selected objects if any of their entities has been removed.</p>
@@ -124,9 +124,9 @@
 </section>
 <section class="detail" id="ClearObjects">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>ClearObjects<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>ClearObjects<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#ClearObjects" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L186" title="View source">packages/flow/lib/classes/sh_tool.lua:186</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:186</span>
 </div>
 <section class="docstring">
 <p>Clears the selected objects, removes the ghost entity and resets the stage and operation.</p>
@@ -134,9 +134,9 @@
 </section>
 <section class="detail" id="CreateConVars">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>CreateConVars<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>CreateConVars<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#CreateConVars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L337" title="View source">packages/flow/lib/classes/sh_tool.lua:337</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:337</span>
 </div>
 <section class="docstring">
 <p>Creates the console variables of the tool: the ones listed in ClientConVar on the client,
@@ -145,9 +145,9 @@ and 'toolmode_allow_&lt;mode&gt;' on the server.</p>
 </section>
 <section class="detail" id="Deploy">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>Deploy<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>Deploy<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Deploy" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L429" title="View source">packages/flow/lib/classes/sh_tool.lua:429</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:429</span>
 </div>
 <section class="docstring">
 <p>Called when the tool gun is deployed. Removes the ghost entity by default.</p>
@@ -155,9 +155,9 @@ and 'toolmode_allow_&lt;mode&gt;' on the server.</p>
 </section>
 <section class="detail" id="DrawHUD">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>DrawHUD<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>DrawHUD<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawHUD" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L317" title="View source">packages/flow/lib/classes/sh_tool.lua:317</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:317</span>
 </div>
 <section class="docstring">
 <p>Gives the tool an opportunity to draw to the HUD. Does nothing by default.</p>
@@ -165,9 +165,9 @@ and 'toolmode_allow_&lt;mode&gt;' on the server.</p>
 </section>
 <section class="detail" id="DrawToolScreen">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>DrawToolScreen<span class="params">(w, h)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>DrawToolScreen<span class="params">(w, h)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#DrawToolScreen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L20" title="View source">packages/flow/lib/classes/sh_tool.lua:20</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:20</span>
 </div>
 <section class="docstring">
 <p>Draws the scrolling name of the tool on the screen of the tool gun.</p>
@@ -177,9 +177,9 @@ and 'toolmode_allow_&lt;mode&gt;' on the server.</p>
 </section>
 <section class="detail" id="FreezeMovement">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>FreezeMovement<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>FreezeMovement<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#FreezeMovement" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L312" title="View source">packages/flow/lib/classes/sh_tool.lua:312</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:312</span>
 </div>
 <section class="docstring">
 <p>Determines whether the view angles of the owner should be frozen while using the tool.
@@ -190,9 +190,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetBone">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetBone<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetBone<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetBone" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L227" title="View source">packages/flow/lib/classes/sh_tool.lua:227</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:227</span>
 </div>
 <section class="docstring">
 <p>Returns the physics bone number of the numbered hit (for ragdolls).</p>
@@ -204,9 +204,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetClientInfo">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetClientInfo<span class="params">(property)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetClientInfo<span class="params">(property)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetClientInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L375" title="View source">packages/flow/lib/classes/sh_tool.lua:375</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:375</span>
 </div>
 <section class="docstring">
 <p>Returns the value of a client console variable of the tool for its owner.</p>
@@ -218,9 +218,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetClientNumber">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetClientNumber<span class="params">(property, default)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetClientNumber<span class="params">(property, default)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetClientNumber" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L383" title="View source">packages/flow/lib/classes/sh_tool.lua:383</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:383</span>
 </div>
 <section class="docstring">
 <p>Returns the value of a client console variable of the tool for its owner as a number.</p>
@@ -232,9 +232,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetEnt">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetEnt<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetEnt<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetEnt" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L196" title="View source">packages/flow/lib/classes/sh_tool.lua:196</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:196</span>
 </div>
 <section class="docstring">
 <p>Returns the entity of the numbered hit.</p>
@@ -246,9 +246,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetHelpText">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetHelpText<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetHelpText<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetHelpText" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L47" title="View source">packages/flow/lib/classes/sh_tool.lua:47</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:47</span>
 </div>
 <section class="docstring">
 <p>Returns the translated description of the tool.</p>
@@ -258,9 +258,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetLocalPos">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetLocalPos<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetLocalPos<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetLocalPos" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L220" title="View source">packages/flow/lib/classes/sh_tool.lua:220</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:220</span>
 </div>
 <section class="docstring">
 <p>Returns the position of the numbered hit local to the entity that was hit.</p>
@@ -272,9 +272,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetMode">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetMode<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetMode<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetMode" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L403" title="View source">packages/flow/lib/classes/sh_tool.lua:403</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:403</span>
 </div>
 <section class="docstring">
 <p>Returns the mode (ID) of the tool.</p>
@@ -284,9 +284,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetNormal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetNormal<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetNormal<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetNormal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L234" title="View source">packages/flow/lib/classes/sh_tool.lua:234</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:234</span>
 </div>
 <section class="docstring">
 <p>Returns the surface normal of the numbered hit in world space.</p>
@@ -298,9 +298,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetOperation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetOperation<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetOperation<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetOperation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L181" title="View source">packages/flow/lib/classes/sh_tool.lua:181</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:181</span>
 </div>
 <section class="docstring">
 <p>Returns the current operation of the tool.</p>
@@ -310,9 +310,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetOwner">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetOwner<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetOwner<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetOwner" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L411" title="View source">packages/flow/lib/classes/sh_tool.lua:411</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:411</span>
 </div>
 <section class="docstring">
 <p>Returns the player who holds the tool gun.</p>
@@ -322,9 +322,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetPhys">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetPhys<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetPhys<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetPhys" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L253" title="View source">packages/flow/lib/classes/sh_tool.lua:253</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:253</span>
 </div>
 <section class="docstring">
 <p>Returns the physics object of the numbered hit.</p>
@@ -336,9 +336,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetPos">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetPos<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetPos<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetPos" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L205" title="View source">packages/flow/lib/classes/sh_tool.lua:205</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:205</span>
 </div>
 <section class="docstring">
 <p>Returns the world position of the numbered hit.</p>
@@ -350,9 +350,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetServerInfo">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetServerInfo<span class="params">(property)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetServerInfo<span class="params">(property)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetServerInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L356" title="View source">packages/flow/lib/classes/sh_tool.lua:356</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:356</span>
 </div>
 <section class="docstring">
 <p>Returns the value of a console variable of the tool.</p>
@@ -364,9 +364,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetStage">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetStage<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetStage<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetStage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L167" title="View source">packages/flow/lib/classes/sh_tool.lua:167</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:167</span>
 </div>
 <section class="docstring">
 <p>Returns the current stage of the tool.</p>
@@ -376,9 +376,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetSWEP">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetSWEP<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetSWEP<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetSWEP" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L407" title="View source">packages/flow/lib/classes/sh_tool.lua:407</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:407</span>
 </div>
 <section class="docstring">
 <p>Returns the tool gun that this tool belongs to.</p>
@@ -388,9 +388,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="GetWeapon">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>GetWeapon<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>GetWeapon<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#GetWeapon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L415" title="View source">packages/flow/lib/classes/sh_tool.lua:415</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:415</span>
 </div>
 <section class="docstring">
 <p>Returns the weapon entity of the tool gun.</p>
@@ -400,9 +400,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="Holster">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>Holster<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>Holster<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Holster" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L432" title="View source">packages/flow/lib/classes/sh_tool.lua:432</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:432</span>
 </div>
 <section class="docstring">
 <p>Called when the tool gun is holstered. Removes the ghost entity by default.</p>
@@ -410,9 +410,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>init<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>init<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L322" title="View source">packages/flow/lib/classes/sh_tool.lua:322</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:322</span>
 </div>
 <section class="docstring">
 <p>Creates a new tool with the default values of its fields.</p>
@@ -420,9 +420,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="Init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>Init<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>Init<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L398" title="View source">packages/flow/lib/classes/sh_tool.lua:398</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:398</span>
 </div>
 <section class="docstring">
 <p>Called when the tool gun initializes the tool. Does nothing by default.</p>
@@ -430,9 +430,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="LeftClick">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>LeftClick<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>LeftClick<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#LeftClick" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L419" title="View source">packages/flow/lib/classes/sh_tool.lua:419</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:419</span>
 </div>
 <section class="docstring">
 <p>Called when the owner presses primary attack. Returns false by default.</p>
@@ -442,9 +442,9 @@ Returns false by default.</p>
 </section>
 <section class="detail" id="MakeGhostEntity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>MakeGhostEntity<span class="params">(model, pos, angle)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>MakeGhostEntity<span class="params">(model, pos, angle)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#MakeGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L56" title="View source">packages/flow/lib/classes/sh_tool.lua:56</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:56</span>
 </div>
 <section class="docstring">
 <p>Creates a translucent ghost prop that previews the result of the tool, replacing
@@ -455,9 +455,9 @@ the previous one. Ragdolls and effects cannot be ghosts.</p>
 </section>
 <section class="detail" id="NumObjects">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>NumObjects<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>NumObjects<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#NumObjects" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L300" title="View source">packages/flow/lib/classes/sh_tool.lua:300</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:300</span>
 </div>
 <section class="docstring">
 <p>Returns the number of selected objects. On the client this is the stage of the tool.</p>
@@ -467,9 +467,9 @@ the previous one. Ragdolls and effects cannot be ghosts.</p>
 </section>
 <section class="detail" id="ReleaseGhostEntity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>ReleaseGhostEntity<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>ReleaseGhostEntity<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#ReleaseGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L103" title="View source">packages/flow/lib/classes/sh_tool.lua:103</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:103</span>
 </div>
 <section class="docstring">
 <p>Removes the ghost entity of the tool.</p>
@@ -477,9 +477,9 @@ the previous one. Ragdolls and effects cannot be ghosts.</p>
 </section>
 <section class="detail" id="Reload">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>Reload<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>Reload<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Reload" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L426" title="View source">packages/flow/lib/classes/sh_tool.lua:426</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:426</span>
 </div>
 <section class="docstring">
 <p>Called when the owner presses reload. Clears the selected objects by default.</p>
@@ -487,9 +487,9 @@ the previous one. Ragdolls and effects cannot be ghosts.</p>
 </section>
 <section class="detail" id="RightClick">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>RightClick<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>RightClick<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#RightClick" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L423" title="View source">packages/flow/lib/classes/sh_tool.lua:423</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:423</span>
 </div>
 <section class="docstring">
 <p>Called when the owner presses secondary attack. Returns false by default.</p>
@@ -499,9 +499,9 @@ the previous one. Ragdolls and effects cannot be ghosts.</p>
 </section>
 <section class="detail" id="SetObject">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>SetObject<span class="params">(i, ent, pos, phys, bone, norm)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>SetObject<span class="params">(i, ent, pos, phys, bone, norm)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#SetObject" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L269" title="View source">packages/flow/lib/classes/sh_tool.lua:269</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:269</span>
 </div>
 <section class="docstring">
 <p>Stores a selected object. The position and the normal are converted to be local to the
@@ -512,9 +512,9 @@ physics object (or the entity), so that they stay valid when it moves.</p>
 </section>
 <section class="detail" id="SetOperation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>SetOperation<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>SetOperation<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#SetOperation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L173" title="View source">packages/flow/lib/classes/sh_tool.lua:173</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:173</span>
 </div>
 <section class="docstring">
 <p>Sets the operation of the tool and networks it to the clients. Does nothing on the client.</p>
@@ -524,9 +524,9 @@ physics object (or the entity), so that they stay valid when it moves.</p>
 </section>
 <section class="detail" id="SetStage">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>SetStage<span class="params">(i)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>SetStage<span class="params">(i)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#SetStage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L159" title="View source">packages/flow/lib/classes/sh_tool.lua:159</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:159</span>
 </div>
 <section class="docstring">
 <p>Sets the stage of the tool and networks it to the clients. Does nothing on the client.</p>
@@ -536,9 +536,9 @@ physics object (or the entity), so that they stay valid when it moves.</p>
 </section>
 <section class="detail" id="StartGhostEntity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>StartGhostEntity<span class="params">(ent)</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>StartGhostEntity<span class="params">(ent)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#StartGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L95" title="View source">packages/flow/lib/classes/sh_tool.lua:95</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:95</span>
 </div>
 <section class="docstring">
 <p>Creates a ghost entity that copies the model, position and angles of the specified entity.</p>
@@ -548,9 +548,9 @@ physics object (or the entity), so that they stay valid when it moves.</p>
 </section>
 <section class="detail" id="Think">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>Think<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>Think<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Think" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L435" title="View source">packages/flow/lib/classes/sh_tool.lua:435</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:435</span>
 </div>
 <section class="docstring">
 <p>Called every tick while the tool is active. Removes the ghost entity by default.</p>
@@ -558,9 +558,9 @@ physics object (or the entity), so that they stay valid when it moves.</p>
 </section>
 <section class="detail" id="UpdateData">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>UpdateData<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>UpdateData<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#UpdateData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L153" title="View source">packages/flow/lib/classes/sh_tool.lua:153</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:153</span>
 </div>
 <section class="docstring">
 <p>Sets the stage of the tool to the number of selected objects.</p>
@@ -568,9 +568,9 @@ physics object (or the entity), so that they stay valid when it moves.</p>
 </section>
 <section class="detail" id="UpdateGhostEntity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Tool:</span>UpdateGhostEntity<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Tool:</span>UpdateGhostEntity<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#UpdateGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L132" title="View source">packages/flow/lib/classes/sh_tool.lua:132</a>
+<span class="source-link">packages/flow/lib/classes/sh_tool.lua:132</span>
 </div>
 <section class="docstring">
 <p>Moves the ghost entity to where the first selected object would end up if the tool
@@ -578,11 +578,11 @@ was applied to the spot the owner is aiming at.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua" title="View source">packages/flow/lib/classes/sh_tool.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#__tostring">__tostring</a></li><li><a href="#Allowed">Allowed</a></li><li><a href="#BuildConVarList">BuildConVarList</a></li><li><a href="#CheckObjects">CheckObjects</a></li><li><a href="#ClearObjects">ClearObjects</a></li><li><a href="#CreateConVars">CreateConVars</a></li><li><a href="#Deploy">Deploy</a></li><li><a href="#DrawHUD">DrawHUD</a></li><li><a href="#DrawToolScreen">DrawToolScreen</a></li><li><a href="#FreezeMovement">FreezeMovement</a></li><li><a href="#GetBone">GetBone</a></li><li><a href="#GetClientInfo">GetClientInfo</a></li><li><a href="#GetClientNumber">GetClientNumber</a></li><li><a href="#GetEnt">GetEnt</a></li><li><a href="#GetHelpText">GetHelpText</a></li><li><a href="#GetLocalPos">GetLocalPos</a></li><li><a href="#GetMode">GetMode</a></li><li><a href="#GetNormal">GetNormal</a></li><li><a href="#GetOperation">GetOperation</a></li><li><a href="#GetOwner">GetOwner</a></li><li><a href="#GetPhys">GetPhys</a></li><li><a href="#GetPos">GetPos</a></li><li><a href="#GetServerInfo">GetServerInfo</a></li><li><a href="#GetStage">GetStage</a></li><li><a href="#GetSWEP">GetSWEP</a></li><li><a href="#GetWeapon">GetWeapon</a></li><li><a href="#Holster">Holster</a></li><li><a href="#init">init</a></li><li><a href="#Init">Init</a></li><li><a href="#LeftClick">LeftClick</a></li><li><a href="#MakeGhostEntity">MakeGhostEntity</a></li><li><a href="#NumObjects">NumObjects</a></li><li><a href="#ReleaseGhostEntity">ReleaseGhostEntity</a></li><li><a href="#Reload">Reload</a></li><li><a href="#RightClick">RightClick</a></li><li><a href="#SetObject">SetObject</a></li><li><a href="#SetOperation">SetOperation</a></li><li><a href="#SetStage">SetStage</a></li><li><a href="#StartGhostEntity">StartGhostEntity</a></li><li><a href="#Think">Think</a></li><li><a href="#UpdateData">UpdateData</a></li><li><a href="#UpdateGhostEntity">UpdateGhostEntity</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/classes/sh_tool.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#__tostring">__tostring</a></li><li data-realm="shared"><a href="#Allowed">Allowed</a></li><li data-realm="shared"><a href="#BuildConVarList">BuildConVarList</a></li><li data-realm="shared"><a href="#CheckObjects">CheckObjects</a></li><li data-realm="shared"><a href="#ClearObjects">ClearObjects</a></li><li data-realm="shared"><a href="#CreateConVars">CreateConVars</a></li><li data-realm="shared"><a href="#Deploy">Deploy</a></li><li data-realm="client"><a href="#DrawHUD">DrawHUD</a></li><li data-realm="shared"><a href="#DrawToolScreen">DrawToolScreen</a></li><li data-realm="client"><a href="#FreezeMovement">FreezeMovement</a></li><li data-realm="shared"><a href="#GetBone">GetBone</a></li><li data-realm="shared"><a href="#GetClientInfo">GetClientInfo</a></li><li data-realm="shared"><a href="#GetClientNumber">GetClientNumber</a></li><li data-realm="shared"><a href="#GetEnt">GetEnt</a></li><li data-realm="shared"><a href="#GetHelpText">GetHelpText</a></li><li data-realm="shared"><a href="#GetLocalPos">GetLocalPos</a></li><li data-realm="shared"><a href="#GetMode">GetMode</a></li><li data-realm="shared"><a href="#GetNormal">GetNormal</a></li><li data-realm="shared"><a href="#GetOperation">GetOperation</a></li><li data-realm="shared"><a href="#GetOwner">GetOwner</a></li><li data-realm="shared"><a href="#GetPhys">GetPhys</a></li><li data-realm="shared"><a href="#GetPos">GetPos</a></li><li data-realm="shared"><a href="#GetServerInfo">GetServerInfo</a></li><li data-realm="shared"><a href="#GetStage">GetStage</a></li><li data-realm="shared"><a href="#GetSWEP">GetSWEP</a></li><li data-realm="shared"><a href="#GetWeapon">GetWeapon</a></li><li data-realm="shared"><a href="#Holster">Holster</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#Init">Init</a></li><li data-realm="shared"><a href="#LeftClick">LeftClick</a></li><li data-realm="shared"><a href="#MakeGhostEntity">MakeGhostEntity</a></li><li data-realm="shared"><a href="#NumObjects">NumObjects</a></li><li data-realm="shared"><a href="#ReleaseGhostEntity">ReleaseGhostEntity</a></li><li data-realm="shared"><a href="#Reload">Reload</a></li><li data-realm="shared"><a href="#RightClick">RightClick</a></li><li data-realm="shared"><a href="#SetObject">SetObject</a></li><li data-realm="shared"><a href="#SetOperation">SetOperation</a></li><li data-realm="shared"><a href="#SetStage">SetStage</a></li><li data-realm="shared"><a href="#StartGhostEntity">StartGhostEntity</a></li><li data-realm="shared"><a href="#Think">Think</a></li><li data-realm="shared"><a href="#UpdateData">UpdateData</a></li><li data-realm="shared"><a href="#UpdateGhostEntity">UpdateGhostEntity</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

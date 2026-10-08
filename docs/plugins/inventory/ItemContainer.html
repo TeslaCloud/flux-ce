@@ -28,23 +28,23 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>ItemContainer <span class="badge badge-class">class</span></h1><p class="subtitle">Extends <a href="../../plugins/items/ItemBase.html"><code>ItemBase</code></a></p><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">inventory</a></p></div>
+<div class="page-header"><h1>ItemContainer <span class="badge badge-class">class</span></h1><p class="subtitle">Extends <a href="../../plugins/items/ItemBase.html"><code>ItemBase</code></a></p><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">Inventory</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#can_contain">can_contain(item_obj)</a></div><div class="summary-synopsis">Called on the server by the 'CanItemTransfer' hook before an item is put into the container. Prevents the container from being put inside of itself.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_inventory">create_inventory()</a></div><div class="summary-synopsis">Creates the inventory that stores the contents of the container and puts it into the 'inventory' field of the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_data">get_inventory_data()</a></div><div class="summary-synopsis">Returns the settings that the inventory of the container is created with.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_created">on_created()</a></div><div class="summary-synopsis">Called on the server by the 'OnItemCreated' hook right after an instance of the item is created. Fills the container with the items listed in default_inventory.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_open">on_open(actor)</a></div><div class="summary-synopsis">Called on the server when a player presses the open button in the item's menu. Creates the inventory of the container if it does not exist yet, fills it with the items that were saved, and opens it for the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_save">on_save()</a></div><div class="summary-synopsis">Called on the server before the character of the player that has the item is saved. Stores the instance ids of the contained items in the 'items' field of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#can_contain">can_contain(item_obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called on the server by the 'CanItemTransfer' hook before an item is put into the container.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_inventory">create_inventory()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates the inventory that stores the contents of the container and puts it into the 'inventory' field of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_data">get_inventory_data()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the settings that the inventory of the container is created with.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_created">on_created()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called on the server by the 'OnItemCreated' hook right after an instance of the item is created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_open">on_open(actor)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called on the server when a player presses the open button in the item's menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_save">on_save()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called on the server before the character of the player that has the item is saved.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="can_contain">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemContainer:</span>can_contain<span class="params">(item_obj)</span></h3>
+<h3 class="signature"><span class="owner">ItemContainer:</span>can_contain<span class="params">(item_obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#can_contain" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/items/bases/sh_item_container.lua#L60" title="View source">plugins/inventory/plugin/items/bases/sh_item_container.lua:60</a>
+<span class="source-link">plugins/inventory/plugin/items/bases/sh_item_container.lua:60</span>
 </div>
 <section class="docstring">
 <p>Called on the server by the 'CanItemTransfer' hook before an item is put
@@ -57,9 +57,9 @@ into the container. Prevents the container from being put inside of itself.</p>
 </section>
 <section class="detail" id="create_inventory">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemContainer:</span>create_inventory<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemContainer:</span>create_inventory<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/items/bases/sh_item_container.lua#L68" title="View source">plugins/inventory/plugin/items/bases/sh_item_container.lua:68</a>
+<span class="source-link">plugins/inventory/plugin/items/bases/sh_item_container.lua:68</span>
 </div>
 <section class="docstring">
 <p>Creates the inventory that stores the contents of the container
@@ -68,9 +68,9 @@ and puts it into the 'inventory' field of the item.</p>
 </section>
 <section class="detail" id="get_inventory_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemContainer:</span>get_inventory_data<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemContainer:</span>get_inventory_data<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_inventory_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/items/bases/sh_item_container.lua#L34" title="View source">plugins/inventory/plugin/items/bases/sh_item_container.lua:34</a>
+<span class="source-link">plugins/inventory/plugin/items/bases/sh_item_container.lua:34</span>
 </div>
 <section class="docstring">
 <p>Returns the settings that the inventory of the container is created with.</p>
@@ -80,9 +80,9 @@ and puts it into the 'inventory' field of the item.</p>
 </section>
 <section class="detail" id="on_created">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemContainer:</span>on_created<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemContainer:</span>on_created<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_created" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/items/bases/sh_item_container.lua#L84" title="View source">plugins/inventory/plugin/items/bases/sh_item_container.lua:84</a>
+<span class="source-link">plugins/inventory/plugin/items/bases/sh_item_container.lua:84</span>
 </div>
 <section class="docstring">
 <p>Called on the server by the 'OnItemCreated' hook right after an instance of the item
@@ -91,9 +91,9 @@ is created. Fills the container with the items listed in default_inventory.</p>
 </section>
 <section class="detail" id="on_open">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemContainer:</span>on_open<span class="params">(actor)</span></h3>
+<h3 class="signature"><span class="owner">ItemContainer:</span>on_open<span class="params">(actor)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_open" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/items/bases/sh_item_container.lua#L42" title="View source">plugins/inventory/plugin/items/bases/sh_item_container.lua:42</a>
+<span class="source-link">plugins/inventory/plugin/items/bases/sh_item_container.lua:42</span>
 </div>
 <section class="docstring">
 <p>Called on the server when a player presses the open button in the item's menu.
@@ -105,9 +105,9 @@ fills it with the items that were saved, and opens it for the player.</p>
 </section>
 <section class="detail" id="on_save">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemContainer:</span>on_save<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemContainer:</span>on_save<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_save" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/items/bases/sh_item_container.lua#L102" title="View source">plugins/inventory/plugin/items/bases/sh_item_container.lua:102</a>
+<span class="source-link">plugins/inventory/plugin/items/bases/sh_item_container.lua:102</span>
 </div>
 <section class="docstring">
 <p>Called on the server before the character of the player that has the item is saved.
@@ -115,11 +115,11 @@ Stores the instance ids of the contained items in the 'items' field of the item.
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/items/bases/sh_item_container.lua" title="View source">plugins/inventory/plugin/items/bases/sh_item_container.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#can_contain">can_contain</a></li><li><a href="#create_inventory">create_inventory</a></li><li><a href="#get_inventory_data">get_inventory_data</a></li><li><a href="#on_created">on_created</a></li><li><a href="#on_open">on_open</a></li><li><a href="#on_save">on_save</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/inventory/plugin/items/bases/sh_item_container.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#can_contain">can_contain</a></li><li data-realm="shared"><a href="#create_inventory">create_inventory</a></li><li data-realm="shared"><a href="#get_inventory_data">get_inventory_data</a></li><li data-realm="shared"><a href="#on_created">on_created</a></li><li data-realm="shared"><a href="#on_open">on_open</a></li><li data-realm="shared"><a href="#on_save">on_save</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

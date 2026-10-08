@@ -31,24 +31,24 @@
 <div class="page-header"><h1>Flux.HTML <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_js">add_js(id, contents)</a></div><div class="summary-synopsis">Adds a script.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_stylesheet">add_stylesheet(id, contents)</a></div><div class="summary-synopsis">Adds a stylesheet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_template">add_template(id, contents)</a></div><div class="summary-synopsis">Adds an HTML template.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#generate_css_file">generate_css_file()</a></div><div class="summary-synopsis">Generates Lua code that adds all of the stylesheets, to be sent to the clients.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#generate_html_file">generate_html_file()</a></div><div class="summary-synopsis">Generates Lua code that adds all of the templates, to be sent to the clients.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#generate_js_file">generate_js_file()</a></div><div class="summary-synopsis">Generates Lua code that adds all of the scripts, to be sent to the clients.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_javascript">get_javascript(id)</a></div><div class="summary-synopsis">Returns the contents of a script.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_stylesheet">get_stylesheet(id)</a></div><div class="summary-synopsis">Returns the contents of a stylesheet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_template">get_template(id)</a></div><div class="summary-synopsis">Returns the source of a template.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#render_template">render_template(id, locals)</a></div><div class="summary-synopsis">Renders a template to HTML. Templates can contain Lua code: '&lt;? code ?&gt;' runs the code, and '&lt;?= expression ?&gt;' inserts the value of the expression into the output.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_js">add_js(id, contents)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a script.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_stylesheet">add_stylesheet(id, contents)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a stylesheet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_template">add_template(id, contents)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds an HTML template.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#generate_css_file">generate_css_file()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Generates Lua code that adds all of the stylesheets, to be sent to the clients.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#generate_html_file">generate_html_file()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Generates Lua code that adds all of the templates, to be sent to the clients.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#generate_js_file">generate_js_file()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Generates Lua code that adds all of the scripts, to be sent to the clients.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_javascript">get_javascript(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the contents of a script.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_stylesheet">get_stylesheet(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the contents of a stylesheet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_template">get_template(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the source of a template.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#render_template">render_template(id, locals)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Renders a template to HTML.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="add_js">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>add_js<span class="params">(id, contents)</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>add_js<span class="params">(id, contents)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_js" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L34" title="View source">packages/flow/lib/sh_html.lua:34</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:34</span>
 </div>
 <section class="docstring">
 <p>Adds a script.</p>
@@ -58,9 +58,9 @@
 </section>
 <section class="detail" id="add_stylesheet">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>add_stylesheet<span class="params">(id, contents)</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>add_stylesheet<span class="params">(id, contents)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_stylesheet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L27" title="View source">packages/flow/lib/sh_html.lua:27</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:27</span>
 </div>
 <section class="docstring">
 <p>Adds a stylesheet.</p>
@@ -70,9 +70,9 @@
 </section>
 <section class="detail" id="add_template">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>add_template<span class="params">(id, contents)</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>add_template<span class="params">(id, contents)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_template" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L20" title="View source">packages/flow/lib/sh_html.lua:20</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:20</span>
 </div>
 <section class="docstring">
 <p>Adds an HTML template.</p>
@@ -82,9 +82,9 @@
 </section>
 <section class="detail" id="generate_css_file">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>generate_css_file<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>generate_css_file<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#generate_css_file" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L130" title="View source">packages/flow/lib/sh_html.lua:130</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:130</span>
 </div>
 <section class="docstring">
 <p>Generates Lua code that adds all of the stylesheets, to be sent to the clients.</p>
@@ -94,9 +94,9 @@
 </section>
 <section class="detail" id="generate_html_file">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>generate_html_file<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>generate_html_file<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#generate_html_file" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L124" title="View source">packages/flow/lib/sh_html.lua:124</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:124</span>
 </div>
 <section class="docstring">
 <p>Generates Lua code that adds all of the templates, to be sent to the clients.</p>
@@ -106,9 +106,9 @@
 </section>
 <section class="detail" id="generate_js_file">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>generate_js_file<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>generate_js_file<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#generate_js_file" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L136" title="View source">packages/flow/lib/sh_html.lua:136</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:136</span>
 </div>
 <section class="docstring">
 <p>Generates Lua code that adds all of the scripts, to be sent to the clients.</p>
@@ -118,9 +118,9 @@
 </section>
 <section class="detail" id="get_javascript">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>get_javascript<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>get_javascript<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_javascript" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L55" title="View source">packages/flow/lib/sh_html.lua:55</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:55</span>
 </div>
 <section class="docstring">
 <p>Returns the contents of a script.</p>
@@ -132,9 +132,9 @@
 </section>
 <section class="detail" id="get_stylesheet">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>get_stylesheet<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>get_stylesheet<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_stylesheet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L41" title="View source">packages/flow/lib/sh_html.lua:41</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:41</span>
 </div>
 <section class="docstring">
 <p>Returns the contents of a stylesheet.</p>
@@ -146,9 +146,9 @@
 </section>
 <section class="detail" id="get_template">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>get_template<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>get_template<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_template" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L48" title="View source">packages/flow/lib/sh_html.lua:48</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:48</span>
 </div>
 <section class="docstring">
 <p>Returns the source of a template.</p>
@@ -160,9 +160,9 @@
 </section>
 <section class="detail" id="render_template">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.HTML:</span>render_template<span class="params">(id, locals)</span></h3>
+<h3 class="signature"><span class="owner">Flux.HTML:</span>render_template<span class="params">(id, locals)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#render_template" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua#L80" title="View source">packages/flow/lib/sh_html.lua:80</a>
+<span class="source-link">packages/flow/lib/sh_html.lua:80</span>
 </div>
 <section class="docstring">
 <p>Renders a template to HTML. Templates can contain Lua code: '&lt;? code ?&gt;' runs the code,
@@ -178,11 +178,11 @@ Flux.HTML:<span class="hl-f">render_template</span>(<span class="hl-s">&#39;gree
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/sh_html.lua" title="View source">packages/flow/lib/sh_html.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add_js">add_js</a></li><li><a href="#add_stylesheet">add_stylesheet</a></li><li><a href="#add_template">add_template</a></li><li><a href="#generate_css_file">generate_css_file</a></li><li><a href="#generate_html_file">generate_html_file</a></li><li><a href="#generate_js_file">generate_js_file</a></li><li><a href="#get_javascript">get_javascript</a></li><li><a href="#get_stylesheet">get_stylesheet</a></li><li><a href="#get_template">get_template</a></li><li><a href="#render_template">render_template</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/sh_html.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#add_js">add_js</a></li><li data-realm="shared"><a href="#add_stylesheet">add_stylesheet</a></li><li data-realm="shared"><a href="#add_template">add_template</a></li><li data-realm="shared"><a href="#generate_css_file">generate_css_file</a></li><li data-realm="shared"><a href="#generate_html_file">generate_html_file</a></li><li data-realm="shared"><a href="#generate_js_file">generate_js_file</a></li><li data-realm="shared"><a href="#get_javascript">get_javascript</a></li><li data-realm="shared"><a href="#get_stylesheet">get_stylesheet</a></li><li data-realm="shared"><a href="#get_template">get_template</a></li><li data-realm="shared"><a href="#render_template">render_template</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

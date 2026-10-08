@@ -28,28 +28,28 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/attributes/index.html">attributes</a></p></div>
+<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/attributes/index.html">Attributes</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#boost_attribute">boost_attribute(attribute_id, value, duration)</a></div><div class="summary-synopsis">Adds a temporary boost to the player's level in an attribute. The boost is stored on the character, networked, and removed by a timer when it expires. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#decrease_attribute">decrease_attribute(attribute_id, amount)</a></div><div class="summary-synopsis">Lowers the player's level in an attribute. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_attribute">get_attribute(attribute_id, no_boost)</a></div><div class="summary-synopsis">Returns the player's level in an attribute and their progress toward the next level. Active boosts are added to the level unless disabled or the attribute is not boostable.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_attribute_boost">get_attribute_boost(attribute_id)</a></div><div class="summary-synopsis">Returns the sum of the player's boosts to an attribute that have not expired yet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_attribute_multiplier">get_attribute_multiplier(attribute_id)</a></div><div class="summary-synopsis">Returns the player's combined progress multiplier for an attribute. Every multiplier adds its value minus one on top of 1, and the result is never lower than 1.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_attributes">get_attributes(type)</a></div><div class="summary-synopsis">Returns the level, progress, boosts and multipliers of every attribute of the player's character. On the client this is the networked copy and the type argument is ignored.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#increase_attribute">increase_attribute(attribute_id, amount)</a></div><div class="summary-synopsis">Raises the player's level in an attribute. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#multiply_attribute">multiply_attribute(attribute_id, value, duration)</a></div><div class="summary-synopsis">Adds a temporary progress multiplier to an attribute of the player. The multiplier is stored on the character and networked. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#progress_attribute">progress_attribute(attribute_id, amount, no_multiplier)</a></div><div class="summary-synopsis">Adds progress to an attribute, raising or lowering its level whenever a level threshold is crossed. Does nothing for attributes with has_progress set. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#regress_attribute">regress_attribute(attribute_id, amount)</a></div><div class="summary-synopsis">Removes progress from an attribute, lowering its level when needed. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_attribute">set_attribute(attribute_id, level)</a></div><div class="summary-synopsis">Sets the player's level in an attribute, clamped to the attribute's min and max, on the character and in the networked attributes. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#boost_attribute">boost_attribute(attribute_id, value, duration)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Adds a temporary boost to the player's level in an attribute.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#decrease_attribute">decrease_attribute(attribute_id, amount)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Lowers the player's level in an attribute.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_attribute">get_attribute(attribute_id, no_boost)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the player's level in an attribute and their progress toward the next level.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_attribute_boost">get_attribute_boost(attribute_id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the sum of the player's boosts to an attribute that have not expired yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_attribute_multiplier">get_attribute_multiplier(attribute_id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the player's combined progress multiplier for an attribute.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_attributes">get_attributes(type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the level, progress, boosts and multipliers of every attribute of the player's character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#increase_attribute">increase_attribute(attribute_id, amount)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Raises the player's level in an attribute.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#multiply_attribute">multiply_attribute(attribute_id, value, duration)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Adds a temporary progress multiplier to an attribute of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#progress_attribute">progress_attribute(attribute_id, amount, no_multiplier)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Adds progress to an attribute, raising or lowering its level whenever a level threshold is crossed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#regress_attribute">regress_attribute(attribute_id, amount)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Removes progress from an attribute, lowering its level when needed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_attribute">set_attribute(attribute_id, level)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets the player's level in an attribute, clamped to the attribute's min and max, on the character and in the networked attributes.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="boost_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>boost_attribute<span class="params">(attribute_id, value, duration)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>boost_attribute<span class="params">(attribute_id, value, duration)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#boost_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L345" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:345</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:345</span>
 </div>
 <section class="docstring">
 <p>Adds a temporary boost to the player's level in an attribute. The boost is stored on the
@@ -63,9 +63,9 @@ target:<span class="hl-f">boost_attribute</span>(<span class="hl-s">&#39;strengt
 </section>
 <section class="detail" id="decrease_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>decrease_attribute<span class="params">(attribute_id, amount)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>decrease_attribute<span class="params">(attribute_id, amount)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#decrease_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L252" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:252</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:252</span>
 </div>
 <section class="docstring">
 <p>Lowers the player's level in an attribute. Server only.</p>
@@ -75,9 +75,9 @@ target:<span class="hl-f">boost_attribute</span>(<span class="hl-s">&#39;strengt
 </section>
 <section class="detail" id="get_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_attribute<span class="params">(attribute_id, no_boost)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_attribute<span class="params">(attribute_id, no_boost)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L168" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:168</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:168</span>
 </div>
 <section class="docstring">
 <p>Returns the player's level in an attribute and their progress toward the next level.
@@ -90,9 +90,9 @@ Active boosts are added to the level unless disabled or the attribute is not boo
 </section>
 <section class="detail" id="get_attribute_boost">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_attribute_boost<span class="params">(attribute_id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_attribute_boost<span class="params">(attribute_id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_attribute_boost" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L180" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:180</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:180</span>
 </div>
 <section class="docstring">
 <p>Returns the sum of the player's boosts to an attribute that have not expired yet.</p>
@@ -104,9 +104,9 @@ Active boosts are added to the level unless disabled or the attribute is not boo
 </section>
 <section class="detail" id="get_attribute_multiplier">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_attribute_multiplier<span class="params">(attribute_id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_attribute_multiplier<span class="params">(attribute_id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_attribute_multiplier" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L202" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:202</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:202</span>
 </div>
 <section class="docstring">
 <p>Returns the player's combined progress multiplier for an attribute. Every multiplier adds
@@ -119,9 +119,9 @@ its value minus one on top of 1, and the result is never lower than 1.</p>
 </section>
 <section class="detail" id="get_attributes">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_attributes<span class="params">(type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_attributes<span class="params">(type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_attributes" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L123" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:123</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:123</span>
 </div>
 <section class="docstring">
 <p>Returns the level, progress, boosts and multipliers of every attribute of the player's
@@ -142,9 +142,9 @@ character. On the client this is the networked copy and the type argument is ign
 </section>
 <section class="detail" id="increase_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>increase_attribute<span class="params">(attribute_id, amount)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>increase_attribute<span class="params">(attribute_id, amount)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#increase_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L243" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:243</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:243</span>
 </div>
 <section class="docstring">
 <p>Raises the player's level in an attribute. Server only.</p>
@@ -154,9 +154,9 @@ character. On the client this is the networked copy and the type argument is ign
 </section>
 <section class="detail" id="multiply_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>multiply_attribute<span class="params">(attribute_id, value, duration)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>multiply_attribute<span class="params">(attribute_id, value, duration)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#multiply_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L409" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:409</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:409</span>
 </div>
 <section class="docstring">
 <p>Adds a temporary progress multiplier to an attribute of the player. The multiplier is
@@ -172,9 +172,9 @@ target:<span class="hl-f">multiply_attribute</span>(<span class="hl-s">&#39;stre
 </section>
 <section class="detail" id="progress_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>progress_attribute<span class="params">(attribute_id, amount, no_multiplier)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>progress_attribute<span class="params">(attribute_id, amount, no_multiplier)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#progress_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L269" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:269</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:269</span>
 </div>
 <section class="docstring">
 <p>Adds progress to an attribute, raising or lowering its level whenever a level threshold is
@@ -190,9 +190,9 @@ target:<span class="hl-f">progress_attribute</span>(<span class="hl-s">&#39;lock
 </section>
 <section class="detail" id="regress_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>regress_attribute<span class="params">(attribute_id, amount)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>regress_attribute<span class="params">(attribute_id, amount)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#regress_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L332" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:332</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:332</span>
 </div>
 <section class="docstring">
 <p>Removes progress from an attribute, lowering its level when needed. Server only.</p>
@@ -204,9 +204,9 @@ target:<span class="hl-f">progress_attribute</span>(<span class="hl-s">&#39;lock
 </section>
 <section class="detail" id="set_attribute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_attribute<span class="params">(attribute_id, level)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_attribute<span class="params">(attribute_id, level)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_attribute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L219" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:219</a>
+<span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua:219</span>
 </div>
 <section class="docstring">
 <p>Sets the player's level in an attribute, clamped to the attribute's min and max, on the
@@ -216,11 +216,11 @@ character and in the networked attributes. Server only.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#boost_attribute">boost_attribute</a></li><li><a href="#decrease_attribute">decrease_attribute</a></li><li><a href="#get_attribute">get_attribute</a></li><li><a href="#get_attribute_boost">get_attribute_boost</a></li><li><a href="#get_attribute_multiplier">get_attribute_multiplier</a></li><li><a href="#get_attributes">get_attributes</a></li><li><a href="#increase_attribute">increase_attribute</a></li><li><a href="#multiply_attribute">multiply_attribute</a></li><li><a href="#progress_attribute">progress_attribute</a></li><li><a href="#regress_attribute">regress_attribute</a></li><li><a href="#set_attribute">set_attribute</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/attributes/plugin/lib/sh_attributes.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#boost_attribute">boost_attribute</a></li><li data-realm="server"><a href="#decrease_attribute">decrease_attribute</a></li><li data-realm="shared"><a href="#get_attribute">get_attribute</a></li><li data-realm="shared"><a href="#get_attribute_boost">get_attribute_boost</a></li><li data-realm="shared"><a href="#get_attribute_multiplier">get_attribute_multiplier</a></li><li data-realm="shared"><a href="#get_attributes">get_attributes</a></li><li data-realm="server"><a href="#increase_attribute">increase_attribute</a></li><li data-realm="server"><a href="#multiply_attribute">multiply_attribute</a></li><li data-realm="server"><a href="#progress_attribute">progress_attribute</a></li><li data-realm="server"><a href="#regress_attribute">regress_attribute</a></li><li data-realm="server"><a href="#set_attribute">set_attribute</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

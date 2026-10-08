@@ -31,20 +31,20 @@
 <div class="page-header"><h1>ActiveRecord.Adapters.Sqlite <span class="badge badge-class">class</span></h1><p class="subtitle">Extends <a href="../../packages/active_record/ActiveRecord.Adapters.Abstract.html"><code>ActiveRecord.Adapters.Abstract</code></a></p><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(settings, on_connected)</a></div><div class="summary-synopsis">Calls the callback right away, since the SQLite database built into Garry's Mod needs no connection.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a></div><div class="summary-synopsis">Escapes a string with sql.SQLStr. Single quotes are replaced with backticks first.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_sqlite">is_sqlite()</a></div><div class="summary-synopsis">Checks whether the adapter talks to an SQLite database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a></div><div class="summary-synopsis">Runs a raw SQL query on the built-in SQLite database. Always blocks until the query is done, regardless of the sync mode. A query that is given bindings, even an empty list of them, is run with sql.QueryTyped: numbers come back as numbers and NULL columns are left out of their rows. Without bindings it is run with sql.Query, which returns every value as a string, but takes several statements at once.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#supports_ddl_transactions">supports_ddl_transactions()</a></div><div class="summary-synopsis">SQLite can roll back schema changes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#unescape">unescape(str)</a></div><div class="summary-synopsis">Turns doubled single quotes in a string read from the database back into single ones.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(settings, on_connected)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Calls the callback right away, since the SQLite database built into Garry's Mod needs no connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Escapes a string with sql.SQLStr.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_sqlite">is_sqlite()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the adapter talks to an SQLite database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs a raw SQL query on the built-in SQLite database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#supports_ddl_transactions">supports_ddl_transactions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">SQLite can roll back schema changes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unescape">unescape(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Turns doubled single quotes in a string read from the database back into single ones.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="connect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>connect<span class="params">(settings, on_connected)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>connect<span class="params">(settings, on_connected)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#connect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/sqlite.lua#L25" title="View source">packages/active_record/lib/adapters/sqlite.lua:25</a>
+<span class="source-link">packages/active_record/lib/adapters/sqlite.lua:25</span>
 </div>
 <section class="docstring">
 <p>Calls the callback right away, since the SQLite database built into Garry's Mod
@@ -55,9 +55,9 @@ needs no connection.</p>
 </section>
 <section class="detail" id="escape">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>escape<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>escape<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#escape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/sqlite.lua#L44" title="View source">packages/active_record/lib/adapters/sqlite.lua:44</a>
+<span class="source-link">packages/active_record/lib/adapters/sqlite.lua:44</span>
 </div>
 <section class="docstring">
 <p>Escapes a string with sql.SQLStr. Single quotes are replaced with backticks first.</p>
@@ -69,9 +69,9 @@ needs no connection.</p>
 </section>
 <section class="detail" id="is_sqlite">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>is_sqlite<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>is_sqlite<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_sqlite" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/sqlite.lua#L31" title="View source">packages/active_record/lib/adapters/sqlite.lua:31</a>
+<span class="source-link">packages/active_record/lib/adapters/sqlite.lua:31</span>
 </div>
 <section class="docstring">
 <p>Checks whether the adapter talks to an SQLite database.</p>
@@ -81,9 +81,9 @@ needs no connection.</p>
 </section>
 <section class="detail" id="raw_query">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#raw_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/sqlite.lua#L70" title="View source">packages/active_record/lib/adapters/sqlite.lua:70</a>
+<span class="source-link">packages/active_record/lib/adapters/sqlite.lua:70</span>
 </div>
 <section class="docstring">
 <p>Runs a raw SQL query on the built-in SQLite database. Always blocks until the query
@@ -100,9 +100,9 @@ string, but takes several statements at once.</p>
 </section>
 <section class="detail" id="supports_ddl_transactions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>supports_ddl_transactions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>supports_ddl_transactions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#supports_ddl_transactions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/sqlite.lua#L37" title="View source">packages/active_record/lib/adapters/sqlite.lua:37</a>
+<span class="source-link">packages/active_record/lib/adapters/sqlite.lua:37</span>
 </div>
 <section class="docstring">
 <p>SQLite can roll back schema changes.</p>
@@ -112,9 +112,9 @@ string, but takes several statements at once.</p>
 </section>
 <section class="detail" id="unescape">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>unescape<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Sqlite:</span>unescape<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#unescape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/sqlite.lua#L51" title="View source">packages/active_record/lib/adapters/sqlite.lua:51</a>
+<span class="source-link">packages/active_record/lib/adapters/sqlite.lua:51</span>
 </div>
 <section class="docstring">
 <p>Turns doubled single quotes in a string read from the database back into single ones.</p>
@@ -125,11 +125,11 @@ string, but takes several statements at once.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/sqlite.lua" title="View source">packages/active_record/lib/adapters/sqlite.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#connect">connect</a></li><li><a href="#escape">escape</a></li><li><a href="#is_sqlite">is_sqlite</a></li><li><a href="#raw_query">raw_query</a></li><li><a href="#supports_ddl_transactions">supports_ddl_transactions</a></li><li><a href="#unescape">unescape</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/adapters/sqlite.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#connect">connect</a></li><li data-realm="shared"><a href="#escape">escape</a></li><li data-realm="shared"><a href="#is_sqlite">is_sqlite</a></li><li data-realm="shared"><a href="#raw_query">raw_query</a></li><li data-realm="shared"><a href="#supports_ddl_transactions">supports_ddl_transactions</a></li><li data-realm="shared"><a href="#unescape">unescape</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

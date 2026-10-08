@@ -22,8 +22,20 @@
   --internal-border: #8b76c2;
   --deprecated-background: #fdecec;
   --deprecated-border: #c0392b;
-  --badge-background: #e9e4f3;
-  --badge-text: #4a3380;
+  --environment-background: #e2f4ef;
+  --environment-border: #0f7a66;
+  --badge-background-saturation: 40%;
+  --badge-background-lightness: 92%;
+  --badge-text-saturation: 45%;
+  --badge-text-lightness: 34%;
+  --realm-server: #2f6bd8;
+  --realm-server-background: #e6eefc;
+  --realm-server-text: #1f4fa8;
+  --realm-client: #e07b14;
+  --realm-client-background: #fdeedd;
+  --realm-client-text: #a14f08;
+  --realm-shared-background: #913591;
+  --realm-shared-text: #fbe6f6;
   --hl-k: #a626a4;
   --hl-s: #50a14f;
   --hl-c: #9a9ca3;
@@ -32,6 +44,7 @@
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
   --mono: "JetBrains Mono", "Fira Mono", "SFMono-Regular", Menlo, Consolas, monospace;
   --sidebar-width: 300px;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -59,13 +72,26 @@
     --internal-border: #8b76c2;
     --deprecated-background: #301c1c;
     --deprecated-border: #e06c5c;
-    --badge-background: #2a2440;
-    --badge-text: #d6c8ff;
+    --environment-background: #142b27;
+    --environment-border: #3cc4a6;
+    --badge-background-saturation: 28%;
+    --badge-background-lightness: 20%;
+    --badge-text-saturation: 80%;
+    --badge-text-lightness: 85%;
+    --realm-server: #5b9cff;
+    --realm-server-background: #16243d;
+    --realm-server-text: #a9c8ff;
+    --realm-client: #f39a3d;
+    --realm-client-background: #33220f;
+    --realm-client-text: #ffc58a;
+    --realm-shared-background: #5e2060;
+    --realm-shared-text: #f0cfea;
     --hl-k: #c678dd;
     --hl-s: #98c379;
     --hl-c: #6f7480;
     --hl-n: #d19a66;
     --hl-f: #61afef;
+    color-scheme: dark;
   }
 }
 
@@ -93,13 +119,26 @@
   --internal-border: #8b76c2;
   --deprecated-background: #301c1c;
   --deprecated-border: #e06c5c;
-  --badge-background: #2a2440;
-  --badge-text: #d6c8ff;
+  --environment-background: #142b27;
+  --environment-border: #3cc4a6;
+  --badge-background-saturation: 28%;
+  --badge-background-lightness: 20%;
+  --badge-text-saturation: 80%;
+  --badge-text-lightness: 85%;
+  --realm-server: #5b9cff;
+  --realm-server-background: #16243d;
+  --realm-server-text: #a9c8ff;
+  --realm-client: #f39a3d;
+  --realm-client-background: #33220f;
+  --realm-client-text: #ffc58a;
+  --realm-shared-background: #5e2060;
+  --realm-shared-text: #f0cfea;
   --hl-k: #c678dd;
   --hl-s: #98c379;
   --hl-c: #6f7480;
   --hl-n: #d19a66;
   --hl-f: #61afef;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -170,9 +209,9 @@ th { background: var(--code-background); }
 .sidebar-project:hover { text-decoration: none; color: var(--main); }
 .sidebar-project-version { display: block; font-weight: 400; color: var(--text-light); font-size: 0.72em; margin-top: 0.15em; }
 
-.sidebar-tabs { display: flex; border-bottom: 1px solid var(--sidebar-border); padding: 0 0.6em; }
+.sidebar-tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--sidebar-border); padding: 0 0.6em; }
 .sidebar-tabs button {
-  background: none; border: none; cursor: pointer;
+  background: none; border: none; cursor: pointer; white-space: nowrap;
   font: inherit; font-size: 0.78em; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--text-light); padding: 0.7em 0.6em; margin-bottom: -1px;
   border-bottom: 2px solid transparent;
@@ -180,7 +219,7 @@ th { background: var(--code-background); }
 .sidebar-tabs button:hover { color: var(--text-headings); }
 .sidebar-tabs button.active { color: var(--text-headings); border-bottom-color: var(--main); }
 
-.sidebar-nav { flex: 1; overflow-y: auto; padding: 0.6em 0 2em; scrollbar-width: thin; }
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 0.6em 0 2em; scrollbar-width: thin; scrollbar-color: var(--sidebar-border) transparent; }
 .sidebar-nav ul { list-style: none; margin: 0; padding: 0; }
 .sidebar-row { display: flex; align-items: center; }
 .sidebar-row > a {
@@ -242,6 +281,8 @@ th { background: var(--code-background); }
 .search-suggestions li a:hover, .search-suggestions li.selected a { background: var(--sidebar-hover); text-decoration: none; }
 .search-suggestions .suggestion-title { font-family: var(--mono); font-size: 0.9em; }
 .search-suggestions .suggestion-kind { float: right; color: var(--text-light); font-size: 0.75em; margin-left: 0.6em; }
+.search-suggestions .suggestion-kind .realm { margin: 0 0.5em 0 0; font-size: 0.62rem; }
+.search-results .result-meta .realm { margin-left: 0.2em; font-size: 0.62rem; }
 .theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-light); cursor: pointer; padding: 0.55em; border-radius: 6px; display: inline-flex; flex: none; }
 .theme-toggle:hover { color: var(--main); border-color: var(--main-light); }
 .theme-toggle .icon-sun { display: none; }
@@ -261,22 +302,52 @@ th { background: var(--code-background); }
 .version { font-size: 0.5em; font-weight: 400; color: var(--text-light); vertical-align: middle; }
 
 .badge {
+  --badge-hue: 262;
   display: inline-block; font-size: 0.68rem; font-weight: 600; vertical-align: middle;
-  padding: 0.1em 0.55em; border-radius: 999px; background: var(--badge-background); color: var(--badge-text);
+  padding: 0.1em 0.55em; border-radius: 999px;
+  background: hsl(var(--badge-hue) var(--badge-background-saturation) var(--badge-background-lightness));
+  color: hsl(var(--badge-hue) var(--badge-text-saturation) var(--badge-text-lightness));
   text-transform: uppercase; letter-spacing: 0.04em; margin-left: 0.3em;
 }
-h1 .badge { font-size: 0.75rem; }
+h1 .badge, h1 .realm, h1 .flag { font-size: 0.75rem; }
+.badge-class { --badge-hue: 262; }
+.badge-library { --badge-hue: 190; }
+.badge-object { --badge-hue: 320; }
+.badge-hooks { --badge-hue: 140; }
+.badge-handlers { --badge-hue: 240; }
+.badge-gamemode { --badge-hue: 0; }
+.badge-plugin { --badge-hue: 85; }
+.badge-schema { --badge-hue: 48; }
+.badge-globals { background: var(--code-background); color: var(--text-light); box-shadow: inset 0 0 0 1px var(--code-border); }
+
+/* Realm markers: orange for the client, blue for the server, split for shared code */
+.realm {
+  --realm-dot: var(--text-light);
+  display: inline-flex; align-items: center; gap: 0.4em; vertical-align: middle;
+  font-family: var(--sans); font-size: 0.68rem; font-weight: 600; line-height: 1.6;
+  padding: 0 0.6em 0 0.5em; border-radius: 999px; margin-left: 0.5em; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: 0.04em; cursor: default;
+}
+.realm::before { content: ""; flex: none; width: 0.85em; height: 0.85em; border-radius: 50%; background: var(--realm-dot); }
+.realm-server { --realm-dot: var(--realm-server); background: var(--realm-server-background); color: var(--realm-server-text); }
+.realm-client { --realm-dot: var(--realm-client); background: var(--realm-client-background); color: var(--realm-client-text); }
+.realm-shared { background: var(--realm-shared-background); color: var(--realm-shared-text); }
+.realm-shared::before, .realm-dot-shared { background: linear-gradient(90deg, var(--realm-client) 50%, var(--realm-server) 50%); }
+.realm-dot { display: inline-block; flex: none; width: 0.75em; height: 0.75em; border-radius: 50%; margin-right: 0.55em; vertical-align: 0.08em; }
+.realm-dot-server { background: var(--realm-server); }
+.realm-dot-client { background: var(--realm-client); }
 .flag {
   display: inline-block; font-size: 0.68em; font-weight: 600; padding: 0.05em 0.5em; border-radius: 3px;
   margin-left: 0.5em; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.04em;
 }
 .flag-deprecated { background: var(--deprecated-background); color: var(--deprecated-border); }
 .flag-internal { background: var(--internal-background); color: var(--internal-border); }
+.flag-environment { background: var(--environment-background); color: var(--environment-border); cursor: default; }
 
 .summary-row { padding: 0.5em 0; border-bottom: 1px solid var(--border); }
 .summary-row:last-child { border-bottom: none; }
 .summary-signature { font-family: var(--mono); font-size: 0.92em; overflow-wrap: anywhere; }
-.summary-signature .badge, .summary-signature .muted { font-family: var(--sans); }
+.summary-signature .badge, .summary-signature .flag, .summary-signature .muted { font-family: var(--sans); }
 .summary-synopsis { color: var(--text-light); padding-left: 1.5em; font-size: 0.97em; }
 .summary-synopsis p { margin: 0; }
 .summary-group h3 { margin-top: 1.4em; }
@@ -289,12 +360,25 @@ h1 .badge { font-size: 0.75rem; }
   background: var(--detail-background); border-left: 3px solid var(--main); border-radius: 0 6px 6px 0;
 }
 .detail-header > * { min-width: 0; }
+.detail-header .realm, .detail-header .flag { margin-left: 0; }
 .detail-header .signature { margin: 0; font-family: var(--mono); font-size: 1.05em; font-weight: 500; color: var(--text-headings); overflow-wrap: anywhere; }
 .detail-header .signature .owner, .detail-header .signature .params { color: var(--text-light); font-weight: 400; }
 .detail-link { color: var(--text-light); opacity: 0; display: inline-flex; }
 .detail-header:hover .detail-link, .detail-link:focus { opacity: 1; }
 .source-link { margin-left: auto; font-size: 0.75em; color: var(--text-light); font-family: var(--mono); }
 .docstring { padding: 0 0 0 1.2em; }
+.hook-info { color: var(--text-light); margin: -0.4em 0 1em; }
+.hook-info .sep { color: var(--border); }
+.realm-doc { border-left: 3px solid var(--realm-dot); padding: 0.1em 0 0.1em 1em; margin: 0 0 1.4em; }
+.realm-doc > :last-child { margin-bottom: 0; }
+.realm-doc-server { --realm-dot: var(--realm-server); }
+.realm-doc-client { --realm-dot: var(--realm-client); }
+.realm-doc-shared { --realm-dot: var(--main-light); }
+.realm-doc-title { font-weight: 700; color: var(--text-headings); margin: 0 0 0.5em; }
+.otherwise { border-left: 3px solid var(--border); padding: 0.1em 0 0.1em 1em; margin: 0 0 1.4em; }
+.otherwise > :last-child { margin-bottom: 0; }
+.otherwise-title { font-weight: 700; color: var(--text-headings); margin: 0 0 0.5em; }
+.otherwise-title .source-link { margin-left: 0.6em; font-weight: 400; }
 
 .admonition { padding: 0.8em 1em; margin: 1em 0; border-radius: 6px; border-left: 3px solid var(--warning-border); background: var(--warning-background); }
 .admonition p { margin: 0; }
@@ -302,15 +386,21 @@ h1 .badge { font-size: 0.75rem; }
 .admonition-title { font-weight: 700; }
 .admonition.internal { background: var(--internal-background); border-color: var(--internal-border); }
 .admonition.deprecated { background: var(--deprecated-background); border-color: var(--deprecated-border); }
+.admonition.environment { background: var(--environment-background); border-color: var(--environment-border); }
 
-.params, .returns, .aliases, .see-also, .variants { list-style: none; padding: 0; margin: 0 0 1em; }
+.params, .returns, .aliases, .see-also, .variants, .callers, .source-list { list-style: none; padding: 0; margin: 0 0 1em; }
+.source-list .source-link { margin: 0; font-size: 0.85em; }
+.arguments li { padding-top: 0.1em; padding-bottom: 0.1em; }
+.source-list .realm { margin-left: 0.4em; }
 .params li, .returns li, .variants li { padding: 0.3em 0 0.3em 1em; border-left: 2px solid var(--code-border); margin: 0.3em 0; }
 .param-name { font-family: var(--mono); font-weight: 600; color: var(--text-headings); }
 .type { font-family: var(--mono); font-size: 0.9em; color: var(--main); }
 .default { color: var(--text-light); font-size: 0.9em; }
 .variants li p { margin: 0.3em 0; }
 .variants .params { margin-bottom: 0; }
-.variants .params li { border-color: transparent; padding-top: 0.1em; padding-bottom: 0.1em; }
+.variants .params li, .variants .returns li { border-color: transparent; padding-top: 0.1em; padding-bottom: 0.1em; }
+.variants .returns { margin-bottom: 0; }
+.variants h5 { font-size: 0.72em; margin: 0.5em 0 0.1em; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); }
 .variant-signature { font-weight: 600; }
 .sources ul { padding-left: 1.2em; }
 .sources .source-link { margin: 0; font-size: 0.9em; }

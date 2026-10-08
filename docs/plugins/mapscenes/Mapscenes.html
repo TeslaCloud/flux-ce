@@ -28,39 +28,28 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Mapscenes <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/mapscenes/index.html">mapscenes</a></p></div>
+<div class="page-header"><h1>Mapscenes <span class="badge badge-plugin">plugin</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/mapscenes/index.html">Mapscenes</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#CalcView">CalcView(client, origin, angles, fov)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Replaces the view with the current mapscene point while the ShouldMapsceneRender hook returns true.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LoadData">LoadData()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Loads the mapscene points when the framework loads its data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialized">PlayerInitialized(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sends all mapscene points to a player who has finished loading.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterPermissions">RegisterPermissions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the 'mapscenes' permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RenderScreenspaceEffects">RenderScreenspaceEffects()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a marker, a direction line and a label for every mapscene point while the local player holds the mapscene tool and has the 'mapscenes' permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Saves the mapscene points when the framework saves its data.</div></div>
+</div>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_point">add_point(pos, ang)</a></div><div class="summary-synopsis">Adds a mapscene camera point, sends it to all clients and saves the list. Serverside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CalcView">CalcView(client, origin, angles, fov)</a></div><div class="summary-synopsis">Replaces the view with the current mapscene point while the ShouldMapsceneRender hook returns true. Depending on the config it cuts to the next point with a fade, glides between the points or slowly rotates the camera.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#load">load()</a></div><div class="summary-synopsis">Reads the mapscene points from the plugin data of the current schema and map, replacing the current list. Does not send them to clients. Serverside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#LoadData">LoadData()</a></div><div class="summary-synopsis">Loads the mapscene points when the framework loads its data.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerInitialized">PlayerInitialized(actor)</a></div><div class="summary-synopsis">Sends all mapscene points to a player who has finished loading.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RegisterPermissions">RegisterPermissions()</a></div><div class="summary-synopsis">Registers the 'mapscenes' permission.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RenderScreenspaceEffects">RenderScreenspaceEffects()</a></div><div class="summary-synopsis">Draws a marker, a direction line and a label for every mapscene point while the local player holds the mapscene tool and has the 'mapscenes' permission.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#save">save()</a></div><div class="summary-synopsis">Writes the mapscene points to the plugin data of the current schema and map. Serverside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a></div><div class="summary-synopsis">Saves the mapscene points when the framework saves its data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_point">add_point(pos, ang)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Adds a mapscene camera point, sends it to all clients and saves the list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load">load()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Reads the mapscene points from the plugin data of the current schema and map, replacing the current list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#save">save()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Writes the mapscene points to the plugin data of the current schema and map.</div></div>
 </div>
 </section>
-<section class="details-group"><h2 id="methods">Methods</h2>
-<section class="detail" id="add_point">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>add_point<span class="params">(pos, ang)</span></h3>
-<a href="#add_point" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sv_plugin.lua#L39" title="View source">plugins/mapscenes/plugin/sv_plugin.lua:39</a>
-</div>
-<section class="docstring">
-<p>Adds a mapscene camera point, sends it to all clients and saves the list.
-Serverside only.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">pos</span> <span class="type">Vector</span> <span class="desc">camera position</span></li><li><span class="param-name">ang</span> <span class="type">Angle</span> <span class="desc">camera angles</span></li></ul>
-</section>
-</section>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
 <section class="detail" id="CalcView">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>CalcView<span class="params">(client, origin, angles, fov)</span></h3>
+<h3 class="signature"><span class="owner">Mapscenes:</span>CalcView<span class="params">(client, origin, angles, fov)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#CalcView" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/cl_hooks.lua#L38" title="View source">plugins/mapscenes/plugin/cl_hooks.lua:38</a>
+<span class="source-link">plugins/mapscenes/plugin/cl_hooks.lua:38</span>
 </div>
 <section class="docstring">
 <p>Replaces the view with the current mapscene point while the ShouldMapsceneRender hook
@@ -72,34 +61,25 @@ between the points or slowly rotates the camera.</p>
 <ul class="returns"><li><span class="type">Map</span> <span class="desc">view table with origin and angles, or nil if no mapscene is shown</span></li></ul>
 </section>
 </section>
-<section class="detail" id="load">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>load<span class="params">()</span></h3>
-<a href="#load" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sv_plugin.lua#L29" title="View source">plugins/mapscenes/plugin/sv_plugin.lua:29</a>
-</div>
-<section class="docstring">
-<p>Reads the mapscene points from the plugin data of the current schema and map, replacing
-the current list. Does not send them to clients. Serverside only.</p>
-</section>
-</section>
 <section class="detail" id="LoadData">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>LoadData<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Mapscenes:</span>LoadData<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#LoadData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sv_plugin.lua#L12" title="View source">plugins/mapscenes/plugin/sv_plugin.lua:12</a>
+<span class="source-link">plugins/mapscenes/plugin/sv_plugin.lua:12</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#LoadData"><code>LoadData</code></a></p>
 <p>Loads the mapscene points when the framework loads its data.</p>
 </section>
 </section>
 <section class="detail" id="PlayerInitialized">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>PlayerInitialized<span class="params">(actor)</span></h3>
+<h3 class="signature"><span class="owner">Mapscenes:</span>PlayerInitialized<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#PlayerInitialized" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sv_plugin.lua#L7" title="View source">plugins/mapscenes/plugin/sv_plugin.lua:7</a>
+<span class="source-link">plugins/mapscenes/plugin/sv_plugin.lua:7</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerInitialized"><code>PlayerInitialized</code></a></p>
 <p>Sends all mapscene points to a player who has finished loading.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
@@ -107,52 +87,80 @@ the current list. Does not send them to clients. Serverside only.</p>
 </section>
 <section class="detail" id="RegisterPermissions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>RegisterPermissions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Mapscenes:</span>RegisterPermissions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#RegisterPermissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sh_plugin.lua#L10" title="View source">plugins/mapscenes/plugin/sh_plugin.lua:10</a>
+<span class="source-link">plugins/mapscenes/plugin/sh_plugin.lua:10</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/admin/Hooks.html#RegisterPermissions"><code>RegisterPermissions</code></a></p>
 <p>Registers the 'mapscenes' permission.</p>
 </section>
 </section>
 <section class="detail" id="RenderScreenspaceEffects">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>RenderScreenspaceEffects<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Mapscenes:</span>RenderScreenspaceEffects<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#RenderScreenspaceEffects" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/cl_hooks.lua#L3" title="View source">plugins/mapscenes/plugin/cl_hooks.lua:3</a>
+<span class="source-link">plugins/mapscenes/plugin/cl_hooks.lua:3</span>
 </div>
 <section class="docstring">
 <p>Draws a marker, a direction line and a label for every mapscene point while the local
 player holds the mapscene tool and has the 'mapscenes' permission.</p>
 </section>
 </section>
+<section class="detail" id="SaveData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Mapscenes:</span>SaveData<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#SaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/mapscenes/plugin/sv_plugin.lua:17</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#SaveData"><code>SaveData</code></a></p>
+<p>Saves the mapscene points when the framework saves its data.</p>
+</section>
+</section>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="add_point">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Mapscenes:</span>add_point<span class="params">(pos, ang)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#add_point" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/mapscenes/plugin/sv_plugin.lua:39</span>
+</div>
+<section class="docstring">
+<p>Adds a mapscene camera point, sends it to all clients and saves the list.
+Serverside only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">pos</span> <span class="type">Vector</span> <span class="desc">camera position</span></li><li><span class="param-name">ang</span> <span class="type">Angle</span> <span class="desc">camera angles</span></li></ul>
+</section>
+</section>
+<section class="detail" id="load">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Mapscenes:</span>load<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#load" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/mapscenes/plugin/sv_plugin.lua:29</span>
+</div>
+<section class="docstring">
+<p>Reads the mapscene points from the plugin data of the current schema and map, replacing
+the current list. Does not send them to clients. Serverside only.</p>
+</section>
+</section>
 <section class="detail" id="save">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>save<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Mapscenes:</span>save<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#save" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sv_plugin.lua#L23" title="View source">plugins/mapscenes/plugin/sv_plugin.lua:23</a>
+<span class="source-link">plugins/mapscenes/plugin/sv_plugin.lua:23</span>
 </div>
 <section class="docstring">
 <p>Writes the mapscene points to the plugin data of the current schema and map.
 Serverside only.</p>
 </section>
 </section>
-<section class="detail" id="SaveData">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Mapscenes:</span>SaveData<span class="params">()</span></h3>
-<a href="#SaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sv_plugin.lua#L17" title="View source">plugins/mapscenes/plugin/sv_plugin.lua:17</a>
-</div>
-<section class="docstring">
-<p>Saves the mapscene points when the framework saves its data.</p>
 </section>
-</section>
-</section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/cl_hooks.lua" title="View source">plugins/mapscenes/plugin/cl_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sh_plugin.lua" title="View source">plugins/mapscenes/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/mapscenes/plugin/sv_plugin.lua" title="View source">plugins/mapscenes/plugin/sv_plugin.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add_point">add_point</a></li><li><a href="#CalcView">CalcView</a></li><li><a href="#load">load</a></li><li><a href="#LoadData">LoadData</a></li><li><a href="#PlayerInitialized">PlayerInitialized</a></li><li><a href="#RegisterPermissions">RegisterPermissions</a></li><li><a href="#RenderScreenspaceEffects">RenderScreenspaceEffects</a></li><li><a href="#save">save</a></li><li><a href="#SaveData">SaveData</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/mapscenes/plugin/cl_hooks.lua</span></li><li><span class="source-link">plugins/mapscenes/plugin/sh_plugin.lua</span></li><li><span class="source-link">plugins/mapscenes/plugin/sv_plugin.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="client"><a href="#CalcView">CalcView</a></li><li data-realm="server"><a href="#LoadData">LoadData</a></li><li data-realm="server"><a href="#PlayerInitialized">PlayerInitialized</a></li><li data-realm="shared"><a href="#RegisterPermissions">RegisterPermissions</a></li><li data-realm="client"><a href="#RenderScreenspaceEffects">RenderScreenspaceEffects</a></li><li data-realm="server"><a href="#SaveData">SaveData</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#add_point">add_point</a></li><li data-realm="server"><a href="#load">load</a></li><li data-realm="server"><a href="#save">save</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

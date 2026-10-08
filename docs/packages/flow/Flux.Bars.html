@@ -28,26 +28,26 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Flux.Bars <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>Flux.Bars <span class="badge badge-class">class</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#adjust">adjust(id, data)</a></div><div class="summary-synopsis">Merges the specified settings into an existing bar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#draw">draw(id)</a></div><div class="summary-synopsis">Draws the bar with the specified ID using the active theme. Does nothing if the bar does not exist or the 'ShouldDrawBar' hook rejects it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawTopBars">DrawTopBars()</a></div><div class="summary-synopsis">Draws every bar from the prioritized list of top bars.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get">get(id)</a></div><div class="summary-synopsis">Returns the bar registered under the specified ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#hinder_value">hinder_value(id, new_value)</a></div><div class="summary-synopsis">Sets the hindrance value of a bar (the part of it that is blocked off), clamped between 0 and its max value. Calls the 'PreBarHinderValueSet' theme hook first.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#position">position()</a></div><div class="summary-synopsis">Recalculates the positions of all top bars, stacking them vertically in order of priority. Plugins can offset each bar through the 'AdjustBarPos' hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#prioritize">prioritize()</a></div><div class="summary-synopsis">Rebuilds the list of top bars grouped by priority. Bars rejected by the 'ShouldDrawBar' hook are left out.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register(id, data, force)</a></div><div class="summary-synopsis">Registers a HUD bar. If a bar with this ID already exists it is returned untouched, unless force is set or Flux runs in development mode.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_value">set_value(id, new_value)</a></div><div class="summary-synopsis">Sets the value of a bar, clamped between 0 and its max value, and starts the fill animation toward it. Calls the 'PreBarValueSet' theme hook first.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#adjust">adjust(id, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Merges the specified settings into an existing bar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#draw">draw(id)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the bar with the specified ID using the active theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawTopBars">DrawTopBars()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws every bar from the prioritized list of top bars.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get">get(id)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the bar registered under the specified ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hinder_value">hinder_value(id, new_value)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the hindrance value of a bar (the part of it that is blocked off), clamped between 0 and its max value.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#position">position()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Recalculates the positions of all top bars, stacking them vertically in order of priority.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#prioritize">prioritize()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Rebuilds the list of top bars grouped by priority.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register(id, data, force)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers a HUD bar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_value">set_value(id, new_value)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the value of a bar, clamped between 0 and its max value, and starts the fill animation toward it.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="adjust">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>adjust<span class="params">(id, data)</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>adjust<span class="params">(id, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#adjust" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L212" title="View source">packages/flow/lib/cl_bars.lua:212</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:212</span>
 </div>
 <section class="docstring">
 <p>Merges the specified settings into an existing bar.</p>
@@ -57,9 +57,9 @@
 </section>
 <section class="detail" id="draw">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>draw<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>draw<span class="params">(id)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#draw" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L172" title="View source">packages/flow/lib/cl_bars.lua:172</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:172</span>
 </div>
 <section class="docstring">
 <p>Draws the bar with the specified ID using the active theme. Does nothing if the bar does
@@ -70,9 +70,9 @@ not exist or the 'ShouldDrawBar' hook rejects it.</p>
 </section>
 <section class="detail" id="DrawTopBars">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>DrawTopBars<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>DrawTopBars<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawTopBars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L201" title="View source">packages/flow/lib/cl_bars.lua:201</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:201</span>
 </div>
 <section class="docstring">
 <p>Draws every bar from the prioritized list of top bars.</p>
@@ -80,9 +80,9 @@ not exist or the 'ShouldDrawBar' hook rejects it.</p>
 </section>
 <section class="detail" id="get">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>get<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>get<span class="params">(id)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L77" title="View source">packages/flow/lib/cl_bars.lua:77</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:77</span>
 </div>
 <section class="docstring">
 <p>Returns the bar registered under the specified ID.</p>
@@ -94,9 +94,9 @@ not exist or the 'ShouldDrawBar' hook rejects it.</p>
 </section>
 <section class="detail" id="hinder_value">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>hinder_value<span class="params">(id, new_value)</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>hinder_value<span class="params">(id, new_value)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#hinder_value" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L110" title="View source">packages/flow/lib/cl_bars.lua:110</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:110</span>
 </div>
 <section class="docstring">
 <p>Sets the hindrance value of a bar (the part of it that is blocked off), clamped between
@@ -107,9 +107,9 @@ not exist or the 'ShouldDrawBar' hook rejects it.</p>
 </section>
 <section class="detail" id="position">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>position<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>position<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#position" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L147" title="View source">packages/flow/lib/cl_bars.lua:147</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:147</span>
 </div>
 <section class="docstring">
 <p>Recalculates the positions of all top bars, stacking them vertically in order of priority.
@@ -118,9 +118,9 @@ Plugins can offset each bar through the 'AdjustBarPos' hook.</p>
 </section>
 <section class="detail" id="prioritize">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>prioritize<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>prioritize<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#prioritize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L125" title="View source">packages/flow/lib/cl_bars.lua:125</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:125</span>
 </div>
 <section class="docstring">
 <p>Rebuilds the list of top bars grouped by priority. Bars rejected by the 'ShouldDrawBar'
@@ -131,9 +131,9 @@ hook are left out.</p>
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>register<span class="params">(id, data, force)</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>register<span class="params">(id, data, force)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L35" title="View source">packages/flow/lib/cl_bars.lua:35</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:35</span>
 </div>
 <section class="docstring">
 <p>Registers a HUD bar. If a bar with this ID already exists it is returned untouched,
@@ -156,9 +156,9 @@ unless force is set or Flux runs in development mode.</p>
 </section>
 <section class="detail" id="set_value">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.Bars:</span>set_value<span class="params">(id, new_value)</span></h3>
+<h3 class="signature"><span class="owner">Flux.Bars:</span>set_value<span class="params">(id, new_value)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_value" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua#L89" title="View source">packages/flow/lib/cl_bars.lua:89</a>
+<span class="source-link">packages/flow/lib/cl_bars.lua:89</span>
 </div>
 <section class="docstring">
 <p>Sets the value of a bar, clamped between 0 and its max value, and starts the fill
@@ -168,11 +168,11 @@ animation toward it. Calls the 'PreBarValueSet' theme hook first.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_bars.lua" title="View source">packages/flow/lib/cl_bars.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#adjust">adjust</a></li><li><a href="#draw">draw</a></li><li><a href="#DrawTopBars">DrawTopBars</a></li><li><a href="#get">get</a></li><li><a href="#hinder_value">hinder_value</a></li><li><a href="#position">position</a></li><li><a href="#prioritize">prioritize</a></li><li><a href="#register">register</a></li><li><a href="#set_value">set_value</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/cl_bars.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#adjust">adjust</a></li><li data-realm="client"><a href="#draw">draw</a></li><li data-realm="client"><a href="#DrawTopBars">DrawTopBars</a></li><li data-realm="client"><a href="#get">get</a></li><li data-realm="client"><a href="#hinder_value">hinder_value</a></li><li data-realm="client"><a href="#position">position</a></li><li data-realm="client"><a href="#prioritize">prioritize</a></li><li data-realm="client"><a href="#register">register</a></li><li data-realm="client"><a href="#set_value">set_value</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -28,25 +28,26 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>AttributesPlugin <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/attributes/index.html">attributes</a></p></div>
+<div class="page-header"><h1>AttributesPlugin <span class="badge badge-plugin">plugin</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/attributes/index.html">Attributes</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
-<div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#OnActiveCharacterSet">OnActiveCharacterSet(owner, char)</a></div><div class="summary-synopsis">Restarts the expiry timers of the character's boosts and multipliers, destroys the ones that have already expired and networks the attributes to the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnCharacterChange">OnCharacterChange(owner, new_char, old_char)</a></div><div class="summary-synopsis">Removes the attribute timers of the character the player is switching away from.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PlayerDisconnected">PlayerDisconnected(actor)</a></div><div class="summary-synopsis">Removes the attribute timers of the disconnecting player's character.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PluginIncludeFolder">PluginIncludeFolder(extra, folder)</a></div><div class="summary-synopsis">Includes a plugin's attributes folder when the 'attributes' extra is being loaded.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PostCreateCharacter">PostCreateCharacter(owner, char, char_data)</a></div><div class="summary-synopsis">Adds an Attribute record for every registered attribute to a new character, using the level chosen during creation or the attribute's minimum.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a></div><div class="summary-synopsis">Registers the 'attribute' condition, which compares a player's attribute level to a value.</div></div>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#OnActiveCharacterSet">OnActiveCharacterSet(owner, char)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Restarts the expiry timers of the character's boosts and multipliers, destroys the ones that have already expired and networks the attributes to the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnCharacterChange">OnCharacterChange(owner, new_char, old_char)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Removes the attribute timers of the character the player is switching away from.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDisconnected">PlayerDisconnected(actor)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Removes the attribute timers of the disconnecting player's character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PluginIncludeFolder">PluginIncludeFolder(extra, folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes a plugin's attributes folder when the 'attributes' extra is being loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostCreateCharacter">PostCreateCharacter(owner, char, char_data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Adds an Attribute record for every registered attribute to a new character, using the level chosen during creation or the attribute's minimum.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterConditions">RegisterConditions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the 'attribute' condition, which compares a player's attribute level to a value.</div></div>
 </div>
 </section>
-<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
 <section class="detail" id="OnActiveCharacterSet">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">AttributesPlugin:</span>OnActiveCharacterSet<span class="params">(owner, char)</span></h3>
+<h3 class="signature"><span class="owner">AttributesPlugin:</span>OnActiveCharacterSet<span class="params">(owner, char)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#OnActiveCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sv_hooks.lua#L22" title="View source">plugins/attributes/plugin/sv_hooks.lua:22</a>
+<span class="source-link">plugins/attributes/plugin/sv_hooks.lua:22</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#OnActiveCharacterSet"><code>OnActiveCharacterSet</code></a></p>
 <p>Restarts the expiry timers of the character's boosts and multipliers, destroys the ones
 that have already expired and networks the attributes to the player.</p>
 <h4>Parameters</h4>
@@ -55,11 +56,12 @@ that have already expired and networks the attributes to the player.</p>
 </section>
 <section class="detail" id="OnCharacterChange">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">AttributesPlugin:</span>OnCharacterChange<span class="params">(owner, new_char, old_char)</span></h3>
+<h3 class="signature"><span class="owner">AttributesPlugin:</span>OnCharacterChange<span class="params">(owner, new_char, old_char)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#OnCharacterChange" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sv_hooks.lua#L72" title="View source">plugins/attributes/plugin/sv_hooks.lua:72</a>
+<span class="source-link">plugins/attributes/plugin/sv_hooks.lua:72</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#OnCharacterChange"><code>OnCharacterChange</code></a></p>
 <p>Removes the attribute timers of the character the player is switching away from.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">new_char</span> <span class="type">Character</span></li><li><span class="param-name">old_char</span> <span class="type">Character</span></li></ul>
@@ -67,11 +69,12 @@ that have already expired and networks the attributes to the player.</p>
 </section>
 <section class="detail" id="PlayerDisconnected">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">AttributesPlugin:</span>PlayerDisconnected<span class="params">(actor)</span></h3>
+<h3 class="signature"><span class="owner">AttributesPlugin:</span>PlayerDisconnected<span class="params">(actor)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#PlayerDisconnected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sv_hooks.lua#L78" title="View source">plugins/attributes/plugin/sv_hooks.lua:78</a>
+<span class="source-link">plugins/attributes/plugin/sv_hooks.lua:78</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../packages/flow/Hooks.html#PlayerDisconnected"><code>PlayerDisconnected</code></a></p>
 <p>Removes the attribute timers of the disconnecting player's character.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
@@ -79,11 +82,12 @@ that have already expired and networks the attributes to the player.</p>
 </section>
 <section class="detail" id="PluginIncludeFolder">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">AttributesPlugin:</span>PluginIncludeFolder<span class="params">(extra, folder)</span></h3>
+<h3 class="signature"><span class="owner">AttributesPlugin:</span>PluginIncludeFolder<span class="params">(extra, folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#PluginIncludeFolder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sh_plugin.lua#L12" title="View source">plugins/attributes/plugin/sh_plugin.lua:12</a>
+<span class="source-link">plugins/attributes/plugin/sh_plugin.lua:12</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../flux/Hooks.html#PluginIncludeFolder"><code>PluginIncludeFolder</code></a></p>
 <p>Includes a plugin's attributes folder when the 'attributes' extra is being loaded.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">extra</span> <span class="type">String</span> <span class="desc">name of the extra being loaded</span></li><li><span class="param-name">folder</span> <span class="type">String</span> <span class="desc">path of the plugin folder</span></li></ul>
@@ -93,11 +97,12 @@ that have already expired and networks the attributes to the player.</p>
 </section>
 <section class="detail" id="PostCreateCharacter">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">AttributesPlugin:</span>PostCreateCharacter<span class="params">(owner, char, char_data)</span></h3>
+<h3 class="signature"><span class="owner">AttributesPlugin:</span>PostCreateCharacter<span class="params">(owner, char, char_data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#PostCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sv_hooks.lua#L6" title="View source">plugins/attributes/plugin/sv_hooks.lua:6</a>
+<span class="source-link">plugins/attributes/plugin/sv_hooks.lua:6</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/characters/Hooks.html#PostCreateCharacter"><code>PostCreateCharacter</code></a></p>
 <p>Adds an Attribute record for every registered attribute to a new character, using the
 level chosen during creation or the attribute's minimum.</p>
 <h4>Parameters</h4>
@@ -106,20 +111,21 @@ level chosen during creation or the attribute's minimum.</p>
 </section>
 <section class="detail" id="RegisterConditions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">AttributesPlugin:</span>RegisterConditions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">AttributesPlugin:</span>RegisterConditions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#RegisterConditions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sh_plugin.lua#L21" title="View source">plugins/attributes/plugin/sh_plugin.lua:21</a>
+<span class="source-link">plugins/attributes/plugin/sh_plugin.lua:21</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/conditions/Hooks.html#RegisterConditions"><code>RegisterConditions</code></a></p>
 <p>Registers the 'attribute' condition, which compares a player's attribute level to a value.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sh_plugin.lua" title="View source">plugins/attributes/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/sv_hooks.lua" title="View source">plugins/attributes/plugin/sv_hooks.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#OnActiveCharacterSet">OnActiveCharacterSet</a></li><li><a href="#OnCharacterChange">OnCharacterChange</a></li><li><a href="#PlayerDisconnected">PlayerDisconnected</a></li><li><a href="#PluginIncludeFolder">PluginIncludeFolder</a></li><li><a href="#PostCreateCharacter">PostCreateCharacter</a></li><li><a href="#RegisterConditions">RegisterConditions</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/attributes/plugin/sh_plugin.lua</span></li><li><span class="source-link">plugins/attributes/plugin/sv_hooks.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="server"><a href="#OnActiveCharacterSet">OnActiveCharacterSet</a></li><li data-realm="server"><a href="#OnCharacterChange">OnCharacterChange</a></li><li data-realm="server"><a href="#PlayerDisconnected">PlayerDisconnected</a></li><li data-realm="shared"><a href="#PluginIncludeFolder">PluginIncludeFolder</a></li><li data-realm="server"><a href="#PostCreateCharacter">PostCreateCharacter</a></li><li data-realm="shared"><a href="#RegisterConditions">RegisterConditions</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -31,41 +31,41 @@
 <div class="page-header"><h1>ActiveRecord.MigrationContext <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_source">add_source(path)</a></div><div class="summary-synopsis">Registers a migration file of a package or plugin. Registered files are installed into the schema's migrations folder by #install_migrations.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#default_migrations_path">default_migrations_path()</a></div><div class="summary-synopsis">Returns the folder the migrations of the active schema live in, relative to the Lua search path.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#parse_migration_filename">parse_migration_filename(file_name)</a></div><div class="summary-synopsis">Splits a migration file name into its parts.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#scope_of">scope_of(path)</a></div><div class="summary-synopsis">Returns the scope a registered migration file is installed under: the name of the package, plugin or schema folder it comes from.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#sources">sources()</a></div><div class="summary-synopsis">Returns the registered package and plugin migration files, in the order they were registered in.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_source">add_source(path)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a migration file of a package or plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#default_migrations_path">default_migrations_path()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the folder the migrations of the active schema live in, relative to the Lua search path.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parse_migration_filename">parse_migration_filename(file_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Splits a migration file name into its parts.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#scope_of">scope_of(path)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the scope a registered migration file is installed under: the name of the package, plugin or schema folder it comes from.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sources">sources()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the registered package and plugin migration files, in the order they were registered in.</div></div>
 </div>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#assume_migrated_upto_version">assume_migrated_upto_version(version)</a></div><div class="summary-synopsis">Records the given version and every older migration as run, without running anything. Used after the schema file has been loaded, which brings the database to the state the migrations up to that version describe.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#current_version">current_version()</a></div><div class="summary-synopsis">Returns the newest version that has been run.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#down">down(target_version)</a></div><div class="summary-synopsis">Reverts the migrations that have been run, newest first, down to (but not including) the target version.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#forward">forward(steps)</a></div><div class="summary-synopsis">Runs the next pending migrations.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_all_versions">get_all_versions()</a></div><div class="summary-synopsis">Returns the versions of the migrations that have been run.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(migrations_paths)</a></div><div class="summary-synopsis">Creates a context, which provides the migrations of one or more folders.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#install_migrations">install_migrations()</a></div><div class="summary-synopsis">Installs the migration files registered with .add_source into the schema's migrations folder (the first of the migration paths): each one is copied under a new version and the scope it came from, e.g. '20190309120000_create_admin_tables.admin.lua'. A migration whose name is already present, under any version or scope, is skipped. Files whose name has no version (e.g. 'CreateFoo.lua') hold bare schema statements, which are wrapped into a migration's #change.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#last_migration">last_migration()</a></div><div class="summary-synopsis">Returns the migration with the newest version.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#migrate">migrate(target_version)</a></div><div class="summary-synopsis">Runs the migrations that have not been run yet. Given a target version, migrates up or down to it instead.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#migration_files">migration_files()</a></div><div class="summary-synopsis">Returns the paths of every migration file in the migration folders.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#migrations">migrations()</a></div><div class="summary-synopsis">Returns the migrations found in the migration folders, sorted by version. Files whose name is not '&lt;version&gt;_&lt;name&gt;.lua' are ignored. Two migrations with the same version or the same name are an error.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#migrations_status">migrations_status()</a></div><div class="summary-synopsis">Returns the status of every migration: the ones found in the migration folders and the versions that have been run but have no file anymore.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#move">move(direction, steps)</a></div><div class="summary-synopsis">Moves a number of migrations up or down from the current version.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#needs_migration">needs_migration()</a></div><div class="summary-synopsis">Checks whether there are migrations that have not been run yet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#next_migration_number">next_migration_number()</a></div><div class="summary-synopsis">Returns the version a new migration in the schema's migrations folder gets.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#open">open(direction, target_version)</a></div><div class="summary-synopsis">Creates a migrator for the migrations of the context without running anything.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#pending_migration_versions">pending_migration_versions()</a></div><div class="summary-synopsis">Returns the versions of the migrations that have not been run yet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rollback">rollback(steps)</a></div><div class="summary-synopsis">Reverts the newest migrations.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#run">run(direction, target_version)</a></div><div class="summary-synopsis">Runs or reverts a single migration.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#up">up(target_version)</a></div><div class="summary-synopsis">Runs the pending migrations up to and including the target version.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#assume_migrated_upto_version">assume_migrated_upto_version(version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Records the given version and every older migration as run, without running anything.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#current_version">current_version()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the newest version that has been run.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#down">down(target_version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Reverts the migrations that have been run, newest first, down to (but not including) the target version.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#forward">forward(steps)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the next pending migrations.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_all_versions">get_all_versions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the versions of the migrations that have been run.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(migrations_paths)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a context, which provides the migrations of one or more folders.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#install_migrations">install_migrations()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Installs the migration files registered with .add_source into the schema's migrations folder (the first of the migration paths): each one is copied under a new version and the scope it came from, e.g. '20190309120000_create_admin_tables.admin.lua'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#last_migration">last_migration()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the migration with the newest version.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrate">migrate(target_version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the migrations that have not been run yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migration_files">migration_files()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the paths of every migration file in the migration folders.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrations">migrations()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the migrations found in the migration folders, sorted by version.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrations_status">migrations_status()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the status of every migration: the ones found in the migration folders and the versions that have been run but have no file anymore.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#move">move(direction, steps)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Moves a number of migrations up or down from the current version.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#needs_migration">needs_migration()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether there are migrations that have not been run yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#next_migration_number">next_migration_number()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the version a new migration in the schema's migrations folder gets.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#open">open(direction, target_version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a migrator for the migrations of the context without running anything.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#pending_migration_versions">pending_migration_versions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the versions of the migrations that have not been run yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rollback">rollback(steps)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Reverts the newest migrations.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#run">run(direction, target_version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs or reverts a single migration.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#up">up(target_version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the pending migrations up to and including the target version.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="add_source">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>add_source<span class="params">(path)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>add_source<span class="params">(path)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_source" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L88" title="View source">packages/active_record/lib/migrator/migration_context.lua:88</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:88</span>
 </div>
 <section class="docstring">
 <p>Registers a migration file of a package or plugin. Registered files are installed
@@ -76,9 +76,9 @@ into the schema's migrations folder by #install_migrations.</p>
 </section>
 <section class="detail" id="default_migrations_path">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>default_migrations_path<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>default_migrations_path<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#default_migrations_path" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L81" title="View source">packages/active_record/lib/migrator/migration_context.lua:81</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:81</span>
 </div>
 <section class="docstring">
 <p>Returns the folder the migrations of the active schema live in, relative to the Lua
@@ -89,9 +89,9 @@ search path.</p>
 </section>
 <section class="detail" id="parse_migration_filename">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>parse_migration_filename<span class="params">(file_name)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>parse_migration_filename<span class="params">(file_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#parse_migration_filename" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L107" title="View source">packages/active_record/lib/migrator/migration_context.lua:107</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:107</span>
 </div>
 <section class="docstring">
 <p>Splits a migration file name into its parts.</p>
@@ -103,9 +103,9 @@ search path.</p>
 </section>
 <section class="detail" id="scope_of">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>scope_of<span class="params">(path)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>scope_of<span class="params">(path)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#scope_of" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L119" title="View source">packages/active_record/lib/migrator/migration_context.lua:119</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:119</span>
 </div>
 <section class="docstring">
 <p>Returns the scope a registered migration file is installed under: the name of the
@@ -118,9 +118,9 @@ package, plugin or schema folder it comes from.</p>
 </section>
 <section class="detail" id="sources">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>sources<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext.</span>sources<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#sources" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L100" title="View source">packages/active_record/lib/migrator/migration_context.lua:100</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:100</span>
 </div>
 <section class="docstring">
 <p>Returns the registered package and plugin migration files, in the order they were
@@ -133,9 +133,9 @@ registered in.</p>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="assume_migrated_upto_version">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>assume_migrated_upto_version<span class="params">(version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>assume_migrated_upto_version<span class="params">(version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#assume_migrated_upto_version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L401" title="View source">packages/active_record/lib/migrator/migration_context.lua:401</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:401</span>
 </div>
 <section class="docstring">
 <p>Records the given version and every older migration as run, without running
@@ -147,9 +147,9 @@ the state the migrations up to that version describe.</p>
 </section>
 <section class="detail" id="current_version">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>current_version<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>current_version<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#current_version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L225" title="View source">packages/active_record/lib/migrator/migration_context.lua:225</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:225</span>
 </div>
 <section class="docstring">
 <p>Returns the newest version that has been run.</p>
@@ -159,9 +159,9 @@ the state the migrations up to that version describe.</p>
 </section>
 <section class="detail" id="down">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>down<span class="params">(target_version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>down<span class="params">(target_version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#down" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L297" title="View source">packages/active_record/lib/migrator/migration_context.lua:297</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:297</span>
 </div>
 <section class="docstring">
 <p>Reverts the migrations that have been run, newest first, down to (but not including)
@@ -174,9 +174,9 @@ the target version.</p>
 </section>
 <section class="detail" id="forward">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>forward<span class="params">(steps)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>forward<span class="params">(steps)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#forward" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L351" title="View source">packages/active_record/lib/migrator/migration_context.lua:351</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:351</span>
 </div>
 <section class="docstring">
 <p>Runs the next pending migrations.</p>
@@ -188,9 +188,9 @@ the target version.</p>
 </section>
 <section class="detail" id="get_all_versions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>get_all_versions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>get_all_versions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_all_versions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L219" title="View source">packages/active_record/lib/migrator/migration_context.lua:219</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:219</span>
 </div>
 <section class="docstring">
 <p>Returns the versions of the migrations that have been run.</p>
@@ -200,9 +200,9 @@ the target version.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>init<span class="params">(migrations_paths)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>init<span class="params">(migrations_paths)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L137" title="View source">packages/active_record/lib/migrator/migration_context.lua:137</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:137</span>
 </div>
 <section class="docstring">
 <p>Creates a context, which provides the migrations of one or more folders.</p>
@@ -214,9 +214,9 @@ the target version.</p>
 </section>
 <section class="detail" id="install_migrations">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>install_migrations<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>install_migrations<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#install_migrations" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L448" title="View source">packages/active_record/lib/migrator/migration_context.lua:448</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:448</span>
 </div>
 <section class="docstring">
 <p>Installs the migration files registered with .add_source into the schema's
@@ -231,9 +231,9 @@ which are wrapped into a migration's #change.</p>
 </section>
 <section class="detail" id="last_migration">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>last_migration<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>last_migration<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#last_migration" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L212" title="View source">packages/active_record/lib/migrator/migration_context.lua:212</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:212</span>
 </div>
 <section class="docstring">
 <p>Returns the migration with the newest version.</p>
@@ -243,9 +243,9 @@ which are wrapped into a migration's #change.</p>
 </section>
 <section class="detail" id="migrate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migrate<span class="params">(target_version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migrate<span class="params">(target_version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#migrate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L268" title="View source">packages/active_record/lib/migrator/migration_context.lua:268</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:268</span>
 </div>
 <section class="docstring">
 <p>Runs the migrations that have not been run yet. Given a target version, migrates
@@ -258,9 +258,9 @@ up or down to it instead.</p>
 </section>
 <section class="detail" id="migration_files">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migration_files<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migration_files<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#migration_files" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L153" title="View source">packages/active_record/lib/migrator/migration_context.lua:153</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:153</span>
 </div>
 <section class="docstring">
 <p>Returns the paths of every migration file in the migration folders.</p>
@@ -270,9 +270,9 @@ up or down to it instead.</p>
 </section>
 <section class="detail" id="migrations">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migrations<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migrations<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#migrations" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L171" title="View source">packages/active_record/lib/migrator/migration_context.lua:171</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:171</span>
 </div>
 <section class="docstring">
 <p>Returns the migrations found in the migration folders, sorted by version. Files whose
@@ -284,9 +284,9 @@ or the same name are an error.</p>
 </section>
 <section class="detail" id="migrations_status">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migrations_status<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>migrations_status<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#migrations_status" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L359" title="View source">packages/active_record/lib/migrator/migration_context.lua:359</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:359</span>
 </div>
 <section class="docstring">
 <p>Returns the status of every migration: the ones found in the migration folders and
@@ -297,9 +297,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="move">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>move<span class="params">(direction, steps)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>move<span class="params">(direction, steps)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#move" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L313" title="View source">packages/active_record/lib/migrator/migration_context.lua:313</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:313</span>
 </div>
 <section class="docstring">
 <p>Moves a number of migrations up or down from the current version.</p>
@@ -311,9 +311,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="needs_migration">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>needs_migration<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>needs_migration<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#needs_migration" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L252" title="View source">packages/active_record/lib/migrator/migration_context.lua:252</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:252</span>
 </div>
 <section class="docstring">
 <p>Checks whether there are migrations that have not been run yet.</p>
@@ -323,9 +323,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="next_migration_number">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>next_migration_number<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>next_migration_number<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#next_migration_number" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L425" title="View source">packages/active_record/lib/migrator/migration_context.lua:425</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:425</span>
 </div>
 <section class="docstring">
 <p>Returns the version a new migration in the schema's migrations folder gets.</p>
@@ -335,9 +335,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="open">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>open<span class="params">(direction, target_version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>open<span class="params">(direction, target_version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#open" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L260" title="View source">packages/active_record/lib/migrator/migration_context.lua:260</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:260</span>
 </div>
 <section class="docstring">
 <p>Creates a migrator for the migrations of the context without running anything.</p>
@@ -349,9 +349,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="pending_migration_versions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>pending_migration_versions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>pending_migration_versions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#pending_migration_versions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L232" title="View source">packages/active_record/lib/migrator/migration_context.lua:232</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:232</span>
 </div>
 <section class="docstring">
 <p>Returns the versions of the migrations that have not been run yet.</p>
@@ -361,9 +361,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="rollback">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>rollback<span class="params">(steps)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>rollback<span class="params">(steps)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rollback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L344" title="View source">packages/active_record/lib/migrator/migration_context.lua:344</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:344</span>
 </div>
 <section class="docstring">
 <p>Reverts the newest migrations.</p>
@@ -375,9 +375,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="run">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>run<span class="params">(direction, target_version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>run<span class="params">(direction, target_version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#run" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L305" title="View source">packages/active_record/lib/migrator/migration_context.lua:305</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:305</span>
 </div>
 <section class="docstring">
 <p>Runs or reverts a single migration.</p>
@@ -389,9 +389,9 @@ the versions that have been run but have no file anymore.</p>
 </section>
 <section class="detail" id="up">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>up<span class="params">(target_version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationContext:</span>up<span class="params">(target_version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#up" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L289" title="View source">packages/active_record/lib/migrator/migration_context.lua:289</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:289</span>
 </div>
 <section class="docstring">
 <p>Runs the pending migrations up to and including the target version.</p>
@@ -402,11 +402,11 @@ the versions that have been run but have no file anymore.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua" title="View source">packages/active_record/lib/migrator/migration_context.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_source">add_source</a></li><li><a href="#default_migrations_path">default_migrations_path</a></li><li><a href="#parse_migration_filename">parse_migration_filename</a></li><li><a href="#scope_of">scope_of</a></li><li><a href="#sources">sources</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#assume_migrated_upto_version">assume_migrated_upto_version</a></li><li><a href="#current_version">current_version</a></li><li><a href="#down">down</a></li><li><a href="#forward">forward</a></li><li><a href="#get_all_versions">get_all_versions</a></li><li><a href="#init">init</a></li><li><a href="#install_migrations">install_migrations</a></li><li><a href="#last_migration">last_migration</a></li><li><a href="#migrate">migrate</a></li><li><a href="#migration_files">migration_files</a></li><li><a href="#migrations">migrations</a></li><li><a href="#migrations_status">migrations_status</a></li><li><a href="#move">move</a></li><li><a href="#needs_migration">needs_migration</a></li><li><a href="#next_migration_number">next_migration_number</a></li><li><a href="#open">open</a></li><li><a href="#pending_migration_versions">pending_migration_versions</a></li><li><a href="#rollback">rollback</a></li><li><a href="#run">run</a></li><li><a href="#up">up</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/migrator/migration_context.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#add_source">add_source</a></li><li data-realm="shared"><a href="#default_migrations_path">default_migrations_path</a></li><li data-realm="shared"><a href="#parse_migration_filename">parse_migration_filename</a></li><li data-realm="shared"><a href="#scope_of">scope_of</a></li><li data-realm="shared"><a href="#sources">sources</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#assume_migrated_upto_version">assume_migrated_upto_version</a></li><li data-realm="shared"><a href="#current_version">current_version</a></li><li data-realm="shared"><a href="#down">down</a></li><li data-realm="shared"><a href="#forward">forward</a></li><li data-realm="shared"><a href="#get_all_versions">get_all_versions</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#install_migrations">install_migrations</a></li><li data-realm="shared"><a href="#last_migration">last_migration</a></li><li data-realm="shared"><a href="#migrate">migrate</a></li><li data-realm="shared"><a href="#migration_files">migration_files</a></li><li data-realm="shared"><a href="#migrations">migrations</a></li><li data-realm="shared"><a href="#migrations_status">migrations_status</a></li><li data-realm="shared"><a href="#move">move</a></li><li data-realm="shared"><a href="#needs_migration">needs_migration</a></li><li data-realm="shared"><a href="#next_migration_number">next_migration_number</a></li><li data-realm="shared"><a href="#open">open</a></li><li data-realm="shared"><a href="#pending_migration_versions">pending_migration_versions</a></li><li data-realm="shared"><a href="#rollback">rollback</a></li><li data-realm="shared"><a href="#run">run</a></li><li data-realm="shared"><a href="#up">up</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

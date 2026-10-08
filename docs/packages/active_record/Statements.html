@@ -29,40 +29,47 @@
 </div>
 <div class="content-inner" id="content-inner">
 <div class="page-header"><h1>Statements <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
+<section class="moduledoc">
+<p>The schema statements (create_table, add_column, add_index and so on) that the
+migrations DSL exposes as global functions. The functions in here run their
+statement right away and keep the in-memory schema and metadata up to date; the
+global functions of the same name (see helpers.lua) go through ActiveRecord.ddl,
+which can also record the statements, so that a migration's #change can be reverted.</p>
+</section>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_column">add_column(table_name, name, type, options)</a></div><div class="summary-synopsis">Adds a column to an existing table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_foreign_key">add_foreign_key(from_table, to_table, options)</a></div><div class="summary-synopsis">Adds a foreign key constraint. Does nothing if a constraint with the same name is already recorded in the metadata. SQLite cannot add constraints to existing tables, so the constraint is only recorded there.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_index">add_index(table_name, columns, options)</a></div><div class="summary-synopsis">Creates an index, unless an index with the same name is already recorded in the metadata.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_reference">add_reference(table_name, name, options)</a></div><div class="summary-synopsis">Adds a reference column ('&lt;name&gt;_id'), its index and optionally a foreign key to an existing table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_timestamps">add_timestamps(table_name, options)</a></div><div class="summary-synopsis">Adds the 'created_at' and 'updated_at' columns to an existing table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#apply_references">apply_references(table_name, query)</a></div><div class="summary-synopsis">Creates the indexes and foreign keys that t:references queued on a query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#change_table">change_table(name, callback)</a></div><div class="summary-synopsis">Alters an existing database table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#column_definition">column_definition(name, type, options)</a></div><div class="summary-synopsis">Splits the arguments of add_column / remove_column into their parts. Both the positional (name, type, options) form and the table form { name, type = ..., ... } are accepted.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_primary_key">create_primary_key(table_name, key)</a></div><div class="summary-synopsis">Adds a PRIMARY KEY constraint named '&lt;table_name&gt;_pkey' to a table, unless it is already recorded in the metadata.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_reference">create_reference(args)</a></div><div class="summary-synopsis">Adds a foreign key constraint along with an index on the key column.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_table">create_table(name, options, callback)</a></div><div class="summary-synopsis">Creates a database table. The 'id' primary key is added automatically.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#define_model">define_model(name, callback)</a></div><div class="summary-synopsis">Creates the database table of a model: a table with the 'id' primary key, the given columns and the 'created_at' / 'updated_at' timestamps.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#drop_table">drop_table(name, options)</a></div><div class="summary-synopsis">Drops a database table, along with what the metadata knows about its indexes and foreign keys.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#execute">execute(sql)</a></div><div class="summary-synopsis">Runs a raw SQL statement.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#execute_block">execute_block(callback)</a></div><div class="summary-synopsis">Runs a function. Used by Migration#reversible to put a block of code into the list of recorded statements.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#foreign_key_name">foreign_key_name(from_table, column, to_table, primary_key)</a></div><div class="summary-synopsis">Returns the name a foreign key constraint gets when none is given.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#index_name">index_name(table_name, columns)</a></div><div class="summary-synopsis">Returns the name an index gets when none is given: '&lt;table&gt;_&lt;columns&gt;_index'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_column">remove_column(table_name, name, type, options)</a></div><div class="summary-synopsis">Removes a column from an existing table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_foreign_key">remove_foreign_key(from_table, to_table, options)</a></div><div class="summary-synopsis">Drops a foreign key constraint and removes it from the metadata.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_index">remove_index(table_name, options)</a></div><div class="summary-synopsis">Drops an index and removes it from the metadata.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_reference">remove_reference(table_name, name, options)</a></div><div class="summary-synopsis">Removes a reference column along with its index and foreign key.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_timestamps">remove_timestamps(table_name, options)</a></div><div class="summary-synopsis">Removes the 'created_at' and 'updated_at' columns from a table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rename_column">rename_column(table_name, name, new_name)</a></div><div class="summary-synopsis">Renames a column of an existing table.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rename_table">rename_table(name, new_name)</a></div><div class="summary-synopsis">Renames a database table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_column">add_column(table_name, name, type, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a column to an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_foreign_key">add_foreign_key(from_table, to_table, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a foreign key constraint.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_index">add_index(table_name, columns, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates an index, unless an index with the same name is already recorded in the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_reference">add_reference(table_name, name, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a reference column ('&lt;name&gt;_id'), its index and optionally a foreign key to an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_timestamps">add_timestamps(table_name, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds the 'created_at' and 'updated_at' columns to an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#apply_references">apply_references(table_name, query)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates the indexes and foreign keys that t:references queued on a query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#change_table">change_table(name, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Alters an existing database table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#column_definition">column_definition(name, type, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Splits the arguments of add_column / remove_column into their parts.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_primary_key">create_primary_key(table_name, key)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a PRIMARY KEY constraint named '&lt;table_name&gt;_pkey' to a table, unless it is already recorded in the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_reference">create_reference(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a foreign key constraint along with an index on the key column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_table">create_table(name, options, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a database table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#define_model">define_model(name, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates the database table of a model: a table with the 'id' primary key, the given columns and the 'created_at' / 'updated_at' timestamps.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#drop_table">drop_table(name, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Drops a database table, along with what the metadata knows about its indexes and foreign keys.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#execute">execute(sql)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs a raw SQL statement.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#execute_block">execute_block(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs a function.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#foreign_key_name">foreign_key_name(from_table, column, to_table, primary_key)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name a foreign key constraint gets when none is given.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#index_name">index_name(table_name, columns)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name an index gets when none is given: '&lt;table&gt;_&lt;columns&gt;_index'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_column">remove_column(table_name, name, type, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes a column from an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_foreign_key">remove_foreign_key(from_table, to_table, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Drops a foreign key constraint and removes it from the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_index">remove_index(table_name, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Drops an index and removes it from the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_reference">remove_reference(table_name, name, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes a reference column along with its index and foreign key.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_timestamps">remove_timestamps(table_name, options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes the 'created_at' and 'updated_at' columns from a table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_column">rename_column(table_name, name, new_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Renames a column of an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_table">rename_table(name, new_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Renames a database table.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="add_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>add_column<span class="params">(table_name, name, type, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>add_column<span class="params">(table_name, name, type, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L231" title="View source">packages/active_record/lib/schema_statements.lua:231</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:231</span>
 </div>
 <section class="docstring">
 <p>Adds a column to an existing table.</p>
@@ -75,9 +82,9 @@
 </section>
 <section class="detail" id="add_foreign_key">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>add_foreign_key<span class="params">(from_table, to_table, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>add_foreign_key<span class="params">(from_table, to_table, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_foreign_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L494" title="View source">packages/active_record/lib/schema_statements.lua:494</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:494</span>
 </div>
 <section class="docstring">
 <p>Adds a foreign key constraint. Does nothing if a constraint with the same name is
@@ -92,9 +99,9 @@ the constraint is only recorded there.</p>
 </section>
 <section class="detail" id="add_index">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>add_index<span class="params">(table_name, columns, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>add_index<span class="params">(table_name, columns, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_index" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L352" title="View source">packages/active_record/lib/schema_statements.lua:352</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:352</span>
 </div>
 <section class="docstring">
 <p>Creates an index, unless an index with the same name is already recorded in the
@@ -109,9 +116,9 @@ add_index { <span class="hl-s">&#39;users&#39;</span>, <span class="hl-s">&#39;s
 </section>
 <section class="detail" id="add_reference">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>add_reference<span class="params">(table_name, name, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>add_reference<span class="params">(table_name, name, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L297" title="View source">packages/active_record/lib/schema_statements.lua:297</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:297</span>
 </div>
 <section class="docstring">
 <p>Adds a reference column ('&lt;name&gt;_id'), its index and optionally a foreign key to an
@@ -122,9 +129,9 @@ existing table.</p>
 </section>
 <section class="detail" id="add_timestamps">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>add_timestamps<span class="params">(table_name, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>add_timestamps<span class="params">(table_name, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_timestamps" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L278" title="View source">packages/active_record/lib/schema_statements.lua:278</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:278</span>
 </div>
 <section class="docstring">
 <p>Adds the 'created_at' and 'updated_at' columns to an existing table.</p>
@@ -134,9 +141,9 @@ existing table.</p>
 </section>
 <section class="detail" id="apply_references">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>apply_references<span class="params">(table_name, query)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>apply_references<span class="params">(table_name, query)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#apply_references" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L47" title="View source">packages/active_record/lib/schema_statements.lua:47</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:47</span>
 </div>
 <section class="docstring">
 <p>Creates the indexes and foreign keys that t:references queued on a query.</p>
@@ -146,9 +153,9 @@ existing table.</p>
 </section>
 <section class="detail" id="change_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>change_table<span class="params">(name, callback)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>change_table<span class="params">(name, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#change_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L211" title="View source">packages/active_record/lib/schema_statements.lua:211</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:211</span>
 </div>
 <section class="docstring">
 <p>Alters an existing database table.</p>
@@ -165,9 +172,9 @@ existing table.</p>
 </section>
 <section class="detail" id="column_definition">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>column_definition<span class="params">(name, type, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>column_definition<span class="params">(name, type, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#column_definition" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L17" title="View source">packages/active_record/lib/schema_statements.lua:17</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:17</span>
 </div>
 <section class="docstring">
 <p>Splits the arguments of add_column / remove_column into their parts. Both the
@@ -181,9 +188,9 @@ are accepted.</p>
 </section>
 <section class="detail" id="create_primary_key">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>create_primary_key<span class="params">(table_name, key)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>create_primary_key<span class="params">(table_name, key)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_primary_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L592" title="View source">packages/active_record/lib/schema_statements.lua:592</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:592</span>
 </div>
 <section class="docstring">
 <p>Adds a PRIMARY KEY constraint named '&lt;table_name&gt;_pkey' to a table, unless it is
@@ -194,9 +201,9 @@ already recorded in the metadata.</p>
 </section>
 <section class="detail" id="create_reference">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>create_reference<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>create_reference<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L578" title="View source">packages/active_record/lib/schema_statements.lua:578</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:578</span>
 </div>
 <section class="docstring">
 <p>Adds a foreign key constraint along with an index on the key column.</p>
@@ -212,9 +219,9 @@ already recorded in the metadata.</p>
 </section>
 <section class="detail" id="create_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>create_table<span class="params">(name, options, callback)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>create_table<span class="params">(name, options, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L82" title="View source">packages/active_record/lib/schema_statements.lua:82</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:82</span>
 </div>
 <section class="docstring">
 <p>Creates a database table. The 'id' primary key is added automatically.</p>
@@ -232,9 +239,9 @@ already recorded in the metadata.</p>
 </section>
 <section class="detail" id="define_model">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>define_model<span class="params">(name, callback)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>define_model<span class="params">(name, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#define_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L129" title="View source">packages/active_record/lib/schema_statements.lua:129</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:129</span>
 </div>
 <section class="docstring">
 <p>Creates the database table of a model: a table with the 'id' primary key, the given
@@ -247,9 +254,9 @@ columns and the 'created_at' / 'updated_at' timestamps.</p>
 </section>
 <section class="detail" id="drop_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>drop_table<span class="params">(name, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>drop_table<span class="params">(name, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#drop_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L140" title="View source">packages/active_record/lib/schema_statements.lua:140</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:140</span>
 </div>
 <section class="docstring">
 <p>Drops a database table, along with what the metadata knows about its indexes and
@@ -260,9 +267,9 @@ foreign keys.</p>
 </section>
 <section class="detail" id="execute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>execute<span class="params">(sql)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>execute<span class="params">(sql)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#execute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L605" title="View source">packages/active_record/lib/schema_statements.lua:605</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:605</span>
 </div>
 <section class="docstring">
 <p>Runs a raw SQL statement.</p>
@@ -274,9 +281,9 @@ foreign keys.</p>
 </section>
 <section class="detail" id="execute_block">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>execute_block<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>execute_block<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#execute_block" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L612" title="View source">packages/active_record/lib/schema_statements.lua:612</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:612</span>
 </div>
 <section class="docstring">
 <p>Runs a function. Used by Migration#reversible to put a block of code into the list
@@ -287,9 +294,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="foreign_key_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>foreign_key_name<span class="params">(from_table, column, to_table, primary_key)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>foreign_key_name<span class="params">(from_table, column, to_table, primary_key)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#foreign_key_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L473" title="View source">packages/active_record/lib/schema_statements.lua:473</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:473</span>
 </div>
 <section class="docstring">
 <p>Returns the name a foreign key constraint gets when none is given.</p>
@@ -301,9 +308,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="index_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>index_name<span class="params">(table_name, columns)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>index_name<span class="params">(table_name, columns)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#index_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L329" title="View source">packages/active_record/lib/schema_statements.lua:329</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:329</span>
 </div>
 <section class="docstring">
 <p>Returns the name an index gets when none is given: '&lt;table&gt;_&lt;columns&gt;_index'.</p>
@@ -315,9 +322,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="remove_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>remove_column<span class="params">(table_name, name, type, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>remove_column<span class="params">(table_name, name, type, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L253" title="View source">packages/active_record/lib/schema_statements.lua:253</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:253</span>
 </div>
 <section class="docstring">
 <p>Removes a column from an existing table.</p>
@@ -327,9 +334,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="remove_foreign_key">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>remove_foreign_key<span class="params">(from_table, to_table, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>remove_foreign_key<span class="params">(from_table, to_table, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_foreign_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L536" title="View source">packages/active_record/lib/schema_statements.lua:536</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:536</span>
 </div>
 <section class="docstring">
 <p>Drops a foreign key constraint and removes it from the metadata.</p>
@@ -343,9 +350,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="remove_index">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>remove_index<span class="params">(table_name, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>remove_index<span class="params">(table_name, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_index" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L434" title="View source">packages/active_record/lib/schema_statements.lua:434</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:434</span>
 </div>
 <section class="docstring">
 <p>Drops an index and removes it from the metadata.</p>
@@ -360,9 +367,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="remove_reference">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>remove_reference<span class="params">(table_name, name, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>remove_reference<span class="params">(table_name, name, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L307" title="View source">packages/active_record/lib/schema_statements.lua:307</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:307</span>
 </div>
 <section class="docstring">
 <p>Removes a reference column along with its index and foreign key.</p>
@@ -372,9 +379,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="remove_timestamps">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>remove_timestamps<span class="params">(table_name, options)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>remove_timestamps<span class="params">(table_name, options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_timestamps" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L287" title="View source">packages/active_record/lib/schema_statements.lua:287</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:287</span>
 </div>
 <section class="docstring">
 <p>Removes the 'created_at' and 'updated_at' columns from a table.</p>
@@ -384,9 +391,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="rename_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>rename_column<span class="params">(table_name, name, new_name)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>rename_column<span class="params">(table_name, name, new_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rename_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L267" title="View source">packages/active_record/lib/schema_statements.lua:267</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:267</span>
 </div>
 <section class="docstring">
 <p>Renames a column of an existing table.</p>
@@ -396,9 +403,9 @@ of recorded statements.</p>
 </section>
 <section class="detail" id="rename_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Statements.</span>rename_table<span class="params">(name, new_name)</span></h3>
+<h3 class="signature"><span class="owner">Statements.</span>rename_table<span class="params">(name, new_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rename_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L177" title="View source">packages/active_record/lib/schema_statements.lua:177</a>
+<span class="source-link">packages/active_record/lib/schema_statements.lua:177</span>
 </div>
 <section class="docstring">
 <p>Renames a database table.</p>
@@ -407,11 +414,11 @@ of recorded statements.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua" title="View source">packages/active_record/lib/schema_statements.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_column">add_column</a></li><li><a href="#add_foreign_key">add_foreign_key</a></li><li><a href="#add_index">add_index</a></li><li><a href="#add_reference">add_reference</a></li><li><a href="#add_timestamps">add_timestamps</a></li><li><a href="#apply_references">apply_references</a></li><li><a href="#change_table">change_table</a></li><li><a href="#column_definition">column_definition</a></li><li><a href="#create_primary_key">create_primary_key</a></li><li><a href="#create_reference">create_reference</a></li><li><a href="#create_table">create_table</a></li><li><a href="#define_model">define_model</a></li><li><a href="#drop_table">drop_table</a></li><li><a href="#execute">execute</a></li><li><a href="#execute_block">execute_block</a></li><li><a href="#foreign_key_name">foreign_key_name</a></li><li><a href="#index_name">index_name</a></li><li><a href="#remove_column">remove_column</a></li><li><a href="#remove_foreign_key">remove_foreign_key</a></li><li><a href="#remove_index">remove_index</a></li><li><a href="#remove_reference">remove_reference</a></li><li><a href="#remove_timestamps">remove_timestamps</a></li><li><a href="#rename_column">rename_column</a></li><li><a href="#rename_table">rename_table</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/schema_statements.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#add_column">add_column</a></li><li data-realm="shared"><a href="#add_foreign_key">add_foreign_key</a></li><li data-realm="shared"><a href="#add_index">add_index</a></li><li data-realm="shared"><a href="#add_reference">add_reference</a></li><li data-realm="shared"><a href="#add_timestamps">add_timestamps</a></li><li data-realm="shared"><a href="#apply_references">apply_references</a></li><li data-realm="shared"><a href="#change_table">change_table</a></li><li data-realm="shared"><a href="#column_definition">column_definition</a></li><li data-realm="shared"><a href="#create_primary_key">create_primary_key</a></li><li data-realm="shared"><a href="#create_reference">create_reference</a></li><li data-realm="shared"><a href="#create_table">create_table</a></li><li data-realm="shared"><a href="#define_model">define_model</a></li><li data-realm="shared"><a href="#drop_table">drop_table</a></li><li data-realm="shared"><a href="#execute">execute</a></li><li data-realm="shared"><a href="#execute_block">execute_block</a></li><li data-realm="shared"><a href="#foreign_key_name">foreign_key_name</a></li><li data-realm="shared"><a href="#index_name">index_name</a></li><li data-realm="shared"><a href="#remove_column">remove_column</a></li><li data-realm="shared"><a href="#remove_foreign_key">remove_foreign_key</a></li><li data-realm="shared"><a href="#remove_index">remove_index</a></li><li data-realm="shared"><a href="#remove_reference">remove_reference</a></li><li data-realm="shared"><a href="#remove_timestamps">remove_timestamps</a></li><li data-realm="shared"><a href="#rename_column">rename_column</a></li><li data-realm="shared"><a href="#rename_table">rename_table</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

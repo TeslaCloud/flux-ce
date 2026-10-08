@@ -31,20 +31,20 @@
 <div class="page-header"><h1>ActiveRecord.MigrationProxy <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#basename">basename()</a></div><div class="summary-synopsis">Returns the name of the file without its folder.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#camel_name">camel_name()</a></div><div class="summary-synopsis">Returns the name in CamelCase, as used in the console output.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#disable_ddl_transaction">disable_ddl_transaction()</a></div><div class="summary-synopsis">Checks whether the migration asks to be run outside of a transaction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(name, version, filename, scope)</a></div><div class="summary-synopsis">Creates a stand-in for a migration file, which loads the file only when the migration is needed.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#load">load()</a></div><div class="summary-synopsis">Loads the migration file and returns the migration it defines, with the version and the name of the file set on it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#migrate">migrate(direction)</a></div><div class="summary-synopsis">Runs the migration in the given direction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#basename">basename()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name of the file without its folder.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#camel_name">camel_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name in CamelCase, as used in the console output.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#disable_ddl_transaction">disable_ddl_transaction()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the migration asks to be run outside of a transaction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(name, version, filename, scope)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a stand-in for a migration file, which loads the file only when the migration is needed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load">load()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Loads the migration file and returns the migration it defines, with the version and the name of the file set on it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrate">migrate(direction)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the migration in the given direction.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="basename">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>basename<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>basename<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#basename" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L27" title="View source">packages/active_record/lib/migrator/migration_context.lua:27</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:27</span>
 </div>
 <section class="docstring">
 <p>Returns the name of the file without its folder.</p>
@@ -54,9 +54,9 @@
 </section>
 <section class="detail" id="camel_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>camel_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>camel_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#camel_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L21" title="View source">packages/active_record/lib/migrator/migration_context.lua:21</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:21</span>
 </div>
 <section class="docstring">
 <p>Returns the name in CamelCase, as used in the console output.</p>
@@ -66,9 +66,9 @@
 </section>
 <section class="detail" id="disable_ddl_transaction">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>disable_ddl_transaction<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>disable_ddl_transaction<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#disable_ddl_transaction" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L68" title="View source">packages/active_record/lib/migrator/migration_context.lua:68</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:68</span>
 </div>
 <section class="docstring">
 <p>Checks whether the migration asks to be run outside of a transaction.</p>
@@ -78,9 +78,9 @@
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>init<span class="params">(name, version, filename, scope)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>init<span class="params">(name, version, filename, scope)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L11" title="View source">packages/active_record/lib/migrator/migration_context.lua:11</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:11</span>
 </div>
 <section class="docstring">
 <p>Creates a stand-in for a migration file, which loads the file only when the
@@ -93,9 +93,9 @@ migration is needed.</p>
 </section>
 <section class="detail" id="load">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>load<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>load<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#load" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L34" title="View source">packages/active_record/lib/migrator/migration_context.lua:34</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:34</span>
 </div>
 <section class="docstring">
 <p>Loads the migration file and returns the migration it defines, with the version and
@@ -106,9 +106,9 @@ the name of the file set on it.</p>
 </section>
 <section class="detail" id="migrate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>migrate<span class="params">(direction)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.MigrationProxy:</span>migrate<span class="params">(direction)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#migrate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua#L62" title="View source">packages/active_record/lib/migrator/migration_context.lua:62</a>
+<span class="source-link">packages/active_record/lib/migrator/migration_context.lua:62</span>
 </div>
 <section class="docstring">
 <p>Runs the migration in the given direction.</p>
@@ -117,11 +117,11 @@ the name of the file set on it.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration_context.lua" title="View source">packages/active_record/lib/migrator/migration_context.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#basename">basename</a></li><li><a href="#camel_name">camel_name</a></li><li><a href="#disable_ddl_transaction">disable_ddl_transaction</a></li><li><a href="#init">init</a></li><li><a href="#load">load</a></li><li><a href="#migrate">migrate</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/migrator/migration_context.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#basename">basename</a></li><li data-realm="shared"><a href="#camel_name">camel_name</a></li><li data-realm="shared"><a href="#disable_ddl_transaction">disable_ddl_transaction</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#load">load</a></li><li data-realm="shared"><a href="#migrate">migrate</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -31,20 +31,20 @@
 <div class="page-header"><h1>math <span class="badge badge-library">library</span></h1></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#divisible">divisible(num, factor)</a></div><div class="summary-synopsis">Checks whether a number is divisible by another number without a remainder.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#even">even(num)</a></div><div class="summary-synopsis">Checks whether a number is even.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#odd">odd(num)</a></div><div class="summary-synopsis">Checks whether a number is odd.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#scale">scale(size)</a></div><div class="summary-synopsis">Scales a size that was designed for a 1080 pixels tall screen to the current screen height. Clientside only, since it depends on the screen resolution.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#scale_size">scale_size(x, y)</a></div><div class="summary-synopsis">Scales a width and a height that were designed for a 1920x1080 screen to the current screen resolution. Clientside only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#scale_x">scale_x(size)</a></div><div class="summary-synopsis">Scales a size that was designed for a 1920 pixels wide screen to the current screen width. Clientside only, since it depends on the screen resolution.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#divisible">divisible(num, factor)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a number is divisible by another number without a remainder.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#even">even(num)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a number is even.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#odd">odd(num)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a number is odd.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#scale">scale(size)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Scales a size that was designed for a 1080 pixels tall screen to the current screen height.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#scale_size">scale_size(x, y)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Scales a width and a height that were designed for a 1920x1080 screen to the current screen resolution.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#scale_x">scale_x(size)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Scales a size that was designed for a 1920 pixels wide screen to the current screen width.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="divisible">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">math.</span>divisible<span class="params">(num, factor)</span></h3>
+<h3 class="signature"><span class="owner">math.</span>divisible<span class="params">(num, factor)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#divisible" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L194" title="View source">lib/stdlib/sh_math.lua:194</a>
+<span class="source-link">lib/stdlib/sh_math.lua:194</span>
 </div>
 <section class="docstring">
 <p>Checks whether a number is divisible by another number without a remainder.</p>
@@ -56,9 +56,9 @@
 </section>
 <section class="detail" id="even">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">math.</span>even<span class="params">(num)</span></h3>
+<h3 class="signature"><span class="owner">math.</span>even<span class="params">(num)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#even" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L179" title="View source">lib/stdlib/sh_math.lua:179</a>
+<span class="source-link">lib/stdlib/sh_math.lua:179</span>
 </div>
 <section class="docstring">
 <p>Checks whether a number is even.</p>
@@ -70,9 +70,9 @@
 </section>
 <section class="detail" id="odd">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">math.</span>odd<span class="params">(num)</span></h3>
+<h3 class="signature"><span class="owner">math.</span>odd<span class="params">(num)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#odd" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L186" title="View source">lib/stdlib/sh_math.lua:186</a>
+<span class="source-link">lib/stdlib/sh_math.lua:186</span>
 </div>
 <section class="docstring">
 <p>Checks whether a number is odd.</p>
@@ -84,9 +84,9 @@
 </section>
 <section class="detail" id="scale">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">math.</span>scale<span class="params">(size)</span></h3>
+<h3 class="signature"><span class="owner">math.</span>scale<span class="params">(size)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#scale" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L150" title="View source">lib/stdlib/sh_math.lua:150</a>
+<span class="source-link">lib/stdlib/sh_math.lua:150</span>
 </div>
 <section class="docstring">
 <p>Scales a size that was designed for a 1080 pixels tall screen to the current screen height.
@@ -99,9 +99,9 @@ Clientside only, since it depends on the screen resolution.</p>
 </section>
 <section class="detail" id="scale_size">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">math.</span>scale_size<span class="params">(x, y)</span></h3>
+<h3 class="signature"><span class="owner">math.</span>scale_size<span class="params">(x, y)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#scale_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L167" title="View source">lib/stdlib/sh_math.lua:167</a>
+<span class="source-link">lib/stdlib/sh_math.lua:167</span>
 </div>
 <section class="docstring">
 <p>Scales a width and a height that were designed for a 1920x1080 screen to the current
@@ -114,9 +114,9 @@ screen resolution. Clientside only.</p>
 </section>
 <section class="detail" id="scale_x">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">math.</span>scale_x<span class="params">(size)</span></h3>
+<h3 class="signature"><span class="owner">math.</span>scale_x<span class="params">(size)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#scale_x" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L158" title="View source">lib/stdlib/sh_math.lua:158</a>
+<span class="source-link">lib/stdlib/sh_math.lua:158</span>
 </div>
 <section class="docstring">
 <p>Scales a size that was designed for a 1920 pixels wide screen to the current screen width.
@@ -128,11 +128,11 @@ Clientside only, since it depends on the screen resolution.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua" title="View source">lib/stdlib/sh_math.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#divisible">divisible</a></li><li><a href="#even">even</a></li><li><a href="#odd">odd</a></li><li><a href="#scale">scale</a></li><li><a href="#scale_size">scale_size</a></li><li><a href="#scale_x">scale_x</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/stdlib/sh_math.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#divisible">divisible</a></li><li data-realm="shared"><a href="#even">even</a></li><li data-realm="shared"><a href="#odd">odd</a></li><li data-realm="shared"><a href="#scale">scale</a></li><li data-realm="shared"><a href="#scale_size">scale_size</a></li><li data-realm="shared"><a href="#scale_x">scale_x</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

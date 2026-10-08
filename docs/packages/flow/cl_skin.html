@@ -28,59 +28,59 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>cl_skin <span class="badge badge-object">object</span></h1><p class="subtitle">SKIN</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>cl_skin <span class="badge badge-object">object</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Object SKIN in lib/cl_skin.lua</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintActiveTab">PaintActiveTab(panel, w, h)</a></div><div class="summary-synopsis">Paints the active tab of a property sheet.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintButton">PaintButton(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a button according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonDown">PaintButtonDown(panel, w, h)</a></div><div class="summary-synopsis">Paints the 'down' button of a scroll bar according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonLeft">PaintButtonLeft(panel, w, h)</a></div><div class="summary-synopsis">Paints the 'left' button of a scroll bar according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonRight">PaintButtonRight(panel, w, h)</a></div><div class="summary-synopsis">Paints the 'right' button of a scroll bar according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonUp">PaintButtonUp(panel, w, h)</a></div><div class="summary-synopsis">Paints the 'up' button of a scroll bar according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCategoryButton">PaintCategoryButton(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a category button according to its state and line parity.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCategoryList">PaintCategoryList(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a category list.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCheckBox">PaintCheckBox(panel, w, h)</a></div><div class="summary-synopsis">Paints a checkbox according to whether it is checked and whether it is disabled.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory(panel, w, h)</a></div><div class="summary-synopsis">Paints a collapsible category, or only its header when it is collapsed.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintComboBox">PaintComboBox(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a combo box according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintComboDownArrow">PaintComboDownArrow(panel, w, h)</a></div><div class="summary-synopsis">Paints the drop-down arrow of a combo box according to the state of the combo box.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintExpandButton">PaintExpandButton(panel, w, h)</a></div><div class="summary-synopsis">Paints the plus or minus button that expands a tree node.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintFrame">PaintFrame(panel, w, h)</a></div><div class="summary-synopsis">Paints a window frame and its shadow, depending on whether the frame has focus.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintListBox">PaintListBox(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a list box.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintListView">PaintListView(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a list view, if it has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintListViewLine">PaintListViewLine(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a list view line that is selected, hovered or alternate.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMenu">PaintMenu(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a menu, with or without the icon column.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuBar">PaintMenuBar(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a menu bar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuOption">PaintMenuOption(panel, w, h)</a></div><div class="summary-synopsis">Paints the highlight of a hovered menu option and the check mark of a checked one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuRightArrow">PaintMenuRightArrow(panel, w, h)</a></div><div class="summary-synopsis">Paints the arrow of a menu option that opens a submenu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuSpacer">PaintMenuSpacer(panel, w, h)</a></div><div class="summary-synopsis">Paints the separator line of a menu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintNumberDown">PaintNumberDown(panel, w, h)</a></div><div class="summary-synopsis">Paints the 'down' arrow of a number entry according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintNumberUp">PaintNumberUp(panel, w, h)</a></div><div class="summary-synopsis">Paints the 'up' arrow of a number entry according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintNumSlider">PaintNumSlider(panel, w, h)</a></div><div class="summary-synopsis">Paints the track of a number slider and its notches.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintPanel">PaintPanel(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a panel, if it has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintProgress">PaintProgress(panel, w, h)</a></div><div class="summary-synopsis">Paints a progress bar filled according to its fraction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintPropertySheet">PaintPropertySheet(panel, w, h)</a></div><div class="summary-synopsis">Paints the body of a property sheet below its tabs.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintScrollBarGrip">PaintScrollBarGrip(panel, w, h)</a></div><div class="summary-synopsis">Paints the grip of a scroll bar according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintSelection">PaintSelection(panel, w, h)</a></div><div class="summary-synopsis">Paints a selection highlight.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintShadow">PaintShadow(panel, w, h)</a></div><div class="summary-synopsis">Paints a drop shadow.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintSliderKnob">PaintSliderKnob(panel, w, h)</a></div><div class="summary-synopsis">Paints the knob of a slider according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTab">PaintTab(panel, w, h)</a></div><div class="summary-synopsis">Paints a tab of a property sheet, depending on whether it is the active one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTextEntry">PaintTextEntry(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a text entry according to its state, then draws its text.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTooltip">PaintTooltip(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a tooltip.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTree">PaintTree(panel, w, h)</a></div><div class="summary-synopsis">Paints the background of a tree view, if it has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTreeNode">PaintTreeNode(panel, w, h)</a></div><div class="summary-synopsis">Paints the lines that connect a tree node to its parent, if the tree draws lines.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTreeNodeButton">PaintTreeNodeButton(panel, w, h)</a></div><div class="summary-synopsis">Paints the selection highlight behind the label of a selected tree node.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintVScrollBar">PaintVScrollBar(panel, w, h)</a></div><div class="summary-synopsis">Paints the track of a vertical scroll bar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintWindowCloseButton">PaintWindowCloseButton(panel, w, h)</a></div><div class="summary-synopsis">Paints the close button of a window according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintWindowMaximizeButton">PaintWindowMaximizeButton(panel, w, h)</a></div><div class="summary-synopsis">Paints the maximize button of a window according to its state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintWindowMinimizeButton">PaintWindowMinimizeButton(panel, w, h)</a></div><div class="summary-synopsis">Paints the minimize button of a window according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintActiveTab">PaintActiveTab(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the active tab of a property sheet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintButton">PaintButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a button according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonDown">PaintButtonDown(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the 'down' button of a scroll bar according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonLeft">PaintButtonLeft(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the 'left' button of a scroll bar according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonRight">PaintButtonRight(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the 'right' button of a scroll bar according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintButtonUp">PaintButtonUp(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the 'up' button of a scroll bar according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCategoryButton">PaintCategoryButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a category button according to its state and line parity.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCategoryList">PaintCategoryList(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a category list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCheckBox">PaintCheckBox(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints a checkbox according to whether it is checked and whether it is disabled.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints a collapsible category, or only its header when it is collapsed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintComboBox">PaintComboBox(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a combo box according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintComboDownArrow">PaintComboDownArrow(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the drop-down arrow of a combo box according to the state of the combo box.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintExpandButton">PaintExpandButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the plus or minus button that expands a tree node.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintFrame">PaintFrame(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints a window frame and its shadow, depending on whether the frame has focus.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintListBox">PaintListBox(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a list box.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintListView">PaintListView(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a list view, if it has one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintListViewLine">PaintListViewLine(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a list view line that is selected, hovered or alternate.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMenu">PaintMenu(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a menu, with or without the icon column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuBar">PaintMenuBar(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a menu bar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuOption">PaintMenuOption(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the highlight of a hovered menu option and the check mark of a checked one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuRightArrow">PaintMenuRightArrow(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the arrow of a menu option that opens a submenu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuSpacer">PaintMenuSpacer(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the separator line of a menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintNumberDown">PaintNumberDown(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the 'down' arrow of a number entry according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintNumberUp">PaintNumberUp(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the 'up' arrow of a number entry according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintNumSlider">PaintNumSlider(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the track of a number slider and its notches.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintPanel">PaintPanel(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a panel, if it has one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintProgress">PaintProgress(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints a progress bar filled according to its fraction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintPropertySheet">PaintPropertySheet(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the body of a property sheet below its tabs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintScrollBarGrip">PaintScrollBarGrip(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the grip of a scroll bar according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintSelection">PaintSelection(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints a selection highlight.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintShadow">PaintShadow(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints a drop shadow.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintSliderKnob">PaintSliderKnob(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the knob of a slider according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTab">PaintTab(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints a tab of a property sheet, depending on whether it is the active one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTextEntry">PaintTextEntry(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a text entry according to its state, then draws its text.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTooltip">PaintTooltip(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a tooltip.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTree">PaintTree(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the background of a tree view, if it has one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTreeNode">PaintTreeNode(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the lines that connect a tree node to its parent, if the tree draws lines.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTreeNodeButton">PaintTreeNodeButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the selection highlight behind the label of a selected tree node.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintVScrollBar">PaintVScrollBar(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the track of a vertical scroll bar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintWindowCloseButton">PaintWindowCloseButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the close button of a window according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintWindowMaximizeButton">PaintWindowMaximizeButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the maximize button of a window according to its state.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintWindowMinimizeButton">PaintWindowMinimizeButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Paints the minimize button of a window according to its state.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="PaintActiveTab">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintActiveTab<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintActiveTab<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintActiveTab" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L498" title="View source">packages/flow/lib/cl_skin.lua:498</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:498</span>
 </div>
 <section class="docstring">
 <p>Paints the active tab of a property sheet.</p>
@@ -90,9 +90,9 @@
 </section>
 <section class="detail" id="PaintButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L348" title="View source">packages/flow/lib/cl_skin.lua:348</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:348</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a button according to its state.</p>
@@ -102,9 +102,9 @@
 </section>
 <section class="detail" id="PaintButtonDown">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonDown<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonDown<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintButtonDown" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L600" title="View source">packages/flow/lib/cl_skin.lua:600</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:600</span>
 </div>
 <section class="docstring">
 <p>Paints the 'down' button of a scroll bar according to its state.</p>
@@ -114,9 +114,9 @@
 </section>
 <section class="detail" id="PaintButtonLeft">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonLeft<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonLeft<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintButtonLeft" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L644" title="View source">packages/flow/lib/cl_skin.lua:644</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:644</span>
 </div>
 <section class="docstring">
 <p>Paints the 'left' button of a scroll bar according to its state.</p>
@@ -126,9 +126,9 @@
 </section>
 <section class="detail" id="PaintButtonRight">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonRight<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonRight<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintButtonRight" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L666" title="View source">packages/flow/lib/cl_skin.lua:666</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:666</span>
 </div>
 <section class="docstring">
 <p>Paints the 'right' button of a scroll bar according to its state.</p>
@@ -138,9 +138,9 @@
 </section>
 <section class="detail" id="PaintButtonUp">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonUp<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintButtonUp<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintButtonUp" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L622" title="View source">packages/flow/lib/cl_skin.lua:622</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:622</span>
 </div>
 <section class="docstring">
 <p>Paints the 'up' button of a scroll bar according to its state.</p>
@@ -150,9 +150,9 @@
 </section>
 <section class="detail" id="PaintCategoryButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintCategoryButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintCategoryButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCategoryButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L884" title="View source">packages/flow/lib/cl_skin.lua:884</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:884</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a category button according to its state and line parity.</p>
@@ -162,9 +162,9 @@
 </section>
 <section class="detail" id="PaintCategoryList">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintCategoryList<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintCategoryList<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCategoryList" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L876" title="View source">packages/flow/lib/cl_skin.lua:876</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:876</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a category list.</p>
@@ -174,9 +174,9 @@
 </section>
 <section class="detail" id="PaintCheckBox">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintCheckBox<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintCheckBox<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCheckBox" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L380" title="View source">packages/flow/lib/cl_skin.lua:380</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:380</span>
 </div>
 <section class="docstring">
 <p>Paints a checkbox according to whether it is checked and whether it is disabled.</p>
@@ -186,9 +186,9 @@
 </section>
 <section class="detail" id="PaintCollapsibleCategory">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintCollapsibleCategory<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintCollapsibleCategory<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCollapsibleCategory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L864" title="View source">packages/flow/lib/cl_skin.lua:864</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:864</span>
 </div>
 <section class="docstring">
 <p>Paints a collapsible category, or only its header when it is collapsed.</p>
@@ -198,9 +198,9 @@
 </section>
 <section class="detail" id="PaintComboBox">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintComboBox<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintComboBox<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintComboBox" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L708" title="View source">packages/flow/lib/cl_skin.lua:708</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:708</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a combo box according to its state.</p>
@@ -210,9 +210,9 @@
 </section>
 <section class="detail" id="PaintComboDownArrow">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintComboDownArrow<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintComboDownArrow<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintComboDownArrow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L688" title="View source">packages/flow/lib/cl_skin.lua:688</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:688</span>
 </div>
 <section class="docstring">
 <p>Paints the drop-down arrow of a combo box according to the state of the combo box.</p>
@@ -222,9 +222,9 @@
 </section>
 <section class="detail" id="PaintExpandButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintExpandButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintExpandButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintExpandButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L400" title="View source">packages/flow/lib/cl_skin.lua:400</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:400</span>
 </div>
 <section class="docstring">
 <p>Paints the plus or minus button that expands a tree node.</p>
@@ -234,9 +234,9 @@
 </section>
 <section class="detail" id="PaintFrame">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintFrame<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintFrame<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintFrame" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L330" title="View source">packages/flow/lib/cl_skin.lua:330</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:330</span>
 </div>
 <section class="docstring">
 <p>Paints a window frame and its shadow, depending on whether the frame has focus.</p>
@@ -246,9 +246,9 @@
 </section>
 <section class="detail" id="PaintListBox">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintListBox<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintListBox<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintListBox" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L728" title="View source">packages/flow/lib/cl_skin.lua:728</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:728</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a list box.</p>
@@ -258,9 +258,9 @@
 </section>
 <section class="detail" id="PaintListView">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintListView<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintListView<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintListView" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L916" title="View source">packages/flow/lib/cl_skin.lua:916</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:916</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a list view, if it has one.</p>
@@ -270,9 +270,9 @@
 </section>
 <section class="detail" id="PaintListViewLine">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintListViewLine<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintListViewLine<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintListViewLine" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L902" title="View source">packages/flow/lib/cl_skin.lua:902</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:902</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a list view line that is selected, hovered or alternate.</p>
@@ -282,9 +282,9 @@
 </section>
 <section class="detail" id="PaintMenu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintMenu<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintMenu<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L430" title="View source">packages/flow/lib/cl_skin.lua:430</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:430</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a menu, with or without the icon column.</p>
@@ -294,9 +294,9 @@
 </section>
 <section class="detail" id="PaintMenuBar">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuBar<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuBar<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMenuBar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L934" title="View source">packages/flow/lib/cl_skin.lua:934</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:934</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a menu bar.</p>
@@ -306,9 +306,9 @@
 </section>
 <section class="detail" id="PaintMenuOption">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuOption<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuOption<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMenuOption" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L451" title="View source">packages/flow/lib/cl_skin.lua:451</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:451</span>
 </div>
 <section class="docstring">
 <p>Paints the highlight of a hovered menu option and the check mark of a checked one.</p>
@@ -318,9 +318,9 @@
 </section>
 <section class="detail" id="PaintMenuRightArrow">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuRightArrow<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuRightArrow<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMenuRightArrow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L465" title="View source">packages/flow/lib/cl_skin.lua:465</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:465</span>
 </div>
 <section class="docstring">
 <p>Paints the arrow of a menu option that opens a submenu.</p>
@@ -330,9 +330,9 @@
 </section>
 <section class="detail" id="PaintMenuSpacer">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuSpacer<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintMenuSpacer<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMenuSpacer" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L442" title="View source">packages/flow/lib/cl_skin.lua:442</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:442</span>
 </div>
 <section class="docstring">
 <p>Paints the separator line of a menu.</p>
@@ -342,9 +342,9 @@
 </section>
 <section class="detail" id="PaintNumberDown">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintNumberDown<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintNumberDown<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintNumberDown" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L756" title="View source">packages/flow/lib/cl_skin.lua:756</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:756</span>
 </div>
 <section class="docstring">
 <p>Paints the 'down' arrow of a number entry according to its state.</p>
@@ -354,9 +354,9 @@
 </section>
 <section class="detail" id="PaintNumberUp">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintNumberUp<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintNumberUp<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintNumberUp" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L736" title="View source">packages/flow/lib/cl_skin.lua:736</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:736</span>
 </div>
 <section class="docstring">
 <p>Paints the 'up' arrow of a number entry according to its state.</p>
@@ -366,9 +366,9 @@
 </section>
 <section class="detail" id="PaintNumSlider">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintNumSlider<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintNumSlider<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintNumSlider" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L844" title="View source">packages/flow/lib/cl_skin.lua:844</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:844</span>
 </div>
 <section class="docstring">
 <p>Paints the track of a number slider and its notches.</p>
@@ -378,9 +378,9 @@
 </section>
 <section class="detail" id="PaintPanel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintPanel<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintPanel<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintPanel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L312" title="View source">packages/flow/lib/cl_skin.lua:312</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:312</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a panel, if it has one.</p>
@@ -390,9 +390,9 @@
 </section>
 <section class="detail" id="PaintProgress">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintProgress<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintProgress<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintProgress" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L855" title="View source">packages/flow/lib/cl_skin.lua:855</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:855</span>
 </div>
 <section class="docstring">
 <p>Paints a progress bar filled according to its fraction.</p>
@@ -402,9 +402,9 @@
 </section>
 <section class="detail" id="PaintPropertySheet">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintPropertySheet<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintPropertySheet<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintPropertySheet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L473" title="View source">packages/flow/lib/cl_skin.lua:473</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:473</span>
 </div>
 <section class="docstring">
 <p>Paints the body of a property sheet below its tabs.</p>
@@ -414,9 +414,9 @@
 </section>
 <section class="detail" id="PaintScrollBarGrip">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintScrollBarGrip<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintScrollBarGrip<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintScrollBarGrip" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L580" title="View source">packages/flow/lib/cl_skin.lua:580</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:580</span>
 </div>
 <section class="docstring">
 <p>Paints the grip of a scroll bar according to its state.</p>
@@ -426,9 +426,9 @@
 </section>
 <section class="detail" id="PaintSelection">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintSelection<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintSelection<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintSelection" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L808" title="View source">packages/flow/lib/cl_skin.lua:808</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:808</span>
 </div>
 <section class="docstring">
 <p>Paints a selection highlight.</p>
@@ -438,9 +438,9 @@
 </section>
 <section class="detail" id="PaintShadow">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintShadow<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintShadow<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintShadow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L322" title="View source">packages/flow/lib/cl_skin.lua:322</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:322</span>
 </div>
 <section class="docstring">
 <p>Paints a drop shadow.</p>
@@ -450,9 +450,9 @@
 </section>
 <section class="detail" id="PaintSliderKnob">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintSliderKnob<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintSliderKnob<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintSliderKnob" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L816" title="View source">packages/flow/lib/cl_skin.lua:816</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:816</span>
 </div>
 <section class="docstring">
 <p>Paints the knob of a slider according to its state.</p>
@@ -462,9 +462,9 @@
 </section>
 <section class="detail" id="PaintTab">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintTab<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintTab<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTab" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L486" title="View source">packages/flow/lib/cl_skin.lua:486</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:486</span>
 </div>
 <section class="docstring">
 <p>Paints a tab of a property sheet, depending on whether it is the active one.</p>
@@ -474,9 +474,9 @@
 </section>
 <section class="detail" id="PaintTextEntry">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintTextEntry<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintTextEntry<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTextEntry" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L412" title="View source">packages/flow/lib/cl_skin.lua:412</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:412</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a text entry according to its state, then draws its text.</p>
@@ -486,9 +486,9 @@
 </section>
 <section class="detail" id="PaintTooltip">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintTooltip<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintTooltip<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTooltip" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L926" title="View source">packages/flow/lib/cl_skin.lua:926</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:926</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a tooltip.</p>
@@ -498,9 +498,9 @@
 </section>
 <section class="detail" id="PaintTree">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintTree<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintTree<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTree" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L370" title="View source">packages/flow/lib/cl_skin.lua:370</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:370</span>
 </div>
 <section class="docstring">
 <p>Paints the background of a tree view, if it has one.</p>
@@ -510,9 +510,9 @@
 </section>
 <section class="detail" id="PaintTreeNode">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintTreeNode<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintTreeNode<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTreeNode" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L776" title="View source">packages/flow/lib/cl_skin.lua:776</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:776</span>
 </div>
 <section class="docstring">
 <p>Paints the lines that connect a tree node to its parent, if the tree draws lines.</p>
@@ -522,9 +522,9 @@
 </section>
 <section class="detail" id="PaintTreeNodeButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintTreeNodeButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintTreeNodeButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTreeNodeButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L794" title="View source">packages/flow/lib/cl_skin.lua:794</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:794</span>
 </div>
 <section class="docstring">
 <p>Paints the selection highlight behind the label of a selected tree node.</p>
@@ -534,9 +534,9 @@
 </section>
 <section class="detail" id="PaintVScrollBar">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintVScrollBar<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintVScrollBar<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintVScrollBar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L572" title="View source">packages/flow/lib/cl_skin.lua:572</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:572</span>
 </div>
 <section class="docstring">
 <p>Paints the track of a vertical scroll bar.</p>
@@ -546,9 +546,9 @@
 </section>
 <section class="detail" id="PaintWindowCloseButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintWindowCloseButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintWindowCloseButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintWindowCloseButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L506" title="View source">packages/flow/lib/cl_skin.lua:506</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:506</span>
 </div>
 <section class="docstring">
 <p>Paints the close button of a window according to its state.</p>
@@ -558,9 +558,9 @@
 </section>
 <section class="detail" id="PaintWindowMaximizeButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintWindowMaximizeButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintWindowMaximizeButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintWindowMaximizeButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L550" title="View source">packages/flow/lib/cl_skin.lua:550</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:550</span>
 </div>
 <section class="docstring">
 <p>Paints the maximize button of a window according to its state.</p>
@@ -570,9 +570,9 @@
 </section>
 <section class="detail" id="PaintWindowMinimizeButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">SKIN:</span>PaintWindowMinimizeButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">SKIN:</span>PaintWindowMinimizeButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintWindowMinimizeButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua#L528" title="View source">packages/flow/lib/cl_skin.lua:528</a>
+<span class="source-link">packages/flow/lib/cl_skin.lua:528</span>
 </div>
 <section class="docstring">
 <p>Paints the minimize button of a window according to its state.</p>
@@ -581,11 +581,11 @@
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_skin.lua" title="View source">packages/flow/lib/cl_skin.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#PaintActiveTab">PaintActiveTab</a></li><li><a href="#PaintButton">PaintButton</a></li><li><a href="#PaintButtonDown">PaintButtonDown</a></li><li><a href="#PaintButtonLeft">PaintButtonLeft</a></li><li><a href="#PaintButtonRight">PaintButtonRight</a></li><li><a href="#PaintButtonUp">PaintButtonUp</a></li><li><a href="#PaintCategoryButton">PaintCategoryButton</a></li><li><a href="#PaintCategoryList">PaintCategoryList</a></li><li><a href="#PaintCheckBox">PaintCheckBox</a></li><li><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory</a></li><li><a href="#PaintComboBox">PaintComboBox</a></li><li><a href="#PaintComboDownArrow">PaintComboDownArrow</a></li><li><a href="#PaintExpandButton">PaintExpandButton</a></li><li><a href="#PaintFrame">PaintFrame</a></li><li><a href="#PaintListBox">PaintListBox</a></li><li><a href="#PaintListView">PaintListView</a></li><li><a href="#PaintListViewLine">PaintListViewLine</a></li><li><a href="#PaintMenu">PaintMenu</a></li><li><a href="#PaintMenuBar">PaintMenuBar</a></li><li><a href="#PaintMenuOption">PaintMenuOption</a></li><li><a href="#PaintMenuRightArrow">PaintMenuRightArrow</a></li><li><a href="#PaintMenuSpacer">PaintMenuSpacer</a></li><li><a href="#PaintNumberDown">PaintNumberDown</a></li><li><a href="#PaintNumberUp">PaintNumberUp</a></li><li><a href="#PaintNumSlider">PaintNumSlider</a></li><li><a href="#PaintPanel">PaintPanel</a></li><li><a href="#PaintProgress">PaintProgress</a></li><li><a href="#PaintPropertySheet">PaintPropertySheet</a></li><li><a href="#PaintScrollBarGrip">PaintScrollBarGrip</a></li><li><a href="#PaintSelection">PaintSelection</a></li><li><a href="#PaintShadow">PaintShadow</a></li><li><a href="#PaintSliderKnob">PaintSliderKnob</a></li><li><a href="#PaintTab">PaintTab</a></li><li><a href="#PaintTextEntry">PaintTextEntry</a></li><li><a href="#PaintTooltip">PaintTooltip</a></li><li><a href="#PaintTree">PaintTree</a></li><li><a href="#PaintTreeNode">PaintTreeNode</a></li><li><a href="#PaintTreeNodeButton">PaintTreeNodeButton</a></li><li><a href="#PaintVScrollBar">PaintVScrollBar</a></li><li><a href="#PaintWindowCloseButton">PaintWindowCloseButton</a></li><li><a href="#PaintWindowMaximizeButton">PaintWindowMaximizeButton</a></li><li><a href="#PaintWindowMinimizeButton">PaintWindowMinimizeButton</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/cl_skin.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#PaintActiveTab">PaintActiveTab</a></li><li data-realm="client"><a href="#PaintButton">PaintButton</a></li><li data-realm="client"><a href="#PaintButtonDown">PaintButtonDown</a></li><li data-realm="client"><a href="#PaintButtonLeft">PaintButtonLeft</a></li><li data-realm="client"><a href="#PaintButtonRight">PaintButtonRight</a></li><li data-realm="client"><a href="#PaintButtonUp">PaintButtonUp</a></li><li data-realm="client"><a href="#PaintCategoryButton">PaintCategoryButton</a></li><li data-realm="client"><a href="#PaintCategoryList">PaintCategoryList</a></li><li data-realm="client"><a href="#PaintCheckBox">PaintCheckBox</a></li><li data-realm="client"><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory</a></li><li data-realm="client"><a href="#PaintComboBox">PaintComboBox</a></li><li data-realm="client"><a href="#PaintComboDownArrow">PaintComboDownArrow</a></li><li data-realm="client"><a href="#PaintExpandButton">PaintExpandButton</a></li><li data-realm="client"><a href="#PaintFrame">PaintFrame</a></li><li data-realm="client"><a href="#PaintListBox">PaintListBox</a></li><li data-realm="client"><a href="#PaintListView">PaintListView</a></li><li data-realm="client"><a href="#PaintListViewLine">PaintListViewLine</a></li><li data-realm="client"><a href="#PaintMenu">PaintMenu</a></li><li data-realm="client"><a href="#PaintMenuBar">PaintMenuBar</a></li><li data-realm="client"><a href="#PaintMenuOption">PaintMenuOption</a></li><li data-realm="client"><a href="#PaintMenuRightArrow">PaintMenuRightArrow</a></li><li data-realm="client"><a href="#PaintMenuSpacer">PaintMenuSpacer</a></li><li data-realm="client"><a href="#PaintNumberDown">PaintNumberDown</a></li><li data-realm="client"><a href="#PaintNumberUp">PaintNumberUp</a></li><li data-realm="client"><a href="#PaintNumSlider">PaintNumSlider</a></li><li data-realm="client"><a href="#PaintPanel">PaintPanel</a></li><li data-realm="client"><a href="#PaintProgress">PaintProgress</a></li><li data-realm="client"><a href="#PaintPropertySheet">PaintPropertySheet</a></li><li data-realm="client"><a href="#PaintScrollBarGrip">PaintScrollBarGrip</a></li><li data-realm="client"><a href="#PaintSelection">PaintSelection</a></li><li data-realm="client"><a href="#PaintShadow">PaintShadow</a></li><li data-realm="client"><a href="#PaintSliderKnob">PaintSliderKnob</a></li><li data-realm="client"><a href="#PaintTab">PaintTab</a></li><li data-realm="client"><a href="#PaintTextEntry">PaintTextEntry</a></li><li data-realm="client"><a href="#PaintTooltip">PaintTooltip</a></li><li data-realm="client"><a href="#PaintTree">PaintTree</a></li><li data-realm="client"><a href="#PaintTreeNode">PaintTreeNode</a></li><li data-realm="client"><a href="#PaintTreeNodeButton">PaintTreeNodeButton</a></li><li data-realm="client"><a href="#PaintVScrollBar">PaintVScrollBar</a></li><li data-realm="client"><a href="#PaintWindowCloseButton">PaintWindowCloseButton</a></li><li data-realm="client"><a href="#PaintWindowMaximizeButton">PaintWindowMaximizeButton</a></li><li data-realm="client"><a href="#PaintWindowMinimizeButton">PaintWindowMinimizeButton</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

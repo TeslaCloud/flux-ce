@@ -28,26 +28,26 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>fl_main_menu <span class="badge badge-object">object</span></h1><p class="subtitle">PANEL</p><p class="subtitle">Part of <a href="../../plugins/characters/index.html">characters</a></p></div>
+<div class="page-header"><h1>fl_main_menu <span class="badge badge-object">object</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Object table PANEL in plugin/views/cl_main_menu.lua</p><p class="subtitle">Part of <a href="../../plugins/characters/index.html">Characters System</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_button">add_button(text, callback)</a></div><div class="summary-synopsis">Adds a button to the sidebar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a></div><div class="summary-synopsis">Covers the screen, builds the sidebar and starts the theme's menu music unless the framework runs in development mode.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#notify">notify(text)</a></div><div class="summary-synopsis">Shows a notification near the bottom of the menu unless one is already visible.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnRemove">OnRemove()</a></div><div class="summary-synopsis">Restores the blur update rate that was lowered while the menu was open.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OpenMenu">OpenMenu(panel, data)</a></div><div class="summary-synopsis">Opens a theme panel as the submenu, closing the currently open submenu first.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Paint">Paint(w, h)</a></div><div class="summary-synopsis">Draws the menu through the theme's PaintMainMenu hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#RecreateSidebar">RecreateSidebar(create_buttons)</a></div><div class="summary-synopsis">Recreates the sidebar, optionally filling it through the AddMainMenuItems hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Think">Think()</a></div><div class="summary-synopsis">Animates the schema logo offset toward zero while a submenu is open and back otherwise.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#to_main_menu">to_main_menu(from_right)</a></div><div class="summary-synopsis">Slides the open submenu away and closes it, bringing the sidebar back in.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_button">add_button(text, callback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds a button to the sidebar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Covers the screen, builds the sidebar and starts the theme's menu music unless the framework runs in development mode.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#notify">notify(text)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Shows a notification near the bottom of the menu unless one is already visible.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnRemove">OnRemove()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Restores the blur update rate that was lowered while the menu was open.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OpenMenu">OpenMenu(panel, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Opens a theme panel as the submenu, closing the currently open submenu first.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Paint">Paint(w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the menu through the theme's PaintMainMenu hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RecreateSidebar">RecreateSidebar(create_buttons)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Recreates the sidebar, optionally filling it through the AddMainMenuItems hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Think">Think()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Animates the schema logo offset toward zero while a submenu is open and back otherwise.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_main_menu">to_main_menu(from_right)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Slides the open submenu away and closes it, bringing the sidebar back in.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="add_button">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>add_button<span class="params">(text, callback)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>add_button<span class="params">(text, callback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#add_button" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L170" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:170</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:170</span>
 </div>
 <section class="docstring">
 <p>Adds a button to the sidebar.</p>
@@ -59,9 +59,9 @@
 </section>
 <section class="detail" id="Init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>Init<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>Init<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#Init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L8" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:8</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:8</span>
 </div>
 <section class="docstring">
 <p>Covers the screen, builds the sidebar and starts the theme's menu music unless the
@@ -70,9 +70,9 @@ framework runs in development mode.</p>
 </section>
 <section class="detail" id="notify">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>notify<span class="params">(text)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>notify<span class="params">(text)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#notify" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L149" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:149</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:149</span>
 </div>
 <section class="docstring">
 <p>Shows a notification near the bottom of the menu unless one is already visible.</p>
@@ -82,9 +82,9 @@ framework runs in development mode.</p>
 </section>
 <section class="detail" id="OnRemove">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>OnRemove<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>OnRemove<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#OnRemove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L36" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:36</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:36</span>
 </div>
 <section class="docstring">
 <p>Restores the blur update rate that was lowered while the menu was open.</p>
@@ -92,9 +92,9 @@ framework runs in development mode.</p>
 </section>
 <section class="detail" id="OpenMenu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>OpenMenu<span class="params">(panel, data)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>OpenMenu<span class="params">(panel, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#OpenMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L90" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:90</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:90</span>
 </div>
 <section class="docstring">
 <p>Opens a theme panel as the submenu, closing the currently open submenu first.</p>
@@ -104,9 +104,9 @@ framework runs in development mode.</p>
 </section>
 <section class="detail" id="Paint">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>Paint<span class="params">(w, h)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>Paint<span class="params">(w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#Paint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L43" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:43</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:43</span>
 </div>
 <section class="docstring">
 <p>Draws the menu through the theme's PaintMainMenu hook.</p>
@@ -116,9 +116,9 @@ framework runs in development mode.</p>
 </section>
 <section class="detail" id="RecreateSidebar">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>RecreateSidebar<span class="params">(create_buttons)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>RecreateSidebar<span class="params">(create_buttons)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#RecreateSidebar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L62" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:62</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:62</span>
 </div>
 <section class="docstring">
 <p>Recreates the sidebar, optionally filling it through the AddMainMenuItems hook.</p>
@@ -128,9 +128,9 @@ framework runs in development mode.</p>
 </section>
 <section class="detail" id="Think">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>Think<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>Think<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#Think" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L50" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:50</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:50</span>
 </div>
 <section class="docstring">
 <p>Animates the schema logo offset toward zero while a submenu is open and back otherwise.</p>
@@ -138,9 +138,9 @@ framework runs in development mode.</p>
 </section>
 <section class="detail" id="to_main_menu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PANEL:</span>to_main_menu<span class="params">(from_right)</span></h3>
+<h3 class="signature"><span class="owner">PANEL:</span>to_main_menu<span class="params">(from_right)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#to_main_menu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua#L111" title="View source">plugins/characters/plugin/views/cl_main_menu.lua:111</a>
+<span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua:111</span>
 </div>
 <section class="docstring">
 <p>Slides the open submenu away and closes it, bringing the sidebar back in.</p>
@@ -149,11 +149,11 @@ framework runs in development mode.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/views/cl_main_menu.lua" title="View source">plugins/characters/plugin/views/cl_main_menu.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add_button">add_button</a></li><li><a href="#Init">Init</a></li><li><a href="#notify">notify</a></li><li><a href="#OnRemove">OnRemove</a></li><li><a href="#OpenMenu">OpenMenu</a></li><li><a href="#Paint">Paint</a></li><li><a href="#RecreateSidebar">RecreateSidebar</a></li><li><a href="#Think">Think</a></li><li><a href="#to_main_menu">to_main_menu</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/characters/plugin/views/cl_main_menu.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#add_button">add_button</a></li><li data-realm="client"><a href="#Init">Init</a></li><li data-realm="client"><a href="#notify">notify</a></li><li data-realm="client"><a href="#OnRemove">OnRemove</a></li><li data-realm="client"><a href="#OpenMenu">OpenMenu</a></li><li data-realm="client"><a href="#Paint">Paint</a></li><li data-realm="client"><a href="#RecreateSidebar">RecreateSidebar</a></li><li data-realm="client"><a href="#Think">Think</a></li><li data-realm="client"><a href="#to_main_menu">to_main_menu</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

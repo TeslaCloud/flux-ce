@@ -31,46 +31,46 @@
 <div class="page-header"><h1>ActiveRecord.Query <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#bind">bind(value)</a></div><div class="summary-synopsis">Adds a value to the bind parameters of the query. The value is sent to the database apart from the SQL, so nothing in it has to be escaped.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#callback">callback(callback)</a></div><div class="summary-synopsis">Sets the function that is called once the query has been run.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create">create(key, value)</a></div><div class="summary-synopsis">Adds a column definition to a 'create' or 'change' query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(text)</a></div><div class="summary-synopsis">Escapes a value for use inside an SQL string literal.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#execute">execute(queue_query)</a></div><div class="summary-synopsis">Builds the SQL string of the query and hands it to the adapter, along with the values of its bind parameters.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#for_table">for_table(table_name)</a></div><div class="summary-synopsis">Changes the table the query operates on.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#handle_create_args">handle_create_args(args)</a></div><div class="summary-synopsis">Appends the NOT NULL / DEFAULT clauses to the definition of the column that is being created.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#if_exists">if_exists(if_exists)</a></div><div class="summary-synopsis">Sets whether a 'drop' query ignores a missing table (DROP TABLE IF EXISTS) instead of failing.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#if_not_exists">if_not_exists(if_not_exists)</a></div><div class="summary-synopsis">Sets whether a 'create' query leaves an existing table alone (CREATE TABLE IF NOT EXISTS) instead of failing.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(table_name, query_type)</a></div><div class="summary-synopsis">Creates an empty query. Queries are normally created through ActiveRecord::Database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#insert">insert(key, value)</a></div><div class="summary-synopsis">Sets the value of a column for an 'insert' query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#limit">limit(value)</a></div><div class="summary-synopsis">Limits the amount of rows affected by a 'select' or 'delete' query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#offset">offset(value)</a></div><div class="summary-synopsis">Sets the row offset of the query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#order">order(key)</a></div><div class="summary-synopsis">Adds a column to the ORDER BY clause.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#overwrite">overwrite(overwrite)</a></div><div class="summary-synopsis">Sets whether a 'create' query drops an existing table first. Without it, and without #if_not_exists, creating a table that exists already fails.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#quote">quote(text)</a></div><div class="summary-synopsis">Turns a value into an escaped, quoted SQL string literal.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#quote_column">quote_column(text)</a></div><div class="summary-synopsis">Quotes an identifier such as a table or column name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove">remove(field_name)</a></div><div class="summary-synopsis">Marks a column to be dropped by a 'change' query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rename">rename(what, into)</a></div><div class="summary-synopsis">Marks a column to be renamed by a 'change' query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#select">select(field_name)</a></div><div class="summary-synopsis">Adds a column to the list of columns to select. All columns are selected if none are added.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_primary_key">set_primary_key(key)</a></div><div class="summary-synopsis">Sets the column used for the PRIMARY KEY clause of a 'create' query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#update">update(key, value)</a></div><div class="summary-synopsis">Sets the new value of a column for an 'update' query.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where">where(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column = value&quot; condition. Multiple conditions are joined with AND.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_equal">where_equal(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column = value&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_gt">where_gt(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column &gt; value&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_gte">where_gte(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column &gt;= value&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_like">where_like(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column LIKE pattern&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_lt">where_lt(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column &lt; value&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_lte">where_lte(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column &lt;= value&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_not_equal">where_not_equal(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column != value&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_not_like">where_not_like(key, value)</a></div><div class="summary-synopsis">Adds a &quot;column NOT LIKE pattern&quot; condition.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#where_raw">where_raw(condition, values)</a></div><div class="summary-synopsis">Adds a raw SQL condition. Nothing in it is escaped or quoted.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#bind">bind(value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a value to the bind parameters of the query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#callback">callback(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the function that is called once the query has been run.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create">create(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a column definition to a 'create' or 'change' query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(text)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Escapes a value for use inside an SQL string literal.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#execute">execute(queue_query)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Builds the SQL string of the query and hands it to the adapter, along with the values of its bind parameters.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#for_table">for_table(table_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Changes the table the query operates on.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#handle_create_args">handle_create_args(args)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Appends the NOT NULL / DEFAULT clauses to the definition of the column that is being created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#if_exists">if_exists(if_exists)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets whether a 'drop' query ignores a missing table (DROP TABLE IF EXISTS) instead of failing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#if_not_exists">if_not_exists(if_not_exists)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets whether a 'create' query leaves an existing table alone (CREATE TABLE IF NOT EXISTS) instead of failing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(table_name, query_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates an empty query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#insert">insert(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the value of a column for an 'insert' query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#limit">limit(value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Limits the amount of rows affected by a 'select' or 'delete' query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#offset">offset(value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the row offset of the query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#order">order(key)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a column to the ORDER BY clause.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#overwrite">overwrite(overwrite)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets whether a 'create' query drops an existing table first.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote">quote(text)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Turns a value into an escaped, quoted SQL string literal.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote_column">quote_column(text)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Quotes an identifier such as a table or column name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove">remove(field_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Marks a column to be dropped by a 'change' query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename">rename(what, into)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Marks a column to be renamed by a 'change' query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#select">select(field_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a column to the list of columns to select.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_primary_key">set_primary_key(key)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the column used for the PRIMARY KEY clause of a 'create' query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#update">update(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the new value of a column for an 'update' query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where">where(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column = value&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_equal">where_equal(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column = value&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_gt">where_gt(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column &gt; value&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_gte">where_gte(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column &gt;= value&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_like">where_like(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column LIKE pattern&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_lt">where_lt(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column &lt; value&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_lte">where_lte(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column &lt;= value&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_not_equal">where_not_equal(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column != value&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_not_like">where_not_like(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a &quot;column NOT LIKE pattern&quot; condition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#where_raw">where_raw(condition, values)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a raw SQL condition.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="bind">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>bind<span class="params">(value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>bind<span class="params">(value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#bind" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L89" title="View source">packages/active_record/lib/database/query.lua:89</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:89</span>
 </div>
 <section class="docstring">
 <p>Adds a value to the bind parameters of the query. The value is sent to the database
@@ -83,9 +83,9 @@ apart from the SQL, so nothing in it has to be escaped.</p>
 </section>
 <section class="detail" id="callback">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>callback<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>callback<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#callback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L204" title="View source">packages/active_record/lib/database/query.lua:204</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:204</span>
 </div>
 <section class="docstring">
 <p>Sets the function that is called once the query has been run.</p>
@@ -95,9 +95,9 @@ apart from the SQL, so nothing in it has to be escaped.</p>
 </section>
 <section class="detail" id="create">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>create<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>create<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L245" title="View source">packages/active_record/lib/database/query.lua:245</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:245</span>
 </div>
 <section class="docstring">
 <p>Adds a column definition to a 'create' or 'change' query.</p>
@@ -107,9 +107,9 @@ apart from the SQL, so nothing in it has to be escaped.</p>
 </section>
 <section class="detail" id="escape">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>escape<span class="params">(text)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>escape<span class="params">(text)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#escape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L62" title="View source">packages/active_record/lib/database/query.lua:62</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:62</span>
 </div>
 <section class="docstring">
 <p>Escapes a value for use inside an SQL string literal.</p>
@@ -121,9 +121,9 @@ apart from the SQL, so nothing in it has to be escaped.</p>
 </section>
 <section class="detail" id="execute">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>execute<span class="params">(queue_query)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>execute<span class="params">(queue_query)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#execute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L552" title="View source">packages/active_record/lib/database/query.lua:552</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:552</span>
 </div>
 <section class="docstring">
 <p>Builds the SQL string of the query and hands it to the adapter, along with the values
@@ -136,9 +136,9 @@ of its bind parameters.</p>
 </section>
 <section class="detail" id="for_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>for_table<span class="params">(table_name)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>for_table<span class="params">(table_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#for_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L101" title="View source">packages/active_record/lib/database/query.lua:101</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:101</span>
 </div>
 <section class="docstring">
 <p>Changes the table the query operates on.</p>
@@ -148,9 +148,9 @@ of its bind parameters.</p>
 </section>
 <section class="detail" id="handle_create_args">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>handle_create_args<span class="params">(args)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>handle_create_args<span class="params">(args)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#handle_create_args" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L47" title="View source">packages/active_record/lib/database/query.lua:47</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:47</span>
 </div>
 <section class="docstring">
 <p>Appends the NOT NULL / DEFAULT clauses to the definition of the column that is
@@ -161,9 +161,9 @@ being created.</p>
 </section>
 <section class="detail" id="if_exists">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>if_exists<span class="params">(if_exists)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>if_exists<span class="params">(if_exists)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#if_exists" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L284" title="View source">packages/active_record/lib/database/query.lua:284</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:284</span>
 </div>
 <section class="docstring">
 <p>Sets whether a 'drop' query ignores a missing table (DROP TABLE IF EXISTS) instead
@@ -174,9 +174,9 @@ of failing.</p>
 </section>
 <section class="detail" id="if_not_exists">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>if_not_exists<span class="params">(if_not_exists)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>if_not_exists<span class="params">(if_not_exists)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#if_not_exists" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L277" title="View source">packages/active_record/lib/database/query.lua:277</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:277</span>
 </div>
 <section class="docstring">
 <p>Sets whether a 'create' query leaves an existing table alone (CREATE TABLE IF NOT
@@ -187,9 +187,9 @@ EXISTS) instead of failing.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>init<span class="params">(table_name, query_type)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>init<span class="params">(table_name, query_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L26" title="View source">packages/active_record/lib/database/query.lua:26</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:26</span>
 </div>
 <section class="docstring">
 <p>Creates an empty query. Queries are normally created through ActiveRecord::Database.</p>
@@ -199,9 +199,9 @@ EXISTS) instead of failing.</p>
 </section>
 <section class="detail" id="insert">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>insert<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>insert<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#insert" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L231" title="View source">packages/active_record/lib/database/query.lua:231</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:231</span>
 </div>
 <section class="docstring">
 <p>Sets the value of a column for an 'insert' query.</p>
@@ -211,9 +211,9 @@ EXISTS) instead of failing.</p>
 </section>
 <section class="detail" id="limit">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>limit<span class="params">(value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>limit<span class="params">(value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#limit" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L257" title="View source">packages/active_record/lib/database/query.lua:257</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:257</span>
 </div>
 <section class="docstring">
 <p>Limits the amount of rows affected by a 'select' or 'delete' query.</p>
@@ -223,9 +223,9 @@ EXISTS) instead of failing.</p>
 </section>
 <section class="detail" id="offset">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>offset<span class="params">(value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>offset<span class="params">(value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#offset" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L263" title="View source">packages/active_record/lib/database/query.lua:263</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:263</span>
 </div>
 <section class="docstring">
 <p>Sets the row offset of the query.</p>
@@ -235,9 +235,9 @@ EXISTS) instead of failing.</p>
 </section>
 <section class="detail" id="order">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>order<span class="params">(key)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>order<span class="params">(key)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#order" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L189" title="View source">packages/active_record/lib/database/query.lua:189</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:189</span>
 </div>
 <section class="docstring">
 <p>Adds a column to the ORDER BY clause.</p>
@@ -251,9 +251,9 @@ query:<span class="hl-f">order</span>({ desc = <span class="hl-s">&#39;name&#39;
 </section>
 <section class="detail" id="overwrite">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>overwrite<span class="params">(overwrite)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>overwrite<span class="params">(overwrite)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#overwrite" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L270" title="View source">packages/active_record/lib/database/query.lua:270</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:270</span>
 </div>
 <section class="docstring">
 <p>Sets whether a 'create' query drops an existing table first. Without it, and without
@@ -264,9 +264,9 @@ query:<span class="hl-f">order</span>({ desc = <span class="hl-s">&#39;name&#39;
 </section>
 <section class="detail" id="quote">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>quote<span class="params">(text)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>quote<span class="params">(text)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#quote" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L69" title="View source">packages/active_record/lib/database/query.lua:69</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:69</span>
 </div>
 <section class="docstring">
 <p>Turns a value into an escaped, quoted SQL string literal.</p>
@@ -278,9 +278,9 @@ query:<span class="hl-f">order</span>({ desc = <span class="hl-s">&#39;name&#39;
 </section>
 <section class="detail" id="quote_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>quote_column<span class="params">(text)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>quote_column<span class="params">(text)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#quote_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L80" title="View source">packages/active_record/lib/database/query.lua:80</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:80</span>
 </div>
 <section class="docstring">
 <p>Quotes an identifier such as a table or column name.</p>
@@ -292,9 +292,9 @@ query:<span class="hl-f">order</span>({ desc = <span class="hl-s">&#39;name&#39;
 </section>
 <section class="detail" id="remove">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>remove<span class="params">(field_name)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>remove<span class="params">(field_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L217" title="View source">packages/active_record/lib/database/query.lua:217</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:217</span>
 </div>
 <section class="docstring">
 <p>Marks a column to be dropped by a 'change' query.</p>
@@ -304,9 +304,9 @@ query:<span class="hl-f">order</span>({ desc = <span class="hl-s">&#39;name&#39;
 </section>
 <section class="detail" id="rename">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>rename<span class="params">(what, into)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>rename<span class="params">(what, into)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rename" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L224" title="View source">packages/active_record/lib/database/query.lua:224</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:224</span>
 </div>
 <section class="docstring">
 <p>Marks a column to be renamed by a 'change' query.</p>
@@ -316,9 +316,9 @@ query:<span class="hl-f">order</span>({ desc = <span class="hl-s">&#39;name&#39;
 </section>
 <section class="detail" id="select">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>select<span class="params">(field_name)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>select<span class="params">(field_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#select" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L211" title="View source">packages/active_record/lib/database/query.lua:211</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:211</span>
 </div>
 <section class="docstring">
 <p>Adds a column to the list of columns to select. All columns are selected if none
@@ -329,9 +329,9 @@ are added.</p>
 </section>
 <section class="detail" id="set_primary_key">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>set_primary_key<span class="params">(key)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>set_primary_key<span class="params">(key)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_primary_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L251" title="View source">packages/active_record/lib/database/query.lua:251</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:251</span>
 </div>
 <section class="docstring">
 <p>Sets the column used for the PRIMARY KEY clause of a 'create' query.</p>
@@ -341,9 +341,9 @@ are added.</p>
 </section>
 <section class="detail" id="update">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>update<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>update<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#update" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L238" title="View source">packages/active_record/lib/database/query.lua:238</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:238</span>
 </div>
 <section class="docstring">
 <p>Sets the new value of a column for an 'update' query.</p>
@@ -353,9 +353,9 @@ are added.</p>
 </section>
 <section class="detail" id="where">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L109" title="View source">packages/active_record/lib/database/query.lua:109</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:109</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column = value&quot; condition. Multiple conditions are joined with AND.</p>
@@ -367,9 +367,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_equal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_equal<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_equal<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L128" title="View source">packages/active_record/lib/database/query.lua:128</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:128</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column = value&quot; condition.</p>
@@ -379,9 +379,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_gt">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_gt<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_gt<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_gt" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L156" title="View source">packages/active_record/lib/database/query.lua:156</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:156</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column &gt; value&quot; condition.</p>
@@ -391,9 +391,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_gte">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_gte<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_gte<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_gte" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L170" title="View source">packages/active_record/lib/database/query.lua:170</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:170</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column &gt;= value&quot; condition.</p>
@@ -403,9 +403,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_like">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_like<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_like<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_like" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L142" title="View source">packages/active_record/lib/database/query.lua:142</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:142</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column LIKE pattern&quot; condition.</p>
@@ -415,9 +415,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_lt">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_lt<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_lt<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_lt" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L163" title="View source">packages/active_record/lib/database/query.lua:163</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:163</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column &lt; value&quot; condition.</p>
@@ -427,9 +427,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_lte">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_lte<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_lte<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_lte" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L177" title="View source">packages/active_record/lib/database/query.lua:177</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:177</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column &lt;= value&quot; condition.</p>
@@ -439,9 +439,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_not_equal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_not_equal<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_not_equal<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_not_equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L135" title="View source">packages/active_record/lib/database/query.lua:135</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:135</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column != value&quot; condition.</p>
@@ -451,9 +451,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_not_like">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_not_like<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_not_like<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_not_like" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L149" title="View source">packages/active_record/lib/database/query.lua:149</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:149</span>
 </div>
 <section class="docstring">
 <p>Adds a &quot;column NOT LIKE pattern&quot; condition.</p>
@@ -463,9 +463,9 @@ are added.</p>
 </section>
 <section class="detail" id="where_raw">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_raw<span class="params">(condition, values)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Query:</span>where_raw<span class="params">(condition, values)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#where_raw" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua#L121" title="View source">packages/active_record/lib/database/query.lua:121</a>
+<span class="source-link">packages/active_record/lib/database/query.lua:121</span>
 </div>
 <section class="docstring">
 <p>Adds a raw SQL condition. Nothing in it is escaped or quoted.</p>
@@ -477,11 +477,11 @@ query:<span class="hl-f">where_raw</span>(<span class="hl-s">&#39;money &gt; ? A
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/database/query.lua" title="View source">packages/active_record/lib/database/query.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#bind">bind</a></li><li><a href="#callback">callback</a></li><li><a href="#create">create</a></li><li><a href="#escape">escape</a></li><li><a href="#execute">execute</a></li><li><a href="#for_table">for_table</a></li><li><a href="#handle_create_args">handle_create_args</a></li><li><a href="#if_exists">if_exists</a></li><li><a href="#if_not_exists">if_not_exists</a></li><li><a href="#init">init</a></li><li><a href="#insert">insert</a></li><li><a href="#limit">limit</a></li><li><a href="#offset">offset</a></li><li><a href="#order">order</a></li><li><a href="#overwrite">overwrite</a></li><li><a href="#quote">quote</a></li><li><a href="#quote_column">quote_column</a></li><li><a href="#remove">remove</a></li><li><a href="#rename">rename</a></li><li><a href="#select">select</a></li><li><a href="#set_primary_key">set_primary_key</a></li><li><a href="#update">update</a></li><li><a href="#where">where</a></li><li><a href="#where_equal">where_equal</a></li><li><a href="#where_gt">where_gt</a></li><li><a href="#where_gte">where_gte</a></li><li><a href="#where_like">where_like</a></li><li><a href="#where_lt">where_lt</a></li><li><a href="#where_lte">where_lte</a></li><li><a href="#where_not_equal">where_not_equal</a></li><li><a href="#where_not_like">where_not_like</a></li><li><a href="#where_raw">where_raw</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/database/query.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#bind">bind</a></li><li data-realm="shared"><a href="#callback">callback</a></li><li data-realm="shared"><a href="#create">create</a></li><li data-realm="shared"><a href="#escape">escape</a></li><li data-realm="shared"><a href="#execute">execute</a></li><li data-realm="shared"><a href="#for_table">for_table</a></li><li data-realm="shared"><a href="#handle_create_args">handle_create_args</a></li><li data-realm="shared"><a href="#if_exists">if_exists</a></li><li data-realm="shared"><a href="#if_not_exists">if_not_exists</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#insert">insert</a></li><li data-realm="shared"><a href="#limit">limit</a></li><li data-realm="shared"><a href="#offset">offset</a></li><li data-realm="shared"><a href="#order">order</a></li><li data-realm="shared"><a href="#overwrite">overwrite</a></li><li data-realm="shared"><a href="#quote">quote</a></li><li data-realm="shared"><a href="#quote_column">quote_column</a></li><li data-realm="shared"><a href="#remove">remove</a></li><li data-realm="shared"><a href="#rename">rename</a></li><li data-realm="shared"><a href="#select">select</a></li><li data-realm="shared"><a href="#set_primary_key">set_primary_key</a></li><li data-realm="shared"><a href="#update">update</a></li><li data-realm="shared"><a href="#where">where</a></li><li data-realm="shared"><a href="#where_equal">where_equal</a></li><li data-realm="shared"><a href="#where_gt">where_gt</a></li><li data-realm="shared"><a href="#where_gte">where_gte</a></li><li data-realm="shared"><a href="#where_like">where_like</a></li><li data-realm="shared"><a href="#where_lt">where_lt</a></li><li data-realm="shared"><a href="#where_lte">where_lte</a></li><li data-realm="shared"><a href="#where_not_equal">where_not_equal</a></li><li data-realm="shared"><a href="#where_not_like">where_not_like</a></li><li data-realm="shared"><a href="#where_raw">where_raw</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -28,21 +28,36 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Conditions <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/conditions/index.html">conditions</a></p></div>
+<div class="page-header"><h1>Conditions <span class="badge badge-plugin">plugin</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/conditions/index.html">Conditions</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
-<div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#check">check(target, conditions)</a></div><div class="summary-synopsis">Checks whether the player satisfies a condition tree. Serverside only. A list of nodes passes if at least one of its nodes does (OR). A node passes if its own check passes and its list of child nodes, unless empty, passes as well (AND). An empty top-level list never passes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_all">get_all()</a></div><div class="summary-synopsis">Returns all registered condition types.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#OnPluginsLoaded">OnPluginsLoaded()</a></div><div class="summary-synopsis">Runs the RegisterConditions hook so that plugins can register their conditions.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register_condition">register_condition(id, data)</a></div><div class="summary-synopsis">Registers a condition type that can be picked in the conditions editor and evaluated with Conditions:check.</div></div>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#OnPluginsLoaded">OnPluginsLoaded()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the RegisterConditions hook so that plugins can register their conditions.</div></div>
 </div>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#check">check(target, conditions)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Checks whether the player satisfies a condition tree.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_all">get_all()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns all registered condition types.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_condition">register_condition(id, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a condition type that can be picked in the conditions editor and evaluated with Conditions:check.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
+<section class="detail" id="OnPluginsLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Conditions:</span>OnPluginsLoaded<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OnPluginsLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/conditions/plugin/sh_plugin.lua:58</span>
+</div>
+<section class="docstring">
+<p class="hook-info">Implements hook <a href="../../flux/Hooks.html#OnPluginsLoaded"><code>OnPluginsLoaded</code></a></p>
+<p>Runs the RegisterConditions hook so that plugins can register their conditions.</p>
+</section>
+</section>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="check">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Conditions:</span>check<span class="params">(target, conditions)</span></h3>
+<h3 class="signature"><span class="owner">Conditions:</span>check<span class="params">(target, conditions)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#check" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/sv_plugin.lua#L34" title="View source">plugins/conditions/plugin/sv_plugin.lua:34</a>
+<span class="source-link">plugins/conditions/plugin/sv_plugin.lua:34</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player satisfies a condition tree. Serverside only.
@@ -66,9 +81,9 @@ An empty top-level list never passes.</p>
 </section>
 <section class="detail" id="get_all">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Conditions:</span>get_all<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Conditions:</span>get_all<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_all" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/sh_plugin.lua#L50" title="View source">plugins/conditions/plugin/sh_plugin.lua:50</a>
+<span class="source-link">plugins/conditions/plugin/sh_plugin.lua:50</span>
 </div>
 <section class="docstring">
 <p>Returns all registered condition types.</p>
@@ -76,21 +91,11 @@ An empty top-level list never passes.</p>
 <ul class="returns"><li><span class="type">Map</span> <span class="desc">condition definitions keyed by condition id</span></li></ul>
 </section>
 </section>
-<section class="detail" id="OnPluginsLoaded">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">Conditions:</span>OnPluginsLoaded<span class="params">()</span></h3>
-<a href="#OnPluginsLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/sh_plugin.lua#L58" title="View source">plugins/conditions/plugin/sh_plugin.lua:58</a>
-</div>
-<section class="docstring">
-<p>Runs the RegisterConditions hook so that plugins can register their conditions.</p>
-</section>
-</section>
 <section class="detail" id="register_condition">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Conditions:</span>register_condition<span class="params">(id, data)</span></h3>
+<h3 class="signature"><span class="owner">Conditions:</span>register_condition<span class="params">(id, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register_condition" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/sh_plugin.lua#L44" title="View source">plugins/conditions/plugin/sh_plugin.lua:44</a>
+<span class="source-link">plugins/conditions/plugin/sh_plugin.lua:44</span>
 </div>
 <section class="docstring">
 <p>Registers a condition type that can be picked in the conditions editor
@@ -132,11 +137,11 @@ and evaluated with Conditions:check.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/sh_plugin.lua" title="View source">plugins/conditions/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/conditions/plugin/sv_plugin.lua" title="View source">plugins/conditions/plugin/sv_plugin.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#check">check</a></li><li><a href="#get_all">get_all</a></li><li><a href="#OnPluginsLoaded">OnPluginsLoaded</a></li><li><a href="#register_condition">register_condition</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/conditions/plugin/sh_plugin.lua</span></li><li><span class="source-link">plugins/conditions/plugin/sv_plugin.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="shared"><a href="#OnPluginsLoaded">OnPluginsLoaded</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#check">check</a></li><li data-realm="shared"><a href="#get_all">get_all</a></li><li data-realm="shared"><a href="#register_condition">register_condition</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

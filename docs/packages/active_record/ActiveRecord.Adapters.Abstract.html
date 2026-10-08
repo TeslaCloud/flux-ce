@@ -31,43 +31,43 @@
 <div class="page-header"><h1>ActiveRecord.Adapters.Abstract <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#append_query">append_query(query, query_type, queue)</a></div><div class="summary-synopsis">Hook called by ActiveRecord::Query#execute before the SQL string is built, so that the adapter can adjust the query object. Does nothing in the abstract adapter.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#append_query_string">append_query_string(query, query_string, query_type)</a></div><div class="summary-synopsis">Hook called by ActiveRecord::Query#execute once the SQL string is built. Adapters may return a string to replace it. Does nothing in the abstract adapter.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#begin_transaction">begin_transaction()</a></div><div class="summary-synopsis">Starts a transaction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#commit_transaction">commit_transaction()</a></div><div class="summary-synopsis">Commits the current transaction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(config, on_connected)</a></div><div class="summary-synopsis">Connects to the database. The abstract implementation only marks the adapter as connected and never calls the callback; real adapters override it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#connected">connected()</a></div><div class="summary-synopsis">Checks whether or not the adapter is connected to a database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_column">create_column(query, column, args, obj, type, def)</a></div><div class="summary-synopsis">Hook called after a column is added to a 'create' or 'change' query through one of the column type methods (t:string, t:integer, ...). Does nothing in the abstract adapter.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#disconnect">disconnect(config)</a></div><div class="summary-synopsis">Closes the database connection. The abstract implementation only clears the connected flag.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a></div><div class="summary-synopsis">Escapes a string for safe use inside an SQL string literal. The abstract implementation returns the string unchanged.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_sql_std">get_sql_std()</a></div><div class="summary-synopsis">Returns the SQL dialect the adapter speaks.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a></div><div class="summary-synopsis">Resets the connection state, the sync flag and the query queue of a new adapter.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_mysql">is_mysql()</a></div><div class="summary-synopsis">Checks whether the adapter talks to a MySQL database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_postgres">is_postgres()</a></div><div class="summary-synopsis">Checks whether the adapter talks to a PostgreSQL database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_result">is_result(result)</a></div><div class="summary-synopsis">Checks whether a query result contains at least one row.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_sqlite">is_sqlite()</a></div><div class="summary-synopsis">Checks whether the adapter talks to an SQLite database.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_connected">on_connected()</a></div><div class="summary-synopsis">Called when the database connects successfully. Runs ActiveRecord's startup in sync mode and fires the 'DatabaseConnected' hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_connection_failed">on_connection_failed(error_text)</a></div><div class="summary-synopsis">Called when the database connection fails. Prints the error and fires the 'DatabaseConnectionFailed' hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#placeholder">placeholder(index)</a></div><div class="summary-synopsis">Returns the placeholder that stands for a bind parameter in the SQL of the adapter.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#query_failed">query_failed(query, error_text, raise)</a></div><div class="summary-synopsis">Reports a failed query. The error is printed, remembered in the last_error field and, if #raise_errors is on, raised as a Lua error.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#queue">queue(query, callback, query_type, bindings)</a></div><div class="summary-synopsis">Puts a raw SQL string into the queue. Queued queries are run one at a time by #think.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#quote">quote(str)</a></div><div class="summary-synopsis">Escapes a string and wraps it in single quotes, producing an SQL string literal.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#quote_name">quote_name(str)</a></div><div class="summary-synopsis">Quotes an identifier such as a table or column name. The abstract implementation returns the name unchanged.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#raise_errors">raise_errors(raise)</a></div><div class="summary-synopsis">Sets whether a failed query raises a Lua error, on top of being printed. The migrator turns this on while a migration runs, so that the migration is canceled on the first failed statement.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a></div><div class="summary-synopsis">Sends a raw SQL string to the database. Does nothing in the abstract adapter. Values are best kept out of the SQL itself and passed as bindings instead, which take the place of the #placeholder of the adapter in the query and need no escaping.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rollback_transaction">rollback_transaction()</a></div><div class="summary-synopsis">Rolls the current transaction back.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#supports_ddl_transactions">supports_ddl_transactions()</a></div><div class="summary-synopsis">Checks whether the database can roll back schema changes (CREATE TABLE, ALTER TABLE and so on) made inside of a transaction. Migrations are wrapped in a transaction when it can.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#sync">sync(sync)</a></div><div class="summary-synopsis">Switches the adapter between synchronous (blocking) and asynchronous query mode. In sync mode #raw_query waits for the result and returns what the query callback returns.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#think">think()</a></div><div class="summary-synopsis">Runs the oldest queued query, if there is one. Called once a second by a timer.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#unescape">unescape(str)</a></div><div class="summary-synopsis">Reverts #escape on a string that was read back from the database. The abstract implementation returns the string unchanged.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#append_query">append_query(query, query_type, queue)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Hook called by ActiveRecord::Query#execute before the SQL string is built, so that the adapter can adjust the query object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#append_query_string">append_query_string(query, query_string, query_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Hook called by ActiveRecord::Query#execute once the SQL string is built.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#begin_transaction">begin_transaction()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Starts a transaction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#commit_transaction">commit_transaction()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Commits the current transaction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(config, on_connected)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Connects to the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#connected">connected()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether or not the adapter is connected to a database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_column">create_column(query, column, args, obj, type, def)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Hook called after a column is added to a 'create' or 'change' query through one of the column type methods (t:string, t:integer, ...).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#disconnect">disconnect(config)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Closes the database connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Escapes a string for safe use inside an SQL string literal.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_sql_std">get_sql_std()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the SQL dialect the adapter speaks.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Resets the connection state, the sync flag and the query queue of a new adapter.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_mysql">is_mysql()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the adapter talks to a MySQL database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_postgres">is_postgres()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the adapter talks to a PostgreSQL database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_result">is_result(result)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a query result contains at least one row.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_sqlite">is_sqlite()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the adapter talks to an SQLite database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_connected">on_connected()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the database connects successfully.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_connection_failed">on_connection_failed(error_text)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called when the database connection fails.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#placeholder">placeholder(index)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the placeholder that stands for a bind parameter in the SQL of the adapter.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#query_failed">query_failed(query, error_text, raise)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Reports a failed query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#queue">queue(query, callback, query_type, bindings)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Puts a raw SQL string into the queue.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote">quote(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Escapes a string and wraps it in single quotes, producing an SQL string literal.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote_name">quote_name(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Quotes an identifier such as a table or column name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#raise_errors">raise_errors(raise)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets whether a failed query raises a Lua error, on top of being printed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sends a raw SQL string to the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rollback_transaction">rollback_transaction()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Rolls the current transaction back.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#supports_ddl_transactions">supports_ddl_transactions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the database can roll back schema changes (CREATE TABLE, ALTER TABLE and so on) made inside of a transaction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sync">sync(sync)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Switches the adapter between synchronous (blocking) and asynchronous query mode.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#think">think()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the oldest queued query, if there is one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unescape">unescape(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Reverts #escape on a string that was read back from the database.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="append_query">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>append_query<span class="params">(query, query_type, queue)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>append_query<span class="params">(query, query_type, queue)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#append_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L187" title="View source">packages/active_record/lib/adapters/abstract.lua:187</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:187</span>
 </div>
 <section class="docstring">
 <p>Hook called by ActiveRecord::Query#execute before the SQL string is built, so that
@@ -78,9 +78,9 @@ the adapter can adjust the query object. Does nothing in the abstract adapter.</
 </section>
 <section class="detail" id="append_query_string">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>append_query_string<span class="params">(query, query_string, query_type)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>append_query_string<span class="params">(query, query_string, query_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#append_query_string" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L195" title="View source">packages/active_record/lib/adapters/abstract.lua:195</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:195</span>
 </div>
 <section class="docstring">
 <p>Hook called by ActiveRecord::Query#execute once the SQL string is built. Adapters may
@@ -91,9 +91,9 @@ return a string to replace it. Does nothing in the abstract adapter.</p>
 </section>
 <section class="detail" id="begin_transaction">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>begin_transaction<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>begin_transaction<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#begin_transaction" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L58" title="View source">packages/active_record/lib/adapters/abstract.lua:58</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:58</span>
 </div>
 <section class="docstring">
 <p>Starts a transaction.</p>
@@ -101,9 +101,9 @@ return a string to replace it. Does nothing in the abstract adapter.</p>
 </section>
 <section class="detail" id="commit_transaction">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>commit_transaction<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>commit_transaction<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#commit_transaction" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L63" title="View source">packages/active_record/lib/adapters/abstract.lua:63</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:63</span>
 </div>
 <section class="docstring">
 <p>Commits the current transaction.</p>
@@ -111,9 +111,9 @@ return a string to replace it. Does nothing in the abstract adapter.</p>
 </section>
 <section class="detail" id="connect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>connect<span class="params">(config, on_connected)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>connect<span class="params">(config, on_connected)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#connect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L109" title="View source">packages/active_record/lib/adapters/abstract.lua:109</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:109</span>
 </div>
 <section class="docstring">
 <p>Connects to the database. The abstract implementation only marks the adapter as
@@ -124,9 +124,9 @@ connected and never calls the callback; real adapters override it.</p>
 </section>
 <section class="detail" id="connected">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>connected<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>connected<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#connected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L259" title="View source">packages/active_record/lib/adapters/abstract.lua:259</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:259</span>
 </div>
 <section class="docstring">
 <p>Checks whether or not the adapter is connected to a database.</p>
@@ -136,9 +136,9 @@ connected and never calls the callback; real adapters override it.</p>
 </section>
 <section class="detail" id="create_column">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>create_column<span class="params">(query, column, args, obj, type, def)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>create_column<span class="params">(query, column, args, obj, type, def)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L206" title="View source">packages/active_record/lib/adapters/abstract.lua:206</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:206</span>
 </div>
 <section class="docstring">
 <p>Hook called after a column is added to a 'create' or 'change' query through one of
@@ -149,9 +149,9 @@ the column type methods (t:string, t:integer, ...). Does nothing in the abstract
 </section>
 <section class="detail" id="disconnect">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>disconnect<span class="params">(config)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>disconnect<span class="params">(config)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#disconnect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L116" title="View source">packages/active_record/lib/adapters/abstract.lua:116</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:116</span>
 </div>
 <section class="docstring">
 <p>Closes the database connection. The abstract implementation only clears the
@@ -162,9 +162,9 @@ connected flag.</p>
 </section>
 <section class="detail" id="escape">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>escape<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>escape<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#escape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L124" title="View source">packages/active_record/lib/adapters/abstract.lua:124</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:124</span>
 </div>
 <section class="docstring">
 <p>Escapes a string for safe use inside an SQL string literal.
@@ -177,9 +177,9 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 <section class="detail" id="get_sql_std">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>get_sql_std<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>get_sql_std<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_sql_std" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L83" title="View source">packages/active_record/lib/adapters/abstract.lua:83</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:83</span>
 </div>
 <section class="docstring">
 <p>Returns the SQL dialect the adapter speaks.</p>
@@ -189,9 +189,9 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>init<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>init<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L13" title="View source">packages/active_record/lib/adapters/abstract.lua:13</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:13</span>
 </div>
 <section class="docstring">
 <p>Resets the connection state, the sync flag and the query queue of a new adapter.</p>
@@ -199,9 +199,9 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 <section class="detail" id="is_mysql">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_mysql<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_mysql<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_mysql" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L95" title="View source">packages/active_record/lib/adapters/abstract.lua:95</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:95</span>
 </div>
 <section class="docstring">
 <p>Checks whether the adapter talks to a MySQL database.</p>
@@ -211,9 +211,9 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 <section class="detail" id="is_postgres">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_postgres<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_postgres<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_postgres" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L89" title="View source">packages/active_record/lib/adapters/abstract.lua:89</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:89</span>
 </div>
 <section class="docstring">
 <p>Checks whether the adapter talks to a PostgreSQL database.</p>
@@ -223,9 +223,9 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 <section class="detail" id="is_result">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_result<span class="params">(result)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_result<span class="params">(result)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_result" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L228" title="View source">packages/active_record/lib/adapters/abstract.lua:228</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:228</span>
 </div>
 <section class="docstring">
 <p>Checks whether a query result contains at least one row.</p>
@@ -237,9 +237,9 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 <section class="detail" id="is_sqlite">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_sqlite<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>is_sqlite<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_sqlite" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L101" title="View source">packages/active_record/lib/adapters/abstract.lua:101</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:101</span>
 </div>
 <section class="docstring">
 <p>Checks whether the adapter talks to an SQLite database.</p>
@@ -249,9 +249,9 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 <section class="detail" id="on_connected">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>on_connected<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>on_connected<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_connected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L234" title="View source">packages/active_record/lib/adapters/abstract.lua:234</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:234</span>
 </div>
 <section class="docstring">
 <p>Called when the database connects successfully. Runs ActiveRecord's startup in sync
@@ -260,9 +260,9 @@ mode and fires the 'DatabaseConnected' hook.</p>
 </section>
 <section class="detail" id="on_connection_failed">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>on_connection_failed<span class="params">(error_text)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>on_connection_failed<span class="params">(error_text)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_connection_failed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L247" title="View source">packages/active_record/lib/adapters/abstract.lua:247</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:247</span>
 </div>
 <section class="docstring">
 <p>Called when the database connection fails. Prints the error and fires the
@@ -273,9 +273,9 @@ mode and fires the 'DatabaseConnected' hook.</p>
 </section>
 <section class="detail" id="placeholder">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>placeholder<span class="params">(index)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>placeholder<span class="params">(index)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#placeholder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L154" title="View source">packages/active_record/lib/adapters/abstract.lua:154</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:154</span>
 </div>
 <section class="docstring">
 <p>Returns the placeholder that stands for a bind parameter in the SQL of the adapter.</p>
@@ -287,9 +287,9 @@ mode and fires the 'DatabaseConnected' hook.</p>
 </section>
 <section class="detail" id="query_failed">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>query_failed<span class="params">(query, error_text, raise)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>query_failed<span class="params">(query, error_text, raise)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#query_failed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L36" title="View source">packages/active_record/lib/adapters/abstract.lua:36</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:36</span>
 </div>
 <section class="docstring">
 <p>Reports a failed query. The error is printed, remembered in the last_error field and,
@@ -300,9 +300,9 @@ if #raise_errors is on, raised as a Lua error.</p>
 </section>
 <section class="detail" id="queue">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>queue<span class="params">(query, callback, query_type, bindings)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>queue<span class="params">(query, callback, query_type, bindings)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#queue" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L176" title="View source">packages/active_record/lib/adapters/abstract.lua:176</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:176</span>
 </div>
 <section class="docstring">
 <p>Puts a raw SQL string into the queue. Queued queries are run one at a time by #think.</p>
@@ -312,9 +312,9 @@ if #raise_errors is on, raised as a Lua error.</p>
 </section>
 <section class="detail" id="quote">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>quote<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>quote<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#quote" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L139" title="View source">packages/active_record/lib/adapters/abstract.lua:139</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:139</span>
 </div>
 <section class="docstring">
 <p>Escapes a string and wraps it in single quotes, producing an SQL string literal.</p>
@@ -326,9 +326,9 @@ if #raise_errors is on, raised as a Lua error.</p>
 </section>
 <section class="detail" id="quote_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>quote_name<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>quote_name<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#quote_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L147" title="View source">packages/active_record/lib/adapters/abstract.lua:147</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:147</span>
 </div>
 <section class="docstring">
 <p>Quotes an identifier such as a table or column name.
@@ -341,9 +341,9 @@ The abstract implementation returns the name unchanged.</p>
 </section>
 <section class="detail" id="raise_errors">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>raise_errors<span class="params">(raise)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>raise_errors<span class="params">(raise)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#raise_errors" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L25" title="View source">packages/active_record/lib/adapters/abstract.lua:25</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:25</span>
 </div>
 <section class="docstring">
 <p>Sets whether a failed query raises a Lua error, on top of being printed. The migrator
@@ -357,9 +357,9 @@ failed statement.</p>
 </section>
 <section class="detail" id="raw_query">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#raw_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L168" title="View source">packages/active_record/lib/adapters/abstract.lua:168</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:168</span>
 </div>
 <section class="docstring">
 <p>Sends a raw SQL string to the database. Does nothing in the abstract adapter.
@@ -371,9 +371,9 @@ the place of the #placeholder of the adapter in the query and need no escaping.<
 </section>
 <section class="detail" id="rollback_transaction">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>rollback_transaction<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>rollback_transaction<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rollback_transaction" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L68" title="View source">packages/active_record/lib/adapters/abstract.lua:68</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:68</span>
 </div>
 <section class="docstring">
 <p>Rolls the current transaction back.</p>
@@ -381,9 +381,9 @@ the place of the #placeholder of the adapter in the query and need no escaping.<
 </section>
 <section class="detail" id="supports_ddl_transactions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>supports_ddl_transactions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>supports_ddl_transactions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#supports_ddl_transactions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L53" title="View source">packages/active_record/lib/adapters/abstract.lua:53</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:53</span>
 </div>
 <section class="docstring">
 <p>Checks whether the database can roll back schema changes (CREATE TABLE, ALTER TABLE
@@ -395,9 +395,9 @@ it can.</p>
 </section>
 <section class="detail" id="sync">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>sync<span class="params">(sync)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>sync<span class="params">(sync)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#sync" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L76" title="View source">packages/active_record/lib/adapters/abstract.lua:76</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:76</span>
 </div>
 <section class="docstring">
 <p>Switches the adapter between synchronous (blocking) and asynchronous query mode.
@@ -410,9 +410,9 @@ In sync mode #raw_query waits for the result and returns what the query callback
 </section>
 <section class="detail" id="think">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>think<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>think<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#think" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L210" title="View source">packages/active_record/lib/adapters/abstract.lua:210</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:210</span>
 </div>
 <section class="docstring">
 <p>Runs the oldest queued query, if there is one. Called once a second by a timer.</p>
@@ -420,9 +420,9 @@ In sync mode #raw_query waits for the result and returns what the query callback
 </section>
 <section class="detail" id="unescape">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>unescape<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Abstract:</span>unescape<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#unescape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua#L132" title="View source">packages/active_record/lib/adapters/abstract.lua:132</a>
+<span class="source-link">packages/active_record/lib/adapters/abstract.lua:132</span>
 </div>
 <section class="docstring">
 <p>Reverts #escape on a string that was read back from the database.
@@ -434,11 +434,11 @@ The abstract implementation returns the string unchanged.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/abstract.lua" title="View source">packages/active_record/lib/adapters/abstract.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#append_query">append_query</a></li><li><a href="#append_query_string">append_query_string</a></li><li><a href="#begin_transaction">begin_transaction</a></li><li><a href="#commit_transaction">commit_transaction</a></li><li><a href="#connect">connect</a></li><li><a href="#connected">connected</a></li><li><a href="#create_column">create_column</a></li><li><a href="#disconnect">disconnect</a></li><li><a href="#escape">escape</a></li><li><a href="#get_sql_std">get_sql_std</a></li><li><a href="#init">init</a></li><li><a href="#is_mysql">is_mysql</a></li><li><a href="#is_postgres">is_postgres</a></li><li><a href="#is_result">is_result</a></li><li><a href="#is_sqlite">is_sqlite</a></li><li><a href="#on_connected">on_connected</a></li><li><a href="#on_connection_failed">on_connection_failed</a></li><li><a href="#placeholder">placeholder</a></li><li><a href="#query_failed">query_failed</a></li><li><a href="#queue">queue</a></li><li><a href="#quote">quote</a></li><li><a href="#quote_name">quote_name</a></li><li><a href="#raise_errors">raise_errors</a></li><li><a href="#raw_query">raw_query</a></li><li><a href="#rollback_transaction">rollback_transaction</a></li><li><a href="#supports_ddl_transactions">supports_ddl_transactions</a></li><li><a href="#sync">sync</a></li><li><a href="#think">think</a></li><li><a href="#unescape">unescape</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/adapters/abstract.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#append_query">append_query</a></li><li data-realm="shared"><a href="#append_query_string">append_query_string</a></li><li data-realm="shared"><a href="#begin_transaction">begin_transaction</a></li><li data-realm="shared"><a href="#commit_transaction">commit_transaction</a></li><li data-realm="shared"><a href="#connect">connect</a></li><li data-realm="shared"><a href="#connected">connected</a></li><li data-realm="shared"><a href="#create_column">create_column</a></li><li data-realm="shared"><a href="#disconnect">disconnect</a></li><li data-realm="shared"><a href="#escape">escape</a></li><li data-realm="shared"><a href="#get_sql_std">get_sql_std</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#is_mysql">is_mysql</a></li><li data-realm="shared"><a href="#is_postgres">is_postgres</a></li><li data-realm="shared"><a href="#is_result">is_result</a></li><li data-realm="shared"><a href="#is_sqlite">is_sqlite</a></li><li data-realm="shared"><a href="#on_connected">on_connected</a></li><li data-realm="shared"><a href="#on_connection_failed">on_connection_failed</a></li><li data-realm="shared"><a href="#placeholder">placeholder</a></li><li data-realm="shared"><a href="#query_failed">query_failed</a></li><li data-realm="shared"><a href="#queue">queue</a></li><li data-realm="shared"><a href="#quote">quote</a></li><li data-realm="shared"><a href="#quote_name">quote_name</a></li><li data-realm="shared"><a href="#raise_errors">raise_errors</a></li><li data-realm="shared"><a href="#raw_query">raw_query</a></li><li data-realm="shared"><a href="#rollback_transaction">rollback_transaction</a></li><li data-realm="shared"><a href="#supports_ddl_transactions">supports_ddl_transactions</a></li><li data-realm="shared"><a href="#sync">sync</a></li><li data-realm="shared"><a href="#think">think</a></li><li data-realm="shared"><a href="#unescape">unescape</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -28,30 +28,30 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/factions/index.html">factions</a></p></div>
+<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/factions/index.html">Factions System</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#demote_rank">demote_rank()</a></div><div class="summary-synopsis">Moves the player one rank down unless they already hold the lowest rank. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_faction">get_faction()</a></div><div class="summary-synopsis">Returns the faction the player belongs to.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_faction_id">get_faction_id()</a></div><div class="summary-synopsis">Returns the ID of the player's faction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_rank">get_rank()</a></div><div class="summary-synopsis">Returns the player's rank in their faction as an index into the faction's rank list.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_rank_name">get_rank_name()</a></div><div class="summary-synopsis">Returns the ID of the player's current rank. Errors if the player has no faction or rank.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_whitelists">get_whitelists()</a></div><div class="summary-synopsis">Returns the faction whitelists of the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#give_whitelist">give_whitelist(faction_id)</a></div><div class="summary-synopsis">Whitelists the player for a faction by adding a Whitelist record to their user record and networking the updated list. Does nothing if they already have it. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_whitelist">has_whitelist(faction_id)</a></div><div class="summary-synopsis">Checks whether the player is whitelisted for a faction.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_rank">is_rank(str_rank, strict)</a></div><div class="summary-synopsis">Checks whether the player holds the given rank of their faction or any rank above it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#promote_rank">promote_rank()</a></div><div class="summary-synopsis">Moves the player one rank up unless they already hold the highest rank. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_faction">set_faction(id)</a></div><div class="summary-synopsis">Moves the player into a faction: resets the rank to 1, regenerates the name, sets the team, adjusts gender and model, and runs both factions' leave and join callbacks. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_rank">set_rank(rank)</a></div><div class="summary-synopsis">Sets the player's rank in their current faction, networks it and regenerates their name from the faction's name template. Server only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#take_whitelist">take_whitelist(faction_id)</a></div><div class="summary-synopsis">Removes the player's whitelist for a faction, destroying its Whitelist record and networking the updated list. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#demote_rank">demote_rank()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Moves the player one rank down unless they already hold the lowest rank.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_faction">get_faction()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the faction the player belongs to.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_faction_id">get_faction_id()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the ID of the player's faction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_rank">get_rank()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the player's rank in their faction as an index into the faction's rank list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_rank_name">get_rank_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the ID of the player's current rank.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_whitelists">get_whitelists()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the faction whitelists of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#give_whitelist">give_whitelist(faction_id)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Whitelists the player for a faction by adding a Whitelist record to their user record and networking the updated list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_whitelist">has_whitelist(faction_id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player is whitelisted for a faction.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_rank">is_rank(str_rank, strict)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player holds the given rank of their faction or any rank above it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#promote_rank">promote_rank()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Moves the player one rank up unless they already hold the highest rank.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_faction">set_faction(id)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Moves the player into a faction: resets the rank to 1, regenerates the name, sets the team, adjusts gender and model, and runs both factions' leave and join callbacks.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_rank">set_rank(rank)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets the player's rank in their current faction, networks it and regenerates their name from the faction's name template.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_whitelist">take_whitelist(faction_id)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Removes the player's whitelist for a faction, destroying its Whitelist record and networking the updated list.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="demote_rank">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>demote_rank<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>demote_rank<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#demote_rank" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L260" title="View source">plugins/factions/plugin/lib/sh_faction.lua:260</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:260</span>
 </div>
 <section class="docstring">
 <p>Moves the player one rank down unless they already hold the lowest rank. Server only.</p>
@@ -59,9 +59,9 @@
 </section>
 <section class="detail" id="get_faction">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_faction<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_faction<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_faction" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L126" title="View source">plugins/factions/plugin/lib/sh_faction.lua:126</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:126</span>
 </div>
 <section class="docstring">
 <p>Returns the faction the player belongs to.</p>
@@ -71,9 +71,9 @@
 </section>
 <section class="detail" id="get_faction_id">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_faction_id<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_faction_id<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_faction_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L120" title="View source">plugins/factions/plugin/lib/sh_faction.lua:120</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:120</span>
 </div>
 <section class="docstring">
 <p>Returns the ID of the player's faction.</p>
@@ -83,9 +83,9 @@
 </section>
 <section class="detail" id="get_rank">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_rank<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_rank<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_rank" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L132" title="View source">plugins/factions/plugin/lib/sh_faction.lua:132</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:132</span>
 </div>
 <section class="docstring">
 <p>Returns the player's rank in their faction as an index into the faction's rank list.</p>
@@ -95,9 +95,9 @@
 </section>
 <section class="detail" id="get_rank_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_rank_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_rank_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_rank_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L138" title="View source">plugins/factions/plugin/lib/sh_faction.lua:138</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:138</span>
 </div>
 <section class="docstring">
 <p>Returns the ID of the player's current rank. Errors if the player has no faction or rank.</p>
@@ -107,9 +107,9 @@
 </section>
 <section class="detail" id="get_whitelists">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_whitelists<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_whitelists<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_whitelists" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L163" title="View source">plugins/factions/plugin/lib/sh_faction.lua:163</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:163</span>
 </div>
 <section class="docstring">
 <p>Returns the faction whitelists of the player.</p>
@@ -119,9 +119,9 @@
 </section>
 <section class="detail" id="give_whitelist">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>give_whitelist<span class="params">(faction_id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>give_whitelist<span class="params">(faction_id)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#give_whitelist" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L271" title="View source">plugins/factions/plugin/lib/sh_faction.lua:271</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:271</span>
 </div>
 <section class="docstring">
 <p>Whitelists the player for a faction by adding a Whitelist record to their user record
@@ -132,9 +132,9 @@ and networking the updated list. Does nothing if they already have it. Server on
 </section>
 <section class="detail" id="has_whitelist">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>has_whitelist<span class="params">(faction_id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>has_whitelist<span class="params">(faction_id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_whitelist" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L170" title="View source">plugins/factions/plugin/lib/sh_faction.lua:170</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:170</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player is whitelisted for a faction.</p>
@@ -146,9 +146,9 @@ and networking the updated list. Does nothing if they already have it. Server on
 </section>
 <section class="detail" id="is_rank">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>is_rank<span class="params">(str_rank, strict)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>is_rank<span class="params">(str_rank, strict)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_rank" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L146" title="View source">plugins/factions/plugin/lib/sh_faction.lua:146</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:146</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player holds the given rank of their faction or any rank above it.</p>
@@ -160,9 +160,9 @@ and networking the updated list. Does nothing if they already have it. Server on
 </section>
 <section class="detail" id="promote_rank">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>promote_rank<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>promote_rank<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#promote_rank" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L251" title="View source">plugins/factions/plugin/lib/sh_faction.lua:251</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:251</span>
 </div>
 <section class="docstring">
 <p>Moves the player one rank up unless they already hold the highest rank. Server only.</p>
@@ -170,9 +170,9 @@ and networking the updated list. Does nothing if they already have it. Server on
 </section>
 <section class="detail" id="set_faction">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_faction<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_faction<span class="params">(id)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_faction" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L190" title="View source">plugins/factions/plugin/lib/sh_faction.lua:190</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:190</span>
 </div>
 <section class="docstring">
 <p>Moves the player into a faction: resets the rank to 1, regenerates the name, sets the team,
@@ -183,9 +183,9 @@ adjusts gender and model, and runs both factions' leave and join callbacks. Serv
 </section>
 <section class="detail" id="set_rank">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_rank<span class="params">(rank)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_rank<span class="params">(rank)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_rank" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L225" title="View source">plugins/factions/plugin/lib/sh_faction.lua:225</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:225</span>
 </div>
 <section class="docstring">
 <p>Sets the player's rank in their current faction, networks it and regenerates their name
@@ -196,9 +196,9 @@ from the faction's name template. Server only.</p>
 </section>
 <section class="detail" id="take_whitelist">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>take_whitelist<span class="params">(faction_id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>take_whitelist<span class="params">(faction_id)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#take_whitelist" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua#L286" title="View source">plugins/factions/plugin/lib/sh_faction.lua:286</a>
+<span class="source-link">plugins/factions/plugin/lib/sh_faction.lua:286</span>
 </div>
 <section class="docstring">
 <p>Removes the player's whitelist for a faction, destroying its Whitelist record and
@@ -208,11 +208,11 @@ networking the updated list. Server only.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/factions/plugin/lib/sh_faction.lua" title="View source">plugins/factions/plugin/lib/sh_faction.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#demote_rank">demote_rank</a></li><li><a href="#get_faction">get_faction</a></li><li><a href="#get_faction_id">get_faction_id</a></li><li><a href="#get_rank">get_rank</a></li><li><a href="#get_rank_name">get_rank_name</a></li><li><a href="#get_whitelists">get_whitelists</a></li><li><a href="#give_whitelist">give_whitelist</a></li><li><a href="#has_whitelist">has_whitelist</a></li><li><a href="#is_rank">is_rank</a></li><li><a href="#promote_rank">promote_rank</a></li><li><a href="#set_faction">set_faction</a></li><li><a href="#set_rank">set_rank</a></li><li><a href="#take_whitelist">take_whitelist</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/factions/plugin/lib/sh_faction.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#demote_rank">demote_rank</a></li><li data-realm="shared"><a href="#get_faction">get_faction</a></li><li data-realm="shared"><a href="#get_faction_id">get_faction_id</a></li><li data-realm="shared"><a href="#get_rank">get_rank</a></li><li data-realm="shared"><a href="#get_rank_name">get_rank_name</a></li><li data-realm="shared"><a href="#get_whitelists">get_whitelists</a></li><li data-realm="server"><a href="#give_whitelist">give_whitelist</a></li><li data-realm="shared"><a href="#has_whitelist">has_whitelist</a></li><li data-realm="shared"><a href="#is_rank">is_rank</a></li><li data-realm="server"><a href="#promote_rank">promote_rank</a></li><li data-realm="server"><a href="#set_faction">set_faction</a></li><li data-realm="server"><a href="#set_rank">set_rank</a></li><li data-realm="server"><a href="#take_whitelist">take_whitelist</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

@@ -31,16 +31,16 @@
 <div class="page-header"><h1>ActiveRecord.Validator <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add">add(id, callback)</a></div><div class="summary-synopsis">Registers a validator, which can then be used with ActiveRecord::Base#validates. A validator has to call exactly one of the two callbacks it is given.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#validate_model">validate_model(model, success_callback, error_callback)</a></div><div class="summary-synopsis">Runs the validations defined on a model, one column at a time. Validators may be asynchronous, so the outcome is reported through the callbacks.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add">add(id, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a validator, which can then be used with ActiveRecord::Base#validates.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#validate_model">validate_model(model, success_callback, error_callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the validations defined on a model, one column at a time.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="add">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Validator:</span>add<span class="params">(id, callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Validator:</span>add<span class="params">(id, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/validator.lua#L107" title="View source">packages/active_record/lib/validator.lua:107</a>
+<span class="source-link">packages/active_record/lib/validator.lua:107</span>
 </div>
 <section class="docstring">
 <p>Registers a validator, which can then be used with ActiveRecord::Base#validates.
@@ -61,9 +61,9 @@ A validator has to call exactly one of the two callbacks it is given.</p>
 </section>
 <section class="detail" id="validate_model">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Validator:</span>validate_model<span class="params">(model, success_callback, error_callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Validator:</span>validate_model<span class="params">(model, success_callback, error_callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#validate_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/validator.lua#L58" title="View source">packages/active_record/lib/validator.lua:58</a>
+<span class="source-link">packages/active_record/lib/validator.lua:58</span>
 </div>
 <section class="docstring">
 <p>Runs the validations defined on a model, one column at a time. Validators may be
@@ -75,11 +75,11 @@ asynchronous, so the outcome is reported through the callbacks.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/validator.lua" title="View source">packages/active_record/lib/validator.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add">add</a></li><li><a href="#validate_model">validate_model</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/validator.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#add">add</a></li><li data-realm="shared"><a href="#validate_model">validate_model</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

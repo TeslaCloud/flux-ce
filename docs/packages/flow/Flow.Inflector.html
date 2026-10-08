@@ -31,26 +31,26 @@
 <div class="page-header"><h1>Flow.Inflector <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#inflections">inflections(lang, func)</a></div><div class="summary-synopsis">Defines the inflection rules of a language. The rules added inside of the callback (and anything looked up afterward) belong to that language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#irregular">irregular(word, replacement)</a></div><div class="summary-synopsis">Adds a word that does not follow the regular rules to the current language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#irregulars">irregulars()</a></div><div class="summary-synopsis">Returns the irregular words of the current language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#irregulars_reverse">irregulars_reverse()</a></div><div class="summary-synopsis">Returns the irregular words of the current language, the other way around.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#plural">plural(expression, replacement)</a></div><div class="summary-synopsis">Adds a pluralization rule to the current language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#pluralize">pluralize(word)</a></div><div class="summary-synopsis">Converts a word to its plural form using the rules of the current language. Only the last part of a snake_case word is converted.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#plurals">plurals()</a></div><div class="summary-synopsis">Returns the pluralization rules of the current language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#singular">singular(expression, replacement)</a></div><div class="summary-synopsis">Adds a singularization rule to the current language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#singularize">singularize(word)</a></div><div class="summary-synopsis">Converts a word to its singular form using the rules of the current language. Only the last part of a snake_case word is converted.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#singulars">singulars()</a></div><div class="summary-synopsis">Returns the singularization rules of the current language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#uncountable">uncountable(words)</a></div><div class="summary-synopsis">Adds words that have no separate plural form to the current language.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#uncountables">uncountables()</a></div><div class="summary-synopsis">Returns the uncountable words of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#inflections">inflections(lang, func)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Defines the inflection rules of a language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#irregular">irregular(word, replacement)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a word that does not follow the regular rules to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#irregulars">irregulars()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the irregular words of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#irregulars_reverse">irregulars_reverse()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the irregular words of the current language, the other way around.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#plural">plural(expression, replacement)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a pluralization rule to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#pluralize">pluralize(word)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a word to its plural form using the rules of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#plurals">plurals()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the pluralization rules of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#singular">singular(expression, replacement)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a singularization rule to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#singularize">singularize(word)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Converts a word to its singular form using the rules of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#singulars">singulars()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the singularization rules of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#uncountable">uncountable(words)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds words that have no separate plural form to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#uncountables">uncountables()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the uncountable words of the current language.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="inflections">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>inflections<span class="params">(lang, func)</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>inflections<span class="params">(lang, func)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#inflections" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L23" title="View source">packages/flow/lib/inflector/sh_inflector.lua:23</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:23</span>
 </div>
 <section class="docstring">
 <p>Defines the inflection rules of a language. The rules added inside of the callback
@@ -70,9 +70,9 @@
 </section>
 <section class="detail" id="irregular">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregular<span class="params">(word, replacement)</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregular<span class="params">(word, replacement)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#irregular" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L96" title="View source">packages/flow/lib/inflector/sh_inflector.lua:96</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:96</span>
 </div>
 <section class="docstring">
 <p>Adds a word that does not follow the regular rules to the current language.</p>
@@ -84,9 +84,9 @@
 </section>
 <section class="detail" id="irregulars">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregulars<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregulars<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#irregulars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L56" title="View source">packages/flow/lib/inflector/sh_inflector.lua:56</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:56</span>
 </div>
 <section class="docstring">
 <p>Returns the irregular words of the current language.</p>
@@ -96,9 +96,9 @@
 </section>
 <section class="detail" id="irregulars_reverse">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregulars_reverse<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregulars_reverse<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#irregulars_reverse" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L62" title="View source">packages/flow/lib/inflector/sh_inflector.lua:62</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:62</span>
 </div>
 <section class="docstring">
 <p>Returns the irregular words of the current language, the other way around.</p>
@@ -108,9 +108,9 @@
 </section>
 <section class="detail" id="plural">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>plural<span class="params">(expression, replacement)</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>plural<span class="params">(expression, replacement)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#plural" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L70" title="View source">packages/flow/lib/inflector/sh_inflector.lua:70</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:70</span>
 </div>
 <section class="docstring">
 <p>Adds a pluralization rule to the current language.</p>
@@ -122,9 +122,9 @@
 </section>
 <section class="detail" id="pluralize">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>pluralize<span class="params">(word)</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>pluralize<span class="params">(word)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#pluralize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L124" title="View source">packages/flow/lib/inflector/sh_inflector.lua:124</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:124</span>
 </div>
 <section class="docstring">
 <p>Converts a word to its plural form using the rules of the current language.
@@ -137,9 +137,9 @@ Only the last part of a snake_case word is converted.</p>
 </section>
 <section class="detail" id="plurals">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>plurals<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>plurals<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#plurals" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L38" title="View source">packages/flow/lib/inflector/sh_inflector.lua:38</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:38</span>
 </div>
 <section class="docstring">
 <p>Returns the pluralization rules of the current language.</p>
@@ -149,9 +149,9 @@ Only the last part of a snake_case word is converted.</p>
 </section>
 <section class="detail" id="singular">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>singular<span class="params">(expression, replacement)</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>singular<span class="params">(expression, replacement)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#singular" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L83" title="View source">packages/flow/lib/inflector/sh_inflector.lua:83</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:83</span>
 </div>
 <section class="docstring">
 <p>Adds a singularization rule to the current language.</p>
@@ -163,9 +163,9 @@ Only the last part of a snake_case word is converted.</p>
 </section>
 <section class="detail" id="singularize">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>singularize<span class="params">(word)</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>singularize<span class="params">(word)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#singularize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L153" title="View source">packages/flow/lib/inflector/sh_inflector.lua:153</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:153</span>
 </div>
 <section class="docstring">
 <p>Converts a word to its singular form using the rules of the current language.
@@ -178,9 +178,9 @@ Only the last part of a snake_case word is converted.</p>
 </section>
 <section class="detail" id="singulars">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>singulars<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>singulars<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#singulars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L44" title="View source">packages/flow/lib/inflector/sh_inflector.lua:44</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:44</span>
 </div>
 <section class="docstring">
 <p>Returns the singularization rules of the current language.</p>
@@ -190,9 +190,9 @@ Only the last part of a snake_case word is converted.</p>
 </section>
 <section class="detail" id="uncountable">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>uncountable<span class="params">(words)</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>uncountable<span class="params">(words)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#uncountable" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L106" title="View source">packages/flow/lib/inflector/sh_inflector.lua:106</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:106</span>
 </div>
 <section class="docstring">
 <p>Adds words that have no separate plural form to the current language.</p>
@@ -204,9 +204,9 @@ Only the last part of a snake_case word is converted.</p>
 </section>
 <section class="detail" id="uncountables">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flow.Inflector:</span>uncountables<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>uncountables<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#uncountables" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L50" title="View source">packages/flow/lib/inflector/sh_inflector.lua:50</a>
+<span class="source-link">packages/flow/lib/inflector/sh_inflector.lua:50</span>
 </div>
 <section class="docstring">
 <p>Returns the uncountable words of the current language.</p>
@@ -215,11 +215,11 @@ Only the last part of a snake_case word is converted.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua" title="View source">packages/flow/lib/inflector/sh_inflector.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#inflections">inflections</a></li><li><a href="#irregular">irregular</a></li><li><a href="#irregulars">irregulars</a></li><li><a href="#irregulars_reverse">irregulars_reverse</a></li><li><a href="#plural">plural</a></li><li><a href="#pluralize">pluralize</a></li><li><a href="#plurals">plurals</a></li><li><a href="#singular">singular</a></li><li><a href="#singularize">singularize</a></li><li><a href="#singulars">singulars</a></li><li><a href="#uncountable">uncountable</a></li><li><a href="#uncountables">uncountables</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/inflector/sh_inflector.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#inflections">inflections</a></li><li data-realm="shared"><a href="#irregular">irregular</a></li><li data-realm="shared"><a href="#irregulars">irregulars</a></li><li data-realm="shared"><a href="#irregulars_reverse">irregulars_reverse</a></li><li data-realm="shared"><a href="#plural">plural</a></li><li data-realm="shared"><a href="#pluralize">pluralize</a></li><li data-realm="shared"><a href="#plurals">plurals</a></li><li data-realm="shared"><a href="#singular">singular</a></li><li data-realm="shared"><a href="#singularize">singularize</a></li><li data-realm="shared"><a href="#singulars">singulars</a></li><li data-realm="shared"><a href="#uncountable">uncountable</a></li><li data-realm="shared"><a href="#uncountables">uncountables</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

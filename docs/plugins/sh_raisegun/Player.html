@@ -31,17 +31,17 @@
 <div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/sh_raisegun/index.html">Raise Weapon</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#is_weapon_raised">is_weapon_raised()</a></div><div class="summary-synopsis">Checks whether the player's active weapon is raised. Without a valid weapon this is false; physgun, gravity gun, tool gun and camera are always raised. Otherwise the ShouldWeaponBeRaised hook decides, falling back to the networked state.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_weapon_raised">set_weapon_raised(raised)</a></div><div class="summary-synopsis">Raises or lowers the player's active weapon and runs the OnWeaponRaised hook. Does nothing clientside. The CanPlayerRaiseWeapon hook can veto the change.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#toggle_weapon_raised">toggle_weapon_raised()</a></div><div class="summary-synopsis">Raises the player's active weapon if it is lowered and lowers it if it is raised. Does nothing clientside.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_weapon_raised">is_weapon_raised()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the player's active weapon is raised.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_weapon_raised">set_weapon_raised(raised)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Raises or lowers the player's active weapon and runs the OnWeaponRaised hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#toggle_weapon_raised">toggle_weapon_raised()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Raises the player's active weapon if it is lowered and lowers it if it is raised.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="is_weapon_raised">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>is_weapon_raised<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>is_weapon_raised<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_weapon_raised" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/sh_raisegun.lua#L201" title="View source">plugins/sh_raisegun.lua:201</a>
+<span class="source-link">plugins/sh_raisegun.lua:201</span>
 </div>
 <section class="docstring">
 <p>Checks whether the player's active weapon is raised. Without a valid weapon this is
@@ -53,9 +53,9 @@ ShouldWeaponBeRaised hook decides, falling back to the networked state.</p>
 </section>
 <section class="detail" id="set_weapon_raised">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>set_weapon_raised<span class="params">(raised)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>set_weapon_raised<span class="params">(raised)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_weapon_raised" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/sh_raisegun.lua#L187" title="View source">plugins/sh_raisegun.lua:187</a>
+<span class="source-link">plugins/sh_raisegun.lua:187</span>
 </div>
 <section class="docstring">
 <p>Raises or lowers the player's active weapon and runs the OnWeaponRaised hook.
@@ -66,9 +66,9 @@ Does nothing clientside. The CanPlayerRaiseWeapon hook can veto the change.</p>
 </section>
 <section class="detail" id="toggle_weapon_raised">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>toggle_weapon_raised<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>toggle_weapon_raised<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#toggle_weapon_raised" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/sh_raisegun.lua#L227" title="View source">plugins/sh_raisegun.lua:227</a>
+<span class="source-link">plugins/sh_raisegun.lua:227</span>
 </div>
 <section class="docstring">
 <p>Raises the player's active weapon if it is lowered and lowers it if it is raised.
@@ -76,11 +76,11 @@ Does nothing clientside.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/sh_raisegun.lua" title="View source">plugins/sh_raisegun.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#is_weapon_raised">is_weapon_raised</a></li><li><a href="#set_weapon_raised">set_weapon_raised</a></li><li><a href="#toggle_weapon_raised">toggle_weapon_raised</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/sh_raisegun.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#is_weapon_raised">is_weapon_raised</a></li><li data-realm="shared"><a href="#set_weapon_raised">set_weapon_raised</a></li><li data-realm="shared"><a href="#toggle_weapon_raised">toggle_weapon_raised</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

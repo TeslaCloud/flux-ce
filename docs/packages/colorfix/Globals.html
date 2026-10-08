@@ -31,17 +31,17 @@
 <div class="page-header"><h1>Globals <span class="badge badge-globals">globals</span></h1><p class="subtitle">Global functions of Linux Color Fix</p><p class="subtitle">Part of <a href="../../packages/colorfix/index.html">Linux Color Fix</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#ErrorNoHalt">ErrorNoHalt(msg)</a></div><div class="summary-synopsis">Overrides ErrorNoHalt to print the error on a red background.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#MsgC">MsgC(...)</a></div><div class="summary-synopsis">Overrides MsgC to print colored text with ANSI escape sequences.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print_colored">print_colored(text, color, background_color, style)</a></div><div class="summary-synopsis">Prints text to the console, colored and styled with ANSI escape sequences. Does not add a newline.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ErrorNoHalt">ErrorNoHalt(msg)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Overrides ErrorNoHalt to print the error on a red background.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#MsgC">MsgC(...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Overrides MsgC to print colored text with ANSI escape sequences.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_colored">print_colored(text, color, background_color, style)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints text to the console, colored and styled with ANSI escape sequences.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="ErrorNoHalt">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>ErrorNoHalt<span class="params">(msg)</span></h3>
+<h3 class="signature"><span class="owner"></span>ErrorNoHalt<span class="params">(msg)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#ErrorNoHalt" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/colorfix/lib/colorfix.lua#L190" title="View source">packages/colorfix/lib/colorfix.lua:190</a>
+<span class="source-link">packages/colorfix/lib/colorfix.lua:190</span>
 </div>
 <section class="docstring">
 <p>Overrides ErrorNoHalt to print the error on a red background.</p>
@@ -51,9 +51,9 @@
 </section>
 <section class="detail" id="MsgC">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>MsgC<span class="params">(...)</span></h3>
+<h3 class="signature"><span class="owner"></span>MsgC<span class="params">(...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#MsgC" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/colorfix/lib/colorfix.lua#L176" title="View source">packages/colorfix/lib/colorfix.lua:176</a>
+<span class="source-link">packages/colorfix/lib/colorfix.lua:176</span>
 </div>
 <section class="docstring">
 <p>Overrides MsgC to print colored text with ANSI escape sequences.</p>
@@ -63,9 +63,9 @@
 </section>
 <section class="detail" id="print_colored">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>print_colored<span class="params">(text, color, background_color, style)</span></h3>
+<h3 class="signature"><span class="owner"></span>print_colored<span class="params">(text, color, background_color, style)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#print_colored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/colorfix/lib/colorfix.lua#L125" title="View source">packages/colorfix/lib/colorfix.lua:125</a>
+<span class="source-link">packages/colorfix/lib/colorfix.lua:125</span>
 </div>
 <section class="docstring">
 <p>Prints text to the console, colored and styled with ANSI escape sequences.
@@ -77,11 +77,11 @@ Does not add a newline.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/colorfix/lib/colorfix.lua" title="View source">packages/colorfix/lib/colorfix.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#ErrorNoHalt">ErrorNoHalt</a></li><li><a href="#MsgC">MsgC</a></li><li><a href="#print_colored">print_colored</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/colorfix/lib/colorfix.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#ErrorNoHalt">ErrorNoHalt</a></li><li data-realm="shared"><a href="#MsgC">MsgC</a></li><li data-realm="shared"><a href="#print_colored">print_colored</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

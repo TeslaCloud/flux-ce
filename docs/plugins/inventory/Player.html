@@ -28,45 +28,45 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">inventory</a></p></div>
+<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">Inventory</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_item">add_item(item_obj, inv_type)</a></div><div class="summary-synopsis">Give the player a certain item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_item_by_id">add_item_by_id(instance_id, inv_type)</a></div><div class="summary-synopsis">Give the player a certain item by its instance id.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_inventories">create_inventories()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Creates the player's default inventories.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#delete_inventories">delete_inventories()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Deletes the player's inventories from the server cache.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find_item">find_item(id, inv_type)</a></div><div class="summary-synopsis">Get the first item with a certain id from the specified inventory or from all of them.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find_items">find_items(id, inv_type)</a></div><div class="summary-synopsis">Get all items with a certain id from the specified inventory or from all of them.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_active_weapon_item">get_active_weapon_item()</a></div><div class="summary-synopsis">Get the item of the weapon that the player is holding in their hands.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_first_in_slot">get_first_in_slot(x, y, inv_type)</a></div><div class="summary-synopsis">Get the first instance_id from a certain slot of the specified inventory.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_inventories">get_inventories()</a></div><div class="summary-synopsis">Get all the player's inventories.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_inventory">get_inventory(inv_type)</a></div><div class="summary-synopsis">Get one of the player's inventories by type.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_item_from_weapon">get_item_from_weapon(weapon_class)</a></div><div class="summary-synopsis">Get the item object by the weapon class.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_items">get_items(inv_type)</a></div><div class="summary-synopsis">Get the items table from a certain inventory or from all of them.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_items_count">get_items_count(id, inv_type)</a></div><div class="summary-synopsis">Get the amount of items with a certain id from the specified inventory or from all of them.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_items_ids">get_items_ids(inv_type)</a></div><div class="summary-synopsis">Get only instance_ids from a certain inventory or from all of them.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_slot">get_slot(x, y, inv_type)</a></div><div class="summary-synopsis">Get instance_ids from a certain slot of the specified inventory.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#give_item">give_item(id, amount, data, inv_type)</a></div><div class="summary-synopsis">Give the player a certain item(s) by id.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_item">has_item(id, inv_type)</a></div><div class="summary-synopsis">Checking if the player has a certain item by its id.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_item_by_id">has_item_by_id(instance_id, inv_type)</a></div><div class="summary-synopsis">Checking if the player has a certain item by its instance id.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_item_equipped">has_item_equipped(id)</a></div><div class="summary-synopsis">Checking if the player has a certain item equipped by its id.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#load_inventories">load_inventories()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Loads the player's inventories with the items they had.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#open_inventory">open_inventory(inventory)</a></div><div class="summary-synopsis">Opens an inventory window for the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#open_player_inventory">open_player_inventory(target)</a></div><div class="summary-synopsis">Opens all the inventories the other player has.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#sync_inventories">sync_inventories()</a></div><div class="summary-synopsis">Synchronize all the inventories that the player has.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#sync_inventory">sync_inventory(inv_type)</a></div><div class="summary-synopsis">Synchronize only the specified inventory.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#take_item">take_item(id, inv_type)</a></div><div class="summary-synopsis">Takes one item from the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#take_item_by_id">take_item_by_id(instance_id, inv_type)</a></div><div class="summary-synopsis">Takes one specified item from the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#take_items">take_items(id, amount, inv_type)</a></div><div class="summary-synopsis">Takes the specified amount of items from the player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#transfer_item">transfer_item(instance_id, inv_type)</a></div><div class="summary-synopsis">Transfers an item to a specified inventory of the player. Takes the item only from the specified inventory. Does nothing and returns nothing if the item is in that inventory already.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_item">add_item(item_obj, inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Give the player a certain item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_item_by_id">add_item_by_id(instance_id, inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Give the player a certain item by its instance id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_inventories">create_inventories()</a><span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Creates the player's default inventories.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete_inventories">delete_inventories()</a><span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Deletes the player's inventories from the server cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_item">find_item(id, inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get the first item with a certain id from the specified inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_items">find_items(id, inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get all items with a certain id from the specified inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_active_weapon_item">get_active_weapon_item()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get the item of the weapon that the player is holding in their hands.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_first_in_slot">get_first_in_slot(x, y, inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get the first instance_id from a certain slot of the specified inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventories">get_inventories()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get all the player's inventories.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory">get_inventory(inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get one of the player's inventories by type.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_item_from_weapon">get_item_from_weapon(weapon_class)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get the item object by the weapon class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_items">get_items(inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get the items table from a certain inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_items_count">get_items_count(id, inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get the amount of items with a certain id from the specified inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_items_ids">get_items_ids(inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get only instance_ids from a certain inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_slot">get_slot(x, y, inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Get instance_ids from a certain slot of the specified inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#give_item">give_item(id, amount, data, inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Give the player a certain item(s) by id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_item">has_item(id, inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checking if the player has a certain item by its id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_item_by_id">has_item_by_id(instance_id, inv_type)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checking if the player has a certain item by its instance id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_item_equipped">has_item_equipped(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checking if the player has a certain item equipped by its id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load_inventories">load_inventories()</a><span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Loads the player's inventories with the items they had.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#open_inventory">open_inventory(inventory)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Opens an inventory window for the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#open_player_inventory">open_player_inventory(target)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Opens all the inventories the other player has.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sync_inventories">sync_inventories()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Synchronize all the inventories that the player has.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sync_inventory">sync_inventory(inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Synchronize only the specified inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_item">take_item(id, inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Takes one item from the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_item_by_id">take_item_by_id(instance_id, inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Takes one specified item from the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_items">take_items(id, amount, inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Takes the specified amount of items from the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#transfer_item">transfer_item(instance_id, inv_type)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Transfers an item to a specified inventory of the player.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="add_item">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>add_item<span class="params">(item_obj, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>add_item<span class="params">(item_obj, inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#add_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L327" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:327</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:327</span>
 </div>
 <section class="docstring">
 <p>Give the player a certain item.</p>
@@ -78,9 +78,9 @@
 </section>
 <section class="detail" id="add_item_by_id">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>add_item_by_id<span class="params">(instance_id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>add_item_by_id<span class="params">(instance_id, inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#add_item_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L340" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:340</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:340</span>
 </div>
 <section class="docstring">
 <p>Give the player a certain item by its instance id.</p>
@@ -92,9 +92,9 @@
 </section>
 <section class="detail" id="create_inventories">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>create_inventories<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">Player:</span>create_inventories<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span>
 <a href="#create_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L253" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:253</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:253</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -103,9 +103,9 @@
 </section>
 <section class="detail" id="delete_inventories">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>delete_inventories<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">Player:</span>delete_inventories<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span>
 <a href="#delete_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L302" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:302</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:302</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -114,9 +114,9 @@
 </section>
 <section class="detail" id="find_item">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>find_item<span class="params">(id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>find_item<span class="params">(id, inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L129" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:129</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:129</span>
 </div>
 <section class="docstring">
 <p>Get the first item with a certain id from the specified inventory or from all of them.</p>
@@ -133,9 +133,9 @@
 </section>
 <section class="detail" id="find_items">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>find_items<span class="params">(id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>find_items<span class="params">(id, inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find_items" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L152" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:152</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:152</span>
 </div>
 <section class="docstring">
 <p>Get all items with a certain id from the specified inventory or from all of them.</p>
@@ -152,9 +152,9 @@
 </section>
 <section class="detail" id="get_active_weapon_item">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_active_weapon_item<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_active_weapon_item<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_active_weapon_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L242" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:242</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:242</span>
 </div>
 <section class="docstring">
 <p>Get the item of the weapon that the player is holding in their hands.</p>
@@ -164,9 +164,9 @@
 </section>
 <section class="detail" id="get_first_in_slot">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_first_in_slot<span class="params">(x, y, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_first_in_slot<span class="params">(x, y, inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_first_in_slot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L93" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:93</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:93</span>
 </div>
 <section class="docstring">
 <p>Get the first instance_id from a certain slot of the specified inventory.</p>
@@ -178,9 +178,9 @@
 </section>
 <section class="detail" id="get_inventories">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_inventories<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_inventories<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L33" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:33</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:33</span>
 </div>
 <section class="docstring">
 <p>Get all the player's inventories.</p>
@@ -190,9 +190,9 @@
 </section>
 <section class="detail" id="get_inventory">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_inventory<span class="params">(inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_inventory<span class="params">(inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L27" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:27</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:27</span>
 </div>
 <section class="docstring">
 <p>Get one of the player's inventories by type.</p>
@@ -204,9 +204,9 @@
 </section>
 <section class="detail" id="get_item_from_weapon">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_item_from_weapon<span class="params">(weapon_class)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_item_from_weapon<span class="params">(weapon_class)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_item_from_weapon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L232" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:232</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:232</span>
 </div>
 <section class="docstring">
 <p>Get the item object by the weapon class.</p>
@@ -218,9 +218,9 @@
 </section>
 <section class="detail" id="get_items">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_items<span class="params">(inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_items<span class="params">(inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_items" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L44" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:44</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:44</span>
 </div>
 <section class="docstring">
 <p>Get the items table from a certain inventory or from all of them.</p>
@@ -236,9 +236,9 @@
 </section>
 <section class="detail" id="get_items_count">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_items_count<span class="params">(id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_items_count<span class="params">(id, inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_items_count" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L106" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:106</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:106</span>
 </div>
 <section class="docstring">
 <p>Get the amount of items with a certain id from the specified inventory or from all of them.</p>
@@ -255,9 +255,9 @@
 </section>
 <section class="detail" id="get_items_ids">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_items_ids<span class="params">(inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_items_ids<span class="params">(inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_items_ids" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L65" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:65</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:65</span>
 </div>
 <section class="docstring">
 <p>Get only instance_ids from a certain inventory or from all of them.</p>
@@ -273,9 +273,9 @@
 </section>
 <section class="detail" id="get_slot">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>get_slot<span class="params">(x, y, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>get_slot<span class="params">(x, y, inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_slot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L84" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:84</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:84</span>
 </div>
 <section class="docstring">
 <p>Get instance_ids from a certain slot of the specified inventory.</p>
@@ -287,9 +287,9 @@
 </section>
 <section class="detail" id="give_item">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>give_item<span class="params">(id, amount, data, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>give_item<span class="params">(id, amount, data, inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#give_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L358" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:358</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:358</span>
 </div>
 <section class="docstring">
 <p>Give the player a certain item(s) by id.</p>
@@ -308,9 +308,9 @@
 </section>
 <section class="detail" id="has_item">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>has_item<span class="params">(id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>has_item<span class="params">(id, inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L175" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:175</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:175</span>
 </div>
 <section class="docstring">
 <p>Checking if the player has a certain item by its id.</p>
@@ -327,9 +327,9 @@
 </section>
 <section class="detail" id="has_item_by_id">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>has_item_by_id<span class="params">(instance_id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>has_item_by_id<span class="params">(instance_id, inv_type)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_item_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L200" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:200</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:200</span>
 </div>
 <section class="docstring">
 <p>Checking if the player has a certain item by its instance id.</p>
@@ -346,9 +346,9 @@
 </section>
 <section class="detail" id="has_item_equipped">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>has_item_equipped<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>has_item_equipped<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_item_equipped" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L219" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:219</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:219</span>
 </div>
 <section class="docstring">
 <p>Checking if the player has a certain item equipped by its id.</p>
@@ -360,9 +360,9 @@
 </section>
 <section class="detail" id="load_inventories">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>load_inventories<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">Player:</span>load_inventories<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span> <span class="flag flag-internal">internal</span>
 <a href="#load_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L274" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:274</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:274</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -371,9 +371,9 @@
 </section>
 <section class="detail" id="open_inventory">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>open_inventory<span class="params">(inventory)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>open_inventory<span class="params">(inventory)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#open_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L515" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:515</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:515</span>
 </div>
 <section class="docstring">
 <p>Opens an inventory window for the player.</p>
@@ -393,9 +393,9 @@ target:<span class="hl-f">open_inventory</span>(inventory)
 </section>
 <section class="detail" id="open_player_inventory">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>open_player_inventory<span class="params">(target)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>open_player_inventory<span class="params">(target)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#open_player_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L524" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:524</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:524</span>
 </div>
 <section class="docstring">
 <p>Opens all the inventories the other player has.</p>
@@ -405,9 +405,9 @@ target:<span class="hl-f">open_inventory</span>(inventory)
 </section>
 <section class="detail" id="sync_inventories">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>sync_inventories<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>sync_inventories<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#sync_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L311" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:311</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:311</span>
 </div>
 <section class="docstring">
 <p>Synchronize all the inventories that the player has.</p>
@@ -415,9 +415,9 @@ target:<span class="hl-f">open_inventory</span>(inventory)
 </section>
 <section class="detail" id="sync_inventory">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>sync_inventory<span class="params">(inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>sync_inventory<span class="params">(inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#sync_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L319" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:319</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:319</span>
 </div>
 <section class="docstring">
 <p>Synchronize only the specified inventory.</p>
@@ -427,9 +427,9 @@ target:<span class="hl-f">open_inventory</span>(inventory)
 </section>
 <section class="detail" id="take_item">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>take_item<span class="params">(id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>take_item<span class="params">(id, inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#take_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L376" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:376</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:376</span>
 </div>
 <section class="docstring">
 <p>Takes one item from the player.</p>
@@ -446,9 +446,9 @@ target:<span class="hl-f">open_inventory</span>(inventory)
 </section>
 <section class="detail" id="take_item_by_id">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>take_item_by_id<span class="params">(instance_id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>take_item_by_id<span class="params">(instance_id, inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#take_item_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L445" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:445</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:445</span>
 </div>
 <section class="docstring">
 <p>Takes one specified item from the player.</p>
@@ -465,9 +465,9 @@ target:<span class="hl-f">open_inventory</span>(inventory)
 </section>
 <section class="detail" id="take_items">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>take_items<span class="params">(id, amount, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>take_items<span class="params">(id, amount, inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#take_items" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L410" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:410</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:410</span>
 </div>
 <section class="docstring">
 <p>Takes the specified amount of items from the player.</p>
@@ -484,9 +484,9 @@ target:<span class="hl-f">open_inventory</span>(inventory)
 </section>
 <section class="detail" id="transfer_item">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Player:</span>transfer_item<span class="params">(instance_id, inv_type)</span></h3>
+<h3 class="signature"><span class="owner">Player:</span>transfer_item<span class="params">(instance_id, inv_type)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#transfer_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L483" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:483</a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:483</span>
 </div>
 <section class="docstring">
 <p>Transfers an item to a specified inventory of the player.
@@ -506,11 +506,11 @@ Does nothing and returns nothing if the item is in that inventory already.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add_item">add_item</a></li><li><a href="#add_item_by_id">add_item_by_id</a></li><li><a href="#create_inventories">create_inventories</a></li><li><a href="#delete_inventories">delete_inventories</a></li><li><a href="#find_item">find_item</a></li><li><a href="#find_items">find_items</a></li><li><a href="#get_active_weapon_item">get_active_weapon_item</a></li><li><a href="#get_first_in_slot">get_first_in_slot</a></li><li><a href="#get_inventories">get_inventories</a></li><li><a href="#get_inventory">get_inventory</a></li><li><a href="#get_item_from_weapon">get_item_from_weapon</a></li><li><a href="#get_items">get_items</a></li><li><a href="#get_items_count">get_items_count</a></li><li><a href="#get_items_ids">get_items_ids</a></li><li><a href="#get_slot">get_slot</a></li><li><a href="#give_item">give_item</a></li><li><a href="#has_item">has_item</a></li><li><a href="#has_item_by_id">has_item_by_id</a></li><li><a href="#has_item_equipped">has_item_equipped</a></li><li><a href="#load_inventories">load_inventories</a></li><li><a href="#open_inventory">open_inventory</a></li><li><a href="#open_player_inventory">open_player_inventory</a></li><li><a href="#sync_inventories">sync_inventories</a></li><li><a href="#sync_inventory">sync_inventory</a></li><li><a href="#take_item">take_item</a></li><li><a href="#take_item_by_id">take_item_by_id</a></li><li><a href="#take_items">take_items</a></li><li><a href="#transfer_item">transfer_item</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#add_item">add_item</a></li><li data-realm="server"><a href="#add_item_by_id">add_item_by_id</a></li><li data-realm="server"><a href="#create_inventories">create_inventories</a></li><li data-realm="server"><a href="#delete_inventories">delete_inventories</a></li><li data-realm="shared"><a href="#find_item">find_item</a></li><li data-realm="shared"><a href="#find_items">find_items</a></li><li data-realm="shared"><a href="#get_active_weapon_item">get_active_weapon_item</a></li><li data-realm="shared"><a href="#get_first_in_slot">get_first_in_slot</a></li><li data-realm="shared"><a href="#get_inventories">get_inventories</a></li><li data-realm="shared"><a href="#get_inventory">get_inventory</a></li><li data-realm="shared"><a href="#get_item_from_weapon">get_item_from_weapon</a></li><li data-realm="shared"><a href="#get_items">get_items</a></li><li data-realm="shared"><a href="#get_items_count">get_items_count</a></li><li data-realm="shared"><a href="#get_items_ids">get_items_ids</a></li><li data-realm="shared"><a href="#get_slot">get_slot</a></li><li data-realm="server"><a href="#give_item">give_item</a></li><li data-realm="shared"><a href="#has_item">has_item</a></li><li data-realm="shared"><a href="#has_item_by_id">has_item_by_id</a></li><li data-realm="shared"><a href="#has_item_equipped">has_item_equipped</a></li><li data-realm="server"><a href="#load_inventories">load_inventories</a></li><li data-realm="server"><a href="#open_inventory">open_inventory</a></li><li data-realm="server"><a href="#open_player_inventory">open_player_inventory</a></li><li data-realm="server"><a href="#sync_inventories">sync_inventories</a></li><li data-realm="server"><a href="#sync_inventory">sync_inventory</a></li><li data-realm="server"><a href="#take_item">take_item</a></li><li data-realm="server"><a href="#take_item_by_id">take_item_by_id</a></li><li data-realm="server"><a href="#take_items">take_items</a></li><li data-realm="server"><a href="#transfer_item">transfer_item</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

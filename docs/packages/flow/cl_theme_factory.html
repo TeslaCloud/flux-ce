@@ -28,59 +28,59 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>cl_theme_factory <span class="badge badge-object">object</span></h1><p class="subtitle">THEME</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>cl_theme_factory <span class="badge badge-object">object</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Object THEME in themes/cl_theme_factory.lua</p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#AdminPanelPaintOver">AdminPanelPaintOver(panel, width, height)</a></div><div class="summary-synopsis">Draws the footer below the admin panel with the Steam name and user group of the local player and the version of the admin mod.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ChatboxPaintBackground">ChatboxPaintBackground(panel, width, height)</a></div><div class="summary-synopsis">Draws the background behind the chat history, leaving out the text entry.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#CreateMainMenu">CreateMainMenu(panel)</a></div><div class="summary-synopsis">Called when the main menu is created, so that a theme can customize it. Does nothing in the factory theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawBarBackground">DrawBarBackground(bar_info)</a></div><div class="summary-synopsis">Draws the background of a HUD bar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawBarFill">DrawBarFill(bar_info)</a></div><div class="summary-synopsis">Draws the filled portion of a HUD bar. While the displayed fill is catching up with the actual value, the difference between the two is drawn in the color of the bar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawBarHindrance">DrawBarHindrance(bar_info)</a></div><div class="summary-synopsis">Draws the hindered portion at the right end of a HUD bar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawBarTexts">DrawBarTexts(bar_info)</a></div><div class="summary-synopsis">Draws the text of a HUD bar, in different colors over its filled and empty portions, and the hindrance text when the hindrance is displayed.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#DrawGenericBackground">DrawGenericBackground(x, y, w, h, color)</a></div><div class="summary-synopsis">Draws a solid rectangle.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#LayoutFrame">LayoutFrame(panel)</a></div><div class="summary-synopsis">Lays out the title label and the close button of a frame.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#LayoutMenuOption">LayoutMenuOption(panel, w, h)</a></div><div class="summary-synopsis">Sizes a menu option to fit its text and the width of its menu, and positions its submenu arrow.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_loaded">on_loaded()</a></div><div class="summary-synopsis">Defines the defaults of the factory theme: options, sounds, assets, colors, fonts, materials and the tab menu panel.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintButton">PaintButton(panel, w, h)</a></div><div class="summary-synopsis">Draws an fl_button: the outline, background, title and FontAwesome icon, according to the settings of the button.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintButton-2">PaintButton(panel, w, h)</a></div><div class="summary-synopsis">Draws a Derma button with a border and a fill that reflects its disabled, pressed or hovered state, and sets its text color.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCharCreationBasePanel">PaintCharCreationBasePanel(panel, w, h)</a></div><div class="summary-synopsis">Draws the title of a character creation stage, if the panel has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCharCreationLoadPanel">PaintCharCreationLoadPanel(panel, w, h)</a></div><div class="summary-synopsis">Draws the title of the character loading screen.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCharCreationMainPanel">PaintCharCreationMainPanel(panel, w, h)</a></div><div class="summary-synopsis">Draws the title of the character creation screen.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCharPanel">PaintCharPanel(panel, w, h)</a></div><div class="summary-synopsis">Draws the name of the character on a character card and outlines the card if it belongs to the active character of the local player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory(panel, w, h)</a></div><div class="summary-synopsis">Draws the header background of a collapsible category, darker while it is collapsed, and applies the theme font to its header.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintConfigLine">PaintConfigLine(panel, w, h)</a></div><div class="summary-synopsis">Draws a darker background on the lines of the config editor that are marked as dark.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintDeathScreen">PaintDeathScreen(cur_time, scrw, scrh)</a></div><div class="summary-synopsis">Draws the death screen with the respawn countdown and progress bar, and sets up the white fade for the last 3 seconds before the respawn.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintFrame">PaintFrame(panel, w, h)</a></div><div class="summary-synopsis">Draws the background and the title of an fl_frame.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintFrame-2">PaintFrame(panel, w, h)</a></div><div class="summary-synopsis">Draws the translucent background of a frame and its header gradient in the accent color.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintInventoryBackground">PaintInventoryBackground(panel, w, h)</a></div><div class="summary-synopsis">Draws the translucent backdrop around an inventory panel.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintItemSlot">PaintItemSlot(panel, w, h)</a></div><div class="summary-synopsis">Draws the gradient background of an inventory item slot.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintListView">PaintListView(panel, w, h)</a></div><div class="summary-synopsis">Draws a white background for a list view if its background is enabled.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintListViewLine">PaintListViewLine(panel)</a></div><div class="summary-synopsis">Draws a line of a list view, colored after its selected, hovered or alternate state, and sets the text color of its columns.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMainMenu">PaintMainMenu(panel, width, height)</a></div><div class="summary-synopsis">Draws the background of the main menu and its top bar with the schema's logo (or name), description and author.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMenu">PaintMenu(panel, w, h)</a></div><div class="summary-synopsis">Draws the dark background of a Derma menu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuOption">PaintMenuOption(panel, w, h)</a></div><div class="summary-synopsis">Draws the highlight of a hovered menu option and sets its text color accordingly.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintOverInventoryBackground">PaintOverInventoryBackground(panel, w, h)</a></div><div class="summary-synopsis">Draws the title of an inventory above its panel, if it has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintOverMenu">PaintOverMenu(panel)</a></div><div class="summary-synopsis">Does nothing: the skin draws nothing over Derma menus.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintPermissionButton">PaintPermissionButton(perm_panel, btn, w, h)</a></div><div class="summary-synopsis">Draws a button of the permission editor, colored and labeled after its permission value, with a selection box and a clock icon for temporary permissions.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintScoreboard">PaintScoreboard(panel, width, height)</a></div><div class="summary-synopsis">Draws the background, title and column headers of the scoreboard.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintScrollBarGrip">PaintScrollBarGrip(panel)</a></div><div class="summary-synopsis">Draws the grip of a scroll bar as a black box with a white border.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintSidebar">PaintSidebar(panel, width, height)</a></div><div class="summary-synopsis">Draws the background of an fl_sidebar.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTab">PaintTab(panel, w, h)</a></div><div class="summary-synopsis">Draws a tab of a property sheet, highlighted if it is the active one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTabInventoryBackground">PaintTabInventoryBackground(panel, w, h)</a></div><div class="summary-synopsis">Draws the frame, the gradients and the character name around the player model of the inventory tab. Does nothing if the panel has no player model.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTabMenu">PaintTabMenu(panel, width, height)</a></div><div class="summary-synopsis">Blurs the screen behind the tab menu, easing the blur size toward the blur target of the menu, and draws an indicator bar for the button stored in the menu's activeBtn field.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#PaintTabMenuButtonPanel">PaintTabMenuButtonPanel(panel, width, height)</a></div><div class="summary-synopsis">Draws the translucent background of the button bar of the tab menu.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SchemeForm">SchemeForm(panel)</a></div><div class="summary-synopsis">Applies the font, upper case text, color and shadow of the skin to the label of a form.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SchemeListViewLabel">SchemeListViewLabel(panel)</a></div><div class="summary-synopsis">Sets the text inset and the text color of a list view label.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#SchemeMenuOption">SchemeMenuOption(panel)</a></div><div class="summary-synopsis">Sets the text color of a menu option.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AdminPanelPaintOver">AdminPanelPaintOver(panel, width, height)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the footer below the admin panel with the Steam name and user group of the local player and the version of the admin mod.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxPaintBackground">ChatboxPaintBackground(panel, width, height)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the background behind the chat history, leaving out the text entry.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreateMainMenu">CreateMainMenu(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Called when the main menu is created, so that a theme can customize it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawBarBackground">DrawBarBackground(bar_info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the background of a HUD bar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawBarFill">DrawBarFill(bar_info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the filled portion of a HUD bar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawBarHindrance">DrawBarHindrance(bar_info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the hindered portion at the right end of a HUD bar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawBarTexts">DrawBarTexts(bar_info)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the text of a HUD bar, in different colors over its filled and empty portions, and the hindrance text when the hindrance is displayed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawGenericBackground">DrawGenericBackground(x, y, w, h, color)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a solid rectangle.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LayoutFrame">LayoutFrame(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Lays out the title label and the close button of a frame.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LayoutMenuOption">LayoutMenuOption(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sizes a menu option to fit its text and the width of its menu, and positions its submenu arrow.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_loaded">on_loaded()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Defines the defaults of the factory theme: options, sounds, assets, colors, fonts, materials and the tab menu panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintButton">PaintButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws an fl_button: the outline, background, title and FontAwesome icon, according to the settings of the button.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintButton-2">PaintButton(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a Derma button with a border and a fill that reflects its disabled, pressed or hovered state, and sets its text color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCharCreationBasePanel">PaintCharCreationBasePanel(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the title of a character creation stage, if the panel has one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCharCreationLoadPanel">PaintCharCreationLoadPanel(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the title of the character loading screen.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCharCreationMainPanel">PaintCharCreationMainPanel(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the title of the character creation screen.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCharPanel">PaintCharPanel(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the name of the character on a character card and outlines the card if it belongs to the active character of the local player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the header background of a collapsible category, darker while it is collapsed, and applies the theme font to its header.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintConfigLine">PaintConfigLine(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a darker background on the lines of the config editor that are marked as dark.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintDeathScreen">PaintDeathScreen(cur_time, scrw, scrh)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the death screen with the respawn countdown and progress bar, and sets up the white fade for the last 3 seconds before the respawn.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintFrame">PaintFrame(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the background and the title of an fl_frame.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintFrame-2">PaintFrame(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the translucent background of a frame and its header gradient in the accent color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintInventoryBackground">PaintInventoryBackground(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the translucent backdrop around an inventory panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintItemSlot">PaintItemSlot(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the gradient background of an inventory item slot.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintListView">PaintListView(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a white background for a list view if its background is enabled.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintListViewLine">PaintListViewLine(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a line of a list view, colored after its selected, hovered or alternate state, and sets the text color of its columns.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMainMenu">PaintMainMenu(panel, width, height)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the background of the main menu and its top bar with the schema's logo (or name), description and author.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMenu">PaintMenu(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the dark background of a Derma menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintMenuOption">PaintMenuOption(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the highlight of a hovered menu option and sets its text color accordingly.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintOverInventoryBackground">PaintOverInventoryBackground(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the title of an inventory above its panel, if it has one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintOverMenu">PaintOverMenu(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Does nothing: the skin draws nothing over Derma menus.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintPermissionButton">PaintPermissionButton(perm_panel, btn, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a button of the permission editor, colored and labeled after its permission value, with a selection box and a clock icon for temporary permissions.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintScoreboard">PaintScoreboard(panel, width, height)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the background, title and column headers of the scoreboard.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintScrollBarGrip">PaintScrollBarGrip(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the grip of a scroll bar as a black box with a white border.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintSidebar">PaintSidebar(panel, width, height)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the background of an fl_sidebar.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTab">PaintTab(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a tab of a property sheet, highlighted if it is the active one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTabInventoryBackground">PaintTabInventoryBackground(panel, w, h)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the frame, the gradients and the character name around the player model of the inventory tab.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTabMenu">PaintTabMenu(panel, width, height)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Blurs the screen behind the tab menu, easing the blur size toward the blur target of the menu, and draws an indicator bar for the button stored in the menu's activeBtn field.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintTabMenuButtonPanel">PaintTabMenuButtonPanel(panel, width, height)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the translucent background of the button bar of the tab menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SchemeForm">SchemeForm(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Applies the font, upper case text, color and shadow of the skin to the label of a form.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SchemeListViewLabel">SchemeListViewLabel(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the text inset and the text color of a list view label.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SchemeMenuOption">SchemeMenuOption(panel)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the text color of a menu option.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="AdminPanelPaintOver">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>AdminPanelPaintOver<span class="params">(panel, width, height)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>AdminPanelPaintOver<span class="params">(panel, width, height)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#AdminPanelPaintOver" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L393" title="View source">packages/flow/themes/cl_theme_factory.lua:393</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:393</span>
 </div>
 <section class="docstring">
 <p>Draws the footer below the admin panel with the Steam name and user group of the local
@@ -91,9 +91,9 @@ player and the version of the admin mod.</p>
 </section>
 <section class="detail" id="ChatboxPaintBackground">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>ChatboxPaintBackground<span class="params">(panel, width, height)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>ChatboxPaintBackground<span class="params">(panel, width, height)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#ChatboxPaintBackground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L618" title="View source">packages/flow/themes/cl_theme_factory.lua:618</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:618</span>
 </div>
 <section class="docstring">
 <p>Draws the background behind the chat history, leaving out the text entry.</p>
@@ -103,9 +103,9 @@ player and the version of the admin mod.</p>
 </section>
 <section class="detail" id="CreateMainMenu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>CreateMainMenu<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>CreateMainMenu<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#CreateMainMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L97" title="View source">packages/flow/themes/cl_theme_factory.lua:97</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:97</span>
 </div>
 <section class="docstring">
 <p>Called when the main menu is created, so that a theme can customize it. Does nothing
@@ -116,9 +116,9 @@ in the factory theme.</p>
 </section>
 <section class="detail" id="DrawBarBackground">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>DrawBarBackground<span class="params">(bar_info)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>DrawBarBackground<span class="params">(bar_info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawBarBackground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L263" title="View source">packages/flow/themes/cl_theme_factory.lua:263</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:263</span>
 </div>
 <section class="docstring">
 <p>Draws the background of a HUD bar.</p>
@@ -128,9 +128,9 @@ in the factory theme.</p>
 </section>
 <section class="detail" id="DrawBarFill">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>DrawBarFill<span class="params">(bar_info)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>DrawBarFill<span class="params">(bar_info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawBarFill" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L292" title="View source">packages/flow/themes/cl_theme_factory.lua:292</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:292</span>
 </div>
 <section class="docstring">
 <p>Draws the filled portion of a HUD bar. While the displayed fill is catching up with the
@@ -141,9 +141,9 @@ actual value, the difference between the two is drawn in the color of the bar.</
 </section>
 <section class="detail" id="DrawBarHindrance">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>DrawBarHindrance<span class="params">(bar_info)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>DrawBarHindrance<span class="params">(bar_info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawBarHindrance" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L276" title="View source">packages/flow/themes/cl_theme_factory.lua:276</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:276</span>
 </div>
 <section class="docstring">
 <p>Draws the hindered portion at the right end of a HUD bar.</p>
@@ -153,9 +153,9 @@ actual value, the difference between the two is drawn in the color of the bar.</
 </section>
 <section class="detail" id="DrawBarTexts">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>DrawBarTexts<span class="params">(bar_info)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>DrawBarTexts<span class="params">(bar_info)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawBarTexts" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L342" title="View source">packages/flow/themes/cl_theme_factory.lua:342</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:342</span>
 </div>
 <section class="docstring">
 <p>Draws the text of a HUD bar, in different colors over its filled and empty portions,
@@ -166,9 +166,9 @@ and the hindrance text when the hindrance is displayed.</p>
 </section>
 <section class="detail" id="DrawGenericBackground">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>DrawGenericBackground<span class="params">(x, y, w, h, color)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>DrawGenericBackground<span class="params">(x, y, w, h, color)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#DrawGenericBackground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L723" title="View source">packages/flow/themes/cl_theme_factory.lua:723</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:723</span>
 </div>
 <section class="docstring">
 <p>Draws a solid rectangle.</p>
@@ -178,9 +178,9 @@ and the hindrance text when the hindrance is displayed.</p>
 </section>
 <section class="detail" id="LayoutFrame">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>LayoutFrame<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>LayoutFrame<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#LayoutFrame" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L730" title="View source">packages/flow/themes/cl_theme_factory.lua:730</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:730</span>
 </div>
 <section class="docstring">
 <p>Lays out the title label and the close button of a frame.</p>
@@ -190,9 +190,9 @@ and the hindrance text when the hindrance is displayed.</p>
 </section>
 <section class="detail" id="LayoutMenuOption">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>LayoutMenuOption<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>LayoutMenuOption<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#LayoutMenuOption" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L856" title="View source">packages/flow/themes/cl_theme_factory.lua:856</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:856</span>
 </div>
 <section class="docstring">
 <p>Sizes a menu option to fit its text and the width of its menu, and positions its
@@ -203,9 +203,9 @@ submenu arrow.</p>
 </section>
 <section class="detail" id="on_loaded">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>on_loaded<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>on_loaded<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#on_loaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L9" title="View source">packages/flow/themes/cl_theme_factory.lua:9</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:9</span>
 </div>
 <section class="docstring">
 <p>Defines the defaults of the factory theme: options, sounds, assets, colors, fonts,
@@ -214,9 +214,9 @@ materials and the tab menu panel.</p>
 </section>
 <section class="detail" id="PaintButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L160" title="View source">packages/flow/themes/cl_theme_factory.lua:160</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:160</span>
 </div>
 <section class="docstring">
 <p>Draws an fl_button: the outline, background, title and FontAwesome icon, according to
@@ -227,9 +227,9 @@ the settings of the button.</p>
 </section>
 <section class="detail" id="PaintButton-2">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintButton<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintButton<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintButton-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L874" title="View source">packages/flow/themes/cl_theme_factory.lua:874</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:874</span>
 </div>
 <section class="docstring">
 <p>Draws a Derma button with a border and a fill that reflects its disabled, pressed or
@@ -240,9 +240,9 @@ hovered state, and sets its text color.</p>
 </section>
 <section class="detail" id="PaintCharCreationBasePanel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintCharCreationBasePanel<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintCharCreationBasePanel<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCharCreationBasePanel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L675" title="View source">packages/flow/themes/cl_theme_factory.lua:675</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:675</span>
 </div>
 <section class="docstring">
 <p>Draws the title of a character creation stage, if the panel has one.</p>
@@ -252,9 +252,9 @@ hovered state, and sets its text color.</p>
 </section>
 <section class="detail" id="PaintCharCreationLoadPanel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintCharCreationLoadPanel<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintCharCreationLoadPanel<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCharCreationLoadPanel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L664" title="View source">packages/flow/themes/cl_theme_factory.lua:664</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:664</span>
 </div>
 <section class="docstring">
 <p>Draws the title of the character loading screen.</p>
@@ -264,9 +264,9 @@ hovered state, and sets its text color.</p>
 </section>
 <section class="detail" id="PaintCharCreationMainPanel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintCharCreationMainPanel<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintCharCreationMainPanel<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCharCreationMainPanel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L653" title="View source">packages/flow/themes/cl_theme_factory.lua:653</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:653</span>
 </div>
 <section class="docstring">
 <p>Draws the title of the character creation screen.</p>
@@ -276,9 +276,9 @@ hovered state, and sets its text color.</p>
 </section>
 <section class="detail" id="PaintCharPanel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintCharPanel<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintCharPanel<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCharPanel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L629" title="View source">packages/flow/themes/cl_theme_factory.lua:629</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:629</span>
 </div>
 <section class="docstring">
 <p>Draws the name of the character on a character card and outlines the card if it
@@ -289,9 +289,9 @@ belongs to the active character of the local player.</p>
 </section>
 <section class="detail" id="PaintCollapsibleCategory">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintCollapsibleCategory<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintCollapsibleCategory<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintCollapsibleCategory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L925" title="View source">packages/flow/themes/cl_theme_factory.lua:925</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:925</span>
 </div>
 <section class="docstring">
 <p>Draws the header background of a collapsible category, darker while it is collapsed,
@@ -302,9 +302,9 @@ and applies the theme font to its header.</p>
 </section>
 <section class="detail" id="PaintConfigLine">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintConfigLine<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintConfigLine<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintConfigLine" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L413" title="View source">packages/flow/themes/cl_theme_factory.lua:413</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:413</span>
 </div>
 <section class="docstring">
 <p>Draws a darker background on the lines of the config editor that are marked as dark.</p>
@@ -314,9 +314,9 @@ and applies the theme font to its header.</p>
 </section>
 <section class="detail" id="PaintDeathScreen">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintDeathScreen<span class="params">(cur_time, scrw, scrh)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintDeathScreen<span class="params">(cur_time, scrw, scrh)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintDeathScreen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L223" title="View source">packages/flow/themes/cl_theme_factory.lua:223</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:223</span>
 </div>
 <section class="docstring">
 <p>Draws the death screen with the respawn countdown and progress bar, and sets up the
@@ -327,9 +327,9 @@ white fade for the last 3 seconds before the respawn.</p>
 </section>
 <section class="detail" id="PaintFrame">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintFrame<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintFrame<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintFrame" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L104" title="View source">packages/flow/themes/cl_theme_factory.lua:104</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:104</span>
 </div>
 <section class="docstring">
 <p>Draws the background and the title of an fl_frame.</p>
@@ -339,9 +339,9 @@ white fade for the last 3 seconds before the respawn.</p>
 </section>
 <section class="detail" id="PaintFrame-2">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintFrame<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintFrame<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintFrame-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L911" title="View source">packages/flow/themes/cl_theme_factory.lua:911</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:911</span>
 </div>
 <section class="docstring">
 <p>Draws the translucent background of a frame and its header gradient in the accent color.</p>
@@ -351,9 +351,9 @@ white fade for the last 3 seconds before the respawn.</p>
 </section>
 <section class="detail" id="PaintInventoryBackground">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintInventoryBackground<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintInventoryBackground<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintInventoryBackground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L554" title="View source">packages/flow/themes/cl_theme_factory.lua:554</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:554</span>
 </div>
 <section class="docstring">
 <p>Draws the translucent backdrop around an inventory panel.</p>
@@ -363,9 +363,9 @@ white fade for the last 3 seconds before the respawn.</p>
 </section>
 <section class="detail" id="PaintItemSlot">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintItemSlot<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintItemSlot<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintItemSlot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L546" title="View source">packages/flow/themes/cl_theme_factory.lua:546</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:546</span>
 </div>
 <section class="docstring">
 <p>Draws the gradient background of an inventory item slot.</p>
@@ -375,9 +375,9 @@ white fade for the last 3 seconds before the respawn.</p>
 </section>
 <section class="detail" id="PaintListView">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintListView<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintListView<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintListView" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L769" title="View source">packages/flow/themes/cl_theme_factory.lua:769</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:769</span>
 </div>
 <section class="docstring">
 <p>Draws a white background for a list view if its background is enabled.</p>
@@ -387,9 +387,9 @@ white fade for the last 3 seconds before the respawn.</p>
 </section>
 <section class="detail" id="PaintListViewLine">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintListViewLine<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintListViewLine<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintListViewLine" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L779" title="View source">packages/flow/themes/cl_theme_factory.lua:779</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:779</span>
 </div>
 <section class="docstring">
 <p>Draws a line of a list view, colored after its selected, hovered or alternate state,
@@ -400,9 +400,9 @@ and sets the text color of its columns.</p>
 </section>
 <section class="detail" id="PaintMainMenu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintMainMenu<span class="params">(panel, width, height)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintMainMenu<span class="params">(panel, width, height)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMainMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L117" title="View source">packages/flow/themes/cl_theme_factory.lua:117</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:117</span>
 </div>
 <section class="docstring">
 <p>Draws the background of the main menu and its top bar with the schema's logo (or name),
@@ -413,9 +413,9 @@ description and author.</p>
 </section>
 <section class="detail" id="PaintMenu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintMenu<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintMenu<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L811" title="View source">packages/flow/themes/cl_theme_factory.lua:811</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:811</span>
 </div>
 <section class="docstring">
 <p>Draws the dark background of a Derma menu.</p>
@@ -425,9 +425,9 @@ description and author.</p>
 </section>
 <section class="detail" id="PaintMenuOption">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintMenuOption<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintMenuOption<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintMenuOption" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L830" title="View source">packages/flow/themes/cl_theme_factory.lua:830</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:830</span>
 </div>
 <section class="docstring">
 <p>Draws the highlight of a hovered menu option and sets its text color accordingly.</p>
@@ -437,9 +437,9 @@ description and author.</p>
 </section>
 <section class="detail" id="PaintOverInventoryBackground">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintOverInventoryBackground<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintOverInventoryBackground<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintOverInventoryBackground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L594" title="View source">packages/flow/themes/cl_theme_factory.lua:594</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:594</span>
 </div>
 <section class="docstring">
 <p>Draws the title of an inventory above its panel, if it has one.</p>
@@ -449,9 +449,9 @@ description and author.</p>
 </section>
 <section class="detail" id="PaintOverMenu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintOverMenu<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintOverMenu<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintOverMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L818" title="View source">packages/flow/themes/cl_theme_factory.lua:818</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:818</span>
 </div>
 <section class="docstring">
 <p>Does nothing: the skin draws nothing over Derma menus.</p>
@@ -461,9 +461,9 @@ description and author.</p>
 </section>
 <section class="detail" id="PaintPermissionButton">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintPermissionButton<span class="params">(perm_panel, btn, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintPermissionButton<span class="params">(perm_panel, btn, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintPermissionButton" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L425" title="View source">packages/flow/themes/cl_theme_factory.lua:425</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:425</span>
 </div>
 <section class="docstring">
 <p>Draws a button of the permission editor, colored and labeled after its permission
@@ -474,9 +474,9 @@ value, with a selection box and a clock icon for temporary permissions.</p>
 </section>
 <section class="detail" id="PaintScoreboard">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintScoreboard<span class="params">(panel, width, height)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintScoreboard<span class="params">(panel, width, height)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintScoreboard" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L474" title="View source">packages/flow/themes/cl_theme_factory.lua:474</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:474</span>
 </div>
 <section class="docstring">
 <p>Draws the background, title and column headers of the scoreboard.</p>
@@ -486,9 +486,9 @@ value, with a selection box and a clock icon for temporary permissions.</p>
 </section>
 <section class="detail" id="PaintScrollBarGrip">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintScrollBarGrip<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintScrollBarGrip<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintScrollBarGrip" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L899" title="View source">packages/flow/themes/cl_theme_factory.lua:899</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:899</span>
 </div>
 <section class="docstring">
 <p>Draws the grip of a scroll bar as a black box with a white border.</p>
@@ -498,9 +498,9 @@ value, with a selection box and a clock icon for temporary permissions.</p>
 </section>
 <section class="detail" id="PaintSidebar">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintSidebar<span class="params">(panel, width, height)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintSidebar<span class="params">(panel, width, height)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintSidebar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L257" title="View source">packages/flow/themes/cl_theme_factory.lua:257</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:257</span>
 </div>
 <section class="docstring">
 <p>Draws the background of an fl_sidebar.</p>
@@ -510,9 +510,9 @@ value, with a selection box and a clock icon for temporary permissions.</p>
 </section>
 <section class="detail" id="PaintTab">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>PaintTab<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>PaintTab<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTab" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L757" title="View source">packages/flow/themes/cl_theme_factory.lua:757</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:757</span>
 </div>
 <section class="docstring">
 <p>Draws a tab of a property sheet, highlighted if it is the active one.</p>
@@ -522,9 +522,9 @@ value, with a selection box and a clock icon for temporary permissions.</p>
 </section>
 <section class="detail" id="PaintTabInventoryBackground">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintTabInventoryBackground<span class="params">(panel, w, h)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintTabInventoryBackground<span class="params">(panel, w, h)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTabInventoryBackground" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L565" title="View source">packages/flow/themes/cl_theme_factory.lua:565</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:565</span>
 </div>
 <section class="docstring">
 <p>Draws the frame, the gradients and the character name around the player model of the
@@ -535,9 +535,9 @@ inventory tab. Does nothing if the panel has no player model.</p>
 </section>
 <section class="detail" id="PaintTabMenu">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintTabMenu<span class="params">(panel, width, height)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintTabMenu<span class="params">(panel, width, height)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTabMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L508" title="View source">packages/flow/themes/cl_theme_factory.lua:508</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:508</span>
 </div>
 <section class="docstring">
 <p>Blurs the screen behind the tab menu, easing the blur size toward the blur target of
@@ -548,9 +548,9 @@ the menu, and draws an indicator bar for the button stored in the menu's activeB
 </section>
 <section class="detail" id="PaintTabMenuButtonPanel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME:</span>PaintTabMenuButtonPanel<span class="params">(panel, width, height)</span></h3>
+<h3 class="signature"><span class="owner">THEME:</span>PaintTabMenuButtonPanel<span class="params">(panel, width, height)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#PaintTabMenuButtonPanel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L499" title="View source">packages/flow/themes/cl_theme_factory.lua:499</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:499</span>
 </div>
 <section class="docstring">
 <p>Draws the translucent background of the button bar of the tab menu.</p>
@@ -560,9 +560,9 @@ the menu, and draws an indicator bar for the button stored in the menu's activeB
 </section>
 <section class="detail" id="SchemeForm">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>SchemeForm<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>SchemeForm<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#SchemeForm" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L746" title="View source">packages/flow/themes/cl_theme_factory.lua:746</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:746</span>
 </div>
 <section class="docstring">
 <p>Applies the font, upper case text, color and shadow of the skin to the label of a form.</p>
@@ -572,9 +572,9 @@ the menu, and draws an indicator bar for the button stored in the menu's activeB
 </section>
 <section class="detail" id="SchemeListViewLabel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>SchemeListViewLabel<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>SchemeListViewLabel<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#SchemeListViewLabel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L802" title="View source">packages/flow/themes/cl_theme_factory.lua:802</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:802</span>
 </div>
 <section class="docstring">
 <p>Sets the text inset and the text color of a list view label.</p>
@@ -584,9 +584,9 @@ the menu, and draws an indicator bar for the button stored in the menu's activeB
 </section>
 <section class="detail" id="SchemeMenuOption">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">THEME.skin:</span>SchemeMenuOption<span class="params">(panel)</span></h3>
+<h3 class="signature"><span class="owner">THEME.skin:</span>SchemeMenuOption<span class="params">(panel)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#SchemeMenuOption" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua#L822" title="View source">packages/flow/themes/cl_theme_factory.lua:822</a>
+<span class="source-link">packages/flow/themes/cl_theme_factory.lua:822</span>
 </div>
 <section class="docstring">
 <p>Sets the text color of a menu option.</p>
@@ -595,11 +595,11 @@ the menu, and draws an indicator bar for the button stored in the menu's activeB
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/themes/cl_theme_factory.lua" title="View source">packages/flow/themes/cl_theme_factory.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#AdminPanelPaintOver">AdminPanelPaintOver</a></li><li><a href="#ChatboxPaintBackground">ChatboxPaintBackground</a></li><li><a href="#CreateMainMenu">CreateMainMenu</a></li><li><a href="#DrawBarBackground">DrawBarBackground</a></li><li><a href="#DrawBarFill">DrawBarFill</a></li><li><a href="#DrawBarHindrance">DrawBarHindrance</a></li><li><a href="#DrawBarTexts">DrawBarTexts</a></li><li><a href="#DrawGenericBackground">DrawGenericBackground</a></li><li><a href="#LayoutFrame">LayoutFrame</a></li><li><a href="#LayoutMenuOption">LayoutMenuOption</a></li><li><a href="#on_loaded">on_loaded</a></li><li><a href="#PaintButton">PaintButton</a></li><li><a href="#PaintButton-2">PaintButton</a></li><li><a href="#PaintCharCreationBasePanel">PaintCharCreationBasePanel</a></li><li><a href="#PaintCharCreationLoadPanel">PaintCharCreationLoadPanel</a></li><li><a href="#PaintCharCreationMainPanel">PaintCharCreationMainPanel</a></li><li><a href="#PaintCharPanel">PaintCharPanel</a></li><li><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory</a></li><li><a href="#PaintConfigLine">PaintConfigLine</a></li><li><a href="#PaintDeathScreen">PaintDeathScreen</a></li><li><a href="#PaintFrame">PaintFrame</a></li><li><a href="#PaintFrame-2">PaintFrame</a></li><li><a href="#PaintInventoryBackground">PaintInventoryBackground</a></li><li><a href="#PaintItemSlot">PaintItemSlot</a></li><li><a href="#PaintListView">PaintListView</a></li><li><a href="#PaintListViewLine">PaintListViewLine</a></li><li><a href="#PaintMainMenu">PaintMainMenu</a></li><li><a href="#PaintMenu">PaintMenu</a></li><li><a href="#PaintMenuOption">PaintMenuOption</a></li><li><a href="#PaintOverInventoryBackground">PaintOverInventoryBackground</a></li><li><a href="#PaintOverMenu">PaintOverMenu</a></li><li><a href="#PaintPermissionButton">PaintPermissionButton</a></li><li><a href="#PaintScoreboard">PaintScoreboard</a></li><li><a href="#PaintScrollBarGrip">PaintScrollBarGrip</a></li><li><a href="#PaintSidebar">PaintSidebar</a></li><li><a href="#PaintTab">PaintTab</a></li><li><a href="#PaintTabInventoryBackground">PaintTabInventoryBackground</a></li><li><a href="#PaintTabMenu">PaintTabMenu</a></li><li><a href="#PaintTabMenuButtonPanel">PaintTabMenuButtonPanel</a></li><li><a href="#SchemeForm">SchemeForm</a></li><li><a href="#SchemeListViewLabel">SchemeListViewLabel</a></li><li><a href="#SchemeMenuOption">SchemeMenuOption</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/themes/cl_theme_factory.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#AdminPanelPaintOver">AdminPanelPaintOver</a></li><li data-realm="client"><a href="#ChatboxPaintBackground">ChatboxPaintBackground</a></li><li data-realm="client"><a href="#CreateMainMenu">CreateMainMenu</a></li><li data-realm="client"><a href="#DrawBarBackground">DrawBarBackground</a></li><li data-realm="client"><a href="#DrawBarFill">DrawBarFill</a></li><li data-realm="client"><a href="#DrawBarHindrance">DrawBarHindrance</a></li><li data-realm="client"><a href="#DrawBarTexts">DrawBarTexts</a></li><li data-realm="client"><a href="#DrawGenericBackground">DrawGenericBackground</a></li><li data-realm="client"><a href="#LayoutFrame">LayoutFrame</a></li><li data-realm="client"><a href="#LayoutMenuOption">LayoutMenuOption</a></li><li data-realm="client"><a href="#on_loaded">on_loaded</a></li><li data-realm="client"><a href="#PaintButton">PaintButton</a></li><li data-realm="client"><a href="#PaintButton-2">PaintButton</a></li><li data-realm="client"><a href="#PaintCharCreationBasePanel">PaintCharCreationBasePanel</a></li><li data-realm="client"><a href="#PaintCharCreationLoadPanel">PaintCharCreationLoadPanel</a></li><li data-realm="client"><a href="#PaintCharCreationMainPanel">PaintCharCreationMainPanel</a></li><li data-realm="client"><a href="#PaintCharPanel">PaintCharPanel</a></li><li data-realm="client"><a href="#PaintCollapsibleCategory">PaintCollapsibleCategory</a></li><li data-realm="client"><a href="#PaintConfigLine">PaintConfigLine</a></li><li data-realm="client"><a href="#PaintDeathScreen">PaintDeathScreen</a></li><li data-realm="client"><a href="#PaintFrame">PaintFrame</a></li><li data-realm="client"><a href="#PaintFrame-2">PaintFrame</a></li><li data-realm="client"><a href="#PaintInventoryBackground">PaintInventoryBackground</a></li><li data-realm="client"><a href="#PaintItemSlot">PaintItemSlot</a></li><li data-realm="client"><a href="#PaintListView">PaintListView</a></li><li data-realm="client"><a href="#PaintListViewLine">PaintListViewLine</a></li><li data-realm="client"><a href="#PaintMainMenu">PaintMainMenu</a></li><li data-realm="client"><a href="#PaintMenu">PaintMenu</a></li><li data-realm="client"><a href="#PaintMenuOption">PaintMenuOption</a></li><li data-realm="client"><a href="#PaintOverInventoryBackground">PaintOverInventoryBackground</a></li><li data-realm="client"><a href="#PaintOverMenu">PaintOverMenu</a></li><li data-realm="client"><a href="#PaintPermissionButton">PaintPermissionButton</a></li><li data-realm="client"><a href="#PaintScoreboard">PaintScoreboard</a></li><li data-realm="client"><a href="#PaintScrollBarGrip">PaintScrollBarGrip</a></li><li data-realm="client"><a href="#PaintSidebar">PaintSidebar</a></li><li data-realm="client"><a href="#PaintTab">PaintTab</a></li><li data-realm="client"><a href="#PaintTabInventoryBackground">PaintTabInventoryBackground</a></li><li data-realm="client"><a href="#PaintTabMenu">PaintTabMenu</a></li><li data-realm="client"><a href="#PaintTabMenuButtonPanel">PaintTabMenuButtonPanel</a></li><li data-realm="client"><a href="#SchemeForm">SchemeForm</a></li><li data-realm="client"><a href="#SchemeListViewLabel">SchemeListViewLabel</a></li><li data-realm="client"><a href="#SchemeMenuOption">SchemeMenuOption</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

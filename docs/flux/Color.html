@@ -31,20 +31,20 @@
 <div class="page-header"><h1>Color <span class="badge badge-class">class</span></h1></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#alpha">alpha(amt)</a></div><div class="summary-synopsis">Returns a copy of the color with a different alpha.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#darken">darken(amt)</a></div><div class="summary-synopsis">Returns a darker copy of the color. Alpha is kept as-is.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#desaturate">desaturate(percentage)</a></div><div class="summary-synopsis">Returns a less saturated copy of the color.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#lighten">lighten(amt)</a></div><div class="summary-synopsis">Returns a lighter copy of the color. Alpha is kept as-is.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#saturate">saturate(percentage)</a></div><div class="summary-synopsis">Returns a more saturated copy of the color.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#saturation">saturation(amt)</a></div><div class="summary-synopsis">Returns a copy of the color with its saturation multiplied by a factor. Ripped directly from C equivalent code that can be found here: <a href="http://alienryderflex.com/saturation.html">http://alienryderflex.com/saturation.html</a></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#alpha">alpha(amt)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a copy of the color with a different alpha.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#darken">darken(amt)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a darker copy of the color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#desaturate">desaturate(percentage)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a less saturated copy of the color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#lighten">lighten(amt)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a lighter copy of the color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#saturate">saturate(percentage)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a more saturated copy of the color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#saturation">saturation(amt)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a copy of the color with its saturation multiplied by a factor.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="alpha">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Color:</span>alpha<span class="params">(amt)</span></h3>
+<h3 class="signature"><span class="owner">Color:</span>alpha<span class="params">(amt)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#alpha" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L303" title="View source">lib/stdlib/sh_color.lua:303</a>
+<span class="source-link">lib/stdlib/sh_color.lua:303</span>
 </div>
 <section class="docstring">
 <p>Returns a copy of the color with a different alpha.</p>
@@ -56,9 +56,9 @@
 </section>
 <section class="detail" id="darken">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Color:</span>darken<span class="params">(amt)</span></h3>
+<h3 class="signature"><span class="owner">Color:</span>darken<span class="params">(amt)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#darken" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L279" title="View source">lib/stdlib/sh_color.lua:279</a>
+<span class="source-link">lib/stdlib/sh_color.lua:279</span>
 </div>
 <section class="docstring">
 <p>Returns a darker copy of the color. Alpha is kept as-is.</p>
@@ -70,9 +70,9 @@
 </section>
 <section class="detail" id="desaturate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Color:</span>desaturate<span class="params">(percentage)</span></h3>
+<h3 class="signature"><span class="owner">Color:</span>desaturate<span class="params">(percentage)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#desaturate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L271" title="View source">lib/stdlib/sh_color.lua:271</a>
+<span class="source-link">lib/stdlib/sh_color.lua:271</span>
 </div>
 <section class="docstring">
 <p>Returns a less saturated copy of the color.</p>
@@ -86,9 +86,9 @@
 </section>
 <section class="detail" id="lighten">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Color:</span>lighten<span class="params">(amt)</span></h3>
+<h3 class="signature"><span class="owner">Color:</span>lighten<span class="params">(amt)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#lighten" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L291" title="View source">lib/stdlib/sh_color.lua:291</a>
+<span class="source-link">lib/stdlib/sh_color.lua:291</span>
 </div>
 <section class="docstring">
 <p>Returns a lighter copy of the color. Alpha is kept as-is.</p>
@@ -100,9 +100,9 @@
 </section>
 <section class="detail" id="saturate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Color:</span>saturate<span class="params">(percentage)</span></h3>
+<h3 class="signature"><span class="owner">Color:</span>saturate<span class="params">(percentage)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#saturate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L263" title="View source">lib/stdlib/sh_color.lua:263</a>
+<span class="source-link">lib/stdlib/sh_color.lua:263</span>
 </div>
 <section class="docstring">
 <p>Returns a more saturated copy of the color.</p>
@@ -116,9 +116,9 @@
 </section>
 <section class="detail" id="saturation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Color:</span>saturation<span class="params">(amt)</span></h3>
+<h3 class="signature"><span class="owner">Color:</span>saturation<span class="params">(amt)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#saturation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L247" title="View source">lib/stdlib/sh_color.lua:247</a>
+<span class="source-link">lib/stdlib/sh_color.lua:247</span>
 </div>
 <section class="docstring">
 <p>Returns a copy of the color with its saturation multiplied by a factor.
@@ -131,11 +131,11 @@ here: <a href="http://alienryderflex.com/saturation.html">http://alienryderflex.
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua" title="View source">lib/stdlib/sh_color.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#alpha">alpha</a></li><li><a href="#darken">darken</a></li><li><a href="#desaturate">desaturate</a></li><li><a href="#lighten">lighten</a></li><li><a href="#saturate">saturate</a></li><li><a href="#saturation">saturation</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/stdlib/sh_color.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#alpha">alpha</a></li><li data-realm="shared"><a href="#darken">darken</a></li><li data-realm="shared"><a href="#desaturate">desaturate</a></li><li data-realm="shared"><a href="#lighten">lighten</a></li><li data-realm="shared"><a href="#saturate">saturate</a></li><li data-realm="shared"><a href="#saturation">saturation</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

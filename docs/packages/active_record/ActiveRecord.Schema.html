@@ -31,20 +31,20 @@
 <div class="page-header"><h1>ActiveRecord.Schema <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#load">load(info, callback)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Runs the statements of a schema definition and records the migrations up to its version as run.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load">load(info, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Runs the statements of a schema definition and records the migrations up to its version as run.</div></div>
 </div>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#create_tables">create_tables()</a></div><div class="summary-synopsis">Creates all tables of the schema. Does nothing; the schema files that hold a 'Structure' object override it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#define">define(info, callback)</a></div><div class="summary-synopsis">Defines the schema of the database. Used by the generated 'db/schema.lua' file, which is loaded with <code>flux db:schema:load</code> or when a fresh database is set up. The statements of the callback are run right away, after which the given version and every older migration are recorded as run.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(version)</a></div><div class="summary-synopsis">Creates a schema object. Only used by schema files that hold a 'Structure' object with a #create_tables method.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_tables">create_tables()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates all tables of the schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#define">define(info, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Defines the schema of the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a schema object.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="load">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Schema.</span>load<span class="params">(info, callback)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Schema.</span>load<span class="params">(info, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#load" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/schema.lua#L49" title="View source">packages/active_record/lib/migrator/schema.lua:49</a>
+<span class="source-link">packages/active_record/lib/migrator/schema.lua:49</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -58,9 +58,9 @@ version as run.</p>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="create_tables">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Schema:</span>create_tables<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Schema:</span>create_tables<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#create_tables" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/schema.lua#L40" title="View source">packages/active_record/lib/migrator/schema.lua:40</a>
+<span class="source-link">packages/active_record/lib/migrator/schema.lua:40</span>
 </div>
 <section class="docstring">
 <p>Creates all tables of the schema. Does nothing; the schema files that hold a
@@ -71,9 +71,9 @@ version as run.</p>
 </section>
 <section class="detail" id="define">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Schema:</span>define<span class="params">(info, callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Schema:</span>define<span class="params">(info, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#define" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/schema.lua#L29" title="View source">packages/active_record/lib/migrator/schema.lua:29</a>
+<span class="source-link">packages/active_record/lib/migrator/schema.lua:29</span>
 </div>
 <section class="docstring">
 <p>Defines the schema of the database. Used by the generated 'db/schema.lua' file,
@@ -99,9 +99,9 @@ it returns a schema object instead and runs nothing.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Schema:</span>init<span class="params">(version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Schema:</span>init<span class="params">(version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/schema.lua#L6" title="View source">packages/active_record/lib/migrator/schema.lua:6</a>
+<span class="source-link">packages/active_record/lib/migrator/schema.lua:6</span>
 </div>
 <section class="docstring">
 <p>Creates a schema object. Only used by schema files that hold a 'Structure' object
@@ -111,11 +111,11 @@ with a #create_tables method.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/schema.lua" title="View source">packages/active_record/lib/migrator/schema.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#load">load</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#create_tables">create_tables</a></li><li><a href="#define">define</a></li><li><a href="#init">init</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/migrator/schema.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#load">load</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#create_tables">create_tables</a></li><li data-realm="shared"><a href="#define">define</a></li><li data-realm="shared"><a href="#init">init</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

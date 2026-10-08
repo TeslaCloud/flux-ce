@@ -4,6 +4,7 @@ local metrics = {}
 if is_development then
   --- Registers an object under a debug metric.
   -- Metrics are only collected when FLUX_ENV is set to 'development'.
+  -- @environment [development]
   -- @param id [String metric name]
   -- @param obj [Any object to register]
   -- @return [Number amount of objects registered under this metric so far]
@@ -20,6 +21,7 @@ if is_development then
   end
 
   --- Returns all objects that were registered under a debug metric.
+  -- @environment [development]
   -- @param id [String metric name]
   -- @return [List registered objects, or nil if nothing was registered under this metric]
   function get_debug_metric(id)
@@ -28,6 +30,7 @@ if is_development then
 
   --- Prints the amount of objects registered under a debug metric to the console.
   -- The metric has to exist.
+  -- @environment [development]
   -- @param id [String metric name]
   -- @param format='{count} {id} were registered.' [String message, {count} and {id} are replaced]
   -- @see [string.fmt]
@@ -44,6 +47,7 @@ if is_development then
   end
 
   --- Prints the amount of registered objects of every debug metric to the console.
+  -- @environment [development]
   function print_debug_metrics()
     for id, objects in pairs(metrics) do
       print_debug_metric(id)

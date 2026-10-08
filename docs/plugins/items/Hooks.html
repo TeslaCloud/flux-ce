@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Hooks — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/items" data-module="Hooks">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Hooks <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Part of <a href="../../plugins/items/index.html">Items System</a></p></div>
+<p class="lead">Hooks called by Items System</p>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#CanItemMenuOpen">CanItemMenuOpen(item_obj)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnEntityItemSet">OnEntityItemSet(self, item_obj)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemCreated">OnItemCreated(instances[id][item_id])</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemEquipped">OnItemEquipped(owner, self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemUnequipped">OnItemUnequipped(owner, self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCanUseItem">PlayerCanUseItem(actor, self, act, ...)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerConsumeItem">PlayerConsumeItem(actor, self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDropItem">PlayerDropItem(actor, self.instance_id)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerTakeItem">PlayerTakeItem(actor, self, ...)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerThrewGrenade">PlayerThrewGrenade(owner, entity)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUsedItem">PlayerUsedItem(actor, self, act, ...)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUseItem">PlayerUseItem(actor, self, ...)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUseItemEntity">PlayerUseItemEntity(caller, self, self.item)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUseItemMenu">PlayerUseItemMenu(entity.item.instance_id, true)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostDrawItemTargetID">PostDrawItemTargetID(self, self.item, x, y, alpha, distance)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreDrawItemTargetID">PreDrawItemTargetID(self, self.item, x, y, alpha, distance)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreEntityItemSet">PreEntityItemSet(self, item_obj)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreItemSave">PreItemSave(item_obj, save_table)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PrePlayerConsumeItem">PrePlayerConsumeItem(actor, self)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
+<section class="detail" id="CanItemMenuOpen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CanItemMenuOpen<span class="params">(item_obj)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#CanItemMenuOpen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/cl_hooks.lua:51</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/Items.html#PlayerUseItemMenu"><code>Items:PlayerUseItemMenu</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/cl_hooks.lua:51</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnEntityItemSet">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnEntityItemSet<span class="params">(self, item_obj)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnEntityItemSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:100</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>item_obj</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/fl_item.html#set_item"><code>fl_item:set_item</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:100</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnItemCreated<span class="params">(instances[id][item_id])</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnItemCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/lib/sh_item.lua:265</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>instances[id][item_id]</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/Item.html#create"><code>Item.create</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/sh_item.lua:265</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemEquipped">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnItemEquipped<span class="params">(owner, self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OnItemEquipped" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/items/bases/sh_item_equipable.lua:122</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>owner</code></li><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemEquipable.html#equip"><code>ItemEquipable:equip</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/items/bases/sh_item_equipable.lua:122</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemUnequipped">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnItemUnequipped<span class="params">(owner, self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#OnItemUnequipped" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/items/bases/sh_item_equipable.lua:134</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>owner</code></li><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemEquipable.html#equip"><code>ItemEquipable:equip</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/items/bases/sh_item_equipable.lua:134</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCanUseItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerCanUseItem<span class="params">(actor, self, act, ...)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCanUseItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:262</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>self</code></li><li><code>act</code></li><li><code>...</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemBase.html#do_menu_action"><code>ItemBase:do_menu_action</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:262</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerConsumeItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerConsumeItem<span class="params">(actor, self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerConsumeItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/items/bases/sh_item_consumables.lua:17</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemConsumable.html#on_use"><code>ItemConsumable:on_use</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/items/bases/sh_item_consumables.lua:17</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerDropItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerDropItem<span class="params">(actor, self.instance_id)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerDropItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:273</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>self.instance_id</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemBase.html#do_menu_action"><code>ItemBase:do_menu_action</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:273</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerTakeItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerTakeItem<span class="params">(actor, self, ...)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerTakeItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:265</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>self</code></li><li><code>...</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemBase.html#do_menu_action"><code>ItemBase:do_menu_action</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:265</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerThrewGrenade">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerThrewGrenade<span class="params">(owner, entity)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerThrewGrenade" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/sv_hooks.lua:14</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>owner</code></li><li><code>entity</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/sv_hooks.lua:14</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUsedItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerUsedItem<span class="params">(actor, self, act, ...)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerUsedItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:289</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>self</code></li><li><code>act</code></li><li><code>...</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemBase.html#do_menu_action"><code>ItemBase:do_menu_action</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:289</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUseItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerUseItem<span class="params">(actor, self, ...)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerUseItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:269</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>self</code></li><li><code>...</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemBase.html#do_menu_action"><code>ItemBase:do_menu_action</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:269</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUseItemEntity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerUseItemEntity<span class="params">(caller, self, self.item)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerUseItemEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:51</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>caller</code></li><li><code>self</code></li><li><code>self.item</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/fl_item.html#Use"><code>fl_item:Use</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:51</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUseItemMenu">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerUseItemMenu<span class="params">(entity.item.instance_id, true)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PlayerUseItemMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/cl_hooks.lua:131</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>entity.item.instance_id</code></li><li><code>true</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/cl_hooks.lua:131</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostDrawItemTargetID">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PostDrawItemTargetID<span class="params">(self, self.item, x, y, alpha, distance)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PostDrawItemTargetID" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:200</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>self.item</code></li><li><code>x</code></li><li><code>y</code></li><li><code>alpha</code></li><li><code>distance</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/fl_item.html#DrawTargetID"><code>fl_item:DrawTargetID</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:200</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreDrawItemTargetID">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreDrawItemTargetID<span class="params">(self, self.item, x, y, alpha, distance)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PreDrawItemTargetID" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:129</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>self.item</code></li><li><code>x</code></li><li><code>y</code></li><li><code>alpha</code></li><li><code>distance</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/fl_item.html#DrawTargetID"><code>fl_item:DrawTargetID</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:129</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreEntityItemSet">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreEntityItemSet<span class="params">(self, item_obj)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PreEntityItemSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:90</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>item_obj</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/fl_item.html#set_item"><code>fl_item:set_item</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua:90</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreItemSave">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreItemSave<span class="params">(item_obj, save_table)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PreItemSave" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/lib/sh_item.lua:144</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>save_table</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/Item.html#to_saveable"><code>Item.to_saveable</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/sh_item.lua:144</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PrePlayerConsumeItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PrePlayerConsumeItem<span class="params">(actor, self)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PrePlayerConsumeItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/items/plugin/items/bases/sh_item_consumables.lua:16</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/items/ItemConsumable.html#on_use"><code>ItemConsumable:on_use</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/items/bases/sh_item_consumables.lua:16</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/items/plugin/cl_hooks.lua</span></li><li><span class="source-link">plugins/items/plugin/entities/entities/fl_item.lua</span></li><li><span class="source-link">plugins/items/plugin/items/bases/sh_item_consumables.lua</span></li><li><span class="source-link">plugins/items/plugin/items/bases/sh_item_equipable.lua</span></li><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua</span></li><li><span class="source-link">plugins/items/plugin/lib/sh_item.lua</span></li><li><span class="source-link">plugins/items/plugin/sv_hooks.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="client"><a href="#CanItemMenuOpen">CanItemMenuOpen</a></li><li data-realm="server"><a href="#OnEntityItemSet">OnEntityItemSet</a></li><li data-realm="server"><a href="#OnItemCreated">OnItemCreated</a></li><li data-realm="shared"><a href="#OnItemEquipped">OnItemEquipped</a></li><li data-realm="shared"><a href="#OnItemUnequipped">OnItemUnequipped</a></li><li data-realm="server"><a href="#PlayerCanUseItem">PlayerCanUseItem</a></li><li data-realm="shared"><a href="#PlayerConsumeItem">PlayerConsumeItem</a></li><li data-realm="server"><a href="#PlayerDropItem">PlayerDropItem</a></li><li data-realm="server"><a href="#PlayerTakeItem">PlayerTakeItem</a></li><li data-realm="server"><a href="#PlayerThrewGrenade">PlayerThrewGrenade</a></li><li data-realm="server"><a href="#PlayerUsedItem">PlayerUsedItem</a></li><li data-realm="server"><a href="#PlayerUseItem">PlayerUseItem</a></li><li data-realm="server"><a href="#PlayerUseItemEntity">PlayerUseItemEntity</a></li><li data-realm="client"><a href="#PlayerUseItemMenu">PlayerUseItemMenu</a></li><li data-realm="client"><a href="#PostDrawItemTargetID">PostDrawItemTargetID</a></li><li data-realm="client"><a href="#PreDrawItemTargetID">PreDrawItemTargetID</a></li><li data-realm="server"><a href="#PreEntityItemSet">PreEntityItemSet</a></li><li data-realm="shared"><a href="#PreItemSave">PreItemSave</a></li><li data-realm="shared"><a href="#PrePlayerConsumeItem">PrePlayerConsumeItem</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

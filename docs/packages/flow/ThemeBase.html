@@ -28,36 +28,36 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>ThemeBase <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>ThemeBase <span class="badge badge-class">class</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a></div><div class="summary-synopsis">Converts the theme to a string for printing.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_panel">add_panel(id, callback)</a></div><div class="summary-synopsis">Registers a callback that creates a panel for this theme. This lets themes replace the panels that are created with Theme.create_panel.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_panel">create_panel(id, parent, ...)</a></div><div class="summary-synopsis">Creates a panel using the callback registered with ThemeBase#add_panel.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color(id, failsafe)</a></div><div class="summary-synopsis">Returns a color of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_font">get_font(key, default)</a></div><div class="summary-synopsis">Returns the name of a font of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_material">get_material(id, failsafe)</a></div><div class="summary-synopsis">Returns a material of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_option">get_option(key, default)</a></div><div class="summary-synopsis">Returns an option of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_sound">get_sound(id, failsafe)</a></div><div class="summary-synopsis">Returns a sound of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(name, parent)</a></div><div class="summary-synopsis">Creates a new theme. The ID of the theme is derived from its name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_loaded">on_loaded()</a></div><div class="summary-synopsis">Called when the theme becomes the active one. Does nothing by default, override it to set the colors, fonts, options and other assets of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_unloaded">on_unloaded()</a></div><div class="summary-synopsis">Called when the theme is unloaded. Does nothing by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a></div><div class="summary-synopsis">Adds this theme to the list of registered themes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register_asset">register_asset(name, path, options)</a></div><div class="summary-synopsis">Registers an asset of the theme. Models are precached, images (PNG and JPEG) are stored as theme materials. When sizes are specified, the smallest scale that covers the height of the screen relative to 720p is picked, and the image is loaded from the file with the '_&lt;scale&gt;x' suffix instead.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove">remove()</a></div><div class="summary-synopsis">Removes this theme from the list of registered themes.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_color">set_color(id, val)</a></div><div class="summary-synopsis">Sets a color of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_font">set_font(key, value, scale, data)</a></div><div class="summary-synopsis">Sets a font of the theme. The font is derived from an existing one with Font.size.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_material">set_material(id, val)</a></div><div class="summary-synopsis">Sets a material of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_option">set_option(key, value)</a></div><div class="summary-synopsis">Sets an option of the theme.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_sound">set_sound(id, val)</a></div><div class="summary-synopsis">Sets a sound of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Converts the theme to a string for printing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_panel">add_panel(id, callback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers a callback that creates a panel for this theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_panel">create_panel(id, parent, ...)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates a panel using the callback registered with ThemeBase#add_panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color(id, failsafe)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns a color of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_font">get_font(key, default)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the name of a font of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_material">get_material(id, failsafe)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns a material of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_option">get_option(key, default)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns an option of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_sound">get_sound(id, failsafe)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns a sound of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(name, parent)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates a new theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_loaded">on_loaded()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Called when the theme becomes the active one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_unloaded">on_unloaded()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Called when the theme is unloaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Adds this theme to the list of registered themes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_asset">register_asset(name, path, options)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Registers an asset of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove">remove()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Removes this theme from the list of registered themes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_color">set_color(id, val)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a color of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_font">set_font(key, value, scale, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a font of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_material">set_material(id, val)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a material of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_option">set_option(key, value)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets an option of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_sound">set_sound(id, val)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets a sound of the theme.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="__tostring">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>__tostring<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>__tostring<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#__tostring" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L226" title="View source">packages/flow/lib/classes/cl_theme.lua:226</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:226</span>
 </div>
 <section class="docstring">
 <p>Converts the theme to a string for printing.</p>
@@ -67,9 +67,9 @@
 </section>
 <section class="detail" id="add_panel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>add_panel<span class="params">(id, callback)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>add_panel<span class="params">(id, callback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#add_panel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L49" title="View source">packages/flow/lib/classes/cl_theme.lua:49</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:49</span>
 </div>
 <section class="docstring">
 <p>Registers a callback that creates a panel for this theme. This lets themes replace
@@ -84,9 +84,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="create_panel">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>create_panel<span class="params">(id, parent, ...)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>create_panel<span class="params">(id, parent, ...)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#create_panel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L58" title="View source">packages/flow/lib/classes/cl_theme.lua:58</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:58</span>
 </div>
 <section class="docstring">
 <p>Creates a panel using the callback registered with ThemeBase#add_panel.</p>
@@ -98,9 +98,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="get_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>get_color<span class="params">(id, failsafe)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_color<span class="params">(id, failsafe)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L180" title="View source">packages/flow/lib/classes/cl_theme.lua:180</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:180</span>
 </div>
 <section class="docstring">
 <p>Returns a color of the theme.</p>
@@ -112,9 +112,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="get_font">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>get_font<span class="params">(key, default)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_font<span class="params">(key, default)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_font" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L164" title="View source">packages/flow/lib/classes/cl_theme.lua:164</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:164</span>
 </div>
 <section class="docstring">
 <p>Returns the name of a font of the theme.</p>
@@ -126,9 +126,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="get_material">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>get_material<span class="params">(id, failsafe)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_material<span class="params">(id, failsafe)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L194" title="View source">packages/flow/lib/classes/cl_theme.lua:194</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:194</span>
 </div>
 <section class="docstring">
 <p>Returns a material of the theme.</p>
@@ -140,9 +140,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="get_option">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>get_option<span class="params">(key, default)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_option<span class="params">(key, default)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_option" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L172" title="View source">packages/flow/lib/classes/cl_theme.lua:172</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:172</span>
 </div>
 <section class="docstring">
 <p>Returns an option of the theme.</p>
@@ -154,9 +154,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="get_sound">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>get_sound<span class="params">(id, failsafe)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_sound<span class="params">(id, failsafe)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L208" title="View source">packages/flow/lib/classes/cl_theme.lua:208</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:208</span>
 </div>
 <section class="docstring">
 <p>Returns a sound of the theme.</p>
@@ -168,9 +168,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>init<span class="params">(name, parent)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>init<span class="params">(name, parent)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L15" title="View source">packages/flow/lib/classes/cl_theme.lua:15</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:15</span>
 </div>
 <section class="docstring">
 <p>Creates a new theme. The ID of the theme is derived from its name.</p>
@@ -180,9 +180,9 @@ the panels that are created with Theme.create_panel.</p>
 </section>
 <section class="detail" id="on_loaded">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>on_loaded<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>on_loaded<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#on_loaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L27" title="View source">packages/flow/lib/classes/cl_theme.lua:27</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:27</span>
 </div>
 <section class="docstring">
 <p>Called when the theme becomes the active one. Does nothing by default, override it
@@ -191,9 +191,9 @@ to set the colors, fonts, options and other assets of the theme.</p>
 </section>
 <section class="detail" id="on_unloaded">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>on_unloaded<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>on_unloaded<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#on_unloaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L31" title="View source">packages/flow/lib/classes/cl_theme.lua:31</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:31</span>
 </div>
 <section class="docstring">
 <p>Called when the theme is unloaded. Does nothing by default.</p>
@@ -201,9 +201,9 @@ to set the colors, fonts, options and other assets of the theme.</p>
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>register<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>register<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L220" title="View source">packages/flow/lib/classes/cl_theme.lua:220</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:220</span>
 </div>
 <section class="docstring">
 <p>Adds this theme to the list of registered themes.</p>
@@ -213,9 +213,9 @@ to set the colors, fonts, options and other assets of the theme.</p>
 </section>
 <section class="detail" id="register_asset">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>register_asset<span class="params">(name, path, options)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>register_asset<span class="params">(name, path, options)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#register_asset" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L76" title="View source">packages/flow/lib/classes/cl_theme.lua:76</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:76</span>
 </div>
 <section class="docstring">
 <p>Registers an asset of the theme. Models are precached, images (PNG and JPEG) are stored
@@ -233,9 +233,9 @@ of the screen relative to 720p is picked, and the image is loaded from the file 
 </section>
 <section class="detail" id="remove">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>remove<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>remove<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#remove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L35" title="View source">packages/flow/lib/classes/cl_theme.lua:35</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:35</span>
 </div>
 <section class="docstring">
 <p>Removes this theme from the list of registered themes.</p>
@@ -243,9 +243,9 @@ of the screen relative to 720p is picked, and the image is loaded from the file 
 </section>
 <section class="detail" id="set_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>set_color<span class="params">(id, val)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_color<span class="params">(id, val)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L134" title="View source">packages/flow/lib/classes/cl_theme.lua:134</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:134</span>
 </div>
 <section class="docstring">
 <p>Sets a color of the theme.</p>
@@ -257,9 +257,9 @@ of the screen relative to 720p is picked, and the image is loaded from the file 
 </section>
 <section class="detail" id="set_font">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>set_font<span class="params">(key, value, scale, data)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_font<span class="params">(key, value, scale, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_font" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L122" title="View source">packages/flow/lib/classes/cl_theme.lua:122</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:122</span>
 </div>
 <section class="docstring">
 <p>Sets a font of the theme. The font is derived from an existing one with Font.size.</p>
@@ -273,9 +273,9 @@ of the screen relative to 720p is picked, and the image is loaded from the file 
 </section>
 <section class="detail" id="set_material">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>set_material<span class="params">(id, val)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_material<span class="params">(id, val)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L146" title="View source">packages/flow/lib/classes/cl_theme.lua:146</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:146</span>
 </div>
 <section class="docstring">
 <p>Sets a material of the theme.</p>
@@ -287,9 +287,9 @@ of the screen relative to 720p is picked, and the image is loaded from the file 
 </section>
 <section class="detail" id="set_option">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>set_option<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_option<span class="params">(key, value)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_option" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L105" title="View source">packages/flow/lib/classes/cl_theme.lua:105</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:105</span>
 </div>
 <section class="docstring">
 <p>Sets an option of the theme.</p>
@@ -301,9 +301,9 @@ of the screen relative to 720p is picked, and the image is loaded from the file 
 </section>
 <section class="detail" id="set_sound">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ThemeBase:</span>set_sound<span class="params">(id, val)</span></h3>
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_sound<span class="params">(id, val)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L155" title="View source">packages/flow/lib/classes/cl_theme.lua:155</a>
+<span class="source-link">packages/flow/lib/classes/cl_theme.lua:155</span>
 </div>
 <section class="docstring">
 <p>Sets a sound of the theme.</p>
@@ -314,11 +314,11 @@ of the screen relative to 720p is picked, and the image is loaded from the file 
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua" title="View source">packages/flow/lib/classes/cl_theme.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#__tostring">__tostring</a></li><li><a href="#add_panel">add_panel</a></li><li><a href="#create_panel">create_panel</a></li><li><a href="#get_color">get_color</a></li><li><a href="#get_font">get_font</a></li><li><a href="#get_material">get_material</a></li><li><a href="#get_option">get_option</a></li><li><a href="#get_sound">get_sound</a></li><li><a href="#init">init</a></li><li><a href="#on_loaded">on_loaded</a></li><li><a href="#on_unloaded">on_unloaded</a></li><li><a href="#register">register</a></li><li><a href="#register_asset">register_asset</a></li><li><a href="#remove">remove</a></li><li><a href="#set_color">set_color</a></li><li><a href="#set_font">set_font</a></li><li><a href="#set_material">set_material</a></li><li><a href="#set_option">set_option</a></li><li><a href="#set_sound">set_sound</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/classes/cl_theme.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="client"><a href="#__tostring">__tostring</a></li><li data-realm="client"><a href="#add_panel">add_panel</a></li><li data-realm="client"><a href="#create_panel">create_panel</a></li><li data-realm="client"><a href="#get_color">get_color</a></li><li data-realm="client"><a href="#get_font">get_font</a></li><li data-realm="client"><a href="#get_material">get_material</a></li><li data-realm="client"><a href="#get_option">get_option</a></li><li data-realm="client"><a href="#get_sound">get_sound</a></li><li data-realm="client"><a href="#init">init</a></li><li data-realm="client"><a href="#on_loaded">on_loaded</a></li><li data-realm="client"><a href="#on_unloaded">on_unloaded</a></li><li data-realm="client"><a href="#register">register</a></li><li data-realm="client"><a href="#register_asset">register_asset</a></li><li data-realm="client"><a href="#remove">remove</a></li><li data-realm="client"><a href="#set_color">set_color</a></li><li data-realm="client"><a href="#set_font">set_font</a></li><li data-realm="client"><a href="#set_material">set_material</a></li><li data-realm="client"><a href="#set_option">set_option</a></li><li data-realm="client"><a href="#set_sound">set_sound</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

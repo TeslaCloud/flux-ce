@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Hooks — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/inventory" data-module="Hooks">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Hooks <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">Inventory</a></p></div>
+<p class="lead">Hooks called by Inventory</p>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#AddDefaultItems">AddDefaultItems(owner, char, char.inventory)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CanItemMove">CanItemMove(item_obj, self, x, y)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CanItemTransfer">CanItemTransfer(item_obj, inventory, x, y)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CanPlayerDropItem">CanPlayerDropItem(actor, item_obj)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreatePlayerInventories">CreatePlayerInventories(self, inventories)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ItemTransferred">ItemTransferred(item_obj, inventory, self)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnContainerOpened">OnContainerOpened(self, inventory_id)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnInventoryClosed">OnInventoryClosed(actor, Inventories.find(inventory_ids[1]))</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnInventoryRebuild">OnInventoryRebuild(self)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnInventorySync">OnInventorySync(inventory)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemAdded">OnItemAdded(item_obj, self, x, y)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemGiven">OnItemGiven(item_obj, self, data)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemMoved">OnItemMoved(actor, item_obj, instance_ids, inventory_id, x, y)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemTaken">OnItemTaken(item_obj, self)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCanMoveItem">PlayerCanMoveItem(actor, item_obj, instance_ids, inventory_id, x, y)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDropItem">PlayerDropItem(actor, instance_ids)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerSelectSlot">PlayerSelectSlot(client, n)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUseItemMenu">PlayerUseItemMenu(self.instance_ids[#self.instance_ids])</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreItemTransfer">PreItemTransfer(item_obj, inventory, self)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis"></div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
+<section class="detail" id="AddDefaultItems">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>AddDefaultItems<span class="params">(owner, char, char.inventory)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#AddDefaultItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/sv_hooks.lua:6</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>owner</code></li><li><code>char</code></li><li><code>char.inventory</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventories.html#PostCreateCharacter"><code>Inventories:PostCreateCharacter</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:6</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CanItemMove">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CanItemMove<span class="params">(item_obj, self, x, y)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CanItemMove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:651</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>self</code></li><li><code>x</code></li><li><code>y</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventory.html#move_item"><code>Inventory:move_item</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:651</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CanItemTransfer">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CanItemTransfer<span class="params">(item_obj, inventory, x, y)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CanItemTransfer" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:727</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>inventory</code></li><li><code>x</code></li><li><code>y</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventory.html#transfer_item"><code>Inventory:transfer_item</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:727</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CanPlayerDropItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CanPlayerDropItem<span class="params">(actor, item_obj)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CanPlayerDropItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/sv_hooks.lua:188</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>item_obj</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventories.html#PlayerDropItem"><code>Inventories:PlayerDropItem</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:188</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CreatePlayerInventories">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>CreatePlayerInventories<span class="params">(self, inventories)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#CreatePlayerInventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:256</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>inventories</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Player.html#create_inventories"><code>Player:create_inventories</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua:256</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ItemTransferred">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>ItemTransferred<span class="params">(item_obj, inventory, self)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#ItemTransferred" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:792</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>inventory</code></li><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventory.html#transfer_item"><code>Inventory:transfer_item</code></a></li><li><a href="../../plugins/inventory/Inventories.html#PlayerTakeItem"><code>Inventories:PlayerTakeItem</code></a></li><li><a href="../../plugins/inventory/Inventories.html#PlayerDropItem"><code>Inventories:PlayerDropItem</code></a></li><li><a href="../../plugins/inventory/Inventories.html#PlayerUseItem"><code>Inventories:PlayerUseItem</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:792</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:165</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:194</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:358</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnContainerOpened">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnContainerOpened<span class="params">(self, inventory_id)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnContainerOpened" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/views/cl_inventory_container.lua:96</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li><li><code>inventory_id</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/fl_inventory_container.html#open_inventory"><code>fl_inventory_container:open_inventory</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/views/cl_inventory_container.lua:96</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnInventoryClosed">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnInventoryClosed<span class="params">(actor, Inventories.find(inventory_ids[1]))</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnInventoryClosed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/sv_hooks.lua:425</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>Inventories.find(inventory_ids[1])</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:425</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnInventoryRebuild">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnInventoryRebuild<span class="params">(self)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnInventoryRebuild" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/views/cl_inventory.lua:345</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/fl_inventory.html#rebuild"><code>fl_inventory:rebuild</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/views/cl_inventory.lua:345</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnInventorySync">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnInventorySync<span class="params">(inventory)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#OnInventorySync" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/cl_hooks.lua:137</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>inventory</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/cl_hooks.lua:137</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemAdded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnItemAdded<span class="params">(item_obj, self, x, y)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnItemAdded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:522</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>self</code></li><li><code>x</code></li><li><code>y</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventory.html#add_item"><code>Inventory:add_item</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:522</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemGiven">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnItemGiven<span class="params">(item_obj, self, data)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnItemGiven" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:569</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>self</code></li><li><code>data</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventory.html#give_item"><code>Inventory:give_item</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:569</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemMoved">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnItemMoved<span class="params">(actor, item_obj, instance_ids, inventory_id, x, y)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnItemMoved" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/sv_hooks.lua:411</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>item_obj</code></li><li><code>instance_ids</code></li><li><code>inventory_id</code></li><li><code>x</code></li><li><code>y</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:411</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemTaken">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>OnItemTaken<span class="params">(item_obj, self)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#OnItemTaken" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:598</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventory.html#take_item_table"><code>Inventory:take_item_table</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:598</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCanMoveItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerCanMoveItem<span class="params">(actor, item_obj, instance_ids, inventory_id, x, y)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerCanMoveItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/sv_hooks.lua:391</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>item_obj</code></li><li><code>instance_ids</code></li><li><code>inventory_id</code></li><li><code>x</code></li><li><code>y</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:391</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerDropItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerDropItem<span class="params">(actor, instance_ids)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PlayerDropItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/sv_hooks.lua:415</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>actor</code></li><li><code>instance_ids</code></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:415</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerSelectSlot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerSelectSlot<span class="params">(client, n)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
+<a href="#PlayerSelectSlot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/sh_hooks.lua:10</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>client</code></li><li><code>n</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventories.html#PlayerBindPress"><code>Inventories:PlayerBindPress</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/sh_hooks.lua:10</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUseItemMenu">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PlayerUseItemMenu<span class="params">(self.instance_ids[#self.instance_ids])</span></h3> <span class="realm realm-client" title="Client-side">client</span>
+<a href="#PlayerUseItemMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/views/cl_inventory_item.lua:162</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>self.instance_ids[#self.instance_ids]</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/fl_inventory_item.html#OnMouseReleased"><code>fl_inventory_item:OnMouseReleased</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/views/cl_inventory_item.lua:162</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreItemTransfer">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>PreItemTransfer<span class="params">(item_obj, inventory, self)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
+<a href="#PreItemTransfer" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:762</span>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+<h4>Arguments</h4>
+<ul class="params arguments"><li><code>item_obj</code></li><li><code>inventory</code></li><li><code>self</code></li></ul>
+<h4>Called from</h4>
+<ul class="callers"><li><a href="../../plugins/inventory/Inventory.html#transfer_item"><code>Inventory:transfer_item</code></a></li><li><a href="../../plugins/inventory/Inventories.html#PlayerTakeItem"><code>Inventories:PlayerTakeItem</code></a></li><li><a href="../../plugins/inventory/Inventories.html#PlayerDropItem"><code>Inventories:PlayerDropItem</code></a></li><li><a href="../../plugins/inventory/Inventories.html#PlayerUseItem"><code>Inventories:PlayerUseItem</code></a></li></ul>
+<h4>Call sites</h4>
+<ul class="source-list"><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua:762</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:156</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:190</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua:353</span> <span class="realm realm-server" title="Server-side">server</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/inventory/plugin/cl_hooks.lua</span></li><li><span class="source-link">plugins/inventory/plugin/lib/classes/sh_inventory.lua</span></li><li><span class="source-link">plugins/inventory/plugin/sv_hooks.lua</span></li><li><span class="source-link">plugins/inventory/plugin/lib/sh_inventory.lua</span></li><li><span class="source-link">plugins/inventory/plugin/sh_hooks.lua</span></li><li><span class="source-link">plugins/inventory/plugin/views/cl_inventory.lua</span></li><li><span class="source-link">plugins/inventory/plugin/views/cl_inventory_container.lua</span></li><li><span class="source-link">plugins/inventory/plugin/views/cl_inventory_item.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="server"><a href="#AddDefaultItems">AddDefaultItems</a></li><li data-realm="server"><a href="#CanItemMove">CanItemMove</a></li><li data-realm="server"><a href="#CanItemTransfer">CanItemTransfer</a></li><li data-realm="server"><a href="#CanPlayerDropItem">CanPlayerDropItem</a></li><li data-realm="server"><a href="#CreatePlayerInventories">CreatePlayerInventories</a></li><li data-realm="server"><a href="#ItemTransferred">ItemTransferred</a></li><li data-realm="client"><a href="#OnContainerOpened">OnContainerOpened</a></li><li data-realm="server"><a href="#OnInventoryClosed">OnInventoryClosed</a></li><li data-realm="client"><a href="#OnInventoryRebuild">OnInventoryRebuild</a></li><li data-realm="client"><a href="#OnInventorySync">OnInventorySync</a></li><li data-realm="server"><a href="#OnItemAdded">OnItemAdded</a></li><li data-realm="server"><a href="#OnItemGiven">OnItemGiven</a></li><li data-realm="server"><a href="#OnItemMoved">OnItemMoved</a></li><li data-realm="server"><a href="#OnItemTaken">OnItemTaken</a></li><li data-realm="server"><a href="#PlayerCanMoveItem">PlayerCanMoveItem</a></li><li data-realm="server"><a href="#PlayerDropItem">PlayerDropItem</a></li><li data-realm="shared"><a href="#PlayerSelectSlot">PlayerSelectSlot</a></li><li data-realm="client"><a href="#PlayerUseItemMenu">PlayerUseItemMenu</a></li><li data-realm="server"><a href="#PreItemTransfer">PreItemTransfer</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

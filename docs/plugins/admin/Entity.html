@@ -28,19 +28,19 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Entity <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/admin/index.html">admin</a></p></div>
+<div class="page-header"><h1>Entity <span class="badge badge-class">class</span><span class="realm realm-server" title="Server-side">server</span></h1><p class="subtitle">Part of <a href="../../plugins/admin/index.html">Admin Mod</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#prevent_transmit">prevent_transmit(target, should_prevent)</a></div><div class="summary-synopsis">Stops or resumes networking this entity and all of its children to a player. Does nothing if the target is invalid.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#prevent_transmit_conditional">prevent_transmit_conditional(should_prevent, condition)</a></div><div class="summary-synopsis">Stops or resumes networking this entity to every other player the condition does not exclude. Also sets the entity's 'transmission_prevented' net var, sent only to itself.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#prevent_transmit">prevent_transmit(target, should_prevent)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Stops or resumes networking this entity and all of its children to a player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#prevent_transmit_conditional">prevent_transmit_conditional(should_prevent, condition)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Stops or resumes networking this entity to every other player the condition does not exclude.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="prevent_transmit">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Entity:</span>prevent_transmit<span class="params">(target, should_prevent)</span></h3>
+<h3 class="signature"><span class="owner">Entity:</span>prevent_transmit<span class="params">(target, should_prevent)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#prevent_transmit" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/meta/sv_entity.lua#L7" title="View source">plugins/admin/plugin/lib/meta/sv_entity.lua:7</a>
+<span class="source-link">plugins/admin/plugin/lib/meta/sv_entity.lua:7</span>
 </div>
 <section class="docstring">
 <p>Stops or resumes networking this entity and all of its children to a player. Does nothing
@@ -51,9 +51,9 @@ if the target is invalid.</p>
 </section>
 <section class="detail" id="prevent_transmit_conditional">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Entity:</span>prevent_transmit_conditional<span class="params">(should_prevent, condition)</span></h3>
+<h3 class="signature"><span class="owner">Entity:</span>prevent_transmit_conditional<span class="params">(should_prevent, condition)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#prevent_transmit_conditional" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/meta/sv_entity.lua#L32" title="View source">plugins/admin/plugin/lib/meta/sv_entity.lua:32</a>
+<span class="source-link">plugins/admin/plugin/lib/meta/sv_entity.lua:32</span>
 </div>
 <section class="docstring">
 <p>Stops or resumes networking this entity to every other player the condition does not
@@ -70,11 +70,11 @@ target:<span class="hl-f">prevent_transmit_conditional</span>(<span class="hl-k"
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/meta/sv_entity.lua" title="View source">plugins/admin/plugin/lib/meta/sv_entity.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#prevent_transmit">prevent_transmit</a></li><li><a href="#prevent_transmit_conditional">prevent_transmit_conditional</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/admin/plugin/lib/meta/sv_entity.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="server"><a href="#prevent_transmit">prevent_transmit</a></li><li data-realm="server"><a href="#prevent_transmit_conditional">prevent_transmit_conditional</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

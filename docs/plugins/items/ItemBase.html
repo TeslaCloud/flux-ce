@@ -28,49 +28,48 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>ItemBase <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/items/index.html">items</a></p></div>
+<div class="page-header"><h1>ItemBase <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/items/index.html">Items System</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a></div><div class="summary-synopsis">Fancy output if you do print(item_obj).</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_button">add_button(name, data)</a></div><div class="summary-synopsis">Adds a custom button to the menu of the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#base_off">base_off(what)</a></div><div class="summary-synopsis">Bases the item off an item base. Copies every function of the base, and every other field that the item has not set yet. Also available as ItemBase:derive.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#do_menu_action">do_menu_action(act, actor, ...)</a></div><div class="summary-synopsis">Performs a menu action on the item on behalf of the player. Runs the 'PlayerCanUseItem' hook and then the hook of the action ('PlayerTakeItem', 'PlayerUseItem' or 'PlayerDropItem'). Every action except 'on_use' and 'on_take' also calls the item's method of the same name with the player and the extra arguments. Runs the 'PlayerUsedItem' hook when done.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#do_menu_action-2">do_menu_action(act, ...)</a></div><div class="summary-synopsis">Asks the server to perform a menu action on the item on behalf of the local player.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_cancel_text">get_cancel_text()</a></div><div class="summary-synopsis">Returns the title of the 'cancel' option in the item's menu. Client-side only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color()</a></div><div class="summary-synopsis">Returns the color of the item's model.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_data">get_data(id, default)</a></div><div class="summary-synopsis">Returns a custom data value of the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_description">get_description()</a></div><div class="summary-synopsis">Returns the description of the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_drop_text">get_drop_text()</a></div><div class="summary-synopsis">Returns the title of the 'drop' option in the item's menu. Client-side only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_icon_data">get_icon_data()</a></div><div class="summary-synopsis">Returns the camera setup that is used to render the item's model in inventory slots.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_icon_material">get_icon_material()</a></div><div class="summary-synopsis">Returns the material that is drawn in inventory slots instead of the item's model.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_icon_model">get_icon_model()</a></div><div class="summary-synopsis">Returns the model that is shown in inventory slots instead of the item's own model. Client-side only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_max_stack">get_max_stack()</a></div><div class="summary-synopsis">Returns how many items of this kind can be stacked in a single inventory slot.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_model">get_model()</a></div><div class="summary-synopsis">Returns the model of the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_name">get_name()</a></div><div class="summary-synopsis">Returns the name of the item that is shown to players.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_player">get_player()</a></div><div class="summary-synopsis">Finds the player that has the item in one of their inventories. Server-side only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_real_name">get_real_name()</a></div><div class="summary-synopsis">Returns the internal name of the item, ignoring its print name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_skin">get_skin()</a></div><div class="summary-synopsis">Returns the skin of the item's model.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_take_text">get_take_text()</a></div><div class="summary-synopsis">Returns the title of the 'take' option in the item's menu. Client-side only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_use_text">get_use_text()</a></div><div class="summary-synopsis">Returns the title of the 'use' option in the item's menu. Client-side only.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_weight">get_weight()</a></div><div class="summary-synopsis">Returns the weight of the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(id)</a></div><div class="summary-synopsis">Initializes a new item table. The 'item' pipeline creates one for every item file and exposes it as ITEM.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is">is(base)</a></div><div class="summary-synopsis">Checks whether the item was based off the specified item base with ItemBase:base_off. Also available as ItemBase:based_off.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_drop">on_drop(actor)</a></div><div class="summary-synopsis">Called on the server by the 'CanPlayerDropItem' hook when a player is about to drop the item. Returning nothing/nil drops the item like normal, returning false prevents the item from appearing and doesn't remove it from the inventory.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_loadout">on_loadout(owner)</a></div><div class="summary-synopsis">Called on the server right after the player that has the item spawns with their character loaded. Override it to give the player whatever the item is supposed to provide.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#on_save">on_save(owner)</a></div><div class="summary-synopsis">Called on the server before the character of the player that has the item is saved. Override it to store the state of the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#play_sound">play_sound(act, emitter)</a></div><div class="summary-synopsis">Plays the sound of a menu action, if the item has one. The sound is emitted by the item's entity if it is in the world. Otherwise it is emitted by the player that has the item, which can only be looked up on the server.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a></div><div class="summary-synopsis">Registers the item as an item template under its id.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_action_sound">set_action_sound(act, sound_path)</a></div><div class="summary-synopsis">Sets the sound that is emitted when a menu action is performed on the item.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_data">set_data(id, value)</a></div><div class="summary-synopsis">Sets a custom data value of the item. Server-side only. The data is then sent to the player that has the item, or to everyone if nobody has it.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_entity">set_entity(ent)</a></div><div class="summary-synopsis">Ties the item to the entity that represents it in the world.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Fancy output if you do print(item_obj).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_button">add_button(name, data)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a custom button to the menu of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#base_off">base_off(what)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Bases the item off an item base.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#do_menu_action">do_menu_action(act, actor, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Performs a menu action on the item on behalf of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_cancel_text">get_cancel_text()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the title of the 'cancel' option in the item's menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the color of the item's model.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_data">get_data(id, default)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns a custom data value of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_description">get_description()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the description of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_drop_text">get_drop_text()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the title of the 'drop' option in the item's menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_icon_data">get_icon_data()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the camera setup that is used to render the item's model in inventory slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_icon_material">get_icon_material()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the material that is drawn in inventory slots instead of the item's model.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_icon_model">get_icon_model()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the model that is shown in inventory slots instead of the item's own model.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_max_stack">get_max_stack()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns how many items of this kind can be stacked in a single inventory slot.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_model">get_model()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the model of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_name">get_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name of the item that is shown to players.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_player">get_player()</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Finds the player that has the item in one of their inventories.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_real_name">get_real_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the internal name of the item, ignoring its print name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_skin">get_skin()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the skin of the item's model.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_take_text">get_take_text()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the title of the 'take' option in the item's menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_use_text">get_use_text()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the title of the 'use' option in the item's menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_weight">get_weight()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the weight of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Initializes a new item table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is">is(base)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the item was based off the specified item base with ItemBase:base_off.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_drop">on_drop(actor)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called on the server by the 'CanPlayerDropItem' hook when a player is about to drop the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_loadout">on_loadout(owner)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called on the server right after the player that has the item spawns with their character loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_save">on_save(owner)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Called on the server before the character of the player that has the item is saved.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#play_sound">play_sound(act, emitter)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Plays the sound of a menu action, if the item has one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the item as an item template under its id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_action_sound">set_action_sound(act, sound_path)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the sound that is emitted when a menu action is performed on the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_data">set_data(id, value)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Sets a custom data value of the item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_entity">set_entity(ent)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Ties the item to the entity that represents it in the world.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="__tostring">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>__tostring<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>__tostring<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#__tostring" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L17" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:17</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:17</span>
 </div>
 <section class="docstring">
 <p>Fancy output if you do print(item_obj).</p>
@@ -80,9 +79,9 @@
 </section>
 <section class="detail" id="add_button">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>add_button<span class="params">(name, data)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>add_button<span class="params">(name, data)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_button" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L154" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:154</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:154</span>
 </div>
 <section class="docstring">
 <p>Adds a custom button to the menu of the item.</p>
@@ -102,9 +101,9 @@
 </section>
 <section class="detail" id="base_off">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>base_off<span class="params">(what)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>base_off<span class="params">(what)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#base_off" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L37" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:37</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:37</span>
 </div>
 <section class="docstring">
 <p>Bases the item off an item base.
@@ -119,11 +118,12 @@ ITEM.name = <span class="hl-s">&#39;Test Bag&#39;</span>
 </section>
 <section class="detail" id="do_menu_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>do_menu_action<span class="params">(act, actor, ...)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>do_menu_action<span class="params">(act, actor, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#do_menu_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L261" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:261</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:261</span>
 </div>
 <section class="docstring">
+<div class="realm-doc realm-doc-server"><p class="realm-doc-title">On the server</p>
 <p>Performs a menu action on the item on behalf of the player.
 Runs the 'PlayerCanUseItem' hook and then the hook of the action ('PlayerTakeItem',
 'PlayerUseItem' or 'PlayerDropItem'). Every action except 'on_use' and 'on_take' also calls
@@ -134,25 +134,21 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </code></pre>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">act</span> <span class="type">String</span> <span class="desc">'on_use', 'on_take', 'on_drop' or the callback of a custom button</span></li><li><span class="param-name">actor</span> <span class="type">Player</span> <span class="desc">the player performing the action</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">extra arguments that are passed to the hooks and to the item's method</span></li></ul>
-</section>
-</section>
-<section class="detail" id="do_menu_action-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>do_menu_action<span class="params">(act, ...)</span></h3>
-<a href="#do_menu_action-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L303" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:303</a>
 </div>
-<section class="docstring">
+<div class="realm-doc realm-doc-client"><p class="realm-doc-title">On the client</p>
 <p>Asks the server to perform a menu action on the item on behalf of the local player.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">act</span> <span class="type">String</span> <span class="desc">'on_use', 'on_take', 'on_drop' or the callback of a custom button</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">extra arguments to send to the server</span></li></ul>
+</div>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:261</span> <span class="realm realm-server" title="Server-side">server</span></li><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:303</span> <span class="realm realm-client" title="Client-side">client</span></li></ul>
 </section>
 </section>
 <section class="detail" id="get_cancel_text">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_cancel_text<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_cancel_text<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_cancel_text" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L327" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:327</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:327</span>
 </div>
 <section class="docstring">
 <p>Returns the title of the 'cancel' option in the item's menu. Client-side only.</p>
@@ -162,9 +158,9 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </section>
 <section class="detail" id="get_color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_color<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_color<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L121" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:121</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:121</span>
 </div>
 <section class="docstring">
 <p>Returns the color of the item's model.</p>
@@ -174,9 +170,9 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </section>
 <section class="detail" id="get_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_data<span class="params">(id, default)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_data<span class="params">(id, default)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L343" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:343</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:343</span>
 </div>
 <section class="docstring">
 <p>Returns a custom data value of the item.</p>
@@ -188,9 +184,9 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </section>
 <section class="detail" id="get_description">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_description<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_description<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_description" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L91" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:91</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:91</span>
 </div>
 <section class="docstring">
 <p>Returns the description of the item.</p>
@@ -200,9 +196,9 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </section>
 <section class="detail" id="get_drop_text">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_drop_text<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_drop_text<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_drop_text" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L321" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:321</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:321</span>
 </div>
 <section class="docstring">
 <p>Returns the title of the 'drop' option in the item's menu. Client-side only.</p>
@@ -212,9 +208,9 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </section>
 <section class="detail" id="get_icon_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_icon_data<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_icon_data<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_icon_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L128" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:128</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:128</span>
 </div>
 <section class="docstring">
 <p>Returns the camera setup that is used to render the item's model in inventory slots.</p>
@@ -224,9 +220,9 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </section>
 <section class="detail" id="get_icon_material">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_icon_material<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_icon_material<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_icon_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L134" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:134</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:134</span>
 </div>
 <section class="docstring">
 <p>Returns the material that is drawn in inventory slots instead of the item's model.</p>
@@ -236,9 +232,9 @@ item_obj:<span class="hl-f">do_menu_action</span>(<span class="hl-s">&#39;on_tak
 </section>
 <section class="detail" id="get_icon_model">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_icon_model<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_icon_model<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_icon_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L334" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:334</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:334</span>
 </div>
 <section class="docstring">
 <p>Returns the model that is shown in inventory slots instead of the item's own model.
@@ -249,9 +245,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_max_stack">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_max_stack<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_max_stack<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_max_stack" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L103" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:103</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:103</span>
 </div>
 <section class="docstring">
 <p>Returns how many items of this kind can be stacked in a single inventory slot.</p>
@@ -261,9 +257,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_model">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_model<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_model<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L109" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:109</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:109</span>
 </div>
 <section class="docstring">
 <p>Returns the model of the item.</p>
@@ -273,9 +269,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L23" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:23</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:23</span>
 </div>
 <section class="docstring">
 <p>Returns the name of the item that is shown to players.</p>
@@ -285,9 +281,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_player">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_player<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_player<span class="params">()</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#get_player" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L241" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:241</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:241</span>
 </div>
 <section class="docstring">
 <p>Finds the player that has the item in one of their inventories. Server-side only.</p>
@@ -297,9 +293,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_real_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_real_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_real_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_real_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L85" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:85</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:85</span>
 </div>
 <section class="docstring">
 <p>Returns the internal name of the item, ignoring its print name.</p>
@@ -309,9 +305,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_skin">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_skin<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_skin<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_skin" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L115" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:115</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:115</span>
 </div>
 <section class="docstring">
 <p>Returns the skin of the item's model.</p>
@@ -321,9 +317,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_take_text">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_take_text<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_take_text<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_take_text" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L315" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:315</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:315</span>
 </div>
 <section class="docstring">
 <p>Returns the title of the 'take' option in the item's menu. Client-side only.</p>
@@ -333,9 +329,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_use_text">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_use_text<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_use_text<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get_use_text" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L309" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:309</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:309</span>
 </div>
 <section class="docstring">
 <p>Returns the title of the 'use' option in the item's menu. Client-side only.</p>
@@ -345,9 +341,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="get_weight">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>get_weight<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>get_weight<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_weight" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L97" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:97</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:97</span>
 </div>
 <section class="docstring">
 <p>Returns the weight of the item.</p>
@@ -357,9 +353,9 @@ Client-side only.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>init<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>init<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L6" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:6</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:6</span>
 </div>
 <section class="docstring">
 <p>Initializes a new item table.
@@ -370,9 +366,9 @@ The 'item' pipeline creates one for every item file and exposes it as ITEM.</p>
 </section>
 <section class="detail" id="is">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>is<span class="params">(base)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>is<span class="params">(base)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L65" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:65</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:65</span>
 </div>
 <section class="docstring">
 <p>Checks whether the item was based off the specified item base with ItemBase:base_off.
@@ -385,9 +381,9 @@ Also available as ItemBase:based_off.</p>
 </section>
 <section class="detail" id="on_drop">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>on_drop<span class="params">(actor)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>on_drop<span class="params">(actor)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_drop" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L214" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:214</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:214</span>
 </div>
 <section class="docstring">
 <p>Called on the server by the 'CanPlayerDropItem' hook when a player is about to drop the item.
@@ -401,9 +397,9 @@ prevents the item from appearing and doesn't remove it from the inventory.</p>
 </section>
 <section class="detail" id="on_loadout">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>on_loadout<span class="params">(owner)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>on_loadout<span class="params">(owner)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_loadout" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L219" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:219</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:219</span>
 </div>
 <section class="docstring">
 <p>Called on the server right after the player that has the item spawns with their character
@@ -414,9 +410,9 @@ loaded. Override it to give the player whatever the item is supposed to provide.
 </section>
 <section class="detail" id="on_save">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>on_save<span class="params">(owner)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>on_save<span class="params">(owner)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#on_save" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L224" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:224</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:224</span>
 </div>
 <section class="docstring">
 <p>Called on the server before the character of the player that has the item is saved.
@@ -427,9 +423,9 @@ Override it to store the state of the item.</p>
 </section>
 <section class="detail" id="play_sound">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>play_sound<span class="params">(act, emitter)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>play_sound<span class="params">(act, emitter)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#play_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L193" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:193</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:193</span>
 </div>
 <section class="docstring">
 <p>Plays the sound of a menu action, if the item has one.
@@ -443,9 +439,9 @@ by the player that has the item, which can only be looked up on the server.</p>
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>register<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>register<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L363" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:363</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:363</span>
 </div>
 <section class="docstring">
 <p>Registers the item as an item template under its id.</p>
@@ -455,9 +451,9 @@ by the player that has the item, which can only be looked up on the server.</p>
 </section>
 <section class="detail" id="set_action_sound">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>set_action_sound<span class="params">(act, sound_path)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>set_action_sound<span class="params">(act, sound_path)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_action_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L178" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:178</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:178</span>
 </div>
 <section class="docstring">
 <p>Sets the sound that is emitted when a menu action is performed on the item.</p>
@@ -469,9 +465,9 @@ by the player that has the item, which can only be looked up on the server.</p>
 </section>
 <section class="detail" id="set_data">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>set_data<span class="params">(id, value)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>set_data<span class="params">(id, value)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#set_data" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L231" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:231</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:231</span>
 </div>
 <section class="docstring">
 <p>Sets a custom data value of the item. Server-side only.
@@ -482,9 +478,9 @@ The data is then sent to the player that has the item, or to everyone if nobody 
 </section>
 <section class="detail" id="set_entity">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ItemBase:</span>set_entity<span class="params">(ent)</span></h3>
+<h3 class="signature"><span class="owner">ItemBase:</span>set_entity<span class="params">(ent)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#set_entity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua#L357" title="View source">plugins/items/plugin/lib/classes/sh_item.lua:357</a>
+<span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua:357</span>
 </div>
 <section class="docstring">
 <p>Ties the item to the entity that represents it in the world.</p>
@@ -493,11 +489,11 @@ The data is then sent to the player that has the item, or to everyone if nobody 
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/items/plugin/lib/classes/sh_item.lua" title="View source">plugins/items/plugin/lib/classes/sh_item.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#__tostring">__tostring</a></li><li><a href="#add_button">add_button</a></li><li><a href="#base_off">base_off</a></li><li><a href="#do_menu_action">do_menu_action</a></li><li><a href="#do_menu_action-2">do_menu_action</a></li><li><a href="#get_cancel_text">get_cancel_text</a></li><li><a href="#get_color">get_color</a></li><li><a href="#get_data">get_data</a></li><li><a href="#get_description">get_description</a></li><li><a href="#get_drop_text">get_drop_text</a></li><li><a href="#get_icon_data">get_icon_data</a></li><li><a href="#get_icon_material">get_icon_material</a></li><li><a href="#get_icon_model">get_icon_model</a></li><li><a href="#get_max_stack">get_max_stack</a></li><li><a href="#get_model">get_model</a></li><li><a href="#get_name">get_name</a></li><li><a href="#get_player">get_player</a></li><li><a href="#get_real_name">get_real_name</a></li><li><a href="#get_skin">get_skin</a></li><li><a href="#get_take_text">get_take_text</a></li><li><a href="#get_use_text">get_use_text</a></li><li><a href="#get_weight">get_weight</a></li><li><a href="#init">init</a></li><li><a href="#is">is</a></li><li><a href="#on_drop">on_drop</a></li><li><a href="#on_loadout">on_loadout</a></li><li><a href="#on_save">on_save</a></li><li><a href="#play_sound">play_sound</a></li><li><a href="#register">register</a></li><li><a href="#set_action_sound">set_action_sound</a></li><li><a href="#set_data">set_data</a></li><li><a href="#set_entity">set_entity</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/items/plugin/lib/classes/sh_item.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#__tostring">__tostring</a></li><li data-realm="shared"><a href="#add_button">add_button</a></li><li data-realm="shared"><a href="#base_off">base_off</a></li><li data-realm="shared"><a href="#do_menu_action">do_menu_action</a></li><li data-realm="client"><a href="#get_cancel_text">get_cancel_text</a></li><li data-realm="shared"><a href="#get_color">get_color</a></li><li data-realm="shared"><a href="#get_data">get_data</a></li><li data-realm="shared"><a href="#get_description">get_description</a></li><li data-realm="client"><a href="#get_drop_text">get_drop_text</a></li><li data-realm="shared"><a href="#get_icon_data">get_icon_data</a></li><li data-realm="shared"><a href="#get_icon_material">get_icon_material</a></li><li data-realm="client"><a href="#get_icon_model">get_icon_model</a></li><li data-realm="shared"><a href="#get_max_stack">get_max_stack</a></li><li data-realm="shared"><a href="#get_model">get_model</a></li><li data-realm="shared"><a href="#get_name">get_name</a></li><li data-realm="server"><a href="#get_player">get_player</a></li><li data-realm="shared"><a href="#get_real_name">get_real_name</a></li><li data-realm="shared"><a href="#get_skin">get_skin</a></li><li data-realm="client"><a href="#get_take_text">get_take_text</a></li><li data-realm="client"><a href="#get_use_text">get_use_text</a></li><li data-realm="shared"><a href="#get_weight">get_weight</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#is">is</a></li><li data-realm="shared"><a href="#on_drop">on_drop</a></li><li data-realm="shared"><a href="#on_loadout">on_loadout</a></li><li data-realm="shared"><a href="#on_save">on_save</a></li><li data-realm="shared"><a href="#play_sound">play_sound</a></li><li data-realm="shared"><a href="#register">register</a></li><li data-realm="shared"><a href="#set_action_sound">set_action_sound</a></li><li data-realm="server"><a href="#set_data">set_data</a></li><li data-realm="shared"><a href="#set_entity">set_entity</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

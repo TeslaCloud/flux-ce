@@ -31,36 +31,36 @@
 <div class="page-header"><h1>ActiveRecord.Migration <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#current_migration">current_migration()</a></div><div class="summary-synopsis">Returns the migration that is running at the moment, if any.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#current_recorder">current_recorder()</a></div><div class="summary-synopsis">Returns the command recorder that is collecting the statements of a #change that is being reverted, if any.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#next_migration_number">next_migration_number(number)</a></div><div class="summary-synopsis">Generates the version for a new migration from the current time (YYYYMMDDHHMMSS in UTC), increased past the given version if that one is newer.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#current_migration">current_migration()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the migration that is running at the moment, if any.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#current_recorder">current_recorder()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the command recorder that is collecting the statements of a #change that is being reverted, if any.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#next_migration_number">next_migration_number(number)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Generates the version for a new migration from the current time (YYYYMMDDHHMMSS in UTC), increased past the given version if that one is newer.</div></div>
 </div>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#announce">announce(message)</a></div><div class="summary-synopsis">Prints a line that stands out, prefixed with the version and the name of the migration.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#change">change()</a></div><div class="summary-synopsis">Describes the schema changes of the migration. Meant to be overridden. The statements used in here are reverted automatically when the migration is rolled back, as long as they are reversible: create_table, add_column, rename_column, add_index, add_foreign_key, add_reference, add_timestamps and their counterparts are. For the rest, use #reversible or define #up and #down instead.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#display_name">display_name()</a></div><div class="summary-synopsis">Returns the name used in the console output: the camel-cased name of the migration file, or the class name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#down">down()</a></div><div class="summary-synopsis">Reverts the migration. Reverts #change by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#exec_migration">exec_migration(direction)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Runs the migration's #change, or #up / #down if #change is not overridden.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#execute_block">execute_block(callback)</a></div><div class="summary-synopsis">Runs a function. When the migration is being reverted through its #change, the function is recorded like a statement and run in its turn.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#has_change">has_change()</a></div><div class="summary-synopsis">Checks whether the migration overrides #change.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(version)</a></div><div class="summary-synopsis">Creates a migration. A migration file defines a migration, describes its changes in #change (or in #up and #down) and returns it. The version and the name of the migration come from its file name, '&lt;version&gt;_&lt;name&gt;.lua'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_verbose">is_verbose()</a></div><div class="summary-synopsis">Checks whether the migration prints its progress.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#migrate">migrate(direction)</a></div><div class="summary-synopsis">Runs the migration in the given direction, printing what happens.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#reversible">reversible(callback)</a></div><div class="summary-synopsis">Lets #change run code that differs between migrating and reverting. The helper that the callback receives runs its 'up' function only when migrating and its 'down' function only when reverting.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#revert">revert(callback)</a></div><div class="summary-synopsis">Runs the inverse of the statements made inside of the function. Normally used inside of #change to undo what an earlier migration did.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#reverting">reverting()</a></div><div class="summary-synopsis">Checks whether the migration is being reverted at the moment.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#say">say(message, subitem)</a></div><div class="summary-synopsis">Prints a message.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#say_with_time">say_with_time(message, callback)</a></div><div class="summary-synopsis">Prints a message, runs a function and prints the time it took.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#suppress_messages">suppress_messages(callback)</a></div><div class="summary-synopsis">Runs a function without printing anything.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#up">up()</a></div><div class="summary-synopsis">Applies the migration. Runs #change by default; override it together with #down for migrations that cannot be described by a reversible #change.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#announce">announce(message)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints a line that stands out, prefixed with the version and the name of the migration.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#change">change()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Describes the schema changes of the migration.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#display_name">display_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the name used in the console output: the camel-cased name of the migration file, or the class name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#down">down()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Reverts the migration.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#exec_migration">exec_migration(direction)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Runs the migration's #change, or #up / #down if #change is not overridden.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#execute_block">execute_block(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs a function.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_change">has_change()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the migration overrides #change.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(version)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a migration.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_verbose">is_verbose()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the migration prints its progress.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrate">migrate(direction)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the migration in the given direction, printing what happens.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reversible">reversible(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Lets #change run code that differs between migrating and reverting.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#revert">revert(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs the inverse of the statements made inside of the function.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reverting">reverting()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether the migration is being reverted at the moment.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#say">say(message, subitem)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints a message.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#say_with_time">say_with_time(message, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints a message, runs a function and prints the time it took.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#suppress_messages">suppress_messages(callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs a function without printing anything.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#up">up()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Applies the migration.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="current_migration">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration.</span>current_migration<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration.</span>current_migration<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#current_migration" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L38" title="View source">packages/active_record/lib/migrator/migration.lua:38</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:38</span>
 </div>
 <section class="docstring">
 <p>Returns the migration that is running at the moment, if any.</p>
@@ -70,9 +70,9 @@
 </section>
 <section class="detail" id="current_recorder">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration.</span>current_recorder<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration.</span>current_recorder<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#current_recorder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L45" title="View source">packages/active_record/lib/migrator/migration.lua:45</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:45</span>
 </div>
 <section class="docstring">
 <p>Returns the command recorder that is collecting the statements of a #change that is
@@ -83,9 +83,9 @@ being reverted, if any.</p>
 </section>
 <section class="detail" id="next_migration_number">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration.</span>next_migration_number<span class="params">(number)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration.</span>next_migration_number<span class="params">(number)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#next_migration_number" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L266" title="View source">packages/active_record/lib/migrator/migration.lua:266</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:266</span>
 </div>
 <section class="docstring">
 <p>Generates the version for a new migration from the current time (YYYYMMDDHHMMSS in
@@ -100,9 +100,9 @@ UTC), increased past the given version if that one is newer.</p>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="announce">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>announce<span class="params">(message)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>announce<span class="params">(message)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#announce" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L206" title="View source">packages/active_record/lib/migrator/migration.lua:206</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:206</span>
 </div>
 <section class="docstring">
 <p>Prints a line that stands out, prefixed with the version and the name of the migration.</p>
@@ -112,9 +112,9 @@ UTC), increased past the given version if that one is newer.</p>
 </section>
 <section class="detail" id="change">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>change<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>change<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#change" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L55" title="View source">packages/active_record/lib/migrator/migration.lua:55</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:55</span>
 </div>
 <section class="docstring">
 <p>Describes the schema changes of the migration. Meant to be overridden. The statements
@@ -128,9 +128,9 @@ rest, use #reversible or define #up and #down instead.</p>
 </section>
 <section class="detail" id="display_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>display_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>display_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#display_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L200" title="View source">packages/active_record/lib/migrator/migration.lua:200</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:200</span>
 </div>
 <section class="docstring">
 <p>Returns the name used in the console output: the camel-cased name of the migration
@@ -141,9 +141,9 @@ file, or the class name.</p>
 </section>
 <section class="detail" id="down">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>down<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>down<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#down" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L69" title="View source">packages/active_record/lib/migrator/migration.lua:69</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:69</span>
 </div>
 <section class="docstring">
 <p>Reverts the migration. Reverts #change by default.</p>
@@ -153,9 +153,9 @@ file, or the class name.</p>
 </section>
 <section class="detail" id="exec_migration">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>exec_migration<span class="params">(direction)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>exec_migration<span class="params">(direction)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#exec_migration" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L116" title="View source">packages/active_record/lib/migrator/migration.lua:116</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:116</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -166,9 +166,9 @@ file, or the class name.</p>
 </section>
 <section class="detail" id="execute_block">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>execute_block<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>execute_block<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#execute_block" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L193" title="View source">packages/active_record/lib/migrator/migration.lua:193</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:193</span>
 </div>
 <section class="docstring">
 <p>Runs a function. When the migration is being reverted through its #change, the
@@ -179,9 +179,9 @@ function is recorded like a statement and run in its turn.</p>
 </section>
 <section class="detail" id="has_change">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>has_change<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>has_change<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#has_change" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L76" title="View source">packages/active_record/lib/migrator/migration.lua:76</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:76</span>
 </div>
 <section class="docstring">
 <p>Checks whether the migration overrides #change.</p>
@@ -191,9 +191,9 @@ function is recorded like a statement and run in its turn.</p>
 </section>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>init<span class="params">(version)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>init<span class="params">(version)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L31" title="View source">packages/active_record/lib/migrator/migration.lua:31</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:31</span>
 </div>
 <section class="docstring">
 <p>Creates a migration. A migration file defines a migration, describes its changes in
@@ -216,9 +216,9 @@ migration come from its file name, '&lt;version&gt;_&lt;name&gt;.lua'.</p>
 </section>
 <section class="detail" id="is_verbose">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>is_verbose<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>is_verbose<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_verbose" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L258" title="View source">packages/active_record/lib/migrator/migration.lua:258</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:258</span>
 </div>
 <section class="docstring">
 <p>Checks whether the migration prints its progress.</p>
@@ -228,9 +228,9 @@ migration come from its file name, '&lt;version&gt;_&lt;name&gt;.lua'.</p>
 </section>
 <section class="detail" id="migrate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>migrate<span class="params">(direction)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>migrate<span class="params">(direction)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#migrate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L89" title="View source">packages/active_record/lib/migrator/migration.lua:89</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:89</span>
 </div>
 <section class="docstring">
 <p>Runs the migration in the given direction, printing what happens.</p>
@@ -242,9 +242,9 @@ migration come from its file name, '&lt;version&gt;_&lt;name&gt;.lua'.</p>
 </section>
 <section class="detail" id="reversible">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>reversible<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>reversible<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#reversible" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L178" title="View source">packages/active_record/lib/migrator/migration.lua:178</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:178</span>
 </div>
 <section class="docstring">
 <p>Lets #change run code that differs between migrating and reverting. The helper that
@@ -263,9 +263,9 @@ function only when reverting.</p>
 </section>
 <section class="detail" id="revert">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>revert<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>revert<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#revert" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L139" title="View source">packages/active_record/lib/migrator/migration.lua:139</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:139</span>
 </div>
 <section class="docstring">
 <p>Runs the inverse of the statements made inside of the function. Normally used inside
@@ -282,9 +282,9 @@ of #change to undo what an earlier migration did.</p>
 </section>
 <section class="detail" id="reverting">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>reverting<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>reverting<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#reverting" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L82" title="View source">packages/active_record/lib/migrator/migration.lua:82</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:82</span>
 </div>
 <section class="docstring">
 <p>Checks whether the migration is being reverted at the moment.</p>
@@ -294,9 +294,9 @@ of #change to undo what an earlier migration did.</p>
 </section>
 <section class="detail" id="say">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>say<span class="params">(message, subitem)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>say<span class="params">(message, subitem)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#say" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L217" title="View source">packages/active_record/lib/migrator/migration.lua:217</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:217</span>
 </div>
 <section class="docstring">
 <p>Prints a message.</p>
@@ -306,9 +306,9 @@ of #change to undo what an earlier migration did.</p>
 </section>
 <section class="detail" id="say_with_time">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>say_with_time<span class="params">(message, callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>say_with_time<span class="params">(message, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#say_with_time" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L227" title="View source">packages/active_record/lib/migrator/migration.lua:227</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:227</span>
 </div>
 <section class="docstring">
 <p>Prints a message, runs a function and prints the time it took.</p>
@@ -320,9 +320,9 @@ of #change to undo what an earlier migration did.</p>
 </section>
 <section class="detail" id="suppress_messages">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>suppress_messages<span class="params">(callback)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>suppress_messages<span class="params">(callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#suppress_messages" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L241" title="View source">packages/active_record/lib/migrator/migration.lua:241</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:241</span>
 </div>
 <section class="docstring">
 <p>Runs a function without printing anything.</p>
@@ -334,9 +334,9 @@ of #change to undo what an earlier migration did.</p>
 </section>
 <section class="detail" id="up">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>up<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.Migration:</span>up<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#up" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua#L62" title="View source">packages/active_record/lib/migrator/migration.lua:62</a>
+<span class="source-link">packages/active_record/lib/migrator/migration.lua:62</span>
 </div>
 <section class="docstring">
 <p>Applies the migration. Runs #change by default; override it together with #down for
@@ -346,11 +346,11 @@ migrations that cannot be described by a reversible #change.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/migration.lua" title="View source">packages/active_record/lib/migrator/migration.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#current_migration">current_migration</a></li><li><a href="#current_recorder">current_recorder</a></li><li><a href="#next_migration_number">next_migration_number</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#announce">announce</a></li><li><a href="#change">change</a></li><li><a href="#display_name">display_name</a></li><li><a href="#down">down</a></li><li><a href="#exec_migration">exec_migration</a></li><li><a href="#execute_block">execute_block</a></li><li><a href="#has_change">has_change</a></li><li><a href="#init">init</a></li><li><a href="#is_verbose">is_verbose</a></li><li><a href="#migrate">migrate</a></li><li><a href="#reversible">reversible</a></li><li><a href="#revert">revert</a></li><li><a href="#reverting">reverting</a></li><li><a href="#say">say</a></li><li><a href="#say_with_time">say_with_time</a></li><li><a href="#suppress_messages">suppress_messages</a></li><li><a href="#up">up</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/migrator/migration.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#current_migration">current_migration</a></li><li data-realm="shared"><a href="#current_recorder">current_recorder</a></li><li data-realm="shared"><a href="#next_migration_number">next_migration_number</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#announce">announce</a></li><li data-realm="shared"><a href="#change">change</a></li><li data-realm="shared"><a href="#display_name">display_name</a></li><li data-realm="shared"><a href="#down">down</a></li><li data-realm="shared"><a href="#exec_migration">exec_migration</a></li><li data-realm="shared"><a href="#execute_block">execute_block</a></li><li data-realm="shared"><a href="#has_change">has_change</a></li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#is_verbose">is_verbose</a></li><li data-realm="shared"><a href="#migrate">migrate</a></li><li data-realm="shared"><a href="#reversible">reversible</a></li><li data-realm="shared"><a href="#revert">revert</a></li><li data-realm="shared"><a href="#reverting">reverting</a></li><li data-realm="shared"><a href="#say">say</a></li><li data-realm="shared"><a href="#say_with_time">say_with_time</a></li><li data-realm="shared"><a href="#suppress_messages">suppress_messages</a></li><li data-realm="shared"><a href="#up">up</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

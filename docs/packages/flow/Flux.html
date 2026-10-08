@@ -31,32 +31,32 @@
 <div class="page-header"><h1>Flux <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#__set_global_offset__">__set_global_offset__(x, y)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Sets the offset returned by Flux.global_ui_offset.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#dev_print">dev_print(message)</a></div><div class="summary-synopsis">Prints a debug message to the console, but only in development or when the debug_output_in_production setting is enabled.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#draw_animation">draw_animation(id, tx, ty, callback)</a></div><div class="summary-synopsis">Draws one frame of a registered position animation: calls the callback with the current position, then eases the position toward the target. Raises an error if the animation has not been registered.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#draw_rotating_cog">draw_rotating_cog(x, y, w, h, color)</a></div><div class="summary-synopsis">Draws a spinning cog icon, usually as a loading indicator. All cogs drawn in a frame share one rotation, which advances with every call.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_action">get_action(id)</a></div><div class="summary-synopsis">Retrieves whatever was registered for the action with the specified identifier.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_all_actions">get_all_actions()</a></div><div class="summary-synopsis">Returns the table storing all of the actions, keyed by identifier. This is the storage table itself, not a copy.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_schema_folder">get_schema_folder()</a></div><div class="summary-synopsis">Gets the folder of the currently loaded schema.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_schema_info">get_schema_info()</a></div><div class="summary-synopsis">Gets the table containing the information about the currently loaded schema. The server reads it from the schema's gamemode .txt file once and caches it; the client uses the copy shared by the server.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_schema_name">get_schema_name()</a></div><div class="summary-synopsis">Gets the name of the currently loaded schema.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_version">get_version()</a></div><div class="summary-synopsis">Returns the version of the Flux core, as declared in its package metadata.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#global_ui_offset">global_ui_offset()</a></div><div class="summary-synopsis">Returns the global UI offset, which follows the local player's view movement. HUD elements add it to their position to appear to lag behind the camera.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_plugins">include_plugins(folder)</a></div><div class="summary-synopsis">Includes all of the plugins inside the folder, files first, then folders. Does not handle plugins nested inside of other plugins.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_schema">include_schema()</a></div><div class="summary-synopsis">Includes the files of the currently loaded schema. On the client, shortly afterward notifies the server and runs the FluxClientSchemaLoaded hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print">print(message)</a></div><div class="summary-synopsis">Prints a message to the console. Tables are printed with PrintTable.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register_action">register_action(id, callback)</a></div><div class="summary-synopsis">Registers an action that can be assigned to a player. The value is stored as given; note that Player#do_action only runs it if it is a table with a callback function field, which is then called with the player and the action ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register_animation">register_animation(id, x, y, delta)</a></div><div class="summary-synopsis">Creates the state of a position animation unless one with this ID already exists, which makes it safe to call every frame.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#set_circle_percent">set_circle_percent(percentage, alpha)</a></div><div class="summary-synopsis">Sets the fill percentage of the circular action indicator drawn in the middle of the HUD. The value is cleared after every draw, so call this each frame while it should be visible.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#update_animation">update_animation(id, x, y, delta)</a></div><div class="summary-synopsis">Creates or overwrites the state of a position animation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#__set_global_offset__">__set_global_offset__(x, y)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Sets the offset returned by Flux.global_ui_offset.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#dev_print">dev_print(message)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints a debug message to the console, but only in development or when the debug_output_in_production setting is enabled.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#draw_animation">draw_animation(id, tx, ty, callback)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws one frame of a registered position animation: calls the callback with the current position, then eases the position toward the target.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#draw_rotating_cog">draw_rotating_cog(x, y, w, h, color)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws a spinning cog icon, usually as a loading indicator.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_action">get_action(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Retrieves whatever was registered for the action with the specified identifier.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_all_actions">get_all_actions()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the table storing all of the actions, keyed by identifier.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_schema_folder">get_schema_folder()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Gets the folder of the currently loaded schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_schema_info">get_schema_info()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Gets the table containing the information about the currently loaded schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_schema_name">get_schema_name()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Gets the name of the currently loaded schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_version">get_version()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the version of the Flux core, as declared in its package metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#global_ui_offset">global_ui_offset()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the global UI offset, which follows the local player's view movement.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_plugins">include_plugins(folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes all of the plugins inside the folder, files first, then folders.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_schema">include_schema()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes the files of the currently loaded schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print">print(message)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints a message to the console.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_action">register_action(id, callback)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers an action that can be assigned to a player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_animation">register_animation(id, x, y, delta)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates the state of a position animation unless one with this ID already exists, which makes it safe to call every frame.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_circle_percent">set_circle_percent(percentage, alpha)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Sets the fill percentage of the circular action indicator drawn in the middle of the HUD.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#update_animation">update_animation(id, x, y, delta)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates or overwrites the state of a position animation.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="__set_global_offset__">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>__set_global_offset__<span class="params">(x, y)</span></h3> <span class="flag flag-internal">internal</span>
+<h3 class="signature"><span class="owner">Flux.</span>__set_global_offset__<span class="params">(x, y)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-internal">internal</span>
 <a href="#__set_global_offset__" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L155" title="View source">packages/flow/core/sh_core.lua:155</a>
+<span class="source-link">packages/flow/core/sh_core.lua:155</span>
 </div>
 <section class="docstring">
 <div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
@@ -67,9 +67,9 @@
 </section>
 <section class="detail" id="dev_print">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>dev_print<span class="params">(message)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>dev_print<span class="params">(message)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#dev_print" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L16" title="View source">packages/flow/core/sh_core.lua:16</a>
+<span class="source-link">packages/flow/core/sh_core.lua:16</span>
 </div>
 <section class="docstring">
 <p>Prints a debug message to the console, but only in development or when the
@@ -80,9 +80,9 @@ debug_output_in_production setting is enabled.</p>
 </section>
 <section class="detail" id="draw_animation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>draw_animation<span class="params">(id, tx, ty, callback)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>draw_animation<span class="params">(id, tx, ty, callback)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#draw_animation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua#L461" title="View source">packages/flow/core/cl_core.lua:461</a>
+<span class="source-link">packages/flow/core/cl_core.lua:461</span>
 </div>
 <section class="docstring">
 <p>Draws one frame of a registered position animation: calls the callback with the current
@@ -100,9 +100,9 @@ Flux.<span class="hl-f">draw_animation</span>(anim_id, box_x, box_y, <span class
 </section>
 <section class="detail" id="draw_rotating_cog">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>draw_rotating_cog<span class="params">(x, y, w, h, color)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>draw_rotating_cog<span class="params">(x, y, w, h, color)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#draw_rotating_cog" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua#L405" title="View source">packages/flow/core/cl_core.lua:405</a>
+<span class="source-link">packages/flow/core/cl_core.lua:405</span>
 </div>
 <section class="docstring">
 <p>Draws a spinning cog icon, usually as a loading indicator. All cogs drawn in a frame
@@ -113,9 +113,9 @@ share one rotation, which advances with every call.</p>
 </section>
 <section class="detail" id="get_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>get_action<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>get_action<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L65" title="View source">packages/flow/core/sh_core.lua:65</a>
+<span class="source-link">packages/flow/core/sh_core.lua:65</span>
 </div>
 <section class="docstring">
 <p>Retrieves whatever was registered for the action with the specified identifier.</p>
@@ -127,9 +127,9 @@ share one rotation, which advances with every call.</p>
 </section>
 <section class="detail" id="get_all_actions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>get_all_actions<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>get_all_actions<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_all_actions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L72" title="View source">packages/flow/core/sh_core.lua:72</a>
+<span class="source-link">packages/flow/core/sh_core.lua:72</span>
 </div>
 <section class="docstring">
 <p>Returns the table storing all of the actions, keyed by identifier. This is the storage
@@ -140,9 +140,9 @@ table itself, not a copy.</p>
 </section>
 <section class="detail" id="get_schema_folder">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>get_schema_folder<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>get_schema_folder<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_schema_folder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L82" title="View source">packages/flow/core/sh_core.lua:82</a>
+<span class="source-link">packages/flow/core/sh_core.lua:82</span>
 </div>
 <section class="docstring">
 <p>Gets the folder of the currently loaded schema.</p>
@@ -152,9 +152,9 @@ table itself, not a copy.</p>
 </section>
 <section class="detail" id="get_schema_info">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>get_schema_info<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>get_schema_info<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_schema_info" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L123" title="View source">packages/flow/core/sh_core.lua:123</a>
+<span class="source-link">packages/flow/core/sh_core.lua:123</span>
 </div>
 <section class="docstring">
 <p>Gets the table containing the information about the currently loaded schema. The server
@@ -166,9 +166,9 @@ copy shared by the server.</p>
 </section>
 <section class="detail" id="get_schema_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>get_schema_name<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>get_schema_name<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_schema_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L92" title="View source">packages/flow/core/sh_core.lua:92</a>
+<span class="source-link">packages/flow/core/sh_core.lua:92</span>
 </div>
 <section class="docstring">
 <p>Gets the name of the currently loaded schema.</p>
@@ -178,9 +178,9 @@ copy shared by the server.</p>
 </section>
 <section class="detail" id="get_version">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>get_version<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>get_version<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/shared.lua#L28" title="View source">packages/flow/shared.lua:28</a>
+<span class="source-link">packages/flow/shared.lua:28</span>
 </div>
 <section class="docstring">
 <p>Returns the version of the Flux core, as declared in its package metadata.</p>
@@ -190,9 +190,9 @@ copy shared by the server.</p>
 </section>
 <section class="detail" id="global_ui_offset">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>global_ui_offset<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>global_ui_offset<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#global_ui_offset" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L162" title="View source">packages/flow/core/sh_core.lua:162</a>
+<span class="source-link">packages/flow/core/sh_core.lua:162</span>
 </div>
 <section class="docstring">
 <p>Returns the global UI offset, which follows the local player's view movement. HUD
@@ -203,9 +203,9 @@ elements add it to their position to appear to lag behind the camera.</p>
 </section>
 <section class="detail" id="include_plugins">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>include_plugins<span class="params">(folder)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>include_plugins<span class="params">(folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_plugins" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L115" title="View source">packages/flow/core/sh_core.lua:115</a>
+<span class="source-link">packages/flow/core/sh_core.lua:115</span>
 </div>
 <section class="docstring">
 <p>Includes all of the plugins inside the folder, files first, then folders. Does not
@@ -216,9 +216,9 @@ handle plugins nested inside of other plugins.</p>
 </section>
 <section class="detail" id="include_schema">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>include_schema<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>include_schema<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L98" title="View source">packages/flow/core/sh_core.lua:98</a>
+<span class="source-link">packages/flow/core/sh_core.lua:98</span>
 </div>
 <section class="docstring">
 <p>Includes the files of the currently loaded schema. On the client, shortly afterward
@@ -227,9 +227,9 @@ notifies the server and runs the FluxClientSchemaLoaded hook.</p>
 </section>
 <section class="detail" id="print">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>print<span class="params">(message)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>print<span class="params">(message)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#print" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L5" title="View source">packages/flow/core/sh_core.lua:5</a>
+<span class="source-link">packages/flow/core/sh_core.lua:5</span>
 </div>
 <section class="docstring">
 <p>Prints a message to the console. Tables are printed with PrintTable.</p>
@@ -239,9 +239,9 @@ notifies the server and runs the FluxClientSchemaLoaded hook.</p>
 </section>
 <section class="detail" id="register_action">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>register_action<span class="params">(id, callback)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>register_action<span class="params">(id, callback)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register_action" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua#L58" title="View source">packages/flow/core/sh_core.lua:58</a>
+<span class="source-link">packages/flow/core/sh_core.lua:58</span>
 </div>
 <section class="docstring">
 <p>Registers an action that can be assigned to a player. The value is stored as given;
@@ -253,9 +253,9 @@ field, which is then called with the player and the action ID.</p>
 </section>
 <section class="detail" id="register_animation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>register_animation<span class="params">(id, x, y, delta)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>register_animation<span class="params">(id, x, y, delta)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#register_animation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua#L442" title="View source">packages/flow/core/cl_core.lua:442</a>
+<span class="source-link">packages/flow/core/cl_core.lua:442</span>
 </div>
 <section class="docstring">
 <p>Creates the state of a position animation unless one with this ID already exists, which
@@ -268,9 +268,9 @@ makes it safe to call every frame.</p>
 </section>
 <section class="detail" id="set_circle_percent">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>set_circle_percent<span class="params">(percentage, alpha)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>set_circle_percent<span class="params">(percentage, alpha)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#set_circle_percent" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua#L27" title="View source">packages/flow/core/cl_core.lua:27</a>
+<span class="source-link">packages/flow/core/cl_core.lua:27</span>
 </div>
 <section class="docstring">
 <p>Sets the fill percentage of the circular action indicator drawn in the middle of the HUD.
@@ -281,9 +281,9 @@ The value is cleared after every draw, so call this each frame while it should b
 </section>
 <section class="detail" id="update_animation">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Flux.</span>update_animation<span class="params">(id, x, y, delta)</span></h3>
+<h3 class="signature"><span class="owner">Flux.</span>update_animation<span class="params">(id, x, y, delta)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#update_animation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua#L430" title="View source">packages/flow/core/cl_core.lua:430</a>
+<span class="source-link">packages/flow/core/cl_core.lua:430</span>
 </div>
 <section class="docstring">
 <p>Creates or overwrites the state of a position animation.</p>
@@ -296,11 +296,11 @@ The value is cleared after every draw, so call this each frame while it should b
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/cl_core.lua" title="View source">packages/flow/core/cl_core.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/core/sh_core.lua" title="View source">packages/flow/core/sh_core.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/shared.lua" title="View source">packages/flow/shared.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#__set_global_offset__">__set_global_offset__</a></li><li><a href="#dev_print">dev_print</a></li><li><a href="#draw_animation">draw_animation</a></li><li><a href="#draw_rotating_cog">draw_rotating_cog</a></li><li><a href="#get_action">get_action</a></li><li><a href="#get_all_actions">get_all_actions</a></li><li><a href="#get_schema_folder">get_schema_folder</a></li><li><a href="#get_schema_info">get_schema_info</a></li><li><a href="#get_schema_name">get_schema_name</a></li><li><a href="#get_version">get_version</a></li><li><a href="#global_ui_offset">global_ui_offset</a></li><li><a href="#include_plugins">include_plugins</a></li><li><a href="#include_schema">include_schema</a></li><li><a href="#print">print</a></li><li><a href="#register_action">register_action</a></li><li><a href="#register_animation">register_animation</a></li><li><a href="#set_circle_percent">set_circle_percent</a></li><li><a href="#update_animation">update_animation</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/core/cl_core.lua</span></li><li><span class="source-link">packages/flow/core/sh_core.lua</span></li><li><span class="source-link">packages/flow/shared.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#__set_global_offset__">__set_global_offset__</a></li><li data-realm="shared"><a href="#dev_print">dev_print</a></li><li data-realm="client"><a href="#draw_animation">draw_animation</a></li><li data-realm="client"><a href="#draw_rotating_cog">draw_rotating_cog</a></li><li data-realm="shared"><a href="#get_action">get_action</a></li><li data-realm="shared"><a href="#get_all_actions">get_all_actions</a></li><li data-realm="shared"><a href="#get_schema_folder">get_schema_folder</a></li><li data-realm="shared"><a href="#get_schema_info">get_schema_info</a></li><li data-realm="shared"><a href="#get_schema_name">get_schema_name</a></li><li data-realm="shared"><a href="#get_version">get_version</a></li><li data-realm="shared"><a href="#global_ui_offset">global_ui_offset</a></li><li data-realm="shared"><a href="#include_plugins">include_plugins</a></li><li data-realm="shared"><a href="#include_schema">include_schema</a></li><li data-realm="shared"><a href="#print">print</a></li><li data-realm="shared"><a href="#register_action">register_action</a></li><li data-realm="client"><a href="#register_animation">register_animation</a></li><li data-realm="client"><a href="#set_circle_percent">set_circle_percent</a></li><li data-realm="client"><a href="#update_animation">update_animation</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

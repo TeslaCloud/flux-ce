@@ -31,67 +31,63 @@
 <div class="page-header"><h1>Globals <span class="badge badge-globals">globals</span></h1><p class="subtitle">Global functions of Flux</p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#a">a(initializer)</a></div><div class="summary-synopsis">Turns a table into a special array that has the functions of the table library as methods. The table itself is modified and returned.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_client_env">add_client_env(key, value)</a></div><div class="summary-synopsis">Adds an environment variable to the clientside environment variables list. Can only be used once. Forces key and value to be strings.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_debug_metric">add_debug_metric(id, obj)</a></div><div class="summary-synopsis">Registers an object under a debug metric. Metrics are only collected when FLUX_ENV is set to 'development'.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_debug_metric-2">add_debug_metric(id, obj)</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#class">class(name, parent_class)</a></div><div class="summary-synopsis">Creates a new class. Supports constructors and inheritance. The class is stored in the global table, or inside of another table when the name is namespaced with <code>::</code>. Every class gets a <code>new</code> function that creates an instance and calls its <code>init</code> constructor, and an <code>include</code> method that mixes a module into the class.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#Color">Color(r, g, b, a)</a></div><div class="summary-synopsis">Creates a color. Replaces the built-in Color function to also accept hexadecimal strings and CSS color names.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#compare">compare(a, b)</a></div><div class="summary-synopsis">Similar to the &lt;=&gt; operator in other languages.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#delegate">delegate(obj, t)</a></div><div class="summary-synopsis">Copies the listed methods of a class onto another object.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#enumerate">enumerate(enums, existing_enumerator)</a></div><div class="summary-synopsis">Creates enumerator variables based on a provided list. Starts at 0.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#equal">equal(a, b)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#error_with_traceback">error_with_traceback(msg)</a></div><div class="summary-synopsis">Print an error message followed by a complete stack traceback. Unlike error, this does not stop the execution of the calling code.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#extends">extends(parent_class)</a></div><div class="summary-synopsis">Sets the base class of the class that is currently being created. Copies the base class into the class created by the last <a href="../flux/Globals.html#class"><code>class</code></a> call, then calls the base class's <code>class_extended(new_class)</code> method and runs the OnClassExtended hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_debug_metric">get_debug_metric(id)</a></div><div class="summary-synopsis">Returns all objects that were registered under a debug metric.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_debug_metric-2">get_debug_metric(id)</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_player_name">get_player_name(target)</a></div><div class="summary-synopsis">Returns the Steam name of a player, or the translated name of the console if the player is not valid (as it is for commands that are run from the server console).</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#getenv">getenv(key, default)</a></div><div class="summary-synopsis">Gets an environment variable matching the &quot;key&quot; name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#greater">greater(a, b)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#greater_equal">greater_equal(a, b)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#i">i(pattern)</a></div><div class="summary-synopsis">Makes a Lua pattern case-insensitive.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_sandboxed">include_sandboxed(f)</a></div><div class="summary-synopsis">Runs a Lua file in a restricted environment that has no access to unsafe globals such as debug, require, RunString, CompileString, setmetatable or File. The environment is a copy of the globals made when the standard library was loaded.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_a">is_a(obj)</a></div><div class="summary-synopsis">Checks whether an object is a special array created with <a href="../flux/Globals.html#a"><code>a</code></a>.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#isclass">isclass(obj)</a></div><div class="summary-synopsis">Checks whether or not an object is a class or an instance of a class.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#LerpColor">LerpColor(fraction, color_from, color_to)</a></div><div class="summary-synopsis">Linearly interpolates between two colors, alpha included.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#less">less(a, b)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#less_equal">less_equal(a, b)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#long_error">long_error(...)</a></div><div class="summary-synopsis">Prints an error using ErrorNoHalt but without the character limit.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#lower">lower(...)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#mod">mod(name)</a></div><div class="summary-synopsis">Create a module with a specified name. The resulting object will have the <code>include</code> method by default.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metric">print_debug_metric(id, format)</a></div><div class="summary-synopsis">Prints the amount of objects registered under a debug metric to the console. The metric has to exist.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metric-2">print_debug_metric(id, format)</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metrics">print_debug_metrics()</a></div><div class="summary-synopsis">Prints the amount of registered objects of every debug metric to the console.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metrics-2">print_debug_metrics()</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print_table">print_table(t, indent, done, indent_length)</a></div><div class="summary-synopsis">Prints the contents of a table to the console, sorted by key, with nested tables indented. A better implementation of PrintTable, which it also replaces.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#print_traceback">print_traceback(suppress, ...)</a></div><div class="summary-synopsis">Print a traceback to the current function call.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#printf">printf(str, ...)</a></div><div class="summary-synopsis">Prints C-style formatted strings.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require_client">require_client(file_name)</a></div><div class="summary-synopsis">Require a clientside-only file. The .lua file ending may be omitted. This is the equivalent of simply doing this:</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require_ignore">require_ignore(who, should_ignore)</a></div><div class="summary-synopsis">Ignore a certain realm in the require_relative function calls.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require_module">require_module(mod)</a></div><div class="summary-synopsis">Includes a module and returns a boolean depending on success. Does not throw Lua errors.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require_relative">require_relative(file_name)</a></div><div class="summary-synopsis">Require a file relative to the current file's directory. The .lua file ending may be omitted. This function will try to guess the realm the file should be in and AddCSLuaFile accordingly and automatically.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require_relative_folder">require_relative_folder(dir, base, recursive)</a></div><div class="summary-synopsis">Require all files in a folder using require_relative. Relative to gamemodes/flux/ by default, unless <code>base</code> is specified.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require_server">require_server(file_name)</a></div><div class="summary-synopsis">Require a serverside-only file. The .lua file ending may be omitted. This is equivalent of simply doing this:</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require_shared">require_shared(file_name)</a></div><div class="summary-synopsis">Require a file on both client and server. The .lua file ending may be omitted. This is equivalent of simply doing this:</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#s">s(what)</a></div><div class="summary-synopsis">Creates a function that returns the given field of the table passed to it. For use with table#map.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#setenv">setenv(key, value)</a></div><div class="summary-synopsis">Sets an environment variable &quot;key&quot; to &quot;value&quot;. Will be automatically converted to a string by the C backend.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#sub">sub(...)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#try">try(func, ...)</a></div><div class="summary-synopsis">A wrapper for pcall for shorthand writing. If the function fails, the error is printed with a traceback and nothing is returned.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#txt">txt(text)</a></div><div class="summary-synopsis">Removes the common indentation and the surrounding blank lines from a multi-line string, so that long texts can be indented together with the code around them.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#typeof">typeof(obj)</a></div><div class="summary-synopsis">Gets the type of an object while ensuring the output is always lowercase. Functions exactly the same as <code>type</code>.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#unequal">unequal(a, b)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#upper">upper(...)</a></div><div class="summary-synopsis"></div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#URLMaterial">URLMaterial(url)</a></div><div class="summary-synopsis">Returns the material of an image from a URL, starting the download on first use. A placeholder material is returned for as long as the image has not been loaded.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#w">w(str)</a></div><div class="summary-synopsis">Splits a string of words into an array. Words are separated by spaces or newlines.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#wk">wk(str)</a></div><div class="summary-synopsis">Splits a string of space-separated words into a hash that has the words as its keys.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#a">a(initializer)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Turns a table into a special array that has the functions of the table library as methods.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_client_env">add_client_env(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds an environment variable to the clientside environment variables list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_debug_metric">add_debug_metric(id, obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span></div><div class="summary-synopsis">Registers an object under a debug metric.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#class">class(name, parent_class)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a new class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Color">Color(r, g, b, a)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#compare">compare(a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Similar to the &lt;=&gt; operator in other languages.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delegate">delegate(obj, t)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Copies the listed methods of a class onto another object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#enumerate">enumerate(enums, existing_enumerator)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates enumerator variables based on a provided list.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#equal">equal(a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#error_with_traceback">error_with_traceback(msg)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Print an error message followed by a complete stack traceback.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#extends">extends(parent_class)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets the base class of the class that is currently being created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_debug_metric">get_debug_metric(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span></div><div class="summary-synopsis">Returns all objects that were registered under a debug metric.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_player_name">get_player_name(target)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the Steam name of a player, or the translated name of the console if the player is not valid (as it is for commands that are run from the server console).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#getenv">getenv(key, default)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Gets an environment variable matching the &quot;key&quot; name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#greater">greater(a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#greater_equal">greater_equal(a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#i">i(pattern)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Makes a Lua pattern case-insensitive.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_sandboxed">include_sandboxed(f)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Runs a Lua file in a restricted environment that has no access to unsafe globals such as debug, require, RunString, CompileString, setmetatable or File.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_a">is_a(obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether an object is a special array created with <a href="../flux/Globals.html#a"><code>a</code></a>.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#isclass">isclass(obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether or not an object is a class or an instance of a class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LerpColor">LerpColor(fraction, color_from, color_to)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Linearly interpolates between two colors, alpha included.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#less">less(a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#less_equal">less_equal(a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#long_error">long_error(...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints an error using ErrorNoHalt but without the character limit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#lower">lower(...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#mod">mod(name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Create a module with a specified name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metric">print_debug_metric(id, format)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span></div><div class="summary-synopsis">Prints the amount of objects registered under a debug metric to the console.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metrics">print_debug_metrics()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span></div><div class="summary-synopsis">Prints the amount of registered objects of every debug metric to the console.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_table">print_table(t, indent, done, indent_length)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints the contents of a table to the console, sorted by key, with nested tables indented.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_traceback">print_traceback(suppress, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Print a traceback to the current function call.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#printf">printf(str, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Prints C-style formatted strings.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_client">require_client(file_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Require a clientside-only file.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_ignore">require_ignore(who, should_ignore)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Ignore a certain realm in the require_relative function calls.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_module">require_module(mod)</a><span class="realm realm-server" title="Server-side">server</span></div><div class="summary-synopsis">Includes a module and returns a boolean depending on success.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_relative">require_relative(file_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Require a file relative to the current file's directory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_relative_folder">require_relative_folder(dir, base, recursive)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Require all files in a folder using require_relative.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_server">require_server(file_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Require a serverside-only file.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_shared">require_shared(file_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Require a file on both client and server.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#s">s(what)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates a function that returns the given field of the table passed to it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#setenv">setenv(key, value)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Sets an environment variable &quot;key&quot; to &quot;value&quot;.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sub">sub(...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#try">try(func, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">A wrapper for pcall for shorthand writing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#txt">txt(text)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes the common indentation and the surrounding blank lines from a multi-line string, so that long texts can be indented together with the code around them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#typeof">typeof(obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Gets the type of an object while ensuring the output is always lowercase.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unequal">unequal(a, b)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#upper">upper(...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#URLMaterial">URLMaterial(url)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the material of an image from a URL, starting the download on first use.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#w">w(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Splits a string of words into an array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#wk">wk(str)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Splits a string of space-separated words into a hash that has the words as its keys.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="a">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>a<span class="params">(initializer)</span></h3>
+<h3 class="signature"><span class="owner"></span>a<span class="params">(initializer)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#a" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L556" title="View source">lib/stdlib/sh_table.lua:556</a>
+<span class="source-link">lib/stdlib/sh_table.lua:556</span>
 </div>
 <section class="docstring">
 <p>Turns a table into a special array that has the functions of the table library as methods.
@@ -108,9 +104,9 @@ words:<span class="hl-f">insert</span>(<span class="hl-s">&#39;three&#39;</span>
 </section>
 <section class="detail" id="add_client_env">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>add_client_env<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner"></span>add_client_env<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_client_env" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua#L49" title="View source">gamemode/env.lua:49</a>
+<span class="source-link">gamemode/env.lua:49</span>
 </div>
 <section class="docstring">
 <p>Adds an environment variable to the clientside environment variables list.
@@ -121,36 +117,30 @@ Can only be used once. Forces key and value to be strings.</p>
 </section>
 <section class="detail" id="add_debug_metric">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>add_debug_metric<span class="params">(id, obj)</span></h3>
+<h3 class="signature"><span class="owner"></span>add_debug_metric<span class="params">(id, obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span>
 <a href="#add_debug_metric" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L10" title="View source">lib/stdlib/sh_debug.lua:10</a>
+<span class="source-link">lib/stdlib/sh_debug.lua:11</span>
 </div>
 <section class="docstring">
+<div class="admonition environment"><p class="admonition-title">Development only</p><p>Only available in the development environment.</p></div>
 <p>Registers an object under a debug metric.
 Metrics are only collected when FLUX_ENV is set to 'development'.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">obj</span> <span class="type">Any</span> <span class="desc">object to register</span></li></ul>
 <h4>Returns</h4>
 <ul class="returns"><li><span class="type">Number</span> <span class="desc">amount of objects registered under this metric so far</span></li></ul>
-</section>
-</section>
-<section class="detail" id="add_debug_metric-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner"></span>add_debug_metric<span class="params">(id, obj)</span></h3>
-<a href="#add_debug_metric-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L56" title="View source">lib/stdlib/sh_debug.lua:56</a>
-</div>
-<section class="docstring">
+<div class="otherwise"><p class="otherwise-title">In other environments <span class="source-link">lib/stdlib/sh_debug.lua:60</span></p>
 <p>Does nothing, since debug metrics are only collected in the development environment.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">obj</span> <span class="type">Any</span> <span class="desc">object to register</span></li></ul>
+</div>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">lib/stdlib/sh_debug.lua:11</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li><li><span class="source-link">lib/stdlib/sh_debug.lua:60</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
 </section>
 </section>
 <section class="detail" id="class">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>class<span class="params">(name, parent_class)</span></h3>
+<h3 class="signature"><span class="owner"></span>class<span class="params">(name, parent_class)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#class" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L37" title="View source">lib/stdlib/sh_class.lua:37</a>
+<span class="source-link">lib/stdlib/sh_class.lua:37</span>
 </div>
 <section class="docstring">
 <p>Creates a new class. Supports constructors and inheritance.
@@ -183,9 +173,9 @@ Dog:include <span class="hl-s">&#39;Talkable&#39;</span> <span class="hl-c">-- c
 </section>
 <section class="detail" id="Color">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>Color<span class="params">(r, g, b, a)</span></h3>
+<h3 class="signature"><span class="owner"></span>Color<span class="params">(r, g, b, a)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#Color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L221" title="View source">lib/stdlib/sh_color.lua:221</a>
+<span class="source-link">lib/stdlib/sh_color.lua:221</span>
 </div>
 <section class="docstring">
 <p>Creates a color. Replaces the built-in Color function to also accept hexadecimal
@@ -212,9 +202,9 @@ strings and CSS color names.</p>
 </section>
 <section class="detail" id="compare">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>compare<span class="params">(a, b)</span></h3>
+<h3 class="signature"><span class="owner"></span>compare<span class="params">(a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#compare" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L364" title="View source">lib/stdlib/sh_utils.lua:364</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:364</span>
 </div>
 <section class="docstring">
 <p>Similar to the &lt;=&gt; operator in other languages.</p>
@@ -226,9 +216,9 @@ strings and CSS color names.</p>
 </section>
 <section class="detail" id="delegate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>delegate<span class="params">(obj, t)</span></h3>
+<h3 class="signature"><span class="owner"></span>delegate<span class="params">(obj, t)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#delegate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L141" title="View source">lib/stdlib/sh_class.lua:141</a>
+<span class="source-link">lib/stdlib/sh_class.lua:141</span>
 </div>
 <section class="docstring">
 <p>Copies the listed methods of a class onto another object.</p>
@@ -243,9 +233,9 @@ strings and CSS color names.</p>
 </section>
 <section class="detail" id="enumerate">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>enumerate<span class="params">(enums, existing_enumerator)</span></h3>
+<h3 class="signature"><span class="owner"></span>enumerate<span class="params">(enums, existing_enumerator)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#enumerate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L469" title="View source">lib/stdlib/sh_utils.lua:469</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:469</span>
 </div>
 <section class="docstring">
 <p>Creates enumerator variables based on a provided list.
@@ -261,9 +251,9 @@ enumerate <span class="hl-s">&#39;GENDER_MALE GENDER_FEMALE GENDER_OTHER&#39;</s
 </section>
 <section class="detail" id="equal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>equal<span class="params">(a, b)</span></h3>
+<h3 class="signature"><span class="owner"></span>equal<span class="params">(a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L246" title="View source">lib/stdlib/sh_utils.lua:246</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:246</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -271,9 +261,9 @@ enumerate <span class="hl-s">&#39;GENDER_MALE GENDER_FEMALE GENDER_OTHER&#39;</s
 </section>
 <section class="detail" id="error_with_traceback">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>error_with_traceback<span class="params">(msg)</span></h3>
+<h3 class="signature"><span class="owner"></span>error_with_traceback<span class="params">(msg)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#error_with_traceback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L429" title="View source">lib/stdlib/sh_utils.lua:429</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:429</span>
 </div>
 <section class="docstring">
 <p>Print an error message followed by a complete stack traceback.
@@ -284,9 +274,9 @@ Unlike error, this does not stop the execution of the calling code.</p>
 </section>
 <section class="detail" id="extends">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>extends<span class="params">(parent_class)</span></h3>
+<h3 class="signature"><span class="owner"></span>extends<span class="params">(parent_class)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#extends" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L167" title="View source">lib/stdlib/sh_class.lua:167</a>
+<span class="source-link">lib/stdlib/sh_class.lua:167</span>
 </div>
 <section class="docstring">
 <p>Sets the base class of the class that is currently being created.
@@ -307,35 +297,29 @@ class <span class="hl-s">&#39;Dog&#39;</span> <span class="hl-f">extends</span>(
 </section>
 <section class="detail" id="get_debug_metric">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>get_debug_metric<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner"></span>get_debug_metric<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span>
 <a href="#get_debug_metric" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L25" title="View source">lib/stdlib/sh_debug.lua:25</a>
+<span class="source-link">lib/stdlib/sh_debug.lua:27</span>
 </div>
 <section class="docstring">
+<div class="admonition environment"><p class="admonition-title">Development only</p><p>Only available in the development environment.</p></div>
 <p>Returns all objects that were registered under a debug metric.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li></ul>
 <h4>Returns</h4>
 <ul class="returns"><li><span class="type">List</span> <span class="desc">registered objects, or nil if nothing was registered under this metric</span></li></ul>
-</section>
-</section>
-<section class="detail" id="get_debug_metric-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner"></span>get_debug_metric<span class="params">(id)</span></h3>
-<a href="#get_debug_metric-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L61" title="View source">lib/stdlib/sh_debug.lua:61</a>
-</div>
-<section class="docstring">
+<div class="otherwise"><p class="otherwise-title">In other environments <span class="source-link">lib/stdlib/sh_debug.lua:65</span></p>
 <p>Does nothing, since debug metrics are only collected in the development environment.</p>
-<h4>Parameters</h4>
-<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li></ul>
+</div>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">lib/stdlib/sh_debug.lua:27</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li><li><span class="source-link">lib/stdlib/sh_debug.lua:65</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
 </section>
 </section>
 <section class="detail" id="get_player_name">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>get_player_name<span class="params">(target)</span></h3>
+<h3 class="signature"><span class="owner"></span>get_player_name<span class="params">(target)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_player_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L208" title="View source">lib/stdlib/sh_utils.lua:208</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:208</span>
 </div>
 <section class="docstring">
 <p>Returns the Steam name of a player, or the translated name of the console if the player is
@@ -348,9 +332,9 @@ not valid (as it is for commands that are run from the server console).</p>
 </section>
 <section class="detail" id="getenv">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>getenv<span class="params">(key, default)</span></h3>
+<h3 class="signature"><span class="owner"></span>getenv<span class="params">(key, default)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#getenv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua#L19" title="View source">gamemode/env.lua:19</a>
+<span class="source-link">gamemode/env.lua:19</span>
 </div>
 <section class="docstring">
 <p>Gets an environment variable matching the &quot;key&quot; name.</p>
@@ -362,9 +346,9 @@ not valid (as it is for commands that are run from the server console).</p>
 </section>
 <section class="detail" id="greater">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>greater<span class="params">(a, b)</span></h3>
+<h3 class="signature"><span class="owner"></span>greater<span class="params">(a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#greater" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L255" title="View source">lib/stdlib/sh_utils.lua:255</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:255</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -372,9 +356,9 @@ not valid (as it is for commands that are run from the server console).</p>
 </section>
 <section class="detail" id="greater_equal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>greater_equal<span class="params">(a, b)</span></h3>
+<h3 class="signature"><span class="owner"></span>greater_equal<span class="params">(a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#greater_equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L261" title="View source">lib/stdlib/sh_utils.lua:261</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:261</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -382,9 +366,9 @@ not valid (as it is for commands that are run from the server console).</p>
 </section>
 <section class="detail" id="i">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>i<span class="params">(pattern)</span></h3>
+<h3 class="signature"><span class="owner"></span>i<span class="params">(pattern)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#i" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L452" title="View source">lib/stdlib/sh_string.lua:452</a>
+<span class="source-link">lib/stdlib/sh_string.lua:452</span>
 </div>
 <section class="docstring">
 <p>Makes a Lua pattern case-insensitive.</p>
@@ -398,9 +382,9 @@ not valid (as it is for commands that are run from the server console).</p>
 </section>
 <section class="detail" id="include_sandboxed">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>include_sandboxed<span class="params">(f)</span></h3>
+<h3 class="signature"><span class="owner"></span>include_sandboxed<span class="params">(f)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_sandboxed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L450" title="View source">lib/stdlib/sh_utils.lua:450</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:450</span>
 </div>
 <section class="docstring">
 <p>Runs a Lua file in a restricted environment that has no access to unsafe globals such as
@@ -414,9 +398,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="is_a">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>is_a<span class="params">(obj)</span></h3>
+<h3 class="signature"><span class="owner"></span>is_a<span class="params">(obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_a" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L564" title="View source">lib/stdlib/sh_table.lua:564</a>
+<span class="source-link">lib/stdlib/sh_table.lua:564</span>
 </div>
 <section class="docstring">
 <p>Checks whether an object is a special array created with <a href="../flux/Globals.html#a"><code>a</code></a>.</p>
@@ -430,9 +414,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="isclass">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>isclass<span class="params">(obj)</span></h3>
+<h3 class="signature"><span class="owner"></span>isclass<span class="params">(obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#isclass" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L7" title="View source">lib/stdlib/sh_class.lua:7</a>
+<span class="source-link">lib/stdlib/sh_class.lua:7</span>
 </div>
 <section class="docstring">
 <p>Checks whether or not an object is a class or an instance of a class.</p>
@@ -446,9 +430,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="LerpColor">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>LerpColor<span class="params">(fraction, color_from, color_to)</span></h3>
+<h3 class="signature"><span class="owner"></span>LerpColor<span class="params">(fraction, color_from, color_to)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#LerpColor" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L312" title="View source">lib/stdlib/sh_color.lua:312</a>
+<span class="source-link">lib/stdlib/sh_color.lua:312</span>
 </div>
 <section class="docstring">
 <p>Linearly interpolates between two colors, alpha included.</p>
@@ -460,9 +444,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="less">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>less<span class="params">(a, b)</span></h3>
+<h3 class="signature"><span class="owner"></span>less<span class="params">(a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#less" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L252" title="View source">lib/stdlib/sh_utils.lua:252</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:252</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -470,9 +454,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="less_equal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>less_equal<span class="params">(a, b)</span></h3>
+<h3 class="signature"><span class="owner"></span>less_equal<span class="params">(a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#less_equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L258" title="View source">lib/stdlib/sh_utils.lua:258</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:258</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -480,9 +464,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="long_error">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>long_error<span class="params">(...)</span></h3>
+<h3 class="signature"><span class="owner"></span>long_error<span class="params">(...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#long_error" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L404" title="View source">lib/stdlib/sh_utils.lua:404</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:404</span>
 </div>
 <section class="docstring">
 <p>Prints an error using ErrorNoHalt but without the character limit.</p>
@@ -494,9 +478,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="lower">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>lower<span class="params">(...)</span></h3>
+<h3 class="signature"><span class="owner"></span>lower<span class="params">(...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#lower" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L2" title="View source">lib/stdlib/sh_string.lua:2</a>
+<span class="source-link">lib/stdlib/sh_string.lua:2</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -504,9 +488,9 @@ The environment is a copy of the globals made when the standard library was load
 </section>
 <section class="detail" id="mod">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>mod<span class="params">(name)</span></h3>
+<h3 class="signature"><span class="owner"></span>mod<span class="params">(name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#mod" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_module.lua#L15" title="View source">lib/stdlib/sh_module.lua:15</a>
+<span class="source-link">lib/stdlib/sh_module.lua:15</span>
 </div>
 <section class="docstring">
 <p>Create a module with a specified name.
@@ -528,56 +512,48 @@ Talkable:include <span class="hl-s">&#39;Living&#39;</span>
 </section>
 <section class="detail" id="print_debug_metric">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>print_debug_metric<span class="params">(id, format)</span></h3>
+<h3 class="signature"><span class="owner"></span>print_debug_metric<span class="params">(id, format)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span>
 <a href="#print_debug_metric" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L34" title="View source">lib/stdlib/sh_debug.lua:34</a>
+<span class="source-link">lib/stdlib/sh_debug.lua:37</span>
 </div>
 <section class="docstring">
+<div class="admonition environment"><p class="admonition-title">Development only</p><p>Only available in the development environment.</p></div>
 <p>Prints the amount of objects registered under a debug metric to the console.
 The metric has to exist.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">format</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;{count} {id} were registered.&#39;</code></span> <span class="desc">message, {count} and {id} are replaced</span></li></ul>
 <h4>See also</h4>
 <ul class="see-also"><li><a href="../flux/string.html#fmt"><code>string.fmt</code></a></li></ul>
-</section>
-</section>
-<section class="detail" id="print_debug_metric-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner"></span>print_debug_metric<span class="params">(id, format)</span></h3>
-<a href="#print_debug_metric-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L67" title="View source">lib/stdlib/sh_debug.lua:67</a>
-</div>
-<section class="docstring">
+<div class="otherwise"><p class="otherwise-title">In other environments <span class="source-link">lib/stdlib/sh_debug.lua:71</span></p>
 <p>Does nothing, since debug metrics are only collected in the development environment.</p>
 <h4>Parameters</h4>
 <ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">format</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">message</span></li></ul>
+</div>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">lib/stdlib/sh_debug.lua:37</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li><li><span class="source-link">lib/stdlib/sh_debug.lua:71</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
 </section>
 </section>
 <section class="detail" id="print_debug_metrics">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>print_debug_metrics<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner"></span>print_debug_metrics<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span> <span class="flag flag-environment" title="Development only">development</span>
 <a href="#print_debug_metrics" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L47" title="View source">lib/stdlib/sh_debug.lua:47</a>
+<span class="source-link">lib/stdlib/sh_debug.lua:51</span>
 </div>
 <section class="docstring">
+<div class="admonition environment"><p class="admonition-title">Development only</p><p>Only available in the development environment.</p></div>
 <p>Prints the amount of registered objects of every debug metric to the console.</p>
-</section>
-</section>
-<section class="detail" id="print_debug_metrics-2">
-<div class="detail-header">
-<h3 class="signature"><span class="owner"></span>print_debug_metrics<span class="params">()</span></h3>
-<a href="#print_debug_metrics-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L71" title="View source">lib/stdlib/sh_debug.lua:71</a>
-</div>
-<section class="docstring">
+<div class="otherwise"><p class="otherwise-title">In other environments <span class="source-link">lib/stdlib/sh_debug.lua:75</span></p>
 <p>Does nothing, since debug metrics are only collected in the development environment.</p>
+</div>
+<h4>Defined in</h4>
+<ul class="source-list"><li><span class="source-link">lib/stdlib/sh_debug.lua:51</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li><li><span class="source-link">lib/stdlib/sh_debug.lua:75</span> <span class="realm realm-shared" title="Shared (server and client)">shared</span></li></ul>
 </section>
 </section>
 <section class="detail" id="print_table">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>print_table<span class="params">(t, indent, done, indent_length)</span></h3>
+<h3 class="signature"><span class="owner"></span>print_table<span class="params">(t, indent, done, indent_length)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#print_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L628" title="View source">lib/stdlib/sh_table.lua:628</a>
+<span class="source-link">lib/stdlib/sh_table.lua:628</span>
 </div>
 <section class="docstring">
 <p>Prints the contents of a table to the console, sorted by key, with nested tables indented.
@@ -588,9 +564,9 @@ A better implementation of PrintTable, which it also replaces.</p>
 </section>
 <section class="detail" id="print_traceback">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>print_traceback<span class="params">(suppress, ...)</span></h3>
+<h3 class="signature"><span class="owner"></span>print_traceback<span class="params">(suppress, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#print_traceback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L375" title="View source">lib/stdlib/sh_utils.lua:375</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:375</span>
 </div>
 <section class="docstring">
 <p>Print a traceback to the current function call.</p>
@@ -602,9 +578,9 @@ A better implementation of PrintTable, which it also replaces.</p>
 </section>
 <section class="detail" id="printf">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>printf<span class="params">(str, ...)</span></h3>
+<h3 class="signature"><span class="owner"></span>printf<span class="params">(str, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#printf" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L34" title="View source">lib/stdlib/sh_utils.lua:34</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:34</span>
 </div>
 <section class="docstring">
 <p>Prints C-style formatted strings.</p>
@@ -614,9 +590,9 @@ A better implementation of PrintTable, which it also replaces.</p>
 </section>
 <section class="detail" id="require_client">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>require_client<span class="params">(file_name)</span></h3>
+<h3 class="signature"><span class="owner"></span>require_client<span class="params">(file_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#require_client" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L119" title="View source">lib/stdlib/sh_helpers.lua:119</a>
+<span class="source-link">lib/stdlib/sh_helpers.lua:119</span>
 </div>
 <section class="docstring">
 <p>Require a clientside-only file.
@@ -636,9 +612,9 @@ This is the equivalent of simply doing this:</p>
 </section>
 <section class="detail" id="require_ignore">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>require_ignore<span class="params">(who, should_ignore)</span></h3>
+<h3 class="signature"><span class="owner"></span>require_ignore<span class="params">(who, should_ignore)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#require_ignore" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L13" title="View source">lib/stdlib/sh_helpers.lua:13</a>
+<span class="source-link">lib/stdlib/sh_helpers.lua:13</span>
 </div>
 <section class="docstring">
 <p>Ignore a certain realm in the require_relative function calls.</p>
@@ -653,9 +629,9 @@ This is the equivalent of simply doing this:</p>
 </section>
 <section class="detail" id="require_module">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>require_module<span class="params">(mod)</span></h3>
+<h3 class="signature"><span class="owner"></span>require_module<span class="params">(mod)</span></h3> <span class="realm realm-server" title="Server-side">server</span>
 <a href="#require_module" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/init.lua#L7" title="View source">gamemode/init.lua:7</a>
+<span class="source-link">gamemode/init.lua:7</span>
 </div>
 <section class="docstring">
 <p>Includes a module and returns a boolean depending on success.
@@ -668,9 +644,9 @@ Does not throw Lua errors.</p>
 </section>
 <section class="detail" id="require_relative">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>require_relative<span class="params">(file_name)</span></h3>
+<h3 class="signature"><span class="owner"></span>require_relative<span class="params">(file_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#require_relative" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L34" title="View source">lib/stdlib/sh_helpers.lua:34</a>
+<span class="source-link">lib/stdlib/sh_helpers.lua:34</span>
 </div>
 <section class="docstring">
 <p>Require a file relative to the current file's directory.
@@ -689,9 +665,9 @@ require_relative <span class="hl-s">&#39;file&#39;</span>        <span class="hl
 </section>
 <section class="detail" id="require_relative_folder">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>require_relative_folder<span class="params">(dir, base, recursive)</span></h3>
+<h3 class="signature"><span class="owner"></span>require_relative_folder<span class="params">(dir, base, recursive)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#require_relative_folder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L69" title="View source">lib/stdlib/sh_helpers.lua:69</a>
+<span class="source-link">lib/stdlib/sh_helpers.lua:69</span>
 </div>
 <section class="docstring">
 <p>Require all files in a folder using require_relative.
@@ -706,9 +682,9 @@ Relative to gamemodes/flux/ by default, unless <code>base</code> is specified.</
 </section>
 <section class="detail" id="require_server">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>require_server<span class="params">(file_name)</span></h3>
+<h3 class="signature"><span class="owner"></span>require_server<span class="params">(file_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#require_server" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L141" title="View source">lib/stdlib/sh_helpers.lua:141</a>
+<span class="source-link">lib/stdlib/sh_helpers.lua:141</span>
 </div>
 <section class="docstring">
 <p>Require a serverside-only file.
@@ -726,9 +702,9 @@ This is equivalent of simply doing this:</p>
 </section>
 <section class="detail" id="require_shared">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>require_shared<span class="params">(file_name)</span></h3>
+<h3 class="signature"><span class="owner"></span>require_shared<span class="params">(file_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#require_shared" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L164" title="View source">lib/stdlib/sh_helpers.lua:164</a>
+<span class="source-link">lib/stdlib/sh_helpers.lua:164</span>
 </div>
 <section class="docstring">
 <p>Require a file on both client and server.
@@ -749,9 +725,9 @@ This is equivalent of simply doing this:</p>
 </section>
 <section class="detail" id="s">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>s<span class="params">(what)</span></h3>
+<h3 class="signature"><span class="owner"></span>s<span class="params">(what)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#s" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L576" title="View source">lib/stdlib/sh_table.lua:576</a>
+<span class="source-link">lib/stdlib/sh_table.lua:576</span>
 </div>
 <section class="docstring">
 <p>Creates a function that returns the given field of the table passed to it.
@@ -766,9 +742,9 @@ For use with table#map.</p>
 </section>
 <section class="detail" id="setenv">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>setenv<span class="params">(key, value)</span></h3>
+<h3 class="signature"><span class="owner"></span>setenv<span class="params">(key, value)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#setenv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua#L36" title="View source">gamemode/env.lua:36</a>
+<span class="source-link">gamemode/env.lua:36</span>
 </div>
 <section class="docstring">
 <p>Sets an environment variable &quot;key&quot; to &quot;value&quot;.
@@ -781,9 +757,9 @@ Will be automatically converted to a string by the C backend.</p>
 </section>
 <section class="detail" id="sub">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>sub<span class="params">(...)</span></h3>
+<h3 class="signature"><span class="owner"></span>sub<span class="params">(...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#sub" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L8" title="View source">lib/stdlib/sh_string.lua:8</a>
+<span class="source-link">lib/stdlib/sh_string.lua:8</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -791,9 +767,9 @@ Will be automatically converted to a string by the C backend.</p>
 </section>
 <section class="detail" id="try">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>try<span class="params">(func, ...)</span></h3>
+<h3 class="signature"><span class="owner"></span>try<span class="params">(func, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#try" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_wrappers.lua#L15" title="View source">lib/stdlib/sh_wrappers.lua:15</a>
+<span class="source-link">lib/stdlib/sh_wrappers.lua:15</span>
 </div>
 <section class="docstring">
 <p>A wrapper for pcall for shorthand writing.
@@ -806,9 +782,9 @@ If the function fails, the error is printed with a traceback and nothing is retu
 </section>
 <section class="detail" id="txt">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>txt<span class="params">(text)</span></h3>
+<h3 class="signature"><span class="owner"></span>txt<span class="params">(text)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#txt" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L179" title="View source">lib/stdlib/sh_utils.lua:179</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:179</span>
 </div>
 <section class="docstring">
 <p>Removes the common indentation and the surrounding blank lines from a multi-line string,
@@ -828,9 +804,9 @@ so that long texts can be indented together with the code around them.</p>
 </section>
 <section class="detail" id="typeof">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>typeof<span class="params">(obj)</span></h3>
+<h3 class="signature"><span class="owner"></span>typeof<span class="params">(obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#typeof" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_wrappers.lua#L6" title="View source">lib/stdlib/sh_wrappers.lua:6</a>
+<span class="source-link">lib/stdlib/sh_wrappers.lua:6</span>
 </div>
 <section class="docstring">
 <p>Gets the type of an object while ensuring the output is always lowercase.
@@ -845,9 +821,9 @@ Functions exactly the same as <code>type</code>.</p>
 </section>
 <section class="detail" id="unequal">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>unequal<span class="params">(a, b)</span></h3>
+<h3 class="signature"><span class="owner"></span>unequal<span class="params">(a, b)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#unequal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L249" title="View source">lib/stdlib/sh_utils.lua:249</a>
+<span class="source-link">lib/stdlib/sh_utils.lua:249</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -855,9 +831,9 @@ Functions exactly the same as <code>type</code>.</p>
 </section>
 <section class="detail" id="upper">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>upper<span class="params">(...)</span></h3>
+<h3 class="signature"><span class="owner"></span>upper<span class="params">(...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#upper" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L5" title="View source">lib/stdlib/sh_string.lua:5</a>
+<span class="source-link">lib/stdlib/sh_string.lua:5</span>
 </div>
 <section class="docstring">
 <p class="muted">No documentation available.</p>
@@ -865,9 +841,9 @@ Functions exactly the same as <code>type</code>.</p>
 </section>
 <section class="detail" id="URLMaterial">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>URLMaterial<span class="params">(url)</span></h3>
+<h3 class="signature"><span class="owner"></span>URLMaterial<span class="params">(url)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#URLMaterial" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L245" title="View source">lib/stdlib/cl_utils.lua:245</a>
+<span class="source-link">lib/stdlib/cl_utils.lua:245</span>
 </div>
 <section class="docstring">
 <p>Returns the material of an image from a URL, starting the download on first use.
@@ -882,9 +858,9 @@ A placeholder material is returned for as long as the image has not been loaded.
 </section>
 <section class="detail" id="w">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>w<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner"></span>w<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#w" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L588" title="View source">lib/stdlib/sh_table.lua:588</a>
+<span class="source-link">lib/stdlib/sh_table.lua:588</span>
 </div>
 <section class="docstring">
 <p>Splits a string of words into an array. Words are separated by spaces or newlines.</p>
@@ -898,9 +874,9 @@ A placeholder material is returned for as long as the image has not been loaded.
 </section>
 <section class="detail" id="wk">
 <div class="detail-header">
-<h3 class="signature"><span class="owner"></span>wk<span class="params">(str)</span></h3>
+<h3 class="signature"><span class="owner"></span>wk<span class="params">(str)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#wk" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L598" title="View source">lib/stdlib/sh_table.lua:598</a>
+<span class="source-link">lib/stdlib/sh_table.lua:598</span>
 </div>
 <section class="docstring">
 <p>Splits a string of space-separated words into a hash that has the words as its keys.</p>
@@ -913,11 +889,11 @@ A placeholder material is returned for as long as the image has not been loaded.
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua" title="View source">gamemode/env.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/init.lua" title="View source">gamemode/init.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua" title="View source">lib/stdlib/cl_utils.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua" title="View source">lib/stdlib/sh_class.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua" title="View source">lib/stdlib/sh_color.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua" title="View source">lib/stdlib/sh_debug.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua" title="View source">lib/stdlib/sh_helpers.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_module.lua" title="View source">lib/stdlib/sh_module.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua" title="View source">lib/stdlib/sh_string.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua" title="View source">lib/stdlib/sh_table.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua" title="View source">lib/stdlib/sh_utils.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_wrappers.lua" title="View source">lib/stdlib/sh_wrappers.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#a">a</a></li><li><a href="#add_client_env">add_client_env</a></li><li><a href="#add_debug_metric">add_debug_metric</a></li><li><a href="#add_debug_metric-2">add_debug_metric</a></li><li><a href="#class">class</a></li><li><a href="#Color">Color</a></li><li><a href="#compare">compare</a></li><li><a href="#delegate">delegate</a></li><li><a href="#enumerate">enumerate</a></li><li><a href="#equal">equal</a></li><li><a href="#error_with_traceback">error_with_traceback</a></li><li><a href="#extends">extends</a></li><li><a href="#get_debug_metric">get_debug_metric</a></li><li><a href="#get_debug_metric-2">get_debug_metric</a></li><li><a href="#get_player_name">get_player_name</a></li><li><a href="#getenv">getenv</a></li><li><a href="#greater">greater</a></li><li><a href="#greater_equal">greater_equal</a></li><li><a href="#i">i</a></li><li><a href="#include_sandboxed">include_sandboxed</a></li><li><a href="#is_a">is_a</a></li><li><a href="#isclass">isclass</a></li><li><a href="#LerpColor">LerpColor</a></li><li><a href="#less">less</a></li><li><a href="#less_equal">less_equal</a></li><li><a href="#long_error">long_error</a></li><li><a href="#lower">lower</a></li><li><a href="#mod">mod</a></li><li><a href="#print_debug_metric">print_debug_metric</a></li><li><a href="#print_debug_metric-2">print_debug_metric</a></li><li><a href="#print_debug_metrics">print_debug_metrics</a></li><li><a href="#print_debug_metrics-2">print_debug_metrics</a></li><li><a href="#print_table">print_table</a></li><li><a href="#print_traceback">print_traceback</a></li><li><a href="#printf">printf</a></li><li><a href="#require_client">require_client</a></li><li><a href="#require_ignore">require_ignore</a></li><li><a href="#require_module">require_module</a></li><li><a href="#require_relative">require_relative</a></li><li><a href="#require_relative_folder">require_relative_folder</a></li><li><a href="#require_server">require_server</a></li><li><a href="#require_shared">require_shared</a></li><li><a href="#s">s</a></li><li><a href="#setenv">setenv</a></li><li><a href="#sub">sub</a></li><li><a href="#try">try</a></li><li><a href="#txt">txt</a></li><li><a href="#typeof">typeof</a></li><li><a href="#unequal">unequal</a></li><li><a href="#upper">upper</a></li><li><a href="#URLMaterial">URLMaterial</a></li><li><a href="#w">w</a></li><li><a href="#wk">wk</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">gamemode/env.lua</span></li><li><span class="source-link">gamemode/init.lua</span></li><li><span class="source-link">lib/stdlib/cl_utils.lua</span></li><li><span class="source-link">lib/stdlib/sh_class.lua</span></li><li><span class="source-link">lib/stdlib/sh_color.lua</span></li><li><span class="source-link">lib/stdlib/sh_debug.lua</span></li><li><span class="source-link">lib/stdlib/sh_helpers.lua</span></li><li><span class="source-link">lib/stdlib/sh_module.lua</span></li><li><span class="source-link">lib/stdlib/sh_string.lua</span></li><li><span class="source-link">lib/stdlib/sh_table.lua</span></li><li><span class="source-link">lib/stdlib/sh_utils.lua</span></li><li><span class="source-link">lib/stdlib/sh_wrappers.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#a">a</a></li><li data-realm="shared"><a href="#add_client_env">add_client_env</a></li><li data-realm="shared"><a href="#add_debug_metric">add_debug_metric</a></li><li data-realm="shared"><a href="#class">class</a></li><li data-realm="shared"><a href="#Color">Color</a></li><li data-realm="shared"><a href="#compare">compare</a></li><li data-realm="shared"><a href="#delegate">delegate</a></li><li data-realm="shared"><a href="#enumerate">enumerate</a></li><li data-realm="shared"><a href="#equal">equal</a></li><li data-realm="shared"><a href="#error_with_traceback">error_with_traceback</a></li><li data-realm="shared"><a href="#extends">extends</a></li><li data-realm="shared"><a href="#get_debug_metric">get_debug_metric</a></li><li data-realm="shared"><a href="#get_player_name">get_player_name</a></li><li data-realm="shared"><a href="#getenv">getenv</a></li><li data-realm="shared"><a href="#greater">greater</a></li><li data-realm="shared"><a href="#greater_equal">greater_equal</a></li><li data-realm="shared"><a href="#i">i</a></li><li data-realm="shared"><a href="#include_sandboxed">include_sandboxed</a></li><li data-realm="shared"><a href="#is_a">is_a</a></li><li data-realm="shared"><a href="#isclass">isclass</a></li><li data-realm="shared"><a href="#LerpColor">LerpColor</a></li><li data-realm="shared"><a href="#less">less</a></li><li data-realm="shared"><a href="#less_equal">less_equal</a></li><li data-realm="shared"><a href="#long_error">long_error</a></li><li data-realm="shared"><a href="#lower">lower</a></li><li data-realm="shared"><a href="#mod">mod</a></li><li data-realm="shared"><a href="#print_debug_metric">print_debug_metric</a></li><li data-realm="shared"><a href="#print_debug_metrics">print_debug_metrics</a></li><li data-realm="shared"><a href="#print_table">print_table</a></li><li data-realm="shared"><a href="#print_traceback">print_traceback</a></li><li data-realm="shared"><a href="#printf">printf</a></li><li data-realm="shared"><a href="#require_client">require_client</a></li><li data-realm="shared"><a href="#require_ignore">require_ignore</a></li><li data-realm="server"><a href="#require_module">require_module</a></li><li data-realm="shared"><a href="#require_relative">require_relative</a></li><li data-realm="shared"><a href="#require_relative_folder">require_relative_folder</a></li><li data-realm="shared"><a href="#require_server">require_server</a></li><li data-realm="shared"><a href="#require_shared">require_shared</a></li><li data-realm="shared"><a href="#s">s</a></li><li data-realm="shared"><a href="#setenv">setenv</a></li><li data-realm="shared"><a href="#sub">sub</a></li><li data-realm="shared"><a href="#try">try</a></li><li data-realm="shared"><a href="#txt">txt</a></li><li data-realm="shared"><a href="#typeof">typeof</a></li><li data-realm="shared"><a href="#unequal">unequal</a></li><li data-realm="shared"><a href="#upper">upper</a></li><li data-realm="client"><a href="#URLMaterial">URLMaterial</a></li><li data-realm="shared"><a href="#w">w</a></li><li data-realm="shared"><a href="#wk">wk</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

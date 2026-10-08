@@ -31,37 +31,37 @@
 <div class="page-header"><h1>Plugin <span class="badge badge-library">library</span></h1></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#add_extra">add_extra(extra)</a></div><div class="summary-synopsis">Adds a folder to the list of extra folders that are included for every plugin.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#add_hooks">add_hooks(id, obj)</a></div><div class="summary-synopsis">Registers the functions of a table as hook handlers.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a></div><div class="summary-synopsis">Returns all registered plugins, the schema included.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#cache_functions">cache_functions(obj, id)</a></div><div class="summary-synopsis">Adds every function of a table to the hook cache under the key it is stored at, so that hook.Call calls it with the table as self.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#call">call(name, ...)</a></div><div class="summary-synopsis">Calls a hook and returns what its handlers returned. This function DOES NOT call GM: (gamemode) hooks! It only calls plugin, schema and hook.Add'ed hooks!</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#clear_cache">clear_cache()</a></div><div class="summary-synopsis">Clears the hook and load caches and resets the extra folders, ready for a code refresh. Does nothing before Flux has initialized. On a lite refresh only the entries of plugins whose path does not contain 'flux' are dropped.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#clear_extras">clear_extras()</a></div><div class="summary-synopsis">Resets the list of extra plugin folders to the defaults.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#clear_load_cache">clear_load_cache()</a></div><div class="summary-synopsis">Forgets which plugins have been loaded, so that they can be included again.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a></div><div class="summary-synopsis">Finds a registered plugin by its path, ID, folder or name.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get_cache">get_cache()</a></div><div class="summary-synopsis">Returns the hook cache.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include">include(path)</a></div><div class="summary-synopsis">Includes a plugin from a folder or from a single .lua file and registers it. Reads plugin.yml on the server, checks the plugin's environment and dependencies, includes its extra folders and its main file. The PLUGIN global is set while the plugin loads.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_entities">include_entities(folder)</a></div><div class="summary-synopsis">Includes and registers the scripted weapons, entities and effects found in a folder. Looks for 'weapons', 'entities' and 'effects' subfolders, each containing single .lua files or folders with shared.lua, init.lua and cl_init.lua.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_folders">include_folders(folder)</a></div><div class="summary-synopsis">Includes all extra folders (lib, classes, config, entities, themes and so on) of a plugin or schema. A plugin can take over a folder by returning a non-nil value from the PluginIncludeFolder hook.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_plugins">include_plugins(folder)</a></div><div class="summary-synopsis">Includes all plugins inside a folder: single-file plugins first, then plugin folders.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#include_schema">include_schema()</a></div><div class="summary-synopsis">Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and plugins, then registers it. Sets the SCHEMA global. Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#is_disabled">is_disabled(folder)</a></div><div class="summary-synopsis">Checks whether a plugin is on the list of disabled plugins.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#loaded">loaded(obj)</a></div><div class="summary-synopsis">Checks whether a plugin has already been loaded.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#recache">recache(id)</a></div><div class="summary-synopsis">Caches the hooks of an existing plugin again. Calls the plugin's on_recache method first, if it has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#register">register(obj)</a></div><div class="summary-synopsis">Registers a plugin: caches its hooks, calls its OnPluginLoaded method, stores it under its path and marks it as loaded. On the server this also imports the schema's .yml config when the schema is registered, and shares the info of single-file plugins with clients.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove">remove(id)</a></div><div class="summary-synopsis">Removes a plugin entirely: unhooks it and deletes it from the registered plugins. Calls the plugin's on_removed method first, if it has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_from_cache">remove_from_cache(id)</a></div><div class="summary-synopsis">Unhooks a plugin by removing its functions from the hook cache. Calls the plugin's on_unhook method first, if it has one.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove_hooks">remove_hooks(id)</a></div><div class="summary-synopsis">Removes all hook handlers that have been registered under an ID.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#require">require(name)</a></div><div class="summary-synopsis">Makes sure that a plugin (or a package) is loaded, including it if it has not been yet. Plugins are looked up in the Flux, cloud and schema plugin folders. Please specify the full file name if requiring a single-file Plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_extra">add_extra(extra)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds a folder to the list of extra folders that are included for every plugin.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_hooks">add_hooks(id, obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers the functions of a table as hook handlers.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns all registered plugins, the schema included.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#cache_functions">cache_functions(obj, id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Adds every function of a table to the hook cache under the key it is stored at, so that hook.Call calls it with the table as self.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#call">call(name, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Calls a hook and returns what its handlers returned.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#clear_cache">clear_cache()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Clears the hook and load caches and resets the extra folders, ready for a code refresh.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#clear_extras">clear_extras()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Resets the list of extra plugin folders to the defaults.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#clear_load_cache">clear_load_cache()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Forgets which plugins have been loaded, so that they can be included again.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Finds a registered plugin by its path, ID, folder or name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_cache">get_cache()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Returns the hook cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include">include(path)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes a plugin from a folder or from a single .lua file and registers it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_entities">include_entities(folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes and registers the scripted weapons, entities and effects found in a folder.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_folders">include_folders(folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes all extra folders (lib, classes, config, entities, themes and so on) of a plugin or schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_plugins">include_plugins(folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes all plugins inside a folder: single-file plugins first, then plugin folders.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_schema">include_schema()</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and plugins, then registers it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_disabled">is_disabled(folder)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a plugin is on the list of disabled plugins.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#loaded">loaded(obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Checks whether a plugin has already been loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#recache">recache(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Caches the hooks of an existing plugin again.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register(obj)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Registers a plugin: caches its hooks, calls its OnPluginLoaded method, stores it under its path and marks it as loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove">remove(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes a plugin entirely: unhooks it and deletes it from the registered plugins.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_from_cache">remove_from_cache(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Unhooks a plugin by removing its functions from the hook cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_hooks">remove_hooks(id)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Removes all hook handlers that have been registered under an ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require">require(name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Makes sure that a plugin (or a package) is loaded, including it if it has not been yet.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="add_extra">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>add_extra<span class="params">(extra)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>add_extra<span class="params">(extra)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_extra" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L639" title="View source">lib/plugin.lua:639</a>
+<span class="source-link">lib/plugin.lua:639</span>
 </div>
 <section class="docstring">
 <p>Adds a folder to the list of extra folders that are included for every plugin.</p>
@@ -71,9 +71,9 @@
 </section>
 <section class="detail" id="add_hooks">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>add_hooks<span class="params">(id, obj)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>add_hooks<span class="params">(id, obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#add_hooks" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L103" title="View source">lib/plugin.lua:103</a>
+<span class="source-link">lib/plugin.lua:103</span>
 </div>
 <section class="docstring">
 <p>Registers the functions of a table as hook handlers.</p>
@@ -91,9 +91,9 @@ Plugin.<span class="hl-f">add_hooks</span>(<span class="hl-s">&#39;FLBinds&#39;<
 </section>
 <section class="detail" id="all">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>all<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>all<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#all" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L35" title="View source">lib/plugin.lua:35</a>
+<span class="source-link">lib/plugin.lua:35</span>
 </div>
 <section class="docstring">
 <p>Returns all registered plugins, the schema included.</p>
@@ -103,9 +103,9 @@ Plugin.<span class="hl-f">add_hooks</span>(<span class="hl-s">&#39;FLBinds&#39;<
 </section>
 <section class="detail" id="cache_functions">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>cache_functions<span class="params">(obj, id)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>cache_functions<span class="params">(obj, id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#cache_functions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L82" title="View source">lib/plugin.lua:82</a>
+<span class="source-link">lib/plugin.lua:82</span>
 </div>
 <section class="docstring">
 <p>Adds every function of a table to the hook cache under the key it is stored at,
@@ -116,9 +116,9 @@ so that hook.Call calls it with the table as self.</p>
 </section>
 <section class="detail" id="call">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>call<span class="params">(name, ...)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>call<span class="params">(name, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#call" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L759" title="View source">lib/plugin.lua:759</a>
+<span class="source-link">lib/plugin.lua:759</span>
 </div>
 <section class="docstring">
 <p>Calls a hook and returns what its handlers returned.
@@ -132,9 +132,9 @@ It only calls plugin, schema and hook.Add'ed hooks!</p>
 </section>
 <section class="detail" id="clear_cache">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>clear_cache<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>clear_cache<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#clear_cache" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L48" title="View source">lib/plugin.lua:48</a>
+<span class="source-link">lib/plugin.lua:48</span>
 </div>
 <section class="docstring">
 <p>Clears the hook and load caches and resets the extra folders, ready for a code refresh.
@@ -144,9 +144,9 @@ whose path does not contain 'flux' are dropped.</p>
 </section>
 <section class="detail" id="clear_extras">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>clear_extras<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>clear_extras<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#clear_extras" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L74" title="View source">lib/plugin.lua:74</a>
+<span class="source-link">lib/plugin.lua:74</span>
 </div>
 <section class="docstring">
 <p>Resets the list of extra plugin folders to the defaults.</p>
@@ -154,9 +154,9 @@ whose path does not contain 'flux' are dropped.</p>
 </section>
 <section class="detail" id="clear_load_cache">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>clear_load_cache<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>clear_load_cache<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#clear_load_cache" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L69" title="View source">lib/plugin.lua:69</a>
+<span class="source-link">lib/plugin.lua:69</span>
 </div>
 <section class="docstring">
 <p>Forgets which plugins have been loaded, so that they can be included again.</p>
@@ -164,9 +164,9 @@ whose path does not contain 'flux' are dropped.</p>
 </section>
 <section class="detail" id="find">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>find<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>find<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L122" title="View source">lib/plugin.lua:122</a>
+<span class="source-link">lib/plugin.lua:122</span>
 </div>
 <section class="docstring">
 <p>Finds a registered plugin by its path, ID, folder or name.</p>
@@ -178,9 +178,9 @@ whose path does not contain 'flux' are dropped.</p>
 </section>
 <section class="detail" id="get_cache">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>get_cache<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>get_cache<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#get_cache" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L41" title="View source">lib/plugin.lua:41</a>
+<span class="source-link">lib/plugin.lua:41</span>
 </div>
 <section class="docstring">
 <p>Returns the hook cache.</p>
@@ -190,9 +190,9 @@ whose path does not contain 'flux' are dropped.</p>
 </section>
 <section class="detail" id="include">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>include<span class="params">(path)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>include<span class="params">(path)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L296" title="View source">lib/plugin.lua:296</a>
+<span class="source-link">lib/plugin.lua:296</span>
 </div>
 <section class="docstring">
 <p>Includes a plugin from a folder or from a single .lua file and registers it.
@@ -206,9 +206,9 @@ its extra folders and its main file. The PLUGIN global is set while the plugin l
 </section>
 <section class="detail" id="include_entities">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>include_entities<span class="params">(folder)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>include_entities<span class="params">(folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_entities" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L571" title="View source">lib/plugin.lua:571</a>
+<span class="source-link">lib/plugin.lua:571</span>
 </div>
 <section class="docstring">
 <p>Includes and registers the scripted weapons, entities and effects found in a folder.
@@ -220,9 +220,9 @@ files or folders with shared.lua, init.lua and cl_init.lua.</p>
 </section>
 <section class="detail" id="include_folders">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>include_folders<span class="params">(folder)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>include_folders<span class="params">(folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_folders" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L649" title="View source">lib/plugin.lua:649</a>
+<span class="source-link">lib/plugin.lua:649</span>
 </div>
 <section class="docstring">
 <p>Includes all extra folders (lib, classes, config, entities, themes and so on) of a
@@ -234,9 +234,9 @@ PluginIncludeFolder hook.</p>
 </section>
 <section class="detail" id="include_plugins">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>include_plugins<span class="params">(folder)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>include_plugins<span class="params">(folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_plugins" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L526" title="View source">lib/plugin.lua:526</a>
+<span class="source-link">lib/plugin.lua:526</span>
 </div>
 <section class="docstring">
 <p>Includes all plugins inside a folder: single-file plugins first, then plugin folders.</p>
@@ -246,9 +246,9 @@ PluginIncludeFolder hook.</p>
 </section>
 <section class="detail" id="include_schema">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>include_schema<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>include_schema<span class="params">()</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#include_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L379" title="View source">lib/plugin.lua:379</a>
+<span class="source-link">lib/plugin.lua:379</span>
 </div>
 <section class="docstring">
 <p>Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and
@@ -258,9 +258,9 @@ Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.</p>
 </section>
 <section class="detail" id="is_disabled">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>is_disabled<span class="params">(folder)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>is_disabled<span class="params">(folder)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#is_disabled" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L221" title="View source">lib/plugin.lua:221</a>
+<span class="source-link">lib/plugin.lua:221</span>
 </div>
 <section class="docstring">
 <p>Checks whether a plugin is on the list of disabled plugins.</p>
@@ -272,9 +272,9 @@ Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.</p>
 </section>
 <section class="detail" id="loaded">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>loaded<span class="params">(obj)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>loaded<span class="params">(obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#loaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L230" title="View source">lib/plugin.lua:230</a>
+<span class="source-link">lib/plugin.lua:230</span>
 </div>
 <section class="docstring">
 <p>Checks whether a plugin has already been loaded.</p>
@@ -286,9 +286,9 @@ Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.</p>
 </section>
 <section class="detail" id="recache">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>recache<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>recache<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#recache" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L170" title="View source">lib/plugin.lua:170</a>
+<span class="source-link">lib/plugin.lua:170</span>
 </div>
 <section class="docstring">
 <p>Caches the hooks of an existing plugin again.
@@ -299,9 +299,9 @@ Calls the plugin's on_recache method first, if it has one.</p>
 </section>
 <section class="detail" id="register">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>register<span class="params">(obj)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>register<span class="params">(obj)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L245" title="View source">lib/plugin.lua:245</a>
+<span class="source-link">lib/plugin.lua:245</span>
 </div>
 <section class="docstring">
 <p>Registers a plugin: caches its hooks, calls its OnPluginLoaded method, stores it under
@@ -314,9 +314,9 @@ and shares the info of single-file plugins with clients.</p>
 </section>
 <section class="detail" id="remove">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>remove<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>remove<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L194" title="View source">lib/plugin.lua:194</a>
+<span class="source-link">lib/plugin.lua:194</span>
 </div>
 <section class="docstring">
 <p>Removes a plugin entirely: unhooks it and deletes it from the registered plugins.
@@ -327,9 +327,9 @@ Calls the plugin's on_removed method first, if it has one.</p>
 </section>
 <section class="detail" id="remove_from_cache">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>remove_from_cache<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>remove_from_cache<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_from_cache" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L137" title="View source">lib/plugin.lua:137</a>
+<span class="source-link">lib/plugin.lua:137</span>
 </div>
 <section class="docstring">
 <p>Unhooks a plugin by removing its functions from the hook cache.
@@ -340,9 +340,9 @@ Calls the plugin's on_unhook method first, if it has one.</p>
 </section>
 <section class="detail" id="remove_hooks">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>remove_hooks<span class="params">(id)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>remove_hooks<span class="params">(id)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove_hooks" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L109" title="View source">lib/plugin.lua:109</a>
+<span class="source-link">lib/plugin.lua:109</span>
 </div>
 <section class="docstring">
 <p>Removes all hook handlers that have been registered under an ID.</p>
@@ -352,9 +352,9 @@ Calls the plugin's on_unhook method first, if it has one.</p>
 </section>
 <section class="detail" id="require">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Plugin.</span>require<span class="params">(name)</span></h3>
+<h3 class="signature"><span class="owner">Plugin.</span>require<span class="params">(name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#require" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua#L461" title="View source">lib/plugin.lua:461</a>
+<span class="source-link">lib/plugin.lua:461</span>
 </div>
 <section class="docstring">
 <p>Makes sure that a plugin (or a package) is loaded, including it if it has not been yet.
@@ -367,11 +367,11 @@ Please specify the full file name if requiring a single-file Plugin.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/plugin.lua" title="View source">lib/plugin.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_extra">add_extra</a></li><li><a href="#add_hooks">add_hooks</a></li><li><a href="#all">all</a></li><li><a href="#cache_functions">cache_functions</a></li><li><a href="#call">call</a></li><li><a href="#clear_cache">clear_cache</a></li><li><a href="#clear_extras">clear_extras</a></li><li><a href="#clear_load_cache">clear_load_cache</a></li><li><a href="#find">find</a></li><li><a href="#get_cache">get_cache</a></li><li><a href="#include">include</a></li><li><a href="#include_entities">include_entities</a></li><li><a href="#include_folders">include_folders</a></li><li><a href="#include_plugins">include_plugins</a></li><li><a href="#include_schema">include_schema</a></li><li><a href="#is_disabled">is_disabled</a></li><li><a href="#loaded">loaded</a></li><li><a href="#recache">recache</a></li><li><a href="#register">register</a></li><li><a href="#remove">remove</a></li><li><a href="#remove_from_cache">remove_from_cache</a></li><li><a href="#remove_hooks">remove_hooks</a></li><li><a href="#require">require</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">lib/plugin.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="shared"><a href="#add_extra">add_extra</a></li><li data-realm="shared"><a href="#add_hooks">add_hooks</a></li><li data-realm="shared"><a href="#all">all</a></li><li data-realm="shared"><a href="#cache_functions">cache_functions</a></li><li data-realm="shared"><a href="#call">call</a></li><li data-realm="shared"><a href="#clear_cache">clear_cache</a></li><li data-realm="shared"><a href="#clear_extras">clear_extras</a></li><li data-realm="shared"><a href="#clear_load_cache">clear_load_cache</a></li><li data-realm="shared"><a href="#find">find</a></li><li data-realm="shared"><a href="#get_cache">get_cache</a></li><li data-realm="shared"><a href="#include">include</a></li><li data-realm="shared"><a href="#include_entities">include_entities</a></li><li data-realm="shared"><a href="#include_folders">include_folders</a></li><li data-realm="shared"><a href="#include_plugins">include_plugins</a></li><li data-realm="shared"><a href="#include_schema">include_schema</a></li><li data-realm="shared"><a href="#is_disabled">is_disabled</a></li><li data-realm="shared"><a href="#loaded">loaded</a></li><li data-realm="shared"><a href="#recache">recache</a></li><li data-realm="shared"><a href="#register">register</a></li><li data-realm="shared"><a href="#remove">remove</a></li><li data-realm="shared"><a href="#remove_from_cache">remove_from_cache</a></li><li data-realm="shared"><a href="#remove_hooks">remove_hooks</a></li><li data-realm="shared"><a href="#require">require</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

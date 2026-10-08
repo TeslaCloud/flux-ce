@@ -28,22 +28,22 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Font <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<div class="page-header"><h1>Font <span class="badge badge-library">library</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Functions</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#clear">clear()</a></div><div class="summary-synopsis">Forgets all of the created fonts, so that they can be created again.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create">create(name, font_data)</a></div><div class="summary-synopsis">Creates a font and remembers its data. Does nothing if a font with this name has already been created. The extended (UTF-8) character range is always enabled.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#create_fonts">create_fonts()</a></div><div class="summary-synopsis">Clears the stored fonts and creates the built-in Flux fonts again, then calls the 'CreateFonts' theme and plugin hooks so that everything else can create theirs.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#get">get(name)</a></div><div class="summary-synopsis">Returns the data of a font created with Font.create.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#size">size(name, size, data)</a></div><div class="summary-synopsis">Returns the name of the specified font scaled to the specified size. The sized font is created from the original one on first use and is named 'name:size'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#clear">clear()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Forgets all of the created fonts, so that they can be created again.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create">create(name, font_data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Creates a font and remembers its data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_fonts">create_fonts()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Clears the stored fonts and creates the built-in Flux fonts again, then calls the 'CreateFonts' theme and plugin hooks so that everything else can create theirs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get">get(name)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the data of a font created with Font.create.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#size">size(name, size, data)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Returns the name of the specified font scaled to the specified size.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="functions">Functions</h2>
 <section class="detail" id="clear">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Font.</span>clear<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Font.</span>clear<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#clear" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_font.lua#L79" title="View source">packages/flow/lib/cl_font.lua:79</a>
+<span class="source-link">packages/flow/lib/cl_font.lua:79</span>
 </div>
 <section class="docstring">
 <p>Forgets all of the created fonts, so that they can be created again.</p>
@@ -51,9 +51,9 @@
 </section>
 <section class="detail" id="create">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Font.</span>create<span class="params">(name, font_data)</span></h3>
+<h3 class="signature"><span class="owner">Font.</span>create<span class="params">(name, font_data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#create" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_font.lua#L18" title="View source">packages/flow/lib/cl_font.lua:18</a>
+<span class="source-link">packages/flow/lib/cl_font.lua:18</span>
 </div>
 <section class="docstring">
 <p>Creates a font and remembers its data. Does nothing if a font with this name
@@ -72,9 +72,9 @@ has already been created. The extended (UTF-8) character range is always enabled
 </section>
 <section class="detail" id="create_fonts">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Font.</span>create_fonts<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">Font.</span>create_fonts<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#create_fonts" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_font.lua#L92" title="View source">packages/flow/lib/cl_font.lua:92</a>
+<span class="source-link">packages/flow/lib/cl_font.lua:92</span>
 </div>
 <section class="docstring">
 <p>Clears the stored fonts and creates the built-in Flux fonts again, then calls the
@@ -83,9 +83,9 @@ has already been created. The extended (UTF-8) character range is always enabled
 </section>
 <section class="detail" id="get">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Font.</span>get<span class="params">(name)</span></h3>
+<h3 class="signature"><span class="owner">Font.</span>get<span class="params">(name)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#get" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_font.lua#L86" title="View source">packages/flow/lib/cl_font.lua:86</a>
+<span class="source-link">packages/flow/lib/cl_font.lua:86</span>
 </div>
 <section class="docstring">
 <p>Returns the data of a font created with Font.create.</p>
@@ -97,9 +97,9 @@ has already been created. The extended (UTF-8) character range is always enabled
 </section>
 <section class="detail" id="size">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">Font.</span>size<span class="params">(name, size, data)</span></h3>
+<h3 class="signature"><span class="owner">Font.</span>size<span class="params">(name, size, data)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_font.lua#L41" title="View source">packages/flow/lib/cl_font.lua:41</a>
+<span class="source-link">packages/flow/lib/cl_font.lua:41</span>
 </div>
 <section class="docstring">
 <p>Returns the name of the specified font scaled to the specified size. The sized font
@@ -114,11 +114,11 @@ is created from the original one on first use and is named 'name:size'.</p>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/cl_font.lua" title="View source">packages/flow/lib/cl_font.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#clear">clear</a></li><li><a href="#create">create</a></li><li><a href="#create_fonts">create_fonts</a></li><li><a href="#get">get</a></li><li><a href="#size">size</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/flow/lib/cl_font.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li data-realm="client"><a href="#clear">clear</a></li><li data-realm="client"><a href="#create">create</a></li><li data-realm="client"><a href="#create_fonts">create_fonts</a></li><li data-realm="client"><a href="#get">get</a></li><li data-realm="client"><a href="#size">size</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

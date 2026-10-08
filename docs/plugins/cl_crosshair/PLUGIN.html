@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="fdoc">
-<title>Crosshair — Flux v0.8.1</title>
+<title>PLUGIN — Flux v0.8.1</title>
 <link rel="stylesheet" href="../../assets/style.css">
 <script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
-<body data-root="../../" data-group="plugins/cl_crosshair" data-module="Crosshair">
+<body data-root="../../" data-group="plugins/cl_crosshair" data-module="PLUGIN">
 <div class="progress" id="progress"></div>
 <button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
 <div class="sidebar-backdrop"></div>
@@ -28,23 +28,24 @@
 <button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
 </div>
 <div class="content-inner" id="content-inner">
-<div class="page-header"><h1>Crosshair <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/cl_crosshair/index.html">Crosshair</a></p></div>
+<div class="page-header"><h1>PLUGIN <span class="badge badge-plugin">plugin</span><span class="realm realm-client" title="Client-side">client</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/cl_crosshair/index.html">Crosshair</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
-<div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#AdjustCrosshairColor">AdjustCrosshairColor(trace, distance)</a></div><div class="summary-synopsis">Tints the crosshair with the theme's accent color when the local player aims at a player or an item that is less than 600 units away.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#AdjustCrosshairGap">AdjustCrosshairGap(trace, distance)</a></div><div class="summary-synopsis">Narrows the crosshair when the local player aims at a player or an item that is less than 600 units away.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#HUDPaint">HUDPaint()</a></div><div class="summary-synopsis">Draws the crosshair: a center dot and four bars around it. Gap and color can be changed through the AdjustCrosshairGap and AdjustCrosshairColor hooks.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#ShouldHUDPaintCrosshair">ShouldHUDPaintCrosshair()</a></div><div class="summary-synopsis">Hides the crosshair while the local player is running, dead or not yet initialized.</div></div>
+<div class="summary-group"><h3>Hooks</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#AdjustCrosshairColor">AdjustCrosshairColor(trace, distance)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Tints the crosshair with the theme's accent color when the local player aims at a player or an item that is less than 600 units away.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#AdjustCrosshairGap">AdjustCrosshairGap(trace, distance)</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Narrows the crosshair when the local player aims at a player or an item that is less than 600 units away.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#HUDPaint">HUDPaint()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Draws the crosshair: a center dot and four bars around it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShouldHUDPaintCrosshair">ShouldHUDPaintCrosshair()</a><span class="realm realm-client" title="Client-side">client</span></div><div class="summary-synopsis">Hides the crosshair while the local player is running, dead or not yet initialized.</div></div>
 </div>
 </section>
-<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="details-group"><h2 id="hooks">Hooks</h2>
 <section class="detail" id="AdjustCrosshairColor">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PLUGIN:</span>AdjustCrosshairColor<span class="params">(trace, distance)</span></h3>
+<h3 class="signature"><span class="owner">PLUGIN:</span>AdjustCrosshairColor<span class="params">(trace, distance)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#AdjustCrosshairColor" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/cl_crosshair.lua#L86" title="View source">plugins/cl_crosshair.lua:86</a>
+<span class="source-link">plugins/cl_crosshair.lua:86</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/cl_crosshair/Hooks.html#AdjustCrosshairColor"><code>AdjustCrosshairColor</code></a></p>
 <p>Tints the crosshair with the theme's accent color when the local player aims at a player
 or an item that is less than 600 units away.</p>
 <h4>Parameters</h4>
@@ -55,11 +56,12 @@ or an item that is less than 600 units away.</p>
 </section>
 <section class="detail" id="AdjustCrosshairGap">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PLUGIN:</span>AdjustCrosshairGap<span class="params">(trace, distance)</span></h3>
+<h3 class="signature"><span class="owner">PLUGIN:</span>AdjustCrosshairGap<span class="params">(trace, distance)</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#AdjustCrosshairGap" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/cl_crosshair.lua#L99" title="View source">plugins/cl_crosshair.lua:99</a>
+<span class="source-link">plugins/cl_crosshair.lua:99</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/cl_crosshair/Hooks.html#AdjustCrosshairGap"><code>AdjustCrosshairGap</code></a></p>
 <p>Narrows the crosshair when the local player aims at a player or an item that is less than
 600 units away.</p>
 <h4>Parameters</h4>
@@ -70,9 +72,9 @@ or an item that is less than 600 units away.</p>
 </section>
 <section class="detail" id="HUDPaint">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PLUGIN:</span>HUDPaint<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PLUGIN:</span>HUDPaint<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#HUDPaint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/cl_crosshair.lua#L21" title="View source">plugins/cl_crosshair.lua:21</a>
+<span class="source-link">plugins/cl_crosshair.lua:21</span>
 </div>
 <section class="docstring">
 <p>Draws the crosshair: a center dot and four bars around it.
@@ -81,22 +83,23 @@ Gap and color can be changed through the AdjustCrosshairGap and AdjustCrosshairC
 </section>
 <section class="detail" id="ShouldHUDPaintCrosshair">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">PLUGIN:</span>ShouldHUDPaintCrosshair<span class="params">()</span></h3>
+<h3 class="signature"><span class="owner">PLUGIN:</span>ShouldHUDPaintCrosshair<span class="params">()</span></h3> <span class="realm realm-client" title="Client-side">client</span>
 <a href="#ShouldHUDPaintCrosshair" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/cl_crosshair.lua#L13" title="View source">plugins/cl_crosshair.lua:13</a>
+<span class="source-link">plugins/cl_crosshair.lua:13</span>
 </div>
 <section class="docstring">
+<p class="hook-info">Implements hook <a href="../../plugins/cl_crosshair/Hooks.html#ShouldHUDPaintCrosshair"><code>ShouldHUDPaintCrosshair</code></a></p>
 <p>Hides the crosshair while the local player is running, dead or not yet initialized.</p>
 <h4>Returns</h4>
 <ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to hide the crosshair, nil otherwise</span></li></ul>
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/cl_crosshair.lua" title="View source">plugins/cl_crosshair.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#AdjustCrosshairColor">AdjustCrosshairColor</a></li><li><a href="#AdjustCrosshairGap">AdjustCrosshairGap</a></li><li><a href="#HUDPaint">HUDPaint</a></li><li><a href="#ShouldHUDPaintCrosshair">ShouldHUDPaintCrosshair</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">plugins/cl_crosshair.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="hooks">Hooks</li><li data-realm="client"><a href="#AdjustCrosshairColor">AdjustCrosshairColor</a></li><li data-realm="client"><a href="#AdjustCrosshairGap">AdjustCrosshairGap</a></li><li data-realm="client"><a href="#HUDPaint">HUDPaint</a></li><li data-realm="client"><a href="#ShouldHUDPaintCrosshair">ShouldHUDPaintCrosshair</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>

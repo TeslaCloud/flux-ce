@@ -31,19 +31,19 @@
 <div class="page-header"><h1>ActiveRecord.TableRecorder <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
 <section class="summary"><h2 id="summary">Summary</h2>
 <div class="summary-group"><h3>Methods</h3>
-<div class="summary-row"><div class="summary-signature"><a href="#init">init(recorder, table_name)</a></div><div class="summary-synopsis">Creates the object that change_table hands to its callback while statements are being recorded. It has the column type methods of a real table definition, as well as remove, rename, timestamps and references, and records each call as a statement.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#references">references(name, ...)</a></div><div class="summary-synopsis">Records the addition of a reference column.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#remove">remove(name)</a></div><div class="summary-synopsis">Records the removal of a column.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#rename">rename(name, new_name)</a></div><div class="summary-synopsis">Records the renaming of a column.</div></div>
-<div class="summary-row"><div class="summary-signature"><a href="#timestamps">timestamps(options)</a></div><div class="summary-synopsis">Records the addition of the timestamp columns.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(recorder, table_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Creates the object that change_table hands to its callback while statements are being recorded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#references">references(name, ...)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Records the addition of a reference column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove">remove(name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Records the removal of a column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename">rename(name, new_name)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Records the renaming of a column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#timestamps">timestamps(options)</a><span class="realm realm-shared" title="Shared (server and client)">shared</span></div><div class="summary-synopsis">Records the addition of the timestamp columns.</div></div>
 </div>
 </section>
 <section class="details-group"><h2 id="methods">Methods</h2>
 <section class="detail" id="init">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>init<span class="params">(recorder, table_name)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>init<span class="params">(recorder, table_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L287" title="View source">packages/active_record/lib/migrator/command_recorder.lua:287</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:287</span>
 </div>
 <section class="docstring">
 <p>Creates the object that change_table hands to its callback while statements are
@@ -57,9 +57,9 @@ as remove, rename, timestamps and references, and records each call as a stateme
 </section>
 <section class="detail" id="references">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>references<span class="params">(name, ...)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>references<span class="params">(name, ...)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#references" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L327" title="View source">packages/active_record/lib/migrator/command_recorder.lua:327</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:327</span>
 </div>
 <section class="docstring">
 <p>Records the addition of a reference column.</p>
@@ -69,9 +69,9 @@ as remove, rename, timestamps and references, and records each call as a stateme
 </section>
 <section class="detail" id="remove">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>remove<span class="params">(name)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>remove<span class="params">(name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#remove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L307" title="View source">packages/active_record/lib/migrator/command_recorder.lua:307</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:307</span>
 </div>
 <section class="docstring">
 <p>Records the removal of a column.</p>
@@ -81,9 +81,9 @@ as remove, rename, timestamps and references, and records each call as a stateme
 </section>
 <section class="detail" id="rename">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>rename<span class="params">(name, new_name)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>rename<span class="params">(name, new_name)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#rename" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L314" title="View source">packages/active_record/lib/migrator/command_recorder.lua:314</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:314</span>
 </div>
 <section class="docstring">
 <p>Records the renaming of a column.</p>
@@ -93,9 +93,9 @@ as remove, rename, timestamps and references, and records each call as a stateme
 </section>
 <section class="detail" id="timestamps">
 <div class="detail-header">
-<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>timestamps<span class="params">(options)</span></h3>
+<h3 class="signature"><span class="owner">ActiveRecord.TableRecorder:</span>timestamps<span class="params">(options)</span></h3> <span class="realm realm-shared" title="Shared (server and client)">shared</span>
 <a href="#timestamps" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
-<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua#L320" title="View source">packages/active_record/lib/migrator/command_recorder.lua:320</a>
+<span class="source-link">packages/active_record/lib/migrator/command_recorder.lua:320</span>
 </div>
 <section class="docstring">
 <p>Records the addition of the timestamp columns.</p>
@@ -104,11 +104,11 @@ as remove, rename, timestamps and references, and records each call as a stateme
 </section>
 </section>
 </section>
-<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/command_recorder.lua" title="View source">packages/active_record/lib/migrator/command_recorder.lua</a></li></ul></section>
-<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#init">init</a></li><li><a href="#references">references</a></li><li><a href="#remove">remove</a></li><li><a href="#rename">rename</a></li><li><a href="#timestamps">timestamps</a></li></ul></template>
+<section class="sources"><h2>Defined in</h2><ul><li><span class="source-link">packages/active_record/lib/migrator/command_recorder.lua</span></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li data-realm="shared"><a href="#init">init</a></li><li data-realm="shared"><a href="#references">references</a></li><li data-realm="shared"><a href="#remove">remove</a></li><li data-realm="shared"><a href="#rename">rename</a></li><li data-realm="shared"><a href="#timestamps">timestamps</a></li></ul></template>
 
 <footer class="footer">
-<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+<p>Built with <a href="https://github.com/Meow/fdoc">fdoc</a>.</p>
 </footer>
 </div>
 </main>
