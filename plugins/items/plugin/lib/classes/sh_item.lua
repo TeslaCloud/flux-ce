@@ -239,7 +239,7 @@ if SERVER then
   --- Finds the player that has the item in one of their inventories. Server-side only.
   -- @return [Player the player, or nil if no player has the item]
   function ItemBase:get_player()
-    for k, v in ipairs(player.GetAll()) do
+    for k, v in player.Iterator() do
       if v:has_item_by_id(self.instance_id) then
         return v
       end

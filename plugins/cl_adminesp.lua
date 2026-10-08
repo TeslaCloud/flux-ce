@@ -16,7 +16,7 @@ do
     and !PLAYER:InVehicle() then
       local client_pos = PLAYER:GetPos()
 
-      for k, v in ipairs(player.GetAll()) do
+      for k, v in player.Iterator() do
         if v == PLAYER then continue end
 
         local pos = v:GetPos()

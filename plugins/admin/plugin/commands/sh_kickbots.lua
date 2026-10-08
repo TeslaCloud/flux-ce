@@ -11,7 +11,7 @@ function CMD:on_run(actor)
     player = get_player_name(actor)
   })
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     if v:IsBot() then
       v:Kick('Kicking bots')
     end

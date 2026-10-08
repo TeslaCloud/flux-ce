@@ -466,7 +466,7 @@ function GM:OneSecond()
   elseif Flux.next_player_count_check <= sys_time then
     Flux.next_player_count_check = sys_time + 1800
 
-    if #player.GetAll() == 0 then
+    if player.GetCount() == 0 then
       if hook.Run('ShouldServerAutoRestart') != false then
         Flux.dev_print('Server is empty, restarting...')
         RunConsoleCommand('changelevel', game.GetMap())
@@ -623,7 +623,7 @@ end
 
 --- Saves the data of every player before the server restarts.
 function GM:ServerRestart()
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     v:save_player()
   end
 end
@@ -643,19 +643,19 @@ end
 -- @param new_value [Any]
 function GM:OnConfigSet(key, old_value, new_value)
   if key == 'walk_speed' then
-    for k, v in ipairs(player.GetAll()) do
+    for k, v in player.Iterator() do
       v:SetWalkSpeed(new_value)
     end
   elseif key == 'run_speed' then
-    for k, v in ipairs(player.GetAll()) do
+    for k, v in player.Iterator() do
       v:SetRunSpeed(new_value)
     end
   elseif key == 'crouched_speed' then
-    for k, v in ipairs(player.GetAll()) do
+    for k, v in player.Iterator() do
       v:SetCrouchedWalkSpeed(new_value / Config.get('walk_speed'))
     end
   elseif key == 'jump_power' then
-    for k, v in ipairs(player.GetAll()) do
+    for k, v in player.Iterator() do
       v:SetJumpPower(new_value)
     end
   end
@@ -710,7 +710,7 @@ do
     if cur_time >= next_think then
       local one_second_tick = (cur_time >= next_second)
 
-      for k, v in ipairs(player.GetAll()) do
+      for k, v in player.Iterator() do
         hook.Call('PlayerThink', self, v, cur_time)
 
         if one_second_tick then

@@ -103,7 +103,7 @@ end
 
 --- Saves the active character of every connected player.
 function Characters:SaveData()
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     v:save_character()
   end
 end

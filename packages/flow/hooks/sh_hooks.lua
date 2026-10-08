@@ -468,7 +468,7 @@ function GM:OnReloaded()
   if Flux.development then
     Flux.Anim:invalidate()
 
-    for k, v in ipairs(player.GetAll()) do
+    for k, v in player.Iterator() do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end
   end
@@ -482,7 +482,7 @@ timer.Create('fl_one_minute', 60, 0, function()
 
   local i = 0
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     i = i + 1
 
     timer.Simple(0.25 * i, function()

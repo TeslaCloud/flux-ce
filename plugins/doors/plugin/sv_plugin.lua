@@ -13,7 +13,7 @@ end
 function Doors:save()
   local doors = {}
 
-  for k, v in ipairs(ents.GetAll()) do
+  for k, v in ents.Iterator() do
     if v:is_door() then
       local save_table = {
         id = v:MapCreationID()

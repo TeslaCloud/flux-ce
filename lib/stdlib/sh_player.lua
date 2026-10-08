@@ -22,7 +22,7 @@ function player.find(name, case_sensitive, return_first)
   local hits = {}
   local is_steamid = name:start_with('STEAM_')
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     if is_steamid then
       if v:SteamID() == name then
         return v

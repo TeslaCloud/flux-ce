@@ -11,7 +11,7 @@ function PANEL:Init()
   self.player_list:AddColumn(t('ui.admin.players'), 1)
   self.player_list:SetWide(scrw / 6)
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     self.player_list:AddLine(v:steam_name(true)..' ('..v:name(true)..')').player = v
   end
 

@@ -126,7 +126,7 @@ end
 -- the 'moderator' permission.
 -- @param actor [Player the player that just connected]
 function Bolt:PlayerInitialSpawn(actor)
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     if (v.is_vanished or v:get_nv('observer')) and !actor:can('moderator') then
       v:prevent_transmit(actor, true)
     end

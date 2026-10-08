@@ -254,12 +254,10 @@ local function create_item_icon(item_obj, parent)
       MVC.push('SpawnMenu::GiveItem', PLAYER, item_obj.id, 1)
     end)
 
-    local players = player.GetAll()
-
-    if #players > 1 then
+    if player.GetCount() > 1 then
       local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player', false)
 
-      for k, v in ipairs(players) do
+      for k, v in player.Iterator() do
         if PLAYER == v then continue end
 
         local player_line = give_player:AddSubMenu(v:Name())

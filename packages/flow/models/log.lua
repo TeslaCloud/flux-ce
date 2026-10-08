@@ -138,7 +138,7 @@ function Log:replicate(condition)
 
   condition = isfunction(condition) and condition or function() return true end
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     if condition(v) then
       Cable.send(
         v,

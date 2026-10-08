@@ -32,7 +32,7 @@ end
 function ent_meta:prevent_transmit_conditional(should_prevent, condition)
   condition = condition or function() return true end
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     if v != self and condition(v, self, should_prevent) != false then
       self:prevent_transmit(v, should_prevent)
     end

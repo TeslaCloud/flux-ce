@@ -60,7 +60,7 @@ end
 function Factions.get_players(id)
   local players = {}
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in player.Iterator() do
     if v:get_faction_id() == id then
       table.insert(players, v)
     end

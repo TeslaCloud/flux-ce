@@ -119,7 +119,7 @@ end
 
 --- Requests the item data of every item entity from the server.
 function Items:OnItemDataReceived()
-  for k, v in ipairs(ents.GetAll()) do
+  for k, v in ents.Iterator() do
     if IsValid(v) and v:GetClass() == 'fl_item' then
       Cable.send('fl_items_data_request', v:EntIndex())
     end

@@ -164,7 +164,7 @@ if SERVER then
       local group_name = str:utf8sub(2, utf8.len(str)):utf8lower()
       local to_ret = {}
 
-      for k, v in ipairs(player.GetAll()) do
+      for k, v in player.Iterator() do
         if v:GetUserGroup() == group_name then
           table.insert(to_ret, v)
         end
@@ -191,7 +191,7 @@ if SERVER then
     ['['] = function(actor, str)
       local name = str:utf8sub(2, utf8.len(str) - 1)
 
-      for k, v in ipairs(player.GetAll()) do
+      for k, v in player.Iterator() do
         if v:name() == name then
           return { v }, '['
         end
@@ -216,7 +216,7 @@ if SERVER then
       local radius = tonumber(str:utf8sub(2, utf8.len(str)))
       local to_ret = {}
 
-      for k, v in pairs(player.GetAll()) do
+      for k, v in player.Iterator() do
         if v != actor and actor:GetPos():Distance(v:GetPos()) <= radius then
           table.insert(to_ret, v)
         end
