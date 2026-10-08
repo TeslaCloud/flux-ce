@@ -60,9 +60,65 @@ end
 do
   local vector_angle = FindMetaTable('Vector').Angle
   local normalize_angle = math.NormalizeAngle
+  local get_weapon_hold_type = Flux.Anim.get_weapon_hold_type
 
-  --- Picks the base activity of a player (idle, walking or running) and updates their
-  -- move_yaw pose parameter. An animation forced with Player#set_animation takes priority.
+  --- Returns the compiled animations for the hold type of a weapon. Hold types that the
+  -- animation table does not define use the 'normal' hold type.
+  -- @param actor [Player]
+  -- @param animations [Map compiled animation table of the player's model]
+  -- @param weapon=nil [Weapon weapon to take the hold type from, the active weapon if nil]
+  -- @return [Map animations by key]
+  local function hold_type_animations(actor, animations, weapon)
+    local hold_type = get_weapon_hold_type(actor, weapon or actor:GetActiveWeapon())
+
+    return animations[hold_type] or animations.normal
+  end
+
+  --- Turns an animation table entry into something the engine can play, looking sequence
+  -- names up on the player's model and caching the IDs in the animation table.
+  -- @param actor [Player]
+  -- @param animations [Map compiled animation table of the player's model]
+  -- @param anim [Number activity or String sequence name]
+  -- @return [Number activity or sequence ID, Boolean true if it is a sequence ID]
+  local function resolve(actor, animations, anim)
+    if isstring(anim) then
+      local sequence_ids = animations.sequence_ids
+      local sequence = sequence_ids[anim]
+
+      if !sequence then
+        sequence = actor:LookupSequence(anim)
+        sequence_ids[anim] = sequence
+      end
+
+      return sequence, true
+    end
+
+    return anim, false
+  end
+
+  --- Plays an animation table entry as a gesture that stops once it has finished.
+  -- @param actor [Player]
+  -- @param animations [Map compiled animation table of the player's model]
+  -- @param slot [Number gesture slot, GESTURE_SLOT_ enum]
+  -- @param anim [Number activity or String sequence name]
+  local function restart_gesture(actor, animations, slot, anim)
+    local is_sequence
+    anim, is_sequence = resolve(actor, animations, anim)
+
+    if is_sequence then
+      if anim != -1 then
+        actor:AddVCDSequenceToGestureSlot(slot, anim, 0, true)
+      end
+    else
+      actor:AnimRestartGesture(slot, anim, true)
+    end
+  end
+
+  --- Picks the base activity of a player (idle, walking or running), updates their
+  -- move_yaw pose parameter and plays the landing gesture when they touch the ground.
+  -- An animation forced with Player#set_animation takes priority. The run threshold comes
+  -- from the animation table and has a small hysteresis so that the animation does not
+  -- flicker when moving at about that speed.
   -- @param actor [Player]
   -- @param velocity [Vector velocity of the player]
   -- @return [Number activity (ACT_ enum, or -1 for a forced animation), Number sequence to
@@ -78,6 +134,20 @@ do
     end
 
     local base_class = self.BaseClass
+    local animations = actor.fl_anim_table
+    local on_ground = actor:OnGround()
+
+    if on_ground and actor.m_bWasOnGround == false and actor:GetMoveType() != MOVETYPE_NOCLIP then
+      if animations then
+        local land = hold_type_animations(actor, animations).land
+
+        if land then
+          restart_gesture(actor, animations, GESTURE_SLOT_JUMP, land)
+        end
+      else
+        actor:AnimRestartGesture(GESTURE_SLOT_JUMP, ACT_LAND, true)
+      end
+    end
 
     if !(base_class:HandlePlayerNoClipping(actor, velocity) or
       base_class:HandlePlayerDriving(actor) or
@@ -86,27 +156,31 @@ do
       base_class:HandlePlayerSwimming(actor, velocity) or
       base_class:HandlePlayerDucking(actor, velocity)) then
       local len_2d = velocity:Length2D()
+      local run_speed = animations and animations.run_speed or 150
 
-      if len_2d > 150 then
+      if len_2d > run_speed or (actor.fl_running and len_2d > run_speed * 0.85) then
         actor.CalcIdeal = ACT_MP_RUN
-      elseif len_2d > 0.5 then
-        actor.CalcIdeal = ACT_MP_WALK
+        actor.fl_running = true
+      else
+        actor.fl_running = nil
+
+        if len_2d > 0.5 then
+          actor.CalcIdeal = ACT_MP_WALK
+        end
       end
     end
 
-    actor.m_bWasOnGround = actor:OnGround()
+    actor.m_bWasOnGround = on_ground
     actor.m_bWasNoclipping = (actor:GetMoveType() == MOVETYPE_NOCLIP and !actor:InVehicle())
 
     return actor.CalcIdeal, (actor.CalcSeqOverride or -1)
   end
-end
-
-do
-  local get_weapon_hold_type = Flux.Anim.get_weapon_hold_type
 
   --- Translates an activity into the animation that the Flux animation tables define for the
-  -- player's model, weapon hold type or vehicle. Models without an animation table are
-  -- handled by the base gamemode.
+  -- player's model, weapon hold type and weapon state. On the ground this is the lowered or
+  -- raised movement animation, in the air the jump, glide, swim or noclip animation and in a
+  -- vehicle the sitting animation. Models without an animation table are handled by the base
+  -- gamemode.
   -- @param actor [Player]
   -- @param act [Number activity to translate, ACT_ enum]
   -- @return [Number translated activity or sequence ID, or nil if the tables have no match]
@@ -120,112 +194,211 @@ do
     actor.CalcSeqOverride = -1
 
     if actor:InVehicle() then
-      local vehicle = actor:GetVehicle()
-      local vehicle_class = vehicle:GetClass()
-      local vehicle_anims = animations['vehicle']
+      local vehicles = animations.vehicle
+      local entry = vehicles and vehicles[actor:GetVehicle():GetClass()]
 
-      if vehicle_anims and vehicle_anims[vehicle_class] then
-        local anim = vehicle_anims[vehicle_class][1]
-        local position = vehicle_anims[vehicle_class][2]
+      if entry then
+        local position = entry[2]
 
         if position then
           actor:ManipulateBonePosition(0, position)
           actor.should_reset_position = true
         end
 
-        if isstring(anim) then
-          actor.CalcSeqOverride = actor:LookupSequence(anim)
+        local anim, is_sequence = resolve(actor, animations, entry[1])
 
-          -- Cache the result of LookupSequence for added performance.
-          actor.fl_anim_table['vehicle'][vehicle_class][1] = actor.CalcSeqOverride
-
-          return actor.CalcSeqOverride
+        if is_sequence then
+          actor.CalcSeqOverride = anim
         end
 
         return anim
+      end
+
+      local pair = animations.normal[ACT_MP_CROUCH_IDLE]
+
+      return pair and pair[1]
+    end
+
+    if actor.should_reset_position then
+      actor:ManipulateBonePosition(0, vector_origin)
+      actor.should_reset_position = nil
+    end
+
+    local anims = hold_type_animations(actor, animations)
+    local anim
+
+    if actor:OnGround() then
+      local pair = anims[act] or anims[ACT_MP_STAND_IDLE]
+
+      if !pair then return end
+
+      if hook.Call('ModelWeaponRaised', nil, actor, actor.fl_anim_model) then
+        anim = pair[2]
       else
-        return animations['normal'][ACT_MP_CROUCH_IDLE][1]
+        anim = pair[1]
       end
-    elseif actor:OnGround() then
-      local holdtype = get_weapon_hold_type(actor, actor:GetActiveWeapon())
-      local holdtype_anims = animations[holdtype]
+    elseif act == ACT_MP_SWIM then
+      anim = anims.swim or anims.glide
+    elseif actor.m_bWasNoclipping then
+      anim = anims.noclip or anims.glide
+    elseif act == ACT_MP_JUMP and anims.jump and actor:GetVelocity()[3] > 0 then
+      anim = anims.jump
+    else
+      anim = anims.glide
+    end
 
-      if actor.should_reset_position then
-        actor:ManipulateBonePosition(0, vector_origin)
-        actor.should_reset_position = nil
-      end
+    if !anim then return end
 
-      if holdtype_anims and holdtype_anims[act] then
-        local anim = holdtype_anims[act]
+    local is_sequence
+    anim, is_sequence = resolve(actor, animations, anim)
 
-        if istable(anim) then
-          if hook.Call('ModelWeaponRaised', nil, actor, model) then
-            anim = anim[2]
-          else
-            anim = anim[1]
-          end
-        elseif isstring(anim) then
-          actor.CalcSeqOverride = actor:LookupSequence(anim)
+    if is_sequence then
+      actor.CalcSeqOverride = anim
+    end
 
-          actor.fl_anim_table[holdtype][act] = actor.CalcSeqOverride
+    return anim
+  end
 
-          return actor.CalcSeqOverride
+  --- Plays the attack and reload gestures of the player's hold type, with their crouched
+  -- variants where the animation table has them, handles the jump and reload cancel events
+  -- and plays the gestures sent with Player#play_gesture. Models without an animation table
+  -- use the default player gestures.
+  -- @param actor [Player]
+  -- @param event [Number animation event, PLAYERANIMEVENT_ enum]
+  -- @param data [Number data of the event; the activity or sequence of a custom gesture]
+  -- @return [Number activity for the view model or ACT_INVALID; nil for unhandled events]
+  function GM:DoAnimationEvent(actor, event, data)
+    if event == PLAYERANIMEVENT_CUSTOM_GESTURE then
+      actor:AnimRestartGesture(GESTURE_SLOT_CUSTOM, data, true)
+
+      return ACT_INVALID
+    elseif event == PLAYERANIMEVENT_CUSTOM_GESTURE_SEQUENCE then
+      actor:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, data, 0, true)
+
+      return ACT_INVALID
+    end
+
+    local animations = actor.fl_anim_table
+
+    if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
+      if animations then
+        local anims = hold_type_animations(actor, animations)
+        local anim = actor:Crouching() and anims.attack_low or anims.attack
+
+        if anim then
+          restart_gesture(actor, animations, GESTURE_SLOT_ATTACK_AND_RELOAD, anim)
         end
-
-        return anim
+      elseif actor:Crouching() then
+        actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
+      else
+        actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_STAND_PRIMARYFIRE, true)
       end
-    elseif animations['normal']['glide'] then
-      return animations['normal']['glide']
+
+      return ACT_VM_PRIMARYATTACK
+    elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
+      if animations then
+        local anims = hold_type_animations(actor, animations)
+        local anim = anims.attack_secondary or (actor:Crouching() and anims.attack_low) or anims.attack
+
+        if anim then
+          restart_gesture(actor, animations, GESTURE_SLOT_ATTACK_AND_RELOAD, anim)
+        end
+      end
+
+      return ACT_VM_SECONDARYATTACK
+    elseif event == PLAYERANIMEVENT_RELOAD then
+      if animations then
+        local anims = hold_type_animations(actor, animations)
+        local anim = actor:Crouching() and anims.reload_low or anims.reload
+
+        if anim then
+          restart_gesture(actor, animations, GESTURE_SLOT_ATTACK_AND_RELOAD, anim)
+        end
+      elseif actor:Crouching() then
+        actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_CROUCH, true)
+      else
+        actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_STAND, true)
+      end
+
+      return ACT_INVALID
+    elseif event == PLAYERANIMEVENT_JUMP then
+      actor.m_bJumping = true
+      actor.m_bFirstJumpFrame = true
+      actor.m_flJumpStartTime = CurTime()
+
+      actor:AnimRestartMainSequence()
+
+      return ACT_INVALID
+    elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
+      actor:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
+
+      return ACT_INVALID
     end
   end
-end
 
--- todo: proper weapon anims
+  --- Keeps the playback rate handling of the base gamemode and, on the server, plays one of
+  -- the idle fidget gestures of the animation table every once in a while when the player
+  -- stands still on the ground. Does nothing for tables without fidgets.
+  -- @param actor [Player]
+  -- @param velocity [Vector velocity of the player]
+  -- @param max_seq_ground_speed [Number ground speed of the current sequence]
+  function GM:UpdateAnimation(actor, velocity, max_seq_ground_speed)
+    self.BaseClass:UpdateAnimation(actor, velocity, max_seq_ground_speed)
 
---- Plays the attack and reload gestures and handles the jump and reload cancel events.
--- @param actor [Player]
--- @param event [Number animation event, PLAYERANIMEVENT_ enum]
--- @param data [Number data of the event; unused]
--- @return [Number activity for the view model or ACT_INVALID; nil for unhandled events]
-function GM:DoAnimationEvent(actor, event, data)
-  if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
-    if actor:Crouching() then
-      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
-    else
-      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_STAND_PRIMARYFIRE, true)
+    if CLIENT then return end
+
+    local animations = actor.fl_anim_table
+
+    if !animations or !animations.has_fidgets then return end
+
+    local cur_time = CurTime()
+    local next_fidget = actor.fl_next_fidget
+    local interval = animations.fidget_interval
+
+    if !next_fidget then
+      actor.fl_next_fidget = cur_time + math.Rand(interval[1], interval[2])
+    elseif cur_time >= next_fidget then
+      actor.fl_next_fidget = cur_time + math.Rand(interval[1], interval[2])
+
+      if actor.CalcIdeal == ACT_MP_STAND_IDLE and !actor.fl_animation
+      and actor:OnGround() and !actor:InVehicle() then
+        local fidgets = hold_type_animations(actor, animations).fidgets
+
+        if fidgets and #fidgets > 0 then
+          actor:play_gesture(fidgets[math.random(#fidgets)])
+        end
+      end
     end
-
-    return ACT_VM_PRIMARYATTACK
-  elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
-    return ACT_VM_SECONDARYATTACK
-  elseif event == PLAYERANIMEVENT_RELOAD then
-    if actor:Crouching() then
-      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_CROUCH, true)
-    else
-      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_STAND, true)
-    end
-
-    return ACT_INVALID
-  elseif event == PLAYERANIMEVENT_JUMP then
-    actor.m_bJumping = true
-    actor.m_bFirstJumpFrame = true
-    actor.m_flJumpStartTime = CurTime()
-
-    actor:AnimRestartMainSequence()
-
-    return ACT_INVALID
-  elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
-    actor:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
-
-    return ACT_INVALID
   end
-end
 
-do
-  local anim_cache = {}
+  --- Plays the raise or lower gesture of the weapon's hold type when the raised state of
+  -- the player's weapon changes. Only runs on the server, where the state is changed.
+  -- @param actor [Player]
+  -- @param weapon [Weapon weapon that was raised or lowered]
+  -- @param raised [Boolean new state]
+  function GM:OnWeaponRaised(actor, weapon, raised)
+    local animations = actor.fl_anim_table
 
-  --- Assigns the animation table of the new model to the player and, on the client, disables
-  -- inverse kinematics for them. Does nothing if no new model is given.
+    if !animations or actor.fl_raised_state == raised then return end
+
+    actor.fl_raised_state = raised
+
+    local anims = hold_type_animations(actor, animations, weapon)
+    local gesture
+
+    if raised then
+      gesture = anims.raise
+    else
+      gesture = anims.lower
+    end
+
+    if gesture then
+      actor:play_gesture(gesture)
+    end
+  end
+
+  --- Assigns the compiled animation table of the new model to the player and, on the client,
+  -- disables inverse kinematics for them. Does nothing if no new model is given.
   -- @param target [Player]
   -- @param new_model [String path of the new model]
   -- @param old_model [String path of the previous model]
@@ -236,11 +409,10 @@ do
       target:SetIK(false)
     end
 
-    if !anim_cache[new_model] then
-      anim_cache[new_model] = Flux.Anim:get_table(new_model)
-    end
-
-    target.fl_anim_table = anim_cache[new_model]
+    target.fl_anim_model = new_model
+    target.fl_anim_table = Flux.Anim:get_table(new_model)
+    target.fl_raised_state = nil
+    target.fl_next_fidget = nil
   end
 end
 
@@ -294,6 +466,8 @@ function GM:OnReloaded()
   end
 
   if Flux.development then
+    Flux.Anim:invalidate()
+
     for k, v in ipairs(player.GetAll()) do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end
