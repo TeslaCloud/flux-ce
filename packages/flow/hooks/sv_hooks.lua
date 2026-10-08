@@ -257,19 +257,19 @@ function GM:GetFallDamage(actor, speed)
   return fall_damage
 end
 
---- Asks the FLPlayerShouldTakeDamage hook whether a player can be damaged. Note that a
--- false or nil result of the hook is turned into true, so damage is never blocked here.
+--- Asks the FLPlayerShouldTakeDamage hook whether a player can be damaged. The damage is
+-- only blocked when the hook returns false.
 -- @param victim [Player]
 -- @param attacker [Entity]
--- @return [Boolean true, or the truthy value returned by the hook]
+-- @return [Boolean false if the hook has returned false, true otherwise]
 function GM:PlayerShouldTakeDamage(victim, attacker)
   --- Called on the server from the gamemode's `PlayerShouldTakeDamage` handler, when a
   -- player is about to take damage from an attacker.
   -- @param victim [Player The player about to take damage]
   -- @param attacker [Entity The entity dealing the damage]
-  -- @return [Any A truthy value is passed on as the result of `PlayerShouldTakeDamage`.
-  --   Returning false does not prevent the damage: false and nil are both turned into true]
-  return hook.Run('FLPlayerShouldTakeDamage', victim, attacker) or true
+  -- @return [Boolean Return false to prevent the damage. The player takes the damage when
+  --   anything else or nothing is returned]
+  return hook.Run('FLPlayerShouldTakeDamage', victim, attacker) != false
 end
 
 --- Decides whether a player may spawn a prop.
@@ -754,6 +754,30 @@ end
 -- @return [Boolean always false]
 function GM:AllowPlayerPickup(actor, entity)
   return false
+end
+
+--- Lets the PlayerSwitchedFlashlight hook decide whether a player may toggle their flashlight,
+-- and leaves the decision to the base gamemode when no handler returns anything. Plugin and
+-- schema handlers of PlayerSwitchFlashlight run before this one and replace it when they
+-- return a value.
+-- @param actor [Player]
+-- @param on [Boolean whether the flashlight is being turned on]
+-- @return [Boolean whether the flashlight may be toggled]
+function GM:PlayerSwitchFlashlight(actor, on)
+  --- Called on the server when a player toggles their flashlight, before the engine does
+  -- it. The Shared Flashlight plugin handles it by toggling a light that other players can
+  -- see and returning false.
+  -- @param actor [Player The player who toggles the flashlight]
+  -- @param on [Boolean Whether the flashlight is being turned on]
+  -- @return [Boolean Return false to keep the engine flashlight from toggling, true to allow
+  --   it; the base gamemode decides when nothing is returned]
+  local result = hook.Run('PlayerSwitchedFlashlight', actor, on)
+
+  if result != nil then
+    return result
+  end
+
+  return BaseClass.PlayerSwitchFlashlight(self, actor, on)
 end
 
 --- Applies changes of the walk_speed, run_speed, crouched_speed and jump_power configs to

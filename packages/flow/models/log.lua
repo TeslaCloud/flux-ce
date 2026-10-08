@@ -2,7 +2,7 @@
 -- The class methods record an entry and output it in one go: `Log:print` and
 -- `Log:colored` write to the console, `Log:notify` notifies every player, `Log:to_discord`
 -- pushes the last message to Discord webhooks and `Log:replicate` repeats the last
--- console entry on the clients. They return the class, so the calls can be chained.
+-- entry on the clients. They return the class, so the calls can be chained.
 
 class 'Log' extends 'ActiveRecord::Base'
 
@@ -31,6 +31,8 @@ function Log:write(message, action, object, subject, io)
       log.subject = subject
     log:save()
   end
+
+  replication_data = nil
 
   if isfunction(io) then
     io(message, action:camel_case(), object, subject)
@@ -133,14 +135,15 @@ function Log:notify(message, arguments)
   return self
 end
 
---- Sends the most recent entry made with Log:print or Log:colored to the clients, where it
--- is output the same way. Does nothing if there is no such entry since the last call.
--- Server only.
+--- Sends the most recent entry to the clients, where it is handled the same way it was made:
+-- an entry of Log:print or Log:colored is printed to the console, and an entry of Log:write
+-- or Log:notify is only recorded, with no output of its own (the LogReplicate hook still
+-- runs for it). Does nothing if the most recent entry has already been sent. Server only.
 -- @param condition=nil [Function called with each Player; return true to send the entry to
 --   them. Everyone receives it when omitted]
 -- @return [Log the Log class, for chaining]
 function Log:replicate(condition)
-  if !last_log or !replication_data then return self end
+  if !last_log then return self end
 
   condition = isfunction(condition) and condition or function() return true end
 
@@ -172,8 +175,9 @@ if CLIENT then
     -- @param action [String Type of the logged event in snake_case; empty if there is none]
     -- @param object [String/Number Who or what performed the action]
     -- @param subject [String/Number Who or what the action was performed on]
-    -- @param data [Map How the server has output the entry: `type` is 'print' or 'colored',
-    --   and `color` is the console color of a colored entry]
+    -- @param data [Map How the server has output the entry: `type` is 'print', 'colored' or
+    --   'write' (an entry without output), and `color` is the console color of a colored
+    --   entry]
     -- @return [Any Return any non-nil value to prevent the default output of the entry]
     if Plugin.call('LogReplicate', message, action, object, subject, data) != nil then
       return

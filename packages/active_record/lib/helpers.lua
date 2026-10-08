@@ -349,19 +349,34 @@ do
   end
 end
 
---- Converts a 'YYYY-MM-DD HH:MM:SS' date-time string to a unix timestamp.
--- @param timestamp [String]
--- @return [Number]
+--- Converts a date-time string to a unix timestamp. It understands both the ISO 8601 form
+-- that to_datetime writes ('YYYY-MM-DDTHH:MM:SSZ') and the 'YYYY-MM-DD HH:MM:SS' form in
+-- which databases return date-time columns, and reads either as UTC. A number is taken for
+-- a unix timestamp and returned as is.
+-- ```
+-- time_from_timestamp('2019-03-09T12:00:00Z') -- 1552132800
+-- time_from_timestamp('2019-03-09 12:00:00')  -- 1552132800
+-- ```
+-- @param timestamp [String/Number]
+-- @return [Number unix timestamp, or nil if the value is not a date-time]
 function time_from_timestamp(timestamp)
-  local yy, mm, dd, hh, m, ss = string.match(timestamp, '(%d+)%-(%d+)%-(%d+) (%d+):(%d+):(%d+)')
-  return os.time({
-    year = yy,
-    month = mm,
-    day = dd,
-    hour = hh,
-    min = m,
-    sec = ss
-  })
+  if isnumber(timestamp) then
+    return timestamp
+  end
+
+  local yy, mm, dd, hh, m, ss = tostring(timestamp):match('(%d+)%-(%d+)%-(%d+)[T ](%d+):(%d+):(%d+)')
+
+  if !yy then return end
+
+  local year, month = tonumber(yy), tonumber(mm)
+  local shift = math.floor((14 - month) / 12)
+  local era_year = year + 4800 - shift
+  local era_month = month + 12 * shift - 3
+  local unix_epoch_day = 2472633
+  local day_number = tonumber(dd) + math.floor((153 * era_month + 2) / 5) + 365 * era_year
+    + math.floor(era_year / 4) - math.floor(era_year / 100) + math.floor(era_year / 400)
+
+  return (day_number - unix_epoch_day) * 86400 + tonumber(hh) * 3600 + tonumber(m) * 60 + tonumber(ss)
 end
 
 --- Escapes a string for use inside an SQL string literal, using the current adapter.

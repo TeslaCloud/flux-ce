@@ -2,7 +2,7 @@
 -- restores them when they leave it.
 
 --- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
--- hidden from players without the 'moderator' permission. The previous position, angles,
+-- hidden from players without the 'moderate' permission. The previous position, angles,
 -- color and move type are kept in actor.observer_data. Requires the 'noclip' permission.
 -- @param actor [Player]
 -- @return [Boolean always false, which blocks the default noclip]
@@ -38,7 +38,7 @@ function Observer:PlayerEnterNoclip(actor)
   -- Respect that one vanish command from the admin mod.
   if !actor.is_vanished then
     actor:prevent_transmit_conditional(true, function(ply)
-      if ply:can('moderator') then
+      if ply:can('moderate') then
         return false
       end
     end)
@@ -84,7 +84,7 @@ function Observer:PlayerExitNoclip(actor)
 
   if !actor.is_vanished then
     actor:prevent_transmit_conditional(false, function(ply)
-      if ply:can('moderator') then
+      if ply:can('moderate') then
         return false
       end
     end)

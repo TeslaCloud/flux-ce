@@ -365,7 +365,8 @@ local adapter_aliases = {
 
 --- Loads the database adapter named in the config and connects it to the database.
 -- Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'sqlite3'
--- and 'mysql' (the config's adapter field is rewritten in that case).
+-- and 'mysql' (the config's adapter field is rewritten in that case). The resolved name
+-- is stored in ActiveRecord.adapter_name.
 -- ```
 -- ActiveRecord.establish_connection {
 --   adapter = 'mysqloo', host = '127.0.0.1', port = 3306,
@@ -381,6 +382,8 @@ function ActiveRecord.establish_connection(config)
     adapter         = adapter_aliases[adapter]
     config.adapter  = adapter
   end
+
+  ActiveRecord.adapter_name = adapter
 
   local path = PACKAGE.__path__
 

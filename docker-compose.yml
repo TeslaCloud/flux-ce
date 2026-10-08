@@ -1,0 +1,110 @@
+# Development setup: a dedicated server that runs this checkout of Flux and a
+# checkout of a schema, both mounted into the container, so that changes to the
+# code are picked up by the Lua refresh of the running server.
+#
+#   docker compose up                       SQLite, kept in docker/sqlite/sv.db
+#   docker compose --profile postgres up    PostgreSQL
+#   docker compose --profile mariadb up     MariaDB
+#
+# The server is published on 127.0.0.1 only. It is also kept off the master
+# server list and does not answer server browser queries, so connect to it with
+# "connect localhost" from the game console. It still has outgoing access to
+# Steam, which Workshop downloads need.
+#
+# "docker compose attach flux" opens the server console; Ctrl+P, Ctrl+Q leaves it
+# again. Stopping the container kills the server right away, enter "quit" in the
+# console if you need it to shut down cleanly. "docker compose down -v" deletes
+# the databases and all other data in the volumes, the SQLite database is reset
+# by deleting docker/sqlite/sv.db.
+#
+# Settings, taken from the environment or from an .env file next to this one:
+#
+#   FLUX_SCHEMA                 folder name of the schema (reborn)
+#   FLUX_SCHEMA_PATH            checkout of the schema (../<FLUX_SCHEMA>)
+#   FLUX_ENV                    Flux environment (development)
+#   FLUX_MAP                    map to start on (gm_construct)
+#   FLUX_PORT                   port on the host (27015)
+#   FLUX_WORKSHOP_COLLECTION    ID of a Workshop collection to download and mount
+#
+# The owner of the files in the checkouts needs to have the user ID 1000, which
+# is the one the server runs as.
+
+services:
+  flux:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: flux-dev
+    init: true
+    tty: true
+    stdin_open: true
+    environment:
+      FLUX_SCHEMA: ${FLUX_SCHEMA:-reborn}
+      FLUX_ENV: ${FLUX_ENV:-development}
+      FLUX_WORKSHOP_COLLECTION: ${FLUX_WORKSHOP_COLLECTION:-}
+    command: ["+map", "${FLUX_MAP:-gm_construct}", "+maxplayers", "16", "-tickrate", "30"]
+    ports:
+      - "127.0.0.1:${FLUX_PORT:-27015}:27015/udp"
+      - "127.0.0.1:${FLUX_PORT:-27015}:27015/tcp"
+    volumes:
+      - .:/home/steam/flux_server/garrysmod/gamemodes/flux
+      - ./config:/home/steam/flux_config:ro
+      - type: bind
+        source: ${FLUX_SCHEMA_PATH:-../${FLUX_SCHEMA:-reborn}}
+        target: /home/steam/flux_server/garrysmod/gamemodes/${FLUX_SCHEMA:-reborn}
+        bind:
+          create_host_path: false
+      - ./docker/sqlite:/home/steam/sqlite
+      - data:/home/steam/flux_server/garrysmod/data
+      - settings:/home/steam/flux_server/garrysmod/settings/flux
+      # Workshop downloads. They fail when garrysmod/cache is a mount instead.
+      - workshop:/home/steam/flux_server/steam_cache
+    tmpfs:
+      # The config folder is replaced by a copy that the entry point adds the
+      # database and environment settings to, see docker/entrypoint.sh.
+      - /home/steam/flux_server/garrysmod/gamemodes/flux/config:uid=1000,gid=1000,mode=755
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: false
+      mariadb:
+        condition: service_healthy
+        required: false
+
+  postgres:
+    image: postgres:18
+    profiles: [postgres]
+    environment:
+      POSTGRES_USER: flux
+      POSTGRES_PASSWORD: flux
+      POSTGRES_DB: flux
+    volumes:
+      - postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "flux", "-d", "flux"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  mariadb:
+    image: mariadb:11.8
+    profiles: [mariadb]
+    environment:
+      MARIADB_USER: flux
+      MARIADB_PASSWORD: flux
+      MARIADB_DATABASE: flux
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  data:
+  settings:
+  workshop:
+  postgres:
+  mariadb:

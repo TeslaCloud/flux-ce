@@ -1,7 +1,7 @@
 --- The Text Tool. Left click places a 3D text on the surface the owner is looking at, with
 -- the chosen text, style (one of ten), colors, scale and fade offset; right click removes
--- the text the owner is looking at. The tool requires the `texts` permission; placing also
--- checks `textadd` and removing `textremove`.
+-- the text the owner is looking at. The tool requires the `texts` permission, which
+-- placing and removing check as well.
 
 TOOL.Category               = 'Flux'
 TOOL.Name                   = 'Text Tool'
@@ -25,13 +25,13 @@ TOOL.ClientConVar['a2']     = 100
 --- Places a 3D text built from the tool's settings on the surface that was hit.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the text was placed (always true clientside), false if the
---   text is empty, nil if the owner lacks the 'textadd' permission]
+--   text is empty, nil if the owner lacks the 'texts' permission]
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
   local owner = self:GetOwner()
 
-  if !IsValid(owner) or !owner:can('textadd') then return end
+  if !IsValid(owner) or !owner:can('texts') then return end
 
   local text = self:GetClientInfo('text')
   local style = self:GetClientNumber('style')

@@ -804,13 +804,14 @@ end
 -- ```
 -- See all available validations in ActiveRecord::Validator.
 -- @param column [String]
--- @param options [Map validation ids mapped to their settings, e.g. { min_length = 4 }]
+-- @param options [Map validation ids mapped to their settings, e.g. { min_length = 4 };
+--   case_sensitive = true makes the uniqueness validation of the column compare case]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:validates(column, options)
   local current_options = self.validations[column] or {}
 
   for k, v in pairs(options) do
-    if id == 'case_sensitive' then -- todo: unhack this
+    if k == 'case_sensitive' then
       current_options.case_sensitive = v
     else
       table.insert(current_options, { id = k, value = v })

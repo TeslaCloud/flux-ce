@@ -245,16 +245,6 @@ do
 
       local old_rank = self:get_rank()
 
-      if isstring(rank) then
-        for k, v in ipairs(faction_table.rank) do
-          if string.utf8lower(v.id) == string.utf8lower(rank) then
-            rank = v.id
-
-            break
-          end
-        end
-      end
-
       self:get_character().rank = rank
       self:set_nv('rank', rank)
 

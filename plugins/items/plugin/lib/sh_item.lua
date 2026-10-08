@@ -103,9 +103,11 @@ function Item.register(id, data)
   data.action_sounds = data.action_sounds or {}
   data.use_text = data.use_text
   data.take_text = data.take_text
+  data.drop_text = data.drop_text
   data.cancel_text = data.cancel_text
   data.use_icon = data.use_icon
   data.take_icon = data.take_icon
+  data.drop_icon = data.drop_icon
   data.cancel_icon = data.cancel_icon
   data.icon_data = data.icon_data or nil
   data.icon_material = data.icon_material or nil
@@ -143,9 +145,11 @@ function Item.to_saveable(item_obj)
     action_sounds = item_obj.action_sounds,
     use_text = item_obj.use_text,
     take_text = item_obj.take_text,
+    drop_text = item_obj.drop_text,
     cancel_text = item_obj.cancel_text,
     use_icon = item_obj.use_icon,
     take_icon = item_obj.take_icon,
+    drop_icon = item_obj.drop_icon,
     cancel_icon = item_obj.cancel_icon,
     max_uses = item_obj.max_uses,
     uses = item_obj.uses,
@@ -222,8 +226,8 @@ function Item.find(name)
     return Item.find_instance_by_id(name)
   end
 
-  if stored[id] then
-    return stored[id]
+  if stored[name] then
+    return stored[name]
   end
 
   for k, v in pairs(stored) do

@@ -86,7 +86,7 @@ end
 
 --- Called by ItemEquipable:can_transfer before the item is equipped.
 -- Checks whether the model of the player is able to wear the item.
--- @param owner [Player]
+-- @param owner [Player the player who is about to wear the item]
 -- @return [Boolean]
 function ItemWearable:can_equip(owner)
   local valid_models = self:get_valid_models()
@@ -149,8 +149,7 @@ function ItemWearable:post_equipped(owner)
   end
 end
 
---- Called when the item gets unequipped. Gives the player their model and bodygroups back,
--- then calls on_use on the items of the same equipment inventory that no longer fit them.
+--- Called when the item gets unequipped. Gives the player their model and bodygroups back.
 -- @param owner [Player]
 function ItemWearable:post_unequipped(owner)
   if self:get_equip_model(owner) then
@@ -162,14 +161,6 @@ function ItemWearable:post_unequipped(owner)
 
     if native_bodygroups and #native_bodygroups > 0 then
       owner:set_bodygroups(native_bodygroups)
-    end
-  end
-
-  for k, v in pairs(owner:get_items(self.equip_inv)) do
-    if self.instance_id == v then continue end
-
-    if v:can_equip(owner) == false then
-      v:on_use(owner)
     end
   end
 end

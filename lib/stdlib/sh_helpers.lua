@@ -100,7 +100,7 @@ function require_relative_folder(dir, base, recursive)
 
     -- Then include all directories.
     for k, v in ipairs(folders) do
-      require_relative_folder(dir..v, recursive)
+      require_relative_folder(dir..v, nil, recursive)
     end
   else
     local files, _ = file.Find(dir..'*.lua', 'LUA', 'namedesc')

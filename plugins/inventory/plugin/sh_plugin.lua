@@ -13,7 +13,11 @@
 -- on `ItemContainer`, and shown to a player with `Player:open_inventory`.
 --
 -- Inventories are managed by the server. Each one has a list of receivers: the players
--- who are sent its contents whenever `Inventory:sync` is called. The client keeps a copy
+-- who are sent its contents whenever `Inventory:sync` is called, and the only ones whose
+-- requests to move or drop its items are accepted. A player is a receiver of their own
+-- inventories and of those that were opened for them; once a second the server closes the
+-- opened ones for the players who are no longer entitled to them, such as those who have
+-- walked away from a container (`Inventory:can_be_viewed_by`). The client keeps a copy
 -- and displays it in an `fl_inventory` panel made of `fl_inventory_item` slots. Dragging
 -- an item to another slot asks the server to move it, which goes through the
 -- `PlayerCanMoveItem`, `CanItemMove` or `CanItemTransfer`, `PreItemTransfer` and

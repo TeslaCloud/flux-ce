@@ -86,7 +86,7 @@ function ItemContainer:create_inventory()
     inventory.title = self:get_name()
     inventory:set_size(inventory_data.width or 1, inventory_data.height or 1)
     inventory.type = inventory_data.type or 'item_container'
-    inventory.multislot = inventory_data.multislot != nil and inventory_data.multislot or true
+    inventory.multislot = inventory_data.multislot != false
     inventory.infinite_width = inventory_data.infinite_width != nil and inventory_data.infinite_width or false
     inventory.infinite_height = inventory_data.infinite_height != nil and inventory_data.infinite_height or false
     inventory.instance_id = self.instance_id

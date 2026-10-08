@@ -2,8 +2,9 @@
 -- A model is registered with `Container:register_prop` together with the size of its
 -- inventory, its name, its description and its sounds; common furniture, crates and boxes of
 -- Half-Life 2 are registered here. A prop that is spawned with such a model becomes
--- persistent, shows its name when it is looked at and can be opened from its interaction menu.
--- Its inventory is created the first time it is opened.
+-- persistent, shows its name when it is looked at and can be opened from its interaction menu
+-- by a player within reach of it. Its inventory is created the first time it is opened and
+-- is closed for a player who moves out of reach.
 --
 -- The `PreContainerOpen` hook is run before a container is shown to a player.
 

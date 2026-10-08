@@ -51,6 +51,8 @@ function Mapscenes:add_point(pos, ang)
 end
 
 Cable.receive('fl_mapscene_remove', function(actor, id)
+  if !actor:can('mapscenes') then return end
+
   table.remove(Mapscenes.points, id)
 
   Cable.send(nil, 'fl_mapscene_delete', id)

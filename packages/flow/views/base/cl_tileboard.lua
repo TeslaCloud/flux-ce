@@ -4,9 +4,13 @@
 -- Derives from `fl_base_panel`.
 
 local PANEL = {}
-PANEL.grid_size = { x = 1, y = 1 }
-PANEL.docked = {}
 PANEL.next_think = 0
+
+--- Gives the board a grid of one cell and an empty list of docked panels of its own.
+function PANEL:Init()
+  self.grid_size = { x = 1, y = 1 }
+  self.docked = {}
+end
 
 --- Twice a second, drops docked entries whose panel is no longer valid.
 function PANEL:Think()
@@ -108,7 +112,7 @@ function PANEL:attach_panel(panel, x, y, w, h)
   panel:SetParent(self)
 
   local idx = table.insert(self.docked, { panel = panel, pos = { x = x, y = y, w = w, h = h } })
-  local obj = self.docked[table.insert(self.docked, { panel = panel, pos = { x = x, y = y, w = w, h = h } })]
+  local obj = self.docked[idx]
 
   panel.m_DockedTileID = idx
 

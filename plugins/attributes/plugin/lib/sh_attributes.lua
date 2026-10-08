@@ -140,7 +140,7 @@ do
         local attribute_id = v.attribute_id
         local attribute_table = Attributes.find(attribute_id)
 
-        if type and v.type != attribute_table.type then continue end
+        if type and attribute_table.type != type then continue end
 
         local attribute = {
           level = v.level,
@@ -184,7 +184,10 @@ do
     return level + boost, attribute.progress or 0
   end
 
-  --- Returns the sum of the player's boosts to an attribute that have not expired yet.
+  --- Returns the sum of the player's boosts to an attribute that have not expired yet. On the
+  -- client every networked boost counts, as the server takes a boost out of the networked
+  -- data when it expires. If the attribute has boost_limited set, the sum is cut down so
+  -- that the level together with the boost stays between the attribute's min and max.
   -- @param attribute_id [String]
   -- @return [Number]
   function player_meta:get_attribute_boost(attribute_id)
@@ -193,13 +196,15 @@ do
     local boost = 0
 
     for k, v in pairs(attribute.boosts) do
-      if time_from_timestamp(v.expires_at) > os.time() then
+      if CLIENT or (time_from_timestamp(v.expires_at) or 0) > os.time() then
         boost = boost + v.value
       end
     end
 
     if attribute_table.boost_limited then
-      boost = math.clamp(level, attribute_table.min, attribute_table.max)
+      local level = attribute.level or attribute_table.min
+
+      boost = math.clamp(level + boost, attribute_table.min, attribute_table.max) - level
     end
 
     return boost
@@ -266,7 +271,7 @@ do
     end
 
     --- Adds progress to an attribute, raising or lowering its level whenever a level threshold is
-    -- crossed. Does nothing for attributes with has_progress set. Server only.
+    -- crossed. Does nothing for attributes whose has_progress is false. Server only.
     -- ```
     -- -- Scaled by the player's multiplier when the attribute is multipliable.
     -- target:progress_attribute('lockpicking', 15)
@@ -280,7 +285,7 @@ do
       local attribute_table = Attributes.find(attribute_id)
       local level, progress = self:get_attribute(attribute_id)
 
-      if attribute_table.has_progress then return end
+      if attribute_table.has_progress == false then return end
 
       if attribute_table.multipliable and !no_multiplier then
         local modifier = self:get_attribute_multiplier(attribute_id)
@@ -383,7 +388,7 @@ do
 
             for k1, v1 in pairs(boosts) do
               if v1.expires_at == expires_at then
-                v1 = nil
+                table.remove(boosts, k1)
 
                 break
               end
@@ -407,7 +412,7 @@ do
     end
 
     --- Adds a temporary progress multiplier to an attribute of the player. The multiplier is
-    -- stored on the character and networked. Server only.
+    -- stored on the character, networked, and removed by a timer when it expires. Server only.
     -- ```
     -- -- Double strength progress for an hour.
     -- target:multiply_attribute('strength', 2, 3600)
@@ -423,9 +428,11 @@ do
 
       for k, v in pairs(self:get_character().attributes) do
         if v.attribute_id == attribute_id then
+          local expires_at = to_datetime(os.time() + duration)
+
           local multiplier = AttributeMultiplier.new()
             multiplier.value = value
-            multiplier.expires_at = to_datetime(os.time() + duration)
+            multiplier.expires_at = expires_at
           table.insert(v.attribute_multipliers, multiplier)
 
           local timer_id = 'fl_multiplier_'..v.id..'_'..multiplier.expires_at
@@ -445,7 +452,7 @@ do
 
             for k1, v1 in pairs(multipliers) do
               if v1.expires_at == expires_at then
-                v1 = nil
+                table.remove(multipliers, k1)
 
                 break
               end

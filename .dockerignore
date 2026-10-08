@@ -1,3 +1,7 @@
 .git
 .dockerignore
 Dockerfile
+Dockerfile.dev
+docker-compose.yml
+docker/sqlite
+.env

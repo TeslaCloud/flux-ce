@@ -1,8 +1,6 @@
 --- Client-side hooks of the Display Typing plugin: reports the text of the local player to the
 -- server and draws the text of the players nearby.
 
-local max_distance = 350 ^ 2
-
 --- Sends the text the local player is typing in the chatbox to the server,
 -- which networks it to other players.
 -- @param new_text [String current contents of the chat text entry]
@@ -11,7 +9,8 @@ function DisplayTyping:ChatTextChanged(new_text)
 end
 
 --- Draws what nearby, unobstructed players are currently typing above their heads.
--- Only the last 45 characters of long texts are shown.
+-- Only the last 45 characters of long texts are shown. How near a player has to be, and
+-- whether they are in sight, is decided by `DisplayTyping:draw_player_typing_text`.
 function DisplayTyping:HUDPaint()
   if !IsValid(PLAYER) then return end
 
@@ -22,9 +21,6 @@ function DisplayTyping:HUDPaint()
 
     local ply_pos = v:EyePos()
     local dist = local_pos:DistToSqr(ply_pos)
-
-    if dist > max_distance or util.vector_obstructed(PLAYER:EyePos(), v:EyePos(), { PLAYER, v }) then continue end
-
     local text = v:get_nv('chat_text', '')
 
     if text != '' then

@@ -112,14 +112,12 @@ function GM:ForceDermaSkin()
   return 'Flux'
 end
 
---- Recreates the fonts so that they fit the new resolution. Note that GM:Tick runs this
--- hook with the new size first, so the values received are the reverse of what the
--- parameter names say.
--- @param old_w [Number receives the new screen width]
--- @param old_h [Number receives the new screen height]
--- @param new_w [Number receives the previous screen width]
--- @param new_h [Number receives the previous screen height]
-function GM:OnResolutionChanged(old_w, old_h, new_w, new_h)
+--- Recreates the fonts so that they fit the new resolution.
+-- @param new_w [Number new screen width]
+-- @param new_h [Number new screen height]
+-- @param old_w [Number previous screen width]
+-- @param old_h [Number previous screen height]
+function GM:OnResolutionChanged(new_w, new_h, old_w, old_h)
   Font.create_fonts()
 end
 
@@ -212,8 +210,9 @@ function GM:HUDDrawScoreBoard()
 end
 
 --- Draws the Flux HUD once the local player is initialized: the damage flash, the death
--- screen while dead or the info displays while alive (unless FLHUDPaint returns a truthy
--- value), and the white respawn fade. Skipped when the ShouldHUDPaint hook returns false.
+-- screen while dead or the info displays and the top bars while alive (unless FLHUDPaint
+-- returns a truthy value), and the white respawn fade. Skipped when the ShouldHUDPaint hook
+-- returns false.
 function GM:HUDPaint()
   --- Asks whether the HUD should be drawn. Called on the client every frame once the local
   -- player has been initialized, from the gamemode's `HUDPaint` handler. HUD elements
@@ -253,14 +252,16 @@ function GM:HUDPaint()
 
       --- Called on the client every frame while the local player is alive and the HUD is
       -- shown, for drawing HUD elements. Runs after the damage flash and before the info
-      -- displays (`InfoDisplay`) are drawn. The gamemode's handler draws the circular action
-      -- indicator.
+      -- displays (`InfoDisplay`) and the top bars (`Flux.Bars`) are drawn. The gamemode's
+      -- handler draws the circular action indicator.
       -- @param cur_time [Number CurTime() of the frame]
       -- @param scrw [Number Screen width]
       -- @param scrh [Number Screen height]
-      -- @return [Boolean Return true to keep the info displays from being drawn]
+      -- @return [Boolean Return true to keep the info displays and the top bars from being
+      --   drawn]
       if !hook.Run('FLHUDPaint', cur_time, scrw, scrh) then
         InfoDisplay:draw_all()
+        Flux.Bars:DrawTopBars()
       end
     end
 
@@ -372,8 +373,8 @@ end
 -- @param x [Number screen x of the target ID]
 -- @param y [Number screen y of the target ID]
 -- @param distance [Number distance to the player in units]
--- @param lines [Map lines to draw, keyed by ID. Each one is a table with the text, font,
---   color and priority fields, and optionally offset_x and offset_y]
+-- @param lines [Map lines to draw, keyed by ID. Each one is a table with the text and
+--   priority fields, and optionally font, color, offset_x and offset_y]
 function GM:GetDrawPlayerInfo(target, x, y, distance, lines)
   lines['name'] = {
     text = target:name(),
@@ -401,9 +402,9 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   -- @param x [Number Screen x of the target ID]
   -- @param y [Number Screen y of the target ID]
   -- @param distance [Number Distance to the player in units]
-  -- @param lines [Map Lines to draw by ID. Each one is a table with the `text`, `color`
-  --   and `priority` fields (lines with a lower priority are drawn first) and optionally
-  --   `font`, `offset_x` and `offset_y`]
+  -- @param lines [Map Lines to draw by ID. Each one is a table with the `text` and
+  --   `priority` fields (lines with a lower priority are drawn first) and optionally
+  --   `color` (white by default), `font`, `offset_x` and `offset_y`]
   hook.Run('GetDrawPlayerInfo', target, x, y, distance, lines)
 
   --- Called on the client after the target ID lines of a player have been collected with
@@ -431,7 +432,7 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
 
   for k, v in SortedPairsByMemberValue(lines, 'priority') do
     local font = v.font or Theme.get_font('tooltip_small')
-    local color = v.color:alpha(alpha) or Color(255, 255, 255, alpha)
+    local color = v.color and v.color:alpha(alpha) or Color(255, 255, 255, alpha)
     local text = v.text
     local wrapped = util.wrap_text(text, font, ScrW() * 0.33, 0)
 

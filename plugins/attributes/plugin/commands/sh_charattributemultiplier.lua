@@ -1,6 +1,6 @@
---- The CharAttributeMultiplier command is meant to give the characters of the targeted
--- players a temporary leveling multiplier for an attribute. It currently applies the value
--- as a boost, through `Player:boost_attribute`. Allowed for moderators by default.
+--- The CharAttributeMultiplier command gives the characters of the targeted players a
+-- temporary leveling multiplier for an attribute, for a duration such as `30` (minutes) or
+-- `2 hours`. Allowed for moderators by default.
 
 CMD.name = 'CharAttributeMultiplier'
 CMD.description = 'command.charattributemultiplier.description'
@@ -17,8 +17,9 @@ function CMD:get_description()
   return t(self.description, { attributes = table.concat(table.GetKeys(Attributes.get_stored()), ', ') })
 end
 
---- Applies a timed value to a multipliable attribute of every target, then notifies the targets
--- and staff. The value is currently applied through Player#boost_attribute.
+--- Gives every target a temporary progress multiplier for a multipliable attribute, then
+-- notifies the targets and staff. Rejects invalid values, durations and attributes that are
+-- not multipliable.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_id [String attribute to affect, normalized with to_id]
@@ -52,7 +53,7 @@ function CMD:on_run(actor, targets, attribute_id, value, duration)
         value = value,
         time = Flux.Lang:nice_time(duration)
       })
-      v:boost_attribute(attribute_id, value, duration)
+      v:multiply_attribute(attribute_id, value, duration)
     end
 
     self:notify_staff('command.charattributemultiplier.message', {

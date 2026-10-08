@@ -31,7 +31,7 @@ function Webhook:push(message, data)
   if self.url and isstring(message) then
     data = data or {}
 
-    http.Post(self.base_url, {
+    http.Post(self.url, {
       content = message,
       username = data.username,
       avatar_url = data.avatar_url,

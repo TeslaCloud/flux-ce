@@ -41,13 +41,13 @@ function Factions:CharPanelCreated(id, panel)
   end
 end
 
---- Stops the player from leaving the 'char_create.general' stage without picking a gender
+--- Stops the player from leaving the 'ui.char_create.general' stage without picking a gender
 -- when the chosen faction requires one.
 -- @param id [String ID of the stage being left]
 -- @param panel [Panel the panel of that stage]
 -- @return [Boolean false to block the change, String translated error; nothing otherwise]
 function Factions:PreStageChange(id, panel)
-  if id == 'char_create.general' then
+  if id == 'ui.char_create.general' then
     local gender =
       (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
     local faction_id = panel:GetParent().char_data.faction

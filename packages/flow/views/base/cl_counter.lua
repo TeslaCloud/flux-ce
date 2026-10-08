@@ -7,8 +7,8 @@
 
 local PANEL = {}
 PANEL.value = 1
-PANEL.max = 0
-PANEL.min = 100
+PANEL.max = 100
+PANEL.min = 0
 PANEL.font = 'flRoboto'
 PANEL.color = Color('white')
 PANEL.title = ''

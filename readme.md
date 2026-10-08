@@ -57,6 +57,26 @@ Things to keep in mind:
 * To use a schema other than Reborn, build with `--build-arg SCHEMA_REPO=https://github.com/you/your_schema.git` and pass the matching `+gamemode`.
 * SQLite, the default database, needs no setup. To use MySQL or PostgreSQL, point `config/database.local.yml` at a database server reachable from the container, see [Database setup](#database-setup).
 
+## Docker (development)
+
+If you are working on Flux or on a schema, use `docker-compose.yml` instead. It starts a server that runs your checkouts directly rather than a copy of them, in the `development` [environment](#environment), so the server reloads your code as you save it.
+
+```sh
+# Flux and the schema are expected to be next to each other.
+git clone https://github.com/TeslaCloud/flux-ce.git
+git clone https://github.com/TeslaCloud/reborn.git
+cd flux-ce
+
+docker compose up                       # SQLite
+docker compose --profile postgres up    # PostgreSQL
+docker compose --profile mariadb up     # MariaDB
+```
+
+* The server only listens on `127.0.0.1` and is hidden from the server list. Join it with `connect localhost` from the game console. `docker compose attach flux` opens the server console.
+* The database is picked by the profile, there is nothing to configure. The SQLite database is the `docker/sqlite/sv.db` file, everything else that the server stores is kept in Docker volumes. `docker compose down -v` deletes those.
+* To use another schema, another map or a Workshop collection, set the variables listed at the top of `docker-compose.yml`, for example `FLUX_SCHEMA=hl2rp docker compose up`. They can also be put into an `.env` file.
+* Changes to the files in `config` need a restart of the container. `database.local.yml` and `environment.local.lua` are written by the container and never touch your checkout.
+
 ## Installation
 
 Flux is a Linux-first system, which means that it is primarily designed to be installed and run on Linux servers. Using Windows to host Flux is strongly discouraged, due to issues and certain OS limitations.

@@ -47,7 +47,8 @@ function player_meta:set_permissions(perm_table)
 end
 
 --- Sets one of the player's individual permissions: updates the Permission records on the
--- player's database record and the networked table, then runs the PlayerPermissionChanged hook.
+-- player's database record (PERM_NO destroys the record and takes it off the list) and the
+-- networked table, then runs the PlayerPermissionChanged hook.
 -- @param perm_id [String permission ID]
 -- @param value [Number PERM_ALLOW or PERM_NEVER, or PERM_NO to remove the permission]
 function player_meta:set_permission(perm_id, value)
@@ -64,12 +65,15 @@ function player_meta:set_permission(perm_id, value)
           end
         else
           v:destroy()
+          table.remove(self.record.permissions, k)
         end
+
+        break
       end
     end
   end
 
-  if create then
+  if create and value != PERM_NO then
     local perm = Permission.new()
       perm.permission_id = perm_id
       perm.object = value
@@ -100,10 +104,13 @@ end
 
 --- Gives the player a temporary permission value that takes precedence over their regular
 -- permissions until it expires. Updates the TempPermission records and the networked table.
+-- Giving the value the player already has temporarily adds the duration to the time that is
+-- left; any other value starts counting from now.
 -- @param perm_id [String permission ID]
 -- @param value [Number PERM_ value, normally PERM_ALLOW or PERM_NEVER]
 -- @param duration [Number seconds until the permission expires]
 function player_meta:set_temp_permission(perm_id, value, duration)
+  local expires = os.time() + duration
   local create = true
 
   if self.record.temp_permissions then
@@ -112,11 +119,12 @@ function player_meta:set_temp_permission(perm_id, value, duration)
         create = false
 
         if v.object == value then
-          v.expires = to_datetime(time_from_timestamp(v.expires) + duration)
+          expires = math.max(time_from_timestamp(v.expires) or 0, os.time()) + duration
         else
           v.object = value
-          v.expires = to_datetime(os.time() + duration)
         end
+
+        v.expires = to_datetime(expires)
 
         break
       end
@@ -126,7 +134,7 @@ function player_meta:set_temp_permission(perm_id, value, duration)
       local temp_perm = TempPermission.new()
         temp_perm.permission_id = perm_id
         temp_perm.object = value
-        temp_perm.expires = to_datetime(os.time() + duration)
+        temp_perm.expires = to_datetime(expires)
       table.insert(self.record.temp_permissions, temp_perm)
     end
   end
@@ -135,7 +143,7 @@ function player_meta:set_temp_permission(perm_id, value, duration)
 
   perm_table[perm_id] = {
     value = value,
-    expires = os.time() + duration
+    expires = expires
   }
 
   self:set_temp_permissions(perm_table)

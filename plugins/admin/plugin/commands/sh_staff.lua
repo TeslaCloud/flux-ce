@@ -21,18 +21,16 @@ function CMD:on_run(actor, ...)
     -- chatbox runs for a regular chat message.
     -- @param speaker [Player Player who sent the staff message]
     -- @param text [String The message]
-    -- @param team_chat [Boolean Always nil for a staff message]
     -- @return [Color Color of the name; the color of the sender's team when nothing is
     --   returned]
-    hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
+    hook.Run('ChatboxGetPlayerColor', actor, text) or team.GetColor(actor:Team()),
     get_player_name(actor),
     --- Run by the Staff command to get the color of the message text, the same hook the
     -- chatbox runs for a regular chat message.
     -- @param speaker [Player Player who sent the staff message]
     -- @param text [String The message]
-    -- @param team_chat [Boolean Always nil for a staff message]
     -- @return [Color Color of the text; white when nothing is returned]
-    hook.Run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
+    hook.Run('ChatboxGetMessageColor', actor, text) or Color(255, 255, 255),
     ': ',
     text:chomp(' '),
     { sender = actor }

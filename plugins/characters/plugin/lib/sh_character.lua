@@ -263,7 +263,7 @@ if SERVER then
     local old_gender = target:get_nv('gender')
 
     if char then
-      char.gender = new_gender or char.name
+      char.gender = new_gender or char.gender
     end
 
     target:set_nv('gender', new_gender)
@@ -287,7 +287,8 @@ if SERVER then
     --   'female' or 'universal'), model, skin and the fields that other stages add]
     hook.Run('PreCreateCharacter', actor, data)
 
-    data.gender = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
+    data.gender = (data.gender == 'female' and CHAR_GENDER_FEMALE) or
+      (data.gender == 'universal' and CHAR_GENDER_NONE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
     local status = Characters.create(actor, data)

@@ -28,6 +28,7 @@ end
 --   the areas]
 function Areas.set_stored(stored_table)
   stored = (istable(stored_table) and stored_table) or {}
+  Areas.stored = stored
 end
 
 --- Returns the callbacks that were set with Areas.set_callback.

@@ -253,7 +253,7 @@ do
   -- @return [Color]
   function color_meta:saturation(amt)
     local r, g, b = self.r, self.g, self.b
-    local p = math.sqrt((r * r * _r) + (g * g * _g) + (b * b + _b))
+    local p = math.sqrt((r * r * _r) + (g * g * _g) + (b * b * _b))
 
     return Color(
       math.Clamp(p + (r - p) * amt, 0, 255),

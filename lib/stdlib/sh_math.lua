@@ -221,8 +221,6 @@ function number_meta:__index(key)
 
   if value then
     return value
-  elseif isnumber(value) then
-    return tostring(self):sub(value, value)
   else
     error('attempt to index a number value with a bad key ('..key..')', 2)
   end

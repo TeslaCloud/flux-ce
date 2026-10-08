@@ -1,3 +1,5 @@
 name: Observer
 description: Makes the admins who are noclipping invisible.
 author: TeslaCloud Studios
+depends:
+  - admin

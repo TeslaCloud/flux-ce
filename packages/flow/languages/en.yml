@@ -83,6 +83,8 @@ en:
     days: "days"
     week: "week"
     weeks: "weeks"
+    month: "month"
+    months: "months"
     year: "year"
     years: "years"
     from_now: "from now"

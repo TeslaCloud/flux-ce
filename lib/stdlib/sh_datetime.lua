@@ -36,8 +36,8 @@ function DateTime:init(year, month, day, hour, minute, second, timezone)
     self.month = month
     self.day = day
     self.hour = hour
-    self.min = min
-    self.sec = sec
+    self.min = minute
+    self.sec = second
   end
 
   self.time = os.time {
@@ -63,7 +63,7 @@ end
 -- @return [DateTime]
 function DateTime:at(seconds, timezone)
   local date = os.date('*t', seconds)
-  return DateTime.new(date.year, date.month, date.day, date.hours, date.min, date.sec, timezone)
+  return DateTime.new(date.year, date.month, date.day, date.hour, date.min, date.sec, timezone)
 end
 
 --- Returns the current date-time.

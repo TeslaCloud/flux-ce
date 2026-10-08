@@ -42,8 +42,9 @@ function ItemEquipable:is_equipped()
 end
 
 --- Called on the server by the 'CanItemTransfer' hook before the item is moved to another
--- inventory. Prevents equipping the item if can_equip disallows it or its equipment slot
--- is occupied, and prevents unequipping it if can_unequip disallows it.
+-- inventory or picked up into one. Prevents equipping the item if can_equip disallows it
+-- for the owner of that inventory or its equipment slot is occupied, and prevents
+-- unequipping it if can_unequip disallows it.
 -- @param inventory [Inventory the inventory the item is being moved to]
 -- @param x [Number target slot, or nil if the position is yet to be found]
 -- @param y [Number target slot, or nil if the position is yet to be found]
@@ -53,7 +54,7 @@ function ItemEquipable:can_transfer(inventory, x, y)
   local inv_type = inventory.type
 
   if inv_type == self.equip_inv then
-    if self:can_equip(owner) == false then
+    if self:can_equip(inventory.owner) == false then
       return false
     end
 
@@ -85,7 +86,8 @@ end
 
 --- Called by ItemEquipable:can_transfer before the item is equipped.
 -- Override it and return false to prevent the item from being equipped.
--- @param owner [Player the player that has the item, or nil if no player has it]
+-- @param owner [Player the player who is about to wear the item: the owner of the equipment
+--   inventory it is being put into]
 -- @return [Boolean false to prevent equipping, nil otherwise]
 function ItemEquipable:can_equip(owner)
 end

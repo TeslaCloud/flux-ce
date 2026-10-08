@@ -8,12 +8,14 @@ Cable.receive('fl_hook_run_cl', function(hook_name, ...)
 end)
 
 Cable.receive('fl_player_initial_spawn', function(ply_index)
-  --- GMod's `PlayerInitialSpawn` hook, which the game only runs on the server. Flux runs
-  -- it on every client as well when the server announces a newly connected player; bots
-  -- are not announced.
-  -- @param actor [Player The player who has joined. The entity is not valid if the client
-  --   has not received it yet]
-  hook.Run('PlayerInitialSpawn', Entity(ply_index))
+  util.wait_for_ent(ply_index, function(target)
+    --- GMod's `PlayerInitialSpawn` hook, which the game only runs on the server. Flux runs
+    -- it on every client as well when the server announces a newly connected player; bots
+    -- are not announced. The hook waits for the client to receive the entity of the
+    -- player (see `util.wait_for_ent`) and is not run if the entity never arrives.
+    -- @param actor [Player The player who has joined]
+    hook.Run('PlayerInitialSpawn', target)
+  end)
 end)
 
 Cable.receive('fl_player_disconnected', function(ply_index)

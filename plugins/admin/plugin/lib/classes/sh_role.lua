@@ -115,8 +115,6 @@ function Role:on_role_set(target, old_group) end
 -- @param new_group [Role the role the player is being given]
 function Role:on_role_taken(target, new_group) end
 
-Role.set_parent = Role.set_base
-
 --- Returns the role's ID.
 -- @return [String]
 function Role:get_id()

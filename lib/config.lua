@@ -43,7 +43,7 @@ if SERVER then
     local loaded = Data.load('config', {})
 
     for k, v in pairs(loaded) do
-      Plugin.call('OnConfigSet', key, stored[k] and stored[k].value, value)
+      Plugin.call('OnConfigSet', k, stored[k] and stored[k].value, v.value)
       stored[k] = v
     end
 
@@ -268,8 +268,8 @@ end
 
 if SERVER then
   --- Imports config values from a YAML file or from a table and sets every one of them.
-  -- Serverside only. The 'depends' key is skipped, and so is every key for which the
-  -- ShouldConfigImport hook returns a non-nil value.
+  -- Serverside only. The 'depends' and 'depends_development' keys are skipped, and so is
+  -- every key for which the ShouldConfigImport hook returns a non-nil value.
   -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
   -- @return [Map the imported table, or nil if the file could not be read or path is
@@ -299,7 +299,7 @@ if SERVER then
       -- @param value [Any value read from the imported file or table]
       -- @return [Boolean Return any value other than nil to skip the key and keep its current
       --   value]
-      if k != 'depends' and Plugin.call('ShouldConfigImport', k, v) == nil then
+      if k != 'depends' and k != 'depends_development' and Plugin.call('ShouldConfigImport', k, v) == nil then
         Config.set(k, v, nil, from_config)
       end
     end

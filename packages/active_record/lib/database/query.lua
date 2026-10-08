@@ -269,10 +269,12 @@ function ActiveRecord.Query:limit(value)
   self._limit = value
 end
 
---- Sets the row offset of the query.
+--- Sets the amount of rows that a 'select' query skips. Without #limit every row after
+-- them is returned; the query then carries the largest LIMIT every database accepts, since
+-- SQLite and MySQL do not take an OFFSET on its own.
 -- @param value [Number]
 function ActiveRecord.Query:offset(value)
-  self.offset = value
+  self._offset = value
 end
 
 --- Sets whether a 'create' query drops an existing table first. Without it, and without
@@ -348,6 +350,15 @@ local function build_select_query(query_obj)
     table.insert(query_string, query_obj._limit)
   end
 
+  if isnumber(query_obj._offset) then
+    if !isnumber(query_obj._limit) then
+      table.insert(query_string, ' LIMIT 9223372036854775807')
+    end
+
+    table.insert(query_string, ' OFFSET ')
+    table.insert(query_string, query_obj._offset)
+  end
+
   return table.concat(query_string)
 end
 
@@ -403,11 +414,6 @@ local function build_update_query(query_obj)
   if istable(query_obj.where_list) and #query_obj.where_list > 0 then
     table.insert(query_string, ' WHERE ')
     table.insert(query_string, build_where(query_obj))
-  end
-
-  if isnumber(query_obj.offset) then
-    table.insert(query_string, ' OFFSET ')
-    table.insert(query_string, query_obj.offset)
   end
 
   return table.concat(query_string)

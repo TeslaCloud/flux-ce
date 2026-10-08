@@ -115,13 +115,13 @@ function Area:HUDPaint()
   end
 end
 
-Cable.receive('fl_player_entered_area', function(area_idx, idx, pos)
+Cable.receive('fl_player_entered_area', function(area_idx, pos)
   local area = Areas.all()[area_idx]
 
   try(Areas.get_callback(area.type), PLAYER, area, true, pos, CurTime())
 end)
 
-Cable.receive('fl_player_left_area', function(area_idx, idx, pos)
+Cable.receive('fl_player_left_area', function(area_idx, pos)
   local area = Areas.all()[area_idx]
 
   try(Areas.get_callback(area.type), PLAYER, area, false, pos, CurTime())

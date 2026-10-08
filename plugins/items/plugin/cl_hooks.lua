@@ -99,7 +99,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
           item_obj:do_menu_action('on_drop')
         end)
 
-        drop_button:SetIcon(item_obj.take_icon or 'icon16/arrow_down.png')
+        drop_button:SetIcon(item_obj.drop_icon or 'icon16/arrow_down.png')
       end
     end
   end

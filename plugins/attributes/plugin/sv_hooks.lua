@@ -3,16 +3,25 @@
 -- expiry timers of its boosts and multipliers as characters are loaded and unloaded.
 
 --- Adds an Attribute record for every registered attribute to a new character, using the
--- level chosen during creation or the attribute's minimum.
+-- level chosen during creation or the attribute's minimum. A chosen level is rounded down
+-- and kept between the attribute's min and max, as the creation data comes from the client.
 -- @param owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data; levels are read from its attributes field]
 function AttributesPlugin:PostCreateCharacter(owner, char, char_data)
   if char.attributes then
+    local levels = istable(char_data.attributes) and char_data.attributes or {}
+
     for k, v in pairs(Attributes.get_stored()) do
+      local level = tonumber(levels[k])
+
+      if !level or level != level then
+        level = v.min
+      end
+
       local attribute = Attribute.new()
         attribute.attribute_id = k
-        attribute.level = char_data.attributes[k] or v.min
+        attribute.level = math.clamp(math.floor(level), v.min, v.max)
         attribute.progress = 0
       table.insert(char.attributes, attribute)
     end

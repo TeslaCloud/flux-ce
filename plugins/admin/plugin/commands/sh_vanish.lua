@@ -1,4 +1,4 @@
---- The Vanish command hides the targeted players from everyone who lacks the `moderator`
+--- The Vanish command hides the targeted players from everyone who lacks the `moderate`
 -- permission when given a true value, and toggles their visibility otherwise. Allowed for
 -- moderators by default.
 
@@ -11,7 +11,7 @@ CMD.arguments = 1
 CMD.immunity = true
 CMD.alias = 'v'
 
---- Hides the targeted players from everyone without the 'moderator' permission, or toggles
+--- Hides the targeted players from everyone without the 'moderate' permission, or toggles
 -- their visibility when no truthy value is given, and notifies them and staff.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to affect]
@@ -48,7 +48,7 @@ function CMD:on_run(actor, targets, should_vanish)
     end
 
     v:prevent_transmit_conditional(should_vanish, function(ply)
-      if ply:can('moderator') then
+      if ply:can('moderate') then
         return false
       end
     end)

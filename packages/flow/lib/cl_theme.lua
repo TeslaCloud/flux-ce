@@ -253,19 +253,20 @@ end
 
 --- Makes the specified theme the active one. Calls on_loaded of every theme it derives from
 -- and of the theme itself, applies its Derma skin, and runs the 'OnThemeLoaded' hook.
--- Unless reloading, it can be prevented with the 'ShouldThemeLoad' hook.
+-- It can be prevented with the 'ShouldThemeLoad' hook.
 -- @param theme_id [String ID of a registered theme]
--- @param reloading=false [Boolean skips the 'ShouldThemeLoad' hook and the theme's own on_loaded]
-function Theme.load_theme(theme_id, reloading)
+-- @return [Boolean true if the theme has been loaded, false if it is not registered or the
+--   'ShouldThemeLoad' hook has prevented it]
+function Theme.load_theme(theme_id)
   local theme_table = Theme.find_theme(theme_id)
 
   if theme_table then
     --- Called on the client before a theme becomes the active one, which includes every reload
-    -- of the active theme. Skipped when `Theme.load_theme` is called with `reloading` set.
+    -- of the active theme.
     -- @param theme_table [ThemeBase the theme that is about to be loaded]
     -- @return [Boolean Return false to prevent the theme from being loaded]
-    if !reloading and hook.Run('ShouldThemeLoad', theme_table) == false then
-      return
+    if hook.Run('ShouldThemeLoad', theme_table) == false then
+      return false
     end
 
     current_theme = theme_table
@@ -280,7 +281,7 @@ function Theme.load_theme(theme_id, reloading)
       next = next.base
     end
 
-    if !reloading and current_theme.on_loaded then
+    if current_theme.on_loaded then
       current_theme:on_loaded()
     end
 
@@ -292,12 +293,18 @@ function Theme.load_theme(theme_id, reloading)
     -- theme.
     -- @param current_theme [ThemeBase the theme that has been loaded]
     hook.Run('OnThemeLoaded', current_theme)
+
+    return true
   end
+
+  return false
 end
 
 --- Unloads the active theme, calling its on_unloaded method and the 'OnThemeUnloaded' hook.
--- Can be prevented with the 'ShouldThemeUnload' hook.
+-- Can be prevented with the 'ShouldThemeUnload' hook. Does nothing if no theme is loaded.
 function Theme.unload_theme()
+  if !current_theme then return end
+
   --- Called on the client before the active theme is unloaded with `Theme.unload_theme`.
   -- @param current_theme [ThemeBase the active theme]
   -- @return [Boolean Return false to keep the theme loaded]
@@ -307,19 +314,21 @@ function Theme.unload_theme()
 
   if current_theme.on_unloaded then
     current_theme:on_unloaded()
-
-    --- Called on the client while the active theme is being unloaded, after its `on_unloaded`
-    -- method has run and before it stops being the active theme.
-    -- @param current_theme [ThemeBase the theme that is being unloaded]
-    hook.Run('OnThemeUnloaded', current_theme)
   end
+
+  --- Called on the client while the active theme is being unloaded, after its `on_unloaded`
+  -- method has run and before it stops being the active theme.
+  -- @param current_theme [ThemeBase the theme that is being unloaded]
+  hook.Run('OnThemeUnloaded', current_theme)
 
   current_theme = nil
 end
 
 --- Loads the active theme again, then calls its 'OnReloaded' method and the 'OnThemeReloaded'
 -- hook. Does nothing if the theme has should_reload set to false, or if the
--- 'ShouldThemeReload' hook returns false.
+-- 'ShouldThemeReload' hook returns false. The theme is loaded the same way as the first
+-- time, so the 'ShouldThemeLoad' hook can prevent the reload too; 'OnReloaded' and
+-- 'OnThemeReloaded' are then not called.
 function Theme.reload()
   if !current_theme then return end
 
@@ -332,7 +341,7 @@ function Theme.reload()
     return
   end
 
-  Theme.load_theme(current_theme.id)
+  if !Theme.load_theme(current_theme.id) then return end
 
   Theme.hook('OnReloaded')
   --- Called on the client after `Theme.reload` has loaded the active theme again and called

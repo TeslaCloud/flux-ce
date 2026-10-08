@@ -149,11 +149,11 @@ function Chatbox.add_text(listeners, ...)
   end
 
   for k, v in ipairs(listeners) do
-    local data = message_data
+    local data = table.Copy(message_data)
 
     --- Lets plugins change a message before it is checked against a listener and sent to them.
-    -- Called on the server once for every potential listener. All listeners share the same
-    -- table, so a change made for one of them is still in place for those that follow.
+    -- Called on the server once for every potential listener. Every listener gets their own
+    -- copy of the message data, so a change made for one of them does not affect the others.
     -- @param listener [Player the player who may receive the message]
     -- @param message_data [Map message data: data (the pieces), sender, position, radius, size
     --   and the other options given to Chatbox.add_text]
@@ -198,7 +198,7 @@ function Chatbox.message_to_string(message_data, concatenator)
         -- @return [String name to use instead of the name of the player]
         name = hook.Run('GetPlayerName', v) or v:name()
       else
-        name = tostring(v) or v:GetClass()
+        name = tostring(v)
       end
 
       table.insert(to_string, name)
@@ -224,8 +224,8 @@ function Chatbox.player_say(actor, text, team_chat)
   -- server before the text is turned into a chat message.
   -- @param actor [Player the speaker]
   -- @param text [String the text as it was typed]
-  -- @param team_chat [Boolean whether the message is meant for the team chat; nil for text
-  --   typed into the chatbox, which does not send it]
+  -- @param team_chat [Boolean whether the message is meant for the team chat, as sent by the
+  --   chatbox of the speaker; nil when Chatbox.player_say is called without it]
   -- @return [String text to say instead; an empty string suppresses the message, which is how
   --   commands are kept out of the chat]
   local player_say_override = hook.Run('PlayerSay', actor, text, team_chat)

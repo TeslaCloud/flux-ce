@@ -208,15 +208,19 @@ Cable.receive('fl_inventory_open', function(inventory_id)
 end)
 
 Cable.receive('fl_inventory_close', function(inventory_id)
+  local container_panel = Flux.container_panel
+
   if inventory_id then
-    local inventory_panel = PLAYER.opened_containers[inventory_id]
+    local inventory_panel = PLAYER.opened_containers and PLAYER.opened_containers[inventory_id]
 
     if IsValid(inventory_panel) then
       inventory_panel:safe_remove()
+    elseif IsValid(container_panel) and table.HasValue(container_panel:get_inventory_ids() or {}, inventory_id) then
+      container_panel:safe_remove()
     end
   else
-    if IsValid(Flux.container_panel) then
-      Flux.container_panel:safe_remove()
+    if IsValid(container_panel) then
+      container_panel:safe_remove()
     end
   end
 end)

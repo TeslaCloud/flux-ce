@@ -1,7 +1,6 @@
 --- The Mapscene tool: left click adds a mapscene camera point at the user's eyes, and the
 -- tool's settings panel lists the points and lets them be deleted.
--- The tool and its list of points are tied to the 'mapscenes' permission, while adding a point
--- checks for 'mapsceneadd'.
+-- The tool, adding a point and the list of points are all tied to the 'mapscenes' permission.
 
 TOOL.Category = 'Flux'
 TOOL.Name = 'Mapscene tool'
@@ -12,13 +11,13 @@ TOOL.permission = 'mapscenes'
 --- Adds a mapscene point at the owner's eye position, facing where they are looking.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the point was added (always true clientside), nil if the owner
---   is not valid or lacks the 'mapsceneadd' permission]
+--   is not valid or lacks the 'mapscenes' permission]
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
   local owner = self:GetOwner()
 
-  if !IsValid(owner) or !owner:can('mapsceneadd') then return end
+  if !IsValid(owner) or !owner:can('mapscenes') then return end
 
   Mapscenes:add_point(owner:EyePos(), owner:GetAngles())
 

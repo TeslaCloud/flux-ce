@@ -24,7 +24,7 @@ end
 -- ```
 -- -- Hide the player from everyone except moderators.
 -- target:prevent_transmit_conditional(true, function(ply)
---   if ply:can('moderator') then
+--   if ply:can('moderate') then
 --     return false
 --   end
 -- end)

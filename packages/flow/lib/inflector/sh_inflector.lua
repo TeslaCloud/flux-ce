@@ -115,7 +115,7 @@ function Flow.Inflector:uncountable(words)
   local lang = self.current_language
 
   if isstring(words) then
-    self._uncountables[lang][word] = true
+    self._uncountables[lang][words] = true
   elseif istable(words) then
     for k, v in ipairs(words) do
       self._uncountables[lang][v] = true

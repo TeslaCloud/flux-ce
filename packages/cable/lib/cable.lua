@@ -1,8 +1,9 @@
 --- Cable is a thin wrapper around the net library that sends any number of values in one call.
 -- `Cable.send` writes its arguments one after another, serializing tables with SFS, and
 -- `Cable.receive` sets the handler that gets them back as regular arguments, so that there is
--- no reading or writing of individual net types. Message names become networked strings the
--- first time the server uses them. This file is the full source, which the server runs;
+-- no reading or writing of individual net types. A nil argument arrives as nil and does not
+-- cut off the arguments after it. Message names become networked strings the first time
+-- the server uses them. This file is the full source, which the server runs;
 -- clients load the minified `cable.min.lua`, and the installer of the package exposes either
 -- one as the `Cable` global.
 
@@ -66,43 +67,45 @@ function cable.receive(id, callback)
     end
 
     if IsValid(sender) then
-      callback(sender, unpack(args))
+      callback(sender, unpack(args, 1, c_len))
     else
-      callback(unpack(args))
+      callback(unpack(args, 1, c_len))
     end
   end)
 end
 
 local function write_sendable_args(...)
   local args = { ... }
-  local length = 0
+  local length = select('#', ...)
   local table_header = ''
   local send = {}
   local tables = {}
 
-  for k, v in ipairs(args) do
-    length = length + 1
+  for i = 1, length do
+    local v = args[i]
 
     if !istable(v) then
-      table.insert(send, v != nil and v or false)
+      send[i] = v
     else
       local data, err = sfs.encode(v)
 
       if err then
-        error('cable.send - failed to encode value #'..length..' ('..err..')\n')
+        error('cable.send - failed to encode value #'..i..' ('..err..')\n')
       end
 
-      table.insert(send, data)
-      tables[length] = true
-      table_header = table_header..tostring(length)..';'
+      send[i] = data
+      tables[i] = true
+      table_header = table_header..tostring(i)..';'
     end
   end
 
   net.WriteUInt(length, 8)
   net.WriteString(table_header)
 
-  for k, v in ipairs(send) do
-    if tables[k] then
+  for i = 1, length do
+    local v = send[i]
+
+    if tables[i] then
       -- SFS data is binary, so it has to be written along with its length.
       net.WriteUInt(#v, 16)
       net.WriteData(v, #v)
@@ -127,8 +130,8 @@ if SERVER then
   end
 
   --- Sends a Cable message to one, several or all players. Serverside variant.
-  -- Tables are serialized with SFS. The first message under a new name is delayed by 0.1
-  -- seconds to let the networked string reach the clients.
+  -- Tables are serialized with SFS, and nil values are delivered as nil. The first message
+  -- under a new name is delayed by 0.1 seconds to let the networked string reach the clients.
   -- ```
   -- Cable.send(target, 'fl_bind_pressed', key)
   -- Cable.send(nil, 'fl_player_disconnected', actor:EntIndex()) -- to everyone
@@ -142,11 +145,11 @@ if SERVER then
     end
 
     if !cable.check_networked_string(id) then
-      local args = { ... }
+      local args, count = { ... }, select('#', ...)
 
       -- Allow networked strings some time to catch up for the first time.
       timer.Simple(0.1, function()
-        cable.send(target, id, unpack(args))
+        cable.send(target, id, unpack(args, 1, count))
       end)
 
       return
@@ -166,7 +169,7 @@ if SERVER then
   end
 else
   --- Sends a Cable message to the server. Clientside variant.
-  -- Tables are serialized with SFS.
+  -- Tables are serialized with SFS, and nil values are delivered as nil.
   -- ```
   -- Cable.send('fl_config_change', key, value)
   -- ```

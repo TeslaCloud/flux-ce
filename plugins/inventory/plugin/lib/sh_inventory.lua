@@ -32,6 +32,26 @@ function Inventories.find(id)
   return stored[id]
 end
 
+if SERVER then
+  local reach = 128
+
+  --- Checks whether a player is close enough to an entity to use an inventory that belongs
+  -- to it: the player has to be alive, and the nearest point of the entity's bounds has to
+  -- be within 128 units of their eyes. Server-side only.
+  -- @param actor [Player]
+  -- @param entity [Entity]
+  -- @return [Boolean false if the entity is invalid, too far away, or the player is dead]
+  function Inventories.is_in_reach(actor, entity)
+    if !IsValid(entity) or !actor:Alive() then
+      return false
+    end
+
+    local eye_pos = actor:EyePos()
+
+    return eye_pos:DistToSqr(entity:NearestPoint(eye_pos)) <= reach * reach
+  end
+end
+
 do
   local player_meta = FindMetaTable('Player')
 
@@ -75,10 +95,10 @@ do
   --   @param inv_type [String]
   -- Will return item ids from all the inventories that the player has.
   -- @variant player_meta:get_items_ids()
-  -- @return [List<Number> numbers; the inv_type variant returns the Inventory itself instead]
+  -- @return [List<Number> numbers]
   function player_meta:get_items_ids(inv_type)
     if inv_type then
-      return self:get_inventory(inv_type)
+      return self:get_inventory(inv_type):get_items_ids()
     else
       local items = {}
 
@@ -532,7 +552,9 @@ do
       end
     end
 
-    --- Opens an inventory window for the player.
+    --- Opens an inventory window for the player and makes them a receiver of the inventory.
+    -- The server closes it again as soon as Inventory:can_be_viewed_by fails for the player,
+    -- for example when they walk away from the entity the inventory belongs to.
     -- ```
     -- -- Creating new inventory
     -- local inventory = Inventory.new()
@@ -552,8 +574,10 @@ do
       Cable.send(self, 'fl_inventory_open', inventory.id)
     end
 
-    --- Opens all the inventories the other player has.
+    --- Opens all the inventories the other player has. The server closes them again as soon
+    -- as the other player is out of reach; call close_player_inventory to close them earlier.
     -- @param target [Player]
+    -- @see [Inventories.is_in_reach]
     function player_meta:open_player_inventory(target)
       local inventory_ids = {}
 
@@ -565,6 +589,43 @@ do
       end
 
       Cable.send(self, 'fl_open_player_inventory', target, inventory_ids)
+    end
+
+    --- Closes inventories that were opened for the player: removes the player from their
+    -- receivers, tells the client to remove their windows and runs the 'OnInventoryClosed'
+    -- hook once, with the first of them. The player's own inventories and inventories that
+    -- are not open for the player are skipped.
+    -- @param inventories [List<Inventory>]
+    function player_meta:close_inventories(inventories)
+      local closed_inventory
+
+      for k, v in pairs(inventories) do
+        if v.owner != self and v:has_receiver(self) then
+          v:remove_receiver(self)
+
+          Cable.send(self, 'fl_inventory_close', v.id)
+
+          closed_inventory = closed_inventory or v
+        end
+      end
+
+      if !closed_inventory then return end
+
+      hook.Run('OnInventoryClosed', self, closed_inventory)
+    end
+
+    --- Closes an inventory that was opened for the player with open_inventory.
+    -- @param inventory [Inventory]
+    -- @see [Player#close_inventories]
+    function player_meta:close_inventory(inventory)
+      self:close_inventories({ inventory })
+    end
+
+    --- Closes the inventories of another player that were opened with open_player_inventory.
+    -- @param target [Player]
+    -- @see [Player#close_inventories]
+    function player_meta:close_player_inventory(target)
+      self:close_inventories(target:get_inventories())
     end
   end
 end

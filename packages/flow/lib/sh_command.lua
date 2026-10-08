@@ -136,7 +136,7 @@ function Flux.Command:extract_arguments(text)
 
   for i = 1, tlen do
     if raw_args == nil and #arguments > 0 then
-      raw_args = string.sub(i, tlen)
+      raw_args = string.sub(text, i, tlen)
     end
 
     if skip > 0 then
@@ -318,7 +318,7 @@ if SERVER then
     local cmd_table = self:find_by_id(command)
 
     if cmd_table then
-      if (!IsValid(actor) and !cmd_table.no_console) or actor:can(cmd_table.id) then
+      if (!IsValid(actor) and !cmd_table.no_console) or (IsValid(actor) and actor:can(cmd_table.id)) then
         --- Called on the server when a player is about to run a command, after the permission
         -- check has passed and before the arguments are checked. The player is not told when a
         -- handler stops the command, so the handler should notify them.
@@ -385,7 +385,9 @@ if SERVER then
               for k, v in ipairs(targets) do
                 if cmd_table.immunity and IsValid(actor) and
                    --- Called for every player a command with `immunity` set is about to be
-                   -- run on, when the command was not run from the server console.
+                   -- run on, when the command was not run from the server console. The actor
+                   -- themselves can be among the targets; the admin plugin's handler always
+                   -- lets that pass, and lets root players target anyone.
                    -- @param actor [Player Player who runs the command]
                    -- @param target [Player Player the command targets]
                    -- @param can_equal [Boolean The command's `can_equal` setting: whether a

@@ -19,7 +19,6 @@ mod 'Plugin'
 local stored = {}
 local unloaded = {}
 local hooks_cache = {}
-local reload_data = {}
 local load_cache = {}
 local default_extras = {
   'lib',
@@ -257,12 +256,6 @@ end
 function Plugin.register(obj)
   Plugin.cache_functions(obj)
 
-  if obj.should_refresh == false then
-    reload_data[obj:get_path()] = false
-  else
-    reload_data[obj:get_path()] = true
-  end
-
   if SERVER then
     if SCHEMA == obj then
       local folder_name = obj.folder:trim_end('/schema')
@@ -271,7 +264,7 @@ function Plugin.register(obj)
       if file.Exists(file_path, 'GAME') then
         Flux.dev_print('Importing config: '..file_path)
 
-        Config.import(File.read(file_path), CONFIG_PLUGIN)
+        Config.import(file_path, CONFIG_PLUGIN)
       end
     end
 
@@ -314,10 +307,7 @@ function Plugin.include(path)
   data.folder = path
   data.single_file = ext == 'lua'
 
-  if reload_data[folder] == false then
-    Flux.dev_print('Not reloading plugin: '..path)
-    return
-  elseif Plugin.loaded(id) then
+  if Plugin.loaded(id) then
     return
   end
 

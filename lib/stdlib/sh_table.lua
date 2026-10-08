@@ -218,13 +218,13 @@ function table.flatten(tab)
 
   for k, v in pairs(tab) do
     if istable(v) and !v.class then
-      table.insert(t, table.flatten(tab))
+      table.Add(t, table.flatten(v))
     else
       table.insert(t, v)
     end
   end
 
-  return v
+  return t
 end
 
 --- Returns a copy of the table without duplicate values.
@@ -489,7 +489,7 @@ function table.to_hash(tab)
     if istable(v) then
       h[v[1]] = v[2]
     else
-      table.insert(v)
+      table.insert(h, v)
     end
   end
 

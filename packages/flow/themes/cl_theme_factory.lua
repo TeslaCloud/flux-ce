@@ -511,42 +511,16 @@ function THEME:PaintTabMenuButtonPanel(panel, width, height)
 end
 
 --- Blurs the screen behind the tab menu, easing the blur size toward the blur target of
--- the menu, and draws an indicator bar for the button stored in the menu's activeBtn field.
+-- the menu.
 -- @param panel [Panel the tab menu]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
 function THEME:PaintTabMenu(panel, width, height)
-  local fraction      = FrameTime() * 8
-  local active_panel  = panel.active_panel
+  local fraction = FrameTime() * 8
 
   Flux.blur_size = Lerp(fraction, Flux.blur_size, panel.blur_target)
 
   draw.blur_panel(panel)
-
-  if IsValid(active_panel) then
-    panel.pos_y = panel.pos_y or 0
-
-    local active_button = panel.activeBtn
-
-    if !IsValid(active_button) then return end
-
-    local x, y      = active_button:GetPos()
-    local target_h  = active_button:GetTall()
-
-    if panel.prev_y != y then
-      panel.pos_y = Lerp(fraction, panel.pos_y, y)
-    end
-
-    panel.prev_y = panel.pos_y
-
-    if !active_panel.indicator_lerp then
-      active_panel.indicator_lerp = 0
-    end
-
-    active_panel.indicator_lerp = Lerp(fraction, active_panel.indicator_lerp, target_h)
-
-    draw.RoundedBox(0, 0, panel.pos_y, 6, target_h, self:get_color('accent_light'))
-  end
 end
 
 --- Draws the gradient background of an inventory item slot.

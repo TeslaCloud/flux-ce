@@ -105,7 +105,7 @@ function Items:RegisterConditions()
     check = function(target, data)
       if !data.operator or !data.item_id or !data.key or !data.value then return false end
 
-      local items = target:find_items(item_id)
+      local items = target:find_items(data.item_id)
 
       if #items == 0 then
         return false

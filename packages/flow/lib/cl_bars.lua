@@ -3,9 +3,10 @@
 -- value and maximum, position and size, and optionally a `callback` that returns its current
 -- value. The `type` of a bar decides how it is laid out. `BAR_TOP` bars are stacked from the
 -- top left corner of the screen in order of their `priority` and are drawn together by
--- `Flux.Bars:DrawTopBars`. Bars of the other types (`BAR_MANUAL`, `BAR_HIDDEN`) keep the
--- position they were registered with and are drawn by their owner with `Flux.Bars:draw`,
--- usually from a HUD paint hook.
+-- `Flux.Bars:DrawTopBars`, which the gamemode calls while it paints the HUD of a living
+-- player. Bars of the other types (`BAR_MANUAL`, `BAR_HIDDEN`) keep the position they were
+-- registered with and are drawn by their owner with `Flux.Bars:draw`, usually from a HUD
+-- paint hook.
 --
 -- Every `LazyTick` the top bars are repositioned and the bars that have a callback get their
 -- value refreshed; other bars are updated with `Flux.Bars:set_value`, which animates the fill
@@ -138,20 +139,20 @@ function Flux.Bars:hinder_value(id, new_value)
   if bar then
     Theme.call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
 
-    if bar.value != new_value then
+    if bar.hinder_value != new_value then
       bar.hinder_value = math.Clamp(new_value, 0, bar.max_value)
     end
   end
 end
 
---- Rebuilds the list of top bars grouped by priority. Bars rejected by the 'ShouldDrawBar'
--- hook are left out.
+--- Rebuilds the list of top bars grouped by priority. Bars that the 'ShouldDrawBar' hook
+-- returns false for are left out.
 -- @return [Map priority mapped to a List<String> of bar IDs]
 function Flux.Bars:prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
-    if !hook.Run('ShouldDrawBar', v) then
+    if hook.Run('ShouldDrawBar', v) == false then
       continue
     end
 
@@ -185,9 +186,9 @@ function Flux.Bars:position()
       if bar and bar.type == BAR_TOP then
         --- Lets plugins offset a top bar while the bars are being stacked. Called on the
         -- client for every `BAR_TOP` bar each time the bars are repositioned, which happens
-        -- every `LazyTick`. The vertical offset is added to the bar's place in the stack. The
-        -- horizontal offset is added to the x position the bar already has, so it accumulates
-        -- from call to call.
+        -- every `LazyTick`. The vertical offset is added to the bar's place in the stack, the
+        -- horizontal offset to the x position of the bar; the offset of the previous call is
+        -- taken back first, so it does not add up from call to call.
         -- @param bar [Map bar data]
         -- @return [Number horizontal offset in pixels, Number vertical offset in pixels; each
         --   is 0 when nothing is returned]
@@ -196,7 +197,8 @@ function Flux.Bars:position()
         off_y = off_y or 0
 
         bar.y = last_y + off_y
-        bar.x = bar.x + off_x
+        bar.x = bar.x - (bar.offset_x or 0) + off_x
+        bar.offset_x = off_x
         last_y = last_y + bar.height + bar.spacing
       end
     end
@@ -204,7 +206,7 @@ function Flux.Bars:position()
 end
 
 --- Draws the bar with the specified ID using the active theme. Does nothing if the bar does
--- not exist or the 'ShouldDrawBar' hook rejects it.
+-- not exist or the 'ShouldDrawBar' hook returns false for it.
 -- @param id [String bar ID]
 function Flux.Bars:draw(id)
   local bar_info = self:get(id)
@@ -219,13 +221,13 @@ function Flux.Bars:draw(id)
 
     --- Asks whether a HUD bar should be drawn. Called on the client by `Flux.Bars:draw` every
     -- time a bar is drawn, and by `Flux.Bars:prioritize` for every registered bar when the top
-    -- bars are sorted. The bar is skipped unless a truthy value is returned. Flux's own
-    -- handler returns false while the value of the bar is above its `display` setting or not
-    -- above its `min_display` setting and true otherwise; as it always returns a value,
-    -- handlers that run after it are not consulted.
+    -- bars are sorted. The bar is drawn unless a handler returns false. Flux's own handler
+    -- returns false while the value of the bar is above its `display` setting or not above
+    -- its `min_display` setting, and nothing otherwise, which leaves the decision to the
+    -- handlers that run after it.
     -- @param bar_info [Map bar data]
-    -- @return [Boolean Return true to draw the bar, false to hide it]
-    if !hook.Run('ShouldDrawBar', bar_info) then
+    -- @return [Boolean Return false to hide the bar]
+    if hook.Run('ShouldDrawBar', bar_info) == false then
       return
     end
 
@@ -254,7 +256,8 @@ function Flux.Bars:draw(id)
   end
 end
 
---- Draws every bar from the prioritized list of top bars.
+--- Draws every bar from the prioritized list of top bars. The gamemode calls it every frame
+-- while it paints the HUD of a living player, along with the info displays.
 function Flux.Bars:DrawTopBars()
   for priority, ids in pairs(sorted) do
     for k, v in ipairs(ids) do
@@ -325,13 +328,11 @@ do
 
   --- Hides the bar while its value is outside of its display range.
   -- @param bar [Map bar data]
-  -- @return [Boolean false if the bar should not be drawn]
+  -- @return [Boolean false if the bar should not be drawn, nothing otherwise]
   function Bars:ShouldDrawBar(bar)
     if bar.display < bar.value or bar.min_display >= bar.value then
       return false
     end
-
-    return true
   end
 
   Plugin.add_hooks('FLBarHooks', Bars)

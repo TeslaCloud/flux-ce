@@ -3,7 +3,7 @@
 -- The constructors are also installed into the `math` library, so that an interval can be
 -- written as `math.minutes(5)` and added to or subtracted from a `Date` or a `DateTime`.
 
---- The DateTime class represents a time interval, not a point in time.
+--- The Time class represents a time interval, not a point in time.
 -- For points in time, please use Date or DateTime.
 -- @see [Date]
 -- @see [DateTime]
@@ -181,8 +181,8 @@ function Time:nice(time)
     minutes < 90  and { 'hour', hours }       or
     hours   < 24  and { 'hours', hours }      or
     hours   < 42  and { 'day', days }         or
-    days    < 6   and { 'days', days }        or
-    hours   < 7   and { 'week', weeks }       or
+    days    < 7   and { 'days', days }        or
+    weeks   < 1.5 and { 'week', weeks }       or
     days    < 31  and { 'weeks', weeks }      or
     days    < 45  and { 'month', months }     or
     days    < 365 and { 'months', months }    or
@@ -194,18 +194,26 @@ function Time:nice(time)
          or '', time_data[2]
 end
 
---- Creates a nice string representation of time relative to now.
--- @param time=current time [Number]
--- @return [String time phrase, String 'time.from_now' or 'time.ago' phrase (empty for
---   'time.just_now'), Number amount of time in the unit of the phrase]
+--- Creates a nice string representation of a point in time relative to now.
+-- @param time=current time [Number/Date UNIX time, or a Date or DateTime object]
+-- @return [String time phrase, String 'time.from_now' for a time in the future or 'time.ago'
+--   for one in the past (empty for 'time.just_now'), Number amount of time in the unit of
+--   the phrase]
 -- @see [Time#nice]
 function Time:nice_from_now(time)
-  local diff = Time.new(math.abs(DateTime.at(time).time - DateTime:now().time))
+  if istable(time) then
+    time = time.time
+  end
+
+  local diff = Time.new(DateTime:at(time).time - DateTime:now().time)
+
   return diff:nice()
 end
 
 --- Same as nice, but performs formatting.
--- Takes the three values that nice returns and translates them into readable text.
+-- Takes the three values that nice returns and translates them into readable text. The
+-- amount is rounded down, with 'about' or 'over' in front of it if anything was cut off, and
+-- is never shown as less than 1.
 -- ```
 -- local text = Time:format_nice(Time:minutes(5):nice()) -- e.g. '5 minutes from now'
 -- ```
@@ -217,7 +225,7 @@ end
 -- @return [String phrases]
 function Time:format_nice(suffix, from_now, amt, lang)
   if suffix != 'time.just_now' then
-    local floored = math.floor(amt or 1)
+    local floored = math.max(math.floor(amt or 1), 1)
     local dec = amt - floored
     local dec_prefix
 

@@ -193,9 +193,9 @@ function PANEL:rebuild_models()
   -- the stage is opened with a gender already chosen and whenever the gender changes.
   -- @param char_data [Map character data collected so far, including the gender ('male',
   --   'female' or 'universal') that has been picked]
-  -- @return [List<String> model paths. The stage has no models of its own, so a handler has to
-  --   return a list, as the Factions plugin does]
-  local models = hook.Run('GetCharacterCreationModels', char_data)
+  -- @return [List<String> model paths. The stage has no models of its own, so it offers none
+  --   unless a handler returns a list, as the Factions plugin does]
+  local models = hook.Run('GetCharacterCreationModels', char_data) or {}
   local i = 0
   local offset = 4
 

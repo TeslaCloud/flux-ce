@@ -154,7 +154,7 @@ function Chatbox.compile(msg_table)
             -- @return [Boolean return false to display the true name of the player]
             hook.Run('ShouldProcessPlayerName', v, msg_table) != false and hook.Run('GetPlayerName', v) or v:name(true)
         else
-          to_insert = tostring(v) or v:GetClass()
+          to_insert = tostring(v)
         end
 
         local w, h = util.text_size(to_insert, font)

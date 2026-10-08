@@ -5,9 +5,11 @@
 -- by) and `no_console` (the command cannot be run from the server console). Setting `immunity`
 -- or `player_arg` turns one argument into a list of target players: the first argument, or the
 -- one at the position that `player_arg` gives. With `immunity` the caller must also pass the
--- immunity check against every target. What the command does goes into `Command:on_run`, and
--- the `notify` helpers tell players about the outcome. Registered commands are kept and run by
--- the `Flux.Command` library.
+-- immunity check (the `CommandCheckImmunity` hook) against every target; with the admin plugin
+-- that means a role with a higher immunity than the target's, or the same one if `can_equal`
+-- is set, while callers always pass against themselves and root players against anyone. What
+-- the command does goes into `Command:on_run`, and the `notify` helpers tell players about
+-- the outcome. Registered commands are kept and run by the `Flux.Command` library.
 
 class 'Command'
 

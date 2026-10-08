@@ -122,25 +122,25 @@ if SERVER then
   end
 
   --- Asks the player's client to find the 3D text they are looking at and request its removal.
-  -- Serverside only; does nothing if the player lacks the 'textremove' permission.
+  -- Serverside only; does nothing if the player lacks the 'texts' permission.
   -- @param actor [Player]
   function SurfaceText:remove_text(actor)
-    if actor:can('textremove') then
+    if actor:can('texts') then
       Cable.send(actor, 'fl_surface_text_calculate', true)
     end
   end
 
   --- Asks the player's client to find the 3D picture they are looking at and request its
-  -- removal. Serverside only; does nothing if the player lacks the 'textremove' permission.
+  -- removal. Serverside only; does nothing if the player lacks the 'pictures' permission.
   -- @param actor [Player]
   function SurfaceText:remove_picture(actor)
-    if actor:can('textremove') then
+    if actor:can('pictures') then
       Cable.send(actor, 'fl_surface_picture_calculate', true)
     end
   end
 
   Cable.receive('fl_surface_text_remove', function(actor, idx)
-    if actor:can('textremove') then
+    if actor:can('texts') then
       table.remove(SurfaceText.texts, idx)
 
       SurfaceText:save()
@@ -152,7 +152,7 @@ if SERVER then
   end)
 
   Cable.receive('fl_surface_picture_remove', function(actor, idx)
-    if actor:can('textremove') then
+    if actor:can('pictures') then
       table.remove(SurfaceText.pictures, idx)
 
       SurfaceText:save()

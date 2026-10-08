@@ -4,7 +4,7 @@
 CMD.name = 'SetGroup'
 CMD.description = 'command.setgroup.description'
 CMD.syntax = 'command.setgroup.syntax'
-CMD.permission = 'administrator'
+CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.immunity = true

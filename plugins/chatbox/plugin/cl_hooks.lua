@@ -113,11 +113,12 @@ function Chatbox:OnThemeLoaded(current_theme)
   current_theme:set_color('chat_text_entry_background', Color(0, 0, 0, 215))
 end
 
---- Sends the entered text to the server, unless it is empty, and closes the chatbox.
+--- Sends the entered text to the server, unless it is empty, along with whether the chatbox
+-- was opened for team chat, and closes the chatbox.
 -- @param text [String the text that was entered]
 function Chatbox:ChatboxTextEntered(text)
   if text and text != '' then
-    Cable.send('fl_chat_player_say', text)
+    Cable.send('fl_chat_player_say', text, PLAYER.typing_team_chat)
   end
 
   Chatbox.hide()

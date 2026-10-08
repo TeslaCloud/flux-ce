@@ -21,9 +21,9 @@ function PLUGIN:pickup_at_trace(actor)
 
   if IsValid(actor.holding_object) then
     --- Called on the server when a player drops the object they carry.
-    -- It is run before a drop the player asks for, which a handler can prevent, and again from
-    -- a timer once the object is found to be no longer held, for whatever reason; what
-    -- handlers return is ignored then.
+    -- It is run once per drop: before a drop the player asks for, which a handler can prevent,
+    -- or from a timer once the object is found to be no longer held for any other reason;
+    -- what handlers return is ignored then.
     -- @param actor [Player The player carrying the object; may no longer be valid when called
     --   from the timer]
     -- @param ent [Entity The object being dropped]
@@ -31,6 +31,7 @@ function PLUGIN:pickup_at_trace(actor)
     if hook.Run('PlayerDropObject', actor, actor.holding_object) != false then
       actor:DropObject()
       actor.holding_object = nil
+      timer.Remove('check_ent_hold_'..actor:SteamID())
     end
 
     return false

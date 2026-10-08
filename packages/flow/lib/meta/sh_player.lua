@@ -107,7 +107,7 @@ if CLIENT then
             -- @param entity [Entity The entity whose name is requested]
             -- @return [String Name to show; when nothing is returned, the string
             --   representation of the entity is used]
-            arguments[k] = hook.Run('GetEntityName', v) or tostring(v) or v:GetClass()
+            arguments[k] = hook.Run('GetEntityName', v) or tostring(v)
           end
         end
       end

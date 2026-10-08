@@ -1,7 +1,7 @@
 --- The Area Tool creates and removes areas. Left click, right click and reload are passed on
 -- to the selected tool mode; modes are added by plugins through the `AddAreaToolModes`
 -- hook and picked from the list in the tool's settings panel. The tool requires the
--- `areas` permission, and each of its actions also checks `area_tool`.
+-- `areas` permission, which each of its actions checks as well.
 
 TOOL.Category = 'Flux'
 TOOL.Name = 'Area Tool'
@@ -14,11 +14,11 @@ TOOL.ClientConVar['mode'] = '1'
 --- Passes the click to the OnLeftClick handler of the selected area tool mode.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
---   nil if the owner lacks the 'area_tool' permission]
+--   nil if the owner lacks the 'areas' permission]
 function TOOL:LeftClick(trace)
   local owner = self:GetOwner()
 
-  if !owner:can('area_tool') then return end
+  if !owner:can('areas') then return end
 
   local mode = self:GetClientNumber('mode')
   local mode_table = Area.tool_modes[mode]
@@ -33,11 +33,11 @@ end
 --- Passes the click to the OnRightClick handler of the selected area tool mode.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
---   nil if the owner lacks the 'area_tool' permission]
+--   nil if the owner lacks the 'areas' permission]
 function TOOL:RightClick(trace)
   local owner = self:GetOwner()
 
-  if !owner:can('area_tool') then return end
+  if !owner:can('areas') then return end
 
   local mode = self:GetClientNumber('mode')
   local mode_table = Area.tool_modes[mode]
@@ -52,11 +52,11 @@ end
 --- Passes the reload to the OnReload handler of the selected area tool mode.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
---   nil if the owner lacks the 'area_tool' permission]
+--   nil if the owner lacks the 'areas' permission]
 function TOOL:Reload(trace)
   local owner = self:GetOwner()
 
-  if !owner:can('area_tool') then return end
+  if !owner:can('areas') then return end
 
   local mode = self:GetClientNumber('mode')
   local mode_table = Area.tool_modes[mode]

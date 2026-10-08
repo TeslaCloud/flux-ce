@@ -14,7 +14,9 @@ end
 
 --- Draws the text a player is typing above their head, fading it out with distance and
 -- keeping it within screen bounds. Shows a generic 'typing' label instead of the text
--- when the 'display_exact_message' config is disabled.
+-- when the 'display_exact_message' config is disabled. Nothing is drawn for a player who is
+-- further away than 350 units, scaled by the DisplayTypingAdjustFadeoffMultiplier hook, or
+-- who is within that distance but not in the local player's line of sight.
 -- @param target [Player the player who is typing]
 -- @param text [String the text being typed]
 -- @param ply_pos [Vector eye position of the typing player]
@@ -22,13 +24,17 @@ end
 function DisplayTyping:draw_player_typing_text(target, text, ply_pos, dist)
   local hide_text = Config.get('display_exact_message') == false
   --- Lets plugins scale the distance over which the typing text of a player fades out. Called
-  -- on the client every frame for each nearby player who is typing.
+  -- on the client every frame for each player who is typing, however far away and whether
+  -- or not they are in sight.
   -- @param target [Player the player who is typing]
   -- @param text [String the text being typed; long texts are cut to their last 45 characters]
   -- @return [Number multiplier of the squared distances at which the text starts to fade (200
-  --   units) and has faded out (350 units); 1 when nothing is returned. The text is never
-  --   drawn beyond 350 units, whatever the multiplier]
+  --   units) and has faded out (350 units), beyond which it is not drawn; 1 when nothing is
+  --   returned]
   local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', target, text) or 1
+
+  if dist > max_distance * mult then return end
+  if util.vector_obstructed(PLAYER:EyePos(), ply_pos, { PLAYER, target }) then return end
 
   if hide_text then
     --- Asks for the label to show in place of the text a player is typing. Called on the

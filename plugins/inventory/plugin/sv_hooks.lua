@@ -1,7 +1,37 @@
 --- Server side of the Inventory plugin: creates the default inventories of players, saves
 -- where items are, does what the take, use and drop actions of items are supposed to do,
--- enforces the rules of moving items between inventories, and handles the move, drop and
--- close requests of the clients.
+-- enforces the rules of moving items between inventories, closes the inventories that
+-- players are no longer entitled to, and handles the move, drop and close requests of the
+-- clients.
+
+--- Checks the item list of a move or drop request. The list has to name distinct items
+-- that all are in one inventory, and that inventory has to be open for the player.
+-- @param actor [Player the player who sent the request]
+-- @param instance_ids [Any the list of instance ids as received from the client]
+-- @return [Inventory the inventory the items are in, List<Number> the instance ids as a
+--   clean list; nothing if the request is not valid]
+local function find_requested_stack(actor, instance_ids)
+  if !istable(instance_ids) then return end
+
+  local first_item = Item.find_instance_by_id(instance_ids[1])
+  local inventory = first_item and Inventories.find(first_item.inventory_id)
+
+  if !inventory or !inventory:has_receiver(actor) then return end
+
+  local stack = {}
+  local listed = {}
+
+  for k, v in ipairs(instance_ids) do
+    local stack_item = Item.find_instance_by_id(v)
+
+    if !stack_item or stack_item.inventory_id != inventory.id or listed[v] then return end
+
+    listed[v] = true
+    stack[k] = v
+  end
+
+  return inventory, stack
+end
 
 --- Calls the 'AddDefaultItems' plugin hook for a character that has just been created.
 -- @param owner [Player]
@@ -13,9 +43,7 @@ function Inventories:PostCreateCharacter(owner, char, char_data)
   -- `Plugin.call`, so gamemode functions do not receive it.
   -- @param owner [Player The player who created the character]
   -- @param char [Character The new character]
-  -- @param inventory [Any The `inventory` field of the character. Nothing in Flux sets
-  --   this field, so it is nil unless another plugin fills it in]
-  Plugin.call('AddDefaultItems', owner, char, char.inventory)
+  Plugin.call('AddDefaultItems', owner, char)
 end
 
 --- Deletes inventories of the disconnected player from the server cache.
@@ -143,7 +171,9 @@ function Inventories:PreItemSave(item_obj, save_table)
 end
 
 --- Puts an item lying in the world into one of the player's inventories
--- and removes its entity. Notifies the player if the item does not fit.
+-- and removes its entity. Nothing happens if the player has no inventory of the requested
+-- type; the player is notified if the 'CanItemTransfer' hook refuses the inventory or the
+-- item does not fit.
 -- @param actor [Player]
 -- @param item_obj [Item]
 -- @param ... [Vararg optional hashes; an inv_type field in one of them sets the inventory type]
@@ -163,7 +193,27 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
 
     inv_type = inv_type or item_obj.preferred_inventory or actor.default_inventory
 
-    local player_inventory = actor:get_inventory(inv_type)
+    local player_inventory = actor:get_inventories()[inv_type]
+
+    if !player_inventory then return end
+
+    local can_transfer, transfer_error = hook.Run('CanItemTransfer', item_obj, player_inventory)
+
+    if can_transfer == false then
+      if transfer_error then
+        actor:notify(transfer_error)
+      end
+
+      return
+    end
+
+    local w, h = player_inventory:get_item_size(item_obj)
+
+    if !player_inventory:find_position(item_obj, w, h) then
+      actor:notify('error.inventory.no_space')
+
+      return
+    end
 
     hook.Run('PreItemTransfer', item_obj, player_inventory)
 
@@ -181,7 +231,8 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
   end
 end
 
---- Takes the items out of their inventory and spawns them in front of the player.
+--- Takes the items out of their inventory and spawns them in front of the player. Does
+-- nothing if the first item does not exist or is not in an inventory.
 -- @param actor [Player]
 -- @param instance_ids [Number/List<Number> instance id(s) of items from the same inventory]
 function Inventories:PlayerDropItem(actor, instance_ids)
@@ -191,7 +242,10 @@ function Inventories:PlayerDropItem(actor, instance_ids)
 
   local trace = actor:GetEyeTraceNoCursor()
   local first_item = Item.find_instance_by_id(table.first(instance_ids))
-  local inventory = Inventories.find(first_item.inventory_id)
+  local inventory = first_item and Inventories.find(first_item.inventory_id)
+
+  if !inventory then return end
+
   local distance = trace.HitPos:Distance(actor:GetPos())
 
   for k, v in pairs(instance_ids) do
@@ -204,7 +258,7 @@ function Inventories:PlayerDropItem(actor, instance_ids)
     -- @param item_obj [Item The item that is about to be dropped]
     -- @return [Boolean Return false to prevent the drop; the items of the stack that
     --   come after this one are not dropped either]
-    if hook.Run('CanPlayerDropItem', actor, item_obj) == false then return end
+    if hook.Run('CanPlayerDropItem', actor, item_obj) == false then break end
 
     hook.Run('PreItemTransfer', item_obj, nil, inventory)
 
@@ -264,9 +318,31 @@ function Inventories:ItemTransferred(item_obj, new_inventory, old_inventory)
   local inventory = item_obj.inventory
 
   if inventory then
-    for k, v in ipairs(inventory.receivers) do
-      if IsValid(v) and !v:has_item_by_id(item_obj.instance_id) then
-        Cable.send(v, 'fl_inventory_close', inventory.id)
+    local receivers = inventory.receivers
+
+    for i = #receivers, 1, -1 do
+      local receiver = receivers[i]
+
+      if IsValid(receiver) and !receiver:has_item_by_id(item_obj.instance_id) then
+        receiver:close_inventory(inventory)
+      end
+    end
+  end
+end
+
+--- Closes, once a second, every inventory for the receivers who are no longer entitled to
+-- it, so that staying a receiver does not depend on the client reporting that it has closed
+-- the window.
+-- @see [Inventory#can_be_viewed_by]
+function Inventories:OneSecond()
+  for id, inventory in pairs(Inventories.all()) do
+    local receivers = inventory.receivers
+
+    for i = #receivers, 1, -1 do
+      local receiver = receivers[i]
+
+      if IsValid(receiver) and !inventory:can_be_viewed_by(receiver) then
+        receiver:close_inventory(inventory)
       end
     end
   end
@@ -338,7 +414,7 @@ end
 -- @param actor [Player]
 -- @param entity [Entity the grenade]
 function Inventories:PlayerThrewGrenade(actor, entity)
-  if !IsValid(actor) then return end
+  if !IsValid(actor) or !actor:IsPlayer() then return end
 
   for k, v in pairs(actor:get_items()) do
     if v:is('throwable') and v:is_equipped() then
@@ -403,13 +479,23 @@ function Inventories:OnItemCreated(item_obj)
 end
 
 Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, was_rotated)
+  local old_inventory, stack = find_requested_stack(actor, instance_ids)
+  local inventory = Inventories.find(inventory_id)
+
+  if !old_inventory or !inventory or !inventory:has_receiver(actor) then return end
+  if !isnumber(x) or !isnumber(y) or x != x or y != y then return end
+
+  instance_ids = stack
+  x, y = math.floor(x), math.floor(y)
+
   local instance_id = instance_ids[1]
   local item_obj = Item.find_instance_by_id(instance_id)
-  local inventory = Inventories.find(inventory_id)
 
   --- Called on the server when a player asks to move items to an inventory slot by
   -- dragging them, before anything is moved. The target can be the inventory the items
-  -- are in or another one.
+  -- are in or another one. Requests that name items or inventories that do not exist,
+  -- the same item twice, items from more than one inventory, an inventory that is not
+  -- open for the player or a slot that is not a number are dropped before the hook is run.
   -- @param actor [Player The player moving the items]
   -- @param item_obj [Item The first of the items that are being moved]
   -- @param instance_ids [List<Number> Instance ids of the items: one item, or several
@@ -422,15 +508,15 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
     return
   end
 
-  if inventory_id == item_obj.inventory_id then
-    inventory:move_stack(instance_ids, x, y, was_rotated)
-  else
-    local old_inventory = Inventories.find(item_obj.inventory_id)
+  local success
 
+  if inventory_id == item_obj.inventory_id then
+    success = inventory:move_stack(instance_ids, x, y, was_rotated)
+  else
     if #instance_ids == 1 then
-      old_inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
+      success = old_inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
     else
-      old_inventory:transfer_stack(instance_ids, inventory, x, y, was_rotated)
+      success = old_inventory:transfer_stack(instance_ids, inventory, x, y, was_rotated)
     end
 
     old_inventory:sync()
@@ -438,45 +524,66 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
 
   inventory:sync()
 
-  --- Called on the server after a request of a player to move items to an inventory slot
-  -- has been handled and the inventories have been synchronized. It is run whether or
-  -- not the items could actually be moved, but not when `PlayerCanMoveItem` has prevented
-  -- the move.
+  if !success then return end
+
+  --- Called on the server after a player has moved items to an inventory slot by dragging
+  -- them and the inventories have been synchronized. It is not run when the items could
+  -- not be moved or when `PlayerCanMoveItem` has prevented the move.
   -- @param actor [Player The player who moved the items]
   -- @param item_obj [Item The first of the items]
   -- @param instance_ids [List<Number> Instance ids of the items]
-  -- @param inventory_id [Number Id of the inventory the items were being moved to]
+  -- @param inventory_id [Number Id of the inventory the items were moved to]
   -- @param x [Number Column of the target slot]
   -- @param y [Number Row of the target slot]
   hook.Run('OnItemMoved', actor, item_obj, instance_ids, inventory_id, x, y)
 end)
 
 Cable.receive('fl_item_drop', function(actor, instance_ids)
+  local inventory, stack = find_requested_stack(actor, instance_ids)
+
+  if !inventory then return end
+
   --- Called on the server when a player drops items by dragging them out of an
   -- inventory panel. The hook is what performs the drop: the Inventory plugin handles it
   -- by taking the items out of their inventory and spawning them in front of the player.
-  -- The Items plugin runs the same hook with a single instance id instead of a list
-  -- when a player uses the drop option of an item's menu, so a handler has to accept
-  -- both.
+  -- Requests that name items that do not exist, the same item twice, items from more
+  -- than one inventory, or an inventory that is not open for the player are dropped
+  -- before the hook is run. The Items plugin runs the same hook with a single instance id
+  -- instead of a list when a player uses the drop option of an item's menu, so a handler
+  -- has to accept both.
   -- @param actor [Player The player dropping the items]
   -- @param instance_ids [List<Number> Instance ids of the items, all from one inventory]
-  hook.Run('PlayerDropItem', actor, instance_ids)
+  hook.Run('PlayerDropItem', actor, stack)
 end)
 
 Cable.receive('fl_inventory_close', function(actor, inventory_ids)
+  if !istable(inventory_ids) then return end
+
+  local closed_inventory
+
   for k, v in pairs(inventory_ids) do
     local inventory = Inventories.find(v)
-    inventory:remove_receiver(actor)
-    inventory:sync()
+
+    if inventory and inventory:has_receiver(actor) then
+      inventory:remove_receiver(actor)
+      inventory:sync()
+
+      closed_inventory = closed_inventory or inventory
+    end
   end
+
+  if !closed_inventory then return end
 
   --- Called on the server when a player has closed the inventories that were opened for
   -- them, such as a container or the inventories of another player. The player has been
   -- removed from the receivers of every closed inventory by now. The hook is run once
-  -- per request, with the first of the closed inventories.
+  -- per request, with the first of the closed inventories; inventories that do not exist
+  -- or were not open for the player are skipped, and the hook is not run when none is left.
+  -- `Player:close_inventories` runs the same hook when the server closes inventories for
+  -- a player, which it does by itself once the player is no longer entitled to them.
   -- @param actor [Player The player who closed the inventories]
   -- @param inventory [Inventory The first of the inventories that were closed]
-  hook.Run('OnInventoryClosed', actor, Inventories.find(inventory_ids[1]))
+  hook.Run('OnInventoryClosed', actor, closed_inventory)
 end)
 
 Cable.receive('fl_character_desc_change', function(actor, text)

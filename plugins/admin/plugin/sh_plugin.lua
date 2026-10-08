@@ -215,14 +215,14 @@ function Bolt:RegisterPermissions()
     'Permission editor',
     'Grants access to the permission editor.',
     'permission.categories.player_management',
-    'administrator'
+    'admin'
   )
   Bolt:register_permission(
     'manage_configuration',
     'Configuration',
     'Grants access to configuration.',
     'permission.categories.configuration',
-    'administrator'
+    'admin'
   )
 
   Bolt:register_permission(
@@ -244,6 +244,6 @@ function Bolt:RegisterPermissions()
     'Super Admin access',
     'General access for superadmins. Other addons will identify the player as superadmin.',
     'permission.categories.compatibility',
-    'administrator'
+    'admin'
   )
 end

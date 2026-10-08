@@ -193,7 +193,7 @@ function extends(parent_class)
     table.safe_merge(obj, copy)
 
     obj.parent = parent_class
-    obj.BaseClass = obj.parent_class
+    obj.BaseClass = obj.parent
 
     --- Called when a class is given a base class with `extends`, after the base class has been
     -- copied into it.

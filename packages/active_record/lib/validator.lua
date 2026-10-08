@@ -5,8 +5,9 @@
 --
 -- The built-in validations are `presence` (the value is not nil), `min_length` and
 -- `max_length` (length of a string in UTF-8 characters), `format` (the value matches a
--- Lua pattern) and `uniqueness` (no row of the table holds the same value, ignoring
--- case). More can be registered with `add`.
+-- Lua pattern) and `uniqueness` (no other row of the table holds the same value, ignoring
+-- case unless `case_sensitive = true` is given along with it; a nil value always passes,
+-- which leaves requiring a value to `presence`). More can be registered with `add`.
 
 class 'ActiveRecord::Validator'
 
@@ -158,23 +159,27 @@ ActiveRecord.Validator:add('format', function(model, column, val, opts, success_
 end)
 
 ActiveRecord.Validator:add('uniqueness', function(model, column, val, opts, success_callback, error_callback)
-  if model[column] != nil then
-    local m = nil
+  if model[column] == nil then
+    success_callback(model)
 
-    if !opts.case_sensitive then
-      m = model:where('lower('..column..') = ?', string.lower(tostring(model[column])))
-    else
-      m = model:where(column, tostring(model[column]))
-    end
-
-    if m then
-      m:get(function()
-        error_callback(model, column, 'uniqueness')
-      end):rescue(function()
-        success_callback(model)
-      end)
-    else
-      error_callback(model, column, 'uniqueness')
-    end
+    return
   end
+
+  local m = nil
+
+  if !opts.case_sensitive then
+    m = model:where('lower('..column..') = ?', string.lower(tostring(model[column])))
+  else
+    m = model:where(column, tostring(model[column]))
+  end
+
+  if model.id then
+    m:where('id != ?', model.id)
+  end
+
+  m:get(function()
+    error_callback(model, column, 'uniqueness')
+  end):rescue(function()
+    success_callback(model)
+  end)
 end)

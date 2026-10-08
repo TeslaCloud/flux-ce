@@ -1,6 +1,6 @@
 --- Shared Flashlight makes the light of a player's flashlight visible to other players, by
 -- attaching a projected light to the player whenever the `PlayerSwitchedFlashlight` hook is
--- run for them.
+-- run for them, which the gamemode does when a player toggles their flashlight.
 -- The plugin is experimental: it only does anything with `experimental` turned on in the
 -- settings.
 

@@ -124,8 +124,8 @@ function Flux.Lang:get_plural(language, phrase, count)
   return translated
 end
 
---- Converts an amount of seconds into human readable text, such as '2 hours from now'.
--- @param time [Number/String seconds from now]
+--- Converts an amount of seconds into a human readable duration, such as 'about 2 hours'.
+-- @param time [Number/String amount of seconds]
 -- @param lang=nil [String language code, the current language by default]
 -- @return [String]
 function Flux.Lang:nice_time(time, lang)
@@ -135,7 +135,9 @@ function Flux.Lang:nice_time(time, lang)
     time = tonumber(time) or 0
   end
 
-  return Time:format_nice(Time:nice_from_now(DateTime:now() + Time:seconds(time)), lang)
+  local suffix, from_now, amount = Time:seconds(time):nice()
+
+  return Time:format_nice(suffix, '', amount, lang)
 end
 
 --- Translates a phrase and puts it in a grammatical case using the rules of the specified
@@ -153,7 +155,7 @@ function Flux.Lang:get_case(language, phrase, case)
   if !lang_table then return translated end
 
   if lang_table.get_case then
-    return lang_table:get_case(phrase, count, translated)
+    return lang_table:get_case(phrase, case, translated)
   end
 
   return translated

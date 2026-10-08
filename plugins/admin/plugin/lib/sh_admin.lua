@@ -172,7 +172,7 @@ function Bolt:can(actor, action, object)
   local temp_perm = actor:get_temp_permission(action)
 
   if temp_perm then
-    if time_from_timestamp(temp_perm.expires) > os.time() then
+    if temp_perm.expires > os.time() then
       local value = temp_perm.value
 
       if value == PERM_ALLOW then
@@ -219,8 +219,10 @@ function Bolt:group_exists(id)
   return self:find_group(id)
 end
 
---- Checks whether a player's role has enough immunity to act on another player. Passes when
--- either player is invalid or either role has no numeric immunity.
+--- Checks whether a player's role has enough immunity to act on another player. A player may
+-- always act on themselves, and a root player on anyone. Also passes when either player is
+-- invalid or a registered role has no numeric immunity. A role ID that is not registered
+-- counts as lower than every registered role.
 -- @param actor [Player the player performing the action]
 -- @param target [Player the player being acted on]
 -- @param can_equal=false [Boolean also pass when both roles have the same immunity]
@@ -230,18 +232,24 @@ function Bolt:check_immunity(actor, target, can_equal)
     return true
   end
 
+  if actor == target or actor:is_root() then
+    return true
+  end
+
   local group1 = self:find_group(actor:GetUserGroup())
   local group2 = self:find_group(target:GetUserGroup())
+  local immunity1 = !group1 and -math.huge or group1.immunity
+  local immunity2 = !group2 and -math.huge or group2.immunity
 
-  if !isnumber(group1.immunity) or !isnumber(group2.immunity) then
+  if !isnumber(immunity1) or !isnumber(immunity2) then
     return true
   end
 
-  if group1.immunity > group2.immunity then
+  if immunity1 > immunity2 then
     return true
   end
 
-  if can_equal and group1.immunity == group2.immunity then
+  if can_equal and immunity1 == immunity2 then
     return true
   end
 
@@ -327,7 +335,8 @@ if SERVER then
     self:add_ban(steam_id, name, os.time() + duration, duration, reason)
   end
 
-  --- Deletes the ban record of a SteamID from the database.
+  --- Deletes the ban record of a SteamID from the database and from the ban cache, so that
+  -- the player can connect again right away and a later ban gets a record of its own.
   -- @param steam_id [String]
   -- @return [Boolean whether a ban record was found and deleted, Map the deleted record's
   --   column values (only when found)]
@@ -337,6 +346,8 @@ if SERVER then
     if obj then
       local dump = obj:dump()
       obj:destroy()
+
+      bans[steam_id] = nil
 
       return true, dump
     end

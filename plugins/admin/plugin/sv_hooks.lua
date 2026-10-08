@@ -3,8 +3,9 @@
 -- and voice chat, expiry of temporary permissions, and giving or stripping the tool gun and
 -- the physgun as permissions change.
 
---- Checks connecting players against the ban cache. A timed ban that passes the expiry check
--- is lifted and the player let in; any other ban rejects the connection with its reason.
+--- Checks connecting players against the ban cache. A timed ban that has expired is lifted
+-- and the player let in; any other ban rejects the connection with its reason, including
+-- a ban whose end time cannot be read.
 -- @param steam_id64 [String 64-bit SteamID of the connecting player]
 -- @param ip [String]
 -- @param sv_pass [String server password]
@@ -24,9 +25,11 @@ function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   -- @return [Boolean Return false to ignore the ban, so that the admin plugin neither
   --   rejects the player nor lifts the ban]
   if entry and Plugin.call('ShouldCheckBan', steam_id, ip, name) != false then
-    if entry.duration != 0 and entry.unban_time >= os.time() and
-       --- Called on the server when the admin plugin is about to lift the temporary ban of
-       -- a connecting player and let them in.
+    local unban_time = time_from_timestamp(entry.unban_time)
+
+    if tonumber(entry.duration) != 0 and unban_time and unban_time <= os.time() and
+       --- Called on the server when the temporary ban of a connecting player has expired
+       -- and the admin plugin is about to lift it and let them in.
        -- @param steam_id [String SteamID of the connecting player]
        -- @param ip [String Address the player connects from]
        -- @param name [String Name of the connecting player]
@@ -78,11 +81,12 @@ function Bolt:ActiveRecordReady()
     for k, v in ipairs(objects) do
       self:record_ban(v.steam_id, v)
     end
-  end)
+  end):fetch()
 end
 
 --- Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
--- root_steamid config root admins, networks stored permissions and logs the connection.
+-- root_steamid config root admins, networks stored permissions, shows vanished and observing
+-- admins to players with the 'moderate' permission and logs the connection.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function Bolt:PlayerRestored(actor, record)
@@ -122,31 +126,42 @@ function Bolt:PlayerRestored(actor, record)
     for k, v in pairs(record.temp_permissions) do
       perm_table[v.permission_id] = {
         value = v.object,
-        expires = time_from_timestamp(v.expires)
+        expires = time_from_timestamp(v.expires) or 0
       }
     end
 
-    actor:set_permissions(perm_table)
+    actor:set_temp_permissions(perm_table)
+  end
+
+  if actor:can('moderate') then
+    for k, v in player.Iterator() do
+      if v.is_vanished or v:get_nv('observer') then
+        v:prevent_transmit(actor, false)
+      end
+    end
   end
 
   Log:notify(actor:name()..' has connected to the server.', { action = 'player_events' })
 end
 
---- Checks role immunity for commands that target players, by way of Bolt:check_immunity.
+--- Checks role immunity for commands that target players, by way of Bolt:check_immunity:
+-- the caller's role must have a higher immunity than the target's, except that callers may
+-- always target themselves and root players may target anyone.
 -- @param actor [Player the caller]
 -- @param target [Player the player being targeted]
 -- @param can_equal=false [Boolean also pass when both roles have the same immunity]
 -- @return [Boolean false if the caller may not target that player]
 function Bolt:CommandCheckImmunity(actor, target, can_equal)
-  return self:check_immunity(actor, v, can_equal)
+  return self:check_immunity(actor, target, can_equal)
 end
 
---- Hides vanished and observing admins from a newly connected player, unless that player has
--- the 'moderator' permission.
+--- Hides vanished and observing admins from a newly connected player. The player's role is
+-- not known yet at this point; Bolt:PlayerRestored shows them again if the player turns out
+-- to have the 'moderate' permission.
 -- @param actor [Player the player that just connected]
 function Bolt:PlayerInitialSpawn(actor)
   for k, v in player.Iterator() do
-    if (v.is_vanished or v:get_nv('observer')) and !actor:can('moderator') then
+    if v.is_vanished or v:get_nv('observer') then
       v:prevent_transmit(actor, true)
     end
   end
@@ -156,7 +171,7 @@ end
 -- @param actor [Player]
 function Bolt:PlayerOneMinute(actor)
   for k, v in pairs(actor:get_temp_permissions()) do
-    if time_from_timestamp(v.expires) <= os.time() then
+    if v.expires <= os.time() then
       self:delete_temp_permission(actor, k)
     end
   end
@@ -182,18 +197,23 @@ function Bolt:PlayerPermissionChanged(target, perm_id, value)
   end
 end
 
---- Gives or strips the tool gun and the physgun to match the player's new role.
+--- Gives or strips the tool gun and the physgun after the player's role has changed, going
+-- by the 'toolgun' and 'physgun' permissions the player has now (role, individual and
+-- temporary permissions together). Does nothing while the player is dead; they get the tools
+-- they are allowed when they spawn.
 -- @param target [Player]
--- @param group [Role the player's new role]
+-- @param group [Role the player's new role, nil if its ID is not registered]
 -- @param old_group [Role the player's previous role]
 function Bolt:PlayerUserGroupChanged(target, group, old_group)
-  if group:can('toolgun') then
+  if !target:Alive() then return end
+
+  if target:can('toolgun') then
     target:Give('gmod_tool')
   else
     target:StripWeapon('gmod_tool')
   end
 
-  if group:can('physgun') then
+  if target:can('physgun') then
     target:Give('weapon_physgun')
   else
     target:StripWeapon('weapon_physgun')

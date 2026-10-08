@@ -1,6 +1,5 @@
 --- Shared hooks of the Inventory plugin: turns the slot binds into the `PlayerSelectSlot`
--- hook, which selects the weapon of the item in that hotbar slot or uses the item, and
--- answers the `GetInventorySize` hook for the pockets.
+-- hook, which selects the weapon of the item in that hotbar slot or uses the item.
 
 --- Calls the 'PlayerSelectSlot' plugin hook when the player presses one of the slot binds.
 -- @param client [Player]
@@ -72,26 +71,5 @@ function Inventories:PlayerSelectSlot(client, slot)
 
       client.next_slot_click = cur_time + 0.2
     end
-  end
-end
-
---- Calculates the size of the pockets inventory based on the items in it.
--- @param owner [Player]
--- @param inv_type [String]
--- @return [Number width, Number height; nothing for any inventory other than pockets]
-function Inventories:GetInventorySize(owner, inv_type)
-  if inv_type == 'pockets' then
-    local item_count = 1
-    local max_x = 0
-
-    for k, v in pairs(owner:get_items(inv_type)) do
-      local item_obj = Item.find_instance_by_id(v)
-
-      if item_obj and item_obj.inventory_type == 'pockets' then
-        max_x = math.max(max_x, item_obj.slot_id[2])
-      end
-    end
-
-    return max_x + 1, Config.get('pockets_height')
   end
 end

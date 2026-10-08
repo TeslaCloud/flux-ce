@@ -54,7 +54,7 @@ end
 -- @param str [String]
 -- @return [String]
 function ActiveRecord.Adapters.Sqlite:unescape(str)
-  return text:gsub("''", "'")
+  return str:gsub("''", "'")
 end
 
 --- Runs a raw SQL query on the built-in SQLite database. Always blocks until the query

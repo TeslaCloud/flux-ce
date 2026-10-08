@@ -1,7 +1,7 @@
 --- The Picture Placer tool. Left click places the picture at the given URL (a png or jpg
 -- image) on the surface the owner is looking at, with the chosen width, height and fade
 -- offset; right click removes the picture the owner is looking at. The tool requires the
--- `pictures` permission; placing also checks `textadd` and removing `textremove`.
+-- `pictures` permission, which placing and removing check as well.
 
 TOOL.Category = 'Flux'
 TOOL.Name = 'Picture Placer'
@@ -18,13 +18,13 @@ TOOL.ClientConVar['fade'] = '0'
 -- The URL must end with png, jpg or jpeg.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the picture was placed (always true clientside), false if the
---   URL is invalid, nil if the owner lacks the 'textadd' permission]
+--   URL is invalid, nil if the owner lacks the 'pictures' permission]
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
   local owner = self:GetOwner()
 
-  if !IsValid(owner) or !owner:can('textadd') then return end
+  if !IsValid(owner) or !owner:can('pictures') then return end
 
   local url = self:GetClientInfo('url')
   local width = self:GetClientNumber('width')

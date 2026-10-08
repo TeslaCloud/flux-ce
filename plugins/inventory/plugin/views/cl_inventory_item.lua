@@ -284,7 +284,7 @@ function PANEL:rebuild()
     end
 
     if self.item_data.adjust_icon_panel then
-      self.item_data.adjust_icon_panel(self.icon_panel, self)
+      self.item_data:adjust_icon_panel(self.icon_panel, self)
     end
   else
     if IsValid(self.model_panel) then

@@ -1,0 +1,50 @@
+# Development image: the dedicated server and the binary modules, without Flux
+# and without a schema. Both are mounted from your checkouts by
+# docker-compose.yml, which is also where the usage is described.
+#
+# Everything up to and including the binary modules is the same as in the
+# Dockerfile, so the two images share those layers and the server is only
+# downloaded once.
+FROM alpine/git AS deps
+RUN git clone --depth 1 https://github.com/TeslaCloud/flux-dependencies.git /deps
+
+FROM steamcmd/steamcmd:debian-trixie
+
+# The first user gets the ID 1000. Files that the server writes into the mounted
+# checkouts belong to that ID on the host as well.
+RUN useradd --create-home --shell /bin/bash steam
+
+USER steam
+ENV USER=steam HOME=/home/steam
+WORKDIR /home/steam/flux_server
+
+# Let steamcmd update itself first. Running the download right after the
+# self-update tends to fail with "Missing configuration".
+RUN steamcmd +quit
+
+# Flux only ships 64-bit modules, so the server has to come from the x86-64 branch.
+# The download is resumed on failure, which happens from time to time.
+RUN attempt=0; until steamcmd +force_install_dir /home/steam/flux_server +login anonymous +app_update 4020 -beta x86-64 validate +quit; do \
+      attempt=$((attempt + 1)); [ "$attempt" -lt 5 ] || exit 1; sleep 10; \
+    done
+
+# Put the binary modules from the dependencies repo on top of the server files.
+COPY --from=deps --chown=steam:steam /deps/garrysmod garrysmod
+
+# Create the mount points of docker-compose.yml as the "steam" user, since named
+# volumes take over the owner of the folder they are first mounted on. "_flux" is
+# where Flux writes generated files, it cannot create that folder on first boot.
+RUN mkdir -p garrysmod/gamemodes/flux garrysmod/lua/_flux garrysmod/settings/flux \
+      garrysmod/data steam_cache /home/steam/sqlite /home/steam/flux_config
+
+# The server keeps its SQLite database in garrysmod/sv.db. The link moves it into
+# a folder of its own, which can be mounted from the host without the file having
+# to exist beforehand.
+RUN ln -s /home/steam/sqlite/sv.db garrysmod/sv.db
+
+COPY --chown=steam:steam --chmod=755 docker/entrypoint.sh /home/steam/entrypoint.sh
+
+EXPOSE 27015/udp 27015/tcp
+
+ENTRYPOINT ["/home/steam/entrypoint.sh"]
+CMD ["+map", "gm_construct", "+maxplayers", "16", "-tickrate", "30"]

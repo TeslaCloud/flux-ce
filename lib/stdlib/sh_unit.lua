@@ -25,7 +25,7 @@ end
 -- @param n [Number amount of millimeters]
 -- @return [Number Source Engine units]
 function Unit:millimeter(n)
-  return n * inches_in_cm
+  return n * inches_in_mm
 end
 
 --- Converts a number of centimeters to Source Engine units.

@@ -10,8 +10,8 @@
 -- `max_stack`; `pocket_size` (true if the item fits into pockets); `background_color`
 -- and `special_color` (background and outline of its inventory slot); `icon_data`,
 -- `icon_material` and `icon_model` (how its inventory icon is rendered); `use_text`,
--- `take_text`, `drop_text`, `use_icon` and `take_icon` (options of its menu); and `data`
--- (default custom data, read and written with `ItemBase:get_data` and
+-- `take_text`, `drop_text`, `use_icon`, `take_icon` and `drop_icon` (options of its menu);
+-- and `data` (default custom data, read and written with `ItemBase:get_data` and
 -- `ItemBase:set_data`).
 --
 -- Callbacks an item can define. Those of the first group are called on the server:
@@ -24,8 +24,8 @@
 -- - `on_loadout(owner)` and `on_save(owner)`: the player that has the item has spawned,
 --   or their character is about to be saved.
 -- - `can_transfer(inventory, x, y)` and `can_move(inventory, x, y)`: the item is about
---   to be moved to another inventory or inside of its inventory; return false, and
---   optionally an error phrase, to prevent it.
+--   to be moved to another inventory (or picked up into one) or inside of its inventory;
+--   return false, and optionally an error phrase, to prevent it.
 -- - `on_transfer(new_inventory, old_inventory)`: the item is about to change its inventory.
 --
 -- And on the client:
@@ -209,6 +209,33 @@ function ItemBase:add_button(name, data)
   self.custom_buttons[name] = data
 end
 
+--- Checks whether clients may request a menu action of the item: 'on_take' and 'on_drop'
+-- always, 'on_use' if the item has an on_use callback, and the callbacks of the item's
+-- custom buttons. The server ignores requests for anything else, so that a client cannot
+-- call arbitrary methods of the item.
+-- @param act [String name of the action]
+-- @return [Boolean]
+-- @see [ItemBase#add_button]
+function ItemBase:has_menu_action(act)
+  if act == 'on_take' or act == 'on_drop' then
+    return true
+  end
+
+  if act == 'on_use' then
+    return self.on_use != nil
+  end
+
+  if self.custom_buttons then
+    for k, v in pairs(self.custom_buttons) do
+      if v.callback == act then
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
 --- Sets the sound that is emitted when a menu action is performed on the item.
 -- @param act [String name of the action, e.g. 'on_drop']
 -- @param sound_path [String path to the sound]
@@ -287,8 +314,8 @@ if SERVER then
 
   --- Performs a menu action on the item on behalf of the player.
   -- Runs the 'PlayerCanUseItem' hook and then the hook of the action ('PlayerTakeItem',
-  -- 'PlayerUseItem' or 'PlayerDropItem'). Every action except 'on_use' and 'on_take' also calls
-  -- the item's method of the same name with the player and the extra arguments.
+  -- 'PlayerUseItem' or 'PlayerDropItem'). Every action except 'on_use', 'on_take' and 'on_drop'
+  -- also calls the item's method of the same name with the player and the extra arguments.
   -- Runs the 'PlayerUsedItem' hook when done.
   -- ```
   -- -- Makes the player pick up the item into their hotbar.
@@ -346,14 +373,13 @@ if SERVER then
       -- panel.
       -- @param actor [Player The player dropping the item]
       -- @param instance_id [Number Instance id of the item]
-      -- @return [Any Any value other than nil ends the action right there: the `on_drop`
-      --   callback is not called by the action, the action sound is not played and
-      --   `PlayerUsedItem` is not run]
+      -- @return [Any Any value other than nil ends the action right there: the action
+      --   sound is not played and `PlayerUsedItem` is not run]
       if hook.Run('PlayerDropItem', actor, self.instance_id) != nil then return end
     end
 
     if self[act] then
-      if act != 'on_take' and act != 'on_use' and act != 'on_take' then
+      if act != 'on_take' and act != 'on_use' and act != 'on_drop' then
         local success, exception = pcall(self[act], self, actor, ...)
 
         if !success then
@@ -379,12 +405,13 @@ if SERVER then
   Cable.receive('fl_items_menu_action', function(actor, instance_id, action, ...)
     local item_obj = Item.find_instance_by_id(instance_id)
 
-    if !item_obj then return end
+    if !item_obj or !item_obj:has_menu_action(action) then return end
 
     item_obj:do_menu_action(action, actor, ...)
   end)
 else
   --- Asks the server to perform a menu action on the item on behalf of the local player.
+  -- The server ignores the actions that ItemBase:has_menu_action does not allow.
   -- @param act [String 'on_use', 'on_take', 'on_drop' or the callback of a custom button]
   -- @param ... [Vararg extra arguments to send to the server]
   function ItemBase:do_menu_action(act, ...)

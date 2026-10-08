@@ -4,7 +4,7 @@
 CMD.name = 'Demote'
 CMD.description = 'command.demote.description'
 CMD.syntax = 'command.demote.syntax'
-CMD.permission = 'administrator'
+CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.immunity = true

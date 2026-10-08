@@ -1,6 +1,7 @@
 --- Server side of the Factions plugin: keeps the team and the networked faction of a player in
--- line with their character, stores the faction on new characters and requires one when a
--- character is created, and networks whitelists.
+-- line with their character, stores the faction on new characters, checks the faction, the
+-- whitelist, the gender and the model of a character that is being created against the
+-- faction's definition, and networks whitelists.
 
 --- Sets the player's team from their faction and puts bots into a random faction.
 -- @param actor [Player]
@@ -32,7 +33,9 @@ function Factions:OnActiveCharacterSet(owner, char)
 end
 
 --- Copies the faction, rank and class from the creation data to the new character, using
--- the 'player' faction and rank 1 when they are missing.
+-- the 'player' faction and rank 1 when they are missing. Creation requests of clients never
+-- carry a rank or a class (see Factions:PreCreateCharacter), so their characters start at
+-- rank 1 without a class.
 -- @param owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
@@ -66,24 +69,52 @@ function Factions:CharacterGenderChanged(owner, char, new_gender, old_gender)
   Characters.set_model(owner, owner:get_faction():get_random_model(owner))
 end
 
---- Generates a name from the faction's name template when the creation data has no name.
+--- Cleans up the creation data a client has sent: discards the rank and the class, which a
+-- client has no say in, and generates a name from the faction's name template when the data
+-- has no name or the faction does not let players pick one.
 -- @param actor [Player]
 -- @param data [Map character creation data, modified in place]
 function Factions:PreCreateCharacter(actor, data)
+  data.rank = nil
+  data.char_class = nil
+
   local faction_table = Factions.find_by_id(data.faction)
 
-  if faction_table and !string.presence(data.name) then
-    -- Try to generate the name if one is not present
-    data.name = faction_table:generate_name(actor, data.rank or 1)
+  if faction_table and (!faction_table.has_name or !string.presence(data.name)) then
+    data.name = faction_table:generate_name(actor, 1)
   end
 end
 
---- Rejects character creation when no faction was chosen.
+--- Rejects character creation when the chosen faction is not registered or requires a
+-- whitelist that the player does not have, when the gender does not fit the faction (a
+-- faction with genders needs a male or female character, any other faction a genderless
+-- one), or when the model is not one of the faction's models for that gender.
 -- @param actor [Player]
 -- @param data [Map character creation data]
--- @return [Number CHAR_ERR_FACTION when the data has no faction, otherwise nil]
+-- @return [Number CHAR_ERR_FACTION, CHAR_ERR_GENDER or CHAR_ERR_MODEL when the data is
+--   rejected, otherwise nil]
 function Factions:PlayerCreateCharacter(actor, data)
-  if !data.faction then
+  local faction_table = isstring(data.faction) and Factions.find_by_id(data.faction)
+
+  if !faction_table then
     return CHAR_ERR_FACTION
+  end
+
+  if faction_table.whitelisted and !actor:has_whitelist(data.faction) then
+    return CHAR_ERR_FACTION
+  end
+
+  local genderless = data.gender == CHAR_GENDER_NONE
+
+  if genderless == tobool(faction_table.has_gender) then
+    return CHAR_ERR_GENDER
+  end
+
+  local gender_models = faction_table:get_gender_models(
+    genderless and 'universal' or data.gender == CHAR_GENDER_FEMALE and 'female' or 'male'
+  )
+
+  if !gender_models or !table.HasValue(gender_models, data.model) then
+    return CHAR_ERR_MODEL
   end
 end

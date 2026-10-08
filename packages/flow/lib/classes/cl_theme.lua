@@ -26,7 +26,7 @@ ThemeBase.options   = {}
 ThemeBase.panels    = {}
 ThemeBase.fonts     = {}
 ThemeBase.skin      = {}
-Theme.should_reload = true
+ThemeBase.should_reload = true
 
 --- Creates a new theme. The ID of the theme is derived from its name.
 -- @param name='Unknown' [String]

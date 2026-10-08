@@ -1,16 +1,21 @@
 --- Server side of the admin plugin: removal of temporary permissions, and the network
 -- receivers behind the admin panel, which set a player's role, permissions and temporary
--- permissions and change config values after checking the sender's own permission.
+-- permissions, remove temporary permissions and change config values after checking the
+-- sender's own permission.
 
---- Removes a temporary permission from a player, destroying its database record and updating
--- the networked table.
+--- Removes a temporary permission from a player, destroying its database record, taking it
+-- off the player's record and updating the networked table.
 -- @param target [Player]
 -- @param perm_id [String permission ID]
 function Bolt:delete_temp_permission(target, perm_id)
-  if target.record.temp_permissions then
-    for k, v in pairs(target.record.temp_permissions) do
-      if v.permission_id == perm_id then
-        v:destroy()
+  local records = target.record.temp_permissions
+
+  if records then
+    for i = #records, 1, -1 do
+      if records[i].permission_id == perm_id then
+        records[i]:destroy()
+
+        table.remove(records, i)
       end
     end
   end
@@ -44,6 +49,12 @@ Cable.receive('fl_temp_permission', function(actor, target, perm_id, value, dura
   if !actor:can('manage_permissions') then return end
 
   target:set_temp_permission(perm_id, value, duration)
+end)
+
+Cable.receive('fl_delete_temp_permission', function(actor, target, perm_id)
+  if !actor:can('manage_permissions') then return end
+
+  Bolt:delete_temp_permission(target, perm_id)
 end)
 
 Cable.receive('fl_config_change', function(actor, key, value)

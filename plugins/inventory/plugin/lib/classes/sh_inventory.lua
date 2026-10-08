@@ -777,16 +777,18 @@ if SERVER then
     if !item_obj then return false, 'error.inventory.invalid_item' end
 
     --- Called on the server before an item is transferred from one inventory to another.
-    -- The Inventory plugin uses it to enforce what equipment slots, pockets, container
-    -- items and disabled inventories accept, and to ask the `can_transfer` callback of the
-    -- item.
+    -- The Inventory plugin also runs it, without a target slot, before a player picks an
+    -- item up from the world into one of their inventories. The Inventory plugin uses it
+    -- to enforce what equipment slots, pockets, container items and disabled inventories
+    -- accept, and to ask the `can_transfer` callback of the item.
     -- @param item_obj [Item The item that is being transferred]
     -- @param inventory [Inventory The inventory the item is being transferred to]
     -- @param x [Number Column of the target slot; a free position is looked for when it is
     --   nil or out of bounds]
     -- @param y [Number Row of the target slot]
     -- @return [Boolean Return false to prevent the transfer, String Error phrase that
-    --   `Inventory:transfer_item` then returns to its caller]
+    --   `Inventory:transfer_item` then returns to its caller, or that the player who picks
+    --   the item up is notified with]
     local success, error_text = hook.Run('CanItemTransfer', item_obj, inventory, x, y)
 
     if success == false then
@@ -824,8 +826,8 @@ if SERVER then
 
     --- Called on the server right before an item changes its inventory.
     -- Besides a transfer between two inventories, as here, the Inventory plugin runs it
-    -- when a player picks an item up from the world (without `old_inventory`, and before
-    -- it is known whether the item fits) and when an item is dropped or removed after
+    -- when a player picks an item up from the world (without `old_inventory`, and only
+    -- if the item fits) and when an item is dropped or removed after
     -- use (with nil as `new_inventory`). The Inventory plugin uses it to call the
     -- `on_transfer` callback of the item, which is how equipable items get equipped and
     -- unequipped.
@@ -933,9 +935,11 @@ if SERVER then
     return self.receivers
   end
 
-  --- Add a new receiver to the inventory.
+  --- Add a new receiver to the inventory. Does nothing if the player is a receiver already.
   -- @param receiver [Player]
   function Inventory:add_receiver(receiver)
+    if self:has_receiver(receiver) then return end
+
     table.insert(self.receivers, receiver)
   end
 
@@ -943,6 +947,50 @@ if SERVER then
   -- @param receiver [Player]
   function Inventory:remove_receiver(receiver)
     table.RemoveByValue(self.receivers, receiver)
+  end
+
+  --- Checks if the player currently receives the inventory data, which is the case for
+  -- their own inventories and for the inventories that have been opened for them.
+  -- @param receiver [Player]
+  -- @return [Boolean]
+  function Inventory:has_receiver(receiver)
+    return table.HasValue(self.receivers, receiver)
+  end
+
+  --- Checks whether a player is entitled to have the inventory open. The owner always is.
+  -- The inside of a container item is for whoever carries the item, or stands within reach
+  -- of it while it lies in the world. Any other inventory that belongs to an entity is for
+  -- those within reach of that entity, and an inventory without an owner is for anyone.
+  -- The server closes an inventory for the receivers that fail this check.
+  -- @param receiver [Player]
+  -- @return [Boolean]
+  -- @see [Inventories.is_in_reach]
+  function Inventory:can_be_viewed_by(receiver)
+    local owner = self.owner
+
+    if owner == receiver then
+      return true
+    end
+
+    if self.instance_id then
+      local item_obj = Item.find_instance_by_id(self.instance_id)
+
+      if !item_obj then
+        return false
+      end
+
+      if IsValid(item_obj.entity) then
+        return Inventories.is_in_reach(receiver, item_obj.entity)
+      end
+
+      return receiver:has_item_by_id(self.instance_id)
+    end
+
+    if owner != nil then
+      return Inventories.is_in_reach(receiver, owner)
+    end
+
+    return true
   end
 
   --- Send inventory data to its receivers.
@@ -970,7 +1018,7 @@ if SERVER then
     for i = 1, self:get_height() do
       for k = 1, self:get_width() do
         if !table.IsEmpty(self:get_slot(k, i)) then
-          max_x, max_y = k, i
+          max_x, max_y = math.max(max_x, k), i
         end
       end
     end
