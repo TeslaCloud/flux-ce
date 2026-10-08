@@ -1,3 +1,8 @@
+--- Time intervals: the `Time` class, its constructors for every unit of time and its
+-- human-readable formatting.
+-- The constructors are also installed into the `math` library, so that an interval can be
+-- written as `math.minutes(5)` and added to or subtracted from a `Date` or a `DateTime`.
+
 --- The DateTime class represents a time interval, not a point in time.
 -- For points in time, please use Date or DateTime.
 -- @see [Date]

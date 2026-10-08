@@ -1,3 +1,6 @@
+--- Client side of the Area Display plugin: queues a notice when the local player enters a
+-- text area and draws the queued notices on the HUD.
+
 local queue = {}
 
 --- Draws the queued text area notices at the left side of the screen

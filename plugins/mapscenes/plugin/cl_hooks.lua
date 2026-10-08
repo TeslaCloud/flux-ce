@@ -1,3 +1,6 @@
+--- Client hooks of the Mapscenes plugin: the camera that shows the mapscene points, and the
+-- markers drawn for the points while the Mapscene tool is held.
+
 --- Draws a marker, a direction line and a label for every mapscene point while the local
 -- player holds the mapscene tool and has the 'mapscenes' permission.
 function Mapscenes:RenderScreenspaceEffects()
@@ -36,6 +39,10 @@ local view = {}
 -- @param fov [Number]
 -- @return [Map view table with origin and angles, or nil if no mapscene is shown]
 function Mapscenes:CalcView(client, origin, angles, fov)
+  --- Asks whether the mapscene camera should replace the local player's view.
+  -- Called on the client on every view calculation. The Characters plugin returns true while
+  -- the intro panel or the main menu is open.
+  -- @return [Boolean Return true to show the mapscene; the view is left alone otherwise]
   if hook.Run('ShouldMapsceneRender') then
     if #self.points > 0 then
       local cur_time = CurTime()

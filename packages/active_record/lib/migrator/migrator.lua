@@ -1,3 +1,12 @@
+--- Runs a list of migrations in one direction. A migrator is created by
+-- `ActiveRecord::MigrationContext` with the direction ('up' or 'down'), the migrations
+-- that exist and an optional target version. It works out which of them have to run by
+-- comparing them with the versions stored by `ActiveRecord::SchemaMigration`, and runs
+-- each one inside of a transaction if the database supports it, storing or forgetting its
+-- version afterward. A migration that fails is rolled back and cancels the ones after it.
+--
+-- This file also loads the other parts of the migrations system.
+
 include 'migration.lua'
 include 'command_recorder.lua'
 include 'schema_migration.lua'

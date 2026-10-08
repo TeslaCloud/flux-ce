@@ -1,3 +1,6 @@
+--- Entity extensions of the admin plugin: hiding an entity from chosen players by stopping
+-- its transmission to them, which the Vanish command is built on.
+
 local ent_meta = FindMetaTable 'Entity'
 
 --- Stops or resumes networking this entity and all of its children to a player. Does nothing

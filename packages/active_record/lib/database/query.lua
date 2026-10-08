@@ -1,3 +1,14 @@
+--- A single SQL query under construction. A query is created through
+-- `ActiveRecord::Database` for one table and one type; its methods collect conditions,
+-- values, ordering and column definitions, and `execute` builds the SQL in the dialect of
+-- the current adapter and hands it over to be run. The methods return nothing, so calls
+-- are not chained. Values given to `where`, `insert` and `update` are sent to the
+-- database as bind parameters, apart from the SQL, and need no escaping.
+--
+-- 'create' and 'change' queries also get a method for every column type of the adapter
+-- (`query:string`, `query:integer` and so on) along with `timestamps` and `references`:
+-- they are the `t` that `create_table` and `change_table` hand to their callback.
+
 --[[
   mysql - 2.0.0
   A simple Database wrapper for Garry's Mod.

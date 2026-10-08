@@ -1,3 +1,5 @@
+--- The GiveItem command gives one or several players a number of items.
+
 CMD.name = 'GiveItem'
 CMD.description = 'command.giveitem.description'
 CMD.syntax = 'command.giveitem.syntax'

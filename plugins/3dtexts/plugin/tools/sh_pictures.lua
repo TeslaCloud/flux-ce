@@ -1,3 +1,8 @@
+--- The Picture Placer tool. Left click places the picture at the given URL (a png or jpg
+-- image) on the surface the owner is looking at, with the chosen width, height and fade
+-- offset; right click removes the picture the owner is looking at. The tool requires the
+-- `pictures` permission; placing also checks `textadd` and removing `textremove`.
+
 TOOL.Category = 'Flux'
 TOOL.Name = 'Picture Placer'
 TOOL.Command = nil

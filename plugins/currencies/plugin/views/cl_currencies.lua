@@ -1,3 +1,7 @@
+--- The money panel (`fl_currencies`): lists how much of every currency an entity holds, with
+-- buttons to give or drop the money of the local player, or to take money from another entity
+-- such as a container. It is created with `Currencies:create_panel`.
+
 local PANEL = {}
 
 --- Sets the default title of the panel.

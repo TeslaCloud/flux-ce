@@ -1,3 +1,9 @@
+--- Pickup Objects lets players carry light physics objects in their hands.
+-- With the fists out, secondary attack picks up the entity the player is looking at, if it is
+-- within two meters and has a mass of 25 or less, or drops the one they hold; reload drops it
+-- as well. Plugins can veto both through the `PlayerPickupObject` and `PlayerDropObject`
+-- hooks.
+
 PLUGIN:set_name('Pickup Objects')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Allows players to pick up objects.')
@@ -14,6 +20,14 @@ function PLUGIN:pickup_at_trace(actor)
   if !IsValid(actor) then return end
 
   if IsValid(actor.holding_object) then
+    --- Called on the server when a player drops the object they carry.
+    -- It is run before a drop the player asks for, which a handler can prevent, and again from
+    -- a timer once the object is found to be no longer held, for whatever reason; what
+    -- handlers return is ignored then.
+    -- @param actor [Player The player carrying the object; may no longer be valid when called
+    --   from the timer]
+    -- @param ent [Entity The object being dropped]
+    -- @return [Boolean Return false to keep the player from dropping the object]
     if hook.Run('PlayerDropObject', actor, actor.holding_object) != false then
       actor:DropObject()
       actor.holding_object = nil
@@ -29,6 +43,13 @@ function PLUGIN:pickup_at_trace(actor)
     if ent:GetPos():DistToSqr(actor:GetPos()) > max_dist then return false end
 
     if !actor.holding_object then
+      --- Asks whether a player may pick up an object with their hands.
+      -- Called on the server when the player tries to pick up the entity they are looking at
+      -- and it is close enough. The plugin's own handler denies objects with a mass over 25
+      -- and pickups during the cooldown of the player.
+      -- @param actor [Player The player picking the object up]
+      -- @param ent [Entity The object being picked up]
+      -- @return [Boolean Return false to prevent the pickup]
       if hook.Run('PlayerPickupObject', actor, ent) != false then
         actor:PickupObject(ent)
         actor.holding_object = ent

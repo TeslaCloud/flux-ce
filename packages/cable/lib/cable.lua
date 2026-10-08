@@ -1,3 +1,11 @@
+--- Cable is a thin wrapper around the net library that sends any number of values in one call.
+-- `Cable.send` writes its arguments one after another, serializing tables with SFS, and
+-- `Cable.receive` sets the handler that gets them back as regular arguments, so that there is
+-- no reading or writing of individual net types. Message names become networked strings the
+-- first time the server uses them. This file is the full source, which the server runs;
+-- clients load the minified `cable.min.lua`, and the installer of the package exposes either
+-- one as the `Cable` global.
+
 --[[
   Cable - A simple Garry's Mod net wrapper.
   2018 TeslaCloud Studios

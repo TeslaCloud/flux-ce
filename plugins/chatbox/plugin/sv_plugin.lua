@@ -1,3 +1,6 @@
+--- Server side of the Chatbox plugin: builds chat messages, decides who can hear them, sends
+-- them to the clients, and turns what players type into messages.
+
 local default_msg_data = {
   sender = nil,
   listeners = {},
@@ -31,6 +34,12 @@ end
 --   List<Vector>), see Chatbox.add_text]
 -- @return [Boolean]
 function Chatbox.can_hear(listener, message_data)
+  --- Lets plugins make a listener receive a message regardless of its radius. Called on the
+  -- server by `Chatbox.can_hear` before the radius is checked; gamemode hooks are not called.
+  -- @param listener [Player]
+  -- @param message_data [Map message data, see Chatbox.add_text]
+  -- @return [Boolean return true to let the listener receive the message. Any other value
+  --   leaves the decision to the radius check, so a handler cannot block a message]
   if Plugin.call('PlayerCanHear', listener, message_data) then
     return true
   end
@@ -142,6 +151,12 @@ function Chatbox.add_text(listeners, ...)
   for k, v in ipairs(listeners) do
     local data = message_data
 
+    --- Lets plugins change a message before it is checked against a listener and sent to them.
+    -- Called on the server once for every potential listener. All listeners share the same
+    -- table, so a change made for one of them is still in place for those that follow.
+    -- @param listener [Player the player who may receive the message]
+    -- @param message_data [Map message data: data (the pieces), sender, position, radius, size
+    --   and the other options given to Chatbox.add_text]
     hook.Run('AdjustMessageData', v, data)
 
     if Chatbox.can_hear(v, data) then
@@ -175,6 +190,12 @@ function Chatbox.message_to_string(message_data, concatenator)
       local name = ''
 
       if v:IsPlayer() then
+        --- Asks for the name to display for a player, here while a message is being turned
+        -- into a string. It is the hook behind `Player:name`; `Chatbox.compile` also runs it
+        -- on the client for the players in a message, unless the ShouldProcessPlayerName hook
+        -- returns false.
+        -- @param target [Player]
+        -- @return [String name to use instead of the name of the player]
         name = hook.Run('GetPlayerName', v) or v:name()
       else
         name = tostring(v) or v:GetClass()
@@ -198,6 +219,15 @@ end
 function Chatbox.player_say(actor, text, team_chat)
   if !IsValid(actor) then return end
 
+  --- The PlayerSay hook of GMod, run by the chatbox itself: chat typed into the chatbox is
+  -- sent through its own network message, so the engine never runs the hook. Called on the
+  -- server before the text is turned into a chat message.
+  -- @param actor [Player the speaker]
+  -- @param text [String the text as it was typed]
+  -- @param team_chat [Boolean whether the message is meant for the team chat; nil for text
+  --   typed into the chatbox, which does not send it]
+  -- @return [String text to say instead; an empty string suppresses the message, which is how
+  --   commands are kept out of the chat]
   local player_say_override = hook.Run('PlayerSay', actor, text, team_chat)
 
   if isstring(player_say_override) then
@@ -209,15 +239,42 @@ function Chatbox.player_say(actor, text, team_chat)
   text = text:strip()
 
   local message = {
+    --- Provides the icon displayed before the name of a player in what they say. Called on
+    -- the server by `Chatbox.player_say`. The Chatbox plugin's own handler supplies the
+    -- default icon.
+    -- @param actor [Player the speaker]
+    -- @param text [String the message]
+    -- @param team_chat [Boolean whether the message is meant for the team chat]
+    -- @return [Map icon piece for Chatbox.add_text; no icon is shown when nothing is returned]
     hook.Run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
+    --- Provides the color of the name of a player in what they say. Called on the server by
+    -- `Chatbox.player_say`. The Chatbox plugin's own handler supplies the team color.
+    -- @param actor [Player the speaker]
+    -- @param text [String the message]
+    -- @param team_chat [Boolean whether the message is meant for the team chat]
+    -- @return [Color color of the name; the color of the speaker's team when nothing is
+    --   returned]
     hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
     actor,
+    --- Provides the color of the text of what a player says. Called on the server by
+    -- `Chatbox.player_say`. The Chatbox plugin's own handler supplies white.
+    -- @param actor [Player the speaker]
+    -- @param text [String the message]
+    -- @param team_chat [Boolean whether the message is meant for the team chat]
+    -- @return [Color color of the text; white when nothing is returned]
     hook.Run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
     ': ',
     text,
     { sender = actor }
   }
 
+  --- Lets plugins alter or replace the message a player is about to say. Called on the server
+  -- by `Chatbox.player_say` once the default message has been put together, before it is
+  -- passed to `Chatbox.add_text`.
+  -- @param actor [Player the speaker]
+  -- @param text [String the text being said, without surrounding whitespace]
+  -- @param message [List arguments for Chatbox.add_text: the icon, the name color, the
+  --   speaker, the text color, ': ', the text and the options table; modify it in place]
   hook.Run('ChatboxAdjustPlayerSay', actor, text, message)
 
   Chatbox.add_text(nil, unpack(message))

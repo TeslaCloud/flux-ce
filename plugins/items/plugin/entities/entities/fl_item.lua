@@ -1,3 +1,9 @@
+--- The entity that represents an item instance lying in the world.
+-- `Item.spawn` creates it and ties the instance to it with `set_item`, which gives the
+-- entity the model, skin and color of the item. Pressing the use key on it briefly opens
+-- the menu of the item for the player; holding the key for half a second takes the item.
+-- On the client it draws the name and the description of the item as its target ID.
+
 AddCSLuaFile()
 
 ENT.Type = 'anim'
@@ -48,6 +54,13 @@ if SERVER then
       if CurTime() - hold_start < 0.5 then
         if IsValid(caller) and caller:IsPlayer() then
           if self.item then
+            --- Called on the server when a player briefly presses the use key on an item
+            -- entity, releasing it in under half a second. Holding the key longer takes
+            -- the item instead and does not run this hook. The Items plugin handles it
+            -- by telling the client of the player to open the menu of the item.
+            -- @param activator [Player The player who used the entity]
+            -- @param entity [Entity The `fl_item` entity]
+            -- @param item_obj [Item The item instance tied to the entity]
             hook.Run('PlayerUseItemEntity', caller, self, self.item)
           else
             Flux.dev_print('A player attempted to use an item entity without an item object tied to it!')
@@ -87,6 +100,10 @@ if SERVER then
   function ENT:set_item(item_obj)
     if !item_obj then return false end
 
+    --- Called on the server before an item instance is tied to an item entity, while the
+    -- entity still has the model, skin and color it had before.
+    -- @param entity [Entity The `fl_item` entity]
+    -- @param item_obj [Item The item instance that is about to be set]
     hook.Run('PreEntityItemSet', self, item_obj)
 
     self:SetModel(item_obj:get_model())
@@ -97,6 +114,12 @@ if SERVER then
 
     Item.network_entity_data(nil, self)
 
+    --- Called on the server after an item instance has been tied to an item entity.
+    -- The entity has the model, skin and color of the item by now, and the clients have
+    -- been told which item it represents. When the item is being spawned by `Item.spawn`,
+    -- the entity itself has not been positioned or spawned yet.
+    -- @param entity [Entity The `fl_item` entity]
+    -- @param item_obj [Item The item instance that has been set]
     hook.Run('OnEntityItemSet', self, item_obj)
   end
 else
@@ -126,6 +149,17 @@ else
     local col2 = Color(0, 0, 0, alpha)
 
     if self.item then
+      --- Called on the client every frame before the target ID of an item entity is drawn,
+      -- while the local player looks at the entity from at most 150 units away.
+      -- @param entity [Entity The `fl_item` entity]
+      -- @param item_obj [Item The item instance tied to the entity]
+      -- @param x [Number Screen x of the center of the target ID]
+      -- @param y [Number Screen y of the top of the target ID]
+      -- @param alpha [Number Opacity of the target ID from 0 to 255; it fades out past
+      --   100 units]
+      -- @param distance [Number Distance between the local player and the entity]
+      -- @return [Boolean Return false to prevent the name and the description from being
+      --   drawn; `PostDrawItemTargetID` is not run then]
       if hook.Run('PreDrawItemTargetID', self, self.item, x, y, alpha, distance) == false then
         return
       end
@@ -197,6 +231,14 @@ else
       y = y + h
     end
 
+    --- Called on the client every frame after the name and the description of an item
+    -- entity have been drawn as its target ID. Handlers can draw more lines below them.
+    -- @param entity [Entity The `fl_item` entity]
+    -- @param item_obj [Item The item instance tied to the entity]
+    -- @param x [Number Screen x of the center of the target ID]
+    -- @param y [Number Screen y right below the last line of the description]
+    -- @param alpha [Number Opacity of the target ID from 0 to 255]
+    -- @param distance [Number Distance between the local player and the entity]
     hook.Run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)
   end
 end

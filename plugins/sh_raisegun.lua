@@ -1,3 +1,13 @@
+--- Raise Weapon keeps weapons lowered until the player raises them by holding the reload key
+-- for a second.
+-- Holding the key again lowers the weapon, and so does switching weapons. A lowered weapon
+-- cannot fire and is held in a lowered pose; the physgun, gravity gun, tool gun and camera
+-- always count as raised. The state is read and changed with `Player:is_weapon_raised`,
+-- `Player:set_weapon_raised` and `Player:toggle_weapon_raised`, and plugins take part through
+-- the `CanPlayerRaiseWeapon`, `ShouldWeaponBeRaised`, `OnWeaponRaised`, `WeaponRaised`,
+-- `WeaponLowered` and `CanPlayerAttack` hooks.
+-- @module [PLUGIN]
+
 PLUGIN:set_name('Raise Weapon')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Allows weapons to be lowered and raised by holding the R key.')
@@ -70,6 +80,11 @@ if CLIENT then
   -- @param actor [Player]
   -- @param user_cmd [CUserCmd]
   function PLUGIN:StartCommand(actor, user_cmd)
+    --- Asks whether the local player may attack.
+    -- Called on the client for every user command that is built; the plugin's own handler
+    -- denies it while the weapon is lowered.
+    -- @return [Boolean Return false to strip the primary and secondary attack keys from the
+    --   command]
     if hook.Run('CanPlayerAttack') == false then
       user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2)
     end
@@ -118,6 +133,13 @@ end
 -- @param raised [Boolean whether the weapon is now raised]
 function PLUGIN:OnWeaponRaised(actor, weapon, raised)
   if IsValid(weapon) then
+    --- Called on the server when the raised state of a player's valid weapon has been set.
+    -- The plugin's own handler lets the weapon fire or blocks its fire, then runs
+    -- `WeaponRaised` or `WeaponLowered`.
+    -- @param actor [Player The player holding the weapon]
+    -- @param weapon [Weapon The active weapon of the player]
+    -- @param raised [Boolean Whether the weapon is now raised]
+    -- @param cur_time [Number CurTime() of the change]
     hook.Run('UpdateWeaponRaised', actor, weapon, raised, CurTime())
   end
 end
@@ -138,6 +160,11 @@ function PLUGIN:UpdateWeaponRaised(actor, weapon, raised, cur_time)
       weapon:OnRaised(actor, cur_time)
     end
 
+    --- Called on the server after a player's weapon has been raised and can fire again.
+    -- For the weapons that cannot be lowered (physgun, gravity gun, tool gun and camera) it is
+    -- called whichever state was set.
+    -- @param actor [Player The player holding the weapon]
+    -- @param weapon [Weapon The weapon that has been raised]
     hook.Run('WeaponRaised', actor, weapon)
   else
     weapon:SetNextPrimaryFire(cur_time + 60)
@@ -147,6 +174,10 @@ function PLUGIN:UpdateWeaponRaised(actor, weapon, raised, cur_time)
       weapon:OnLowered(actor, cur_time)
     end
 
+    --- Called on the server after a player's weapon has been lowered and its fire has been
+    -- blocked.
+    -- @param actor [Player The player holding the weapon]
+    -- @param weapon [Weapon The weapon that has been lowered]
     hook.Run('WeaponLowered', actor, weapon)
   end
 end
@@ -186,9 +217,21 @@ local player_meta = FindMetaTable('Player')
 -- @param raised [Boolean true to raise the weapon, false to lower it]
 function player_meta:set_weapon_raised(raised)
   if SERVER then
+    --- Asks whether the raised state of a player's weapon may be changed.
+    -- Called on the server by `Player:set_weapon_raised`, for lowering as well as for raising.
+    -- @param actor [Player The player holding the weapon]
+    -- @param raised [Boolean True if the weapon is about to be raised and false if it is about
+    --   to be lowered]
+    -- @return [Boolean Return false to leave the weapon as it is]
     if hook.Run('CanPlayerRaiseWeapon', self, raised) != false then
       self:SetDTBool(BOOL_WEAPON_RAISED, raised)
 
+      --- Called on the server after the raised state of a player's weapon has been set.
+      -- The gamemode plays the raise or lower gesture from it, and the plugin runs
+      -- `UpdateWeaponRaised`.
+      -- @param actor [Player The player holding the weapon]
+      -- @param weapon [Weapon The active weapon of the player, which may not be valid]
+      -- @param raised [Boolean Whether the weapon is now raised]
       hook.Run('OnWeaponRaised', self, self:GetActiveWeapon(), raised)
     end
   end
@@ -209,6 +252,13 @@ function player_meta:is_weapon_raised()
     return true
   end
 
+  --- Lets plugins force a player's weapon to count as raised or as lowered.
+  -- Called on both realms every time `Player:is_weapon_raised` is asked about a weapon that
+  -- can be lowered.
+  -- @param actor [Player The player holding the weapon]
+  -- @param weapon [Weapon The active weapon of the player]
+  -- @return [Boolean Return true or false to override the state; the networked state is used
+  --   when nothing is returned]
   local should_raise = hook.Run('ShouldWeaponBeRaised', self, weapon)
 
   if should_raise != nil then

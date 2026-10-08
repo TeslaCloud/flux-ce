@@ -1,3 +1,8 @@
+--- Server-side additions of the Flux core: `hook.run_client`, which runs a hook on the
+-- client of a player, and a `ServerLog` that leaves an empty line after every entry.
+-- Also derives the gamemode from sandbox on the server.
+-- @module [hook]
+
 DeriveGamemode('sandbox')
 
 old_server_log = old_server_log or ServerLog

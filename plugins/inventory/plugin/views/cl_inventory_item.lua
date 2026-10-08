@@ -1,3 +1,9 @@
+--- The `fl_inventory_item` panel is a single slot of an `fl_inventory` panel.
+-- It displays the item or the stack of items in the slot as a model or an icon, can be
+-- dragged onto other slots and opens the menu of the item when it is clicked. An item
+-- can draw on its slot with its `paint_slot` and `paint_over_slot` callbacks and adjust
+-- the model view with `adjust_model_panel`.
+
 local PANEL = {}
 PANEL.item_data = nil
 PANEL.item_count = 0
@@ -159,6 +165,12 @@ function PANEL:OnMouseReleased(...)
     if self.item_data and self.mouse_pressed and self.mouse_pressed > (CurTime() - 0.15) then
       Flux.inventory_drag_slot = nil
 
+      --- Called on the client when the local player clicks an inventory slot that has an
+      -- item in it, to open the menu of the item. The Items plugin handles the hook by
+      -- building the menu; it also runs the hook itself, with true as a second argument, for
+      -- items that lie in the world.
+      -- @param instance_id [Number Instance id of the item; the last one of the stack if the
+      --   slot holds several items]
       hook.Run('PlayerUseItemMenu', self.instance_ids[#self.instance_ids])
     end
   end

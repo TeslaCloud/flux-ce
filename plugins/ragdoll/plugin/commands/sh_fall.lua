@@ -1,3 +1,6 @@
+--- The `fall` command: the caller falls over into a ragdoll and gets back up once the delay
+-- has passed.
+
 CMD.name = 'Fall'
 CMD.description = 'command.fall.description'
 CMD.syntax = 'command.fall.syntax'

@@ -1,3 +1,6 @@
+--- Client side of the Ragdoll plugin: registers the get up progress bar, draws the screen
+-- overlay of a fallen player and sends the getup command when they press jump.
+
 Flux.Bars:register('getup', {
   text = t'ui.hud.bar_text.getup',
   color = Color(50, 200, 50),
@@ -26,6 +29,11 @@ function PLUGIN:HUDPaint()
 
   local fallen, getup = PLAYER:is_doing_action('fallen'), PLAYER:is_doing_action('getup')
 
+  --- Asks whether the overlay of a fallen player should be drawn: the darkened screen with the
+  -- 'press jump' prompt or the get up progress bar.
+  -- Called on the client on every HUD paint while the local player is fallen over or getting
+  -- up.
+  -- @return [Boolean Return false to hide the overlay]
   if (fallen or getup) and Plugin.call('ShouldFallenHUDPaint') != false then
     local scrw, scrh = ScrW(), ScrH()
 

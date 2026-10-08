@@ -1,3 +1,9 @@
+--- The `fl_icon_editor` panel is a developer tool for setting up the inventory icon of
+-- an item.
+-- It shows a model in an adjustable view next to a preview of an inventory slot of the
+-- chosen size, and copies the matching `ITEM.model`, `ITEM.width`, `ITEM.height` and
+-- `ITEM.icon_data` lines to the clipboard. The `fl_icon_editor` console command opens it.
+
 local PANEL = {}
 
 --- Builds the icon editor: the adjustable model view with camera preset buttons,

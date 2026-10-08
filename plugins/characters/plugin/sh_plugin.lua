@@ -1,3 +1,17 @@
+--- Characters lets every player own several characters and play one of them at a time.
+-- A character is a `Character` record that belongs to the player's user record and stores a
+-- name, gender, physical description, model, skin and health. Players create, load and delete
+-- their characters in the main menu, which opens after the intro when they join; until a
+-- character is loaded the player stays hidden and dead and the HUD is not drawn. The
+-- `Characters` functions create, save, delete and edit characters on the server, and the
+-- `Player` extensions return a player's characters and the fields of the active one.
+--
+-- Other plugins build on it through hooks: `PlayerCreateCharacter` validates the data of a new
+-- character, `PostCreateCharacter` and `SaveCharacterData` let them keep their own fields on a
+-- character, `OnActiveCharacterSet` and `PostCharacterLoaded` tell them that a character has
+-- been loaded, and `AddCharacterCreationMenuStages` and `AddMainMenuItems` add stages to the
+-- character creation screen and buttons to the main menu.
+
 PLUGIN:set_global('Characters')
 
 require_relative 'cl_hooks'

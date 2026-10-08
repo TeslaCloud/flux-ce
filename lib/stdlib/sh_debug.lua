@@ -1,3 +1,9 @@
+--- Debug metrics: named lists of objects that are registered while Flux loads, such as items
+-- or tools, and whose sizes are printed to the console at the end of the boot.
+-- The functions only do something when `FLUX_ENV` is 'development'. In every other
+-- environment they are defined as stubs, so they can be called unconditionally.
+-- @environment [development]
+
 local is_development = ENV['FLUX_ENV'] == 'development'
 local metrics = {}
 

@@ -1,3 +1,11 @@
+--- The base panel (`fl_base_panel`) that most Flux panels derive from.
+-- It holds the common appearance fields with their accessors (`SetDrawBackground`,
+-- `SetBackgroundColor`, `SetTextColor`, `SetMainColor`, `SetAccentColor`, `SetTitle` and
+-- `SetFont`), leaves painting and thinking to the active theme's `PaintPanel` and `PanelThink`
+-- hooks, and gives every derived panel the MVC helpers `push`, `pull` and `request` for
+-- exchanging data with the server. Register your own panels with `fl_base_panel` as their base
+-- rather than using it on its own.
+
 --[[
   Simplistic base panel that has basic colors, fields and methods commonly used throughout Flux Framework.
   Do not use it directly, base your own panels off of it instead.

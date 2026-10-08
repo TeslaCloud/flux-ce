@@ -1,3 +1,8 @@
+--- Sends notifications from the server to the players. `Flux.Player:notify` notifies one
+-- player and `Flux.Player:broadcast` notifies everyone. The message can be a language phrase
+-- with arguments; it is translated on the client of each recipient and displayed there with
+-- `Flux.Notification`. `Player:notify` is the shorter way to notify a single player.
+
 mod 'Flux::Player'
 
 --- Sends a notification to a player. If the player is not valid (e.g. the server console)

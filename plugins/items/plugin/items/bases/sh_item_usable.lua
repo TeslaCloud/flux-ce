@@ -1,3 +1,10 @@
+--- ItemUsable is the base class for items that do something when they are used.
+-- A derived item overrides `use(actor)` with its effect and, to forbid the use in some
+-- cases, `can_use(actor)`. The `max_uses` field sets how many times the item can be used
+-- before it is removed from the inventory, 1 by default. The uses that are left are kept
+-- in the `uses` field of the instance; when `max_uses` is above 1 they are shown in the
+-- name of the item and on its inventory slot, and the weight of the item shrinks with them.
+
 class 'ItemUsable' extends 'ItemBase'
 
 ItemUsable.name = 'Usable Items Base'

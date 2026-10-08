@@ -1,3 +1,7 @@
+--- An HTML view (`fl_html`) that assembles its page from separate parts.
+-- Set the parts with `set_head`, `set_css`, `set_body` and `set_javascript`, then call
+-- `render` to build the document and display it; `set_html` displays a complete document as it
+-- is. The help panel renders its templates into it. Derives from `DHTML`.
 
 local PANEL = {}
 PANEL.css = ''

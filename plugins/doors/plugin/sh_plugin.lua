@@ -1,3 +1,17 @@
+--- Doors makes the doors of a map configurable and lockable.
+-- A door has properties, such as its name, title type, skin and lock state, that are edited in
+-- the door menu by staff with the 'manage_doors' permission and saved for the map, and a tree
+-- of conditions of the Conditions plugin that decides which players may lock and unlock it. A
+-- player opens the menu of the door they look at with the ShowSpare1 key (F3 by default);
+-- those who may lock the door toggle its lock from that menu or by using the door while
+-- sprinting. The title of a door is drawn on the door by its title type.
+--
+-- Plugins add properties with `Doors:register_property` from the `RegisterDoorProperties` hook
+-- and title types with `Doors:register_title_type` from `RegisterDoorTitleTypes`.
+-- `PlayerCanLockDoor` grants the right to lock a door, `PlayerUseDoor` reports that a door is
+-- used, and `InitialDoorsLoad` lets a schema set the doors up on a map that has no saved door
+-- data.
+
 PLUGIN:set_global('Doors')
 
 local properties = Doors.properties or {}
@@ -75,6 +89,10 @@ end
 --- Runs the RegisterDoorProperties and RegisterDoorTitleTypes hooks so that plugins can
 -- register their door properties and title types.
 function Doors:OnPluginsLoaded()
+  --- Lets plugins register their door properties with `Doors:register_property`. Called on the
+  -- server and the client once all plugins have been loaded.
   hook.Run('RegisterDoorProperties')
+  --- Lets plugins register their door title types with `Doors:register_title_type`. Called on
+  -- the server and the client once all plugins have been loaded.
   hook.Run('RegisterDoorTitleTypes')
 end

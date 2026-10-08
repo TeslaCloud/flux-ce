@@ -1,3 +1,6 @@
+--- The Administrator role (`admin`): based on `moderator`, with an immunity of 300 and every
+-- permission allowed.
+
 ROLE.name = 'Administrator'
 ROLE.description = 'role.admin'
 ROLE.color = Color(255, 255, 255)

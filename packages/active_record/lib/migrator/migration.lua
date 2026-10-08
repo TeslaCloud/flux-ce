@@ -1,3 +1,15 @@
+--- A migration: one versioned step in the history of the database schema. A migration
+-- file, named `<version>_<name>.lua`, creates a migration, describes its changes with the
+-- schema statements in `change` (or in `up` and `down`) and returns it. Running the
+-- migration up applies the changes; running it down reverts them, which happens
+-- automatically for a `change` made of reversible statements.
+--
+-- The migrations of a schema live in its `db/migrate/` folder, where
+-- `flux generate migration` creates new ones; those of packages and plugins live in their
+-- `migrations` folder and are copied into the schema's folder when the server starts. The
+-- class also keeps track of the migration that is running and prints its progress to the
+-- console.
+
 class 'ActiveRecord::Migration'
 
 --- Whether migrations print what they do to the console.

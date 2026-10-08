@@ -1,3 +1,6 @@
+--- Client side of the Currencies plugin: attaches money panels to the inventory of the player
+-- and to opened containers, and adds the options to give money to the player interaction menu.
+
 --- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel.
 -- @param panel [Panel the inventory panel that was rebuilt]
 function Currencies:OnInventoryRebuild(panel)

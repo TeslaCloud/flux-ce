@@ -1,3 +1,7 @@
+--- Server side of the Factions plugin: keeps the team and the networked faction of a player in
+-- line with their character, stores the faction on new characters and requires one when a
+-- character is created, and networks whitelists.
+
 --- Sets the player's team from their faction and puts bots into a random faction.
 -- @param actor [Player]
 function Factions:PostPlayerSpawn(actor)

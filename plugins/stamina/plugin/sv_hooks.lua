@@ -1,3 +1,6 @@
+--- Server side of the Stamina plugin: tracks which players are running and drains or
+-- regenerates their stamina on timers.
+
 Stamina.running = Stamina.running or {}
 Stamina.timer_ids = Stamina.timer_ids or {}
 
@@ -131,6 +134,9 @@ function Stamina:start_running(target, prevent_drain)
   timer.Pause('stam_regen_'..steam_id)
 
   if !prevent_drain then
+    --- Called when a player starts running and their stamina begins to drain.
+    -- The hook is run on the server and then on the client of the player.
+    -- @param target [Player The player who started running]
     hook.Run('PlayerStartRunning', target)
     hook.run_client(target, 'PlayerStartRunning', target)
   end
@@ -143,6 +149,10 @@ function Stamina:start_running(target, prevent_drain)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(target) then
+          --- Lets plugins scale how fast a running player's stamina drains.
+          -- Called on every drain tick, five times a second.
+          -- @param target [Player The player who is running]
+          -- @return [Number Multiplier of the drain rate; 1 when nothing is returned]
           local adjust_scale = Plugin.call('StaminaAdjustDrainScale', target) or 1
           local new_stam = target:get_nv('stamina', max_stamina) - 1 * drain_scale * adjust_scale
 
@@ -176,6 +186,10 @@ function Stamina:stop_running(target, prevent_regen)
   timer.Pause('stam_run_'..steam_id)
 
   if prevent_regen then
+    --- Called when a player stops running and their stamina stops draining.
+    -- Regeneration only starts once the regeneration delay has passed. The hook is run
+    -- on the server and then on the client of the player.
+    -- @param target [Player The player who stopped running]
     hook.Run('PlayerStopRunning', target)
     hook.run_client(target, 'PlayerStopRunning', target)
   end
@@ -189,6 +203,10 @@ function Stamina:stop_running(target, prevent_regen)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(target) then
+          --- Lets plugins scale how fast a player's stamina regenerates.
+          -- Called on every regeneration tick, five times a second.
+          -- @param target [Player The player who is recovering]
+          -- @return [Number Multiplier of the regeneration rate; 1 when nothing is returned]
           local adjust_scale = Plugin.call('StaminaAdjustRegenScale', target) or 1
           local new_stam = target:get_nv('stamina', max_stamina) + 1 * regen_scale * adjust_scale
 

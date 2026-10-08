@@ -1,3 +1,11 @@
+--- Areas are named regions of the map, made of one or more polygons with a floor and a
+-- height, that the server tracks players entering and leaving.
+-- Every area has a type registered with `Areas.register_type`. The type's callback runs
+-- when a player enters or leaves an area of that type, on the server and on that player's
+-- client. An area is built with `Areas.create` and its `add_vertex` and `register`
+-- methods, or drawn in game with the Area Tool. Registered areas are sent to all clients,
+-- and the Areas API plugin saves them.
+
 mod 'Areas'
 
 local stored = Areas.stored or {}
@@ -241,8 +249,18 @@ Areas.register_type(
   Color(255, 0, 255),
   function(actor, area, has_entered, pos, cur_time)
     if has_entered then
+      --- Called when a player enters an area of the `area` type. Runs on the server and on
+      -- the client of that player.
+      -- @param actor [Player The player who has entered the area]
+      -- @param area [Map The area table]
+      -- @param cur_time [Number CurTime() of the check]
       hook.Run('PlayerEnteredArea', actor, area, cur_time)
     else
+      --- Called when a player leaves an area of the `area` type. Runs on the server and on
+      -- the client of that player.
+      -- @param actor [Player The player who has left the area]
+      -- @param area [Map The area table]
+      -- @param cur_time [Number CurTime() of the check]
       hook.Run('PlayerLeftArea', actor, area, cur_time)
     end
   end

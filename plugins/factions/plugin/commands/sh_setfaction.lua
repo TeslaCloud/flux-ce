@@ -1,3 +1,5 @@
+--- Staff command that moves players into another faction.
+
 CMD.name = 'SetFaction'
 CMD.description = 'command.setfaction.description'
 CMD.syntax = 'command.setfaction.syntax'

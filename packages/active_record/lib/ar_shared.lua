@@ -1,3 +1,9 @@
+--- Entry point of the ActiveRecord package, loaded on both the server and the client.
+-- The server loads the whole library from here. The client only receives
+-- `ActiveRecord::Base`, with every method that needs the database replaced by a stub that
+-- returns the object, and an `ActiveRecord.define_model` that merely declares a class, so
+-- that model files can be loaded on the client, where there is no database.
+
 -- We only need to include ActiveRecord once.
 if !ActiveRecord.Base then
   if SERVER then

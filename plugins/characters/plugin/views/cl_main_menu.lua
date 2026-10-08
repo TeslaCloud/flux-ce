@@ -1,3 +1,9 @@
+--- The main menu (`fl_main_menu`): a fullscreen panel with a sidebar of buttons and at most
+-- one submenu open at a time.
+-- The buttons are added with `add_button` from the AddMainMenuItems hook; a button either runs
+-- a callback or opens a theme panel as the submenu. The theme draws the menu and supplies its
+-- music.
+
 local PANEL = {}
 PANEL.prev_button = nil
 PANEL.schema_logo_offset = math.scale(450)
@@ -74,6 +80,10 @@ function PANEL:RecreateSidebar(create_buttons)
   end
 
   if create_buttons then
+    --- Lets plugins add buttons to the main menu. Called on the client whenever the menu fills
+    -- its sidebar: when it is created and when a submenu is closed.
+    -- @param panel [Panel the fl_main_menu panel; add buttons with its add_button method]
+    -- @param sidebar [Panel the newly created sidebar that the buttons go into]
     hook.Run('AddMainMenuItems', self, self.sidebar)
 
     local x, y = self.sidebar:GetPos()

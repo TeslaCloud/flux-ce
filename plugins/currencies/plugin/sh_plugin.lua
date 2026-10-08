@@ -1,3 +1,15 @@
+--- Currencies gives characters and containers money in any number of currencies.
+-- A currency is registered with `Currencies:register_currency`. A character gets a `Currency`
+-- record with a balance for every registered currency when it is created, and containers hold
+-- money as well. Balances are read and changed through the `Entity` extensions, such as
+-- `Entity:get_money`, `Entity:give_money` and `Entity:give_money_to`. Players give money to
+-- what they are looking at, drop it as an fl_money entity, and move it in and out of
+-- containers with the money panel next to their inventory.
+--
+-- Hooks decide what is allowed: `CanContainMoney` names the entities that can hold money,
+-- `CanPlayerTransferMoney`, `CanGiveMoney`, `CanPlayerDropMoney` and `CanPlayerPickupMoney`
+-- can refuse to move it, and `EntityMoneyChanged` reports every change of a balance.
+
 PLUGIN:set_global('Currencies')
 
 local stored = Currencies.stored or {}

@@ -1,3 +1,7 @@
+--- Selects the environment Flux runs in by returning its name.
+-- The name is stored in the `FLUX_ENV` environment variable when the gamemode boots. A
+-- `config/environment.local.lua` file is used instead of this one when it exists.
+
 --
 -- This is the environment setting file.
 -- It is used to tell Flux how it should run.

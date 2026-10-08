@@ -1,3 +1,7 @@
+--- Measure tool for the tool gun. Left click and right click set two points, reload clears
+-- them, and the distance between the points is drawn on the HUD in the measurement system
+-- chosen in the tool's settings (imperial, metric or game units).
+
 TOOL.Category               = 'Flux'
 TOOL.Name                   = 'Measure Tool'
 TOOL.Command                = nil

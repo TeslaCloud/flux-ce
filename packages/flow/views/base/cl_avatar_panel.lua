@@ -1,3 +1,8 @@
+--- A Steam avatar image (`fl_avatar_panel`) that opens the player's Steam profile on left
+-- click and copies their SteamID on right click.
+-- Assign the player with `set_player`. Used on the player cards of the scoreboard and in the
+-- player management of the admin menu. Derives from `AvatarImage`.
+
 local PANEL = {}
 
 --- Sets the tooltip and covers the avatar with an invisible button that opens the player's

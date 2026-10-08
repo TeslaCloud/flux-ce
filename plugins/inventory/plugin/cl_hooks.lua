@@ -1,3 +1,8 @@
+--- Client side of the Inventory plugin: shows the hotbar, adds the inventory tab to the
+-- tab menu, receives the inventories and the requests to open or close them from the
+-- server, and adds the items tab to the spawn menu along with the `fl_icon_editor`
+-- console command.
+
 --- Shows the hotbar and makes it interactive while the context menu is open.
 function Inventories:OnContextMenuOpen()
   if IsValid(PLAYER.hotbar) then
@@ -134,6 +139,10 @@ Cable.receive('fl_inventory_sync', function(data)
     inventory.panel:rebuild()
   end
 
+  --- Called on the client when an inventory has been received from the server.
+  -- The local copy of the inventory has been updated by now and its panel, if it has
+  -- one, has been rebuilt.
+  -- @param inventory [Inventory The inventory that has been updated]
   hook.Run('OnInventorySync', inventory)
 end)
 

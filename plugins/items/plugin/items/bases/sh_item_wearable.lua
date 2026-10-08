@@ -1,3 +1,14 @@
+--- ItemWearable is the base class for clothing: items that change the model or the
+-- bodygroups of the player while equipped.
+-- A derived item sets `equip_inv` (`'equipment_torso'` by default) and `equip_slot`, and
+-- says what it changes. The model the player gets is, in this order: their current model
+-- with the last folder of its path replaced by `model_group`, or `equip_model`, or the
+-- `model` of the item itself. `equip_bodygroups` maps bodygroup ids or names to the
+-- values they are set to. `valid_models`, a list of model paths, or `valid_model_group`,
+-- a pattern that the path of the player's model has to contain, restrict who can wear the
+-- item. The model and the bodygroups the player had before are kept in the data of the
+-- item and given back when it is unequipped.
+
 if !ItemEquipable then
   require_relative 'sh_item_equipable'
 end

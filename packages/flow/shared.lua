@@ -1,3 +1,11 @@
+--- Entry point of the Flux gamemode package, run on both realms.
+-- Fills in the gamemode information (`GM.Name`, `GM.version`, `GM.code_name` and so on)
+-- from the package metadata, then loads the core, the libraries, classes and metatable
+-- extensions, the models, controllers and views, the themes and the tools, and finally the
+-- gamemode hooks. On the server it also registers the package's languages, migrations and
+-- HTML assets with `Pipeline`. During a partial code reload (`LITE_REFRESH`) only the
+-- hooks are loaded again.
+
 local metadata = Flux.__package__
 
 -- Define basic GM info fields.

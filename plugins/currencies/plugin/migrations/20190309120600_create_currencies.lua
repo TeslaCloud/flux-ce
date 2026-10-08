@@ -1,3 +1,5 @@
+--- Migration that creates the `currencies` table.
+
 local CreateCurrencies = ActiveRecord.Migration.new()
 
 --- Creates the currencies table.

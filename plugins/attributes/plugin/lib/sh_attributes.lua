@@ -1,3 +1,8 @@
+--- Registry of the attribute definitions, together with the player methods that read and
+-- change the attributes of a player's character.
+-- Definitions are `AttributeBase` objects registered with `Attributes.register`, usually
+-- by `Attributes.include_attributes` loading the files of a plugin's `attributes` folder.
+
 mod 'Attributes'
 
 local stored = Attributes.stored or {}
@@ -70,6 +75,11 @@ function Attributes.register(id, data)
   data.multipliable = data.multipliable
   data.boost_limited = data.boost_limited
 
+  --- Called on both realms when an attribute definition is registered, after its missing
+  -- fields have been given their defaults and before it is stored. A handler may change the
+  -- definition.
+  -- @param id [String Attribute ID]
+  -- @param data [AttributeBase The attribute definition]
   hook.Run('AttributeRegistered', id, data)
 
   stored[id] = data

@@ -1,3 +1,12 @@
+--- A faction that characters can belong to.
+-- It holds the name, description, color and image of the faction, its models by gender, its
+-- ranks from the lowest to the highest, and the template that character names are generated
+-- from. Factions are normally defined in the files of a factions folder, where the object is
+-- available as FACTION (see `Factions.include_factions`), and are registered with
+-- `Faction:register`. A definition can override `Faction:on_player_join` and
+-- `Faction:on_player_leave`, and define make_name to build names itself. Unlike the other
+-- files of the models folder, this is a plain class that is not stored in the database.
+
 class 'Faction'
 
 --- Creates a faction with default settings: no ranks, no models, name, description and gender
@@ -160,6 +169,15 @@ function Faction:generate_name(target, rank, default_data)
 
   default_data = default_data or {}
 
+  --- Decides whether a character name is generated for a player. Called by
+  -- `Faction:generate_name` before the name template of the faction is applied; the Factions
+  -- plugin itself returns false for bots.
+  -- @param target [Player]
+  -- @param faction [Faction the faction that generates the name]
+  -- @param char_name [String the current name of the player]
+  -- @param rank [Number/String rank index or rank ID the name is generated for]
+  -- @param default_data [Map values for the {data:key} placeholders of the template]
+  -- @return [Boolean return false to keep the current name of the player]
   if hook.Run('ShouldNameGenerate', target, self, char_name, rank, default_data) == false then return target:name() end
 
   if isfunction(self.make_name) then

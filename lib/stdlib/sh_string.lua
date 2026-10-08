@@ -1,3 +1,12 @@
+--- Extensions of the `string` library, which can also be called as methods of any string, as
+-- in `name:to_id()`.
+-- Adds snake_case aliases for the built-in functions, trimming and case checks that are aware
+-- of UTF-8, conversions between naming styles (`string.underscore`, `string.camel_case`,
+-- `string.to_id`), lookups of tables by a `::`-separated path, which `class` and `mod` are
+-- built on, `{name}` placeholders with `string.fmt`, and a `+` operator that concatenates
+-- strings.
+-- @module [string]
+
 local String = {
   lower = function(...)
     return (string.utf8lower or string.lower)(...)
@@ -209,6 +218,13 @@ function string.is_command(str)
     end
   end
 
+  --- Called when `string.is_command` checks a text that starts with one of the command
+  -- prefixes.
+  -- Lets plugins keep such a text from being treated as a command, as the Prefixes plugin
+  -- does for its chat prefixes. Runs on both the server and the client.
+  -- @param text [String the text being checked]
+  -- @return [Boolean Return false to have the text treated as regular text instead of a
+  --   command]
   if longest and hook.Run('StringIsCommand', str) != false then
     return true, longest
   end

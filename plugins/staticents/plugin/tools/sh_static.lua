@@ -1,3 +1,7 @@
+--- The Static Add/Remove tool: left click makes the entity the user is looking at static,
+-- right click removes its static status.
+-- The tool is tied to the 'static_tool' permission.
+
 TOOL.Category = 'Flux'
 TOOL.Name = 'Static Add/Remove'
 TOOL.Command = nil

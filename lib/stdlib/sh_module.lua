@@ -1,3 +1,7 @@
+--- Modules: named tables of functions that are created with `mod` and can be mixed into each
+-- other or into classes with `include`.
+-- Libraries such as `Plugin`, `Config` and `Pipeline` are declared this way.
+
 --- Create a module with a specified name.
 -- The resulting object will have the `include` method by default.
 -- ```

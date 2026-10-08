@@ -1,3 +1,5 @@
+--- Staff command that takes the whitelist for a faction away from players.
+
 CMD.name = 'UnWhitelist'
 CMD.description = 'command.unwhitelist.description'
 CMD.syntax = 'command.unwhitelist.syntax'

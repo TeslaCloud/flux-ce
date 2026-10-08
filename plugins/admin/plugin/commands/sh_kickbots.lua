@@ -1,3 +1,5 @@
+--- The KickBots command kicks every bot from the server. Allowed for moderators by default.
+
 CMD.name = 'KickBots'
 CMD.description = 'command.kickbots.description'
 CMD.permission = 'moderator'

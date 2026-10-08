@@ -1,3 +1,11 @@
+--- Builds the column DSL of table definitions and converts values between Lua and the
+-- database. `ActiveRecord.generate_create_funcs` gives a 'create' or 'change' query a
+-- method for every column type of the adapter (`t:string 'name'`,
+-- `t:integer { 'age', null = false }`) along with `t:timestamps` and `t:references`.
+-- `ActiveRecord.str_to_type` and `ActiveRecord.type_to_db` convert the values of a column
+-- when a model is loaded and saved, and `ActiveRecord.generate_tables` creates the tables
+-- that ActiveRecord keeps its own bookkeeping in.
+
 --- Splits the arguments of a column type method into the column name and its options.
 -- @param name [String/Map column name, or a table holding the name at index 1 and the
 --   options as keys]

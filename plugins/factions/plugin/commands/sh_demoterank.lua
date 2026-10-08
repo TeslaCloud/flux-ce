@@ -1,3 +1,5 @@
+--- Staff command that moves players one rank down in their faction.
+
 CMD.name = 'DemoteRank'
 CMD.description = 'command.demoterank.description'
 CMD.syntax = 'command.demoterank.syntax'

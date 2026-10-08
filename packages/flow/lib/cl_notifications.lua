@@ -1,3 +1,11 @@
+--- On-screen notifications: short messages that slide in at the top right corner of the
+-- screen. `Flux.Notification:add` queues a message, either plain text or a language phrase.
+-- Queued messages are displayed one after another as `fl_notification` panels, each one
+-- pushing the older ones down, and disappear after their lifetime.
+-- `Flux.Notification:add_popup` creates a single notification at a given position instead. On
+-- the client `Player:notify` displays its message through this library; server code sends
+-- notifications with `Player:notify` or `Flux.Player:notify`.
+
 mod 'Flux::Notification'
 
 local display = {}

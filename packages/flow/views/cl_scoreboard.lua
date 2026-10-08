@@ -1,3 +1,14 @@
+--- The scoreboard of the tab menu: `fl_scoreboard`, the list of players, and
+-- `fl_scoreboard_player`, the card of a single player.
+-- Plugins change its contents through the `PreRebuildScoreboard`, `RebuildScoreboard` and
+-- `RebuildScoreboardPlayerCard` hooks.
+
+--- The scoreboard page of the tab menu (`fl_scoreboard`): a scrollable list with one
+-- `fl_scoreboard_player` card per initialized player, drawn by the active theme's
+-- `PaintScoreboard` hook.
+-- `rebuild` recreates the cards. A `PreRebuildScoreboard` handler can build the list itself,
+-- which is how the Factions plugin groups the players by faction, and `RebuildScoreboard`
+-- handlers can add to the default list.
 local PANEL = {}
 PANEL.player_cards = {}
 
@@ -20,6 +31,13 @@ end
 function PANEL:rebuild()
   local w, h = self:GetSize()
 
+  --- Called on the client before the scoreboard builds its list of players.
+  -- A handler can build the contents itself, for example to group the players.
+  -- @param panel [Panel The `fl_scoreboard` being rebuilt]
+  -- @param w [Number Width of the scoreboard]
+  -- @param h [Number Height of the scoreboard]
+  -- @return [Any Return anything but nil to skip the default player list and the
+  --   `RebuildScoreboard` hook]
   if hook.Run('PreRebuildScoreboard', self, w, h) != nil then
     return
   end
@@ -51,6 +69,11 @@ function PANEL:rebuild()
     table.insert(self.player_cards, player_card)
   end
 
+  --- Called on the client after the scoreboard has created the default player cards.
+  -- Not called when a `PreRebuildScoreboard` handler has built the list instead.
+  -- @param panel [Panel The `fl_scoreboard` that has been rebuilt]
+  -- @param w [Number Width of the scoreboard]
+  -- @param h [Number Height of the scoreboard]
   hook.Run('RebuildScoreboard', self, w, h)
 end
 
@@ -62,6 +85,10 @@ end
 
 vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
 
+--- The card of one player on the scoreboard (`fl_scoreboard_player`): their avatar, name and
+-- ping.
+-- Assign the player with `set_player`, which also builds the card. Plugins add their own
+-- elements in the `RebuildScoreboardPlayerCard` hook.
 local PANEL = {}
 PANEL.player = false
 
@@ -118,6 +145,11 @@ function PANEL:rebuild()
   self.ping:SetTextColor(Theme.get_color('text'))
   self.ping:SizeToContents()
 
+  --- Called on the client after a scoreboard player card has created its avatar, name and ping
+  -- labels (the `avatar_panel`, `name_label` and `ping` fields of the card), so that plugins
+  -- can add to the card or rearrange it.
+  -- @param card [Panel The `fl_scoreboard_player` card]
+  -- @param target [Player The player the card shows]
   hook.Run('RebuildScoreboardPlayerCard', self, target)
 end
 

@@ -1,3 +1,6 @@
+--- The CharSetAttribute command sets the level of an attribute of the targeted players'
+-- characters. Allowed for moderators by default.
+
 CMD.name = 'CharSetAttribute'
 CMD.description = 'command.charsetattribute.description'
 CMD.syntax = 'command.charsetattribute.syntax'

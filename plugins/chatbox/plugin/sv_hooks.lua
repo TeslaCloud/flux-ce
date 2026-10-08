@@ -1,3 +1,6 @@
+--- Default handlers of the server-side hooks of the Chatbox plugin: the icon and the colors of
+-- what players say, and the rule that the sender of a message always receives it.
+
 --- Provides the default icon that is displayed before the name of the player
 -- in their chat messages.
 -- @param speaker [Player the speaker]

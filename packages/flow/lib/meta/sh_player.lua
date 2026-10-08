@@ -1,3 +1,12 @@
+--- Extensions of the `Player` metatable that the gamemode package adds to every player.
+-- Names go through the `GetPlayerName` hook so that plugins can replace them,
+-- `Player:SetModel` announces model changes with the `PlayerModelChanged` hook, and the
+-- permission checks (`Player:can`, `Player:is_root`) are answered by hooks that an admin
+-- plugin implements. The rest covers the initialization state, the networked data table,
+-- client-side notifications, freezing, and actions: every player has one current action,
+-- registered with `Flux.register_action`, which the gamemode runs on each `PlayerThink`.
+-- The server-only half adds saving and restoring of the player's database record.
+
 local player_meta = FindMetaTable('Player')
 
 --- Checks whether the player has finished loading in and has been initialized by Flux.
@@ -20,6 +29,15 @@ player_meta.fl_name = player_meta.fl_name or player_meta.Name
 -- @param force_true_name=false [Boolean ignore the 'GetPlayerName' hook]
 -- @return [String]
 function player_meta:Name(force_true_name)
+  --- Lets plugins replace the name a player is shown under, for example with the name of
+  -- their character. Called on both realms whenever the name of a player is requested
+  -- with `Player:Name` (unless the true name is forced) or `Entity:get_name`, and on the
+  -- client for players passed as arguments of a notification. Inside a handler, use
+  -- `target:name(true)` to get the unmodified name: `target:name()` would run the hook
+  -- again.
+  -- @param target [Player The player whose name is requested]
+  -- @return [String Name to show; when nothing is returned, the player's `name` networked
+  --   variable or else their Steam name is used]
   return (!force_true_name and hook.Run('GetPlayerName', self)) or self:get_nv('name', self:fl_name())
 end
 
@@ -37,6 +55,15 @@ end
 function player_meta:SetModel(path)
   local old_model = self:GetModel()
 
+  --- Called when the model of a player changes, right before the new model is applied.
+  -- `Player:SetModel` runs it on the realm it is called on, and the server also announces
+  -- the change to every client, which runs the hook once the player's entity is valid
+  -- there. In addition, the client runs it for every player when the map's entities have
+  -- been created, with the current model as both the new and the old one. The gamemode's
+  -- handler assigns the animation table of the new model to the player.
+  -- @param target [Player The player whose model changes]
+  -- @param new_model [String Path of the new model]
+  -- @param old_model [String Path of the previous model]
   hook.Run('PlayerModelChanged', self, path, old_model)
 
   if SERVER then
@@ -74,6 +101,12 @@ if CLIENT then
           if v:IsPlayer() then
             arguments[k] = hook.Run('GetPlayerName', v) or v:name()
           else
+            --- Lets plugins give a display name to an entity that is not a player. Called on
+            -- both realms by `Entity:get_name`, and on the client for entities passed as
+            -- arguments of a notification.
+            -- @param entity [Entity The entity whose name is requested]
+            -- @return [String Name to show; when nothing is returned, the string
+            --   representation of the entity is used]
             arguments[k] = hook.Run('GetEntityName', v) or tostring(v) or v:GetClass()
           end
         end
@@ -215,6 +248,13 @@ end
 -- @param object=nil [Any object the permission is checked against, passed to the hook]
 -- @return [Boolean nil if nothing handles the hook]
 function player_meta:can(action, object)
+  --- Decides whether a player has a permission. Called on both realms by `Player:can`,
+  -- which returns whatever the hook returns. Flux has no handler of its own: an admin
+  -- plugin is expected to implement it.
+  -- @param actor [Player The player being checked]
+  -- @param action [String Permission ID, such as 'spawn_props']
+  -- @param object [Any Object the permission is checked against; nil if none was given]
+  -- @return [Boolean Whether the player has the permission]
   return hook.Run('PlayerHasPermission', self, action, object)
 end
 
@@ -222,5 +262,10 @@ end
 -- is made by the 'PlayerIsRoot' hook.
 -- @return [Boolean nil if nothing handles the hook]
 function player_meta:is_root()
+  --- Decides whether a player has root access, that is can do anything. Called on both
+  -- realms by `Player:is_root`, which returns whatever the hook returns. Flux has no
+  -- handler of its own: an admin plugin is expected to implement it.
+  -- @param target [Player The player being checked]
+  -- @return [Boolean Whether the player is root]
   return hook.Run('PlayerIsRoot', self)
 end

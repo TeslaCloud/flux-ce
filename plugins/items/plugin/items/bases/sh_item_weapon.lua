@@ -1,3 +1,13 @@
+--- ItemWeapon is the base class for items that give the player a weapon while equipped.
+-- A derived item sets `weapon_class`, the class of the weapon (`'weapon_pistol'` by
+-- default), and usually `equip_slot`, which is `'item.slot.primary'` by default.
+-- Equipping the item gives the weapon to the player and selects it; unequipping strips
+-- it. The rounds in both clips of the weapon are stored in the `ammo` data of the item
+-- when it is unequipped and when the character is saved, and loaded back when it is
+-- equipped. The unload button of the menu moves the loaded rounds to the ammo reserve
+-- of the player.
+-- @module [ItemWeapon]
+
 if !ItemEquipable then
   require_relative 'sh_item_equipable'
 end

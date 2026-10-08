@@ -1,3 +1,9 @@
+--- Player management page of the admin panel, open to players with the `manage_permissions`
+-- permission: a list of the online players and, for the selected one, a header with their
+-- avatar, name and role above the permission editor.
+-- The header is the `fl_player_info` panel, which is also defined here; its edit button
+-- opens a selector that changes the player's role.
+
 local PANEL = {}
 
 --- Creates the player list, the player info header and the permissions editor. The last two

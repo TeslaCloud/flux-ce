@@ -1,3 +1,10 @@
+--- Weapon Selector replaces the default weapon selection HUD with a scrolling list of the
+-- player's weapons.
+-- The invprev, invnext and slot binds move the highlight, and attack selects the highlighted
+-- weapon through the `selectweapon` console command. The selector closes after five seconds
+-- without input. Plugins can keep it from reacting with the `ShouldOpenWepselect` hook and
+-- follow it through `OnWeaponIndexChange` and `OnWeaponSelected`.
+
 PLUGIN:set_name('Weapon Selector')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a custom weapon selector for use with Flux.')
@@ -158,6 +165,13 @@ do
     local weapon = client:GetActiveWeapon()
 
     if !client:InVehicle() and !client:KeyDown(IN_ATTACK) then
+      --- Asks whether the weapon selector should handle a bind.
+      -- Called on the client for every bind the local player presses or releases while they
+      -- are not in a vehicle and not holding attack.
+      -- @param client [Player The local player]
+      -- @param bind [String The command of the bind]
+      -- @param pressed [Boolean Whether the bind was pressed rather than released]
+      -- @return [Boolean Return false to make the selector ignore the bind]
       if hook.Run('ShouldOpenWepselect', client, bind, pressed) != false then
         local cur_time = CurTime()
         local weapon_count = table.Count(client:GetWeapons())
@@ -168,6 +182,12 @@ do
           if bind:find('invprev') and pressed then
             self.weapon_index = relative_clamp(self.weapon_index - 1, 1, weapon_count)
 
+            --- Called on the client when the highlighted entry of the weapon selector changes
+            -- through the invprev, invnext or slot binds.
+            -- The plugin's own handler opens the selector and scrolls it to the new entry.
+            -- @param old_index [Number Previously highlighted index in the weapon list of the
+            --   player]
+            -- @param index [Number Newly highlighted index]
             Plugin.call('OnWeaponIndexChange', old_index, self.weapon_index)
 
             return true
@@ -209,6 +229,10 @@ do
           elseif bind:find('attack') and self.is_open and pressed then
             RunConsoleCommand('selectweapon', self.weapon_index)
 
+            --- Called on the client when the player confirms the highlighted weapon with
+            -- attack, right after the `selectweapon` command has been sent to the server.
+            -- @param index [Number Index of the selected weapon in the weapon list of the
+            --   player]
             Plugin.call('OnWeaponSelected', self.weapon_index)
 
             return true

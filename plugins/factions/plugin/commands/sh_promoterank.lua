@@ -1,3 +1,5 @@
+--- Staff command that moves players one rank up in their faction.
+
 CMD.name = 'PromoteRank'
 CMD.description = 'command.promoterank.description'
 CMD.syntax = 'command.promoterank.syntax'

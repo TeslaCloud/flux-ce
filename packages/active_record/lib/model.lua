@@ -1,3 +1,8 @@
+--- Registry of the model classes. Every class that extends `ActiveRecord::Base` is added
+-- to it automatically. Whenever the schema is restored or changed by migrations,
+-- `populate` hands each model the schema of its table and gives it a `find_by_<column>`
+-- shortcut for every column.
+
 class 'ActiveRecord::Model'
 
 ActiveRecord.Model.models = {}

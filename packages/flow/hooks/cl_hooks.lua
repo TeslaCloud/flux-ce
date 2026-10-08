@@ -1,3 +1,10 @@
+--- Client side of the gamemode hooks: the `GM` handlers that finish loading the local
+-- player, draw the loading screen, the HUD, the death screen and the target IDs, open the
+-- tab menu in place of the scoreboard, add the Flux tools to the spawn menu and hide the
+-- parts of the sandbox HUD that Flux replaces.
+-- Most of Flux's client-side drawing hooks are run from here, such as `FLHUDPaint`,
+-- `ShouldHUDPaint`, `GetDrawPlayerInfo` and `DrawEntityTargetID`.
+
 timer.Remove('HintSystem_OpeningMenu')
 timer.Remove('HintSystem_Annoy1')
 timer.Remove('HintSystem_Annoy2')
@@ -21,6 +28,10 @@ function GM:InitPostEntity()
     hook.Run('PlayerModelChanged', v, model, model)
   end
 
+  --- Called on the client when the tool gun has to learn about the Flux tools: once the
+  -- map's entities have been created, and again whenever the tool menu has been populated.
+  -- The gamemode's handler copies every registered Flux tool into the tool table of the
+  -- tool gun.
   hook.Run('SynchronizeTools')
   hook.Run('LoadData')
 
@@ -37,8 +48,15 @@ end
 
 --- Rebuilds the spawn menu and the tool menu once the server has initialized the local player.
 function GM:PlayerInitialized()
+  --- Called on the client once the server has initialized the local player, right before
+  -- the spawn menu is rebuilt with the `spawnmenu_reload` console command. Plugins add
+  -- their spawn menu tabs here.
   hook.Run('PopulateSpawnMenu')
   RunConsoleCommand('spawnmenu_reload')
+  --- Sandbox's `PopulateToolMenu` hook, run once more by Flux on the client when the
+  -- server has initialized the local player, after the spawn menu reload has been
+  -- requested. The gamemode's handler adds every registered Flux tool to the tool menu
+  -- and then runs `SynchronizeTools`.
   hook.Run('PopulateToolMenu')
 end
 
@@ -62,6 +80,12 @@ do
       if scrw != new_w or scrh != new_h then
         Flux.print('Resolution changed from '..scrw..'x'..scrh..' to '..new_w..'x'..new_h..'.')
 
+        --- Called on the client when the screen resolution has changed. The gamemode checks
+        -- the resolution once a second, and its handler recreates the fonts.
+        -- @param new_w [Number New screen width]
+        -- @param new_h [Number New screen height]
+        -- @param old_w [Number Previous screen width]
+        -- @param old_h [Number Previous screen height]
         hook.Run('OnResolutionChanged', new_w, new_h, scrw, scrh)
 
         scrw, scrh = new_w, new_h
@@ -102,6 +126,9 @@ end
 --- Opens the tab menu in place of the default scoreboard, closing the previous one first,
 -- unless the ShouldScoreboardShow hook returns false.
 function GM:ScoreboardShow()
+  --- Asks whether the tab menu may open. Called on the client when the scoreboard key is
+  -- pressed.
+  -- @return [Boolean Return false to keep the tab menu from opening]
   if hook.Run('ShouldScoreboardShow') != false then
     if Flux.tab_menu and Flux.tab_menu.close_menu then
       Flux.tab_menu:close_menu()
@@ -117,6 +144,9 @@ end
 -- than 0.3 seconds, unless the ShouldScoreboardHide hook returns false. A short press
 -- leaves the menu open.
 function GM:ScoreboardHide()
+  --- Asks whether the tab menu may close. Called on the client when the scoreboard key is
+  -- released.
+  -- @return [Boolean Return false to keep the tab menu open]
   if hook.Run('ShouldScoreboardHide') != false then
     if Flux.tab_menu and Flux.tab_menu.held_time and CurTime() >= Flux.tab_menu.held_time then
       Flux.tab_menu:close_menu()
@@ -129,6 +159,9 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
+  --- Asks whether the loading screen should stay up. Called on the client every frame once
+  -- the local player has been initialized; until then the loading screen is always drawn.
+  -- @return [Boolean Return true to keep drawing the loading screen]
   if !IsValid(PLAYER) or !PLAYER:has_initialized() or hook.Run('ShouldDrawLoadingScreen') then
     local text = t'ui.hud.loading.schema'
     local percentage = 80
@@ -141,6 +174,11 @@ function GM:HUDDrawScoreBoard()
       percentage = 20
     end
 
+    --- Lets plugins replace the status text and the progress shown on the loading screen.
+    -- Called on the client every frame while the loading screen is drawn. Gamemode (`GM`)
+    -- handlers are not called.
+    -- @return [String Text to show instead of the default status,
+    --   Number Progress of the bar from 0 to 100; optional and only used along with a text]
     local hooked, hooked_percentage = Plugin.call('GetLoadingScreenMessage')
 
     if isstring(hooked) then
@@ -167,6 +205,8 @@ function GM:HUDDrawScoreBoard()
     draw.RoundedBox(0, bar_x, bar_y, bar_w, bar_h, Color(22, 22, 22))
     draw.RoundedBox(0, bar_x + 1, bar_y + 1, fill_w, bar_h - 2, Color(245, 245, 245))
 
+    --- Called on the client every frame right after the loading screen has been drawn, for
+    -- drawing on top of it. Gamemode (`GM`) handlers are not called.
     Plugin.call('PostDrawLoadingScreen')
   end
 end
@@ -175,6 +215,10 @@ end
 -- screen while dead or the info displays while alive (unless FLHUDPaint returns a truthy
 -- value), and the white respawn fade. Skipped when the ShouldHUDPaint hook returns false.
 function GM:HUDPaint()
+  --- Asks whether the HUD should be drawn. Called on the client every frame once the local
+  -- player has been initialized, from the gamemode's `HUDPaint` handler. HUD elements
+  -- that plugins draw on their own, such as the crosshair, can run it too.
+  -- @return [Boolean Return false to hide the Flux HUD and the HUD of the base gamemode]
   if PLAYER:has_initialized() and hook.Run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
@@ -186,8 +230,19 @@ function GM:HUDPaint()
     end
 
     if !PLAYER:Alive() then
+      --- Called on the client every frame while the local player is dead, before the theme
+      -- paints the death screen, for drawing behind it. The gamemode's handler draws a red
+      -- blood overlay.
+      -- @param cur_time [Number CurTime() of the frame]
+      -- @param scrw [Number Screen width]
+      -- @param scrh [Number Screen height]
       hook.Run('HUDPaintDeathBackground', cur_time, scrw, scrh)
         Theme.call('PaintDeathScreen', cur_time, scrw, scrh)
+      --- Called on the client every frame while the local player is dead, after the theme has
+      -- painted the death screen, for drawing on top of it.
+      -- @param cur_time [Number CurTime() of the frame]
+      -- @param scrw [Number Screen width]
+      -- @param scrh [Number Screen height]
       hook.Run('HUDPaintDeathForeground', cur_time, scrw, scrh)
     else
       PLAYER.respawn_alpha = 0
@@ -196,6 +251,14 @@ function GM:HUDPaint()
         PLAYER.white_alpha = Lerp(0.04, PLAYER.white_alpha, 0)
       end
 
+      --- Called on the client every frame while the local player is alive and the HUD is
+      -- shown, for drawing HUD elements. Runs after the damage flash and before the info
+      -- displays (`InfoDisplay`) are drawn. The gamemode's handler draws the circular action
+      -- indicator.
+      -- @param cur_time [Number CurTime() of the frame]
+      -- @param scrw [Number Screen width]
+      -- @param scrh [Number Screen height]
+      -- @return [Boolean Return true to keep the info displays from being drawn]
       if !hook.Run('FLHUDPaint', cur_time, scrw, scrh) then
         InfoDisplay:draw_all()
       end
@@ -278,10 +341,26 @@ function GM:HUDDrawTargetID()
       local x, y = screen_pos.x, screen_pos.y
 
       if ent:IsPlayer() and ent:has_initialized() and ent:Alive() then
+        --- Called on the client every frame to draw the target ID of the player that the local
+        -- player is looking at, or has closest to the crosshair. Only happens while the local
+        -- player is alive and for targets that are alive, initialized and not obstructed. The
+        -- gamemode's handler draws the lines collected with `GetDrawPlayerInfo`.
+        -- @param target [Player The player being looked at]
+        -- @param x [Number Screen x of the point above the target to center the text on]
+        -- @param y [Number Screen y of that point]
+        -- @param distance [Number Distance from the camera to the target's eyes in units]
         hook.Run('DrawPlayerTargetID', ent, x, y, dist)
       elseif ent.DrawTargetID then
         ent:DrawTargetID(x, y, dist)
       else
+        --- Called on the client every frame to draw the target ID of the entity that the local
+        -- player is looking at, or has closest to the crosshair, when `DrawPlayerTargetID`
+        -- does not apply to it and it has no `DrawTargetID` method of its own. Nothing is
+        -- drawn unless a handler does it.
+        -- @param entity [Entity The entity being looked at]
+        -- @param x [Number Screen x of the point above the entity to center the text on]
+        -- @param y [Number Screen y of that point]
+        -- @param distance [Number Distance from the camera to the entity in units]
         hook.Run('DrawEntityTargetID', ent, x, y, dist)
       end
     end
@@ -314,8 +393,28 @@ end
 function GM:DrawPlayerTargetID(target, x, y, distance)
   local lines = {}
 
+  --- Collects the lines of text shown in the target ID of a player. Called on the client
+  -- every frame the gamemode draws a player's target ID. Handlers add their entries to
+  -- `lines` and should not return anything, so that the other handlers run too; the
+  -- gamemode's handler adds the `name` line.
+  -- @param target [Player The player being looked at]
+  -- @param x [Number Screen x of the target ID]
+  -- @param y [Number Screen y of the target ID]
+  -- @param distance [Number Distance to the player in units]
+  -- @param lines [Map Lines to draw by ID. Each one is a table with the `text`, `color`
+  --   and `priority` fields (lines with a lower priority are drawn first) and optionally
+  --   `font`, `offset_x` and `offset_y`]
   hook.Run('GetDrawPlayerInfo', target, x, y, distance, lines)
 
+  --- Called on the client after the target ID lines of a player have been collected with
+  -- `GetDrawPlayerInfo` and before they are drawn. Handlers can change or remove the
+  -- entries of `lines`.
+  -- @param target [Player The player being looked at]
+  -- @param x [Number Screen x of the target ID]
+  -- @param y [Number Screen y of the target ID]
+  -- @param distance [Number Distance to the player in units]
+  -- @param lines [Map Lines about to be drawn by ID, see `GetDrawPlayerInfo`]
+  -- @return [Boolean Return false to draw nothing for this player]
   if hook.Run('PreDrawPlayerInfo', target, x, y, distance, lines) == false then return end
 
   local alpha = 255
@@ -462,6 +561,12 @@ end
 -- @return [Boolean true to block the bind, nil otherwise]
 function GM:PlayerBindPress(client, bind, pressed)
   if bind:find('gmod_undo') and pressed then
+    --- Called on the client when the local player presses the undo key (a bind containing
+    -- `gmod_undo`). The gamemode's handler asks the server to undo the last entry of the
+    -- player's Flux undo queue and returns true if the queue is not empty.
+    -- @param client [Player The local player]
+    -- @return [Any Return any non-nil value to block the bind, which keeps sandbox's own
+    --   undo from running as well]
     if hook.Run('SoftUndo', client) != nil then
       return true
     end

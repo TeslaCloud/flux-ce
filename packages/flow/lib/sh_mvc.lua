@@ -1,3 +1,13 @@
+--- A small request and response layer between the client and the server, loosely modelled on
+-- model-view-controller. Panels (the views) send named requests, and handlers on the server
+-- (the controllers) act on them and can answer. On the server `MVC.handler` registers a
+-- handler for a request name. Inside of a handler `respond_to` sends a response back to the
+-- player who has made the request, and `MVC.push` sends data under a name to any player at any
+-- time. On the client `MVC.push` sends a request, `MVC.request` sends one and calls a function
+-- with the response, and `MVC.listen` receives everything the server pushes under a name.
+-- Plugins usually keep their handlers in their `controllers` folder.
+-- @module [MVC]
+
 -- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
 
 mod 'MVC'

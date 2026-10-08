@@ -1,3 +1,7 @@
+--- The CharAttributeMultiplier command is meant to give the characters of the targeted
+-- players a temporary leveling multiplier for an attribute. It currently applies the value
+-- as a boost, through `Player:boost_attribute`. Allowed for moderators by default.
+
 CMD.name = 'CharAttributeMultiplier'
 CMD.description = 'command.charattributemultiplier.description'
 CMD.syntax = 'command.charattributemultiplier.syntax'

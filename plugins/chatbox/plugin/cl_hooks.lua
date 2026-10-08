@@ -1,3 +1,7 @@
+--- Client-side hooks of the Chatbox plugin: opens the chatbox on the chat binds in place of
+-- the default chat, sets up its fonts and theme options, sends entered text to the server and
+-- adds the messages that arrive from it.
+
 --- Recalculates the size and position options of the chatbox for the new resolution
 -- and removes the chatbox panel so that it gets recreated.
 -- @param new_width [Number new screen width]

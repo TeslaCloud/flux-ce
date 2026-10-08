@@ -1,3 +1,7 @@
+--- Shared hooks of the Inventory plugin: turns the slot binds into the `PlayerSelectSlot`
+-- hook, which selects the weapon of the item in that hotbar slot or uses the item, and
+-- answers the `GetInventorySize` hook for the pockets.
+
 --- Calls the 'PlayerSelectSlot' plugin hook when the player presses one of the slot binds.
 -- @param client [Player]
 -- @param bind [String]
@@ -7,6 +11,13 @@ function Inventories:PlayerBindPress(client, bind, pressed)
     local n = tonumber(bind:match('slot(%d+)'))
 
     if n then
+      --- Called on the client when the local player presses one of the slot binds, `slot1`
+      -- and so on. The Inventory plugin handles it by selecting the weapon of the item in
+      -- that hotbar slot, or using the item. It is run with `Plugin.call`, so gamemode
+      -- functions do not receive it.
+      -- @param client [Player The local player]
+      -- @param slot [Number Number of the slot taken from the bind]
+      -- @realm [client]
       Plugin.call('PlayerSelectSlot', client, n)
     end
   end

@@ -1,3 +1,9 @@
+--- Visible Legs lets players see the body of their character when they look down in first
+-- person.
+-- It draws a clientside copy of the local player's model that follows their animation, with
+-- the head and the arms moved out of view. Nothing is drawn in observer mode, in third person
+-- or while the player is dead.
+
 PLUGIN:set_global('VisibleLegs')
 PLUGIN:set_name('Visible Legs')
 PLUGIN:set_author('NightAngel')

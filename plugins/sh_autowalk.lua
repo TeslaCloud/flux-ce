@@ -1,3 +1,9 @@
+--- Auto Walk lets players walk forward without holding a key.
+-- It is toggled with the `toggleautowalk` console command, which the plugin binds to the N key
+-- by default, and stops as soon as the player presses a movement key. Plugins can forbid it
+-- through the `CanPlayerAutoWalk` hook. The state is networked as the `auto_walk` variable of
+-- the player.
+
 PLUGIN:set_name('Auto Walk')
 PLUGIN:set_author('NightAngel')
 PLUGIN:set_description('Allows users to press a button to automatically walk forward.')
@@ -32,6 +38,11 @@ if SERVER then
 
   -- So clients can bind this as they want.
   concommand.Add('toggleautowalk', function(actor)
+    --- Asks whether a player may toggle auto walk.
+    -- Called on the server when the player runs the `toggleautowalk` command, for turning it
+    -- off as well as on.
+    -- @param actor [Player The player who wants to toggle auto walk]
+    -- @return [Boolean Return false to prevent the toggle]
     if hook.Run('CanPlayerAutoWalk', actor) != false then
       actor:set_nv('auto_walk', !actor:get_nv('auto_walk', false))
     end

@@ -1,3 +1,9 @@
+--- Calendar dates: the `Date` class, a point in time with the precision of a day, which
+-- `DateTime` builds on.
+-- Dates are created from a year, a month and a day or with `Date:today`, `Date:at` and the
+-- like, formatted with `Date:iso` and `Date:strftime`, and shifted by adding or subtracting
+-- `Time` intervals.
+
 --- The Date class is the base class for most time-related classes in Flux.
 -- The Date class represents a point in time, not a time interval.
 -- For time intervals, please use Time.

@@ -1,3 +1,9 @@
+--- Extensions of the `Panel` metatable: removal that hides the panel first, positions and
+-- sizes that scale with the screen resolution, and a way to make a panel undraggable.
+-- The file also replaces the paint function of `DModelPanel` so that models stay visible
+-- on top of blurred backgrounds.
+-- @module [Panel]
+
 local panel_meta = FindMetaTable('Panel')
 
 -- Seriously, Newman? I have to write this myself?

@@ -1,3 +1,10 @@
+--- Defines PackageInstance, the object that holds the metadata and the dependencies of one
+-- package.
+-- `Package` creates one for every package it includes and exposes it as the `PACKAGE` global
+-- while the package loads; `Package:describe` fills in its metadata from the
+-- `packagespec.lua`. A package can define `PACKAGE:__installed__` to run code once it has
+-- been included.
+
 --- A Flux package instance class.
 -- This provides basic information fields and dependencies.
 class 'PackageInstance'

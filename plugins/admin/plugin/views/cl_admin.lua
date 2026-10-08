@@ -1,3 +1,8 @@
+--- The admin panel shown by the Admin entry of the tab menu: a sidebar of page buttons and
+-- the page that is currently open.
+-- Pages are added from the `AddAdminMenuItems` hook with `add_panel`, may require a
+-- permission, and are created through the theme when their button is clicked.
+
 local PANEL = {}
 PANEL.cur_panel = nil
 PANEL.panels = {}
@@ -20,6 +25,11 @@ function PANEL:Init()
 
   self:SetKeyboardInputEnabled(true)
 
+  --- Called on the client when the admin panel is created. Add pages to it here with
+  -- `panel:add_panel(id, title, permission)`; the page itself must be registered with the
+  -- theme under the same ID, as `Bolt:OnThemeLoaded` does.
+  -- @param panel [Panel The admin panel, an `fl_admin_panel`]
+  -- @param sidebar [Panel The sidebar of the admin panel, which holds the page buttons]
   hook.Run('AddAdminMenuItems', self, self.sidebar)
 end
 

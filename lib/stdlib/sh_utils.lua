@@ -1,3 +1,12 @@
+--- Extensions of the `util` library: validation and conversion of values, joining lists into
+-- strings, waiting for entities to become valid and applying operators by name.
+-- More of them are defined next to what they work with: text measuring, easing and materials
+-- on the client, color and number conversions with `Color` and `math`. This file also holds
+-- general-purpose global functions: formatted printing, `txt` for indented multi-line text,
+-- error reporting with tracebacks, `enumerate` for creating enumerator globals and
+-- `include_sandboxed` for running a file in a restricted environment.
+-- @module [util]
+
 --- Returns the names of all ammo types that are registered in the game.
 -- @return [List<String> ammo type names]
 function game.get_ammo_list()

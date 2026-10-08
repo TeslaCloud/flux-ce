@@ -1,3 +1,7 @@
+--- The User role (`user`): the role of every player who has not been given another one,
+-- with an immunity of 0. It defines no permissions itself and has those registered for
+-- `user`.
+
 ROLE.name = 'User'
 ROLE.description = 'role.user'
 ROLE.color = Color(255, 255, 255)

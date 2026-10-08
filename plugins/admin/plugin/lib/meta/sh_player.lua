@@ -1,3 +1,7 @@
+--- Player extensions of the admin plugin: the player's role, their individual and temporary
+-- permissions, and the staff level checks. The engine's `GetUserGroup`, `IsAdmin` and
+-- `IsSuperAdmin` are overridden so that other addons see Flux roles and permissions.
+
 local player_meta = FindMetaTable('Player')
 
 -- Implement common admin interfaces.

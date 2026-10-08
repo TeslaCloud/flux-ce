@@ -1,3 +1,14 @@
+--- Reverting of migrations: the recorder that stands in for the schema statements while a
+-- migration's `change` is being reverted, the inverters that turn each statement into the
+-- one that undoes it, and the table object that `change_table` works on in the meantime.
+
+--- Records schema statements instead of running them, which is how a migration's `change`
+-- is reverted. While `ActiveRecord::Migration#revert` is at work, `ActiveRecord.ddl`
+-- hands every statement to the recorder, which stores its inverse (`drop_table` for
+-- `create_table`, `remove_column` for `add_column` and so on); the stored statements are
+-- then run in reverse order. A statement that has no inverse, or that was not given
+-- enough to work its inverse out, raises an error that explains how to make the migration
+-- reversible.
 class 'ActiveRecord::CommandRecorder'
 
 --- Error message of statements that cannot be reverted automatically.
@@ -20,6 +31,10 @@ local function command(name, ...)
   return { command = name, args = pack(...) }
 end
 
+--- The inverters of the reversible schema statements, which
+-- `ActiveRecord::CommandRecorder#inverse_of` looks up by the name of the statement. A
+-- statement that has no inverter cannot be reverted automatically.
+--
 -- Statement name -> function that takes the arguments of the statement (a list with
 -- their count under 'n') and returns the inverse statement.
 local inverters = {}
@@ -276,6 +291,10 @@ function ActiveRecord.CommandRecorder:replay()
   end
 end
 
+--- The table object that `change_table` hands to its callback while statements are being
+-- recorded. It has the methods of a real table definition (the column types, `remove`,
+-- `rename`, `timestamps` and `references`), each of which records the matching statement
+-- (`add_column`, `remove_column` and so on) on its `ActiveRecord::CommandRecorder`.
 class 'ActiveRecord::TableRecorder'
 
 --- Creates the object that change_table hands to its callback while statements are

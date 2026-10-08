@@ -1,3 +1,11 @@
+--- Environment variables of Flux: the `ENV` table with `getenv` and `setenv`, and the
+-- `FLUX_ENV` variable that names the environment Flux runs in.
+-- Both entry points of the gamemode include this file first. On the first boot it reads
+-- `FLUX_ENV` from `config/environment.local.lua` if that file exists, else from
+-- `config/environment.lua`, and falls back to 'development' when the file returns nothing.
+-- The server shares variables with clients through `add_client_env`, which appends `setenv`
+-- calls to the generated `lua/_flux/environment.lua` file that clients include here.
+
 --
 -- Pointers for a C implementation of getenv:
 --

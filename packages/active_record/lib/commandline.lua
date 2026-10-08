@@ -1,3 +1,11 @@
+--- Server console commands of ActiveRecord. `flux db:<task>` runs one of the database
+-- tasks of `ActiveRecord.Tasks` (`flux db:migrate`, `flux db:rollback STEP=2`,
+-- `flux db:schema:dump` and so on), and `flux generate migration <Name> [column:type ...]`
+-- writes a new migration file with `ActiveRecord::MigrationGenerator`; anything else
+-- prints the list of tasks. `ar_recreate_schema` wipes and recreates the whole database
+-- once it has been entered twice within three seconds. Both commands only work from the
+-- server console, never for a player.
+
 local hold_start = nil
 
 concommand.Add('ar_recreate_schema', function(actor)

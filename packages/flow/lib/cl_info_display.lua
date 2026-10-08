@@ -1,3 +1,13 @@
+--- The info display: a row of round icons in the top left corner of the HUD that each show a
+-- percentage, such as health and armor. An icon is registered with `InfoDisplay:add` under an
+-- ID, with a Font Awesome icon, a size and a `callback` that updates its `percentage` before
+-- every draw. The icon is drawn dimmed and then filled with its color from the bottom up to
+-- that percentage. It is hidden while the percentage is outside of the range between
+-- `min_percentage` and `max_percentage`, so that the health icon, for example, only appears
+-- once the player is hurt. Flux registers the 'health' and 'armor' icons itself and draws all
+-- of the icons with `InfoDisplay:draw_all` from its HUD paint hook while the local player is
+-- alive.
+
 mod 'InfoDisplay'
 
 local stored        = InfoDisplay.stored or {}
@@ -75,6 +85,10 @@ end
 -- @param info [Map icon data, as stored by InfoDisplay#add]
 -- @return [Number horizontal offset for the next icon, 0 if nothing was drawn]
 function InfoDisplay:draw(info)
+  --- Called on the client before an icon of the info display is drawn, before the callback of
+  -- the icon runs.
+  -- @param info [Map icon data, as stored by `InfoDisplay:add`]
+  -- @return [Any Return any non-nil value to skip this icon]
   if hook.Run('PreDrawInfoDisplayItem', info) == nil then
     if isfunction(info.callback) then
       info.callback(info)
@@ -131,6 +145,9 @@ end
 -- with the 'PreDrawInfoDisplay' hook.
 -- @return [InfoDisplay self, for chaining]
 function InfoDisplay:draw_all()
+  --- Called on the client every time the info display is about to be drawn.
+  -- @param icons [Map all of the registered icons by ID]
+  -- @return [Any Return any non-nil value to prevent the info display from being drawn]
   if hook.Run('PreDrawInfoDisplay', stored) == nil then
     for k, v in pairs(stored) do
       last_x = last_x + self:draw(v)

@@ -1,3 +1,7 @@
+--- The Ban command bans the targeted players for a duration such as `30` (minutes),
+-- `2 hours` or `perma`, with an optional reason, and kicks them. Allowed for assistants by
+-- default.
+
 CMD.name = 'Ban'
 CMD.description = 'command.ban.description'
 CMD.syntax = 'command.ban.syntax'

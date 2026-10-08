@@ -1,3 +1,10 @@
+--- Extensions of the `Entity` metatable, available on every entity, players included.
+-- They add checks (`Entity:stuck`, `Entity:is_door`, `Entity:facing`), bodygroup, hitbox
+-- and idle animation helpers, display names that plugins can provide through hooks
+-- (`Entity:get_name`) and freezing (`Entity:freeze`).
+-- The engine's `SetModel` is kept as `flSetModel`, so that the `Player` metatable can
+-- override it and still call the original.
+
 local ent_meta = FindMetaTable('Entity')
 
 --[[
@@ -138,6 +145,9 @@ function ent_meta:freeze()
 
   self:set_nv('fl_frozen', true)
 
+  --- Called after an entity has been frozen with `Entity:freeze`, on the realm that
+  -- function was called on (it is meant for the server).
+  -- @param entity [Entity The entity that has been frozen; can be a player]
   hook.Run('EntityFreeze', self)
 end
 
@@ -154,6 +164,9 @@ function ent_meta:unfreeze()
 
   self:set_nv('fl_frozen', false)
 
+  --- Called after an entity has been unfrozen with `Entity:unfreeze`, on the realm that
+  -- function was called on (it is meant for the server).
+  -- @param entity [Entity The entity that has been unfrozen; can be a player]
   hook.Run('EntityUnfreeze', self)
 end
 

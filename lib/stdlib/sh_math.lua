@@ -1,3 +1,11 @@
+--- Extensions of the `math` library: snake_case aliases for the built-in functions, scaling of
+-- sizes to the screen resolution and checks for even, odd and divisible numbers.
+-- Numbers get the `math` library as their methods here, so that `n:floor()` and
+-- `n:clamp(0, 3)` work. The `Time` and `Unit` classes add their constructors and converters
+-- to the library as well, as in `math.minutes(5)` and `math.meters(2)`. This file also defines
+-- the `util` functions for hexadecimal numbers and 2D geometry.
+-- @module [math]
+
 -- Ruby-style names for the built-in math functions.
 math.angle_difference = math.AngleDifference
 math.approach         = math.Approach

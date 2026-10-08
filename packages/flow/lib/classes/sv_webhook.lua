@@ -1,3 +1,10 @@
+--- A Discord webhook that the server can post messages to. The class is also the registry of
+-- the webhooks: `Webhook:add` stores a webhook under an ID, and `Webhook:get`, `Webhook:all`
+-- and `Webhook:get_type` look the stored ones up. Every webhook lists the types of messages it
+-- accepts, so that a message of some type can be posted to all of the webhooks that want it.
+-- Flux creates the webhooks listed in the settings of the server and posts log messages to
+-- them with `Log:to_discord`.
+
 class 'Webhook'
 
 Webhook.base_url  = 'https://discordapp.com/api/webhooks/{id}/{key}'

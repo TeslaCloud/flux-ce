@@ -1,3 +1,9 @@
+--- Permission editor of the admin panel's player management page, which sets the individual
+-- and temporary permissions of the selected player.
+
+--- A row of the permission editor: the name of a permission and the allow, not set and never
+-- buttons that set its value for the edited player. Right-clicking a button makes that value
+-- temporary.
 local PANEL = {}
 PANEL.permission_value = PERM_NO
 PANEL.permission = {}
@@ -246,6 +252,8 @@ end
 
 vgui.Register('fl_permission', PANEL, 'fl_base_panel')
 
+--- The permission editor: every registered permission, grouped by category, with an
+-- `fl_permission` row each and buttons that set a whole category at once.
 local PANEL = {}
 
 --- Creates the list of permission rows.

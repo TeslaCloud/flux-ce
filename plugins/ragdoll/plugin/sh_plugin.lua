@@ -1,3 +1,10 @@
+--- Ragdoll lets players fall over and get back up, and leaves a ragdoll behind when they die.
+-- A fallen player is replaced by a ragdoll of their model and sees through its eyes; they get
+-- up with the jump key. Players use the `fall` and `getup` commands on themselves, staff use
+-- `forcefall` and `forcegetup` on others. The state of a player is one of the `RAGDOLL_` enums
+-- and is changed with `Player:set_ragdoll_state`. The ragdoll of a dead player stays for two
+-- minutes after they respawn.
+
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'

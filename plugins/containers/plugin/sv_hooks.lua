@@ -1,3 +1,7 @@
+--- Server side of the Containers plugin: creates the inventory of a container when a player
+-- opens it, plays its sounds, makes container props persistent and keeps the IDs of their
+-- items on the props when persistent entities are saved.
+
 --- Closes the inventory of a removed entity for everyone who views it
 -- and deletes the inventory from the server cache.
 -- @param entity [Entity]
@@ -96,6 +100,10 @@ Cable.receive('fl_container_open', function(actor, entity)
       entity:EmitSound(container_data.open_sound, 55)
     end
 
+    --- Called on the server when a player opens a container, after its inventory has been
+    -- created or found and its opening sound played, right before the inventory is shown to
+    -- the player. The player is not passed to the hook.
+    -- @param entity [Entity the container prop; its inventory is entity.inventory]
     hook.Run('PreContainerOpen', entity)
 
     actor:open_inventory(entity.inventory, entity)

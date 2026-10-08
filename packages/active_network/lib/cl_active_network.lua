@@ -1,3 +1,6 @@
+--- Client side of ActiveNetwork: stores the global and per-entity variables received from the
+-- server and provides the getters for them. Variables cannot be set on the client.
+
 if ActiveNetwork then return end
 
 mod 'ActiveNetwork'

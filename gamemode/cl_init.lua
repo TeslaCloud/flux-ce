@@ -1,3 +1,7 @@
+--- Client entry point of the gamemode.
+-- Loads the environment, the standard library and the package manager and includes the `flux`
+-- package, or reloads it on a code refresh, then creates the fonts.
+
 local start_time = os.clock()
 
 include 'env.lua'

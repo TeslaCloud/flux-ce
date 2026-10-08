@@ -1,3 +1,6 @@
+--- Client side of the Display Typing plugin: draws the text a player is typing above their
+-- head.
+
 local margin = math.scale(48)
 local max_distance = 350 ^ 2
 local fade_distance = 200 ^ 2
@@ -18,9 +21,23 @@ end
 -- @param dist [Number squared distance between the local player and the typing player]
 function DisplayTyping:draw_player_typing_text(target, text, ply_pos, dist)
   local hide_text = Config.get('display_exact_message') == false
+  --- Lets plugins scale the distance over which the typing text of a player fades out. Called
+  -- on the client every frame for each nearby player who is typing.
+  -- @param target [Player the player who is typing]
+  -- @param text [String the text being typed; long texts are cut to their last 45 characters]
+  -- @return [Number multiplier of the squared distances at which the text starts to fade (200
+  --   units) and has faded out (350 units); 1 when nothing is returned. The text is never
+  --   drawn beyond 350 units, whatever the multiplier]
   local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', target, text) or 1
 
   if hide_text then
+    --- Asks for the label to show in place of the text a player is typing. Called on the
+    -- client, only while the 'display_exact_message' config is disabled.
+    -- @param target [Player the player who is typing]
+    -- @param text [String the text being typed; long texts are cut to their last 45
+    --   characters]
+    -- @return [String label to draw; the translated 'typing' label is used when nothing is
+    --   returned]
     text = hook.Run('DisplayTypingTextType', target, text) or t'ui.hud.display_typing.typing'
   end
 

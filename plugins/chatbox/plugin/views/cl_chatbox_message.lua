@@ -1,3 +1,7 @@
+--- A single message of the chatbox (`fl_chat_message`): draws a message compiled by
+-- `Chatbox.compile` and fades out after the 'message_fade_delay' config, unless the chatbox is
+-- open.
+
 local PANEL = {}
 PANEL.message_data = {}
 PANEL.compiled = {}
@@ -57,6 +61,14 @@ end
 -- @param h [Number]
 function PANEL:Paint(w, h)
   if self.should_paint then
+    --- Lets plugins draw a chat message themselves. Called on the client every frame for each
+    -- message that is visible, while its panel is being painted; gamemode hooks are not
+    -- called.
+    -- @param w [Number width of the message panel]
+    -- @param h [Number height of the message panel]
+    -- @param panel [Panel the fl_chat_message panel; its message_data field holds the compiled
+    --   message and its alpha field the current opacity]
+    -- @return [Boolean return true to skip the default drawing]
     if Plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
 
     local cur_color = Color(255, 255, 255, self.alpha)
@@ -100,6 +112,11 @@ end
 --- Removes the message from the chatbox history and deletes its panel,
 -- unless the ShouldMessageeject hook returns false.
 function PANEL:eject()
+  --- Decides whether a message may be removed from the chatbox. Called on the client when the
+  -- history is full and its oldest message is about to be ejected; gamemode hooks are not
+  -- called.
+  -- @param panel [Panel the fl_chat_message panel]
+  -- @return [Boolean return false to keep the message]
   if Plugin.call('ShouldMessageeject', self) != false then
     local parent = Chatbox.panel
 

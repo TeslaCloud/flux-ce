@@ -1,3 +1,23 @@
+--- The Flux gamemode table: the handlers of GMod's gamemode hooks that turn Flux into a
+-- gamemode derived from sandbox.
+-- The handlers set players up when they join and spawn, check sandbox actions such as
+-- spawning props against the Flux permissions, play the animations defined by the
+-- `Flux.Anim` tables, draw the HUD and save the data. While doing so they run Flux's own
+-- hooks (`PlayerInitialized`, `PostPlayerSpawn`, `PlayerThink`, `LazyTick`, `FLHUDPaint`
+-- and so on, listed on the Hooks page), which are what plugins and schemas are meant to
+-- implement instead of overriding the `GM` functions.
+--
+-- Plugin and schema handlers of a hook are called before the handlers added with
+-- `hook.Add` and before the `GM` handler. The first handler that returns a non-nil value
+-- ends the call, so the remaining handlers, including the gamemode's, do not run: only
+-- return a value from a handler when the hook's documentation gives it a meaning. Hooks
+-- that are run with `Plugin.call` never reach the `GM` handlers.
+--
+-- The handlers are split by realm. The shared ones cover initialization, player animations,
+-- the noclip and physics gun checks and the timers behind the periodic hooks (`LazyTick`,
+-- `HalfSecond`, `OneSecond`, `OneMinute`); the server and the client ones are in the `sv_`
+-- and `cl_` hook files.
+
 --- Removes unused sandbox hooks and, on the server, imports the configuration from the
 -- settings, loads the config, connects to the database and registers the Discord webhooks.
 -- Runs the FLInitialize hook when done.
@@ -36,6 +56,9 @@ function GM:Initialize()
     end
   end
 
+  --- Called at the end of the gamemode's `Initialize` handler, on both realms.
+  -- On the server the config has been loaded, the connection to the database has been
+  -- started and the Discord webhooks from the settings have been registered by then.
   hook.Run('FLInitialize')
 end
 
@@ -232,6 +255,14 @@ do
 
       if !pair then return end
 
+      --- Asks whether a player should use the raised weapon animations of their model.
+      -- Called on both realms whenever the gamemode translates a movement activity of a
+      -- player who is on the ground and whose model has a Flux animation table. Gamemode
+      -- (`GM`) handlers are not called.
+      -- @param actor [Player The player being animated]
+      -- @param model [String Path of the model the player's animation table belongs to]
+      -- @return [Boolean Return true to use the raised animations; the lowered ones are used
+      --   when nothing or false is returned]
       if hook.Call('ModelWeaponRaised', nil, actor, actor.fl_anim_model) then
         anim = pair[2]
       else
@@ -423,12 +454,23 @@ end
 -- @return [Boolean whether the change is allowed]
 function GM:PlayerNoClip(actor, state)
   if state == false then
+    --- Called on both realms when a player tries to leave noclip. Gamemode (`GM`) handlers
+    -- are not called.
+    -- @param actor [Player The player leaving noclip]
+    -- @return [Boolean Return false to prevent it or true to allow it; it is allowed when
+    --   nothing is returned]
     local should_exit = Plugin.call('PlayerExitNoclip', actor)
 
     if should_exit != nil then
       return should_exit
     end
   else
+    --- Called on both realms when a player tries to enter noclip. Gamemode (`GM`) handlers
+    -- are not called. A handler that returns false may put the player into a noclip mode
+    -- of its own, which is how the observer plugin works.
+    -- @param actor [Player The player entering noclip]
+    -- @return [Boolean Return false to prevent it or true to allow it; it is allowed when
+    --   nothing is returned]
     local should_enter = Plugin.call('PlayerEnterNoclip', actor)
 
     if should_enter != nil then
@@ -451,6 +493,9 @@ end
 
 concommand.Add('fl_save_pers', function()
   if Flux.development and SERVER then
+    --- Sandbox's `PersistenceSave` hook, which saves the persistent entities. Flux runs it
+    -- on demand from the `fl_save_pers` console command, on the server and in development
+    -- only.
     hook.Run('PersistenceSave')
   end
 end)
@@ -478,6 +523,7 @@ end
 
 -- Utility timers to call hooks that should be executed every once in a while.
 timer.Create('fl_one_minute', 60, 0, function()
+  --- Called once a minute on both realms.
   hook.Run('OneMinute')
 
   local i = 0
@@ -487,6 +533,9 @@ timer.Create('fl_one_minute', 60, 0, function()
 
     timer.Simple(0.25 * i, function()
       if IsValid(v) then
+        --- Called once a minute for every player, on both realms. The calls are spread out:
+        -- each player's call comes a quarter of a second after the previous player's.
+        -- @param actor [Player The player the call is for]
         hook.Run('PlayerOneMinute', v)
       end
     end)
@@ -494,13 +543,18 @@ timer.Create('fl_one_minute', 60, 0, function()
 end)
 
 timer.Create('fl_one_second', 1, 0, function()
+  --- Called once a second on both realms. On the server the gamemode's handler uses it to
+  -- trigger the periodic data save (`FLSaveData`) and the restart of an empty server.
   hook.Run('OneSecond')
 end)
 
 timer.Create('fl_half_second', 0.5, 0, function()
+  --- Called twice a second on both realms.
   hook.Run('HalfSecond')
 end)
 
 timer.Create('fl_lazy_tick', 0.125, 0, function()
+  --- Called eight times a second on both realms. A cheaper alternative to `Tick` and
+  -- `Think` for work that has to happen often, but not on every tick or frame.
   hook.Run('LazyTick')
 end)

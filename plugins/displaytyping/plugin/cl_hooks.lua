@@ -1,3 +1,6 @@
+--- Client-side hooks of the Display Typing plugin: reports the text of the local player to the
+-- server and draws the text of the players nearby.
+
 local max_distance = 350 ^ 2
 
 --- Sends the text the local player is typing in the chatbox to the server,

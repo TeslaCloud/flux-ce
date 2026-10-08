@@ -1,3 +1,6 @@
+--- Client side of the Third Person plugin: calculates the third person view and adds the key
+-- bind that toggles it.
+
 local start_time = ThirdPerson.start_time or nil
 local offset = ThirdPerson.offset or Vector(0, 0, 0)
 ThirdPerson.start_time = start_time

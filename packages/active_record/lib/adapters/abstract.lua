@@ -1,3 +1,17 @@
+--- Base class of the database adapters. An adapter connects ActiveRecord to one kind of
+-- database: it opens the connection, runs raw SQL, escapes and quotes values, and tells
+-- the query builder about the SQL dialect (its `types` table maps the abstract column
+-- types such as 'string' to SQL types, `placeholder` gives the form of a bind parameter).
+-- It can run queries asynchronously or, in sync mode, block until the result is there,
+-- and it keeps a queue of deferred queries that is worked off one query a second.
+--
+-- The abstract adapter talks to no database; `ActiveRecord::Adapters::Sqlite`,
+-- `ActiveRecord::Adapters::Mysqloo` and `ActiveRecord::Adapters::Pg` override what their
+-- database needs. `ActiveRecord.establish_connection` creates the adapter named in the
+-- database settings and stores it in `ActiveRecord.adapter`. An adapter for another
+-- database is a class `ActiveRecord::Adapters::<Name>` that extends this one, placed in
+-- `lib/adapters/<name>.lua`.
+
 ActiveRecord.Adapters = ActiveRecord.Adapters or {}
 
 class 'ActiveRecord::Adapters::Abstract'
@@ -236,6 +250,11 @@ function ActiveRecord.Adapters.Abstract:on_connected()
   self:sync(true)
 
   ActiveRecord.on_connected()
+  --- Called on the server once the adapter is connected to the database and ActiveRecord
+  -- has finished starting up, right after the `ActiveRecordReady` hook. The adapter is
+  -- still in sync mode during the call, so queries made by a handler finish before it
+  -- returns.
+  -- @realm [server]
   hook.Run('DatabaseConnected')
 
   self:sync(false)
@@ -251,6 +270,11 @@ function ActiveRecord.Adapters.Abstract:on_connection_failed(error_text)
     ErrorNoHalt('HINT:\ntry running "flux db:create" to create the databases.\n\n')
   end
 
+  --- Called on the server when the adapter fails to connect to the database, after the
+  -- error has been printed to the console. Only the MySQL and PostgreSQL adapters report
+  -- a failed connection, and they do not when their binary module is missing.
+  -- @param error_text [String error reported by the database module]
+  -- @realm [server]
   hook.Run('DatabaseConnectionFailed', error_text)
 end
 

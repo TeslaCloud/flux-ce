@@ -1,3 +1,14 @@
+--- HTML templates, stylesheets and scripts for the panels that display web content. The files
+-- in the `views/html`, `views/assets/stylesheets` and `views/assets/javascripts` folders of
+-- Flux, the schema and the plugins are read on the server, stored in this library under their
+-- file name without extensions, and sent to the clients as generated Lua code. Templates can
+-- contain Lua code between `<?` and `?>`, as described under `Flux.HTML:render_template`. The
+-- global functions `render_template`, `render_partial`, `render_stylesheet` and
+-- `render_javascript` are the usual way to get their contents, both from Lua, as in
+-- `self.html:set_body(render_template('help'))`, and from inside of other templates, as in
+-- `<?= render_partial('credits') ?>`.
+-- @module [Flux.HTML]
+
 mod 'Flux::HTML'
 
 Flux.HTML.templates       = Flux.HTML.templates   or {}

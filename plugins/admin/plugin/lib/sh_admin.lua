@@ -1,3 +1,7 @@
+--- Core of the Bolt library: the registries of roles and permissions, the permission and
+-- immunity checks, bans (server side) and the parsing of human-readable ban durations.
+-- Also defines the `can` global and the `role` pipeline that loads role files.
+
 if !Bolt then
   PLUGIN:set_global('Bolt')
 end

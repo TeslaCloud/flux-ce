@@ -1,3 +1,9 @@
+--- The character loading screen of the main menu and the panel that shows a single character
+-- in it.
+
+--- The character loading screen (`fl_char_load`): a fullscreen list with one
+-- `fl_character_panel` for every character of the local player. It is rebuilt whenever the
+-- server sends the character list again.
 local PANEL = {}
 PANEL.chars = {}
 
@@ -36,6 +42,7 @@ function PANEL:Init()
     self:GetParent():to_main_menu(true)
   end
 
+  --- Rebuilds the list every time the character list arrives from the server.
   -- The list can only be trusted once the server has sent the characters again, which
   -- may happen long after the request that has changed them.
   hook.Add('OnCharactersReceived', self, self.rebuild)
@@ -83,6 +90,9 @@ end
 
 vgui.Register('fl_char_load', PANEL, 'fl_frame')
 
+--- A single character of the loading screen (`fl_character_panel`): shows its model with a
+-- button that selects the character and a button that deletes it once the player has typed the
+-- name of the character to confirm.
 local PANEL = {}
 
 --- Creates the model preview and the select and delete buttons.
@@ -179,6 +189,11 @@ function PANEL:set_character(char_data)
     self.delete:SetVisible(false)
   end
 
+  --- Called on the client when a character panel of the loading screen has been given its
+  -- character, after the model has been set. Lets plugins change how the character is
+  -- presented.
+  -- @param panel [Panel the fl_character_panel; its model preview is panel.model]
+  -- @param char_data [Map networked data of the character]
   hook.Run('PanelCharacterSet', self, char_data)
 end
 

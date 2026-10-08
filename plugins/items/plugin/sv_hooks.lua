@@ -1,3 +1,7 @@
+--- Server side of the Items plugin: loads and saves the items, sends the items lying in the
+-- world to players, checks whether a player may perform a menu action on an item, and
+-- calls the `on_drop`, `on_loadout`, `on_save` and `on_created` callbacks of items.
+
 --- Loads the saved items once the map entities have been created.
 function Items:InitPostEntity()
   Item.load()
@@ -11,6 +15,13 @@ function Items:OnEntityCreated(entity)
       if IsValid(entity) then
         local owner = entity:GetOwner()
 
+        --- Called on the server when a frag grenade has been thrown.
+        -- It runs on the next tick after an `npc_grenade_frag` entity is created. The
+        -- Inventory plugin uses it to take the equipped throwable item away from the
+        -- thrower.
+        -- @param owner [Entity The owner of the grenade, normally the player who threw it;
+        --   it is not checked for validity and is not necessarily a player]
+        -- @param entity [Entity The grenade]
         hook.Run('PlayerThrewGrenade', owner, entity)
       end
     end)

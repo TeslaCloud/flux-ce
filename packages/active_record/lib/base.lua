@@ -1,3 +1,18 @@
+--- The model class of ActiveRecord. A model is a class that extends `ActiveRecord::Base`;
+-- it is tied to the database table named after the lowercase plural of its class name,
+-- and each of its objects stands for one row, with the columns of the table as fields.
+--
+-- Objects are loaded by chaining query methods (`where`, `order`, `limit` and so on) on
+-- the class, naming a callback with `expect` (a single object) or `get` (a list) and then
+-- launching the query with `fetch`, or with `rescue`, which also names the callback for
+-- when nothing is found. `save` validates an object and inserts or updates its row, and
+-- `destroy` deletes it. Models are related to each other with `has_many`, `has_one` and
+-- `belongs_to`, validated with `validates`, and may define the `before_save`,
+-- `before_create`, `after_create`, `after_save` and `restored` callbacks.
+--
+-- The file is also sent to the client, where the methods that need the database are
+-- replaced by stubs.
+
 --- Base class for ActiveRecord database-tied objects.
 -- These objects are also referred to as "models".
 class 'ActiveRecord::Base'

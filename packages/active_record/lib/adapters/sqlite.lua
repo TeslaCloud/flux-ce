@@ -1,3 +1,8 @@
+--- Adapter for the SQLite database built into Garry's Mod (the `sql` library). It is the
+-- default: it is used when the database settings name the 'sqlite' or 'sqlite3' adapter,
+-- or none at all. It needs no connection and no binary module, every query blocks until
+-- it is done, and schema changes can be rolled back, so migrations run in a transaction.
+
 class 'ActiveRecord::Adapters::Sqlite' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Sqlite.types = {

@@ -1,3 +1,11 @@
+--- Converts words between their singular and plural forms, in the manner of the inflector of
+-- Ruby on Rails. The rules of a language are declared inside of a `Flow.Inflector:inflections`
+-- block as pattern replacements, irregular words and uncountable words; the English rules ship
+-- with Flux. `Flow.Inflector:pluralize` and `Flow.Inflector:singularize` apply the rules of
+-- the current language to a word. ActiveRecord uses them to derive the names of database
+-- tables from the names of models, turning 'user' into 'users', and the names of foreign keys
+-- from the names of tables.
+
 class 'Flow::Inflector'
 
 Flow.Inflector._plurals = {}

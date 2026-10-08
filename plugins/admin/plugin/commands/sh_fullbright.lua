@@ -1,3 +1,6 @@
+--- The Fullbright command turns fullbright rendering, which ignores the map's lighting, on
+-- or off for the targeted players. Allowed for moderators by default.
+
 CMD.name = 'Fullbright'
 CMD.description = 'command.fullbright.description'
 CMD.syntax = 'command.fullbright.syntax'

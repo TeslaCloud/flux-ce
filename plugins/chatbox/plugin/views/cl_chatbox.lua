@@ -1,3 +1,10 @@
+--- The chatbox panel (`fl_chat_panel`): a scrolling history of message panels above a text
+-- entry.
+-- While it is closed only recent messages are visible until they fade out. While it is open
+-- the whole history is shown, the text entry takes the input with a history of earlier entries
+-- on the up and down keys, and the commands that match what is being typed are listed.
+-- `Chatbox.create` creates the panel and keeps it in Chatbox.panel.
+
 local PANEL = {}
 PANEL.history = {}
 PANEL.last_pos = 0
@@ -39,12 +46,19 @@ function PANEL:Init()
     self:SetSize(Chatbox.width, Chatbox.height + offset)
     entry:SetTall(Theme.get_option('chatbox_text_entry_height', 40) + offset)
 
+    --- The ChatTextChanged hook of GMod, run by the chatbox because it replaces the default
+    -- chat. Called on the client whenever the contents of the text entry change, and with an
+    -- empty string when the chatbox is closed by `Chatbox.hide`.
+    -- @param text [String current contents of the text entry]
     hook.Run('ChatTextChanged', value)
   end
 
   self.text_entry.OnEnter = function(entry)
     local value = entry:GetValue()
 
+    --- Called on the client when the player presses enter in the chatbox. The handler of the
+    -- Chatbox plugin itself sends the text to the server and closes the chatbox.
+    -- @param text [String contents of the text entry, which may be empty]
     hook.Run('ChatboxTextEntered', value)
 
     if entry.history[1] != value then
@@ -302,6 +316,10 @@ end
 -- ChatboxShouldAddMessage hook returns false.
 -- @param message_data [Map message data received from the server]
 function PANEL:add_message(message_data)
+  --- Decides whether a message received from the server is added to the chatbox. Called on the
+  -- client before the message is compiled; gamemode hooks are not called.
+  -- @param message_data [Map message data received from the server]
+  -- @return [Boolean return false to drop the message]
   if message_data and Plugin.call('ChatboxShouldAddMessage', message_data) != false then
     local panel = self:create_message(message_data)
 

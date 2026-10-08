@@ -1,3 +1,6 @@
+--- The Tp command teleports the targeted players to the spot the caller is looking at.
+-- Allowed for assistants by default.
+
 CMD.name = 'Tp'
 CMD.description = 'command.tp.description'
 CMD.syntax = 'command.tp.syntax'

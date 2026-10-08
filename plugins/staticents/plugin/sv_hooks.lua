@@ -1,3 +1,6 @@
+--- Server side of the Static Entities plugin: turns Sandbox's own persistence off, saves and
+-- loads the static entities and handles the requests to make an entity static.
+
 -- Disable default Sandbox persistence.
 hook.Remove('ShutDown', 'SavePersistenceOnShutdown')
 hook.Remove('PersistenceSave', 'PersistenceSave')
@@ -14,17 +17,27 @@ local whitelisted_ents = {
 
 --- Runs the PersistenceLoad hook once the map's entities have been created.
 function StaticEnts:InitPostEntity()
+  --- Sandbox's `PersistenceLoad` hook, run by the plugin in place of Sandbox once the map's
+  -- entities have been created.
+  -- Handlers spawn what they have saved; the plugin's own handler loads the static entities.
   hook.Run('PersistenceLoad')
 end
 
 --- Runs the PersistenceSave hook when the server shuts down.
 function StaticEnts:ShutDown()
+  --- Sandbox's `PersistenceSave` hook, run by the plugin in place of Sandbox when the server
+  -- shuts down and whenever the framework saves its data.
+  -- Handlers save their persistent entities; the plugin's own handler saves the static
+  -- entities.
   hook.Run('PersistenceSave')
 end
 
 --- Saves every persistent entity to the plugin data of the current schema and map, one
 -- 'static/<class>' entry per entity class. Runs the PrePersistenceSave hook first.
 function StaticEnts:PersistenceSave()
+  --- Called on the server right before the static entities are copied and saved, so that
+  -- plugins can prepare their entities for it.
+  -- The Containers plugin stores the item IDs of every container on its entity here.
   hook.Run('PrePersistenceSave')
 
   local entities = {}

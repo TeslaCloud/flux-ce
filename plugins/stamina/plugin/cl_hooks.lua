@@ -1,3 +1,5 @@
+--- Client side of the Stamina plugin: draws the stamina bar on the HUD.
+
 local w, h = math.scale(512), math.scale(4)
 local cur_wide = w
 local cur_alpha = 0

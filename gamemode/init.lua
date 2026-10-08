@@ -1,3 +1,8 @@
+--- Server entry point of the gamemode.
+-- Opens the `file` binary module, without which startup is aborted, then loads the
+-- environment, the standard library and the package manager and includes the `flux` package.
+-- On a code refresh the package is reloaded instead.
+
 local start_time = os.clock()
 
 --- Includes a module and returns a boolean depending on success.

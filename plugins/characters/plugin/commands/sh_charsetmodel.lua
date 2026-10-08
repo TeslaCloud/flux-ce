@@ -1,3 +1,5 @@
+--- Staff command that sets the model of the characters of one or more players.
+
 CMD.name = 'CharSetModel'
 CMD.description = 'command.charsetmodel.description'
 CMD.syntax = 'command.charsetmodel.syntax'

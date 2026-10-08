@@ -1,3 +1,22 @@
+--- Bolt is the admin mod of Flux: roles, permissions, bans, and the commands and menus that
+-- manage them.
+-- Every player has a role (`user`, `assistant`, `moderator` or `admin` out of the box): a
+-- `Role` with an immunity level and a set of allowed permissions. A permission is an ID
+-- registered with `Bolt:register_permission`, normally from a `RegisterPermissions` hook;
+-- every command also gets a permission named after its ID, allowed by default for the role
+-- in the command's `permission` field. Code asks whether a player may do something with
+-- `actor:can(id)`, which Bolt answers from the player's unexpired temporary permissions,
+-- then their individual permissions (`PERM_ALLOW` or `PERM_NEVER`), then their role. The
+-- SteamIDs listed in the `root_steamid` config are root players, who may do anything.
+--
+-- Bans are stored in the database and checked whenever a player connects. Staff manage
+-- players with the plugin's commands and with the Admin entry of the tab menu, which holds
+-- the player management page (role and permission editor) and the config editor.
+--
+-- Other plugins extend Bolt by registering permissions, by shipping role files in a `roles`
+-- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook.
+-- @module [Bolt]
+
 PLUGIN:set_global('Bolt')
 
 require_relative 'cl_hooks'
@@ -50,6 +69,9 @@ end
 --- Runs the RegisterPermissions hook, then allows each permission for the role it was
 -- registered for and for every role based on it.
 function Bolt:OnPluginsLoaded()
+  --- Called on both realms once all plugins have loaded. Register permissions here with
+  -- `Bolt:register_permission`; each one is then allowed for the role it was registered for
+  -- and for every role based on it.
   hook.Run('RegisterPermissions')
 
   for k, v in pairs(self:get_roles()) do

@@ -1,3 +1,10 @@
+--- Adapter for PostgreSQL servers, built on the `pg` binary module (`gmsv_pg`). It is used
+-- when the database settings name the 'pg' or 'postgresql' adapter. Queries run
+-- asynchronously unless the adapter is in sync mode, bind parameters are numbered ($1,
+-- $2 and so on), and insert queries get the id of the new row through RETURNING id.
+-- Schema changes can be rolled back, so migrations run in a transaction. It is the only
+-- adapter that `flux db:create` can create the database for.
+
 class 'ActiveRecord::Adapters::Pg' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Pg.types = {

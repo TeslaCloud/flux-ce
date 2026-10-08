@@ -1,3 +1,7 @@
+--- The Vanish command hides the targeted players from everyone who lacks the `moderator`
+-- permission when given a true value, and toggles their visibility otherwise. Allowed for
+-- moderators by default.
+
 CMD.name = 'Vanish'
 CMD.description = 'command.vanish.description'
 CMD.syntax = 'command.vanish.syntax'

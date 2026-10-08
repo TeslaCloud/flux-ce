@@ -1,3 +1,25 @@
+--- An Inventory is a grid of slots that holds item instances.
+-- Every inventory has an id, under which it is found with `Inventories.find`, a `type`
+-- that says what it is for, a `title` and a size in slots. Each slot holds a list of
+-- instance ids: more than one when stackable items are stacked. If `multislot` is true,
+-- an item covers `width` by `height` slots, swapped when it is rotated; otherwise every
+-- item takes one slot. An item in an inventory carries its position in its
+-- `inventory_id`, `inventory_type`, `x`, `y` and `rotated` fields.
+--
+-- Inventories are created and changed on the server. Items are put in with
+-- `Inventory:add_item` or `Inventory:give_item`, taken out with the `take_` functions and
+-- moved with `Inventory:move_item` and `Inventory:transfer_item`, which run the
+-- `CanItemMove`, `CanItemTransfer`, `PreItemTransfer` and `ItemTransferred` hooks. The
+-- changes reach the clients when `Inventory:sync` is called, which sends the contents of
+-- the inventory to the players listed as its receivers. On the client an inventory is
+-- a copy of what was last synchronized, and `Inventory:create_panel` displays it.
+--
+-- Other fields: `owner` is the player or entity the inventory belongs to, and
+-- `instance_id` is the instance id of the container item it is the inside of. On the
+-- server, `default` marks the inventory of a player that items go to when none is named,
+-- and `infinite_width` and `infinite_height` make the inventory resize itself to keep
+-- an empty column or row past its last item.
+
 --- The inventory class is used to manage a player's items,
 -- transferring them from one player or object to another,
 -- using the same interface and functionality.
@@ -519,6 +541,14 @@ if SERVER then
         end
       end
 
+      --- Called on the server when an item has been put into an inventory by
+      -- `Inventory:add_item`: when it is given, picked up, or loaded along with the
+      -- inventories of a character. It is not run when an item arrives from another
+      -- inventory through `Inventory:transfer_item`.
+      -- @param item_obj [Item The item that has been added]
+      -- @param inventory [Inventory The inventory the item is in now]
+      -- @param x [Number Column of the slot the item has been placed in]
+      -- @param y [Number Row of the slot the item has been placed in]
       hook.Run('OnItemAdded', item_obj, self, x, y)
 
       self:check_size()
@@ -566,6 +596,12 @@ if SERVER then
         return success, error_text
       end
 
+      --- Called on the server for every item that `Inventory:give_item` has created and
+      -- added to an inventory, after `OnItemAdded`.
+      -- @param item_obj [Item The new item instance]
+      -- @param inventory [Inventory The inventory the item has been added to]
+      -- @param data [Map The fields that were overridden on the item, or nil if there are
+      --   none]
       hook.Run('OnItemGiven', item_obj, self, data)
     end
 
@@ -595,6 +631,12 @@ if SERVER then
 
     self:check_size()
 
+    --- Called on the server when an item has been taken out of an inventory by one of the
+    -- `take_` functions: when it is dropped, used up or taken away. The item no longer
+    -- has its `inventory_id`, `inventory_type`, `x` and `y` fields at this point. It is not
+    -- run when an item leaves for another inventory through `Inventory:transfer_item`.
+    -- @param item_obj [Item The item that has been taken]
+    -- @param inventory [Inventory The inventory the item was in]
     hook.Run('OnItemTaken', item_obj, self)
 
     return true
@@ -648,6 +690,16 @@ if SERVER then
 
     if !item_obj then return false, 'error.inventory.invalid_item' end
 
+    --- Called on the server before an item is moved to another slot of the inventory it
+    -- is in. The Inventory plugin uses it to ask the `can_move` callback of the item and to
+    -- keep items in disabled inventories where they are.
+    -- @param item_obj [Item The item that is being moved]
+    -- @param inventory [Inventory The inventory the item is in]
+    -- @param x [Number Column of the target slot; a free position is looked for when it is
+    --   nil or out of bounds]
+    -- @param y [Number Row of the target slot]
+    -- @return [Boolean Return false to prevent the move, String Error phrase that
+    --   `Inventory:move_item` then returns to its caller]
     local success, error_text = hook.Run('CanItemMove', item_obj, self, x, y)
 
     if success == false then
@@ -724,6 +776,17 @@ if SERVER then
 
     if !item_obj then return false, 'error.inventory.invalid_item' end
 
+    --- Called on the server before an item is transferred from one inventory to another.
+    -- The Inventory plugin uses it to enforce what equipment slots, pockets, container
+    -- items and disabled inventories accept, and to ask the `can_transfer` callback of the
+    -- item.
+    -- @param item_obj [Item The item that is being transferred]
+    -- @param inventory [Inventory The inventory the item is being transferred to]
+    -- @param x [Number Column of the target slot; a free position is looked for when it is
+    --   nil or out of bounds]
+    -- @param y [Number Row of the target slot]
+    -- @return [Boolean Return false to prevent the transfer, String Error phrase that
+    --   `Inventory:transfer_item` then returns to its caller]
     local success, error_text = hook.Run('CanItemTransfer', item_obj, inventory, x, y)
 
     if success == false then
@@ -759,6 +822,18 @@ if SERVER then
       end
     end
 
+    --- Called on the server right before an item changes its inventory.
+    -- Besides a transfer between two inventories, as here, the Inventory plugin runs it
+    -- when a player picks an item up from the world (without `old_inventory`, and before
+    -- it is known whether the item fits) and when an item is dropped or removed after
+    -- use (with nil as `new_inventory`). The Inventory plugin uses it to call the
+    -- `on_transfer` callback of the item, which is how equipable items get equipped and
+    -- unequipped.
+    -- @param item_obj [Item The item that is about to be moved]
+    -- @param new_inventory [Inventory The inventory the item goes to, or nil if it leaves
+    --   for the world or is removed]
+    -- @param old_inventory [Inventory The inventory the item is in, or nil if it comes from
+    --   the world]
     hook.Run('PreItemTransfer', item_obj, inventory, self)
 
     item_obj.inventory_id = inventory.id
@@ -789,6 +864,15 @@ if SERVER then
     self:check_size()
     inventory:check_size()
 
+    --- Called on the server right after an item has changed its inventory. It is run in
+    -- the same cases as `PreItemTransfer`: a transfer between two inventories, as here, a
+    -- pickup from the world (without `old_inventory`, and only if the item did fit) and a
+    -- drop or a removal after use (with nil as `new_inventory`).
+    -- @param item_obj [Item The item that has been moved]
+    -- @param new_inventory [Inventory The inventory the item is in now, or nil if it has
+    --   left for the world or has been removed]
+    -- @param old_inventory [Inventory The inventory the item was in, or nil if it came
+    --   from the world]
     hook.Run('ItemTransferred', item_obj, inventory, self)
 
     return true

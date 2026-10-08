@@ -1,3 +1,6 @@
+--- Installer of the SFS package: loads Srlion's Fast Serializer into the `sfs` global and
+-- makes its encoder report functions as an unsupported type.
+
 --- Called by the Package manager once the package has been included.
 -- Sends the library to clients and loads SFS into the global of the same name.
 function PACKAGE:__installed__()

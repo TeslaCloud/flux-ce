@@ -1,3 +1,6 @@
+--- Migration that creates the tables of the admin plugin, `permissions`, `temp_permissions`
+-- and `bans`, and adds the `role` and `banned` columns to `users`.
+
 local CreateAdminTables = ActiveRecord.Migration.new()
 
 --- Creates the permissions, temp_permissions and bans tables, and adds the role and

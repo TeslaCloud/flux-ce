@@ -1,3 +1,12 @@
+--- ActiveNetwork keeps variables in sync between the server and its clients.
+-- The server sets global variables with `ActiveNetwork.set_nv` and the variables of an entity
+-- with `Entity:set_nv`. Every change is sent to clients over Cable, where
+-- `ActiveNetwork.get_nv` and `Entity:get_nv` return the last value received. Values only
+-- travel from the server to clients, and anything but a function can be networked.
+-- `Player:sync_nv` sends everything that is currently set to a single player, which Flux does
+-- for every player once their client has created its local player.
+-- @module [ActiveNetwork]
+
 if ActiveNetwork then return end
 
 mod 'ActiveNetwork'

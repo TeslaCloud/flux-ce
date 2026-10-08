@@ -1,3 +1,8 @@
+--- The Area Tool creates and removes areas. Left click, right click and reload are passed on
+-- to the selected tool mode; modes are added by plugins through the `AddAreaToolModes`
+-- hook and picked from the list in the tool's settings panel. The tool requires the
+-- `areas` permission, and each of its actions also checks `area_tool`.
+
 TOOL.Category = 'Flux'
 TOOL.Name = 'Area Tool'
 TOOL.Command = nil

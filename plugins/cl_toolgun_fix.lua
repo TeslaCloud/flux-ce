@@ -1,3 +1,7 @@
+--- Toolgun Render Fix replaces the HUD drawing of the tool gun, so that the name and the
+-- description of Flux tools are translated by the Flux language system instead of the
+-- engine's.
+
 PLUGIN:set_name('Toolgun Render Fix')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Fixes toolgun help rendering incorrectly with Flux phrases.')

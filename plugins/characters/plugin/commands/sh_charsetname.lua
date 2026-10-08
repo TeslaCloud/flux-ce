@@ -1,3 +1,5 @@
+--- Staff command that sets the name of a player's character.
+
 CMD.name = 'CharSetName'
 CMD.description = 'command.charsetname.description'
 CMD.syntax = 'command.charsetname.syntax'

@@ -1,3 +1,7 @@
+--- Server-side player extensions of the admin plugin: setting and saving the player's role
+-- and their individual and temporary permissions, running commands as the player, and
+-- teleporting.
+
 local player_meta = FindMetaTable('Player')
 
 --- Sets the player's role, overriding the engine method. Networks the role, calls
@@ -18,6 +22,11 @@ function player_meta:SetUserGroup(group)
     end
   end
 
+  --- Called on the server after a player's role has been set with `Player:SetUserGroup`.
+  -- Either role is nil when its ID does not belong to a registered role.
+  -- @param target [Player The player whose role has changed]
+  -- @param group [Role The player's new role]
+  -- @param old_group [Role The role the player had before]
   hook.Run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
 end
 
@@ -73,6 +82,11 @@ function player_meta:set_permission(perm_id, value)
 
   self:set_permissions(perm_table)
 
+  --- Called on the server after one of a player's individual permissions has been set with
+  -- `Player:set_permission`. Temporary permissions do not run this hook.
+  -- @param target [Player The player whose permission has changed]
+  -- @param perm_id [String Permission ID]
+  -- @param value [Number New value: PERM_ALLOW, PERM_NEVER, or PERM_NO when it was unset]
   hook.Run('PlayerPermissionChanged', self, perm_id, value)
 end
 

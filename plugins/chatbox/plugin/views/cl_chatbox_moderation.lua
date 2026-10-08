@@ -1,3 +1,5 @@
+--- Placeholder of a chat moderation panel (`fl_chat_moderation`) that has no behavior yet.
+
 local PANEL = {}
 
 --- Currently does nothing.

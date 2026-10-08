@@ -1,3 +1,10 @@
+--- A window panel (`fl_frame`) with a title header and a close button, drawn by the active
+-- theme's `PaintFrame` hook.
+-- Set the title with `SetTitle`; docked children start below the header. The close button
+-- removes the frame, and `set_draggable` lets the player drag it around the screen. The
+-- character creation and loading screens and the item icon editor are built on it. Derives
+-- from `fl_base_panel`.
+
 local PANEL = {}
 PANEL.draggable = false
 

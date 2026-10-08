@@ -1,3 +1,6 @@
+--- Server-side player methods of the Characters plugin: selecting the active character,
+-- setting its fields and saving it.
+
 local player_meta = FindMetaTable('Player')
 
 --- Makes one of the player's characters their active one. Runs OnCharacterChange if another
@@ -15,6 +18,11 @@ function player_meta:set_active_character(id)
   local cur_char_id = self:get_character_id()
 
   if cur_char_id then
+    --- Called on the server when a player who already has an active character selects a
+    -- character, before the selected character becomes the active one.
+    -- @param owner [Player]
+    -- @param new_char [Character the character that is about to become active]
+    -- @param old_char [Character the character that is still active]
     hook.Run('OnCharacterChange', self, real_character, self:get_character())
   end
 
@@ -28,6 +36,12 @@ function player_meta:set_active_character(id)
   self:set_nv('phys_desc', char_data.phys_desc or '')
   self:set_nv('model', char_data.model or 'models/humans/group01/male_02.mdl')
 
+  --- Called on the server when a character has become the active character of a player, after
+  -- its ID, name, gender, description and model have been networked. The Characters plugin
+  -- spawns the player from its own handler of this hook; other plugins use it to apply what
+  -- they keep on the character.
+  -- @param owner [Player]
+  -- @param character [Character the character that is now active]
   hook.Run('OnActiveCharacterSet', self, self:get_character())
 end
 

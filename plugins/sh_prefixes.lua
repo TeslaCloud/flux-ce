@@ -1,3 +1,9 @@
+--- Prefixes lets plugins handle chat messages that start with a certain text, such as `//` for
+-- out of character chat, without making them commands.
+-- Register a prefix on the server with `Prefixes:add`: messages that start with it are handed
+-- to its callback instead of the regular chat, and are never treated as commands. The
+-- `PlayerUsedPrefix` hook is run after a prefix has handled a message.
+
 PLUGIN:set_global('Prefixes')
 PLUGIN:set_name('Prefixes')
 PLUGIN:set_author('TeslaCloud Studios')
@@ -58,6 +64,12 @@ if SERVER then
     if message != '' then
       prefix_data.callback(actor, message, team_chat)
 
+      --- Called on the server after a chat message has been handled by the callback of a
+      -- registered prefix.
+      -- @param actor [Player The player who sent the message]
+      -- @param prefix_id [String ID the prefix was registered with]
+      -- @param message [String The message without the prefix]
+      -- @param team_chat [Boolean Whether the message was sent to the team chat]
       hook.Run('PlayerUsedPrefix', actor, prefix_id, message, team_chat)
     end
 

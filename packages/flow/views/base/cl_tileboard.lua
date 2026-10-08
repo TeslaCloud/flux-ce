@@ -1,3 +1,8 @@
+--- A board (`fl_tile_board`) that lays its child panels out on a grid of equally sized cells.
+-- Set the number of columns and rows with `set_grid_size`, then dock panels with
+-- `attach_panel`, which positions and sizes them from the size the board has at that moment.
+-- Derives from `fl_base_panel`.
+
 local PANEL = {}
 PANEL.grid_size = { x = 1, y = 1 }
 PANEL.docked = {}

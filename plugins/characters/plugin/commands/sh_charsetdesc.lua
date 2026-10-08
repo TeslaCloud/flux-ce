@@ -1,3 +1,5 @@
+--- Staff command that sets the physical description of a player's character.
+
 CMD.name = 'CharSetDesc'
 CMD.description = 'command.charsetdesc.description'
 CMD.syntax = 'command.charsetdesc.syntax'

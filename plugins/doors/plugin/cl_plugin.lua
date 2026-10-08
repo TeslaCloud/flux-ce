@@ -1,3 +1,6 @@
+--- Client side of the Doors plugin: when the server sends it, opens the context menu of a door
+-- with the options to lock or unlock it and to open its settings.
+
 Cable.receive('fl_door_menu', function(entity, can_lock, conditions)
   if can_lock or can('manage_doors') then
     local menu = DermaMenu()

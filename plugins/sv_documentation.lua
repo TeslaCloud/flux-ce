@@ -1,3 +1,11 @@
+--- Documentation Generator is an unfinished generator of HTML pages that list the functions of
+-- Flux.
+-- When the server starts it scans the Lua files under `gamemodes/flux/` for global function
+-- declarations and writes one page for the standard library and one for every package and
+-- plugin to `gamemodes/flux/docs/`. It only runs in development mode with `experimental`
+-- turned on in the settings.
+-- @environment [development]
+
 -- WIP WIP WIP
 
 PLUGIN:set_name('Documentation Generator')

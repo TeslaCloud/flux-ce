@@ -1,3 +1,7 @@
+--- The door settings menu (`fl_door_menu`): a frame with a row for every door property that
+-- defines create_panel, and a conditions editor for the door. The changes are sent to the
+-- server when the menu is closed.
+
 local PANEL = {}
 
 --- Sets up the frame with the list of door properties and the conditions editor.

@@ -1,3 +1,12 @@
+--- Key binds that Flux handles itself, independently of the binds in the settings of the game.
+-- A bind ties a button (a `KEY_` or `MOUSE_` code) to a console command. Plugins add their
+-- default binds on the client with `Flux.Binds:add_bind`, for example
+-- `Flux.Binds:add_bind('ToggleThirdPerson', 'fl_third_person', KEY_P)`. When a player presses
+-- a button, the server tells their client which one, and the client runs the console command
+-- that is bound to it, if any. A command can only be bound to one button at a time. The
+-- library itself only exists on the client.
+-- @module [Flux.Binds]
+
 if CLIENT then
   mod 'Flux::Binds'
 
@@ -93,6 +102,7 @@ if CLIENT then
   end
 end
 
+--- Hook handlers of the binds library, registered as `FLBinds`.
 local hooks = {}
 
 if SERVER then

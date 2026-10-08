@@ -1,3 +1,7 @@
+--- Client side of the Areas API plugin: draws the areas of the Area Tool's selected mode,
+-- shows the texts of text areas on the HUD, and receives the areas and the enter and leave
+-- events from the server.
+
 do
   local cache = nil
   local temp_cache = nil

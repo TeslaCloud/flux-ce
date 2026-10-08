@@ -1,3 +1,12 @@
+--- Extensions of the `table` library and the shorthand helpers that go with it.
+-- Adds functional helpers (`table.map`, `table.select`, `table.reduce`, `table.partition` and
+-- others), filtering with `table.keep_if` and `table.delete_if`, comparison, conversion
+-- between hashes and arrays, and serialization through SFS with a fallback to JSON. `a` turns
+-- a table into an array that has the table library as its methods, `w` and `wk` build arrays
+-- and hashes out of words, and `print_table` replaces PrintTable. `table.Merge` is replaced
+-- with a version that leaves the `class` field of objects alone.
+-- @module [table]
+
 --- Recursively merges the source table into the destination table, overwriting existing keys.
 -- Replaces the built-in table.Merge. Unlike the built-in, a table stored under the `class`
 -- key is assigned by reference instead of being merged.

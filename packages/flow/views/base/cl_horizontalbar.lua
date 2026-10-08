@@ -1,3 +1,10 @@
+--- A horizontal row of panels (`fl_horizontalbar`) that can be scrolled when its contents do
+-- not fit.
+-- It extends `DHorizontalScroller`: add panels with `AddPanel` and they are lined up from the
+-- left and stretched to the height of the bar, or centered after `set_centered(true)`. The
+-- background is left to the active theme's `PaintHorizontalbar` hook. Used for the character
+-- list, the stages of the character creation and the faction chooser.
+
 local PANEL = {}
 PANEL.centered = false
 

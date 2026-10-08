@@ -1,3 +1,8 @@
+--- The base panel of character creation stages and the general stage built on it.
+
+--- Base panel of the stages of character creation (`fl_character_creation_base`). It only
+-- draws its background through the theme; stage panels derive from it and may define the
+-- on_open, on_close and on_validate methods that the character creation screen calls.
 local PANEL = {}
 PANEL.id = 'base'
 PANEL.text = 'Click sidebar buttons to open character creation menus.'
@@ -16,6 +21,9 @@ end
 
 vgui.Register('fl_character_creation_base', PANEL, 'fl_base_panel')
 
+--- The general stage of character creation (`fl_char_create_general`): lets the player pick a
+-- gender, enter a name and a physical description, and choose a model and its skin. The models
+-- on offer come from the GetCharacterCreationModels hook.
 local PANEL = {}
 PANEL.id = 'general'
 PANEL.text = 'ui.char_create.general'
@@ -180,6 +188,13 @@ end
 -- model if it is no longer among them.
 function PANEL:rebuild_models()
   local char_data = self:GetParent().char_data
+  --- Asks for the models the player can choose from in the general stage of character
+  -- creation. Called on the client every time the model list is rebuilt, which happens when
+  -- the stage is opened with a gender already chosen and whenever the gender changes.
+  -- @param char_data [Map character data collected so far, including the gender ('male',
+  --   'female' or 'universal') that has been picked]
+  -- @return [List<String> model paths. The stage has no models of its own, so a handler has to
+  --   return a list, as the Factions plugin does]
   local models = hook.Run('GetCharacterCreationModels', char_data)
   local i = 0
   local offset = 4

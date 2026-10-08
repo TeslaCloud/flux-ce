@@ -1,3 +1,6 @@
+--- The SetGroup command sets the role of the targeted players to the role with the given
+-- ID. By default only administrators can use it.
+
 CMD.name = 'SetGroup'
 CMD.description = 'command.setgroup.description'
 CMD.syntax = 'command.setgroup.syntax'

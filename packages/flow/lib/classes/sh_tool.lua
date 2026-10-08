@@ -1,3 +1,12 @@
+--- Base class of the tool gun tools that Flux loads. It reimplements the tool object of
+-- Sandbox, so that a tool file written for Sandbox works as it is: the same fields (`Mode`,
+-- `ClientConVar`, `Objects` and so on), the same callbacks to override (`LeftClick`,
+-- `RightClick`, `Reload`, `Think`, `Deploy`, `Holster`, `DrawHUD`) and the same helpers for
+-- console variables, selected objects and ghost entities. What Flux adds is that the name and
+-- the description of a tool come from the `tool.<id>.name` and `tool.<id>.desc` language
+-- phrases. Tool files are loaded from the `tools` folders by the `Flux.Tool` library, which
+-- creates the object and passes it to the file as `TOOL`.
+
 --[[
   Sandbox's tools copy-pasta.
   Because sandbox only lets you create tools

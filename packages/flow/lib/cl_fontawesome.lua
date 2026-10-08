@@ -1,3 +1,8 @@
+--- Font Awesome 5 icons for the interface. Maps the icon names ('fa-plus', 'fa-shield-alt' and
+-- so on) to the glyphs of the bundled Font Awesome font, and draws them as text of any size
+-- and color with `FontAwesome:draw`.
+-- @module [FontAwesome]
+
 --[[
   Font-Awesome 5's license can be found here:
   https://fontawesome.com/license/free

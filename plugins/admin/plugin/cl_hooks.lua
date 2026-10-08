@@ -1,3 +1,6 @@
+--- Client-side hooks of the admin plugin: the Admin entry of the tab menu and its pages, the
+-- vanish indicator on the HUD, fullbright rendering and the voice permission check.
+
 --- Returns false for speakers that lack the 'voice' permission.
 -- @param speaker [Player the player that started talking]
 -- @return [Boolean false if the player lacks the permission, nothing otherwise]

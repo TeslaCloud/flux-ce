@@ -1,3 +1,12 @@
+--- Player extensions of the Factions plugin: the faction, rank and whitelists of a player.
+-- Every player is in a faction and holds a rank in it, and has a list of the factions they are
+-- whitelisted for. The player methods read these on the server and the client; on the server
+-- they also move the player to another faction, change their rank and give or take whitelists.
+--
+-- This file also holds the `Factions` functions that register and look up factions, and
+-- the loader of faction definition files.
+-- @module [Player]
+
 if !Factions then
   PLUGIN:set_global 'Factions'
 end
@@ -216,6 +225,13 @@ do
 
       faction_table:on_player_join(self)
 
+      --- Called on the server after `Player:set_faction` has moved a player into a faction:
+      -- their name, rank, team, gender and model have been updated, and the on_player_leave
+      -- and on_player_join callbacks of the factions have run.
+      -- @param target [Player]
+      -- @param faction_table [Faction the faction the player is in now]
+      -- @param old_faction [Faction the faction the player was in before, nil if that was not
+      --   a registered faction]
       hook.Run('OnPlayerFactionChanged', self, faction_table, old_faction)
     end
 
@@ -244,6 +260,11 @@ do
 
       Characters.set_name(self, faction_table:generate_name(self, rank))
 
+      --- Called on the server after `Player:set_rank` has changed the rank of a player,
+      -- networked it and regenerated their name.
+      -- @param target [Player]
+      -- @param rank [Number the new rank index]
+      -- @param old_rank [Number the rank index before the change]
       hook.Run('OnRankChanged', self, rank, old_rank)
     end
 

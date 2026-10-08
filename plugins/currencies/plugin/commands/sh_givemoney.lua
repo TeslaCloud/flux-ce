@@ -1,3 +1,5 @@
+--- Command that gives an amount of the player's money to the entity they are looking at.
+
 CMD.name = 'GiveMoney'
 CMD.description = 'command.givemoney.description'
 CMD.syntax = 'command.givemoney.syntax'

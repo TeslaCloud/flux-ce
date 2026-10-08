@@ -1,3 +1,36 @@
+--- Items are the objects that players carry, use, equip and drop.
+-- An item starts as an item class, also called a template: a file in the `items/` folder
+-- of a plugin or of the schema that is loaded through the `item` pipeline. The pipeline
+-- creates an `ItemBase` object, exposes it as the `ITEM` global while the file runs and
+-- registers it under the id taken from the file name (`sh_test_item.lua` becomes
+-- `test_item`). An item class can build upon a base class from an `items/bases/` folder
+-- with `ItemBase:base_off`; this plugin comes with `ItemUsable`, `ItemConsumable`,
+-- `ItemAmmo`, `ItemEquipable`, `ItemWeapon`, `ItemThrowable` and `ItemWearable`.
+--
+-- What players actually own are item instances: copies of a template made by
+-- `Item.create`, each with its own numeric instance id and custom data. The server saves
+-- the instances and sends them to the clients. An instance either sits in an inventory
+-- (see the Inventory plugin) or lies in the world as an `fl_item` entity spawned by
+-- `Item.spawn`. Players act on an instance through its menu: the use, take and drop options
+-- and the custom buttons of the item all end up in `ItemBase:do_menu_action` on the
+-- server, which runs the `PlayerCanUseItem`, `PlayerUseItem`, `PlayerTakeItem`,
+-- `PlayerDropItem` and `PlayerUsedItem` hooks.
+--
+-- Once this plugin is loaded, every plugin and the schema get their `items/bases/` and
+-- `items/` folders included, so adding an item only takes a file:
+-- ```
+-- ITEM:base_off 'ItemUsable'
+-- ITEM.name = 'Bandage'
+-- ITEM.description = 'A roll of clean cloth.'
+-- ITEM.model = 'models/props_lab/box01a.mdl'
+--
+-- function ITEM:use(actor)
+--   actor:SetHealth(math.min(actor:Health() + 10, actor:GetMaxHealth()))
+-- end
+-- ```
+-- The plugin also registers the `has_item` and `has_item_data` conditions.
+-- @module [Items]
+
 PLUGIN:set_global('Items')
 
 require_relative 'cl_hooks'

@@ -1,3 +1,13 @@
+--- Entry point of the query builder. Each of its methods starts an `ActiveRecord::Query`
+-- of one type (select, insert, update, delete, create, change, drop or truncate) on a
+-- table; the query is then set up through its own methods and run with
+-- `ActiveRecord::Query#execute`. Models and the schema statements are built on top of it,
+-- so it is only needed directly for tables that have no model. The class is used as it
+-- is, without creating objects of it.
+--
+-- It also creates and drops the database itself for the `flux db:create` and
+-- `flux db:drop` tasks, and makes the adapter work off its queue of deferred queries.
+
 --[[
   mysql - 2.0.0
   A simple Database wrapper for Garry's Mod.

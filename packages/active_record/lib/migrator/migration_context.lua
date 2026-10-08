@@ -1,3 +1,19 @@
+--- Finds the migration files and decides which of them to run. A context looks for files
+-- named `<version>_<name>.lua` in its migration folders (the `db/migrate/` folder of the
+-- active schema by default), wraps each one in an `ActiveRecord::MigrationProxy` and
+-- offers the operations behind the `flux db:*` tasks: `migrate`, `up`, `down`, `run`,
+-- `rollback`, `forward` and `migrations_status`. The migrations themselves are run by an
+-- `ActiveRecord::Migrator` that the context creates.
+--
+-- It also installs the migrations that packages and plugins ship in their `migrations`
+-- folder: those files are registered through the 'migrations' pipeline, and
+-- `install_migrations` copies them into the schema's folder under a new version when the
+-- server starts.
+-- @module [ActiveRecord.MigrationContext]
+
+--- A stand-in for a migration file that has not been loaded yet. It carries the version,
+-- the name and the scope found in the file name, and includes the file only when the
+-- migration itself is needed.
 class 'ActiveRecord::MigrationProxy'
 
 --- Creates a stand-in for a migration file, which loads the file only when the

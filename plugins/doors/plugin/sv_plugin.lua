@@ -1,3 +1,6 @@
+--- Server side of the Doors plugin: saves and loads the properties and conditions of doors,
+-- locks doors and applies what the door menu sends.
+
 --- Loads the saved doors when the framework loads its data.
 function Doors:LoadData()
   self:load()
@@ -54,6 +57,8 @@ function Doors:load()
       door.conditions = v.conditions
     end
   else
+    --- Called on the server when the doors are loaded and no door data has been saved for the
+    -- map yet. Lets a schema set the doors of the map up for the first time.
     hook.Run('InitialDoorsLoad')
   end
 end

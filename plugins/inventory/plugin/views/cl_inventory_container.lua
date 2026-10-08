@@ -1,3 +1,10 @@
+--- The `fl_inventory_container` panel is a fullscreen view that shows another inventory
+-- next to the main inventory, the pockets and the hotbar of the local player, so that
+-- items can be dragged between them.
+-- The server opens it for a single inventory, such as that of a container, or for all
+-- inventories of another player. When it is removed it tells the server that the
+-- inventories have been closed.
+
 local PANEL = {}
 PANEL.title = 'ui.inventory.container'
 
@@ -93,6 +100,11 @@ function PANEL:open_inventory(inventory_id)
 
   self.inventory_ids = { inventory_id }
 
+  --- Called on the client when an `fl_inventory_container` panel has been set up to show
+  -- an inventory next to those of the local player. It is not run when the panel shows
+  -- the inventories of another player.
+  -- @param panel [Panel The `fl_inventory_container` panel]
+  -- @param inventory_id [Number Id of the inventory that has been opened]
   hook.Run('OnContainerOpened', self, inventory_id)
 end
 

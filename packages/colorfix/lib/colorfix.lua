@@ -1,3 +1,9 @@
+--- Makes console output colored on Linux servers, where MsgC prints everything in white.
+-- Replaces `MsgC` and `ErrorNoHalt` with versions that write ANSI escape sequences, picking
+-- the closest of the 256 terminal colors for every Color, and adds `print_colored` for styled
+-- output. The originals stay available as `_MsgC` and `_ErrorNoHalt`. Flux only includes this
+-- package on Linux, and only on the server.
+
 _MsgC                       = _MsgC         or MsgC
 _ErrorNoHalt                = _ErrorNoHalt  or ErrorNoHalt
 

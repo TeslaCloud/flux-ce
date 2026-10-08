@@ -1,3 +1,6 @@
+--- Client side of the Containers plugin: draws the name and the description of containers and
+-- adds the 'open' option to their interaction menu.
+
 --- Draws the name and the description of the container that the local player is looking at.
 -- @param entity [Entity]
 -- @param x [Number screen position]

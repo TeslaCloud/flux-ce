@@ -1,3 +1,6 @@
+--- Server side of the Observer plugin: puts players into observer mode when they noclip and
+-- restores them when they leave it.
+
 --- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
 -- hidden from players without the 'moderator' permission. The previous position, angles,
 -- color and move type are kept in actor.observer_data. Requires the 'noclip' permission.
@@ -15,6 +18,10 @@ function Observer:PlayerEnterNoclip(actor)
     angles = actor:EyeAngles(),
     color = actor:GetColor(),
     move_type = actor:GetMoveType(),
+    --- Called on the server when a player enters observer mode, to decide whether they
+    -- are put back where they entered it once they leave.
+    -- @param actor [Player The player entering observer mode]
+    -- @return [Boolean Return false to leave the player where they stop observing]
     should_reset = (Plugin.call('ShouldObserverReset', actor) != false)
   }
 

@@ -1,3 +1,16 @@
+--- Factions puts every character into a faction, which is also the team of its player.
+-- A faction is a `Faction` object, normally defined in a file of the factions folder of a
+-- schema or plugin. It sets the name, color, models and ranks of its members, whether they
+-- choose a name, description and gender of their own, and whether a whitelist is needed to
+-- join. The plugin makes the choice of a faction the first stage of character creation,
+-- generates character names from the name template of the faction, groups the scoreboard by
+-- faction, and adds commands that change factions, ranks and whitelists.
+--
+-- The `Factions` functions register and look up factions, and the `Player` extensions read and
+-- change the faction, rank and whitelists of a player. The `OnPlayerFactionChanged` and
+-- `OnRankChanged` hooks report changes, and `ShouldNameGenerate` can stop a name from being
+-- generated. The 'faction' and 'rank' conditions are registered for the Conditions plugin.
+
 PLUGIN:set_global('Factions')
 
 Plugin.add_extra('factions')

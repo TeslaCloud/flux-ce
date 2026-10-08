@@ -1,3 +1,7 @@
+--- The CharAttributeBoost command gives the characters of the targeted players a temporary
+-- boost of the given number of levels to an attribute, for a duration such as `30`
+-- (minutes) or `2 hours`. Allowed for moderators by default.
+
 CMD.name = 'CharAttributeBoost'
 CMD.description = 'command.charattributeboost.description'
 CMD.syntax = 'command.charattributeboost.syntax'

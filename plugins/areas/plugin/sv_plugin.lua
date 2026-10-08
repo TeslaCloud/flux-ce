@@ -1,3 +1,6 @@
+--- Server side of the Areas API plugin: saves and loads the areas, sends them to players,
+-- and checks every second which players have entered or left an area.
+
 --- Sends all stored areas to the player who has just initialized.
 -- @param actor [Player]
 function Area:PlayerInitialized(actor)

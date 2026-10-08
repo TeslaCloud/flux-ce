@@ -1,3 +1,5 @@
+--- The Unfreeze command unfreezes the targeted players. Allowed for assistants by default.
+
 CMD.name = 'Unfreeze'
 CMD.description = 'command.unfreeze.description'
 CMD.syntax = 'command.unfreeze.syntax'

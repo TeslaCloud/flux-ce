@@ -1,3 +1,7 @@
+--- Server side of the admin plugin: removal of temporary permissions, and the network
+-- receivers behind the admin panel, which set a player's role, permissions and temporary
+-- permissions and change config values after checking the sender's own permission.
+
 --- Removes a temporary permission from a player, destroying its database record and updating
 -- the networked table.
 -- @param target [Player]

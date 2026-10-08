@@ -1,3 +1,6 @@
+--- Server-side hooks of the Doors plugin: opens the door menu, toggles the lock of a door that
+-- is used while sprinting and checks the conditions of doors.
+
 --- Opens the door menu for the player if they are looking at a door
 -- that is closer than 115 units.
 -- @param actor [Player]
@@ -6,6 +9,13 @@ function Doors:ShowSpare1(actor)
   local entity = trace.Entity
 
   if IsValid(entity) and entity:is_door() and actor:GetPos():Distance(entity:GetPos()) < 115 then
+    --- Asks whether a player may lock and unlock a door. Called on the server when the player
+    -- opens the menu of the door, when they use the door and when they ask to lock or unlock
+    -- it from the menu.
+    -- @param actor [Player]
+    -- @param entity [Entity the door]
+    -- @return [Boolean return true to allow it; the player may not lock the door when nothing
+    --   is returned]
     local can_lock = hook.Run('PlayerCanLockDoor', actor, entity) or false
 
     Cable.send(actor, 'fl_door_menu', entity, can_lock, entity.conditions)
@@ -39,6 +49,10 @@ function Doors:PlayerUse(activator, entity)
 
       entity.next_use = cur_time + 0.5
 
+      --- Called on the server when a player uses a door that is within reach and not on its
+      -- use cooldown, except for the use that has just locked the door.
+      -- @param activator [Player]
+      -- @param entity [Entity the door]
       hook.Run('PlayerUseDoor', activator, entity)
     else
       return false

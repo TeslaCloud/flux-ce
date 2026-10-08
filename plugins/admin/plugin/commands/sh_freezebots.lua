@@ -1,3 +1,6 @@
+--- The FreezeBots command freezes all bots by turning the `bot_zombie` console variable on.
+-- Allowed for moderators by default.
+
 CMD.name = 'FreezeBots'
 CMD.description = 'command.freezebots.description'
 CMD.permission = 'moderator'

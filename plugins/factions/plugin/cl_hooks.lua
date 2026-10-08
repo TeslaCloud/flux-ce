@@ -1,3 +1,6 @@
+--- Client side of the Factions plugin: adds the faction stage to character creation, adapts
+-- the general stage to the chosen faction and groups the scoreboard by faction.
+
 --- Hides the gender, description and name controls of the 'ui.char_create.general' stage
 -- when the chosen faction does not have them. Factions without gender get the 'universal' one.
 -- @param id [String ID of the stage that has just been opened]
@@ -122,6 +125,12 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     players_table[k] = players
   end
 
+  --- Lets plugins regroup the players of the scoreboard before its faction categories are
+  -- created. Called on the client each time the scoreboard is rebuilt.
+  -- @param players_table [Map lists of players keyed by faction ID, with an entry for every
+  --   faction that has players online; modify it in place. An entry under the 'players_online'
+  --   key becomes a category titled with the 'ui.scoreboard.players_online' phrase; every
+  --   other key has to be the ID of a registered faction]
   hook.Run('PreRebuildFactionCategories', players_table)
 
   for k, v in pairs(players_table) do

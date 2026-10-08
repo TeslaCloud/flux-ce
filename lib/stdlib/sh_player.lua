@@ -1,3 +1,6 @@
+--- Extensions of the `player` library: picking a random player, finding players by name or
+-- SteamID and looking up the Steam name of a SteamID.
+
 --- Selects a random player.
 -- @return [Player random player, or nil if there are no players on the server]
 function player.random()

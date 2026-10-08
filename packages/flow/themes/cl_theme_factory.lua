@@ -1,3 +1,13 @@
+--- The factory theme: Flux's default theme and the base that other themes derive from.
+-- `on_loaded` defines the default options, sounds, colors, fonts and materials that the
+-- interface reads through `Theme.get_option`, `Theme.get_color`, `Theme.get_font` and their
+-- siblings, and registers the 'tab_menu' panel. The `Paint...` and `Draw...` methods are the
+-- theme hooks that panels and HUD code call through `Theme.hook` to draw frames, buttons,
+-- bars, the scoreboard, the tab menu, the inventories and the character screens. `THEME.skin`
+-- holds the colors, fonts and paint functions that are copied into the 'Flux' Derma skin when
+-- the theme is loaded. A schema theme sets `THEME.parent = 'factory'` and overrides only what
+-- it changes.
+
 -- Create the default Theme that other themes will derive from.
 THEME.author        = 'TeslaCloud Studios'
 THEME.id            = 'factory'

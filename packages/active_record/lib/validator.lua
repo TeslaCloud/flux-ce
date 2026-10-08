@@ -1,3 +1,13 @@
+--- Validations of model objects. `ActiveRecord::Base#validates` attaches validations to a
+-- column of a model, and `ActiveRecord::Base#save` runs them through `validate_model`
+-- before anything is written: the object is saved only if all of them pass, otherwise its
+-- `invalid` callback receives the column and the id of the validation that failed.
+--
+-- The built-in validations are `presence` (the value is not nil), `min_length` and
+-- `max_length` (length of a string in UTF-8 characters), `format` (the value matches a
+-- Lua pattern) and `uniqueness` (no row of the table holds the same value, ignoring
+-- case). More can be registered with `add`.
+
 class 'ActiveRecord::Validator'
 
 ActiveRecord.Validator.validators = {}

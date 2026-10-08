@@ -1,3 +1,8 @@
+--- Server-side hooks of the admin plugin: the ban check on connect, loading of the bans and
+-- of each player's role and permissions from the database, the permission checks for tools
+-- and voice chat, expiry of temporary permissions, and giving or stripping the tool gun and
+-- the physgun as permissions change.
+
 --- Checks connecting players against the ban cache. A timed ban that passes the expiry check
 -- is lifted and the player let in; any other ban rejects the connection with its reason.
 -- @param steam_id64 [String 64-bit SteamID of the connecting player]
@@ -11,8 +16,22 @@ function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
   local entry = self:get_bans()[steam_id]
 
+  --- Called on the server when a connecting player has a ban on record, before the ban is
+  -- enforced or lifted.
+  -- @param steam_id [String SteamID of the connecting player]
+  -- @param ip [String Address the player connects from]
+  -- @param name [String Name of the connecting player]
+  -- @return [Boolean Return false to ignore the ban, so that the admin plugin neither
+  --   rejects the player nor lifts the ban]
   if entry and Plugin.call('ShouldCheckBan', steam_id, ip, name) != false then
     if entry.duration != 0 and entry.unban_time >= os.time() and
+       --- Called on the server when the admin plugin is about to lift the temporary ban of
+       -- a connecting player and let them in.
+       -- @param steam_id [String SteamID of the connecting player]
+       -- @param ip [String Address the player connects from]
+       -- @param name [String Name of the connecting player]
+       -- @return [Boolean Return false to keep the ban, so that the player is rejected with
+       --   the reason of the ban]
        Plugin.call('ShouldExpireBan', steam_id, ip, name) != false then
       self:remove_ban(steam_id)
 

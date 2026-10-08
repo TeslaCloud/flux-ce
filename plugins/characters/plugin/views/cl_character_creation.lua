@@ -1,3 +1,10 @@
+--- The character creation screen (`fl_char_create`), a fullscreen frame that takes the player
+-- through a list of stages and then asks the server to create the character.
+-- A stage is the ID of a theme panel, added with `add_stage` from the
+-- AddCharacterCreationMenuStages hook. A stage panel may define on_open(parent),
+-- on_close(parent) and on_validate(); it hands over what the player has entered with
+-- `collect_data`, and the collected char_data is what is sent to the server.
+
 local PANEL = {}
 PANEL.char_data = {}
 
@@ -14,6 +21,10 @@ function PANEL:Init()
   self.stage = 1
   self.stages = {}
 
+  --- Lets plugins add their stages to the character creation screen. Called on the client each
+  -- time the screen is created, before its first stage is opened.
+  -- @param panel [Panel the fl_char_create panel; call its add_stage method with the ID of a
+  --   theme panel]
   hook.Run('AddCharacterCreationMenuStages', self)
 
   self:open_panel(self.stages[1])
@@ -220,6 +231,13 @@ function PANEL:next_stage()
     end
   end
 
+  --- Lets plugins keep the player on the current stage of character creation. Called on the
+  -- client when the screen is about to move on from a stage (on the last stage, before the
+  -- player is asked to confirm), after the on_validate method of the stage panel has passed.
+  -- @param id [String ID of the current stage]
+  -- @param panel [Panel the panel of that stage]
+  -- @return [Boolean return false to stay on the stage, String error text to show; a generic
+  --   error is shown when it is omitted]
   local success, error = hook.Run('PreStageChange', self.stages[self.stage], self.panel)
 
   if success == false then
@@ -250,6 +268,10 @@ function PANEL:next_stage()
               Flux.intro_panel.hide_sidebar = true
 
               timer.Simple(Theme.get_option('menu_anim_duration') * #self.stages, function()
+                --- Called on the client shortly after the local player has created a character
+                -- that is their only one, 1.5 seconds before that character is loaded
+                -- automatically.
+                -- @param char [Map networked data of the new character]
                 hook.Run('FirstCharacterCreated', chars[1])
 
                 timer.Simple(1.5, function()
@@ -260,6 +282,12 @@ function PANEL:next_stage()
           else
             local status = response.status
             local text = t'ui.char_create.unknown_error'
+            --- Lets plugins supply the text shown when the server has refused to create a
+            -- character. Called on the client.
+            -- @param success [Boolean always false here]
+            -- @param status [Number the CHAR_ERR_* code the server answered with]
+            -- @return [String translated error text; when nothing is returned the menu uses
+            --   its own text for the codes of the Characters plugin]
             local hook_text = hook.Run('GetCharCreationErrorText', response.success, status)
 
             if hook_text then
@@ -365,6 +393,10 @@ function PANEL:open_panel(id)
     self.panel:on_open(self)
   end
 
+  --- Called on the client after the character creation screen has opened the panel of a stage
+  -- and run its on_open method. Lets plugins adjust the stage panels of other plugins.
+  -- @param id [String ID of the stage, as it was passed to add_stage]
+  -- @param panel [Panel the panel created for the stage]
   hook.Run('CharPanelCreated', id, self.panel)
 end
 

@@ -1,3 +1,26 @@
+--- Themes control how the Flux interface looks. A theme is a `ThemeBase` object that holds
+-- named colors, fonts, sounds, materials and options (sizes, positions and other values),
+-- callbacks that create panels, and overrides for the 'Flux' Derma skin. Themes are defined in
+-- the `themes` folder of the schema or of a plugin, where every file gets a `THEME` table to
+-- fill in, and can name a `parent` theme to inherit from; 'factory' is the base theme that
+-- ships with Flux. One theme is active at a time: the `default_theme` of the schema, or
+-- 'factory', is loaded once the local player has been initialized, and it is loaded again when
+-- the code is refreshed.
+--
+-- This library is the way to reach the active theme. `Theme.get_color`, `Theme.get_font`,
+-- `Theme.get_option` and their siblings read its values, `Theme.create_panel` creates a panel
+-- that the theme provides, and plugins add their own values and panels to the theme from an
+-- `OnThemeLoaded` handler.
+--
+-- Drawing is delegated to the theme through theme hooks. `Theme.hook` (also available as
+-- `Theme.call`) calls the method of that name on the active theme and returns what it returns,
+-- and does nothing if the theme has no such method. A panel calls, for example,
+-- `Theme.hook('PaintButton', self, w, h)` from its `Paint` function, and a theme changes the
+-- look of buttons by defining `THEME:PaintButton(panel, w, h)`. Theme hooks are plain methods
+-- of the theme rather than hooks of the `hook` library: plugins cannot add handlers for them,
+-- only the active theme answers, with the methods it defines or inherits from its parents.
+-- @module [Theme]
+
 -- This library really hates being refreshed :/
 if Theme then return end
 
@@ -44,6 +67,10 @@ end
 -- @param ... [Vararg extra arguments for the theme's callback]
 -- @return [Panel the created panel, or nil if the active theme did not create one]
 function Theme.create_panel(panel_id, parent, ...)
+  --- Called on the client before the active theme creates a panel for `Theme.create_panel`.
+  -- @param panel_id [String ID the panel was added to the theme with]
+  -- @param current_theme [ThemeBase the active theme]
+  -- @return [Boolean Return false to prevent the panel from being created]
   if current_theme and hook.Run('ShouldThemeCreatePanel', panel_id, current_theme) != false then
     return current_theme:create_panel(panel_id, parent, ...)
   end
@@ -233,6 +260,10 @@ function Theme.load_theme(theme_id, reloading)
   local theme_table = Theme.find_theme(theme_id)
 
   if theme_table then
+    --- Called on the client before a theme becomes the active one, which includes every reload
+    -- of the active theme. Skipped when `Theme.load_theme` is called with `reloading` set.
+    -- @param theme_table [ThemeBase the theme that is about to be loaded]
+    -- @return [Boolean Return false to prevent the theme from being loaded]
     if !reloading and hook.Run('ShouldThemeLoad', theme_table) == false then
       return
     end
@@ -255,6 +286,11 @@ function Theme.load_theme(theme_id, reloading)
 
     Theme.set_derma_skin()
 
+    --- Called on the client after a theme has become the active one: its `on_loaded` methods
+    -- have run and its Derma skin has been applied. It is called again every time the theme is
+    -- reloaded. Plugins use it to add their own colors, fonts, options and panels to the
+    -- theme.
+    -- @param current_theme [ThemeBase the theme that has been loaded]
     hook.Run('OnThemeLoaded', current_theme)
   end
 end
@@ -262,6 +298,9 @@ end
 --- Unloads the active theme, calling its on_unloaded method and the 'OnThemeUnloaded' hook.
 -- Can be prevented with the 'ShouldThemeUnload' hook.
 function Theme.unload_theme()
+  --- Called on the client before the active theme is unloaded with `Theme.unload_theme`.
+  -- @param current_theme [ThemeBase the active theme]
+  -- @return [Boolean Return false to keep the theme loaded]
   if hook.Run('ShouldThemeUnload', current_theme) == false then
     return
   end
@@ -269,6 +308,9 @@ function Theme.unload_theme()
   if current_theme.on_unloaded then
     current_theme:on_unloaded()
 
+    --- Called on the client while the active theme is being unloaded, after its `on_unloaded`
+    -- method has run and before it stops being the active theme.
+    -- @param current_theme [ThemeBase the theme that is being unloaded]
     hook.Run('OnThemeUnloaded', current_theme)
   end
 
@@ -281,6 +323,11 @@ end
 function Theme.reload()
   if !current_theme then return end
 
+  --- Called on the client before the active theme is reloaded with `Theme.reload`, which
+  -- happens when the code is refreshed. Not called for a theme that has `should_reload` set to
+  -- false.
+  -- @param current_theme [ThemeBase the active theme]
+  -- @return [Boolean Return false to prevent the theme from being reloaded]
   if (current_theme.should_reload == false) or hook.Run('ShouldThemeReload', current_theme) == false then
     return
   end
@@ -288,6 +335,9 @@ function Theme.reload()
   Theme.load_theme(current_theme.id)
 
   Theme.hook('OnReloaded')
+  --- Called on the client after `Theme.reload` has loaded the active theme again and called
+  -- its `OnReloaded` theme hook.
+  -- @param current_theme [ThemeBase the active theme]
   hook.Run('OnThemeReloaded', current_theme)
 end
 
@@ -298,6 +348,8 @@ function Theme.initialized()
 end
 
 do
+  --- Hook handlers of the theme library, registered as `flThemeHooks`: they load the default
+  -- theme once the local player has been initialized and reload it when the code is refreshed.
   local theme_hooks = {}
 
   --- Loads the default theme of the schema, or the 'factory' theme if there is none.

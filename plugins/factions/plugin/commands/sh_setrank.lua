@@ -1,3 +1,5 @@
+--- Staff command that sets the rank of players in their faction.
+
 CMD.name = 'SetRank'
 CMD.description = 'command.setrank.description'
 CMD.syntax = 'command.setrank.syntax'

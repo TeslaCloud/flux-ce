@@ -1,3 +1,19 @@
+--- Stores tables as JSON files on disk, for data that does not belong in the database. On the
+-- server the files go to `settings/flux/` in the game folder, on the client to the `flux`
+-- folder inside the `data` folder of the game. `Data.save`, `Data.load` and `Data.delete` take
+-- a key that is the name of the file inside that folder. The `_schema` variants keep the data
+-- apart for every schema and map, and the `_plugin` variants build on those for the data of
+-- plugins, which is usually loaded in a `LoadData` handler and saved in a `SaveData` handler:
+-- ```
+-- function PLUGIN:LoadData()
+--   self.texts = Data.load_plugin('3dtexts', {})
+-- end
+--
+-- function PLUGIN:SaveData()
+--   Data.save_plugin('3dtexts', self.texts)
+-- end
+-- ```
+
 mod 'Data'
 
 if SERVER then

@@ -1,3 +1,6 @@
+--- The `forcegetup` staff command: makes the fallen target players get up, optionally after a
+-- delay.
+
 CMD.name = 'ForceGetUp'
 CMD.description = 'command.forcegetup.description'
 CMD.syntax = 'command.forcegetup.syntax'

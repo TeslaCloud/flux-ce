@@ -1,3 +1,7 @@
+--- Money lying in the world (`fl_money`): holds an amount of one currency and hands it to the
+-- player who uses it, unless the CanPlayerPickupMoney hook prevents that. It is created by
+-- `Entity:drop_money`.
+
 AddCSLuaFile()
 
 ENT.Type = 'anim'
@@ -55,7 +59,17 @@ if SERVER then
   -- @param value [Number]
   function ENT:Use(activator, caller, use_type, value)
     if IsValid(activator) then
+      --- Decides whether money lying in the world may be picked up. Called on the server when
+      -- a valid entity uses an fl_money entity.
+      -- @param activator [Entity the entity that used the money, normally a player]
+      -- @param entity [Entity the fl_money entity]
+      -- @return [Boolean return false to prevent the pickup]
       if hook.Run('CanPlayerPickupMoney', activator, self) != false then
+        --- Called on the server when money is picked up, right before its entity is removed.
+        -- The handler of the Currencies plugin itself is what adds the money to the player.
+        -- @param activator [Entity the entity that used the money, normally a player]
+        -- @param entity [Entity the fl_money entity; its get_currency and get_currency_amount
+        --   methods return what it holds]
         hook.Run('PlayerPickupMoney', activator, self)
 
         self:Remove()

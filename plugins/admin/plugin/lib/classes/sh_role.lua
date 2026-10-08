@@ -1,3 +1,11 @@
+--- A role is a group of players that share a set of permissions, such as `moderator`.
+-- A role has a name, a description, a color, an icon, an immunity level that
+-- `Bolt:check_immunity` compares between players, and optionally a base role (`base`) whose
+-- permissions it shares. Roles are normally defined by a file in a plugin's `roles` folder,
+-- which fills in the `ROLE` global and may define `define_permissions` to allow or deny
+-- actions with `can`, `cannot` and `allow_anything`; see `Role:register`. A player's role
+-- is read with `Player:get_role` and set with `Player:SetUserGroup`.
+
 class 'Role'
 
 Role.name = 'Undefined'
@@ -212,6 +220,11 @@ function Role:register()
 
       self:define_permissions()
 
+      --- Called on both realms while a role is being registered, right after its
+      -- `define_permissions` method has run. The `can`, `cannot` and `allow_anything` globals
+      -- are still bound to the role, so a handler can adjust its permissions. Roles without
+      -- a `define_permissions` method do not run this hook.
+      -- @param role [Role The role being registered]
       hook.Run('OnDefinePermissions', self)
 
     can, cannot, allow_anything = old_can, old_cannot, old_anything

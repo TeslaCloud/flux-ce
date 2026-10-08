@@ -1,3 +1,10 @@
+--- PluginInstance is the object that represents a single plugin, or the schema.
+-- `Plugin.include` creates one for every plugin with the info from its `plugin.yml` and
+-- exposes it as the `PLUGIN` global while the plugin's files are included; the schema's
+-- instance is the `SCHEMA` global. The functions a plugin defines on this object become its
+-- hook handlers once it is registered. The setters are meant to be called from the plugin's
+-- main file, and `PluginInstance:set_global` gives the plugin a global name of its own.
+
 class 'PluginInstance'
 
 --- Class constructor. Fills in the basic plugin fields, then merges the whole data table

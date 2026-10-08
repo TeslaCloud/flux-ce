@@ -1,3 +1,19 @@
+--- The command system: keeps the registered chat and console commands and runs them for
+-- players. Commands are `Command` objects. Every file in the `commands` folder of a plugin or
+-- schema gets a `CMD` table to fill in (name, description, syntax, permission, aliases and the
+-- `on_run` callback) and is registered automatically under an ID taken from its file name; see
+-- `Command:on_run` for an example. Players run commands by typing them in the chat with a
+-- command prefix or through the `flc` console command, which also works from the server
+-- console.
+--
+-- On the server `Flux.Command:interpret` does the work: it splits the text into arguments,
+-- finds the command by its ID or alias, checks the permission of the player and the amount of
+-- arguments, turns the player argument into a list of targets (player names or the selectors
+-- described under `Flux.Command:str_to_player`), checks their immunity, logs the command and
+-- calls its `on_run`. Plugins can step in through the `PlayerCanRunCommand`,
+-- `CommandCheckImmunity`, `PlayerRunCommand` and `TargetFromString` hooks. On the client
+-- `Flux.Command:send` asks the server to run a command for the local player.
+
 mod 'Flux::Command'
 
 local command_log_color = Color('orange')
@@ -41,6 +57,10 @@ function Flux.Command:create(id, data)
     end
   end
 
+  --- Called on the server and the client after a command has been registered with
+  -- `Flux.Command:create`.
+  -- @param id [String command ID]
+  -- @param data [Command the command, with the defaults filled in]
   hook.Run('OnCommandCreated', id, data)
 end
 
@@ -237,6 +257,15 @@ if SERVER then
   --   character, if one was used]
   function Flux.Command:str_to_player(actor, str)
     local start = str:utf8sub(1, 1)
+    --- Lets plugins add target selectors for the player argument of commands. Called on the
+    -- server when the argument does not start with one of the built-in selector characters. If
+    -- no function is returned, the argument is looked up as a player name.
+    -- @param actor [Player the player who is running the command, an invalid entity for the
+    --   server console]
+    -- @param str [String the whole player argument]
+    -- @param start [String first character of the argument]
+    -- @return [Function Parser that is called with the actor and the argument; it returns a
+    --   List<Player> of targets, or false if there are none, and the selector character]
     local parser = macros[start] or hook.Run('TargetFromString', actor, str, start)
 
     if isfunction(parser) then
@@ -290,6 +319,15 @@ if SERVER then
 
     if cmd_table then
       if (!IsValid(actor) and !cmd_table.no_console) or actor:can(cmd_table.id) then
+        --- Called on the server when a player is about to run a command, after the permission
+        -- check has passed and before the arguments are checked. The player is not told when a
+        -- handler stops the command, so the handler should notify them.
+        -- @param actor [Player the player who runs the command, an invalid entity for the
+        --   server console]
+        -- @param cmd_table [Command the command]
+        -- @param from_console [Boolean true if it was run as a console command, nil if it was
+        --   typed in the chat]
+        -- @return [Any Return any non-nil value, even true, to stop the command from running]
         if hook.Run('PlayerCanRunCommand', actor, cmd_table, from_console) != nil then return end
 
         if cmd_table.arguments == 0 or cmd_table.arguments <= #args then
@@ -346,6 +384,14 @@ if SERVER then
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
                 if cmd_table.immunity and IsValid(actor) and
+                   --- Called for every player a command with `immunity` set is about to be
+                   -- run on, when the command was not run from the server console.
+                   -- @param actor [Player Player who runs the command]
+                   -- @param target [Player Player the command targets]
+                   -- @param can_equal [Boolean The command's `can_equal` setting: whether a
+                   --   target of the same standing as the actor may be affected]
+                   -- @return [Boolean Return false if the target is immune to the actor; the
+                   --   command is then not run and the actor is notified]
                    hook.Run('CommandCheckImmunity', actor, v, cmd_table.can_equal) == false then
                   actor:notify('error.command.higher_immunity', {
                     target = get_player_name(v)
@@ -371,6 +417,15 @@ if SERVER then
           end
 
           -- Let plugins hook into this and abort the command's execution if necessary.
+          --- Called on the server right before a command is logged and run, after all of the
+          -- checks have passed and its targets have been found.
+          -- @param actor [Player the player who runs the command, an invalid entity for the
+          --   server console]
+          -- @param cmd_table [Command the command]
+          -- @param args [List arguments that are passed to `on_run`; for a command that
+          --   targets players, the player argument is already a List<Player>]
+          -- @return [Boolean Return true to stop the command from running; the player is not
+          --   notified]
           if !hook.Run('PlayerRunCommand', actor, cmd_table, args) then
             local message
 

@@ -1,3 +1,5 @@
+--- Staff command that whitelists players for a faction.
+
 CMD.name = 'Whitelist'
 CMD.description = 'command.whitelist.description'
 CMD.syntax = 'command.whitelist.syntax'

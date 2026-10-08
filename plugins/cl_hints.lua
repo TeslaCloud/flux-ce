@@ -1,3 +1,9 @@
+--- Hints shows the player a random gameplay hint as a notification, at most once every five
+-- minutes.
+-- Plugins register their own hints with `Hints:add`, optionally with a color, a sound and a
+-- callback that decides whether the hint may be shown; `Hints:display_random` shows one right
+-- away. The plugin registers a few general hints itself.
+
 PLUGIN:set_global('Hints')
 PLUGIN:set_name('Hints')
 PLUGIN:set_description('Adds hints that are displayed to players.')

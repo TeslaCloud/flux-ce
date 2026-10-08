@@ -1,15 +1,28 @@
+--- Server side of the `Player` extensions: restoring and saving the database record of a
+-- player (`User`), writing their networked data table and initialization state, sending
+-- notifications, and helpers for ammo, weapons and moving a stuck player to a free spot.
+
 local player_meta = FindMetaTable('Player')
 
 --- Saves the database record of the player. Does nothing for bots. Can be prevented by returning
 -- true from the 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook afterward.
 function player_meta:save_player()
   if self:IsBot() then return end
+
+  --- Called on the server before `Player:save_player` saves the database record of a
+  -- player. Not called for bots.
+  -- @param actor [Player The player about to be saved]
+  -- @return [Boolean Return true to prevent the record from being saved; in that case
+  --   `PostSavePlayerData` is not run either]
   if hook.Run('PreSavePlayerData', self) == true then return end
 
   if self.record then
     self.record:save()
   end
 
+  --- Called on the server after `Player:save_player` has saved the database record of a
+  -- player. Not called for bots.
+  -- @param actor [Player The player who has been saved]
   hook.Run('PostSavePlayerData', self)
 end
 
@@ -91,6 +104,12 @@ function player_meta:restore_player()
     obj.player = self
     self.record = obj
 
+    --- Called on the server once the database record of a player who has just joined is
+    -- available as `actor.record`. For a player who joins for the first time it runs after
+    -- `PlayerCreated`, when the new record has been saved. Bots get it right away with a
+    -- blank record.
+    -- @param actor [Player The player who has joined]
+    -- @param record [User The database record of the player]
     hook.Run('PlayerRestored', self, obj)
   end):rescue(function(obj)
     ServerLog(self:name()..' has joined for the first time!')
@@ -101,6 +120,11 @@ function player_meta:restore_player()
     obj.role = 'user'
     self.record = obj
 
+    --- Called on the server when a player joins for the first time, after their new database
+    -- record has been given the SteamID, the name and the `user` role and right before it
+    -- is saved. Handlers can set further defaults on the record. `PlayerRestored` follows.
+    -- @param actor [Player The player who has joined]
+    -- @param record [User The new database record of the player]
     hook.Run('PlayerCreated', self, obj)
 
     obj:save()

@@ -1,3 +1,10 @@
+--- Extensions of the Color metatable and of the global `Color` function.
+-- `Color` also accepts hexadecimal strings and CSS color names here, and colors gain methods
+-- that return adjusted copies: `Color:darken`, `Color:lighten`, `Color:saturate`,
+-- `Color:desaturate` and `Color:alpha`. `LerpColor` interpolates between two colors, and the
+-- `util` library gets `util.hex_to_color` and `util.text_color_from_base`.
+-- @module [Color]
+
 local color_meta = FindMetaTable('Color')
 
 --- Converts a hexadecimal color to a color structure.

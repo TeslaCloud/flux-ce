@@ -1,8 +1,20 @@
+--- Server side of the Inventory plugin: creates the default inventories of players, saves
+-- where items are, does what the take, use and drop actions of items are supposed to do,
+-- enforces the rules of moving items between inventories, and handles the move, drop and
+-- close requests of the clients.
+
 --- Calls the 'AddDefaultItems' plugin hook for a character that has just been created.
 -- @param owner [Player]
 -- @param char [Character]
 -- @param char_data [Map data the character was created from]
 function Inventories:PostCreateCharacter(owner, char, char_data)
+  --- Called on the server when a character has just been created, before it is saved
+  -- for the first time, so that plugins can give it its starting items. It is run with
+  -- `Plugin.call`, so gamemode functions do not receive it.
+  -- @param owner [Player The player who created the character]
+  -- @param char [Character The new character]
+  -- @param inventory [Any The `inventory` field of the character. Nothing in Flux sets
+  --   this field, so it is nil unless another plugin fills it in]
   Plugin.call('AddDefaultItems', owner, char, char.inventory)
 end
 
@@ -185,6 +197,13 @@ function Inventories:PlayerDropItem(actor, instance_ids)
   for k, v in pairs(instance_ids) do
     local item_obj = Item.find_instance_by_id(v)
 
+    --- Called on the server before a player drops an item from an inventory into the
+    -- world, once for every item of a dropped stack. The Items plugin uses it to ask the
+    -- `on_drop` callback of the item.
+    -- @param actor [Player The player dropping the item]
+    -- @param item_obj [Item The item that is about to be dropped]
+    -- @return [Boolean Return false to prevent the drop; the items of the stack that
+    --   come after this one are not dropped either]
     if hook.Run('CanPlayerDropItem', actor, item_obj) == false then return end
 
     hook.Run('PreItemTransfer', item_obj, nil, inventory)
@@ -388,6 +407,17 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
   local item_obj = Item.find_instance_by_id(instance_id)
   local inventory = Inventories.find(inventory_id)
 
+  --- Called on the server when a player asks to move items to an inventory slot by
+  -- dragging them, before anything is moved. The target can be the inventory the items
+  -- are in or another one.
+  -- @param actor [Player The player moving the items]
+  -- @param item_obj [Item The first of the items that are being moved]
+  -- @param instance_ids [List<Number> Instance ids of the items: one item, or several
+  --   from the same stack]
+  -- @param inventory_id [Number Id of the inventory the items are being moved to]
+  -- @param x [Number Column of the target slot]
+  -- @param y [Number Row of the target slot]
+  -- @return [Boolean Return false to prevent the move]
   if hook.Run('PlayerCanMoveItem', actor, item_obj, instance_ids, inventory_id, x, y) == false then
     return
   end
@@ -408,10 +438,28 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
 
   inventory:sync()
 
+  --- Called on the server after a request of a player to move items to an inventory slot
+  -- has been handled and the inventories have been synchronized. It is run whether or
+  -- not the items could actually be moved, but not when `PlayerCanMoveItem` has prevented
+  -- the move.
+  -- @param actor [Player The player who moved the items]
+  -- @param item_obj [Item The first of the items]
+  -- @param instance_ids [List<Number> Instance ids of the items]
+  -- @param inventory_id [Number Id of the inventory the items were being moved to]
+  -- @param x [Number Column of the target slot]
+  -- @param y [Number Row of the target slot]
   hook.Run('OnItemMoved', actor, item_obj, instance_ids, inventory_id, x, y)
 end)
 
 Cable.receive('fl_item_drop', function(actor, instance_ids)
+  --- Called on the server when a player drops items by dragging them out of an
+  -- inventory panel. The hook is what performs the drop: the Inventory plugin handles it
+  -- by taking the items out of their inventory and spawning them in front of the player.
+  -- The Items plugin runs the same hook with a single instance id instead of a list
+  -- when a player uses the drop option of an item's menu, so a handler has to accept
+  -- both.
+  -- @param actor [Player The player dropping the items]
+  -- @param instance_ids [List<Number> Instance ids of the items, all from one inventory]
   hook.Run('PlayerDropItem', actor, instance_ids)
 end)
 
@@ -422,6 +470,12 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
     inventory:sync()
   end
 
+  --- Called on the server when a player has closed the inventories that were opened for
+  -- them, such as a container or the inventories of another player. The player has been
+  -- removed from the receivers of every closed inventory by now. The hook is run once
+  -- per request, with the first of the closed inventories.
+  -- @param actor [Player The player who closed the inventories]
+  -- @param inventory [Inventory The first of the inventories that were closed]
   hook.Run('OnInventoryClosed', actor, Inventories.find(inventory_ids[1]))
 end)
 

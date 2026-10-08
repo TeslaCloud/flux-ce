@@ -1,3 +1,10 @@
+--- The intro screen (`fl_intro`): a full screen panel that plays the logo animation for four
+-- seconds, then fades out and removes itself.
+-- The Characters plugin opens it once a player without an active character has initialized,
+-- and opens the main menu when it closes. It runs the `OnIntroPanelCreated` and
+-- `OnIntroPanelRemoved` hooks.
+-- @module [fl_intro]
+
 local PANEL = {}
 
 --- Covers the whole screen, starts the intro animation, schedules the panel to close after
@@ -12,6 +19,8 @@ function PANEL:Init()
     self:close_menu()
   end)
 
+  --- Called on the client when the intro panel has been created and has started its animation.
+  -- @param panel [Panel The `fl_intro` panel]
   hook.Run('OnIntroPanelCreated', self)
 end
 
@@ -96,6 +105,9 @@ function PANEL:close_menu()
     self:Remove()
   end)
 
+  --- Called on the client when the intro panel starts closing, one second before the panel
+  -- itself is removed.
+  -- The Characters plugin opens the main menu from it.
   hook.Run('OnIntroPanelRemoved')
 end
 

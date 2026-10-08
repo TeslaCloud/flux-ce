@@ -1,3 +1,9 @@
+--- Log entries, stored in the `logs` table of the database.
+-- The class methods record an entry and output it in one go: `Log:print` and
+-- `Log:colored` write to the console, `Log:notify` notifies every player, `Log:to_discord`
+-- pushes the last message to Discord webhooks and `Log:replicate` repeats the last
+-- console entry on the clients. They return the class, so the calls can be chained.
+
 class 'Log' extends 'ActiveRecord::Base'
 
 local last_log = nil
@@ -160,6 +166,15 @@ end
 
 if CLIENT then
   Cable.receive('log_replicate', function(message, action, object, subject, data)
+    --- Called on the client when a log entry sent with `Log:replicate` arrives, before it is
+    -- output. Gamemode (`GM`) handlers are not called.
+    -- @param message [String Text of the entry]
+    -- @param action [String Type of the logged event in snake_case; empty if there is none]
+    -- @param object [String/Number Who or what performed the action]
+    -- @param subject [String/Number Who or what the action was performed on]
+    -- @param data [Map How the server has output the entry: `type` is 'print' or 'colored',
+    --   and `color` is the console color of a colored entry]
+    -- @return [Any Return any non-nil value to prevent the default output of the entry]
     if Plugin.call('LogReplicate', message, action, object, subject, data) != nil then
       return
     elseif data.type == 'colored' then

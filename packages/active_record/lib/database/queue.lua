@@ -1,3 +1,7 @@
+--- Holds the table definitions made with `ActiveRecord.define_model` before ActiveRecord
+-- is ready. The column type calls of each definition are recorded instead of run, and
+-- `run` creates the tables once the stored schema has been restored from the database.
+
 class 'ActiveRecord::Queue'
 
 ActiveRecord.Queue.stored = {}

@@ -1,3 +1,18 @@
+--- Localization: translates phrases into the language of the player. The phrases come from the
+-- YAML files in the `languages` folders of Flux, the schema and the plugins, where they are
+-- nested under the language code; the server reads the files and sends the phrases to the
+-- clients. A phrase is referred to by its path with dots, such as 'ui.hud.bar_text.respawn',
+-- and translated with the global `t` function, which also fills in the `{placeholders}` of the
+-- phrase. Text that is not a known phrase is returned as it is, so `t` can be given text that
+-- may or may not be a phrase.
+--
+-- On the client the current language follows the `gmod_language` setting of the game and is
+-- reported to the server, where `Flux.Lang:get_player_lang` returns it for a player. On the
+-- server `t` translates to English unless it is given a language. Phrases can also be added
+-- from code with `Flux.Lang:add`, and a language can define `pluralize` and `get_case`
+-- functions for its grammar, which `Flux.Lang:get_plural` and `Flux.Lang:get_case` use.
+-- @module [Flux.Lang]
+
 mod 'Flux::Lang'
 
 local current_language  = 'en'
@@ -182,6 +197,8 @@ if CLIENT then
     end
   end
 
+  --- Follows the `gmod_language` setting of the game: when it changes, switches the current
+  -- language of the client and tells the server the new language of the local player.
   hook.Add('LazyTick', 'LanguageChecker', function()
     local new_lang = GetConVar('gmod_language'):GetString()
 

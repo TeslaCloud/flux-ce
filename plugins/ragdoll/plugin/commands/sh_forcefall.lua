@@ -1,3 +1,6 @@
+--- The `forcefall` staff command: makes the target players fall over, and optionally get back
+-- up after a delay.
+
 CMD.name = 'ForceFall'
 CMD.description = 'command.forcefall.description'
 CMD.syntax = 'command.forcefall.syntax'

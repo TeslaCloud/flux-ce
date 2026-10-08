@@ -1,3 +1,7 @@
+--- Server side of the Attributes plugin: gives new characters their attribute records,
+-- networks a character's attributes when it becomes active, and starts and removes the
+-- expiry timers of its boosts and multipliers as characters are loaded and unloaded.
+
 --- Adds an Attribute record for every registered attribute to a new character, using the
 -- level chosen during creation or the attribute's minimum.
 -- @param owner [Player]

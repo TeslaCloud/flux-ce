@@ -1,3 +1,10 @@
+--- Definition of an attribute: its name, description, category, icon and type, its level
+-- range (`min`, `max`), how the progress needed for a level grows (`total_progress`,
+-- `progression_type`, `progression_coefficient`), and the `boostable`, `multipliable`,
+-- `boost_limited`, `has_progress` and `hidden` flags.
+-- A file in a plugin's `attributes` folder fills in an `AttributeBase` through the
+-- `ATTRIBUTE` global; `Attributes.register` supplies the defaults of the missing fields.
+
 class 'AttributeBase'
 
 --- Creates an attribute definition. Fill in its fields and call register to make it available.

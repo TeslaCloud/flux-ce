@@ -1,3 +1,11 @@
+--- The standard Flux button (`fl_button`): a title with an optional FontAwesome icon, drawn by
+-- the active theme's `PaintButton` hook.
+-- Set it up with `set_text`, `set_icon`, `set_icon_size`, `set_centered` and
+-- `set_text_offset`, and assign `DoClick` or `DoRightClick` to handle clicks. `set_active`
+-- marks the button as selected, `set_enabled(false)` darkens its text and blocks mouse input,
+-- and `set_background_color` and `set_draw_outline` control what is drawn behind the title.
+-- Derives from `fl_base_panel`.
+
 local PANEL = {}
 
 PANEL.title = ''

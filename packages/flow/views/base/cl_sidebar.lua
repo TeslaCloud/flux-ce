@@ -1,3 +1,10 @@
+--- A vertical list of panels (`fl_sidebar`) that scrolls without a visible scrollbar, drawn by
+-- the active theme's `PaintSidebar` hook.
+-- Fill it from top to bottom with `add_button` and `add_panel`, spaced with `set_margin` and
+-- `add_space`; `Clear` empties it again. Buttons added with `add_button` behave like tabs: the
+-- clicked one becomes active and the previously clicked one is deactivated. The main menu and
+-- the admin menu use it for their navigation. Derives from `DScrollPanel`.
+
 local PANEL = {}
 PANEL.last_pos = 0
 PANEL.margin = 0

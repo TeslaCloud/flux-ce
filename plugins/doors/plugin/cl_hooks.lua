@@ -1,3 +1,5 @@
+--- Client-side hooks of the Doors plugin: draws the titles of doors in the world.
+
 --- Draws the titles of the doors within 256 units of the camera on both sides
 -- of the door, using the title type that is set on each door.
 -- @param depth [Boolean whether the depth pass is being drawn]

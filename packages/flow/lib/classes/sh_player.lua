@@ -1,3 +1,9 @@
+--- The 'flux_player' player class, which Flux assigns to every player. It derives from the
+-- 'player_default' class of Garry's Mod and passes the callbacks of the player class on to
+-- Flux hooks: setting up the data tables runs `PlayerSetupDataTables`, and the loadout runs
+-- `PostPlayerLoadout` with the default loadout of the class, the fists. It also picks the
+-- hands model that matches the model of the player.
+
 local flux_player       = {}
 flux_player.DisplayName = 'Flux Player'
 DEFINE_BASECLASS('player_default')
@@ -21,6 +27,10 @@ function flux_player:SetupDataTables()
 
   self.Player:DTVar('Bool', BOOL_INITIALIZED, 'Initialized')
 
+  --- Called on the server and the client when the data tables of a player are set up, right
+  -- after Flux has added its own `Initialized` variable. Add the data table variables of your
+  -- plugin to the player here with `DTVar`.
+  -- @param target [Player the player whose data tables are being set up]
   hook.Run('PlayerSetupDataTables', self.Player)
 end
 
@@ -59,6 +69,12 @@ end
 
 --- Runs the 'PostPlayerLoadout' hook with the default loadout of the player class.
 function flux_player:Loadout()
+  --- Called on the server when a player gets their loadout after spawning. The handler of the
+  -- Flux gamemode strips the weapons of the player, gives them the weapons of the default
+  -- loadout and selects the first one; it does not run if a plugin or schema handler returns a
+  -- non-nil value.
+  -- @param actor [Player the player who has spawned]
+  -- @param default_loadout [List<String> weapon classes of the default loadout]
   hook.Run('PostPlayerLoadout', self.Player, self.loadout)
 end
 

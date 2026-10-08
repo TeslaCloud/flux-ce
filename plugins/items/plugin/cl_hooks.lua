@@ -1,3 +1,6 @@
+--- Client side of the Items plugin: shows the progress of picking an item up by holding
+-- the use key, and builds the menu of an item with its use, take, drop and custom options.
+
 --- Fills the circular progress indicator while the local player holds the use key on an item.
 function Items:HUDPaint()
   if !IsValid(PLAYER) then return end
@@ -48,6 +51,9 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
   if !item_obj then return end
 
+  --- Called on the client before the menu of an item is opened.
+  -- @param item_obj [Item The item instance the menu is for]
+  -- @return [Boolean Return false to prevent the menu from opening]
   if hook.Run('CanItemMenuOpen', item_obj) == false then return end
 
   local item_menu = vgui.Create('fl_menu')
@@ -128,6 +134,14 @@ end
 
 Cable.receive('fl_player_use_item_entity', function(entity)
   if IsValid(entity) and entity.item then
+    --- Called on the client to open the menu of an item.
+    -- Here it is run when the server reports that the local player has pressed the use key
+    -- on an item entity. The Inventory plugin runs it without the second argument when
+    -- an inventory slot is clicked. The Items plugin itself handles the hook by building
+    -- the menu.
+    -- @param instance_id [Number Instance id of the item]
+    -- @param is_entity [Boolean true if the item lies in the world, nil if it is in an
+    --   inventory; decides between the take and the drop option]
     hook.Run('PlayerUseItemMenu', entity.item.instance_id, true)
   end
 end)

@@ -1,3 +1,7 @@
+--- The Respawn command respawns the targeted dead players, either at their last position
+-- (`stay`, the default) or at the spot the caller is looking at (`tp`). Allowed for
+-- assistants by default.
+
 CMD.name = 'Respawn'
 CMD.description = 'command.respawn.description'
 CMD.syntax = 'command.respawn.syntax'

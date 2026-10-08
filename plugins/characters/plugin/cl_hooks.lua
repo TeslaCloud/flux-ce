@@ -1,3 +1,8 @@
+--- Client side of the Characters plugin: opens the intro and the main menu, registers the
+-- character menus with the theme, fills the main menu, and hides the HUD and blocks the
+-- scoreboard until a character is loaded. It also shows the physical description of characters
+-- on scoreboard cards and above players.
+
 do
   local cur_volume = 1
 
@@ -168,6 +173,12 @@ function Characters:RebuildScoreboardPlayerCard(card, target)
   card.steam_name:SetTextColor(Theme.get_color('text'))
   card.steam_name:SizeToContents()
 
+  --- Decides whether a scoreboard card shows the character of its player. Called on the client
+  -- when a scoreboard player card is rebuilt.
+  -- @param card [Panel the scoreboard player card]
+  -- @param target [Player the player the card belongs to]
+  -- @return [Boolean return false to hide the character name, model icon and physical
+  --   description, which leaves only the Steam name on the card]
   if hook.Run('IsCharacterCardVisible', card, target) != false then
     card.avatar_panel:SetPos(card:GetWide() - card.avatar_panel:GetWide() - math.scale(48), math.scale(4))
 

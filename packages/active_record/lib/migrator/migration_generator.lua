@@ -1,3 +1,9 @@
+--- Generates migration files for the `flux generate migration <Name> [column:type ...]`
+-- console command. The name of the migration decides what its `change` starts out with:
+-- a `create_table` for 'Create<Table>', `add_column` calls for 'Add<Columns>To<Table>'
+-- and `remove_column` calls for 'Remove<Columns>From<Table>'. The file is written into
+-- the `db/migrate/` folder of the active schema under a new version.
+
 class 'ActiveRecord::MigrationGenerator'
 
 --- Creates a generator for a migration file.

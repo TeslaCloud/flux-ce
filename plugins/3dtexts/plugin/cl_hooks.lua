@@ -1,3 +1,6 @@
+--- Client side of the 3D Texts plugin: draws the placed texts and pictures in the world, and
+-- the placement preview of the Text Tool and the Picture Placer.
+
 local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 

@@ -1,3 +1,6 @@
+--- The Freeze command freezes the targeted players in place. Allowed for assistants by
+-- default.
+
 CMD.name = 'Freeze'
 CMD.description = 'command.freeze.description'
 CMD.syntax = 'command.freeze.syntax'

@@ -1,3 +1,11 @@
+--- Hook Profiler measures how much time the server and the client spend in each hook.
+-- It wraps `hook.Call` to add up the run time and the number of calls of every hook, and the
+-- server sends its numbers to the clients once a second. The client draws the totals and the
+-- slowest hook of both sides on the HUD, and the `fl_profiler_toggle` console command opens a
+-- window that lists the hooks of the server. The plugin does nothing when DBugR is installed.
+-- @environment [development]
+-- @module [Profiler]
+
 PLUGIN:set_name('Hook Profiler')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Profile any hooks.')
@@ -104,6 +112,11 @@ if CLIENT then
     )
   end
 
+  --- The window of the hook profiler (`profiler_window`): a list of the server's hooks with
+  -- their load and number of calls.
+  -- It is opened with the `fl_profiler_toggle` console command and refreshed through
+  -- `update_metrics`.
+  -- @module [profiler_window]
   local PANEL = {}
 
   PANEL.metrics = {}

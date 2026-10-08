@@ -1,3 +1,14 @@
+--- Player extensions of the Characters plugin: the characters of a player and the active one.
+-- A player owns a list of characters and has at most one active character at a time. The
+-- player methods return these characters (`Player:get_all_characters`, `Player:get_character`)
+-- and the fields of the active one; on the server they are `Character` records, on the client
+-- the networked tables that the server sends to the owner of the characters. Server-side
+-- methods select the active character, set its fields and save it.
+--
+-- This file also holds the `Characters` functions that create, save, delete and edit
+-- characters, and the network handlers behind the character menus.
+-- @module [Player]
+
 if !Characters then
   PLUGIN:set_global('Characters')
 end
@@ -31,6 +42,14 @@ local translate_gender = {
 -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin]
 -- @return [Number CHAR_SUCCESS, or the CHAR_ERR_* code returned by the hook]
 function Characters.create(target, data)
+  --- Validates the data of a character that is about to be created. Called by
+  -- `Characters.create`, which the plugin runs on the server, before the character record is
+  -- built.
+  -- @param owner [Player the player the character is created for]
+  -- @param data [Map creation data: name, phys_desc, gender, model, skin and the fields that
+  --   other plugins add]
+  -- @return [Number return a CHAR_ERR_* code to refuse the character; it becomes the result of
+  --   Characters.create and is sent to the client. Return nothing to accept the data]
   local hook_result = hook.Run('PlayerCreateCharacter', target, data)
 
   if hook_result then
@@ -49,6 +68,12 @@ function Characters.create(target, data)
   table.insert(target.record.characters, char)
 
   if SERVER then
+    --- Called on the server when a character has been built and added to the record of its
+    -- owner, before it is saved and sent to the owner. Handlers copy their own fields from the
+    -- creation data to the character.
+    -- @param owner [Player]
+    -- @param char [Character the new character, not saved yet]
+    -- @param char_data [Map creation data the character was built from]
     hook.Run('PostCreateCharacter', target, char, data)
 
     Characters.save(target, char)
@@ -108,8 +133,17 @@ if SERVER then
   -- @param character [Character]
   function Characters.save(target, character)
     if !IsValid(target) or !istable(character) or
+       --- Lets plugins prepare for or prevent the saving of a character. Called on the
+       -- server by `Characters.save`, before the SaveCharacterData hook.
+       -- @param owner [Player]
+       -- @param character [Character the character that is about to be saved]
+       -- @return [Boolean return false to cancel the save]
        hook.Run('PreSaveCharacter', target, character) == false then return end
 
+    --- Called on the server right before the record of a player is saved together with a
+    -- character. Handlers write the data they keep for the character into its fields.
+    -- @param owner [Player]
+    -- @param character [Character the character that is being saved]
     hook.Run('SaveCharacterData', target, character)
 
     target:save_player()
@@ -152,6 +186,12 @@ if SERVER then
     end
 
     target:set_nv('name', new_name)
+    --- Called on the server after `Characters.set_name` has changed the name of a player's
+    -- active character and networked it.
+    -- @param owner [Player]
+    -- @param char [Character the active character, nil if the player has none]
+    -- @param new_name [String]
+    -- @param old_name [String the name that was networked before the change]
     hook.Run('CharacterNameChanged', target, char, new_name, old_name)
 
     Characters.send_to_client(target)
@@ -172,6 +212,12 @@ if SERVER then
     end
 
     target:set_nv('phys_desc', new_desc)
+    --- Called on the server after `Characters.set_desc` has changed the physical description
+    -- of a player's active character and networked it.
+    -- @param owner [Player]
+    -- @param char [Character the active character, nil if the player has none]
+    -- @param new_desc [String]
+    -- @param old_desc [String the description that was networked before the change]
     hook.Run('CharacterDescChanged', target, char, new_desc, old_desc)
 
     Characters.send_to_client(target)
@@ -193,6 +239,12 @@ if SERVER then
 
     target:set_nv('model', model)
     target:SetModel(model)
+    --- Called on the server after `Characters.set_model` has changed the model of a player and
+    -- of their active character and networked it.
+    -- @param owner [Player]
+    -- @param char [Character the active character, nil if the player has none]
+    -- @param model [String the new model path]
+    -- @param old_model [String the model that was networked before the change]
     hook.Run('CharacterModelChanged', target, char, model, old_model)
 
     Characters.send_to_client(target)
@@ -215,12 +267,24 @@ if SERVER then
     end
 
     target:set_nv('gender', new_gender)
+    --- Called on the server after `Characters.set_gender` has changed the gender of a player's
+    -- active character and networked it.
+    -- @param owner [Player]
+    -- @param char [Character the active character, nil if the player has none]
+    -- @param new_gender [Number CHAR_GENDER_* value]
+    -- @param old_gender [Number the CHAR_GENDER_* value that was networked before the change]
     hook.Run('CharacterGenderChanged', target, char, new_gender, old_gender)
 
     Characters.send_to_client(target)
   end
 
   MVC.handler('fl_create_character', function(actor, data)
+    --- Called on the server when the request of a client to create a character arrives, before
+    -- the data is converted and passed to `Characters.create`. Handlers can fill in or change
+    -- the data in place.
+    -- @param actor [Player the player who sent the request]
+    -- @param data [Map data collected by the creation menu: name, description, gender ('male',
+    --   'female' or 'universal'), model, skin and the fields that other stages add]
     hook.Run('PreCreateCharacter', actor, data)
 
     data.gender = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
@@ -246,6 +310,11 @@ if SERVER then
   Cable.receive('fl_player_delete_character', function(actor, id)
     Flux.dev_print(actor:name()..' has deleted character #'..id)
 
+    --- Called on the server when a player has asked to delete one of their characters, right
+    -- before it is deleted.
+    -- @param actor [Player]
+    -- @param id [Number character ID as sent by the client; at this point it has not been
+    --   checked that the player has such a character]
     hook.Run('OnCharacterDelete', actor, id)
 
     Characters.delete(actor, id)
@@ -265,6 +334,11 @@ else
 
         timer.Remove('fl_characters_defer')
 
+        --- Called on the client when the list of the local player's characters has arrived
+        -- from the server and has been stored in PLAYER.characters. The server sends it when
+        -- the player joins and again whenever one of their characters is created, deleted or
+        -- changed.
+        -- @param characters [List<Map> networked data of every character of the local player]
         hook.Run('OnCharactersReceived', data)
       end
     end)

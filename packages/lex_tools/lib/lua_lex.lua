@@ -1,3 +1,10 @@
+--- LuaLexer turns Lua source code into a list of tokens.
+-- It understands the additions of Garry's Mod to the language (`!`, `!=`, `&&`, `||`,
+-- `continue` and C-style comments), keeps comments as tokens and records the line of every
+-- token, which makes it suitable for analyzers and documentation tools. Token types are
+-- numbers: the character code for single-character tokens, and a global `TK_*` enumerator for
+-- keywords, names, literals and operators of several characters.
+
 --
 -- A lot of ideas and principles are taken from LuaJIT's
 -- source code, which is released under the following license:

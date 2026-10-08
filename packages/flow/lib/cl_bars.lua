@@ -1,3 +1,22 @@
+--- HUD bars: horizontal progress bars such as a respawn timer or a "getting up" timer. A bar
+-- is a table of settings registered under an ID with `Flux.Bars:register`: its text, color,
+-- value and maximum, position and size, and optionally a `callback` that returns its current
+-- value. The `type` of a bar decides how it is laid out. `BAR_TOP` bars are stacked from the
+-- top left corner of the screen in order of their `priority` and are drawn together by
+-- `Flux.Bars:DrawTopBars`. Bars of the other types (`BAR_MANUAL`, `BAR_HIDDEN`) keep the
+-- position they were registered with and are drawn by their owner with `Flux.Bars:draw`,
+-- usually from a HUD paint hook.
+--
+-- Every `LazyTick` the top bars are repositioned and the bars that have a callback get their
+-- value refreshed; other bars are updated with `Flux.Bars:set_value`, which animates the fill
+-- toward the new value. Part of a bar can be blocked off with `Flux.Bars:hinder_value`. A bar
+-- is only drawn while its value is inside its display range (above `min_display` and not above
+-- `display`). The drawing itself is done by the active theme through the `DrawBarBackground`,
+-- `DrawBarFill`, `DrawBarHindrance` and `DrawBarTexts` theme hooks, and plugins can step in
+-- with the bar hooks (`ShouldDrawBar`, `PreDrawBar`, `AdjustBarPos`, `AdjustBarInfo` and so
+-- on).
+-- @module [Flux.Bars]
+
 if !font then require_relative 'cl_font' end
 if !Flux.Lang then require_relative 'sh_lang' end
 
@@ -66,6 +85,12 @@ function Flux.Bars:register(id, data, force)
     callback = data.callback
   }
 
+  --- Called on the client after a HUD bar has been registered or overwritten with
+  -- `Flux.Bars:register`. Not called when a bar with this ID already exists and is kept.
+  -- @param bar [Map the stored bar, with the defaults filled in]
+  -- @param id [String bar ID]
+  -- @param force [Boolean true if an existing bar with this ID was allowed to be overwritten,
+  --   which is always the case in development mode]
   hook.Run('OnBarRegistered', stored[id], id, force)
 
   return stored[id]
@@ -130,6 +155,10 @@ function Flux.Bars:prioritize()
       continue
     end
 
+    --- Called on the client for every bar that passes `ShouldDrawBar`, right before the bar is
+    -- sorted into the prioritized list of top bars. This happens every `LazyTick` and is the
+    -- place to change the `priority` of a bar.
+    -- @param bar [Map bar data]
     hook.Run('PreBarPrioritized', v)
 
     sorted[v.priority] = sorted[v.priority] or {}
@@ -154,6 +183,14 @@ function Flux.Bars:position()
       local bar = self:get(v)
 
       if bar and bar.type == BAR_TOP then
+        --- Lets plugins offset a top bar while the bars are being stacked. Called on the
+        -- client for every `BAR_TOP` bar each time the bars are repositioned, which happens
+        -- every `LazyTick`. The vertical offset is added to the bar's place in the stack. The
+        -- horizontal offset is added to the x position the bar already has, so it accumulates
+        -- from call to call.
+        -- @param bar [Map bar data]
+        -- @return [Number horizontal offset in pixels, Number vertical offset in pixels; each
+        --   is 0 when nothing is returned]
         local off_x, off_y = hook.Run('AdjustBarPos', bar)
         off_x = off_x or 0
         off_y = off_y or 0
@@ -173,15 +210,32 @@ function Flux.Bars:draw(id)
   local bar_info = self:get(id)
 
   if bar_info then
+    --- Called on the client when a bar is about to be drawn, before the `PreDrawBar` theme
+    -- hook and before `ShouldDrawBar` is asked. Flux's own handler works out the fill width of
+    -- the bar here (advancing its value animation) and converts its texts to upper case.
+    -- @param bar_info [Map bar data]
     hook.Run('PreDrawBar', bar_info)
     Theme.call('PreDrawBar', bar_info)
 
+    --- Asks whether a HUD bar should be drawn. Called on the client by `Flux.Bars:draw` every
+    -- time a bar is drawn, and by `Flux.Bars:prioritize` for every registered bar when the top
+    -- bars are sorted. The bar is skipped unless a truthy value is returned. Flux's own
+    -- handler returns false while the value of the bar is above its `display` setting or not
+    -- above its `min_display` setting and true otherwise; as it always returns a value,
+    -- handlers that run after it are not consulted.
+    -- @param bar_info [Map bar data]
+    -- @return [Boolean Return true to draw the bar, false to hide it]
     if !hook.Run('ShouldDrawBar', bar_info) then
       return
     end
 
     Theme.call('DrawBarBackground', bar_info)
 
+    --- Asks whether the fill of a bar should be drawn. Called on the client every time a bar
+    -- is drawn, after its background. The fill is always drawn when the value of the bar is
+    -- not 0.
+    -- @param bar_info [Map bar data]
+    -- @return [Boolean Return true to draw the fill even though the value of the bar is 0]
     if hook.Run('ShouldFillBar', bar_info) or bar_info.value != 0 then
       Theme.call('DrawBarFill', bar_info)
     end
@@ -192,6 +246,9 @@ function Flux.Bars:draw(id)
 
     Theme.call('DrawBarTexts', bar_info)
 
+    --- Called on the client after a bar has been drawn, before the `PostDrawBar` theme hook.
+    -- Not called for bars that `ShouldDrawBar` has hidden.
+    -- @param bar_info [Map bar data]
     hook.Run('PostDrawBar', bar_info)
     Theme.call('PostDrawBar', bar_info)
   end
@@ -218,6 +275,8 @@ function Flux.Bars:adjust(id, data)
 end
 
 do
+  --- Hook handlers of the bars library, registered as `FLBarHooks`: they keep the bars
+  -- positioned and up to date, animate their fill and hide them outside their display range.
   local Bars = {}
 
   --- Repositions the top bars and refreshes the value of every bar that has a callback.
@@ -230,6 +289,11 @@ do
           Flux.Bars:set_value(v.id, v.callback(stored[k]))
         end
 
+        --- Called on the client for every registered bar each `LazyTick`, after the callback
+        -- of the bar has refreshed its value. Handlers can change the settings of the bar in
+        -- place.
+        -- @param id [String bar ID]
+        -- @param bar [Map bar data]
         hook.Run('AdjustBarInfo', k, stored[k])
       end
     end

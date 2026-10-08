@@ -1,3 +1,6 @@
+--- The Changelevel command changes the map to the given one, optionally after a delay in
+-- seconds. Allowed for moderators by default.
+
 CMD.name = 'Changelevel'
 CMD.description = 'command.changelevel.description'
 CMD.syntax = 'command.changelevel.syntax'

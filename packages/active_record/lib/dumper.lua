@@ -1,3 +1,10 @@
+--- Generates the schema file. `ActiveRecord.dump_schema` turns the schema that
+-- ActiveRecord keeps in memory (tables and their columns, indexes, foreign keys and
+-- primary keys) into the Lua source of `db/schema.lua`: a single
+-- `ActiveRecord::Schema#define` call made of the schema statements that recreate the
+-- database. `ActiveRecord.Tasks.schema_dump` writes it to disk, which also happens after
+-- migrations have been run.
+
 local function lua_literal(value)
   if isstring(value) then
     return string.format('%q', value)

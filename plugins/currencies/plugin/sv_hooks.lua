@@ -1,3 +1,6 @@
+--- Server side of the Currencies plugin: gives new characters their balances, networks the
+-- balances of characters and containers, holds the default rules for giving, dropping and
+-- picking up money, and handles the requests of the money panel.
 
 --- Adds a Currency record with a zero balance for every registered currency to a new
 -- character.
@@ -88,6 +91,13 @@ end
 -- @return [Boolean false when not allowed, String error phrase if there is one; nothing
 --   when allowed]
 function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, trace)
+  --- Asks whether an entity may part with an amount of money. Called on the server by the
+  -- default handlers of CanPlayerDropMoney and CanGiveMoney, before their own checks.
+  -- @param actor [Entity the entity that drops or gives the money: a player, or a container
+  --   that money is taken out of]
+  -- @param amount [Number]
+  -- @param currency [String currency ID]
+  -- @return [Boolean return false to refuse, String error phrase for the player]
   local success, err = hook.Run('CanPlayerTransferMoney', actor, amount, currency)
 
   if success == false then

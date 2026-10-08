@@ -1,3 +1,7 @@
+--- Installer of the YAML package: loads the parser into the `YAML` global and adds
+-- `YAML.read`, which parses a file and prefers its `.local.yml` variant. The package is only
+-- included on the server.
+
 --- Loads the YAML library into the YAML global, unless it is loaded already,
 -- and adds the YAML.read file helper to it when it is missing.
 function PACKAGE:__installed__()

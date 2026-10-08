@@ -1,3 +1,6 @@
+--- Server hooks of the Ragdoll plugin: ragdolls players when they die, resets them when they
+-- spawn and passes the damage a ragdoll takes on to its player.
+
 --- Cancels the player's current action and puts them into the RAGDOLL_DUMMY state, which
 -- leaves a corpse ragdoll.
 -- @param victim [Player]
@@ -16,6 +19,11 @@ end
 -- @param actor [Player]
 function PLUGIN:PlayerThink(actor)
   if !actor:Alive() and actor:is_ragdolled() then
+    --- GMod's `PlayerDeathThink` hook, run again by the Ragdoll plugin.
+    -- Besides the engine's own calls, the plugin runs it on the server from its `PlayerThink`
+    -- handler for every dead player who is ragdolled. This call ignores what the handlers
+    -- return.
+    -- @param actor [Player The dead player]
     hook.Run('PlayerDeathThink', actor)
   end
 end

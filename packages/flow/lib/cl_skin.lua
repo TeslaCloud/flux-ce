@@ -1,3 +1,7 @@
+--- The 'Flux' Derma skin, which Flux makes the default skin of all Derma panels. It is a copy
+-- of the default GWEN skin of Garry's Mod, defined under the name 'Flux' as a base for themes:
+-- `Theme.set_derma_skin` copies the `skin` table of the active theme over it.
+
 -- Default GWEN skin copy-pasta.
 
 SKIN                                    = {}

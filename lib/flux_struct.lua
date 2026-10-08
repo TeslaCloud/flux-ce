@@ -1,3 +1,9 @@
+--- Creates the `Flux` global together with `Flux.shared`, the table of data that the server
+-- passes on to clients: the schema folder, plugin info, configs, dependencies and packages.
+-- Refuses to start when the gamemode is set to 'flux' itself instead of a schema. On the
+-- client it also loads the UTF-8 and SFS libraries and the generated files from
+-- `_flux/client`.
+
 if engine.ActiveGamemode() == 'flux' then
   error(txt[[
     ============================================

@@ -1,3 +1,12 @@
+--- The schema definition that the schema file is written in. The generated
+-- `db/schema.lua` calls `ActiveRecord.Schema:define` with the version of the schema and a
+-- function whose schema statements create every table, index and foreign key. Loading
+-- the file, with `flux db:schema:load` or when the server starts with an empty database,
+-- builds the whole database at once and records the migrations up to that version as run.
+--
+-- Schema files of the older form, which define a 'Structure' object with a
+-- `create_tables` method, are still recognized, but they cannot be loaded.
+
 class 'ActiveRecord::Schema'
 
 --- Creates a schema object. Only used by schema files that hold a 'Structure' object

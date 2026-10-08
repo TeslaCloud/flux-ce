@@ -1,3 +1,8 @@
+--- A modal dialog (`fl_selector`) that asks the player to pick one choice from a combo box.
+-- It shows itself in the center of the screen as soon as it is created. Set its texts with
+-- `set_title`, `set_text` and `set_value`, and add the choices with `add_choice`; picking a
+-- choice runs its callback and removes the dialog. Derives from `DFrame`.
+
 local PANEL = {}
 
 --- Builds and shows the modal dialog: a message label and a combo box. Selecting a choice

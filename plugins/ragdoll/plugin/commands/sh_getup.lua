@@ -1,3 +1,6 @@
+--- The `getup` command: the fallen caller gets back up after a delay, during which they see a
+-- progress bar.
+
 CMD.name = 'GetUp'
 CMD.description = 'command.getup.description'
 CMD.syntax = 'command.getup.syntax'

@@ -1,3 +1,6 @@
+--- Migration that creates the tables of the gamemode package: `users`, the records of the
+-- players (`User`), indexed by SteamID, and `logs`, the entries written by `Log`.
+
 local CreateDefaultTables = ActiveRecord.Migration.new()
 
 --- Creates the users and logs tables.

@@ -1,3 +1,10 @@
+--- A numeric stepper (`fl_counter`): a value with a button above it to increase it, a button
+-- below it to decrease it and an optional title.
+-- Set the allowed range with `set_min_max` and the current value with `set_value`, read it
+-- with `get_value`, and override `on_click` to react to a change or to reject it by returning
+-- false. The character creation uses it to pick the skin of the model. Derives from
+-- `fl_base_panel`.
+
 local PANEL = {}
 PANEL.value = 1
 PANEL.max = 0

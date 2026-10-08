@@ -1,3 +1,26 @@
+--- ActiveRecord is Flux's object-relational mapper, modelled on the Rails library of the
+-- same name. It ties classes to database tables: a model is a class that extends
+-- `ActiveRecord::Base`, its table is named after the lowercase plural of the class name,
+-- and every row of that table is loaded as an object of the class and written back with
+-- `ActiveRecord::Base#save`.
+--
+-- The tables are described by migrations (`ActiveRecord::Migration`): files in the
+-- schema's `db/migrate/` folder that change the database through the schema statements
+-- (`create_table`, `add_column`, `add_index` and so on). Pending migrations are run when
+-- the server starts or through the `flux db:*` console commands (`ActiveRecord.Tasks`),
+-- and the resulting schema is dumped into `db/schema.lua`. All SQL goes through a database
+-- adapter (`ActiveRecord::Adapters::Abstract`) for SQLite, MySQL or PostgreSQL, picked by
+-- the settings of the current environment in `config/database.yml`.
+--
+-- The functions on the `ActiveRecord` table itself connect to the database, bring the
+-- library up and keep its bookkeeping: the columns of every table are mirrored in
+-- `ActiveRecord.schema` and in the 'ar_schema' table, and the indexes, foreign keys and
+-- primary keys in `ActiveRecord.metadata` and in the 'ar_metadata' key-value table.
+-- `ActiveRecord.ready` is set once the stored schema has been read back, and the
+-- `ActiveRecordReady` hook is run when startup is complete. The library only exists on
+-- the server; the client gets a stub of `ActiveRecord::Base`.
+-- @module [ActiveRecord]
+
 -- Store for later use.
 local PACKAGE = PACKAGE
 
@@ -402,6 +425,13 @@ function ActiveRecord.on_connected()
     long_error(tostring(exception)..'\n')
   end
 
+  --- Called on the server once ActiveRecord has finished starting up: the database is
+  -- connected, the stored schema is restored, the models know their columns and the
+  -- pending migrations have been run. It is called even if bringing the database up to
+  -- date failed. This is the place to load data that has to be in memory from the start.
+  -- The adapter is in sync mode during the call, so queries made by a handler finish
+  -- before it returns. `DatabaseConnected` is run right after it.
+  -- @realm [server]
   hook.Run('ActiveRecordReady')
 end
 

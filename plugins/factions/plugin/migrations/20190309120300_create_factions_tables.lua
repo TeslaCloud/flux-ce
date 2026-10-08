@@ -1,3 +1,6 @@
+--- Migration that creates the `whitelists` table and adds the faction and rank columns to the
+-- `characters` table.
+
 local CreateFactionsTables = ActiveRecord.Migration.new()
 
 --- Creates the whitelists table, and adds the faction and rank columns to characters.

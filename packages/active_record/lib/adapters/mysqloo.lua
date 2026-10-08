@@ -1,3 +1,11 @@
+--- Adapter for MySQL servers, built on the MySQLOO binary module (`gmsv_mysqloo`). It is
+-- used when the database settings name the 'mysqloo' or 'mysql' adapter. Queries run
+-- asynchronously unless the adapter is in sync mode, and queries with bind parameters are
+-- sent as prepared statements. Tables are created with the InnoDB engine and the encoding
+-- of the database settings ('utf8' by default), and the connection is pinged every 30
+-- seconds to keep it alive. Unlike the other adapters, it does not run migrations in a
+-- transaction.
+
 class 'ActiveRecord::Adapters::Mysqloo' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Mysqloo.types = {

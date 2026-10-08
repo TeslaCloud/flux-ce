@@ -1,3 +1,14 @@
+--- Attributes gives characters numeric stats and skills that can level up.
+-- An attribute is defined once, as an `AttributeBase` in a file of a plugin's `attributes`
+-- folder or through `Attributes.register`, with a level range, a type (`ATTRIBUTE_STAT` or
+-- `ATTRIBUTE_SKILL`) and a progression curve. Every character has a level and a progress
+-- value for each attribute, stored in the database and read and changed through player
+-- methods such as `Player:get_attribute`, `Player:set_attribute` and
+-- `Player:progress_attribute`. A boost adds levels to an attribute for a limited time, and
+-- a multiplier scales the progress gained in it for a limited time. Staff set and boost
+-- attributes with the plugin's commands, and the `attribute` condition compares a
+-- player's attribute level with a value.
+
 PLUGIN:set_global('AttributesPlugin')
 
 Plugin.add_extra('attributes')

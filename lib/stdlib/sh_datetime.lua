@@ -1,3 +1,6 @@
+--- Dates with a time of day: the `DateTime` class, which extends `Date` with hours, minutes,
+-- seconds and a time zone.
+
 --- The DateTime class represents a point in time, not a time interval.
 -- For time intervals, please use Time.
 -- @see [Time]

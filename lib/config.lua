@@ -1,3 +1,11 @@
+--- Config stores the settings of the server under string keys and shares them with clients.
+-- The server owns the values: `Config.set` changes one, runs the OnConfigSet hook and sends
+-- the new value to every player unless the config is hidden, and `Config.get` reads one on
+-- either side. `Config.save` and `Config.load` keep the values in the 'config' data file, and
+-- `Config.import` sets them from a YAML file. `Config.read` reads config definitions (default
+-- values, names, descriptions and editor types) from YAML, out of which the client builds the
+-- categories of the config menu.
+
 -- This library is for serverside configs only!
 -- For clientside configs, see cl_settings.lua!
 
@@ -80,6 +88,15 @@ if SERVER then
         end
       end
 
+      --- Called when the value of a config is about to change, before the new value is stored.
+      -- On the server it runs for every `Config.set`, which includes the defaults set by
+      -- `Config.read` and the values set by `Config.import`. On the client it only runs for
+      -- values set locally with `Config.set`, not for the ones received from the server.
+      -- `Config.load` and the client side `Config.set` call it through `Plugin.call`, which
+      -- skips gamemode handlers.
+      -- @param key [String config key]
+      -- @param old_value [Any current value, nil if the config has just been created]
+      -- @param new_value [Any value that is about to be stored]
       hook.Run('OnConfigSet', key, stored[key].value, value)
 
       stored[key].value = value
@@ -277,6 +294,11 @@ if SERVER then
     end
 
     for k, v in pairs(config_table) do
+      --- Called on the server for every key that `Config.import` is about to set.
+      -- @param key [String config key]
+      -- @param value [Any value read from the imported file or table]
+      -- @return [Boolean Return any value other than nil to skip the key and keep its current
+      --   value]
       if k != 'depends' and Plugin.call('ShouldConfigImport', k, v) == nil then
         Config.set(k, v, nil, from_config)
       end

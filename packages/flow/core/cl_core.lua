@@ -1,3 +1,11 @@
+--- Client-side drawing helpers of the Flux core.
+-- `surface` gains scaled and rotated text and drawing blocks, circles, sectors and rings.
+-- `draw` gains stencil cutouts, outlined, textured and plain boxes, lines and blurred
+-- backgrounds. `Flux` gains the circular action indicator, the spinning cog and simple
+-- position animations. The file also derives the gamemode from sandbox on the client and
+-- sets up the materials and the settings of the blur effect.
+-- @module [draw]
+
 DeriveGamemode('sandbox')
 
 Flux.blur_material = Material('pp/blurscreen')

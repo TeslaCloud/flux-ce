@@ -1,3 +1,6 @@
+--- Registers the door properties that come with the Doors plugin ('name', 'title_type',
+-- 'skin', 'bodygroups' and 'locked') and the 'center' title type.
+
 Doors:register_property('name', {
   --- Returns the name of the door.
   -- @param entity [Entity the door]

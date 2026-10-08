@@ -1,3 +1,5 @@
+--- Staff command that sets how much of a currency one or more players have.
+
 CMD.name = 'SetMoney'
 CMD.description = 'command.setmoney.description'
 CMD.syntax = 'command.setmoney.syntax'

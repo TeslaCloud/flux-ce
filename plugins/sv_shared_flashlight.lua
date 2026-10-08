@@ -1,3 +1,9 @@
+--- Shared Flashlight makes the light of a player's flashlight visible to other players, by
+-- attaching a projected light to the player whenever the `PlayerSwitchedFlashlight` hook is
+-- run for them.
+-- The plugin is experimental: it only does anything with `experimental` turned on in the
+-- settings.
+
 PLUGIN:set_name 'Shared Flashlight'
 PLUGIN:set_author 'TeslaCloud Studios'
 PLUGIN:set_description "Makes other players' flashlight lights visible to you."

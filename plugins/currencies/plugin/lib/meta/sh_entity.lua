@@ -1,3 +1,9 @@
+--- Entity extensions of the Currencies plugin: the money an entity holds.
+-- The balances of an entity are networked, so they can be read on the server and the client;
+-- on the server they can be set, given, taken, dropped and moved to another entity. The
+-- balance of a player belongs to their active character and is stored in its `Currency`
+-- records, while other entities, such as containers, keep theirs on the entity.
+
 do
   local entity_meta = FindMetaTable('Entity')
 
@@ -23,6 +29,11 @@ do
   --- Checks whether the entity is able to hold money by running the CanContainMoney hook.
   -- @return [Boolean true when a hook allows it, otherwise nil]
   function entity_meta:can_contain_money()
+    --- Asks whether an entity is able to hold money. Called by `Entity:can_contain_money`, and
+    -- on the server by the default CanGiveMoney handler for the receiver of the money.
+    -- @param object [Entity]
+    -- @return [Boolean return true if the entity can hold money; it cannot when nothing is
+    --   returned]
     return hook.Run('CanContainMoney', self)
   end
 
@@ -58,6 +69,12 @@ do
 
         self:set_nv('fl_currencies', currency_table)
 
+        --- Called on the server after the amount of a currency that an entity holds has been
+        -- set and networked.
+        -- @param entity [Entity the player or other entity whose balance was set]
+        -- @param currency [String currency ID]
+        -- @param value [Number the new amount]
+        -- @param old_value [Number the amount before the change]
         hook.Run('EntityMoneyChanged', self, currency, value, old_value)
       end
     end
@@ -112,6 +129,16 @@ do
         return
       end
 
+      --- Decides whether a player may drop money on the ground. Called on the server by
+      -- `Entity:drop_money` before the money entity is created.
+      -- @param actor [Player]
+      -- @param amount [Number]
+      -- @param currency [String currency ID]
+      -- @param pos [Vector where the money would appear, at most 120 units from the eyes of
+      --   the player]
+      -- @param trace [Map eye trace result of the player]
+      -- @return [Boolean return false to refuse the drop, String error phrase that drop_money
+      --   returns to its caller]
       local success, err = hook.Run('CanPlayerDropMoney', self, value, currency, pos, trace)
 
       if success == false then
@@ -168,6 +195,15 @@ do
         target = trace.Entity
       end
 
+      --- Decides whether money may be moved from one entity to another. Called on the server
+      -- by `Entity:give_money_to` before anything is moved.
+      -- @param giver [Entity the entity the money is taken from, a player or a container]
+      -- @param target [Entity the receiver; it may be invalid when a player gives money to
+      --   whatever they are looking at]
+      -- @param amount [Number]
+      -- @param currency [String currency ID]
+      -- @return [Boolean return false to refuse the transfer, String error phrase that
+      --   give_money_to returns to its caller]
       local success, err = hook.Run('CanGiveMoney', self, target, value, currency)
 
       if success == false then

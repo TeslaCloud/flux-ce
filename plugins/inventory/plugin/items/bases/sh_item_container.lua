@@ -1,3 +1,17 @@
+--- ItemContainer is the base class for items that hold other items, such as bags.
+-- A derived item sets `inventory_data`, the settings of the inventory inside: `width`,
+-- `height`, `type` and optionally `infinite_width` and `infinite_height`; it is a 4x4
+-- inventory of the `'item_container'` type by default. `default_inventory` is an optional
+-- list of `{ id = ..., amount = ..., data = ... }` entries that every new container is
+-- filled with.
+--
+-- The base class adds the open button to the menu of the item. The inventory is created
+-- when the container is opened for the first time, or filled on creation, and belongs to
+-- the item through its `instance_id` field; the instance ids of the contents are saved
+-- with the item. A derived item can override `can_contain(item_obj)` and return false to
+-- refuse an item, calling the base method to keep the container out of itself.
+-- @module [ItemContainer]
+
 class 'ItemContainer' extends 'ItemBase'
 
 ItemContainer.name = 'Container Items Base'

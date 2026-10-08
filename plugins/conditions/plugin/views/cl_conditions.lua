@@ -1,3 +1,10 @@
+--- The conditions editor (`fl_conditions`): a tree in which every node is a condition. The
+-- nodes on one level are alternatives, and a node with nodes under it also needs one of those
+-- to hold.
+-- Right-clicking a node adds a condition under it, sets its parameter or operator, or deletes
+-- it. The tree is read with `get_conditions` and filled with `set_conditions`, and it can be
+-- saved to and loaded from named presets.
+
 local PANEL = {}
 
 --- Creates the root node of the condition tree and the buttons

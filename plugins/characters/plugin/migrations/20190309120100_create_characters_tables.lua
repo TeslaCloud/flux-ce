@@ -1,3 +1,5 @@
+--- Migration that creates the `characters` and `ammunitions` tables.
+
 local CreateCharactersTables = ActiveRecord.Migration.new()
 
 --- Creates the characters and ammunitions tables.

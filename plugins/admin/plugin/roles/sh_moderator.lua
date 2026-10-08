@@ -1,3 +1,7 @@
+--- The Moderator role (`moderator`): based on `assistant`, with an immunity of 200. It
+-- defines no permissions itself and has those registered for `moderator` and for the roles
+-- it is based on.
+
 ROLE.name = 'Moderator'
 ROLE.description = 'role.moderator'
 ROLE.color = Color(255, 255, 255)

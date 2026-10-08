@@ -1,3 +1,9 @@
+--- The `fl_inventory_menu` panel is the inventory tab of the tab menu.
+-- It shows the main inventory and the pockets of the local player, the equipment slots
+-- around a preview of their model, a field for editing the description of the character,
+-- and the hotbar at the bottom of the screen. Dropping an equipable item onto the model
+-- equips it.
+
 local PANEL = {}
 
 --- Draws the background of the inventory tab using the theme.

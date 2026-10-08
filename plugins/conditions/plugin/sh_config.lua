@@ -1,3 +1,6 @@
+--- Registers the condition types that come with the Conditions plugin: 'steamid', 'model',
+-- 'health', 'armor' and 'active_weapon'.
+
 Conditions:register_condition('steamid', {
   name = 'condition.steamid.name',
   text = 'condition.steamid.text',

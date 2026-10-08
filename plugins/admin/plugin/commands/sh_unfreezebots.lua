@@ -1,3 +1,6 @@
+--- The UnfreezeBots command unfreezes all bots by turning the `bot_zombie` console variable
+-- off. Allowed for moderators by default.
+
 CMD.name = 'UnfreezeBots'
 CMD.description = 'command.unfreezebots.description'
 CMD.permission = 'moderator'

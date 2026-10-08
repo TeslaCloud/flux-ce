@@ -1,3 +1,8 @@
+--- Config editor page of the admin panel, which lets players with the `manage_configuration`
+-- permission change config values in game.
+
+--- The config editor page: a scrollable list of collapsible config categories, each filled
+-- with `fl_config_line` rows.
 local PANEL = {}
 
 --- Builds a collapsible category for every config menu category and fills it with config
@@ -45,6 +50,9 @@ end
 
 vgui.Register('fl_config_editor', PANEL, 'fl_base_panel')
 
+--- A row of the config editor: the name of a config value and the control that matches its
+-- type (slider, checkbox, text entry, list editor or dropdown). Changes are sent to the
+-- server.
 local PANEL = {}
 
 --- Creates the label that shows the config's name.

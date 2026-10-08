@@ -1,3 +1,9 @@
+--- Keeps track of the migrations that have been run. Their versions are stored in the
+-- 'ar_schema_migrations' table, one row each: the migrator reads them to tell the pending
+-- migrations from the ones that have been run, and adds or removes a row whenever a
+-- migration is run or reverted. The class is used as it is, without creating objects of
+-- it.
+
 class 'ActiveRecord::SchemaMigration'
 
 --- Name of the table that holds the versions of the migrations that have been run.

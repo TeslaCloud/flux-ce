@@ -1,3 +1,5 @@
+--- Command that drops an amount of the player's money in front of them.
+
 CMD.name = 'DropMoney'
 CMD.description = 'command.dropmoney.description'
 CMD.syntax = 'command.dropmoney.syntax'

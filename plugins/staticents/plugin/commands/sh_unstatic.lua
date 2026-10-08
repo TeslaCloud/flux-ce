@@ -1,3 +1,5 @@
+--- The `unstatic` command: removes the static status of the entity the caller is looking at.
+
 CMD.name = 'UnStatic'
 CMD.description = 'command.unstatic.description'
 CMD.permission = 'assistant'

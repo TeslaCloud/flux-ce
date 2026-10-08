@@ -1,3 +1,22 @@
+--- Base class of the interface themes. A theme stores the named colors, fonts, sounds,
+-- materials and options that the interface looks up through the `Theme` library, the callbacks
+-- that create the panels it provides (`ThemeBase:add_panel`), and a `skin` table of overrides
+-- for the 'Flux' Derma skin. A file in a `themes` folder receives a new instance as `THEME`:
+-- set `THEME.parent` to inherit from another theme, define the values of the theme in
+-- `THEME:on_loaded`, and add methods such as `THEME:PaintButton(panel, w, h)` to answer the
+-- theme hooks that the interface calls with `Theme.hook`. When a theme is loaded, the
+-- `on_loaded` methods of its parents are run on it as well.
+-- ```
+-- THEME.author = 'TeslaCloud Studios'
+-- THEME.id = 'hl2rp'
+-- THEME.parent = 'factory'
+--
+-- function THEME:on_loaded()
+--   self:set_color('accent', Color(58, 87, 167))
+--   self:set_option('bar_height', 7)
+-- end
+-- ```
+
 class 'ThemeBase'
 
 ThemeBase.colors    = {}

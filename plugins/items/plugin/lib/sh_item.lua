@@ -1,3 +1,15 @@
+--- The Item library keeps track of item templates and item instances.
+-- Templates are the item classes registered from item files. The `item` pipeline, defined
+-- at the end of this file, creates an `ItemBase` object for every file, runs the file with
+-- that object as `ITEM` and passes it to `Item.register`. `Item.create` makes an instance
+-- out of a template, with an instance id of its own, and `Item.spawn` puts an instance
+-- into the world as an `fl_item` entity.
+--
+-- On the server the library also saves the instances and the positions of the item
+-- entities (`Item.save_all`, `Item.load`) and sends instances to the clients
+-- (`Item.network_item`, `Item.network_item_data`), which keep their own copies of them.
+-- Plugins can add fields to what is saved and sent through the `PreItemSave` hook.
+
 mod 'Item'
 
 local stored = Item.stored or {}
@@ -141,6 +153,12 @@ function Item.to_saveable(item_obj)
     icon_material = item_obj.icon_material
   }
 
+  --- Lets plugins add fields to the data of an item that is saved and sent to clients.
+  -- Called by `Item.to_saveable`, which the server uses both when it saves the item
+  -- instances and when it sends an instance to clients. Handlers write their fields into
+  -- `save_table`; the Inventory plugin adds the position of the item in its inventory.
+  -- @param item_obj [Item The item that is being saved]
+  -- @param save_table [Map The fields that are going to be saved, to be modified in place]
   hook.Run('PreItemSave', item_obj, save_table)
 
   return save_table
@@ -262,6 +280,12 @@ function Item.create(id, data, forced_id)
     instances[id][item_id].instance_id = item_id
 
     if SERVER then
+      --- Called on the server when `Item.create` has created a new item instance.
+      -- At this point the instance has its instance id and the overridden fields, but it
+      -- has not been saved or sent to the clients yet and it is not in any inventory.
+      -- The Items plugin uses the hook to call the `on_created` callback of the item.
+      -- It is not run for the instances that `Item.load` restores.
+      -- @param item_obj [Item The new item instance]
       hook.Run('OnItemCreated', instances[id][item_id])
 
       Item.async_save()

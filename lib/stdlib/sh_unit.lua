@@ -1,3 +1,8 @@
+--- Distance conversion: the `Unit` class converts metric and imperial lengths to Source Engine
+-- units and back, and formats distances for display.
+-- The converters are also installed into the `math` library, so that a distance can be
+-- written as `math.meters(2)`.
+
 --- A class to convert conventional metrics to Source Engine units.
 class 'Unit'
 

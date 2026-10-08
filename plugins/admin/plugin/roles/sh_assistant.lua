@@ -1,3 +1,7 @@
+--- The Assistant role (`assistant`): the first staff role, based on `user`, with an immunity
+-- of 100. It defines no permissions itself and has those registered for `assistant` and
+-- for `user`.
+
 ROLE.name = 'Assistant'
 ROLE.description = 'role.assistant'
 ROLE.color = Color(255, 255, 255)

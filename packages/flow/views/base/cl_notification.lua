@@ -1,3 +1,11 @@
+--- A notification popup (`fl_notification`): lines of text on a blurred background that fade
+-- in and out.
+-- Set it up with `set_text`, `set_text_color` and `set_background_color`, and call
+-- `set_lifetime` to start the timers that slide it off the right edge of the screen and remove
+-- it. Notifications are normally created through `Flux.Notification:add`, which also queues
+-- and positions them. A theme can take over the drawing with its `PaintNotificationContainer`
+-- and `PaintNotificationText` hooks.
+
 local PANEL = {}
 PANEL.lifetime = 6
 PANEL.background_color = Color(0, 0, 0)

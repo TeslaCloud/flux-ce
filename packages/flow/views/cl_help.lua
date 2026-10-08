@@ -1,3 +1,7 @@
+--- The help page of the tab menu (`fl_help`): an `fl_html` view that shows the 'help' template
+-- rendered with its stylesheet and JavaScript.
+-- `rebuild` renders the page again. Derives from `fl_base_panel`.
+
 local PANEL = {}
 PANEL.categories = {}
 

@@ -1,3 +1,42 @@
+--- ItemBase is the class of every item: item templates and item instances are both ItemBase
+-- objects, and the item base classes extend it.
+-- The `item` pipeline creates one object per item file and exposes it as `ITEM`. The file
+-- sets its fields and defines its callbacks, optionally after taking over those of a base
+-- class with `ItemBase:base_off`.
+--
+-- Fields an item can set; `Item.register` fills in the defaults:
+-- `name`, `print_name`, `description` and `category`; `model`, `skin` and `color`;
+-- `weight` and `cost`; `width` and `height` (size in inventory slots), `stackable` and
+-- `max_stack`; `pocket_size` (true if the item fits into pockets); `background_color`
+-- and `special_color` (background and outline of its inventory slot); `icon_data`,
+-- `icon_material` and `icon_model` (how its inventory icon is rendered); `use_text`,
+-- `take_text`, `drop_text`, `use_icon` and `take_icon` (options of its menu); and `data`
+-- (default custom data, read and written with `ItemBase:get_data` and
+-- `ItemBase:set_data`).
+--
+-- Callbacks an item can define. Those of the first group are called on the server:
+--
+-- - `on_use(actor)`: a player uses the item. The use option is only shown when the item
+--   has this callback. Returning true keeps the item, returning false cancels the use,
+--   and returning nothing removes the item.
+-- - `on_drop(actor)`: a player is about to drop the item; return false to prevent it.
+-- - `on_created()`: the instance has just been created.
+-- - `on_loadout(owner)` and `on_save(owner)`: the player that has the item has spawned,
+--   or their character is about to be saved.
+-- - `can_transfer(inventory, x, y)` and `can_move(inventory, x, y)`: the item is about
+--   to be moved to another inventory or inside of its inventory; return false, and
+--   optionally an error phrase, to prevent it.
+-- - `on_transfer(new_inventory, old_inventory)`: the item is about to change its inventory.
+--
+-- And on the client:
+--
+-- - `is_action_visible(action)`: return false to hide the `'use'`, `'take'` or `'drop'`
+--   option of the menu.
+-- - `paint_slot(w, h)` and `paint_over_slot(w, h)`: draw on the inventory slot of the item.
+--
+-- Custom menu options are added with `ItemBase:add_button`, and every menu action goes
+-- through `ItemBase:do_menu_action`.
+
 class 'ItemBase'
 
 --- Initializes a new item table.
@@ -259,17 +298,57 @@ if SERVER then
   -- @param actor [Player the player performing the action]
   -- @param ... [Vararg extra arguments that are passed to the hooks and to the item's method]
   function ItemBase:do_menu_action(act, actor, ...)
+    --- Called on the server before a player performs any menu action on an item:
+    -- using, taking or dropping it, or pressing one of its custom buttons.
+    -- The Items plugin uses it to reject actions on items the player does not have and
+    -- on items in the world that are out of reach.
+    -- @param actor [Player The player performing the action]
+    -- @param item_obj [Item The item instance]
+    -- @param act [String Name of the action: `'on_use'`, `'on_take'`, `'on_drop'` or the
+    --   callback of a custom button]
+    -- @param ... [Vararg Extra arguments that were passed to `ItemBase:do_menu_action`]
+    -- @return [Boolean Return false to prevent the action]
     if hook.Run('PlayerCanUseItem', actor, self, act, ...) == false then return end
 
     if act == 'on_take' then
+      --- Called on the server when a player takes an item, after `PlayerCanUseItem`.
+      -- The hook is what performs the action: the Inventory plugin handles it by putting
+      -- an item that lies in the world into one of the player's inventories.
+      -- @param actor [Player The player taking the item]
+      -- @param item_obj [Item The item instance]
+      -- @param ... [Vararg Extra arguments of the action; a table with an `inv_type` field
+      --   names the inventory type the item should go to]
+      -- @return [Any Any value other than nil ends the action right there: the action
+      --   sound is not played and `PlayerUsedItem` is not run]
       if hook.Run('PlayerTakeItem', actor, self, ...) != nil then return end
     end
 
     if act == 'on_use' then
+      --- Called on the server when a player uses an item, after `PlayerCanUseItem`.
+      -- The hook is what performs the action: the Inventory plugin handles it by calling
+      -- the `on_use` callback of the item and removing the item afterward, unless the
+      -- callback returns true to keep it. It returns false when the callback cancels the
+      -- use.
+      -- @param actor [Player The player using the item]
+      -- @param item_obj [Item The item instance]
+      -- @param ... [Vararg Extra arguments that were passed to `ItemBase:do_menu_action`]
+      -- @return [Any Any value other than nil ends the action right there: the action
+      --   sound is not played and `PlayerUsedItem` is not run]
       if hook.Run('PlayerUseItem', actor, self, ...) != nil then return end
     end
 
     if act == 'on_drop' then
+      --- Called on the server when a player drops an item through its menu, after
+      -- `PlayerCanUseItem`. The hook is what performs the action: the Inventory plugin
+      -- handles it by taking the item out of its inventory and spawning it in front of
+      -- the player. The Inventory plugin also runs this hook itself, with a list of
+      -- instance ids instead of a single one, when items are dragged out of an inventory
+      -- panel.
+      -- @param actor [Player The player dropping the item]
+      -- @param instance_id [Number Instance id of the item]
+      -- @return [Any Any value other than nil ends the action right there: the `on_drop`
+      --   callback is not called by the action, the action sound is not played and
+      --   `PlayerUsedItem` is not run]
       if hook.Run('PlayerDropItem', actor, self.instance_id) != nil then return end
     end
 
@@ -286,6 +365,14 @@ if SERVER then
       self:play_sound(act, actor)
     end
 
+    --- Called on the server after a player has performed a menu action on an item.
+    -- It is not run when the action was rejected by `PlayerCanUseItem` or ended by a
+    -- handler of `PlayerTakeItem`, `PlayerUseItem` or `PlayerDropItem`.
+    -- @param actor [Player The player who performed the action]
+    -- @param item_obj [Item The item instance]
+    -- @param act [String Name of the action: `'on_use'`, `'on_take'`, `'on_drop'` or the
+    --   callback of a custom button]
+    -- @param ... [Vararg Extra arguments that were passed to `ItemBase:do_menu_action`]
     hook.Run('PlayerUsedItem', actor, self, act, ...)
   end
 

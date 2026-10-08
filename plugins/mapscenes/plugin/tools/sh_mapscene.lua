@@ -1,3 +1,8 @@
+--- The Mapscene tool: left click adds a mapscene camera point at the user's eyes, and the
+-- tool's settings panel lists the points and lets them be deleted.
+-- The tool and its list of points are tied to the 'mapscenes' permission, while adding a point
+-- checks for 'mapsceneadd'.
+
 TOOL.Category = 'Flux'
 TOOL.Name = 'Mapscene tool'
 TOOL.Command = nil

@@ -1,3 +1,10 @@
+--- Classes for Lua: the `class` keyword with constructors, inheritance through `extends` and
+-- `super`, and mixins through `include`.
+-- Classes are plain tables stored under their ConstantStyle name. Instances are created with
+-- `Name.new(...)`, which copies the class into a new table and calls its `init` method.
+-- `delegate` copies selected methods of a class to another object, and `isclass` tells
+-- classes and their instances from other values.
+
 local last_class = nil
 
 --- Checks whether or not an object is a class or an instance of a class.
@@ -188,6 +195,12 @@ function extends(parent_class)
     obj.parent = parent_class
     obj.BaseClass = obj.parent_class
 
+    --- Called when a class is given a base class with `extends`, after the base class has been
+    -- copied into it.
+    -- Runs on the realm the class is defined on. Classes that get their base class through
+    -- the second argument of `class` do not run it.
+    -- @param new_class [Map the class that is being created]
+    -- @param parent_class [Map the base class it extends]
     hook.Run('OnClassExtended', obj, parent_class)
 
     last_class.parent[last_class.name] = obj

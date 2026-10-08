@@ -1,3 +1,7 @@
+--- Status codes of character creation. `Characters.create` returns one of them, handlers of
+-- the PlayerCreateCharacter hook return the error codes, and the code is sent back to the
+-- client that asked for the character.
+
 -- Character System Codes
 enumerate [[
   CHAR_SUCCESS

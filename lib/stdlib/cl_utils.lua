@@ -1,3 +1,6 @@
+--- Client side of the `util` extensions: measuring and wrapping text, cubic easing, cached
+-- materials and materials downloaded from a URL.
+
 do
   local cache = {}
 
@@ -228,6 +231,11 @@ do
             file.Write(path, body)
             cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
 
+            --- Called on the client when an image requested with `URLMaterial` or
+            -- `util.cache_url_material` has been downloaded and turned into a material.
+            -- Images that are on disk already are loaded without running this hook.
+            -- @param url [String URL the image was downloaded from]
+            -- @param material [Material the downloaded image]
             hook.Run('OnURLMatLoaded', url, cache[url_crc])
           end)
         end

@@ -1,3 +1,10 @@
+--- An undo queue for every player. An undo entry is a list of callbacks that revert something
+-- a player has done, such as removing an entity they have spawned. It is built in steps:
+-- `Flux.Undo:create` starts an entry, `Flux.Undo:add` adds callbacks to it,
+-- `Flux.Undo:set_player` sets its owner and `Flux.Undo:finish` puts it on top of the queue of
+-- the owner. `Flux.Undo:do_player` undoes the most recent entry of a player; Flux calls it on
+-- the server when the client of the player reports that they have pressed their undo key.
+
 mod 'Flux::Undo'
 
 local queue   = {}

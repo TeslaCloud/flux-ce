@@ -1,3 +1,10 @@
+--- Global helper functions of ActiveRecord. Most of them are the migrations DSL: every
+-- schema statement (`create_table`, `add_column`, `add_index` and so on) as a global
+-- function that hands its arguments to `ActiveRecord.ddl`. That function runs the
+-- statement of the same name in `ActiveRecord.SchemaStatements`, or records it while a
+-- migration's `change` is being reverted. The remaining helpers convert timestamps,
+-- escape and quote SQL through the current adapter, and print queries to the console.
+
 --- Formats a schema statement and its arguments for the migration output,
 -- e.g. 'add_column("users", "role", "string")'.
 -- @param command [String]

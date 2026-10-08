@@ -1,3 +1,6 @@
+--- The AddBots command adds the given number of bots to the server (1 by default, 128 at
+-- most). Allowed for moderators by default.
+
 CMD.name = 'AddBots'
 CMD.description = 'command.addbots.description'
 CMD.syntax = 'command.addbots.syntax'

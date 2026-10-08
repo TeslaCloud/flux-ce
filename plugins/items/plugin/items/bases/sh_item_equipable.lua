@@ -1,3 +1,20 @@
+--- ItemEquipable is the base class for items that take effect while they are equipped,
+-- such as weapons and clothing.
+-- An item is equipped for as long as it sits in a particular inventory of the player. A
+-- derived item sets `equip_inv`, the type of that inventory (`'hotbar'` by default), and
+-- `equip_slot`, a slot name or a list of slot names: an item cannot be equipped while
+-- another equipped item of that inventory has one of the same slot names. Optionally,
+-- `disabled_inventories` lists the types of inventories that are emptied into the main
+-- inventory and disabled while the item is equipped.
+--
+-- A derived item overrides `post_equipped(owner)` and `post_unequipped(owner)` to apply
+-- and remove its effect, and `can_equip(owner)` and `can_unequip(owner)` to forbid either.
+-- The base class adds the equip button to the menu of the item and reacts to inventory
+-- transfers through its `can_transfer` and `on_transfer` callbacks, so that moving the
+-- item into or out of its equipment inventory equips or unequips it. The
+-- `OnItemEquipped` and `OnItemUnequipped` hooks tell other plugins about it.
+-- @module [ItemEquipable]
+
 class 'ItemEquipable' extends 'ItemBase'
 
 ItemEquipable.name = 'Equipment Base'
@@ -119,6 +136,13 @@ function ItemEquipable:equip(owner, should_equip)
 
     self:post_equipped(owner)
 
+    --- Called when an equipable item has been equipped, after its `post_equipped` callback.
+    -- This happens on the server when the item is about to enter its equipment inventory
+    -- (the transfer itself has not been made yet), and every time its owner spawns while
+    -- it is equipped.
+    -- @param owner [Player The player who has the item]
+    -- @param item_obj [Item The equipped item]
+    -- @realm [server]
     hook.Run('OnItemEquipped', owner, self)
   else
     for k, v in pairs(self.disabled_inventories) do
@@ -131,6 +155,12 @@ function ItemEquipable:equip(owner, should_equip)
 
     self:post_unequipped(owner)
 
+    --- Called when an equipable item has been unequipped, after its `post_unequipped`
+    -- callback. This happens on the server when the item is about to leave its equipment
+    -- inventory: it is moved to another inventory, dropped or removed after use.
+    -- @param owner [Player The player who has the item]
+    -- @param item_obj [Item The unequipped item]
+    -- @realm [server]
     hook.Run('OnItemUnequipped', owner, self)
   end
 end

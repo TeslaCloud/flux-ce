@@ -1,3 +1,9 @@
+--- Extensions of the `File` library, which reads and writes files anywhere in the game folder.
+-- The library itself comes from the `file` binary module that the server opens on startup.
+-- This file replaces `File.write` with a version that creates missing folders, and adds
+-- recursive listing, wrappers around the built-in `file` functions that always work in the
+-- game folder, and aliases such as `File.rm`, `File.dir` and `File.is_folder`.
+
 include 'sh_table.lua'
 
 File = File or {}

@@ -1,3 +1,15 @@
+--- Plugin loads plugins and the schema and dispatches hooks to them.
+-- A plugin is a folder with a `plugin.yml` and a `plugin` subfolder, or a single .lua file;
+-- the schema is loaded in much the same way and takes part in hooks like one more plugin.
+-- While a plugin is being included the `PLUGIN` global holds its `PluginInstance`, and
+-- besides the main file a set of extra folders (`lib`, `config`, `entities`, `themes` and so
+-- on, see `Plugin.add_extra`) is included automatically. Every function of a registered
+-- plugin is put into the hook cache under its name, and `hook.Call` is overridden to run
+-- those functions before the regular hooks, so defining `function PLUGIN:PlayerSpawn(target)`
+-- is all it takes to handle a hook. `Plugin.call` runs a hook without the gamemode's own
+-- handlers, and `Plugin.add_hooks` registers a table of handlers that does not belong to a
+-- plugin.
+
 if Plugin then return end
 
 require_relative 'plugin_instance'
@@ -383,6 +395,9 @@ function Plugin.include_schema()
   local file_path = 'gamemodes/'..schema_path..'/'..schema_path..'.yml'
   local deps = {}
 
+  --- Called at the start of `Plugin.include_schema`, before the dependencies of the schema,
+  -- the schema itself and its plugins are included.
+  -- Runs on both the server and the client, on boot and again on every code refresh.
   hook.Run('PreLoadPlugins')
 
   if SERVER and file.Exists(file_path, 'GAME') then
@@ -433,6 +448,12 @@ function Plugin.include_schema()
   Plugin.include_folders(schema_folder)
   Plugin.include_plugins(schema_path..'/plugins')
 
+  --- Called once the schema's `sh_schema.lua`, its extra folders and all of its plugins have
+  -- been included, right before the schema itself is registered.
+  -- Runs on both the server and the client. Plugins commonly use it to run registration hooks
+  -- of their own, since every plugin is able to answer them by now. On the first load the
+  -- schema's functions are not in the hook cache yet at this point; the schema can use
+  -- OnSchemaLoaded instead.
   hook.Run('OnPluginsLoaded')
 
   if schema_info.name and schema_info.author then
@@ -442,6 +463,9 @@ function Plugin.include_schema()
 
   SCHEMA:register()
 
+  --- Called at the end of `Plugin.include_schema`, once all plugins have been loaded and the
+  -- schema has been registered.
+  -- Runs on both the server and the client.
   hook.Call('OnSchemaLoaded', GM)
 end
 
@@ -648,6 +672,14 @@ end
 -- @param folder [String plugin or schema folder, without a trailing slash]
 function Plugin.include_folders(folder)
   for k, v in ipairs(extras) do
+    --- Called for every extra folder of a plugin or of the schema before Flux includes it: the
+    -- default ones such as 'lib' or 'config' and those added with `Plugin.add_extra`.
+    -- Lets a plugin load the folders it has added in its own way, as the items and factions
+    -- plugins do. Runs on both the server and the client, whether the folder exists or not.
+    -- @param extra [String name of the extra folder, relative to the plugin's folder]
+    -- @param folder [String folder of the plugin or schema, without a trailing slash]
+    -- @return [Boolean Return any value other than nil to take the folder over, so that Flux
+    --   does not include it itself]
     if Plugin.call('PluginIncludeFolder', v, folder) == nil then
       if v == 'entities' then
         Plugin.include_entities(folder..'/'..v)
@@ -714,6 +746,15 @@ do
             error_with_traceback(tostring(a))
 
             if name != 'OnHookError' then
+              --- Called when a handler from the hook cache (a plugin's, the schema's or one
+              -- added with `Plugin.add_hooks`) throws an error.
+              -- Only runs outside of the production environment, where these handlers are
+              -- called through pcall. An error inside of an OnHookError handler does not run
+              -- the hook again.
+              -- @param name [String name of the hook whose handler has failed]
+              -- @param entry [Map hook cache entry: the handler at index 1, the table it
+              --   belongs to at index 2 and the ID given to `Plugin.add_hooks` in the `id`
+              --   field]
               hook.Call('OnHookError', gm, name, v)
             end
           elseif a != nil then

@@ -1,3 +1,10 @@
+--- File inclusion helpers built around `require_relative`, which includes a file and sends it
+-- to clients as its name calls for.
+-- The realm is taken from the path: a file with `cl_` in it is only sent to clients, one with
+-- `sv_` in it only runs on the server, and everything else is shared.
+-- `require_relative_folder` does the same for a whole folder, and `require_client`,
+-- `require_server` and `require_shared` set the realm regardless of the name.
+
 local should_ignore_client = false
 local should_ignore_server = false
 

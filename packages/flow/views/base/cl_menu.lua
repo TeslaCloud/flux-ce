@@ -1,3 +1,9 @@
+--- The Flux context menu: `fl_menu`, a popup list of clickable options, and `fl_menu_item`,
+-- the panel of a single option.
+
+--- A single option of an `fl_menu`: a `DButton` in the theme's colors with an optional icon.
+-- Options are created with the menu's `add_option`; `set_icon` and `set_icon_size` put a
+-- material on the left side of one.
 local PANEL = {}
 PANEL.icon = nil
 PANEL.icon_w = 16
@@ -57,6 +63,10 @@ end
 
 vgui.Register('fl_menu_item', PANEL, 'DButton')
 
+--- A popup context menu (`fl_menu`), built on `DScrollPanel`.
+-- Create it, add entries with `add_option` and `add_spacer`, then call `open` to show it at
+-- the cursor or at a given position. It is registered with Derma's menu system, so it is
+-- removed when the Derma menus are closed. The action menu of an item is built with it.
 local PANEL = {}
 PANEL.last = 0
 PANEL.option_height = 32

@@ -1,3 +1,12 @@
+--- The tab menu (`fl_tab_menu`): the full screen menu that opens in place of the scoreboard,
+-- with a bar of buttons at the top and one content panel open at a time.
+-- The gamemode creates it through the theme's 'tab_menu' panel when the scoreboard key is
+-- pressed. Plugins add their entries in the `AddTabMenuItems` hook by calling `add_menu_item`
+-- with the class of the panel to open. When an entry is clicked the menu creates that panel,
+-- sizes it with the panel's `get_menu_size`, calls its `rebuild` and runs the
+-- `OnMenuPanelOpen` hook. The panel that was open when the menu closed is opened again the
+-- next time. `close_menu` closes the menu.
+
 local PANEL = {}
 PANEL.menu_items = {}
 PANEL.buttons = {}
@@ -16,6 +25,11 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(scrw, scrh)
 
+  --- Lets plugins move the buttons of the tab menu's button bar.
+  -- Called on the client while the tab menu is being built, before its buttons are created.
+  -- @param menu [Panel The `fl_tab_menu` being built]
+  -- @return [Number X position of the first button in the bar; 0 when nothing is returned,
+  --   Number Y position of the buttons; 0 when nothing is returned]
   local cur_x, cur_y = hook.Run('AdjustMenuItemPositions', self)
   local offset = math.scale(16)
   local size_x, size_y = math.scale(72), math.scale(72)
@@ -50,6 +64,9 @@ function PANEL:Init()
 
   self.menu_items = {}
 
+  --- Called on the client every time the tab menu is opened, to collect its items.
+  -- Handlers register their buttons and panels with the menu's `add_menu_item`.
+  -- @param menu [Panel The `fl_tab_menu` being built]
   hook.Run('AddTabMenuItems', self)
 
   for k, v in ipairs(self.menu_items) do
@@ -106,6 +123,11 @@ function PANEL:Init()
 
         self.active_panel.id = v.id
 
+        --- Called on the client when a panel of the tab menu is opened, after the panel has
+        -- been created, sized and rebuilt.
+        -- The gamemode centers the panel in the menu.
+        -- @param menu_panel [Panel The `fl_tab_menu`]
+        -- @param active_panel [Panel The panel that has been opened]
         hook.Run('OnMenuPanelOpen', self, self.active_panel)
       end
 

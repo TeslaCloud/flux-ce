@@ -1,3 +1,10 @@
+--- Color Modify provides a small API for a color modification effect on the local player's
+-- screen.
+-- Turn the effect on with `enable_color_mod` and off with `Flux.disable_color_mod`, and set
+-- its values with `Flux.set_color_mod` or `Flux.set_color_mod_table`; the values are those of
+-- GMod's `DrawColorModify`. Schemas use it to give the game its own look.
+-- @module [PLUGIN]
+
 PLUGIN:set_name('Color Modify')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Provides a color modify API.')

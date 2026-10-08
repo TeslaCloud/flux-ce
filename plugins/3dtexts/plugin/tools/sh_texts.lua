@@ -1,3 +1,8 @@
+--- The Text Tool. Left click places a 3D text on the surface the owner is looking at, with
+-- the chosen text, style (one of ten), colors, scale and fade offset; right click removes
+-- the text the owner is looking at. The tool requires the `texts` permission; placing also
+-- checks `textadd` and removing `textremove`.
+
 TOOL.Category               = 'Flux'
 TOOL.Name                   = 'Text Tool'
 TOOL.Command                = nil

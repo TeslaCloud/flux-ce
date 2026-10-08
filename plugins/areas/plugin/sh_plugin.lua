@@ -1,3 +1,15 @@
+--- Areas API lets staff mark out areas of the map and lets plugins react when players enter
+-- or leave them.
+-- An area is a set of polygons with a height and a type; the `Areas` library creates areas
+-- and registers area types. Every second the server checks which areas each player is in,
+-- and runs the callback of an area's type on the server and on the player's client when
+-- the player enters or leaves it. Staff draw areas with the Area Tool, whose modes each
+-- create one type of area; plugins add modes from the `AddAreaToolModes` hook. The plugin
+-- comes with the `area` type, which runs the `PlayerEnteredArea` and `PlayerLeftArea`
+-- hooks, and with the `textarea` type and its tool mode, which shows the area's text on
+-- the HUD of a player who enters it.
+-- @module [Area]
+
 PLUGIN:set_global('Area')
 
 require_relative 'cl_plugin'
@@ -87,6 +99,10 @@ Area.tool_modes = {
 
 --- Calls the AddAreaToolModes hook so that plugins can add their modes to the area tool.
 function Area:OnSchemaLoaded()
+  --- Called on both realms once the schema has loaded. Add modes to the Area Tool here with
+  -- `mode_list:Add(mode)`, where a mode is a table with a title, the area type it creates,
+  -- its convars and its click handlers.
+  -- @param mode_list [Map The `Area.tool_modes` table]
   Plugin.call('AddAreaToolModes', self.tool_modes)
 end
 

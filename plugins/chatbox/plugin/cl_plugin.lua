@@ -1,3 +1,10 @@
+--- Client side of the Chatbox plugin, which takes over the `chat.AddText` function of GMod.
+-- Text added with `chat.AddText` is sent to the server and comes back as a chatbox message for
+-- the local player; the original function is kept in Chatbox.old_add_text. The rest of this
+-- file compiles received messages into pieces that can be drawn (`Chatbox.compile`) and
+-- creates, shows and hides the chatbox panel.
+-- @module [chat]
+
 Chatbox.width = Chatbox.width or 100
 Chatbox.height = Chatbox.height or 100
 Chatbox.x = Chatbox.x or 0
@@ -45,8 +52,21 @@ function Chatbox.compile(msg_table)
 
   table.insert(compiled, cur_size)
 
+  --- Lets plugins compile a whole message themselves. Called on the client by
+  -- `Chatbox.compile` before the pieces of the message are compiled; gamemode hooks are not
+  -- called.
+  -- @param data [List pieces of the message as they were received from the server]
+  -- @param compiled [Map compiled message to fill in; it already holds the initial font size,
+  --   and its total_height field should be set to the height of the message]
+  -- @return [Boolean return true to skip the default compilation of all pieces]
   if Plugin.call('ChatboxCompileMessage', data, compiled) != true then
     for k, v in ipairs(data) do
+      --- Lets plugins compile a single piece of a message. Called on the client for every
+      -- piece in order, unless ChatboxCompileMessage has taken over the whole message;
+      -- gamemode hooks are not called.
+      -- @param piece [Any a string, font size, color, icon or image table, player or entity]
+      -- @param compiled [Map the message compiled so far, to append to]
+      -- @return [Boolean return true to skip the default handling of this piece]
       if Plugin.call('ChatboxCompileMessageData', v, compiled) == true then
         continue
       end
@@ -126,6 +146,12 @@ function Chatbox.compile(msg_table)
 
         if v:IsPlayer() then
           to_insert =
+            --- Decides whether the name of a player in a message goes through the
+            -- GetPlayerName hook. Called on the client by `Chatbox.compile` for every
+            -- player that is part of a message.
+            -- @param target [Player the player whose name is displayed]
+            -- @param message_data [Map message data received from the server]
+            -- @return [Boolean return false to display the true name of the player]
             hook.Run('ShouldProcessPlayerName', v, msg_table) != false and hook.Run('GetPlayerName', v) or v:name(true)
         else
           to_insert = tostring(v) or v:GetClass()
@@ -151,6 +177,9 @@ function Chatbox.compile(msg_table)
 
   compiled.total_height = math.max(total_height, compiled.total_height)
 
+  --- Called on the client when a message has been compiled, before `Chatbox.compile` returns
+  -- it. The Chatbox plugin itself uses it to print the message to the console.
+  -- @param compiled [Map the compiled message; changes made to it are kept]
   hook.Run('ChatboxMessageCompiled', compiled)
 
   return compiled

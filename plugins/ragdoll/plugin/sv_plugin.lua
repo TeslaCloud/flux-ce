@@ -1,3 +1,7 @@
+--- Player extensions of the Ragdoll plugin: the ragdoll state of a player and the ragdoll
+-- entity that stands in for them.
+-- Serverside only.
+
 local player_meta = FindMetaTable('Player')
 
 player_meta.old_get_ragdoll = player_meta.old_get_ragdoll or player_meta.get_ragdoll_entity

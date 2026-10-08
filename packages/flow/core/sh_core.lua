@@ -1,3 +1,11 @@
+--- Core helpers of the Flux gamemode package on the global `Flux` table.
+-- They cover console output (`Flux.print`, `Flux.dev_print`), the registry of player
+-- actions (`Flux.register_action`), the loaded schema (its folder, name, information and
+-- inclusion) and, on the client, HUD helpers: the circular action indicator, the spinning
+-- cog, position animations and the global UI offset.
+-- The same file replaces `file.Write` with a version that creates missing folders.
+-- @module [Flux]
+
 AddCSLuaFile()
 
 --- Prints a message to the console. Tables are printed with PrintTable.
@@ -104,6 +112,9 @@ function Flux.include_schema()
     -- Wait just a tiny bit for stuff to catch up
     timer.Simple(0.2, function()
       Cable.send('fl_client_included_schema', true)
+      --- Called on the client shortly after the schema files have been included, right after
+      -- the server has been told about it (which runs `ClientIncludedSchema` there). The
+      -- gamemode's handler creates the fonts.
       hook.Run('FluxClientSchemaLoaded')
     end)
   end

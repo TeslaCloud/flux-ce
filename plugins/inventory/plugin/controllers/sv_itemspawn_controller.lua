@@ -1,3 +1,8 @@
+--- Server-side handlers of the items tab of the spawn menu.
+-- `SpawnMenu::SpawnItem` creates an item and spawns it where the player is looking, which
+-- requires the `spawn_items` permission. `SpawnMenu::GiveItem` gives a number of items
+-- to a player, which requires the `give_items` permission.
+
 MVC.handler('SpawnMenu::SpawnItem', function(actor, item_id)
   if !actor:can('spawn_items') then
     actor:notify('error.no_permission')

@@ -1,3 +1,5 @@
+--- The Unban command lifts the ban of the given SteamID. Allowed for assistants by default.
+
 CMD.name = 'Unban'
 CMD.description = 'command.unban.description'
 CMD.syntax = 'command.unban.syntax'

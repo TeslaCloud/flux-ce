@@ -1,3 +1,5 @@
+--- Staff command that sets the gender of the characters of one or more players.
+
 CMD.name = 'CharSetGender'
 CMD.description = 'command.charsetgender.description'
 CMD.syntax = 'command.charsetgender.syntax'

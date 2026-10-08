@@ -1,3 +1,17 @@
+--- Player extensions of the Inventory plugin: everything a player can do with their
+-- inventories and the items in them.
+-- A player has one inventory per type (`'main_inventory'`, `'hotbar'`, `'pockets'` and
+-- so on), built by the `CreatePlayerInventories` hook when their character becomes
+-- active. The functions that look items up work on both the server and the client;
+-- those that take an optional `inv_type` go through all inventories of the player when
+-- it is omitted. On the server a player can also be given items, have them taken or
+-- moved to another of their inventories, and be shown an inventory. These functions
+-- synchronize the inventories they change right away.
+--
+-- The file also holds the registry of all inventories, `Inventories.all` and
+-- `Inventories.find`.
+-- @module [Player]
+
 if !Inventories then
   PLUGIN:set_global('Inventories')
 end
@@ -253,6 +267,25 @@ do
     function player_meta:create_inventories()
       local inventories = {}
 
+      --- Called on the server to build the inventories of a player, every time their
+      -- active character is set. Handlers create their inventories with `Inventory.new`
+      -- and put them into `inventories` under the type of each one; the Inventory plugin
+      -- adds the main inventory, the hotbar, the pockets and the equipment slots this
+      -- way. Afterward every inventory in the table gets the player as its owner and
+      -- receiver, the items of the character are loaded into them and they are
+      -- synchronized.
+      -- ```
+      -- function PLUGIN:CreatePlayerInventories(owner, inventories)
+      --   local wallet = Inventory.new()
+      --   wallet.title = 'Wallet'
+      --   wallet.type = 'wallet'
+      --   wallet:set_size(2, 1)
+      --   inventories[wallet.type] = wallet
+      -- end
+      -- ```
+      -- @param owner [Player The player the inventories are created for]
+      -- @param inventories [Map The inventories of the player, keyed by inventory type,
+      --   to be filled in place]
       hook.Run('CreatePlayerInventories', self, inventories)
 
       for k, v in pairs(inventories) do

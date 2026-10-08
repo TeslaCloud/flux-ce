@@ -1,3 +1,6 @@
+--- The Demote command sets the role of the targeted players back to `user`. By default only
+-- administrators can use it.
+
 CMD.name = 'Demote'
 CMD.description = 'command.demote.description'
 CMD.syntax = 'command.demote.syntax'

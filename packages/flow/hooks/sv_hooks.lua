@@ -1,3 +1,10 @@
+--- Server side of the gamemode hooks: the `GM` handlers that set players up when they join
+-- and spawn, decide their model, fall damage and respawn time, check the sandbox spawn
+-- menu and physics gun against the Flux permissions, save the data periodically, pass chat
+-- commands to the command interpreter and write the files that are sent to clients.
+-- Most of Flux's server-side hooks are run from here, including `PostPlayerSpawn`,
+-- `PlayerThink`, `PlayerOneSecond`, `FLSaveData` and the `FLPlayerSpawn...` checks.
+
 DEFINE_BASECLASS('gamemode_base')
 
 --- Does nothing, which disables the default handling of a player's death.
@@ -29,7 +36,14 @@ function GM:InitPostEntity()
     toolgun.Tool[v.Mode] = v
   end
 
+  --- Called once the map's entities have been created, for plugins to load their saved
+  -- data. Runs on both realms, from the server-side and from the client-side
+  -- `InitPostEntity` handler of the gamemode. The counterpart of `SaveData`, which only
+  -- runs on the server.
   hook.Run('LoadData')
+  --- Called at the end of the gamemode's `InitPostEntity` handler, right after `LoadData`,
+  -- on both realms. The Flux tools have been registered with the tool gun by then, and on
+  -- the client the `PLAYER` global has been set. Gamemode (`GM`) handlers are not called.
   Plugin.call('FLInitPostEntity')
 end
 
@@ -58,6 +72,11 @@ end
 function GM:PlayerSpawn(actor)
   player_manager.SetPlayerClass(actor, 'flux_player')
 
+  --- GMod's `PlayerSetModel` hook, run by Flux on the server every time a player spawns,
+  -- before the rest of their state is reset. The gamemode's handler applies the model
+  -- (see `PrePlayerSetModel` for changing it). A plugin or schema handler that returns a
+  -- value replaces the gamemode's handler and has to set the model itself.
+  -- @param actor [Player The player who is spawning]
   hook.Run('PlayerSetModel', actor)
 
   actor:SetCollisionGroup(COLLISION_GROUP_PLAYER)
@@ -77,6 +96,13 @@ function GM:PlayerSpawn(actor)
   actor:SetNotSolid(false)
   actor:SetCanZoom(false)
 
+  --- Called on the server every time a player spawns, after their model, collisions,
+  -- visibility and movement speeds have been reset and before their hands model is
+  -- created. This is the place to set up whatever the player should spawn with.
+  -- The gamemode's handler gives the loadout, plus the tool gun and the physics gun to
+  -- players with the permissions for them, then runs the hook on the player's own client,
+  -- where it is called without arguments.
+  -- @param actor [Player The player who has spawned; nil on the client]
   hook.Run('PostPlayerSpawn', actor)
 
   local old_hands = actor:GetHands()
@@ -132,6 +158,12 @@ end
 -- and anyone else is left to the base gamemode.
 -- @param actor [Player]
 function GM:PlayerSetModel(actor)
+  --- Lets plugins choose the model a player gets when the gamemode sets it, which happens
+  -- on the server every time the player spawns.
+  -- @param actor [Player The player whose model is being set]
+  -- @return [String/Boolean Path of the model to use, or false to let the base gamemode
+  --   pick the model. When nothing is returned, bots and initialized players get the model
+  --   from their `model` networked variable and everyone else is left to the base gamemode]
   local override = hook.Run('PrePlayerSetModel', actor)
 
   if isstring(override) then
@@ -206,6 +238,12 @@ end
 -- @param speed [Number fall speed]
 -- @return [Number damage to deal]
 function GM:GetFallDamage(actor, speed)
+  --- Lets plugins set the damage a player takes from a fall. Called on the server from the
+  -- gamemode's `GetFallDamage` handler.
+  -- @param actor [Player The player who has hit the ground]
+  -- @param speed [Number Speed at which the player hit the ground]
+  -- @return [Number Damage to deal; when nothing or false is returned, the damage is
+  --   calculated from the speed]
   local fall_damage = hook.Run('FLGetFallDamage', actor, speed)
 
   if speed < 660 then
@@ -225,6 +263,12 @@ end
 -- @param attacker [Entity]
 -- @return [Boolean true, or the truthy value returned by the hook]
 function GM:PlayerShouldTakeDamage(victim, attacker)
+  --- Called on the server from the gamemode's `PlayerShouldTakeDamage` handler, when a
+  -- player is about to take damage from an attacker.
+  -- @param victim [Player The player about to take damage]
+  -- @param attacker [Entity The entity dealing the damage]
+  -- @return [Any A truthy value is passed on as the result of `PlayerShouldTakeDamage`.
+  --   Returning false does not prevent the damage: false and nil are both turned into true]
   return hook.Run('FLPlayerShouldTakeDamage', victim, attacker) or true
 end
 
@@ -241,6 +285,11 @@ function GM:PlayerSpawnProp(actor, model)
     return false
   end
 
+  --- Called on the server when a player tries to spawn a prop, after the gamemode has
+  -- checked that they have the `spawn_props` permission.
+  -- @param actor [Player The player spawning the prop]
+  -- @param model [String Model of the prop]
+  -- @return [Boolean Return false to prevent the prop from being spawned]
   if hook.Run('FLPlayerSpawnProp', actor, model) == false then
     return false
   end
@@ -262,6 +311,12 @@ function GM:PlayerSpawnObject(actor, model, skin)
     return false
   end
 
+  --- Called on the server when a player tries to spawn a prop, a ragdoll or an effect,
+  -- after the gamemode has checked that they have the `spawn_entities` permission.
+  -- @param actor [Player The player spawning the object]
+  -- @param model [String Model of the object]
+  -- @param skin [Number Skin of the object]
+  -- @return [Boolean Return false to prevent the object from being spawned]
   if hook.Run('FLPlayerSpawnObject', actor, model, skin) == false then
     return false
   end
@@ -283,6 +338,12 @@ function GM:PlayerSpawnNPC(actor, npc, weapon)
     return false
   end
 
+  --- Called on the server when a player tries to spawn an NPC, after the gamemode has
+  -- checked that they have the `spawn_npcs` permission.
+  -- @param actor [Player The player spawning the NPC]
+  -- @param npc [String Type of the NPC]
+  -- @param weapon [String Class of the weapon given to the NPC]
+  -- @return [Boolean Return false to prevent the NPC from being spawned]
   if hook.Run('FLPlayerSpawnNPC', actor, npc, weapon) == false then
     return false
   end
@@ -303,6 +364,11 @@ function GM:PlayerSpawnEffect(actor, model)
     return false
   end
 
+  --- Called on the server when a player tries to spawn an effect, after the gamemode has
+  -- checked that they have the `spawn_entities` permission.
+  -- @param actor [Player The player spawning the effect]
+  -- @param model [String Model of the effect]
+  -- @return [Boolean Return false to prevent the effect from being spawned]
   if hook.Run('FLPlayerSpawnEffect', actor, model) == false then
     return false
   end
@@ -325,6 +391,13 @@ function GM:PlayerSpawnVehicle(actor, model, name, tab)
     return false
   end
 
+  --- Called on the server when a player tries to spawn a vehicle, after the gamemode has
+  -- checked that they have the `spawn_vehicles` permission.
+  -- @param actor [Player The player spawning the vehicle]
+  -- @param model [String Model of the vehicle]
+  -- @param name [String Name of the vehicle in the vehicle list]
+  -- @param tab [Map Vehicle table from the vehicle list]
+  -- @return [Boolean Return false to prevent the vehicle from being spawned]
   if hook.Run('FLPlayerSpawnVehicle', actor, model, name, tab) == false then
     return false
   end
@@ -346,6 +419,12 @@ function GM:PlayerSpawnSWEP(actor, weapon, swep)
     return false
   end
 
+  --- Called on the server when a player tries to spawn a weapon, after the gamemode has
+  -- checked that they have the `spawn_sweps` permission.
+  -- @param actor [Player The player spawning the weapon]
+  -- @param weapon [String Class of the weapon]
+  -- @param swep [Map Information about the weapon from the weapon list]
+  -- @return [Boolean Return false to prevent the weapon from being spawned]
   if hook.Run('FLPlayerSpawnSWEP', actor, weapon, swep) == false then
     return false
   end
@@ -366,6 +445,11 @@ function GM:PlayerSpawnSENT(actor, class)
     return false
   end
 
+  --- Called on the server when a player tries to spawn a scripted entity, after the
+  -- gamemode has checked that they have the `spawn_entities` permission.
+  -- @param actor [Player The player spawning the entity]
+  -- @param class [String Class of the entity]
+  -- @return [Boolean Return false to prevent the entity from being spawned]
   if hook.Run('FLPlayerSpawnSENT', actor, class) == false then
     return false
   end
@@ -386,6 +470,11 @@ function GM:PlayerSpawnRagdoll(actor, model)
     return false
   end
 
+  --- Called on the server when a player tries to spawn a ragdoll, after the gamemode has
+  -- checked that they have the `spawn_ragdolls` permission.
+  -- @param actor [Player The player spawning the ragdoll]
+  -- @param model [String Model of the ragdoll]
+  -- @return [Boolean Return false to prevent the ragdoll from being spawned]
   if hook.Run('FLPlayerSpawnRagdoll', actor, model) == false then
     return false
   end
@@ -407,6 +496,12 @@ function GM:PlayerGiveSWEP(actor, weapon, swep)
     return false
   end
 
+  --- Called on the server when a player tries to give themselves a weapon from the spawn
+  -- menu, after the gamemode has checked that they have the `spawn_sweps` permission.
+  -- @param actor [Player The player taking the weapon]
+  -- @param weapon [String Class of the weapon]
+  -- @param swep [Map Information about the weapon from the weapon list]
+  -- @return [Boolean Return false to prevent the weapon from being given]
   if hook.Run('FLPlayerGiveSWEP', actor, weapon, swep) == false then
     return false
   end
@@ -433,6 +528,12 @@ end
 -- @param damage_info [CTakeDamageInfo]
 function GM:EntityTakeDamage(ent, damage_info)
   if IsValid(ent) and ent:IsPlayer() then
+    --- Called on the server whenever a player takes damage, from the gamemode's
+    -- `EntityTakeDamage` handler. The return value is ignored, so the damage cannot be
+    -- blocked from here. The gamemode's handler tells the victim's client to show the
+    -- damage flash.
+    -- @param victim [Player The player taking the damage]
+    -- @param damage_info [CTakeDamageInfo The damage being dealt]
     hook.Run('PlayerTakeDamage', ent, damage_info)
   end
 end
@@ -454,7 +555,15 @@ function GM:OneSecond()
   if !Flux.next_save_data then
     Flux.next_save_data = cur_time + 10
   elseif Flux.next_save_data <= cur_time then
+    --- Asks whether the periodic data save may happen now. Called on the server every
+    -- `data_save_interval` seconds (360 unless configured), for the first time about ten
+    -- seconds after the server has started.
+    -- @return [Boolean Return false to skip this save]
     if hook.Run('FLShouldSaveData') != false then
+      --- Called on the server when all persistent data has to be saved: every
+      -- `data_save_interval` seconds unless `FLShouldSaveData` returns false, and by the
+      -- restart command of the admin plugin. The gamemode's handler saves the config and
+      -- runs `SaveData`, which is the hook that plugins normally implement.
       hook.Run('FLSaveData')
     end
 
@@ -467,6 +576,9 @@ function GM:OneSecond()
     Flux.next_player_count_check = sys_time + 1800
 
     if player.GetCount() == 0 then
+      --- Asks whether the empty server may reload the current map. Called on the server every
+      -- half an hour, if no players are connected at that moment.
+      -- @return [Boolean Return false to prevent the map from being reloaded]
       if hook.Run('ShouldServerAutoRestart') != false then
         Flux.dev_print('Server is empty, restarting...')
         RunConsoleCommand('changelevel', game.GetMap())
@@ -573,6 +685,8 @@ end
 --- Saves the config and runs the SaveData hook.
 function GM:FLSaveData()
   Config.save()
+  --- Called on the server for plugins to save their persistent data, from the gamemode's
+  -- `FLSaveData` handler after the config has been saved. The counterpart of `LoadData`.
   hook.Run('SaveData')
 end
 
@@ -583,6 +697,12 @@ function GM:PlayerOneSecond(actor, cur_time)
   local pos = actor:GetPos()
 
   if actor.last_pos != pos then
+    --- Called on the server when a player is not where they were a second ago. The gamemode
+    -- checks this once a second for every player, from its `PlayerOneSecond` handler.
+    -- @param actor [Player The player who has moved]
+    -- @param old_pos [Vector Position at the previous check; nil at the player's first check]
+    -- @param new_pos [Vector Current position]
+    -- @param cur_time [Number CurTime() of the check]
     hook.Run('PlayerPositionChanged', actor, actor.last_pos, pos, cur_time)
   end
 
@@ -711,9 +831,19 @@ do
       local one_second_tick = (cur_time >= next_second)
 
       for k, v in player.Iterator() do
+        --- Called on the server eight times a second for every player, including players who
+        -- are dead or not initialized yet. Prefer `PlayerOneSecond` when once a second is
+        -- often enough. The gamemode's handler runs the player's current action.
+        -- @param actor [Player The player to process]
+        -- @param cur_time [Number CurTime() of the call]
         hook.Call('PlayerThink', self, v, cur_time)
 
         if one_second_tick then
+          --- Called on the server once a second for every player, right after that player's
+          -- `PlayerThink`. The gamemode's handler uses it to detect movement (see
+          -- `PlayerPositionChanged`).
+          -- @param actor [Player The player to process]
+          -- @param cur_time [Number CurTime() of the call]
           hook.Call('PlayerOneSecond', self, v, cur_time)
         end
       end

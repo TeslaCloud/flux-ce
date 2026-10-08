@@ -1,3 +1,6 @@
+--- The faction stage of character creation (`fl_char_create_faction`): shows a button for
+-- every faction the local player may join and stores the chosen faction in the character data.
+
 local PANEL = {}
 PANEL.id = 'faction'
 PANEL.text = 'ui.char_create.faction'

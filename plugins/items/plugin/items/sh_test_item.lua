@@ -1,3 +1,6 @@
+--- Test item that shows what a minimal item file looks like: a stackable 2x1 item with
+-- a custom camera setup for its inventory icon and an `on_use` callback.
+
 ITEM.name = 'Test Item'
 ITEM.description = 'An item that has a single purpose: system testing. Great, yeah.'
 ITEM.model = 'models/weapons/w_pistol.mdl'

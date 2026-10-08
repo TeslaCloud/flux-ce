@@ -1,3 +1,19 @@
+--- Animations for player models that are not built on the player animation set of Garry's Mod,
+-- such as the NPC models that roleplay schemas use for their characters. Every such model is
+-- assigned a model class with `Flux.Anim:set_model_class`, and every class has an animation
+-- table, registered with `Flux.Anim:register`, that maps movement states and weapon hold types
+-- to the activities or sequences of that kind of model. 'player' is the built-in class and the
+-- fallback for models without a class. The tables are compiled on first use into a flat form,
+-- returned by `Flux.Anim:get_table`, from which the animation hooks of Flux pick the idle,
+-- walk, run, crouch, jump, attack and reload animations of a player, depending on the weapon
+-- they hold (`Flux.Anim.get_weapon_hold_type`) and on whether it is raised. Models from a
+-- 'player' folder keep the regular animations of Garry's Mod.
+--
+-- The library also adds the `Player` methods for one-off animations: `Player:set_animation`
+-- makes a player play a sequence instead of their regular animations, and
+-- `Player:play_gesture` plays a gesture on top of them.
+-- @module [Flux.Anim]
+
 mod 'Flux::Anim'
 
 local stored            = Flux.Anim.stored or {}

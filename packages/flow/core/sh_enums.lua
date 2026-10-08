@@ -1,3 +1,7 @@
+--- Enumerations of the gamemode package: the data table index of the flag that marks a
+-- player as initialized (`BOOL_INITIALIZED`), the bar types (`BAR_TOP`, `BAR_MANUAL`,
+-- `BAR_HIDDEN`) and the config sources (`CONFIG_PLUGIN`, `CONFIG_SCHEMA`, `CONFIG_FLUX`).
+
 -- DTVars
 enumerate 'BOOL_INITIALIZED' -- Whether the player has passed all initialization steps.
 

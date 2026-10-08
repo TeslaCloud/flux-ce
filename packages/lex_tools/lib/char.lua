@@ -1,3 +1,8 @@
+--- Character classification for lexers: tells digits, letters, identifier characters, spaces,
+-- punctuation and control characters apart by their character code.
+-- Works on a lookup table of all 256 byte values and the `CHAR_*` bitmasks, the way LuaJIT
+-- does. The file returns the `char` table, which `LuaLexer` includes.
+
 -- Methodology is largely copied from LuaJIT's source code.
 -- https://github.com/LuaJIT/LuaJIT/blob/master/src/lj_char.h
 --

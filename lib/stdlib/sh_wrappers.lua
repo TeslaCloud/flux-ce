@@ -1,3 +1,5 @@
+--- Shorthand wrappers around built-in Lua functions: `typeof` and `try`.
+
 --- Gets the type of an object while ensuring the output is always lowercase.
 -- Functions exactly the same as `type`.
 -- @param obj [Any]

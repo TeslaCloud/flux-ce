@@ -1,3 +1,9 @@
+--- ItemAmmo is the base class for boxes of ammunition.
+-- A derived item sets `ammo_class`, the name of the ammo type as `Player:GiveAmmo` takes
+-- it (`'Pistol'` by default), and `ammo_count`, the amount of ammo that one use gives
+-- (16 by default). Using the item gives that ammo to the player. With `max_uses` above 1,
+-- inherited from `ItemUsable`, a box can be used several times before it is gone.
+
 if !ItemUsable then
   require_relative 'sh_item_usable'
 end

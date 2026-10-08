@@ -1,3 +1,7 @@
+--- Server side of the Characters plugin: keeps players without a character out of the world,
+-- sends the character list to players who join, applies a character to its player when it is
+-- loaded, saves characters and validates character creation data.
+
 --- Hides, locks and silently kills players who spawn without an active character.
 -- @param actor [Player]
 function Characters:PostPlayerSpawn(actor)
@@ -40,6 +44,9 @@ function Characters:PlayerRestored(actor)
     if IsValid(actor) and actor:has_initialized() then
       Characters.send_to_client(actor)
 
+      --- Called on the server after the character list has been sent to a player who has
+      -- joined, which happens once their record is restored and they have initialized.
+      -- @param actor [Player]
       hook.Run('PostRestoreCharacters', actor)
 
       timer.Remove(timer_name)
@@ -84,6 +91,12 @@ function Characters:OnActiveCharacterSet(owner, character)
     end
   end
 
+  --- Called on the server once a loaded character has been applied to its player: the player
+  -- has been spawned and given the model, skin, health and ammo of the character. The
+  -- Characters plugin forwards the hook to the client of the owner, where handlers receive
+  -- only the ID of the character.
+  -- @param owner [Player]
+  -- @param character [Character]
   hook.Run('PostCharacterLoaded', owner, character)
 end
 

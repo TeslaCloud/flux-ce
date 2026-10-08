@@ -1,3 +1,10 @@
+--- The `fl_inventory` panel displays an inventory as a grid of `fl_inventory_item` slots
+-- and lets the player drag items around.
+-- It is created with `Inventory:create_panel` and is rebuilt every time the inventory is
+-- synchronized. Dropping an item onto a slot asks the server to move it there; dropping it
+-- onto the parent of the panel asks the server to drop it into the world. Pressing R
+-- rotates the item that is being dragged.
+
 local PANEL = {}
 PANEL.title = nil
 PANEL.slot_size = math.scale(64)
@@ -342,6 +349,10 @@ function PANEL:rebuild()
     end
   end
 
+  --- Called on the client when an `fl_inventory` panel has recreated its slots, which
+  -- happens when it is set up and every time its inventory is synchronized. Handlers
+  -- can use it to resize the panel or to attach their own panels to it.
+  -- @param panel [Panel The `fl_inventory` panel that has been rebuilt]
   hook.Run('OnInventoryRebuild', self)
 end
 

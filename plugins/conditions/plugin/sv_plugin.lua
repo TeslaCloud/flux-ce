@@ -1,3 +1,5 @@
+--- Server side of the Conditions plugin: checks a player against a tree of conditions.
+
 local function CheckConditions(target, conditions)
   for k, v in pairs(conditions) do
     local condition_table = Conditions:get_all()[v.id]
