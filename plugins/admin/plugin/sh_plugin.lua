@@ -11,7 +11,9 @@
 --
 -- Bans are stored in the database and checked whenever a player connects. Staff manage
 -- players with the plugin's commands and with the Admin entry of the tab menu, which holds
--- the player management page (role and permission editor) and the config editor.
+-- the player management page (role and permission editor), the staff page (everybody with a
+-- role above `user`, connected or not), the ban list, the config editor and the plugin
+-- manager.
 --
 -- Other plugins extend Bolt by registering permissions, by shipping role files in a `roles`
 -- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook.
@@ -20,9 +22,12 @@
 PLUGIN:set_global('Bolt')
 
 require_relative 'cl_hooks'
+require_relative 'cl_plugin'
 require_relative 'sh_enums'
 require_relative 'sv_hooks'
 require_relative 'sv_plugin'
+require_relative 'sv_bans'
+require_relative 'sv_staff'
 
 --- Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.
 function Bolt:OnPluginLoaded()
@@ -57,6 +62,31 @@ end
 -- @return [Boolean true for root players, nil otherwise]
 function Bolt:PlayerIsRoot(target)
   return target.can_anything
+end
+
+--- Keeps players without the 'context_menu' permission from using the properties of
+-- entities. The gamemode only keeps them from opening the context menu, which is done on
+-- the client; this is the same check where it counts, since the server asks this hook
+-- before it runs a property. The decision is left to the gamemode for everybody else.
+-- @param actor [Player the player using the property]
+-- @param property [String ID of the property, e.g. 'remover']
+-- @param entity [Entity the entity the property is used on]
+-- @return [Boolean false if the player lacks the permission, nothing otherwise]
+function Bolt:CanProperty(actor, property, entity)
+  if IsValid(actor) and !actor:can('context_menu') then
+    return false
+  end
+end
+
+--- Keeps players without the 'context_menu' permission from driving entities, which is
+-- started from the context menu. The decision is left to the gamemode for everybody else.
+-- @param actor [Player the player trying to drive]
+-- @param entity [Entity the entity to be driven]
+-- @return [Boolean false if the player lacks the permission, nothing otherwise]
+function Bolt:CanDrive(actor, entity)
+  if IsValid(actor) and !actor:can('context_menu') then
+    return false
+  end
 end
 
 --- Registers a permission for every newly created command.
@@ -114,8 +144,9 @@ function Bolt:RegisterConditions()
   })
 end
 
---- Registers the built-in permissions: tools, spawning, voice, context menu, management and
--- the staff / admin / super admin compatibility levels.
+--- Registers the built-in permissions: tools, spawning, voice, context menu, management of
+-- permissions, configs and plugins, and the staff / admin / super admin compatibility
+-- levels.
 function Bolt:RegisterPermissions()
   Bolt:register_permission(
     'physgun',
@@ -205,7 +236,7 @@ function Bolt:RegisterPermissions()
   Bolt:register_permission(
     'context_menu',
     'Context Menu',
-    'Grants access to the context menu.',
+    'Grants access to the context menu, to the properties of entities and to driving them.',
     'permission.categories.general',
     'assistant'
   )
@@ -222,6 +253,14 @@ function Bolt:RegisterPermissions()
     'Configuration',
     'Grants access to configuration.',
     'permission.categories.configuration',
+    'admin'
+  )
+
+  Bolt:register_permission(
+    'manage_plugins',
+    'permission.manage_plugins.name',
+    'permission.manage_plugins.description',
+    'permission.categories.server_management',
     'admin'
   )
 

@@ -1,0 +1,11 @@
+categories:
+  admin:
+    name: config.admin.title
+    description: config.admin.desc
+configs:
+  ban_message_language:
+    name: config.admin.ban_message_language.name
+    description: config.admin.ban_message_language.desc
+    category: admin
+    type: string
+    default_value: "en"

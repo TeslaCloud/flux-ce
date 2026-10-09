@@ -105,7 +105,8 @@ end
 --- Gives the player a temporary permission value that takes precedence over their regular
 -- permissions until it expires. Updates the TempPermission records and the networked table.
 -- Giving the value the player already has temporarily adds the duration to the time that is
--- left; any other value starts counting from now.
+-- left; any other value starts counting from now. The config is sent to the player again if
+-- that has changed their right to edit configs.
 -- @param perm_id [String permission ID]
 -- @param value [Number PERM_ value, normally PERM_ALLOW or PERM_NEVER]
 -- @param duration [Number seconds until the permission expires]
@@ -147,6 +148,8 @@ function player_meta:set_temp_permission(perm_id, value, duration)
   }
 
   self:set_temp_permissions(perm_table)
+
+  Bolt:update_config_access(self)
 end
 
 --- Runs a command as this player, with the usual permission checks.

@@ -1,11 +1,12 @@
 --- Server-side hooks of the admin plugin: the ban check on connect, loading of the bans and
--- of each player's role and permissions from the database, the permission checks for tools
--- and voice chat, expiry of temporary permissions, and giving or stripping the tool gun and
--- the physgun as permissions change.
+-- of each player's role and permissions from the database, the permission checks for tools,
+-- chairs and voice chat, expiry of temporary permissions, and giving or stripping the tool
+-- gun and the physgun as permissions change.
 
 --- Checks connecting players against the ban cache. A timed ban that has expired is lifted
--- and the player let in; any other ban rejects the connection with its reason, including
--- a ban whose end time cannot be read.
+-- and the player let in; any other ban rejects the connection with the message of
+-- Bolt:get_ban_message, which names its reason and the time it has left, including a ban
+-- whose end time cannot be read.
 -- @param steam_id64 [String 64-bit SteamID of the connecting player]
 -- @param ip [String]
 -- @param sv_pass [String server password]
@@ -40,7 +41,7 @@ function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
 
       return true
     else
-      return false, 'You are still banned: '..tostring(entry.reason)
+      return false, self:get_ban_message(entry)
     end
   end
 end
@@ -56,6 +57,44 @@ function Bolt:CanTool(actor, trace, tool_name)
   if tool and tool.permission and !actor:can(tool.permission) then
     return false
   end
+end
+
+--- Decides whether a player may spawn a chair: a seat of the vehicle list, which is a
+-- 'prop_vehicle_prisoner_pod'. Chairs take the 'spawn_chairs' permission instead of the
+-- 'spawn_vehicles' permission that the gamemode asks of every other vehicle. A player who
+-- has both is left to the gamemode and to the other handlers of this hook. For a player
+-- who may only spawn chairs the gamemode has to be overruled, which also skips the handlers
+-- that come after this one; the chair is passed on to the FLPlayerSpawnVehicle hook the way
+-- the gamemode passes vehicles on.
+-- @param actor [Player]
+-- @param model [String model of the vehicle]
+-- @param name [String name of the vehicle in the vehicle list]
+-- @param tab [Map vehicle table from the vehicle list]
+-- @return [Boolean false if the player may not spawn chairs, true if they may spawn chairs
+--   but no other vehicles; nothing if it is not a chair or the player may spawn vehicles
+--   as well, which leaves the decision to the gamemode]
+function Bolt:PlayerSpawnVehicle(actor, model, name, tab)
+  if !IsValid(actor) or !istable(tab) or tab.Class != 'prop_vehicle_prisoner_pod' then return end
+
+  if !actor:can('spawn_chairs') then
+    return false
+  end
+
+  if actor:can('spawn_vehicles') then return end
+
+  --- Run by the admin plugin when a player who has the `spawn_chairs` permission but not
+  -- the `spawn_vehicles` one tries to spawn a chair, in place of the gamemode, which runs it
+  -- for every other vehicle.
+  -- @param actor [Player The player spawning the chair]
+  -- @param model [String Model of the chair]
+  -- @param name [String Name of the chair in the vehicle list]
+  -- @param tab [Map Vehicle table from the vehicle list]
+  -- @return [Boolean Return false to prevent the chair from being spawned]
+  if hook.Run('FLPlayerSpawnVehicle', actor, model, name, tab) == false then
+    return false
+  end
+
+  return true
 end
 
 --- Mutes talkers that lack the 'voice' permission.
@@ -85,8 +124,9 @@ function Bolt:ActiveRecordReady()
 end
 
 --- Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
--- root_steamid config root admins, networks stored permissions, shows vanished and observing
--- admins to players with the 'moderate' permission and logs the connection.
+-- root_steamid config root admins, networks stored permissions, sends the config again if
+-- the player turns out to be allowed to edit it, shows vanished and observing admins to
+-- players with the 'moderate' permission and logs the connection.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function Bolt:PlayerRestored(actor, record)
@@ -133,6 +173,8 @@ function Bolt:PlayerRestored(actor, record)
     actor:set_temp_permissions(perm_table)
   end
 
+  self:update_config_access(actor)
+
   if actor:can('moderate') then
     for k, v in player.Iterator() do
       if v.is_vanished or v:get_nv('observer') then
@@ -142,6 +184,14 @@ function Bolt:PlayerRestored(actor, record)
   end
 
   Log:notify(actor:name()..' has connected to the server.', { action = 'player_events' })
+end
+
+--- Remembers whether the player could edit configs when the config was first sent to them,
+-- which the gamemode does right before this hook. Bolt:update_config_access compares against
+-- it to tell when the config has to be sent again.
+-- @param actor [Player the player whose client has finished loading]
+function Bolt:PlayerInitialized(actor)
+  actor.bolt_config_access = Config.can_manage(actor)
 end
 
 --- Checks role immunity for commands that target players, by way of Bolt:check_immunity:
@@ -181,11 +231,14 @@ end
 -- changes, going by what the player may do now (role, individual and temporary permissions
 -- together): unsetting the permission leaves the tool with a player whose role allows it,
 -- and PERM_NEVER takes it away. Does nothing while the player is dead; they get the tools
--- they are allowed when they spawn.
+-- they are allowed when they spawn. Any permission change also sends the config to the
+-- player again if it has changed their right to edit configs.
 -- @param target [Player]
 -- @param perm_id [String permission ID]
 -- @param value [Number new PERM_ value]
 function Bolt:PlayerPermissionChanged(target, perm_id, value)
+  self:update_config_access(target)
+
   if perm_id != 'toolgun' and perm_id != 'physgun' then return end
   if !target:Alive() then return end
 
@@ -201,11 +254,14 @@ end
 --- Gives or strips the tool gun and the physgun after the player's role has changed, going
 -- by the 'toolgun' and 'physgun' permissions the player has now (role, individual and
 -- temporary permissions together). Does nothing while the player is dead; they get the tools
--- they are allowed when they spawn.
+-- they are allowed when they spawn. Also sends the config to the player again if the new
+-- role has changed their right to edit configs.
 -- @param target [Player]
 -- @param group [Role the player's new role, nil if its ID is not registered]
 -- @param old_group [Role the player's previous role]
 function Bolt:PlayerUserGroupChanged(target, group, old_group)
+  self:update_config_access(target)
+
   if !target:Alive() then return end
 
   if target:can('toolgun') then

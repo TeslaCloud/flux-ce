@@ -9,7 +9,8 @@ PANEL.permission_value = PERM_NO
 PANEL.permission = {}
 
 --- Recreates the row: the permission's title and the allow / not set / never buttons.
--- Right-clicking a button asks for a duration and makes that value temporary.
+-- The name and the description of the permission are translated if they are language
+-- phrases. Right-clicking a button asks for a duration and makes that value temporary.
 function PANEL:rebuild()
   if IsValid(self.container) then
     self.container:safe_remove()
@@ -28,11 +29,11 @@ function PANEL:rebuild()
   self.title = vgui.Create('DLabel', self.container)
   self.title:SetPos(0, height * 0.5 - font_size * 0.5)
   self.title:SetFont(font)
-  self.title:SetText(permission.name or 'No Permission')
+  self.title:SetText(t(permission.name or 'No Permission'))
   self.title:SetSize(quarter, height)
 
   if permission.description then
-    self.title:SetTooltip(permission.description)
+    self.title:SetTooltip(t(permission.description))
   end
 
   self.button_allow = vgui.Create('DButton', self.container)

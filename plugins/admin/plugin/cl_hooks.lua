@@ -1,5 +1,6 @@
---- Client-side hooks of the admin plugin: the Admin entry of the tab menu and its pages, the
--- vanish indicator on the HUD, fullbright rendering and the voice permission check.
+--- Client-side hooks of the admin plugin: the Admin entry of the tab menu and its pages,
+-- keeping the config editor and the plugin manager up to date with the server, the vanish
+-- indicator on the HUD, fullbright rendering and the voice permission check.
 
 --- Returns false for speakers that lack the 'voice' permission.
 -- @param speaker [Player the player that started talking]
@@ -21,12 +22,18 @@ function Bolt:AddTabMenuItems(menu)
   })
 end
 
---- Adds the player management and config editor pages to the admin panel.
+--- Adds the pages of the admin plugin to the admin panel: player management, the staff
+-- list, the ban list, the config editor and the plugin manager. Each one asks for the
+-- permission that the server checks for what the page does; for the config editor that is
+-- the permission named by `Config.permission`.
 -- @param panel [Panel the admin panel]
 -- @param sidebar [Panel the admin panel's sidebar]
 function Bolt:AddAdminMenuItems(panel, sidebar)
   panel:add_panel('admin_player_management', t'ui.admin.player_management', 'manage_permissions')
-  panel:add_panel('admin_config_editor', t'ui.admin.config_editor', 'manage_configuration')
+  panel:add_panel('admin_staff_list', t'ui.admin.staff.title', 'manage_permissions')
+  panel:add_panel('admin_ban_list', t'ui.admin.bans.title', 'unban')
+  panel:add_panel('admin_config_editor', t'ui.admin.config_editor', Config.permission)
+  panel:add_panel('admin_plugin_manager', t'ui.admin.plugins.title', 'manage_plugins')
 end
 
 --- Registers the constructors of the admin panel's pages with the loaded theme.
@@ -36,9 +43,53 @@ function Bolt:OnThemeLoaded(current_theme)
     return vgui.Create('fl_player_management', parent)
   end)
 
+  current_theme:add_panel('admin_staff_list', function(id, parent, ...)
+    return vgui.Create('fl_staff_list', parent)
+  end)
+
+  current_theme:add_panel('admin_ban_list', function(id, parent, ...)
+    return vgui.Create('fl_ban_list', parent)
+  end)
+
   current_theme:add_panel('admin_config_editor', function(id, parent, ...)
     return vgui.Create('fl_config_editor', parent)
   end)
+
+  current_theme:add_panel('admin_plugin_manager', function(id, parent, ...)
+    return vgui.Create('fl_plugin_manager', parent)
+  end)
+end
+
+--- Updates the line of a config in the config editor, if it is open, when the value of
+-- the config has arrived from the server.
+-- @param key [String config key]
+-- @param old_value [Any value the client had before]
+-- @param new_value [Any value that has been received]
+function Bolt:OnConfigReceived(key, old_value, new_value)
+  if IsValid(self.config_editor) then
+    self.config_editor:update_config(key)
+  end
+end
+
+--- Updates the line of a config in the config editor, if it is open, when the server
+-- reports that the config has got a pending value or no longer has one.
+-- @param key [String config key]
+-- @param is_pending [Boolean whether the config has a pending value now]
+-- @param value [Any value the config takes on the next start of the server]
+function Bolt:OnConfigPendingReceived(key, is_pending, value)
+  if IsValid(self.config_editor) then
+    self.config_editor:update_config(key)
+  end
+end
+
+--- Rebuilds the list of the plugin manager, if it is open, when the server reports that a
+-- plugin has been disabled or enabled.
+-- @param id [String normalized ID of the plugin]
+-- @param disabled [Boolean true if the plugin will be disabled after the restart]
+function Bolt:OnPluginStateChanged(id, disabled)
+  if IsValid(self.plugin_manager) then
+    self.plugin_manager:rebuild()
+  end
 end
 
 --- Draws the vanish indicator in the bottom right corner while the local player is hidden

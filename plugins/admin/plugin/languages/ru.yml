@@ -1,8 +1,11 @@
 ru:
   command:
+    announce:
+      description: Показывает объявление всем игрокам на сервере.
+      syntax: <текст>
     ban:
-      description: Забанить урода!
-      syntax: <игрок> <срок блокировки> [причина]
+      description: Забанить урода! По Steam ID можно забанить того, кого нет на сервере.
+      syntax: <игрок или Steam ID> <срок блокировки> [причина]
       message: "{player} банит {target} на {time}. ({reason})"
       message_permanent: "{player} банит {target} навсегда. ({reason})"
     freezebots:
@@ -26,13 +29,40 @@ ru:
       syntax: <карта> [задержка]
       message: "{player} меняет карту на {map} через {delay} секунд!"
     demote:
-      description: Понижает игрока до пользователя.
-      syntax: <игрок>
+      description: Понижает игрока до пользователя. По Steam ID можно понизить того, кого нет на сервере.
+      syntax: <игрок или Steam ID>
       message: "{player} понижает {target} до пользователя."
+    grant:
+      description: Выдает игроку разрешение, навсегда или на указанное время.
+      syntax: <игрок> <разрешение> [срок]
+      message: "{player} выдает {target} разрешение {permission}."
+      message_temporary: "{player} выдает {target} разрешение {permission} на {time}."
     kick:
       description: Выкидывает игрока с сервера.
       syntax: <игрок> [причина]
       message: "{player} кикает {target} ({reason})."
+    permissions:
+      description: Показывает разрешения, заданные игроку лично.
+      syntax: <игрок>
+      role: "Роль игрока {target}: {role}."
+      allowed: "Разрешено игроку {target}: {permissions}."
+      denied: "Запрещено игроку {target}: {permissions}."
+      temporary_allowed: "Временно разрешено игроку {target}: {permission} (осталось: {time})."
+      temporary_denied: "Временно запрещено игроку {target}: {permission} (осталось: {time})."
+      none: "У игрока {target} нет личных разрешений."
+    resetpermission:
+      description: Убирает то, что задано игроку для разрешения лично, и оно снова зависит от роли.
+      syntax: <игрок> <разрешение>
+      message: "{player} сбрасывает разрешение {permission} игрока {target}."
+    revoke:
+      description: Запрещает игроку разрешение, навсегда или на указанное время.
+      syntax: <игрок> <разрешение> [срок]
+      message: "{player} запрещает {target} разрешение {permission}."
+      message_temporary: "{player} запрещает {target} разрешение {permission} на {time}."
+    warn:
+      description: Выносит игроку предупреждение.
+      syntax: <игрок> [причина]
+      message: "{player} выносит {target} предупреждение: {reason}."
     restart:
       description: Перезапускает текущую карту.
       syntax: "[задержка]"
@@ -41,10 +71,21 @@ ru:
       description: Вернуть игрока туда, где он находился до телепорта.
       syntax: <игрок>
       message: "{player} возвращает {target} на предыдущую позицию."
+    send:
+      description: Телепортировать игрока к другому игроку.
+      syntax: <игрок> <к кому>
+      message: "{player} телепортировал {target} к {destination}."
     setgroup:
       description: "Меняет группу пользователя игрока. Группы: {groups}"
       syntax: <игрок> <группа>
       message: "{player} добавляет {target} к группе {group}."
+    slay:
+      description: Убивает игрока.
+      syntax: <игрок>
+      message: "{player} убивает {target}."
+    staff:
+      description: Написать в чат администрации.
+      syntax: <сообщение>
     tp:
       description: Телепортировать игрока туда, куда вы смотрите.
       syntax: <игрок>
@@ -76,7 +117,7 @@ ru:
       syntax: "<игрок>"
       message: "{player} разморозил {target}."
     respawn:
-      description: "Возродить мертвого игрока."
+      description: "Возродить игрока там, где он находится, или там, куда вы смотрите."
       syntax: "<игрок> [tp / stay]"
       message: "{target} был возрожден благодаря {player}."
     godmode:
@@ -90,29 +131,58 @@ ru:
       text: Роль {operator} {role}
       message: Выберите роль
     roles: Роли
+  config:
+    admin:
+      title: Администрирование
+      desc: Настройки админ-мода.
+      ban_message_language:
+        name: Язык сообщения о бане
+        desc: Код языка (например, en или ru) сообщения, которое видят забаненные игроки при попытке зайти.
   error:
+    already_user: "{target} уже является пользователем."
+    banned:
+      temporary: "Вы забанены на этом сервере. Причина: {reason}. До конца бана: {time}."
+      permanent: "Вы забанены на этом сервере навсегда. Причина: {reason}."
     group_not_valid: "'{group}' не является группой пользователя!"
+    map_not_valid: "На сервере нет карты '{map}'!"
     not_banned: Steam ID '{steam_id}' не находится в блокировке!
     no_permission: У вас недостаточно прав чтобы сделать это.
-    respawn: "Вы не можете возродить живого игрока."
+    permission_not_set: "У этих игроков для разрешения {permission} ничего не задано."
+    permission_not_valid: "'{permission}' не является разрешением!"
+    permission_not_yours: "Вы не можете выдать разрешение {permission}, потому что у вас самих его нет."
+    plugin:
+      admin: Плагин администрирования нельзя отключить из его же меню.
+    send_same: Игрока нельзя телепортировать к самому себе.
+    slay: Никто из этих игроков не жив.
+    user_not_found: "Игрок со Steam ID '{steam_id}' никогда не заходил на этот сервер."
   notification:
+    announcement: "[Объявление] {text}"
     demote: Вы были понижены с должности {group} до пользователя.
     fullbright:
       enabled: "Вы теперь видите в темноте."
       disabled: "Вы больше не видите в темноте."
+    permission:
+      granted: "Вам выдано разрешение {permission}."
+      revoked: "Вам запрещено разрешение {permission}."
+      reset: "Ваше разрешение {permission} сброшено и снова зависит от вашей роли."
+    plugin_disabled: "{player} отключил плагин {plugin}. Он останется загруженным до перезапуска сервера."
+    plugin_enabled: "{player} включил плагин {plugin}. Он будет загружен после перезапуска сервера."
     return: Вы были возвращены на предыдущую позицию.
     setgroup: Ваша группа была изменена на {group}.
+    slay: "Вы были убиты игроком {player}."
     tp: Вы были телепортированы.
     vanish:
       enabled: Теперь вы скрыты от других игроков.
       disabled: Теперь вы видимы для других игроков.
     freeze: "Вы были заморожены {player}."
     unfreeze: "Вы были разморожены {player}."
+    warn: "Вам вынесено предупреждение: {reason}."
     godmode:
       enabled: "Режим бога активирован."
       disabled: "Режим бога отключен."
     respawn: "Вы были возрождены благодаря {player}."
     config_changed: "{player} изменил значение конфига {config} на {value}."
+    config_changed_restart: "{player} изменил значение конфига {config} на {value}. Изменение вступит в силу после перезапуска сервера."
   permission:
     categories:
       administration: Администрирование
@@ -125,6 +195,9 @@ ru:
       player_management: Управление игроками
       configuration: Конфигурация
       compatibility: Совместимость
+    manage_plugins:
+      name: Управление плагинами
+      description: Дает доступ к отключению и включению плагинов.
   role:
     user: Ранг, выдаваемый всем игрокам при заходе на сервер.
     assistant: Административный ранг с низким уровнем доступа, для помощников администрации.
@@ -141,6 +214,7 @@ ru:
       no_all: "'Нет' для всех"
       never_all: Запретить всё
       expires: Истекает через
+      loading: Загрузка...
       temp_permission:
         title: Выдача временного разрешения
         message: Укажите, на какое время будет выдано это разрешение. Если оно уже существует, оно будет продлено на это время. Оставьте пустым, чтобы изъять разрешение.
@@ -153,6 +227,54 @@ ru:
       new_config_text: Введите новое значение.
       delete_config: Удалить значение
       delete_config_text: Вы уверены, что хотите удалить данное значение?
+      config:
+        reset: Вернуть значение по умолчанию
+        static: Этот конфиг задается в файлах сервера, и его нельзя изменить в игре.
+        reveal: Показать или скрыть значение
+        needs_restart: Изменения этого конфига вступают в силу после перезапуска сервера.
+        pending: "До тех пор его значение: {value}"
+        select: Выберите значение
+      bans:
+        title: Баны
+        search: Поиск по имени, Steam ID или причине
+        page:
+          "1": "Страница {page} из {pages} ({count} бан)"
+          "2": "Страница {page} из {pages} ({count} бана)"
+          "5": "Страница {page} из {pages} ({count} банов)"
+        empty: Банов нет.
+        permanent: Навсегда
+        expired: Истек
+        banned_by: "забанил {admin}"
+        unban: Разбанить
+        unban_message: "Вы уверены, что хотите разбанить {name}?"
+      staff:
+        title: Администрация
+        empty: Ни у кого нет роли, кроме пользователя.
+        online: В сети
+        offline: Не в сети
+        demote: Понизить
+        demote_message: "Вы уверены, что хотите понизить {name} с должности {role} до пользователя?"
+      plugins:
+        title: Плагины
+        notice: Отключение и включение плагина вступает в силу только после перезапуска сервера или смены карты. До тех пор отключенный плагин остается загруженным, а включенный не загружается.
+        enabled: Включен. Нажмите, чтобы отключить.
+        disabled: Отключен. Нажмите, чтобы включить.
+        author: "Автор: {author}"
+        depends: "Зависит от: {plugins}"
+        required_by: "Требуется для: {plugins}"
+        state:
+          loaded: Загружен
+          disabled: "Не загружен: отключен"
+          dependency: "Не загружен: недоступен плагин, от которого он зависит"
+          environment: "Не загружен: не предназначен для этого окружения"
+          unknown: Не загружен
+        restart:
+          disabled: будет отключен после перезапуска
+          enabled: будет включен после перезапуска
+        force:
+          title: Отключение необходимого плагина
+          message: "Плагин {plugin} требуется для: {plugins}. Все, что от него зависит, тоже не будет загружено, а схема без него может сломаться. Все равно отключить?"
+          confirm: Все равно отключить
     cmd_desc:
       usage: "Синтаксис:"
       aliases: "Алиасы:"

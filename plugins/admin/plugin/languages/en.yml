@@ -1,8 +1,11 @@
 en:
   command:
+    announce:
+      description: Shows a notice to everyone on the server.
+      syntax: <text>
     ban:
-      description: Ban this sucker!
-      syntax: <target> <duration> [reason]
+      description: Ban this sucker! A Steam ID bans somebody who is not on the server.
+      syntax: <target or Steam ID> <duration> [reason]
       message: "{player} has banned {target} for {time}. ({reason})."
       message_permanent: "{player} has banned {target} permanently. ({reason})."
     freezebots:
@@ -25,13 +28,36 @@ en:
       syntax: <string Map> [number Delay]
       message: "{player} is changing the level to {map} in {delay} second(s)!"
     demote:
-      description: Demote a player to user.
-      syntax: <target>
+      description: Demote a player to user. A Steam ID demotes somebody who is not on the server.
+      syntax: <target or Steam ID>
       message: "{player} has demoted {target} to user."
+    grant:
+      description: Allows a permission for a player, for good or for the given time.
+      syntax: <target> <permission> [duration]
+      message: "{player} has granted {target} the {permission} permission."
+      message_temporary: "{player} has granted {target} the {permission} permission for {time}."
     kick:
       description: Kicks a player from the server.
       syntax: <target> [reason]
       message: "{player} has kicked {target} ({reason})."
+    permissions:
+      description: Lists the permissions that were set for a player individually.
+      syntax: <target>
+      role: "{target} has the {role} role."
+      allowed: "Allowed for {target}: {permissions}."
+      denied: "Denied for {target}: {permissions}."
+      temporary_allowed: "Temporarily allowed for {target}: {permission} ({time} left)."
+      temporary_denied: "Temporarily denied for {target}: {permission} ({time} left)."
+      none: "{target} has no permissions of their own."
+    resetpermission:
+      description: Removes what was set for a permission of a player, so that their role decides again.
+      syntax: <target> <permission>
+      message: "{player} has reset the {permission} permission of {target}."
+    revoke:
+      description: Denies a permission to a player, for good or for the given time.
+      syntax: <target> <permission> [duration]
+      message: "{player} has denied {target} the {permission} permission."
+      message_temporary: "{player} has denied {target} the {permission} permission for {time}."
     warn:
       description: Warns a player.
       syntax: <target> [reason]
@@ -44,10 +70,18 @@ en:
       description: Bring a player back to their previous position before teleport.
       syntax: <target>
       message: "{player} returned {target} to their previous position."
+    send:
+      description: Teleport a player to another player.
+      syntax: <target> <destination player>
+      message: "{player} has teleported {target} to {destination}."
     setgroup:
       description: "Sets the player's usergroup. Usergroups: {groups}"
       syntax: <target> <usergroup>
       message: "{player} has set {target}'s user group to {group}."
+    slay:
+      description: Kills a player.
+      syntax: <target>
+      message: "{player} has slain {target}."
     staff:
       description: 'Talk to fellow staff members.'
       syntax: <message>
@@ -82,7 +116,7 @@ en:
       syntax: "<string player>"
       message: "{player} has unfrozen {target}."
     respawn:
-      description: "Respawn a dead player."
+      description: "Respawns a player where they are, or where you are looking."
       syntax: "<string player> [tp / stay]"
       message: "{target} was respawned by {player}."
     godmode:
@@ -96,18 +130,45 @@ en:
       text: Role {operator} {role}
       message: Select role
     roles: Roles
+  config:
+    admin:
+      title: Administration
+      desc: Settings of the admin mod.
+      ban_message_language:
+        name: Ban message language
+        desc: Code of the language (such as en or ru) of the message that banned players read when they try to join.
   error:
+    already_user: "{target} is a user already."
+    banned:
+      temporary: "You are banned from this server. Reason: {reason}. The ban ends in {time}."
+      permanent: "You are permanently banned from this server. Reason: {reason}."
     group_not_valid: "'{group}' is not a valid user group!"
+    map_not_valid: "The server has no map called '{map}'!"
     not_banned: Steam ID '{steam_id}' is not banned!
     no_permission: You have no permissions to do that.
-    respawn: "You can't respawn an alive player."
+    permission_not_set: "Nothing is set for the {permission} permission of these players."
+    permission_not_valid: "'{permission}' is not a valid permission!"
+    permission_not_yours: "You cannot grant the {permission} permission, because you do not have it yourself."
+    plugin:
+      admin: The admin plugin cannot be disabled from its own menu.
+    send_same: A player cannot be sent to themselves.
+    slay: None of these players is alive.
+    user_not_found: "Nobody with the Steam ID '{steam_id}' has ever joined this server."
   notification:
+    announcement: "[Announcement] {text}"
     demote: You have been demoted from {group} to user.
     fullbright:
       enabled: Fullbright mode enabled.
       disabled: Fullbright mode disabled.
+    permission:
+      granted: "You have been granted the {permission} permission."
+      revoked: "You have been denied the {permission} permission."
+      reset: "Your {permission} permission has been reset to what your role allows."
+    plugin_disabled: "{player} has disabled the {plugin} plugin. It stays loaded until the server restarts."
+    plugin_enabled: "{player} has enabled the {plugin} plugin. It will be loaded after the server restarts."
     return: You have been returned to your previous position.
     setgroup: Your usergroup was set to {group}.
+    slay: "You have been slain by {player}."
     tp: You have been teleported.
     vanish:
       enabled: You are now vanished.
@@ -120,6 +181,7 @@ en:
       disabled: "God mode disabled."
     respawn: "You've been respawned by {player}."
     config_changed: "{player} has changed the {config} config to {value}."
+    config_changed_restart: "{player} has changed the {config} config to {value}. The change takes effect after the server restarts."
   permission:
     categories:
       administration: Administration
@@ -132,6 +194,9 @@ en:
       player_management: Player management
       configuration: Configuration
       compatibility: Compatibility
+    manage_plugins:
+      name: Plugin manager
+      description: Grants access to disable and enable plugins.
   role:
     user: The base rank that is automatically given to the player.
     assistant: A low clearance administrative rank given to assistant staff members.
@@ -148,6 +213,7 @@ en:
       no_all: "'No' for all"
       never_all: Forbid all
       expires: Expires in
+      loading: Loading...
       temp_permission:
         title: Give temporary permission
         message: Specify the permission duration. If the permission is already given, this time will be added to it. Leave empty to take the temporary permission.
@@ -160,6 +226,53 @@ en:
       new_config_text: Enter a new value.
       delete_config: Delete table value
       delete_config_text: Are you sure that you want to delete this value?
+      config:
+        reset: Reset to the default value
+        static: This config is set in the files of the server and cannot be changed in game.
+        reveal: Show or hide the value
+        needs_restart: Changes of this config take effect after the server restarts.
+        pending: "Until then its value is: {value}"
+        select: Select a value
+      bans:
+        title: Bans
+        search: Search by name, Steam ID or reason
+        page:
+          "1": "Page {page} of {pages} ({count} ban)"
+          "2": "Page {page} of {pages} ({count} bans)"
+        empty: There are no bans to show.
+        permanent: Permanent
+        expired: Expired
+        banned_by: "banned by {admin}"
+        unban: Unban
+        unban_message: "Are you sure that you want to unban {name}?"
+      staff:
+        title: Staff
+        empty: Nobody has a role other than user.
+        online: Online
+        offline: Offline
+        demote: Demote
+        demote_message: "Are you sure that you want to demote {name} from {role} to user?"
+      plugins:
+        title: Plugins
+        notice: Disabling or enabling a plugin only takes effect after the server restarts or changes the map. Until then a disabled plugin stays loaded, and an enabled one stays out.
+        enabled: Enabled. Click to disable.
+        disabled: Disabled. Click to enable.
+        author: "Author: {author}"
+        depends: "Depends on: {plugins}"
+        required_by: "Required by: {plugins}"
+        state:
+          loaded: Loaded
+          disabled: "Not loaded: disabled"
+          dependency: "Not loaded: a plugin it depends on is not available"
+          environment: "Not loaded: not meant for this environment"
+          unknown: Not loaded
+        restart:
+          disabled: disabled after the restart
+          enabled: enabled after the restart
+        force:
+          title: Disable a required plugin
+          message: "{plugin} is required by: {plugins}. Whatever depends on it will not be loaded either, and the schema may break without it. Disable it anyway?"
+          confirm: Disable anyway
     cmd_desc:
       usage: "Syntax:"
       aliases: "Aliases:"
