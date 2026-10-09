@@ -1,0 +1,5 @@
+name: Quiz
+description: Makes players pass an entry quiz before they can create or load a character.
+author: TeslaCloud Studios
+depends:
+  - characters

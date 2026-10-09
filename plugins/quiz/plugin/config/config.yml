@@ -1,0 +1,33 @@
+categories:
+  quiz:
+    name: config.quiz.title
+    description: config.quiz.desc
+configs:
+  quiz_enabled:
+    name: config.quiz.enabled.name
+    description: config.quiz.enabled.desc
+    category: quiz
+    type: boolean
+    default_value: true
+  quiz_pass_percentage:
+    name: config.quiz.pass_percentage.name
+    description: config.quiz.pass_percentage.desc
+    category: quiz
+    type: number
+    min_value: 1
+    max_value: 100
+    default_value: 100
+  quiz_kick_on_fail:
+    name: config.quiz.kick_on_fail.name
+    description: config.quiz.kick_on_fail.desc
+    category: quiz
+    type: boolean
+    default_value: true
+  quiz_retry_delay:
+    name: config.quiz.retry_delay.name
+    description: config.quiz.retry_delay.desc
+    category: quiz
+    type: number
+    min_value: 0
+    max_value: 86400
+    default_value: 60
