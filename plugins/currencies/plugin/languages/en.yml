@@ -10,9 +10,23 @@ en:
       description: "Set money for a player. Currencies: {currencies}"
       syntax: <target> <amount> [currency]
       message: "{player} has set {target}'s {currency} to {value}."
+  config:
+    currencies:
+      title: Currencies
+      desc: Money and currency settings.
+      default_currency:
+        name: Default Currency
+        desc: ID of the currency that is used whenever none is named, for instance by the money commands. Leave it empty to use the only registered currency.
+      starting_money:
+        name: Starting Money
+        desc: How much of the default currency new characters start with. Leave it at 0 to use the amount the currency itself is registered with.
+      save_dropped_money:
+        name: Save Dropped Money
+        desc: Should the money lying on the ground be saved and put back when the map is loaded again.
   error:
     not_enough_money: Insufficient funds.
     invalid_currency: This is not a valid currency.
+    money_refused: The money was not accepted.
   notification:
     currency:
       pickup: You picked up {value} {currency}.

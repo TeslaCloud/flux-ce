@@ -1,0 +1,24 @@
+categories:
+  currencies:
+    name: config.currencies.title
+    description: config.currencies.desc
+configs:
+  default_currency:
+    name: config.currencies.default_currency.name
+    description: config.currencies.default_currency.desc
+    category: currencies
+    type: string
+  starting_money:
+    name: config.currencies.starting_money.name
+    description: config.currencies.starting_money.desc
+    category: currencies
+    type: number
+    min_value: 0
+    max_value: 100000
+    default_value: 0
+  save_dropped_money:
+    name: config.currencies.save_dropped_money.name
+    description: config.currencies.save_dropped_money.desc
+    category: currencies
+    type: boolean
+    default_value: false

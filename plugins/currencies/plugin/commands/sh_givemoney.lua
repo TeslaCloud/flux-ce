@@ -24,8 +24,8 @@ end
 --- Gives money to the entity the player is looking at.
 -- @param actor [Player the player who ran the command]
 -- @param amount [String amount to give, parsed with tonumber]
--- @param currency=nil [String currency ID; the default_currency config is used when it is
---   omitted or unknown]
+-- @param currency=nil [String currency ID; the default currency is used when it is omitted
+--   or unknown, see `Currencies:get_default_currency`]
 function CMD:on_run(actor, amount, currency)
   amount = tonumber(amount)
 
@@ -36,16 +36,12 @@ function CMD:on_run(actor, amount, currency)
   end
 
   amount = math.max(0, amount)
-  currency = currency or Config.get('default_currency')
+  currency = Currencies:resolve_currency(currency)
 
-  if !Currencies:find_currency(currency) then
-    currency = Config.get('default_currency')
+  if !currency then
+    actor:notify('error.invalid_currency')
 
-    if !Currencies:find_currency(currency) then
-      actor:notify('error.currency.invalid_currency')
-
-      return
-    end
+    return
   end
 
   local success, err = actor:give_money_to(nil, currency, amount)

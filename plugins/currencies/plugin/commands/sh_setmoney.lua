@@ -25,8 +25,8 @@ end
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param amount [String new balance, parsed with tonumber; negative values become 0]
--- @param currency=nil [String currency ID; the default_currency config is used when it is
---   omitted or unknown]
+-- @param currency=nil [String currency ID; the default currency is used when it is omitted
+--   or unknown, see `Currencies:get_default_currency`]
 function CMD:on_run(actor, targets, amount, currency)
   amount = tonumber(amount)
 
@@ -37,16 +37,12 @@ function CMD:on_run(actor, targets, amount, currency)
   end
 
   amount = math.max(0, amount)
-  currency = currency or Config.get('default_currency')
+  currency = Currencies:resolve_currency(currency)
 
-  if !Currencies:find_currency(currency) then
-    currency = Config.get('default_currency')
+  if !currency then
+    actor:notify('error.invalid_currency')
 
-    if !Currencies:find_currency(currency) then
-      actor:notify('error.currency.invalid_currency')
-
-      return
-    end
+    return
   end
 
   local currency_data = Currencies:find_currency(currency)

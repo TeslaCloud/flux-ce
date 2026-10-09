@@ -1,6 +1,10 @@
 --- Money lying in the world (`fl_money`): holds an amount of one currency and hands it to the
 -- player who uses it, unless the CanPlayerPickupMoney hook prevents that. It is created by
--- `Entity:drop_money`.
+-- `Currencies:spawn_money`, which is what `Entity:drop_money` puts the money of a player into
+-- the world with. While the save_dropped_money config is on, the Currencies plugin saves
+-- these entities and puts them back when the map is loaded again; the money that is left is
+-- saved again as soon as one of them is picked up, so that it cannot come back after it has
+-- been taken.
 
 AddCSLuaFile()
 
@@ -52,7 +56,10 @@ if SERVER then
   end
 
   --- Lets the activator pick the money up: runs PlayerPickupMoney and removes the entity
-  -- unless a CanPlayerPickupMoney hook returns false.
+  -- unless a CanPlayerPickupMoney hook returns false. The entity also stays if a
+  -- PlayerPickupMoney handler returns false, which the Currencies plugin does when the money
+  -- was refused. Once the entity is removed, the money that is left in the world is saved
+  -- if the save_dropped_money config is on.
   -- @param activator [Entity]
   -- @param caller [Entity]
   -- @param use_type [Number USE_* enum]
@@ -70,9 +77,16 @@ if SERVER then
         -- @param activator [Entity the entity that used the money, normally a player]
         -- @param entity [Entity the fl_money entity; its get_currency and get_currency_amount
         --   methods return what it holds]
-        hook.Run('PlayerPickupMoney', activator, self)
+        -- @return [Boolean return false to leave the money where it is, as the Currencies
+        --   plugin does when the AdjustReceivedMoney hook has refused it. A returned value
+        --   keeps the handlers after it from running, so return nothing otherwise]
+        if hook.Run('PlayerPickupMoney', activator, self) != false then
+          self:Remove()
 
-        self:Remove()
+          if Config.get('save_dropped_money') then
+            Currencies:save_money()
+          end
+        end
       end
     end
   end

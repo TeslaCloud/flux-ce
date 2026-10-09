@@ -1,8 +1,9 @@
 --- Server side of the Currencies plugin: gives new characters their balances, networks the
 -- balances of characters and containers, holds the default rules for giving, dropping and
--- picking up money, and handles the requests of the money panel. Money can only be taken
--- from an entity that has an inventory open for the player who asks: a container, or
--- another player whose inventories are being viewed.
+-- picking up money, saves and loads the money that lies in the world, and handles the
+-- requests of the money panel. Money can only be taken from an entity that has an inventory
+-- open for the player who asks: a container, or another player whose inventories are being
+-- viewed.
 
 --- Finds an inventory of an entity that is open for a player, which is what entitles the
 -- player to take the money of that entity.
@@ -21,17 +22,56 @@ local function find_open_inventory(actor, entity)
   end
 end
 
---- Adds a Currency record with a zero balance for every registered currency to a new
--- character.
+--- Adds a Currency record for every registered currency to a new character, with the
+-- starting amount of that currency as its balance. Runs the GetStartingMoney hook for every
+-- currency.
 -- @param owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
 function Currencies:PostCreateCharacter(owner, char, char_data)
   for k, v in pairs(Currencies.all()) do
+    local amount = self:get_starting_amount(k)
+
+    --- Lets plugins decide how much of a currency a new character starts with, for instance
+    -- by its faction. Called on the server for every registered currency while a character
+    -- is being created, before it is saved.
+    -- @param owner [Player the player the character is created for]
+    -- @param char [Character the new character, not saved yet]
+    -- @param currency [String currency ID]
+    -- @param amount [Number what the character would start with, see
+    --   `Currencies:get_starting_amount`]
+    -- @param char_data [Map creation data the character was built from]
+    -- @return [Number return the amount the character should start with; it is rounded to
+    --   the decimals of the currency and never below 0. Return nothing to keep the amount]
+    local result = hook.Run('GetStartingMoney', owner, char, k, amount, char_data)
+
+    if isnumber(result) and result == result and result != math.huge then
+      amount = math.max(0, math.round(result, v.decimals or 0))
+    end
+
     local currency = Currency.new()
       currency.currency_id = k
-      currency.amount = 0
+      currency.amount = amount
     table.insert(char.currencies, currency)
+  end
+end
+
+--- Puts the saved money back into the world when the framework loads its data, if the
+-- save_dropped_money config is on.
+function Currencies:LoadData()
+  if Config.get('save_dropped_money') then
+    self:load_money()
+  end
+end
+
+--- Saves the money that lies in the world when the framework saves its data, if the
+-- save_dropped_money config is on. Deletes what has been saved for the map otherwise, so
+-- that money which is long gone does not come back once the config is turned on again.
+function Currencies:SaveData()
+  if Config.get('save_dropped_money') then
+    self:save_money()
+  else
+    Data.delete_plugin('money')
   end
 end
 
@@ -65,17 +105,26 @@ function Currencies:CanPlayerPickupMoney(actor, entity)
 end
 
 --- Gives the contents of a money entity to the player, notifies them and starts their
--- pickup cooldown.
+-- pickup cooldown. The money stays where it is if the AdjustReceivedMoney hook refuses it.
 -- @param actor [Player]
 -- @param entity [Entity the fl_money entity]
+-- @return [Boolean false if the money was refused, otherwise nil]
 function Currencies:PlayerPickupMoney(actor, entity)
   local currency = entity:get_currency()
   local amount = entity:get_currency_amount()
-  local currency_data = Currencies:find_currency(currency)
+  local currency_data = isstring(currency) and Currencies:find_currency(currency)
 
-  actor:give_money(currency, amount)
+  if !currency_data then return end
+
+  local received = actor:give_money(currency, amount, entity)
+
   actor.next_money_pickup = CurTime() + 0.5
-  actor:notify('notification.currency.pickup', { value = amount, currency = currency_data.name }, Color('lightgreen'))
+
+  if received == false then
+    return false
+  end
+
+  actor:notify('notification.currency.pickup', { value = received, currency = currency_data.name }, Color('lightgreen'))
   entity:EmitSound('physics/cardboard/cardboard_box_impact_bullet'..math.random(1, 5)..'.wav', 55)
 end
 
