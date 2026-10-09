@@ -1,0 +1,12 @@
+en:
+  config:
+    cinematics:
+      title: Cinematics
+      desc: Cinematics plugin configuration
+      intro:
+        name: Character Intro
+        desc: Show the name and the description of the schema between cinematic bars when a player loads a character for the first time after joining.
+  ui:
+    hud:
+      cinematics:
+        intro_credits: A roleplaying game by {author}.

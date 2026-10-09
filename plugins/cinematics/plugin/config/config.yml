@@ -1,0 +1,11 @@
+categories:
+  cinematics:
+    name: config.cinematics.title
+    description: config.cinematics.desc
+configs:
+  cinematic_intro:
+    name: config.cinematics.intro.name
+    description: config.cinematics.intro.desc
+    category: cinematics
+    type: boolean
+    default_value: true
