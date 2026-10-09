@@ -59,3 +59,23 @@ configs:
     min_value: 1
     max_value: 256
     default_value: 100
+  chat_interval:
+    name: config.chatbox.chat_interval.name
+    description: config.chatbox.chat_interval.desc
+    category: chatbox
+    type: number
+    min_value: 0
+    max_value: 5000
+    default_value: 200
+  chat_avatars:
+    name: config.chatbox.chat_avatars.name
+    description: config.chatbox.chat_avatars.desc
+    category: chatbox
+    type: boolean
+    default_value: false
+  chat_timestamps:
+    name: config.chatbox.chat_timestamps.name
+    description: config.chatbox.chat_timestamps.desc
+    category: chatbox
+    type: boolean
+    default_value: false

@@ -1,6 +1,7 @@
 --- A single message of the chatbox (`fl_chat_message`): draws a message compiled by
 -- `Chatbox.compile` and fades out after the 'message_fade_delay' config, unless the chatbox is
--- open.
+-- open. Steam avatars in the message are `AvatarImage` child panels that the message draws
+-- itself.
 
 local PANEL = {}
 PANEL.message_data = {}
@@ -55,7 +56,7 @@ function PANEL:Think()
   end
 end
 
---- Draws the texts, images and icons of the compiled message, unless the
+--- Draws the texts, images, icons and avatars of the compiled message, unless the
 -- ChatboxPrePaintMessage hook returns true.
 -- @param w [Number]
 -- @param h [Number]
@@ -86,6 +87,11 @@ function PANEL:Paint(w, h)
           draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, white_alpha)
         elseif v.icon then
           FontAwesome:draw(v.icon, v.x, v.y, v.h, white_alpha)
+        elseif v.avatar then
+          if IsValid(v.panel) then
+            v.panel:SetAlpha(self.alpha)
+            v.panel:PaintManual()
+          end
         end
       elseif isnumber(v) then
         cur_font = Font.size(Theme.get_font('chatbox_normal'), v)
@@ -94,8 +100,8 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Sets the compiled message to display and resizes the panel to its height.
--- Does nothing if the chatbox panel does not exist.
+--- Sets the compiled message to display, resizes the panel to its height and creates the
+-- panels of its avatars. Does nothing if the chatbox panel does not exist.
 -- @param msg_info [Map compiled message, as returned by Chatbox.compile]
 function PANEL:set_message(msg_info)
   local parent = Chatbox.panel
@@ -105,6 +111,45 @@ function PANEL:set_message(msg_info)
   self.message_data = msg_info
 
   self:SetSize(self:GetWide() - parent.padding * 0.5, msg_info.total_height)
+  self:create_avatars()
+end
+
+--- Creates an `AvatarImage` panel for every avatar piece of the compiled message, replacing
+-- the ones of the previous message. The panels are not drawn on their own: `PANEL:Paint` draws
+-- them along with the rest of the message, so that they fade with it. A piece that holds a
+-- SteamID64 shows the avatar even if that player is not on the server anymore.
+function PANEL:create_avatars()
+  for k, v in ipairs(self.avatars or {}) do
+    if IsValid(v) then
+      v:Remove()
+    end
+  end
+
+  self.avatars = {}
+
+  for k, v in ipairs(self.message_data) do
+    if istable(v) and v.avatar and isnumber(v.w) and isnumber(v.h) then
+      local source = v.avatar
+      local target = isstring(source) and player.GetBySteamID64(source) or source
+      local resolution = v.h > 32 and 64 or 32
+      local avatar = vgui.Create('AvatarImage', self)
+
+      avatar:SetPos(v.x, v.y)
+      avatar:SetSize(v.w, v.h)
+      avatar:SetMouseInputEnabled(false)
+      avatar:SetPaintedManually(true)
+
+      if isentity(target) and IsValid(target) and target:IsPlayer() then
+        avatar:SetPlayer(target, resolution)
+      elseif isstring(source) then
+        avatar:SetSteamID(source, resolution)
+      end
+
+      v.panel = avatar
+
+      table.insert(self.avatars, avatar)
+    end
+  end
 end
 
 -- Those people want us gone :(

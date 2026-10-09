@@ -1,6 +1,6 @@
 --- Client-side hooks of the Chatbox plugin: opens the chatbox on the chat binds in place of
--- the default chat, sets up its fonts and theme options, sends entered text to the server and
--- adds the messages that arrive from it.
+-- the default chat, sets up its fonts and theme options, sends entered text to the server,
+-- adds the messages that arrive from it and shows what is said from the server console.
 
 --- Recalculates the size and position options of the chatbox for the new resolution
 -- and removes the chatbox panel so that it gets recreated.
@@ -140,16 +140,30 @@ function Chatbox:ChatboxMessageCompiled(compiled)
   MsgC(unpack(to_print))
 end
 
+--- Shows what is typed with `say` in the server console as a chat line of the console. The
+-- engine delivers such text to every client with an invalid speaker; what players say
+-- through the engine is left to the gamemode.
+-- @param speaker [Player the speaker, an invalid entity for the server console]
+-- @param text [String the message]
+-- @param team_chat [Boolean whether the message was sent to the team chat]
+-- @param is_dead [Boolean whether the speaker is dead]
+-- @return [Boolean true to suppress the default handling of a console message, nil otherwise]
+function Chatbox:OnPlayerChat(speaker, text, team_chat, is_dead)
+  if IsValid(speaker) then return end
+
+  Chatbox.add_message({
+    data = {
+      Theme.get_color('chat_console', Color(255, 90, 90)),
+      t'notification.console',
+      Color(255, 255, 255),
+      ': '..tostring(text)
+    },
+    console = true
+  })
+
+  return true
+end
+
 Cable.receive('fl_chat_message_add', function(message_data)
-  if !IsValid(Chatbox.panel) then
-    if Theme.initialized() then
-      Chatbox.create()
-    else
-      return
-    end
-  end
-
-  Chatbox.panel:add_message(message_data)
-
-  chat.PlaySound()
+  Chatbox.add_message(message_data)
 end)

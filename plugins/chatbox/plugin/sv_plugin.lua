@@ -1,5 +1,6 @@
 --- Server side of the Chatbox plugin: builds chat messages, decides who can hear them, sends
--- them to the clients, and turns what players type into messages.
+-- them to the clients, and turns what players type into messages, limiting how long a
+-- submitted text can be and how often a player can submit one.
 
 local default_msg_data = {
   sender = nil,
@@ -71,8 +72,14 @@ end
 -- hear it. Serverside only.
 -- Strings are displayed as text, numbers set the font size of the following text,
 -- colors set its color, players and entities are displayed by their names. Tables with
--- is_data = true are displayed as icons or images. Any other table is merged into the
--- message options: sender, position, radius (0 is global), size, should_translate.
+-- is_data = true are displayed as icons, images or Steam avatars (see `Chatbox.avatar`).
+-- Any other table is merged into the message options: sender, position, radius (0 is
+-- global), size, should_translate, time (when the message was sent, the current
+-- os.time() by default; shown when the 'chat_timestamps' config is enabled).
+--
+-- The ChatboxShouldSendMessage hook can cancel the message before anyone receives it, and
+-- the ChatboxMessageSent hook is run with the players who have received it. Neither is run
+-- for the text that a client adds with chat.AddText.
 -- ```
 -- -- Message for everyone.
 -- Chatbox.add_text(nil, Color(255, 200, 0), 'The server restarts in 5 minutes!')
@@ -90,6 +97,7 @@ end
 -- @param listeners [List<Player>/Player the receivers, nil to send to all players]
 -- @param ... [Vararg pieces of the message and option tables]
 -- @see [Chatbox.can_hear]
+-- @see [Chatbox.avatar]
 function Chatbox.add_text(listeners, ...)
   local message_data = {
     sender = nil,
@@ -101,7 +109,8 @@ function Chatbox.add_text(listeners, ...)
     rich = false,
     size = Config.get('default_font_size', 20),
     text = nil,
-    team_chat = false
+    team_chat = false,
+    time = os.time()
   }
 
   if !istable(listeners) then
@@ -139,6 +148,8 @@ function Chatbox.add_text(listeners, ...)
       elseif istable(v) then
         if !v.is_data and !client_mode then
           table.Merge(message_data, v)
+        elseif v.avatar != nil and !isstring(v.avatar) then
+          table.insert(message_data.data, Chatbox.avatar(v.avatar, v.size, v.margin))
         else
           table.insert(message_data.data, v)
         end
@@ -147,6 +158,23 @@ function Chatbox.add_text(listeners, ...)
       end
     end
   end
+
+  --- Decides whether a chat message is sent at all. Called on the server by
+  -- `Chatbox.add_text` once the message has been put together, before the AdjustMessageData
+  -- and PlayerCanHear hooks are run for its listeners. Not called for the text that a client
+  -- adds with `chat.AddText`, which only that client receives.
+  -- @param message_data [Map message data: data (the pieces), sender, position, radius, size,
+  --   time and the other options given to Chatbox.add_text; a change made to it applies to
+  --   every listener]
+  -- @param listeners [List<Player> the players the message is meant for, before it is checked
+  --   who of them can hear it]
+  -- @return [Boolean return false to cancel the message, so that nobody receives it and
+  --   ChatboxMessageSent is not run]
+  if !client_mode and hook.Run('ChatboxShouldSendMessage', message_data, listeners) == false then
+    return
+  end
+
+  local receivers = {}
 
   for k, v in ipairs(listeners) do
     local data = table.Copy(message_data)
@@ -161,7 +189,21 @@ function Chatbox.add_text(listeners, ...)
 
     if Chatbox.can_hear(v, data) then
       Cable.send(v, 'fl_chat_message_add', data)
+
+      table.insert(receivers, v)
     end
+  end
+
+  if !client_mode then
+    --- Called on the server after a chat message has been sent to everyone who can hear it.
+    -- Not called for a message that ChatboxShouldSendMessage has cancelled, nor for the text
+    -- that a client adds with `chat.AddText`.
+    -- @param message_data [Map message data as it was before the AdjustMessageData hook
+    --   changed the copies of the listeners: data (the pieces), sender, position, radius,
+    --   size, time and the other options given to Chatbox.add_text]
+    -- @param receivers [List<Player> the players the message has been sent to, in the order
+    --   they received it; empty if nobody could hear it]
+    hook.Run('ChatboxMessageSent', message_data, receivers)
   end
 end
 
@@ -268,26 +310,92 @@ function Chatbox.player_say(actor, text, team_chat)
     { sender = actor }
   }
 
+  if Config.get('chat_avatars') then
+    table.insert(message, 2, Chatbox.avatar(actor))
+  end
+
   --- Lets plugins alter or replace the message a player is about to say. Called on the server
   -- by `Chatbox.player_say` once the default message has been put together, before it is
   -- passed to `Chatbox.add_text`.
   -- @param actor [Player the speaker]
   -- @param text [String the text being said, without surrounding whitespace]
   -- @param message [List arguments for Chatbox.add_text: the icon, the name color, the
-  --   speaker, the text color, ': ', the text and the options table; modify it in place]
+  --   speaker, the text color, ': ', the text and the options table; modify it in place.
+  --   While the 'chat_avatars' config is enabled the avatar of the speaker (see
+  --   Chatbox.avatar) comes right after the icon, moving the rest one place further]
   hook.Run('ChatboxAdjustPlayerSay', actor, text, message)
 
   Chatbox.add_text(nil, unpack(message))
+end
+
+--- Checks whether the player may submit a chat message now, that is whether the
+-- 'chat_interval' config (in milliseconds) has passed since their last accepted submission.
+-- A submission that is accepted starts the next interval. Serverside only.
+-- @param actor [Player the player who submits a message]
+-- @return [Boolean false if the player has to wait, true otherwise]
+function Chatbox.check_interval(actor)
+  local interval = (tonumber(Config.get('chat_interval')) or 0) * 0.001
+
+  if interval <= 0 then return true end
+
+  local cur_time = CurTime()
+
+  if cur_time < (actor.fl_next_chat_at or 0) then
+    return false
+  end
+
+  actor.fl_next_chat_at = cur_time + interval
+
+  return true
+end
+
+--- Cuts a text that a player has submitted down to the 'max_message_length' config, counted
+-- in characters like the limit of the chatbox text entry. A text that is not valid UTF-8 is
+-- cut to that many bytes instead. Serverside only.
+-- @param text [String the submitted text]
+-- @return [String the text, no longer than the limit]
+function Chatbox.limit_text(text)
+  local limit = Config.get('max_message_length', 512)
+
+  if #text <= limit then return text end
+
+  local length = utf8.len(text)
+
+  if length and length <= limit then return text end
+
+  local success, cut = pcall(string.utf8sub, text, 1, limit)
+
+  return success and cut or text:sub(1, limit)
 end
 
 Cable.receive('fl_chat_text_add', function(actor, ...)
   if !IsValid(actor) then return end
 
   Chatbox.set_client_mode(true)
-  Chatbox.add_text(actor, ...)
+
+  local success, exception = pcall(Chatbox.add_text, actor, ...)
+
   Chatbox.set_client_mode(false)
+
+  if !success then
+    ErrorNoHalt('[Flux - Chatbox] Failed to relay chat.AddText of '..tostring(actor)..': '..tostring(exception)..'\n')
+  end
 end)
 
 Cable.receive('fl_chat_player_say', function(actor, text, team_chat)
-  Chatbox.player_say(actor, text, team_chat)
+  if !IsValid(actor) or !isstring(text) then return end
+
+  if !Chatbox.check_interval(actor) then
+    local cur_time = CurTime()
+
+    if cur_time >= (actor.fl_next_chat_notice_at or 0) then
+      actor.fl_next_chat_notice_at = cur_time + 1
+
+      actor:notify('error.chat.too_fast')
+    end
+
+    return
+  end
+
+  Chatbox.player_say(actor, Chatbox.limit_text(text), team_chat)
 end)

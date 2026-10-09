@@ -1,8 +1,8 @@
 --- Client side of the Chatbox plugin, which takes over the `chat.AddText` function of GMod.
 -- Text added with `chat.AddText` is sent to the server and comes back as a chatbox message for
 -- the local player; the original function is kept in Chatbox.old_add_text. The rest of this
--- file compiles received messages into pieces that can be drawn (`Chatbox.compile`) and
--- creates, shows and hides the chatbox panel.
+-- file adds received messages to the chatbox (`Chatbox.add_message`), compiles them into
+-- pieces that can be drawn (`Chatbox.compile`) and creates, shows and hides the chatbox panel.
 -- @module [chat]
 
 Chatbox.width = Chatbox.width or 100
@@ -19,14 +19,42 @@ function chat.AddText(...)
   Cable.send('fl_chat_text_add', ...)
 end
 
+--- Adds a message to the chatbox of the local player and plays the chat sound, creating the
+-- chatbox panel first if necessary. This is what happens to every message that arrives from
+-- the server; call it directly to show a message that only exists on this client.
+-- Does nothing if there is no panel and the theme has not been initialized yet.
+-- Clientside only.
+-- ```
+-- Chatbox.add_message({ data = { Color(255, 200, 0), 'Only you can see this.' } })
+-- ```
+-- @param message_data [Map message data: data (List of strings, font sizes, colors, image,
+--   icon and avatar tables, players and entities), optional size, time and should_translate]
+-- @see [Chatbox.compile]
+function Chatbox.add_message(message_data)
+  if !IsValid(Chatbox.panel) then
+    if Theme.initialized() then
+      Chatbox.create()
+    else
+      return
+    end
+  end
+
+  Chatbox.panel:add_message(message_data)
+
+  chat.PlaySound()
+end
+
 --- Converts a message that was received from the server into a list of pieces with
 -- calculated sizes and positions, ready to be drawn by a fl_chat_message panel.
--- Strings are wrapped to the width of the chatbox. Clientside only.
+-- Strings are wrapped to the width of the chatbox. While the 'chat_timestamps' config is
+-- enabled the message starts with the time it was sent at. Clientside only.
 -- @param msg_table [Map message data: data (List of strings, font sizes, colors,
---   image / icon tables, players and entities), optional size and should_translate]
+--   image / icon / avatar tables, players and entities), optional size, time (os.time() of
+--   the message, the current time when omitted) and should_translate]
 -- @return [Map sequential pieces: font sizes (Number), colors (Color), texts
---   ({ text, w, h, x, y }) and images ({ image or icon, x, y, w, h }), plus the
---   total_height field; nil if the chatbox font is not available]
+--   ({ text, w, h, x, y }), images ({ image or icon, x, y, w, h }) and avatars
+--   ({ avatar, x, y, w, h }), plus the total_height field; nil if the chatbox font is not
+--   available]
 function Chatbox.compile(msg_table)
   local compiled = {
     total_height = 0
@@ -60,11 +88,31 @@ function Chatbox.compile(msg_table)
   --   and its total_height field should be set to the height of the message]
   -- @return [Boolean return true to skip the default compilation of all pieces]
   if Plugin.call('ChatboxCompileMessage', data, compiled) != true then
+    if Config.get('chat_timestamps') then
+      local stamp = os.date('%H:%M', isnumber(msg_table.time) and msg_table.time or os.time())..' '
+      local w, h = util.text_size(stamp, font)
+
+      table.insert(compiled, Theme.get_color('chat_timestamp', Color(170, 170, 170)))
+
+      if !fix then
+        table.insert(compiled, { text = stamp, w = w, h = h, x = cur_x, y = cur_y })
+      else
+        table.insert(compiled, { text = stamp, w = w, h = h, x = cur_x, y = cur_y - h * fix_const })
+        h = h - (h * fix_const)
+      end
+
+      table.insert(compiled, Color(255, 255, 255))
+
+      cur_x = cur_x + w
+      total_height = h + Config.get('message_margin')
+    end
+
     for k, v in ipairs(data) do
       --- Lets plugins compile a single piece of a message. Called on the client for every
       -- piece in order, unless ChatboxCompileMessage has taken over the whole message;
       -- gamemode hooks are not called.
-      -- @param piece [Any a string, font size, color, icon or image table, player or entity]
+      -- @param piece [Any a string, font size, color, icon, image or avatar table, player or
+      --   entity]
       -- @param compiled [Map the message compiled so far, to append to]
       -- @return [Boolean return true to skip the default handling of this piece]
       if Plugin.call('ChatboxCompileMessageData', v, compiled) == true then
@@ -138,6 +186,32 @@ function Chatbox.compile(msg_table)
           if total_height < scaled then
             total_height = scaled + Config.get('message_margin')
           end
+        elseif v.avatar then
+          local _, line_height = util.text_size('W', font)
+
+          if fix then
+            line_height = line_height - line_height * fix_const
+          end
+
+          local size = math.floor(isnumber(v.size) and math.scale(v.size) or line_height)
+          local margin = math.scale(isnumber(v.margin) and v.margin or 8)
+          local wrap_width = Chatbox.width - Theme.get_option('chatbox_padding', math.scale(8)) * 4
+
+          if cur_x > 1 and cur_x + size + margin > wrap_width then
+            cur_x = 0
+            cur_y = cur_y + line_height + Config.get('message_margin')
+          end
+
+          table.insert(compiled, {
+            avatar  = v.avatar,
+            x       = cur_x + math.ceil(margin * 0.5),
+            y       = cur_y + math.max(0, math.floor((line_height - size) * 0.5)),
+            w       = size,
+            h       = size
+          })
+
+          cur_x = cur_x + size + margin
+          total_height = math.max(total_height, cur_y + size + Config.get('message_margin'))
         elseif v.r and v.g and v.b and v.a then
           table.insert(compiled, Color(v.r, v.g, v.b, v.a))
         end
