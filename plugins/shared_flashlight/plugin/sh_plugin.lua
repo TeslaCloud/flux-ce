@@ -7,8 +7,8 @@
 -- The flashlight key still toggles it: the `PlayerSwitchedFlashlight` hook turns the light on
 -- or off through `Player:set_flashlight` and keeps the engine flashlight from toggling. The
 -- state is read with `Player:is_flashlight_on` on both realms, and the entity of a lit
--- flashlight with `Player:get_flashlight`. The light goes out when the player dies and when
--- they leave the server. The `PlayerFlashlightChanged` hook runs on the server after every
+-- flashlight with `Player:get_flashlight`. The light goes out when the player dies, spawns
+-- and leaves the server. The `PlayerFlashlightChanged` hook runs on the server after every
 -- change.
 --
 -- The `shared_flashlight_enabled` config switches the plugin off, which leaves the engine

@@ -21,19 +21,16 @@ if SERVER then
     self:SetTransmitWithParent(true)
   end
 else
-  --- Creates the projected light. It is placed on the first think, once the owner is known.
+  --- Does nothing but hide the shadow of the entity. The projected light is created on the
+  -- first think that finds the owner, so that there is never a light without a player.
   function ENT:Initialize()
     self:DrawShadow(false)
-
-    self.light = ProjectedTexture()
-    self.light:SetTexture('effects/flashlight001')
-    self.light:SetNearZ(12)
   end
 
   --- Remembers the entity as the flashlight of its owner and moves the light to the owner's
   -- eyes, along their view. The engine Think of a clientside entity runs every frame, so the
-  -- light follows the owner without a delay. The light is switched off while the owner is
-  -- not valid, which happens for a moment after the entity arrives.
+  -- light follows the owner without a delay. The light is removed while the owner is not
+  -- valid, which happens for a moment after the entity arrives and once the owner has left.
   function ENT:Think()
     local owner = self:GetOwner()
 
@@ -45,6 +42,12 @@ else
 
     if SharedFlashlight.lights[owner] != self then
       SharedFlashlight.lights[owner] = self
+    end
+
+    if !self.light then
+      self.light = ProjectedTexture()
+      self.light:SetTexture('effects/flashlight001')
+      self.light:SetNearZ(12)
     end
 
     self.light:SetPos(owner:EyePos())
@@ -59,11 +62,13 @@ else
   --- Draws nothing: the entity has no model, only the light.
   function ENT:Draw() end
 
-  --- Moves the light out of the way without removing it, for the frames the owner is not
-  -- known on.
+  --- Removes the light, for the frames the owner is not known on. The next think that finds
+  -- the owner creates it again.
   function ENT:switch_off()
-    self.light:SetFarZ(0)
-    self.light:Update()
+    if self.light then
+      self.light:Remove()
+      self.light = nil
+    end
   end
 
   --- Removes the light and forgets the entity as its owner's flashlight.

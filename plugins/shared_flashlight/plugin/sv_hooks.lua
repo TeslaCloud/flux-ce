@@ -24,6 +24,29 @@ function SharedFlashlight:PlayerDeath(victim, inflictor, attacker)
   victim:set_flashlight(false)
 end
 
+--- Makes sure that a player spawns with their flashlight off. A silent kill, which Flux uses
+-- when a player goes back to the main menu or changes character, does not run `PlayerDeath`,
+-- so a light that was on at that time would otherwise stay on through the spawn; the engine
+-- flashlight is put out as well, in case the engine has kept it from a previous life.
+-- @param actor [Player]
+function SharedFlashlight:PlayerSpawn(actor)
+  if actor:is_flashlight_on() or actor:get_flashlight() then
+    actor:set_flashlight(false)
+  end
+end
+
+--- Removes the light of a player who leaves the server, so that it never outlives them.
+-- @param actor [Player]
+function SharedFlashlight:PlayerDisconnected(actor)
+  local light = actor:get_flashlight()
+
+  if IsValid(light) then
+    light:Remove()
+  end
+
+  actor.fl_flashlight = nil
+end
+
 --- Puts every shared flashlight out when the `shared_flashlight_enabled` config is turned
 -- off, so that nobody keeps a light the engine flashlight has taken over from.
 -- @param key [String key of the config that has changed]
