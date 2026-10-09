@@ -1,17 +1,43 @@
 ru:
+  attribute:
+    category:
+      other: Прочее
+    level:
+      superb: Супер
+      great: Отлично
+      good: Хорошо
+      fair: Нормально
+      mediocre: Посредственно
+      poor: Плохо
+      terrible: Ужасно
+    other:
+      name: Неизвестный атрибут
+      desc: У этого атрибута нет описания.
   command:
     charsetattribute:
       description: "Установить атрибут персонажа. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение>
       message: "{player} устанавливает {target} атрибут {attribute} на {value}."
     charattributeboost:
-      description: "Усилить атрибут персонажа. Атрибуты: {attributes}"
+      description: "Усилить атрибут персонажа. Длительность 'perma' дает усиление, которое действует, пока его не снимут. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение> <длительность>
       message: "{player} усиливает {target} атрибут {attribute} на {value} на {time}."
+      message_permanent: "{player} усиливает {target} атрибут {attribute} на {value} навсегда."
     charattributemultiplier:
-      description: "Дать игроку модификатор прокачки атрибута. Значение 1.5 ускорит прокачку на 50%, 2 - на 100% и т.д. Атрибуты: {attributes}"
+      description: "Дать игроку модификатор прокачки атрибута. Значение 1.5 ускорит прокачку на 50%, 2 - на 100% и т.д. Длительность 'perma' дает множитель, который действует, пока его не снимут. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение> <длительность>
       message: "{player} добавляет {target} множитель прокачки атрибута {attribute} на {value} на {time}."
+      message_permanent: "{player} добавляет {target} множитель прокачки атрибута {attribute} на {value} навсегда."
+    charattributeboostclear:
+      description: "Снять усиления и множители прокачки с атрибута персонажа или со всех атрибутов, если атрибут не указан. Атрибуты: {attributes}"
+      syntax: "<цель> [атрибут]"
+      message: "{player} снимает с {target} усиления и множители атрибута {attribute}."
+      message_all: "{player} снимает с {target} все усиления и множители атрибутов."
+    charattributes:
+      description: "Посмотреть атрибуты персонажа."
+      syntax: <цель>
+      header: "Атрибуты персонажа {target}:"
+      line: "{attribute} ({id}): уровень {level}, усиление {boost}, прогресс {progress}"
   condition:
     attribute:
       name: Игрок с определенным атрибутом
@@ -19,10 +45,41 @@ ru:
       message1: Выберите атрибут
       message2: Выберите значение атрибута
     attributes: Атрибуты
+  config:
+    attributes:
+      title: Атрибуты
+      desc: Настройки атрибутов персонажей.
+      progress_scale:
+        name: Множитель прогресса атрибутов
+        desc: На что умножается прогресс, который персонажи получают или теряют в атрибутах. 1 оставляет его как есть, 2 удваивает, 0 останавливает прокачку атрибутов.
   error:
     attribute_not_valid: "'{attribute}' не является атрибутом!"
+    attribute_no_character: "У игрока {target} нет активного персонажа!"
   notification:
     attribute:
       boost: Ваш атрибут '{attribute}' был увеличен на {value} на {time}.
+      boost_permanent: Ваш атрибут '{attribute}' был увеличен на {value} навсегда.
+      boosts_cleared: С вашего атрибута '{attribute}' были сняты усиления и множители прокачки.
+      boosts_cleared_all: Со всех ваших атрибутов были сняты усиления и множители прокачки.
       multiplier: Ваш множитель прокачки атрибута '{attribute}' был установлен на {value} на {time}.
+      multiplier_permanent: Ваш множитель прокачки атрибута '{attribute}' был установлен на {value} навсегда.
       set: Ваш атрибут '{attribute}' был установлен на {value}.
+  ui:
+    attributes:
+      title: Атрибуты
+      viewer_title: "Атрибуты персонажа {name}"
+      empty: Нет атрибутов для отображения.
+      hidden: "(скрыт)"
+      level: "{level} / {max}"
+      level_named: "{name} ({level})"
+      max_level: Максимальный уровень
+      progress: "Прогресс: {progress} / {total}"
+      boosts: "Усиления: {list}"
+      multipliers: "Множители прогресса: {list}"
+      timed: "{value} ({time})"
+      type:
+        stat: Характеристики
+        skill: Навыки
+        other: Прочее
+    tab_menu:
+      attributes: Атрибуты

@@ -1,0 +1,14 @@
+categories:
+  attributes:
+    name: config.attributes.title
+    description: config.attributes.desc
+configs:
+  attribute_progress_scale:
+    name: config.attributes.progress_scale.name
+    description: config.attributes.progress_scale.desc
+    category: attributes
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1

@@ -1,6 +1,6 @@
 --- The CharAttributeMultiplier command gives the characters of the targeted players a
--- temporary leveling multiplier for an attribute, for a duration such as `30` (minutes) or
--- `2 hours`. Allowed for moderators by default.
+-- leveling multiplier for an attribute, for a duration such as `30` (minutes) or `2 hours`,
+-- or until it is removed with a duration such as `perma`. Allowed for moderators by default.
 
 CMD.name = 'CharAttributeMultiplier'
 CMD.description = 'command.charattributemultiplier.description'
@@ -17,14 +17,15 @@ function CMD:get_description()
   return t(self.description, { attributes = table.concat(table.GetKeys(Attributes.get_stored()), ', ') })
 end
 
---- Gives every target a temporary progress multiplier for a multipliable attribute, then
--- notifies the targets and staff. Rejects invalid values, durations and attributes that are
--- not multipliable.
+--- Gives every target a progress multiplier for a multipliable attribute, then notifies the
+-- targets and staff. A duration of 0 gives a multiplier that does not expire. Rejects
+-- invalid values, durations and attributes that are not multipliable.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_id [String attribute to affect, normalized with to_id]
 -- @param value [String multiplier value, parsed with tonumber]
--- @param duration [String effect length, e.g. '30' (minutes) or '2 hours']
+-- @param duration [String effect length as read by Bolt:interpret_ban_time, e.g. '30'
+--   (minutes), '2 hours' or 'perma']
 function CMD:on_run(actor, targets, attribute_id, value, duration)
   attribute_id = attribute_id:to_id()
 
@@ -47,8 +48,10 @@ function CMD:on_run(actor, targets, attribute_id, value, duration)
   end
 
   if attribute and attribute.multipliable then
+    local permanent = duration <= 0
+
     for k, v in ipairs(targets) do
-      v:notify('notification.attribute.multiplier', {
+      v:notify(permanent and 'notification.attribute.multiplier_permanent' or 'notification.attribute.multiplier', {
         attribute = attribute.name,
         value = value,
         time = Flux.Lang:duration(duration)
@@ -56,7 +59,7 @@ function CMD:on_run(actor, targets, attribute_id, value, duration)
       v:multiply_attribute(attribute_id, value, duration)
     end
 
-    self:notify_staff('command.charattributemultiplier.message', {
+    self:notify_staff('command.charattributemultiplier.'..(permanent and 'message_permanent' or 'message'), {
       player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       attribute = attribute.name,

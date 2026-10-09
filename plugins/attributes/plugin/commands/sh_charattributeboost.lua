@@ -1,6 +1,7 @@
---- The CharAttributeBoost command gives the characters of the targeted players a temporary
--- boost of the given number of levels to an attribute, for a duration such as `30`
--- (minutes) or `2 hours`. Allowed for moderators by default.
+--- The CharAttributeBoost command gives the characters of the targeted players a boost of
+-- the given number of levels to an attribute, for a duration such as `30` (minutes) or
+-- `2 hours`, or until it is removed with a duration such as `perma`. Allowed for moderators
+-- by default.
 
 CMD.name = 'CharAttributeBoost'
 CMD.description = 'command.charattributeboost.description'
@@ -17,13 +18,15 @@ function CMD:get_description()
   return t(self.description, { attributes = table.concat(table.GetKeys(Attributes.get_stored()), ', ') })
 end
 
---- Gives every target a temporary boost to an attribute, then notifies the targets and staff.
--- Rejects invalid values, durations and attributes that are not boostable.
+--- Gives every target a boost to an attribute, then notifies the targets and staff. A
+-- duration of 0 gives a boost that does not expire. Rejects invalid values, durations and
+-- attributes that are not boostable.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_id [String attribute to boost, normalized with to_id]
 -- @param value [String number of levels to add, parsed with tonumber]
--- @param duration [String boost length, e.g. '30' (minutes) or '2 hours']
+-- @param duration [String boost length as read by Bolt:interpret_ban_time, e.g. '30'
+--   (minutes), '2 hours' or 'perma']
 function CMD:on_run(actor, targets, attribute_id, value, duration)
   attribute_id = attribute_id:to_id()
 
@@ -46,8 +49,10 @@ function CMD:on_run(actor, targets, attribute_id, value, duration)
   end
 
   if attribute and attribute.boostable != false then
+    local permanent = duration <= 0
+
     for k, v in ipairs(targets) do
-      v:notify('notification.attribute.boost', {
+      v:notify(permanent and 'notification.attribute.boost_permanent' or 'notification.attribute.boost', {
         attribute = attribute.name,
         value = value,
         time = Flux.Lang:duration(duration)
@@ -55,7 +60,7 @@ function CMD:on_run(actor, targets, attribute_id, value, duration)
       v:boost_attribute(attribute_id, value, duration)
     end
 
-    self:notify_staff('command.charattributeboost.message', {
+    self:notify_staff('command.charattributeboost.'..(permanent and 'message_permanent' or 'message'), {
       player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       attribute = attribute.name,

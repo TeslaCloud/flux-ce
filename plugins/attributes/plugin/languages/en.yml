@@ -1,17 +1,43 @@
 en:
+  attribute:
+    category:
+      other: Other
+    level:
+      superb: Superb
+      great: Great
+      good: Good
+      fair: Fair
+      mediocre: Mediocre
+      poor: Poor
+      terrible: Terrible
+    other:
+      name: Unknown Attribute
+      desc: This attribute has no description.
   command:
     charsetattribute:
       description: "Set a character's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value>
       message: "{player} has set {target}'s attribute {attribute} to {value}."
     charattributeboost:
-      description: "Boost a character's attribute. Attributes: {attributes}"
+      description: "Boost a character's attribute. A duration of 'perma' gives a boost that lasts until it is removed. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
       message: "{player} has boosted {target}'s attribute {attribute} by {value} for {time}."
+      message_permanent: "{player} has boosted {target}'s attribute {attribute} by {value} permanently."
     charattributemultiplier:
-      description: "Give a leveling multiplier to a character's attribute. Value 1.5 will speed up leveling by 50%, 2 - by 100% etc. Attributes: {attributes}"
+      description: "Give a leveling multiplier to a character's attribute. Value 1.5 will speed up leveling by 50%, 2 - by 100% etc. A duration of 'perma' gives a multiplier that lasts until it is removed. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
       message: "{player} has set {target}'s {attribute} leveling multiplier to {value} for {time}."
+      message_permanent: "{player} has set {target}'s {attribute} leveling multiplier to {value} permanently."
+    charattributeboostclear:
+      description: "Remove the boosts and leveling multipliers of a character's attribute, or of all attributes if none is given. Attributes: {attributes}"
+      syntax: "<target> [attribute_id]"
+      message: "{player} has removed the boosts and multipliers of {target}'s attribute {attribute}."
+      message_all: "{player} has removed all attribute boosts and multipliers of {target}."
+    charattributes:
+      description: "View the attributes of a character."
+      syntax: <target>
+      header: "Attributes of {target}:"
+      line: "{attribute} ({id}): level {level}, boost {boost}, progress {progress}"
   condition:
     attribute:
       name: Matching Attribute Value
@@ -19,10 +45,41 @@ en:
       message1: Attribute name
       message2: Attribute value
     attributes: Attributes
+  config:
+    attributes:
+      title: Attributes
+      desc: Character attributes settings.
+      progress_scale:
+        name: Attribute Progress Scale
+        desc: What the progress that characters gain or lose in their attributes is multiplied by. 1 leaves it as it is, 2 doubles it, 0 stops attributes from progressing.
   error:
     attribute_not_valid: "'{attribute}' is not a valid attribute!"
+    attribute_no_character: "{target} has no active character!"
   notification:
     attribute:
       boost: Your attribute '{attribute}' was boosted by {value} for {time}.
+      boost_permanent: Your attribute '{attribute}' was boosted by {value} permanently.
+      boosts_cleared: The boosts and leveling multipliers of your attribute '{attribute}' were removed.
+      boosts_cleared_all: All of your attribute boosts and leveling multipliers were removed.
       multiplier: Your leveling modifier for attribute '{attribute}' was set to {value} for {time}.
+      multiplier_permanent: Your leveling modifier for attribute '{attribute}' was set to {value} permanently.
       set: Your attribute '{attribute}' was set to {value}.
+  ui:
+    attributes:
+      title: Attributes
+      viewer_title: "Attributes of {name}"
+      empty: There are no attributes to show.
+      hidden: "(hidden)"
+      level: "{level} / {max}"
+      level_named: "{name} ({level})"
+      max_level: Maximum level
+      progress: "Progress: {progress} / {total}"
+      boosts: "Boosts: {list}"
+      multipliers: "Progress multipliers: {list}"
+      timed: "{value} ({time})"
+      type:
+        stat: Stats
+        skill: Skills
+        other: Other
+    tab_menu:
+      attributes: Attributes
