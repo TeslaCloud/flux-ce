@@ -1,0 +1,20 @@
+en:
+  config:
+    shared_flashlight:
+      title: Shared Flashlight
+      desc: Settings for the flashlight that every player can see.
+      enabled:
+        name: Shared Flashlight
+        desc: Whether the flashlight is a light that every player sees. When disabled, the engine flashlight is used, which only its holder sees.
+      fov:
+        name: Beam Width
+        desc: The angle of the flashlight beam, in degrees.
+      distance:
+        name: Beam Distance
+        desc: How far the flashlight shines, in units.
+      brightness:
+        name: Brightness
+        desc: How bright the flashlight is. 1 is the brightness of the engine flashlight.
+      shadows:
+        name: Shadows
+        desc: Whether the flashlight casts shadows. Shadows cost performance on busy servers.
