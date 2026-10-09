@@ -1,5 +1,5 @@
 name: Display Typing
-description: Displays when a character is typing and what exactly.
+description: Shows a bubble for nearby characters who are typing, with the kind of speech and optionally the text.
 author: TeslaCloud Studios
 depends:
   - chatbox

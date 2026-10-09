@@ -5,7 +5,21 @@ en:
       desc: Display Typing plugin configuration
       exact_message:
         name: Display Exact Message
-        desc: Display the full message that the player is currently typing.
+        desc: Let players see the text a nearby player is typing as they type it. When disabled only the typing bubble is shown and the text is not sent to other players.
+      range:
+        name: Typing Bubble Range
+        desc: Distance in units from which players see that someone is typing. Kinds of speech such as whispering and yelling scale it.
+      through_walls:
+        name: Typing Bubbles Through Walls
+        desc: Show the typing bubbles of players who are in range but behind a wall.
+  settings:
+    display_typing:
+      bubbles:
+        name: Typing bubbles
+        desc: Show a bubble for players nearby who are typing.
+      live_text:
+        name: Live typing text
+        desc: Show what players nearby are typing as they type it, if the server allows it.
   ui:
     hud:
       display_typing:

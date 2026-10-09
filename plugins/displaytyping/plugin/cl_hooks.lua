@@ -1,36 +1,31 @@
---- Client-side hooks of the Display Typing plugin: reports the text of the local player to the
--- server and draws the text of the players nearby.
+--- Client-side hooks of the Display Typing plugin: follows the chatbox of the local player,
+-- receives the typing of the players nearby from the server and draws their bubbles.
 
---- Sends the text the local player is typing in the chatbox to the server,
--- which networks it to other players.
+--- Reports the text the local player is typing in the chatbox. The chatbox runs this with
+-- an empty string when it closes, which is also what happens after a message is sent, and
+-- that ends the typing.
 -- @param new_text [String current contents of the chat text entry]
 function DisplayTyping:ChatTextChanged(new_text)
-  Cable.send('display_typing_text_changed', new_text)
+  self:report(new_text)
 end
 
---- Draws what nearby, unobstructed players are currently typing above their heads.
--- Only the last 45 characters of long texts are shown. How near a player has to be, and
--- whether they are in sight, is decided by `DisplayTyping:draw_player_typing_text`.
+--- Draws the typing bubbles, unless the HUD is hidden.
 function DisplayTyping:HUDPaint()
-  if !IsValid(PLAYER) then return end
+  if !IsValid(PLAYER) or !PLAYER:has_initialized() or !Theme.initialized() then return end
 
-  local local_pos = PLAYER:EyePos()
+  --- Flux's `ShouldHUDPaint` hook, asked again here before the typing bubbles are drawn, so
+  -- that whatever hides the HUD hides the bubbles as well. Called on the client on every HUD
+  -- paint once the local player has been initialized.
+  -- @return [Boolean Return false to hide the HUD and the typing bubbles with it]
+  if hook.Run('ShouldHUDPaint') == false then return end
 
-  for k, v in player.Iterator() do
-    if v == PLAYER then continue end
-
-    local ply_pos = v:EyePos()
-    local dist = local_pos:DistToSqr(ply_pos)
-    local text = v:get_nv('chat_text', '')
-
-    if text != '' then
-      local text_len = utf8.len(text)
-
-      if text_len >= 48 then
-        text = '...'..text:utf8sub(text_len - 45, text_len)
-      end
-
-      self:draw_player_typing_text(v, text, ply_pos, dist)
-    end
-  end
+  self:draw_bubbles()
 end
+
+Cable.receive('fl_typing_update', function(index, text, exact)
+  DisplayTyping:update_bubble(index, text, exact)
+end)
+
+Cable.receive('fl_typing_stop', function(index)
+  DisplayTyping:stop_bubble(index)
+end)
