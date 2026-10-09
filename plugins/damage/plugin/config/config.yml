@@ -1,0 +1,154 @@
+categories:
+  damage:
+    name: config.damage.title
+    description: config.damage.desc
+configs:
+  damage_scale_head:
+    name: config.damage.scale_head.name
+    description: config.damage.scale_head.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1
+  damage_scale_chest:
+    name: config.damage.scale_chest.name
+    description: config.damage.scale_chest.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1
+  damage_scale_stomach:
+    name: config.damage.scale_stomach.name
+    description: config.damage.scale_stomach.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1
+  damage_scale_arms:
+    name: config.damage.scale_arms.name
+    description: config.damage.scale_arms.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1
+  damage_scale_legs:
+    name: config.damage.scale_legs.name
+    description: config.damage.scale_legs.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1
+  damage_scale_fall:
+    name: config.damage.scale_fall.name
+    description: config.damage.scale_fall.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1
+  health_regen:
+    name: config.damage.health_regen.name
+    description: config.damage.health_regen.desc
+    category: damage
+    type: boolean
+    default_value: false
+  health_regen_amount:
+    name: config.damage.health_regen_amount.name
+    description: config.damage.health_regen_amount.desc
+    category: damage
+    type: number
+    min_value: 1
+    max_value: 100
+    default_value: 2
+  health_regen_interval:
+    name: config.damage.health_regen_interval.name
+    description: config.damage.health_regen_interval.desc
+    category: damage
+    type: number
+    min_value: 1
+    max_value: 600
+    default_value: 10
+  health_regen_fast_interval:
+    name: config.damage.health_regen_fast_interval.name
+    description: config.damage.health_regen_fast_interval.desc
+    category: damage
+    type: number
+    min_value: 1
+    max_value: 600
+    default_value: 5
+  health_regen_fast_share:
+    name: config.damage.health_regen_fast_share.name
+    description: config.damage.health_regen_fast_share.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 50
+  drowning:
+    name: config.damage.drowning.name
+    description: config.damage.drowning.desc
+    category: damage
+    type: boolean
+    default_value: false
+  drowning_time:
+    name: config.damage.drowning_time.name
+    description: config.damage.drowning_time.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 600
+    default_value: 20
+  drowning_damage:
+    name: config.damage.drowning_damage.name
+    description: config.damage.drowning_damage.desc
+    category: damage
+    type: number
+    min_value: 1
+    max_value: 100
+    default_value: 7
+  drowning_interval:
+    name: config.damage.drowning_interval.name
+    description: config.damage.drowning_interval.desc
+    category: damage
+    type: number
+    min_value: 1
+    max_value: 60
+    default_value: 1
+  damage_view_punch:
+    name: config.damage.view_punch.name
+    description: config.damage.view_punch.desc
+    category: damage
+    type: boolean
+    default_value: false
+  damage_view_punch_scale:
+    name: config.damage.view_punch_scale.name
+    description: config.damage.view_punch_scale.desc
+    category: damage
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 1
+  log_damage:
+    name: config.damage.log_damage.name
+    description: config.damage.log_damage.desc
+    category: damage
+    type: boolean
+    default_value: false
+  log_kills:
+    name: config.damage.log_kills.name
+    description: config.damage.log_kills.desc
+    category: damage
+    type: boolean
+    default_value: false

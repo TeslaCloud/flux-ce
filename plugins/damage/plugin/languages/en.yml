@@ -1,0 +1,62 @@
+en:
+  config:
+    damage:
+      title: Damage
+      desc: Damage multipliers, health regeneration, drowning and damage logs.
+      scale_head:
+        name: Head Damage Multiplier
+        desc: How much the damage of a hit to the head is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+      scale_chest:
+        name: Chest Damage Multiplier
+        desc: How much the damage of a hit to the chest is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+      scale_stomach:
+        name: Stomach Damage Multiplier
+        desc: How much the damage of a hit to the stomach is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+      scale_arms:
+        name: Arm Damage Multiplier
+        desc: How much the damage of a hit to an arm is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+      scale_legs:
+        name: Leg Damage Multiplier
+        desc: How much the damage of a hit to a leg is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+      scale_fall:
+        name: Fall Damage Multiplier
+        desc: How much fall damage is multiplied by. 1 changes nothing, 0 turns fall damage off.
+      health_regen:
+        name: Health Regeneration
+        desc: Whether hurt players slowly regain health over time.
+      health_regen_amount:
+        name: Health Regeneration Amount
+        desc: How much health a player regains at once.
+      health_regen_interval:
+        name: Health Regeneration Interval
+        desc: How many seconds pass between two bits of regained health. The wait starts over when the player takes damage.
+      health_regen_fast_interval:
+        name: Fast Health Regeneration Interval
+        desc: How many seconds pass between two bits of regained health while the health of the player is at or above the fast regeneration threshold.
+      health_regen_fast_share:
+        name: Fast Health Regeneration Threshold
+        desc: The percentage of maximum health at or above which the fast interval is used.
+      drowning:
+        name: Drowning
+        desc: Whether players who stay under water for too long take damage until they surface.
+      drowning_time:
+        name: Breath Time
+        desc: How many seconds a player can stay completely under water before they start to drown.
+      drowning_damage:
+        name: Drowning Damage
+        desc: How much damage a drowning player takes at once.
+      drowning_interval:
+        name: Drowning Damage Interval
+        desc: How many seconds pass between two bits of drowning damage.
+      view_punch:
+        name: Damage View Punch
+        desc: Whether the view of a player is jolted when they take damage.
+      view_punch_scale:
+        name: Damage View Punch Scale
+        desc: How many degrees the view is jolted by per point of damage, at most. A single hit never jolts it by more than 30 degrees.
+      log_damage:
+        name: Log Damage
+        desc: Whether the damage players take is written to the log.
+      log_kills:
+        name: Log Kills
+        desc: Whether the deaths of players are written to the log.
