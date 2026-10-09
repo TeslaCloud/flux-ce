@@ -1,0 +1,104 @@
+en:
+  config:
+    vendors:
+      title: Vendors
+      desc: Settings of the NPC vendors.
+      buy_rate:
+        name: Default buy-back rate
+        desc: "What percent of an item's cost a newly placed vendor pays for it."
+      talk:
+        name: Vendors talk
+        desc: Whether vendors say their phrases to customers in the chat.
+  error:
+    vendor:
+      equipped: Unequip this item before you sell it.
+      not_empty: Empty this item before you sell it.
+      cannot_sell: You cannot sell this item.
+      cannot_buy: You cannot buy this item.
+      not_vendor: This is not a vendor!
+      invalid_model: This model does not exist, so the vendor keeps the one it had.
+  notification:
+    vendor:
+      bought: "You bought {item} for {price} {currency}."
+      sold: "You sold {item} for {price} {currency}."
+      created: You have placed a vendor.
+      saved: You have saved the vendor.
+      removed: You have removed the vendor.
+      picked: Now press Reload where the vendor should stand.
+      moved: You have moved the vendor.
+  tool:
+    vendor:
+      name: Vendor Tool
+      desc: Place, edit, move and remove NPC vendors.
+      "0": "Left Click: Place or edit a vendor, Right Click: Remove a vendor, Reload: Move a vendor."
+      model: Model of new vendors
+  ui:
+    vendor:
+      title: Vendor
+      sells: For sale
+      sells_nothing: This vendor has nothing for sale.
+      buys: Your items
+      buys_nothing: You have nothing this vendor would buy.
+      buy: Buy
+      sell: Sell
+      stock: "In stock: {count}"
+      sold_out: Sold out
+      owned: "You have: {count}"
+      your_money: Your money
+      vendor_money: "Vendor's money"
+      editor:
+        title: Vendor editor
+        save: Save
+        remove: Remove vendor
+        remove_message: Are you sure you want to remove this vendor?
+        general: General
+        name: Name
+        description: Description
+        model: Model
+        animation: Animation
+        animation_auto: Automatic
+        animation_help: "The list has the animations of the current model. Save the vendor and open the editor again after you change the model."
+        currency: Currency
+        money: Money pool
+        money_help: "How much money the vendor has: it grows when the vendor sells and shrinks when it buys. Leave it empty for a vendor that never runs out of money."
+        buy_rate: "Buy-back rate, %"
+        buy_rate_help: "What percent of an item's cost the vendor pays for it, unless a buying price is set for the item."
+        items: Items
+        search: Search by name or ID...
+        items_help: "Click an item to choose whether the vendor sells or buys it, at what price and with how much stock. Without a price of its own an item is sold for its cost and bought for its cost at the buy-back rate."
+        item: Item
+        sell_price: Sells for
+        stock: Stock
+        buy_price: Buys for
+        unlimited: Unlimited
+        by_default: "(default)"
+        start_selling: Sell this item
+        stop_selling: Stop selling
+        set_sell_price: Set the selling price...
+        set_stock: Set the stock...
+        start_buying: Buy this item
+        stop_buying: Stop buying
+        set_buy_price: Set the buying price...
+        price_message: Enter the price. Leave it empty to use the default price.
+        stock_message: Enter how many the vendor has. Leave it empty for unlimited stock.
+        access: Access
+        access_help: "Leave everything unchecked to let everyone trade. Otherwise a customer needs one of the checked factions or classes."
+        phrases:
+          title: Phrases
+          help: What the vendor says to its customer. Leave a phrase empty to use the default one.
+          greeting: When trading starts
+          refuse: When the customer may not trade
+          no_money: When the customer cannot afford an item
+          no_stock: When an item is sold out
+          broke: When the vendor cannot afford an item
+          thanks: When a customer who has traded leaves
+  vendor:
+    default_name: Vendor
+    says: says
+    phrase:
+      greeting: How can I help you?
+      refuse: I cannot trade with you.
+      no_money: You do not have enough money for that.
+      no_stock: I am out of those.
+      broke: I cannot afford that.
+      thanks: Thank you, come again.

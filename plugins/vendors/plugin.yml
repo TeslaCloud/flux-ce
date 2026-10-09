@@ -1,0 +1,6 @@
+name: Vendors
+description: Adds NPC vendors that sell items to players and buy items from them.
+author: TeslaCloud Studios
+depends:
+  - inventory
+  - currencies
