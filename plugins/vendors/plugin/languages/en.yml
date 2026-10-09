@@ -6,9 +6,6 @@ en:
       buy_rate:
         name: Default buy-back rate
         desc: "What percent of an item's cost a newly placed vendor pays for it."
-      talk:
-        name: Vendors talk
-        desc: Whether vendors say their phrases to customers in the chat.
   error:
     vendor:
       equipped: Unequip this item before you sell it.

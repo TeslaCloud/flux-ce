@@ -1,5 +1,8 @@
 --- Server side of the Doors plugin: saves and loads the properties, conditions and ownership
--- of doors, locks doors and applies what the door menu sends.
+-- of doors, locks doors, tells players what they may know about the ownership of a door and
+-- applies what the door menu sends.
+
+Cable.check_networked_string('fl_door_info')
 
 --- Checks whether a player is close enough to a door to use its menu, lock it, trade it,
 -- manage it or edit it: within `Doors.use_distance` of it.
@@ -142,6 +145,70 @@ function Doors:player_lock_door(actor, entity, lock, move)
   })
 end
 
+--- Collects what a player is told about the ownership of a door when they open its menu.
+-- @param actor [Player]
+-- @param entity [Entity the door]
+-- @return [Map ownable (Boolean), owned (Boolean), level (Number access level of the
+--   player), price (Number) and currency (String, may be nil) of the door, group_size
+--   (Number of doors in its group); owner_name (String) for those who manage the door and
+--   for staff; text (String) and access (List of Maps with id, name and level, sorted by
+--   name) for those who manage the door; refund (Number) and refund_currency (String, may
+--   be nil) for the owner]
+function Doors:get_menu_info(actor, entity)
+  local root = self:get_root(entity)
+  local state = self:get_state(root)
+  local owner = state.owner
+  local level = self:get_access_level(actor, root)
+  local price, currency = self:get_price(root)
+  local info = {
+    ownable = state.ownable or false,
+    owned = owner != nil,
+    level = level,
+    price = price,
+    currency = currency,
+    group_size = #self:get_group(root)
+  }
+
+  if owner and (level >= DOOR_ACCESS_MANAGE or actor:can('manage_doors')) then
+    info.owner_name = owner.name
+  end
+
+  if level >= DOOR_ACCESS_MANAGE then
+    local access = {}
+
+    for k, v in pairs(state.access or {}) do
+      table.insert(access, { id = k, name = v.name, level = v.level })
+    end
+
+    table.sort(access, function(a, b)
+      if a.name == b.name then
+        return a.id < b.id
+      end
+
+      return a.name < b.name
+    end)
+
+    info.text = state.text or ''
+    info.access = access
+  end
+
+  if level >= DOOR_ACCESS_OWNER then
+    info.refund, info.refund_currency = self:get_refund(root)
+  end
+
+  return info
+end
+
+--- Sends a player what `Doors:get_menu_info` returns for a door, so that their door
+-- management menu shows the current state.
+-- @param actor [Player]
+-- @param entity [Entity the door]
+function Doors:send_info(actor, entity)
+  if !IsValid(actor) then return end
+
+  Cable.send(actor, 'fl_door_info', entity, self:get_menu_info(actor, entity))
+end
+
 Cable.receive('fl_send_door_data', function(actor, entity, id, data)
   if actor:can('manage_doors') and IsValid(entity) and entity:is_door() and Doors:is_in_reach(actor, entity) then
     local property = Doors.properties[id]
@@ -164,5 +231,97 @@ Cable.receive('fl_send_door_conditions', function(actor, entity, conditions)
   if actor:can('manage_doors') and IsValid(entity) and entity:is_door() and istable(conditions)
   and Doors:is_in_reach(actor, entity) then
     entity.conditions = conditions
+  end
+end)
+
+--- Checks a request that the door menu of a player has sent: the entity has to be a door
+-- within `Doors.use_distance` of the living player, and a player may send a request only
+-- every 0.3 seconds. The player is told what is wrong.
+-- @param actor [Player]
+-- @param entity [Any what the client sent as the door]
+-- @return [Boolean whether the request may be handled]
+local function accept_request(actor, entity)
+  if !isentity(entity) or !IsValid(entity) or !entity:is_door() then return false end
+
+  if !actor:Alive() then
+    actor:notify('error.cant_now')
+
+    return false
+  end
+
+  local cur_time = CurTime()
+
+  if actor.next_door_request and actor.next_door_request > cur_time then
+    actor:notify('error.wait')
+
+    return false
+  end
+
+  if !Doors:is_in_reach(actor, entity) then
+    actor:notify('error.door.too_far')
+
+    return false
+  end
+
+  actor.next_door_request = cur_time + 0.3
+
+  return true
+end
+
+Cable.receive('fl_door_buy', function(actor, entity)
+  if !accept_request(actor, entity) then return end
+
+  local success, reason, arguments = Doors:buy(actor, entity)
+
+  if !success then
+    actor:notify(reason, arguments)
+  end
+end)
+
+Cable.receive('fl_door_sell', function(actor, entity)
+  if !accept_request(actor, entity) then return end
+
+  local success, reason, arguments = Doors:sell(actor, entity)
+
+  if !success then
+    actor:notify(reason, arguments)
+  end
+end)
+
+Cable.receive('fl_door_set_text', function(actor, entity, text)
+  if !accept_request(actor, entity) then return end
+
+  local success, reason = Doors:change_text(actor, entity, text)
+
+  if success then
+    actor:notify('notification.door.text_set')
+  else
+    actor:notify(reason)
+  end
+
+  Doors:send_info(actor, entity)
+end)
+
+Cable.receive('fl_door_set_access', function(actor, entity, character_id, level)
+  if !accept_request(actor, entity) then return end
+
+  local success, reason, arguments = Doors:change_access(actor, entity, character_id, level)
+
+  if !success then
+    actor:notify(reason, arguments)
+  end
+
+  Doors:send_info(actor, entity)
+end)
+
+Cable.receive('fl_door_evict', function(actor, entity)
+  if !actor:can('manage_doors') or !accept_request(actor, entity) then return end
+
+  if Doors:evict(entity) then
+    actor:notify('notification.door.evict_done')
+
+    Doors:save()
+  else
+    actor:notify('error.door.not_owned')
   end
 end)

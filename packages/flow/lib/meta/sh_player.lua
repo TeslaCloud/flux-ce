@@ -84,16 +84,46 @@ function player_meta:SetModel(path)
   return self:flSetModel(path)
 end
 
---- Returns the classes of all of the weapons the player has.
--- @return [List<String> weapon classes]
-function player_meta:get_weapons_list()
+--- Returns the weapons the player has: their classes alone, or together with what is
+-- loaded in them and the reserve ammo of the player, in the shape that `Player:give_weapons`
+-- takes to give everything back.
+-- ```
+-- local weapons, ammo = actor:get_weapons_list(true)
+-- actor:StripWeapons()
+-- actor:StripAmmo()
+-- actor:give_weapons(weapons, ammo)
+-- ```
+-- @param with_ammo=false [Boolean true to list the clips of the weapons and the reserve
+--   ammo of the player as well]
+-- @return [List<String> weapon classes; when with_ammo is true, List<Map> tables with the
+--   class, clip1 and clip2 fields instead, followed by Map the reserve ammo of the player,
+--   a count by ammo type name]
+function player_meta:get_weapons_list(with_ammo)
   local weapons_table = {}
 
   for k, v in pairs(self:GetWeapons()) do
-    table.insert(weapons_table, v:GetClass())
+    if with_ammo then
+      table.insert(weapons_table, { class = v:GetClass(), clip1 = v:Clip1(), clip2 = v:Clip2() })
+    else
+      table.insert(weapons_table, v:GetClass())
+    end
   end
 
-  return weapons_table
+  if !with_ammo then
+    return weapons_table
+  end
+
+  local ammo = {}
+
+  for ammo_id, amount in pairs(self:GetAmmo()) do
+    local ammo_name = game.GetAmmoName(ammo_id)
+
+    if ammo_name then
+      ammo[ammo_name] = amount
+    end
+  end
+
+  return weapons_table, ammo
 end
 
 if CLIENT then

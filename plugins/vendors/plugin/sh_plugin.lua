@@ -36,7 +36,13 @@ Vendors.default_model = 'models/humans/group01/male_02.mdl'
 Vendors.phrases = { 'greeting', 'refuse', 'no_money', 'no_stock', 'broke', 'thanks' }
 
 require_relative 'cl_hooks'
-require_relative 'sv_plugin'
+require_relative 'sv_data'
+require_relative 'sv_pricing'
+require_relative 'sv_talk'
+require_relative 'sv_sessions'
+require_relative 'sv_vendors'
+require_relative 'sv_editor'
+require_relative 'sv_trade'
 require_relative 'sv_hooks'
 
 --- Registers the 'manage_vendors' level design permission.

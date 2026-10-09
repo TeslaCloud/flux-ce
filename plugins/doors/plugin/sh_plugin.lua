@@ -171,9 +171,12 @@ end
 require_relative 'sh_config'
 require_relative 'cl_hooks'
 require_relative 'cl_plugin'
+require_relative 'sv_ownership'
+require_relative 'sv_access'
+require_relative 'sv_trade'
+require_relative 'sv_persistence'
 require_relative 'sv_hooks'
 require_relative 'sv_plugin'
-require_relative 'sv_ownership'
 
 --- Registers the 'manage_doors' level design permission.
 function Doors:RegisterPermissions()

@@ -1,0 +1,26 @@
+categories:
+  weapon_raise:
+    name: config.weapon_raise.title
+    description: config.weapon_raise.desc
+configs:
+  weapon_raise_enabled:
+    name: config.weapon_raise.enabled.name
+    description: config.weapon_raise.enabled.desc
+    category: weapon_raise
+    type: boolean
+    default_value: true
+  sprint_lowers_weapon:
+    name: config.weapon_raise.sprint_lowers_weapon.name
+    description: config.weapon_raise.sprint_lowers_weapon.desc
+    category: weapon_raise
+    type: boolean
+    default_value: false
+  weapon_raise_fire_delay:
+    name: config.weapon_raise.fire_delay.name
+    description: config.weapon_raise.fire_delay.desc
+    category: weapon_raise
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 1
+    default_value: 0

@@ -8,9 +8,9 @@
 -- * `state`: the RAGDOLL_ state the ragdoll was last given.
 -- * `fallen`: true if the ragdoll took over the body of a living player (they were frozen,
 --   hidden and stripped of their weapons), false if it is only a corpse.
--- * `eye_angles`, `weapons` (a list of tables with `class`, `clip1` and `clip2`), `weapon`
---   (class of the weapon they held), `no_draw` and `not_solid`: what the player gets back
---   when they get up.
+-- * `eye_angles`, `weapons` (their weapons with clips, as `Player:get_weapons_list` lists
+--   them with ammo), `weapon` (class of the weapon they held), `no_draw` and `not_solid`:
+--   what the player gets back when they get up.
 -- * `immunity`: CurTime() until which the ragdoll ignores damage that no player has dealt.
 -- * `getup_end`: CurTime() at which the player gets up by themselves, nil without a timer.
 -- * `getup_paused`: seconds left on a paused timer, nil if it is not paused.
@@ -22,9 +22,8 @@
 -- time at which a running get up timer ends is networked to everyone as the
 -- 'ragdoll_getup_end' variable of the player, which `Player:get_knockout_remaining` reads.
 --
--- The weapons of a fallen player are stored with their clips by the local `store_weapons`
--- and `restore_weapons`, as the `Player:get_weapons_list` and `Player:give_weapons` helpers
--- of Flux carry the classes only.
+-- Only the clips of the weapons of a fallen player are stored: `Player:StripWeapons` leaves
+-- the reserve ammo on the player, so the weapons are given back without any.
 
 local player_meta = FindMetaTable('Player')
 local burn_time = 8
@@ -41,38 +40,6 @@ local function limit_force(force)
   end
 
   return force
-end
-
---- Lists the weapons a player carries together with what is loaded in them.
--- @param target [Player]
--- @return [List<Map> tables with the class, clip1 and clip2 fields]
-local function store_weapons(target)
-  local stored = {}
-
-  for k, v in ipairs(target:GetWeapons()) do
-    table.insert(stored, { class = v:GetClass(), clip1 = v:Clip1(), clip2 = v:Clip2() })
-  end
-
-  return stored
-end
-
---- Gives a player the weapons they had when they fell, loaded as they were, and selects
--- the one they held.
--- @param target [Player]
--- @param data [Map ragdoll data of the player]
-local function restore_weapons(target, data)
-  for k, v in ipairs(data.weapons or {}) do
-    local weapon = target:Give(v.class, true)
-
-    if IsValid(weapon) then
-      weapon:SetClip1(v.clip1)
-      weapon:SetClip2(v.clip2)
-    end
-  end
-
-  if data.weapon and target:HasWeapon(data.weapon) then
-    target:SelectWeapon(data.weapon)
-  end
 end
 
 --- Removes a ragdoll that no longer belongs to a player, right away or once its decay time
@@ -147,7 +114,11 @@ local function stand_up(target, data, ragdoll, reset)
     target:SetEyeAngles(data.eye_angles)
   end
 
-  restore_weapons(target, data)
+  target:give_weapons(data.weapons or {}, true)
+
+  if data.weapon and target:HasWeapon(data.weapon) then
+    target:SelectWeapon(data.weapon)
+  end
 
   if !data.not_solid and target:stuck() then
     target:DropToFloor()
@@ -362,7 +333,7 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
     local grounded = in_vehicle or self:IsOnGround()
 
     data.eye_angles = self:EyeAngles()
-    data.weapons = store_weapons(self)
+    data.weapons = self:get_weapons_list(true)
     data.weapon = IsValid(active) and active:GetClass() or nil
     data.no_draw = self:GetNoDraw()
     data.not_solid = !self:IsSolid()

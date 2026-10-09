@@ -11,9 +11,3 @@ configs:
     min_value: 0
     max_value: 100
     default_value: 50
-  vendor_talk:
-    name: config.vendors.talk.name
-    description: config.vendors.talk.desc
-    category: vendors
-    type: boolean
-    default_value: true

@@ -1,0 +1,14 @@
+en:
+  config:
+    pickup:
+      title: Pickup Objects
+      desc: Carrying, throwing and dragging objects with the hands.
+      max_mass:
+        name: Max Carried Mass
+        desc: The heaviest object, in kilograms, a player can pick up and carry with their hands. Plugins can change the limit per player.
+      throw_force:
+        name: Throw Force
+        desc: How hard a carried object is thrown. Set to 0 to disable throwing.
+      drag_ragdolls:
+        name: Drag Ragdolls
+        desc: Whether a ragdoll is dragged along the ground by the grabbed limb instead of being carried, whatever it weighs.

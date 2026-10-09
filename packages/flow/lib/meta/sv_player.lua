@@ -301,11 +301,45 @@ function player_meta:unstuck(filter)
   end
 end
 
---- Gives several weapons to the player.
--- @param weapons_table [List<String> weapon classes]
--- @param no_ammo=false [Boolean do not give the default ammo with the weapons]
-function player_meta:give_weapons(weapons_table, no_ammo)
+--- Gives several weapons to the player: the classes that `Player:get_weapons_list` returns,
+-- or its tables with clips, which the weapons are loaded with once they are given. The
+-- weapons come with their default ammo unless the second argument says otherwise.
+-- ```
+-- actor:give_weapons({ 'weapon_pistol', 'weapon_crowbar' })
+-- actor:give_weapons(weapons, true)
+-- actor:give_weapons(weapons, ammo)
+-- ```
+-- @param weapons_table [List<String/Map> weapon classes, or tables with the class, clip1 and
+--   clip2 fields as `Player:get_weapons_list` lists them with ammo; a clip that is nil is
+--   left as the weapon spawns with it]
+-- @param ammo=nil [Boolean/Map what reserve ammo comes with the weapons: nil for the default
+--   ammo of every weapon, true for none, or counts by ammo type name as
+--   `Player:get_weapons_list` returns them, which are set on the player once the weapons are
+--   given and replace what they hold of those types]
+function player_meta:give_weapons(weapons_table, ammo)
+  local no_ammo = ammo != nil and ammo != false
+
   for k, v in pairs(weapons_table) do
-    self:Give(v, no_ammo)
+    if istable(v) then
+      local weapon = self:Give(v.class, no_ammo)
+
+      if IsValid(weapon) then
+        if isnumber(v.clip1) then
+          weapon:SetClip1(v.clip1)
+        end
+
+        if isnumber(v.clip2) then
+          weapon:SetClip2(v.clip2)
+        end
+      end
+    else
+      self:Give(v, no_ammo)
+    end
+  end
+
+  if istable(ammo) then
+    for ammo_name, amount in pairs(ammo) do
+      self:SetAmmo(amount, ammo_name)
+    end
   end
 end

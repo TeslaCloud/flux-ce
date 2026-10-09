@@ -30,12 +30,6 @@ en:
       remove_staff:
         name: Remove abandoned staff entities
         desc: Whether or not the entities of staff who bypass prop protection are removed after they leave as well.
-      cost:
-        name: Prop cost
-        desc: How much of the default currency it costs to spawn a prop. Set to 0 to make props free.
-      refund_time:
-        name: Prop refund time
-        desc: For how long after a prop is spawned its cost is given back when the prop is removed (in seconds). Set to 0 to never refund.
       prop_kill:
         name: Prop kill protection
         desc: Whether or not players are protected from the impacts of props that are held with the physics gun, have just been dropped by it or have just been spawned.
@@ -46,11 +40,8 @@ en:
     prop_protection:
       not_yours: This does not belong to you!
       protected: This entity is protected!
-      cannot_afford: "You need {value} {currency} to spawn this prop!"
   notification:
     prop_protection:
-      charged: "You paid {value} {currency} for the prop."
-      refunded: "You got {value} {currency} back for the removed prop."
       returned: "Your entities are yours again ({count})."
   settings:
     prop_protection:

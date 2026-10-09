@@ -1,0 +1,14 @@
+en:
+  config:
+    weapon_raise:
+      title: Weapon Raising
+      desc: Settings for lowering and raising weapons.
+      enabled:
+        name: Weapon Raising System
+        desc: Whether weapons stay lowered until the player raises them by holding the reload key. When disabled, weapons are raised unless something else keeps them lowered.
+      sprint_lowers_weapon:
+        name: Sprinting Lowers Weapon
+        desc: Whether the weapon of a running player is lowered and cannot fire until they slow down.
+      fire_delay:
+        name: Fire Delay After Raising
+        desc: How many seconds a weapon cannot fire for after it has been raised. Set to 0 to disable.

@@ -1,7 +1,7 @@
 --- Server-side hooks of the Prop Protection plugin: the checks for freezing and unfreezing
 -- with the physics gun, the ownership of everything that comes out of the spawn menu, the
--- cost of props, the protection of players from props, and the removal and return of the
--- entities of players who disconnect or switch characters.
+-- protection of players from props, and the removal and return of the entities of players
+-- who disconnect or switch characters.
 
 --- Refuses to let a player freeze an entity that the rules protect from them. Nothing is
 -- returned for everything else, so that the handlers of other plugins may still refuse and
@@ -67,34 +67,11 @@ function PropProtection:PhysgunDrop(actor, entity)
   end
 end
 
---- Keeps a player who cannot afford the cost of a prop from spawning it.
--- @param actor [Player]
--- @param model [String model of the prop]
--- @return [Boolean false if the player cannot pay for the prop, nothing otherwise]
-function PropProtection:FLPlayerSpawnProp(actor, model)
-  local cost, currency, currency_data = self:get_prop_cost(actor, model)
-
-  if cost > 0 and !actor:has_money(currency, cost) then
-    actor:notify('error.prop_protection.cannot_afford', { value = cost, currency = currency_data.name })
-
-    return false
-  end
-end
-
---- Charges the player for the prop they have spawned, removing it if they cannot pay after
--- all, and makes the prop theirs.
+--- Makes the prop a player has spawned theirs.
 -- @param actor [Player]
 -- @param model [String model of the prop]
 -- @param entity [Entity the prop]
 function PropProtection:PlayerSpawnedProp(actor, model, entity)
-  if !IsValid(actor) or !IsValid(entity) then return end
-
-  if !self:charge_prop_cost(actor, model, entity) then
-    entity:Remove()
-
-    return
-  end
-
   self:entity_spawned(actor, entity)
 end
 
@@ -173,11 +150,9 @@ function PropProtection:EntityTakeDamage(target, damage_info)
   return true
 end
 
---- Refunds a prop that is removed within its refund time and forgets what the plugin kept
--- about the removed entity.
+--- Forgets what the plugin kept about an entity that is being removed.
 -- @param entity [Entity]
 function PropProtection:EntityRemoved(entity)
-  self:refund_prop_cost(entity)
   self:forget_entity(entity)
 end
 

@@ -18,12 +18,10 @@
 -- instead. The entities of staff who are exempt from the rules stay where they are, unless
 -- the `remove_staff_entities` config says otherwise.
 --
--- The plugin also charges for spawned props through the Currencies plugin when the
--- `prop_cost` config is set, refunds a prop that is removed soon after, and keeps players
--- from being hurt by props that are held with the physics gun, have just been dropped by it
--- or have just been spawned (`prop_kill_protection`). Addons that speak the Common Prop
--- Protection Interface find the `CPPI` table and the `CPPI` entity and player methods in
--- lib/meta/sh_entity.lua.
+-- The plugin also keeps players from being hurt by props that are held with the physics
+-- gun, have just been dropped by it or have just been spawned (`prop_kill_protection`).
+-- Addons that speak the Common Prop Protection Interface find the `CPPI` table and the
+-- `CPPI` entity and player methods in lib/meta/sh_entity.lua.
 --
 -- Rules and the configs that switch them:
 -- ```

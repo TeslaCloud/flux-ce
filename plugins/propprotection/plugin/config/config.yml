@@ -59,22 +59,6 @@ configs:
     category: prop_protection
     type: boolean
     default_value: false
-  prop_cost:
-    name: config.prop_protection.cost.name
-    description: config.prop_protection.cost.desc
-    category: prop_protection
-    type: number
-    min_value: 0
-    max_value: 100000
-    default_value: 0
-  prop_refund_time:
-    name: config.prop_protection.refund_time.name
-    description: config.prop_protection.refund_time.desc
-    category: prop_protection
-    type: number
-    min_value: 0
-    max_value: 600
-    default_value: 10
   prop_kill_protection:
     name: config.prop_protection.prop_kill.name
     description: config.prop_protection.prop_kill.desc

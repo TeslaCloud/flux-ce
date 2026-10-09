@@ -1,0 +1,24 @@
+--- Hints shows the player a random gameplay hint as a notification every five minutes.
+-- Plugins register their own hints with `Hints:add`, optionally with a color, a sound and a
+-- callback that decides whether the hint may be shown at the moment; `Hints:remove` takes a
+-- hint out again, `Hints:find` looks one up and `Hints:all` lists them. A plugin that cannot
+-- be sure that this one is loaded registers its hints from the `RegisterHints` hook, which
+-- only this plugin runs. The plugin registers a few general hints itself.
+--
+-- Once a minute the plugin checks whether the interval has passed since the last hint. If it
+-- has, a hint is picked at random among those that may be shown right now: the ones whose
+-- callback allows them and which no `ShouldDisplayHint` handler holds back. When none may be
+-- shown, the plugin tries again a minute later. The same hint is not shown twice in a row
+-- as long as there is another one to show.
+--
+-- The interval is the `default_interval` constant at the top of cl_plugin.lua, in seconds;
+-- a schema or a plugin changes it with `Hints:set_interval`, and an interval of zero turns
+-- the automatic hints off. Because the check runs once a minute, the interval is in effect
+-- rounded up to whole minutes.
+--
+-- With the Settings plugin loaded the player can turn the hints off with the 'show_hints'
+-- setting. `Hints:display` shows a hint regardless of all of the above. The whole plugin,
+-- the `Hints` global included, lives on the client.
+-- @module [Hints]
+
+require_relative 'cl_plugin'
