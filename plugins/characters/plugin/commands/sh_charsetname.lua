@@ -9,13 +9,20 @@ CMD.arguments = 2
 CMD.player_arg = 1
 CMD.alias = 'setname'
 
---- Sets the name of the first target's character and notifies staff.
+--- Sets the name of the first target's character and notifies staff. The name is refused
+-- when another character already has it.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param ... [Vararg words of the new name, joined with spaces]
 function CMD:on_run(actor, targets, ...)
   local new_name = table.concat({ ... }, ' ')
   local target = targets[1]
+
+  if Characters.is_name_taken(new_name, target:get_character()) then
+    Flux.Player:notify(actor, 'error.character.name_taken', { name = new_name })
+
+    return
+  end
 
   self:notify_staff('command.charsetname.message', {
     player = get_player_name(actor),

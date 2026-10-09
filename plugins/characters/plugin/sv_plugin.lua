@@ -1,10 +1,12 @@
 --- Server-side player methods of the Characters plugin: selecting the active character,
--- setting its fields and saving it.
+-- setting its fields and generic data and saving it.
 
 local player_meta = FindMetaTable('Player')
 
 --- Makes one of the player's characters their active one. Runs OnCharacterChange if another
 -- character was active, networks the basic character data and runs OnActiveCharacterSet.
+-- Nothing is checked here: the requests of players go through `Characters.can_use` first,
+-- which is what keeps banned characters from being loaded.
 -- @param id [Number/String character ID; nothing happens if the player has no such character]
 function player_meta:set_active_character(id)
   id = tonumber(id)
@@ -26,6 +28,7 @@ function player_meta:set_active_character(id)
     hook.Run('OnCharacterChange', self, real_character, self:get_character())
   end
 
+  self.vitals_restored = false
   self:set_nv('active_character', tonumber(real_character.id))
   self.current_character = real_character
 
@@ -52,6 +55,27 @@ function player_meta:set_character_var(id, val)
   if isstring(id) then
     self:set_nv(id, val)
     self:get_character()[id] = val
+  end
+end
+
+--- Sets a value in the generic data of the player's active character. Unlike
+-- `Player:set_character_var`, the value needs no column of its own and is not networked to
+-- every player: it is saved with the character the next time the character is saved, and
+-- sent to the player themselves only if the key is registered with
+-- `Characters.network_data`.
+-- ```
+-- target:set_character_data('spawn_position', target:GetPos())
+-- ```
+-- @param key [String nothing happens when it is not a string]
+-- @param value [Any anything serializable, so no functions; nil removes the key]
+-- @see [Characters.set_custom_data]
+function player_meta:set_character_data(key, value)
+  if !self:is_character_loaded() then return end
+
+  local character = self:get_character()
+
+  if character then
+    Characters.set_custom_data(character, key, value)
   end
 end
 

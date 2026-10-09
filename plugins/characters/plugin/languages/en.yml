@@ -16,6 +16,17 @@ en:
       description: "Set a character's gender: male, female or no_gender."
       syntax: <target> <new gender>
       message: "{player} has set {target}'s gender to {gender}."
+    charban:
+      description: "Ban a player's active character."
+      syntax: <target>
+      message: "{player} has banned the character {target}."
+    charunban:
+      description: "Unban a character by its name, even if its player is offline."
+      syntax: <character name>
+      message: "{player} has unbanned the character {target}."
+    charphysdesc:
+      description: "Change your character's physical description."
+      syntax: "[new description]"
   condition:
     character:
       name: Specific Character
@@ -38,13 +49,32 @@ en:
       max_desc_len:
         name: Maximum Character Description Length
         desc: "The maximum length of the character's physical description."
+      limit:
+        name: Character Limit
+        desc: "The maximum number of characters a player may have."
   error:
     invalid_gender: "Invalid gender."
+    character:
+      invalid: "You do not have such a character."
+      banned: "This character is banned."
+      already_active: "You are already playing this character."
+      cannot_use: "You cannot load this character right now."
+      cannot_switch: "You cannot switch characters right now."
+      cannot_delete: "You cannot delete this character."
+      switch_dead: "You cannot switch characters while you are dead."
+      switch_ragdolled: "You cannot switch characters while you are on the ground."
+      delete_active: "You cannot delete the character you are playing."
+      delete_banned: "You cannot delete a banned character."
+      name_taken: "The name '{name}' is already taken by another character."
+      nobody_to_ban: "None of these players has a character that could be banned."
+      not_found: "There is no character named '{name}'."
+      not_banned: "The character '{name}' is not banned."
   notification:
     name_changed: "Your character's name was changed to {name}."
     model_changed: "Your character's model was changed to {model}."
     desc_changed: "Your character's description was changed to {desc}."
     gender_changed: "Your character's gender was changed to {gender}."
+    character_banned: "Your character {name} has been banned. Pick another character."
   permission:
     categories:
       character_management: Character Management
@@ -81,6 +111,9 @@ en:
       confirm_msg: Are you sure that you want to create this character?
       delete_confirm: Delete Character
       delete_confirm_msg: "Please type in your character's name to confirm deletion: {name}"
+      banned: Banned
+      limit: "You cannot have more than {limit} characters."
+      name_taken: "Another character already has this name."
       name_invalid: Invalid name.
       name_len: "Your character's name must be between {min} and {max} characters long."
       desc_invalid: Invalid physical description.
@@ -93,5 +126,9 @@ en:
         critical: "The server may be experiencing connection issues, please wait..."
         lag: "The request is taking a while, hold up..."
         record: "ActiveRecord screwed up again, try reconnecting or restarting your server..."
+    char_desc:
+      title: Physical Description
+      message: "Describe how your character looks, in {min} to {max} characters."
+      confirm: Change
     tab_menu:
       main_menu: Main Menu

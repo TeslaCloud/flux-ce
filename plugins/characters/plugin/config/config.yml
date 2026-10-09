@@ -35,3 +35,11 @@ configs:
     min_value: 1
     max_value: 256
     default_value: 256
+  character_limit:
+    name: config.character.limit.name
+    description: config.character.limit.desc
+    category: character
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 5

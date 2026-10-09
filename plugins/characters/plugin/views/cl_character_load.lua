@@ -3,7 +3,7 @@
 
 --- The character loading screen (`fl_char_load`): a fullscreen list with one
 -- `fl_character_panel` for every character of the local player. It is rebuilt whenever the
--- server sends the character list again.
+-- server sends the character list again or refuses a request to load or delete a character.
 local PANEL = {}
 PANEL.chars = {}
 
@@ -46,6 +46,10 @@ function PANEL:Init()
   -- The list can only be trusted once the server has sent the characters again, which
   -- may happen long after the request that has changed them.
   hook.Add('OnCharactersReceived', self, self.rebuild)
+
+  --- Rebuilds the list when the server has refused a request, which brings back the card of
+  -- a character that was faded out for a deletion that did not happen.
+  hook.Add('CharacterRequestFailed', self, self.rebuild)
 end
 
 --- Draws the panel through the theme's PaintCharCreationLoadPanel hook.
@@ -92,7 +96,8 @@ vgui.Register('fl_char_load', PANEL, 'fl_frame')
 
 --- A single character of the loading screen (`fl_character_panel`): shows its model with a
 -- button that selects the character and a button that deletes it once the player has typed the
--- name of the character to confirm.
+-- name of the character to confirm. A banned character is shown darkened, with a disabled
+-- button that says so in place of the two.
 local PANEL = {}
 
 --- Creates the model preview and the select and delete buttons.
@@ -161,7 +166,8 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Positions the model preview and the select and delete buttons.
+--- Positions the model preview and the select and delete buttons. The select button takes
+-- the whole width when there is no delete button next to it.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PerformLayout(w, h)
@@ -169,14 +175,18 @@ function PANEL:PerformLayout(w, h)
   self.model:SetSize(w - 4, h * .80)
 
   self.select:SetPos(4, h - Theme.get_option('menu_sidebar_button_height'))
-  self.select:SetSize(w / 3 * 2 - 4, Theme.get_option('menu_sidebar_button_height'))
+  self.select:SetSize(
+    self.delete:IsVisible() and w / 3 * 2 - 4 or w - 8,
+    Theme.get_option('menu_sidebar_button_height')
+  )
 
   self.delete:SetPos(w / 3 * 2, h - Theme.get_option('menu_sidebar_button_height'))
   self.delete:SetSize(w / 3 - 4, Theme.get_option('menu_sidebar_button_height'))
 end
 
---- Sets the character shown by the panel, hides the buttons if it is the active character
--- and runs the PanelCharacterSet hook.
+--- Sets the character shown by the panel and runs the PanelCharacterSet hook. A banned
+-- character gets a darkened model and a disabled button that says it is banned instead of
+-- the select and delete buttons; the buttons of the active character are hidden.
 -- @param char_data [Map networked character data]
 function PANEL:set_character(char_data)
   self.char_data = char_data
@@ -184,7 +194,17 @@ function PANEL:set_character(char_data)
   self.model:SetModel(char_data.model)
   self.model:GetEntity():SetSequence(self.model:GetEntity():idle_animation())
 
-  if PLAYER:get_character_id() == char_data.id then
+  if char_data.banned then
+    self.model:SetColor(Color(80, 80, 80))
+
+    self.select:SetTitle(t'ui.char_create.banned')
+    self.select:set_icon('fa-ban')
+    self.select:set_enabled(false)
+    self.select:set_text_color(Color('red'))
+    self.delete:SetVisible(false)
+
+    self:InvalidateLayout()
+  elseif PLAYER:get_character_id() == char_data.id then
     self.select:SetVisible(false)
     self.delete:SetVisible(false)
   end

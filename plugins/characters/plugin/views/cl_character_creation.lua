@@ -308,6 +308,10 @@ function PANEL:next_stage()
               text = t'ui.char_create.no_model'
             elseif status == CHAR_ERR_RECORD then
               text = t'ui.char_create.error.record'
+            elseif status == CHAR_ERR_EXISTS then
+              text = t'ui.char_create.name_taken'
+            elseif status == CHAR_ERR_LIMIT then
+              text = t('ui.char_create.limit', { limit = Characters.get_limit(PLAYER) })
             end
 
             Flux.intro_panel:notify(text)

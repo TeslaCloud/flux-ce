@@ -1,16 +1,26 @@
 --- Characters lets every player own several characters and play one of them at a time.
 -- A character is a `Character` record that belongs to the player's user record and stores a
--- name, gender, physical description, model, skin and health. Players create, load and delete
--- their characters in the main menu, which opens after the intro when they join; until a
--- character is loaded the player stays hidden and dead and the HUD is not drawn. The
--- `Characters` functions create, save, delete and edit characters on the server, and the
--- `Player` extensions return a player's characters and the fields of the active one.
+-- name, gender, physical description, model and skin, along with the health, armor and
+-- reserve ammo its player had when it was last saved. Players create, load and delete their
+-- characters in the main menu, which opens after the intro when they join; until a character
+-- is loaded the player stays hidden and dead and the HUD is not drawn. The `Characters`
+-- functions create, save, delete, ban and edit characters on the server, and the `Player`
+-- extensions return a player's characters and the fields of the active one.
+--
+-- A player may have as many characters as the `character_limit` config allows, and a name
+-- that a player picks has to be unlike the name of any other character. Staff can ban a
+-- character with the CharBan command: it can then be neither loaded nor deleted until
+-- CharUnban lifts the ban. Players change their own description with CharPhysDesc.
 --
 -- Other plugins build on it through hooks: `PlayerCreateCharacter` validates the data of a new
 -- character, `PostCreateCharacter` and `SaveCharacterData` let them keep their own fields on a
 -- character, `OnActiveCharacterSet` and `PostCharacterLoaded` tell them that a character has
 -- been loaded, and `AddCharacterCreationMenuStages` and `AddMainMenuItems` add stages to the
--- character creation screen and buttons to the main menu.
+-- character creation screen and buttons to the main menu. `GetCharacterLimit` changes the
+-- limit for a player, and `PlayerCanUseCharacter`, `PlayerCanSwitchCharacter` and
+-- `PlayerCanDeleteCharacter` can refuse a request to load or delete a character with a
+-- reason. A plugin that only needs to remember something about a character can keep it in the
+-- generic character data (`Player:set_character_data`) instead of adding a column.
 
 PLUGIN:set_global('Characters')
 

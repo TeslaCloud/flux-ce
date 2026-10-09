@@ -1,7 +1,9 @@
 --- Client side of the Characters plugin: opens the intro and the main menu, registers the
 -- character menus with the theme, fills the main menu, and hides the HUD and blocks the
 -- scoreboard until a character is loaded. It also shows the physical description of characters
--- on scoreboard cards and above players.
+-- on scoreboard cards and above players. The handlers of the messages that the server sends
+-- about characters, such as a refused request or the order to open the main menu, are in
+-- `lib/sh_character.lua`.
 
 do
   local cur_volume = 1
@@ -240,19 +242,27 @@ function Characters:GetDrawPlayerInfo(target, x, y, distance, lines)
 end
 
 --- Adds the continue, create character, load character and disconnect buttons to the main
--- menu.
+-- menu. There is no continue button while the active character is banned, and the create
+-- button only shows a notice once the player has as many characters as they may have.
 -- @param panel [Panel the main menu]
 -- @param sidebar [Panel the main menu sidebar]
 function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
-  if PLAYER:is_character_loaded() then
+  if PLAYER:is_character_loaded() and !PLAYER:is_character_banned() then
     panel:add_button(t'ui.main_menu.continue', function(btn)
       panel:Remove()
     end)
   end
 
   panel:add_button(t'ui.char_create.title', function(btn)
+    if Characters.limit_reached(PLAYER) then
+      btn:set_active(false)
+      panel:notify(t('ui.char_create.limit', { limit = Characters.get_limit(PLAYER) }))
+
+      return
+    end
+
     btn:set_enabled(false)
 
     panel.menu = Theme.create_panel('char_create', panel)

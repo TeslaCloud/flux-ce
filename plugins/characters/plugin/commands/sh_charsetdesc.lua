@@ -1,4 +1,5 @@
---- Staff command that sets the physical description of a player's character.
+--- Staff command that sets the physical description of a player's character. Players change
+-- their own description with the CharPhysDesc command, which the 'physdesc' alias belongs to.
 
 CMD.name = 'CharSetDesc'
 CMD.description = 'command.charsetdesc.description'
@@ -7,7 +8,7 @@ CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1
-CMD.aliases = { 'setdesc', 'setdescription', 'physdesc' }
+CMD.aliases = { 'setdesc', 'setdescription' }
 
 --- Sets the physical description of the first target's character and notifies staff.
 -- @param actor [Player the player who ran the command]
