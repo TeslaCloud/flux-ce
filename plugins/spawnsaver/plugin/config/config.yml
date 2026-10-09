@@ -1,0 +1,7 @@
+configs:
+  spawn_where_left:
+    name: config.character.spawn_where_left.name
+    description: config.character.spawn_where_left.desc
+    category: character
+    type: boolean
+    default_value: true

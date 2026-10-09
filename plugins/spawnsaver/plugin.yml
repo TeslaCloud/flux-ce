@@ -1,0 +1,5 @@
+name: Spawn Saver
+description: Puts characters back where they were when their players left.
+author: TeslaCloud Studios
+depends:
+  - characters

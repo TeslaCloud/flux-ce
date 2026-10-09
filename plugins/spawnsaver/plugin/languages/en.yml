@@ -1,0 +1,6 @@
+en:
+  config:
+    character:
+      spawn_where_left:
+        name: Spawn Where Left
+        desc: "Whether characters are put back where they were when their players left, as long as the map is the same."
