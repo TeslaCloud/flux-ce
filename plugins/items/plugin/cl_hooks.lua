@@ -1,5 +1,6 @@
 --- Client side of the Items plugin: shows the progress of picking an item up by holding
--- the use key, and builds the menu of an item with its use, take, drop and custom options.
+-- the use key, and builds the menu of an item with its use, take, drop, destroy and custom
+-- options.
 
 --- Fills the circular progress indicator while the local player holds the use key on an item.
 function Items:HUDPaint()
@@ -43,7 +44,20 @@ function Items:Think()
   end
 end
 
---- Opens the menu of an item with its custom buttons and the use, take and drop options.
+--- Asks the local player whether they really want to destroy an item, and requests the
+-- 'on_destroy' menu action from the server if they do.
+-- @param item_obj [Item the item instance to destroy]
+function Items:confirm_destroy(item_obj)
+  local message = t('ui.item.destroy_message', { item = t(item_obj:get_name()) })
+  local decline_text = t'ui.no'
+
+  Derma_Query(message, t'ui.item.destroy_title', t'ui.yes', function()
+    item_obj:do_menu_action('on_destroy')
+  end, decline_text)
+end
+
+--- Opens the menu of an item with its custom buttons and the use, take and drop options,
+-- and the destroy option if the item is destroyable and in an inventory.
 -- @param instance_id [Number instance id of the item]
 -- @param is_entity=nil [Boolean true if the item is lying in the world, not in an inventory]
 function Items:PlayerUseItemMenu(instance_id, is_entity)
@@ -100,6 +114,15 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
         end)
 
         drop_button:SetIcon(item_obj.drop_icon or 'icon16/arrow_down.png')
+      end
+
+      if item_obj:is_destroyable()
+      and (!item_obj.is_action_visible or item_obj:is_action_visible('destroy') != false) then
+        local destroy_button = item_menu:add_option(t(item_obj:get_destroy_text()), function()
+          self:confirm_destroy(item_obj)
+        end)
+
+        destroy_button:SetIcon(item_obj.destroy_icon or 'icon16/cross.png')
       end
     end
   end

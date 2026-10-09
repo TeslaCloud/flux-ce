@@ -9,6 +9,11 @@
 -- entities (`Item.save_all`, `Item.load`) and sends instances to the clients
 -- (`Item.network_item`, `Item.network_item_data`), which keep their own copies of them.
 -- Plugins can add fields to what is saved and sent through the `PreItemSave` hook.
+-- `Item.remove` deletes an instance for good, on the server and on every client.
+--
+-- An item entity remembers the character that dropped it. `Item.spawn` takes the dropper
+-- as its last argument, and `Item.expect_drop` names the dropper for callers that cannot
+-- pass one; the Items plugin does so whenever a player drops an item from an inventory.
 
 mod 'Item'
 
@@ -16,6 +21,7 @@ local stored = Item.stored or {}
 local instances = Item.instances or {}
 local sorted = Item.sorted or {}
 local entities = Item.entities or {}
+local expected_drops = Item.expected_drops or {}
 
 -- Item Templates storage.
 Item.stored = stored
@@ -29,6 +35,8 @@ Item.sorted = sorted
 
 -- Items currently dropped and lying on the ground.
 Item.entities = entities
+
+Item.expected_drops = expected_drops
 
 --- Returns all the registered item templates.
 -- @return [Map item templates, keyed by item id]
@@ -51,7 +59,8 @@ function Item.get_sorted()
 end
 
 --- Returns saved data about the items that are lying on the ground.
--- It is keyed by item id, then by instance id; each entry has 'position' and 'angles' fields.
+-- It is keyed by item id, then by instance id; each entry has 'position' and 'angles' fields,
+-- and a 'dropped_by' field if a character has dropped the item.
 -- @return [Map entity data]
 function Item.get_entities()
   return entities
@@ -109,6 +118,9 @@ function Item.register(id, data)
   data.take_icon = data.take_icon
   data.drop_icon = data.drop_icon
   data.cancel_icon = data.cancel_icon
+  data.destroy_text = data.destroy_text
+  data.destroy_icon = data.destroy_icon
+  data.model_bodygroups = data.model_bodygroups or nil
   data.icon_data = data.icon_data or nil
   data.icon_material = data.icon_material or nil
 
@@ -137,6 +149,7 @@ function Item.to_saveable(item_obj)
     model = item_obj.model,
     skin = item_obj.skin,
     color = item_obj.color,
+    model_bodygroups = item_obj.model_bodygroups,
     cost = item_obj.cost,
     special_color = item_obj.special_color,
     is_base = item_obj.is_base,
@@ -151,6 +164,8 @@ function Item.to_saveable(item_obj)
     take_icon = item_obj.take_icon,
     drop_icon = item_obj.drop_icon,
     cancel_icon = item_obj.cancel_icon,
+    destroy_text = item_obj.destroy_text,
+    destroy_icon = item_obj.destroy_icon,
     max_uses = item_obj.max_uses,
     uses = item_obj.uses,
     icon_data = item_obj.icon_data,
@@ -301,7 +316,8 @@ function Item.create(id, data, forced_id)
 end
 
 --- Removes an item instance along with its entity in the world, if it has one.
--- Does not take the item out of the inventory that holds it. Saves the items on the server.
+-- Does not take the item out of the inventory that holds it. On the server it also saves
+-- the items and tells every client to remove its copy of the instance.
 -- @param instance_id [Number/Item instance id, or the item instance itself]
 function Item.remove(instance_id)
   local item_obj = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
@@ -311,10 +327,17 @@ function Item.remove(instance_id)
       item_obj.entity:Remove()
     end
 
-    instances[item_obj.id][item_obj.instance_id] = nil
+    if instances[item_obj.id] then
+      instances[item_obj.id][item_obj.instance_id] = nil
+    end
+
+    sorted[item_obj.instance_id] = nil
 
     if SERVER then
+      expected_drops[item_obj.instance_id] = nil
+
       Item.async_save()
+      Cable.send(nil, 'fl_items_remove', item_obj.instance_id)
     end
 
     Flux.dev_print('Removed item instance ID: '..item_obj.instance_id)
@@ -328,6 +351,26 @@ function Item.is_instance(item_obj)
   if !istable(item_obj) then return end
 
   return (item_obj.instance_id or ITEM_TEMPLATE) > ITEM_TEMPLATE
+end
+
+--- Applies the bodygroups of an item's model to an entity, the way the item entity gets
+-- them. Bodygroups that are given by name and that the model of the entity does not have
+-- are skipped, so the model has to be set first.
+-- @param entity [Entity the entity to set the bodygroups on]
+-- @param item_obj [Item the item whose model bodygroups to apply]
+-- @see [ItemBase#get_model_bodygroups]
+function Item.apply_bodygroups(entity, item_obj)
+  local bodygroups = item_obj:get_model_bodygroups()
+
+  if !istable(bodygroups) then return end
+
+  for k, v in pairs(bodygroups) do
+    local index = tonumber(k) or entity:FindBodygroupByName(k)
+
+    if index and index >= 0 then
+      entity:SetBodygroup(index, tonumber(v) or 0)
+    end
+  end
 end
 
 --- Includes every item file of a folder through the 'item' pipeline, registering the items.
@@ -393,7 +436,7 @@ if SERVER then
       for id, instance_table in pairs(loaded) do
         for k, v in pairs(instance_table) do
           if instances[id] and instances[id][k] then
-            Item.spawn(v.position, v.angles, instances[id][k])
+            Item.spawn(v.position, v.angles, instances[id][k], v.dropped_by or false)
           else
             loaded[id][k] = nil
           end
@@ -428,19 +471,22 @@ if SERVER then
     Data.save_schema('items/instances', to_save)
   end
 
-  --- Saves positions and angles of all the item entities in the world. Server-side only.
+  --- Saves positions and angles of all the item entities in the world, along with the
+  -- characters that dropped them. Entities that are being removed are left out.
+  -- Server-side only.
   function Item.save_entities()
     local item_ents = ents.FindByClass('fl_item')
 
     entities = {}
 
     for k, v in ipairs(item_ents) do
-      if IsValid(v) and v.item then
+      if IsValid(v) and !v:IsMarkedForDeletion() and v.item then
         entities[v.item.id] = entities[v.item.id] or {}
 
         entities[v.item.id][v.item.instance_id] = {
           position = v:GetPos(),
-          angles = v:GetAngles()
+          angles = v:GetAngles(),
+          dropped_by = v.dropped_by
         }
       end
     end
@@ -514,8 +560,38 @@ if SERVER then
     hook.run_client(target, 'OnItemDataReceived')
   end
 
+  --- Names the player who is about to drop an item, for code that spawns the item without
+  -- passing a dropper to Item.spawn. The next Item.spawn of the item uses that player,
+  -- provided that it happens within the same tick. Server-side only.
+  -- The Items plugin calls it from its 'CanPlayerDropItem' handler, which is how the items
+  -- that the Inventory plugin drops get their dropper.
+  -- @param item_obj [Item the item instance that is about to be dropped]
+  -- @param actor [Player the player dropping it]
+  -- @see [Item.spawn]
+  function Item.expect_drop(item_obj, actor)
+    if !Item.is_instance(item_obj) then return end
+
+    expected_drops[item_obj.instance_id] = { actor = actor, time = CurTime() }
+  end
+
+  --- Returns the player that Item.expect_drop has named as the dropper of an item during
+  -- the current tick, and forgets them. Server-side only.
+  -- @param item_obj [Item]
+  -- @return [Player the dropper, or nil if nobody is expected to drop the item right now]
+  function Item.take_expected_dropper(item_obj)
+    local expected = expected_drops[item_obj.instance_id]
+
+    expected_drops[item_obj.instance_id] = nil
+
+    if expected and expected.time == CurTime() and IsValid(expected.actor) then
+      return expected.actor
+    end
+  end
+
   --- Spawns an item instance in the world as an fl_item entity. Server-side only.
-  -- The item is sent to all clients and the item entities are saved afterward.
+  -- The item is sent to all clients and the item entities are saved afterward. The entity
+  -- remembers the character of the dropper, and the on_entity_spawned callback of the item
+  -- is called once the entity is in the world.
   -- ```
   -- local item_obj = Item.create('test_item')
   -- local trace = actor:GetEyeTraceNoCursor()
@@ -524,8 +600,12 @@ if SERVER then
   -- @param position [Vector where to put the item; it is raised by the height of its bounds]
   -- @param angles=nil [Angle]
   -- @param item_obj [Item item instance; templates cannot be spawned]
+  -- @param dropper=nil [Player/Map/Boolean the player who drops the item, or a table with
+  --   the character_id and steam_id fields of an earlier drop, or false if nobody does;
+  --   when nil, the player named by Item.expect_drop is used, if there is one]
   -- @return [Entity the item entity, Item the spawned item; nothing if the arguments are invalid]
-  function Item.spawn(position, angles, item_obj)
+  -- @see [Item.expect_drop]
+  function Item.spawn(position, angles, item_obj, dropper)
     if !position or !istable(item_obj) then
       error_with_traceback('No position or item table is not a table!')
       return
@@ -550,6 +630,14 @@ if SERVER then
 
     ent:Spawn()
 
+    if dropper == nil then
+      dropper = Item.take_expected_dropper(item_obj)
+    else
+      expected_drops[item_obj.instance_id] = nil
+    end
+
+    ent:set_dropper(dropper)
+
     item_obj:set_entity(ent)
     Item.network_item(nil, item_obj.instance_id)
 
@@ -557,10 +645,15 @@ if SERVER then
     entities[item_obj.id][item_obj.instance_id] = entities[item_obj.id][item_obj.instance_id] or {}
     entities[item_obj.id][item_obj.instance_id] = {
       position = position,
-      angles = angles
+      angles = angles,
+      dropped_by = ent.dropped_by
     }
 
     Item.async_save_entities()
+
+    if item_obj.on_entity_spawned then
+      item_obj:on_entity_spawned(ent)
+    end
 
     return ent, item_obj
   end
@@ -605,6 +698,8 @@ else
       ent:SetSkin(item_obj.skin)
       ent:SetColor(item_obj:get_color())
 
+      Item.apply_bodygroups(ent, item_obj)
+
       -- Restore the item's functions. For some weird reason they aren't properly initialized.
       table.safe_merge(ent, scripted_ents.Get('fl_item'))
 
@@ -614,6 +709,10 @@ else
 
   Cable.receive('fl_items_new_instance', function(id, data, item_id)
     Item.create(id, data, item_id)
+  end)
+
+  Cable.receive('fl_items_remove', function(instance_id)
+    Item.remove(instance_id)
   end)
 end
 

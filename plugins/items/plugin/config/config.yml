@@ -1,0 +1,37 @@
+categories:
+  items:
+    name: config.items.title
+    description: config.items.desc
+configs:
+  item_destroy:
+    name: config.items.destroy.name
+    description: config.items.destroy.desc
+    category: items
+    type: boolean
+    default_value: false
+  item_entity_health:
+    name: config.items.entity_health.name
+    description: config.items.entity_health.desc
+    category: items
+    type: number
+    min_value: 0
+    max_value: 1000
+    default_value: 0
+  item_drop_ownership:
+    name: config.items.drop_ownership.name
+    description: config.items.drop_ownership.desc
+    category: items
+    type: boolean
+    default_value: false
+  ammo_requires_weapon:
+    name: config.items.ammo_requires_weapon.name
+    description: config.items.ammo_requires_weapon.desc
+    category: items
+    type: boolean
+    default_value: false
+  drop_weapons_on_death:
+    name: config.items.drop_weapons_on_death.name
+    description: config.items.drop_weapons_on_death.desc
+    category: items
+    type: boolean
+    default_value: false

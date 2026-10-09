@@ -10,6 +10,30 @@ en:
       message1: Input item id
       message2: Input item data key
       message3: Input item data value
+  config:
+    items:
+      title: Items
+      desc: Settings of items and of the items that lie in the world.
+      destroy:
+        name: Allow destroying items
+        desc: Whether players can destroy the items in their inventories through the item menu. An item can allow or forbid it regardless of this setting.
+      entity_health:
+        name: Dropped item health
+        desc: How much damage an item lying in the world takes before it is destroyed. Set to 0 to make dropped items indestructible. Applies to the items dropped from now on.
+      drop_ownership:
+        name: Keep characters away from each other's drops
+        desc: Whether players are kept from picking up and using the items that another of their own characters has dropped.
+      ammo_requires_weapon:
+        name: Ammunition requires a weapon
+        desc: Whether ammunition can only be loaded by a player who carries a weapon that uses it.
+      drop_weapons_on_death:
+        name: Drop weapons on death
+        desc: Whether the equipped weapons of a player are dropped into the world when the player dies.
+  error:
+    item:
+      other_character: You cannot touch an item that another character of yours has dropped.
+      no_weapon_for_ammo: You are not carrying a weapon that uses this ammunition.
+      destroy_not_empty: Empty this item before you destroy it.
   item:
     category:
       consumables: Consumables
@@ -34,3 +58,8 @@ en:
       unequip: Unequip
       unload: Unload
       load: Load
+      destroy: Destroy
+  ui:
+    item:
+      destroy_title: Destroy Item
+      destroy_message: "Are you sure that you want to destroy {item}? This cannot be undone."

@@ -5,14 +5,18 @@
 -- class with `ItemBase:base_off`.
 --
 -- Fields an item can set; `Item.register` fills in the defaults:
--- `name`, `print_name`, `description` and `category`; `model`, `skin` and `color`;
--- `weight` and `cost`; `width` and `height` (size in inventory slots), `stackable` and
--- `max_stack`; `pocket_size` (true if the item fits into pockets); `background_color`
--- and `special_color` (background and outline of its inventory slot); `icon_data`,
--- `icon_material` and `icon_model` (how its inventory icon is rendered); `use_text`,
--- `take_text`, `drop_text`, `use_icon`, `take_icon` and `drop_icon` (options of its menu);
--- and `data` (default custom data, read and written with `ItemBase:get_data` and
--- `ItemBase:set_data`).
+-- `name`, `print_name`, `description` and `category`; `model`, `skin`, `color` and
+-- `model_bodygroups` (a table of bodygroup id or name to value, applied to the item
+-- entity); `weight` and `cost`; `width` and `height` (size in inventory slots),
+-- `stackable` and `max_stack`; `pocket_size` (true if the item fits into pockets);
+-- `background_color` and `special_color` (background and outline of its inventory slot);
+-- `icon_data`, `icon_material` and `icon_model` (how its inventory icon is rendered);
+-- `use_text`, `take_text`, `drop_text`, `destroy_text`, `use_icon`, `take_icon`,
+-- `drop_icon` and `destroy_icon` (options of its menu); `destroyable` (true or false to
+-- let or forbid players to destroy the item whatever the `item_destroy` config says);
+-- `entity_health` (how much damage the item takes while it lies in the world, instead
+-- of the `item_entity_health` config; 0 makes it indestructible); and `data` (default
+-- custom data, read and written with `ItemBase:get_data` and `ItemBase:set_data`).
 --
 -- Callbacks an item can define. Those of the first group are called on the server:
 --
@@ -20,6 +24,8 @@
 --   has this callback. Returning true keeps the item, returning false cancels the use,
 --   and returning nothing removes the item.
 -- - `on_drop(actor)`: a player is about to drop the item; return false to prevent it.
+-- - `on_destroy(actor)`: a player is about to destroy the item; return false, and
+--   optionally an error phrase, to prevent it.
 -- - `on_created()`: the instance has just been created.
 -- - `on_loadout(owner)` and `on_save(owner)`: the player that has the item has spawned,
 --   or their character is about to be saved.
@@ -27,12 +33,29 @@
 --   to be moved to another inventory (or picked up into one) or inside of its inventory;
 --   return false, and optionally an error phrase, to prevent it.
 -- - `on_transfer(new_inventory, old_inventory)`: the item is about to change its inventory.
+-- - `on_entity_spawned(entity)`: the item has been put into the world as an `fl_item`
+--   entity, which includes the entities that are restored when the server starts.
+-- - `on_entity_take_damage(entity, damage_info)`: the entity of the item is taking damage;
+--   return false to ignore the damage.
+-- - `on_entity_destroyed(entity, damage_info)`: the entity of the item has lost all of
+--   its health and is about to be removed along with the item; return false to do
+--   without the default break effect.
 --
--- And on the client:
+-- On the client:
 --
--- - `is_action_visible(action)`: return false to hide the `'use'`, `'take'` or `'drop'`
---   option of the menu.
+-- - `is_action_visible(action)`: return false to hide the `'use'`, `'take'`, `'drop'` or
+--   `'destroy'` option of the menu.
 -- - `paint_slot(w, h)` and `paint_over_slot(w, h)`: draw on the inventory slot of the item.
+-- - `on_entity_draw(entity)`: the entity of the item is about to be drawn; return false
+--   to keep its model from being drawn.
+--
+-- And on both:
+--
+-- - `on_entity_think(entity)`: called for the entity of the item once a second; return
+--   a number to be called again in that many seconds instead (0.1 at least).
+-- - `on_entity_removed(entity)`: the entity of the item is being removed, be it because
+--   the item was picked up or destroyed or because the map is being cleaned up or shut
+--   down. A client also gets the call when it merely stops receiving the entity.
 --
 -- Custom menu options are added with `ItemBase:add_button`, and every menu action goes
 -- through `ItemBase:do_menu_action`.
@@ -161,6 +184,46 @@ function ItemBase:get_color()
   return self.color or Color(255, 255, 255)
 end
 
+--- Returns the bodygroups of the item's model, which the entity of the item is given when
+-- the item lies in the world.
+-- ```
+-- ITEM.model_bodygroups = {
+--   [1] = 2,
+--   ['strap'] = 1
+-- }
+-- ```
+-- @return [Map bodygroup id (Number) or bodygroup name (String) to its value, or nil if
+--   the item leaves the bodygroups of its model alone]
+-- @see [Item.apply_bodygroups]
+function ItemBase:get_model_bodygroups()
+  return self.model_bodygroups
+end
+
+--- Returns the health that the entity of the item gets when the item is put into the
+-- world: the entity_health of the item, or the 'item_entity_health' config if the item
+-- has none.
+-- @return [Number 0 if the item cannot be destroyed by damage]
+function ItemBase:get_entity_health()
+  local health = self.entity_health
+
+  if !isnumber(health) then
+    health = Config.get('item_entity_health')
+  end
+
+  return isnumber(health) and math.max(health, 0) or 0
+end
+
+--- Checks whether players may destroy the item through its menu: the destroyable field of
+-- the item if it is set, and the 'item_destroy' config otherwise.
+-- @return [Boolean]
+function ItemBase:is_destroyable()
+  if self.destroyable != nil then
+    return self.destroyable == true
+  end
+
+  return Config.get('item_destroy') == true
+end
+
 --- Returns the camera setup that is used to render the item's model in inventory slots.
 -- @return [Map table with origin (Vector), angles (Angle) and fov (Number) fields,
 --   or nil to position the camera automatically]
@@ -210,12 +273,13 @@ function ItemBase:add_button(name, data)
 end
 
 --- Checks whether clients may request a menu action of the item: 'on_take' and 'on_drop'
--- always, 'on_use' if the item has an on_use callback, and the callbacks of the item's
--- custom buttons. The server ignores requests for anything else, so that a client cannot
--- call arbitrary methods of the item.
+-- always, 'on_use' if the item has an on_use callback, 'on_destroy' if the item is
+-- destroyable, and the callbacks of the item's custom buttons. The server ignores requests
+-- for anything else, so that a client cannot call arbitrary methods of the item.
 -- @param act [String name of the action]
 -- @return [Boolean]
 -- @see [ItemBase#add_button]
+-- @see [ItemBase#is_destroyable]
 function ItemBase:has_menu_action(act)
   if act == 'on_take' or act == 'on_drop' then
     return true
@@ -223,6 +287,10 @@ function ItemBase:has_menu_action(act)
 
   if act == 'on_use' then
     return self.on_use != nil
+  end
+
+  if act == 'on_destroy' then
+    return self:is_destroyable()
   end
 
   if self.custom_buttons then
@@ -279,6 +347,14 @@ end
 -- @return [Boolean false to prevent the drop, nil otherwise]
 function ItemBase:on_drop(actor) end
 
+--- Called on the server when a player is about to destroy the item through its menu, after
+-- the 'PlayerCanDestroyItem' hook has allowed it. Returning nothing/nil lets the item be
+-- destroyed, returning false keeps it where it is.
+-- @param actor [Player]
+-- @return [Boolean false to prevent the destruction, String error phrase to notify the
+--   player with; nothing otherwise]
+function ItemBase:on_destroy(actor) end
+
 --- Called on the server right after the player that has the item spawns with their character
 -- loaded. Override it to give the player whatever the item is supposed to provide.
 -- @param owner [Player]
@@ -314,25 +390,26 @@ if SERVER then
 
   --- Performs a menu action on the item on behalf of the player.
   -- Runs the 'PlayerCanUseItem' hook and then the hook of the action ('PlayerTakeItem',
-  -- 'PlayerUseItem' or 'PlayerDropItem'). Every action except 'on_use', 'on_take' and 'on_drop'
-  -- also calls the item's method of the same name with the player and the extra arguments.
-  -- Runs the 'PlayerUsedItem' hook when done.
+  -- 'PlayerUseItem', 'PlayerDropItem' or 'PlayerDestroyItem'). Every action except 'on_use',
+  -- 'on_take', 'on_drop' and 'on_destroy' also calls the item's method of the same name with
+  -- the player and the extra arguments. Runs the 'PlayerUsedItem' hook when done.
   -- ```
   -- -- Makes the player pick up the item into their hotbar.
   -- item_obj:do_menu_action('on_take', actor, { inv_type = 'hotbar' })
   -- ```
-  -- @param act [String 'on_use', 'on_take', 'on_drop' or the callback of a custom button]
+  -- @param act [String 'on_use', 'on_take', 'on_drop', 'on_destroy' or the callback of a
+  --   custom button]
   -- @param actor [Player the player performing the action]
   -- @param ... [Vararg extra arguments that are passed to the hooks and to the item's method]
   function ItemBase:do_menu_action(act, actor, ...)
     --- Called on the server before a player performs any menu action on an item:
-    -- using, taking or dropping it, or pressing one of its custom buttons.
+    -- using, taking, dropping or destroying it, or pressing one of its custom buttons.
     -- The Items plugin uses it to reject actions on items the player does not have and
     -- on items in the world that are out of reach.
     -- @param actor [Player The player performing the action]
     -- @param item_obj [Item The item instance]
-    -- @param act [String Name of the action: `'on_use'`, `'on_take'`, `'on_drop'` or the
-    --   callback of a custom button]
+    -- @param act [String Name of the action: `'on_use'`, `'on_take'`, `'on_drop'`,
+    --   `'on_destroy'` or the callback of a custom button]
     -- @param ... [Vararg Extra arguments that were passed to `ItemBase:do_menu_action`]
     -- @return [Boolean Return false to prevent the action]
     if hook.Run('PlayerCanUseItem', actor, self, act, ...) == false then return end
@@ -378,8 +455,24 @@ if SERVER then
       if hook.Run('PlayerDropItem', actor, self.instance_id) != nil then return end
     end
 
+    if act == 'on_destroy' then
+      --- Called on the server when a player destroys an item through its menu, after
+      -- `PlayerCanUseItem`. The hook is what performs the action: the Items plugin
+      -- handles it by asking the `PlayerCanDestroyItem` hook and the `on_destroy` callback
+      -- of the item, taking the item out of its inventory and removing the instance for
+      -- good. Only items that are in an inventory can be destroyed this way; the client
+      -- asks the player to confirm before it sends the request.
+      -- @param actor [Player The player destroying the item]
+      -- @param item_obj [Item The item instance]
+      -- @param ... [Vararg Extra arguments that were passed to `ItemBase:do_menu_action`]
+      -- @return [Any Any value other than nil ends the action right there: the action
+      --   sound is not played and `PlayerUsedItem` is not run. The Items plugin returns
+      --   false when the item has not been destroyed]
+      if hook.Run('PlayerDestroyItem', actor, self, ...) != nil then return end
+    end
+
     if self[act] then
-      if act != 'on_take' and act != 'on_use' and act != 'on_drop' then
+      if act != 'on_take' and act != 'on_use' and act != 'on_drop' and act != 'on_destroy' then
         local success, exception = pcall(self[act], self, actor, ...)
 
         if !success then
@@ -393,11 +486,12 @@ if SERVER then
 
     --- Called on the server after a player has performed a menu action on an item.
     -- It is not run when the action was rejected by `PlayerCanUseItem` or ended by a
-    -- handler of `PlayerTakeItem`, `PlayerUseItem` or `PlayerDropItem`.
+    -- handler of `PlayerTakeItem`, `PlayerUseItem`, `PlayerDropItem` or
+    -- `PlayerDestroyItem`. After the `'on_destroy'` action the item is a removed instance.
     -- @param actor [Player The player who performed the action]
     -- @param item_obj [Item The item instance]
-    -- @param act [String Name of the action: `'on_use'`, `'on_take'`, `'on_drop'` or the
-    --   callback of a custom button]
+    -- @param act [String Name of the action: `'on_use'`, `'on_take'`, `'on_drop'`,
+    --   `'on_destroy'` or the callback of a custom button]
     -- @param ... [Vararg Extra arguments that were passed to `ItemBase:do_menu_action`]
     hook.Run('PlayerUsedItem', actor, self, act, ...)
   end
@@ -412,7 +506,8 @@ if SERVER then
 else
   --- Asks the server to perform a menu action on the item on behalf of the local player.
   -- The server ignores the actions that ItemBase:has_menu_action does not allow.
-  -- @param act [String 'on_use', 'on_take', 'on_drop' or the callback of a custom button]
+  -- @param act [String 'on_use', 'on_take', 'on_drop', 'on_destroy' or the callback of a
+  --   custom button]
   -- @param ... [Vararg extra arguments to send to the server]
   function ItemBase:do_menu_action(act, ...)
     Cable.send('fl_items_menu_action', self.instance_id, act, ...)
@@ -434,6 +529,12 @@ else
   -- @return [String language phrase]
   function ItemBase:get_drop_text()
     return self.drop_text or 'item.option.drop'
+  end
+
+  --- Returns the title of the 'destroy' option in the item's menu. Client-side only.
+  -- @return [String language phrase]
+  function ItemBase:get_destroy_text()
+    return self.destroy_text or 'item.option.destroy'
   end
 
   --- Returns the title of the 'cancel' option in the item's menu. Client-side only.

@@ -11,10 +11,18 @@
 -- `Item.create`, each with its own numeric instance id and custom data. The server saves
 -- the instances and sends them to the clients. An instance either sits in an inventory
 -- (see the Inventory plugin) or lies in the world as an `fl_item` entity spawned by
--- `Item.spawn`. Players act on an instance through its menu: the use, take and drop options
--- and the custom buttons of the item all end up in `ItemBase:do_menu_action` on the
--- server, which runs the `PlayerCanUseItem`, `PlayerUseItem`, `PlayerTakeItem`,
--- `PlayerDropItem` and `PlayerUsedItem` hooks.
+-- `Item.spawn`. Players act on an instance through its menu: the use, take, drop and
+-- destroy options and the custom buttons of the item all end up in
+-- `ItemBase:do_menu_action` on the server, which runs the `PlayerCanUseItem`,
+-- `PlayerUseItem`, `PlayerTakeItem`, `PlayerDropItem`, `PlayerDestroyItem` and
+-- `PlayerUsedItem` hooks.
+--
+-- The config keys of the plugin, all off by default, let players destroy the items in
+-- their inventories (`item_destroy`), give the items that lie in the world health so that
+-- they can be destroyed by damage (`item_entity_health`), keep players away from the items
+-- that another of their own characters has dropped (`item_drop_ownership`), make
+-- ammunition require a weapon that uses it (`ammo_requires_weapon`) and drop the equipped
+-- weapons of players who die (`drop_weapons_on_death`).
 --
 -- Once this plugin is loaded, every plugin and the schema get their `items/bases/` and
 -- `items/` folders included, so adding an item only takes a file:
