@@ -1,0 +1,3 @@
+name: Game Time
+description: Adds an in-game clock and calendar that the server keeps running and saves across restarts.
+author: TeslaCloud Studios

@@ -1,0 +1,25 @@
+categories:
+  gametime:
+    name: config.gametime.title
+    description: config.gametime.desc
+configs:
+  gametime_real_time:
+    name: config.gametime.real_time.name
+    description: config.gametime.real_time.desc
+    category: gametime
+    type: boolean
+    default_value: false
+  gametime_start:
+    name: config.gametime.start.name
+    description: config.gametime.start.desc
+    category: gametime
+    type: string
+    default_value: '2020-01-01 08:00'
+  gametime_minute_length:
+    name: config.gametime.minute_length.name
+    description: config.gametime.minute_length.desc
+    category: gametime
+    type: number
+    min_value: 1
+    max_value: 7200
+    default_value: 60

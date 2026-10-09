@@ -1,0 +1,61 @@
+en:
+  command:
+    settime:
+      description: "Sets the in-game date and time. Give a date, a time of day or both, for example 2020-01-01 08:00."
+      syntax: "[YYYY-MM-DD] [HH:MM]"
+      message: "{player} has set the game time to {time}."
+  config:
+    gametime:
+      title: Game Time
+      desc: In-game clock and calendar settings.
+      minute_length:
+        name: Minute Length
+        desc: "How many real seconds an in-game minute lasts. At 60 the game clock runs as fast as a real one."
+      start:
+        name: Start Date
+        desc: "The date and time the game clock starts from while no game time has been saved yet, written as YYYY-MM-DD HH:MM."
+      real_time:
+        name: Follow Real Time
+        desc: "Make the game clock show the real date and time of the server instead of running on its own."
+  error:
+    gametime:
+      invalid: This date is outside of the game calendar.
+      invalid_format: "This is not a valid date or time. Write it as YYYY-MM-DD HH:MM, or give the date or the time alone."
+      not_ready: The game clock has not been started yet.
+      real_time: The game clock follows the real time of the server and cannot be set.
+  gametime:
+    am: AM
+    pm: PM
+    format:
+      date: "{weekday}, {day} {month} {year}"
+      date_short: "{day}/{month}/{year}"
+      date_time: "{date}, {time}"
+    months:
+      january: January
+      february: February
+      march: March
+      april: April
+      may: May
+      june: June
+      july: July
+      august: August
+      september: September
+      october: October
+      november: November
+      december: December
+    weekdays:
+      monday: Monday
+      tuesday: Tuesday
+      wednesday: Wednesday
+      thursday: Thursday
+      friday: Friday
+      saturday: Saturday
+      sunday: Sunday
+  settings:
+    gametime:
+      clock:
+        name: Show the game clock
+        desc: "Show the in-game date and time in the top right corner of the menu that the TAB key opens."
+      twelve_hour:
+        name: "12-hour game clock"
+        desc: "Show the in-game time with a 12-hour clock (5:05 PM) instead of a 24-hour one (17:05)."
