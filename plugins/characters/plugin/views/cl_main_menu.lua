@@ -74,7 +74,7 @@ function PANEL:RecreateSidebar(create_buttons)
   self.sidebar:SetPos(Theme.get_option('menu_sidebar_x'), Theme.get_option('menu_sidebar_y'))
   self.sidebar:SetSize(0, Theme.get_option('menu_sidebar_height'))
   self.sidebar:set_margin(Theme.get_option('menu_sidebar_margin'))
-  self.sidebar:add_space(16)
+  self.sidebar:add_space(math.scale(16))
 
   self.sidebar.Paint = function(pnl, w, h)
   end
@@ -166,7 +166,7 @@ function PANEL:notify(text)
   self.notification:set_background_color(Color(50, 50, 50, 220))
 
   local w, h = self.notification:GetSize()
-  self.notification:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
+  self.notification:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - math.scale(128))
 
   --- Keeps the notification above the main menu.
   function self.notification:PostThink() self:MoveToFront() end
@@ -185,7 +185,7 @@ function PANEL:add_button(text, callback)
   button:set_text(string.utf8upper(text))
   button:set_text_autoposition(false)
   button:set_centered(Theme.get_option('menu_sidebar_button_centered'))
-  button:set_text_offset(8)
+  button:set_text_offset(math.scale(8))
 
   button:SizeToContents()
 
@@ -220,7 +220,7 @@ function PANEL:add_button(text, callback)
   end
 
   self.sidebar:add_panel(button)
-  self.sidebar:add_space(6)
+  self.sidebar:add_space(math.scale(6))
 
   return button
 end

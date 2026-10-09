@@ -133,9 +133,11 @@ function THEME:PaintMainMenu(panel, width, height)
   local desc_w,   desc_h    = util.text_size(desc, self:get_font('main_menu_titles'))
   local author_w, author_h  = util.text_size(author, self:get_font('main_menu_titles'))
   local bar_height          = math.scale(128)
+  local padding             = math.scale(16)
+  local text_padding        = math.scale(8)
 
   surface.SetDrawColor(self:get_color('menu_background'))
-  surface.DrawRect(0, 0, width, width)
+  surface.DrawRect(0, 0, width, height)
 
   surface.SetDrawColor(self:get_color('menu_background'):lighten(40))
   surface.DrawRect(0, 0, width, bar_height)
@@ -145,19 +147,32 @@ function THEME:PaintMainMenu(panel, width, height)
       title,
       self:get_font('text_largest'),
       width * 0.5 - title_w * 0.5,
-      bar_height - title_h - 8,
+      bar_height - title_h - text_padding,
       self:get_color('schema_text')
     )
   else
-    draw.textured_rect(logo, width * 0.5 - math.scale(200), 16, 400, 96, Color(255, 255, 255))
+    draw.textured_rect(
+      logo,
+      width * 0.5 - math.scale(200),
+      padding,
+      math.scale(400),
+      math.scale(96),
+      Color(255, 255, 255)
+    )
   end
 
-  draw.SimpleText(desc, self:get_font('main_menu_titles'), 16, bar_height - desc_h - 8, self:get_color('schema_text'))
+  draw.SimpleText(
+    desc,
+    self:get_font('main_menu_titles'),
+    padding,
+    bar_height - desc_h - text_padding,
+    self:get_color('schema_text')
+  )
   draw.SimpleText(
     author,
     self:get_font('main_menu_titles'),
-    width - author_w - 16,
-    bar_height - author_h - 8,
+    width - author_w - padding,
+    bar_height - author_h - text_padding,
     self:get_color('schema_text')
   )
 end

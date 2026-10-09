@@ -92,21 +92,25 @@ if CLIENT then
 
   --- Draws the total hook run time and the slowest hook of the server and of the client.
   function Profiler:HUDPaint()
-    local pos = ScrH() - 30
+    local font = Theme.get_font('text_smallest', 'default')
+    local line_height = util.font_size(font)
+    local x = math.scale(8)
+    -- Sits right above the version line of the developer HUD.
+    local pos = ScrH() - math.scale(8) - line_height * 2
 
-    draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', 'default', 8, pos - 36, debug_color)
+    draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', font, x, pos - line_height * 3, debug_color)
     draw.SimpleText(
       largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)',
-      'default',
-      8,
-      pos - 24,
+      font,
+      x,
+      pos - line_height * 2,
       debug_color
     )
-    draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', 'default', 8, pos - 12, debug_color)
+    draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', font, x, pos - line_height, debug_color)
     draw.SimpleText(
       largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)',
-      'default',
-      8,
+      font,
+      x,
       pos,
       debug_color
     )

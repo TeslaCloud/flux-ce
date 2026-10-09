@@ -367,7 +367,9 @@ else
         self.data_requested = true
       end
 
-      Flux.draw_rotating_cog(x, y - 48, 48, 48, Color(255, 255, 255))
+      local cog_size = math.scale(48)
+
+      Flux.draw_rotating_cog(x, y - cog_size, cog_size, cog_size, Color(255, 255, 255))
 
       return
     end
@@ -389,8 +391,9 @@ else
       end
     end
 
-    local box_x, box_y = x - max_width * 0.5 - 8, y - 8
-    local box_width, box_height = max_width + 16, height + desc_height + 16
+    local padding = math.scale(8)
+    local box_x, box_y = x - max_width * 0.5 - padding, y - padding
+    local box_width, box_height = max_width + padding * 2, height + desc_height + padding * 2
     local accent_color = Theme.get_color('accent'):alpha(200)
     local ent_pos = self:GetPos():ToScreen()
     local anim_id = 'itemid_gradient_'..self.item.instance_id
@@ -411,12 +414,13 @@ else
     render.SetScissorRect(0, 0, 0, 0, false)
 
     if alpha > 100 then
-      draw.line(box_x, y + height + desc_height + 8, ent_pos.x, ent_pos.y, accent_color)
+      draw.line(box_x, y + height + desc_height + padding, ent_pos.x, ent_pos.y, accent_color)
     end
 
     draw.SimpleTextOutlined(text, name_font, x - width * 0.5, y, col, nil, nil, 1, col2)
 
-    y = y + 26
+    -- Move down by the height of the name, which depends on the scaled font size.
+    y = y + height
 
     for k, v in pairs(wrapped) do
       local w, h = util.text_size(v, desc_font)

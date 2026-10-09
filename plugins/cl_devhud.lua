@@ -17,11 +17,13 @@ function PLUGIN:HUDPaint()
     -- @return [Any Return anything but nil to hide the default version line]
     if hook.Run('HUDPaintDeveloper') == nil then
       local flow_version = (Flow and Flow.__package__ and Flow.__package__.version) or 'UNKNOWN'
+      local font = Theme.get_font('text_smallest', 'default')
+
       draw.SimpleText(
         'Flux version '..(GAMEMODE.version or 'UNKNOWN')..'. Core version '..flow_version..'.',
-        'default',
-        8,
-        ScrH() - 18,
+        font,
+        math.scale(8),
+        ScrH() - math.scale(4) - util.font_size(font),
         Color(200, 100, 100, 200)
       )
     end
