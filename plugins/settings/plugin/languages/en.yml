@@ -1,0 +1,18 @@
+en:
+  settings:
+    categories:
+      general: General
+      interface: Interface
+      gameplay: Gameplay
+      chat: Chat
+      sound: Sound
+      admin: Administration
+  ui:
+    tab_menu:
+      settings: Settings
+    settings:
+      title: Settings
+      empty: There are no settings to change yet.
+      reset: Reset to default
+      reset_all: Reset all
+      reset_all_message: Are you sure you want to reset all of these settings to their default values?

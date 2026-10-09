@@ -1,0 +1,18 @@
+ru:
+  settings:
+    categories:
+      general: Общие
+      interface: Интерфейс
+      gameplay: Игровой процесс
+      chat: Чат
+      sound: Звук
+      admin: Администрирование
+  ui:
+    tab_menu:
+      settings: Настройки
+    settings:
+      title: Настройки
+      empty: Пока нет настроек, которые можно изменить.
+      reset: Сбросить по умолчанию
+      reset_all: Сбросить всё
+      reset_all_message: Вы уверены, что хотите сбросить все эти настройки до значений по умолчанию?
