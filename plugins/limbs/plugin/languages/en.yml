@@ -1,0 +1,45 @@
+en:
+  command:
+    heallimbs:
+      description: "Heal every limb of a player's character."
+      syntax: <target>
+      message: "{player} has healed the limbs of {target}."
+      notification: Your limbs have been healed.
+  config:
+    limbs:
+      title: Limb Damage
+      desc: Limb damage settings.
+      enabled:
+        name: Limb Damage
+        desc: Track damage per body part. When off, no limb takes damage, hurt limbs have no effect and the body diagram is hidden.
+      damage_scale:
+        name: Limb Damage Scale
+        desc: How much damage a limb takes for every point of health the player loses to a hit on it. A limb is crippled at 100.
+      legs_slow:
+        name: Hurt Legs Slow Down
+        desc: Hurt legs slow running down and lower jumps, down to half for a crippled leg.
+      fall_damage:
+        name: Fall Damage Hurts Legs
+        desc: Split fall damage between both legs.
+      arms_sway:
+        name: Hurt Arms Sway Aim
+        desc: Hurt arms make the aim of a held weapon drift.
+      recovery:
+        name: Limb Recovery
+        desc: How much damage every hurt limb recovers per minute on its own. Set to 0 so that limbs only heal through treatment or death.
+  settings:
+    limbs_hud:
+      name: Body diagram
+      desc: When to show the diagram of your limbs on the HUD.
+      hurt: While hurt
+      always: Always
+      never: Never
+  ui:
+    limbs:
+      head: Head
+      chest: Chest
+      stomach: Stomach
+      left_arm: Left arm
+      right_arm: Right arm
+      left_leg: Left leg
+      right_leg: Right leg

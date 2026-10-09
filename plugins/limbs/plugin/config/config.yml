@@ -1,0 +1,46 @@
+categories:
+  limbs:
+    name: config.limbs.title
+    description: config.limbs.desc
+configs:
+  limbs_enabled:
+    name: config.limbs.enabled.name
+    description: config.limbs.enabled.desc
+    category: limbs
+    type: boolean
+    default_value: true
+  limbs_damage_scale:
+    name: config.limbs.damage_scale.name
+    description: config.limbs.damage_scale.desc
+    category: limbs
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 2
+    default_value: 2
+  limbs_legs_slow:
+    name: config.limbs.legs_slow.name
+    description: config.limbs.legs_slow.desc
+    category: limbs
+    type: boolean
+    default_value: true
+  limbs_fall_damage:
+    name: config.limbs.fall_damage.name
+    description: config.limbs.fall_damage.desc
+    category: limbs
+    type: boolean
+    default_value: true
+  limbs_arms_sway:
+    name: config.limbs.arms_sway.name
+    description: config.limbs.arms_sway.desc
+    category: limbs
+    type: boolean
+    default_value: true
+  limbs_recovery:
+    name: config.limbs.recovery.name
+    description: config.limbs.recovery.desc
+    category: limbs
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 5

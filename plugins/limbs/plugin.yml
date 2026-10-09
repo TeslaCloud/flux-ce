@@ -1,0 +1,5 @@
+name: Limb Damage
+description: Tracks damage per body part and makes hurt legs and arms a hindrance.
+author: TeslaCloud Studios
+depends:
+  - characters
