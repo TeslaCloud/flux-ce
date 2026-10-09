@@ -1,7 +1,7 @@
 categories:
   stamina:
     name: config.stamina.title
-    description: config.stamina.title
+    description: config.stamina.desc
 configs:
   stam_drain_scale:
     name: config.stamina.stam_drain_scale.name
@@ -43,3 +43,35 @@ configs:
     min_value: 0
     max_value: 256
     default_value: 3
+  stam_health_drain_scale:
+    name: config.stamina.stam_health_drain_scale.name
+    description: config.stamina.stam_health_drain_scale.desc
+    category: stamina
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 1
+    default_value: 0
+  stam_crouch_regen_scale:
+    name: config.stamina.stam_crouch_regen_scale.name
+    description: config.stamina.stam_crouch_regen_scale.desc
+    category: stamina
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 1
+    default_value: 1
+  stam_slowdown_threshold:
+    name: config.stamina.stam_slowdown_threshold.name
+    description: config.stamina.stam_slowdown_threshold.desc
+    category: stamina
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 0
+  stam_persistent:
+    name: config.stamina.stam_persistent.name
+    description: config.stamina.stam_persistent.desc
+    category: stamina
+    type: boolean
+    default_value: false

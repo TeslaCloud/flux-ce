@@ -18,3 +18,15 @@ en:
       stam_regen_delay:
         name: Regeneration Delay
         desc: How many seconds to wait before starting stamina regeneration.
+      stam_health_drain_scale:
+        name: Health Drain Scale
+        desc: How much faster stamina drains for a wounded player. At 1 a player who is almost dead tires twice as fast; 0 turns it off.
+      stam_crouch_regen_scale:
+        name: Crouch Regeneration Scale
+        desc: How many times faster stamina regenerates while the player is crouching. 1 turns it off.
+      stam_slowdown_threshold:
+        name: Slowdown Threshold
+        desc: Percentage of the max stamina below which a running player gradually slows down to walking speed, and has to stop sprinting to recover. At 0 the player runs at full speed until the stamina runs out.
+      stam_persistent:
+        name: Save Stamina
+        desc: Whether stamina is saved with the character and restored when it is loaded. Otherwise a loaded character always starts with full stamina.
