@@ -1,0 +1,14 @@
+en:
+  config:
+    mapcleaner:
+      title: Map Cleaner
+      desc: Settings of the entities that are removed from the map.
+      classes:
+        name: Removed entity classes
+        desc: "Classes of the entities that are removed from the map when it loads and after a map cleanup. An asterisk stands for any number of characters, as in weapon_*. Only entities created by the map itself are removed."
+      physics:
+        name: Remove map physics props
+        desc: Whether the physics props of the map are removed when it loads and after a map cleanup.
+      vehicles:
+        name: Remove map vehicles
+        desc: Whether the vehicles of the map are removed when it loads and after a map cleanup. This includes the seats built into the map.
