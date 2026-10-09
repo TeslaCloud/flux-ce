@@ -16,14 +16,14 @@
 -- default currency, and the `GetStartingMoney` hook has the last word.
 --
 -- Money that lies in the world is kept over restarts while the `save_dropped_money` config is
--- on: it is saved for every map whenever the framework saves its data and whenever money is
--- picked up, and put back when the map is loaded again.
+-- on: it is saved for every map whenever the framework saves its data, and put back when the
+-- map is loaded again.
 --
 -- Hooks decide what is allowed: `CanContainMoney` names the entities that can hold money,
 -- `CanPlayerTransferMoney`, `CanGiveMoney`, `CanPlayerDropMoney` and `CanPlayerPickupMoney`
--- can refuse to move it, `AdjustReceivedMoney` changes or refuses the money that an entity is
--- given, `EntityMoneyReceived` reports the money it was given and `EntityMoneyChanged`
--- reports every change of a balance.
+-- can refuse to move it, `PlayerPickupMoney` can refuse a pickup, `AdjustReceivedMoney`
+-- changes or refuses the money that an entity is given, `EntityMoneyReceived` reports the
+-- money it was given and `EntityMoneyChanged` reports every change of a balance.
 
 PLUGIN:set_global('Currencies')
 

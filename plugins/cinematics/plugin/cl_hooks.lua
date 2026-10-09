@@ -32,8 +32,8 @@ function Cinematics:Think()
 end
 
 --- Draws the letterbox bars and the text of the cinematic that is being played. This hook runs
--- right after HUDPaint, which puts the cinematic above everything the HUD has drawn.
-function Cinematics:HUDDrawScoreBoard()
+-- once the HUD has been drawn, which puts the cinematic above everything on it.
+function Cinematics:PostDrawHUD()
   if self:is_active() or self.current then
     self:draw(ScrW(), ScrH())
   end

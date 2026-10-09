@@ -267,9 +267,9 @@ function Inventories:PlayerDropItem(actor, instance_ids)
     hook.Run('ItemTransferred', item_obj, nil, inventory)
 
     if distance < 80 then
-      Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_obj)
+      Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_obj, actor)
     else
-      local ent = Item.spawn(actor:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_obj)
+      local ent = Item.spawn(actor:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_obj, actor)
       local phys_obj = ent:GetPhysicsObject()
 
       if IsValid(phys_obj) then

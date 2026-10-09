@@ -41,14 +41,15 @@ local title_types = Doors.title_types or {}
 Doors.properties = properties
 Doors.title_types = title_types
 
---- Limits and defaults of door ownership, which a schema may change: the longest text an
--- owner can put on a door (in characters), how many characters can have access to one
--- door, how far from a door its management menu works (in units), and the title type that
--- draws the status of ownable doors that have never been given a title type.
-Doors.max_text_length     = Doors.max_text_length or 32
-Doors.max_access_entries  = Doors.max_access_entries or 32
-Doors.manage_distance     = Doors.manage_distance or 192
-Doors.default_title_type  = Doors.default_title_type or 'center'
+--- How far from a door (in units) a player can open its menu, lock or unlock it, buy, sell
+-- and manage it and, for staff, edit its settings. A schema may change it. The longest
+-- text an owner can put on a door and how many characters can have access to one door are
+-- the door_text_length and door_access_entries configs.
+Doors.use_distance = Doors.use_distance or 160
+
+--- The title type that draws the status of ownable doors that have never been given a
+-- title type. A schema may change it.
+Doors.default_title_type = Doors.default_title_type or 'center'
 
 --- Registers a door property that is saved together with the door
 -- and can optionally be edited in the door menu.
@@ -149,28 +150,15 @@ function Doors:is_owner(actor, entity)
   return character_id != nil and character_id == self:get_owner_id(entity)
 end
 
---- Returns the currency that doors are bought and sold in: the one named by the
--- default_currency config.
--- @return [String currency ID, or nil if the Currencies plugin is not loaded or the currency
---   is not registered, in which case doors are free]
-function Doors:get_currency()
-  if !Currencies then return end
-
-  local currency = Config.get('default_currency')
-
-  if isstring(currency) and Currencies:find_currency(currency) then
-    return currency:lower()
-  end
-end
-
 --- Returns what a door costs: its own price if staff have set one, the door_price config
--- otherwise, rounded to the decimals of the currency. A group of linked doors has one price
--- for all of its doors.
+-- otherwise, rounded to the decimals of the default currency of the Currencies plugin. A
+-- group of linked doors has one price for all of its doors. Doors are free while the
+-- Currencies plugin is not loaded or has no default currency.
 -- @param entity [Entity the door]
 -- @return [Number the price, 0 if the door is free, String ID of the currency the price is
 --   in, nil if there is no currency to pay with]
 function Doors:get_price(entity)
-  local currency = self:get_currency()
+  local currency = Currencies and Currencies:get_default_currency()
 
   if !currency then return 0 end
 

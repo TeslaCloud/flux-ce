@@ -8,9 +8,9 @@
 -- unlimited) and `buy_rate` (percent of the cost of an item that the vendor pays for it);
 -- `sells` (item ID to `{ price = Number or false, stock = Number or false }`) and `buys`
 -- (item ID to `{ price = Number or false }`), where false stands for the default price and
--- for unlimited stock; `factions` and `classes` (ID to true, both empty to let everyone
--- trade); and `phrases` (phrase ID to text, '' for the default text). Always change the
--- settings with `Vendors:apply`, which checks them.
+-- for unlimited stock; `factions` (ID to true, empty to let everyone trade); and `phrases`
+-- (phrase ID to text, '' for the default text). Always change the settings with
+-- `Vendors:apply`, which checks them.
 --
 -- A player who is trading has a session in `Vendors.sessions`, a table with the `vendor`
 -- and the `traded` flag, from `Vendors:open` until `Vendors:close`.
@@ -52,14 +52,6 @@ local function clean_text(value, limit, fallback)
   value = value:gsub('%c', ' ')
 
   return limit_text(value:Trim(), limit)
-end
-
---- Escapes a text for use as an argument of a notification, where it ends up as the
--- replacement of a pattern substitution.
--- @param text [String]
--- @return [String]
-local function escape_argument(text)
-  return (tostring(text):gsub('%%', '%%%%'))
 end
 
 --- Makes a finite number within a range out of a value received from a client or read from a
@@ -130,7 +122,7 @@ end
 
 --- Makes a clean set of IDs out of the one received from a client or read from a save. The
 -- set is either a map of ID to true or a list of IDs. IDs that are not registered are kept, so
--- that a vendor does not open up to everyone when a faction or a class goes away.
+-- that a vendor does not open up to everyone when a faction goes away.
 -- @param ids [Any]
 -- @return [Map ID to true]
 local function clean_ids(ids)
@@ -214,13 +206,12 @@ function Vendors:get_default_data()
     description = '',
     model = self.default_model,
     animation = '',
-    currency = self:get_default_currency() or '',
+    currency = Currencies:get_default_currency() or '',
     money = false,
     buy_rate = clean_number(Config.get('vendor_buy_rate', 50), 0, 1000) or 50,
     sells = {},
     buys = {},
     factions = {},
-    classes = {},
     phrases = phrases
   }
 end
@@ -270,7 +261,6 @@ function Vendors:sanitize(data, current)
   result.sells = data.sells != nil and clean_items(data.sells, result.currency, true) or current.sells
   result.buys = data.buys != nil and clean_items(data.buys, result.currency, false) or current.buys
   result.factions = data.factions != nil and clean_ids(data.factions) or current.factions
-  result.classes = data.classes != nil and clean_ids(data.classes) or current.classes
   result.phrases = {}
 
   for k, v in ipairs(self.phrases) do
@@ -387,7 +377,6 @@ function Vendors:to_saveable(vendor)
     sells = items_to_list(data.sells),
     buys = items_to_list(data.buys),
     factions = table.GetKeys(data.factions),
-    classes = table.GetKeys(data.classes),
     phrases = data.phrases
   }
 end
@@ -616,8 +605,8 @@ function Vendors:say(vendor, actor, id)
 end
 
 --- Checks whether a player may trade with a vendor. The PlayerCanUseVendor hook decides
--- first; if it has no opinion, the player needs one of the factions or classes of the vendor,
--- unless the vendor has neither.
+-- first; if it has no opinion, the player needs one of the factions of the vendor, unless
+-- the vendor has none. A schema that restricts vendors further does so through the hook.
 -- @param actor [Player]
 -- @param vendor [Entity]
 -- @return [Boolean, String error phrase given by the hook, Map arguments of the phrase]
@@ -627,9 +616,9 @@ function Vendors:can_trade(actor, vendor)
   -- @param actor [Player The customer]
   -- @param vendor [Entity The vendor]
   -- @return [Boolean Return false to refuse the player and true to let them trade whatever
-  --   the factions and classes of the vendor are; nothing leaves it to those, String Error
-  --   phrase to notify a refused player with instead of the 'refuse' phrase of the vendor,
-  --   Map Arguments of that phrase]
+  --   the factions of the vendor are; nothing leaves it to those, String Error phrase to
+  --   notify a refused player with instead of the 'refuse' phrase of the vendor, Map
+  --   Arguments of that phrase]
   local allowed, reason, arguments = hook.Run('PlayerCanUseVendor', actor, vendor)
 
   if allowed == false then
@@ -640,28 +629,13 @@ function Vendors:can_trade(actor, vendor)
     return true
   end
 
-  local data = vendor.vendor_data
-  local restricted = false
+  local factions = vendor.vendor_data.factions
 
-  if Factions and !table.IsEmpty(data.factions) then
-    if data.factions[actor:get_faction_id()] then
-      return true
-    end
-
-    restricted = true
+  if Factions and !table.IsEmpty(factions) then
+    return factions[actor:get_faction_id()] == true
   end
 
-  if Classes and !table.IsEmpty(data.classes) then
-    local class_id = actor:get_class_id()
-
-    if class_id and data.classes[class_id] then
-      return true
-    end
-
-    restricted = true
-  end
-
-  return !restricted
+  return true
 end
 
 --- Returns the players who have the trade panel of a vendor open.
@@ -696,6 +670,31 @@ function Vendors:update_customers(vendor, actor)
     if !actor or actor == v then
       Cable.send(v, 'fl_vendor_update', vendor, self:get_trade_data(vendor, v))
     end
+  end
+end
+
+--- Tells the customers of a vendor what a trade has changed: the customer who traded gets
+-- the whole trade panel again, because their items have changed, and every other customer
+-- gets just the money pool of the vendor and the stock of the item that was traded.
+-- @param vendor [Entity]
+-- @param actor [Player the customer who has traded]
+-- @param item_id=nil [String ID of the item whose stock has changed, nil if none has]
+function Vendors:send_trade_change(vendor, actor, item_id)
+  local data = vendor.vendor_data
+  local entry = item_id and data.sells[item_id]
+  local stock = entry and entry.stock or nil
+  local others = {}
+
+  for k, v in ipairs(self:get_customers(vendor)) do
+    if v != actor then
+      table.insert(others, v)
+    end
+  end
+
+  self:update_customers(vendor, actor)
+
+  if #others > 0 then
+    Cable.send(others, 'fl_vendor_change', vendor, data.money, item_id, stock)
   end
 end
 
@@ -916,7 +915,7 @@ function Vendors:buy(actor, vendor, item_id)
   session.traded = true
 
   actor:notify('notification.vendor.bought', {
-    item = escape_argument(item_obj:get_name()),
+    item = item_obj:get_name(),
     price = price,
     currency = Currencies:find_currency(currency).name
   })
@@ -929,16 +928,18 @@ function Vendors:buy(actor, vendor, item_id)
   -- @param price [Number What the player has paid]
   hook.Run('PlayerBoughtFromVendor', actor, vendor, item_obj, price)
 
-  self:update_customers(vendor)
+  self:send_trade_change(vendor, actor, item_id)
 
   return true
 end
 
 --- Buys an item from a player who is trading with a vendor. Refused if the player does not
 -- have the item, if the vendor does not take it, if the CanPlayerDropItem or the
--- PlayerCanSellToVendor hook vetoes it, or if the money pool of the vendor does not cover the
--- price. Otherwise the item is taken out of the inventory of the player and removed, and the
--- price goes from the money pool of the vendor to the player.
+-- PlayerCanSellToVendor hook vetoes it, if the money pool of the vendor does not cover the
+-- price or if the AdjustReceivedMoney hook refuses the money. The player is paid first, and
+-- only then is the item taken out of their inventory and removed; the money pool of the
+-- vendor goes down by what the player has received, which the AdjustReceivedMoney hook may
+-- have lowered.
 -- @param actor [Player the customer]
 -- @param vendor [Entity]
 -- @param instance_id [Number instance ID of the item]
@@ -1000,10 +1001,25 @@ function Vendors:sell(actor, vendor, instance_id)
   end
 
   local item_name = item_obj:get_name()
+  local paid = 0
+
+  if price > 0 then
+    paid = actor:give_money(currency, price, vendor)
+
+    if paid == false then
+      actor:notify('error.money_refused')
+
+      return false
+    end
+  end
 
   hook.Run('PreItemTransfer', item_obj, nil, inventory)
 
   if !inventory:take_item_by_id(instance_id) then
+    if paid > 0 then
+      actor:take_money(currency, paid)
+    end
+
     inventory:sync()
 
     return false
@@ -1015,19 +1031,15 @@ function Vendors:sell(actor, vendor, instance_id)
 
   Item.remove(item_obj)
 
-  if price > 0 then
-    actor:give_money(currency, price)
-  end
-
   if data.money then
-    data.money = round_money(currency, math.max(data.money - price, 0))
+    data.money = round_money(currency, math.max(data.money - paid, 0))
   end
 
   session.traded = true
 
   actor:notify('notification.vendor.sold', {
-    item = escape_argument(item_name),
-    price = price,
+    item = item_name,
+    price = paid,
     currency = Currencies:find_currency(currency).name
   })
 
@@ -1036,10 +1048,10 @@ function Vendors:sell(actor, vendor, instance_id)
   -- @param actor [Player The customer]
   -- @param vendor [Entity The vendor]
   -- @param item_obj [Item The item instance that was sold; it does not exist anymore]
-  -- @param price [Number What the player has been paid]
-  hook.Run('PlayerSoldToVendor', actor, vendor, item_obj, price)
+  -- @param price [Number What the player has been paid, after the AdjustReceivedMoney hook]
+  hook.Run('PlayerSoldToVendor', actor, vendor, item_obj, paid)
 
-  self:update_customers(vendor)
+  self:send_trade_change(vendor, actor)
 
   return true
 end

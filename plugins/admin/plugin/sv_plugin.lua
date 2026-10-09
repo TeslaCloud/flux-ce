@@ -7,6 +7,20 @@
 --
 -- The receivers of the ban list and of the staff page are in sv_bans.lua and sv_staff.lua.
 
+--- Returns the name of a plugin the loader knows of, loaded or not, for the notifications
+-- of the plugin manager.
+-- @param id [String normalized plugin ID]
+-- @return [String the name from `Plugin.known`, or the ID when no plugin has it]
+local function known_plugin_name(id)
+  for k, v in ipairs(Plugin.known()) do
+    if v.id == id then
+      return v.name
+    end
+  end
+
+  return id
+end
+
 --- Checks a request of the admin panel to edit a player's role or permissions. The sender
 -- needs the 'manage_permissions' permission and a role with a higher immunity than the
 -- target's; an equal immunity is not enough, as for the SetGroup and Demote commands. Senders
@@ -180,7 +194,7 @@ local function announce_config_change(actor, key, value, pending)
   Command:notify_staff(pending and 'notification.config_changed_restart' or 'notification.config_changed', {
     player = get_player_name(actor),
     config = definition and definition.name or key,
-    value = (string.gsub(Config.display_value(key, value), '%%', '%%%%'))
+    value = Config.display_value(key, value)
   })
 end
 
@@ -254,16 +268,7 @@ Cable.receive('fl_bolt_plugin_set_disabled', function(actor, id, disabled, force
 
   if Plugin.disabled_on_restart(id) == disabled then return end
 
-  local name = id
-
-  for k, v in ipairs(Plugin.known()) do
-    if v.id == id then
-      name = v.name
-
-      break
-    end
-  end
-
+  local name = known_plugin_name(id)
   local success, phrase, dependents = Plugin.set_disabled(id, disabled, force == true)
 
   if !success then

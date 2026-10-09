@@ -287,11 +287,9 @@ local function has_inventory()
   return Inventories != nil
 end
 
-do
-  Hints:add('forums', 'hint.forums')
-  Hints:add('hints', 'hint.hints', nil, false, has_settings)
-  Hints:add('tab', 'hint.tab')
-  Hints:add('inventory', 'hint.inventory', nil, false, has_inventory)
-  Hints:add('commands', 'hint.commands')
-  Hints:add('bugs', 'hint.bugs')
-end
+Hints:add('forums', 'hint.forums')
+Hints:add('hints', 'hint.hints', nil, false, has_settings)
+Hints:add('tab', 'hint.tab')
+Hints:add('inventory', 'hint.inventory', nil, false, has_inventory)
+Hints:add('commands', 'hint.commands')
+Hints:add('bugs', 'hint.bugs')

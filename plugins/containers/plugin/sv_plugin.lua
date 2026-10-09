@@ -31,13 +31,6 @@ local function sanitize(text, max_length)
   end
 end
 
---- Escapes a text so that it can be substituted into a language phrase as it is.
--- @param text [String]
--- @return [String the text with its percent signs doubled]
-local function escape(text)
-  return (text:gsub('%%', '%%%%'))
-end
-
 --- Counts the slots of an inventory that have items in them.
 -- @param inventory [Inventory]
 -- @return [Number]
@@ -329,8 +322,8 @@ function Container:open(actor, entity)
 
   if message then
     actor:notify('notification.container.message', {
-      name = escape(self:get_container_name(entity) or ''),
-      message = escape(message)
+      name = self:get_container_name(entity) or '',
+      message = message
     })
   end
 
@@ -511,8 +504,9 @@ end
 --- Deals with the items of a container whose prop is being removed: drops them on the
 -- ground if the `container_spill_items` config is on and destroys them otherwise, and
 -- runs the `OnContainerRemoved` hook. Does nothing while the server is shutting down or
--- changing the map, when the containers are saved to come back with their items. Items
--- that turn out to be in the world or in another inventory are left alone.
+-- changing the map, or while the map is being cleaned up: the containers are saved then,
+-- with the IDs of their items, to come back with them. Items that turn out to be in the
+-- world or in another inventory are left alone.
 --
 -- The items are dropped or destroyed on the next tick. A map that is unloading never gets
 -- there, so the saved items of the containers are safe even if the shutdown was not
@@ -521,7 +515,7 @@ end
 -- @param inventory [Inventory the inventory of the container, nil if it was never created]
 -- @param item_ids [List<Number> instance ids of the items of the container]
 function Container:handle_removal(entity, inventory, item_ids)
-  if Flux.shutting_down then return end
+  if Flux.shutting_down or self.cleaning_up then return end
 
   local spilled = Config.get('container_spill_items', false) == true
 
@@ -541,7 +535,7 @@ function Container:handle_removal(entity, inventory, item_ids)
   -- run for every removed prop with a container model, whether it held anything or not.
   -- The prop is still valid at this point and its inventory is not registered anymore;
   -- its items are dropped on the ground or destroyed on the next tick. It is not run when
-  -- the map unloads.
+  -- the map unloads or is cleaned up.
   -- @param entity [Entity The container prop that is being removed]
   -- @param spilled [Boolean true if the items are dropped on the ground, false if they
   --   are destroyed]

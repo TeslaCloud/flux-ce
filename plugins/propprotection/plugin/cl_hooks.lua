@@ -1,6 +1,28 @@
 --- Client side of the Prop Protection plugin: shows who owns the entity the local player is
 -- looking at and registers the client setting that hides it.
 
+--- Color of the owner line on the entities of the local player.
+local own_color = Color('lightgreen')
+
+--- Colors that the owner line is drawn with, faded by distance; filled in every frame rather
+-- than allocated.
+local text_color = Color(255, 255, 255)
+local outline_color = Color(0, 0, 0)
+
+--- Copies a color into one of the reusable colors with another alpha.
+-- @param target [Color the color that is written to]
+-- @param source [Color the color to copy]
+-- @param alpha [Number alpha from 0 to 255]
+-- @return [Color the target]
+local function fade(target, source, alpha)
+  target.r = source.r
+  target.g = source.g
+  target.b = source.b
+  target.a = alpha
+
+  return target
+end
+
 --- Registers the setting that shows or hides the owner line of entities.
 function PropProtection:RegisterClientSettings()
   ClientSettings:register_setting('show_prop_owners', {
@@ -34,7 +56,7 @@ function PropProtection:DrawEntityTargetID(entity, x, y, dist)
 
   if key == self:get_key(PLAYER) then
     text = t'ui.prop_protection.owner_you'
-    color = Color('lightgreen')
+    color = own_color
   elseif Config.get('prop_owner_display') or self:can_bypass(PLAYER) then
     local owner = self:find_owner(key)
 
@@ -56,10 +78,10 @@ function PropProtection:DrawEntityTargetID(entity, x, y, dist)
     font,
     x - text_w * 0.5,
     y - text_h - 4,
-    color:alpha(alpha),
+    fade(text_color, color, alpha),
     nil,
     nil,
     1,
-    color_black:alpha(alpha)
+    fade(outline_color, color_black, alpha)
   )
 end

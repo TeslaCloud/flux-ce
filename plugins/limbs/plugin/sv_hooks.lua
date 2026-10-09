@@ -2,13 +2,20 @@
 -- it into limb damage, reset the limbs of players who die and let limbs recover over time.
 -- None of the damage handlers returns a value or changes the damage, so they work alongside
 -- the damage handlers of the schema and of other plugins.
+--
+-- With the Damage plugin loaded the hit location comes from its `PostPlayerTakeDamage`
+-- hook, which already carries it; without it the plugin remembers the location from
+-- `ScalePlayerDamage` itself and reads it back in `PostEntityTakeDamage`.
 
 --- Remembers the body part that an attack on a player was traced to, for the damage that
--- follows in the same tick. The damage is left as it is.
+-- follows in the same tick. The damage is left as it is. Not needed while the Damage
+-- plugin is loaded, which passes the location to `PostPlayerTakeDamage`.
 -- @param victim [Player]
 -- @param hitgroup [Number HITGROUP_ enum of the body part that was hit]
 -- @param damage_info [CTakeDamageInfo]
 function Limbs:ScalePlayerDamage(victim, hitgroup, damage_info)
+  if Damage then return end
+
   victim.limb_hitgroup = hitgroup
   victim.limb_hit_tick = engine.TickCount()
 end
@@ -24,28 +31,53 @@ function Limbs:EntityTakeDamage(entity, damage_info)
   end
 end
 
---- Hurts the limbs of a player who has taken damage. This runs after the damage has been
--- dealt, so damage that was blocked hurts nothing and damage that other handlers have scaled
--- counts as it was dealt. Limb damage is worked out from the health the player has lost,
--- which leaves out what their armor has absorbed, times the 'limbs_damage_scale' config.
+--- Hurts the limbs of a player who has taken damage, from the `PostPlayerTakeDamage` hook
+-- of the Damage plugin, which carries the hit location.
+-- @param victim [Player the player who has taken damage]
+-- @param damage_info [CTakeDamageInfo]
+-- @param took [Boolean whether the damage was actually dealt]
+-- @param hitgroup [Number HITGROUP_ enum of the hit location]
+function Limbs:PostPlayerTakeDamage(victim, damage_info, took, hitgroup)
+  self:handle_damage(victim, damage_info, took, hitgroup)
+end
+
+--- Hurts the limbs of a player who has taken damage, with the hit location that
+-- `ScalePlayerDamage` has remembered. Only used without the Damage plugin.
 -- @param victim [Entity the entity that has taken damage]
 -- @param damage_info [CTakeDamageInfo]
 -- @param took [Boolean whether the damage was actually dealt]
 function Limbs:PostEntityTakeDamage(victim, damage_info, took)
-  if !IsValid(victim) or !victim:IsPlayer() then return end
+  if Damage or !IsValid(victim) or !victim:IsPlayer() then return end
 
-  local tick = engine.TickCount()
-  local hitgroup, health_before
+  local hitgroup
 
-  if victim.limb_hit_tick == tick then
+  if victim.limb_hit_tick == engine.TickCount() then
     hitgroup = victim.limb_hitgroup
   end
 
-  if victim.limb_health_tick == tick then
+  victim.limb_hit_tick = nil
+
+  self:handle_damage(victim, damage_info, took, hitgroup)
+end
+
+--- Hurts the limbs of a player who has taken damage. This runs after the damage has been
+-- dealt, so damage that was blocked hurts nothing and damage that other handlers have scaled
+-- counts as it was dealt. Limb damage is worked out from the health the player has lost,
+-- which leaves out what their armor has absorbed, times the 'limbs_damage_scale' config.
+-- @param victim [Player the player who has taken damage]
+-- @param damage_info [CTakeDamageInfo]
+-- @param took [Boolean whether the damage was actually dealt]
+-- @param hitgroup=nil [Number HITGROUP_ enum of the hit location; nil or HITGROUP_GENERIC
+--   for damage without one]
+function Limbs:handle_damage(victim, damage_info, took, hitgroup)
+  if !IsValid(victim) or !victim:IsPlayer() then return end
+
+  local health_before
+
+  if victim.limb_health_tick == engine.TickCount() then
     health_before = victim.limb_health_before
   end
 
-  victim.limb_hit_tick = nil
   victim.limb_health_tick = nil
 
   if !took or !victim:Alive() or !self:is_enabled() then return end

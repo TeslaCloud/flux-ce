@@ -1,4 +1,28 @@
---- Client-side hooks of the Doors plugin: draws the titles of doors in the world.
+--- Client-side hooks of the Doors plugin: draws the titles of doors in the world and keeps
+-- the status texts of the doors up to date.
+
+--- Makes a door work its status text out again when one of its ownership variables
+-- ('fl_door_ownable', 'fl_door_price', 'fl_door_owner' or 'fl_door_text') has changed.
+-- @param entity [Entity the entity whose variable has changed]
+-- @param key [String variable name]
+function Doors:NetVarChanged(entity, key)
+  if key:start_with('fl_door_') then
+    self:invalidate_status_text(entity)
+  end
+end
+
+--- Makes every door work its status text out again when the language changes.
+function Doors:LanguageChanged()
+  self:invalidate_status_texts()
+end
+
+--- Makes every door work its status text out again when the door_price config changes.
+-- @param key [String config key]
+function Doors:OnConfigReceived(key)
+  if key == 'door_price' then
+    self:invalidate_status_texts()
+  end
+end
 
 --- Draws the titles of the doors within 256 units of the camera on both sides
 -- of the door, using the title type that is set on each door. A door that is ownable or

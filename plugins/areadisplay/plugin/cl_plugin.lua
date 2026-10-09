@@ -20,10 +20,16 @@ AreaDisplay.defaults = {
   type_sound = 'common/talk.wav'
 }
 
---- Converts a color that may have come over the network to an opaque Color.
+--- Converts a color that may have come over the network to an opaque Color. The Cinematics
+-- plugin does it with `Cinematics.to_color` whenever it is loaded; the code here is only the
+-- fallback for a server without it.
 -- @param value [Color/Map color, or any table with the r, g and b fields]
 -- @return [Color the color without its alpha, or nil if the value is not a color]
 local function to_color(value)
+  if Cinematics and isfunction(Cinematics.to_color) then
+    return Cinematics.to_color(value)
+  end
+
   if istable(value) and isnumber(value.r) and isnumber(value.g) and isnumber(value.b) then
     return Color(value.r, value.g, value.b)
   end

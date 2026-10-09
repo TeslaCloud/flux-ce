@@ -5,6 +5,10 @@
 
 local next_getup_request = 0
 
+--- Overlays of the screen: black for a knocked out player, dark for a fallen one.
+local knocked_out_color = Color(0, 0, 0, 255)
+local fallen_color = Color(0, 0, 0, 100)
+
 --- Checks whether the get up timer of the local player is running.
 -- @return [Boolean]
 local function is_getting_up()
@@ -51,7 +55,7 @@ function Ragdoll:HUDPaint()
   local getting_up = is_getting_up()
   local text = nil
 
-  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, knocked_out and 255 or 100))
+  draw.RoundedBox(0, 0, 0, scrw, scrh, knocked_out and knocked_out_color or fallen_color)
 
   if knocked_out then
     text = t'ui.hud.knocked_out'

@@ -134,9 +134,12 @@ vgui.Register('fl_staff_list', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the labels of the row and the button that demotes the member.
+--- Creates the labels of the row and the button that demotes the member, and picks the
+-- background color of the dark rows.
 function PANEL:Init()
   local text_color = Theme.get_color('text')
+
+  self.dark_color = Theme.get_color('background'):alpha(150)
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetFont(Theme.get_font('text_small'))
@@ -168,7 +171,7 @@ end
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
   if Theme.hook('PaintAdminRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
+    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
   end
 end
 
@@ -230,7 +233,7 @@ function PANEL:demote()
 
   local title, yes, no = t'ui.admin.staff.demote', t'ui.yes', t'ui.no'
   local message = t('ui.admin.staff.demote_message', {
-    name = (string.gsub(tostring(member.name or member.steam_id), '%%', '%%%%')),
+    name = tostring(member.name or member.steam_id),
     role = tostring(member.role)
   })
 

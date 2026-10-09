@@ -3,6 +3,13 @@
 -- charges and refunds the cost of props and keeps track of the props that must not hurt
 -- players. Ownership lasts for the session of the server: it is kept on the entities and in
 -- an index by ownership key, and nothing is written to the database.
+--
+-- The file ends by replacing Sandbox's `cleanup.Add`, which every spawn command and every
+-- tool calls for the entities it creates, so that those entities are given to the player
+-- before they are added to their cleanup list as usual. The original function is kept as
+-- `cleanup.fl_add`, which is also what keeps the replacement from wrapping itself on a code
+-- refresh. The spawn hooks of sv_hooks.lua cover the spawn menu; this covers everything
+-- else that Sandbox creates on behalf of a player, such as the entities of the tools.
 
 local owned = PropProtection.owned or {}
 local held = PropProtection.held or {}

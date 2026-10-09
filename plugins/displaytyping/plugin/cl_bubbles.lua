@@ -33,6 +33,14 @@ local listed = {}
 local triangle = { { x = 0, y = 0 }, { x = 0, y = 0 }, { x = 0, y = 0 } }
 local ignored_first, ignored_second
 local trace_result = {}
+local metrics_dirty = true
+local lifted_position = Vector()
+local view_offset = Vector()
+local accent_color = Color(255, 255, 255)
+local text_color = Color(255, 255, 255)
+local background_color = Color(0, 0, 0)
+local dot_color = Color(255, 255, 255)
+local caret_color = Color(255, 255, 255)
 
 --- Decides whether an entity blocks the line of sight to a typing player. Players, NPCs,
 -- ragdolls, weapons and the vehicles the two players sit in do not.
@@ -51,6 +59,18 @@ local trace_data = {
   filter = blocks_sight,
   output = trace_result
 }
+
+--- Copies a color into one of the colors that are kept for drawing, at an opacity, so that
+-- drawing a bubble does not create colors every frame.
+-- @param target [Color color to write to]
+-- @param source [Color color to copy]
+-- @param alpha [Number opacity from 0 to 255]
+-- @return [Color the target]
+local function tint(target, source, alpha)
+  target.r, target.g, target.b, target.a = source.r, source.g, source.b, alpha
+
+  return target
+end
 
 --- Moves a value towards its goal by a share of the remaining difference that does not
 -- depend on the frame rate.
@@ -325,8 +345,16 @@ function DisplayTyping:watch_bubble(bubble, now)
   return 1 - (distance - fade_from) / (range - fade_from)
 end
 
---- Reads the fonts, colors and sizes of the bubbles from the active theme for the frame,
--- falling back to the general fonts and colors of the theme, and whether live text is shown.
+--- Has the fonts, colors and sizes of the bubbles read from the theme again before the next
+-- frame. The plugin does so when a theme has been loaded, the screen size has changed and
+-- the live text setting or config has been switched.
+function DisplayTyping:invalidate_metrics()
+  metrics_dirty = true
+end
+
+--- Reads the fonts, colors and sizes of the bubbles from the active theme, falling back to
+-- the general fonts and colors of the theme, and whether live text is shown. Done before the
+-- first frame and again after `DisplayTyping:invalidate_metrics`, not every frame.
 function DisplayTyping:update_metrics()
   metrics.name_font = Theme.get_font('typing_bubble_name', Theme.get_font('text_bar', 'flRoboto'))
   metrics.kind_font = Theme.get_font('typing_bubble_kind', Theme.get_font('text_smallest', 'flRoboto'))
@@ -351,7 +379,8 @@ end
 
 --- Works out what a bubble shows and how large it has to be: the label and the color of the
 -- kind of speech, the wrapped lines of the live text if it is shown, and the size the bubble
--- eases towards. The lines are only wrapped again when the text or the look has changed.
+-- eases towards. The lines are only wrapped again when the text or the look has changed, and
+-- the name and the label are only measured again when they or their fonts have changed.
 -- @param bubble [Map]
 function DisplayTyping:layout_bubble(bubble)
   local kind = bubble.kind
@@ -382,14 +411,26 @@ function DisplayTyping:layout_bubble(bubble)
     end
   end
 
-  local name_width, name_height = util.text_size(bubble.name or '', metrics.name_font)
-  local label = bubble.label or ''
-  local label_width, label_height = 0, 0
-
-  if label != '' then
-    label_width, label_height = util.text_size(label, metrics.kind_font)
+  if bubble.measured_name != bubble.name or bubble.measured_name_font != metrics.name_font then
+    bubble.measured_name = bubble.name
+    bubble.measured_name_font = metrics.name_font
+    bubble.name_width, bubble.name_height = util.text_size(bubble.name or '', metrics.name_font)
   end
 
+  local label = bubble.label or ''
+
+  if bubble.measured_label != label or bubble.measured_label_font != metrics.kind_font then
+    bubble.measured_label = label
+    bubble.measured_label_font = metrics.kind_font
+    bubble.label_width, bubble.label_height = 0, 0
+
+    if label != '' then
+      bubble.label_width, bubble.label_height = util.text_size(label, metrics.kind_font)
+    end
+  end
+
+  local name_width, name_height = bubble.name_width, bubble.name_height
+  local label_width, label_height = bubble.label_width, bubble.label_height
   local width = metrics.dots_width + metrics.spacing + name_width
   local height = math.max(name_height, label_height, metrics.dot)
 
@@ -397,7 +438,6 @@ function DisplayTyping:layout_bubble(bubble)
     width = width + metrics.spacing + label_width
   end
 
-  bubble.name_width = name_width
   bubble.header_height = height
 
   if bubble.lines then
@@ -418,16 +458,19 @@ end
 function DisplayTyping:aim_bubble(bubble)
   if !bubble.fresh then return end
 
-  local position = bubble.head + Vector(0, 0, bubble.lift)
-  local offset = position - view.origin
-  local depth, side, rise = offset:Dot(view.forward), offset:Dot(view.right), offset:Dot(view.up)
+  lifted_position:Set(bubble.head)
+  lifted_position.z = lifted_position.z + bubble.lift
+  view_offset:Set(lifted_position)
+  view_offset:Sub(view.origin)
+
+  local depth, side, rise = view_offset:Dot(view.forward), view_offset:Dot(view.right), view_offset:Dot(view.up)
   local w, h = bubble.goal_w, bubble.goal_h
   local margin = metrics.margin
   local inside = false
   local screen_x, screen_y
 
   if depth > 8 then
-    local screen = position:ToScreen()
+    local screen = lifted_position:ToScreen()
     local inset = margin + (bubble.edge and margin or 0)
 
     screen_x, screen_y = screen.x, screen.y
@@ -562,12 +605,13 @@ function DisplayTyping:draw_bubble(bubble, now)
   if Theme.hook('PaintTypingBubble', bubble, x, y, w, h, alpha) != nil then return end
 
   local accent = bubble.color or metrics.accent
-  local accent_color = ColorAlpha(accent, alpha)
-  local text_color = ColorAlpha(metrics.text, alpha)
-  local background = ColorAlpha(metrics.background, metrics.background.a * fraction)
   local pointer = metrics.pointer
 
-  draw.RoundedBox(metrics.rounding, x, y, w, h, background)
+  tint(accent_color, accent, alpha)
+  tint(text_color, metrics.text, alpha)
+  tint(background_color, metrics.background, metrics.background.a * fraction)
+
+  draw.RoundedBox(metrics.rounding, x, y, w, h, background_color)
 
   if bubble.edge then
     local direction_x, direction_y = bubble.direction_x, bubble.direction_y
@@ -588,7 +632,7 @@ function DisplayTyping:draw_bubble(bubble, now)
   elseif bubble.anchor_y and bubble.anchor_y >= y + h and w > (metrics.rounding + pointer) * 2 then
     local tip_x = math.Clamp(bubble.anchor_x, x + metrics.rounding + pointer, x + w - metrics.rounding - pointer)
 
-    draw_triangle(tip_x - pointer, y + h, tip_x + pointer, y + h, tip_x, y + h + pointer, background)
+    draw_triangle(tip_x - pointer, y + h, tip_x + pointer, y + h, tip_x, y + h + pointer, background_color)
   end
 
   local dot = metrics.dot
@@ -606,7 +650,7 @@ function DisplayTyping:draw_bubble(bubble, now)
         middle - dot * 0.5 - hop * dot * 0.6,
         dot,
         dot,
-        ColorAlpha(accent, alpha * (0.45 + 0.55 * hop))
+        tint(dot_color, accent, alpha * (0.45 + 0.55 * hop))
       )
     end
 
@@ -643,7 +687,7 @@ function DisplayTyping:draw_bubble(bubble, now)
         line_y + (#lines - 1) * line_height + line_height * 0.15,
         metrics.caret,
         line_height * 0.7,
-        ColorAlpha(accent, alpha * (0.5 + 0.5 * math.sin(now * 6 + bubble.phase)))
+        tint(caret_color, accent, alpha * (0.5 + 0.5 * math.sin(now * 6 + bubble.phase)))
       )
     end
   render.SetScissorRect(0, 0, 0, 0, false)
@@ -676,7 +720,11 @@ function DisplayTyping:draw_bubbles()
   view.forward, view.right, view.up = angles:Forward(), angles:Right(), angles:Up()
   view.eyes = PLAYER:EyePos()
 
-  self:update_metrics()
+  if metrics_dirty then
+    metrics_dirty = false
+
+    self:update_metrics()
+  end
 
   local count = 0
 

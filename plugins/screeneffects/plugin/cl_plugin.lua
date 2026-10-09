@@ -2,6 +2,14 @@
 -- whether an effect is applied, the state that is advanced every frame and the drawing of the
 -- screen passes.
 --
+-- Whether an effect is applied, how strong the player wants it and what the `Adjust*` hooks
+-- make of it is looked up eight times a second by `ScreenEffects:update_settings`; every
+-- frame only moves the effects towards those values. The saturation, brightness and
+-- contrast of the low health effect are folded into the color modification table of the
+-- Color Modify plugin through `Flux.set_color_mod`, on top of whatever the schema has set
+-- there, so that the screen is only color corrected once; without that plugin they are not
+-- drawn. The distortion, the blur and the motion blur are passes of their own.
+--
 -- `ScreenEffects.effects` maps the ID of an effect to its `config` key, the IDs of its
 -- `setting` and `strength` settings and the `max_strength` of the latter in percent.
 -- `ScreenEffects.effect_order` lists the IDs in the order of the settings menu.
@@ -112,17 +120,37 @@ local bob_info = { speed = 0, pitch = 0, yaw = 0, roll = 0, lean = 0 }
 local shake = { pitch = 0, roll = 0, duration = 0, elapsed = 0 }
 local heartbeat_info = { interval = 0, volume = 0, pitch = 100 }
 local fall_speed = 0
-local color_modify = {
-  ['$pp_colour_addr'] = 0,
-  ['$pp_colour_addg'] = 0,
-  ['$pp_colour_addb'] = 0,
-  ['$pp_colour_brightness'] = 0,
-  ['$pp_colour_contrast'] = 1,
-  ['$pp_colour_colour'] = 1,
-  ['$pp_colour_mulr'] = 0,
-  ['$pp_colour_mulg'] = 0,
-  ['$pp_colour_mulb'] = 0
+
+--- Whether each effect is applied and how strong the player wants it, as last looked up.
+local enabled = { low_health = false, heartbeat = false, underwater = false, headbob = false }
+local strengths = { low_health = 1, heartbeat = 1, underwater = 1, headbob = 1 }
+
+--- What the AdjustScreenEffects and AdjustViewEffects hooks last made of the effects: the
+-- values of the screen passes that a handler has replaced, by field, and what the handlers
+-- have added to each view angle. Worked out eight times a second from what the effects
+-- would draw on their own.
+local screen_overrides = {}
+local view_offsets = { pitch = 0, yaw = 0, roll = 0 }
+local base_screen = {}
+local adjusted_screen = {}
+local adjusted_view = {}
+local screen_fields = { 'saturation', 'brightness', 'contrast', 'motion_blur', 'refraction', 'blur' }
+local view_fields = { 'pitch', 'yaw', 'roll' }
+
+--- The color modification keys that the color pass writes, by field of
+-- `ScreenEffects.screen`, with the value that leaves the picture alone; what the pass has
+-- last written to each key and what it found there before, so that the values of the schema
+-- are multiplied rather than replaced and put back once the effect is neutral; and whether
+-- the pass has turned the color modification on itself, so that it turns it off again.
+local color_keys = {
+  saturation = { key = '$pp_colour_colour', neutral = 1 },
+  brightness = { key = '$pp_colour_brightness', neutral = 0 },
+  contrast = { key = '$pp_colour_contrast', neutral = 1 }
 }
+local color_written = {}
+local color_base = {}
+local color_mod_enabled_here = false
+
 local heartbeat_path = 'player/heartbeat1.wav'
 local refract_material = Material('models/props_c17/fisheyelens')
 local blur_material = Material('pp/blurscreen')
@@ -236,6 +264,74 @@ function ScreenEffects:get_effect_strength(id)
   return to_number(ClientSettings:get(effect.strength, 100), 100) / 100
 end
 
+--- Folds one value of the color pass into the color modification table of the Color Modify
+-- plugin: the saturation and the contrast multiply what the schema has set there, the
+-- brightness is added to it, and a neutral value puts the value of the schema back.
+-- @param field [String 'saturation', 'brightness' or 'contrast']
+-- @param value [Number value of the pass]
+local function apply_color(field, value)
+  local info = color_keys[field]
+  local current = PLAYER.color_mod_table and PLAYER.color_mod_table[info.key]
+
+  if current == nil then
+    current = info.neutral
+  end
+
+  if color_written[field] == nil or current != color_written[field] then
+    color_base[field] = current
+  end
+
+  local base = color_base[field]
+  local result = base
+
+  if value != info.neutral then
+    result = field == 'brightness' and base + value or base * value
+  end
+
+  Flux.set_color_mod(info.key, result)
+
+  color_written[field] = result
+end
+
+--- Writes the color pass to the Color Modify plugin and turns the color modification on
+-- while the pass changes the picture, or off again once it does not, unless something
+-- else has turned it on. Does nothing without the Color Modify plugin.
+-- @param saturation [Number 1 leaves the colors alone]
+-- @param brightness [Number 0 leaves it alone]
+-- @param contrast [Number 1 leaves it alone]
+local function apply_color_pass(saturation, brightness, contrast)
+  if !isfunction(Flux.set_color_mod) or !IsValid(PLAYER) then return end
+
+  apply_color('saturation', saturation)
+  apply_color('brightness', brightness)
+  apply_color('contrast', contrast)
+
+  local active = saturation != 1 or brightness != 0 or contrast != 1
+
+  if active and !PLAYER.color_mod then
+    enable_color_mod()
+
+    color_mod_enabled_here = true
+  elseif !active and color_mod_enabled_here then
+    Flux.disable_color_mod()
+
+    color_mod_enabled_here = false
+  end
+end
+
+--- Works out what the screen passes would draw from the levels of the effects alone.
+-- @param target [Map table that the values are written to]
+local function compute_screen(target)
+  local blur_health = math.Clamp(defaults.blur_health, 0.01, 1)
+
+  target.saturation = math.max(1 - levels.damage, 0)
+  target.brightness = 0
+  target.contrast = 1
+  target.motion_blur = math.Clamp((levels.damage - (1 - blur_health)) / blur_health, 0, 1) * defaults.motion_blur
+  target.refraction = levels.submerged * defaults.refraction
+  target.blur = levels.submerged * defaults.blur
+end
+
 --- Checks whether screen effects make sense right now: the local player has been initialized,
 -- has a character loaded if the Characters plugin is there, and neither the intro nor the main
 -- menu is open.
@@ -267,7 +363,8 @@ function ScreenEffects:get_health_fraction()
 end
 
 --- Puts everything back to where nothing is drawn, nothing is added to the view and no
--- heartbeat is heard. Called every frame while the effects are not active.
+-- heartbeat is heard, and gives the color modification table back to the schema. Called
+-- every frame while the effects are not active.
 function ScreenEffects:reset_effects()
   levels.damage = 0
   levels.submerged = 0
@@ -289,63 +386,125 @@ function ScreenEffects:reset_effects()
   bob.roll = 0
   bob.lean = 0
 
+  bob_info.speed = 0
+  bob_info.pitch = 0
+  bob_info.yaw = 0
+  bob_info.roll = 0
+  bob_info.lean = 0
+
   shake.duration = 0
   fall_speed = 0
+
+  for k, v in ipairs(screen_fields) do
+    screen_overrides[v] = nil
+  end
+
+  for k, v in ipairs(view_fields) do
+    view_offsets[v] = 0
+  end
+
+  apply_color_pass(1, 0, 1)
 
   self:stop_heartbeat()
 end
 
+--- Looks up what the effects are allowed to do: whether each of them is applied and how
+-- strong the player wants it, what the headbob should be for the way the local player
+-- moves, and what the AdjustScreenEffects and AdjustViewEffects hooks make of the effects.
+-- Called eight times a second while the effects are active; the frames in between only
+-- move the effects towards these values.
+function ScreenEffects:update_settings()
+  for k, v in ipairs(effect_order) do
+    enabled[v] = self:is_effect_enabled(v)
+    strengths[v] = self:get_effect_strength(v)
+  end
+
+  self:update_headbob_target()
+
+  compute_screen(base_screen)
+
+  for k, v in ipairs(screen_fields) do
+    adjusted_screen[v] = base_screen[v]
+  end
+
+  --- Lets plugins change what the screen passes of the Screen Effects plugin draw. Called on
+  -- the client eight times a second while the local player is in the game with a character,
+  -- with what the low health and the underwater effect would draw on their own, and also
+  -- when these effects are turned off, in which case the values are neutral. A field that a
+  -- handler changes keeps the value it was given until the hook runs again; the others go
+  -- on following the effects every frame. Change the fields in place; do not return
+  -- anything from the handler, or the plugins after it are not asked.
+  -- @param screen [Map values of the passes: saturation (Number, 1 leaves the colors alone and
+  --   0 is gray), brightness (Number, 0 leaves it alone), contrast (Number, 1 leaves it alone),
+  --   motion_blur (Number 0 to 1, 0 for none), refraction (Number how far the picture is
+  --   distorted, 0 for none; the underwater effect uses 0.1) and blur (Number how far the
+  --   picture is blurred, 0 for none; the underwater effect uses 2.5)]
+  hook.Run('AdjustScreenEffects', adjusted_screen)
+
+  for k, v in ipairs(screen_fields) do
+    local value = to_number(adjusted_screen[v], base_screen[v])
+
+    screen_overrides[v] = value != base_screen[v] and value or nil
+  end
+
+  for k, v in ipairs(view_fields) do
+    adjusted_view[v] = view[v] - view_offsets[v]
+  end
+
+  --- Lets plugins change what the Screen Effects plugin adds to the view angles of the local
+  -- player. Called on the client eight times a second while the player is in the game with a
+  -- character, with what the headbob and the fall shake add on their own, and also when the
+  -- 'headbob' effect is turned off, in which case the angles are 0. What a handler adds to
+  -- or takes off an angle is kept and added every frame until the hook runs again. The
+  -- angles are not added while the player is seen in third person or looks through another
+  -- entity. Change the fields in place; do not return anything from the handler, or the
+  -- plugins after it are not asked.
+  -- @param view [Map angles added to the view, in degrees: pitch (Number, positive looks
+  --   down), yaw (Number, positive turns left) and roll (Number, positive tilts to the right)]
+  hook.Run('AdjustViewEffects', adjusted_view)
+
+  for k, v in ipairs(view_fields) do
+    view_offsets[v] = to_number(adjusted_view[v], view[v]) - (view[v] - view_offsets[v])
+  end
+end
+
 --- Works out what the screen passes draw this frame: fades the low health and the underwater
--- effect towards where they should be, writes their values to `ScreenEffects.screen` and runs
--- the AdjustScreenEffects hook.
+-- effect towards where they should be, writes their values to `ScreenEffects.screen` with
+-- what the AdjustScreenEffects hook has last replaced, and hands the color pass to the
+-- Color Modify plugin.
 -- @param frame_time [Number seconds since the last frame]
 function ScreenEffects:update_screen(frame_time)
   local client = PLAYER
   local damage = 0
   local submerged = 0
 
-  if self:is_effect_enabled('low_health') then
-    damage = (1 - self:get_health_fraction()) * self:get_effect_strength('low_health')
+  if enabled.low_health then
+    damage = (1 - self:get_health_fraction()) * strengths.low_health
   end
 
-  if client:WaterLevel() >= 3 and GetViewEntity() == client and self:is_effect_enabled('underwater') then
-    submerged = self:get_effect_strength('underwater')
+  if enabled.underwater and client:WaterLevel() >= 3 and GetViewEntity() == client then
+    submerged = strengths.underwater
   end
 
   levels.damage = math.Approach(levels.damage, damage, frame_time * defaults.drain_speed)
   levels.submerged = math.Approach(levels.submerged, submerged, frame_time * defaults.submerge_speed)
 
-  local blur_health = math.Clamp(defaults.blur_health, 0.01, 1)
+  compute_screen(screen)
 
-  screen.saturation = math.max(1 - levels.damage, 0)
-  screen.brightness = 0
-  screen.contrast = 1
-  screen.motion_blur = math.Clamp((levels.damage - (1 - blur_health)) / blur_health, 0, 1) * defaults.motion_blur
-  screen.refraction = levels.submerged * defaults.refraction
-  screen.blur = levels.submerged * defaults.blur
+  for k, v in pairs(screen_overrides) do
+    screen[k] = v
+  end
 
-  --- Lets plugins change what the screen passes of the Screen Effects plugin draw. Called on
-  -- the client every frame while the local player is in the game with a character, after the
-  -- low health and the underwater effect have written their values, and also when these
-  -- effects are turned off, in which case the values are neutral. Change the fields in place;
-  -- do not return anything from the handler, or the plugins after it are not asked.
-  -- @param screen [Map values of the passes: saturation (Number, 1 leaves the colors alone and
-  --   0 is gray), brightness (Number, 0 leaves it alone), contrast (Number, 1 leaves it alone),
-  --   motion_blur (Number 0 to 1, 0 for none), refraction (Number how far the picture is
-  --   distorted, 0 for none; the underwater effect uses 0.1) and blur (Number how far the
-  --   picture is blurred, 0 for none; the underwater effect uses 2.5)]
-  hook.Run('AdjustScreenEffects', screen)
+  apply_color_pass(to_number(screen.saturation, 1), to_number(screen.brightness, 0), to_number(screen.contrast, 1))
 end
 
 --- Draws the screen passes from the values in `ScreenEffects.screen`: the distortion, the
--- blur, the motion blur and the color pass, each of them only if it would change the picture.
+-- blur and the motion blur, each of them only if it would change the picture. The color
+-- pass is drawn by the Color Modify plugin.
 function ScreenEffects:draw_screen()
   local refraction = to_number(screen.refraction, 0)
   local blur = to_number(screen.blur, 0)
   local motion_blur = math.Clamp(to_number(screen.motion_blur, 0), 0, 1)
-  local saturation = to_number(screen.saturation, 1)
-  local brightness = to_number(screen.brightness, 0)
-  local contrast = to_number(screen.contrast, 1)
 
   if refraction > 0 then
     draw_refraction(refraction)
@@ -357,14 +516,6 @@ function ScreenEffects:draw_screen()
 
   if motion_blur > 0.01 then
     DrawMotionBlur(math.max(1 - motion_blur, 0.1), 1, 0)
-  end
-
-  if saturation != 1 or brightness != 0 or contrast != 1 then
-    color_modify['$pp_colour_colour'] = saturation
-    color_modify['$pp_colour_brightness'] = brightness
-    color_modify['$pp_colour_contrast'] = contrast
-
-    DrawColorModify(color_modify)
   end
 end
 
@@ -378,7 +529,7 @@ function ScreenEffects:update_heartbeat()
   local fraction = self:get_health_fraction()
   local threshold = defaults.heartbeat_health
 
-  if !client:Alive() or fraction >= threshold or !self:is_effect_enabled('heartbeat') then
+  if !client:Alive() or fraction >= threshold or !enabled.heartbeat then
     self:stop_heartbeat()
 
     return
@@ -397,7 +548,7 @@ function ScreenEffects:update_heartbeat()
   local info = heartbeat_info
 
   info.interval = Lerp(danger, defaults.heartbeat_slow, defaults.heartbeat_fast)
-  info.volume = Lerp(danger, defaults.heartbeat_quiet, defaults.heartbeat_loud) * self:get_effect_strength('heartbeat')
+  info.volume = Lerp(danger, defaults.heartbeat_quiet, defaults.heartbeat_loud) * strengths.heartbeat
   info.pitch = Lerp(danger, 100, defaults.heartbeat_pitch)
 
   --- Lets plugins change the next beat of the low health heartbeat. Called on the client right
@@ -452,7 +603,7 @@ function ScreenEffects:start_fall_shake(speed)
   if speed < min_speed then return end
 
   local intensity = math.Clamp((speed - min_speed) / math.max(defaults.fall_max_speed - min_speed, 1), 0, 1)
-  local strength = self:get_effect_strength('headbob')
+  local strength = strengths.headbob
   local side = math.random(2) == 1 and 1 or -1
   local info = {
     pitch = Lerp(intensity, defaults.fall_pitch_min, defaults.fall_pitch_max) * strength,
@@ -476,27 +627,12 @@ function ScreenEffects:start_fall_shake(speed)
   shake.elapsed = 0
 end
 
---- Works out what is added to the view angles this frame: notices landings, advances the
--- headbob and the fall shake, writes the result to `ScreenEffects.view` and runs the
--- AdjustViewEffects hook.
--- @param frame_time [Number seconds since the last frame]
-function ScreenEffects:update_view(frame_time)
+--- Works out what the headbob should be for the way the local player moves right now and
+-- runs the AdjustHeadbob hook; the view follows the result smoothly every frame. Called
+-- eight times a second while the effects are active.
+function ScreenEffects:update_headbob_target()
   local client = PLAYER
-  local enabled = self:is_effect_enabled('headbob')
-  local on_foot = client:Alive() and client:GetMoveType() == MOVETYPE_WALK and !client:InVehicle()
-  local on_ground = client:IsOnGround()
-  local velocity = client:GetVelocity()
   local info = bob_info
-
-  if on_foot and !on_ground then
-    fall_speed = math.max(-velocity.z, 0)
-  elseif fall_speed > 0 then
-    if enabled and on_foot and client:WaterLevel() < 2 then
-      self:start_fall_shake(fall_speed)
-    end
-
-    fall_speed = 0
-  end
 
   info.speed = 0
   info.pitch = 0
@@ -504,31 +640,54 @@ function ScreenEffects:update_view(frame_time)
   info.roll = 0
   info.lean = 0
 
-  if enabled and on_foot and on_ground then
-    local speed = velocity:Length2D()
+  if !enabled.headbob or !client:Alive() or !client:IsOnGround() then return end
+  if client:GetMoveType() != MOVETYPE_WALK or client:InVehicle() then return end
 
-    if speed > defaults.bob_min_speed then
-      local run_speed = math.max(to_number(Config.get('run_speed', 200), 200), 1)
-      local fraction = math.min(speed / run_speed, 1)
-      local strength = self:get_effect_strength('headbob')
-      local sideways = math.Clamp(client:EyeAngles():Right():Dot(velocity) / run_speed, -1, 1)
+  local velocity = client:GetVelocity()
+  local speed = velocity:Length2D()
 
-      info.speed = Lerp(fraction, defaults.bob_rate_min, defaults.bob_rate_max)
-      info.pitch = defaults.bob_pitch * fraction * strength
-      info.yaw = defaults.bob_yaw * fraction * strength
-      info.roll = defaults.bob_roll * fraction * strength
-      info.lean = defaults.bob_lean * sideways * strength
+  if speed > defaults.bob_min_speed then
+    local run_speed = math.max(to_number(Config.get('run_speed', 200), 200), 1)
+    local fraction = math.min(speed / run_speed, 1)
+    local strength = strengths.headbob
+    local sideways = math.Clamp(client:EyeAngles():Right():Dot(velocity) / run_speed, -1, 1)
+
+    info.speed = Lerp(fraction, defaults.bob_rate_min, defaults.bob_rate_max)
+    info.pitch = defaults.bob_pitch * fraction * strength
+    info.yaw = defaults.bob_yaw * fraction * strength
+    info.roll = defaults.bob_roll * fraction * strength
+    info.lean = defaults.bob_lean * sideways * strength
+  end
+
+  --- Lets plugins change the headbob of the local player. Called on the client eight times
+  -- a second while the player is alive, on foot and on the ground and the 'headbob' effect
+  -- is applied, also when they stand still, in which case every field is 0. The view
+  -- follows the result smoothly. Change the fields in place; do not return anything from
+  -- the handler, or the plugins after it are not asked.
+  -- @param info [Map the headbob: speed (Number how fast the sway cycles, in radians per
+  --   second), pitch, yaw and roll (Number degrees of sway on each axis) and lean (Number
+  --   degrees the view is rolled to one side, positive to the right)]
+  hook.Run('AdjustHeadbob', info)
+end
+
+--- Works out what is added to the view angles this frame: notices landings, advances the
+-- headbob towards what `ScreenEffects:update_headbob_target` has last asked for and the
+-- fall shake, and writes the result to `ScreenEffects.view` with what the
+-- AdjustViewEffects hook has last added.
+-- @param frame_time [Number seconds since the last frame]
+function ScreenEffects:update_view(frame_time)
+  local client = PLAYER
+  local on_foot = client:Alive() and client:GetMoveType() == MOVETYPE_WALK and !client:InVehicle()
+  local info = bob_info
+
+  if on_foot and !client:IsOnGround() then
+    fall_speed = math.max(-client:GetVelocity().z, 0)
+  elseif fall_speed > 0 then
+    if enabled.headbob and on_foot and client:WaterLevel() < 2 then
+      self:start_fall_shake(fall_speed)
     end
 
-    --- Lets plugins change the headbob of the local player. Called on the client every frame
-    -- while the player is alive, on foot and on the ground and the 'headbob' effect is
-    -- applied, also when they stand still, in which case every field is 0. The view follows
-    -- the result smoothly. Change the fields in place; do not return anything from the
-    -- handler, or the plugins after it are not asked.
-    -- @param info [Map the headbob: speed (Number how fast the sway cycles, in radians per
-    --   second), pitch, yaw and roll (Number degrees of sway on each axis) and lean (Number
-    --   degrees the view is rolled to one side, positive to the right)]
-    hook.Run('AdjustHeadbob', info)
+    fall_speed = 0
   end
 
   local blend = math.min(frame_time * defaults.bob_smoothing, 1)
@@ -557,18 +716,7 @@ function ScreenEffects:update_view(frame_time)
     end
   end
 
-  view.pitch = pitch
-  view.yaw = yaw
-  view.roll = roll
-
-  --- Lets plugins change what the Screen Effects plugin adds to the view angles of the local
-  -- player. Called on the client every frame while the player is in the game with a
-  -- character, after the headbob and the fall shake have been worked out, and also when the
-  -- 'headbob' effect is turned off, in which case the angles are 0. The angles are not added
-  -- while the player is seen in third person or looks through another entity. Change the
-  -- fields in place; do not return anything from the handler, or the plugins after it are
-  -- not asked.
-  -- @param view [Map angles added to the view, in degrees: pitch (Number, positive looks
-  --   down), yaw (Number, positive turns left) and roll (Number, positive tilts to the right)]
-  hook.Run('AdjustViewEffects', view)
+  view.pitch = pitch + view_offsets.pitch
+  view.yaw = yaw + view_offsets.yaw
+  view.roll = roll + view_offsets.roll
 end

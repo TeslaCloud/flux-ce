@@ -6,16 +6,12 @@
 -- door and the doors linked to it. `Doors:buy`, `Doors:sell`, `Doors:change_access` and
 -- `Doors:change_text` are what the door menu of a player asks for, with every rule checked;
 -- `Doors:set_owner`, `Doors:clear_owner`, `Doors:set_access` and `Doors:set_text` change the
--- state without asking, for staff tools and other plugins.
+-- state without asking, for staff tools and other plugins. What players and staff change
+-- through `Doors:buy`, `Doors:sell`, `Doors:change_access`, `Doors:change_text`, `Doors:evict`,
+-- `Doors:link` and `Doors:unlink` is saved right away; the setters leave the saving to the
+-- caller.
 
 Cable.check_networked_string('fl_door_info')
-
---- Escapes a text so that it can be given as an argument of a notification.
--- @param text [Any]
--- @return [String the text with its percent signs doubled]
-local function escape(text)
-  return (tostring(text):gsub('%%', '%%%%'))
-end
 
 --- Returns the ownership state of a door, creating it if the door has none yet. The doors
 -- of a group share one table. Do not change it directly: use the setters, which also
@@ -448,8 +444,10 @@ function Doors:buy(actor, entity)
 end
 
 --- Makes a player sell a door that their active character owns, together with the doors
--- linked with it: asks the PlayerCanSellDoor hook, releases the door and pays the refund.
--- The player is told about a sale; a refusal is returned for the caller to tell.
+-- linked with it: asks the PlayerCanSellDoor hook, pays the refund and releases the door.
+-- Nothing changes if the AdjustReceivedMoney hook refuses the refund. The player is told
+-- about a sale, with the refund they have actually received; a refusal is returned for the
+-- caller to tell.
 -- @param actor [Player]
 -- @param entity [Entity the door]
 -- @return [Boolean whether the door was sold, String error phrase if it was not, Map
@@ -477,13 +475,22 @@ function Doors:sell(actor, entity)
     return false, reason or 'error.door.cannot_sell', arguments
   end
 
-  self:clear_owner(root)
+  local received = 0
 
   if refund > 0 then
+    received = actor:give_money(currency, refund, 'door_sale')
+
+    if received == false then
+      return false, 'error.money_refused'
+    end
+  end
+
+  self:clear_owner(root)
+
+  if received > 0 then
     local currency_data = Currencies:find_currency(currency)
 
-    actor:give_money(currency, refund)
-    actor:notify('notification.door.sold', { value = refund, currency = currency_data.name }, Color('lightgreen'))
+    actor:notify('notification.door.sold', { value = received, currency = currency_data.name }, Color('lightgreen'))
   else
     actor:notify('notification.door.abandoned')
   end
@@ -544,7 +551,7 @@ function Doors:change_access(actor, entity, character_id, level)
   if entry then
     name = entry.name
   elseif IsValid(target) then
-    if table.Count(access) >= self.max_access_entries then
+    if table.Count(access) >= (tonumber(Config.get('door_access_entries')) or 32) then
       return false, 'error.door.access_full'
     end
 
@@ -581,10 +588,11 @@ function Doors:change_access(actor, entity, character_id, level)
   end
 
   self:set_access(root, character_id, level, name)
+  self:save()
 
   local suffix = level == DOOR_ACCESS_MANAGE and 'manage' or level == DOOR_ACCESS_USE and 'use' or 'none'
 
-  actor:notify('notification.door.access.'..suffix, { name = escape(name) })
+  actor:notify('notification.door.access.'..suffix, { name = name })
 
   if IsValid(target) then
     target:notify('notification.door.access_received.'..suffix)
@@ -594,8 +602,8 @@ function Doors:change_access(actor, entity, character_id, level)
 end
 
 --- Makes a player put a text on a door that they manage (DOOR_ACCESS_MANAGE). Line breaks
--- and other control characters become spaces and the text is cut to
--- `Doors.max_text_length` characters; an empty text removes the text. A refusal is returned
+-- and other control characters become spaces and the text is cut to the length that the
+-- door_text_length config allows; an empty text removes the text. A refusal is returned
 -- for the caller to tell.
 -- @param actor [Player]
 -- @param entity [Entity the door]
@@ -614,11 +622,14 @@ function Doors:change_text(actor, entity, text)
 
   if !isnumber(length) then return false, 'error.door.invalid_text' end
 
-  if length > self.max_text_length then
-    text = text:utf8sub(1, self.max_text_length)
+  local max_length = tonumber(Config.get('door_text_length')) or 32
+
+  if length > max_length then
+    text = text:utf8sub(1, max_length)
   end
 
   self:set_text(entity, text)
+  self:save()
 
   return true
 end
@@ -655,23 +666,11 @@ function Doors:release_character(character_id)
   return released
 end
 
---- Links a door into the group of another door, so that the two are owned, shared and
--- labeled together. The door takes over the ownership state of the group. A door that
--- already leads a group brings its doors along; a door of another group leaves that group.
+--- Puts a door, along with the doors linked to it, under the main door of a group, where
+-- they share its ownership state. Nothing is checked, networked or saved here.
 -- @param entity [Entity the door to link]
--- @param parent [Entity a door of the group to link it into]
--- @return [Boolean whether the door was linked, String error phrase if it was not: either
---   is not a door, they are in one group already, or the door to link has an owner]
-function Doors:link(entity, parent)
-  if !IsValid(entity) or !IsValid(parent) or !entity:is_door() or !parent:is_door() then
-    return false, 'error.door.not_a_door'
-  end
-
-  local root = self:get_root(parent)
-
-  if self:get_root(entity) == root then return false, 'error.door.already_linked' end
-  if self:get_owner(entity) then return false, 'error.door.link_owned' end
-
+-- @param root [Entity the main door of the group]
+local function attach(entity, root)
   local moved = { entity }
   local old_parent = entity.door_parent
 
@@ -687,7 +686,7 @@ function Doors:link(entity, parent)
     entity.door_children = nil
   end
 
-  local state = self:get_state(root)
+  local state = Doors:get_state(root)
 
   root.door_children = root.door_children or {}
 
@@ -697,15 +696,37 @@ function Doors:link(entity, parent)
 
     table.insert(root.door_children, v)
   end
+end
+
+--- Links a door into the group of another door, so that the two are owned, shared and
+-- labeled together. The door takes over the ownership state of the group. A door that
+-- already leads a group brings its doors along; a door of another group leaves that group.
+-- The doors are saved.
+-- @param entity [Entity the door to link]
+-- @param parent [Entity a door of the group to link it into]
+-- @return [Boolean whether the door was linked, String error phrase if it was not: either
+--   is not a door, they are in one group already, or the door to link has an owner]
+function Doors:link(entity, parent)
+  if !IsValid(entity) or !IsValid(parent) or !entity:is_door() or !parent:is_door() then
+    return false, 'error.door.not_a_door'
+  end
+
+  local root = self:get_root(parent)
+
+  if self:get_root(entity) == root then return false, 'error.door.already_linked' end
+  if self:get_owner(entity) then return false, 'error.door.link_owned' end
+
+  attach(entity, root)
 
   self:sync(root)
+  self:save()
 
   return true
 end
 
 --- Takes a door out of the group it is linked into. The door keeps the price and the
 -- ownable flag of the group but not its owner. Unlinking the main door of a group breaks
--- the whole group up, and the main door keeps the owner.
+-- the whole group up, and the main door keeps the owner. The doors are saved.
 -- @param entity [Entity the door]
 -- @return [Boolean whether anything was unlinked, String error phrase if the door is not
 --   linked to any other]
@@ -741,6 +762,7 @@ function Doors:unlink(entity)
   end
 
   self:sync(root)
+  self:save()
 
   return true
 end
@@ -819,7 +841,7 @@ function Doors:set_ownership_data(entity, data)
 end
 
 --- Links the loaded doors to their main doors again and networks the ownership state of
--- every loaded door.
+-- every loaded door. Nothing is saved, since the doors are as they were saved.
 -- @param doors [List<Entity> the doors that were loaded]
 function Doors:restore_links(doors)
   for k, v in ipairs(doors) do
@@ -830,8 +852,8 @@ function Doors:restore_links(doors)
 
       local parent = ents.GetMapCreatedEntity(parent_id)
 
-      if IsValid(parent) and parent != v then
-        self:link(v, parent)
+      if IsValid(parent) and parent:is_door() and parent != v and self:get_root(v) != self:get_root(parent) then
+        attach(v, self:get_root(parent))
       end
     end
   end
@@ -908,8 +930,8 @@ function Doors:send_info(actor, entity)
 end
 
 --- Checks a request that the door menu of a player has sent: the entity has to be a door
--- within `Doors.manage_distance` of the living player, and a player may send a request
--- only every 0.3 seconds. The player is told what is wrong.
+-- within `Doors.use_distance` of the living player, and a player may send a request only
+-- every 0.3 seconds. The player is told what is wrong.
 -- @param actor [Player]
 -- @param entity [Any what the client sent as the door]
 -- @return [Boolean whether the request may be handled]
@@ -930,7 +952,7 @@ local function accept_request(actor, entity)
     return false
   end
 
-  if actor:GetPos():Distance(entity:GetPos()) > Doors.manage_distance then
+  if !Doors:is_in_reach(actor, entity) then
     actor:notify('error.door.too_far')
 
     return false

@@ -10,7 +10,7 @@ CMD.permission = 'moderator'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 4
 CMD.player_arg = 1
-CMD.aliases = { 'attboost', 'attboost', 'attributeboost', 'attributeboost', 'charattboost' }
+CMD.aliases = { 'attboost', 'attributeboost', 'charattboost' }
 
 --- Returns the translated command description with every registered attribute ID listed.
 -- @return [String]

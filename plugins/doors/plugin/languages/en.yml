@@ -18,6 +18,12 @@ en:
       unlock_time:
         name: Door Unlock Time
         desc: How many seconds it takes to unlock a door. Set to 0 to unlock doors at once.
+      text_length:
+        name: Door Text Length
+        desc: The longest text, in characters, that the owner of a door can put on it.
+      access_entries:
+        name: Door Access Entries
+        desc: How many characters can be given access to one door, with linked doors counted as one.
   door:
     categories:
       general: General

@@ -29,7 +29,8 @@ if CLIENT then
   end
 
   --- Draws lines of text one below another, outlined in black so that they stay readable on
-  -- any background.
+  -- any background. The Cinematics plugin draws them with `Cinematics.draw_lines` whenever it
+  -- is loaded; the code here is only the fallback for a server without it.
   -- @param lines [List<String> lines to draw]
   -- @param font [String font name]
   -- @param x [Number screen x the lines are aligned to]
@@ -38,6 +39,10 @@ if CLIENT then
   -- @param align [Number horizontal alignment, one of the TEXT_ALIGN enums]
   -- @return [Number height the lines took]
   local function draw_lines(lines, font, x, y, color, align)
+    if Cinematics and isfunction(Cinematics.draw_lines) then
+      return Cinematics.draw_lines(lines, font, x, y, color, align) - y
+    end
+
     local line_height = util.font_size(font)
     local outline_color = Color(0, 0, 0, color.a)
 

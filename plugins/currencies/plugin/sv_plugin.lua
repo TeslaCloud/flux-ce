@@ -1,6 +1,39 @@
---- Server-side functions of the Currencies plugin: puts money into the world, and saves and
--- loads the money that lies in it. The money is stored in the plugin data of the current
--- schema and map under the 'money' key, one entry for every fl_money entity.
+--- Server-side functions of the Currencies plugin: puts money into the world, hands it to
+-- the players who pick it up, and saves and loads the money that lies in it. The money is
+-- stored in the plugin data of the current schema and map under the 'money' key, one entry
+-- for every fl_money entity. A pickup marks the saved money as out of date
+-- (`Currencies.money_dirty`), and the next data save writes what is left.
+
+--- Gives the contents of a money entity to a player, notifies them, starts their pickup
+-- cooldown and marks the saved money as out of date. The entity is not removed here. Server
+-- only.
+-- @param actor [Player]
+-- @param entity [Entity the fl_money entity]
+-- @return [Boolean true if the player has received the money; false if the entity holds no
+--   registered currency or the AdjustReceivedMoney hook has refused the money, in which
+--   case the money stays where it is]
+function Currencies:pickup_money(actor, entity)
+  local currency = entity:get_currency()
+  local amount = entity:get_currency_amount()
+  local currency_data = isstring(currency) and self:find_currency(currency)
+
+  if !currency_data or !isnumber(amount) then return false end
+
+  local received = actor:give_money(currency, amount, entity)
+
+  actor.next_money_pickup = CurTime() + 0.5
+
+  if received == false then
+    return false
+  end
+
+  self.money_dirty = true
+
+  actor:notify('notification.currency.pickup', { value = received, currency = currency_data.name }, Color('lightgreen'))
+  entity:EmitSound('physics/cardboard/cardboard_box_impact_bullet'..math.random(1, 5)..'.wav', 55)
+
+  return true
+end
 
 --- Puts an amount of a currency into the world as an fl_money entity, with the model that
 -- the currency has for that amount. Nobody is charged for it: `Entity:drop_money` is what
@@ -46,8 +79,8 @@ end
 --- Saves the currency, amount, position and angles of every fl_money entity in the world,
 -- and whether it is frozen, to the plugin data of the current schema and map. Entities that
 -- are being removed are left out, so it can be called right after `Entity:Remove`. The
--- plugin calls it whenever the framework saves its data and whenever money is picked up,
--- while the save_dropped_money config is on. Server only.
+-- plugin calls it whenever the framework saves its data, while the save_dropped_money
+-- config is on. Server only.
 function Currencies:save_money()
   local saved = {}
 

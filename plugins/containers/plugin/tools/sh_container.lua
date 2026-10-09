@@ -21,13 +21,6 @@ TOOL.ClientConVar['category'] = 'all'
 local modes = { 'name', 'message', 'password', 'fill' }
 local handlers = {}
 
---- Escapes a text so that it can be substituted into a language phrase as it is.
--- @param text [String]
--- @return [String the text with its percent signs doubled]
-local function escape(text)
-  return (text:gsub('%%', '%%%%'))
-end
-
 --- Gives the container the name entered in the tool's settings, or removes its name.
 -- @param tool [Tool the container tool]
 -- @param owner [Player the tool owner]
@@ -39,7 +32,7 @@ function handlers.name(tool, owner, entity, reset)
   name = Container:set_container_name(entity, name)
 
   if name then
-    owner:notify('notification.container.name_set', { name = escape(name) })
+    owner:notify('notification.container.name_set', { name = name })
   else
     owner:notify('notification.container.name_removed')
   end
@@ -72,7 +65,7 @@ function handlers.password(tool, owner, entity, reset)
   password = Container:set_container_password(entity, password)
 
   if password then
-    owner:notify('notification.container.password_set', { password = escape(password) })
+    owner:notify('notification.container.password_set', { password = password })
   else
     owner:notify('notification.container.password_removed')
   end

@@ -3,6 +3,10 @@
 -- regenerates health, hurts players who stay under water, punches the view of a player who
 -- is hurt and writes the damage and kill log entries. The hooks that call these functions
 -- are in `sv_hooks.lua`.
+--
+-- The log entries are printed and replicated the moment they are written, but they are
+-- saved to the database in one go by `Damage:flush_logs`, which runs once a second and
+-- when a player dies, so that a hit does not cost a database insert of its own.
 
 --- Config key of the damage multiplier of each hit location that has one.
 local hitgroup_scales = {
@@ -35,13 +39,14 @@ local kill_log_color = Color(255, 80, 80)
 --- Largest angle, in degrees, that a single hit can punch the view of a player by.
 local max_view_punch = 30
 
---- Decides who receives a replicated damage or kill log entry: the players who have the
--- 'view_damage_logs' permission.
--- @param listener [Player]
--- @return [Boolean]
-local function can_view_logs(listener)
-  return listener:can('view_damage_logs') and true or false
-end
+--- Log entries that are waiting to be saved to the database, in the order they were
+-- written, each with the body, action, object and subject of a Log record.
+local pending_logs = {}
+
+--- The players who receive the replicated log entries, and the CurTime() until which the
+-- list is trusted.
+local log_viewers = {}
+local log_viewers_until = 0
 
 --- Returns what a log entry stores as its object or subject for an entity.
 -- @param entity [Entity]
@@ -333,10 +338,83 @@ function Damage:get_weapon_class(attacker, inflictor, victim)
   end
 end
 
+--- Returns the players who receive the replicated damage and kill log entries: those with
+-- the 'view_damage_logs' permission. The list is worked out at most once a second, not on
+-- every hit. Serverside only.
+-- @return [List<Player> do not modify the list]
+function Damage:get_log_viewers()
+  local cur_time = CurTime()
+
+  if log_viewers_until > cur_time then
+    return log_viewers
+  end
+
+  log_viewers = {}
+  log_viewers_until = cur_time + 1
+
+  for k, v in player.Iterator() do
+    if v:can('view_damage_logs') then
+      table.insert(log_viewers, v)
+    end
+  end
+
+  return log_viewers
+end
+
+--- Writes a log entry the way `Log:colored` followed by `Log:replicate` would, except that
+-- the entry is not saved right away: it is printed to the server console in its color, sent
+-- to the players who view the damage logs, and queued for `Damage:flush_logs`.
+-- Serverside only.
+-- @param color [Color console color of the entry]
+-- @param message [String text of the entry]
+-- @param action [String type of the logged event, in snake_case]
+-- @param object=nil [String/Number who or what performed the action]
+-- @param subject=nil [String/Number who or what the action was performed on]
+function Damage:write_log(color, message, action, object, subject)
+  MsgC(color, action:camel_case()..' - '..message..'\n')
+
+  Cable.send(
+    self:get_log_viewers(),
+    'log_replicate',
+    message,
+    action,
+    object,
+    subject,
+    { type = 'colored', color = color }
+  )
+
+  table.insert(pending_logs, { body = message, action = action, object = object, subject = subject })
+end
+
+--- Saves the log entries that `Damage:write_log` has queued to the logs table, in the order
+-- they were written. Serverside only.
+-- @return [Number how many entries were saved]
+function Damage:flush_logs()
+  local entries = pending_logs
+
+  if #entries == 0 then
+    return 0
+  end
+
+  pending_logs = {}
+
+  for k, v in ipairs(entries) do
+    local log = Log.new()
+      log.body = v.body
+      log.action = v.action
+      log.object = v.object
+      log.subject = v.subject
+    log:save()
+  end
+
+  return #entries
+end
+
 --- Writes a damage log entry: who has taken how much damage, where, from whom and with
--- what, and the health and armor they are left with. The entry is stored with the
+-- what, and the health and armor they are left with. The entry is written with the
 -- 'player_damage' action and replicated to the players who have the 'view_damage_logs'
--- permission. Does not check the 'log_damage' config. Serverside only.
+-- permission; it is saved by `Damage:flush_logs`. Does not check the 'log_damage' config.
+-- Serverside only.
 -- @param victim [Player player who has taken the damage]
 -- @param damage_info [CTakeDamageInfo the damage]
 -- @param hitgroup=HITGROUP_GENERIC [Number HITGROUP_ enum of the hit location]
@@ -375,18 +453,13 @@ function Damage:log_damage(victim, damage_info, hitgroup)
     message = message..' and '..victim:Armor()..' armor'
   end
 
-  Log:colored(
-    damage_log_color,
-    message..'.',
-    'player_damage',
-    get_log_id(attacker),
-    get_log_id(victim)
-  ):replicate(can_view_logs)
+  self:write_log(damage_log_color, message..'.', 'player_damage', get_log_id(attacker), get_log_id(victim))
 end
 
 --- Writes a kill log entry: who has died, who or what has killed them and with what. The
--- entry is stored with the 'player_death' action and replicated to the players who have the
--- 'view_damage_logs' permission. Does not check the 'log_kills' config. Serverside only.
+-- entry is written with the 'player_death' action and replicated to the players who have
+-- the 'view_damage_logs' permission; it is saved by `Damage:flush_logs`. Does not check
+-- the 'log_kills' config. Serverside only.
 -- @param victim [Player player who has died]
 -- @param inflictor [Entity entity that has dealt the fatal damage]
 -- @param attacker [Entity entity responsible for the death]
@@ -408,11 +481,5 @@ function Damage:log_kill(victim, inflictor, attacker)
     message = message..' with '..weapon
   end
 
-  Log:colored(
-    kill_log_color,
-    message..'.',
-    'player_death',
-    get_log_id(attacker),
-    get_log_id(victim)
-  ):replicate(can_view_logs)
+  self:write_log(kill_log_color, message..'.', 'player_death', get_log_id(attacker), get_log_id(victim))
 end

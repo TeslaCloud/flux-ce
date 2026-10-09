@@ -481,12 +481,25 @@ function GM:PlayerNoClip(actor, state)
   return true
 end
 
---- Lets players with the physgun_pickup permission pick entities up with the physics gun.
+--- Lets players with the physgun_pickup permission pick entities up with the physics gun,
+-- and players without it when a PlayerCanPhysgunPickup handler allows it. Plugins that want
+-- to refuse a pickup return false from PhysgunPickup; they do not return true from it, as
+-- that would keep the other handlers from refusing.
 -- @param actor [Player]
 -- @param entity [Entity the entity being picked up]
--- @return [Boolean true if the player has the permission, nil otherwise]
+-- @return [Boolean true if the player may pick the entity up, nil otherwise]
 function GM:PhysgunPickup(actor, entity)
   if actor:can('physgun_pickup') then
+    return true
+  end
+
+  --- Asks whether a player who lacks the physgun_pickup permission may pick an entity up
+  -- with the physics gun all the same, for instance because they own it. Called on both the
+  -- server and the client after every PhysgunPickup handler has had the chance to refuse.
+  -- @param actor [Player The player holding the physics gun]
+  -- @param entity [Entity The entity being picked up]
+  -- @return [Boolean Return true to allow the pickup]
+  if hook.Run('PlayerCanPhysgunPickup', actor, entity) == true then
     return true
   end
 end

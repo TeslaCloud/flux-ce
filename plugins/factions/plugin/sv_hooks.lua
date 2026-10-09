@@ -8,28 +8,6 @@
 
 Cable.check_networked_string('fl_faction_creation_refused')
 
---- Makes a default description of a faction pass the length check that the Characters
--- plugin applies to the descriptions players write: a text that is too short is padded with
--- spaces and a text that is too long is cut. The result only has to pass the check; the
--- character gets the unchanged description afterwards.
--- @param text [String]
--- @return [String]
-local function fit_description(text)
-  local min_length = tonumber(Config.get('character_min_desc_len')) or 0
-  local max_length = tonumber(Config.get('character_max_desc_len')) or 0
-  local length = utf8.len(text)
-
-  if !isnumber(length) then return text end
-
-  if length < min_length then
-    return text..string.rep(' ', min_length - length)
-  elseif max_length >= min_length and length > max_length then
-    return text:utf8sub(1, max_length)
-  end
-
-  return text
-end
-
 --- Asks the PlayerCanBypassFactionLimit hook whether a player may load a character of a
 -- faction or rank that is full.
 -- @param actor [Player]
@@ -73,32 +51,22 @@ function Factions:PostPlayerSpawn(actor)
 end
 
 --- Gives a spawning player the weapons of their faction and rank on top of the default
--- loadout. This is done on the next tick, because the gamemode strips the weapons of the
--- player and gives the default loadout after the plugin handlers of this hook have run. The
--- record of the weapons given before is dropped, as none of them is left after that.
+-- loadout. The record of the weapons given before is dropped first, as the gamemode has
+-- just stripped every weapon of the player. The hook runs inside Player:Spawn, so the ammo
+-- that the Characters plugin restores once the player has spawned is set on top of these
+-- weapons.
 -- @param actor [Player]
 -- @param default_loadout [List<String> weapon classes of the default loadout]
-function Factions:PostPlayerLoadout(actor, default_loadout)
+function Factions:PlayerLoadoutGiven(actor, default_loadout)
   actor.faction_weapons = nil
 
-  timer.Simple(0, function()
-    if IsValid(actor) and actor:Alive() then
-      self.give_loadout(actor)
-    end
-  end)
+  self.give_loadout(actor)
 end
 
---- Makes a spawning player use the model of their rank, if the rank has one and their class
--- does not have a model of its own.
+--- Makes a spawning player use the model of their rank, if the rank has one.
 -- @param actor [Player]
 -- @return [String model path of the rank, nil to leave the choice of the model to others]
 function Factions:PrePlayerSetModel(actor)
-  if Classes then
-    local class_table = actor:get_class()
-
-    if class_table and class_table:get_model(actor) then return end
-  end
-
   local model = self.get_rank_model(actor)
 
   if model then
@@ -108,16 +76,20 @@ function Factions:PrePlayerSetModel(actor)
   end
 end
 
---- Networks the faction and the rank of the newly active character and sets the player's
--- team to match. A character whose rank does not exist in its faction is given the default
--- rank. The player then gets the maximum health and armor of the faction and rank (full
--- health and armor if the character had none saved), the model of the rank, and the feelings
--- of NPCs towards the faction. A character whose faction is not registered only loses the
--- rank model and the feelings of NPCs that an earlier character of the player has left.
+--- Networks the faction and the rank of the character that has just been loaded, giving a
+-- character whose rank does not exist in its faction the default rank, and gives the player
+-- what the faction grants them in the world: the weapons, the maximum health and armor
+-- (full armor if the character had none saved), the model of the rank and the feelings of
+-- NPCs towards the faction. The hook runs once the Characters plugin has spawned the
+-- player, given them the model of the character and restored their saved health, armor and
+-- ammo, so the model of the rank is put over that of the character here no matter which
+-- plugin's handler of OnActiveCharacterSet ran first. The team of the player is set as they
+-- spawn, see Factions:PostPlayerSpawn. A player whose faction is not registered only loses
+-- the rank model and the feelings of NPCs that an earlier character of theirs has left.
 -- @param owner [Player]
--- @param char [Character]
-function Factions:OnActiveCharacterSet(owner, char)
-  owner:set_nv('faction', char.faction)
+-- @param character [Character]
+function Factions:PostCharacterLoaded(owner, character)
+  owner:set_nv('faction', character.faction)
 
   local faction_table = owner:get_faction()
 
@@ -128,42 +100,33 @@ function Factions:OnActiveCharacterSet(owner, char)
     return
   end
 
-  owner:SetTeam(faction_table.team_id or 1)
-
-  local rank = tonumber(char.rank)
+  local rank = tonumber(character.rank)
 
   if !rank or !faction_table:get_rank(rank) then
     rank = faction_table:get_default_rank()
   end
 
-  char.rank = rank
+  character.rank = rank
 
   owner:set_nv('rank', rank)
 
-  self.apply_vitals(owner)
+  self.apply_membership(owner)
 
-  local health = tonumber(char.health)
   local max_armor = faction_table:get_max_armor(rank)
 
-  if !health or health <= 0 then
-    owner:SetHealth(owner:GetMaxHealth())
-  end
-
-  if max_armor and tonumber(char.armor) == nil then
+  if max_armor and tonumber(character.armor) == nil then
     owner:SetArmor(max_armor)
   end
 
-  self.apply_model(owner)
   self.apply_npc_relations(owner)
 end
 
---- Copies the faction, rank and class from the creation data to the new character, using
--- the 'player' faction and the default rank of the faction when they are missing. Creation
--- requests of clients never carry a rank or a class (see Factions:PreCreateCharacter), so
--- their characters start at the default rank without a class, unless the on_character_create
--- callback of the faction has set one. A character of a faction that does not let players
--- write a description gets the default description of the faction, and a faction or rank
--- that sets a maximum health or armor makes the character start with them.
+--- Copies the faction and the rank from the creation data to the new character, using the
+-- 'player' faction and the default rank of the faction when they are missing. Creation
+-- requests of clients never carry a rank (see Factions:PreCreateCharacter), so their
+-- characters start at the default rank unless the on_character_create callback of the
+-- faction has set one. A faction or rank that sets a maximum health or armor makes the
+-- character start with them.
 -- @param owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
@@ -177,15 +140,10 @@ function Factions:PostCreateCharacter(owner, char, char_data)
 
   char.faction = char_data.faction or 'player'
   char.rank = rank or 1
-  char.char_class = char_data.char_class or ''
 
   if faction_table then
     local max_health = faction_table:get_max_health(char.rank)
     local max_armor = faction_table:get_max_armor(char.rank)
-
-    if isstring(char_data.default_phys_desc) then
-      char.phys_desc = char_data.default_phys_desc
-    end
 
     if max_health then
       char.health = max_health
@@ -243,13 +201,18 @@ function Factions:OnEntityCreated(entity)
   end
 end
 
---- Gives the player a random model of their faction that matches the new gender.
+--- Gives the player a random model of their faction that matches the new gender. A player
+-- whose faction is not registered keeps their model.
 -- @param owner [Player]
 -- @param char [Character]
 -- @param new_gender [Number CHAR_GENDER_* value]
 -- @param old_gender [Number CHAR_GENDER_* value]
 function Factions:CharacterGenderChanged(owner, char, new_gender, old_gender)
-  Characters.set_model(owner, owner:get_faction():get_random_model(owner))
+  local faction_table = owner:get_faction()
+
+  if faction_table then
+    Characters.set_model(owner, faction_table:get_random_model(owner))
+  end
 end
 
 --- Keeps the model of the rank on a player whose character model has been changed.
@@ -259,20 +222,6 @@ end
 -- @param old_model [String the model that was networked before the change]
 function Factions:CharacterModelChanged(owner, char, model, old_model)
   self.apply_model(owner)
-end
-
---- Gives the model and the weapons of the rank back to a player whose class has changed:
--- the Classes plugin resets the model and takes the weapons of the old class away, which may
--- be those of the rank as well.
--- @param target [Player]
--- @param class_table [CharacterClass the class the player holds now, nil if they have none]
--- @param old_class [CharacterClass the class the player held before, nil if they had none]
-function Factions:OnPlayerClassChanged(target, class_table, old_class)
-  self.apply_model(target)
-
-  if target:Alive() then
-    self.give_loadout(target)
-  end
 end
 
 --- Refuses to load a character when its faction or its rank already has as many members
@@ -311,16 +260,16 @@ function Factions:PlayerCanUseCharacter(actor, character)
   end
 end
 
---- Cleans up the creation data a client has sent: discards the rank and the class, which a
--- client has no say in, generates a name from the faction's name template when the data has
--- no name or the faction does not let players pick one, and replaces the description with
--- the default description of a faction that does not let players write one.
+--- Cleans up the creation data a client has sent: discards the rank, which a client has no
+-- say in, generates a name from the faction's name template when the data has no name or
+-- the faction does not let players pick one, and replaces the description with the default
+-- description of a faction that does not let players write one. The Characters plugin
+-- counts a replaced name or description as generated, which frees the description from the
+-- length limits that apply to the ones players write.
 -- @param actor [Player]
 -- @param data [Map character creation data, modified in place]
 function Factions:PreCreateCharacter(actor, data)
   data.rank = nil
-  data.char_class = nil
-  data.default_phys_desc = nil
 
   local faction_table = isstring(data.faction) and Factions.find_by_id(data.faction)
 
@@ -331,10 +280,7 @@ function Factions:PreCreateCharacter(actor, data)
   end
 
   if !faction_table.has_description then
-    local description = self.get_default_description(faction_table, actor)
-
-    data.default_phys_desc = description
-    data.description = fit_description(description)
+    data.description = self.get_default_description(faction_table, actor)
   end
 end
 

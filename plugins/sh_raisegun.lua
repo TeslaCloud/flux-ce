@@ -213,12 +213,13 @@ local function raise_fire_delay()
   return Config.get('weapon_raise_fire_delay', 0)
 end
 
---- Keeps a weapon from firing for the next 60 seconds and marks it as blocked by the plugin.
+--- Keeps a weapon from firing, for a day unless `release_fire` lets it fire again before
+-- that, and marks it as blocked by the plugin.
 -- @param weapon [Weapon]
 -- @param cur_time [Number CurTime() of the call]
 local function block_fire(weapon, cur_time)
-  weapon:SetNextPrimaryFire(cur_time + 60)
-  weapon:SetNextSecondaryFire(cur_time + 60)
+  weapon:SetNextPrimaryFire(cur_time + 86400)
+  weapon:SetNextSecondaryFire(cur_time + 86400)
 
   weapon.fl_fire_blocked = true
 end
@@ -234,6 +235,8 @@ local function release_fire(weapon, next_fire)
 end
 
 if CLIENT then
+  local lowered_offset = Vector()
+
   --- Works out the lowered pose of a weapon: how far its view model is turned and moved
   -- when the weapon is fully lowered.
   -- The angles come from the `lowered_angles` field of the item that gives the weapon, the
@@ -252,9 +255,9 @@ if CLIENT then
 
     --- Lets plugins change the lowered pose of a weapon.
     -- Called on the client on every frame the view model of the local player's weapon is
-    -- positioned, whether the weapon is lowered at that moment or not. The angles and the
-    -- origin that are passed in are shared between calls: return new ones rather than
-    -- changing them.
+    -- positioned while the weapon is lowered or on its way up or down; not while it is fully
+    -- raised. The angles and the origin that are passed in are shared between calls: return
+    -- new ones rather than changing them.
     -- @param weapon [Weapon The active weapon of the local player]
     -- @param angles [Angle How far the lowered view model is turned around the up (pitch
     --   field), forward (yaw field) and right (roll field) axes of the view]
@@ -271,6 +274,9 @@ if CLIENT then
 
   --- Turns and moves the view model into the lowered pose while the local player's weapon is
   -- not raised, then lets the weapon's GetViewModelPosition and CalcViewModelView adjust it.
+  -- The pose eases in and out over `PLAYER.curRaisedFrac`, from 0 (raised) to 100 (lowered),
+  -- and snaps to either end once it is close; while the weapon is fully raised the view model
+  -- is left as it is, apart from what the weapon itself adjusts.
   -- @param weapon [Weapon]
   -- @param view_model [Entity]
   -- @param old_eye_pos [Vector]
@@ -284,24 +290,37 @@ if CLIENT then
       return
     end
 
-    local target_val = 0
+    local target_val = PLAYER:is_weapon_raised() and 0 or 100
+    local current = PLAYER.curRaisedFrac or 0
+    local fraction = current / 100
 
-    if !PLAYER:is_weapon_raised() then
-      target_val = 100
+    current = Lerp(FrameTime() * 2, current, target_val)
+
+    if math.abs(current - target_val) < 0.1 then
+      current = target_val
     end
 
-    local fraction = (PLAYER.curRaisedFrac or 0) / 100
-    local rotation, origin = lowered_view(weapon)
+    PLAYER.curRaisedFrac = current
 
-    eye_angles:RotateAroundAxis(eye_angles:Up(), rotation.p * fraction)
-    eye_angles:RotateAroundAxis(eye_angles:Forward(), rotation.y * fraction)
-    eye_angles:RotateAroundAxis(eye_angles:Right(), rotation.r * fraction)
+    local offset
 
-    local offset = (
-      eye_angles:Right() * origin.x + eye_angles:Forward() * origin.y + eye_angles:Up() * origin.z
-    ) * fraction
+    if fraction > 0 then
+      local rotation, origin = lowered_view(weapon)
 
-    PLAYER.curRaisedFrac = Lerp(FrameTime() * 2, PLAYER.curRaisedFrac or 0, target_val)
+      eye_angles:RotateAroundAxis(eye_angles:Up(), rotation.p * fraction)
+      eye_angles:RotateAroundAxis(eye_angles:Forward(), rotation.y * fraction)
+      eye_angles:RotateAroundAxis(eye_angles:Right(), rotation.r * fraction)
+
+      if origin.x != 0 or origin.y != 0 or origin.z != 0 then
+        offset = lowered_offset
+
+        offset:Set(eye_angles:Right())
+        offset:Mul(origin.x)
+        offset:Add(eye_angles:Forward() * origin.y)
+        offset:Add(eye_angles:Up() * origin.z)
+        offset:Mul(fraction)
+      end
+    end
 
     view_model:SetAngles(eye_angles)
 
@@ -319,7 +338,11 @@ if CLIENT then
       eye_angles = angles or eye_angles
     end
 
-    return old_eye_pos + offset, eye_angles
+    if offset then
+      return old_eye_pos + offset, eye_angles
+    end
+
+    return old_eye_pos, eye_angles
   end
 
   --- Removes the attack keys from the command when the CanPlayerAttack hook returns false.
@@ -405,8 +428,8 @@ function PLUGIN:OnWeaponRaised(actor, weapon, raised)
 end
 
 --- Lets the weapon fire again (raised, or a weapon that cannot be lowered) or blocks its
--- fire for 60 seconds (lowered). Then calls the weapon's OnRaised or OnLowered method and
--- runs the WeaponRaised or WeaponLowered hook.
+-- fire until it is raised (lowered). Then calls the weapon's OnRaised or OnLowered method
+-- and runs the WeaponRaised or WeaponLowered hook.
 -- A weapon that has just been raised can fire once the `weapon_raise_fire_delay` config has
 -- passed; a weapon that cannot be lowered can fire at once. A weapon that has been raised
 -- while something else still keeps it lowered (the player is running and the
@@ -461,21 +484,28 @@ end
 --- Keeps the player's active weapon from firing for as long as it is lowered, and lets it
 -- fire again when it stops being lowered without `Player:set_weapon_raised` having been
 -- called: the player has stopped running, a ShouldWeaponBeRaised handler no longer keeps
--- it down or the `weapon_raise_enabled` config has been turned off. A weapon that is never
--- raised is not kept from firing.
+-- it down or the `weapon_raise_enabled` config has been turned off. The fire is only touched
+-- when the state of the weapon flips, which the `fl_fire_blocked` mark on the weapon keeps
+-- track of, and when the player has switched to the weapon, since deploying it may have let
+-- it fire again. A weapon that is never raised is not kept from firing.
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the tick]
 function PLUGIN:PlayerThink(actor, cur_time)
   local weapon = actor:GetActiveWeapon()
 
-  if IsValid(weapon) then
-    local fixed_state = fixed_raise_state(weapon)
+  if !IsValid(weapon) then return end
 
-    if fixed_state == nil and !actor:is_weapon_raised() then
+  local switched = actor.fl_raise_weapon != weapon
+  local fixed_state = fixed_raise_state(weapon)
+
+  actor.fl_raise_weapon = weapon
+
+  if fixed_state == nil and !actor:is_weapon_raised() then
+    if switched or !weapon.fl_fire_blocked then
       block_fire(weapon, cur_time)
-    elseif weapon.fl_fire_blocked then
-      release_fire(weapon, cur_time + (fixed_state == nil and raise_fire_delay() or 0))
     end
+  elseif weapon.fl_fire_blocked then
+    release_fire(weapon, cur_time + (fixed_state == nil and raise_fire_delay() or 0))
   end
 end
 

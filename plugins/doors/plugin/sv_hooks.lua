@@ -2,15 +2,15 @@
 -- is used while sprinting, checks the conditions and the access lists of doors and releases
 -- the doors of deleted characters.
 
---- Opens the door menu for the player if they are looking at a door
--- that is closer than 115 units. Along with the conditions of the door the client is sent
--- what the player may know about its ownership (see `Doors:get_menu_info`).
+--- Opens the door menu for the player if they are looking at a door within
+-- `Doors.use_distance`. Along with the conditions of the door the client is sent what the
+-- player may know about its ownership (see `Doors:get_menu_info`).
 -- @param actor [Player]
 function Doors:ShowSpare1(actor)
   local trace = actor:GetEyeTraceNoCursor()
   local entity = trace.Entity
 
-  if IsValid(entity) and entity:is_door() and actor:GetPos():Distance(entity:GetPos()) < 115 then
+  if IsValid(entity) and entity:is_door() and Doors:is_in_reach(actor, entity) then
     --- Asks whether a player may lock and unlock a door. Called on the server when the player
     -- opens the menu of the door, when they use the door, when they ask to lock or unlock it
     -- from the menu and when a timed locking or unlocking of theirs completes. The Doors
@@ -37,7 +37,7 @@ end
 function Doors:PlayerUse(activator, entity)
   local cur_time = CurTime()
 
-  if IsValid(entity) and entity:is_door() and activator:GetPos():Distance(entity:GetPos()) < 115 then
+  if IsValid(entity) and entity:is_door() and Doors:is_in_reach(activator, entity) then
     if !entity.next_use or entity.next_use <= cur_time then
       if hook.Run('PlayerCanLockDoor', activator, entity) and activator:IsSprinting() then
         local locked = entity:get_nv('fl_locked')

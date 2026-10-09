@@ -83,9 +83,11 @@ end
 -- @param text [String the text being typed or its outline, not empty]
 -- @param exact=false [Boolean true if the text is what the player is typing and others may
 --   see it; otherwise it is reduced to its outline]
--- @param range=1 [Number multiplier of the 'display_typing_range' config for this text,
---   limited to `DisplayTyping.max_range`]
-function DisplayTyping:set_typing(actor, text, exact, range)
+-- @param kind_id=nil [String ID of the kind of speech, as registered with
+--   `DisplayTyping:register_kind` on both realms; its range scales the 'display_typing_range'
+--   config for this text, limited to `DisplayTyping.max_range`. A kind the server does not
+--   know gets the range 1]
+function DisplayTyping:set_typing(actor, text, exact, kind_id)
   local now = CurTime()
   local state = typists[actor]
   local started = state == nil
@@ -98,13 +100,9 @@ function DisplayTyping:set_typing(actor, text, exact, range)
   end
 
   exact = exact == true
-  range = tonumber(range) or 1
 
-  if range != range then
-    range = 1
-  end
-
-  range = math.Clamp(range, 0, self.max_range)
+  local kind = isstring(kind_id) and self:find_kind(kind_id) or nil
+  local range = math.Clamp(kind and kind.range or 1, 0, self.max_range)
 
   local outline = self:outline(text)
 

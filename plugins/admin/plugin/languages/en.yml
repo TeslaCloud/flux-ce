@@ -148,7 +148,7 @@ en:
     no_permission: You have no permissions to do that.
     permission_not_set: "Nothing is set for the {permission} permission of these players."
     permission_not_valid: "'{permission}' is not a valid permission!"
-    permission_not_yours: "You cannot grant the {permission} permission, because you do not have it yourself."
+    permission_not_yours: "You cannot grant or revoke the {permission} permission, because you do not have it yourself."
     plugin:
       admin: The admin plugin cannot be disabled from its own menu.
     send_same: A player cannot be sent to themselves.

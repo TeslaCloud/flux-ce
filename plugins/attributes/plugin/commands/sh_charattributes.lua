@@ -21,7 +21,7 @@ function CMD:on_run(actor, targets)
 
   if !IsValid(target) then return end
 
-  local target_name = target:name():gsub('%%', '%%%%')
+  local target_name = target:name()
 
   if !target:is_character_loaded() then
     Flux.Player:notify(actor, 'error.attribute_no_character', { target = target_name })

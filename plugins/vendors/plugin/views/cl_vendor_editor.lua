@@ -2,7 +2,7 @@
 -- vendor. The first has its name, description, model, animation, currency, money pool and
 -- buy-back rate; the second lists every item, where a click on a row chooses whether the
 -- vendor sells or buys the item, at what price and with how much stock; the third picks the
--- factions and classes that may trade; the fourth holds the phrases of the vendor.
+-- factions that may trade; the fourth holds the phrases of the vendor.
 -- The server opens the editor for staff with the 'manage_vendors' permission who use the
 -- Vendor Tool on a vendor, and gets the settings back when the save button is pressed.
 
@@ -106,7 +106,6 @@ function PANEL:set_vendor(vendor, data)
   self.data.sells = istable(self.data.sells) and self.data.sells or {}
   self.data.buys = istable(self.data.buys) and self.data.buys or {}
   self.data.factions = istable(self.data.factions) and self.data.factions or {}
-  self.data.classes = istable(self.data.classes) and self.data.classes or {}
   self.data.phrases = istable(self.data.phrases) and self.data.phrases or {}
 
   self:build_general()
@@ -449,9 +448,9 @@ function PANEL:open_item_menu(item_id)
   options:Open()
 end
 
---- Builds the page with a checkbox for every faction and, if the Classes plugin is loaded,
--- for every class. A faction or a class that the vendor is limited to but that is not
--- registered anymore gets a checkbox labelled with its ID, so that it can be unchecked.
+--- Builds the page with a checkbox for every faction. A faction that the vendor is limited
+-- to but that is not registered anymore gets a checkbox labelled with its ID, so that it can
+-- be unchecked.
 function PANEL:build_access()
   local data = self.data
   local page = self:add_page('access', (t'ui.vendor.editor.access'))
@@ -471,31 +470,6 @@ function PANEL:build_access()
       if !factions[id] then
         self:add_check_box(page, tostring(id), true, function(value)
           data.factions[id] = value and true or nil
-        end)
-      end
-    end
-  end
-
-  if Classes then
-    local classes = Classes.all()
-
-    for id, class_table in SortedPairs(classes) do
-      local faction_table = class_table:get_faction()
-      local title = t(class_table:get_name())
-
-      if faction_table then
-        title = t(faction_table:get_name())..': '..title
-      end
-
-      self:add_check_box(page, title, data.classes[id] == true, function(value)
-        data.classes[id] = value and true or nil
-      end)
-    end
-
-    for id, listed in SortedPairs(table.Copy(data.classes)) do
-      if !classes[id] then
-        self:add_check_box(page, tostring(id), true, function(value)
-          data.classes[id] = value and true or nil
         end)
       end
     end

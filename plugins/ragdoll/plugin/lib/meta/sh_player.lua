@@ -38,3 +38,18 @@ end
 function player_meta:is_knocked_out()
   return self:get_ragdoll_state() == RAGDOLL_KNOCKEDOUT
 end
+
+--- Returns how long the knocked out player stays out, for HUDs and the like. Both realms
+-- know it, as the end of the get up timer is networked.
+-- @return [Number seconds until the player comes to by themselves; 0 if they are not
+--   knocked out; nil if they are knocked out without a timer, or while the timer is paused,
+--   and stay out until something wakes them]
+function player_meta:get_knockout_remaining()
+  if !self:is_knocked_out() then return 0 end
+
+  local getup_end = self:get_nv('ragdoll_getup_end')
+
+  if !isnumber(getup_end) then return end
+
+  return math.max(getup_end - CurTime(), 0)
+end

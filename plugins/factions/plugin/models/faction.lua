@@ -68,7 +68,6 @@ function Faction:init(id)
   self.description = 'This faction has no description set!'
   self.phys_desc = 'This faction has no default physical description set!'
   self.whitelisted = false
-  self.default_class = nil
   self.color = Color(255, 255, 255)
   self.material = nil
   self.has_name = true
@@ -464,7 +463,7 @@ end
 -- ```
 -- @param owner [Player the player the character is created for]
 -- @param data [Map creation data: name, phys_desc, gender (a CHAR_GENDER_* value), model,
---   skin and faction; rank and char_class may be set]
+--   skin and faction; rank may be set]
 -- @return [Boolean/Number return false to refuse the character, optionally followed by a
 --   String language phrase that tells the player why and a Map of its arguments; or return
 --   a CHAR_ERR_* code to refuse it with the text of that code]

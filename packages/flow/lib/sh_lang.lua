@@ -155,8 +155,9 @@ do
   -- ```
   -- @param phrase [String phrase ID with its nesting separated by dots, or plain text]
   -- @param args=nil [Map/Any values to replace the {key} placeholders with, by key;
-  --   a single value replaces {1}. A value made by `Flux.Lang:duration` is replaced with
-  --   the duration as text]
+  --   a single value replaces {1}. A value is inserted as it is, so text that a player has
+  --   typed needs no escaping. A value made by `Flux.Lang:duration` is replaced with the
+  --   duration as text]
   -- @param force_lang=nil [String language code to use instead of the current language]
   -- @return [String translated text, Number amount of line breaks that were replaced]
   -- @see [Flux.Lang#get_plural_form]
@@ -183,7 +184,7 @@ do
         v = Flux.Lang:nice_time(v.nice_time, lang)
       end
 
-      phrase = string.gsub(phrase, '{'..k..'}', v)
+      phrase = string.Replace(phrase, '{'..k..'}', tostring(v))
     end
 
     return phrase:gsub('\n', ' ')

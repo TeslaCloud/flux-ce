@@ -107,7 +107,7 @@ function PANEL:check_door()
 
   if door == nil then return end
 
-  if !IsValid(door) or !IsValid(PLAYER) or PLAYER:GetPos():Distance(door:GetPos()) > Doors.manage_distance then
+  if !IsValid(door) or !IsValid(PLAYER) or PLAYER:GetPos():Distance(door:GetPos()) > Doors.use_distance then
     self:safe_remove()
   end
 end
@@ -162,7 +162,7 @@ function PANEL:set_info(info)
   local owner_text = t'ui.door.management.you_own'
 
   if !is_owner then
-    owner_text = t('ui.door.management.owner', { name = string.gsub(info.owner_name or '', '%%', '%%%%') })
+    owner_text = t('ui.door.management.owner', { name = info.owner_name or '' })
   end
 
   self.owner_label:SetText(owner_text)
@@ -228,7 +228,7 @@ function PANEL:rebuild()
     if IsValid(target) then
       name = target:name()
     else
-      name = t('ui.door.management.away', { name = string.gsub(name, '%%', '%%%%') })
+      name = t('ui.door.management.away', { name = name })
     end
 
     listed[v.id] = true

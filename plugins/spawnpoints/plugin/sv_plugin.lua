@@ -65,10 +65,10 @@ function SpawnPoints:sync(target)
 end
 
 --- Adds a spawn point, saves the list and sends it to the staff who edit spawn points.
--- The group is stored as it is given, so that points can be placed for a faction or a class
--- before it is registered; see `SpawnPoints:is_valid_group` for checking it first.
+-- The group is stored as it is given, so that points can be placed for a faction before it
+-- is registered; see `SpawnPoints:is_valid_group` for checking it first.
 -- ```
--- SpawnPoints:add_point(actor:GetPos(), actor:EyeAngles(), SpawnPoints:make_group('class', 'medic'))
+-- SpawnPoints:add_point(actor:GetPos(), actor:EyeAngles(), SpawnPoints:make_group('faction', 'police'))
 -- ```
 -- @param pos [Vector where the feet of a spawning player are put]
 -- @param ang=nil [Angle the direction a spawning player faces; only the yaw is kept]
@@ -173,27 +173,17 @@ function SpawnPoints:pick_point(points, ignore)
 end
 
 --- Returns the spawn point groups a player belongs to, the most specific one first: the
--- class of their character, the faction of their character, then `default`. They are read
--- from the character itself, which is already in place when the player is spawned for a
--- character that is being loaded.
+-- faction of their character, then `default`. They are read from the character itself,
+-- which is already in place when the player is spawned for a character that is being
+-- loaded.
 -- @param actor [Player]
 -- @return [List<String> groups; always ends with 'default']
 function SpawnPoints:get_player_groups(actor)
   local groups = {}
   local character = Characters and actor:is_character_loaded() and actor:get_character()
 
-  if istable(character) then
-    if Classes then
-      local class_table = Classes.get_character_class(character)
-
-      if class_table then
-        table.insert(groups, self:make_group('class', class_table.class_id))
-      end
-    end
-
-    if Factions and isstring(character.faction) then
-      table.insert(groups, self:make_group('faction', character.faction))
-    end
+  if istable(character) and Factions and isstring(character.faction) then
+    table.insert(groups, self:make_group('faction', character.faction))
   end
 
   if groups[#groups] != 'default' then

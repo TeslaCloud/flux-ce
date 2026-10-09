@@ -60,3 +60,25 @@ configs:
     min_value: 0
     max_value: 60
     default_value: 8
+  ragdoll_knockout_on_damage:
+    name: config.ragdoll.knockout_on_damage.name
+    description: config.ragdoll.knockout_on_damage.desc
+    category: ragdoll
+    type: boolean
+    default_value: false
+  ragdoll_knockout_health:
+    name: config.ragdoll.knockout_health.name
+    description: config.ragdoll.knockout_health.desc
+    category: ragdoll
+    type: number
+    min_value: 1
+    max_value: 1000
+    default_value: 20
+  ragdoll_knockout_time:
+    name: config.ragdoll.knockout_time.name
+    description: config.ragdoll.knockout_time.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 600
+    default_value: 60

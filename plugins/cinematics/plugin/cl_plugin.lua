@@ -33,34 +33,54 @@ local wrap_widths = {
   subtitle = 0.6
 }
 local fallback_font = 'DermaLarge'
+local outline_color = Color(0, 0, 0)
+local caption_color = Color(255, 255, 255)
+local title_draw_color = Color(255, 255, 255)
 
 Cinematics.queue = queue
 Cinematics.state = state
 Cinematics.defaults = defaults
 
---- Converts a color that may have come over the network to an opaque Color.
+--- Copies a color into one of the colors that are kept for drawing, at an opacity, so that
+-- drawing a cinematic does not create colors every frame.
+-- @param target [Color color to write to]
+-- @param source [Color color to copy]
+-- @param alpha [Number opacity from 0 to 255]
+-- @return [Color the target]
+local function tint(target, source, alpha)
+  target.r, target.g, target.b, target.a = source.r, source.g, source.b, alpha
+
+  return target
+end
+
+--- Converts a color that may have come over the network to an opaque Color. Other plugins
+-- that show text sent by the server, such as Area Display, use it as well.
 -- @param value [Color/Map color, or any table with the r, g and b fields]
 -- @return [Color the color without its alpha, or nil if the value is not a color]
-local function to_color(value)
+function Cinematics.to_color(value)
   if istable(value) and isnumber(value.r) and isnumber(value.g) and isnumber(value.b) then
     return Color(value.r, value.g, value.b)
   end
 end
 
---- Draws lines of text one below another, centered on a horizontal position and outlined in
--- black so that they stay readable outside of the bars.
+--- Draws lines of text one below another, aligned to a horizontal position and outlined in
+-- black so that they stay readable on any background. Other plugins that draw text over the
+-- screen, such as Area Display, use it as well.
 -- @param lines [List<String> lines to draw]
 -- @param font [String font name]
--- @param x [Number screen x of the center of every line]
+-- @param x [Number screen x the lines are aligned to]
 -- @param y [Number screen y of the top of the first line]
 -- @param color [Color text color, with the alpha to draw the text at]
+-- @param align=TEXT_ALIGN_CENTER [Number horizontal alignment, one of the TEXT_ALIGN enums]
 -- @return [Number screen y below the last line]
-local function draw_lines(lines, font, x, y, color)
+function Cinematics.draw_lines(lines, font, x, y, color, align)
   local line_height = util.font_size(font)
-  local outline_color = Color(0, 0, 0, color.a)
+
+  align = align or TEXT_ALIGN_CENTER
+  outline_color.a = color.a
 
   for k, v in ipairs(lines) do
-    draw.SimpleTextOutlined(v, font, x, y, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, outline_color)
+    draw.SimpleTextOutlined(v, font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
 
     y = y + line_height
   end
@@ -100,8 +120,8 @@ function Cinematics:add(cinematic)
   if !istable(cinematic) then return end
 
   local entry = {
-    color = to_color(cinematic.color),
-    title_color = to_color(cinematic.title_color),
+    color = Cinematics.to_color(cinematic.color),
+    title_color = Cinematics.to_color(cinematic.title_color),
     duration = math.max(tonumber(cinematic.duration) or Theme.get_option('cinematic_duration', defaults.duration), 0),
     delay = math.max(tonumber(cinematic.delay) or 0, 0),
     bar_size = math.Clamp(
@@ -341,12 +361,12 @@ function Cinematics:draw(scrw, scrh)
     local text_height = #lines.text * util.font_size(font)
     local band_height = math.max(current.bar_size * scrh, text_height + math.scale(32))
 
-    draw_lines(
+    Cinematics.draw_lines(
       lines.text,
       font,
       center_x,
       scrh - band_height * 0.5 - text_height * 0.5,
-      text_color:alpha(state.alpha)
+      tint(caption_color, text_color, state.alpha)
     )
   end
 
@@ -361,11 +381,13 @@ function Cinematics:draw(scrw, scrh)
     if lines.title then
       local title_color = current.title_color or current.color or Theme.get_color('cinematic_title', color_white)
 
-      y = draw_lines(lines.title, title_font, center_x, y, title_color:alpha(state.alpha)) + gap
+      y = Cinematics.draw_lines(
+        lines.title, title_font, center_x, y, tint(title_draw_color, title_color, state.alpha)
+      ) + gap
     end
 
     if lines.subtitle then
-      draw_lines(lines.subtitle, subtitle_font, center_x, y, text_color:alpha(state.alpha))
+      Cinematics.draw_lines(lines.subtitle, subtitle_font, center_x, y, tint(caption_color, text_color, state.alpha))
     end
   end
 end

@@ -1,8 +1,6 @@
 --- Client hooks of the Spawn Points plugin: ask the server for the spawn points when the
 -- local player takes out the Spawn Point Tool, and draw the points while it is held.
 
-local color_default = Color(120, 200, 255)
-local box_angle = Angle(0, 0, 0)
 local eye_offset = Vector(0, 0, 64)
 local label_offset = Vector(0, 0, 80)
 local direction_length = 32
@@ -41,10 +39,10 @@ function SpawnPoints:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
   if draw_depth or draw_skybox or !self.editing then return end
 
   for k, v in ipairs(self.points) do
-    local color = v.color or color_default
+    local color = v.color or self.color_default
     local eye_pos = v.pos + eye_offset
 
-    render.DrawWireframeBox(v.pos, box_angle, self.hull_mins, self.hull_maxs, color, true)
+    render.DrawWireframeBox(v.pos, self.box_angle, self.hull_mins, self.hull_maxs, color, true)
     render.DrawLine(eye_pos, eye_pos + v.ang:Forward() * direction_length, color, true)
   end
 end
@@ -65,7 +63,7 @@ function SpawnPoints:HUDPaint()
         font,
         screen_pos.x,
         screen_pos.y,
-        v.color or color_default,
+        v.color or self.color_default,
         TEXT_ALIGN_CENTER,
         TEXT_ALIGN_CENTER
       )

@@ -68,8 +68,11 @@ vgui.Register('fl_plugin_manager', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the switch and the labels for the name and the state of the plugin.
+--- Creates the switch and the labels for the name and the state of the plugin, and picks
+-- the background color of the dark rows.
 function PANEL:Init()
+  self.dark_color = Theme.get_color('background'):alpha(150)
+
   self.toggle = vgui.Create('fl_button', self)
   self.toggle:SetDrawBackground(false)
   self.toggle:set_centered(true)
@@ -93,7 +96,7 @@ end
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
   if Theme.hook('PaintAdminRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
+    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
   end
 end
 

@@ -381,7 +381,10 @@ end
 -- @param value [Any new value, anything but a function or a table that contains one]
 -- @param send=nil [Player/List<Player> makes the variable private: these players become
 --   its only recipients, and everyone else is told to forget it. If nil, the value goes to
---   the current recipients of the variable, which is everyone unless it is private]
+--   the current recipients of the variable, which is everyone unless it is private. This
+--   is a change from earlier versions, where the argument only chose who was sent this one
+--   update: a variable that is given recipients stays private until
+--   `Entity:set_nv_recipients` makes it public again]
 function ent_meta:set_nv(key, value, send)
   if is_bad_type(key, value) then return end
 

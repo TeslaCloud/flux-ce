@@ -7,6 +7,27 @@
 local target_distance = 300
 local refresh_delay = 0.3
 
+--- Returns the description of a vendor broken into lines that fit the target ID. The lines
+-- are kept on the entity and made again only when the description or the width changes.
+-- @param entity [Entity the vendor]
+-- @param font [String font the lines are drawn with]
+-- @param width [Number widest line in pixels]
+-- @return [List<String> the lines, none if the vendor has no description]
+local function get_description_lines(entity, font, width)
+  local description = entity:get_vendor_description()
+  local cached = entity.vendor_description_lines
+
+  if cached and cached.text == description and cached.width == width and cached.font == font then
+    return cached.lines
+  end
+
+  local lines = description != '' and util.wrap_text(description, font, width, 0) or {}
+
+  entity.vendor_description_lines = { text = description, width = width, font = font, lines = lines }
+
+  return lines
+end
+
 --- Draws the name and the description of the vendor that the local player is looking at
 -- above its head. It is drawn from here rather than as an ordinary target ID, because those
 -- are hidden when the feet of the entity are out of sight, as they are behind a counter.
@@ -31,8 +52,7 @@ function Vendors:HUDDrawTargetID()
   local name_font = Theme.get_font('tooltip_large')
   local desc_font = Theme.get_font('tooltip_normal')
   local name_w, name_h = util.text_size(name, name_font)
-  local description = entity:get_vendor_description()
-  local lines = description != '' and util.wrap_text(description, desc_font, ScrW() * 0.33, 0) or {}
+  local lines = get_description_lines(entity, desc_font, ScrW() * 0.33)
   local height = name_h
 
   for k, v in ipairs(lines) do
@@ -82,6 +102,23 @@ function Vendors:OnInventorySync(inventory)
   end)
 end
 
+--- Updates the line about money of the trade panel when the money of the local player
+-- changes.
+-- @param entity [Entity the entity whose variable has changed]
+-- @param key [String variable name]
+function Vendors:NetVarChanged(entity, key)
+  if entity == PLAYER and key == 'fl_currencies' and IsValid(self.trade_panel) then
+    self.trade_panel:refresh_money()
+  end
+end
+
+--- Translates the line about money of the trade panel again when the language changes.
+function Vendors:LanguageChanged()
+  if IsValid(self.trade_panel) then
+    self.trade_panel:refresh_money()
+  end
+end
+
 Cable.receive('fl_vendor_open', function(vendor, data)
   if IsValid(Vendors.trade_panel) then
     Vendors.trade_panel:close(true)
@@ -104,6 +141,14 @@ Cable.receive('fl_vendor_update', function(vendor, data)
 
   if IsValid(panel) and panel:get_vendor() == vendor and istable(data) then
     panel:set_data(data)
+  end
+end)
+
+Cable.receive('fl_vendor_change', function(vendor, money, item_id, stock)
+  local panel = Vendors.trade_panel
+
+  if IsValid(panel) and panel:get_vendor() == vendor then
+    panel:apply_change(money, item_id, stock)
   end
 end)
 

@@ -14,9 +14,17 @@
 -- * `immunity`: CurTime() until which the ragdoll ignores damage that no player has dealt.
 -- * `getup_end`: CurTime() at which the player gets up by themselves, nil without a timer.
 -- * `getup_paused`: seconds left on a paused timer, nil if it is not paused.
+-- * `getup_held`: true while the timer is paused for another timed action of the player,
+--   which the hooks of sv_hooks.lua resume once that action has ended.
 --
 -- The health and the armor of a fallen player stay on the player: damage dealt to the ragdoll
--- is passed on to them, so `Player:Health` and `Player:Armor` are right at all times.
+-- is passed on to them, so `Player:Health` and `Player:Armor` are right at all times. The
+-- time at which a running get up timer ends is networked to everyone as the
+-- 'ragdoll_getup_end' variable of the player, which `Player:get_knockout_remaining` reads.
+--
+-- The weapons of a fallen player are stored with their clips by the local `store_weapons`
+-- and `restore_weapons`, as the `Player:get_weapons_list` and `Player:give_weapons` helpers
+-- of Flux carry the classes only.
 
 local player_meta = FindMetaTable('Player')
 local burn_time = 8
@@ -151,8 +159,17 @@ local function stand_up(target, data, ragdoll, reset)
   end
 end
 
+--- Networks the end of the get up timer of a player, so that clients can show how long
+-- they stay down.
+-- @param target [Player]
+-- @param data=nil [Map ragdoll data of the player; nil clears the variable]
+local function sync_getup_end(target, data)
+  target:set_nv('ragdoll_getup_end', data and data.getup_end or nil)
+end
+
 --- Takes a player out of their ragdoll state without asking any hook: stops their get up
--- timer, sets the state to RAGDOLL_NONE, lets go of the ragdoll and runs PlayerUnragdolled.
+-- timer, sets the state to RAGDOLL_NONE, lets go of the ragdoll and runs PlayerUnragdolled,
+-- and PlayerWokeUp for a player who was knocked out.
 -- @param target [Player]
 -- @param reset [Boolean the player is being respawned rather than getting up]
 local function unragdoll(target, reset)
@@ -162,8 +179,10 @@ local function unragdoll(target, reset)
   if data then
     data.getup_end = nil
     data.getup_paused = nil
+    data.getup_held = nil
   end
 
+  sync_getup_end(target)
   Flux.TimedAction:cancel(target, 'getup')
 
   if target:is_doing_action('fallen') then
@@ -183,6 +202,16 @@ local function unragdoll(target, reset)
     -- @param reset [Boolean True if the state was cleared because the player is respawning
     --   or leaving, false if they got up where their ragdoll was]
     hook.Run('PlayerUnragdolled', target, state, data, reset == true)
+  end
+
+  if state == RAGDOLL_KNOCKEDOUT then
+    --- Called on the server after a knocked out player has come to: their knockout timer
+    -- ran out, something got them up or made them merely fallen over, or their state was
+    -- cleared because they respawn or leave. Not called when they die while knocked out.
+    -- @param target [Player The player]
+    -- @param reset [Boolean True if the state was cleared because the player is respawning
+    --   or leaving, false if they came to where they lay]
+    hook.Run('PlayerWokeUp', target, reset == true)
   end
 end
 
@@ -299,7 +328,6 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
 
   ragdoll.player = self
   ragdoll.decay = decay
-  ragdoll.weapons = {}
   ragdoll:Spawn()
 
   if !IsValid(ragdoll) or ragdoll:IsMarkedForDeletion() then return end
@@ -339,8 +367,6 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
     data.no_draw = self:GetNoDraw()
     data.not_solid = !self:IsSolid()
     data.immunity = grounded and CurTime() + Config.get('ragdoll_immunity_time', 0.5) or 0
-
-    ragdoll.weapons = self:get_weapons_list()
 
     if self:IsOnFire() then
       data.burning_until = CurTime() + burn_time
@@ -430,6 +456,7 @@ function player_meta:set_getup_time(delay)
 
   data.getup_end = nil
   data.getup_paused = nil
+  data.getup_held = nil
 
   Flux.TimedAction:cancel(self, 'getup')
 
@@ -440,6 +467,8 @@ function player_meta:set_getup_time(delay)
 
     start_getup_action(self, data, delay)
   end
+
+  sync_getup_end(self, data)
 
   return true
 end
@@ -466,6 +495,7 @@ function player_meta:pause_getup_time()
 
   data.getup_end = nil
 
+  sync_getup_end(self)
   Flux.TimedAction:cancel(self, 'getup')
 
   data.getup_paused = remaining
@@ -495,8 +525,9 @@ end
 
 --- Makes the fallen player start getting up by themselves, which is what the jump key and
 -- the getup command do. Refused if they are not fallen over (a knocked out player has to
--- wait), if they already have a get up timer, running or paused, or if the PlayerCanGetUp
--- hook says no. Serverside only.
+-- wait), if they already have a get up timer, running or paused, if someone is dragging
+-- their ragdoll (`Player:get_dragger` of the Pickup Objects plugin), or if the
+-- PlayerCanGetUp hook says no. Serverside only.
 -- @param duration=nil [Number seconds it takes, never less than the ragdoll_getup_time
 --   config, which is also the default, nor more than 60]
 -- @return [Boolean true if the player has started getting up]
@@ -505,6 +536,7 @@ function player_meta:get_up(duration)
 
   if !data or !self:Alive() or self:get_ragdoll_state() != RAGDOLL_FALLENOVER then return false end
   if data.getup_end or data.getup_paused then return false end
+  if isfunction(self.get_dragger) and IsValid(self:get_dragger()) then return false end
 
   --- Asks whether a fallen player may start getting up by themselves. Called on the server
   -- when they press the jump key or run the getup command (`Player:get_up`), not when a
@@ -529,11 +561,13 @@ function player_meta:reset_ragdoll_state()
 end
 
 --- Makes a living player fall over or knocks them out, or changes which of the two a player
--- who is already down is.
+-- who is already down is. Runs the PlayerCanKnockOut, PlayerKnockedOut and PlayerWokeUp
+-- hooks when the knocked out state is entered or left for the fallen over one.
 -- @param target [Player]
 -- @param state [Number RAGDOLL_FALLENOVER or RAGDOLL_KNOCKEDOUT]
 -- @param delay=nil [Number seconds after which the player gets up by themselves]
--- @param options=nil [Map optional settings: force (Vector push given to the ragdoll)]
+-- @param options=nil [Map optional settings: force (Vector push given to the ragdoll) and
+--   attacker (Entity whoever knocked the player out)]
 -- @return [Boolean true if the player is now in the state]
 local function fall_down(target, state, delay, options)
   if !target:Alive() then return false end
@@ -548,6 +582,20 @@ local function fall_down(target, state, delay, options)
   local current = target:get_ragdoll_state()
   local down = data != nil and data.fallen and IsValid(data.entity)
     and (current == RAGDOLL_FALLENOVER or current == RAGDOLL_KNOCKEDOUT)
+  local attacker = options and options.attacker or nil
+  local knocking_out = state == RAGDOLL_KNOCKEDOUT and current != RAGDOLL_KNOCKEDOUT
+
+  if knocking_out then
+    --- Asks whether a player may be knocked out. Called on the server before a player who
+    -- is not knocked out already is, whether by `Player:knock_out`, the knockout command or
+    -- a stunstick hit, and before the PlayerCanRagdoll hook.
+    -- @param target [Player The player who is about to be knocked out]
+    -- @param attacker [Entity Whoever is knocking them out; nil if nobody in particular]
+    -- @param duration [Number Seconds after which they would come to; nil if they stay out
+    --   until something wakes them]
+    -- @return [Boolean Return false to keep the player conscious]
+    if hook.Run('PlayerCanKnockOut', target, attacker, delay) == false then return false end
+  end
 
   if !can_ragdoll(target, state, delay, down and data or nil) then return false end
 
@@ -572,6 +620,19 @@ local function fall_down(target, state, delay, options)
 
   ragdolled(target, state, data)
 
+  if knocking_out then
+    --- Called on the server after a player has been knocked out: they lie on the ground
+    -- unable to get up, hear and are heard by nobody over voice chat and cannot switch
+    -- characters until they come to.
+    -- @param target [Player The player who was knocked out]
+    -- @param duration [Number Seconds after which they come to by themselves; nil if they
+    --   stay out until something wakes them]
+    -- @param attacker [Entity Whoever knocked them out; nil if nobody in particular]
+    hook.Run('PlayerKnockedOut', target, delay, attacker)
+  elseif current == RAGDOLL_KNOCKEDOUT and state == RAGDOLL_FALLENOVER then
+    hook.Run('PlayerWokeUp', target, false)
+  end
+
   return true
 end
 
@@ -586,8 +647,10 @@ local function leave_corpse(target)
   if data then
     data.getup_end = nil
     data.getup_paused = nil
+    data.getup_held = nil
   end
 
+  sync_getup_end(target)
   Flux.TimedAction:cancel(target, 'getup')
 
   if target:is_doing_action('fallen') then
@@ -629,11 +692,13 @@ end
 -- @param delay=nil [Number seconds after which a fallen or knocked out player gets up by
 --   themselves; nil leaves them down until something gets them up]
 -- @param options=nil [Map optional settings for falling over: force (Vector push given to
---   the ragdoll, such as the force of the damage that knocked the player down)]
+--   the ragdoll, such as the force of the damage that knocked the player down) and
+--   attacker (Entity whoever knocked the player out, passed to the knockout hooks)]
 -- @return [Boolean true if the player is now in the state, false if a hook has refused or
 --   the state does not apply to them]
 -- @see [Player#set_getup_time]
 -- @see [Player#reset_ragdoll_state]
+-- @see [Player#knock_out]
 function player_meta:set_ragdoll_state(state, delay, options)
   state = state or RAGDOLL_NONE
 
@@ -668,4 +733,34 @@ function player_meta:set_ragdoll_state(state, delay, options)
   end
 
   return true
+end
+
+--- Knocks the player out: they fall over, or stay down if they are fallen over already, and
+-- cannot get up by themselves until they come to. While they are out they are not heard
+-- over voice chat and cannot switch characters. The PlayerCanKnockOut hook can refuse;
+-- PlayerKnockedOut runs afterwards and PlayerWokeUp once they come to. Serverside only.
+-- ```
+-- target:knock_out(30, { attacker = actor }) -- out for half a minute
+-- target:knock_out() -- out until something wakes them
+-- ```
+-- @param duration=nil [Number seconds after which the player comes to by themselves; nil
+--   or 0 keeps them out until `Player:wake_up`, `Player:set_getup_time` or staff gets them
+--   up]
+-- @param options=nil [Map optional settings: attacker (Entity whoever knocks the player
+--   out) and force (Vector push given to the ragdoll)]
+-- @return [Boolean true if the player is knocked out now]
+-- @see [Player#set_ragdoll_state]
+function player_meta:knock_out(duration, options)
+  return self:set_ragdoll_state(RAGDOLL_KNOCKEDOUT, duration, options)
+end
+
+--- Brings the knocked out player to: they get up where their ragdoll is, unless the
+-- PlayerCanUnragdoll hook keeps them down. Serverside only.
+-- @return [Boolean true if the player is up; false if they were not knocked out or a hook
+--   has refused]
+-- @see [Player#set_ragdoll_state]
+function player_meta:wake_up()
+  if self:get_ragdoll_state() != RAGDOLL_KNOCKEDOUT then return false end
+
+  return self:set_ragdoll_state(RAGDOLL_NONE)
 end

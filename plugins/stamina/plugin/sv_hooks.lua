@@ -172,9 +172,10 @@ end
 
 --- Writes the stamina of the player into the generic data of their character before it is
 -- saved, under the 'stamina' key. Nothing is kept for a dead player, so that the character
--- is loaded with full stamina next time, or while the 'stam_persistent' config is off. A
--- player counts as dead once their health is gone, because the save that follows a death
--- runs while `Player:Alive` still returns true.
+-- is loaded with full stamina next time, or while the 'stam_persistent' config is off: a
+-- value that was saved before is then cleared once, and nothing is written as long as
+-- there is none. A player counts as dead once their health is gone, because the save that
+-- follows a death runs while `Player:Alive` still returns true.
 -- Only runs when the Characters plugin is loaded.
 -- @param owner [Player]
 -- @param character [Character the character that is being saved]
@@ -184,7 +185,7 @@ function Stamina:SaveCharacterData(owner, character)
 
   if persistent and owner:Alive() and owner:Health() > 0 then
     Characters.set_custom_data(character, 'stamina', math.Round(self:get_stamina(owner)))
-  else
+  elseif Characters.get_custom_data(character, 'stamina') != nil then
     Characters.set_custom_data(character, 'stamina', nil)
   end
 end

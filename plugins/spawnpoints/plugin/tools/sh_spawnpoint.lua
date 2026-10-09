@@ -1,6 +1,6 @@
 --- The Spawn Point Tool places and removes spawn points. Left click adds a point where the
 -- owner stands, facing the way they look, for the group picked in the tool's settings:
--- everyone, a faction or a class. Right click removes the point the owner is aiming at.
+-- everyone or a faction. Right click removes the point the owner is aiming at.
 -- While the tool is held the existing points are drawn in the world. The tool requires the
 -- 'spawnpoints' permission, which each of its actions checks as well.
 

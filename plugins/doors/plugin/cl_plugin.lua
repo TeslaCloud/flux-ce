@@ -1,6 +1,24 @@
 --- Client side of the Doors plugin: when the server sends it, opens the context menu of a door
 -- with the options to lock or unlock it, to buy it, to manage it and to open its settings.
--- Also works out the status text that is drawn on ownable doors.
+-- Also works out the status text that is drawn on ownable doors, which is kept on the door
+-- until its ownership variables, the language or the door_price config change.
+
+Doors.status_generation = Doors.status_generation or 0
+
+--- Makes every door work its status text out again, for when something that every status
+-- depends on has changed: the language or the door_price config.
+function Doors:invalidate_status_texts()
+  self.status_generation = self.status_generation + 1
+end
+
+--- Makes a door work its status text out again, for when one of its ownership variables
+-- has changed.
+-- @param entity [Entity the door]
+function Doors:invalidate_status_text(entity)
+  if IsValid(entity) then
+    entity.door_status_generation = nil
+  end
+end
 
 --- Formats a price for display.
 -- @param price [Number the price]
@@ -19,7 +37,8 @@ end
 
 --- Returns the status line of a door, which title types draw below its name: the text of
 -- the owner or a note that the door is owned, or for an ownable door without an owner that
--- it is for sale and for how much.
+-- it is for sale and for how much. The line is kept on the door and only worked out again
+-- once one of its 'fl_door_*' variables, the language or the door_price config changes.
 -- ```
 -- Doors:register_title_type('plain', {
 --   name = 'door.title_type.plain',
@@ -35,6 +54,10 @@ end
 -- @param entity [Entity the door]
 -- @return [String the status, or nil if the door is neither owned nor ownable]
 function Doors:get_status_text(entity)
+  if entity.door_status_generation == self.status_generation then
+    return entity.door_status_text
+  end
+
   local text
 
   if self:is_owned(entity) then
@@ -52,6 +75,9 @@ function Doors:get_status_text(entity)
       text = t'ui.door.status.free'
     end
   end
+
+  entity.door_status_text = text
+  entity.door_status_generation = self.status_generation
 
   return text
 end
@@ -110,7 +136,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
   end
 
   if staff and info.owned then
-    local label = t('ui.door.evict', { name = string.gsub(info.owner_name or '', '%%', '%%%%') })
+    local label = t('ui.door.evict', { name = info.owner_name or '' })
     local message = t'ui.door.evict_message'
 
     menu:AddOption(label, function()

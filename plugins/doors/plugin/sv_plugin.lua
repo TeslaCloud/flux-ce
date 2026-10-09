@@ -1,6 +1,15 @@
 --- Server side of the Doors plugin: saves and loads the properties, conditions and ownership
 -- of doors, locks doors and applies what the door menu sends.
 
+--- Checks whether a player is close enough to a door to use its menu, lock it, trade it,
+-- manage it or edit it: within `Doors.use_distance` of it.
+-- @param actor [Player]
+-- @param entity [Entity the door]
+-- @return [Boolean]
+function Doors:is_in_reach(actor, entity)
+  return actor:GetPos():Distance(entity:GetPos()) <= self.use_distance
+end
+
 --- Loads the saved doors when the framework loads its data.
 function Doors:LoadData()
   self:load()
@@ -120,7 +129,7 @@ function Doors:player_lock_door(actor, entity, lock, move)
 
   return actor:start_timed_action(lock and 'lock_door' or 'unlock_door', duration, {
     text = lock and 'ui.hud.bar_text.lock_door' or 'ui.hud.bar_text.unlock_door',
-    condition = Flux.TimedAction:looking_at(entity, 160),
+    condition = Flux.TimedAction:looking_at(entity, self.use_distance),
     callback = function(target, success)
       if !success or !IsValid(entity) or !hook.Run('PlayerCanLockDoor', target, entity) then return end
 
@@ -134,8 +143,7 @@ function Doors:player_lock_door(actor, entity, lock, move)
 end
 
 Cable.receive('fl_send_door_data', function(actor, entity, id, data)
-  if actor:can('manage_doors') and IsValid(entity) and entity:is_door()
-  and actor:GetPos():Distance(entity:GetPos()) < 115 then
+  if actor:can('manage_doors') and IsValid(entity) and entity:is_door() and Doors:is_in_reach(actor, entity) then
     local property = Doors.properties[id]
 
     if property and property.on_load then
@@ -153,8 +161,8 @@ Cable.receive('fl_lock_door', function(actor, entity, lock)
 end)
 
 Cable.receive('fl_send_door_conditions', function(actor, entity, conditions)
-  if actor:can('manage_doors') and IsValid(entity) and entity:is_door() and conditions and istable(conditions)
-  and actor:GetPos():Distance(entity:GetPos()) < 115 then
+  if actor:can('manage_doors') and IsValid(entity) and entity:is_door() and istable(conditions)
+  and Doors:is_in_reach(actor, entity) then
     entity.conditions = conditions
   end
 end)

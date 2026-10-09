@@ -25,9 +25,9 @@ end
 
 Characters.networked_data = Characters.networked_data or {}
 
-CHAR_GENDER_MALE    = 0    -- Guys.
-CHAR_GENDER_FEMALE  = 1    -- Gals.
-CHAR_GENDER_NONE    = 2    -- Gender-less characters such as vorts.
+CHAR_GENDER_MALE = 0
+CHAR_GENDER_FEMALE = 1
+CHAR_GENDER_NONE = 2
 
 local translate_gender = {
   [CHAR_GENDER_MALE] = 'male',
@@ -125,15 +125,16 @@ end
 -- @param target [Player owner of the new character]
 -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin. Set
 --   name_generated to true when the name was not chosen by the player, which lets it
---   repeat the name of another character]
+--   repeat the name of another character, and description_generated to true when the
+--   description was not written by the player, which frees it from the length limits]
 -- @return [Number CHAR_SUCCESS, or the CHAR_ERR_* code returned by the hook]
 function Characters.create(target, data)
   --- Validates the data of a character that is about to be created. Called by
   -- `Characters.create`, which the plugin runs on the server, before the character record is
   -- built.
   -- @param owner [Player the player the character is created for]
-  -- @param data [Map creation data: name, phys_desc, gender, model, skin, name_generated and
-  --   the fields that other plugins add]
+  -- @param data [Map creation data: name, phys_desc, gender, model, skin, name_generated,
+  --   description_generated and the fields that other plugins add]
   -- @return [Number return a CHAR_ERR_* code to refuse the character; it becomes the result of
   --   Characters.create and is sent to the client. Return nothing to accept the data]
   local hook_result = hook.Run('PlayerCreateCharacter', target, data)
@@ -592,7 +593,7 @@ if SERVER then
     actor.next_desc_change = cur_time + request_delay
 
     Characters.set_desc(actor, new_desc)
-    actor:notify('notification.desc_changed', { desc = new_desc:gsub('%%', '%%%%') })
+    actor:notify('notification.desc_changed', { desc = new_desc })
 
     return true
   end
@@ -809,17 +810,20 @@ if SERVER then
     end
 
     local requested_name = data.name
+    local requested_description = data.description
 
     --- Called on the server when the request of a client to create a character arrives, before
     -- the data is converted and passed to `Characters.create`. Handlers can fill in or change
     -- the data in place. A name that a handler has replaced counts as generated and may
-    -- repeat the name of another character.
+    -- repeat the name of another character; a description that a handler has replaced
+    -- counts as generated and may be of any length.
     -- @param actor [Player the player who sent the request]
     -- @param data [Map data collected by the creation menu: name, description, gender ('male',
     --   'female' or 'universal'), model, skin and the fields that other stages add]
     hook.Run('PreCreateCharacter', actor, data)
 
     data.name_generated = data.name != requested_name
+    data.description_generated = data.description != requested_description
     data.gender = (data.gender == 'female' and CHAR_GENDER_FEMALE) or
       (data.gender == 'universal' and CHAR_GENDER_NONE) or CHAR_GENDER_MALE
     data.phys_desc = data.description

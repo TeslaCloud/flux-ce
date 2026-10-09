@@ -448,9 +448,7 @@ function PANEL:update()
     local has_pending = Config.get_pending(self.key)
 
     if has_pending then
-      local current = string.gsub(Config.display_value(self.key), '%%', '%%%%')
-
-      tooltip = tooltip..' '..t('ui.admin.config.pending', { value = current })
+      tooltip = tooltip..' '..t('ui.admin.config.pending', { value = Config.display_value(self.key) })
     end
 
     self.restart_flag:SetTooltip(tooltip)

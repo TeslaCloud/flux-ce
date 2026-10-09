@@ -70,7 +70,6 @@ if SERVER then
   function ENT:Use(activator, caller, use_type, value)
     local last_activator = self:get_nv('last_activator')
 
-    -- prevent minge-grabbing glitch
     if IsValid(last_activator) and last_activator != activator then return end
 
     local hold_start = activator:get_nv('hold_start')

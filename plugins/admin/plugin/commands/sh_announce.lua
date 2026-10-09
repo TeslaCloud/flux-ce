@@ -27,7 +27,5 @@ function CMD:on_run(actor, ...)
     return
   end
 
-  self:notify(nil, 'notification.announcement', {
-    text = (string.gsub(text, '%%', '%%%%'))
-  }, announcement_color)
+  self:notify(nil, 'notification.announcement', { text = text }, announcement_color)
 end

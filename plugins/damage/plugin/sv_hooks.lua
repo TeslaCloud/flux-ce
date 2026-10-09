@@ -95,8 +95,9 @@ function Damage:PostEntityTakeDamage(entity, damage_info, took)
   hook.Run('PostPlayerTakeDamage', entity, damage_info, took, hitgroup)
 end
 
---- Clears what the plugin tracks about the player who died and writes the kill log entry if
--- the 'log_kills' config is on.
+--- Clears what the plugin tracks about the player who died, writes the kill log entry if
+-- the 'log_kills' config is on and saves the queued log entries, so that the hits that led
+-- to the death are in the database together with it.
 -- @param victim [Player the player who died]
 -- @param inflictor [Entity entity that has dealt the fatal damage]
 -- @param attacker [Entity entity responsible for the death]
@@ -106,6 +107,18 @@ function Damage:PlayerDeath(victim, inflictor, attacker)
   if Config.get('log_kills') then
     self:log_kill(victim, inflictor, attacker)
   end
+
+  self:flush_logs()
+end
+
+--- Saves the log entries that were written during the last second.
+function Damage:OneSecond()
+  self:flush_logs()
+end
+
+--- Saves the log entries that are still queued when the server shuts down.
+function Damage:ShutDown()
+  self:flush_logs()
 end
 
 --- Clears what the plugin tracks about the player when they spawn.

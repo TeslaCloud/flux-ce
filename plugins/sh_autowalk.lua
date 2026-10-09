@@ -48,8 +48,6 @@ if SERVER then
     end
   end)
 else
-  -- We do this so there's no need to do an unnecessary check for if client or server in the hook itself.
-
   --- Moves the player forward at full speed while auto walk is on (clientside prediction).
   -- @param client [Player]
   -- @param move_data [CMoveData]

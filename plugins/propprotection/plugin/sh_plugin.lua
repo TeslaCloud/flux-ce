@@ -21,7 +21,9 @@
 -- The plugin also charges for spawned props through the Currencies plugin when the
 -- `prop_cost` config is set, refunds a prop that is removed soon after, and keeps players
 -- from being hurt by props that are held with the physics gun, have just been dropped by it
--- or have just been spawned (`prop_kill_protection`).
+-- or have just been spawned (`prop_kill_protection`). Addons that speak the Common Prop
+-- Protection Interface find the `CPPI` table and the `CPPI` entity and player methods in
+-- lib/meta/sh_entity.lua.
 --
 -- Rules and the configs that switch them:
 -- ```
@@ -55,6 +57,14 @@ local action_permissions = {
 
 PropProtection.rules = rules
 
+--- Owners that the client has looked up lately, by ownership key: the player and the
+-- RealTime() until which the answer is trusted. The lookup walks every player, and the
+-- target ID asks for it every frame, so the client keeps the answer for a moment.
+local owner_cache = {}
+
+--- Seconds for which the client trusts a cached owner lookup.
+local owner_cache_time = 0.5
+
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
@@ -76,16 +86,36 @@ function PropProtection:get_key(target)
 end
 
 --- Finds the connected player who currently plays the character behind an ownership key.
+-- On the client the answer is kept for half a second, as the lookup walks every player and
+-- is asked for every frame while an owned entity is looked at; the server always looks.
 -- @param key [String ownership key, see PropProtection:get_key]
 -- @return [Player the owner, or nil if they are not connected or play another character]
 function PropProtection:find_owner(key)
   if !isstring(key) then return end
 
-  for k, v in player.Iterator() do
-    if self:get_key(v) == key then
-      return v
+  if CLIENT then
+    local cached = owner_cache[key]
+
+    if cached and cached.expires > RealTime() then
+      return IsValid(cached.owner) and cached.owner or nil
     end
   end
+
+  local owner
+
+  for k, v in player.Iterator() do
+    if self:get_key(v) == key then
+      owner = v
+
+      break
+    end
+  end
+
+  if CLIENT then
+    owner_cache[key] = { owner = owner or false, expires = RealTime() + owner_cache_time }
+  end
+
+  return owner
 end
 
 --- Checks whether an entity was created by the map. The answer comes from the engine, which
@@ -230,23 +260,31 @@ function PropProtection:can_manipulate(actor, entity, action, detail)
   return true
 end
 
---- Refuses to let a player pick up an entity that the rules protect from them, and lets
--- them pick up everything else even without the `physgun_pickup` permission, which is what
--- makes their own entities movable. Entities that forbid the physics gun themselves and
--- players who hold the permission are left to the gamemode.
+--- Refuses to let a player pick up an entity that the rules protect from them. Nothing is
+-- returned for everything else, so that the handlers of other plugins may still refuse.
 -- @param actor [Player]
 -- @param entity [Entity the entity that is being picked up]
--- @return [Boolean false to refuse, true to allow, nothing to let the gamemode decide]
+-- @return [Boolean false to refuse, nothing otherwise]
 function PropProtection:PhysgunPickup(actor, entity)
   if !IsValid(actor) or !IsValid(entity) then return end
 
   if !self:can_manipulate(actor, entity, 'physgun') then
     return false
   end
+end
 
-  if entity.PhysgunDisabled or actor:can('physgun_pickup') then return end
+--- Lets a player without the `physgun_pickup` permission pick up an entity that the rules
+-- allow them, which is what makes their own entities movable. Entities that forbid the
+-- physics gun themselves are left alone.
+-- @param actor [Player]
+-- @param entity [Entity the entity that is being picked up]
+-- @return [Boolean true to allow the pickup, nothing otherwise]
+function PropProtection:PlayerCanPhysgunPickup(actor, entity)
+  if !IsValid(actor) or !IsValid(entity) or entity.PhysgunDisabled then return end
 
-  return true
+  if self:can_manipulate(actor, entity, 'physgun') then
+    return true
+  end
 end
 
 --- Refuses the use of a Sandbox tool on an entity that the rules protect from the player,

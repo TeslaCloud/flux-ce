@@ -14,7 +14,9 @@ CMD.immunity = true
 CMD.aliases = { 'plyrevoke', 'takeaccess', 'plytakeaccess' }
 
 --- Denies the permission to the targeted players and notifies them and staff. The permission
--- is named by its ID or by the name or an alias of the command it belongs to.
+-- is named by its ID or by the name or an alias of the command it belongs to. Callers can
+-- only revoke what they may do themselves, as with the Grant command; the server console
+-- can revoke anything.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to deny the permission to]
 -- @param permission_id [String permission ID, command name or command alias]
@@ -24,6 +26,12 @@ function CMD:on_run(actor, targets, permission_id, ...)
   local permission = Bolt:find_command_permission(actor, permission_id)
 
   if !permission then return end
+
+  if IsValid(actor) and !actor:can(permission.id) then
+    actor:notify('error.permission_not_yours', { permission = permission.id })
+
+    return
+  end
 
   local valid, duration = Bolt:read_permission_duration(actor, table.concat({ ... }, ' '))
 

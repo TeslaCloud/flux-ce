@@ -8,6 +8,9 @@
 -- set them.
 
 local default_category = 'attribute.category.other'
+local title_background = Color(50, 50, 50, 100)
+local default_boost_color = Color(100, 200, 100)
+local default_hindrance_color = Color(220, 90, 90)
 local type_names = {
   'ui.attributes.type.stat',
   'ui.attributes.type.skill',
@@ -23,16 +26,6 @@ local function translate(phrase, args)
   local text = t(phrase, args)
 
   return text
-end
-
---- Makes a text safe to pass as an argument of a phrase, where a percent sign would be
--- taken for a part of a pattern.
--- @param text [Any]
--- @return [String]
-local function phrase_arg(text)
-  local escaped = tostring(text):gsub('%%', '%%%%')
-
-  return escaped
 end
 
 --- Formats a number for display: rounded to two decimals, with a plus in front of a
@@ -129,17 +122,16 @@ function PANEL:Paint(w, h)
     local text = translate('ui.attributes.title')
     local font = Theme.get_font('main_menu_large')
     local text_w, text_h = util.text_size(text, font)
-    local background_color = Color(50, 50, 50, 100)
 
     DisableClipping(true)
-      draw.RoundedBox(0, -4, -4, w + 8, h + 8, background_color)
+      draw.RoundedBox(0, -4, -4, w + 8, h + 8, title_background)
       draw.textured_rect(
         Theme.get_material('gradient_down'),
         -4,
         -text_h - 4,
         text_w + 8,
         text_h,
-        background_color
+        title_background
       )
       draw.SimpleText(text, font, 0, -text_h - 4, color_white)
     DisableClipping(false)
@@ -367,6 +359,11 @@ PANEL.level_fraction = 0
 PANEL.boosted_fraction = 0
 PANEL.progress_fraction = false
 
+--- Picks the color of the line of details, a darker shade of the text color of the theme.
+function PANEL:Init()
+  self.details_color = Theme.get_color('text'):darken(40)
+end
+
 --- Places the image of the attribute's icon in the top left corner of the row.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
@@ -395,8 +392,8 @@ function PANEL:Paint(w, h)
   local icon_size = math.scale(40)
   local text_color = Theme.get_color('text')
   local background_color = Theme.get_color('background')
-  local boost_color = Theme.get_color('attribute_boost', Color(100, 200, 100))
-  local hindrance_color = Theme.get_color('attribute_hindrance', Color(220, 90, 90))
+  local boost_color = Theme.get_color('attribute_boost', default_boost_color)
+  local hindrance_color = Theme.get_color('attribute_hindrance', default_hindrance_color)
   local font = Theme.get_font('text_normal')
   local x, right = padding, w - padding
 
@@ -455,7 +452,7 @@ function PANEL:Paint(w, h)
   end
 
   if self.details_text != '' then
-    draw.SimpleText(self.details_text, Theme.get_font('text_smaller'), x, math.scale(56), text_color:darken(40))
+    draw.SimpleText(self.details_text, Theme.get_font('text_smaller'), x, math.scale(56), self.details_color)
   end
 end
 
@@ -579,7 +576,7 @@ function PANEL:update()
 
   if level_name then
     self.value_text = translate('ui.attributes.level_named', {
-      name = phrase_arg(translate(level_name)),
+      name = translate(level_name),
       level = format_number(level)
     })
   else
@@ -614,13 +611,13 @@ function PANEL:update()
 
   if #boosts > 0 then
     table.insert(details, translate('ui.attributes.boosts', {
-      list = phrase_arg(describe_modifiers(boosts, '', true))
+      list = describe_modifiers(boosts, '', true)
     }))
   end
 
   if #multipliers > 0 then
     table.insert(details, translate('ui.attributes.multipliers', {
-      list = phrase_arg(describe_modifiers(multipliers, 'x', false))
+      list = describe_modifiers(multipliers, 'x', false)
     }))
   end
 

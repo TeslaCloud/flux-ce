@@ -511,14 +511,22 @@ function GM:PlayerGiveSWEP(actor, weapon, swep)
   return true
 end
 
---- Lets the base gamemode freeze the entity if the player has the physgun_freeze permission.
+--- Lets the base gamemode freeze the entity if the player has the physgun_freeze permission
+-- or a PlayerCanPhysgunFreeze handler allows it. Plugins that want to refuse a freeze return
+-- false from OnPhysgunFreeze before this handler runs.
 -- @param weapon [Weapon the physics gun]
 -- @param phys_obj [PhysObj the physics object being frozen]
 -- @param entity [Entity the entity the physics object belongs to]
 -- @param actor [Player the player trying to freeze it]
--- @return [Boolean false if the player has the permission, nil otherwise]
+-- @return [Boolean false if the entity has been frozen, nil otherwise]
 function GM:OnPhysgunFreeze(weapon, phys_obj, entity, actor)
-  if actor:can('physgun_freeze') then
+  --- Asks whether a player who lacks the physgun_freeze permission may freeze an entity
+  -- with the physics gun all the same, for instance because they own it. Called on the
+  -- server after every OnPhysgunFreeze handler has had the chance to refuse.
+  -- @param actor [Player The player holding the physics gun]
+  -- @param entity [Entity The entity being frozen]
+  -- @return [Boolean Return true to allow the freeze]
+  if actor:can('physgun_freeze') or hook.Run('PlayerCanPhysgunFreeze', actor, entity) == true then
     BaseClass.OnPhysgunFreeze(self, weapon, phys_obj, entity, actor)
 
     return false
@@ -822,7 +830,7 @@ function GM:OnConfigSet(key, old_value, new_value)
 end
 
 --- Strips the weapons of the player, gives them the default loadout and selects the first
--- weapon of it.
+-- weapon of it, then runs the PlayerLoadoutGiven hook for the weapons that plugins add.
 -- @param actor [Player]
 -- @param default_loadout [List<String> weapon classes to give]
 function GM:PostPlayerLoadout(actor, default_loadout)
@@ -833,6 +841,15 @@ function GM:PostPlayerLoadout(actor, default_loadout)
   end
 
   actor:SelectWeapon(default_loadout[1])
+
+  --- Called on the server once a spawning player holds the default loadout, after the
+  -- gamemode has stripped their weapons and given the default ones. This is where a plugin
+  -- or schema gives the player the weapons of their faction, rank or job: a weapon given
+  -- from `PostPlayerLoadout` would be stripped right after. Runs inside `Player:Spawn`, so
+  -- whatever happens after the spawn, such as restoring saved ammo, sees these weapons.
+  -- @param actor [Player the player who has spawned]
+  -- @param default_loadout [List<String> weapon classes the player has been given]
+  hook.Run('PlayerLoadoutGiven', actor, default_loadout)
 end
 
 --- Tells the client of the player to open the interaction menu for the player or entity

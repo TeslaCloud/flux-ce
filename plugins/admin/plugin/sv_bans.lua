@@ -12,14 +12,6 @@ local request_interval = 0.25
 Cable.check_networked_string('fl_bolt_bans')
 Cable.check_networked_string('fl_bolt_bans_changed')
 
---- Makes a text safe to pass to `t` as a phrase argument, where a percent sign would
--- otherwise be read as the start of a capture reference.
--- @param text [String]
--- @return [String]
-local function escape_argument(text)
-  return (string.gsub(text, '%%', '%%%%'))
-end
-
 --- Turns a ban record into the row that the ban list page shows for it.
 -- @param ban [Ban]
 -- @return [Map row with the steam_id, name, reason, admin, permanent and time_left fields]
@@ -78,7 +70,7 @@ function Bolt:get_ban_message(ban, lang)
     lang = 'en'
   end
 
-  local reason = escape_argument((t(tostring(ban.reason or 'ui.no_reason'), nil, lang)))
+  local reason = (t(tostring(ban.reason or 'ui.no_reason'), nil, lang))
   local time_left = self:get_ban_time_left(ban)
 
   if !time_left then

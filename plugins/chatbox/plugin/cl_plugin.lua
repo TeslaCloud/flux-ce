@@ -68,13 +68,12 @@ function Chatbox.compile(msg_table)
     cur_size = math.scale(msg_table.size)
   end
 
-  -- offset x by 1 to prevent weird clipping issues
   local cur_x, cur_y = 1, 0
   local total_height = 0
   local font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
   local v_offset = 0
   local fix = Theme.get_option('chatbox_fix_alignment') == true
-  local fix_const = 0.2 -- 4 * 0.05
+  local fix_const = 0.2
 
   if !font then return end
 

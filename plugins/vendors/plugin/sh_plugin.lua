@@ -13,15 +13,15 @@
 -- checks the distance, the stock, the money of both sides, the space in the inventory and
 -- who may trade.
 --
--- A vendor can be limited to factions and, when the Classes plugin is loaded, to classes: a
--- customer then needs one of the listed factions or classes. The vendor says a few phrases
--- to its customer in the chat, each of which can be replaced in the editor. Their IDs are
--- listed in `Vendors.phrases`: 'greeting' when the trade panel opens, 'refuse' when the
--- customer may not trade, 'no_money' when the customer cannot afford an item, 'no_stock' when
--- an item is sold out, 'broke' when the vendor cannot afford an item and 'thanks' when a
--- customer who has traded leaves. The default text of a phrase is the language phrase
--- 'vendor.phrase.<id>'. `Vendors.entity_class` is the class of the vendor entity and
--- `Vendors.default_model` the model of a vendor whose own model is missing.
+-- A vendor can be limited to factions: a customer then needs one of the listed factions. A
+-- schema restricts vendors further through the `PlayerCanUseVendor` hook. The vendor says a
+-- few phrases to its customer in the chat, each of which can be replaced in the editor.
+-- Their IDs are listed in `Vendors.phrases`: 'greeting' when the trade panel opens, 'refuse'
+-- when the customer may not trade, 'no_money' when the customer cannot afford an item,
+-- 'no_stock' when an item is sold out, 'broke' when the vendor cannot afford an item and
+-- 'thanks' when a customer who has traded leaves. The default text of a phrase is the
+-- language phrase 'vendor.phrase.<id>'. `Vendors.entity_class` is the class of the vendor
+-- entity and `Vendors.default_model` the model of a vendor whose own model is missing.
 --
 -- Hooks: `PlayerCanUseVendor` decides who may trade, `AdjustVendorPrice` changes prices,
 -- `PlayerCanBuyFromVendor` and `PlayerCanSellToVendor` veto single trades,
@@ -55,23 +55,6 @@ end
 -- @return [Boolean]
 function Vendors:is_vendor(entity)
   return isentity(entity) and IsValid(entity) and entity:GetClass() == self.entity_class
-end
-
---- Returns the currency that new vendors trade in: the 'default_currency' config if it names
--- a registered currency, otherwise the registered currency that comes first alphabetically.
--- @return [String currency ID, or nil if no currency is registered]
-function Vendors:get_default_currency()
-  local currency = Config.get('default_currency')
-
-  if isstring(currency) and Currencies:find_currency(currency) then
-    return currency:lower()
-  end
-
-  local ids = table.GetKeys(Currencies:all())
-
-  table.sort(ids)
-
-  return ids[1]
 end
 
 --- Turns an amount of money into text: the amount followed by the symbol of the currency, or

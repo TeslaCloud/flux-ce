@@ -6,6 +6,7 @@ local refresh_interval = 0.5
 
 Cable.check_networked_string('fl_vendor_open')
 Cable.check_networked_string('fl_vendor_update')
+Cable.check_networked_string('fl_vendor_change')
 Cable.check_networked_string('fl_vendor_edit')
 
 --- Spawns the saved vendors when the framework loads its data.

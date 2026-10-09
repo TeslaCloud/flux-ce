@@ -384,15 +384,6 @@ if SERVER then
     end
   end
 
-  --- Returns the class of a player, if the Classes plugin is loaded.
-  -- @param target [Player]
-  -- @return [CharacterClass the class, or nil if the player has none]
-  local function get_class(target)
-    if Classes then
-      return target:get_class()
-    end
-  end
-
   --- Makes an NPC feel about a player in a given way, remembering how it felt before so
   -- that `Factions.reset_npc_relations` can undo it.
   -- @param target [Player]
@@ -504,23 +495,19 @@ if SERVER then
   -- gives the weapons of the loadout that they do not have, and takes back the weapons it
   -- gave earlier that are not in the loadout any more. Which weapons it gave is remembered
   -- in the faction_weapons field of the player, so a weapon they hold for another reason,
-  -- such as the default loadout or the loadout of their class, is left alone. Server only.
+  -- such as the default loadout, is left alone. Server only.
   -- @param target [Player a living player]
   -- @see [Faction#get_loadout]
   function Factions.give_loadout(target)
     local faction_table, rank = get_membership(target)
     local loadout = faction_table and faction_table:get_loadout(rank) or {}
     local given = target.faction_weapons or {}
-    local class_table = get_class(target)
-    local class_loadout = class_table and class_table:get_loadout() or {}
 
     target.faction_weapons = given
 
     for weapon_class, v in pairs(given) do
       if !table.HasValue(loadout, weapon_class) then
-        if !table.HasValue(class_loadout, weapon_class) then
-          target:StripWeapon(weapon_class)
-        end
+        target:StripWeapon(weapon_class)
 
         given[weapon_class] = nil
       end
@@ -575,18 +562,10 @@ if SERVER then
 
   --- Gives a player the model of their rank, if the rank has one, and gives the model of
   -- their character back once it has none. The model of the character itself is not changed.
-  -- A class of the Classes plugin that has a model of its own takes precedence. Server only.
+  -- Server only.
   -- @param target [Player]
   -- @see [Factions.get_rank_model]
   function Factions.apply_model(target)
-    local class_table = get_class(target)
-
-    if class_table and class_table:get_model(target) then
-      target.faction_model = nil
-
-      return
-    end
-
     local model = Factions.get_rank_model(target)
 
     if model then
@@ -788,8 +767,9 @@ do
     -- description of a faction that does not let players write one, and runs both factions'
     -- leave and join callbacks. The player then gets the weapons, the maximum health and
     -- armor and the rank model of the new faction, and NPCs feel about them as that faction
-    -- says. Neither the limit of the faction nor its can_transfer callback is checked; see
-    -- `Factions.can_transfer`. Server only.
+    -- says. The rank is set here rather than with `Player:set_rank`, so only the
+    -- OnPlayerFactionChanged hook reports the move. Neither the limit of the faction nor its
+    -- can_transfer callback is checked; see `Factions.can_transfer`. Server only.
     -- @param id [String ID of a registered faction]
     function player_meta:set_faction(id)
       local old_faction = self:get_faction()
@@ -797,20 +777,21 @@ do
       local char = self:get_character()
       local default_rank = faction_table:get_default_rank()
 
-      Characters.set_name(self, faction_table:generate_name(self, default_rank))
-
       self:set_nv('faction', id)
+      self:set_nv('rank', default_rank)
 
       if char then
         char.faction = id
+        char.rank = default_rank
       end
 
-      self:set_rank(default_rank)
       self:SetTeam(faction_table.team_id)
+
+      Characters.set_name(self, faction_table:generate_name(self, default_rank))
 
       if !faction_table.has_gender then
         Characters.set_gender(self, CHAR_GENDER_NONE)
-      elseif !old_faction or old_faction and !old_faction.has_gender then
+      elseif !old_faction or !old_faction.has_gender then
         Characters.set_gender(self, math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
       end
 

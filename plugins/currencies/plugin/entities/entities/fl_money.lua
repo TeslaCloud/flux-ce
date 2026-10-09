@@ -1,10 +1,10 @@
 --- Money lying in the world (`fl_money`): holds an amount of one currency and hands it to the
--- player who uses it, unless the CanPlayerPickupMoney hook prevents that. It is created by
--- `Currencies:spawn_money`, which is what `Entity:drop_money` puts the money of a player into
--- the world with. While the save_dropped_money config is on, the Currencies plugin saves
--- these entities and puts them back when the map is loaded again; the money that is left is
--- saved again as soon as one of them is picked up, so that it cannot come back after it has
--- been taken.
+-- player who uses it (`Currencies:pickup_money`), unless the CanPlayerPickupMoney or the
+-- PlayerPickupMoney hook prevents that. It is created by `Currencies:spawn_money`, which is
+-- what `Entity:drop_money` puts the money of a player into the world with. While the
+-- save_dropped_money config is on, the Currencies plugin saves these entities and puts them
+-- back when the map is loaded again; a pickup marks the saved money as out of date, so that
+-- the next data save writes what is left.
 
 AddCSLuaFile()
 
@@ -55,39 +55,37 @@ if SERVER then
     end
   end
 
-  --- Lets the activator pick the money up: runs PlayerPickupMoney and removes the entity
-  -- unless a CanPlayerPickupMoney hook returns false. The entity also stays if a
-  -- PlayerPickupMoney handler returns false, which the Currencies plugin does when the money
-  -- was refused. Once the entity is removed, the money that is left in the world is saved
-  -- if the save_dropped_money config is on.
+  --- Lets the activator pick the money up: asks the CanPlayerPickupMoney and the
+  -- PlayerPickupMoney hooks, gives the money to the activator with
+  -- `Currencies:pickup_money` and removes the entity. The entity stays if either hook
+  -- returns false or if the money is refused, as it is when the AdjustReceivedMoney hook
+  -- refuses it.
   -- @param activator [Entity]
   -- @param caller [Entity]
   -- @param use_type [Number USE_* enum]
   -- @param value [Number]
   function ENT:Use(activator, caller, use_type, value)
-    if IsValid(activator) then
-      --- Decides whether money lying in the world may be picked up. Called on the server when
-      -- a valid entity uses an fl_money entity.
-      -- @param activator [Entity the entity that used the money, normally a player]
-      -- @param entity [Entity the fl_money entity]
-      -- @return [Boolean return false to prevent the pickup]
-      if hook.Run('CanPlayerPickupMoney', activator, self) != false then
-        --- Called on the server when money is picked up, right before its entity is removed.
-        -- The handler of the Currencies plugin itself is what adds the money to the player.
-        -- @param activator [Entity the entity that used the money, normally a player]
-        -- @param entity [Entity the fl_money entity; its get_currency and get_currency_amount
-        --   methods return what it holds]
-        -- @return [Boolean return false to leave the money where it is, as the Currencies
-        --   plugin does when the AdjustReceivedMoney hook has refused it. A returned value
-        --   keeps the handlers after it from running, so return nothing otherwise]
-        if hook.Run('PlayerPickupMoney', activator, self) != false then
-          self:Remove()
+    if !IsValid(activator) then return end
 
-          if Config.get('save_dropped_money') then
-            Currencies:save_money()
-          end
-        end
-      end
+    --- Decides whether money lying in the world may be picked up. Called on the server when
+    -- a valid entity uses an fl_money entity.
+    -- @param activator [Entity the entity that used the money, normally a player]
+    -- @param entity [Entity the fl_money entity]
+    -- @return [Boolean return false to prevent the pickup]
+    if hook.Run('CanPlayerPickupMoney', activator, self) == false then return end
+
+    --- Called on the server when money is about to be picked up, before anything has
+    -- changed hands. A handler can refuse the pickup or take note of it; the money itself
+    -- is given by `Currencies:pickup_money` once the hook has run.
+    -- @param activator [Entity the entity that used the money, normally a player]
+    -- @param entity [Entity the fl_money entity; its get_currency and get_currency_amount
+    --   methods return what it holds]
+    -- @return [Boolean return false to leave the money where it is. A returned value keeps
+    --   the handlers after it from running, so return nothing otherwise]
+    if hook.Run('PlayerPickupMoney', activator, self) == false then return end
+
+    if Currencies:pickup_money(activator, self) then
+      self:Remove()
     end
   end
 else

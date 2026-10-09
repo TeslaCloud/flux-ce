@@ -136,10 +136,11 @@ end
 -- otherwise when that time is up. An empty text, or one that no bubble is shown for, ends
 -- the typing right away. While the player keeps typing a text that looks the same to others,
 -- the report is repeated every `keepalive_interval` seconds so that the server knows they
--- are still at it.
+-- are still at it. A report carries the ID of the kind of speech, from which the server
+-- takes the range of the bubble.
 -- @param text [String current contents of the chat text entry]
 function DisplayTyping:report(text)
-  local payload, exact, range = '', false, 1
+  local payload, exact, kind_id = '', false, nil
 
   if isstring(text) and text != '' and IsValid(PLAYER) then
     local kind = self:get_kind(PLAYER, text)
@@ -147,7 +148,7 @@ function DisplayTyping:report(text)
     if kind then
       exact = kind.live and self:live_text_allowed()
       payload = exact and text or self:outline(text)
-      range = kind.range
+      kind_id = kind.id
     end
   end
 
@@ -168,7 +169,7 @@ function DisplayTyping:report(text)
   local now = RealTime()
   local last = self.reported
 
-  if last and last.text == payload and last.exact == exact and last.range == range
+  if last and last.text == payload and last.exact == exact and last.kind == kind_id
   and now - last.time < self.keepalive_interval then
     self.pending_report = nil
 
@@ -177,7 +178,7 @@ function DisplayTyping:report(text)
     return
   end
 
-  self.pending_report = { text = payload, exact = exact, range = range }
+  self.pending_report = { text = payload, exact = exact, kind = kind_id }
 
   local wait = (self.next_report or 0) - now
 
@@ -207,5 +208,5 @@ function DisplayTyping:flush_report()
 
   timer.Remove('fl_typing_report')
 
-  Cable.send('fl_typing_report', pending.text, pending.exact, pending.range)
+  Cable.send('fl_typing_report', pending.text, pending.exact, pending.kind)
 end

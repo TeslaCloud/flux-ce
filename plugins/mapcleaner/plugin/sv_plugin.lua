@@ -65,20 +65,18 @@ end
 -- -- false
 -- ```
 -- @param ent_class [String entity class]
--- @param patterns=MapCleaner:get_patterns() [List<String> class patterns, `*` stands for any
---   number of characters]
+-- @param patterns=MapCleaner:get_patterns() [List<String> class patterns in lower case, as
+--   `MapCleaner:get_patterns` returns them; `*` stands for any number of characters]
 -- @return [Boolean]
 function MapCleaner:class_matches(ent_class, patterns)
   ent_class = ent_class:lower()
 
   for k, v in ipairs(patterns or self:get_patterns()) do
-    local pattern = v:lower()
-
-    if pattern == ent_class then
+    if v == ent_class then
       return true
     end
 
-    if pattern:find('*', 1, true) and ent_class:find(to_lua_pattern(pattern)) then
+    if v:find('*', 1, true) and ent_class:find(to_lua_pattern(v)) then
       return true
     end
   end

@@ -73,6 +73,8 @@ function Currencies:SaveData()
   else
     Data.delete_plugin('money')
   end
+
+  self.money_dirty = nil
 end
 
 --- Networks the currency balances of the newly active character to the player entity.
@@ -102,30 +104,6 @@ function Currencies:CanPlayerPickupMoney(actor, entity)
   if entity.next_pickup and entity.next_pickup > CurTime() then
     return false
   end
-end
-
---- Gives the contents of a money entity to the player, notifies them and starts their
--- pickup cooldown. The money stays where it is if the AdjustReceivedMoney hook refuses it.
--- @param actor [Player]
--- @param entity [Entity the fl_money entity]
--- @return [Boolean false if the money was refused, otherwise nil]
-function Currencies:PlayerPickupMoney(actor, entity)
-  local currency = entity:get_currency()
-  local amount = entity:get_currency_amount()
-  local currency_data = isstring(currency) and Currencies:find_currency(currency)
-
-  if !currency_data then return end
-
-  local received = actor:give_money(currency, amount, entity)
-
-  actor.next_money_pickup = CurTime() + 0.5
-
-  if received == false then
-    return false
-  end
-
-  actor:notify('notification.currency.pickup', { value = received, currency = currency_data.name }, Color('lightgreen'))
-  entity:EmitSound('physics/cardboard/cardboard_box_impact_bullet'..math.random(1, 5)..'.wav', 55)
 end
 
 --- Checks that the amount is a positive, finite number with no more decimals than the

@@ -254,17 +254,6 @@ end
 --   to call on the server), and optionally name (String) or the client-side functions
 --   get_name, get_icon, on_show and on_click, each of which receives the item]
 function ItemBase:add_button(name, data)
-  --[[
-    Example data structure:
-    data = {
-      icon = 'path/to/icon.png',
-      callback = 'on_use', -- This will call the ITEM:on_use function when the button is pressed.
-      on_show = function(item_obj) -- Client-Side function. Determines whether the button will be shown.
-        return true
-      end
-    }
-  --]]
-
   if !self.custom_buttons then
     self.custom_buttons = {}
   end

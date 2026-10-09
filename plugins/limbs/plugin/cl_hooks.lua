@@ -1,10 +1,15 @@
 --- Client-side hooks of the Limbs plugin: they register the client setting of the body
 -- diagram, draw the diagram on the HUD and make the aim of a player with hurt arms drift.
+-- The strength of the drift is looked up eight times a second; every frame only moves the
+-- view along its path.
 
 local diagram_alpha = 0
 local sway_strength = 0
 local sway_pitch = 0
 local sway_yaw = 0
+
+--- Strength of the aim drift the local player is due, as last looked up.
+local aim_fraction = 0
 
 --- Checks whether a player is holding a weapon that they could aim: any weapon, or a raised
 -- one when the Raise Weapon plugin is loaded.
@@ -20,6 +25,25 @@ local function is_aiming(client)
   end
 
   return true
+end
+
+--- Looks up how strongly the aim of the local player should drift: the 'aim' effect of
+-- their limbs while they are alive, on foot and holding a weapon they could aim.
+function Limbs:LazyTick()
+  local fraction = 0
+
+  if IsValid(PLAYER) and PLAYER:Alive() and !PLAYER:InVehicle() and is_aiming(PLAYER) then
+    fraction = self:get_effect(PLAYER, 'aim')
+  end
+
+  aim_fraction = fraction
+end
+
+--- Forgets the colors of the diagram when a theme is loaded, so that they come from the
+-- new theme.
+-- @param current_theme [Theme the theme that has been loaded]
+function Limbs:OnThemeLoaded(current_theme)
+  self:reset_colors()
 end
 
 --- Registers the 'limbs_hud' client setting, which decides when the body diagram is shown.
@@ -78,16 +102,11 @@ end
 --- Makes the aim of the local player drift while they hold a weapon with a hurt arm. The
 -- view is moved along a slow, repeating path of up to `Limbs.sway_angle` degrees for a
 -- crippled arm; only the difference to the previous frame is added, so the player keeps
--- control of their aim and the view returns to where it was once the drift stops.
+-- control of their aim and the view returns to where it was once the drift stops. The
+-- strength comes from the last `LazyTick`.
 -- @param user_cmd [CUserCmd]
 function Limbs:CreateMove(user_cmd)
-  local fraction = 0
-
-  if IsValid(PLAYER) and PLAYER:Alive() and !PLAYER:InVehicle() and is_aiming(PLAYER) then
-    fraction = self:get_effect(PLAYER, 'aim')
-  end
-
-  sway_strength = math.Approach(sway_strength, fraction, FrameTime())
+  sway_strength = math.Approach(sway_strength, aim_fraction, FrameTime())
 
   local time = RealTime()
   local angle = sway_strength * self.sway_angle

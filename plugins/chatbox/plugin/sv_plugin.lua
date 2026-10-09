@@ -1,6 +1,8 @@
 --- Server side of the Chatbox plugin: builds chat messages, decides who can hear them, sends
--- them to the clients, and turns what players type into messages, limiting how long a
--- submitted text can be and how often a player can submit one.
+-- them to the clients, and turns what players type into messages. Every text a player submits,
+-- from the chatbox, the `say` console command or `chat.AddText` on their client, goes through
+-- the same guard: it is cut to the 'max_message_length' config and dropped while the
+-- 'chat_interval' config has not passed since their last submission.
 
 local default_msg_data = {
   sender = nil,
@@ -17,6 +19,7 @@ local default_msg_data = {
 
 local filters = {}
 local client_mode = false
+local submitting = false
 
 --- Stores a message filter under the specified id. Serverside only.
 -- Filters are only stored at the moment, nothing reads them yet.
@@ -123,7 +126,6 @@ function Chatbox.add_text(listeners, ...)
 
   local last_string = false
 
-  -- Compile the initial message data table.
   for k, v in ipairs({ ... }) do
     if isstring(v) then
       if !last_string then
@@ -262,8 +264,10 @@ function Chatbox.player_say(actor, text, team_chat)
   if !IsValid(actor) then return end
 
   --- The PlayerSay hook of GMod, run by the chatbox itself: chat typed into the chatbox is
-  -- sent through its own network message, so the engine never runs the hook. Called on the
-  -- server before the text is turned into a chat message.
+  -- sent through its own network message, so the engine never runs the hook for it. Called on
+  -- the server before the text is turned into a chat message. The engine runs the same hook
+  -- for the `say` console command, where the plugin's own `Chatbox:PlayerSay` handler takes
+  -- the text over.
   -- @param actor [Player the speaker]
   -- @param text [String the text as it was typed]
   -- @param team_chat [Boolean whether the message is meant for the team chat, as sent by the
@@ -368,22 +372,27 @@ function Chatbox.limit_text(text)
   return success and cut or text:sub(1, limit)
 end
 
-Cable.receive('fl_chat_text_add', function(actor, ...)
-  if !IsValid(actor) then return end
+--- Checks whether a text that a player has submitted is being turned into a message at the
+-- moment, that is whether `Chatbox.submit` is running. The PlayerSay hook that
+-- `Chatbox.player_say` runs then comes from the chatbox itself and not from the engine.
+-- Serverside only.
+-- @return [Boolean]
+function Chatbox.is_submitting()
+  return submitting
+end
 
-  Chatbox.set_client_mode(true)
-
-  local success, exception = pcall(Chatbox.add_text, actor, ...)
-
-  Chatbox.set_client_mode(false)
-
-  if !success then
-    ErrorNoHalt('[Flux - Chatbox] Failed to relay chat.AddText of '..tostring(actor)..': '..tostring(exception)..'\n')
-  end
-end)
-
-Cable.receive('fl_chat_player_say', function(actor, text, team_chat)
-  if !IsValid(actor) or !isstring(text) then return end
+--- Makes a player say a text they have submitted, from the chatbox or the `say` console
+-- command: the text is dropped, and the player told so once a second at most, while the
+-- 'chat_interval' config has not passed since their last submission (see
+-- `Chatbox.check_interval`); otherwise it is cut to the 'max_message_length' config (see
+-- `Chatbox.limit_text`) and passed to `Chatbox.player_say`. Serverside only.
+-- @param actor [Player the player who has submitted the text]
+-- @param text [String the text as it was typed]
+-- @param team_chat=nil [Boolean whether the text is meant for the team chat]
+-- @return [Boolean true if the text has been passed to Chatbox.player_say without an error,
+--   false otherwise]
+function Chatbox.submit(actor, text, team_chat)
+  if !IsValid(actor) or !isstring(text) then return false end
 
   if !Chatbox.check_interval(actor) then
     local cur_time = CurTime()
@@ -394,8 +403,44 @@ Cable.receive('fl_chat_player_say', function(actor, text, team_chat)
       actor:notify('error.chat.too_fast')
     end
 
-    return
+    return false
   end
 
-  Chatbox.player_say(actor, Chatbox.limit_text(text), team_chat)
+  submitting = true
+
+  local success, exception = pcall(Chatbox.player_say, actor, Chatbox.limit_text(text), team_chat)
+
+  submitting = false
+
+  if !success then
+    ErrorNoHalt('[Flux - Chatbox] Failed to say the text of '..tostring(actor)..': '..tostring(exception)..'\n')
+  end
+
+  return success
+end
+
+Cable.receive('fl_chat_text_add', function(actor, ...)
+  if !IsValid(actor) or !Chatbox.check_interval(actor) then return end
+
+  local pieces = { ... }
+
+  for k, v in ipairs(pieces) do
+    if isstring(v) then
+      pieces[k] = Chatbox.limit_text(v)
+    end
+  end
+
+  Chatbox.set_client_mode(true)
+
+  local success, exception = pcall(Chatbox.add_text, actor, unpack(pieces))
+
+  Chatbox.set_client_mode(false)
+
+  if !success then
+    ErrorNoHalt('[Flux - Chatbox] Failed to relay chat.AddText of '..tostring(actor)..': '..tostring(exception)..'\n')
+  end
+end)
+
+Cable.receive('fl_chat_player_say', function(actor, text, team_chat)
+  Chatbox.submit(actor, text, team_chat)
 end)

@@ -22,6 +22,14 @@ local function is_strength_visible(setting)
   return ScreenEffects:is_effect_allowed(setting.effect) and ClientSettings:get(effect.setting, true) != false
 end
 
+--- Looks up the settings of the effects and what the Adjust hooks make of them eight times a
+-- second while the local player is in the game with a character.
+function ScreenEffects:LazyTick()
+  if self:effects_active() then
+    self:update_settings()
+  end
+end
+
 --- Advances the effects once a frame, or resets them while the local player is not in the game
 -- with a character.
 function ScreenEffects:Think()
@@ -38,8 +46,8 @@ function ScreenEffects:Think()
   self:update_view(frame_time)
 end
 
---- Draws the screen passes of the effects. The passes are the plugin's own, so they add to
--- what the Color Modify plugin and other post-processing draw.
+--- Draws the distortion, the blur and the motion blur of the effects. The color pass is
+-- folded into the color modification of the Color Modify plugin, which draws it.
 function ScreenEffects:RenderScreenspaceEffects()
   self:draw_screen()
 end

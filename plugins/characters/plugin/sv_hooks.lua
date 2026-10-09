@@ -47,11 +47,15 @@ function Characters:PlayerDeathThink(actor)
   end
 end
 
---- Saves the character of a player who died.
+--- Saves the character of a player who died, unless the character is banned: a banned
+-- character has nothing of its player to keep, and `Characters.set_banned` saves it before
+-- it kills the player.
 -- @param victim [Player]
 -- @param inflictor [Entity]
 -- @param attacker [Entity]
 function Characters:PlayerDeath(victim, inflictor, attacker)
+  if victim:is_character_banned() then return end
+
   victim:save_character()
 end
 
@@ -172,8 +176,9 @@ function Characters:SaveData()
 end
 
 --- Validates character creation data: the presence of the player's database record, the
--- character limit, name and description length, gender, model and, unless the name was
--- generated, that no other character has the name.
+-- character limit, the length of the name, the length of the description unless it was
+-- generated, gender, model and, unless the name was generated, that no other character has
+-- the name.
 -- @param actor [Player]
 -- @param data [Map character creation data]
 -- @return [Number CHAR_ERR_* code when the data is rejected, otherwise nil]
@@ -191,7 +196,11 @@ function Characters:PlayerCreateCharacter(actor, data)
     return CHAR_ERR_NAME
   end
 
-  if !isstring(data.phys_desc) or (utf8.len(data.phys_desc) < Config.get('character_min_desc_len') or
+  if !isstring(data.phys_desc) then
+    return CHAR_ERR_DESC
+  end
+
+  if !data.description_generated and (utf8.len(data.phys_desc) < Config.get('character_min_desc_len') or
     utf8.len(data.phys_desc) > Config.get('character_max_desc_len')) then
     return CHAR_ERR_DESC
   end

@@ -18,6 +18,7 @@ local PANEL = {}
 -- asks the server for the first page and makes the panel known to the plugin.
 function PANEL:Init()
   local text_color = Theme.get_color('text')
+  local hint_color = text_color:darken(40)
   local small_font = Theme.get_font('text_small')
   local search_hint = t'ui.admin.bans.search'
 
@@ -41,7 +42,7 @@ function PANEL:Init()
         small_font,
         math.scale(6),
         h * 0.5,
-        text_color:darken(40),
+        hint_color,
         TEXT_ALIGN_LEFT,
         TEXT_ALIGN_CENTER
       )
@@ -190,9 +191,12 @@ vgui.Register('fl_ban_list', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the labels of the row and the button that lifts the ban.
+--- Creates the labels of the row and the button that lifts the ban, and picks the
+-- background color of the dark rows.
 function PANEL:Init()
   local text_color = Theme.get_color('text')
+
+  self.dark_color = Theme.get_color('background'):alpha(150)
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetFont(Theme.get_font('text_small'))
@@ -228,7 +232,7 @@ end
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
   if Theme.hook('PaintAdminRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
+    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
   end
 end
 
@@ -276,9 +280,7 @@ function PANEL:set_ban(ban)
   self.ban = ban
 
   if ban.admin then
-    details = details..' / '..t('ui.admin.bans.banned_by', {
-      admin = (string.gsub(tostring(ban.admin), '%%', '%%%%'))
-    })
+    details = details..' / '..t('ui.admin.bans.banned_by', { admin = tostring(ban.admin) })
   end
 
   if ban.permanent then
@@ -308,9 +310,7 @@ function PANEL:unban()
   if !ban then return end
 
   local title, yes, no = t'ui.admin.bans.unban', t'ui.yes', t'ui.no'
-  local message = t('ui.admin.bans.unban_message', {
-    name = (string.gsub(tostring(ban.name or ban.steam_id), '%%', '%%%%'))
-  })
+  local message = t('ui.admin.bans.unban_message', { name = tostring(ban.name or ban.steam_id) })
 
   Derma_Query(message, title, yes, function()
     Cable.send('fl_bolt_unban', ban.steam_id)

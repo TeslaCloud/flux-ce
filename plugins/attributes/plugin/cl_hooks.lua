@@ -15,8 +15,7 @@ function Attributes.open_viewer(target, attributes)
   end
 
   local name = IsValid(target) and target:name() or ''
-  local escaped_name = name:gsub('%%', '%%%%')
-  local title = t('ui.attributes.viewer_title', { name = escaped_name })
+  local title = t('ui.attributes.viewer_title', { name = name })
 
   local frame = vgui.Create('fl_frame')
   frame:SetSize(math.scale(720), math.scale(640))

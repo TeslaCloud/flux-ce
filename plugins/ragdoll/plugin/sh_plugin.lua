@@ -14,11 +14,21 @@
 -- `knockout` and `forcegetup` on others. With the `ragdoll_fall_damage` and
 -- `ragdoll_hit_damage` configs, hard falls and heavy hits make players fall over too.
 --
+-- A knockout is what a stunstick does: `Player:knock_out` puts a player out for a while
+-- and `Player:wake_up` brings them to. A knocked out player cannot get up, is not heard
+-- over voice chat, cannot switch characters and has no weapons, as nobody on the ground
+-- has. With the `ragdoll_knockout_on_damage` config a melee hit (DMG_CLUB) that leaves a
+-- player at or below `ragdoll_knockout_health` knocks them out for
+-- `ragdoll_knockout_time` seconds, so a schema only has to turn it on. The hooks
+-- `PlayerCanKnockOut`, `PlayerKnockedOut` and `PlayerWokeUp` go with it, and
+-- `Player:get_knockout_remaining` tells HUDs how long the player stays out.
+--
 -- Plugins can step in with the server hooks `PlayerCanRagdoll`, `PlayerRagdolled`,
 -- `PlayerCanUnragdoll`, `PlayerUnragdolled`, `PlayerCanGetUp`, `PlayerCanRagdollDecay` and
 -- `PlayerRagdollCanTakeDamage`, and with the client hook `ShouldFallenHUDPaint`.
--- `Player:is_ragdolled`, `Player:get_ragdoll_state`, `Player:get_ragdoll_entity` and
--- `Entity:get_ragdoll_owner` work on both realms.
+-- `Player:is_ragdolled`, `Player:get_ragdoll_state`, `Player:get_ragdoll_entity`,
+-- `Player:is_knocked_out`, `Player:get_knockout_remaining` and `Entity:get_ragdoll_owner`
+-- work on both realms.
 -- @module [Ragdoll]
 
 PLUGIN:set_global('Ragdoll')
@@ -27,6 +37,32 @@ require_relative 'sh_enums'
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
+
+--- Name of the head bone that the view falls back to on models without an 'eyes'
+-- attachment.
+local head_bone = 'ValveBiped.Bip01_Head1'
+
+--- Finds where the eyes of a ragdoll are: its 'eyes' attachment, or the head bone of
+-- models that have no such attachment.
+-- @param entity [Entity the ragdoll]
+-- @return [Vector position, Angle direction; nothing if neither is found]
+local function find_eyes(entity)
+  local index = entity:LookupAttachment('eyes')
+
+  if index > 0 then
+    local data = entity:GetAttachment(index)
+
+    if data then
+      return data.Pos, data.Ang
+    end
+  end
+
+  local bone = entity:LookupBone(head_bone)
+
+  if bone then
+    return entity:GetBonePosition(bone)
+  end
+end
 
 --- Moves the view to the eyes of the player's ragdoll while they have one and are not
 -- drawn in third person.
@@ -40,18 +76,14 @@ function Ragdoll:CalcView(client, origin, angles, fov)
   local entity = client:GetDTEntity(ENT_RAGDOLL)
 
   if !client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll() then
-    local index = entity:LookupAttachment('eyes')
+    local pos, ang = find_eyes(entity)
 
-    if index then
-      local data = entity:GetAttachment(index)
-
-      if data then
-        view.origin = data.Pos
-        view.angles = data.Ang
-      end
-
-      return view
+    if pos then
+      view.origin = pos
+      view.angles = ang
     end
+
+    return view
   end
 end
 

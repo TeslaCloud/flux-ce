@@ -82,7 +82,7 @@ en:
         price_message: Enter the price. Leave it empty to use the default price.
         stock_message: Enter how many the vendor has. Leave it empty for unlimited stock.
         access: Access
-        access_help: "Leave everything unchecked to let everyone trade. Otherwise a customer needs one of the checked factions or classes."
+        access_help: "Leave everything unchecked to let everyone trade. Otherwise a customer needs one of the checked factions."
         phrases:
           title: Phrases
           help: What the vendor says to its customer. Leave a phrase empty to use the default one.

@@ -7,8 +7,8 @@
 -- value, and any number of boosts and progress multipliers. A boost or a multiplier may
 -- carry an identifier, which lets the code that gave it replace or remove it later, and may
 -- have no expiry, in which case it stays until it is removed. The server networks the
--- attributes of every player in the 'attributes' networked variable, which the getters read
--- on the client.
+-- attributes of a player to that player alone, in the private 'attributes' networked
+-- variable, which the getters read on the client.
 
 mod 'Attributes'
 
@@ -373,9 +373,9 @@ if SERVER then
     return attributes, earliest
   end
 
-  --- Networks the attributes of a player's character again and notes when the next of its
-  -- boosts and multipliers expires. Called after every change the plugin makes; call it
-  -- yourself after changing the records directly.
+  --- Networks the attributes of a player's character to that player again and notes when
+  -- the next of its boosts and multipliers expires. Called after every change the plugin
+  -- makes; call it yourself after changing the records directly.
   -- @param target [Player]
   function Attributes.sync(target)
     if !IsValid(target) then return end
@@ -383,7 +383,7 @@ if SERVER then
     local attributes, earliest = Attributes.to_networkable(target)
 
     target.attribute_expiry = earliest
-    target:set_nv('attributes', attributes)
+    target:set_private_nv('attributes', attributes)
   end
 
   --- Removes the boosts and multipliers of a player's character that have expired, deleting
@@ -524,19 +524,14 @@ if SERVER then
 
     return removed
   end
-
-  --- Does nothing. Boosts and multipliers used to expire through timers that had to be
-  -- removed with the character; the plugin now checks for expired ones once a second.
-  -- Kept so that code that calls it keeps working.
-  -- @param character [Character]
-  function Attributes.destroy_timers(character) end
 end
 
 do
   local player_meta = FindMetaTable('Player')
 
   --- Returns the level, progress, boosts and multipliers of every attribute of the player's
-  -- character. On the client this is what the server has networked. A boost or multiplier
+  -- character. On the client this is what the server has networked, which it does for the
+  -- local player alone: any other player has no attributes there. A boost or multiplier
   -- has a value, the identifier it was given (`id`), the time it expires at as a date-time
   -- string (`expires_at`) and as a CurTime (`end_time`); the last three are nil when not set.
   -- ```
@@ -553,7 +548,7 @@ do
   -- ```
   -- @param attribute_type=nil [Number attribute type to filter by]
   -- @return [Map attribute data keyed by attribute ID; empty if the player has no character
-  --   or, on the client, nothing has been networked yet]
+  --   or, on the client, nothing has been networked yet or the player is not the local one]
   function player_meta:get_attributes(attribute_type)
     if SERVER then
       local attributes = Attributes.to_networkable(self, attribute_type)

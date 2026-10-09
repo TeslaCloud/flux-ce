@@ -18,14 +18,6 @@ Cable.check_networked_string('fl_sound_stop')
 Cable.check_networked_string('fl_tab_menu_open')
 Cable.check_networked_string('fl_tab_menu_close')
 
---- Checks whether a message has someone to be sent to. A player who is no longer valid (one
--- who has left, for example) is nobody, while `Cable.send` would send to everyone instead.
--- @param target [Player/List<Player> who the message is for; everyone if nil]
--- @return [Boolean]
-local function has_recipients(target)
-  return target == nil or istable(target) or IsValid(target)
-end
-
 --- Sends a notification to a player. If the player is not valid (e.g. the server console)
 -- the message is written to the server log instead.
 -- @param target [Player]
@@ -58,7 +50,7 @@ end
 -- @param target [Player/List<Player> who hears the sound; everyone if nil]
 -- @param path [String path of the sound file, relative to the sound/ folder]
 function Flux.Player:play_sound(target, path)
-  if !isstring(path) or !has_recipients(target) then return end
+  if !isstring(path) then return end
 
   Cable.send(target, 'fl_sound_play', path)
 end
@@ -76,7 +68,7 @@ end
 -- @param path [String path of the sound file, relative to the sound/ folder]
 -- @param volume=0.75 [Number volume from 0 to 1]
 function Flux.Player:start_sound(target, id, path, volume)
-  if !isstring(id) or !isstring(path) or !has_recipients(target) then return end
+  if !isstring(id) or !isstring(path) then return end
 
   Cable.send(target, 'fl_sound_start', id, path, math.Clamp(tonumber(volume) or 0.75, 0, 1))
 end
@@ -90,7 +82,7 @@ end
 -- @param id [String name the sound was started under]
 -- @param fade_out=0 [Number seconds over which the sound fades out; 0 cuts it off]
 function Flux.Player:stop_sound(target, id, fade_out)
-  if !isstring(id) or !has_recipients(target) then return end
+  if !isstring(id) then return end
 
   Cable.send(target, 'fl_sound_stop', id, math.max(tonumber(fade_out) or 0, 0))
 end
@@ -104,15 +96,11 @@ end
 -- @param panel_id=nil [String ID of the menu item to show; the item that was open the last
 --   time if nil]
 function Flux.Player:open_tab_menu(target, panel_id)
-  if !has_recipients(target) then return end
-
   Cable.send(target, 'fl_tab_menu_open', isstring(panel_id) and panel_id or nil)
 end
 
 --- Closes the tab menu on the clients of the given players, if they have it open.
 -- @param target [Player/List<Player> whose menu closes; everyone's if nil]
 function Flux.Player:close_tab_menu(target)
-  if !has_recipients(target) then return end
-
   Cable.send(target, 'fl_tab_menu_close')
 end

@@ -3,29 +3,34 @@
 -- cost of props, the protection of players from props, and the removal and return of the
 -- entities of players who disconnect or switch characters.
 
---- Refuses to let a player freeze an entity that the rules protect from them, and freezes
--- everything else for players without the `physgun_freeze` permission the way the gamemode
--- does for those who hold it, which is what lets players freeze their own entities.
--- Entities that forbid the physics gun themselves and players who hold the permission are
--- left to the gamemode.
+--- Refuses to let a player freeze an entity that the rules protect from them. Nothing is
+-- returned for everything else, so that the handlers of other plugins may still refuse and
+-- the gamemode does the freezing.
 -- @param weapon [Weapon the physics gun]
 -- @param phys_obj [PhysObj the physics object that is being frozen]
 -- @param entity [Entity the entity the physics object belongs to]
 -- @param actor [Player the player who is trying to freeze it]
--- @return [Boolean false if the freeze was refused or has been handled here, nothing to let
---   the gamemode decide]
+-- @return [Boolean false to refuse, nothing otherwise]
 function PropProtection:OnPhysgunFreeze(weapon, phys_obj, entity, actor)
   if !IsValid(actor) or !IsValid(entity) then return end
 
   if !self:can_manipulate(actor, entity, 'freeze') then
     return false
   end
+end
 
-  if entity.PhysgunDisabled or actor:can('physgun_freeze') then return end
+--- Lets a player without the `physgun_freeze` permission freeze an entity that the rules
+-- allow them, which is what lets players freeze their own entities. Entities that forbid the
+-- physics gun themselves are left alone.
+-- @param actor [Player the player who is trying to freeze the entity]
+-- @param entity [Entity the entity that is being frozen]
+-- @return [Boolean true to allow the freeze, nothing otherwise]
+function PropProtection:PlayerCanPhysgunFreeze(actor, entity)
+  if !IsValid(actor) or !IsValid(entity) or entity.PhysgunDisabled then return end
 
-  baseclass.Get('gamemode_base').OnPhysgunFreeze(GAMEMODE, weapon, phys_obj, entity, actor)
-
-  return false
+  if self:can_manipulate(actor, entity, 'freeze') then
+    return true
+  end
 end
 
 --- Refuses to let a player unfreeze an entity that the rules protect from them.

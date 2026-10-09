@@ -7,8 +7,9 @@
 -- dragged by the limb the player has grabbed, for as long as they stay on foot with their
 -- fists out. That includes the fallen players and the corpses of the Ragdoll plugin. A
 -- ragdoll is grabbed as soon as the key is pressed, and the fists do not punch it. A player
--- whose ragdoll is being dragged cannot use the `getup` command, takes no physics damage
--- through the ragdoll and has the `dragged` networked variable set to true.
+-- whose ragdoll is being dragged takes no physics damage through the ragdoll and has the
+-- `dragged` networked variable set to true; the Ragdoll plugin asks `Player:get_dragger` to
+-- keep them from getting up in the meantime.
 --
 -- The plugin defines three config keys on the server: `pickup_max_mass` (25) is the heaviest
 -- object a player can carry, `pickup_throw_force` (1000) is the force of a throw, where 0
@@ -102,20 +103,6 @@ local function aims_at_draggable(actor)
   local ent = actor:GetEyeTraceNoCursor().Entity
 
   return IsValid(ent) and should_drag(ent)
-end
-
---- Finds the player a ragdoll stands in for, through the Ragdoll plugin.
--- @param ragdoll [Entity]
--- @return [Player the player whose ragdoll entity this is; nil if it belongs to nobody or the
---   Ragdoll plugin is not loaded]
-local function find_ragdoll_owner(ragdoll)
-  if !player_meta.get_ragdoll_entity then return end
-
-  for k, v in player.Iterator() do
-    if v:get_ragdoll_entity() == ragdoll then
-      return v
-    end
-  end
 end
 
 --- Checks whether a ragdoll is safe from physics damage: it is being dragged, or was let go
@@ -343,7 +330,7 @@ function PLUGIN:force_pickup(actor, ent, bone)
     data.drag = true
     data.bone = bone
     data.mass = phys_obj:GetMass()
-    data.target = find_ragdoll_owner(ent)
+    data.target = ent.get_ragdoll_owner and ent:get_ragdoll_owner()
 
     phys_obj:SetMass(math.max(data.mass, drag_bone_mass))
     phys_obj:Wake()
@@ -390,6 +377,8 @@ function PLUGIN:pickup_entity(actor, ent, bone)
   local drag = should_drag(ent)
 
   if drag then
+    local owner = ent.get_ragdoll_owner and ent:get_ragdoll_owner()
+
     --- Asks whether a player may start dragging a ragdoll.
     -- Called on the server when the player tries to pick up a ragdoll within reach while the
     -- pickup_drag_ragdolls config is on, before PlayerPickupObject. The plugin's own handler
@@ -399,7 +388,7 @@ function PLUGIN:pickup_entity(actor, ent, bone)
     -- @param target [Player The player whose ragdoll it is, fallen over or dead; nil for a
     --   corpse left behind by a player who has respawned and for any other ragdoll]
     -- @return [Boolean Return false to prevent the dragging]
-    if hook.Run('PlayerCanDragRagdoll', actor, ent, find_ragdoll_owner(ent)) == false then return false end
+    if hook.Run('PlayerCanDragRagdoll', actor, ent, owner) == false then return false end
   end
 
   --- Asks whether a player may pick up an object with their hands.
@@ -643,25 +632,6 @@ end
 -- @return [Boolean false to deny the dragging, nil otherwise]
 function PLUGIN:PlayerCanDragRagdoll(actor, ragdoll, target)
   if IsValid(target) and target:is_doing_action('getup') then
-    return false
-  end
-end
-
---- Keeps a player from getting up with the getup command while their ragdoll is being
--- dragged, and tells them so, once in two seconds at most.
--- @param actor [Player the player running the command; not valid for the server console]
--- @param cmd_table [Command]
--- @return [Boolean false to stop the command, nil otherwise]
-function PLUGIN:PlayerCanRunCommand(actor, cmd_table)
-  if cmd_table.id == 'getup' and IsValid(actor) and actor:get_dragger() then
-    local cur_time = CurTime()
-
-    if !actor.next_dragged_notice or actor.next_dragged_notice <= cur_time then
-      actor.next_dragged_notice = cur_time + 2
-
-      actor:notify('error.cant_now')
-    end
-
     return false
   end
 end

@@ -11,9 +11,9 @@
 -- Plugins can add fields to what is saved and sent through the `PreItemSave` hook.
 -- `Item.remove` deletes an instance for good, on the server and on every client.
 --
--- An item entity remembers the character that dropped it. `Item.spawn` takes the dropper
--- as its last argument, and `Item.expect_drop` names the dropper for callers that cannot
--- pass one; the Items plugin does so whenever a player drops an item from an inventory.
+-- An item entity remembers the character that dropped it: `Item.spawn` takes the dropper
+-- as its last argument, which the Inventory plugin passes whenever a player drops an item
+-- from an inventory.
 
 mod 'Item'
 
@@ -21,22 +21,11 @@ local stored = Item.stored or {}
 local instances = Item.instances or {}
 local sorted = Item.sorted or {}
 local entities = Item.entities or {}
-local expected_drops = Item.expected_drops or {}
 
--- Item Templates storage.
 Item.stored = stored
-
--- Actual items.
 Item.instances = instances
-
--- Instances table indexed by instance ID.
--- For quicker item lookups.
 Item.sorted = sorted
-
--- Items currently dropped and lying on the ground.
 Item.entities = entities
-
-Item.expected_drops = expected_drops
 
 --- Returns all the registered item templates.
 -- @return [Map item templates, keyed by item id]
@@ -317,13 +306,14 @@ end
 
 --- Removes an item instance along with its entity in the world, if it has one.
 -- Does not take the item out of the inventory that holds it. On the server it also saves
--- the items and tells every client to remove its copy of the instance.
+-- the items and tells every client to remove its copy of the instance; the client only
+-- forgets the instance, since the entity is removed by the server.
 -- @param instance_id [Number/Item instance id, or the item instance itself]
 function Item.remove(instance_id)
   local item_obj = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
 
   if item_obj and Item.is_instance(item_obj) then
-    if IsValid(item_obj.entity) then
+    if SERVER and IsValid(item_obj.entity) then
       item_obj.entity:Remove()
     end
 
@@ -334,8 +324,6 @@ function Item.remove(instance_id)
     sorted[item_obj.instance_id] = nil
 
     if SERVER then
-      expected_drops[item_obj.instance_id] = nil
-
       Item.async_save()
       Cable.send(nil, 'fl_items_remove', item_obj.instance_id)
     end
@@ -411,7 +399,6 @@ if SERVER then
     local loaded = Data.load_schema('items/instances', {})
 
     if loaded and !table.IsEmpty(loaded) then
-      -- Returns functions to the instances table after loading.
       for id, instance_table in pairs(loaded) do
         local item_obj = Item.find_by_id(id)
 
@@ -560,34 +547,6 @@ if SERVER then
     hook.run_client(target, 'OnItemDataReceived')
   end
 
-  --- Names the player who is about to drop an item, for code that spawns the item without
-  -- passing a dropper to Item.spawn. The next Item.spawn of the item uses that player,
-  -- provided that it happens within the same tick. Server-side only.
-  -- The Items plugin calls it from its 'CanPlayerDropItem' handler, which is how the items
-  -- that the Inventory plugin drops get their dropper.
-  -- @param item_obj [Item the item instance that is about to be dropped]
-  -- @param actor [Player the player dropping it]
-  -- @see [Item.spawn]
-  function Item.expect_drop(item_obj, actor)
-    if !Item.is_instance(item_obj) then return end
-
-    expected_drops[item_obj.instance_id] = { actor = actor, time = CurTime() }
-  end
-
-  --- Returns the player that Item.expect_drop has named as the dropper of an item during
-  -- the current tick, and forgets them. Server-side only.
-  -- @param item_obj [Item]
-  -- @return [Player the dropper, or nil if nobody is expected to drop the item right now]
-  function Item.take_expected_dropper(item_obj)
-    local expected = expected_drops[item_obj.instance_id]
-
-    expected_drops[item_obj.instance_id] = nil
-
-    if expected and expected.time == CurTime() and IsValid(expected.actor) then
-      return expected.actor
-    end
-  end
-
   --- Spawns an item instance in the world as an fl_item entity. Server-side only.
   -- The item is sent to all clients and the item entities are saved afterward. The entity
   -- remembers the character of the dropper, and the on_entity_spawned callback of the item
@@ -601,10 +560,8 @@ if SERVER then
   -- @param angles=nil [Angle]
   -- @param item_obj [Item item instance; templates cannot be spawned]
   -- @param dropper=nil [Player/Map/Boolean the player who drops the item, or a table with
-  --   the character_id and steam_id fields of an earlier drop, or false if nobody does;
-  --   when nil, the player named by Item.expect_drop is used, if there is one]
+  --   the character_id and steam_id fields of an earlier drop; nil or false if nobody does]
   -- @return [Entity the item entity, Item the spawned item; nothing if the arguments are invalid]
-  -- @see [Item.expect_drop]
   function Item.spawn(position, angles, item_obj, dropper)
     if !position or !istable(item_obj) then
       error_with_traceback('No position or item table is not a table!')
@@ -629,13 +586,6 @@ if SERVER then
     end
 
     ent:Spawn()
-
-    if dropper == nil then
-      dropper = Item.take_expected_dropper(item_obj)
-    else
-      expected_drops[item_obj.instance_id] = nil
-    end
-
     ent:set_dropper(dropper)
 
     item_obj:set_entity(ent)
@@ -693,14 +643,12 @@ else
         return Cable.send('fl_items_data_request', ent_index)
       end
 
-      -- The client has to know this shit too I guess?
       ent:SetModel(item_obj:get_model())
       ent:SetSkin(item_obj.skin)
       ent:SetColor(item_obj:get_color())
 
       Item.apply_bodygroups(ent, item_obj)
 
-      -- Restore the item's functions. For some weird reason they aren't properly initialized.
       table.safe_merge(ent, scripted_ents.Get('fl_item'))
 
       ent.item = item_obj

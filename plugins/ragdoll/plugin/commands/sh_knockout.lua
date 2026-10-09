@@ -11,7 +11,7 @@ CMD.player_arg = 1
 CMD.aliases = { 'plyknockout', 'forceknockout' }
 
 --- Knocks every living target out, including the ones who are lying on the ground already,
--- and notifies the staff.
+-- with the caller as the attacker of the knockout hooks, and notifies the staff.
 -- @param actor [Player the caller; not valid when run from the server console]
 -- @param targets [List<Player> players to knock out]
 -- @param delay=0 [String/Number seconds after which the targets come to, clamped between
@@ -19,9 +19,11 @@ CMD.aliases = { 'plyknockout', 'forceknockout' }
 function CMD:on_run(actor, targets, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 600)
 
+  local options = { attacker = IsValid(actor) and actor or nil }
+
   for k, v in ipairs(targets) do
     if IsValid(v) and v:Alive() then
-      v:set_ragdoll_state(RAGDOLL_KNOCKEDOUT, delay)
+      v:knock_out(delay, options)
     end
   end
 

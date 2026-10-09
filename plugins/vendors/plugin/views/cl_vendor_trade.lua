@@ -2,8 +2,9 @@
 -- The panel is a frame with two lists (`fl_vendor_list`) of rows (`fl_vendor_row`): what the
 -- vendor sells, with prices and stock, and the items of the local player that the vendor
 -- buys, with what it pays for them. The buttons of the rows ask the server to buy or to sell
--- one item; the server answers with fresh contents for the panel. Removing the panel tells
--- the server that the trade is over.
+-- one item; the server answers with fresh contents for the panel, and tells the other
+-- customers of the vendor what has changed. Removing the panel tells the server that the
+-- trade is over.
 --
 -- A theme can draw the rows and the lists itself with `PaintVendorRow(panel, w, h)` and
 -- `PaintVendorList(panel, w, h)`: returning anything but nil replaces the default drawing.
@@ -66,6 +67,12 @@ function PANEL:Paint(w, h)
     draw.SimpleText(self.name, name_font, text_x, math.scale(6), text_color)
     draw.SimpleText(self.info, info_font, text_x, h * 0.5 + math.scale(2), text_color:darken(40))
   render.SetScissorRect(0, 0, 0, 0, false)
+end
+
+--- Changes the line below the name.
+-- @param info [String]
+function PANEL:set_info(info)
+  self.info = info or ''
 end
 
 --- Fills the row.
@@ -236,30 +243,48 @@ function PANEL:PerformLayout(w, h)
 end
 
 --- Draws how much money the local player has and, if its money pool is finite, how much the
--- vendor has.
+-- vendor has. The texts are made by `refresh_money`, not here.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PaintOver(w, h)
-  local data = self.data
-
-  if !data or !IsValid(PLAYER) then return end
+  if !self.money_text then return end
 
   local left, top, right, bottom = self:GetDockPadding()
   local gap = math.scale(8)
   local font = Theme.get_font('main_menu_small')
   local color = Theme.get_color('text')
-  local own_money = Vendors:format_money(PLAYER:get_money(data.currency), data.currency)
-  local text = t'ui.vendor.your_money'..': '..own_money
-  local text_w, text_h = util.text_size(text, font)
+  local text_w, text_h = util.text_size(self.money_text, font)
   local y = h - bottom - math.scale(16) - text_h * 0.5
 
-  draw.SimpleText(text, font, left + gap, y, color)
+  draw.SimpleText(self.money_text, font, left + gap, y, color)
+
+  if self.vendor_money_text then
+    text_w = util.text_size(self.vendor_money_text, font)
+
+    draw.SimpleText(self.vendor_money_text, font, w - right - gap - text_w, y, color)
+  end
+end
+
+--- Makes the texts about the money of the local player and of the vendor again. Called when
+-- the panel gets new contents, when the money of the local player changes and when the
+-- language changes.
+function PANEL:refresh_money()
+  local data = self.data
+
+  if !data or !IsValid(PLAYER) then
+    self.money_text = nil
+    self.vendor_money_text = nil
+
+    return
+  end
+
+  local own_money = Vendors:format_money(PLAYER:get_money(data.currency), data.currency)
+
+  self.money_text = t'ui.vendor.your_money'..': '..own_money
+  self.vendor_money_text = nil
 
   if data.money then
-    text = t'ui.vendor.vendor_money'..': '..Vendors:format_money(data.money, data.currency)
-    text_w = util.text_size(text, font)
-
-    draw.SimpleText(text, font, w - right - gap - text_w, y, color)
+    self.vendor_money_text = t'ui.vendor.vendor_money'..': '..Vendors:format_money(data.money, data.currency)
   end
 end
 
@@ -316,8 +341,42 @@ function PANEL:set_data(data)
   self:SetTitle(data.name or 'ui.vendor.title')
   self.description:SetText(data.description or '')
 
+  self:refresh_money()
   self:rebuild()
   self:InvalidateLayout()
+end
+
+--- Applies what a trade of another customer has changed, without rebuilding the lists: the
+-- money pool of the vendor and the stock of one item.
+-- @param money [Number/Boolean the money pool of the vendor, false if it is unlimited]
+-- @param item_id=nil [String ID of the item whose stock has changed, nil if none has]
+-- @param stock=nil [Number/Boolean the stock of that item, false if it is unlimited]
+function PANEL:apply_change(money, item_id, stock)
+  local data = self.data
+
+  if !data then return end
+
+  data.money = money
+
+  local listed = item_id and self.sell_rows and self.sell_rows[item_id]
+
+  if listed then
+    listed.entry.stock = stock
+
+    listed.row:set_info(self:get_stock_text(listed.entry))
+  end
+
+  self:refresh_money()
+end
+
+--- Returns the line below the name of an item that the vendor sells: its stock, or nothing
+-- if the stock is unlimited.
+-- @param entry [Map the entry of the item in the trade data: id, price and stock]
+-- @return [String]
+function PANEL:get_stock_text(entry)
+  if !entry.stock then return '' end
+
+  return entry.stock > 0 and t('ui.vendor.stock', { count = entry.stock }) or t'ui.vendor.sold_out'
 end
 
 --- Fills the list of what the vendor sells and the list of what it buys from the local
@@ -332,6 +391,8 @@ function PANEL:rebuild()
   local sells = {}
   local buys = {}
   local groups = {}
+
+  self.sell_rows = {}
 
   self.sell_list:clear()
   self.buy_list:clear()
@@ -366,15 +427,9 @@ function PANEL:rebuild()
 
   for k, v in ipairs(sells) do
     local item_table, entry = v.item_table, v.entry
-    local info = ''
-
-    if entry.stock then
-      info = entry.stock > 0 and t('ui.vendor.stock', { count = entry.stock }) or t'ui.vendor.sold_out'
-    end
-
-    self.sell_list:add_row({
+    local row = self.sell_list:add_row({
       name = v.name,
-      info = info,
+      info = self:get_stock_text(entry),
       price = Vendors:format_money(entry.price, currency),
       tooltip = t(item_table:get_description()),
       model = item_table:get_model(),
@@ -384,6 +439,8 @@ function PANEL:rebuild()
         Cable.send('fl_vendor_buy', self.vendor, entry.id)
       end
     })
+
+    self.sell_rows[entry.id] = { row = row, entry = entry }
   end
 
   for k, v in ipairs(buys) do

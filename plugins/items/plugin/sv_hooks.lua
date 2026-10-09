@@ -117,21 +117,16 @@ function Items:PlayerUsedItem(actor, item_obj, act, ...)
   end
 end
 
---- Lets the on_drop callback of the item decide whether the player is able to drop it, and
--- names the player as the dropper of the item for the entity that is spawned next.
+--- Lets the on_drop callback of the item decide whether the player is able to drop it.
 -- @param actor [Player]
 -- @param item_obj [Item]
 -- @return [Boolean false to prevent the drop, nil otherwise]
 function Items:CanPlayerDropItem(actor, item_obj)
   if !istable(item_obj) then return end
 
-  if item_obj.on_drop then
-    if item_obj:on_drop(actor) == false then
-      return false
-    end
+  if item_obj.on_drop and item_obj:on_drop(actor) == false then
+    return false
   end
-
-  Item.expect_drop(item_obj, actor)
 end
 
 --- Destroys an item that is in an inventory on request of the player: asks the

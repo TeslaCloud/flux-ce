@@ -156,20 +156,17 @@ function AreaDisplay:find_text_area_at(pos)
   return self:find_text_areas_at(pos)[1]
 end
 
---- Replaces the Text Area mode of the Area Tool with one that also sets the display style
--- of the area and whether it is shown to a player only once. The mode takes the place of
--- the first Text Area mode in the list, and every other one is removed, so that a code
--- refresh does not leave more than one behind. It is added to the end of the list if the
--- Areas API has not added its own.
--- @param mode_list [Map the Area.tool_modes table; modes are added with mode_list:Add]
-function AreaDisplay:AddAreaToolModes(mode_list)
+--- Builds the Text Area mode of the Area Tool that this plugin adds: a text area mode that
+-- also sets the display style of the area and whether it is shown to a player only once.
+-- @return [Map the mode definition, ready for mode_list:Add]
+local function build_tool_mode()
   local mode = {}
   mode.title = t'tool.area_display.title'
-  mode.area_type = self.area_type
+  mode.area_type = AreaDisplay.area_type
   mode.ClientConVar = {
     height = '512',
     text = 'Sample Text',
-    style = self.default_style,
+    style = AreaDisplay.default_style,
     once = '0'
   }
 
@@ -230,9 +227,7 @@ function AreaDisplay:AddAreaToolModes(mode_list)
 
       Areas.register(area.id, area)
 
-      tool:GetOwner():notify('notification.area_display.updated', {
-        text = tostring(area.text):gsub('%%', '%%%%')
-      })
+      tool:GetOwner():notify('notification.area_display.updated', { text = tostring(area.text) })
     end
 
     return true
@@ -274,20 +269,43 @@ function AreaDisplay:AddAreaToolModes(mode_list)
     panel:AddControl('CheckBox', { Label = t'tool.area_display.once', Command = 'area_once' })
   end
 
-  mode_list:Add(mode)
+  return mode
+end
 
-  local added = table.remove(mode_list)
-  local index = #mode_list + 1
+--- Replaces the Text Area mode of the Area Tool with the one of this plugin (see
+-- `build_tool_mode`). The mode is passed through mode_list:Add, which fills in its defaults
+-- and merges its convars into the tool, and then takes the place of the first Text Area mode
+-- in the list; any other Text Area mode is removed, so that a code refresh does not leave
+-- more than one behind. The mode stays at the end of the list if the Areas API has not added
+-- its own.
+-- @param mode_list [Map the Area.tool_modes table; modes are added with mode_list:Add]
+function AreaDisplay:AddAreaToolModes(mode_list)
+  mode_list:Add(build_tool_mode())
 
-  for k = #mode_list, 1, -1 do
+  local mode = table.remove(mode_list)
+  local index
+
+  for k = 1, #mode_list do
     if mode_list[k].area_type == self.area_type then
-      table.remove(mode_list, k)
-
       index = k
+
+      break
     end
   end
 
-  table.insert(mode_list, index, added)
+  if !index then
+    table.insert(mode_list, mode)
+
+    return
+  end
+
+  mode_list[index] = mode
+
+  for k = #mode_list, index + 1, -1 do
+    if mode_list[k].area_type == self.area_type then
+      table.remove(mode_list, k)
+    end
+  end
 end
 
 Areas.set_callback(AreaDisplay.area_type, function(actor, area, has_entered, pos, cur_time)

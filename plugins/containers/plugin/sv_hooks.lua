@@ -1,14 +1,15 @@
 --- Server side of the Containers plugin: opens a container when a player within reach asks
 -- for it, plays its sounds, makes container props persistent, keeps the IDs of their items
 -- on the props when persistent entities are saved, networks the names of the loaded
--- containers and deals with the inventory and the items of a container that is removed.
+-- containers, deals with the inventory and the items of a container that is removed and
+-- keeps the items of the containers through a map cleanup.
 
 local detached_inventories = {}
 local request_delay = 0.5
 
 --- Closes the inventory of a removed entity for everyone who views it and deletes the
 -- inventory from the server cache. If the entity is a container, its items are destroyed
--- or dropped on the ground as well, unless the map is unloading.
+-- or dropped on the ground as well, unless the map is unloading or being cleaned up.
 -- @param entity [Entity]
 -- @see [Container#handle_removal]
 function Container:EntityRemoved(entity)
@@ -29,6 +30,19 @@ function Container:EntityRemoved(entity)
 
     self:handle_removal(entity, inventory, istable(item_ids) and item_ids or {})
   end
+end
+
+--- Marks that the map is being cleaned up, so that the items of the containers that the
+-- cleanup removes are left alone: the persistent props are saved right before the cleanup,
+-- with the IDs of their items, and spawned again right after it, so the items come back
+-- with them.
+function Container:PreCleanupMap()
+  self.cleaning_up = true
+end
+
+--- Ends the map cleanup, after which removed containers lose their items again.
+function Container:PostCleanupMap()
+  self.cleaning_up = nil
 end
 
 --- Networks the custom names and the password marks of the containers that have been

@@ -11,7 +11,7 @@ function SpawnPoints:set_points(points)
   for k, v in ipairs(self.points) do
     local group_label = self:get_group_label(v.group)
 
-    v.label = t('ui.spawnpoints.label', { id = k, group = group_label:gsub('%%', '%%%%') })
+    v.label = t('ui.spawnpoints.label', { id = k, group = group_label })
     v.color = self:get_group_color(v.group)
   end
 end

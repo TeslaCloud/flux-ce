@@ -1,16 +1,18 @@
 --- Spawn Points lets staff choose where players appear on the map.
 -- A spawn point is a position, a facing direction and a group. The group says who the point
--- is for: `default` is for everyone, `faction:<faction ID>` for the characters of a faction
--- and `class:<class ID>` for the holders of a class. Factions need the Factions plugin and
--- classes the Classes plugin; the plugin works without either, with default points only.
--- Points are saved separately for every map.
+-- is for: `default` is for everyone and `faction:<faction ID>` for the characters of a
+-- faction. Factions need the Factions plugin; the plugin works without it, with default
+-- points only. Points are saved separately for every map.
+-- The group names are built and taken apart by `SpawnPoints:make_group` and
+-- `SpawnPoints:split_group`, which take any kind, so a plugin can add a kind of its own
+-- and resolve it through the `GetPlayerSpawnPoint` hook.
 --
 -- Staff with the 'spawnpoints' permission place and remove points with the Spawn Point Tool.
 -- While the tool is held, every point is drawn in the world as a box of the size of a player
 -- with a line that shows its direction and a label that names its group.
 --
 -- When a player spawns, the server looks at the groups the player belongs to, the most
--- specific one first: their class, then their faction, then `default`. The first group that
+-- specific one first: their faction, then `default`. The first group that
 -- has any points is used, and the player is put at a random point of it that nobody is
 -- standing on. Without any points the map's own spawn is used. The `GetPlayerSpawnPoint`
 -- hook can replace the choice or turn it down.
@@ -36,8 +38,11 @@ require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
 
-local color_default = Color(120, 200, 255)
-local box_angle = Angle(0, 0, 0)
+--- Color that `default` and groups that are not valid any more are drawn with.
+SpawnPoints.color_default = Color(120, 200, 255)
+
+--- Angle of the box that stands for a point, which is never rotated.
+SpawnPoints.box_angle = Angle(0, 0, 0)
 
 --- Registers the 'spawnpoints' level design permission.
 function SpawnPoints:RegisterPermissions()
@@ -55,8 +60,8 @@ end
 -- SpawnPoints:make_group('faction', 'police') -- 'faction:police'
 -- SpawnPoints:make_group('default') -- 'default'
 -- ```
--- @param kind [String 'default', 'faction' or 'class']
--- @param id=nil [String faction ID or class ID; not used for 'default']
+-- @param kind [String 'default', 'faction' or any kind of a plugin's own]
+-- @param id=nil [String faction ID, or the ID the kind takes; not used for 'default']
 -- @return [String the group, 'default' when the kind is 'default' or there is no ID]
 function SpawnPoints:make_group(kind, id)
   if kind == 'default' or !isstring(kind) or !isstring(id) or id == '' then
@@ -68,11 +73,12 @@ end
 
 --- Takes the name of a spawn point group apart.
 -- ```
--- local kind, id = SpawnPoints:split_group('class:medic') -- 'class', 'medic'
+-- local kind, id = SpawnPoints:split_group('faction:police') -- 'faction', 'police'
 -- ```
 -- @param group [String group, such as 'default' or 'faction:police']
--- @return [String 'default', 'faction', 'class' or whatever precedes the colon; nil when the
---   group is not a group name at all, String the faction ID or class ID; nil for 'default']
+-- @return [String 'default', 'faction' or whatever precedes the colon; nil when the group
+--   is not a group name at all, String the faction ID or whatever follows the colon; nil
+--   for 'default']
 function SpawnPoints:split_group(group)
   if !isstring(group) then return end
 
@@ -83,9 +89,9 @@ function SpawnPoints:split_group(group)
   return group:match('^(%l+):(.+)$')
 end
 
---- Checks whether a group can be given spawn points right now: it is `default`, a
--- registered faction or a registered class. Points of a group that is not valid any more are
--- kept, but no player belongs to it.
+--- Checks whether a group can be given spawn points right now: it is `default` or a
+-- registered faction. Points of a group that is not valid any more are kept, but no player
+-- belongs to it.
 -- @param group [String group, such as 'default' or 'faction:police']
 -- @return [Boolean]
 function SpawnPoints:is_valid_group(group)
@@ -95,15 +101,13 @@ function SpawnPoints:is_valid_group(group)
     return true
   elseif kind == 'faction' then
     return Factions != nil and Factions.find_by_id(id) != nil
-  elseif kind == 'class' then
-    return Classes != nil and Classes.find_by_id(id) != nil
   end
 
   return false
 end
 
 --- Returns every group that spawn points can be placed for: `default`, then the registered
--- factions, then the registered classes, each sorted by ID.
+-- factions sorted by ID.
 -- @return [List<String> groups]
 function SpawnPoints:get_groups()
   local groups = { 'default' }
@@ -118,24 +122,14 @@ function SpawnPoints:get_groups()
     end
   end
 
-  if Classes then
-    local ids = table.GetKeys(Classes.all())
-
-    table.sort(ids)
-
-    for k, v in ipairs(ids) do
-      table.insert(groups, self:make_group('class', v))
-    end
-  end
-
   return groups
 end
 
---- Returns the name of who a group stands for: the name of the faction or of the class, or
--- the 'ui.spawnpoints.group.default' phrase for `default`. The name can be a language phrase
+--- Returns the name of who a group stands for: the name of the faction, or the
+-- 'ui.spawnpoints.group.default' phrase for `default`. The name can be a language phrase
 -- and is not translated here.
 -- @param group [String group, such as 'default' or 'faction:police']
--- @return [String name or language phrase; the ID when the faction or class is not registered]
+-- @return [String name or language phrase; the ID when the faction is not registered]
 function SpawnPoints:get_group_name(group)
   local kind, id = self:split_group(group)
 
@@ -147,34 +141,28 @@ function SpawnPoints:get_group_name(group)
     if faction_table then
       return faction_table.name
     end
-  elseif kind == 'class' and Classes then
-    local class_table = Classes.find_by_id(id)
-
-    if class_table then
-      return class_table:get_name()
-    end
   end
 
   return id or tostring(group)
 end
 
 --- Returns the translated text that describes a group in the tool settings and on the
--- labels of the points, such as 'Everyone', 'Faction: Police' or 'Class: Medic'.
+-- labels of the points, such as 'Everyone' or 'Faction: Police'.
 -- @param group [String group, such as 'default' or 'faction:police']
 -- @return [String]
 function SpawnPoints:get_group_label(group)
   local kind = self:split_group(group)
   local label = t(self:get_group_name(group))
 
-  if kind == 'faction' or kind == 'class' then
-    label = t('ui.spawnpoints.group.'..kind, { name = label:gsub('%%', '%%%%') })
+  if kind == 'faction' then
+    label = t('ui.spawnpoints.group.faction', { name = label })
   end
 
   return label
 end
 
---- Returns the color a group is drawn with: the color of the faction or of the class, or
--- light blue for `default` and for groups that are not valid any more.
+--- Returns the color a group is drawn with: the color of the faction, or
+-- `SpawnPoints.color_default` for `default` and for groups that are not valid any more.
 -- @param group [String group, such as 'default' or 'faction:police']
 -- @return [Color]
 function SpawnPoints:get_group_color(group)
@@ -186,15 +174,9 @@ function SpawnPoints:get_group_color(group)
     if faction_table and faction_table.color then
       return faction_table.color
     end
-  elseif kind == 'class' and Classes then
-    local class_table = Classes.find_by_id(id)
-
-    if class_table then
-      return class_table:get_color()
-    end
   end
 
-  return color_default
+  return self.color_default
 end
 
 --- Returns the spawn points of a group, or all of them. The server knows every point; a
@@ -230,7 +212,7 @@ function SpawnPoints:find_aimed_point(start, direction, distance)
 
   for k, v in ipairs(self.points) do
     local hit_pos, hit_normal, fraction = util.IntersectRayWithOBB(
-      start, delta, v.pos, box_angle, self.hull_mins, self.hull_maxs
+      start, delta, v.pos, self.box_angle, self.hull_mins, self.hull_maxs
     )
 
     if hit_pos and (!found_fraction or (fraction or 0) < found_fraction) then

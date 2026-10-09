@@ -136,6 +136,9 @@ if SERVER then
   -- Cable.send(target, 'fl_bind_pressed', key)
   -- Cable.send(nil, 'fl_player_disconnected', actor:EntIndex()) -- to everyone
   -- ```
+  -- A player who is not valid any more, such as one who has left, is nobody: a single invalid
+  -- player gets no message and invalid players are left out of a list. A list without a valid
+  -- player sends nothing. Only nil stands for everyone.
   -- @param target [Player/List<Player> who to send the message to; everyone if nil]
   -- @param id [String message name]
   -- @param ... [Vararg values to send]
@@ -147,7 +150,6 @@ if SERVER then
     if !cable.check_networked_string(id) then
       local args, count = { ... }, select('#', ...)
 
-      -- Allow networked strings some time to catch up for the first time.
       timer.Simple(0.1, function()
         cable.send(target, id, unpack(args, 1, count))
       end)
@@ -155,12 +157,24 @@ if SERVER then
       return
     end
 
-    if !istable(target) then
-      if IsValid(target) then
-        target = { target }
-      else
-        target = player.GetAll()
+    if target == nil then
+      target = player.GetAll()
+    elseif !istable(target) then
+      if !IsValid(target) or !target:IsPlayer() then return end
+
+      target = { target }
+    else
+      local receivers = {}
+
+      for k, v in pairs(target) do
+        if isentity(v) and IsValid(v) and v:IsPlayer() then
+          receivers[#receivers + 1] = v
+        end
       end
+
+      if #receivers == 0 then return end
+
+      target = receivers
     end
 
     net.Start(id)

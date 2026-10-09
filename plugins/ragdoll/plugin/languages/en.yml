@@ -43,9 +43,19 @@ en:
       hit_time:
         name: Time Down After A Hit
         desc: How many seconds a player knocked down by a heavy hit stays down before getting up. Set to 0 to let them get up by themselves.
+      knockout_on_damage:
+        name: Knock Out From Melee Hits
+        desc: Whether or not a melee hit, such as one from a stunstick, knocks a player out once their health is low enough.
+      knockout_health:
+        name: Knockout Health
+        desc: A melee hit that leaves a player at this much health or less knocks them out.
+      knockout_time:
+        name: Knockout Time
+        desc: How many seconds a player knocked out by a melee hit stays unconscious. Set to 0 to keep them out until someone gets them up.
   error:
     ragdoll:
       fall_cooldown: "You have to wait {time} s. before you can fall over again."
+      knocked_out_switch: You cannot switch characters while you are unconscious.
   ui:
     hud:
       press_jump_to_getup: Press the 'jump' key to get up...
