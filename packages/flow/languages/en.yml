@@ -61,8 +61,7 @@ en:
     forums:
       You can visit the TeslaCloud forums to get support, download schemas and
       chat with fellow Flux users!
-    hints:
-      These hints can be disabled from the clientside settings menu.
+    hints: These hints can be turned off in the Settings tab of the menu.
     tab: "Press the 'Show Scoreboard' key (default: TAB) to open Flux's menu."
     commands:
       Start typing a command in chat to see a list of all available commands and
@@ -70,6 +69,9 @@ en:
     bugs:
       Encountered a bug? Have an idea that we should totally add to Flux? Visit
       our forums at https://teslacloud.net and tell us about it!
+    setting:
+      name: Show hints
+      desc: Show a random gameplay hint on the screen every now and then.
   language:
     name: English
   notification:
