@@ -1,5 +1,5 @@
---- The `forcegetup` staff command: makes the fallen target players get up, optionally after a
--- delay.
+--- The `forcegetup` staff command: makes the fallen or knocked out target players get up,
+-- optionally after a delay.
 
 CMD.name = 'ForceGetUp'
 CMD.description = 'command.forcegetup.description'
@@ -10,7 +10,9 @@ CMD.arguments = 1
 CMD.player_arg = 1
 CMD.aliases = { 'forcegetup', 'plygetup' }
 
---- Makes every living, ragdolled target get up after the delay, and notifies the staff.
+--- Makes every living, ragdolled target get up, and notifies the staff. With a delay the
+-- targets are given a get up timer, which replaces the one they have; without one they get
+-- up right away.
 -- @param actor [Player the caller; not valid when run from the server console]
 -- @param targets [List<Player> players to get up]
 -- @param delay=0 [String/Number seconds before the targets get up, clamped between
@@ -20,13 +22,9 @@ function CMD:on_run(actor, targets, delay)
 
   for k, v in ipairs(targets) do
     if IsValid(v) and v:Alive() and v:is_ragdolled() then
-      v:set_ragdoll_state(RAGDOLL_FALLENOVER)
-
-      timer.Simple(delay, function()
-        if IsValid(v) and v:Alive() and v:is_ragdolled() then
-          v:set_ragdoll_state(RAGDOLL_NONE)
-        end
-      end)
+      if delay <= 0 or !v:set_getup_time(delay) then
+        v:set_ragdoll_state(RAGDOLL_NONE)
+      end
     end
   end
 

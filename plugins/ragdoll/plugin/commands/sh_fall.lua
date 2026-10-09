@@ -8,19 +8,34 @@ CMD.category = 'permission.categories.roleplay'
 CMD.aliases = { 'fallover', 'charfallover' }
 CMD.no_console = true
 
---- Makes the player fall over and runs the getup command for them with the given delay.
--- Notifies the player instead if they are dead or already ragdolled.
+--- Makes the player fall over and get back up by themselves after the delay. Notifies the
+-- player instead if they are dead, already ragdolled, in a vehicle or noclipping, or if they
+-- have used the command less than the ragdoll_fall_cooldown config ago.
 -- @param actor [Player the caller]
--- @param delay=2 [String/Number seconds to pass to getup, clamped between 2 and 60]
+-- @param delay=nil [String/Number seconds until the player gets up, clamped between the
+--   ragdoll_getup_time config and 60]
 function CMD:on_run(actor, delay)
-  delay = math.clamp(tonumber(delay) or 0, 2, 60)
+  if !actor:Alive() or actor:is_ragdolled() or actor:InVehicle() or actor:GetMoveType() == MOVETYPE_NOCLIP then
+    actor:notify('error.cant_now')
 
-  if actor:Alive() and !actor:is_ragdolled() then
-    actor:set_ragdoll_state(RAGDOLL_FALLENOVER)
+    return
+  end
 
-    if delay and delay > 0 then
-      actor:run_command('getup '..tostring(delay))
-    end
+  local cur_time = CurTime()
+  local next_fall = actor.next_fall or 0
+
+  if next_fall > cur_time then
+    actor:notify('error.ragdoll.fall_cooldown', { time = math.ceil(next_fall - cur_time) })
+
+    return
+  end
+
+  local minimum = Config.get('ragdoll_getup_time', 4)
+
+  delay = math.clamp(tonumber(delay) or 0, minimum, math.max(minimum, 60))
+
+  if actor:set_ragdoll_state(RAGDOLL_FALLENOVER, delay) then
+    actor.next_fall = cur_time + Config.get('ragdoll_fall_cooldown', 5)
   else
     actor:notify('error.cant_now')
   end

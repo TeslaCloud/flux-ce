@@ -1,0 +1,62 @@
+categories:
+  ragdoll:
+    name: config.ragdoll.title
+    description: config.ragdoll.desc
+configs:
+  ragdoll_getup_time:
+    name: config.ragdoll.getup_time.name
+    description: config.ragdoll.getup_time.desc
+    category: ragdoll
+    type: number
+    min_value: 1
+    max_value: 60
+    default_value: 4
+  ragdoll_fall_cooldown:
+    name: config.ragdoll.fall_cooldown.name
+    description: config.ragdoll.fall_cooldown.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 600
+    default_value: 5
+  ragdoll_immunity_time:
+    name: config.ragdoll.immunity_time.name
+    description: config.ragdoll.immunity_time.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 1
+    default_value: 0.5
+  ragdoll_decay_time:
+    name: config.ragdoll.decay_time.name
+    description: config.ragdoll.decay_time.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 3600
+    default_value: 120
+  ragdoll_fall_damage:
+    name: config.ragdoll.fall_damage.name
+    description: config.ragdoll.fall_damage.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 1000
+    default_value: 0
+  ragdoll_hit_damage:
+    name: config.ragdoll.hit_damage.name
+    description: config.ragdoll.hit_damage.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 1000
+    default_value: 0
+  ragdoll_hit_time:
+    name: config.ragdoll.hit_time.name
+    description: config.ragdoll.hit_time.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 60
+    default_value: 8

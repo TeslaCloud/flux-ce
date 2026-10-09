@@ -1,15 +1,16 @@
 --- Enumerations of the Ragdoll plugin: the `ENT_RAGDOLL` and `INT_RAGDOLL_STATE` data table
--- slots of the player, and the ragdoll states `RAGDOLL_NONE` (not ragdolled),
--- `RAGDOLL_FALLENOVER` (fallen over) and `RAGDOLL_DUMMY` (the ragdoll left by a dead player).
+-- slots of the player, and the ragdoll states.
+-- `ENT_RAGDOLL` is the entity slot that holds the player's ragdoll (fallen over, knocked out
+-- or dead). It is a fixed number rather than an enumeration to avoid collisions with legacy
+-- data table variables. `INT_RAGDOLL_STATE` is the integer slot that holds the state, which
+-- is one of:
+-- * `RAGDOLL_NONE`: not ragdolled.
+-- * `RAGDOLL_FALLENOVER`: lying on the ground, able to get up by themselves.
+-- * `RAGDOLL_DUMMY`: dead; the ragdoll is the corpse the player has left.
+-- * `RAGDOLL_KNOCKEDOUT`: unconscious, unable to get up until the state ends.
 
--- Can't use enumerate here since this is made to avoid collisions with legacy DTVars...
-ENT_RAGDOLL = 2 -- Player's ragdoll (E.G. fallenover, death or anything else).
+ENT_RAGDOLL = 2
 
 enumerate 'INT_RAGDOLL_STATE'
--- INT_RAGDOLL_STATE   = Player's ragdoll state (RAGDOLL_ enums).
 
--- Ragdoll states
-enumerate 'RAGDOLL_NONE RAGDOLL_FALLENOVER RAGDOLL_DUMMY'
--- RAGDOLL_NONE        = Not ragdolled.
--- RAGDOLL_FALLENOVER  = Ragdolled and can take damage.
--- RAGDOLL_DUMMY       = Ragdolled and cannot take damage.
+enumerate 'RAGDOLL_NONE RAGDOLL_FALLENOVER RAGDOLL_DUMMY RAGDOLL_KNOCKEDOUT'

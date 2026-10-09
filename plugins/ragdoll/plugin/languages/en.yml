@@ -14,6 +14,41 @@ en:
     getup:
       description: Get up if you are currently fallen.
       syntax: "[Get up time]"
+    knockout:
+      description: Knocks a player out. They cannot get up by themselves until they come to.
+      syntax: "<target> [Time until they come to]"
+      message: "{player} knocked {target} out for {time} s."
+  config:
+    ragdoll:
+      title: Ragdoll
+      desc: Falling over, knockouts and corpses.
+      getup_time:
+        name: Get Up Time
+        desc: How many seconds it takes a fallen player to get back up.
+      fall_cooldown:
+        name: Fall Cooldown
+        desc: How many seconds a player must wait before using the fall command again. Set to 0 to disable.
+      immunity_time:
+        name: Ragdoll Immunity Time
+        desc: For how many seconds after falling over a player's ragdoll ignores damage that was not dealt by a player, such as hitting the ground. Set to 0 to disable.
+      decay_time:
+        name: Corpse Decay Time
+        desc: How many seconds the ragdoll of a player stays after they have respawned or left the server. Set to 0 to remove it right away.
+      fall_damage:
+        name: Fall Over From Falls
+        desc: A fall that deals at least this much damage makes the player fall over. Set to 0 to disable.
+      hit_damage:
+        name: Fall Over From Hits
+        desc: A single hit that deals at least this much damage makes the player fall over. Set to 0 to disable.
+      hit_time:
+        name: Time Down After A Hit
+        desc: How many seconds a player knocked down by a heavy hit stays down before getting up. Set to 0 to let them get up by themselves.
+  error:
+    ragdoll:
+      fall_cooldown: "You have to wait {time} s. before you can fall over again."
   ui:
     hud:
       press_jump_to_getup: Press the 'jump' key to get up...
+      knocked_out: You are unconscious...
+      bar_text:
+        wakeup: REGAINING CONSCIOUSNESS...

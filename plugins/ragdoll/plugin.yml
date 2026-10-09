@@ -1,5 +1,5 @@
 name: Ragdoll
-description: Allows players to enter a ragdolled state. Also makes their corpses persist after death.
+description: Lets players fall over, be knocked out and get back up. Also makes their corpses persist after death.
 author: TeslaCloud Studios
 depends:
   - admin
