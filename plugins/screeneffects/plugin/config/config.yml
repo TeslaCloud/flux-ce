@@ -1,0 +1,29 @@
+categories:
+  screen_effects:
+    name: config.screen_effects.title
+    description: config.screen_effects.desc
+configs:
+  allow_low_health_effect:
+    name: config.screen_effects.low_health.name
+    description: config.screen_effects.low_health.desc
+    category: screen_effects
+    type: boolean
+    default_value: true
+  allow_heartbeat_effect:
+    name: config.screen_effects.heartbeat.name
+    description: config.screen_effects.heartbeat.desc
+    category: screen_effects
+    type: boolean
+    default_value: true
+  allow_underwater_effect:
+    name: config.screen_effects.underwater.name
+    description: config.screen_effects.underwater.desc
+    category: screen_effects
+    type: boolean
+    default_value: true
+  allow_headbob_effect:
+    name: config.screen_effects.headbob.name
+    description: config.screen_effects.headbob.desc
+    category: screen_effects
+    type: boolean
+    default_value: true

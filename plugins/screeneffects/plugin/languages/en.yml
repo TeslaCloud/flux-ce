@@ -1,0 +1,45 @@
+en:
+  config:
+    screen_effects:
+      title: Screen Effects
+      desc: Screen Effects plugin configuration
+      low_health:
+        name: Allow Low Health Effect
+        desc: Allow the colors to drain and the picture to blur as a player loses health, and the screen to turn gray when they die.
+      heartbeat:
+        name: Allow Heartbeat
+        desc: Allow players to hear a heartbeat that speeds up as their health drops.
+      underwater:
+        name: Allow Underwater Effect
+        desc: Allow the picture to be blurred and distorted while the view of a player is under water.
+      headbob:
+        name: Allow Headbob
+        desc: Allow the view to sway while a player walks or runs and to shake when they land after a fall.
+  settings:
+    categories:
+      screen_effects: Screen Effects
+    screen_effects:
+      low_health:
+        name: Low health effect
+        desc: Drain the colors and blur the picture as your health drops.
+        strength:
+          name: Low health effect strength
+          desc: How strong the low health effect is, in percent.
+      heartbeat:
+        name: Heartbeat
+        desc: Play a heartbeat that speeds up as your health drops.
+        strength:
+          name: Heartbeat volume
+          desc: How loud the heartbeat is, in percent.
+      underwater:
+        name: Underwater effect
+        desc: Blur and distort the picture while you are under water.
+        strength:
+          name: Underwater effect strength
+          desc: How strong the underwater effect is, in percent.
+      headbob:
+        name: Headbob
+        desc: Sway the view while you walk or run and shake it when you land after a fall.
+        strength:
+          name: Headbob strength
+          desc: How strong the sway and the landing shake are, in percent.

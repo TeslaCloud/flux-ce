@@ -1,0 +1,58 @@
+--- Screen Effects adds the effects that tie the local player's screen and view to the state of
+-- their character. There are four of them, known by these IDs:
+--
+-- * 'low_health': the colors drain and a slight motion blur sets in as health drops; the screen
+--   is gray while the player is dead.
+-- * 'heartbeat': a heartbeat is heard at low health and speeds up as health drops further.
+-- * 'underwater': the picture is distorted and blurred while the view is under water.
+-- * 'headbob': the view sways while the player walks or runs and shakes when they land after
+--   a fall.
+--
+-- An effect is applied when the server allows it, the player has it turned on and no plugin
+-- suppresses it. The server allows the effects with the 'allow_low_health_effect',
+-- 'allow_heartbeat_effect', 'allow_underwater_effect' and 'allow_headbob_effect' configs, all
+-- on by default. With the Settings plugin loaded, every player gets a switch and a strength
+-- slider for each effect in the Settings tab: the 'low_health_effect', 'heartbeat_effect',
+-- 'underwater_effect' and 'headbob_effect' settings and the settings of the same names ending
+-- in '_strength'; without that plugin the effects are on at full strength. A plugin or the
+-- schema suppresses an effect by returning false from the `ShouldApplyScreenEffect` hook.
+-- ```
+-- function MyPlugin:ShouldApplyScreenEffect(id)
+--   if id == 'heartbeat' and PLAYER:get_nv('observer') then
+--     return false
+--   end
+-- end
+-- ```
+--
+-- Nothing is applied while the local player has not been initialized, has no character loaded
+-- or is looking at the intro or the main menu.
+--
+-- What ends up on the screen can be changed every frame. `AdjustScreenEffects` receives the
+-- values of the screen passes after the effects of this plugin have set them, and
+-- `AdjustViewEffects` receives the angles that are added to the view; both run whether the
+-- effects of the plugin are turned on or not, so other plugins can use the passes for effects
+-- of their own. `AdjustHeadbob`, `AdjustHeartbeat` and `AdjustFallShake` change the built-in
+-- effects themselves.
+-- ```
+-- function Drunkenness:AdjustScreenEffects(screen)
+--   local level = PLAYER:get_nv('drunk', 0)
+--
+--   screen.motion_blur = math.max(screen.motion_blur, level * 0.8)
+-- end
+--
+-- function Drunkenness:AdjustHeadbob(info)
+--   info.yaw = info.yaw + PLAYER:get_nv('drunk', 0) * 2
+-- end
+-- ```
+--
+-- The color pass of the plugin is separate from the Color Modify plugin, so the look a schema
+-- sets through that plugin and the low health effect are applied one after the other. The
+-- numbers the effects are built from are in `ScreenEffects.defaults`, which a schema may change.
+--
+-- A schema turns the plugin on by adding `screeneffects` to its `depends`.
+-- @module [ScreenEffects]
+
+PLUGIN:set_global('ScreenEffects')
+
+require_relative 'cl_plugin'
+require_relative 'cl_hooks'
