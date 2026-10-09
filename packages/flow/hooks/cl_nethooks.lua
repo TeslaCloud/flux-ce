@@ -1,7 +1,8 @@
 --- Client-side receivers of the gamemode's network messages. They run the hooks that the
 -- server asks for (`hook.run_client`), repeat `PlayerInitialSpawn`, `PlayerDisconnected`
--- and `PlayerModelChanged` on the client, show notifications and the damage flash, and
--- open the interaction menu when the local player uses a player or an entity.
+-- and `PlayerModelChanged` on the client, show notifications and the damage flash, play
+-- the sounds that the server starts and stops, and open the interaction menu when the
+-- local player uses a player or an entity.
 
 Cable.receive('fl_hook_run_cl', function(hook_name, ...)
   hook.Run(hook_name, ...)
@@ -40,6 +41,28 @@ end)
 
 Cable.receive('fl_player_take_damage', function()
   PLAYER.last_damage = CurTime()
+end)
+
+Cable.receive('fl_sound_play', function(path)
+  if isstring(path) then
+    surface.PlaySound(path)
+  end
+end)
+
+Cable.receive('fl_sound_start', function(id, path, volume)
+  local client = LocalPlayer()
+
+  if IsValid(client) then
+    client:start_sound(id, path, volume)
+  end
+end)
+
+Cable.receive('fl_sound_stop', function(id, fade_out)
+  local client = LocalPlayer()
+
+  if IsValid(client) then
+    client:stop_sound(id, fade_out)
+  end
 end)
 
 Cable.receive('fl_player_interact', function(target)

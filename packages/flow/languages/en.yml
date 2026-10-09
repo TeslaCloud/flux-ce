@@ -59,6 +59,8 @@ en:
     bugs:
       Encountered a bug? Have an idea that we should totally add to Flux? Visit
       our forums at https://teslacloud.net and tell us about it!
+  language:
+    name: English
   notification:
     console: Console
   operator:
@@ -125,6 +127,7 @@ en:
       close_menu: Back
       scoreboard: Players
       help: Help
+    ok: OK
     cancel: Cancel
     yes: "Yes"
     no: "No"

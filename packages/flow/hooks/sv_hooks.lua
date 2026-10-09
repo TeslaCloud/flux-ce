@@ -1,9 +1,11 @@
 --- Server side of the gamemode hooks: the `GM` handlers that set players up when they join
 -- and spawn, decide their model, fall damage and respawn time, check the sandbox spawn
--- menu and physics gun against the Flux permissions, save the data periodically, pass chat
--- commands to the command interpreter and write the files that are sent to clients.
+-- menu and physics gun against the Flux permissions, save the data periodically and when
+-- the server shuts down, pass chat commands to the command interpreter and write the files
+-- that are sent to clients.
 -- Most of Flux's server-side hooks are run from here, including `PostPlayerSpawn`,
--- `PlayerThink`, `PlayerOneSecond`, `FLSaveData` and the `FLPlayerSpawn...` checks.
+-- `PlayerThink`, `PlayerOneSecond`, `FLSaveData`, `PostSaveData` and the
+-- `FLPlayerSpawn...` checks.
 
 DEFINE_BASECLASS('gamemode_base')
 
@@ -561,9 +563,10 @@ function GM:OneSecond()
     -- @return [Boolean Return false to skip this save]
     if hook.Run('FLShouldSaveData') != false then
       --- Called on the server when all persistent data has to be saved: every
-      -- `data_save_interval` seconds unless `FLShouldSaveData` returns false, and by the
-      -- restart command of the admin plugin. The gamemode's handler saves the config and
-      -- runs `SaveData`, which is the hook that plugins normally implement.
+      -- `data_save_interval` seconds unless `FLShouldSaveData` returns false, when the
+      -- server shuts down or changes the map, and by the restart command of the admin
+      -- plugin. The gamemode's handler saves the config and runs `SaveData`, which is the
+      -- hook that plugins normally implement, followed by `PostSaveData`.
       hook.Run('FLSaveData')
     end
 
@@ -682,12 +685,30 @@ do
   end
 end
 
---- Saves the config and runs the SaveData hook.
+--- Saves the config and runs the SaveData hook, then the PostSaveData hook.
 function GM:FLSaveData()
   Config.save()
   --- Called on the server for plugins to save their persistent data, from the gamemode's
   -- `FLSaveData` handler after the config has been saved. The counterpart of `LoadData`.
   hook.Run('SaveData')
+  --- Called on the server after a data save, when the config has been saved and every
+  -- `SaveData` handler has run. This is the place for work that depends on the saved
+  -- state, such as a backup or a log entry. Database queries that the handlers have
+  -- started may still be running.
+  hook.Run('PostSaveData')
+end
+
+--- Saves everything when the server shuts down or changes the map: runs the FLSaveData
+-- hook and saves the data of every player. Afterwards Flux.shutting_down is true, so that
+-- code which runs while the map unloads (an entity's OnRemove, for example) can tell.
+function GM:ShutDown()
+  hook.Run('FLSaveData')
+
+  for k, v in player.Iterator() do
+    v:save_player()
+  end
+
+  Flux.shutting_down = true
 end
 
 --- Runs the PlayerPositionChanged hook if the player has moved since the previous check.

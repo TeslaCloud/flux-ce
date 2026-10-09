@@ -15,7 +15,7 @@ timer.Remove('HintSystem_Annoy2')
 function GM:InitPostEntity()
   PLAYER = LocalPlayer()
 
-  Cable.send('fl_player_set_lang', GetConVar('gmod_language'):GetString())
+  Cable.send('fl_player_set_lang', Flux.Lang:get_preferred_language())
 
   timer.Simple(0.4, function()
     Cable.send('fl_player_created', true)

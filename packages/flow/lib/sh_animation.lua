@@ -11,7 +11,9 @@
 --
 -- The library also adds the `Player` methods for one-off animations: `Player:set_animation`
 -- makes a player play a sequence instead of their regular animations, and
--- `Player:play_gesture` plays a gesture on top of them.
+-- `Player:play_gesture` plays a gesture on top of them. An animation that the server sets
+-- is shown by every client, including the clients of players who join while it lasts; one
+-- that a client sets is only seen on that client.
 -- @module [Flux.Anim]
 
 mod 'Flux::Anim'
@@ -411,37 +413,206 @@ do
 end
 
 local player_meta = FindMetaTable('Player')
+local forced = Flux.Anim.forced or {}
+Flux.Anim.forced = forced
+
+--- Takes the finish callback off the animation that was set for a player and makes the
+-- timer of that animation do nothing.
+-- @param target [Player]
+-- @return [Function the finish callback, nil if the animation had none]
+local function detach_callback(target)
+  local callback = target.fl_animation_callback
+
+  target.fl_animation_serial = (target.fl_animation_serial or 0) + 1
+  target.fl_animation_callback = nil
+
+  return callback
+end
+
+--- Calls the finish callback of a player animation, if it had one.
+-- @param callback [Function the finish callback, or nil]
+-- @param target [Player]
+-- @param completed [Boolean whether the animation was kept for its whole duration]
+local function run_callback(callback, target, completed)
+  if !isfunction(callback) then return end
+
+  local ok, result = pcall(callback, target, completed)
+
+  if !ok then
+    error_with_traceback('Finish callback of a player animation has failed to run!\n'..result)
+  end
+end
+
+--- Removes the animation that was set for a player. On the server, also tells the clients
+-- if they have been shown the animation.
+-- @param target [Player]
+-- @param completed [Boolean whether the animation was kept for its whole duration]
+local function stop_animation(target, completed)
+  target:SetCycle(0)
+  target.fl_animation = nil
+
+  if SERVER and forced[target] then
+    forced[target] = nil
+
+    Cable.send(nil, 'fl_animation_stop', target:EntIndex())
+  end
+
+  run_callback(detach_callback(target), target, completed)
+end
 
 --- Makes the player play the specified sequence instead of their regular animations.
--- The override is removed once the sequence has finished.
+-- The override is removed once the sequence has finished. Called on the server, the
+-- animation is shown by every client, including the clients of players who join while it
+-- lasts; called on a client, it is only seen on that client. Setting an animation replaces
+-- the one that was set before.
+-- ```
+-- target:set_animation('idle_to_sit_ground', nil, function(target, completed)
+--   if completed then
+--     target:set_animation('sit_ground', 0)
+--   end
+-- end)
+-- ```
 -- @param animation [String name of the sequence]
 -- @param duration_override=nil [Number seconds to keep the override for instead of
 --   the duration of the sequence, 0 keeps it until Player#stop_animation is called]
-function player_meta:set_animation(animation, duration_override)
+-- @param callback=nil [Function called with the player and a Boolean when the override is
+--   removed: true if it was kept for its whole duration, false if it was stopped or
+--   replaced before that. Called in the realm the animation was set in]
+-- @return [Boolean false if the model of the player has no such sequence, in which case
+--   nothing changes and the callback is not called]
+function player_meta:set_animation(animation, duration_override, callback)
   local sequence, duration = self:LookupSequence(animation)
+
+  if sequence == -1 then return false end
 
   if duration_override then
     duration = duration_override
   end
 
-  if sequence != -1 then
-    self:SetCycle(0)
-    self.fl_animation = sequence
+  local previous_callback = detach_callback(self)
+  local serial = self.fl_animation_serial
 
-    if duration > 0 then
-      timer.Simple(duration, function()
-        if IsValid(self) then
-          self:stop_animation()
+  self:SetCycle(0)
+  self.fl_animation = sequence
+  self.fl_animation_callback = callback
+
+  if SERVER then
+    forced[self] = animation
+
+    Cable.send(nil, 'fl_animation_set', self:EntIndex(), animation)
+  end
+
+  if duration > 0 then
+    timer.Simple(duration, function()
+      if IsValid(self) and self.fl_animation_serial == serial then
+        stop_animation(self, true)
+      end
+    end)
+  end
+
+  run_callback(previous_callback, self, false)
+
+  return true
+end
+
+--- Stops the animation that was set with Player#set_animation. Called on the server, it
+-- stops on every client as well. The finish callback of the animation is called with false.
+function player_meta:stop_animation()
+  stop_animation(self, false)
+end
+
+if SERVER then
+  Cable.check_networked_string('fl_animation_set')
+  Cable.check_networked_string('fl_animation_stop')
+
+  --- Hook handlers of the animation library, registered as `FLAnimations`.
+  local hooks = {}
+
+  --- Shows a player who has finished loading the animations that were set before they
+  -- joined and are still playing.
+  -- @param actor [Player]
+  function hooks:PlayerInitialized(actor)
+    for target, animation in pairs(forced) do
+      if IsValid(target) then
+        Cable.send(actor, 'fl_animation_set', target:EntIndex(), animation)
+      else
+        forced[target] = nil
+      end
+    end
+  end
+
+  --- Ends the animation of a leaving player, so that clients forget it and its finish
+  -- callback runs.
+  -- @param actor [Player]
+  function hooks:PlayerDisconnected(actor)
+    if forced[actor] then
+      stop_animation(actor, false)
+    end
+  end
+
+  Plugin.add_hooks('FLAnimations', hooks)
+else
+  local desired = {}
+
+  --- Applies the animation that the server has set for a player, if their model has it.
+  -- Leaves the local player alone when they already play it, which is the case when the
+  -- same animation was started on this client ahead of the server.
+  -- @param target [Entity the player]
+  local function apply_animation(target)
+    local animation = desired[target:EntIndex()]
+
+    if !animation or !target:IsPlayer() then return end
+
+    local sequence = target:LookupSequence(animation)
+
+    if sequence == -1 then return end
+    if target == LocalPlayer() and target.fl_animation == sequence then return end
+
+    local previous_callback = detach_callback(target)
+
+    target:SetCycle(0)
+    target.fl_animation = sequence
+
+    run_callback(previous_callback, target, false)
+  end
+
+  Cable.receive('fl_animation_set', function(ent_index, animation)
+    desired[ent_index] = animation
+
+    util.wait_for_ent(ent_index, apply_animation)
+  end)
+
+  Cable.receive('fl_animation_stop', function(ent_index)
+    local target = Entity(ent_index)
+
+    desired[ent_index] = nil
+
+    if IsValid(target) and target.fl_animation then
+      target:SetCycle(0)
+      target.fl_animation = nil
+
+      run_callback(detach_callback(target), target, false)
+    end
+  end)
+
+  --- Hook handlers of the animation library, registered as `FLAnimations`.
+  local hooks = {}
+
+  --- Applies the animation that the server has set for a player once the player comes into
+  -- view, in case their model was not available when the animation was announced.
+  -- @param entity [Entity entity that starts or stops being networked to this client]
+  -- @param should_transmit [Boolean true if it starts being networked]
+  function hooks:NotifyShouldTransmit(entity, should_transmit)
+    if should_transmit and desired[entity:EntIndex()] and !entity.fl_animation then
+      timer.Simple(0, function()
+        if IsValid(entity) and !entity.fl_animation then
+          apply_animation(entity)
         end
       end)
     end
   end
-end
 
---- Stops the animation that was set with Player#set_animation.
-function player_meta:stop_animation()
-  self:SetCycle(0)
-  self.fl_animation = nil
+  Plugin.add_hooks('FLAnimations', hooks)
 end
 
 --- Plays a gesture on top of the player's regular animations in the custom gesture slot.

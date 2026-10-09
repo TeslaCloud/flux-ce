@@ -27,5 +27,21 @@ Cable.receive('fl_player_created', function(actor)
 end)
 
 Cable.receive('fl_player_set_lang', function(actor, lang)
+  if !isstring(lang) or lang == '' or #lang > 16 then return end
+
+  local old_lang = Flux.Lang:get_player_lang(actor)
+
+  if old_lang == lang then return end
+
   actor:set_nv('language', lang)
+
+  --- Called on the server when the client of a player has reported a new language: the one
+  -- the player picked with `Flux.Lang:set_language`, or else the language of their game.
+  -- Runs after `Flux.Lang:get_player_lang` has started to return the new language. Not
+  -- called for the first report of a player whose language is English, which is what the
+  -- server assumes until then.
+  -- @param actor [Player The player whose language has changed]
+  -- @param new_lang [String New language code]
+  -- @param old_lang [String Previous language code]
+  hook.Run('PlayerLanguageChanged', actor, lang, old_lang)
 end)

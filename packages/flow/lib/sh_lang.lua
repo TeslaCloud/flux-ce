@@ -4,7 +4,8 @@
 -- clients. A phrase is referred to by its path with dots, such as 'ui.hud.bar_text.respawn',
 -- and translated with the global `t` function, which also fills in the `{placeholders}` of the
 -- phrase. Text that is not a known phrase is returned as it is, so `t` can be given text that
--- may or may not be a phrase.
+-- may or may not be a phrase. A phrase that the language has no translation for is taken
+-- from English.
 --
 -- A phrase that depends on a number can have plural forms: instead of a text it is a table
 -- of texts under the keys '1', '2' and '5', and `t` picks the one that fits the number among
@@ -21,7 +22,10 @@
 -- of English, which is also used for languages without a rule of their own, and of Russian;
 -- `Flux.Lang:set_plural_rule` adds others.
 --
--- On the client the current language follows the `gmod_language` setting of the game and is
+-- On the client the current language follows the `gmod_language` setting of the game, unless
+-- the player has picked another one: `Flux.Lang:set_language` overrides it and remembers the
+-- choice in the `fl_language` console variable. `Flux.Lang:get_languages` and
+-- `Flux.Lang:get_language_name` list the languages to pick from. Either way the language is
 -- reported to the server, where `Flux.Lang:get_player_lang` returns it for a player. On the
 -- server `t` translates to English unless it is given a language, so text that depends on the
 -- language of the reader should be built on the client: `Flux.Lang:duration` does that for the
@@ -31,7 +35,7 @@
 
 mod 'Flux::Lang'
 
-local current_language  = 'en'
+local current_language  = Flux.Lang.current or 'en'
 local stored            = Flux.Lang.stored or {}
 Flux.Lang.stored        = stored
 local plural_rules      = Flux.Lang.plural_rules or {}
@@ -117,9 +121,24 @@ do
     end
   end
 
+  --- Looks a phrase up in one language and picks the plural form that fits the arguments.
+  -- @param tabs [List<String> the parts of the phrase ID]
+  -- @param lang [String language code]
+  -- @param args [Map arguments of the phrase]
+  -- @return [String the text of the phrase, nil or false if the language does not have it]
+  local function _translate(tabs, lang, args)
+    local translated = _get_phrase(tabs, stored[lang])
+
+    if istable(translated) then
+      translated = _get_form(translated, lang, _get_count(args))
+    end
+
+    return translated
+  end
+
   --- Translates a phrase to the current language. English is used if the language is not
-  -- available, and the phrase itself is returned if it has no translation. Line breaks
-  -- in the result are replaced with spaces.
+  -- available or does not have the phrase, and the phrase itself is returned if it has no
+  -- translation at all. Line breaks in the result are replaced with spaces.
   -- ```
   -- local text = t'ui.char_create.unknown_error'
   -- -- Replaces {name} in the translated phrase.
@@ -150,10 +169,11 @@ do
       lang = 'en'
     end
 
-    local translated = _get_phrase(phrase:split('.'), stored[lang])
+    local tabs = phrase:split('.')
+    local translated = _translate(tabs, lang, args)
 
-    if istable(translated) then
-      translated = _get_form(translated, lang, _get_count(args))
+    if !translated and lang != 'en' then
+      translated = _translate(tabs, 'en', args)
     end
 
     phrase = translated or phrase
@@ -304,7 +324,8 @@ function Flux.Lang:get_case(language, phrase, case)
   return translated
 end
 
---- Returns the language of a player.
+--- Returns the language of a player: the one their client has reported, which is the
+-- language they picked with `Flux.Lang:set_language` or else the language of their game.
 -- @param target [Player]
 -- @return [String language code, 'en' if the player is not valid or has not sent it yet]
 function Flux.Lang:get_player_lang(target)
@@ -313,45 +334,146 @@ function Flux.Lang:get_player_lang(target)
   return target:get_nv('language', 'en')
 end
 
+--- Returns the language that `t` translates to when it is not given one.
+-- @return [String language code; always 'en' on the server]
+function Flux.Lang:get_language()
+  return current_language
+end
+
+--- Returns the languages that have phrases, for a language picker.
+-- @return [List<String> language codes in alphabetical order]
+function Flux.Lang:get_languages()
+  local languages = {}
+
+  for k, v in pairs(stored) do
+    if istable(v) then
+      table.insert(languages, k)
+    end
+  end
+
+  table.sort(languages)
+
+  return languages
+end
+
+--- Returns the name of a language in that language, such as 'English' or 'Русский'. It is
+-- the `language.name` phrase of the language.
+-- @param lang [String language code]
+-- @return [String the name, or the language code if the language does not have one]
+function Flux.Lang:get_language_name(lang)
+  local lang_table = stored[lang]
+  local names = istable(lang_table) and lang_table.language
+  local name = istable(names) and names.name
+
+  return isstring(name) and name or lang
+end
+
 if CLIENT then
-  --- Translates a phrase to the game's language, in the plural form that fits the amount.
+  local override = CreateClientConVar('fl_language', '', true, false,
+    'Language of the Flux interface. Leave empty to use the language of the game.')
+
+  --- Returns the language the local player has picked instead of the language of the game.
   -- Clientside only.
+  -- @return [String language code, nil if the player follows the language of the game]
+  function Flux.Lang:get_language_override()
+    local lang = override:GetString()
+
+    if lang != '' then
+      return lang
+    end
+  end
+
+  --- Returns the language the client should use: the one the player has picked, if it has
+  -- phrases, and the `gmod_language` setting of the game otherwise. Clientside only.
+  -- @return [String language code]
+  function Flux.Lang:get_preferred_language()
+    local lang = override:GetString()
+
+    if lang != '' and stored[lang] then
+      return lang
+    end
+
+    return GetConVar('gmod_language'):GetString()
+  end
+
+  --- Switches the current language of the client. Tells the server the new language of the
+  -- local player, once the local player exists, and runs the `LanguageChanged` hook.
+  -- @param new_lang [String language code]
+  local function apply_language(new_lang)
+    local old_lang = current_language
+
+    if old_lang == new_lang then return end
+
+    current_language = new_lang
+    Flux.Lang.current = new_lang
+
+    if IsValid(LocalPlayer()) then
+      Cable.send('fl_player_set_lang', new_lang)
+    end
+
+    --- Called on the client when the language that `t` translates to has changed, because
+    -- the player picked another one with `Flux.Lang:set_language` or changed the language
+    -- of the game. Interface elements that keep translated text can rebuild it here.
+    -- @param new_lang [String New language code]
+    -- @param old_lang [String Previous language code]
+    hook.Run('LanguageChanged', new_lang, old_lang)
+  end
+
+  --- Sets the language of the local player, instead of following the `gmod_language`
+  -- setting of the game. The choice is kept in the `fl_language` console variable, which
+  -- the game saves, takes effect right away and is reported to the server, so that
+  -- `Flux.Lang:get_player_lang` returns it there. Clientside only.
+  -- ```
+  -- Flux.Lang:set_language('ru')
+  -- -- Back to the language of the game.
+  -- Flux.Lang:set_language(nil)
+  -- ```
+  -- @param lang=nil [String language code, one of Flux.Lang#get_languages; nil or an empty
+  --   string to follow the language of the game again]
+  -- @return [Boolean false if there are no phrases for the language, in which case nothing
+  --   changes]
+  function Flux.Lang:set_language(lang)
+    lang = lang or ''
+
+    if !isstring(lang) or (lang != '' and !stored[lang]) then return false end
+
+    override:SetString(lang)
+
+    apply_language(lang != '' and lang or GetConVar('gmod_language'):GetString())
+
+    return true
+  end
+
+  --- Translates a phrase to the current language of the client, in the plural form that
+  -- fits the amount. Clientside only.
   -- @param phrase [String phrase ID]
   -- @param count [Number amount of things]
   -- @return [String]
   -- @see [Flux.Lang#get_plural]
   function Flux.Lang:pluralize(phrase, count)
-    local lang = GetConVar('gmod_language'):GetString()
-
-    if lang then
-      return self:get_plural(lang, phrase, count)
-    end
+    return self:get_plural(current_language, phrase, count)
   end
 
-  --- Translates a phrase and puts it in a grammatical case using the rules of the game's
-  -- language. Clientside only.
+  --- Translates a phrase and puts it in a grammatical case using the rules of the current
+  -- language of the client. Clientside only.
   -- @param phrase [String phrase ID]
   -- @param case [String grammatical case]
   -- @return [String]
   -- @see [Flux.Lang#get_case]
   function Flux.Lang:case(phrase, case)
-    local lang = GetConVar('gmod_language'):GetString()
-
-    if lang then
-      return self:get_case(lang, phrase, case)
-    end
+    return self:get_case(current_language, phrase, case)
   end
 
-  --- Follows the `gmod_language` setting of the game: when it changes, switches the current
-  -- language of the client and tells the server the new language of the local player.
+  if !Flux.Lang.current then
+    current_language = Flux.Lang:get_preferred_language()
+    Flux.Lang.current = current_language
+  end
+
+  --- Follows the language the player has picked and the `gmod_language` setting of the
+  -- game: when the preferred language changes, switches the current language of the client
+  -- and tells the server the new language of the local player.
   hook.Add('LazyTick', 'LanguageChecker', function()
-    local new_lang = GetConVar('gmod_language'):GetString()
-
-    if current_language != new_lang then
-      current_language = new_lang
-
-      Cable.send('fl_player_set_lang', new_lang)
-    end
+    apply_language(Flux.Lang:get_preferred_language())
   end)
 else
   Pipeline.register('language', function(id, file_name, pipe)

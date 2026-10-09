@@ -3,8 +3,9 @@
 -- `Player:SetModel` announces model changes with the `PlayerModelChanged` hook, and the
 -- permission checks (`Player:can`, `Player:is_root`) are answered by hooks that an admin
 -- plugin implements. The rest covers the initialization state, the networked data table,
--- client-side notifications, freezing, and actions: every player has one current action,
--- registered with `Flux.register_action`, which the gamemode runs on each `PlayerThink`.
+-- client-side notifications and sounds, freezing, and actions: every player has one current
+-- action, registered with `Flux.register_action`, which the gamemode runs on each
+-- `PlayerThink`; `Flux.TimedAction` builds actions that take time on top of it.
 -- The server-only half adds saving and restoring of the player's database record.
 
 local player_meta = FindMetaTable('Player')
@@ -119,6 +120,72 @@ if CLIENT then
     Flux.Notification:add(message, 8, color:darken(50))
 
     chat.AddText(color, message)
+  end
+
+  local looping_sounds = {}
+
+  --- Plays a sound once for the local player, at full volume and without a position.
+  -- Clientside variant: does nothing when called on another player.
+  -- @param path [String path of the sound file, relative to the sound/ folder]
+  function player_meta:play_sound(path)
+    if self != LocalPlayer() or !isstring(path) then return end
+
+    surface.PlaySound(path)
+  end
+
+  --- Starts a named looping sound for the local player. Starting another sound under a name
+  -- that is in use replaces the old one, and starting the same sound again while it plays
+  -- does nothing. Clientside variant: does nothing when called on another player.
+  -- @param id [String name to stop the sound by]
+  -- @param path [String path of a looping sound file, relative to the sound/ folder]
+  -- @param volume=0.75 [Number volume from 0 to 1]
+  function player_meta:start_sound(id, path, volume)
+    if self != LocalPlayer() or id == nil or !isstring(path) then return end
+
+    local current = looping_sounds[id]
+
+    if current then
+      if current.path == path and current.patch:IsPlaying() then return end
+
+      current.patch:Stop()
+    end
+
+    local patch = CreateSound(self, path)
+
+    patch:PlayEx(math.Clamp(tonumber(volume) or 0.75, 0, 1), 100)
+
+    looping_sounds[id] = { path = path, patch = patch }
+  end
+
+  --- Stops a sound that was started with Player#start_sound. Clientside variant: does
+  -- nothing when called on another player.
+  -- @param id [String name the sound was started under]
+  -- @param fade_out=0 [Number seconds over which the sound fades out; 0 cuts it off]
+  function player_meta:stop_sound(id, fade_out)
+    if self != LocalPlayer() or id == nil then return end
+
+    local current = looping_sounds[id]
+
+    if !current then return end
+
+    local patch = current.patch
+
+    looping_sounds[id] = nil
+    fade_out = tonumber(fade_out) or 0
+
+    if fade_out > 0 then
+      patch:FadeOut(fade_out)
+
+      timer.Simple(fade_out + 0.1, function()
+        local restarted = looping_sounds[id]
+
+        if !restarted or restarted.path != current.path then
+          patch:Stop()
+        end
+      end)
+    else
+      patch:Stop()
+    end
   end
 end
 

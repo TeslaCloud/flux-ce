@@ -1,11 +1,30 @@
 --- Server side of the `Player` extensions: restoring and saving the database record of a
--- player (`User`), writing their networked data table and initialization state, sending
--- notifications, and helpers for ammo, weapons and moving a stuck player to a free spot.
+-- player (`User`), writing their data table and initialization state, sending
+-- notifications and sounds, and helpers for ammo, weapons and moving a stuck player to a
+-- free spot.
+--
+-- The data table of a player (`Player:set_player_data`, `Player:get_player_data`) is
+-- networked to the clients and persistent: it is kept serialized in the `data` column of
+-- the player's `User` record, loaded when the record is restored and saved with it.
 
 local player_meta = FindMetaTable('Player')
 
---- Saves the database record of the player. Does nothing for bots. Can be prevented by returning
--- true from the 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook afterward.
+--- Reads the persistent data table out of the database record of a player.
+-- @param record [User the database record]
+-- @return [Map the stored data, an empty table if there is none or it cannot be read]
+local function read_record_data(record)
+  local raw = record.data
+
+  if !isstring(raw) or raw == '' then return {} end
+
+  local data = table.deserialize(raw)
+
+  return istable(data) and data or {}
+end
+
+--- Saves the database record of the player, together with their data table. Does nothing for
+-- bots. Can be prevented by returning true from the 'PreSavePlayerData' hook. Runs the
+-- 'PostSavePlayerData' hook afterward.
 function player_meta:save_player()
   if self:IsBot() then return end
 
@@ -17,6 +36,7 @@ function player_meta:save_player()
   if hook.Run('PreSavePlayerData', self) == true then return end
 
   if self.record then
+    self.record.data = table.serialize(self:get_data())
     self.record:save()
   end
 
@@ -26,15 +46,28 @@ function player_meta:save_player()
   hook.Run('PostSavePlayerData', self)
 end
 
---- Replaces the networked data table of the player.
--- @param data={} [Map]
+--- Replaces the data table of the player. The table is networked to the clients and written
+-- to the database record of the player, which stores it the next time the record is saved.
+-- @param data={} [Map values that `table.serialize` can store]
 function player_meta:set_data(data)
-  self:set_nv('fl_data', data or {})
+  data = data or {}
+
+  self:set_nv('fl_data', data)
+
+  if self.record then
+    self.record.data = table.serialize(data)
+  end
 end
 
---- Sets a value in the networked data table of the player.
+--- Sets a value in the data table of the player. The value is networked to the clients and
+-- persistent: it is saved with the database record of the player (when they disconnect,
+-- when their character is saved and when the server shuts down) and is there again the
+-- next time they join. Keep the values to what `table.serialize` can store.
+-- ```
+-- target:set_player_data('tutorial_seen', true)
+-- ```
 -- @param key [String]
--- @param value [Any]
+-- @param value [Any nil removes the value]
 function player_meta:set_player_data(key, value)
   local data = self:get_data()
 
@@ -43,7 +76,8 @@ function player_meta:set_player_data(key, value)
   self:set_data(data)
 end
 
---- Returns a value from the networked data table of the player.
+--- Returns a value from the data table of the player. Values that were saved during an
+-- earlier session are available once the `PlayerRestored` hook has run for the player.
 -- @param key [String]
 -- @param default=nil [Any returned if the value is not set or is false]
 -- @return [Any]
@@ -74,6 +108,31 @@ function player_meta:notify_admin(message, arguments)
   Flux.Player:notify(self, message, arguments, Color(255, 128, 128))
 end
 
+--- Plays a sound once on the client of the player, at full volume and without a position.
+-- Serverside variant.
+-- @param path [String path of the sound file, relative to the sound/ folder]
+-- @see [Flux.Player#play_sound]
+function player_meta:play_sound(path)
+  Flux.Player:play_sound(self, path)
+end
+
+--- Starts a named looping sound on the client of the player. Serverside variant.
+-- @param id [String name to stop the sound by]
+-- @param path [String path of a looping sound file, relative to the sound/ folder]
+-- @param volume=0.75 [Number volume from 0 to 1]
+-- @see [Flux.Player#start_sound]
+function player_meta:start_sound(id, path, volume)
+  Flux.Player:start_sound(self, id, path, volume)
+end
+
+--- Stops a named sound on the client of the player. Serverside variant.
+-- @param id [String name the sound was started under]
+-- @param fade_out=0 [Number seconds over which the sound fades out]
+-- @see [Flux.Player#stop_sound]
+function player_meta:stop_sound(id, fade_out)
+  Flux.Player:stop_sound(self, id, fade_out)
+end
+
 --- Returns the ammo the player has.
 -- @return [Map amounts of ammo by ammo type ID, only for the types the player has]
 function player_meta:get_ammo_table()
@@ -92,8 +151,10 @@ end
 
 --- Loads the database record of the player by their SteamID, creating and saving a new one
 -- if they have joined for the first time. The query is asynchronous: the record is put
--- into self.record and the 'PlayerRestored' hook is run once it has loaded. Bots get
--- a blank record that is never saved here.
+-- into self.record, the saved data table of the player is loaded from it (values set
+-- during this session before the record arrived are kept) and the 'PlayerRestored' hook
+-- is run once it has loaded. Nothing happens if the player has left by then. Bots get a
+-- blank record that is never saved here.
 function player_meta:restore_player()
   if self:IsBot() then
     self.record = User.new()
@@ -101,8 +162,17 @@ function player_meta:restore_player()
   end
 
   User:where('steam_id', self:SteamID()):expect(function(obj)
+    if !IsValid(self) then return end
+
+    local data = read_record_data(obj)
+
+    for k, v in pairs(self:get_data()) do
+      data[k] = v
+    end
+
     obj.player = self
     self.record = obj
+    self:set_data(data)
 
     --- Called on the server once the database record of a player who has just joined is
     -- available as `actor.record`. For a player who joins for the first time it runs after
@@ -112,6 +182,8 @@ function player_meta:restore_player()
     -- @param record [User The database record of the player]
     hook.Run('PlayerRestored', self, obj)
   end):rescue(function(obj)
+    if !IsValid(self) then return end
+
     ServerLog(self:name()..' has joined for the first time!')
 
     obj.player = self
@@ -119,6 +191,7 @@ function player_meta:restore_player()
     obj.name = self:name()
     obj.role = 'user'
     self.record = obj
+    self:set_data(self:get_data())
 
     --- Called on the server when a player joins for the first time, after their new database
     -- record has been given the SteamID, the name and the `user` role and right before it
