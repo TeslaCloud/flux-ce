@@ -1,0 +1,40 @@
+ru:
+  command:
+    setclass:
+      description: "Установить класс персонажа в его фракции. Классы: {classes}"
+      syntax: "<игрок> <класс> [строгий режим поиска]"
+      message: "{player} меняет класс {target} на {class}."
+  config:
+    classes:
+      title: Классы
+      desc: Настройки классов и зарплат.
+      class_change_cooldown:
+        name: Задержка смены класса
+        desc: Сколько секунд игрок должен подождать, прежде чем снова сменить класс. Установите 0, чтобы отключить.
+      wages_interval:
+        name: Интервал выплаты зарплат
+        desc: Как часто игрокам выплачивается зарплата их класса, в секундах. Установите 0, чтобы отключить зарплаты.
+  error:
+    class:
+      invalid: "'{class}' не является классом!"
+      wrong_faction: "Класс {class} не относится к фракции персонажа."
+      already: Вы уже состоите в этом классе.
+      not_selectable: Вы не можете выбрать этот класс самостоятельно.
+      cooldown: "До следующей смены класса: {time}."
+      full: В этом классе нет свободных мест.
+      not_allowed: Вы не можете перейти в этот класс.
+      not_selected: Класс персонажа недействителен.
+  notification:
+    class_changed: Ваш класс был изменен на {class}.
+    class_joined: Вы сменили класс на {class}.
+    wage: "Вы получили зарплату: {currency} x {value}."
+  ui:
+    classes:
+      title: Классы
+      join: Перейти
+      current: Текущий класс
+      players: "Игроки: {count}"
+      players_limited: "Игроки: {count}/{limit}"
+      wage: "Зарплата: {value} {currency}"
+    tab_menu:
+      classes: Классы

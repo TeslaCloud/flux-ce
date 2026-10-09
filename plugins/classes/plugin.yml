@@ -1,0 +1,6 @@
+name: Classes System
+description: Adds classes that a character can hold within their faction, and wages paid by class.
+author: TeslaCloud Studios
+depends:
+  - characters
+  - factions
