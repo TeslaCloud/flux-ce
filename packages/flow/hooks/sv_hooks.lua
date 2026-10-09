@@ -590,11 +590,6 @@ function GM:OneSecond()
   end
 end
 
---- Loads the list of disabled plugins into Flux.shared before the plugins are loaded.
-function GM:PreLoadPlugins()
-  Flux.shared.disabled_plugins = Data.load('disabled_plugins', {})
-end
-
 do
   local function purge_client_files()
     if file.Exists('lua/_flux/client', 'GAME') then

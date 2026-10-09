@@ -13,6 +13,16 @@
 # gamemodes/<your_schema>/schema/config/config.yml
 # !!!!
 #
+# Besides the fields used below, a config can be marked with:
+#   hidden: true          - the value is never sent to clients.
+#   static: true          - cannot be changed in game, the value comes from
+#                           the files only.
+#   private: true         - the value is only sent to the players who are
+#                           allowed to edit the configuration, and is masked
+#                           when a change is announced.
+#   needs_restart: true   - a change made in game is stored and takes effect
+#                           the next time the server starts.
+#
 categories:
   general:
     name: config.general.title
@@ -85,4 +95,5 @@ configs:
     description: config.general.root_steamid.desc
     category: general
     type: table
+    static: true
     default_value: ["STEAM_0:0:000000000"]

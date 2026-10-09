@@ -39,6 +39,18 @@ en:
       player_invalid: "'{player}' is not a valid player!"
       syntax: "Incorrect syntax, use /{command} {syntax}"
       you_must_enter_command: You must enter a command!
+    config:
+      unknown: There is no such config!
+      static: This config cannot be changed in game!
+      invalid_value: This is not a valid value for this config!
+      not_a_number: The value of this config has to be a number!
+      not_a_boolean: "The value of this config has to be either 'true' or 'false'!"
+      not_a_string: The value of this config has to be a line of text!
+      not_a_table: The value of this config has to be a list!
+      no_default: This config has no default value!
+    plugin:
+      unknown: There is no such plugin!
+      required: "This plugin cannot be disabled, it is required by: {plugins}"
     invalid_time: "'{time}' could not be interpreted as time!"
     invalid_value: "You specified an invalid argument value!"
     invalid_amount: You specified an invalid amount!
