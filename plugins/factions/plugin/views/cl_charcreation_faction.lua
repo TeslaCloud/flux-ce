@@ -76,8 +76,9 @@ function PANEL:on_close(parent)
   })
 end
 
---- Checks that a faction is selected and that the local player is whitelisted for it when
--- the faction requires a whitelist.
+--- Checks that a faction is selected, that the local player is whitelisted for it when the
+-- faction requires a whitelist, and that they do not have as many characters of the faction
+-- as it allows.
 -- @return [Boolean false when invalid, String translated error; nothing when valid]
 function PANEL:on_validate()
   if self.faction_id == '' then
@@ -88,6 +89,10 @@ function PANEL:on_validate()
 
   if faction.whitelisted and !PLAYER:has_whitelist(self.faction_id) then
     return false, t'ui.char_create.no_whitelist'
+  end
+
+  if Factions.character_limit_reached(PLAYER, self.faction_id) then
+    return false, t'ui.char_create.faction_limit'
   end
 end
 

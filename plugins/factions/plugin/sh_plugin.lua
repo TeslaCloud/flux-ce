@@ -6,17 +6,41 @@
 -- generates character names from the name template of the faction, groups the scoreboard by
 -- faction, and adds commands that change factions, ranks and whitelists.
 --
+-- A faction can also limit how many of its members, or holders of one of its ranks, may be
+-- online at once, which is checked when a character is loaded, and how many characters one
+-- player may have in it, which is checked when a character is created. Its members spawn
+-- with the weapons, the maximum health and the maximum armor that the faction and their rank
+-- set, wear the model of their rank if it has one, and are liked, feared or hated by the NPC
+-- classes that the faction names. A rank can let its holders promote and demote other
+-- members with the PromoteRank and DemoteRank commands, which staff with the 'manage_ranks'
+-- permission may use on anyone.
+--
 -- The `Factions` functions register and look up factions, and the `Player` extensions read and
 -- change the faction, rank and whitelists of a player. The `OnPlayerFactionChanged` and
--- `OnRankChanged` hooks report changes, and `ShouldNameGenerate` can stop a name from being
--- generated. The 'faction' and 'rank' conditions are registered for the Conditions plugin.
+-- `OnRankChanged` hooks report changes, `ShouldNameGenerate` can stop a name from being
+-- generated, `GetFactionLimit` and `PlayerCanBypassFactionLimit` adjust the limits, and
+-- `PlayerCanTransferFaction` can refuse a transfer by the SetFaction command. The 'faction'
+-- and 'rank' conditions are registered for the Conditions plugin.
 
 PLUGIN:set_global('Factions')
 
 Plugin.add_extra('factions')
 
+require_relative 'sh_enums'
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'
+
+--- Registers the 'manage_ranks' permission, which lets staff promote and demote any member
+-- of any faction, whatever their own rank.
+function Factions:RegisterPermissions()
+  Bolt:register_permission(
+    'manage_ranks',
+    'Manage faction ranks',
+    'Grants access to promote and demote any character, regardless of the ranks.',
+    'permission.categories.character_management',
+    'assistant'
+  )
+end
 
 --- Includes a plugin's factions folder when the 'factions' extra is being loaded.
 -- @param extra [String name of the extra being loaded]
@@ -83,11 +107,13 @@ function Factions:RegisterConditions()
       local rank_name = ''
 
       if panel.data.faction_id then
-        local _faction = faction.find_by_id(panel.data.faction_id)
+        local _faction = self.find_by_id(panel.data.faction_id)
         faction_name = _faction:get_name()
 
-        if panel.data.rank then
-          rank_name = _faction:get_rank(panel.data.rank).id
+        local rank_table = select(2, _faction:find_rank(panel.data.rank))
+
+        if rank_table then
+          rank_name = rank_table.id
         end
       end
 
@@ -98,7 +124,13 @@ function Factions:RegisterConditions()
       if !data.operator or !data.rank or !data.faction_id then return false end
       if target:get_faction_id() != data.faction_id then return false end
 
-      return util.process_operator(data.operator, target:get_rank(), data.rank)
+      local rank_table = target:get_rank_table()
+      local faction_table = self.find_by_id(data.faction_id)
+      local rank = faction_table and faction_table:find_rank(data.rank)
+
+      if !rank_table or !rank then return false end
+
+      return util.process_operator(data.operator, target:get_rank(), rank)
     end,
     set_parameters = function(id, data, panel, menu, parent)
       parent:create_selector(data.name, 'condition.faction.message', 'condition.factions', self.all(),

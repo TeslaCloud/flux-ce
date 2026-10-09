@@ -39,6 +39,14 @@ ru:
     faction:
       invalid: "'{faction}' не является фракцией!"
       not_selected: Вы не выбрали фракцию.
+      full: Во фракции {faction} сейчас нет свободных мест.
+      rank_full: Все места ранга {rank} во фракции этого персонажа сейчас заняты.
+      creation_refused: Эта фракция не принимает такого персонажа.
+      transfer_refused: "{target} нельзя перевести во фракцию {faction}."
+      no_character: "У {target} нет персонажа."
+    rank:
+      cannot_promote: Вы не можете повысить никого из этих игроков.
+      cannot_demote: Вы не можете понизить никого из этих игроков.
   notification:
     demote_rank: Вы были понижены до ранга {rank}.
     promote_rank: Вы были повышены до ранга {rank}.
@@ -51,3 +59,4 @@ ru:
       faction: Фракция
       no_whitelist: У Вас нет доступа к этой фракции.
       no_faction: Вы не выбрали фракцию.
+      faction_limit: У Вас не может быть больше персонажей в этой фракции.

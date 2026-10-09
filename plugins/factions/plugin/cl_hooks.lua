@@ -1,5 +1,6 @@
 --- Client side of the Factions plugin: adds the faction stage to character creation, adapts
--- the general stage to the chosen faction and groups the scoreboard by faction.
+-- the general stage to the chosen faction, explains why the server has refused a character
+-- because of its faction, and groups the scoreboard by faction.
 
 --- Hides the gender, description and name controls of the 'ui.char_create.general' stage
 -- when the chosen faction does not have them. Factions without gender get the 'universal' one.
@@ -181,12 +182,28 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   return true
 end
 
---- Supplies the error text shown when character creation fails for lack of a faction.
+--- Supplies the error text shown when character creation fails because of the faction: no
+-- faction was chosen, the player has too many characters of it, or the faction has refused
+-- the character, in which case the reason the server has sent is shown if there is one.
 -- @param success [Boolean]
 -- @param status [Number CHAR_* status code sent by the server]
--- @return [String translated error for CHAR_ERR_FACTION, otherwise nil]
+-- @return [String translated error for the CHAR_ERR_FACTION codes, otherwise nil]
 function Factions:GetCharCreationErrorText(success, status)
+  local refusal = self.creation_refusal
+
+  self.creation_refusal = nil
+
   if status == CHAR_ERR_FACTION then
     return t'error.faction.not_selected'
+  elseif status == CHAR_ERR_FACTION_LIMIT then
+    return t'ui.char_create.faction_limit'
+  elseif status == CHAR_ERR_FACTION_REFUSED then
+    return refusal or t'error.faction.creation_refused'
   end
 end
+
+Cable.receive('fl_faction_creation_refused', function(reason, arguments)
+  if isstring(reason) then
+    Factions.creation_refusal = t(reason, arguments)
+  end
+end)
