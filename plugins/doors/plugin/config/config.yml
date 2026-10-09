@@ -1,0 +1,45 @@
+categories:
+  doors:
+    name: config.doors.title
+    description: config.doors.desc
+configs:
+  door_price:
+    name: config.doors.price.name
+    description: config.doors.price.desc
+    category: doors
+    type: number
+    min_value: 0
+    max_value: 1000000
+    default_value: 50
+  door_sell_share:
+    name: config.doors.sell_share.name
+    description: config.doors.sell_share.desc
+    category: doors
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 50
+  door_limit:
+    name: config.doors.limit.name
+    description: config.doors.limit.desc
+    category: doors
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 5
+  door_lock_time:
+    name: config.doors.lock_time.name
+    description: config.doors.lock_time.desc
+    category: doors
+    type: number
+    min_value: 0
+    max_value: 60
+    default_value: 0
+  door_unlock_time:
+    name: config.doors.unlock_time.name
+    description: config.doors.unlock_time.desc
+    category: doors
+    type: number
+    min_value: 0
+    max_value: 60
+    default_value: 0

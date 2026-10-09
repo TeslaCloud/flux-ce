@@ -1,5 +1,5 @@
 --- Registers the door properties that come with the Doors plugin ('name', 'title_type',
--- 'skin', 'bodygroups' and 'locked') and the 'center' title type.
+-- 'skin', 'bodygroups', 'locked', 'ownable' and 'price') and the 'center' title type.
 
 Doors:register_property('name', {
   --- Returns the name of the door.
@@ -121,35 +121,118 @@ Doors:register_property('locked', {
   end
 })
 
+Doors:register_property('ownable', {
+  --- Returns whether the door can be owned.
+  -- @param entity [Entity the door]
+  -- @return [Boolean]
+  get_save_data = function(entity)
+    return entity:get_nv('fl_door_ownable', false)
+  end,
+  --- Makes the door, and the doors linked with it, ownable or not. The owner of a door that
+  -- stops being ownable loses it. Serverside only.
+  -- @param entity [Entity the door]
+  -- @param data [Boolean true to let characters own the door; other values are converted
+  --   with tobool]
+  on_load = function(entity, data)
+    Doors:set_ownable(entity, tobool(data))
+  end,
+  --- Creates the checkbox row that makes the door ownable in the door menu.
+  -- @param entity [Entity the door]
+  -- @param panel [Panel the fl_door_menu panel]
+  -- @return [Panel the created property row]
+  create_panel = function(entity, panel)
+    local ownable = panel.properties:CreateRow(t'door.categories.ownership', t'door.properties.ownable')
+    ownable:Setup('Boolean')
+
+    return ownable
+  end
+})
+
+Doors:register_property('price', {
+  --- Returns the price that staff have set for the door.
+  -- @param entity [Entity the door]
+  -- @return [Number the price; if the door has none, an empty string on the client and nil
+  --   on the server]
+  get_save_data = function(entity)
+    if CLIENT then
+      return entity:get_nv('fl_door_price', '')
+    else
+      return entity:get_nv('fl_door_price')
+    end
+  end,
+  --- Sets the price of the door and of the doors linked with it. Serverside only.
+  -- @param entity [Entity the door]
+  -- @param data [Number/String the price; anything that is not a number makes the door
+  --   cost what the door_price config says]
+  on_load = function(entity, data)
+    Doors:set_price(entity, tonumber(data))
+  end,
+  --- Creates the text row for the price of the door in the door menu.
+  -- @param entity [Entity the door]
+  -- @param panel [Panel the fl_door_menu panel]
+  -- @return [Panel the created property row]
+  create_panel = function(entity, panel)
+    local price = panel.properties:CreateRow(t'door.categories.ownership', t'door.properties.price')
+    price:Setup('Generic')
+
+    return price
+  end
+})
+
 Doors:register_title_type('center', {
   name = 'door.title_type.center',
   --- Draws the name of the door on a background box with white bars above and below it,
-  -- a quarter of the door's height away from the center of the door.
+  -- a quarter of the door's height away from the center of the door, and the status of the
+  -- door (see `Doors:get_status_text`) in a smaller font below it. A door without a name
+  -- only gets its status drawn, and nothing is drawn if it has no status either.
   -- @param entity [Entity the door]
   -- @param w [Number width of the door face in drawing units]
   -- @param h [Number height of the door face in drawing units]
   -- @param alpha [Number opacity that fades with distance, up to 255]
   draw = function(entity, w, h, alpha)
-    local text = entity:get_nv('fl_name')
+    local text = entity:get_nv('fl_name', '')
+    local status = Doors:get_status_text(entity)
     local font = Theme.get_font('text_3d2d')
     local text_w, text_h = util.text_size(text, font)
     local box_x, box_y = -text_w * 0.55, -h / 4 - text_h * 0.55
     local box_w, box_h = text_w * 1.1, text_h * 1.1
+    local status_y = -h / 4
 
-    draw.RoundedBox(0, box_x, box_y, box_w, box_h, Theme.get_color('background'):alpha(alpha))
-    draw.RoundedBox(2, box_x - 4, box_y, box_w + 8, 4, color_white:alpha(alpha))
-    draw.RoundedBox(2, box_x - 4, box_y + box_h, box_w + 8, 4, color_white:alpha(alpha))
+    if text != '' then
+      draw.RoundedBox(0, box_x, box_y, box_w, box_h, Theme.get_color('background'):alpha(alpha))
+      draw.RoundedBox(2, box_x - 4, box_y, box_w + 8, 4, color_white:alpha(alpha))
+      draw.RoundedBox(2, box_x - 4, box_y + box_h, box_w + 8, 4, color_white:alpha(alpha))
 
-    draw.SimpleTextOutlined(
-      text,
-      font,
-      -text_w / 2,
-      -h / 4 - text_h / 2,
-      color_white:alpha(alpha),
-      nil,
-      nil,
-      1,
-      Color(0, 0, 0, alpha)
-    )
+      draw.SimpleTextOutlined(
+        text,
+        font,
+        -text_w / 2,
+        -h / 4 - text_h / 2,
+        color_white:alpha(alpha),
+        nil,
+        nil,
+        1,
+        Color(0, 0, 0, alpha)
+      )
+
+      status_y = box_y + box_h + 16
+    end
+
+    if status then
+      local status_font = font and Font.size(font, 128) or font
+      local status_w, status_h = util.text_size(status, status_font)
+
+      draw.SimpleTextOutlined(
+        status,
+        status_font,
+        -status_w / 2,
+        status_y,
+        color_white:alpha(alpha),
+        nil,
+        nil,
+        1,
+        Color(0, 0, 0, alpha)
+      )
+    end
   end
 })

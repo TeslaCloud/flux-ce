@@ -1,19 +1,127 @@
 en:
+  config:
+    doors:
+      title: Doors
+      desc: Door ownership and locking settings.
+      price:
+        name: Door Price
+        desc: What an ownable door costs unless staff have given it a price of its own. Set to 0 to make doors free.
+      sell_share:
+        name: Door Sell Share
+        desc: The percentage of the price paid for a door that its owner gets back for selling it.
+      limit:
+        name: Door Limit
+        desc: How many doors a character can own, with linked doors counted as one. Set to 0 to disable the limit.
+      lock_time:
+        name: Door Lock Time
+        desc: How many seconds it takes to lock a door. Set to 0 to lock doors at once.
+      unlock_time:
+        name: Door Unlock Time
+        desc: How many seconds it takes to unlock a door. Set to 0 to unlock doors at once.
   door:
     categories:
       general: General
+      ownership: Ownership
     properties:
       name: Name
       title_type:
         name: Title Type
         select: Select...
       locked: Locked
+      ownable: Can Be Owned
+      price: Price (empty for the default)
     title_type:
       none: "Disabled"
       center: "Centered"
+  error:
+    door:
+      not_a_door: This is not a door!
+      too_far: You are too far away from the door!
+      not_ownable: This door cannot be owned!
+      already_owned: This door already has an owner!
+      not_owned: Nobody owns this door!
+      not_owner: You do not own this door!
+      no_access: You are not allowed to manage this door!
+      owner_only: Only the owner of the door can do that!
+      limit: "You cannot own more doors, the limit is {limit}!"
+      cant_afford: "You cannot afford this door, it costs {value} {currency}!"
+      cannot_buy: You cannot buy this door!
+      cannot_sell: You cannot sell this door!
+      cannot_change_access: You cannot change the access to this door!
+      invalid_character: This character cannot be given or denied access!
+      invalid_text: This text cannot be put on a door!
+      access_full: Too many characters have access to this door already!
+      already_linked: These doors are linked already!
+      not_linked: This door is not linked to any other!
+      link_owned: A door that has an owner cannot be linked. Unlink it or evict the owner first!
+  notification:
+    door:
+      bought: "You have bought the door for {value} {currency}."
+      taken: The door is yours now.
+      sold: "You have sold the door for {value} {currency}."
+      abandoned: You no longer own the door.
+      evicted: You have lost the ownership of a door.
+      evict_done: The owner of the door has been evicted.
+      text_set: The text on the door has been changed.
+      access:
+        use: "{name} can now lock and unlock the door."
+        manage: "{name} can now manage the door."
+        none: "{name} no longer has access to the door."
+      access_received:
+        use: You have been allowed to lock and unlock a door.
+        manage: You have been allowed to manage a door.
+        none: Your access to a door has been taken away.
+      link_picked: Main door picked. Left click the doors to link to it.
+      linked: "The door has been linked. Doors in the group: {count}."
+      unlinked: The door has been unlinked.
+      link_cleared: The picked door has been forgotten.
+  tool:
+    door_link:
+      name: Door Link
+      desc: Link doors into groups that are owned together.
+      "0": "Left Click: Pick the main door, then link doors to it. Right Click: Unlink. Reload: Forget the picked door."
   ui:
     door:
       title: Doors
       unlock: Unlock
       lock: Lock
       settings: Settings
+      price: "{value} {currency}"
+      buy: "Buy ({price})"
+      buy_message: "Do you want to buy this door for {price}?"
+      take: Take Ownership
+      take_message: Do you want to become the owner of this door?
+      manage: Manage
+      evict: "Evict Owner ({name})"
+      evict_message: Do you want to take this door away from its owner? Nothing will be refunded.
+      status:
+        for_sale: "For sale: {price}"
+        free: Available
+        owned: Owned
+      access:
+        none: No access
+        use: Lock and unlock
+        manage: Lock, unlock and manage
+        give_use: Allow to lock and unlock
+        give_manage: Allow to manage
+        take: Take access away
+      management:
+        title: Door Management
+        you_own: You own this door.
+        owner: "Owner: {name}"
+        group: This door is linked with others. Everything here applies to all of them.
+        text: Text on the door
+        save: Set Text
+        character: Character
+        access: Access
+        away: "{name} (away)"
+        hint: Right-click or double-click a character to change their access.
+        sell: "Sell ({price})"
+        abandon: Give Up the Door
+        sell_title: Sell Door
+        sell_message: "Do you want to sell this door for {price}?"
+        abandon_message: Do you want to give this door up? You will get nothing for it.
+    hud:
+      bar_text:
+        lock_door: LOCKING THE DOOR...
+        unlock_door: UNLOCKING THE DOOR...

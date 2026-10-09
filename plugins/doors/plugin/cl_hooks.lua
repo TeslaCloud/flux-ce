@@ -1,7 +1,9 @@
 --- Client-side hooks of the Doors plugin: draws the titles of doors in the world.
 
 --- Draws the titles of the doors within 256 units of the camera on both sides
--- of the door, using the title type that is set on each door.
+-- of the door, using the title type that is set on each door. A door that is ownable or
+-- owned and has never been given a title type is drawn with `Doors.default_title_type`, so
+-- that its status shows; choosing the disabled title type for it turns that off.
 -- @param depth [Boolean whether the depth pass is being drawn]
 -- @param skybox [Boolean whether the skybox is being drawn]
 function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
@@ -12,6 +14,11 @@ function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
   for k, v in ipairs(ents.FindInSphere(eye_pos, 256)) do
     if IsValid(v) and v:is_door() then
       local title = v:get_nv('fl_title_type')
+
+      if title == nil and (Doors:is_ownable(v) or Doors:is_owned(v)) then
+        title = Doors.default_title_type
+      end
+
       local title_data = Doors.title_types[title]
 
       if !title or title == '' or !title_data or !title_data.draw then
