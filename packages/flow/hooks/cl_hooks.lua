@@ -121,33 +121,28 @@ function GM:OnResolutionChanged(new_w, new_h, old_w, old_h)
   Font.create_fonts()
 end
 
---- Opens the tab menu in place of the default scoreboard, closing the previous one first,
--- unless the ShouldScoreboardShow hook returns false.
+--- Opens the tab menu in place of the default scoreboard, unless the ShouldScoreboardShow
+-- hook returns false, and notes when the key was pressed.
 function GM:ScoreboardShow()
-  --- Asks whether the tab menu may open. Called on the client when the scoreboard key is
-  -- pressed.
-  -- @return [Boolean Return false to keep the tab menu from opening]
-  if hook.Run('ShouldScoreboardShow') != false then
-    if Flux.tab_menu and Flux.tab_menu.close_menu then
-      Flux.tab_menu:close_menu()
-    end
+  local menu = Flux.TabMenu:open()
 
-    Flux.tab_menu = Theme.create_panel('tab_menu', nil, 'fl_tab_menu')
-    Flux.tab_menu:MakePopup()
-    Flux.tab_menu.held_time = CurTime() + 0.3
+  if menu then
+    menu.held_time = CurTime() + 0.3
   end
 end
 
 --- Closes the tab menu when the scoreboard key is released after being held for longer
 -- than 0.3 seconds, unless the ShouldScoreboardHide hook returns false. A short press
--- leaves the menu open.
+-- leaves the menu open, and so does a menu that was opened from code.
 function GM:ScoreboardHide()
   --- Asks whether the tab menu may close. Called on the client when the scoreboard key is
   -- released.
   -- @return [Boolean Return false to keep the tab menu open]
   if hook.Run('ShouldScoreboardHide') != false then
-    if Flux.tab_menu and Flux.tab_menu.held_time and CurTime() >= Flux.tab_menu.held_time then
-      Flux.tab_menu:close_menu()
+    local menu = Flux.TabMenu:get_panel()
+
+    if menu and menu.held_time and CurTime() >= menu.held_time then
+      Flux.TabMenu:close()
     end
   end
 end
@@ -545,6 +540,42 @@ function GM:AddTabMenuItems(menu)
   })
 end
 
+--- Adds the options that the scoreboard offers for every player to the menu of a player
+-- card: opening their Steam profile and copying their SteamID. Bots have neither.
+-- @param menu [Panel the DermaMenu being filled]
+-- @param target [Player the player the card shows]
+-- @param card [Panel the fl_scoreboard_player card that was clicked]
+function GM:CreateScoreboardPlayerMenu(menu, target, card)
+  if target:IsBot() then return end
+
+  menu:AddOption(t'ui.scoreboard.menu.profile', function()
+    if IsValid(target) then
+      target:ShowProfile()
+    end
+  end):SetIcon('icon16/user.png')
+
+  menu:AddOption(t'ui.scoreboard.menu.copy_steam_id', function()
+    if IsValid(target) then
+      SetClipboardText(target:SteamID())
+    end
+  end):SetIcon('icon16/page_copy.png')
+end
+
+--- Takes the players that are kept off the scoreboard out of the lists that the Factions
+-- plugin builds its scoreboard categories from, so that PlayerShouldShowOnScoreboard also
+-- applies when the players are grouped by faction. Handles the PreRebuildFactionCategories
+-- hook of that plugin and runs after the plugins that regroup the players.
+-- @param players_table [Map lists of players keyed by category]
+function GM:PreRebuildFactionCategories(players_table)
+  for id, players in pairs(players_table) do
+    for k, v in pairs(players) do
+      if IsValid(v) and v:has_initialized() and hook.Run('PlayerShouldShowOnScoreboard', v) == false then
+        players[k] = nil
+      end
+    end
+  end
+end
+
 --- Centers a newly opened panel within the tab menu.
 -- @param menu_panel [Panel the tab menu]
 -- @param active_panel [Panel the panel that has been opened]
@@ -553,6 +584,89 @@ function GM:OnMenuPanelOpen(menu_panel, active_panel)
     menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5,
     menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5
   )
+end
+
+do
+  local following = false
+
+  --- Makes the language setting show the language the player has actually picked, which
+  -- is kept in the fl_language console variable and can be changed there directly. A
+  -- language that this server has no phrases for is shown as following the game. The
+  -- console variable is left alone.
+  local function follow_language()
+    if following or !ClientSettings or !ClientSettings:find('language') then return end
+
+    local lang = Flux.Lang:get_language_override() or ''
+
+    if ClientSettings:sanitize('language', lang) == nil then
+      lang = ''
+    end
+
+    if ClientSettings:get('language') != lang then
+      following = true
+      ClientSettings:set('language', lang)
+      following = false
+    end
+  end
+
+  --- Switches the language of the client to the one the player has picked in the settings
+  -- menu.
+  -- @param value [String language code, or an empty string to follow the language of the
+  --   game]
+  local function language_picked(value)
+    if following then return end
+
+    following = true
+    Flux.Lang:set_language(value)
+    following = false
+  end
+
+  --- Registers the language setting with the Settings plugin: a choice between following
+  -- the language of the game and every language the server has phrases for. Picking one
+  -- goes through Flux.Lang:set_language. Handles the RegisterClientSettings hook, which
+  -- only the Settings plugin runs, so nothing happens without that plugin.
+  local function register_language_setting()
+    if !ClientSettings then return end
+
+    local choices = { { value = '', name = 'settings.language.auto' } }
+
+    for k, v in ipairs(Flux.Lang:get_languages()) do
+      table.insert(choices, { value = v, name = Flux.Lang:get_language_name(v) })
+    end
+
+    ClientSettings:register_setting('language', {
+      type = 'choice',
+      default = '',
+      choices = choices,
+      category = 'settings.categories.interface',
+      name = 'settings.language.name',
+      description = 'settings.language.desc',
+      on_change = language_picked
+    })
+
+    follow_language()
+  end
+
+  --- Registers the language setting when the Settings plugin collects the settings, which
+  -- it does while the schema is being included. On the first load the gamemode is not
+  -- registered yet at that point and a `GM` method would not be called, which is why the
+  -- handler is added with hook.Add instead.
+  hook.Add('RegisterClientSettings', 'FLLanguageSetting', register_language_setting)
+
+  --- Keeps the language setting in step when the language of the client changes for
+  -- another reason than the setting itself, such as the fl_language console variable.
+  -- @param new_lang [String new language code]
+  -- @param old_lang [String previous language code]
+  function GM:LanguageChanged(new_lang, old_lang)
+    follow_language()
+  end
+
+  --- Keeps the language setting in step when the fl_language console variable changes
+  -- without the language of the client changing with it, which is the case when it is
+  -- cleared while the game is set to the same language.
+  cvars.AddChangeCallback('fl_language', function(name, old_value, new_value)
+    follow_language()
+  end, 'FLLanguageSetting')
 end
 
 --- Intercepts the undo bind and blocks it when the SoftUndo hook returns a value.

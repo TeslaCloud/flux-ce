@@ -1,5 +1,5 @@
 <div class="panel__title">
-  <h1>Credits</h1>
+  <h1><?= Flux.HTML:escape(t'ui.help.credits.title') ?></h1>
 </div>
 <div class="credits__entry">
   <div class="credits__name">Meow the Cat</div>

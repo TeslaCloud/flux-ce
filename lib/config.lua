@@ -33,9 +33,9 @@
 -- configs, checks the value against the definition with `Config.validate` and holds the
 -- value back when the config needs a restart, and through `Config.reset`, which puts the
 -- default value back.
-
--- This library is for serverside configs only!
--- For clientside configs, see cl_settings.lua!
+--
+-- These are the settings of the server. The options of an individual player are kept on
+-- the client of that player by the Settings plugin (`ClientSettings`).
 
 mod 'Config'
 

@@ -62,8 +62,7 @@ en:
       You can visit the TeslaCloud forums to get support, download schemas and
       chat with fellow Flux users!
     hints:
-      These hints can be disabled from the clientside settings menu. Not in
-      this build though.
+      These hints can be disabled from the clientside settings menu.
     tab: "Press the 'Show Scoreboard' key (default: TAB) to open Flux's menu."
     commands:
       Start typing a command in chat to see a list of all available commands and
@@ -85,6 +84,11 @@ en:
     and: AND
     or: OR
     not: NOT
+  settings:
+    language:
+      name: Language
+      desc: The language of the Flux interface. It does not change the language of the game itself.
+      auto: Same as the game
   time:
     just_now: "just now"
     second: "second"
@@ -129,8 +133,23 @@ en:
           "1": "RESPAWNING IN {time} SECOND."
           "2": "RESPAWNING IN {time} SECONDS."
     avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
+    help:
+      commands:
+        title: Commands
+        empty: There are no commands that you can use.
+        aliases: Aliases
+        uncategorized: Other
+      plugins:
+        title: Plugins
+        schema: Schema
+      credits:
+        title: Credits
     scoreboard:
       help: Clicking a player's card may bring up some options.
+      menu:
+        profile: Open Steam profile
+        copy_steam_id: Copy SteamID
+      online: "Players online: {count} / {max}"
       ping: Ping
       players_online: Players Online
       title: PLAYER LIST

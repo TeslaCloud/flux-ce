@@ -1,16 +1,14 @@
+<? local pages = Flux.Help:get_pages() ?>
 <div class="tab">
-  <button id="default__open" class="tab__links active" onclick="openTab(event, 'plugins')">
-    Plugins
-  </button>
-  <button class="tab__links" onclick="openTab(event, 'credits')">
-    Credits
-  </button>
+  <? for k, v in ipairs(pages) do ?>
+    <button class="tab__links" onclick="openTab(event, 'help__<?= v.id ?>')">
+      <?= Flux.HTML:escape(t(v.title)) ?>
+    </button>
+  <? end ?>
 </div>
 
-<div id="plugins" class="tab__content">
-  <?= render_partial('plugins') ?>
-</div>
-
-<div id="credits" class="tab__content">
-  <?= render_partial('credits') ?>
-</div>
+<? for k, v in ipairs(pages) do ?>
+  <div id="help__<?= v.id ?>" class="tab__content">
+    <?= Flux.Help:render_page(v) ?>
+  </div>
+<? end ?>

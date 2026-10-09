@@ -2,7 +2,7 @@
 -- Names go through the `GetPlayerName` hook so that plugins can replace them,
 -- `Player:SetModel` announces model changes with the `PlayerModelChanged` hook, and the
 -- permission checks (`Player:can`, `Player:is_root`) are answered by hooks that an admin
--- plugin implements. The rest covers the initialization state, the networked data table,
+-- plugin implements. The rest covers the initialization state, the data table of a player,
 -- client-side notifications and sounds, freezing, and actions: every player has one current
 -- action, registered with `Flux.register_action`, which the gamemode runs on each
 -- `PlayerThink`; `Flux.TimedAction` builds actions that take time on top of it.
@@ -16,9 +16,19 @@ function player_meta:has_initialized()
   return self:GetDTBool(BOOL_INITIALIZED) or false
 end
 
---- Returns the networked data table of the player.
+--- Returns the data table of the player. The server keeps the table of every player, while
+-- a client is only sent the table of its own local player: for anyone else it gets an empty
+-- table there.
 -- @return [Map]
 function player_meta:get_data()
+  if SERVER then
+    local data = self.fl_player_data
+
+    if istable(data) then
+      return data
+    end
+  end
+
   return self:get_nv('fl_data', {})
 end
 

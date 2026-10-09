@@ -5,7 +5,9 @@
 -- with the class of the panel to open. When an entry is clicked the menu creates that panel,
 -- sizes it with the panel's `get_menu_size`, calls its `rebuild` and runs the
 -- `OnMenuPanelOpen` hook. The panel that was open when the menu closed is opened again the
--- next time. `close_menu` closes the menu.
+-- next time. `open_panel` switches to another entry and `close_menu` closes the menu, which
+-- runs the `OnTabMenuClosed` hook. Code that wants the menu opened or closed goes through
+-- `Flux.TabMenu`.
 
 local PANEL = {}
 PANEL.menu_items = {}
@@ -63,6 +65,7 @@ function PANEL:Init()
   cur_x = cur_x + self.close_button:GetWide() + size_x
 
   self.menu_items = {}
+  self.buttons = {}
 
   --- Called on the client every time the tab menu is opened, to collect its items.
   -- Handlers register their buttons and panels with the menu's `add_menu_item`.
@@ -150,11 +153,22 @@ function PANEL:Init()
     end
   end
 
-  local panel_id = PLAYER.tab_panel or self.default_panel
-
-  if panel_id then
-    self.buttons[panel_id]:DoClick()
+  if !self:open_panel(PLAYER.tab_panel) then
+    self:open_panel(self.default_panel)
   end
+end
+
+--- Shows the panel of a menu item, as if its button had been clicked.
+-- @param id [String ID the item was added under with add_menu_item]
+-- @return [Boolean false if the menu has no such item]
+function PANEL:open_panel(id)
+  local button = id != nil and self.buttons[id]
+
+  if !IsValid(button) then return false end
+
+  button:DoClick()
+
+  return true
 end
 
 --- Clears the text color override of the active button once its panel is gone.
@@ -215,8 +229,12 @@ function PANEL:add_menu_item(id, data, index)
 end
 
 --- Closes the menu: fades the active panel out, remembers it for the next time the menu
--- opens, calls its on_close method and slides the button bar away before removing the menu.
+-- opens, calls its on_close method, slides the button bar away before removing the menu and
+-- runs the OnTabMenuClosed hook. Does nothing if the menu is closing already.
 function PANEL:close_menu()
+  if self.closing then return end
+
+  self.closing = true
   self.blur_target = 0
 
   if IsValid(self.active_panel) then
@@ -232,8 +250,16 @@ function PANEL:close_menu()
   self.button_panel:MoveTo(0, -self.button_panel:GetTall(), Theme.get_option('menu_anim_duration'), 0, 0.5, function()
     self:safe_remove()
 
-    Flux.blur_update_fps = 8
+    if !IsValid(Flux.tab_menu) then
+      Flux.blur_update_fps = 8
+    end
   end)
+
+  --- Called on the client when the tab menu starts to close, whether the player closed it or
+  -- code did, after the `on_close` method of its open panel has been called. The menu is
+  -- still valid at that point: it is removed once its closing animation has finished.
+  -- @param menu [Panel The tab menu that is closing]
+  hook.Run('OnTabMenuClosed', self)
 end
 
 vgui.Register('fl_tab_menu', PANEL, 'EditablePanel')

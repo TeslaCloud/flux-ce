@@ -67,6 +67,30 @@ function Flux.HTML:get_javascript(id)
   return self.javascripts[id]
 end
 
+local html_entities = {
+  ['&'] = '&amp;',
+  ['<'] = '&lt;',
+  ['>'] = '&gt;',
+  ['"'] = '&quot;',
+  ["'"] = '&#39;'
+}
+
+--- Makes a text safe to put into HTML, as the contents of an element or as the value of a
+-- quoted attribute, by replacing the characters that HTML gives a meaning to (&, <, >,
+-- " and ') with their entities. Templates insert values as they are, so use it there for
+-- every text that is not meant to be markup.
+-- ```
+-- -- In a template: <div class="name"><?= Flux.HTML:escape(target:name()) ?></div>
+-- Flux.HTML:escape('<target> [reason]') -- '&lt;target&gt; [reason]'
+-- ```
+-- @param text [Any text to escape; anything but a string is converted to one first]
+-- @return [String the escaped text, empty if the text is nil]
+function Flux.HTML:escape(text)
+  if text == nil then return '' end
+
+  return (tostring(text):gsub('[&<>"\']', html_entities))
+end
+
 local function val_to_str(val)
   if isstring(val) then
     return '"'..val:gsub('"', '\\"')..'"'

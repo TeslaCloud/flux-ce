@@ -13,7 +13,9 @@
 -- makes a player play a sequence instead of their regular animations, and
 -- `Player:play_gesture` plays a gesture on top of them. An animation that the server sets
 -- is shown by every client, including the clients of players who join while it lasts; one
--- that a client sets is only seen on that client.
+-- that a client sets is only seen on that client. Either kind is removed when the player
+-- dies, spawns or gets another model, since the sequence belongs to the model and the pose
+-- of the player they had before.
 -- @module [Flux.Anim]
 
 mod 'Flux::Anim'
@@ -460,11 +462,22 @@ local function stop_animation(target, completed)
   run_callback(detach_callback(target), target, completed)
 end
 
+--- Checks whether a model change gives a player another model, as opposed to setting the
+-- model they already have, which the gamemode does every time a player spawns.
+-- @param new_model [String path of the new model]
+-- @param old_model [String path of the previous model]
+-- @return [Boolean false if both paths name the same model]
+local function is_other_model(new_model, old_model)
+  if !isstring(new_model) or !isstring(old_model) then return true end
+
+  return string.lower(new_model) != string.lower(old_model)
+end
+
 --- Makes the player play the specified sequence instead of their regular animations.
--- The override is removed once the sequence has finished. Called on the server, the
--- animation is shown by every client, including the clients of players who join while it
--- lasts; called on a client, it is only seen on that client. Setting an animation replaces
--- the one that was set before.
+-- The override is removed once the sequence has finished, and also when the player dies,
+-- spawns or gets another model. Called on the server, the animation is shown by every
+-- client, including the clients of players who join while it lasts; called on a client, it
+-- is only seen on that client. Setting an animation replaces the one that was set before.
 -- ```
 -- target:set_animation('idle_to_sit_ground', nil, function(target, completed)
 --   if completed then
@@ -477,7 +490,8 @@ end
 --   the duration of the sequence, 0 keeps it until Player#stop_animation is called]
 -- @param callback=nil [Function called with the player and a Boolean when the override is
 --   removed: true if it was kept for its whole duration, false if it was stopped or
---   replaced before that. Called in the realm the animation was set in]
+--   replaced before that, which includes the death, the spawn and the model change of
+--   the player. Called in the realm the animation was set in]
 -- @return [Boolean false if the model of the player has no such sequence, in which case
 --   nothing changes and the callback is not called]
 function player_meta:set_animation(animation, duration_override, callback)
@@ -550,6 +564,46 @@ if SERVER then
     end
   end
 
+  --- Removes the animation of a player whose state has been reset and makes every client
+  -- do the same, also for an animation that a client has set for the player on its own.
+  -- @param target [Player]
+  local function clear_animation(target)
+    local announced = forced[target] != nil
+
+    if announced or target.fl_animation then
+      stop_animation(target, false)
+    end
+
+    if !announced then
+      Cable.send(nil, 'fl_animation_stop', target:EntIndex())
+    end
+  end
+
+  --- Removes the animation of a player who has died, however they died.
+  -- @param victim [Player]
+  function hooks:PostPlayerDeath(victim)
+    clear_animation(victim)
+  end
+
+  --- Removes the animation of a player who is spawning. Runs before the gamemode resets
+  -- the player, so an animation that a `PostPlayerSpawn` handler sets is kept.
+  -- @param actor [Player]
+  function hooks:PlayerSpawn(actor)
+    clear_animation(actor)
+  end
+
+  --- Ends the animation of a player who gets another model, which may not have the
+  -- sequence. The clients drop their own animations of the player when they are told about
+  -- the new model.
+  -- @param target [Player]
+  -- @param new_model [String path of the new model]
+  -- @param old_model [String path of the previous model]
+  function hooks:PlayerModelChanged(target, new_model, old_model)
+    if forced[target] and is_other_model(new_model, old_model) then
+      stop_animation(target, false)
+    end
+  end
+
   Plugin.add_hooks('FLAnimations', hooks)
 else
   local desired = {}
@@ -607,6 +661,30 @@ else
       timer.Simple(0, function()
         if IsValid(entity) and !entity.fl_animation then
           apply_animation(entity)
+        end
+      end)
+    end
+  end
+
+  --- Drops the animation of a player who gets another model, since its sequence number
+  -- belongs to the previous one. If the server still wants the player animated, which is
+  -- the case when it has set the animation after changing the model, the animation is
+  -- applied again to the new model.
+  -- @param target [Player the player whose model changes]
+  -- @param new_model [String path of the new model]
+  -- @param old_model [String path of the previous model]
+  function hooks:PlayerModelChanged(target, new_model, old_model)
+    if !IsValid(target) or !target.fl_animation or !is_other_model(new_model, old_model) then return end
+
+    target:SetCycle(0)
+    target.fl_animation = nil
+
+    run_callback(detach_callback(target), target, false)
+
+    if desired[target:EntIndex()] then
+      timer.Simple(0, function()
+        if IsValid(target) and !target.fl_animation then
+          apply_animation(target)
         end
       end)
     end

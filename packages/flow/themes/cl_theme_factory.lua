@@ -477,7 +477,8 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   end
 end
 
---- Draws the background, title and column headers of the scoreboard.
+--- Draws the background, title and column headers of the scoreboard, with the amount of
+-- players online in the middle of the header.
 -- @param panel [Panel the scoreboard]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
@@ -495,6 +496,13 @@ function THEME:PaintScoreboard(panel, width, height)
   font = self:get_font('text_small')
 
   draw.SimpleText(t'ui.scoreboard.help', font, 4, 0, self:get_color('text'))
+
+  if panel.get_online_text then
+    text = panel:get_online_text()
+    text_w, text_h = util.text_size(text, font)
+
+    draw.SimpleText(text, font, width * 0.5 - text_w * 0.5, 0, self:get_color('text'))
+  end
 
   text = t'ui.scoreboard.ping'
   text_w, text_h = util.text_size(text, font)

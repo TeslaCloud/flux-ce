@@ -1,4 +1,4 @@
-function openTab(evt, cityName) {
+function openTab(evt, pageName) {
   // Declare all variables
   var i, tabcontent, tablinks;
 
@@ -15,8 +15,13 @@ function openTab(evt, cityName) {
   }
 
   // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(cityName).style.display = "block";
+  document.getElementById(pageName).style.display = "block";
   evt.currentTarget.className += " active";
 }
 
-document.getElementById("default__open").click();
+// Open the first page, which is the one with the lowest priority
+var firstTab = document.getElementsByClassName("tab__links")[0];
+
+if (firstTab) {
+  firstTab.click();
+}

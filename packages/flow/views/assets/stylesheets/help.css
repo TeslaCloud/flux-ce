@@ -50,6 +50,33 @@ body::-webkit-scrollbar {
   font-size: 18px;
 }
 
+.command__card {
+  padding: 8px;
+  margin: 4px;
+  background: #00000099;
+  border-radius: 8px;
+}
+
+.command__name {
+  font-size: 24px;
+}
+
+.command__syntax {
+  color: #ffffffaa;
+  font-size: 18px;
+  margin-left: 8px;
+}
+
+.command__description {
+  color: #ffffffff;
+  font-size: 16px;
+}
+
+.command__aliases {
+  color: #ffffffaa;
+  font-size: 14px;
+}
+
 .tab {
   overflow: hidden;
   background-color: #f1f1f1;

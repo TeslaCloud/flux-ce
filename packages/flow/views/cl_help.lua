@@ -1,5 +1,7 @@
 --- The help page of the tab menu (`fl_help`): an `fl_html` view that shows the 'help' template
--- rendered with its stylesheet and JavaScript.
+-- rendered with its stylesheet and JavaScript. The template gives every page that has been
+-- added with `Flux.Help:add_page` a tab of its own, so that is the place to add to the
+-- contents of this panel.
 -- `rebuild` renders the page again. Derives from `fl_base_panel`.
 
 local PANEL = {}
@@ -12,7 +14,8 @@ function PANEL:Init()
   self:rebuild()
 end
 
---- Renders the help page again from the 'help' stylesheet, template and JavaScript.
+--- Renders the help page again from the 'help' stylesheet, template and JavaScript, with
+-- the pages that `Flux.Help:get_pages` returns at that moment.
 function PANEL:rebuild()
   self.html:set_css(render_stylesheet('help'))
   self.html:set_body(render_template('help'))

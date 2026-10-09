@@ -1,16 +1,20 @@
 --- The scoreboard of the tab menu: `fl_scoreboard`, the list of players, and
 -- `fl_scoreboard_player`, the card of a single player.
 -- Plugins change its contents through the `PreRebuildScoreboard`, `RebuildScoreboard` and
--- `RebuildScoreboardPlayerCard` hooks.
+-- `RebuildScoreboardPlayerCard` hooks, keep players off it with
+-- `PlayerShouldShowOnScoreboard` and add to the menu that a click on a player card opens
+-- with `CreateScoreboardPlayerMenu`.
 
 --- The scoreboard page of the tab menu (`fl_scoreboard`): a scrollable list with one
 -- `fl_scoreboard_player` card per initialized player, drawn by the active theme's
--- `PaintScoreboard` hook.
+-- `PaintScoreboard` hook, which also writes how many players are online.
 -- `rebuild` recreates the cards. A `PreRebuildScoreboard` handler can build the list itself,
 -- which is how the Factions plugin groups the players by faction, and `RebuildScoreboard`
--- handlers can add to the default list.
+-- handlers can add to the default list. Either way a player is left out when a
+-- `PlayerShouldShowOnScoreboard` handler returns false.
 local PANEL = {}
 PANEL.player_cards = {}
+PANEL.online_count = 0
 
 --- Creates the scroll panel that holds the player cards.
 function PANEL:Init()
@@ -26,10 +30,52 @@ function PANEL:Paint(w, h)
   Theme.hook('PaintScoreboard', self, w, h)
 end
 
---- Removes the existing player cards and creates one for every initialized player, then
--- runs the RebuildScoreboard hook. Does nothing if PreRebuildScoreboard returns a value.
+--- Checks whether a player is listed on the scoreboard: they are once they have been
+-- initialized, unless a PlayerShouldShowOnScoreboard handler returns false.
+-- @param target [Player]
+-- @return [Boolean]
+function PANEL:should_show_player(target)
+  if !IsValid(target) or !target:has_initialized() then return false end
+
+  --- Asks whether a player is listed on the scoreboard. Called on the client for every
+  -- initialized player each time the scoreboard is rebuilt, also when the Factions plugin
+  -- groups the players by faction. A player who is kept off the scoreboard is not counted
+  -- in its line of players online either.
+  -- @param target [Player The player about to be listed]
+  -- @return [Boolean Return false to keep the player off the scoreboard. Return nothing
+  --   otherwise, so that the other handlers are asked as well]
+  return hook.Run('PlayerShouldShowOnScoreboard', target) != false
+end
+
+--- Counts the players for the line of players online: everyone who is connected, including
+-- those who are still loading, except for the players that are kept off the scoreboard.
+-- @return [Number]
+function PANEL:count_players()
+  local count = 0
+
+  for k, v in player.Iterator() do
+    if !v:has_initialized() or self:should_show_player(v) then
+      count = count + 1
+    end
+  end
+
+  return count
+end
+
+--- Returns the text of the line of players online, as it was when the scoreboard was last
+-- rebuilt. The theme draws it in its PaintScoreboard hook.
+-- @return [String translated text, such as 'Players online: 12 / 32']
+function PANEL:get_online_text()
+  return (t('ui.scoreboard.online', { count = self.online_count, max = game.MaxPlayers() }))
+end
+
+--- Counts the players online, removes the existing player cards and creates one for every
+-- player that is listed, then runs the RebuildScoreboard hook. Only the count is done if
+-- PreRebuildScoreboard returns a value.
 function PANEL:rebuild()
   local w, h = self:GetSize()
+
+  self.online_count = self:count_players()
 
   --- Called on the client before the scoreboard builds its list of players.
   -- A handler can build the contents itself, for example to group the players.
@@ -55,7 +101,7 @@ function PANEL:rebuild()
   local margin = math.scale(2)
 
   for k, v in player.Iterator() do
-    if !v:has_initialized() then continue end
+    if !self:should_show_player(v) then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)
     player_card:SetSize(w - 8, card_tall)
@@ -88,9 +134,62 @@ vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
 --- The card of one player on the scoreboard (`fl_scoreboard_player`): their avatar, name and
 -- ping.
 -- Assign the player with `set_player`, which also builds the card. Plugins add their own
--- elements in the `RebuildScoreboardPlayerCard` hook.
+-- elements in the `RebuildScoreboardPlayerCard` hook. A click on the card opens a menu of
+-- things to do with the player (`open_menu`), which plugins fill in the
+-- `CreateScoreboardPlayerMenu` hook.
 local PANEL = {}
 PANEL.player = false
+
+--- Opens the menu of the card's player when the card is clicked with the left or the right
+-- mouse button. Children of the card that take clicks themselves, such as the avatar, keep
+-- their own behaviour.
+-- @param code [Number mouse button code, one of the MOUSE_ enums]
+function PANEL:OnMousePressed(code)
+  if code == MOUSE_LEFT or code == MOUSE_RIGHT then
+    self:open_menu()
+  end
+end
+
+--- Builds the menu of things to do with the card's player through the
+-- CreateScoreboardPlayerMenu hook and opens it at the cursor. No menu is shown if no
+-- handler has added an option.
+-- @return [Panel the opened DermaMenu, or nil if there is nothing to show]
+function PANEL:open_menu()
+  local target = self.player
+
+  if !IsValid(target) then return end
+
+  local menu = DermaMenu()
+
+  --- Called on the client when a player card of the scoreboard is clicked, to fill the menu
+  -- of things to do with that player. The menu opens at the cursor if a handler has added
+  -- anything to it and is removed otherwise. The gamemode's handler, which runs last,
+  -- adds the options to open the Steam profile of the player and to copy their SteamID.
+  -- An option that does something on the server still has to be checked there: sending a
+  -- command with `Flux.Command:send` takes care of that.
+  -- ```
+  -- function MyPlugin:CreateScoreboardPlayerMenu(menu, target, card)
+  --   if target != PLAYER and PLAYER:can('poke') then
+  --     menu:AddOption(t'ui.my_plugin.poke', function()
+  --       Flux.Command:send('poke "'..target:name()..'"')
+  --     end):SetIcon('icon16/user_comment.png')
+  --   end
+  -- end
+  -- ```
+  -- @param menu [Panel The `DermaMenu` to add options to]
+  -- @param target [Player The player the card shows]
+  -- @param card [Panel The `fl_scoreboard_player` card that was clicked]
+  -- @return [Any Return nothing, so that the other handlers can add their options as well]
+  hook.Run('CreateScoreboardPlayerMenu', menu, target, self)
+
+  if menu:ChildCount() > 0 then
+    menu:Open()
+
+    return menu
+  end
+
+  menu:safe_remove()
+end
 
 --- Draws the background of the player card.
 -- @param w [Number panel width]

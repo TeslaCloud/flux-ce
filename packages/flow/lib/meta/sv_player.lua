@@ -1,11 +1,13 @@
 --- Server side of the `Player` extensions: restoring and saving the database record of a
 -- player (`User`), writing their data table and initialization state, sending
--- notifications and sounds, and helpers for ammo, weapons and moving a stuck player to a
--- free spot.
+-- notifications and sounds, opening and closing their tab menu, and helpers for ammo,
+-- weapons and moving a stuck player to a free spot.
 --
 -- The data table of a player (`Player:set_player_data`, `Player:get_player_data`) is
--- networked to the clients and persistent: it is kept serialized in the `data` column of
--- the player's `User` record, loaded when the record is restored and saved with it.
+-- persistent: it is kept serialized in the `data` column of the player's `User` record,
+-- loaded when the record is restored and saved with it. The server holds it in the
+-- `fl_player_data` field of the player and networks it to that player alone, as the private
+-- `fl_data` variable, so that nobody else's client learns what is stored about a player.
 
 local player_meta = FindMetaTable('Player')
 
@@ -24,7 +26,9 @@ end
 
 --- Saves the database record of the player, together with their data table. Does nothing for
 -- bots. Can be prevented by returning true from the 'PreSavePlayerData' hook. Runs the
--- 'PostSavePlayerData' hook afterward.
+-- 'PostSavePlayerData' hook afterward. The data table is taken from the server's own copy
+-- and never from the networked variables, which are gone once the entity of a leaving
+-- player has been removed: without that copy the record keeps the data it already has.
 function player_meta:save_player()
   if self:IsBot() then return end
 
@@ -36,7 +40,12 @@ function player_meta:save_player()
   if hook.Run('PreSavePlayerData', self) == true then return end
 
   if self.record then
-    self.record.data = table.serialize(self:get_data())
+    local data = self.fl_player_data
+
+    if istable(data) then
+      self.record.data = table.serialize(data)
+    end
+
     self.record:save()
   end
 
@@ -46,23 +55,26 @@ function player_meta:save_player()
   hook.Run('PostSavePlayerData', self)
 end
 
---- Replaces the data table of the player. The table is networked to the clients and written
--- to the database record of the player, which stores it the next time the record is saved.
+--- Replaces the data table of the player. The table is networked to the player it belongs
+-- to, and to nobody else, and written to the database record of the player, which stores
+-- it the next time the record is saved.
 -- @param data={} [Map values that `table.serialize` can store]
 function player_meta:set_data(data)
   data = data or {}
 
-  self:set_nv('fl_data', data)
+  self.fl_player_data = data
+  self:set_private_nv('fl_data', data)
 
   if self.record then
     self.record.data = table.serialize(data)
   end
 end
 
---- Sets a value in the data table of the player. The value is networked to the clients and
--- persistent: it is saved with the database record of the player (when they disconnect,
--- when their character is saved and when the server shuts down) and is there again the
--- next time they join. Keep the values to what `table.serialize` can store.
+--- Sets a value in the data table of the player. The value is networked to the player it
+-- belongs to, and to nobody else, and persistent: it is saved with the database record of
+-- the player (when they disconnect, when their character is saved and when the server
+-- shuts down) and is there again the next time they join. Keep the values to what
+-- `table.serialize` can store.
 -- ```
 -- target:set_player_data('tutorial_seen', true)
 -- ```
@@ -131,6 +143,20 @@ end
 -- @see [Flux.Player#stop_sound]
 function player_meta:stop_sound(id, fade_out)
   Flux.Player:stop_sound(self, id, fade_out)
+end
+
+--- Opens the tab menu of the player. Serverside variant.
+-- @param panel_id=nil [String ID of the menu item to show; the item that was open the last
+--   time if nil]
+-- @see [Flux.Player#open_tab_menu]
+function player_meta:open_tab_menu(panel_id)
+  Flux.Player:open_tab_menu(self, panel_id)
+end
+
+--- Closes the tab menu of the player, if they have it open. Serverside variant.
+-- @see [Flux.Player#close_tab_menu]
+function player_meta:close_tab_menu()
+  Flux.Player:close_tab_menu(self)
 end
 
 --- Returns the ammo the player has.
