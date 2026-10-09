@@ -33,6 +33,7 @@
 
 local cable = {}
 local net_cache = {}
+local delayed = {}
 local handlers = {}
 local transfers = {}
 local next_transfer_id = 0
@@ -436,8 +437,9 @@ if SERVER then
   cable.check_networked_string(CHUNK_MESSAGE)
 
   --- Sends a Cable message to one, several or all players. Serverside variant.
-  -- Tables are serialized with SFS, and nil values are delivered as nil. The first message
-  -- under a new name is delayed by 0.1 seconds to let the networked string reach the clients.
+  -- Tables are serialized with SFS, and nil values are delivered as nil. Messages under a new
+  -- name are delayed until 0.1 seconds after the first one, to let the networked string reach
+  -- the clients, and are then sent in the order they were queued in.
   -- Values that do not fit into one net message are sent in chunks (see the top of this
   -- file), which takes `Cable.chunk_interval` seconds per piece after the first.
   -- ```
@@ -455,12 +457,25 @@ if SERVER then
       error('cable.send - bad argument #1 (must not be a string)\n')
     end
 
-    if !cable.check_networked_string(id) then
-      local args, count = { ... }, select('#', ...)
+    local queue = delayed[id]
 
-      timer.Simple(0.1, function()
-        cable.send(target, id, unpack(args, 1, count))
-      end)
+    if queue or !cable.check_networked_string(id) then
+      -- Everything sent before the name has reached the clients has to wait, not only the
+      -- first message, or the clients drop the rest and get the first one out of order.
+      if !queue then
+        queue = {}
+        delayed[id] = queue
+
+        timer.Simple(0.1, function()
+          delayed[id] = nil
+
+          for k, v in ipairs(queue) do
+            cable.send(v.target, id, unpack(v.args, 1, v.count))
+          end
+        end)
+      end
+
+      queue[#queue + 1] = { target = target, args = { ... }, count = select('#', ...) }
 
       return
     end

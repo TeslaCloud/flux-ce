@@ -617,6 +617,27 @@ do
     AddCSLuaFile('_flux/client/'..path)
   end
 
+  -- Garry's Mod does not send a Lua file to clients if it is larger than 64 KB once it is
+  -- compressed, clients get an empty file instead. Serialized tables are hex digits, which
+  -- compress to half their size at worst, so pieces of this length always stay below that.
+  local chunk_size = 100000
+
+  -- Writes a table for the client, split over as many files as it takes. The pieces are put
+  -- back together by Flux.receive_chunk, 'assign' is the code that runs once 'data' is whole.
+  local function write_client_table(name, tab, assign)
+    local contents = table.serialize(tab)
+    local count = math.max(math.ceil(#contents / chunk_size), 1)
+
+    for i = 1, count do
+      write_client_file(
+        string.format('%s_%02d.lua', name, i),
+        "local data = Flux.receive_chunk('"..name.."', "..i..', '..count..', [['
+          ..contents:sub((i - 1) * chunk_size + 1, i * chunk_size)..']])\n'
+          ..'if data then '..assign..' end\n'
+      )
+    end
+  end
+
   local function write_html()
     write_client_file('3_html.lua', Flux.HTML:generate_html_file() or '-- .keep')
     write_client_file('4_css.lua', Flux.HTML:generate_css_file() or '-- .keep')
@@ -631,26 +652,20 @@ do
     local settings_copy = table.Copy(Settings)
     settings_copy.server = nil
 
+    write_client_table('0_shared', Flux.shared, 'Flux.shared = data')
+    write_client_table('1_settings', settings_copy, 'Settings = data')
+    write_client_table('2_lang', Flux.Lang.stored, "mod'Flux::Lang' Flux.Lang.stored = data")
+
     if IS_DEVELOPMENT then
-      write_client_file('0_shared.lua', 'Flux.shared = table.deserialize([['..table.serialize(Flux.shared)..']])\n')
-      write_client_file('1_settings.lua', 'Settings = table.deserialize([['..table.serialize(settings_copy)..']])\n')
-      write_client_file(
-        '2_lang.lua',
-        "mod'Flux::Lang'\nFlux.Lang.stored = table.deserialize([["..table.serialize(Flux.Lang.stored)..']])\n'
-      )
       write_html()
     else
       print 'Compiling clientside assets...'
 
-      local contents = 'Flux.shared=table.deserialize([['..table.serialize(Flux.shared)..']])'
-      contents = contents..'Settings=table.deserialize([['..table.serialize(settings_copy)..']])'
-      contents =
-        contents.."mod'Flux::Lang'Flux.Lang.stored=table.deserialize([["..table.serialize(Flux.Lang.stored)..']])'
-      contents = contents..(Flux.HTML:generate_html_file() or '')..' '
+      local contents = (Flux.HTML:generate_html_file() or '')..' '
       contents = contents..(Flux.HTML:generate_css_file() or '')..' '
       contents = contents..(Flux.HTML:generate_js_file() or '')
 
-      write_client_file('0_production.lua', contents)
+      write_client_file('3_production.lua', contents)
     end
   end
 

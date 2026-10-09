@@ -41,6 +41,35 @@ if CLIENT then
     sfs = include(sfs_path..'lib/sfs.lua')
   end
 
+  local chunks = {}
+
+  --- Takes one piece of a table that the server has split over several of the generated
+  -- files, because a single file would be too large to be sent to clients.
+  -- @param name [String name of the table the piece belongs to]
+  -- @param index [Number position of the piece]
+  -- @param count [Number amount of pieces the table consists of]
+  -- @param data [String the piece of the serialized table]
+  -- @return [Hash the table once all of its pieces are there, nil before that]
+  function Flux.receive_chunk(name, index, count, data)
+    local parts = chunks[name]
+
+    if !parts or parts.count != count then
+      parts = { count = count, received = 0 }
+      chunks[name] = parts
+    end
+
+    if !parts[index] then
+      parts.received = parts.received + 1
+    end
+
+    parts[index] = data
+
+    -- The pieces are kept, a Lua refresh may only send the ones that have changed.
+    if parts.received == count then
+      return table.deserialize(table.concat(parts))
+    end
+  end
+
   local files, folders = file.Find('_flux/client/*.lua', 'LUA')
 
   for k, v in ipairs(files) do
