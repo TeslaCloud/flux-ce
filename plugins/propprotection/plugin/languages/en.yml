@@ -1,0 +1,64 @@
+en:
+  config:
+    prop_protection:
+      title: Prop protection
+      desc: Entity ownership and the sandbox rules that are built on it.
+      owned:
+        name: Protect owned entities
+        desc: Whether or not players are kept from picking up, freezing, driving and using tools and properties on the entities of other characters.
+      map:
+        name: Protect map entities
+        desc: Whether or not players are kept from doing the same to the entities that are part of the map.
+      world:
+        name: Protect unowned entities
+        desc: Whether or not players are kept from doing the same to the entities that belong to nobody, such as items, players, ragdolls and static props.
+      players:
+        name: Protect players from the physics gun
+        desc: Whether or not players are kept from picking up other players with the physics gun.
+      vehicles:
+        name: Protect occupied vehicles from the physics gun
+        desc: Whether or not players are kept from picking up vehicles that have a driver, their own included.
+      ragdolls:
+        name: Protect player ragdolls from the physics gun
+        desc: Whether or not players are kept from picking up the ragdolls of dead and knocked down players.
+      owner_display:
+        name: Show entity owners
+        desc: Whether or not players see who owns the entity they are looking at. Staff who bypass prop protection always do.
+      removal_delay:
+        name: Abandoned entity removal delay
+        desc: How long the entities of a player stay after they disconnect or switch characters (in seconds). They keep the entities if they return in time. Set to 0 to never remove them.
+      remove_staff:
+        name: Remove abandoned staff entities
+        desc: Whether or not the entities of staff who bypass prop protection are removed after they leave as well.
+      cost:
+        name: Prop cost
+        desc: How much of the default currency it costs to spawn a prop. Set to 0 to make props free.
+      refund_time:
+        name: Prop refund time
+        desc: For how long after a prop is spawned its cost is given back when the prop is removed (in seconds). Set to 0 to never refund.
+      prop_kill:
+        name: Prop kill protection
+        desc: Whether or not players are protected from the impacts of props that are held with the physics gun, have just been dropped by it or have just been spawned.
+      prop_kill_time:
+        name: Prop kill protection time
+        desc: How long a prop stays harmless to players after it is spawned or dropped by the physics gun (in seconds).
+  error:
+    prop_protection:
+      not_yours: This does not belong to you!
+      protected: This entity is protected!
+      cannot_afford: "You need {value} {currency} to spawn this prop!"
+  notification:
+    prop_protection:
+      charged: "You paid {value} {currency} for the prop."
+      refunded: "You got {value} {currency} back for the removed prop."
+      returned: "Your entities are yours again ({count})."
+  settings:
+    prop_protection:
+      show_owners:
+        name: Show entity owners
+        desc: Whether or not the owner of the entity you are looking at is shown above it.
+  ui:
+    prop_protection:
+      owner: "Owner: {name}"
+      owner_you: This belongs to you
+      owner_away: The owner is away
