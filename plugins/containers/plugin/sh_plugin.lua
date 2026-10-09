@@ -6,7 +6,27 @@
 -- by a player within reach of it. Its inventory is created the first time it is opened and
 -- is closed for a player who moves out of reach.
 --
--- The `PreContainerOpen` hook is run before a container is shown to a player.
+-- Staff can give a container a name of its own, a message that is shown to whoever opens it
+-- and a password that has to be entered before it opens, and fill it with random items.
+-- All of this is done with the Container Tool, which needs the `manage_containers`
+-- permission (and `fill_containers` to fill), or from code with
+-- `Container:set_container_name`, `Container:set_container_message`,
+-- `Container:set_container_password` and `Container:fill`. The name, the message and the
+-- password are kept on the prop in its `container_name`, `container_message` and
+-- `container_password` fields, so they are saved with it the same way its items are. A
+-- wrong password makes the player wait for `container_password_delay` seconds before the
+-- next attempt.
+--
+-- Random items are picked among all registered items but the bases and those that set
+-- `ITEM.lootable = false`, optionally from one item category.
+--
+-- When a container prop is removed, its items are destroyed with it, or dropped on the
+-- ground if the `container_spill_items` config is on.
+--
+-- Hooks: `PlayerCanOpenContainer` and `ShouldAskContainerPassword` decide who opens a
+-- container and who has to enter its password, `PlayerEnteredContainerPassword` tells about
+-- every entered password, `PreContainerOpen` is run before a container is shown to a player
+-- and `OnContainerRemoved` after the items of a removed container have been dealt with.
 
 PLUGIN:set_global('Container')
 
@@ -50,9 +70,127 @@ do
   function Container:find(model)
     return stored[model:lower()]
   end
+
+  --- Returns the container data of an entity, if the entity is a container: a valid
+  -- physics prop with a registered model.
+  -- @param entity [Entity]
+  -- @return [Map container data, or nil if the entity is not a container]
+  function Container:get_container_data(entity)
+    if !isentity(entity) or !IsValid(entity) or entity:GetClass() != 'prop_physics' then return end
+
+    local model = entity:GetModel()
+
+    if isstring(model) then
+      return stored[model:lower()]
+    end
+  end
+
+  --- Checks whether an entity is a container: a valid physics prop with a registered model.
+  -- @param entity [Entity]
+  -- @return [Boolean]
+  function Container:is_container(entity)
+    return self:get_container_data(entity) != nil
+  end
+end
+
+--- Returns the name of a container: the one it was given with
+-- `Container:set_container_name`, or else the name that is registered for its model.
+-- ```
+-- local name, is_custom = Container:get_container_name(entity)
+-- local text = is_custom and name or t(name)
+-- ```
+-- @param entity [Entity the container prop]
+-- @return [String the custom name as it was entered, or the language phrase of the default
+--   name; nil if the model of the entity is not registered, Boolean true if the name is a
+--   custom one]
+function Container:get_container_name(entity)
+  local custom_name = SERVER and entity.container_name or entity:get_nv('fl_container_name')
+
+  if isstring(custom_name) and custom_name != '' then
+    return custom_name, true
+  end
+
+  local model = entity:GetModel()
+  local container_data = isstring(model) and self:find(model)
+
+  return container_data and container_data.name or nil, false
+end
+
+--- Checks whether a password has to be entered to open a container. The password itself
+-- is only known to the server.
+-- @param entity [Entity the container prop]
+-- @return [Boolean]
+function Container:has_container_password(entity)
+  if SERVER then
+    return entity.container_password != nil
+  end
+
+  return entity:get_nv('fl_container_locked', false) == true
+end
+
+--- Returns the item templates that containers can be filled with: every registered item
+-- except for the bases and the items that set `lootable` to false.
+-- ```
+-- -- In an item file: keeps the item out of the randomly filled containers.
+-- ITEM.lootable = false
+-- ```
+-- @param category=nil [String item category to pick from, e.g.
+--   'item.category.consumables'; items of all categories if nil]
+-- @return [List<Item> item templates]
+function Container:get_loot_items(category)
+  local items = {}
+
+  for id, item_table in pairs(Item.all()) do
+    if !item_table.is_base and item_table.lootable != false
+    and (!category or item_table.category == category) then
+      table.insert(items, item_table)
+    end
+  end
+
+  return items
+end
+
+--- Returns the categories of the items that containers can be filled with.
+-- @return [List<String> item category IDs in alphabetical order]
+function Container:get_loot_categories()
+  local categories = {}
+  local seen = {}
+
+  for k, item_table in ipairs(self:get_loot_items()) do
+    local category = item_table.category
+
+    if isstring(category) and !seen[category] then
+      seen[category] = true
+
+      table.insert(categories, category)
+    end
+  end
+
+  table.sort(categories)
+
+  return categories
+end
+
+--- Registers the 'manage_containers' and 'fill_containers' level design permissions.
+function Container:RegisterPermissions()
+  Bolt:register_permission(
+    'manage_containers',
+    'Manage containers',
+    'Grants access to set the names, messages and passwords of containers.',
+    'permission.categories.level_design',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'fill_containers',
+    'Fill containers',
+    'Grants access to fill containers with random items.',
+    'permission.categories.level_design',
+    'moderator'
+  )
 end
 
 require_relative 'cl_hooks'
+require_relative 'sv_plugin'
 require_relative 'sv_hooks'
 
 Container:register_prop({

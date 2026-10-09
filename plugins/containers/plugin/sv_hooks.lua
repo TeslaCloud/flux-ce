@@ -1,16 +1,20 @@
---- Server side of the Containers plugin: creates the inventory of a container when a player
--- within reach opens it, plays its sounds, makes container props persistent and keeps the
--- IDs of their items on the props when persistent entities are saved.
+--- Server side of the Containers plugin: opens a container when a player within reach asks
+-- for it, plays its sounds, makes container props persistent, keeps the IDs of their items
+-- on the props when persistent entities are saved, networks the names of the loaded
+-- containers and deals with the inventory and the items of a container that is removed.
 
 local detached_inventories = {}
+local request_delay = 0.5
 
---- Closes the inventory of a removed entity for everyone who views it
--- and deletes the inventory from the server cache.
+--- Closes the inventory of a removed entity for everyone who views it and deletes the
+-- inventory from the server cache. If the entity is a container, its items are destroyed
+-- or dropped on the ground as well, unless the map is unloading.
 -- @param entity [Entity]
+-- @see [Container#handle_removal]
 function Container:EntityRemoved(entity)
-  if entity.inventory then
-    local inventory = entity.inventory
+  local inventory = entity.inventory
 
+  if inventory then
     for k, v in ipairs(inventory.receivers) do
       if IsValid(v) then
         Cable.send(v, 'fl_inventory_close')
@@ -19,6 +23,25 @@ function Container:EntityRemoved(entity)
 
     Inventories.stored[inventory.id] = nil
   end
+
+  if self:is_container(entity) then
+    local item_ids = inventory and inventory:get_items_ids() or entity.items
+
+    self:handle_removal(entity, inventory, istable(item_ids) and item_ids or {})
+  end
+end
+
+--- Networks the custom names and the password marks of the containers that have been
+-- loaded with the persistent entities. This is done on the next tick, once every handler
+-- of the hook has spawned its entities and given them their saved fields back.
+function Container:PersistenceLoad()
+  timer.Simple(0, function()
+    for k, v in ents.Iterator() do
+      if (v.container_name or v.container_password) and self:is_container(v) then
+        self:update_netvars(v)
+      end
+    end
+  end)
 end
 
 --- Makes the spawned prop persistent if its model is a container.
@@ -83,39 +106,11 @@ function Container:CanContainMoney(object)
 end
 
 Cable.receive('fl_container_open', function(actor, entity)
-  if !IsValid(entity) or entity:GetClass() != 'prop_physics' then return end
-  if !Inventories.is_in_reach(actor, entity) then return end
+  local cur_time = CurTime()
 
-  local container_data = Container:find(entity:GetModel())
+  if actor.next_container_request and actor.next_container_request > cur_time then return end
 
-  if container_data then
-    if !entity.inventory then
-      local inventory = Inventory.new()
-      inventory:set_size(container_data.w, container_data.h)
-      inventory.title = container_data.name
-      inventory.type = 'container'
-      inventory.multislot = (container_data != nil) and true or false
-      inventory.owner = entity
+  actor.next_container_request = cur_time + request_delay
 
-      if entity.items then
-        inventory:load_items(entity.items)
-
-        entity.items = nil
-      end
-
-      entity.inventory = inventory
-    end
-
-    if container_data.open_sound then
-      entity:EmitSound(container_data.open_sound, 55)
-    end
-
-    --- Called on the server when a player opens a container, after its inventory has been
-    -- created or found and its opening sound played, right before the inventory is shown to
-    -- the player. The player is not passed to the hook.
-    -- @param entity [Entity the container prop; its inventory is entity.inventory]
-    hook.Run('PreContainerOpen', entity)
-
-    actor:open_inventory(entity.inventory, entity)
-  end
+  Container:request_open(actor, entity)
 end)

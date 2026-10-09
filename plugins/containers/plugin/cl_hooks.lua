@@ -1,5 +1,6 @@
 --- Client side of the Containers plugin: draws the name and the description of containers and
--- adds the 'open' option to their interaction menu.
+-- adds the 'open' option to their interaction menu. A container that was given a name of its
+-- own shows that name instead of the name of its model.
 
 --- Draws the name and the description of the container that the local player is looking at.
 -- @param entity [Entity]
@@ -11,8 +12,12 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
     local container_data = self:find(entity:GetModel())
 
     if container_data then
-      local title = t(container_data.name)
+      local title, is_custom = self:get_container_name(entity)
       local alpha = 255 - 255 * (dist / 300)
+
+      if title and !is_custom then
+        title = t(title)
+      end
 
       if title then
         local font = Theme.get_font('tooltip_large')
@@ -64,18 +69,21 @@ function Container:CanItemMenuOpen(item_obj)
   end
 end
 
---- Returns the translated name of the container.
+--- Returns the name of the container: its custom name, or the translated name of its model.
 -- @param entity [Entity]
 -- @return [String name, or nil if the entity is not a container]
 function Container:GetEntityName(entity)
   local container_data = self:find(entity:GetModel())
 
   if container_data then
-    return t(container_data.name)
+    local name, is_custom = self:get_container_name(entity)
+
+    return is_custom and name or t(name)
   end
 end
 
---- Adds the 'open' option to the interactions menu of the container props.
+--- Adds the 'open' option to the interactions menu of the container props. The option has
+-- a lock for an icon if the container asks for a password.
 -- @param menu [Panel the interactions menu]
 -- @param entity [Entity]
 function Container:CreateEntityInteractions(menu, entity)
@@ -84,6 +92,6 @@ function Container:CreateEntityInteractions(menu, entity)
   if container_data and entity:GetClass() == 'prop_physics' then
     menu:AddOption(t'ui.container.open', function()
       Cable.send('fl_container_open', entity)
-    end):SetIcon('icon16/box.png')
+    end):SetIcon(self:has_container_password(entity) and 'icon16/lock.png' or 'icon16/box.png')
   end
 end

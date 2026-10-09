@@ -1,4 +1,14 @@
 en:
+  config:
+    containers:
+      title: Containers
+      desc: Customize how containers work on your server!
+      password_delay:
+        name: Password retry delay
+        desc: How long a player has to wait after entering a wrong container password before they can try again (in seconds).
+      spill_items:
+        name: Spill items on removal
+        desc: Whether the items of a container are dropped on the ground when the container is removed. They are destroyed with it otherwise.
   container:
     box:
       title: Cardboard box
@@ -81,6 +91,44 @@ en:
     medium_cash_reg:
       title: Cash Register
       desc: "A moderately sized cash register, it seems to be missing a lock."
+  error:
+    container:
+      not_valid: This is not a container!
+      wrong_password: You have entered an incorrect password!
+      password_wait: "You have to wait {time} before you can enter a password again!"
+      no_items: There are no items to fill this container with!
+      no_space: Nothing could be added to this container!
+  notification:
+    container:
+      message: "{name}: {message}"
+      name_set: "You have named this container '{name}'."
+      name_removed: You have removed the name of this container.
+      message_set: You have set the message of this container.
+      message_removed: You have removed the message of this container.
+      password_set: "You have set the password of this container to '{password}'."
+      password_removed: You have removed the password of this container.
+      filled:
+        "1": "You have added {count} random item to this container."
+        "2": "You have added {count} random items to this container."
+  tool:
+    container:
+      name: Container Tool
+      desc: Name containers, give them a message or a password, or fill them with random items.
+      "0": "Left Click: Apply, Right Click: Remove the name, message or password."
+      mode: Mode
+      mode_name: Set the name
+      mode_message: Set the message
+      mode_password: Set the password
+      mode_fill: Fill with random items
+      custom_name: Name
+      message: Message
+      password: Password
+      share: "Fill up to (% of slots)"
+      category: Item category
+      any_category: Any category
   ui:
     container:
       open: Open
+      password:
+        title: Password
+        message: What is the password for this container?
