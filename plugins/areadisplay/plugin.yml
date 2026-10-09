@@ -1,5 +1,5 @@
 name: Area Display
-description: Displays the area name when a player enters an area.
+description: Announces the text areas of the map to the players who enter them.
 author: TeslaCloud Studios
 depends:
   - areas

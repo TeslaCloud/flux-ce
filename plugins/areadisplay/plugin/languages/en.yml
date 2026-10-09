@@ -1,0 +1,29 @@
+en:
+  config:
+    area_display:
+      title: Area Display
+      desc: Area Display plugin configuration
+      cooldown:
+        name: Area Notice Cooldown
+        desc: How many seconds have to pass before the notice of the same area is shown to a player again. 0 shows it every time the player enters the area.
+  notification:
+    area_display:
+      updated: "You have updated the display of the '{text}' area."
+  settings:
+    area_display:
+      name: Show Area Notices
+      desc: Show the name of an area on the screen when you enter it.
+  tool:
+    area_display:
+      title: Text Area
+      desc: "Create an area that announces its text to the players who enter it. Right Click without an area being created: apply the style and the one-time setting to the text area you are looking at."
+      text: Text
+      height: Height
+      style: Display Style
+      once: Show to every player only once
+  ui:
+    area_display:
+      styles:
+        fade: Fading Title
+        typewriter: Typewriter
+        cinematic: Cinematic

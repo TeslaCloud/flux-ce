@@ -1,0 +1,13 @@
+categories:
+  area_display:
+    name: config.area_display.title
+    description: config.area_display.desc
+configs:
+  area_display_cooldown:
+    name: config.area_display.cooldown.name
+    description: config.area_display.cooldown.desc
+    category: area_display
+    type: number
+    min_value: 0
+    max_value: 600
+    default_value: 20
