@@ -61,7 +61,7 @@ local function parse_args(args_str)
   local env = {}
   local task = nil
 
-  for k, v in ipairs((args_str or ''):trim():split(' ')) do
+  for k, v in ipairs(string.Trim(args_str or ''):split(' ')) do
     if v != '' then
       local key, value = v:match('^([%w_]+)=(.*)$')
 

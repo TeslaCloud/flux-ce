@@ -449,7 +449,7 @@ local function wrap_unversioned_migration(contents, source)
     '-- Its file name has no version, so its statements are wrapped into #change.\n'..
     'local Migration = ActiveRecord.Migration.new()\n\n'..
     'function Migration:change()\n'..
-    string.set_indent(contents:trim(), '  ')..'\n'..
+    string.set_indent(string.Trim(contents), '  ')..'\n'..
     'end\n\n'..
     'return Migration\n'
 end
@@ -477,7 +477,23 @@ function ActiveRecord.MigrationContext:install_migrations()
 
   local installed = {}
 
+  -- Install in the order of the original versions, so a migration that alters a table
+  -- always gets a later version than the one creating it, whatever order the files were
+  -- registered in. Unversioned files go last, in registration order.
+  local ordered = {}
+
   for k, source in ipairs(source_list) do
+    local version = ActiveRecord.MigrationContext.parse_migration_filename(source)
+    table.insert(ordered, { source = source, version = version or math.huge, index = k })
+  end
+
+  table.sort(ordered, function(a, b)
+    if a.version != b.version then return a.version < b.version end
+    return a.index < b.index
+  end)
+
+  for k, entry in ipairs(ordered) do
+    local source = entry.source
     local version, name = ActiveRecord.MigrationContext.parse_migration_filename(source)
     local unversioned = version == nil
 

@@ -267,8 +267,8 @@ en:
           environment: "Not loaded: not meant for this environment"
           unknown: Not loaded
         restart:
-          disabled: disabled after the restart
-          enabled: enabled after the restart
+          disabled: "disabled after the restart"
+          enabled: "enabled after the restart"
         force:
           title: Disable a required plugin
           message: "{plugin} is required by: {plugins}. Whatever depends on it will not be loaded either, and the schema may break without it. Disable it anyway?"
