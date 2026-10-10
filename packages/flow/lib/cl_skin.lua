@@ -4,6 +4,12 @@
 
 -- Default GWEN skin copy-pasta.
 
+-- Pixel sizes that the paint functions hardcode are scaled with the screen like the stock
+-- Derma panels (see cl_derma_scale.lua), which loads after this file.
+local function scale(size)
+  return DermaScale and DermaScale.scale(size) or size
+end
+
 SKIN                                    = {}
 
 SKIN.print_name                         = 'Flux Skin'
@@ -334,7 +340,7 @@ end
 function SKIN:PaintFrame(panel, w, h)
   if panel.m_bPaintShadow then
     DisableClipping(true)
-      SKIN.tex.Shadow(-4, -4, w + 10, h + 10)
+      SKIN.tex.Shadow(-scale(4), -scale(4), w + scale(10), h + scale(10))
     DisableClipping(false)
   end
 
@@ -458,7 +464,7 @@ function SKIN:PaintMenuOption(panel, w, h)
   end
 
   if panel:GetChecked() then
-    self.tex.Menu_Check(5, h / 2 - 7, 15, 15)
+    self.tex.Menu_Check(scale(5), h / 2 - scale(7), scale(15), scale(15))
   end
 end
 
@@ -478,7 +484,7 @@ function SKIN:PaintPropertySheet(panel, w, h)
   local active_tab = panel:GetActiveTab()
   local offset = 0
 
-  if active_tab then offset = active_tab:GetTall() - 8 end
+  if active_tab then offset = active_tab:GetTall() - scale(8) end
 
   self.tex.Tab_Control(0, offset, w, h - offset)
 end
@@ -782,12 +788,14 @@ function SKIN:PaintTreeNode(panel, w, h)
 
   surface.SetDrawColor(self.Colours.Tree.Lines)
 
+  local x, y = scale(9), scale(7)
+
   if panel.m_bLastChild then
-    surface.DrawRect(9, 0, 1, 7)
-    surface.DrawRect(9, 7, 9, 1)
+    surface.DrawRect(x, 0, 1, y)
+    surface.DrawRect(x, y, x, 1)
   else
-    surface.DrawRect(9, 0, 1, h)
-    surface.DrawRect(9, 7, 9, 1)
+    surface.DrawRect(x, 0, 1, h)
+    surface.DrawRect(x, y, x, 1)
   end
 end
 
@@ -802,7 +810,7 @@ function SKIN:PaintTreeNodeButton(panel, w, h)
   -- it just gets the cached value from inside the Label
   local w, _ = panel:GetTextSize()
 
-  self.tex.Selection(38, 0, w + 6, h)
+  self.tex.Selection(scale(38), 0, w + scale(6), h)
 end
 
 --- Paints a selection highlight.
@@ -837,7 +845,7 @@ local function PaintNotches(x, y, w, h, num)
   local space = w / num
 
   for i = 0, num do
-    surface.DrawRect(x + i * space, y + 4, 1, 5)
+    surface.DrawRect(x + i * space, y + scale(4), 1, scale(5))
   end
 end
 
@@ -847,9 +855,9 @@ end
 -- @param h [Number height of the panel]
 function SKIN:PaintNumSlider(panel, w, h)
   surface.SetDrawColor(Color(0, 0, 0, 100))
-  surface.DrawRect(8, h * 0.5 - 1, w - 15, 1)
+  surface.DrawRect(scale(8), h * 0.5 - 1, w - scale(15), 1)
 
-  PaintNotches(8, h * 0.5 - 1, w - 16, 1, panel.m_iNotches)
+  PaintNotches(scale(8), h * 0.5 - 1, w - scale(16), 1, panel.m_iNotches)
 end
 
 --- Paints a progress bar filled according to its fraction.
@@ -866,11 +874,11 @@ end
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintCollapsibleCategory(panel, w, h)
-  if h < 21 then
+  if h < scale(21) then
     return self.tex.categoryList.Header(0, 0, w, h)
   end
 
-  self.tex.categoryList.Inner(0, 0, w, 63)
+  self.tex.categoryList.Inner(0, 0, w, scale(63))
 end
 
 --- Paints the background of a category list.

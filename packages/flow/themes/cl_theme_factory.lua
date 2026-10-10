@@ -763,7 +763,7 @@ end
 -- @param h [Number panel height]
 function THEME.skin:PaintTab(panel, w, h)
   if panel:GetPropertySheet():GetActiveTab() == panel then
-    self:DrawGenericBackground(4, 0, w - 8, h - 8, self.colTab:alpha(220))
+    self:DrawGenericBackground(DermaScale.scale(4), 0, w - DermaScale.scale(8), h - DermaScale.scale(8), self.colTab:alpha(220))
   else
     self:DrawGenericBackground(0, 0, w, h, Color(40, 40, 40))
   end
@@ -921,7 +921,8 @@ function THEME.skin:PaintFrame(panel, w, h)
   surface.SetDrawColor(Color(10, 10, 10, 150))
   surface.DrawRect(0, 0, w, h)
 
-  draw.textured_rect(Theme.get_material('gradient'), 0, 0, w, 24, color:alpha(200))
+  -- The gradient covers the title bar, which scales with the stock Derma (cl_derma_scale.lua).
+  draw.textured_rect(Theme.get_material('gradient'), 0, 0, w, DermaScale.scale(24), color:alpha(200))
 end
 
 --- Draws the header background of a collapsible category, darker while it is collapsed,
@@ -932,9 +933,12 @@ end
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)
   panel.Header:SetFont(Theme.get_font('text_smaller'))
 
-  if h < 21 then
-    self:DrawGenericBackground(0, 0, w, 21, Color(0, 0, 0))
+  -- The bar covers the header, whose height scales with the stock Derma (cl_derma_scale.lua).
+  local bar_height = panel:GetHeaderHeight() + 1
+
+  if h < bar_height then
+    self:DrawGenericBackground(0, 0, w, bar_height, Color(0, 0, 0))
   else
-    self:DrawGenericBackground(0, 0, w, 21, Color(30, 30, 30))
+    self:DrawGenericBackground(0, 0, w, bar_height, Color(30, 30, 30))
   end
 end

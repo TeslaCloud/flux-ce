@@ -21,7 +21,7 @@ function PANEL:Init()
   self.text:SetTextColor(color_white)
 
   self.list = vgui.Create('DComboBox', self)
-  self.list:DockMargin(0, 8, 0, 0)
+  self.list:DockMargin(0, DermaScale.scale(8), 0, 0)
   self.list:Dock(TOP)
   self.list.OnSelect = function(panel, index, text, callback)
     if callback then
@@ -41,7 +41,8 @@ end
 function PANEL:SizeToContents()
   local width, height = math.max(self.text:GetWide(), ScrW() / 6), self.text:GetTall()
 
-  self:SetSize(width + 50, height + 42 + self.list:GetTall())
+  -- The frame's title bar and paddings scale with the stock Derma (cl_derma_scale.lua).
+  self:SetSize(width + DermaScale.scale(50), height + DermaScale.scale(42) + self.list:GetTall())
 end
 
 --- Sets the title of the dialog window.
