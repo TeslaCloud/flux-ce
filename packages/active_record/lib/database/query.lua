@@ -16,7 +16,7 @@
   Alexander Grist-Hucker
   http://www.alexgrist.com
 
-  Meow the Cat
+  Luna Fox
   https://teslacloud.net
 --]]
 

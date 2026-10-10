@@ -4,7 +4,7 @@ Package:describe(function(s)
   s.date        = '2019-03-20'
   s.summary     = 'Fix output colors on Linux.'
   s.description = 'Fix print and MsgC being all white on Linux.'
-  s.authors     = { 'TeslaCloud Studios', 'Meow the Cat' }
+  s.authors     = { 'TeslaCloud Studios', 'Luna Fox' }
   s.email       = 'support@teslacloud.net'
   s.sv_file     = 'lib/colorfix.lua'
   s.website     = 'https://teslacloud.net'

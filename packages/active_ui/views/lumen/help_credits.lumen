@@ -1,0 +1,58 @@
+--- The Credits page of the Help tab: the people behind Flux.
+
+local card_style = { padding = 8, gap = 2, background = Color(0, 0, 0, 150), radius = 8 }
+
+local sections = {
+  {
+    entries = {
+      { name = 'Luna Fox', roles = { 'Project Lead', 'Lead Dev' } },
+      { name = 'AleXXX_007', roles = { 'HL2RP Lead', 'Lead Dev' } },
+      {
+        name = 'Community Contributions',
+        roles = {
+          'Seriously thanks a lot to all the people supporting the framework and '..
+          'helping us out with contributions. You rock!'
+        }
+      }
+    }
+  },
+  {
+    title = 'Special Thanks',
+    entries = {
+      { name = 'Atle', roles = { 'Gamemode design help' } }
+    }
+  },
+  {
+    title = 'Past Contributors',
+    entries = {
+      { name = 'NightAngel', roles = { 'Developer' } },
+      { name = 'Zig (zigbomb)', roles = { 'Designer' } }
+    }
+  }
+}
+
+--- The card of one person.
+-- @param props [Map entry (Map name (String) and roles (List<String>))]
+local function Entry(props)
+  return <view style={card_style}>
+    <text style={{ font = 'menu_normal' }}>{props.entry.name}</text>
+    {Lumen.map(props.entry.roles, function(role)
+      return <text key={role} style={{ font = 'text_small' }}>{role}</text>
+    end)}
+  </view>
+end
+
+return function(props)
+  return <view style={{ gap = 8 }}>
+    {Lumen.map(sections, function(section, index)
+      return <view key={index} style={{ gap = 4 }}>
+        <text style={{ font = 'menu_large', margin_top = index > 1 and 8 or 0 }}>
+          {section.title or t'ui.help.credits.title'}
+        </text>
+        {Lumen.map(section.entries, function(entry)
+          return <Entry key={entry.name} entry={entry} />
+        end)}
+      </view>
+    end)}
+  </view>
+end

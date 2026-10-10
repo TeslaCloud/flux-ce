@@ -1,0 +1,38 @@
+--- The Plugins page of the Help tab: the schema, then every plugin with its author and its
+-- description.
+
+local card_style = { padding = 8, gap = 2, background = Color(0, 0, 0, 150), radius = 8 }
+
+--- The card of the schema or of a plugin.
+-- @param props [Map name (String), author (String), description (String)]
+local function PluginCard(props)
+  local dim = (Lumen.Style.color('text') or color_white):alpha(170)
+  local author = props.author
+  local description = props.description
+
+  return <view style={card_style}>
+    <text style={{ font = 'menu_normal' }}>{props.name}</text>
+    {isstring(author) and author != '' and <text style={{ font = 'text_smaller', color = dim }}>{author}</text>}
+    {isstring(description) and description != '' and <text style={{ font = 'text_smaller' }}>{description}</text>}
+  </view>
+end
+
+return function(props)
+  local plugins = {}
+
+  for path, plugin in SortedPairsByMemberValue(Plugin.all(), 'author') do
+    if istable(plugin) and !plugin:is_schema() then
+      plugins[#plugins + 1] = { path = path, plugin = plugin }
+    end
+  end
+
+  return <view style={{ gap = 8 }}>
+    <text style={{ font = 'menu_large' }}>{t'ui.help.plugins.schema'}</text>
+    <PluginCard name={SCHEMA:get_name()} author={SCHEMA:get_author()} />
+    <text style={{ font = 'menu_large', margin_top = 4 }}>{t'ui.help.plugins.title'}</text>
+    {Lumen.map(plugins, function(entry)
+      return <PluginCard key={entry.path} name={entry.plugin.name} author={entry.plugin.author}
+        description={entry.plugin.description} />
+    end)}
+  </view>
+end

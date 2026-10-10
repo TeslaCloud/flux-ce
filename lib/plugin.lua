@@ -54,9 +54,7 @@ local default_extras = {
   'config',
   'languages',
   'controllers',
-  'views', 'views/html',
-  'views/assets/stylesheets',
-  'views/assets/javascripts',
+  'views', 'views/lumen',
   'tools',
   'themes',
   'entities',
@@ -1225,8 +1223,8 @@ function Plugin.include_folders(folder)
           Pipeline.include_folder('language', folder..'/languages/')
         elseif v == 'migrations' then
           Pipeline.include_folder('migrations', folder..'/migrations/')
-        elseif v:find('assets') or v:find('html') then
-          Pipeline.include_folder('html', folder..'/'..v)
+        elseif v == 'views/lumen' then
+          Pipeline.include_folder('lumen', folder..'/'..v)
         else
           require_relative_folder(folder..'/'..v)
         end

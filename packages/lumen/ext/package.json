@@ -1,0 +1,43 @@
+{
+  "name": "lua-lumen",
+  "displayName": "Lua Lumen",
+  "description": "Syntax highlighting for Lumen templates: Garry's Mod Lua with markup, as used by the Flux framework.",
+  "version": "1.0.0",
+  "publisher": "flux",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "lumen",
+    "flux",
+    "garrysmod",
+    "glua"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "lumen",
+        "aliases": [
+          "Lua Lumen",
+          "Lumen",
+          "lumen"
+        ],
+        "extensions": [
+          ".lumen"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "lumen",
+        "scopeName": "source.lumen",
+        "path": "./syntaxes/lumen.tmLanguage.json"
+      }
+    ]
+  }
+}

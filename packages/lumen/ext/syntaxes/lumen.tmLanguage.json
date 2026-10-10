@@ -1,0 +1,438 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Lumen",
+  "scopeName": "source.lumen",
+  "fileTypes": ["lumen"],
+  "patterns": [
+    { "include": "#lua" }
+  ],
+  "repository": {
+    "lua": {
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#strings" },
+        { "include": "#markup" },
+        { "include": "#numbers" },
+        { "include": "#function-definition" },
+        { "include": "#keywords" },
+        { "include": "#constants" },
+        { "include": "#lumen-api" },
+        { "include": "#table" },
+        { "include": "#function-call" },
+        { "include": "#operators" },
+        { "include": "#variables" }
+      ]
+    },
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.documentation.lumen",
+          "begin": "---\\[(=*)\\[",
+          "end": "\\]\\1\\]",
+          "captures": { "0": { "name": "punctuation.definition.comment.lumen" } }
+        },
+        {
+          "name": "comment.block.lumen",
+          "begin": "--\\[(=*)\\[",
+          "end": "\\]\\1\\]",
+          "captures": { "0": { "name": "punctuation.definition.comment.lumen" } }
+        },
+        {
+          "name": "comment.line.documentation.lumen",
+          "match": "(---)(?!-).*$",
+          "captures": { "1": { "name": "punctuation.definition.comment.lumen" } },
+          "patterns": [{ "include": "#doc-tags" }]
+        },
+        {
+          "name": "comment.line.double-dash.lumen",
+          "match": "(--).*$",
+          "captures": { "1": { "name": "punctuation.definition.comment.lumen" } }
+        },
+        {
+          "name": "comment.line.double-slash.lumen",
+          "match": "(//).*$",
+          "captures": { "1": { "name": "punctuation.definition.comment.lumen" } }
+        },
+        {
+          "name": "comment.block.slash-star.lumen",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "captures": { "0": { "name": "punctuation.definition.comment.lumen" } }
+        }
+      ]
+    },
+
+    "doc-tags": {
+      "match": "(@)(param|return|module|see|alias|class|field)\\b",
+      "captures": {
+        "0": { "name": "storage.type.class.doc.lumen" }
+      }
+    },
+
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.lumen",
+          "begin": "'",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.lumen" } },
+          "end": "'|$",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.lumen" } },
+          "patterns": [{ "include": "#string-escape" }]
+        },
+        {
+          "name": "string.quoted.double.lumen",
+          "begin": "\"",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.lumen" } },
+          "end": "\"|$",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.lumen" } },
+          "patterns": [{ "include": "#string-escape" }]
+        },
+        {
+          "name": "string.quoted.other.multiline.lumen",
+          "begin": "\\[(=*)\\[",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.lumen" } },
+          "end": "\\]\\1\\]",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.lumen" } }
+        }
+      ]
+    },
+
+    "string-escape": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.lumen",
+          "match": "\\\\(?:[abfnrtv\\\\\"'\\n]|z|x[0-9A-Fa-f]{2}|\\d{1,3}|u\\{[0-9A-Fa-f]+\\})"
+        },
+        {
+          "name": "invalid.illegal.escape.lumen",
+          "match": "\\\\."
+        }
+      ]
+    },
+
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.lumen",
+          "match": "\\b0[xX][0-9A-Fa-f]+(?:\\.[0-9A-Fa-f]*)?(?:[pP][-+]?\\d+)?\\b"
+        },
+        {
+          "name": "constant.numeric.float.lumen",
+          "match": "(?<![\\w.])(?:\\d+\\.\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?\\b|(?<![\\w.])\\d+[eE][-+]?\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.lumen",
+          "match": "(?<![\\w.])\\d+\\b"
+        }
+      ]
+    },
+
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.lumen",
+          "match": "\\b(?:if|then|elseif|else|end|for|in|while|do|repeat|until|return|break|continue|goto)\\b"
+        },
+        {
+          "name": "storage.modifier.local.lumen",
+          "match": "\\blocal\\b"
+        },
+        {
+          "name": "storage.type.function.lumen",
+          "match": "\\bfunction\\b"
+        },
+        {
+          "name": "keyword.operator.logical.lumen",
+          "match": "\\b(?:and|or|not)\\b"
+        }
+      ]
+    },
+
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.lumen",
+          "match": "\\b(?:true|false|nil)\\b"
+        },
+        {
+          "name": "variable.language.self.lumen",
+          "match": "\\bself\\b"
+        },
+        {
+          "name": "variable.language.varargs.lumen",
+          "match": "\\.\\.\\."
+        },
+        {
+          "name": "variable.language.realm.lumen",
+          "match": "\\b(?:CLIENT|SERVER|PLAYER|SCHEMA|PLUGIN|THEME|PANEL|GM|GAMEMODE)\\b"
+        }
+      ]
+    },
+
+    "lumen-api": {
+      "patterns": [
+        {
+          "name": "support.function.hook.lumen",
+          "match": "\\buse_(?:state|effect|ref|memo)\\b"
+        },
+        {
+          "match": "\\b(Lumen)(\\.)(element|props|map|require|component|render|mount|load|compile|flatten|text_of|register_element|Fragment)\\b",
+          "captures": {
+            "1": { "name": "support.class.lumen" },
+            "2": { "name": "punctuation.accessor.lumen" },
+            "3": { "name": "support.function.lumen" }
+          }
+        },
+        {
+          "name": "support.class.lumen",
+          "match": "\\b(?:Lumen|Flux|Theme|Font|Plugin|Config|Color|FontAwesome)\\b"
+        },
+        {
+          "name": "support.function.translate.lumen",
+          "match": "\\bt(?=\\s*[('\"\\[])"
+        }
+      ]
+    },
+
+    "function-definition": {
+      "patterns": [
+        {
+          "match": "\\b(local)\\s+(function)\\s+([A-Za-z_]\\w*)",
+          "captures": {
+            "1": { "name": "storage.modifier.local.lumen" },
+            "2": { "name": "storage.type.function.lumen" },
+            "3": { "name": "entity.name.function.lumen" }
+          }
+        },
+        {
+          "match": "\\b(function)\\s+([A-Za-z_][\\w.]*?)(?:([.:])([A-Za-z_]\\w*))?\\s*(?=\\()",
+          "captures": {
+            "1": { "name": "storage.type.function.lumen" },
+            "2": { "name": "entity.name.function.lumen" },
+            "3": { "name": "punctuation.accessor.lumen" },
+            "4": { "name": "entity.name.function.method.lumen" }
+          }
+        }
+      ]
+    },
+
+    "function-call": {
+      "match": "\\b([A-Za-z_]\\w*)\\s*(?=\\(|\\{|'|\"|\\[\\[|\\[=)",
+      "captures": {
+        "1": { "name": "entity.name.function.call.lumen" }
+      }
+    },
+
+    "table": {
+      "name": "meta.table.lumen",
+      "begin": "\\{",
+      "beginCaptures": { "0": { "name": "punctuation.definition.table.begin.lumen" } },
+      "end": "\\}",
+      "endCaptures": { "0": { "name": "punctuation.definition.table.end.lumen" } },
+      "patterns": [
+        {
+          "match": "\\b([A-Za-z_]\\w*)\\s*(=)(?!=)",
+          "captures": {
+            "1": { "name": "variable.other.property.lumen" },
+            "2": { "name": "keyword.operator.assignment.lumen" }
+          }
+        },
+        { "include": "#lua" }
+      ]
+    },
+
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.lumen",
+          "match": "!=|~=|==|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.logical.lumen",
+          "match": "&&|\\|\\||!"
+        },
+        {
+          "name": "keyword.operator.concat.lumen",
+          "match": "\\.\\.(?!\\.)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.lumen",
+          "match": "[-+*/%^#]"
+        },
+        {
+          "name": "keyword.operator.assignment.lumen",
+          "match": "="
+        }
+      ]
+    },
+
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.other.constant.lumen",
+          "match": "\\b[A-Z][A-Z0-9_]+\\b"
+        },
+        {
+          "match": "([.:])([A-Za-z_]\\w*)",
+          "captures": {
+            "1": { "name": "punctuation.accessor.lumen" },
+            "2": { "name": "variable.other.property.lumen" }
+          }
+        },
+        {
+          "name": "variable.other.lumen",
+          "match": "\\b[A-Za-z_]\\w*\\b"
+        }
+      ]
+    },
+
+    "markup": {
+      "comment": "Markup starts at a < that is followed by a tag name or > (a fragment) and that stands where an operand may start: after an opening bracket, a comma, an assignment, a keyword such as return or and, or at the start of a line. A < after an operand is the less-than operator and is left to #operators.",
+      "patterns": [
+        {
+          "begin": "(?<=[(\\[{,=]|^|^return|\\sreturn|\\sand|\\sor|\\snot|\\sthen|\\sdo|\\selse)\\s*(?=<[A-Za-z_>])",
+          "end": "(?<=/>|>)",
+          "patterns": [
+            { "include": "#tag" },
+            { "include": "#fragment" }
+          ]
+        }
+      ]
+    },
+
+    "tag": {
+      "name": "meta.tag.lumen",
+      "begin": "(<)([A-Z][\\w.]*|[a-z_][\\w.-]*)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.lumen" },
+        "2": { "name": "entity.name.tag.lumen", "patterns": [{ "include": "#tag-name" }] }
+      },
+      "end": "(/>)|(</)(\\2)\\s*(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.end.lumen" },
+        "2": { "name": "punctuation.definition.tag.begin.lumen" },
+        "3": { "name": "entity.name.tag.lumen", "patterns": [{ "include": "#tag-name" }] },
+        "4": { "name": "punctuation.definition.tag.end.lumen" }
+      },
+      "patterns": [
+        { "include": "#tag-attributes" },
+        { "include": "#children" }
+      ]
+    },
+
+    "tag-name": {
+      "patterns": [
+        {
+          "name": "support.class.component.lumen",
+          "match": "\\b[A-Z][\\w.]*"
+        },
+        {
+          "name": "entity.name.tag.intrinsic.lumen",
+          "match": "\\b(?:view|text|button|scroll|spacer|image|input|checkbox|combo|slider|avatar|model)\\b"
+        }
+      ]
+    },
+
+    "fragment": {
+      "name": "meta.tag.fragment.lumen",
+      "begin": "(<)(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.lumen" },
+        "2": { "name": "punctuation.definition.tag.end.lumen" }
+      },
+      "end": "(</)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.lumen" },
+        "2": { "name": "punctuation.definition.tag.end.lumen" }
+      },
+      "patterns": [
+        { "include": "#children" }
+      ]
+    },
+
+    "tag-attributes": {
+      "name": "meta.tag.attributes.lumen",
+      "begin": "\\G",
+      "end": "(?=/>)|(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.end.lumen" }
+      },
+      "patterns": [
+        {
+          "name": "meta.attribute.spread.lumen",
+          "begin": "(\\{)(\\.\\.\\.)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.section.embedded.begin.lumen" },
+            "2": { "name": "keyword.operator.spread.lumen" }
+          },
+          "end": "\\}",
+          "endCaptures": { "0": { "name": "punctuation.section.embedded.end.lumen" } },
+          "contentName": "meta.embedded.expression.lumen",
+          "patterns": [{ "include": "#lua" }]
+        },
+        {
+          "match": "([A-Za-z_][\\w.-]*)\\s*(=)",
+          "captures": {
+            "1": { "name": "entity.other.attribute-name.lumen" },
+            "2": { "name": "keyword.operator.assignment.lumen" }
+          }
+        },
+        {
+          "name": "entity.other.attribute-name.lumen",
+          "match": "[A-Za-z_][\\w.-]*"
+        },
+        {
+          "name": "string.quoted.double.attribute.lumen",
+          "begin": "\"",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.lumen" } },
+          "end": "\"",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.lumen" } },
+          "patterns": [{ "include": "#entity" }]
+        },
+        {
+          "name": "string.quoted.single.attribute.lumen",
+          "begin": "'",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.lumen" } },
+          "end": "'",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.lumen" } },
+          "patterns": [{ "include": "#entity" }]
+        },
+        { "include": "#expression" }
+      ]
+    },
+
+    "children": {
+      "patterns": [
+        {
+          "name": "comment.block.markup.lumen",
+          "begin": "<!--",
+          "end": "-->",
+          "captures": { "0": { "name": "punctuation.definition.comment.lumen" } }
+        },
+        { "include": "#expression" },
+        { "include": "#tag" },
+        { "include": "#fragment" },
+        { "include": "#entity" },
+        {
+          "name": "text.lumen",
+          "match": "[^<{&]+"
+        }
+      ]
+    },
+
+    "expression": {
+      "name": "meta.embedded.expression.lumen",
+      "begin": "\\{",
+      "beginCaptures": { "0": { "name": "punctuation.section.embedded.begin.lumen" } },
+      "end": "\\}",
+      "endCaptures": { "0": { "name": "punctuation.section.embedded.end.lumen" } },
+      "patterns": [{ "include": "#lua" }]
+    },
+
+    "entity": {
+      "name": "constant.character.entity.lumen",
+      "match": "&(?:[A-Za-z]+|#\\d+|#x[0-9A-Fa-f]+);"
+    }
+  }
+}

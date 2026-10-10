@@ -1,19 +1,17 @@
 --- Help: the pages of the Help tab of the tab menu. A page is registered under an ID with
 -- `Flux.Help:add_page` and shows up as a tab of its own, in the order of the priorities.
--- Its contents are HTML that comes from one of three places: an HTML template from a
--- `views/html` folder (the usual way, see `Flux.HTML`), a function that returns the HTML,
--- or a ready string. Flux registers three pages itself: 'commands' (every command the
--- local player may run, see `Flux.Help:get_commands`), 'plugins' and 'credits'.
+-- Its contents are a Lumen element tree that comes from one of two places: a Lumen template
+-- from a `views/lumen` folder (the usual way, see `Lumen`), or a function that returns the
+-- elements. Flux registers three pages itself: 'commands' (every command the local player
+-- may run, see `Flux.Help:get_commands`), 'plugins' and 'credits'.
 --
 -- The pages are rendered every time the Help tab is opened, in the language of the player,
--- so a page can show what is true at that moment. Text that does not come from the page's
--- author (names, descriptions, anything a player has typed) has to go through
--- `Flux.HTML:escape` before it is put into the HTML.
+-- so a page can show what is true at that moment.
 -- ```
--- -- plugin/cl_plugin.lua, with the page in plugin/views/html/_rules.html.loon
+-- -- plugin/cl_plugin.lua, with the page in plugin/views/lumen/rules.lumen
 -- Flux.Help:add_page('rules', {
 --   title = 'ui.help.rules.title',
---   template = '_rules',
+--   component = 'rules',
 --   priority = 5
 -- })
 -- ```
@@ -49,17 +47,17 @@ end
 --     return PLAYER:has_initialized()
 --   end,
 --   render = function(page)
---     return '<div class="panel__title"><h1>'..Flux.HTML:escape(GetHostName())..'</h1></div>'
+--     return Lumen.element('text', { style = { font = 'menu_large' } }, { GetHostName() })
 --   end
 -- })
 -- ```
 -- @param id [String unique page ID made of Latin letters, digits and underscores]
--- @param data [Map page options. Give one of: template (String ID of an HTML template,
---   rendered with `render_template`), render (Function(page) that returns the HTML) or
---   html (String the HTML itself). Optional: title (String text or phrase shown on the tab
---   of the page, the ID by default), priority (Number pages are ordered by ascending
---   priority, 50 by default), locals (Map local variables for the template) and visible
---   (Function(page) return a falsy value to leave the page out)]
+-- @param data [Map page options. Give one of: component (String ID of a Lumen template, or
+--   Function a Lumen component; it receives the page as the `page` prop along with `props`)
+--   or render (Function(page) that returns a Lumen element). Optional: title (String text or
+--   phrase shown on the tab of the page, the ID by default), priority (Number pages are
+--   ordered by ascending priority, 50 by default), props (Map more props for the component)
+--   and visible (Function(page) return a falsy value to leave the page out)]
 -- @return [Map the stored page, or nil if the ID or the options are not valid]
 function Flux.Help:add_page(id, data)
   if !isstring(id) or !id:match('^[%w_]+$') or !istable(data) then
@@ -119,32 +117,46 @@ function Flux.Help:get_pages()
   return pages
 end
 
---- Renders the contents of a page. A page that fails to render is reported in the console
+--- Renders the contents of a page: the element of its component with the page as a prop, or
+-- what its render function returns. A page that fails to render is reported in the console
 -- and comes out empty, so that it does not take the other pages down with it.
 -- @param page [Map page, as returned by Flux.Help#get_pages or Flux.Help#find_page]
--- @return [String HTML of the page, empty if the page has none]
+-- @return [Map Lumen element of the page, or nil if the page has none]
 function Flux.Help:render_page(page)
-  if !istable(page) then return '' end
-
-  local ok, html = true, page.html
-  local namespace = get_template_namespace()
+  if !istable(page) then return nil end
 
   if isfunction(page.render) then
-    ok, html = pcall(page.render, page)
-  elseif isstring(page.template) then
-    ok, html = pcall(render_template, page.template, page.locals)
+    local success, result = pcall(page.render, page)
+
+    if !success then
+      ErrorNoHalt("The '"..tostring(page.id).."' help page has failed to render!\n")
+      error_with_traceback(tostring(result))
+
+      return nil
+    end
+
+    if result == nil or result == false then return nil end
+
+    return result
   end
 
-  if !ok then
-    set_template_namespace(namespace)
+  local component = page.component
 
-    ErrorNoHalt("The '"..tostring(page.id).."' help page has failed to render!\n")
-    error_with_traceback(tostring(html))
-
-    return ''
+  if isstring(component) then
+    component = Lumen.component(component)
   end
 
-  return isstring(html) and html or ''
+  if component == nil then return nil end
+
+  local props = { page = page }
+
+  if istable(page.props) then
+    for k, v in pairs(page.props) do
+      props[k] = v
+    end
+  end
+
+  return Lumen.element(component, props)
 end
 
 --- Returns the prefix to show in front of the names of commands: '/' if that is one of the
@@ -161,9 +173,9 @@ function Flux.Help:get_command_prefix()
 end
 
 --- Lists the commands the local player is allowed to run, grouped by category, for the
--- Commands page of the Help tab. The texts are translated to the current language but not
--- escaped. Commands without a category end up in a category of their own, and categories
--- that translate to the same name are merged.
+-- Commands page of the Help tab. The texts are translated to the current language. Commands
+-- without a category end up in a category of their own, and categories that translate to the
+-- same name are merged.
 -- @return [List<Map> categories ordered by name: name (String translated name) and
 --   commands (List<Map> ordered by name: id (String), name (String), syntax (String,
 --   empty if the command takes no arguments), description (String) and aliases
@@ -238,18 +250,18 @@ end
 
 Flux.Help:add_page('commands', {
   title = 'ui.help.commands.title',
-  template = '_commands',
+  component = 'help_commands',
   priority = 10
 })
 
 Flux.Help:add_page('plugins', {
   title = 'ui.help.plugins.title',
-  template = '_plugins',
+  component = 'help_plugins',
   priority = 20
 })
 
 Flux.Help:add_page('credits', {
   title = 'ui.help.credits.title',
-  template = '_credits',
+  component = 'help_credits',
   priority = 90
 })

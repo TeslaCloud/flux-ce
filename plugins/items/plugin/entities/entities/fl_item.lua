@@ -338,7 +338,7 @@ else
     if distance > 150 then return end
 
     local text = 'ERROR'
-    local desc = 'Meow probably broke it again'
+    local desc = 'Luna probably broke it again'
     local alpha = self.alpha or 255
 
     if distance > 100 then

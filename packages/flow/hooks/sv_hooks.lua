@@ -669,7 +669,7 @@ do
     --- Called on the server while the files that get sent to the clients are written, on
     -- `FluxPackageLoaded` and after a Lua refresh, once the shared data, the settings and
     -- the language phrases have been written. Packages and plugins that generate clientside
-    -- code of their own, such as the HTML assets of Active UI, write it here with
+    -- code of their own, such as the compiled templates of Lumen, write it here with
     -- `Flux.write_client_file`.
     hook.Run('FLWriteClientFiles')
   end

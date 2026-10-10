@@ -4,7 +4,7 @@ Package:describe(function(s)
   s.date        = '2020-02-16'
   s.summary     = 'A gamemode framework.'
   s.description = 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
-  s.authors     = { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zig' }
+  s.authors     = { 'TeslaCloud Studios', 'Luna Fox', 'AleXXX_007', 'NightAngel', 'Zig' }
   s.email       = 'support@teslacloud.net'
   s.global      = 'Flux'
   s.website     = 'https://teslacloud.net'
@@ -24,5 +24,6 @@ Package:describe(function(s)
   s.depends     'active_network'
   s.depends     'fontawesome'
   s.depends     'flow'
+  s.depends     'lumen'
   s.depends     'active_ui'
 end)

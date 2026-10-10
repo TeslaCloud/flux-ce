@@ -1,8 +1,8 @@
 --- Entry point of the Active UI package, run on both realms.
 -- Loads the libraries, the classes and the metatable extensions, the base panels and the
 -- views, registers the theme pipeline with the factory theme, and finally the hooks. On the
--- server it also registers the package's HTML templates, stylesheets and scripts with
--- `Pipeline`. During a partial code reload (`LITE_REFRESH`) only the hooks are loaded again.
+-- server it also registers the package's Lumen templates with `Pipeline`. During a partial
+-- code reload (`LITE_REFRESH`) only the hooks are loaded again.
 
 if !LITE_REFRESH then
   local package_path = PACKAGE.__path__
@@ -12,9 +12,7 @@ if !LITE_REFRESH then
   require_relative_folder('lib/meta', true)
 
   if SERVER then
-    Pipeline.include_folder('html', package_path..'views/html')
-    Pipeline.include_folder('html', package_path..'views/assets/stylesheets')
-    Pipeline.include_folder('html', package_path..'views/assets/javascripts')
+    Pipeline.include_folder('lumen', package_path..'views/lumen')
   end
 
   require_relative_folder('views/base', true)

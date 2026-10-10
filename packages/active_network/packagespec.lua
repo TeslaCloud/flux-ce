@@ -5,7 +5,7 @@ Package:describe(function(s)
   s.summary     = 'Networking utilities'
   s.description = 'Active Network provides various convenience libraries for automatic variable networking '..
                   'from server to client and vice versa.'
-  s.authors     = { 'TeslaCloud Studios', 'Meow the Cat' }
+  s.authors     = { 'TeslaCloud Studios', 'Luna Fox' }
   s.email       = 'support@teslacloud.net'
   s.files       = { 'lib/cl_active_network.lua', 'lib/sv_active_network.lua' }
   s.website     = 'https://teslacloud.net'

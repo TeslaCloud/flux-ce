@@ -1,26 +1,31 @@
---- The help page of the tab menu (`fl_help`): an `fl_html` view that shows the 'help' template
--- rendered with its stylesheet and JavaScript. The template gives every page that has been
--- added with `Flux.Help:add_page` a tab of its own, so that is the place to add to the
--- contents of this panel.
--- `rebuild` renders the page again. Derives from `fl_base_panel`.
+--- The help page of the tab menu (`fl_help`): the 'help' Lumen template mounted into the
+-- panel. The template gives every page that has been added with `Flux.Help:add_page` a tab of
+-- its own, so that is the place to add to the contents of this panel. `rebuild` renders the
+-- template again. Derives from `fl_base_panel`.
 
 local PANEL = {}
-PANEL.categories = {}
 
---- Creates the HTML view and renders the help page into it.
+--- Mounts the help template.
 function PANEL:Init()
-  self.html = vgui.Create('fl_html', self)
-  self.html:Dock(FILL)
-  self:rebuild()
+  self.root = Lumen.render('help', nil, self)
 end
 
---- Renders the help page again from the 'help' stylesheet, template and JavaScript, with
--- the pages that `Flux.Help:get_pages` returns at that moment.
+--- Renders the help template again, with the pages that `Flux.Help:get_pages` returns at that
+-- moment.
 function PANEL:rebuild()
-  self.html:set_css(render_stylesheet('help'))
-  self.html:set_body(render_template('help'))
-  self.html:set_javascript(render_javascript('help'))
-  self.html:render()
+  if self.root then
+    self.root:update()
+  else
+    self.root = Lumen.render('help', nil, self)
+  end
+end
+
+--- Takes the template down with the panel.
+function PANEL:OnRemove()
+  if self.root then
+    self.root:unmount()
+    self.root = nil
+  end
 end
 
 --- Returns the size the tab menu gives this panel when it opens it.

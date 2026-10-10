@@ -1,0 +1,30 @@
+--- The Help tab of the tab menu: a row of tabs, one for every page that `Flux.Help:add_page`
+-- has added, and the page that is selected below them, in a scrolling view. The first page is
+-- selected until a tab is pressed; when the selected page goes away the first one takes over.
+
+return function(props)
+  local pages = Flux.Help:get_pages()
+  local active_id, set_active = use_state(nil)
+  local current = pages[1]
+
+  for k, page in ipairs(pages) do
+    if page.id == active_id then
+      current = page
+    end
+  end
+
+  return <view style={{ gap = 8 }}>
+    <view style={{ direction = 'row', wrap = true, gap = 4 }}>
+      {Lumen.map(pages, function(page)
+        return <button key={page.id} active={current == page}
+          style={{ font = 'menu_small', padding = { 8, 16 } }}
+          on_press={function() set_active(page.id) end}>
+          {t(page.title)}
+        </button>
+      end)}
+    </view>
+    <scroll style={{ flex = 1, gap = 4, padding = { 0, 8, 0, 0 } }}>
+      {current and Flux.Help:render_page(current)}
+    </scroll>
+  </view>
+end

@@ -1,0 +1,42 @@
+--- The Commands page of the Help tab: every command the local player may run, grouped by
+-- category, with its syntax, its description and its aliases.
+
+local card_style = { padding = 8, gap = 2, background = Color(0, 0, 0, 150), radius = 8 }
+
+--- One command.
+-- @param props [Map command (Map as `Flux.Help:get_commands` lists them), prefix (String)]
+local function Command(props)
+  local command = props.command
+  local dim = (Lumen.Style.color('text') or color_white):alpha(170)
+
+  return <view style={card_style}>
+    <view style={{ direction = 'row', gap = 8, align = 'end' }}>
+      <text style={{ font = 'text_normal' }}>{props.prefix..command.name}</text>
+      {command.syntax != '' and <text style={{ font = 'text_small', color = dim }}>{command.syntax}</text>}
+    </view>
+    {command.description != '' and <text style={{ font = 'text_smaller' }}>{command.description}</text>}
+    {#command.aliases > 0 and <text style={{ font = 'text_smallest', color = dim }}>
+      {t'ui.help.commands.aliases'..': '..table.concat(command.aliases, ', ')}
+    </text>}
+  </view>
+end
+
+return function(props)
+  local prefix = Flux.Help:get_command_prefix()
+  local categories = Flux.Help:get_commands()
+
+  return <view style={{ gap = 8 }}>
+    <text style={{ font = 'menu_large' }}>{t'ui.help.commands.title'}</text>
+    {#categories == 0 and <view style={card_style}>
+      <text style={{ font = 'text_normal' }}>{t'ui.help.commands.empty'}</text>
+    </view>}
+    {Lumen.map(categories, function(category)
+      return <view key={category.name} style={{ gap = 4 }}>
+        <text style={{ font = 'menu_normal', margin_top = 4 }}>{category.name}</text>
+        {Lumen.map(category.commands, function(command)
+          return <Command key={command.id} command={command} prefix={prefix} />
+        end)}
+      </view>
+    end)}
+  </view>
+end
