@@ -94,3 +94,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Font Awesome Free
+
+Copyright (c) Fonticons, Inc. (https://fontawesome.com)
+
+The Font Awesome Free icons are licensed under the CC BY 4.0 License, the fonts under the
+SIL OFL 1.1 License and the code under the MIT License. The full license text is in
+packages/fontawesome/LICENSE.txt.

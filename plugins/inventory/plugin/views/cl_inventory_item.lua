@@ -116,8 +116,7 @@ function PANEL:Paint(w, h)
     local icon_size = h * 0.75
 
     if icon:start_with('fa') then
-      local icon_text = FontAwesome:get(icon)
-      local icon_w, icon_h = util.text_size(icon_text, Font.size('flFontAwesome', icon_size))
+      local icon_w, icon_h = FontAwesome:get_icon_size(icon, icon_size)
 
       FontAwesome:draw(icon, w * 0.5 - icon_w * 0.5, h * 0.5 - icon_h * 0.5, icon_size, slot_icon_color)
     else

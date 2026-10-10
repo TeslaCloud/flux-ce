@@ -477,7 +477,7 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   end
 
   if btn.is_temp then
-    FontAwesome:draw('fa-clock-o', w - h - 2, 2, h - 4, color_white)
+    FontAwesome:draw('far fa-clock', w - h - 2, 2, h - 4, color_white)
   end
 end
 

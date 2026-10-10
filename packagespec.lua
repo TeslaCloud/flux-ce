@@ -22,5 +22,6 @@ Package:describe(function(s)
   s.depends     'lib/flux.lua'
   s.depends     'active_record'
   s.depends     'active_network'
+  s.depends     'fontawesome'
   s.depends     'flow'
 end)
