@@ -3,7 +3,7 @@
   'title'         'Flux'
   'maps'          '^rp_'
   'base'          'sandbox'
-  'version'       '0.8.1 (20200216) - alpha'
+  'version'       '0.8.2 (20261010) - alpha'
   'author'        'TeslaCloud Studios'
   'description'   'A free, versatile gamemode framework.'
   'workshopid'    '1518849094'
