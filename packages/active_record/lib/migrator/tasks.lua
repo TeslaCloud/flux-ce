@@ -220,14 +220,24 @@ function Tasks.import_structure_metadata(metadata)
 end
 
 --- Brings the database up to date when the server starts: installs the migrations of
--- the packages and plugins, loads the schema file into a fresh database and runs the
--- pending migrations.
+-- the packages and plugins, warns about versions that have been run but have no file
+-- anymore, loads the schema file into a fresh database and runs the pending migrations.
 -- @return [List<ActiveRecord::MigrationProxy> migrations that were run]
 function Tasks.prepare()
   local context = Tasks.context()
 
   Tasks.import_metadata_version()
   context:install_migrations()
+
+  local missing = context:versions_without_file()
+
+  if #missing > 0 then
+    ErrorNoHalt(
+      'ActiveRecord - '..#missing..' migration(s) recorded as run have no file: '..
+      table.concat(missing, ', ')..'\n'..
+      'Restore the files, or check `flux db:migrate:status`.\n'
+    )
+  end
 
   local fresh = #context:get_all_versions() == 0 and table.Count(ActiveRecord.schema) == 0
 

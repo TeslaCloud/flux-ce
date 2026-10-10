@@ -7,8 +7,10 @@
 --
 -- It also installs the migrations that packages and plugins ship in their `migrations`
 -- folder: those files are registered through the 'migrations' pipeline, and
--- `install_migrations` copies them into the schema's folder under a new version when the
--- server starts.
+-- `install_migrations` copies them into the schema's folder when the server starts. An
+-- installed copy keeps the version of its source, and the version is recorded in the
+-- `ar_metadata` table, so deleting the copy and starting the server again recreates it
+-- under the version the database has already run.
 -- @module [ActiveRecord.MigrationContext]
 
 --- A stand-in for a migration file that has not been loaded yet. It carries the version,
@@ -205,8 +207,8 @@ function ActiveRecord.MigrationContext:migrations()
         error(
           'ActiveRecord - multiple migrations have the name \''..name..'\':\n'..
           by_name[name]..'\n'..file_name..'\n'..
-          'Migration names have to be unique. If both come from the same plugin migration, '..
-          'delete the newer copy.',
+          'Migration names have to be unique. Keep the copy whose version the database has '..
+          'run (`flux db:migrate:status` lists them) and delete the other.',
           0
         )
       end
@@ -368,6 +370,26 @@ function ActiveRecord.MigrationContext:forward(steps)
   return self:move('up', steps)
 end
 
+--- Returns the versions that have been run but have no migration file anymore.
+-- @return [List<Number> sorted, oldest first]
+function ActiveRecord.MigrationContext:versions_without_file()
+  local present = {}
+
+  for k, v in ipairs(self:migrations()) do
+    present[v.version] = true
+  end
+
+  local missing = {}
+
+  for k, v in ipairs(self:get_all_versions()) do
+    if !present[v] then
+      missing[#missing + 1] = v
+    end
+  end
+
+  return missing
+end
+
 --- Returns the status of every migration: the ones found in the migration folders and
 -- the versions that have been run but have no file anymore.
 -- @return [List<Map> entries with status ('up' or 'down'), version (String) and name,
@@ -454,25 +476,68 @@ local function wrap_unversioned_migration(contents, source)
     'return Migration\n'
 end
 
+local installed_version_prefix = 'installed_migration:'
+
+--- Returns the versions that installed migrations were given, by migration name, as
+-- recorded in the 'ar_metadata' table. Has to be called while the adapter is in sync mode.
+-- @return [Map<String, Number>]
+local function recorded_installed_versions()
+  local query = ActiveRecord.Database:select('ar_metadata')
+    query:callback(function(result)
+      local versions = {}
+
+      if !istable(result) then return versions end
+
+      for k, v in ipairs(result) do
+        local key = tostring(v.key)
+
+        if key:start_with(installed_version_prefix) then
+          versions[key:sub(#installed_version_prefix + 1)] = tonumber(v.value)
+        end
+      end
+
+      return versions
+    end)
+  return query:execute() or {}
+end
+
 --- Installs the migration files registered with .add_source into the schema's
--- migrations folder (the first of the migration paths): each one is copied under a new
--- version and the scope it came from, e.g. '20190309120000_create_admin_tables.admin.lua'.
--- A migration whose name is already present, under any version or scope, is skipped.
--- Files whose name has no version (e.g. 'CreateFoo.lua') hold bare schema statements,
--- which are wrapped into a migration's #change.
+-- migrations folder (the first of the migration paths): each one is copied under the
+-- scope it came from, e.g. '20190309120000_create_admin_tables.admin.lua'. A migration
+-- whose name is already present, under any version or scope, is skipped.
+--
+-- The version of a copy is the one recorded in the 'ar_metadata' table for its name, so
+-- a deleted copy comes back under the version the database has run; otherwise it is the
+-- version of the source file, or a new version for a source file without one. A version
+-- already taken by another file is increased until it is free. Files whose name has no
+-- version (e.g. 'CreateFoo.lua') hold bare schema statements, which are wrapped into a
+-- migration's #change.
 -- @return [List<String> paths of the installed files]
 function ActiveRecord.MigrationContext:install_migrations()
   local destination = self.migrations_paths[1]
   local existing = {}
+  local used_versions = {}
   local last_version = 0
 
   for k, file_name in ipairs(self:migration_files()) do
     local version, name = ActiveRecord.MigrationContext.parse_migration_filename(file_name)
 
     if version then
-      existing[name] = file_name
+      existing[name] = version
+      used_versions[version] = true
       last_version = math.max(last_version, version)
     end
+  end
+
+  local recorded = recorded_installed_versions()
+
+  local function record_version(name, version)
+    if recorded[name] == version then return end
+
+    recorded[name] = version
+    local version_string = ActiveRecord.SchemaMigration:normalize_migration_number(version)
+
+    ActiveRecord.set_meta_key(installed_version_prefix..name, version_string)
   end
 
   local installed = {}
@@ -502,26 +567,39 @@ function ActiveRecord.MigrationContext:install_migrations()
       name = File.name(source):gsub('%.lua$', ''):underscore()
     end
 
-    if !existing[name] then
+    if existing[name] then
+      record_version(name, existing[name])
+    else
       local contents = File.read('gamemodes/'..source)
 
       if contents then
+        local new_version = recorded[name] or version
+          or tonumber(ActiveRecord.Migration.next_migration_number(last_version))
+
+        while used_versions[new_version] do
+          new_version = new_version + 1
+        end
+
         if unversioned then
           contents = wrap_unversioned_migration(contents, source)
+        elseif new_version == version then
+          contents = '-- This migration comes from '..source..'\n'..contents
         else
           contents = '-- This migration comes from '..source..' (originally '..version..')\n'..contents
         end
 
-        local new_version = ActiveRecord.Migration.next_migration_number(last_version)
         local scope = ActiveRecord.MigrationContext.scope_of(source)
-        local file_name = destination..new_version..'_'..name..'.'..scope..'.lua'
+        local version_string = ActiveRecord.SchemaMigration:normalize_migration_number(new_version)
+        local file_name = destination..version_string..'_'..name..'.'..scope..'.lua'
 
         File.write('gamemodes/'..file_name, contents)
+        record_version(name, new_version)
 
         print('Installed migration '..file_name..' (from '..source..')')
 
-        existing[name] = file_name
-        last_version = tonumber(new_version)
+        existing[name] = new_version
+        used_versions[new_version] = true
+        last_version = math.max(last_version, new_version)
 
         table.insert(installed, file_name)
       end
