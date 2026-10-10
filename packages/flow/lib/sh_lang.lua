@@ -172,7 +172,8 @@ do
   --   typed needs no escaping. A value made by `Flux.Lang:duration` is replaced with the
   --   duration as text]
   -- @param force_lang=nil [String language code to use instead of the current language]
-  -- @return [String translated text, Number amount of line breaks that were replaced]
+  -- @return [String translated text; nothing else, so that a call like `list:AddColumn(t'id')`
+  --   never passes a second argument by accident]
   -- @see [Flux.Lang#get_plural_form]
   function t(phrase, args, force_lang)
     if args == nil then
@@ -210,10 +211,10 @@ do
     end
 
     if !string_find(phrase, '\n', 1, true) then
-      return phrase, 0
+      return phrase
     end
 
-    return phrase:gsub('\n', ' ')
+    return (phrase:gsub('\n', ' '))
   end
 end
 

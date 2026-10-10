@@ -2,8 +2,10 @@
 -- such as the NPC models that roleplay schemas use for their characters. Every such model is
 -- assigned a model class with `Flux.Anim:set_model_class`, and every class has an animation
 -- table, registered with `Flux.Anim:register`, that maps movement states and weapon hold types
--- to the activities or sequences of that kind of model. 'player' is the built-in class and the
--- fallback for models without a class. The tables are compiled on first use into a flat form,
+-- to the activities or sequences of that kind of model. 'player' (the male citizen animations)
+-- and 'female' (the female citizen ones, which lack a few of the male activities) are the
+-- built-in classes. A model without a class uses 'female' if its path contains 'female' and
+-- 'player' otherwise. The tables are compiled on first use into a flat form,
 -- returned by `Flux.Anim:get_table`, from which the animation hooks of Flux pick the idle,
 -- walk, run, crouch, jump, attack and reload animations of a player, depending on the weapon
 -- they hold (`Flux.Anim.get_weapon_hold_type`) and on whether it is raised. Models from a
@@ -21,6 +23,7 @@
 mod 'Flux::Anim'
 
 local string_lower      = string.lower
+local string_find       = string.find
 local IsValid           = IsValid
 local istable           = istable
 local pairs             = pairs
@@ -126,6 +129,12 @@ stored.player = {
   }
 }
 
+stored.female = table.Copy(stored.player)
+stored.female.normal[ACT_MP_STAND_IDLE]  = { ACT_IDLE, ACT_IDLE_ANGRY }
+stored.female.pistol[ACT_MP_CROUCH_IDLE] = { ACT_COVER_LOW, ACT_RANGE_AIM_SMG1_LOW }
+stored.female.pistol.attack_low          = ACT_RANGE_ATTACK_SMG1_LOW
+stored.female.pistol.reload_low          = ACT_RELOAD_SMG1_LOW
+
 --- Returns all of the animation tables, as they were registered.
 -- @return [Map animation tables by model class]
 function Flux.Anim:all()
@@ -176,16 +185,22 @@ function Flux.Anim:set_model_class(model, class)
   model_tables = {}
 end
 
---- Returns the animation class of a model.
+--- Returns the animation class of a model. A model that none was set for gets the 'female'
+-- class if its path contains 'female' and the 'player' class otherwise.
 -- @param model [String path to the model]
--- @return [String model class, 'player' if none was set for the model]
+-- @return [String model class]
 function Flux.Anim:get_model_class(model)
   if !model then return 'player' end
 
-  local model_class = models[string_lower(model)]
+  local lowered = string_lower(model)
+  local model_class = models[lowered]
 
   if model_class then
     return model_class
+  end
+
+  if string_find(lowered, 'female', 1, true) then
+    return 'female'
   end
 
   return 'player'
@@ -339,7 +354,7 @@ function Flux.Anim:get_table(model)
   local lowered = string_lower(model)
   local result = false
 
-  if !string.find(lowered, '/player/', 1, true) then
+  if !string_find(lowered, '/player/', 1, true) then
     local class = self:get_model_class(lowered)
     result = compiled_classes[class] or self:compile(class) or false
   end
