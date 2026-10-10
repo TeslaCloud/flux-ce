@@ -6,9 +6,8 @@
 --
 -- `Flux.Player:play_sound` plays a sound once on the clients of the given players, and
 -- `Flux.Player:start_sound` and `Flux.Player:stop_sound` control named looping sounds
--- there, such as an ambience or an alarm that only some players should hear.
--- `Flux.Player:open_tab_menu` and `Flux.Player:close_tab_menu` open and close the tab menu
--- of the given players. `Player` has methods of the same names for a single player.
+-- there, such as an ambience or an alarm that only some players should hear. `Player` has
+-- methods of the same names for a single player.
 
 mod 'Flux::Player'
 
@@ -17,8 +16,6 @@ local isstring = isstring
 Cable.check_networked_string('fl_sound_play')
 Cable.check_networked_string('fl_sound_start')
 Cable.check_networked_string('fl_sound_stop')
-Cable.check_networked_string('fl_tab_menu_open')
-Cable.check_networked_string('fl_tab_menu_close')
 
 --- Sends a notification to a player. If the player is not valid (e.g. the server console)
 -- the message is written to the server log instead.
@@ -87,22 +84,4 @@ function Flux.Player:stop_sound(target, id, fade_out)
   if !isstring(id) then return end
 
   Cable.send(target, 'fl_sound_stop', id, math.max(tonumber(fade_out) or 0, 0))
-end
-
---- Opens the tab menu on the clients of the given players, as `Flux.TabMenu:open` does
--- there. The client may still refuse, for example while the player has no character.
--- ```
--- Flux.Player:open_tab_menu(target, 'inventory')
--- ```
--- @param target [Player/List<Player> whose menu opens; everyone's if nil]
--- @param panel_id=nil [String ID of the menu item to show; the item that was open the last
---   time if nil]
-function Flux.Player:open_tab_menu(target, panel_id)
-  Cable.send(target, 'fl_tab_menu_open', isstring(panel_id) and panel_id or nil)
-end
-
---- Closes the tab menu on the clients of the given players, if they have it open.
--- @param target [Player/List<Player> whose menu closes; everyone's if nil]
-function Flux.Player:close_tab_menu(target)
-  Cable.send(target, 'fl_tab_menu_close')
 end

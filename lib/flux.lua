@@ -34,8 +34,9 @@ if PACKAGE then
           Package:reload(v)
         end
       else
-        -- Reload flow either way since we actually need its shared file.
+        -- Reload flow and active_ui either way since we actually need their shared files.
         Package:reload 'flow'
+        Package:reload 'active_ui'
       end
     end
 

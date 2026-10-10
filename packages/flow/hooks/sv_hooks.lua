@@ -616,13 +616,22 @@ do
     end
   end
 
-  local function write_client_file(path, contents)
+  --- Writes a Lua file into lua/_flux/client and marks it for download, so that the clients
+  -- include it when they load. The files are included in the order of their names, which
+  -- is why the gamemode's own start with a number. Packages that generate clientside code
+  -- call this from their `FLWriteClientFiles` handler, since the folder is emptied before
+  -- the files are written.
+  -- @param path [String file name, relative to lua/_flux/client]
+  -- @param contents [String Lua code]
+  function Flux.write_client_file(path, contents)
     File.mkdir 'lua/_flux'
     File.mkdir 'lua/_flux/client'
 
     File.write('lua/_flux/client/'..path, contents)
     AddCSLuaFile('_flux/client/'..path)
   end
+
+  local write_client_file = Flux.write_client_file
 
   -- Garry's Mod does not send a Lua file to clients if it is larger than 64 KB once it is
   -- compressed, clients get an empty file instead. Serialized tables are hex digits, which
@@ -645,12 +654,6 @@ do
     end
   end
 
-  local function write_html()
-    write_client_file('3_html.lua', Flux.HTML:generate_html_file() or '-- .keep')
-    write_client_file('4_css.lua', Flux.HTML:generate_css_file() or '-- .keep')
-    write_client_file('5_js.lua', Flux.HTML:generate_js_file() or '-- .keep')
-  end
-
   local function write_client_files()
     -- Get rid of the old files (if any)
     purge_client_files()
@@ -663,43 +666,16 @@ do
     write_client_table('1_settings', settings_copy, 'Settings = data')
     write_client_table('2_lang', Flux.Lang.stored, "mod'Flux::Lang' Flux.Lang.stored = data")
 
-    if IS_DEVELOPMENT then
-      write_html()
-    else
-      print 'Compiling clientside assets...'
-
-      local contents = (Flux.HTML:generate_html_file() or '')..' '
-      contents = contents..(Flux.HTML:generate_css_file() or '')..' '
-      contents = contents..(Flux.HTML:generate_js_file() or '')
-
-      write_client_file('3_production.lua', contents)
-    end
+    --- Called on the server while the files that get sent to the clients are written, on
+    -- `FluxPackageLoaded` and after a Lua refresh, once the shared data, the settings and
+    -- the language phrases have been written. Packages and plugins that generate clientside
+    -- code of their own, such as the HTML assets of Active UI, write it here with
+    -- `Flux.write_client_file`.
+    hook.Run('FLWriteClientFiles')
   end
 
-  concommand.Add('fl_reload_html', function(actor)
-    if !IsValid(actor) then
-      print('Reloading HTML...')
-
-      local total = tostring(table.Count(Flux.HTML.file_paths))
-      local len = total:len()
-      local i = 0
-
-      Msg('  -> 0 / '..total)
-
-      for k, v in pairs(Flux.HTML.file_paths) do
-        i = i + 1
-        Msg('\r  -> '..i..' / '..total)
-        Flux.HTML[v.pipe][v.file_name] = File.read(k)
-      end
-
-      write_html()
-
-      Msg ' (done)\n'
-    end
-  end)
-
   --- Writes the files that get sent to clients (shared data, settings, language phrases and
-  -- the HTML, CSS and JavaScript assets) into lua/_flux/client.
+  -- whatever the FLWriteClientFiles handlers add) into lua/_flux/client.
   function GM:FluxPackageLoaded()
     write_client_files()
   end

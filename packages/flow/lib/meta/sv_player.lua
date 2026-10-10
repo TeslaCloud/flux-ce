@@ -147,20 +147,6 @@ function player_meta:stop_sound(id, fade_out)
   Flux.Player:stop_sound(self, id, fade_out)
 end
 
---- Opens the tab menu of the player. Serverside variant.
--- @param panel_id=nil [String ID of the menu item to show; the item that was open the last
---   time if nil]
--- @see [Flux.Player#open_tab_menu]
-function player_meta:open_tab_menu(panel_id)
-  Flux.Player:open_tab_menu(self, panel_id)
-end
-
---- Closes the tab menu of the player, if they have it open. Serverside variant.
--- @see [Flux.Player#close_tab_menu]
-function player_meta:close_tab_menu()
-  Flux.Player:close_tab_menu(self)
-end
-
 --- Returns the ammo the player has.
 -- @return [Map amounts of ammo by ammo type ID, only for the types the player has]
 function player_meta:get_ammo_table()

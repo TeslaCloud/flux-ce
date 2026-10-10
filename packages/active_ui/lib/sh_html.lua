@@ -268,3 +268,56 @@ Pipeline.register('html', function(id, file_name, pipe)
     Flux.HTML.file_paths[file_path] = { pipe = pipe, file_name = file_name }
   end
 end)
+
+if SERVER then
+  --- Writes the templates, the stylesheets and the scripts for the clients: a file for each
+  -- of them in development, one compiled file in production.
+  local function write_html()
+    if IS_DEVELOPMENT then
+      Flux.write_client_file('3_html.lua', Flux.HTML:generate_html_file() or '-- .keep')
+      Flux.write_client_file('4_css.lua', Flux.HTML:generate_css_file() or '-- .keep')
+      Flux.write_client_file('5_js.lua', Flux.HTML:generate_js_file() or '-- .keep')
+    else
+      print 'Compiling clientside assets...'
+
+      local contents = (Flux.HTML:generate_html_file() or '')..' '
+      contents = contents..(Flux.HTML:generate_css_file() or '')..' '
+      contents = contents..(Flux.HTML:generate_js_file() or '')
+
+      Flux.write_client_file('3_production.lua', contents)
+    end
+  end
+
+  --- Hook handlers of the HTML library, registered as `FLHTMLHooks`.
+  local hooks = {}
+
+  --- Writes the HTML, CSS and JavaScript assets along with the other files that get sent to
+  -- the clients.
+  function hooks:FLWriteClientFiles()
+    write_html()
+  end
+
+  Plugin.add_hooks('FLHTMLHooks', hooks)
+
+  concommand.Add('fl_reload_html', function(actor)
+    if !IsValid(actor) then
+      print('Reloading HTML...')
+
+      local total = tostring(table.Count(Flux.HTML.file_paths))
+      local len = total:len()
+      local i = 0
+
+      Msg('  -> 0 / '..total)
+
+      for k, v in pairs(Flux.HTML.file_paths) do
+        i = i + 1
+        Msg('\r  -> '..i..' / '..total)
+        Flux.HTML[v.pipe][v.file_name] = File.read(k)
+      end
+
+      write_html()
+
+      Msg ' (done)\n'
+    end
+  end)
+end

@@ -1,10 +1,10 @@
 --- Entry point of the Flux gamemode package, run on both realms.
 -- Fills in the gamemode information (`GM.Name`, `GM.version`, `GM.code_name` and so on)
 -- from the package metadata, then loads the core, the libraries, classes and metatable
--- extensions, the models, controllers and views, the themes and the tools, and finally the
--- gamemode hooks. On the server it also registers the package's languages, migrations and
--- HTML assets with `Pipeline`. During a partial code reload (`LITE_REFRESH`) only the
--- hooks are loaded again.
+-- extensions, the models and the tools, and finally the gamemode hooks. On the server it
+-- also registers the package's languages and migrations with `Pipeline`. The user interface
+-- lives in the Active UI package, which is loaded after this one. During a partial code
+-- reload (`LITE_REFRESH`) only the hooks are loaded again.
 
 local metadata = Flux.__package__
 
@@ -65,33 +65,9 @@ if !LITE_REFRESH then
   if SERVER then
     Pipeline.include_folder('language', package_path..'languages')
     Pipeline.include_folder('migrations', package_path..'migrations')
-    Pipeline.include_folder('html', package_path..'views/html')
-    Pipeline.include_folder('html', package_path..'views/assets/stylesheets')
-    Pipeline.include_folder('html', package_path..'views/assets/javascripts')
   end
 
   require_relative_folder('models', true)
-  require_relative_folder('controllers', true)
-  require_relative_folder('views/base', true)
-  require_relative_folder('views', true)
-
-  if Theme or SERVER then
-    Pipeline.register('theme', function(id, file_name, pipe)
-      if CLIENT then
-        THEME = ThemeBase.new(id)
-
-        require_relative(file_name)
-
-        THEME:register() THEME = nil
-      else
-        require_relative(file_name)
-      end
-    end)
-
-    -- The theme factory is needed for any other themes that may be in the themes folder.
-    Pipeline.include('theme', 'themes/cl_theme_factory.lua')
-    Pipeline.include_folder('theme', package_path..'themes')
-  end
 
   Pipeline.include_folder('tool', package_path..'tools')
 else

@@ -24,4 +24,5 @@ Package:describe(function(s)
   s.depends     'active_network'
   s.depends     'fontawesome'
   s.depends     'flow'
+  s.depends     'active_ui'
 end)
