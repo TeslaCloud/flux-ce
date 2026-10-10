@@ -1,6 +1,24 @@
 --- Client-side hooks of the Doors plugin: draws the titles of doors in the world and keeps
 -- the status texts of the doors up to date.
 
+local IsValid = IsValid
+local find_in_sphere = ents.FindInSphere
+local trace_line = util.TraceLine
+local start_3d2d = cam.Start3D2D
+local end_3d2d = cam.End3D2D
+
+local title_distance = 256
+local inverse_title_distance = 1 / title_distance
+local title_scale = 0.05
+local offset_side = Angle(0, 90, 90)
+local offset_front = Angle(0, 0, 90)
+local offset_flat = Angle(90, 90, 0)
+local offset_back = Angle(0, 180, 0)
+local trace_data = {
+  collisiongroup = COLLISION_GROUP_WORLD,
+  ignoreworld = true
+}
+
 --- Makes a door work its status text out again when one of its ownership variables
 -- ('fl_door_ownable', 'fl_door_price', 'fl_door_owner' or 'fl_door_text') has changed.
 -- @param entity [Entity the entity whose variable has changed]
@@ -34,16 +52,21 @@ function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
   if depth or skybox then return end
 
   local eye_pos = EyePos()
+  local doors = Doors
+  local title_types = doors.title_types
+  local found = find_in_sphere(eye_pos, title_distance)
 
-  for k, v in ipairs(ents.FindInSphere(eye_pos, 256)) do
+  for i = 1, #found do
+    local v = found[i]
+
     if IsValid(v) and v:is_door() then
       local title = v:get_nv('fl_title_type')
 
-      if title == nil and (Doors:is_ownable(v) or Doors:is_owned(v)) then
-        title = Doors.default_title_type
+      if title == nil and (doors:is_ownable(v) or doors:is_owned(v)) then
+        title = doors.default_title_type
       end
 
-      local title_data = Doors.title_types[title]
+      local title_data = title_types[title]
 
       if !title or title == '' or !title_data or !title_data.draw then
         continue
@@ -52,24 +75,24 @@ function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
       local ang, pos = v:GetAngles(), v:LocalToWorld(v:OBBCenter())
       local mins, maxs = v:OBBMins(), v:OBBMaxs()
       local size = maxs - mins
-      local alpha = 255 * (1 - (eye_pos:Distance(pos) / 256))
+      local alpha = 255 * (1 - eye_pos:Distance(pos) * inverse_title_distance)
       local ang_offset, pos_offset
       local w, h
 
       if size.x < size.y and size.x < size.z then
-        ang_offset = Angle(0, 90, 90)
+        ang_offset = offset_side
         pos_offset = v:GetForward() * size.x * 0.5
 
         w = size.y
         h = size.z
       elseif size.y < size.z then
-        ang_offset = Angle(0, 0, 90)
+        ang_offset = offset_front
         pos_offset = v:GetRight() * size.y * 0.5
 
         w = size.x
         h = size.z
       elseif size.z < size.y then
-        ang_offset = Angle(90, 90, 0)
+        ang_offset = offset_flat
         pos_offset = v:GetUp() * size.z * 0.5
 
         w = size.x
@@ -78,27 +101,24 @@ function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
 
       ang:Add(ang_offset)
 
-      local trace = util.TraceLine({
-        start = pos + pos_offset,
-        endpos = pos,
-        collisiongroup = COLLISION_GROUP_WORLD,
-        ignoreworld = true
-      })
+      trace_data.start = pos + pos_offset
+      trace_data.endpos = pos
 
-      local mult = 0.05
+      local trace = trace_line(trace_data)
+      local draw_w, draw_h = w / title_scale, h / title_scale
 
       if trace.HitNormal:Dot((eye_pos - pos):GetNormalized()) > 0 then
-        cam.Start3D2D(trace.HitPos + pos_offset * 0.05, ang, mult)
-          title_data.draw(v, w / mult, h / mult, alpha)
-        cam.End3D2D()
+        start_3d2d(trace.HitPos + pos_offset * 0.05, ang, title_scale)
+          title_data.draw(v, draw_w, draw_h, alpha)
+        end_3d2d()
       else
-        cam.Start3D2D(pos + (pos - trace.HitPos) * 1.05, ang + Angle(0, 180, 0), mult)
+        start_3d2d(pos + (pos - trace.HitPos) * 1.05, ang + offset_back, title_scale)
           if title_data.draw_back then
-            title_data.draw_back(v, w / mult, h / mult, alpha)
+            title_data.draw_back(v, draw_w, draw_h, alpha)
           else
-            title_data.draw(v, w / mult, h / mult, alpha)
+            title_data.draw(v, draw_w, draw_h, alpha)
           end
-        cam.End3D2D()
+        end_3d2d()
       end
     end
   end

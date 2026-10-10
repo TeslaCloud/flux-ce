@@ -45,20 +45,20 @@ end
 --- Draws a line between the two measurement points and the distance between them in the
 -- selected measurement system.
 function TOOL:DrawHUD()
-  local system = self:GetClientInfo('system')
+  local first, second = self.first, self.second
 
-  if self.first and self.second then
-    cam.Start3D()
-      render.DrawLine(self.first, self.second, color_white)
-    cam.End3D()
+  if !first or !second then return end
 
-    local text = Unit:format(self.first:Distance(self.second), system)
-    local font = Theme.get_font('tooltip_normal')
-    local text_w, text_h = util.text_size(text, font)
-    local x, y = ScrC()
+  cam.Start3D()
+    render.DrawLine(first, second, color_white)
+  cam.End3D()
 
-    draw.SimpleTextOutlined(text, font, x - text_w * 0.5, y + text_h * 2, color_white, nil, nil, 1, color_black)
-  end
+  local text = Unit:format(first:Distance(second), self:GetClientInfo('system'))
+  local font = Theme.get_font('tooltip_normal')
+  local text_w, text_h = util.text_size(text, font)
+  local x, y = ScrC()
+
+  draw.SimpleTextOutlined(text, font, x - text_w * 0.5, y + text_h * 2, color_white, nil, nil, 1, color_black)
 end
 
 local units = {

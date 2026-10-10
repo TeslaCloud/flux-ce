@@ -4,6 +4,8 @@
 -- the sounds that the server starts and stops, and open the interaction menu when the
 -- local player uses a player or an entity.
 
+local IsValid = IsValid
+
 Cable.receive('fl_hook_run_cl', function(hook_name, ...)
   hook.Run(hook_name, ...)
 end)
@@ -34,8 +36,10 @@ Cable.receive('fl_player_model_changed', function(ply_index, new_model, old_mode
 end)
 
 Cable.receive('fl_notification', function(message, arguments, color)
-  if IsValid(PLAYER) and PLAYER:has_initialized() then
-    PLAYER:notify(message, arguments, color)
+  local client = PLAYER
+
+  if IsValid(client) and client:has_initialized() then
+    client:notify(message, arguments, color)
   end
 end)
 

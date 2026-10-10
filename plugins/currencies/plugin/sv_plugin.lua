@@ -4,6 +4,10 @@
 -- for every fl_money entity. A pickup marks the saved money as out of date
 -- (`Currencies.money_dirty`), and the next data save writes what is left.
 
+local IsValid = IsValid
+local isstring = isstring
+local isnumber = isnumber
+
 --- Gives the contents of a money entity to a player, notifies them, starts their pickup
 -- cooldown and marks the saved money as out of date. The entity is not removed here. Server
 -- only.
@@ -91,13 +95,13 @@ function Currencies:save_money()
     if !v:IsMarkedForDeletion() and isstring(currency) and isnumber(amount) and amount > 0 then
       local phys_obj = v:GetPhysicsObject()
 
-      table.insert(saved, {
+      saved[#saved + 1] = {
         currency = currency,
         amount = amount,
         position = v:GetPos(),
         angles = v:GetAngles(),
         frozen = IsValid(phys_obj) and !phys_obj:IsMotionEnabled()
-      })
+      }
     end
   end
 

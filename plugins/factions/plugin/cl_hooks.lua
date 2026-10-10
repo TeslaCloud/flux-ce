@@ -118,12 +118,19 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
   local players_table = {}
 
-  for k, v in pairs(Factions.all()) do
-    local players = Factions.get_players(k)
+  for k, v in player.Iterator() do
+    local faction_id = v:get_faction_id()
 
-    if #players == 0 then continue end
+    if Factions.find_by_id(faction_id) then
+      local players = players_table[faction_id]
 
-    players_table[k] = players
+      if !players then
+        players = {}
+        players_table[faction_id] = players
+      end
+
+      players[#players + 1] = v
+    end
   end
 
   --- Lets plugins regroup the players of the scoreboard before its faction categories are
@@ -148,7 +155,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     category_list:Add(category)
 
     local list = vgui.Create('DPanelList', panel)
-    list:SetSpacing(math.scale(2))
+    list:SetSpacing(margin)
     list:EnableHorizontal(false)
 
     category:SetContents(list)
@@ -173,7 +180,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
       list:AddItem(player_card)
 
-      table.insert(panel.player_cards, player_card)
+      panel.player_cards[#panel.player_cards + 1] = player_card
     end
 
     cur_y = cur_y + category:GetTall() + card_tall + margin

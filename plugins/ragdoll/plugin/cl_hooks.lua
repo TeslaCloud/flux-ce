@@ -38,11 +38,13 @@ end
 -- are knocked out, and tells them what they can do about it: the 'press jump' prompt for a
 -- fallen player who is not getting up yet, a notice for a knocked out one.
 function Ragdoll:HUDPaint()
-  if !IsValid(PLAYER) or !PLAYER:Alive() then return end
+  local client = PLAYER
 
-  local knocked_out = PLAYER:is_knocked_out()
+  if !IsValid(client) or !client:Alive() then return end
 
-  if !knocked_out and !PLAYER:is_fallen_over() then return end
+  local knocked_out = client:is_knocked_out()
+
+  if !knocked_out and !client:is_fallen_over() then return end
 
   --- Asks whether the overlay of a fallen player should be drawn: the darkened screen with
   -- the 'press jump' prompt, or the blacked out screen of a knocked out player.

@@ -2,6 +2,7 @@
 -- its transmission to them, which the Vanish command is built on.
 
 local ent_meta = FindMetaTable 'Entity'
+local always_true = function() return true end
 
 --- Stops or resumes networking this entity and all of its children to a player. Does nothing
 -- if the target is invalid.
@@ -33,7 +34,7 @@ end
 -- @param condition=nil [Function called as condition(receiver, entity, should_prevent); return
 --   false to leave that player unaffected]
 function ent_meta:prevent_transmit_conditional(should_prevent, condition)
-  condition = condition or function() return true end
+  condition = condition or always_true
 
   for k, v in player.Iterator() do
     if v != self and condition(v, self, should_prevent) != false then

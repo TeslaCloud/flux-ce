@@ -43,8 +43,10 @@ function flux_player:GetHandsModel()
     return player_manager.TranslatePlayerHands(model_list[player_model])
   end
 
+  local stripped_model = string.gsub(player_model, '_', '')
+
   for k, v in pairs(model_list) do
-    if string.find(string.gsub(player_model, '_', ''), v) then
+    if string.find(stripped_model, v) then
       model_list[player_model] = v
 
       break

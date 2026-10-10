@@ -13,6 +13,7 @@ mod 'Font'
 
 -- We want the fonts to recreate on refresh.
 local stored = {}
+local sized_names = {}
 
 --- Creates a font and remembers its data. Does nothing if a font with this name
 -- has already been created. The extended (UTF-8) character range is always enabled.
@@ -59,14 +60,20 @@ function Font.size(name, size, data)
     return name
   end
 
-  local new_name = name
+  local names_by_size = sized_names[name]
 
-  local raw_name, original_size = string.match(new_name, '^(.+):(%d)')
+  if !names_by_size then
+    names_by_size = {}
+    sized_names[name] = names_by_size
+  end
 
-  if !original_size then
-    new_name = new_name..':'..size
-  else
-    new_name = raw_name..':'..size
+  local new_name = names_by_size[size]
+
+  if !new_name then
+    local raw_name, original_size = string.match(name, '^(.+):(%d)')
+
+    new_name = (original_size and raw_name or name)..':'..size
+    names_by_size[size] = new_name
   end
 
   if !stored[new_name] then

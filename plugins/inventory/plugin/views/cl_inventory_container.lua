@@ -5,6 +5,9 @@
 -- inventories of another player. When it is removed it tells the server that the
 -- inventories have been closed.
 
+local math_scale = math.scale
+local math_scale_x = math.scale_x
+
 local PANEL = {}
 PANEL.title = 'ui.inventory.container'
 
@@ -34,25 +37,25 @@ function PANEL:Init()
   self.main_inventory:rebuild()
 
   self.pockets = PLAYER:get_inventory('pockets'):create_panel(self)
-  self.pockets:set_slot_size(math.scale(48))
+  self.pockets:set_slot_size(math_scale(48))
   self.pockets:set_title('ui.inventory.pockets')
   self.pockets:SizeToContents()
 
   local title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
-  local x = scrw * 0.5 - self.main_inventory:GetWide() - math.scale(8)
+  local x = scrw * 0.5 - self.main_inventory:GetWide() - math_scale(8)
   local y = scrh * 0.5 - self.main_inventory:GetTall() * 0.5 - self.pockets:GetTall() * 0.5 - title_h * 0.5
 
   self.main_inventory:SetPos(x, y)
-  self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math.scale(16))
+  self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math_scale(16))
   self.pockets:rebuild()
 
   self.hotbar = PLAYER:get_inventory('hotbar'):create_panel(self)
-  self.hotbar:set_slot_size(math.scale(80))
-  self.hotbar:set_slot_padding(math.scale(8))
+  self.hotbar:set_slot_size(math_scale(80))
+  self.hotbar:set_slot_padding(math_scale(8))
   self.hotbar:draw_inventory_slots(true)
   self.hotbar:set_title('ui.inventory.hotbar')
   self.hotbar:SizeToContents()
-  self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math.scale(16))
+  self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math_scale(16))
   self.hotbar:rebuild()
 
   draw.set_blur_size(6)
@@ -96,7 +99,7 @@ function PANEL:open_inventory(inventory_id)
   self.inventory = inventory:create_panel(self)
   self.inventory:set_title(inventory.title)
   self.inventory:SizeToContents()
-  self.inventory:SetPos(ScrW() * 0.5 + math.scale_x(4), ScrH() * 0.5 - self.inventory:GetTall() * 0.5)
+  self.inventory:SetPos(ScrW() * 0.5 + math_scale_x(4), ScrH() * 0.5 - self.inventory:GetTall() * 0.5)
 
   self.inventory_ids = { inventory_id }
 
@@ -127,39 +130,39 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   local scrw, scrh = ScrW(), ScrH()
 
   self.container.main_inventory:SetPos(
-    self.main_inventory.x + self.main_inventory:GetWide() + math.scale_x(12),
+    self.main_inventory.x + self.main_inventory:GetWide() + math_scale_x(12),
     self.main_inventory.y
   )
   self.container.main_inventory:set_title(self.player:name())
   self.container.main_inventory:SizeToContents()
 
   self.container.pockets:SetPos(
-    self.main_inventory.x + self.main_inventory:GetWide() + math.scale_x(12),
+    self.main_inventory.x + self.main_inventory:GetWide() + math_scale_x(12),
     self.pockets.y
   )
-  self.container.pockets:set_slot_size(math.scale(48))
+  self.container.pockets:set_slot_size(math_scale(48))
   self.container.pockets:SizeToContents()
 
-  self.hotbar:SetPos(scrw * 0.5 - self.hotbar:GetWide() - math.scale_x(6), self.hotbar.y)
+  self.hotbar:SetPos(scrw * 0.5 - self.hotbar:GetWide() - math_scale_x(6), self.hotbar.y)
 
-  self.container.hotbar:SetPos(scrw * 0.5 + math.scale_x(6), self.hotbar.y)
-  self.container.hotbar:set_slot_size(math.scale(80))
-  self.container.hotbar:set_slot_padding(math.scale(8))
+  self.container.hotbar:SetPos(scrw * 0.5 + math_scale_x(6), self.hotbar.y)
+  self.container.hotbar:set_slot_size(math_scale(80))
+  self.container.hotbar:set_slot_padding(math_scale(8))
   self.container.hotbar:draw_inventory_slots(true)
   self.container.hotbar:set_title('ui.inventory.hotbar')
   self.container.hotbar:SizeToContents()
 
   local equipment_left = vgui.Create('DIconLayout', self)
-  equipment_left:SetSpaceY(math.scale(12))
-  equipment_left:SetSize(math.scale_x(64))
-  equipment_left:MoveRightOf(self.container.main_inventory, math.scale_x(12))
+  equipment_left:SetSpaceY(math_scale(12))
+  equipment_left:SetSize(math_scale_x(64))
+  equipment_left:MoveRightOf(self.container.main_inventory, math_scale_x(12))
   equipment_left:SetPos(equipment_left.x, self.container.main_inventory.y)
   equipment_left.add_slot = function(pnl, id)
     local panel = self.container[id]
     panel:set_title()
 
     if id == 'equipment_accessories' then
-      panel:set_slot_padding(math.scale(12))
+      panel:set_slot_padding(math_scale(12))
     end
 
     panel:SizeToContents()
@@ -168,9 +171,9 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   end
 
   local equipment_right = vgui.Create('DIconLayout', self)
-  equipment_right:SetSpaceY(math.scale(12))
-  equipment_right:SetSize(math.scale_x(64))
-  equipment_right:MoveRightOf(equipment_left, math.scale_x(12))
+  equipment_right:SetSpaceY(math_scale(12))
+  equipment_right:SetSize(math_scale_x(64))
+  equipment_right:MoveRightOf(equipment_left, math_scale_x(12))
   equipment_right:SetPos(equipment_right.x, self.container.main_inventory.y)
   equipment_right.add_slot = equipment_left.add_slot
 

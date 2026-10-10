@@ -11,6 +11,8 @@
   Do not use it directly, base your own panels off of it instead.
 --]]
 
+local theme_hook = Theme.hook
+
 local PANEL = {}
 PANEL.draw_background = true
 PANEL.background_color = Color(0, 0, 0)
@@ -32,11 +34,11 @@ AccessorFunc(PANEL, 'font', 'Font')
 -- @param width [Number panel width]
 -- @param height [Number panel height]
 function PANEL:Paint(width, height)
-  Theme.hook('PaintPanel', self, width, height)
+  theme_hook('PaintPanel', self, width, height)
 end
 
 --- Runs the active theme's PanelThink hook for this panel.
-function PANEL:Think() Theme.hook('PanelThink', self)
+function PANEL:Think() theme_hook('PanelThink', self)
 end
 
 -- MVC Functionality for all FL panels.

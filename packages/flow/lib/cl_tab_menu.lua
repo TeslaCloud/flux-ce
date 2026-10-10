@@ -9,6 +9,9 @@
 
 mod 'Flux::TabMenu'
 
+local IsValid  = IsValid
+local isstring = isstring
+
 --- Returns the tab menu if it is open. A menu that is playing its closing animation does
 -- not count as open any more.
 -- @return [Panel the tab menu, or nil if it is not open]

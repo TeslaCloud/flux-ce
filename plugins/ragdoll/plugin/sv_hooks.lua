@@ -4,6 +4,9 @@
 -- over from hard falls and heavy hits and knocks them out from melee hits when the config
 -- says so, and keeps knocked out players from being heard and from switching characters.
 
+local IsValid = IsValid
+local config_get = Config.get
+
 --- Checks whether a hit knocks a player out: the ragdoll_knockout_on_damage config is on,
 -- the damage is of the DMG_CLUB type (a stunstick, a crowbar) and the player is left alive
 -- at or below the ragdoll_knockout_health config, while they are not knocked out already.
@@ -11,12 +14,12 @@
 -- @param damage_info [CTakeDamageInfo]
 -- @return [Boolean]
 local function knocks_out(victim, damage_info)
-  if !Config.get('ragdoll_knockout_on_damage') or victim:is_knocked_out() then return false end
+  if !config_get('ragdoll_knockout_on_damage') or victim:is_knocked_out() then return false end
   if !damage_info:IsDamageType(DMG_CLUB) then return false end
 
   local health = victim:Health()
 
-  return health > 0 and health <= Config.get('ragdoll_knockout_health', 20)
+  return health > 0 and health <= config_get('ragdoll_knockout_health', 20)
 end
 
 --- Cancels the player's current action and puts them into the RAGDOLL_DUMMY state, which
@@ -41,7 +44,7 @@ function Ragdoll:PlayerDisconnected(actor)
   local ragdoll = actor:get_ragdoll_entity()
 
   if IsValid(ragdoll) then
-    ragdoll.decay = ragdoll.decay or Config.get('ragdoll_decay_time', 120)
+    ragdoll.decay = ragdoll.decay or config_get('ragdoll_decay_time', 120)
   end
 
   actor:reset_ragdoll_state()
@@ -196,7 +199,7 @@ function Ragdoll:PostEntityTakeDamage(entity, damage_info, took)
   if !took or !entity:IsPlayer() or !entity:Alive() then return end
 
   if knocks_out(entity, damage_info) then
-    local delay = Config.get('ragdoll_knockout_time', 60)
+    local delay = config_get('ragdoll_knockout_time', 60)
     local attacker = damage_info:GetAttacker()
     local force = damage_info:GetDamageForce()
 
@@ -212,11 +215,11 @@ function Ragdoll:PostEntityTakeDamage(entity, damage_info, took)
   if entity:InVehicle() or entity:is_ragdolled() then return end
 
   local fell = damage_info:IsFallDamage()
-  local threshold = Config.get(fell and 'ragdoll_fall_damage' or 'ragdoll_hit_damage', 0)
+  local threshold = config_get(fell and 'ragdoll_fall_damage' or 'ragdoll_hit_damage', 0)
 
   if threshold <= 0 or damage_info:GetDamage() < threshold then return end
 
-  local delay = !fell and Config.get('ragdoll_hit_time', 8) or nil
+  local delay = !fell and config_get('ragdoll_hit_time', 8) or nil
   local force = !fell and damage_info:GetDamageForce() or nil
 
   timer.Simple(0, function()

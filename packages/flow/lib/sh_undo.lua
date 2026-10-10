@@ -37,7 +37,9 @@ end
 -- @param callback [Function receives the undo entry (Map), followed by the extra arguments]
 -- @param ... [Vararg extra arguments for the callback]
 function Flux.Undo:add(callback, ...)
-  table.insert(buffer.functions, { func = callback, args = { ... } })
+  local functions = buffer.functions
+
+  functions[#functions + 1] = { func = callback, args = { ... } }
 end
 
 --- Sets the player that the current undo entry belongs to.
@@ -49,10 +51,13 @@ end
 --- Puts the current undo entry on top of its player's undo queue. The entry is discarded
 -- if it has no valid player.
 function Flux.Undo:finish()
-  if istable(buffer) and IsValid(buffer.player) then
-    queue[buffer.player] = queue[buffer.player] or {}
+  local owner = istable(buffer) and buffer.player
 
-    table.insert(queue[buffer.player], buffer)
+  if IsValid(owner) then
+    local owner_queue = queue[owner] or {}
+
+    queue[owner] = owner_queue
+    owner_queue[#owner_queue + 1] = buffer
   end
 
   buffer = {}

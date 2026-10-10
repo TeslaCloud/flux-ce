@@ -31,6 +31,19 @@
   Flux edition. Won't work outside of Flux due to dependencies.
 --]]
 
+local IsValid = IsValid
+local isstring = isstring
+local istable = istable
+local tonumber = tonumber
+local unpack = unpack
+local select = select
+local read_uint = net.ReadUInt
+local write_uint = net.WriteUInt
+local read_data = net.ReadData
+local write_data = net.WriteData
+local read_string = net.ReadString
+local write_string = net.WriteString
+
 local cable = {}
 local net_cache = {}
 local delayed = {}
@@ -69,20 +82,22 @@ end
 -- @param id [String message name, for the error message]
 -- @return [List<Any> the values, Number how many there are]
 local function read_args(id)
-  local count = net.ReadUInt(8)
-  local table_indices = table.map(string.split(net.ReadString(), ';'), function(v) return tonumber(v) end)
+  local count = read_uint(8)
+  local table_indices = string.Split(read_string(), ';')
   local tables = {}
   local args = {}
 
-  if table_indices then
-    for k, v in ipairs(table_indices) do
-      tables[v] = true
+  for i = 1, #table_indices do
+    local index = tonumber(table_indices[i])
+
+    if index != nil then
+      tables[index] = true
     end
   end
 
   for i = 1, count do
     if tables[i] then
-      local value, err = sfs.decode(net.ReadData(net.ReadUInt(16)))
+      local value, err = sfs.decode(read_data(read_uint(16)))
 
       if err then
         error('cable.receive - failed to decode value #'..i..' of "'..id..'" ('..err..')\n')
@@ -139,15 +154,17 @@ end
 -- @param table_header [String table index header]
 -- @param length [Number how many values there are]
 local function write_args(send, tables, table_header, length)
-  net.WriteUInt(length, 8)
-  net.WriteString(table_header)
+  write_uint(length, 8)
+  write_string(table_header)
 
   for i = 1, length do
     local v = send[i]
 
     if tables[i] then
-      net.WriteUInt(#v, 16)
-      net.WriteData(v, #v)
+      local size = #v
+
+      write_uint(size, 16)
+      write_data(v, size)
     else
       net.WriteType(v)
     end
@@ -216,14 +233,16 @@ end
 -- @param compressed [Boolean whether the block is compressed]
 -- @param piece [String the piece]
 local function write_chunk(transfer_id, id, index, count, compressed, piece)
+  local size = #piece
+
   net.Start(CHUNK_MESSAGE)
-  net.WriteUInt(transfer_id, 32)
-  net.WriteString(id)
-  net.WriteUInt(index, 16)
-  net.WriteUInt(count, 16)
+  write_uint(transfer_id, 32)
+  write_string(id)
+  write_uint(index, 16)
+  write_uint(count, 16)
   net.WriteBool(compressed)
-  net.WriteUInt(#piece, 16)
-  net.WriteData(piece, #piece)
+  write_uint(size, 16)
+  write_data(piece, size)
 end
 
 --- Lists the players of a receiver list who are still on the server.
@@ -355,13 +374,13 @@ function cable.pending_transfers()
 end
 
 net.Receive(CHUNK_MESSAGE, function(length, sender)
-  local transfer_id = net.ReadUInt(32)
-  local id = net.ReadString()
-  local index = net.ReadUInt(16)
-  local count = net.ReadUInt(16)
+  local transfer_id = read_uint(32)
+  local id = read_string()
+  local index = read_uint(16)
+  local count = read_uint(16)
   local compressed = net.ReadBool()
-  local size = net.ReadUInt(16)
-  local piece = net.ReadData(size)
+  local size = read_uint(16)
+  local piece = read_data(size)
 
   if !handlers[id] or count < 1 or index < 1 or index > count or size > cable.chunk_size then return end
 

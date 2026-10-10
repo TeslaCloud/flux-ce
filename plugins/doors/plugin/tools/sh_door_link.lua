@@ -4,6 +4,8 @@
 -- breaks the group up if the door is its main door, and reload forgets the picked door.
 -- The tool is tied to the 'manage_doors' permission.
 
+local IsValid = IsValid
+
 TOOL.Category = 'Flux'
 TOOL.Name = 'Door Link'
 TOOL.Command = nil

@@ -1,6 +1,9 @@
 --- The Flux context menu: `fl_menu`, a popup list of clickable options, and `fl_menu_item`,
 -- the panel of a single option.
 
+local get_color = Theme.get_color
+local color_icon = Color(255, 255, 255)
+
 --- A single option of an `fl_menu`: a `DButton` in the theme's colors with an optional icon.
 -- Options are created with the menu's `add_option`; `set_icon` and `set_icon_size` put a
 -- material on the left side of one.
@@ -12,14 +15,14 @@ PANEL.icon_h = 16
 --- Applies the theme's menu font and text color to the item.
 function PANEL:Init()
   self:SetFont(Theme.get_font('main_menu_small'))
-  self:SetTextColor(Theme.get_color('text'))
+  self:SetTextColor(get_color('text'))
 end
 
 --- Draws the background of the item, lightened while hovered, and its icon if one is set.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  local col = Theme.get_color('background')
+  local col = get_color('background')
 
   if self:IsHovered() then
     col = col:lighten(40)
@@ -28,7 +31,7 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, col)
 
   if self.icon then
-    draw.textured_rect(self.icon, 8, h * 0.5 - self.icon_h * 0.5, self.icon_w, self.icon_h, Color(255, 255, 255))
+    draw.textured_rect(self.icon, 8, h * 0.5 - self.icon_h * 0.5, self.icon_w, self.icon_h, color_icon)
   end
 end
 
@@ -159,7 +162,7 @@ function PANEL:add_option(name, callback)
   panel:SetPos(0, 0)
   panel:MoveTo(0, self.last, 0.15 * self.count)
   panel:SetSize(self:GetWide(), self.option_height)
-  panel:SetTextColor(Theme.get_color('text'))
+  panel:SetTextColor(get_color('text'))
   panel:SetText(name)
   panel:MoveToBack()
 
@@ -189,10 +192,11 @@ function PANEL:add_spacer(px)
 
   panel.Paint = function(pan, w, h)
     local wide = math.ceil(w * 0.1)
+    local background_color = get_color('background')
 
-    draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('text'))
-    draw.RoundedBox(0, 0, 0, wide, h, Theme.get_color('background'))
-    draw.RoundedBox(0, w - wide, 0, wide, h, Theme.get_color('background'))
+    draw.RoundedBox(0, 0, 0, w, h, get_color('text'))
+    draw.RoundedBox(0, 0, 0, wide, h, background_color)
+    draw.RoundedBox(0, w - wide, 0, wide, h, background_color)
   end
 
   panel:MoveTo(0, self.last, 0.15 * self.count)

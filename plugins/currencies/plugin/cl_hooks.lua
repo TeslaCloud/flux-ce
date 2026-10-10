@@ -1,6 +1,10 @@
 --- Client side of the Currencies plugin: attaches money panels to the inventory of the player
 -- and to opened containers, and adds the options to give money to the player interaction menu.
 
+local IsValid = IsValid
+local t = t
+local scale = math.scale
+
 --- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel.
 -- @param panel [Panel the inventory panel that was rebuilt]
 function Currencies:OnInventoryRebuild(panel)
@@ -20,11 +24,11 @@ function Currencies:OnInventoryRebuild(panel)
     local text_w, text_h = util.text_size(text, font)
 
     if IsValid(panel.main_inventory) then
-      panel:SetWide(math.min(panel:GetWide(), panel.main_inventory:GetWide() - panel.money:GetWide() - math.scale(16)))
+      panel:SetWide(math.min(panel:GetWide(), panel.main_inventory:GetWide() - panel.money:GetWide() - scale(16)))
     end
 
     panel.money:SetPos(
-      panel.x + panel:GetWide() + math.scale(8),
+      panel.x + panel:GetWide() + scale(8),
       panel.y + math.max(panel:GetTall() - panel.money:GetTall(), text_h)
     )
   end
@@ -50,7 +54,7 @@ function Currencies:OnContainerOpened(panel, inventory_id)
   local font = Theme.get_font('main_menu_normal_large')
   local text_w, text_h = util.text_size(text, font)
 
-  panel.container_money:SetPos(inv_panel.x, inv_panel.y + inv_panel:GetTall() + text_h + math.scale(8))
+  panel.container_money:SetPos(inv_panel.x, inv_panel.y + inv_panel:GetTall() + text_h + scale(8))
 end
 
 --- Adds a money submenu to the player interaction menu with a 'give' option for every
@@ -61,8 +65,10 @@ function Currencies:CreatePlayerInteractions(menu, target)
   local money_menu, money_menu_option = menu:AddSubMenu(t'ui.currency.title')
   money_menu_option:SetIcon('icon16/money.png')
 
+  local client = PLAYER
+
   for k, v in pairs(Currencies.all()) do
-    local amount = PLAYER:get_money(k) or 0
+    local amount = client:get_money(k) or 0
 
     if !v.hidden or v.hidden and amount > 0 then
       money_menu:AddOption(t'ui.currency.menu.give'..' '..t(v.name), function()
@@ -76,7 +82,7 @@ function Currencies:CreatePlayerInteractions(menu, target)
             if value and value > 0 then
               Cable.send('fl_currency_give', value, k, target)
             else
-              PLAYER:notify('error.invalid_amount')
+              client:notify('error.invalid_amount')
             end
           end
         )

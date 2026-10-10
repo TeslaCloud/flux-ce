@@ -62,9 +62,10 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
     return
   end
 
-  local target_val = PLAYER:is_weapon_raised() and 0 or 100
-  local current = PLAYER.curRaisedFrac or 0
-  local fraction = current / 100
+  local client = PLAYER
+  local target_val = client:is_weapon_raised() and 0 or 100
+  local current = client.curRaisedFrac or 0
+  local fraction = current * 0.01
 
   current = Lerp(FrameTime() * 2, current, target_val)
 
@@ -72,7 +73,7 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
     current = target_val
   end
 
-  PLAYER.curRaisedFrac = current
+  client.curRaisedFrac = current
 
   local offset
 
@@ -135,8 +136,10 @@ end
 -- weapon that is never raised: such a weapon is used in the lowered pose.
 -- @return [Boolean false if the weapon is lowered, nil otherwise]
 function RaiseGun:CanPlayerAttack()
-  if !PLAYER:is_weapon_raised() then
-    local weapon = PLAYER:GetActiveWeapon()
+  local client = PLAYER
+
+  if !client:is_weapon_raised() then
+    local weapon = client:GetActiveWeapon()
 
     if !IsValid(weapon) or self:get_fixed_state(weapon) != false then
       return false

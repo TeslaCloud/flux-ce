@@ -9,6 +9,8 @@
 -- runs the `OnTabMenuClosed` hook. Code that wants the menu opened or closed goes through
 -- `Flux.TabMenu`.
 
+local IsValid = IsValid
+
 local PANEL = {}
 PANEL.menu_items = {}
 PANEL.buttons = {}
@@ -141,7 +143,7 @@ function PANEL:Init()
 
     cur_x = cur_x + button:GetWide()
 
-    if cur_x >= ScrW() - button:GetWide() then
+    if cur_x >= scrw - button:GetWide() then
       cur_y = cur_y + offset
       cur_x = offset
     end

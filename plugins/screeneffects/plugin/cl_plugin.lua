@@ -48,6 +48,12 @@
 -- * `fall_roll`: how far the view wobbles sideways at the highest speed, in degrees.
 -- * `fall_duration_min` and `fall_duration_max`: how long the shake lasts, in seconds.
 
+local clamp, max, min, approach = math.Clamp, math.max, math.min, math.Approach
+local sin, cos, sqrt = math.sin, math.cos, math.sqrt
+local lerp = Lerp
+local pi = math.pi
+local two_pi, four_pi = pi * 2, pi * 4
+
 local stored = {
   low_health = {
     config = 'allow_low_health_effect',
@@ -261,7 +267,7 @@ function ScreenEffects:get_effect_strength(id)
     return 1
   end
 
-  return to_number(ClientSettings:get(effect.strength, 100), 100) / 100
+  return to_number(ClientSettings:get(effect.strength, 100), 100) * 0.01
 end
 
 --- Folds one value of the color pass into the color modification table of the Color Modify
@@ -322,12 +328,12 @@ end
 --- Works out what the screen passes would draw from the levels of the effects alone.
 -- @param target [Map table that the values are written to]
 local function compute_screen(target)
-  local blur_health = math.Clamp(defaults.blur_health, 0.01, 1)
+  local blur_health = clamp(defaults.blur_health, 0.01, 1)
 
-  target.saturation = math.max(1 - levels.damage, 0)
+  target.saturation = max(1 - levels.damage, 0)
   target.brightness = 0
   target.contrast = 1
-  target.motion_blur = math.Clamp((levels.damage - (1 - blur_health)) / blur_health, 0, 1) * defaults.motion_blur
+  target.motion_blur = clamp((levels.damage - (1 - blur_health)) / blur_health, 0, 1) * defaults.motion_blur
   target.refraction = levels.submerged * defaults.refraction
   target.blur = levels.submerged * defaults.blur
 end
@@ -359,7 +365,7 @@ function ScreenEffects:get_health_fraction()
     return 0
   end
 
-  return math.Clamp(client:Health() / math.max(client:GetMaxHealth(), 1), 0, 1)
+  return clamp(client:Health() / max(client:GetMaxHealth(), 1), 0, 1)
 end
 
 --- Puts everything back to where nothing is drawn, nothing is added to the view and no
@@ -395,12 +401,12 @@ function ScreenEffects:reset_effects()
   shake.duration = 0
   fall_speed = 0
 
-  for k, v in ipairs(screen_fields) do
-    screen_overrides[v] = nil
+  for i = 1, #screen_fields do
+    screen_overrides[screen_fields[i]] = nil
   end
 
-  for k, v in ipairs(view_fields) do
-    view_offsets[v] = 0
+  for i = 1, #view_fields do
+    view_offsets[view_fields[i]] = 0
   end
 
   apply_color_pass(1, 0, 1)
@@ -486,8 +492,8 @@ function ScreenEffects:update_screen(frame_time)
     submerged = strengths.underwater
   end
 
-  levels.damage = math.Approach(levels.damage, damage, frame_time * defaults.drain_speed)
-  levels.submerged = math.Approach(levels.submerged, submerged, frame_time * defaults.submerge_speed)
+  levels.damage = approach(levels.damage, damage, frame_time * defaults.drain_speed)
+  levels.submerged = approach(levels.submerged, submerged, frame_time * defaults.submerge_speed)
 
   compute_screen(screen)
 
@@ -504,7 +510,7 @@ end
 function ScreenEffects:draw_screen()
   local refraction = to_number(screen.refraction, 0)
   local blur = to_number(screen.blur, 0)
-  local motion_blur = math.Clamp(to_number(screen.motion_blur, 0), 0, 1)
+  local motion_blur = clamp(to_number(screen.motion_blur, 0), 0, 1)
 
   if refraction > 0 then
     draw_refraction(refraction)
@@ -515,7 +521,7 @@ function ScreenEffects:draw_screen()
   end
 
   if motion_blur > 0.01 then
-    DrawMotionBlur(math.max(1 - motion_blur, 0.1), 1, 0)
+    DrawMotionBlur(max(1 - motion_blur, 0.1), 1, 0)
   end
 end
 
@@ -547,9 +553,9 @@ function ScreenEffects:update_heartbeat()
   local danger = 1 - fraction / threshold
   local info = heartbeat_info
 
-  info.interval = Lerp(danger, defaults.heartbeat_slow, defaults.heartbeat_fast)
-  info.volume = Lerp(danger, defaults.heartbeat_quiet, defaults.heartbeat_loud) * strengths.heartbeat
-  info.pitch = Lerp(danger, 100, defaults.heartbeat_pitch)
+  info.interval = lerp(danger, defaults.heartbeat_slow, defaults.heartbeat_fast)
+  info.volume = lerp(danger, defaults.heartbeat_quiet, defaults.heartbeat_loud) * strengths.heartbeat
+  info.pitch = lerp(danger, 100, defaults.heartbeat_pitch)
 
   --- Lets plugins change the next beat of the low health heartbeat. Called on the client right
   -- before every beat, which is not every frame. Change the fields in place; do not return
@@ -560,13 +566,13 @@ function ScreenEffects:update_heartbeat()
   -- @param fraction [Number how much of their health the local player has left, 0 to 1]
   hook.Run('AdjustHeartbeat', info, fraction)
 
-  self.next_heartbeat = cur_time + math.max(to_number(info.interval, defaults.heartbeat_slow), 0.1)
+  self.next_heartbeat = cur_time + max(to_number(info.interval, defaults.heartbeat_slow), 0.1)
 
-  local volume = math.Clamp(to_number(info.volume, 0), 0, 1)
+  local volume = clamp(to_number(info.volume, 0), 0, 1)
 
   if volume <= 0 then return end
 
-  local pitch = math.Clamp(to_number(info.pitch, 100), 1, 255)
+  local pitch = clamp(to_number(info.pitch, 100), 1, 255)
 
   if !self.heartbeat or self.heartbeat_owner != client then
     if self.heartbeat then
@@ -602,13 +608,13 @@ function ScreenEffects:start_fall_shake(speed)
 
   if speed < min_speed then return end
 
-  local intensity = math.Clamp((speed - min_speed) / math.max(defaults.fall_max_speed - min_speed, 1), 0, 1)
+  local intensity = clamp((speed - min_speed) / max(defaults.fall_max_speed - min_speed, 1), 0, 1)
   local strength = strengths.headbob
   local side = math.random(2) == 1 and 1 or -1
   local info = {
-    pitch = Lerp(intensity, defaults.fall_pitch_min, defaults.fall_pitch_max) * strength,
+    pitch = lerp(intensity, defaults.fall_pitch_min, defaults.fall_pitch_max) * strength,
     roll = defaults.fall_roll * intensity * strength * side,
-    duration = Lerp(intensity, defaults.fall_duration_min, defaults.fall_duration_max)
+    duration = lerp(intensity, defaults.fall_duration_min, defaults.fall_duration_max)
   }
 
   --- Lets plugins change the shake of the view that follows a landing. Called on the client
@@ -623,7 +629,7 @@ function ScreenEffects:start_fall_shake(speed)
 
   shake.pitch = to_number(info.pitch, 0)
   shake.roll = to_number(info.roll, 0)
-  shake.duration = math.max(to_number(info.duration, 0), 0)
+  shake.duration = max(to_number(info.duration, 0), 0)
   shake.elapsed = 0
 end
 
@@ -647,12 +653,12 @@ function ScreenEffects:update_headbob_target()
   local speed = velocity:Length2D()
 
   if speed > defaults.bob_min_speed then
-    local run_speed = math.max(to_number(Config.get('run_speed', 200), 200), 1)
-    local fraction = math.min(speed / run_speed, 1)
+    local run_speed = max(to_number(Config.get('run_speed', 200), 200), 1)
+    local fraction = min(speed / run_speed, 1)
     local strength = strengths.headbob
-    local sideways = math.Clamp(client:EyeAngles():Right():Dot(velocity) / run_speed, -1, 1)
+    local sideways = clamp(client:EyeAngles():Right():Dot(velocity) / run_speed, -1, 1)
 
-    info.speed = Lerp(fraction, defaults.bob_rate_min, defaults.bob_rate_max)
+    info.speed = lerp(fraction, defaults.bob_rate_min, defaults.bob_rate_max)
     info.pitch = defaults.bob_pitch * fraction * strength
     info.yaw = defaults.bob_yaw * fraction * strength
     info.roll = defaults.bob_roll * fraction * strength
@@ -681,7 +687,7 @@ function ScreenEffects:update_view(frame_time)
   local info = bob_info
 
   if on_foot and !client:IsOnGround() then
-    fall_speed = math.max(-client:GetVelocity().z, 0)
+    fall_speed = max(-client:GetVelocity().z, 0)
   elseif fall_speed > 0 then
     if enabled.headbob and on_foot and client:WaterLevel() < 2 then
       self:start_fall_shake(fall_speed)
@@ -690,27 +696,31 @@ function ScreenEffects:update_view(frame_time)
     fall_speed = 0
   end
 
-  local blend = math.min(frame_time * defaults.bob_smoothing, 1)
+  local blend = min(frame_time * defaults.bob_smoothing, 1)
 
-  bob.speed = Lerp(blend, bob.speed, to_number(info.speed, 0))
-  bob.pitch = Lerp(blend, bob.pitch, to_number(info.pitch, 0))
-  bob.yaw = Lerp(blend, bob.yaw, to_number(info.yaw, 0))
-  bob.roll = Lerp(blend, bob.roll, to_number(info.roll, 0))
-  bob.lean = Lerp(blend, bob.lean, to_number(info.lean, 0))
-  bob.phase = (bob.phase + bob.speed * frame_time) % (math.pi * 2)
+  bob.speed = lerp(blend, bob.speed, to_number(info.speed, 0))
+  bob.pitch = lerp(blend, bob.pitch, to_number(info.pitch, 0))
+  bob.yaw = lerp(blend, bob.yaw, to_number(info.yaw, 0))
+  bob.roll = lerp(blend, bob.roll, to_number(info.roll, 0))
+  bob.lean = lerp(blend, bob.lean, to_number(info.lean, 0))
+  local phase = (bob.phase + bob.speed * frame_time) % two_pi
 
-  local pitch = math.sin(bob.phase * 2) * bob.pitch
-  local yaw = math.sin(bob.phase) * bob.yaw
-  local roll = math.cos(bob.phase) * bob.roll + bob.lean
+  bob.phase = phase
+
+  local pitch = sin(phase * 2) * bob.pitch
+  local yaw = sin(phase) * bob.yaw
+  local roll = cos(phase) * bob.roll + bob.lean
 
   if shake.duration > 0 then
-    shake.elapsed = shake.elapsed + frame_time
+    local elapsed = shake.elapsed + frame_time
 
-    local progress = shake.elapsed / shake.duration
+    shake.elapsed = elapsed
+
+    local progress = elapsed / shake.duration
 
     if progress < 1 then
-      pitch = pitch + shake.pitch * math.sin(math.pi * math.sqrt(progress))
-      roll = roll + shake.roll * math.sin(math.pi * 4 * progress) * (1 - progress)
+      pitch = pitch + shake.pitch * sin(pi * sqrt(progress))
+      roll = roll + shake.roll * sin(four_pi * progress) * (1 - progress)
     else
       shake.duration = 0
     end

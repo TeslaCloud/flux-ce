@@ -23,6 +23,10 @@
 class 'Tool'
 Tool.is_flux_tool = true
 
+local IsValid     = IsValid
+local CurTime     = CurTime
+local ghost_color = Color(255, 255, 255, 150)
+
 --- Draws the scrolling name of the tool on the screen of the tool gun.
 -- @param w [Number width of the screen]
 -- @param h [Number height of the screen]
@@ -75,28 +79,32 @@ function Tool:MakeGhostEntity(model, pos, angle)
   -- Don't allow ragdolls/effects to be ghosts
   if !util.IsValidProp(model) then return end
 
+  local ghost
+
   if CLIENT then
-    self.GhostEntity = ents.CreateClientProp(model)
+    ghost = ents.CreateClientProp(model)
   else
-    self.GhostEntity = ents.Create('prop_physics')
+    ghost = ents.Create('prop_physics')
   end
 
   -- If there's too many entities we might not spawn..
-  if !IsValid(self.GhostEntity) then
+  if !IsValid(ghost) then
     self.GhostEntity = nil
     return
   end
 
-  self.GhostEntity:SetModel(model)
-  self.GhostEntity:SetPos(pos)
-  self.GhostEntity:SetAngles(angle)
-  self.GhostEntity:Spawn()
+  self.GhostEntity = ghost
 
-  self.GhostEntity:SetSolid(SOLID_VPHYSICS)
-  self.GhostEntity:SetMoveType(MOVETYPE_NONE)
-  self.GhostEntity:SetNotSolid(true)
-  self.GhostEntity:SetRenderMode(RENDERMODE_TRANSALPHA)
-  self.GhostEntity:SetColor(Color(255, 255, 255, 150))
+  ghost:SetModel(model)
+  ghost:SetPos(pos)
+  ghost:SetAngles(angle)
+  ghost:Spawn()
+
+  ghost:SetSolid(SOLID_VPHYSICS)
+  ghost:SetMoveType(MOVETYPE_NONE)
+  ghost:SetNotSolid(true)
+  ghost:SetRenderMode(RENDERMODE_TRANSALPHA)
+  ghost:SetColor(ghost_color)
 end
 
 --- Creates a ghost entity that copies the model, position and angles of the specified entity.
@@ -139,23 +147,27 @@ end
 --- Moves the ghost entity to where the first selected object would end up if the tool
 -- was applied to the spot the owner is aiming at.
 function Tool:UpdateGhostEntity()
-  if self.GhostEntity == nil then return end
+  local ghost = self.GhostEntity
 
-  if !IsValid(self.GhostEntity) then self.GhostEntity = nil return end
+  if ghost == nil then return end
+
+  if !IsValid(ghost) then self.GhostEntity = nil return end
 
   local trace = self:GetOwner():GetEyeTrace()
   if !trace.Hit then return end
 
+  local ent = self:GetEnt(1)
+  local ent_pos = ent:GetPos()
   local ang1, ang2 = self:GetNormal(1):Angle(), (trace.HitNormal * -1):Angle()
-  local target_angle = self:GetEnt(1):AlignAngles(ang1, ang2)
+  local target_angle = ent:AlignAngles(ang1, ang2)
 
-  self.GhostEntity:SetPos(self:GetEnt(1):GetPos())
-  self.GhostEntity:SetAngles(target_angle)
+  ghost:SetPos(ent_pos)
+  ghost:SetAngles(target_angle)
 
-  local translated_pos = self.GhostEntity:LocalToWorld(self:GetLocalPos(1))
-  local target_pos = trace.HitPos + (self:GetEnt(1):GetPos() - translated_pos) + trace.HitNormal
+  local translated_pos = ghost:LocalToWorld(self:GetLocalPos(1))
+  local target_pos = trace.HitPos + (ent_pos - translated_pos) + trace.HitNormal
 
-  self.GhostEntity:SetPos(target_pos)
+  ghost:SetPos(target_pos)
 end
 
 --- Sets the stage of the tool to the number of selected objects.
@@ -212,13 +224,15 @@ end
 -- @param i [Number index of the selected object]
 -- @return [Vector]
 function Tool:GetPos(i)
-  if self.Objects[i].Ent:EntIndex() == 0 then
-    return self.Objects[i].Pos
+  local object = self.Objects[i]
+
+  if object.Ent:EntIndex() == 0 then
+    return object.Pos
   else
-    if IsValid(self.Objects[i].Phys) then
-      return self.Objects[i].Phys:LocalToWorld(self.Objects[i].Pos)
+    if IsValid(object.Phys) then
+      return object.Phys:LocalToWorld(object.Pos)
     else
-      return self.Objects[i].Ent:LocalToWorld(self.Objects[i].Pos)
+      return object.Ent:LocalToWorld(object.Pos)
     end
   end
 end
@@ -241,15 +255,17 @@ end
 -- @param i [Number index of the selected object]
 -- @return [Vector]
 function Tool:GetNormal(i)
-  if self.Objects[i].Ent:EntIndex() == 0 then
-    return self.Objects[i].Normal
+  local object = self.Objects[i]
+
+  if object.Ent:EntIndex() == 0 then
+    return object.Normal
   else
     local norm
 
-    if IsValid(self.Objects[i].Phys) then
-      norm = self.Objects[i].Phys:LocalToWorld(self.Objects[i].Normal)
+    if IsValid(object.Phys) then
+      norm = object.Phys:LocalToWorld(object.Normal)
     else
-      norm = self.Objects[i].Ent:LocalToWorld(self.Objects[i].Normal)
+      norm = object.Ent:LocalToWorld(object.Normal)
     end
 
     return norm - self:GetPos(i)
@@ -260,11 +276,13 @@ end
 -- @param i [Number index of the selected object]
 -- @return [PhysObj]
 function Tool:GetPhys(i)
-  if self.Objects[i].Phys == nil then
+  local phys = self.Objects[i].Phys
+
+  if phys == nil then
     return self:GetEnt(i):GetPhysicsObject()
   end
 
-  return self.Objects[i].Phys
+  return phys
 end
 
 --- Stores a selected object. The position and the normal are converted to be local to the
@@ -276,26 +294,29 @@ end
 -- @param bone [Number physics bone number]
 -- @param norm [Vector surface normal of the hit]
 function Tool:SetObject(i, ent, pos, phys, bone, norm)
-  self.Objects[i] = {}
-  self.Objects[i].Ent = ent
-  self.Objects[i].Phys = phys
-  self.Objects[i].Bone = bone
-  self.Objects[i].Normal = norm
+  local object = {
+    Ent = ent,
+    Phys = phys,
+    Bone = bone,
+    Normal = norm
+  }
+
+  self.Objects[i] = object
 
   -- Worldspawn is a special case
   if ent:EntIndex() == 0 then
-    self.Objects[i].Phys = nil
-    self.Objects[i].Pos = pos
+    object.Phys = nil
+    object.Pos = pos
   else
     norm = norm + pos
 
     -- Convert the position to a local position - so it's still valid when the object moves
     if IsValid(phys) then
-      self.Objects[i].Normal = self.Objects[i].Phys:WorldToLocal(norm)
-      self.Objects[i].Pos = self.Objects[i].Phys:WorldToLocal(pos)
+      object.Normal = phys:WorldToLocal(norm)
+      object.Pos = phys:WorldToLocal(pos)
     else
-      self.Objects[i].Normal = self.Objects[i].Ent:WorldToLocal(norm)
-      self.Objects[i].Pos = self.Objects[i].Ent:WorldToLocal(pos)
+      object.Normal = ent:WorldToLocal(norm)
+      object.Pos = ent:WorldToLocal(pos)
     end
   end
 

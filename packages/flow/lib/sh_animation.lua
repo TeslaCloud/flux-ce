@@ -20,6 +20,11 @@
 
 mod 'Flux::Anim'
 
+local string_lower      = string.lower
+local IsValid           = IsValid
+local istable           = istable
+local pairs             = pairs
+
 local stored            = Flux.Anim.stored or {}
 local models            = Flux.Anim.models or {}
 local compiled_classes  = {}
@@ -167,9 +172,8 @@ function Flux.Anim:set_model_class(model, class)
     class = 'player'
   end
 
-  model = string.lower(model)
-  models[model] = class
-  model_tables[model] = nil
+  models[string_lower(model)] = class
+  model_tables = {}
 end
 
 --- Returns the animation class of a model.
@@ -178,7 +182,7 @@ end
 function Flux.Anim:get_model_class(model)
   if !model then return 'player' end
 
-  local model_class = models[string.lower(model)]
+  local model_class = models[string_lower(model)]
 
   if model_class then
     return model_class
@@ -326,18 +330,17 @@ end
 function Flux.Anim:get_table(model)
   if !model then return end
 
-  model = string.lower(model)
-
   local cached = model_tables[model]
 
   if cached != nil then
     return cached or nil
   end
 
+  local lowered = string_lower(model)
   local result = false
 
-  if !string.find(model, '/player/', 1, true) then
-    local class = self:get_model_class(model)
+  if !string.find(lowered, '/player/', 1, true) then
+    local class = self:get_model_class(lowered)
     result = compiled_classes[class] or self:compile(class) or false
   end
 
@@ -396,11 +399,11 @@ do
       return cached
     end
 
-    local hold_type = weapon_hold_types[string.lower(weapon:GetClass())]
+    local hold_type = weapon_hold_types[string_lower(weapon:GetClass())]
 
     if !hold_type then
       if isstring(raw_hold_type) then
-        local lowered = string.lower(raw_hold_type)
+        local lowered = string_lower(raw_hold_type)
         hold_type = translate_hold_types[lowered] or lowered
       else
         hold_type = 'normal'
@@ -470,7 +473,7 @@ end
 local function is_other_model(new_model, old_model)
   if !isstring(new_model) or !isstring(old_model) then return true end
 
-  return string.lower(new_model) != string.lower(old_model)
+  return string_lower(new_model) != string_lower(old_model)
 end
 
 --- Makes the player play the specified sequence instead of their regular animations.

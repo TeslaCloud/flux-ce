@@ -1,8 +1,10 @@
 --- Server side of the Conditions plugin: checks a player against a tree of conditions.
 
 local function CheckConditions(target, conditions)
+  local stored = Conditions:get_all()
+
   for k, v in pairs(conditions) do
-    local condition_table = Conditions:get_all()[v.id]
+    local condition_table = stored[v.id]
 
     if condition_table.check and condition_table.check(target, v.data) == false or
     #v.childs != 0 and CheckConditions(target, v.childs) == false then

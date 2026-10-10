@@ -40,6 +40,10 @@
 -- the server.
 -- @module [Limbs]
 
+local tonumber = tonumber
+local math_min = math.min
+local config_get = Config.get
+
 PLUGIN:set_global('Limbs')
 
 Limbs.data_key = 'limbs'
@@ -113,7 +117,7 @@ Characters.network_data(Limbs.data_key)
 --- Checks whether limb damage is turned on by the 'limbs_enabled' config.
 -- @return [Boolean]
 function Limbs:is_enabled()
-  return Config.get('limbs_enabled', true) and true or false
+  return config_get('limbs_enabled', true) and true or false
 end
 
 --- Returns the IDs of all limbs, from the head down.
@@ -189,7 +193,7 @@ function Limbs:get_all_damage(target)
       local damage = tonumber(stored[v])
 
       if damage and damage > 0 then
-        result[v] = math.min(damage, self.max_damage)
+        result[v] = math_min(damage, self.max_damage)
       end
     end
   end
@@ -215,7 +219,7 @@ function Limbs:get_damage(target, limb)
     return 0
   end
 
-  return math.min(damage, self.max_damage)
+  return math_min(damage, self.max_damage)
 end
 
 --- Returns how healthy one limb of a player is: 100 minus its damage.
@@ -248,7 +252,7 @@ function Limbs:get_worst_damage(target, limbs)
     end
   end
 
-  return math.min(worst, self.max_damage)
+  return math_min(worst, self.max_damage)
 end
 
 --- Checks whether any limb of a player is hurt.
@@ -273,7 +277,7 @@ end
 function Limbs:get_effect(target, effect)
   local info = limb_effects[effect]
 
-  if !info or !Config.get(info.config, true) then
+  if !info or !config_get(info.config, true) then
     return 0
   end
 

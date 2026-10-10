@@ -4,6 +4,8 @@
 -- like, formatted with `Date:iso` and `Date:strftime`, and shifted by adding or subtracting
 -- `Time` intervals.
 
+local os_date = os.date
+
 --- The Date class is the base class for most time-related classes in Flux.
 -- The Date class represents a point in time, not a time interval.
 -- For time intervals, please use Time.
@@ -45,21 +47,21 @@ end
 --- Returns the current date.
 -- @return [Date today]
 function Date:today()
-  local date = os.date('*t', os.time())
+  local date = os_date('*t', os.time())
   return Date.new(date.year, date.month, date.day)
 end
 
 --- Returns the following day's date.
 -- @return [Date tomorrow]
 function Date:tomorrow()
-  local date = os.date('*t', os.time() + d_const)
+  local date = os_date('*t', os.time() + d_const)
   return Date.new(date.year, date.month, date.day)
 end
 
 --- Returns the previous day's date.
 -- @return [Date yesterday]
 function Date:yesterday()
-  local date = os.date('*t', os.time() - d_const)
+  local date = os_date('*t', os.time() - d_const)
   return Date.new(date.year, date.month, date.day)
 end
 
@@ -67,7 +69,7 @@ end
 -- @param seconds [Number UNIX timestamp]
 -- @return [Date]
 function Date:at(seconds)
-  local date = os.date('*t', seconds)
+  local date = os_date('*t', seconds)
   return Date.new(date.year, date.month, date.day)
 end
 
@@ -92,7 +94,7 @@ end
 -- @param time=Date object [Number UNIX time]
 -- @return [String ISO date format]
 function Date:iso(time)
-  return os.date('%Y-%m-%d', time or self.time)
+  return os_date('%Y-%m-%d', time or self.time)
 end
 
 --- Formats the date-time using a format string.
@@ -100,7 +102,7 @@ end
 -- @param time=DateTime [Number UNIX time]
 -- @return [String formatted string]
 function Date:strftime(fmt, time)
-  return os.date(fmt, time or self.time)
+  return os_date(fmt, time or self.time)
 end
 
 --- @ignore

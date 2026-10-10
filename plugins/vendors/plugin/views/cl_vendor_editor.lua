@@ -6,6 +6,12 @@
 -- The server opens the editor for staff with the 'manage_vendors' permission who use the
 -- Vendor Tool on a vendor, and gets the settings back when the save button is pressed.
 
+local IsValid = IsValid
+local t = t
+local scale = math.scale
+local get_font = Theme.get_font
+local get_color = Theme.get_color
+
 local PANEL = {}
 
 --- Turns the text of an entry into a number.
@@ -24,10 +30,10 @@ end
 --- Creates the frame, its save and remove buttons, the bar of page buttons and the body
 -- that holds the pages.
 function PANEL:Init()
-  local gap = math.scale(4)
-  local font = Theme.get_font('main_menu_small')
+  local gap = scale(4)
+  local font = get_font('main_menu_small')
 
-  self:SetSize(math.min(math.scale(760), ScrW() - 32), math.min(math.scale(680), ScrH() - 32))
+  self:SetSize(math.min(scale(760), ScrW() - 32), math.min(scale(680), ScrH() - 32))
   self:Center()
   self:MakePopup()
   self:set_draggable(true)
@@ -37,32 +43,32 @@ function PANEL:Init()
 
   self.footer = vgui.Create('DPanel', self)
   self.footer:SetPaintBackground(false)
-  self.footer:SetTall(math.scale(32))
+  self.footer:SetTall(scale(32))
   self.footer:DockMargin(0, gap, 0, 0)
   self.footer:Dock(BOTTOM)
 
   self.save_button = vgui.Create('fl_button', self.footer)
-  self.save_button:SetWide(math.scale(180))
+  self.save_button:SetWide(scale(180))
   self.save_button:Dock(RIGHT)
   self.save_button:SetFont(font)
   self.save_button:set_text(t'ui.vendor.editor.save')
   self.save_button:set_icon('fa-check')
   self.save_button:set_centered(true)
   self.save_button:set_draw_outline(true)
-  self.save_button:set_background_color(Theme.get_color('accent'))
+  self.save_button:set_background_color(get_color('accent'))
   self.save_button.DoClick = function(btn)
     self:save()
   end
 
   self.remove_button = vgui.Create('fl_button', self.footer)
-  self.remove_button:SetWide(math.scale(180))
+  self.remove_button:SetWide(scale(180))
   self.remove_button:Dock(LEFT)
   self.remove_button:SetFont(font)
   self.remove_button:set_text(t'ui.vendor.editor.remove')
   self.remove_button:set_icon('fa-trash')
   self.remove_button:set_centered(true)
   self.remove_button:set_draw_outline(true)
-  self.remove_button:set_background_color(Theme.get_color('main'))
+  self.remove_button:set_background_color(get_color('main'))
   self.remove_button.DoClick = function(btn)
     Derma_Query(
       t'ui.vendor.editor.remove_message',
@@ -81,7 +87,7 @@ function PANEL:Init()
 
   self.tabs = vgui.Create('DPanel', self)
   self.tabs:SetPaintBackground(false)
-  self.tabs:SetTall(math.scale(32))
+  self.tabs:SetTall(scale(32))
   self.tabs:DockMargin(0, 0, 0, gap * 2)
   self.tabs:Dock(TOP)
 
@@ -131,14 +137,14 @@ function PANEL:add_page(id, title, class)
   panel:SetVisible(false)
 
   local button = vgui.Create('fl_button', self.tabs)
-  button:SetWide(math.scale(150))
-  button:DockMargin(0, 0, math.scale(4), 0)
+  button:SetWide(scale(150))
+  button:DockMargin(0, 0, scale(4), 0)
   button:Dock(LEFT)
-  button:SetFont(Theme.get_font('main_menu_small'))
+  button:SetFont(get_font('main_menu_small'))
   button:set_text(title)
   button:set_centered(true)
   button:set_draw_outline(true)
-  button:set_background_color(Theme.get_color('main'))
+  button:set_background_color(get_color('main'))
   button.DoClick = function(btn)
     self:show_page(id)
   end
@@ -154,7 +160,7 @@ function PANEL:show_page(id)
   for k, v in pairs(self.pages) do
     v.panel:SetVisible(k == id)
     v.button:set_active(k == id)
-    v.button:set_background_color(Theme.get_color(k == id and 'accent' or 'main'))
+    v.button:set_background_color(get_color(k == id and 'accent' or 'main'))
   end
 
   self.body:InvalidateLayout()
@@ -168,15 +174,15 @@ end
 function PANEL:add_field(page, title, class)
   local row = vgui.Create('DPanel', page)
   row:SetPaintBackground(false)
-  row:SetTall(math.scale(28))
-  row:DockMargin(0, 0, 0, math.scale(4))
+  row:SetTall(scale(28))
+  row:DockMargin(0, 0, 0, scale(4))
   row:Dock(TOP)
 
   local label = vgui.Create('DLabel', row)
-  label:SetWide(math.scale(260))
+  label:SetWide(scale(260))
   label:Dock(LEFT)
-  label:SetFont(Theme.get_font('main_menu_small'))
-  label:SetTextColor(Theme.get_color('text'))
+  label:SetFont(get_font('main_menu_small'))
+  label:SetTextColor(get_color('text'))
   label:SetText(title)
 
   local control = vgui.Create(class, row)
@@ -191,10 +197,10 @@ end
 -- @return [Panel the label]
 function PANEL:add_help(page, text)
   local label = vgui.Create('DLabel', page)
-  label:DockMargin(0, 0, 0, math.scale(8))
+  label:DockMargin(0, 0, 0, scale(8))
   label:Dock(TOP)
-  label:SetFont(Theme.get_font('tooltip_small'))
-  label:SetTextColor(Theme.get_color('text'):darken(50))
+  label:SetFont(get_font('tooltip_small'))
+  label:SetTextColor(get_color('text'):darken(50))
   label:SetText(text)
   label:SetWrap(true)
   label:SetAutoStretchVertical(true)
@@ -210,10 +216,10 @@ end
 -- @return [Panel the checkbox]
 function PANEL:add_check_box(page, title, checked, callback)
   local check_box = vgui.Create('DCheckBoxLabel', page)
-  check_box:DockMargin(0, 0, 0, math.scale(6))
+  check_box:DockMargin(0, 0, 0, scale(6))
   check_box:Dock(TOP)
   check_box:SetText(title)
-  check_box:SetTextColor(Theme.get_color('text'))
+  check_box:SetTextColor(get_color('text'))
   check_box:SetChecked(checked)
   check_box.OnChange = function(pnl, value)
     callback(value)
@@ -289,8 +295,8 @@ function PANEL:build_items()
   page:SetPaintBackground(false)
 
   self.search_entry = vgui.Create('DTextEntry', page)
-  self.search_entry:SetTall(math.scale(28))
-  self.search_entry:DockMargin(0, 0, 0, math.scale(4))
+  self.search_entry:SetTall(scale(28))
+  self.search_entry:DockMargin(0, 0, 0, scale(4))
   self.search_entry:Dock(TOP)
   self.search_entry:SetPlaceholderText(t'ui.vendor.editor.search')
   self.search_entry:SetUpdateOnType(true)
@@ -299,7 +305,7 @@ function PANEL:build_items()
   end
 
   local help = self:add_help(page, t'ui.vendor.editor.items_help')
-  help:DockMargin(0, math.scale(4), 0, 0)
+  help:DockMargin(0, scale(4), 0, 0)
   help:Dock(BOTTOM)
 
   self.item_list = vgui.Create('DListView', page)
@@ -336,7 +342,7 @@ function PANEL:refresh_items()
     local name = t(item_table:get_real_name())
 
     if !item_table.is_base and (query == '' or name:utf8lower():find(query, 1, true) or id:find(query, 1, true)) then
-      table.insert(items, { id = id, name = name, cost = tonumber(item_table.cost) or 0 })
+      items[#items + 1] = { id = id, name = name, cost = tonumber(item_table.cost) or 0 }
     end
   end
 

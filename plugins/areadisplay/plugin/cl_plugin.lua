@@ -9,6 +9,7 @@ local pending = AreaDisplay.pending or {}
 local last_shown = {}
 local last_request = {}
 local request_interval = 10
+local offsets = {}
 
 AreaDisplay.active = active
 AreaDisplay.pending = pending
@@ -140,7 +141,7 @@ function AreaDisplay:add(info, area)
     return display
   end
 
-  table.insert(active, display)
+  active[#active + 1] = display
 
   return display
 end
@@ -241,7 +242,10 @@ end
 -- @param scrw [Number screen width]
 -- @param scrh [Number screen height]
 function AreaDisplay:draw(cur_time, scrw, scrh)
-  local offsets = {}
+  for style_id in pairs(offsets) do
+    offsets[style_id] = nil
+  end
+
   local index = 1
 
   while active[index] do

@@ -12,6 +12,8 @@ PANEL.char_data = {}
 -- AddCharacterCreationMenuStages hook, opens the first one and creates the navigation.
 function PANEL:Init()
   local fa_icon_size = math.scale(16)
+  local button_height = Theme.get_option('menu_sidebar_button_height')
+  local font = Theme.get_font('main_menu_normal')
 
   self:SetPos(0, 0)
   self:SetSize(ScrW(), ScrH())
@@ -32,9 +34,9 @@ function PANEL:Init()
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
 
   self.back = vgui.Create('fl_button', self)
-  self.back:SetSize(self.panel:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
+  self.back:SetSize(self.panel:GetWide() * 0.25, button_height)
   self.back:SetPos(x, y + self.panel:GetTall() + self.back:GetTall())
-  self.back:SetFont(Theme.get_font('main_menu_normal'))
+  self.back:SetFont(font)
   self.back:SetTitle(t'ui.char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:set_icon('fa-chevron-left')
@@ -54,9 +56,9 @@ function PANEL:Init()
   end
 
   self.next = vgui.Create('fl_button', self)
-  self.next:SetSize(self.panel:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
+  self.next:SetSize(self.panel:GetWide() * 0.25, button_height)
   self.next:SetPos(x + self.panel:GetWide() - self.next:GetWide(), y + self.panel:GetTall() + self.next:GetTall())
-  self.next:SetFont(Theme.get_font('main_menu_normal'))
+  self.next:SetFont(font)
   self.next:SetTitle(t'ui.char_create.next')
   self.next:SetDrawBackground(false)
   self.next:set_icon('fa-chevron-right', true)
@@ -76,7 +78,7 @@ function PANEL:Init()
   end
 
   self.stage_list = vgui.Create('fl_horizontalbar', self)
-  self.stage_list:SetSize(self.panel:GetWide(), Theme.get_option('menu_sidebar_button_height'))
+  self.stage_list:SetSize(self.panel:GetWide(), button_height)
   self.stage_list:SetPos(x, y + self.panel:GetTall() + self.next:GetTall() * 2)
   self.stage_list:SetOverlap(4)
   self.stage_list:set_centered(true)
@@ -132,14 +134,19 @@ end
 function PANEL:rebuild()
   self.stage_list:Clear()
 
+  local button_w = self.panel:GetWide() * 0.2
+  local button_h = Theme.get_option('menu_sidebar_button_height')
+  local font = Theme.get_font('main_menu_normal')
+  local icon_size = math.scale(16)
+
   for k, v in ipairs(self.stages) do
     local button = vgui.Create('fl_button', self.stage_list)
-    button:SetSize(self.panel:GetWide() / 5, Theme.get_option('menu_sidebar_button_height'))
-    button:SetFont(Theme.get_font('main_menu_normal'))
+    button:SetSize(button_w, button_h)
+    button:SetFont(font)
     button:SetTitle(t(v))
     button:SetDrawBackground(false)
     button:set_icon('fa-chevron-right', true)
-    button:set_icon_size(math.scale(16))
+    button:set_icon_size(icon_size)
     button:set_centered(true)
     button:SizeToContents()
 
@@ -362,6 +369,7 @@ end
 -- @param id [String ID of one of the added stages]
 function PANEL:open_panel(id)
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
+  local stage_index = table.KeyFromValue(self.stages, id)
 
   if IsValid(self.panel) then
     if self.panel.on_close then
@@ -370,7 +378,7 @@ function PANEL:open_panel(id)
 
     local to = self:GetWide()
 
-    if self.stage < table.KeyFromValue(self.stages, id) then
+    if self.stage < stage_index then
       to = -self.panel:GetWide()
     end
 
@@ -382,7 +390,7 @@ function PANEL:open_panel(id)
 
   local from
 
-  if self.stage < table.KeyFromValue(self.stages, id) then
+  if self.stage < stage_index then
     from = self:GetWide()
   elseif self.stage == 1 then
     from = x

@@ -189,8 +189,11 @@ vgui.Register('fl_settings', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the label of the setting and the button that resets it.
+--- Creates the label of the setting and the button that resets it, and picks the
+-- background color of the dark rows.
 function PANEL:Init()
+  self.dark_color = Theme.get_color('background'):alpha(150)
+
   self.label = vgui.Create('DLabel', self)
   self.label:SetFont(Theme.get_font('text_small'))
   self.label:SetTextColor(Theme.get_color('text'))
@@ -215,7 +218,7 @@ end
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
   if Theme.hook('PaintSettingRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
+    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
   end
 end
 

@@ -16,6 +16,8 @@
 
 mod 'Data'
 
+local isstring = isstring
+
 if SERVER then
   --- Saves a table to 'settings/flux/' in the game folder as JSON. The '.json' extension
   -- is added if the key does not have one. Does nothing unless the value is a table.
@@ -43,8 +45,10 @@ if SERVER then
       key = key..'.json'
     end
 
-    if file.Exists('settings/flux/'..key, 'GAME') then
-      return util.JSONToTable(File.read('settings/flux/'..key))
+    local path = 'settings/flux/'..key
+
+    if file.Exists(path, 'GAME') then
+      return util.JSONToTable(File.read(path))
     elseif default != nil then
       return default
     else
@@ -63,8 +67,10 @@ if SERVER then
       key = key..'.json'
     end
 
-    if file.Exists('settings/flux/'..key, 'GAME') then
-      File.delete('settings/flux/'..key)
+    local path = 'settings/flux/'..key
+
+    if file.Exists(path, 'GAME') then
+      File.delete(path)
     end
   end
 else
@@ -94,8 +100,10 @@ else
       key = key..'.dat'
     end
 
-    if file.Exists('flux/'..key, 'DATA') then
-      return util.JSONToTable(file.Read('flux/'..key, 'DATA'))
+    local path = 'flux/'..key
+
+    if file.Exists(path, 'DATA') then
+      return util.JSONToTable(file.Read(path, 'DATA'))
     elseif default != nil then
       return default
     else
@@ -126,8 +134,10 @@ else
       key = key..'.dat'
     end
 
-    if file.Exists('flux/'..key, 'DATA') then
-      file.Delete('flux/'..key)
+    local path = 'flux/'..key
+
+    if file.Exists(path, 'DATA') then
+      file.Delete(path)
     end
   end
 end

@@ -4,6 +4,11 @@
 -- players are no longer entitled to, and handles the move, drop and close requests of the
 -- clients.
 
+local pairs = pairs
+local IsValid = IsValid
+
+local drop_near_distance_sqr = 80 * 80
+
 --- Checks the item list of a move or drop request. The list has to name distinct items
 -- that all are in one inventory, and that inventory has to be open for the player.
 -- @param actor [Player the player who sent the request]
@@ -20,9 +25,10 @@ local function find_requested_stack(actor, instance_ids)
 
   local stack = {}
   local listed = {}
+  local find_instance_by_id = Item.find_instance_by_id
 
   for k, v in ipairs(instance_ids) do
-    local stack_item = Item.find_instance_by_id(v)
+    local stack_item = find_instance_by_id(v)
 
     if !stack_item or stack_item.inventory_id != inventory.id or listed[v] then return end
 
@@ -246,7 +252,7 @@ function Inventories:PlayerDropItem(actor, instance_ids)
 
   if !inventory then return end
 
-  local distance = trace.HitPos:Distance(actor:GetPos())
+  local drop_near = trace.HitPos:DistToSqr(actor:GetPos()) < drop_near_distance_sqr
 
   for k, v in pairs(instance_ids) do
     local item_obj = Item.find_instance_by_id(v)
@@ -266,7 +272,7 @@ function Inventories:PlayerDropItem(actor, instance_ids)
 
     hook.Run('ItemTransferred', item_obj, nil, inventory)
 
-    if distance < 80 then
+    if drop_near then
       Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_obj, actor)
     else
       local ent = Item.spawn(actor:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_obj, actor)
@@ -341,14 +347,19 @@ function Inventories:OneSecond()
   local stale = {}
 
   for id, inventory in pairs(Inventories.all()) do
-    for k, receiver in ipairs(inventory.receivers) do
+    local receivers = inventory.receivers
+
+    for i = 1, #receivers do
+      local receiver = receivers[i]
+
       if IsValid(receiver) and !inventory:can_be_viewed_by(receiver) then
         local holder = inventory.owner or inventory
+        local holders = stale[receiver] or {}
+        local inventories = holders[holder] or {}
 
-        stale[receiver] = stale[receiver] or {}
-        stale[receiver][holder] = stale[receiver][holder] or {}
-
-        table.insert(stale[receiver][holder], inventory)
+        stale[receiver] = holders
+        holders[holder] = inventories
+        inventories[#inventories + 1] = inventory
       end
     end
   end
@@ -428,9 +439,13 @@ end
 function Inventories:PlayerThrewGrenade(actor, entity)
   if !IsValid(actor) or !actor:IsPlayer() then return end
 
-  for k, v in pairs(actor:get_items()) do
-    if v:is('throwable') and v:is_equipped() then
-      actor:take_item_by_id(v.instance_id)
+  local items = actor:get_items()
+
+  for i = 1, #items do
+    local item_obj = items[i]
+
+    if item_obj:is('throwable') and item_obj:is_equipped() then
+      actor:take_item_by_id(item_obj.instance_id)
     end
   end
 end

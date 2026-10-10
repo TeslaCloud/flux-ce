@@ -193,26 +193,35 @@ Doors:register_title_type('center', {
     local text = entity:get_nv('fl_name', '')
     local status = Doors:get_status_text(entity)
     local font = Theme.get_font('text_3d2d')
-    local text_w, text_h = util.text_size(text, font)
-    local box_x, box_y = -text_w * 0.55, -h / 4 - text_h * 0.55
-    local box_w, box_h = text_w * 1.1, text_h * 1.1
-    local status_y = -h / 4
+    local has_text = text != ''
 
-    if text != '' then
-      draw.RoundedBox(0, box_x, box_y, box_w, box_h, Theme.get_color('background'):alpha(alpha))
-      draw.RoundedBox(2, box_x - 4, box_y, box_w + 8, 4, color_white:alpha(alpha))
-      draw.RoundedBox(2, box_x - 4, box_y + box_h, box_w + 8, 4, color_white:alpha(alpha))
+    if !has_text and !status then return end
+
+    local text_w, text_h = util.text_size(text, font)
+    local quarter_h = -h * 0.25
+    local box_x, box_y = -text_w * 0.55, quarter_h - text_h * 0.55
+    local box_w, box_h = text_w * 1.1, text_h * 1.1
+    local status_y = quarter_h
+    local white = color_white:alpha(alpha)
+    local outline = Color(0, 0, 0, alpha)
+
+    if has_text then
+      local rounded_box = draw.RoundedBox
+
+      rounded_box(0, box_x, box_y, box_w, box_h, Theme.get_color('background'):alpha(alpha))
+      rounded_box(2, box_x - 4, box_y, box_w + 8, 4, white)
+      rounded_box(2, box_x - 4, box_y + box_h, box_w + 8, 4, white)
 
       draw.SimpleTextOutlined(
         text,
         font,
-        -text_w / 2,
-        -h / 4 - text_h / 2,
-        color_white:alpha(alpha),
+        -text_w * 0.5,
+        quarter_h - text_h * 0.5,
+        white,
         nil,
         nil,
         1,
-        Color(0, 0, 0, alpha)
+        outline
       )
 
       status_y = box_y + box_h + 16
@@ -225,13 +234,13 @@ Doors:register_title_type('center', {
       draw.SimpleTextOutlined(
         status,
         status_font,
-        -status_w / 2,
+        -status_w * 0.5,
         status_y,
-        color_white:alpha(alpha),
+        white,
         nil,
         nil,
         1,
-        Color(0, 0, 0, alpha)
+        outline
       )
     end
   end

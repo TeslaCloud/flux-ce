@@ -9,6 +9,14 @@
 -- A theme can draw the rows and the lists itself with `PaintVendorRow(panel, w, h)` and
 -- `PaintVendorList(panel, w, h)`: returning anything but nil replaces the default drawing.
 
+local t = t
+local scale = math.scale
+local get_font = Theme.get_font
+local get_color = Theme.get_color
+local text_size = util.text_size
+local simple_text = draw.SimpleText
+local cable_send = Cable.send
+
 local PANEL = {}
 PANEL.name = ''
 PANEL.info = ''
@@ -16,8 +24,8 @@ PANEL.price = ''
 
 --- Creates the icon and the button of the row.
 function PANEL:Init()
-  local padding = math.scale(4)
-  local height = math.scale(56)
+  local padding = scale(4)
+  local height = scale(56)
 
   self:SetTall(height)
   self:Dock(TOP)
@@ -30,12 +38,12 @@ function PANEL:Init()
   self.icon:SetMouseInputEnabled(false)
 
   self.button = vgui.Create('fl_button', self)
-  self.button:SetWide(math.scale(104))
+  self.button:SetWide(scale(104))
   self.button:Dock(RIGHT)
-  self.button:SetFont(Theme.get_font('main_menu_small'))
+  self.button:SetFont(get_font('main_menu_small'))
   self.button:set_centered(true)
   self.button:set_draw_outline(true)
-  self.button:set_background_color(Theme.get_color('accent'))
+  self.button:set_background_color(get_color('accent'))
 end
 
 --- Draws the background of the row, the name of the item, the line below it and the price.
@@ -51,21 +59,21 @@ function PANEL:Paint(w, h)
   -- @return [Any Return anything but nil to replace the default drawing]
   if Theme.hook('PaintVendorRow', self, w, h) != nil then return end
 
-  local padding = math.scale(8)
-  local name_font = Theme.get_font('main_menu_small')
-  local info_font = Theme.get_font('tooltip_small')
-  local text_color = Theme.get_color('text')
-  local price_w, price_h = util.text_size(self.price, name_font)
+  local padding = scale(8)
+  local name_font = get_font('main_menu_small')
+  local info_font = get_font('tooltip_small')
+  local text_color = get_color('text')
+  local price_w, price_h = text_size(self.price, name_font)
   local text_x = self.icon.x + self.icon:GetWide() + padding
   local price_x = self.button.x - padding - price_w
   local screen_x, screen_y = self:LocalToScreen(0, 0)
 
-  draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(self:IsHovered() and 220 or 180))
-  draw.SimpleText(self.price, name_font, price_x, h * 0.5 - price_h * 0.5, Theme.get_color('accent_light'))
+  draw.RoundedBox(0, 0, 0, w, h, get_color('background'):alpha(self:IsHovered() and 220 or 180))
+  simple_text(self.price, name_font, price_x, h * 0.5 - price_h * 0.5, get_color('accent_light'))
 
   render.SetScissorRect(screen_x + text_x, screen_y, screen_x + price_x - padding, screen_y + h, true)
-    draw.SimpleText(self.name, name_font, text_x, math.scale(6), text_color)
-    draw.SimpleText(self.info, info_font, text_x, h * 0.5 + math.scale(2), text_color:darken(40))
+    simple_text(self.name, name_font, text_x, scale(6), text_color)
+    simple_text(self.info, info_font, text_x, h * 0.5 + scale(2), text_color:darken(40))
   render.SetScissorRect(0, 0, 0, 0, false)
 end
 
@@ -114,8 +122,8 @@ end
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PerformLayout(w, h)
-  local padding = math.scale(4)
-  local header = math.scale(36)
+  local padding = scale(4)
+  local header = scale(36)
 
   self.scroll:SetPos(padding, header)
   self.scroll:SetSize(w - padding * 2, h - header - padding)
@@ -135,20 +143,20 @@ function PANEL:Paint(w, h)
   -- @return [Any Return anything but nil to replace the default drawing]
   if Theme.hook('PaintVendorList', self, w, h) != nil then return end
 
-  local header = math.scale(36)
+  local header = scale(36)
   local title = t(self.title)
-  local title_font = Theme.get_font('main_menu_titles')
-  local title_w, title_h = util.text_size(title, title_font)
+  local title_font = get_font('main_menu_titles')
+  local title_w, title_h = text_size(title, title_font)
 
-  draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('main_dark'):alpha(150))
-  draw.SimpleText(title, title_font, math.scale(8), header * 0.5 - title_h * 0.5, Theme.get_color('text'))
+  draw.RoundedBox(0, 0, 0, w, h, get_color('main_dark'):alpha(150))
+  simple_text(title, title_font, scale(8), header * 0.5 - title_h * 0.5, get_color('text'))
 
   if #self.rows == 0 then
     local text = t(self.empty_text)
-    local font = Theme.get_font('main_menu_small')
-    local text_w, text_h = util.text_size(text, font)
+    local font = get_font('main_menu_small')
+    local text_w, text_h = text_size(text, font)
 
-    draw.SimpleText(text, font, w * 0.5 - text_w * 0.5, h * 0.5 - text_h * 0.5, Theme.get_color('text'):darken(60))
+    simple_text(text, font, w * 0.5 - text_w * 0.5, h * 0.5 - text_h * 0.5, get_color('text'):darken(60))
   end
 end
 
@@ -173,7 +181,7 @@ function PANEL:add_row(data)
   local row = vgui.Create('fl_vendor_row', self.scroll)
   row:set_row(data)
 
-  table.insert(self.rows, row)
+  self.rows[#self.rows + 1] = row
 
   return row
 end
@@ -196,7 +204,7 @@ PANEL = {}
 
 --- Creates the frame with the description of the vendor and the two lists.
 function PANEL:Init()
-  self:SetSize(math.min(math.scale(960), ScrW() - 32), math.min(math.scale(640), ScrH() - 32))
+  self:SetSize(math.min(scale(960), ScrW() - 32), math.min(scale(640), ScrH() - 32))
   self:Center()
   self:MakePopup()
   self:SetTitle('ui.vendor.title')
@@ -204,8 +212,8 @@ function PANEL:Init()
   self.opened_at = RealTime()
 
   self.description = vgui.Create('DLabel', self)
-  self.description:SetFont(Theme.get_font('main_menu_small'))
-  self.description:SetTextColor(Theme.get_color('text'))
+  self.description:SetFont(get_font('main_menu_small'))
+  self.description:SetTextColor(get_color('text'))
   self.description:SetContentAlignment(7)
   self.description:SetWrap(true)
   self.description:SetText('')
@@ -225,9 +233,9 @@ function PANEL:PerformLayout(w, h)
   self.BaseClass.PerformLayout(self, w, h)
 
   local left, top, right, bottom = self:GetDockPadding()
-  local gap = math.scale(8)
-  local header = self.description:GetText() != '' and math.scale(44) or 0
-  local footer = math.scale(32)
+  local gap = scale(8)
+  local header = self.description:GetText() != '' and scale(44) or 0
+  local footer = scale(32)
   local list_w = (w - left - right - gap) * 0.5
   local list_y = top + header + (header > 0 and gap or 0)
   local list_h = h - list_y - bottom - footer
@@ -250,18 +258,18 @@ function PANEL:PaintOver(w, h)
   if !self.money_text then return end
 
   local left, top, right, bottom = self:GetDockPadding()
-  local gap = math.scale(8)
-  local font = Theme.get_font('main_menu_small')
-  local color = Theme.get_color('text')
-  local text_w, text_h = util.text_size(self.money_text, font)
-  local y = h - bottom - math.scale(16) - text_h * 0.5
+  local gap = scale(8)
+  local font = get_font('main_menu_small')
+  local color = get_color('text')
+  local text_w, text_h = text_size(self.money_text, font)
+  local y = h - bottom - scale(16) - text_h * 0.5
 
-  draw.SimpleText(self.money_text, font, left + gap, y, color)
+  simple_text(self.money_text, font, left + gap, y, color)
 
   if self.vendor_money_text then
-    text_w = util.text_size(self.vendor_money_text, font)
+    text_w = text_size(self.vendor_money_text, font)
 
-    draw.SimpleText(self.vendor_money_text, font, w - right - gap - text_w, y, color)
+    simple_text(self.vendor_money_text, font, w - right - gap - text_w, y, color)
   end
 end
 
@@ -271,14 +279,16 @@ end
 function PANEL:refresh_money()
   local data = self.data
 
-  if !data or !IsValid(PLAYER) then
+  local client = PLAYER
+
+  if !data or !IsValid(client) then
     self.money_text = nil
     self.vendor_money_text = nil
 
     return
   end
 
-  local own_money = Vendors:format_money(PLAYER:get_money(data.currency), data.currency)
+  local own_money = Vendors:format_money(client:get_money(data.currency), data.currency)
 
   self.money_text = t'ui.vendor.your_money'..': '..own_money
   self.vendor_money_text = nil
@@ -304,7 +314,7 @@ function PANEL:OnRemove()
   timer.Remove('fl_vendor_refresh')
 
   if !self.closed_by_server then
-    Cable.send('fl_vendor_close')
+    cable_send('fl_vendor_close')
   end
 end
 
@@ -401,7 +411,7 @@ function PANEL:rebuild()
     local item_table = Item.find_by_id(v.id)
 
     if item_table then
-      table.insert(sells, { name = t(item_table:get_name()), item_table = item_table, entry = v })
+      sells[#sells + 1] = { name = t(item_table:get_name()), item_table = item_table, entry = v }
     end
   end
 
@@ -411,14 +421,17 @@ function PANEL:rebuild()
     if item_obj then
       local name = t(item_obj:get_name())
       local key = item_obj.id..'\n'..name..'\n'..tostring(v.price)
+      local group = groups[key]
 
-      if !groups[key] then
-        groups[key] = { name = name, item_obj = item_obj, price = v.price, instance_ids = {} }
-
-        table.insert(buys, groups[key])
+      if !group then
+        group = { name = name, item_obj = item_obj, price = v.price, instance_ids = {} }
+        groups[key] = group
+        buys[#buys + 1] = group
       end
 
-      table.insert(groups[key].instance_ids, v.instance_id)
+      local instance_ids = group.instance_ids
+
+      instance_ids[#instance_ids + 1] = v.instance_id
     end
   end
 
@@ -436,7 +449,7 @@ function PANEL:rebuild()
       skin = item_table:get_skin(),
       button_text = t'ui.vendor.buy',
       on_click = function()
-        Cable.send('fl_vendor_buy', self.vendor, entry.id)
+        cable_send('fl_vendor_buy', self.vendor, entry.id)
       end
     })
 
@@ -455,7 +468,7 @@ function PANEL:rebuild()
       skin = item_obj:get_skin(),
       button_text = t'ui.vendor.sell',
       on_click = function()
-        Cable.send('fl_vendor_sell', self.vendor, v.instance_ids[1])
+        cable_send('fl_vendor_sell', self.vendor, v.instance_ids[1])
       end
     })
   end

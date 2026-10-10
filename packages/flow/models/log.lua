@@ -145,10 +145,10 @@ end
 function Log:replicate(condition)
   if !last_log then return self end
 
-  condition = isfunction(condition) and condition or function() return true end
+  local has_condition = isfunction(condition)
 
   for k, v in player.Iterator() do
-    if condition(v) then
+    if !has_condition or condition(v) then
       Cable.send(
         v,
         'log_replicate',

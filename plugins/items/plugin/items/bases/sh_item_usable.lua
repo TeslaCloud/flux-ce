@@ -5,6 +5,8 @@
 -- in the `uses` field of the instance; when `max_uses` is above 1 they are shown in the
 -- name of the item and on its inventory slot, and the weight of the item shrinks with them.
 
+local uses_text_color = Color(225, 225, 225)
+
 class 'ItemUsable' extends 'ItemBase'
 
 ItemUsable.name = 'Usable Items Base'
@@ -21,7 +23,7 @@ if CLIENT then
       local text = self:get_uses()..'/'..self.max_uses
       local font = Theme.get_font('text_smallest')
       local text_w, text_h = util.text_size(text, font)
-      draw.SimpleText(text, font, w - text_w - math.scale_x(4), math.scale(4), Color(225, 225, 225))
+      draw.SimpleText(text, font, w - text_w - math.scale_x(4), math.scale(4), uses_text_color)
     end
   end
 end

@@ -242,7 +242,7 @@ end
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
   local padding = math.scale(8)
-  local half = math.floor(h / 2)
+  local half = math.floor(h * 0.5)
   local button_w = self.unban_button:GetWide()
   local time_width = math.scale(200)
   local text_width = w - button_w - time_width - padding * 4

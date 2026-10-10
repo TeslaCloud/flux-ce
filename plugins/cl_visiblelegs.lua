@@ -135,8 +135,8 @@ function VisibleLegs:spawn_legs(client)
   local legs = client.legs
 
   if IsValid(legs) then
-    for k, v in pairs(hidden_bones) do
-      local bone = legs:LookupBone(v)
+    for i = 1, #hidden_bones do
+      local bone = legs:LookupBone(hidden_bones[i])
 
       if bone then
         legs:ManipulateBonePosition(bone, offset)

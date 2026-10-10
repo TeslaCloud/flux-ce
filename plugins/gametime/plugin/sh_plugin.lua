@@ -47,6 +47,7 @@ require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 
 local floor = math.floor
+local format = string.format
 local minute_length = 60
 local hour_length = 60 * 60
 local day_length = 60 * 60 * 24
@@ -368,7 +369,7 @@ function GameTime:format_time(timestamp, twelve_hour, lang)
   end
 
   if !twelve_hour then
-    return string.format('%02d:%02d', date.hour, date.minute)
+    return format('%02d:%02d', date.hour, date.minute)
   end
 
   local hour = date.hour % 12
@@ -378,7 +379,7 @@ function GameTime:format_time(timestamp, twelve_hour, lang)
     hour = 12
   end
 
-  return string.format('%d:%02d %s', hour, date.minute, period)
+  return format('%d:%02d %s', hour, date.minute, period)
 end
 
 --- Formats the date of a timestamp, such as 'Wednesday, 1 January 2020', or '01/01/2020' in
@@ -393,8 +394,8 @@ function GameTime:format_date(timestamp, short, lang)
 
   if short then
     text = t('gametime.format.date_short', {
-      day = string.format('%02d', date.day),
-      month = string.format('%02d', date.month),
+      day = format('%02d', date.day),
+      month = format('%02d', date.month),
       year = date.year
     }, lang)
   else
@@ -435,7 +436,7 @@ end
 function GameTime:to_string(timestamp)
   local date = self:get_date(timestamp)
 
-  return string.format('%04d-%02d-%02d %02d:%02d', date.year, date.month, date.day, date.hour, date.minute)
+  return format('%04d-%02d-%02d %02d:%02d', date.year, date.month, date.day, date.hour, date.minute)
 end
 
 --- Reads a timestamp from text: a date as 'YYYY-MM-DD', a time of day as 'HH:MM' or

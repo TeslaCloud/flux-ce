@@ -26,10 +26,13 @@ function Flux.Notification:process_queue()
     lifetime = lifetime or 8
     text = t(text) or ''
 
-    display[top] = { text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, is_last = true }
+    local entry = { text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, is_last = true }
+    local previous = display[top - 1]
 
-    if display[top - 1] then
-      display[top - 1].is_last = false
+    display[top] = entry
+
+    if previous then
+      previous.is_last = false
     end
 
     local panel = vgui.Create('fl_notification')
@@ -39,12 +42,13 @@ function Flux.Notification:process_queue()
     panel:set_background_color(notification.back_color)
 
     local w, h = panel:GetSize()
-    panel:SetPos(scrw - w - 8, -h)
-    panel:MoveTo(scrw - w - 8, 8, 0.1)
+    local x = scrw - w - 8
+    panel:SetPos(x, -h)
+    panel:MoveTo(x, 8, 0.1)
 
-    display[top].panel = panel
-    display[top].width = w
-    display[top].height = h
+    entry.panel = panel
+    entry.width = w
+    entry.height = h
 
     timer.Simple(lifetime, function()
       display[top] = nil
@@ -69,7 +73,7 @@ end
 -- @param text_color=Color(255, 255, 255) [Color]
 -- @param back_color=Color(0, 0, 0) [Color]
 function Flux.Notification:add(text, lifetime, text_color, back_color)
-  table.insert(queue, { text = text, lifetime = lifetime, text_color = text_color, back_color = back_color })
+  queue[#queue + 1] = { text = text, lifetime = lifetime, text_color = text_color, back_color = back_color }
   self:process_queue()
 end
 
@@ -100,11 +104,15 @@ end
 function Flux.Notification:reposition(offset)
   if !isnumber(offset) then return end
 
-  for k, v in ipairs(display) do
-    if v and IsValid(v.panel) then
-      local x, y = v.panel:GetPos()
+  local shift = offset + 4
 
-      v.panel:MoveTo(x, y + offset + 4, 0.1)
+  for k, v in ipairs(display) do
+    local panel = v.panel
+
+    if IsValid(panel) then
+      local x, y = panel:GetPos()
+
+      panel:MoveTo(x, y + shift, 0.1)
     end
   end
 end

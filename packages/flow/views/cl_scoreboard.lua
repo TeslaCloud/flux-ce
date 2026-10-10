@@ -5,6 +5,8 @@
 -- `PlayerShouldShowOnScoreboard` and add to the menu that a click on a player card opens
 -- with `CreateScoreboardPlayerMenu`.
 
+local IsValid = IsValid
+
 --- The scoreboard page of the tab menu (`fl_scoreboard`): a scrollable list with one
 -- `fl_scoreboard_player` card per initialized player, drawn by the active theme's
 -- `PaintScoreboard` hook, which also writes how many players are online.

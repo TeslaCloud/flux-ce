@@ -4,6 +4,9 @@
 -- A player who is trading has a session in `Vendors.sessions`, a table with the `vendor`
 -- and the `traded` flag, from `Vendors:open` until `Vendors:close`.
 
+local IsValid = IsValid
+local cable_send = Cable.send
+
 local sessions = Vendors.sessions or {}
 Vendors.sessions = sessions
 
@@ -56,7 +59,7 @@ function Vendors:get_customers(vendor)
 
   for actor, session in pairs(sessions) do
     if session.vendor == vendor and IsValid(actor) then
-      table.insert(customers, actor)
+      customers[#customers + 1] = actor
     end
   end
 
@@ -78,7 +81,7 @@ end
 function Vendors:update_customers(vendor, actor)
   for k, v in ipairs(self:get_customers(vendor)) do
     if !actor or actor == v then
-      Cable.send(v, 'fl_vendor_update', vendor, self:get_trade_data(vendor, v))
+      cable_send(v, 'fl_vendor_update', vendor, self:get_trade_data(vendor, v))
     end
   end
 end
@@ -97,14 +100,14 @@ function Vendors:send_trade_change(vendor, actor, item_id)
 
   for k, v in ipairs(self:get_customers(vendor)) do
     if v != actor then
-      table.insert(others, v)
+      others[#others + 1] = v
     end
   end
 
   self:update_customers(vendor, actor)
 
   if #others > 0 then
-    Cable.send(others, 'fl_vendor_change', vendor, data.money, item_id, stock)
+    cable_send(others, 'fl_vendor_change', vendor, data.money, item_id, stock)
   end
 end
 
@@ -143,7 +146,7 @@ function Vendors:open(actor, vendor)
 
   sessions[actor] = { vendor = vendor, traded = false }
 
-  Cable.send(actor, 'fl_vendor_open', vendor, self:get_trade_data(vendor, actor))
+  cable_send(actor, 'fl_vendor_open', vendor, self:get_trade_data(vendor, actor))
 
   self:say(vendor, actor, 'greeting')
 
@@ -166,7 +169,7 @@ function Vendors:close(actor, by_client, silent)
   if !IsValid(actor) then return true end
 
   if !by_client then
-    Cable.send(actor, 'fl_vendor_close')
+    cable_send(actor, 'fl_vendor_close')
   end
 
   if !silent and session.traded then

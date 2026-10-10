@@ -489,6 +489,7 @@ function ActiveRecord.MigrationContext:install_migrations()
 
   table.sort(ordered, function(a, b)
     if a.version != b.version then return a.version < b.version end
+
     return a.index < b.index
   end)
 

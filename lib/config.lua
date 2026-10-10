@@ -37,6 +37,14 @@
 -- These are the settings of the server. The options of an individual player are kept on
 -- the client of that player by the Settings plugin (`ClientSettings`).
 
+local pairs = pairs
+local istable = istable
+local isstring = isstring
+local isnumber = isnumber
+local isbool = isbool
+local IsValid = IsValid
+local tostring = tostring
+
 mod 'Config'
 
 local stored = Config.stored or {}
@@ -490,24 +498,27 @@ if SERVER then
   --   label where a newly created config came from]
   function Config.set(key, value, hidden, from_config)
     if key != nil then
-      if !stored[key] then
-        stored[key] = {}
+      local entry = stored[key]
+
+      if !entry then
+        entry = {}
+        stored[key] = entry
 
         if PLUGIN then
-          stored[key].added_by = PLUGIN:get_name()
+          entry.added_by = PLUGIN:get_name()
         elseif SCHEMA then
-          stored[key].added_by = 'Schema'
+          entry.added_by = 'Schema'
         else
-          stored[key].added_by = 'Flux'
+          entry.added_by = 'Flux'
         end
 
         if isnumber(from_config) then
           if from_config == CONFIG_FLUX then
-            stored[key].added_by = 'Flux Config'
+            entry.added_by = 'Flux Config'
           elseif from_config == CONFIG_SCHEMA then
-            stored[key].added_by = 'Schema Config'
+            entry.added_by = 'Schema Config'
           elseif PLUGIN and from_config == CONFIG_PLUGIN then
-            stored[key].added_by = PLUGIN:get_name()..' Config'
+            entry.added_by = PLUGIN:get_name()..' Config'
           end
         end
       end
@@ -522,12 +533,12 @@ if SERVER then
       -- @param key [String config key]
       -- @param old_value [Any current value, nil if the config has just been created]
       -- @param new_value [Any value that is about to be stored]
-      hook.Run('OnConfigSet', key, stored[key].value, value)
+      hook.Run('OnConfigSet', key, entry.value, value)
 
-      stored[key].value = value
+      entry.value = value
 
-      if stored[key].hidden == nil or hidden != nil then
-        stored[key].hidden = hidden or false
+      if entry.hidden == nil or hidden != nil then
+        entry.hidden = hidden or false
       end
 
       cache[key] = value
@@ -843,15 +854,21 @@ end
 -- @param default=nil [Any value to return if the config has no value]
 -- @return [Any config value, or default]
 function Config.get(key, default)
-  if cache[key] then
-    return cache[key]
+  local value = cache[key]
+
+  if value then
+    return value
   end
 
-  if stored[key] != nil then
-    if stored[key].value != nil then
-      cache[key] = stored[key].value
+  local entry = stored[key]
 
-      return stored[key].value
+  if entry != nil then
+    value = entry.value
+
+    if value != nil then
+      cache[key] = value
+
+      return value
     end
   end
 

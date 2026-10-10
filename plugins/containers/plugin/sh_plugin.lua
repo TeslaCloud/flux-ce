@@ -33,6 +33,8 @@ PLUGIN:set_global('Container')
 local stored = Container.stored or {}
 Container.stored = stored
 
+local lowercase_models = {}
+
 do
   --- Makes props with the specified model(s) work as containers.
   -- ```
@@ -68,7 +70,14 @@ do
   -- @param model [String path to the model; case-insensitive]
   -- @return [Map container data, or nil if the model is not a container]
   function Container:find(model)
-    return stored[model:lower()]
+    local lowercase = lowercase_models[model]
+
+    if !lowercase then
+      lowercase = model:lower()
+      lowercase_models[model] = lowercase
+    end
+
+    return stored[lowercase]
   end
 
   --- Returns the container data of an entity, if the entity is a container: a valid
@@ -81,7 +90,7 @@ do
     local model = entity:GetModel()
 
     if isstring(model) then
-      return stored[model:lower()]
+      return self:find(model)
     end
   end
 
@@ -143,7 +152,7 @@ function Container:get_loot_items(category)
   for id, item_table in pairs(Item.all()) do
     if !item_table.is_base and item_table.lootable != false
     and (!category or item_table.category == category) then
-      table.insert(items, item_table)
+      items[#items + 1] = item_table
     end
   end
 
@@ -162,7 +171,7 @@ function Container:get_loot_categories()
     if isstring(category) and !seen[category] then
       seen[category] = true
 
-      table.insert(categories, category)
+      categories[#categories + 1] = category
     end
   end
 

@@ -142,8 +142,10 @@ function Bolt:PlayerRestored(actor, record)
       actor.can_anything = true
     end
   elseif istable(root_steamid) then
+    local steam_id = actor:SteamID()
+
     for k, v in ipairs(root_steamid) do
-      if v == actor:SteamID() then
+      if v == steam_id then
         actor:SetUserGroup('admin')
         actor.can_anything = true
       end
@@ -220,8 +222,10 @@ end
 --- Removes the player's expired temporary permissions.
 -- @param actor [Player]
 function Bolt:PlayerOneMinute(actor)
+  local now = os.time()
+
   for k, v in pairs(actor:get_temp_permissions()) do
-    if v.expires <= os.time() then
+    if v.expires <= now then
       self:delete_temp_permission(actor, k)
     end
   end

@@ -38,11 +38,17 @@ end
 function SpawnPoints:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
   if draw_depth or draw_skybox or !self.editing then return end
 
-  for k, v in ipairs(self.points) do
-    local color = v.color or self.color_default
-    local eye_pos = v.pos + eye_offset
+  local points = self.points
+  local default_color = self.color_default
+  local box_angle, hull_mins, hull_maxs = self.box_angle, self.hull_mins, self.hull_maxs
 
-    render.DrawWireframeBox(v.pos, self.box_angle, self.hull_mins, self.hull_maxs, color, true)
+  for i = 1, #points do
+    local v = points[i]
+    local pos = v.pos
+    local color = v.color or default_color
+    local eye_pos = pos + eye_offset
+
+    render.DrawWireframeBox(pos, box_angle, hull_mins, hull_maxs, color, true)
     render.DrawLine(eye_pos, eye_pos + v.ang:Forward() * direction_length, color, true)
   end
 end
@@ -53,17 +59,21 @@ function SpawnPoints:HUDPaint()
   if !self.editing then return end
 
   local font = Theme.get_font('text_small')
+  local points = self.points
+  local default_color = self.color_default
 
-  for k, v in ipairs(self.points) do
+  for i = 1, #points do
+    local v = points[i]
+    local label = v.label
     local screen_pos = (v.pos + label_offset):ToScreen()
 
-    if screen_pos.visible and v.label then
+    if screen_pos.visible and label then
       draw.SimpleText(
-        v.label,
+        label,
         font,
         screen_pos.x,
         screen_pos.y,
-        v.color or self.color_default,
+        v.color or default_color,
         TEXT_ALIGN_CENTER,
         TEXT_ALIGN_CENTER
       )

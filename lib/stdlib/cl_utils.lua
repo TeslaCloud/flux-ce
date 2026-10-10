@@ -1,6 +1,10 @@
 --- Client side of the `util` extensions: measuring and wrapping text, cubic easing, cached
 -- materials and materials downloaded from a URL.
 
+local pow = math.pow
+local set_font = surface.SetFont
+local get_text_size = surface.GetTextSize
+
 do
   local cache = {}
 
@@ -12,19 +16,24 @@ do
   function util.text_size(text, font)
     font = font or 'default'
 
-    if cache[text] and cache[text][font] then
-      local text_size = cache[text][font]
+    local text_cache = cache[text]
+    local text_size = text_cache and text_cache[font]
 
+    if text_size then
       return text_size[1], text_size[2]
     else
-      surface.SetFont(font)
+      set_font(font)
 
-      local result = { surface.GetTextSize(text) }
+      local width, height = get_text_size(text)
 
-      cache[text] = {}
-      cache[text][font] = result
+      if !text_cache then
+        text_cache = {}
+        cache[text] = text_cache
+      end
 
-      return result[1], result[2]
+      text_cache[font] = { width, height }
+
+      return width, height
     end
   end
 end
@@ -96,7 +105,7 @@ end
 -- @param to [Number final value]
 -- @return [Number interpolated value]
 function util.cubic_ease_in(cur_step, steps, from, to)
-  return (to - from) * math.pow(cur_step / steps, 3) + from
+  return (to - from) * pow(cur_step / steps, 3) + from
 end
 
 --- Calculates the value of a cubic ease-out interpolation at a given step.
@@ -106,7 +115,7 @@ end
 -- @param to [Number final value]
 -- @return [Number interpolated value]
 function util.cubic_ease_out(cur_step, steps, from, to)
-  return (to - from) * (math.pow(cur_step / steps - 1, 3) + 1) + from
+  return (to - from) * (pow(cur_step / steps - 1, 3) + 1) + from
 end
 
 --- Precalculates every step of a cubic ease-in interpolation.
@@ -119,7 +128,7 @@ function util.cubic_ease_in_t(steps, from, to)
   local result = {}
 
   for i = 1, steps do
-    table.insert(result, util.cubic_ease_in(i, steps, from, to))
+    result[i] = util.cubic_ease_in(i, steps, from, to)
   end
 
   return result
@@ -135,7 +144,7 @@ function util.cubic_ease_out_t(steps, from, to)
   local result = {}
 
   for i = 1, steps do
-    table.insert(result, util.cubic_ease_out(i, steps, from, to))
+    result[i] = util.cubic_ease_out(i, steps, from, to)
   end
 
   return result
@@ -167,7 +176,7 @@ function util.cubic_ease_in_out_t(steps, from, to)
   local result = {}
 
   for i = 1, steps do
-    table.insert(result, util.cubic_ease_in_out(i, steps, from, to))
+    result[i] = util.cubic_ease_in_out(i, steps, from, to)
   end
 
   return result
@@ -180,11 +189,14 @@ do
   -- @param mat [String material path]
   -- @return [Material]
   function util.get_material(mat)
-    if !mat_cache[mat] then
-      mat_cache[mat] = Material(mat)
+    local material = mat_cache[mat]
+
+    if !material then
+      material = Material(mat)
+      mat_cache[mat] = material
     end
 
-    return mat_cache[mat]
+    return material
   end
 end
 
@@ -252,9 +264,10 @@ do
   -- @see [util.cache_url_material]
   function URLMaterial(url)
     local url_crc = util.CRC(url)
+    local material = cache[url_crc]
 
-    if cache[url_crc] then
-      return cache[url_crc]
+    if material then
+      return material
     end
 
     if !loading_cache[url_crc] then
@@ -312,14 +325,14 @@ function util.wrap_text(text, font, width, initial_width)
           else
             current_word = current_word..char..'-'
 
-            table.insert(output, current_word)
+            output[#output + 1] = current_word
 
             current_word = ''
             cur_width = 0
           end
         end
       else -- The width is LESS than the total width
-        table.insert(output, current_word)
+        output[#output + 1] = current_word
 
         current_word = v..' '
 
@@ -332,7 +345,7 @@ function util.wrap_text(text, font, width, initial_width)
 
   -- If we have some characters remaining, drop them into the lines table.
   if current_word != '' then
-    table.insert(output, current_word)
+    output[#output + 1] = current_word
   end
 
   return output

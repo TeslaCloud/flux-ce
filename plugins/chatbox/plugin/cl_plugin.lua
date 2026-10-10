@@ -5,6 +5,11 @@
 -- pieces that can be drawn (`Chatbox.compile`) and creates, shows and hides the chatbox panel.
 -- @module [chat]
 
+local scale = math.scale
+local get_option, get_font = Theme.get_option, Theme.get_font
+local config_get = Config.get
+local text_size = util.text_size
+
 Chatbox.width = Chatbox.width or 100
 Chatbox.height = Chatbox.height or 100
 Chatbox.x = Chatbox.x or 0
@@ -62,22 +67,22 @@ function Chatbox.compile(msg_table)
 
   local data = msg_table.data
   local should_translate = msg_table.should_translate
-  local cur_size = Theme.get_option('chatbox_text_normal_size')
+  local cur_size = get_option('chatbox_text_normal_size')
 
   if isnumber(msg_table.size) then
-    cur_size = math.scale(msg_table.size)
+    cur_size = scale(msg_table.size)
   end
 
   local cur_x, cur_y = 1, 0
   local total_height = 0
-  local font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
+  local font = Font.size(get_font('chatbox_normal'), cur_size)
   local v_offset = 0
-  local fix = Theme.get_option('chatbox_fix_alignment') == true
+  local fix = get_option('chatbox_fix_alignment') == true
   local fix_const = 0.2
 
   if !font then return end
 
-  table.insert(compiled, cur_size)
+  compiled[#compiled + 1] = cur_size
 
   --- Lets plugins compile a whole message themselves. Called on the client by
   -- `Chatbox.compile` before the pieces of the message are compiled; gamemode hooks are not
@@ -87,23 +92,26 @@ function Chatbox.compile(msg_table)
   --   and its total_height field should be set to the height of the message]
   -- @return [Boolean return true to skip the default compilation of all pieces]
   if Plugin.call('ChatboxCompileMessage', data, compiled) != true then
-    if Config.get('chat_timestamps') then
-      local stamp = os.date('%H:%M', isnumber(msg_table.time) and msg_table.time or os.time())..' '
-      local w, h = util.text_size(stamp, font)
+    local message_margin = config_get('message_margin')
+    local wrap_width = Chatbox.width - get_option('chatbox_padding', scale(8)) * 4
 
-      table.insert(compiled, Theme.get_color('chat_timestamp', Color(170, 170, 170)))
+    if config_get('chat_timestamps') then
+      local stamp = os.date('%H:%M', isnumber(msg_table.time) and msg_table.time or os.time())..' '
+      local w, h = text_size(stamp, font)
+
+      compiled[#compiled + 1] = Theme.get_color('chat_timestamp', Color(170, 170, 170))
 
       if !fix then
-        table.insert(compiled, { text = stamp, w = w, h = h, x = cur_x, y = cur_y })
+        compiled[#compiled + 1] = { text = stamp, w = w, h = h, x = cur_x, y = cur_y }
       else
-        table.insert(compiled, { text = stamp, w = w, h = h, x = cur_x, y = cur_y - h * fix_const })
+        compiled[#compiled + 1] = { text = stamp, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
         h = h - (h * fix_const)
       end
 
-      table.insert(compiled, Color(255, 255, 255))
+      compiled[#compiled + 1] = Color(255, 255, 255)
 
       cur_x = cur_x + w
-      total_height = h + Config.get('message_margin')
+      total_height = h + message_margin
     end
 
     for k, v in ipairs(data) do
@@ -123,53 +131,53 @@ function Chatbox.compile(msg_table)
           data[k] = t(v)
         end
 
-        local wrapped =
-          util.wrap_text(v, font, Chatbox.width - Theme.get_option('chatbox_padding', math.scale(8)) * 4, cur_x)
+        local wrapped = util.wrap_text(v, font, wrap_width, cur_x)
         local line_count = #wrapped
 
-        for k2, v2 in ipairs(wrapped) do
-          local w, h = util.text_size(v2, font)
+        for k2 = 1, line_count do
+          local v2 = wrapped[k2]
+          local w, h = text_size(v2, font)
 
           if !fix then
-            table.insert(compiled, { text = v2, w = w, h = h, x = cur_x, y = cur_y })
+            compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y }
           else
-            table.insert(compiled, { text = v2, w = w, h = h, x = cur_x, y = cur_y - h * fix_const })
+            compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
             h = h - (h * fix_const)
           end
 
           cur_x = cur_x + w
 
           if total_height < h then
-            total_height = h + Config.get('message_margin')
+            total_height = h + message_margin
           end
 
           if line_count > 1 and k2 != line_count then
-            cur_y = cur_y + h + Config.get('message_margin')
+            cur_y = cur_y + h + message_margin
 
-            total_height = total_height + h + Config.get('message_margin')
+            total_height = total_height + h + message_margin
 
             cur_x = 0
           end
         end
       elseif isnumber(v) then
-        cur_size = math.scale(v)
+        cur_size = scale(v)
 
-        font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
+        font = Font.size(get_font('chatbox_normal'), cur_size)
 
-        table.insert(compiled, cur_size)
+        compiled[#compiled + 1] = cur_size
       elseif istable(v) then
         if v.image or v.icon then
           v.height  = v.height  or v.size
           v.width   = v.width   or v.size
 
-          local margin = math.scale(v.margin or 2)
+          local margin = scale(v.margin or 2)
           local margin_side = math.ceil(margin * 0.5)
-          local scaled = math.scale(v.height)
+          local scaled = scale(v.height)
           local image_data = {
             image = v.image,
             x     = cur_x + margin_side,
             y     = cur_y,
-            w     = math.scale(v.width),
+            w     = scale(v.width),
             h     = scaled
           }
 
@@ -180,39 +188,38 @@ function Chatbox.compile(msg_table)
 
           cur_x = cur_x + image_data.w + margin
 
-          table.insert(compiled, image_data)
+          compiled[#compiled + 1] = image_data
 
           if total_height < scaled then
-            total_height = scaled + Config.get('message_margin')
+            total_height = scaled + message_margin
           end
         elseif v.avatar then
-          local _, line_height = util.text_size('W', font)
+          local _, line_height = text_size('W', font)
 
           if fix then
             line_height = line_height - line_height * fix_const
           end
 
-          local size = math.floor(isnumber(v.size) and math.scale(v.size) or line_height)
-          local margin = math.scale(isnumber(v.margin) and v.margin or 8)
-          local wrap_width = Chatbox.width - Theme.get_option('chatbox_padding', math.scale(8)) * 4
+          local size = math.floor(isnumber(v.size) and scale(v.size) or line_height)
+          local margin = scale(isnumber(v.margin) and v.margin or 8)
 
           if cur_x > 1 and cur_x + size + margin > wrap_width then
             cur_x = 0
-            cur_y = cur_y + line_height + Config.get('message_margin')
+            cur_y = cur_y + line_height + message_margin
           end
 
-          table.insert(compiled, {
+          compiled[#compiled + 1] = {
             avatar  = v.avatar,
             x       = cur_x + math.ceil(margin * 0.5),
             y       = cur_y + math.max(0, math.floor((line_height - size) * 0.5)),
             w       = size,
             h       = size
-          })
+          }
 
           cur_x = cur_x + size + margin
-          total_height = math.max(total_height, cur_y + size + Config.get('message_margin'))
+          total_height = math.max(total_height, cur_y + size + message_margin)
         elseif v.r and v.g and v.b and v.a then
-          table.insert(compiled, Color(v.r, v.g, v.b, v.a))
+          compiled[#compiled + 1] = Color(v.r, v.g, v.b, v.a)
         end
       elseif IsValid(v) then
         local to_insert = ''
@@ -230,19 +237,19 @@ function Chatbox.compile(msg_table)
           to_insert = tostring(v)
         end
 
-        local w, h = util.text_size(to_insert, font)
+        local w, h = text_size(to_insert, font)
 
         if !fix then
-          table.insert(compiled, { text = to_insert, w = w, h = h, x = cur_x, y = cur_y })
+          compiled[#compiled + 1] = { text = to_insert, w = w, h = h, x = cur_x, y = cur_y }
         else
-          table.insert(compiled, { text = to_insert, w = w, h = h, x = cur_x, y = cur_y - h * fix_const })
+          compiled[#compiled + 1] = { text = to_insert, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
           h = h - (h * fix_const)
         end
 
         cur_x = cur_x + w
 
         if total_height < h then
-          total_height = h + Config.get('message_margin')
+          total_height = h + message_margin
         end
       end
     end
@@ -261,10 +268,10 @@ end
 --- Creates the chatbox panel in its closed state, taking the size and position
 -- from the current theme. The panel is stored in Chatbox.panel.
 function Chatbox.create()
-  Chatbox.width = Theme.get_option('chatbox_width') or 100
-  Chatbox.height = Theme.get_option('chatbox_height') or 100
-  Chatbox.x = Theme.get_option('chatbox_x') or 0
-  Chatbox.y = Theme.get_option('chatbox_y') or 0
+  Chatbox.width = get_option('chatbox_width') or 100
+  Chatbox.height = get_option('chatbox_height') or 100
+  Chatbox.x = get_option('chatbox_x') or 0
+  Chatbox.y = get_option('chatbox_y') or 0
 
   Chatbox.panel = vgui.Create('fl_chat_panel')
   Chatbox.panel:set_open(false)

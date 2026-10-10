@@ -80,8 +80,10 @@ function Cinematics:PostCharacterLoaded(char_id)
 end
 
 Cable.receive('fl_cinematic_show', function(cinematic)
-  if !IsValid(PLAYER) or !PLAYER:has_initialized() then return end
-  if PLAYER.is_character_loaded and !PLAYER:is_character_loaded() then return end
+  local client = PLAYER
+
+  if !IsValid(client) or !client:has_initialized() then return end
+  if client.is_character_loaded and !client:is_character_loaded() then return end
 
   Cinematics:add(cinematic)
 end)

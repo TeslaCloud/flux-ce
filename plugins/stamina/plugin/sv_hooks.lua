@@ -2,18 +2,24 @@
 -- regenerates their stamina on timers, slows them down as it runs out and saves it with
 -- their character.
 
+local IsValid = IsValid
+local config_get = Config.get
+local timer_exists = timer.Exists
+local timer_pause = timer.Pause
+local timer_remove = timer.Remove
+
 Stamina.running = Stamina.running or {}
 Stamina.timer_ids = Stamina.timer_ids or {}
 
-local drain_scale = 4 * Config.get('stam_drain_scale', 1)
-local regen_scale = 2 * Config.get('stam_regen_scale', 1)
-local jump_penalty = Config.get('stam_jump_penalty', 25)
-local max_stamina = Config.get('stam_max', 100)
-local regen_delay = Config.get('stam_regen_delay', 3)
-local health_drain_scale = Config.get('stam_health_drain_scale', 0)
-local crouch_regen_scale = Config.get('stam_crouch_regen_scale', 1)
-local slowdown_threshold = Config.get('stam_slowdown_threshold', 0)
-local persistent = Config.get('stam_persistent', false)
+local drain_scale = 4 * config_get('stam_drain_scale', 1)
+local regen_scale = 2 * config_get('stam_regen_scale', 1)
+local jump_penalty = config_get('stam_jump_penalty', 25)
+local max_stamina = config_get('stam_max', 100)
+local regen_delay = config_get('stam_regen_delay', 3)
+local health_drain_scale = config_get('stam_health_drain_scale', 0)
+local crouch_regen_scale = config_get('stam_crouch_regen_scale', 1)
+local slowdown_threshold = config_get('stam_slowdown_threshold', 0)
+local persistent = config_get('stam_persistent', false)
 
 --- Returns the stamina below which a running player is slowed down, as set by the
 -- 'stam_slowdown_threshold' config.
@@ -31,7 +37,7 @@ end
 -- @return [Number run speed]
 local function get_run_speed(actor, stamina)
   local walk_speed = actor:GetWalkSpeed()
-  local run_speed = Config.get('run_speed')
+  local run_speed = config_get('run_speed')
   local slowdown_start = get_slowdown_start()
 
   if stamina <= 1 then
@@ -72,7 +78,7 @@ local function delay_regen(target)
   target.stamina_regenerating = false
   target.standing_since = CurTime()
 
-  timer.Pause('stam_regen_'..target:SteamID())
+  timer_pause('stam_regen_'..target:SteamID())
 end
 
 --- Returns how much stamina a running player loses on a drain tick: the 'stam_drain_scale'
@@ -216,7 +222,7 @@ function Stamina:PlayerThink(actor, cur_time)
   if cur_stam < jump_penalty then
     actor:SetJumpPower(1)
   else
-    actor:SetJumpPower(Config.get('jump_power'))
+    actor:SetJumpPower(config_get('jump_power'))
   end
 
   actor:SetRunSpeed(get_run_speed(actor, cur_stam))
@@ -240,7 +246,7 @@ function Stamina:PlayerDisconnected(actor)
   local steam_id = actor:SteamID()
 
   for k, v in ipairs({ 'stam_run_'..steam_id, 'stam_regen_'..steam_id }) do
-    timer.Remove(v)
+    timer_remove(v)
     table.RemoveByValue(self.timer_ids, v)
   end
 
@@ -251,8 +257,8 @@ end
 -- were doing so that the timers are started again.
 function Stamina:OnReloaded()
   for k, v in ipairs(self.timer_ids) do
-    if timer.Exists(v) then
-      timer.Remove(v)
+    if timer_exists(v) then
+      timer_remove(v)
     end
   end
 
@@ -355,7 +361,7 @@ function Stamina:start_running(target, prevent_drain)
   local steam_id = target:SteamID()
   local id = 'stam_run_'..steam_id
 
-  timer.Pause('stam_regen_'..steam_id)
+  timer_pause('stam_regen_'..steam_id)
 
   if !prevent_drain then
     --- Called when a player starts running and their stamina begins to drain.
@@ -368,7 +374,7 @@ function Stamina:start_running(target, prevent_drain)
   if !prevent_drain then
     self.running[steam_id] = true
 
-    if !timer.Exists(id) then
+    if !timer_exists(id) then
       table.insert(self.timer_ids, id)
 
       timer.Create(id, 0.2, 0, function()
@@ -377,7 +383,7 @@ function Stamina:start_running(target, prevent_drain)
             self:set_stamina(target, self:get_stamina(target) - get_drain_amount(target))
           end
         else
-          timer.Remove(id)
+          timer_remove(id)
           self.running[steam_id] = false
         end
       end)
@@ -398,7 +404,7 @@ function Stamina:stop_running(target, prevent_regen)
   local steam_id = target:SteamID()
   local id = 'stam_regen_'..steam_id
 
-  timer.Pause('stam_run_'..steam_id)
+  timer_pause('stam_run_'..steam_id)
 
   self.running[steam_id] = false
 
@@ -414,7 +420,7 @@ function Stamina:stop_running(target, prevent_regen)
   if !prevent_regen then
     target.stamina_regenerating = true
 
-    if !timer.Exists(id) then
+    if !timer_exists(id) then
       table.insert(self.timer_ids, id)
 
       timer.Create(id, 0.2, 0, function()
@@ -430,10 +436,10 @@ function Stamina:stop_running(target, prevent_regen)
           if stamina >= max_stamina then
             target.stamina_regenerating = false
 
-            timer.Pause(id)
+            timer_pause(id)
           end
         else
-          timer.Remove(id)
+          timer_remove(id)
         end
       end)
     else

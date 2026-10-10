@@ -5,7 +5,16 @@
 -- `delegate` copies selected methods of a class to another object, and `isclass` tells
 -- classes and their instances from other values.
 
+local istable = istable
+local isstring = isstring
+local isfunction = isfunction
+local pcall = pcall
+
 local last_class = nil
+
+local function always_valid()
+  return true
+end
 
 --- Checks whether or not an object is a class or an instance of a class.
 -- @param obj [Any object to check]
@@ -112,7 +121,7 @@ function class(name, parent_class)
 
     new_obj.class = real_class
     new_obj.static_class = false
-    new_obj.IsValid = function() return true end
+    new_obj.IsValid = always_valid
 
     super = old_super
 
@@ -131,7 +140,9 @@ function class(name, parent_class)
       end
     end
 
-    table.insert(self.included_modules, module_table)
+    local included_modules = self.included_modules
+
+    included_modules[#included_modules + 1] = module_table
   end
 
   return parent[name]

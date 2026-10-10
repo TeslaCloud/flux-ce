@@ -40,7 +40,9 @@ function mod(name)
       end
     end
 
-    table.insert(self.included_modules, module_table)
+    local included_modules = self.included_modules
+
+    included_modules[#included_modules + 1] = module_table
   end
 
   parent[name] = obj

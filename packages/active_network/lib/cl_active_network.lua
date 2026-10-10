@@ -62,8 +62,10 @@ end
 -- @param default=nil [Any value to return if the variable is not set]
 -- @return [Any variable value, or default]
 function ActiveNetwork.get_nv(key, default)
-  if globals[key] != nil then
-    return globals[key]
+  local value = globals[key]
+
+  if value != nil then
+    return value
   end
 
   return default
@@ -77,10 +79,14 @@ function ActiveNetwork.set_nv() end
 -- @param default=nil [Any value to return if the variable is not set]
 -- @return [Any variable value, or default]
 function ent_meta:get_nv(key, default)
-  local index = self:EntIndex()
+  local vars = stored[self:EntIndex()]
 
-  if stored[index] and stored[index][key] != nil then
-    return stored[index][key]
+  if vars then
+    local value = vars[key]
+
+    if value != nil then
+      return value
+    end
   end
 
   return default

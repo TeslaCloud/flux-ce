@@ -1,6 +1,8 @@
 --- Dates with a time of day: the `DateTime` class, which extends `Date` with hours, minutes,
 -- seconds and a time zone.
 
+local os_date = os.date
+
 --- The DateTime class represents a point in time, not a time interval.
 -- For time intervals, please use Time.
 -- @see [Time]
@@ -54,7 +56,7 @@ end
 --- Gets the timezone abbreviation / information string.
 -- @return [String time zone]
 function DateTime:zone()
-  return os.date('%z', self.time)
+  return os_date('%z', self.time)
 end
 
 --- Returns the date-time at a specified point in time.
@@ -62,7 +64,7 @@ end
 -- @param timezone [String time zone]
 -- @return [DateTime]
 function DateTime:at(seconds, timezone)
-  local date = os.date('*t', seconds)
+  local date = os_date('*t', seconds)
   return DateTime.new(date.year, date.month, date.day, date.hour, date.min, date.sec, timezone)
 end
 
@@ -76,7 +78,7 @@ end
 -- @param time=DateTime [Number UNIX time]
 -- @return [DateTime]
 function DateTime:utc(time)
-  local date = os.date('!*t', time or self.time)
+  local date = os_date('!*t', time or self.time)
   return DateTime.new(date.year, date.month, date.day, date.hour, date.min, date.sec, 'utc')
 end
 
@@ -101,5 +103,5 @@ end
 -- @param time=Date object [Number UNIX time]
 -- @return [String ISO date format]
 function DateTime:iso(time)
-  return os.date('!%Y-%m-%dT%H:%M:%SZ', time or self.time)
+  return os_date('!%Y-%m-%dT%H:%M:%SZ', time or self.time)
 end

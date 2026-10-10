@@ -10,10 +10,12 @@
 
 mod 'InfoDisplay'
 
+local scale         = math.scale
+
 local stored        = InfoDisplay.stored or {}
 InfoDisplay.stored  = stored
 
-local margin        = math.scale(26)
+local margin        = scale(26)
 local last_x        = 0
 local white         = Color(255, 255, 255)
 local back_color    = Color(40, 40, 40, 120)
@@ -97,41 +99,29 @@ function InfoDisplay:draw(info)
     if info.max_percentage and info.max_percentage <= info.percentage then return 0 end
     if info.min_percentage and info.min_percentage >= info.percentage then return 0 end
 
-    local fa_icon = isstring(info.icon)
-    local size = math.scale(info.size)
-    local x_pos, y_pos = last_x + margin, size + margin
-    local circle_size = size * 0.5
-    local circle_pos = x_pos + circle_size
-    local font_size = size * 0.8
-    local half_size = font_size * 0.5
-    local ox, oy = math.scale(info.offset_x), math.scale(info.offset_y)
+    local size = scale(info.size)
 
-    if fa_icon then
-      FontAwesome:draw(
-        info.icon,
-        x_pos + circle_size - half_size + ox,
-        margin + circle_size - half_size + oy,
-        font_size,
-        info.back_color
-      )
+    if isstring(info.icon) then
+      local x_pos = last_x + margin
+      local circle_size = size * 0.5
+      local circle_x, circle_y = x_pos + circle_size, margin + circle_size
+      local font_size = size * 0.8
+      local half_size = font_size * 0.5
+      local icon_x = circle_x - half_size + scale(info.offset_x)
+      local icon_y = circle_y - half_size + scale(info.offset_y)
+
+      FontAwesome:draw(info.icon, icon_x, icon_y, font_size, info.back_color)
       surface.SetDrawColor(info.back_color)
-      surface.draw_circle_outline(x_pos + size * 0.5, margin + size * 0.5, circle_size, 3, 64)
-    end
+      surface.draw_circle_outline(circle_x, circle_y, circle_size, 3, 64)
 
-    if !info.circle then
-      if fa_icon then
-        render.SetScissorRect(x_pos, y_pos - (size / 100 * info.percentage), x_pos + size, y_pos, true)
-          FontAwesome:draw(
-            info.icon,
-            x_pos + circle_size - half_size + ox,
-            margin + circle_size - half_size + oy,
-            font_size,
-            info.color
-          )
+      if !info.circle then
+        local y_pos = size + margin
+
+        render.SetScissorRect(x_pos, y_pos - size * 0.01 * info.percentage, x_pos + size, y_pos, true)
+          FontAwesome:draw(info.icon, icon_x, icon_y, font_size, info.color)
           surface.SetDrawColor(info.color)
-          surface.draw_circle_outline(x_pos + size * 0.5, margin + size * 0.5, circle_size, 3, 64)
+          surface.draw_circle_outline(circle_x, circle_y, circle_size, 3, 64)
         render.SetScissorRect(0, 0, 0, 0, false)
-      else
       end
     end
 

@@ -7,6 +7,8 @@
 -- hook, which already carries it; without it the plugin remembers the location from
 -- `ScalePlayerDamage` itself and reads it back in `PostEntityTakeDamage`.
 
+local tick_count = engine.TickCount
+
 --- Remembers the body part that an attack on a player was traced to, for the damage that
 -- follows in the same tick. The damage is left as it is. Not needed while the Damage
 -- plugin is loaded, which passes the location to `PostPlayerTakeDamage`.
@@ -17,7 +19,7 @@ function Limbs:ScalePlayerDamage(victim, hitgroup, damage_info)
   if Damage then return end
 
   victim.limb_hitgroup = hitgroup
-  victim.limb_hit_tick = engine.TickCount()
+  victim.limb_hit_tick = tick_count()
 end
 
 --- Remembers the health of a player who is about to take damage, so that the health they
@@ -27,7 +29,7 @@ end
 function Limbs:EntityTakeDamage(entity, damage_info)
   if IsValid(entity) and entity:IsPlayer() then
     entity.limb_health_before = entity:Health()
-    entity.limb_health_tick = engine.TickCount()
+    entity.limb_health_tick = tick_count()
   end
 end
 
@@ -51,7 +53,7 @@ function Limbs:PostEntityTakeDamage(victim, damage_info, took)
 
   local hitgroup
 
-  if victim.limb_hit_tick == engine.TickCount() then
+  if victim.limb_hit_tick == tick_count() then
     hitgroup = victim.limb_hitgroup
   end
 
@@ -74,7 +76,7 @@ function Limbs:handle_damage(victim, damage_info, took, hitgroup)
 
   local health_before
 
-  if victim.limb_health_tick == engine.TickCount() then
+  if victim.limb_health_tick == tick_count() then
     health_before = victim.limb_health_before
   end
 

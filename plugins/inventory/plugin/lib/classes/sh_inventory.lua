@@ -20,6 +20,14 @@
 -- and `infinite_width` and `infinite_height` make the inventory resize itself to keep
 -- an empty column or row past its last item.
 
+local pairs = pairs
+local next = next
+local istable = istable
+local math_max = math.max
+local math_min = math.min
+local table_has_value = table.HasValue
+local table_remove_by_value = table.RemoveByValue
+
 --- The inventory class is used to manage a player's items,
 -- transferring them from one player or object to another,
 -- using the same interface and functionality.
@@ -177,11 +185,16 @@ end
 --- @warning [Internal]
 -- Rebuilds the inventory slots hash.
 function Inventory:rebuild()
-  for i = 1, self.height do
-    self.slots[i] = self.slots[i] or {}
+  local slots = self.slots
+  local width = self.width
 
-    for k = 1, self.width do
-      self.slots[i][k] = self.slots[i][k] or {}
+  for i = 1, self.height do
+    local row = slots[i] or {}
+
+    slots[i] = row
+
+    for k = 1, width do
+      row[k] = row[k] or {}
     end
   end
 end
@@ -191,12 +204,14 @@ end
 -- @return [List<Item> items]
 function Inventory:get_items()
   local items = {}
+  local ids = self:get_items_ids()
+  local find_instance_by_id = Item.find_instance_by_id
 
-  for k, v in pairs(self:get_items_ids()) do
-    local item_obj = Item.find_instance_by_id(v)
+  for i = 1, #ids do
+    local item_obj = find_instance_by_id(ids[i])
 
     if item_obj then
-      table.insert(items, item_obj)
+      items[#items + 1] = item_obj
 
       local inventory = item_obj.inventory
 
@@ -213,12 +228,16 @@ end
 -- @return [List<Number> items ids]
 function Inventory:get_items_ids()
   local items = {}
+  local slots = self.slots
+  local width = self.width
 
   for i = 1, self.height do
-    for k = 1, self.width do
-      local stack = self.slots[i][k]
+    local row = slots[i]
 
-      if istable(stack) and !table.IsEmpty(stack) then
+    for k = 1, width do
+      local stack = row[k]
+
+      if istable(stack) then
         for _, v in pairs(stack) do
           items[v] = true
         end
@@ -226,7 +245,13 @@ function Inventory:get_items_ids()
     end
   end
 
-  return table.GetKeys(items)
+  local ids = {}
+
+  for k in pairs(items) do
+    ids[#ids + 1] = k
+  end
+
+  return ids
 end
 
 --- Get the items ids that are located in the specified slot.
@@ -246,7 +271,7 @@ end
 function Inventory:get_first_in_slot(x, y)
   local slot = self:get_slot(x, y)
 
-  if istable(slot) and !table.IsEmpty(slot) then
+  if istable(slot) and next(slot) != nil then
     return slot[1]
   end
 end
@@ -255,7 +280,7 @@ end
 -- @param id [String]
 -- @return [Number]
 function Inventory:get_items_count(id)
-  return table.Count(self:find_items(id))
+  return #self:find_items(id)
 end
 
 --- Checks if the inventory is empty.
@@ -266,16 +291,35 @@ end
 -- ```
 -- @return [Boolean]
 function Inventory:is_empty()
-  return table.IsEmpty(self:get_items_ids())
+  local slots = self.slots
+  local width = self.width
+
+  for i = 1, self.height do
+    local row = slots[i]
+
+    for k = 1, width do
+      local stack = row[k]
+
+      if istable(stack) and next(stack) != nil then
+        return false
+      end
+    end
+  end
+
+  return true
 end
 
 --- Find a specified item object by its id.
 -- @param id [String]
 -- @return [Item first item found, or nil if there is none]
 function Inventory:find_item(id)
-  for k, v in pairs(self:get_items()) do
-    if v.id == id then
-      return v
+  local items = self:get_items()
+
+  for i = 1, #items do
+    local item_obj = items[i]
+
+    if item_obj.id == id then
+      return item_obj
     end
   end
 end
@@ -285,10 +329,13 @@ end
 -- @return [List<Item> items]
 function Inventory:find_items(id)
   local items = {}
+  local all_items = self:get_items()
 
-  for k, v in pairs(self:get_items()) do
-    if v.id == id then
-      table.insert(items, v)
+  for i = 1, #all_items do
+    local item_obj = all_items[i]
+
+    if item_obj.id == id then
+      items[#items + 1] = item_obj
     end
   end
 
@@ -317,7 +364,7 @@ function Inventory:has_items(id, amount)
 
   local items = self:find_items(id)
 
-  if table.Count(items) >= amount then
+  if #items >= amount then
     return true, items
   end
 
@@ -328,8 +375,19 @@ end
 -- @param instance_id [Number]
 -- @return [Boolean, Item found item]
 function Inventory:has_item_by_id(instance_id)
-  if table.HasValue(self:get_items_ids(), instance_id) then
-    return true, Item.find_instance_by_id(instance_id)
+  local slots = self.slots
+  local width = self.width
+
+  for i = 1, self.height do
+    local row = slots[i]
+
+    for k = 1, width do
+      local stack = row[k]
+
+      if istable(stack) and table_has_value(stack, instance_id) then
+        return true, Item.find_instance_by_id(instance_id)
+      end
+    end
   end
 
   return false
@@ -370,9 +428,13 @@ end
 -- @param h [Number height of the item]
 -- @return [Number x, Number y, Boolean is a rotation needed]
 function Inventory:find_stack(item_obj, w, h)
-  for k, v in pairs(self:find_items(item_obj.id)) do
-    if self:can_stack(item_obj, v) then
-      return v.x, v.y, v.rotated
+  local items = self:find_items(item_obj.id)
+
+  for i = 1, #items do
+    local stack_item = items[i]
+
+    if self:can_stack(item_obj, stack_item) then
+      return stack_item.x, stack_item.y, stack_item.rotated
     end
   end
 end
@@ -397,8 +459,10 @@ end
 -- @param h [Number]
 -- @return [Number x, Number y]
 function Inventory:find_empty_slot(w, h)
-  for i = 1, self:get_height() - h + 1 do
-    for k = 1, self:get_width() - w + 1 do
+  local max_x = self.width - w + 1
+
+  for i = 1, self.height - h + 1 do
+    for k = 1, max_x do
       if self:slots_empty(k, i, w, h) then
         return k, i
       end
@@ -413,9 +477,14 @@ end
 -- @param h [Number]
 -- @return [Boolean]
 function Inventory:slots_empty(x, y, w, h)
+  local slots = self.slots
+  local max_x = x + w - 1
+
   for i = y, y + h - 1 do
-    for k = x, x + w - 1 do
-      if !table.IsEmpty(self.slots[i][k]) then
+    local row = slots[i]
+
+    for k = x, max_x do
+      if next(row[k]) != nil then
         return false
       end
     end
@@ -432,12 +501,16 @@ end
 -- @param h [Number]
 -- @return [Boolean, Number x, Number y, Boolean is a rotation needed]
 function Inventory:overlaps_stack(item_obj, x, y, w, h)
-  for i = y, y + h - 1 do
-    for k = x, x + w - 1 do
-      local slot = self:get_slot(k, i)
-      local stack_item = Item.find_instance_by_id(slot[1])
+  local find_instance_by_id = Item.find_instance_by_id
+  local instance_id = item_obj.instance_id
+  local max_x = x + w - 1
 
-      if stack_item and self:can_stack(item_obj, stack_item) and !table.HasValue(slot, item_obj.instance_id) then
+  for i = y, y + h - 1 do
+    for k = x, max_x do
+      local slot = self:get_slot(k, i)
+      local stack_item = find_instance_by_id(slot[1])
+
+      if stack_item and self:can_stack(item_obj, stack_item) and !table_has_value(slot, instance_id) then
         return true, stack_item.x, stack_item.y, stack_item.rotated != item_obj.rotated
       end
     end
@@ -453,11 +526,14 @@ end
 -- @param h [Number]
 -- @return [Boolean]
 function Inventory:overlaps_itself(instance_id, x, y, w, h)
-  for i = math.max(y, 1), math.min(y + h - 1, self:get_height()) do
-    for k = math.max(x, 1), math.min(x + w - 1, self:get_width()) do
-      local slot = self.slots[i][k]
+  local slots = self.slots
+  local min_x, max_x = math_max(x, 1), math_min(x + w - 1, self.width)
 
-      if table.HasValue(slot, instance_id) then
+  for i = math_max(y, 1), math_min(y + h - 1, self.height) do
+    local row = slots[i]
+
+    for k = min_x, max_x do
+      if table_has_value(row[k], instance_id) then
         return true
       end
     end
@@ -474,11 +550,16 @@ end
 -- @param h [Number]
 -- @return [Boolean]
 function Inventory:overlaps_only_itself(instance_id, x, y, w, h)
-  for i = y, y + h - 1 do
-    for k = x, x + w - 1 do
-      local slot = self.slots[i][k]
+  local slots = self.slots
+  local max_x = x + w - 1
 
-      if !table.HasValue(slot, instance_id) and !table.IsEmpty(slot) then
+  for i = y, y + h - 1 do
+    local row = slots[i]
+
+    for k = x, max_x do
+      local slot = row[k]
+
+      if next(slot) != nil and !table_has_value(slot, instance_id) then
         return false
       end
     end
@@ -491,7 +572,7 @@ end
 -- @param item_obj [Item]
 -- @return [Number width, Number height]
 function Inventory:get_item_size(item_obj)
-  if !self:is_multislot() then
+  if !self.multislot then
     return 1, 1
   end
 
@@ -520,7 +601,7 @@ if SERVER then
     local need_rotation = false
     local w, h = self:get_item_size(item_obj)
 
-    if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
+    if !x or !y or x < 1 or y < 1 or x + w - 1 > self.width or y + h - 1 > self.height then
       x, y, need_rotation = self:find_position(item_obj, w, h)
     end
 
@@ -536,9 +617,16 @@ if SERVER then
         item_obj.rotated = !item_obj.rotated
       end
 
+      local slots = self.slots
+      local instance_id = item_obj.instance_id
+
       for i = y, y + h - 1 do
+        local row = slots[i]
+
         for k = x, x + w - 1 do
-          table.insert(self.slots[i][k], item_obj.instance_id)
+          local stack = row[k]
+
+          stack[#stack + 1] = instance_id
         end
       end
 
@@ -624,9 +712,14 @@ if SERVER then
     item_obj.y = nil
     item_obj.rotated = false
 
+    local slots = self.slots
+    local instance_id = item_obj.instance_id
+
     for i = y, y + h - 1 do
+      local row = slots[i]
+
       for k = x, x + w - 1 do
-        table.RemoveByValue(self.slots[i][k], item_obj.instance_id)
+        table_remove_by_value(row[k], instance_id)
       end
     end
 
@@ -716,7 +809,7 @@ if SERVER then
       w, h = h, w
     end
 
-    if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
+    if !x or !y or x < 1 or y < 1 or x + w - 1 > self.width or y + h - 1 > self.height then
       x, y, need_rotation = self:find_position(item_obj, w, h)
 
       if !x or !y then
@@ -747,15 +840,23 @@ if SERVER then
       item_obj.rotated = !item_obj.rotated
     end
 
+    local slots = self.slots
+
     for i = old_y, old_y + old_h - 1 do
+      local row = slots[i]
+
       for k = old_x, old_x + old_w - 1 do
-        table.RemoveByValue(self.slots[i][k], instance_id)
+        table_remove_by_value(row[k], instance_id)
       end
     end
 
     for i = y, y + h - 1 do
+      local row = slots[i]
+
       for k = x, x + w - 1 do
-        table.insert(self.slots[i][k], instance_id)
+        local stack = row[k]
+
+        stack[#stack + 1] = instance_id
       end
     end
 
@@ -805,7 +906,7 @@ if SERVER then
       w, h = h, w
     end
 
-    if !x or !y or x < 1 or y < 1 or x + w - 1 > inventory:get_width() or y + h - 1 > inventory:get_height() then
+    if !x or !y or x < 1 or y < 1 or x + w - 1 > inventory.width or y + h - 1 > inventory.height then
       x, y, need_rotation = inventory:find_position(item_obj, w, h)
 
       if !x or !y then
@@ -852,15 +953,24 @@ if SERVER then
       item_obj.rotated = !item_obj.rotated
     end
 
+    local old_slots = self.slots
+    local new_slots = inventory.slots
+
     for i = old_y, old_y + old_h - 1 do
+      local row = old_slots[i]
+
       for k = old_x, old_x + old_w - 1 do
-        table.RemoveByValue(self.slots[i][k], instance_id)
+        table_remove_by_value(row[k], instance_id)
       end
     end
 
     for i = y, y + h - 1 do
+      local row = new_slots[i]
+
       for k = x, x + w - 1 do
-        table.insert(inventory.slots[i][k], instance_id)
+        local stack = row[k]
+
+        stack[#stack + 1] = instance_id
       end
     end
 
@@ -899,8 +1009,8 @@ if SERVER then
       return true
     end
 
-    for k, v in ipairs(instance_ids) do
-      local success, error_text = self:move_item(v, x, y, was_rotated)
+    for i = 1, #instance_ids do
+      local success, error_text = self:move_item(instance_ids[i], x, y, was_rotated)
 
       if !success then
         return success, error_text
@@ -919,8 +1029,8 @@ if SERVER then
   -- @param was_rotated [Boolean]
   -- @return [Boolean have the items been transferred successfully, String text of the error that occurred]
   function Inventory:transfer_stack(instance_ids, inventory, x, y, was_rotated)
-    for k, v in ipairs(instance_ids) do
-      local success, error_text = self:transfer_item(v, inventory, x, y, was_rotated)
+    for i = 1, #instance_ids do
+      local success, error_text = self:transfer_item(instance_ids[i], inventory, x, y, was_rotated)
 
       if !success then
         return success, error_text
@@ -939,15 +1049,17 @@ if SERVER then
   --- Add a new receiver to the inventory. Does nothing if the player is a receiver already.
   -- @param receiver [Player]
   function Inventory:add_receiver(receiver)
-    if self:has_receiver(receiver) then return end
+    local receivers = self.receivers
 
-    table.insert(self.receivers, receiver)
+    if table_has_value(receivers, receiver) then return end
+
+    receivers[#receivers + 1] = receiver
   end
 
   --- Remove the receiver from the inventory.
   -- @param receiver [Player]
   function Inventory:remove_receiver(receiver)
-    table.RemoveByValue(self.receivers, receiver)
+    table_remove_by_value(self.receivers, receiver)
   end
 
   --- Checks if the player currently receives the inventory data, which is the case for
@@ -955,7 +1067,7 @@ if SERVER then
   -- @param receiver [Player]
   -- @return [Boolean]
   function Inventory:has_receiver(receiver)
-    return table.HasValue(self.receivers, receiver)
+    return table_has_value(self.receivers, receiver)
   end
 
   --- Checks whether a player is entitled to have the inventory open. The owner always is.
@@ -996,13 +1108,20 @@ if SERVER then
 
   --- Send inventory data to its receivers.
   function Inventory:sync()
-    for k, v in pairs(self:get_receivers()) do
+    local ids, networkable
+
+    for k, v in pairs(self.receivers) do
       if IsValid(v) then
-        for k1, v1 in pairs(self:get_items_ids()) do
-          Item.network_item(v, v1)
+        if !ids then
+          ids = self:get_items_ids()
+          networkable = self:to_networkable()
         end
 
-        Cable.send(v, 'fl_inventory_sync', self:to_networkable())
+        for i = 1, #ids do
+          Item.network_item(v, ids[i])
+        end
+
+        Cable.send(v, 'fl_inventory_sync', networkable)
       else
         self:remove_receiver(v)
       end
@@ -1012,23 +1131,29 @@ if SERVER then
   --- @warning [Internal]
   -- Check the size of the inventory and resize it if needed.
   function Inventory:check_size()
-    if !self:is_height_infinite() and !self:is_width_infinite() then return end
+    local infinite_width, infinite_height = self.infinite_width, self.infinite_height
 
+    if !infinite_height and !infinite_width then return end
+
+    local slots = self.slots
+    local width = self.width
     local max_x, max_y = 0, 0
 
-    for i = 1, self:get_height() do
-      for k = 1, self:get_width() do
-        if !table.IsEmpty(self:get_slot(k, i)) then
-          max_x, max_y = math.max(max_x, k), i
+    for i = 1, self.height do
+      local row = slots[i]
+
+      for k = 1, width do
+        if next(row[k]) != nil then
+          max_x, max_y = math_max(max_x, k), i
         end
       end
     end
 
-    if self:is_height_infinite() then
+    if infinite_height then
       self.height = max_y + 1
     end
 
-    if self:is_width_infinite() then
+    if infinite_width then
       self.width = max_x + 1
     end
 
@@ -1040,13 +1165,13 @@ if SERVER then
   -- Fill the inventory with certain items by their ids.
   -- @param items_ids [List<Number> instance ids]
   function Inventory:load_items(items_ids)
+    local find_instance_by_id = Item.find_instance_by_id
+
     for k, v in pairs(items_ids) do
-      local item_obj = Item.find_instance_by_id(v)
+      local item_obj = find_instance_by_id(v)
 
       if item_obj then
-        local x, y = item_obj.x, item_obj.y
-
-        self:add_item(item_obj, x, y)
+        self:add_item(item_obj, item_obj.x, item_obj.y)
       end
     end
   end

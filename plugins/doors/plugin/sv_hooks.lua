@@ -10,7 +10,7 @@ function Doors:ShowSpare1(actor)
   local trace = actor:GetEyeTraceNoCursor()
   local entity = trace.Entity
 
-  if IsValid(entity) and entity:is_door() and Doors:is_in_reach(actor, entity) then
+  if IsValid(entity) and entity:is_door() and self:is_in_reach(actor, entity) then
     --- Asks whether a player may lock and unlock a door. Called on the server when the player
     -- opens the menu of the door, when they use the door, when they ask to lock or unlock it
     -- from the menu and when a timed locking or unlocking of theirs completes. The Doors
@@ -37,7 +37,7 @@ end
 function Doors:PlayerUse(activator, entity)
   local cur_time = CurTime()
 
-  if IsValid(entity) and entity:is_door() and Doors:is_in_reach(activator, entity) then
+  if IsValid(entity) and entity:is_door() and self:is_in_reach(activator, entity) then
     if !entity.next_use or entity.next_use <= cur_time then
       if hook.Run('PlayerCanLockDoor', activator, entity) and activator:IsSprinting() then
         local locked = entity:get_nv('fl_locked')

@@ -118,7 +118,7 @@ function SpawnPoints:get_groups()
     table.sort(ids)
 
     for k, v in ipairs(ids) do
-      table.insert(groups, self:make_group('faction', v))
+      groups[k + 1] = self:make_group('faction', v)
     end
   end
 
@@ -186,10 +186,12 @@ end
 -- @return [List<Map> points, each with pos, ang and group; a new list that is safe to change]
 function SpawnPoints:get_points(group)
   local points = {}
+  local count = 0
 
   for k, v in ipairs(self.points) do
     if group == nil or v.group == group then
-      table.insert(points, v)
+      count = count + 1
+      points[count] = v
     end
   end
 

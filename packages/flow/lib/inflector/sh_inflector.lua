@@ -76,10 +76,12 @@ end
 -- @param replacement [String what to replace the match with, can refer to captures]
 -- @return [Flow::Inflector self, for chaining]
 function Flow.Inflector:plural(expression, replacement)
-  table.insert(self._plurals[self.current_language], {
+  local rules = self._plurals[self.current_language]
+
+  rules[#rules + 1] = {
     expression = expression,
     replacement = replacement
-  })
+  }
 
   return self
 end
@@ -89,10 +91,12 @@ end
 -- @param replacement [String what to replace the match with, can refer to captures]
 -- @return [Flow::Inflector self, for chaining]
 function Flow.Inflector:singular(expression, replacement)
-  table.insert(self._singulars[self.current_language], {
+  local rules = self._singulars[self.current_language]
+
+  rules[#rules + 1] = {
     expression = expression,
     replacement = replacement
-  })
+  }
 
   return self
 end
@@ -114,11 +118,13 @@ end
 function Flow.Inflector:uncountable(words)
   local lang = self.current_language
 
+  local uncountables = self._uncountables[lang]
+
   if isstring(words) then
-    self._uncountables[lang][words] = true
+    uncountables[words] = true
   elseif istable(words) then
     for k, v in ipairs(words) do
-      self._uncountables[lang][v] = true
+      uncountables[v] = true
     end
   end
 
@@ -141,7 +147,10 @@ function Flow.Inflector:pluralize(word)
   if irregular then return original_word:gsub(word, irregular) end
   if self:uncountables()[word] then return original_word end
 
-  for k, v in ipairs(self:plurals()) do
+  local rules = self:plurals()
+
+  for i = 1, #rules do
+    local v = rules[i]
     local original_text = word
     local text, replacements = word:gsub(v.expression, v.replacement)
 
@@ -170,7 +179,10 @@ function Flow.Inflector:singularize(word)
   if irregular then return original_word:gsub(word, irregular) end
   if self:uncountables()[word] then return original_word end
 
-  for k, v in ipairs(self:singulars()) do
+  local rules = self:singulars()
+
+  for i = 1, #rules do
+    local v = rules[i]
     local original_text = word
     local text, replacements = word:gsub(v.expression, v.replacement)
 

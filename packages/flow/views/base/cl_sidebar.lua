@@ -122,10 +122,12 @@ end
 
 --- Centers every item horizontally within the sidebar.
 function PANEL:center_items()
+  local half_w = self:GetWide() * 0.5
+
   for k, v in ipairs(self:GetCanvas():GetChildren()) do
     local x, y = v:GetPos()
 
-    v:SetPos(self:GetWide() / 2 - v:GetWide() / 2, y)
+    v:SetPos(half_w - v:GetWide() * 0.5, y)
   end
 end
 

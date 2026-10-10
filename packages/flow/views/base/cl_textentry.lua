@@ -27,9 +27,12 @@ function PANEL:Paint(w, h)
   -- @param h [Number Height of the entry]
   -- @return [Boolean Return true to skip the default background and text]
   if !hook.Run('ChatboxEntryPaint', self, 0, 0, w, h) then
-    draw.RoundedBox(2, 0, 0, w, h, Theme.get_color('background'))
+    local get_color = Theme.get_color
+    local text_color = get_color('text')
 
-    self:DrawTextEntryText(Theme.get_color('text'), Theme.get_color('accent'), Theme.get_color('text'))
+    draw.RoundedBox(2, 0, 0, w, h, get_color('background'))
+
+    self:DrawTextEntryText(text_color, get_color('accent'), text_color)
   end
 end
 
@@ -40,7 +43,9 @@ function PANEL:AllowInput(char)
   local text = self:GetValue()
 
   if text and text != '' then
-    if self:get_limit() != 0 and utf8.len(text) >= self:get_limit() then
+    local limit = self:get_limit()
+
+    if limit != 0 and utf8.len(text) >= limit then
       return true
     end
   end

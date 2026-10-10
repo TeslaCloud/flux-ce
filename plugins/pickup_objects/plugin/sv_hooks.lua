@@ -67,8 +67,7 @@ function PickupObjects:Think()
   for actor, data in pairs(holds) do
     if !self:update_hold(actor, data, cur_time) then
       lost = lost or {}
-
-      table.insert(lost, actor)
+      lost[#lost + 1] = actor
     end
   end
 

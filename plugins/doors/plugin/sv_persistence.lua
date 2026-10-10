@@ -4,6 +4,11 @@
 -- reads back, and `Doors:restore_links` links the loaded doors into their groups again once
 -- every door has been loaded.
 
+local IsValid = IsValid
+local istable = istable
+local isstring = isstring
+local tonumber = tonumber
+
 --- Returns the ownership of a door in the form it is saved in.
 -- @param entity [Entity the door]
 -- @return [Map `parent` (the map creation ID of the main door) for a door that is linked to

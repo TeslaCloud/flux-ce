@@ -1,6 +1,8 @@
 --- Server side of the Mapscenes plugin: sets the default camera settings, stores the mapscene
 -- points per map and sends them and their changes to the clients.
 
+local cable_send = Cable.send
+
 Config.set('mapscenes_speed', 15)
 Config.set('mapscenes_animated', false)
 Config.set('mapscenes_rotate_speed', 0.05)
@@ -8,7 +10,7 @@ Config.set('mapscenes_rotate_speed', 0.05)
 --- Sends all mapscene points to a player who has finished loading.
 -- @param actor [Player]
 function Mapscenes:PlayerInitialized(actor)
-  Cable.send(actor, 'fl_mapscene_load', self.points)
+  cable_send(actor, 'fl_mapscene_load', self.points)
 end
 
 --- Loads the mapscene points when the framework loads its data.
@@ -45,7 +47,7 @@ function Mapscenes:add_point(pos, ang)
     ang = ang
   })
 
-  Cable.send(nil, 'fl_mapscene_add', pos, ang)
+  cable_send(nil, 'fl_mapscene_add', pos, ang)
 
   self:save()
 end
@@ -56,7 +58,7 @@ Cable.receive('fl_mapscene_remove', function(actor, id)
 
   table.remove(Mapscenes.points, id)
 
-  Cable.send(nil, 'fl_mapscene_delete', id)
+  cable_send(nil, 'fl_mapscene_delete', id)
 
   Mapscenes:save()
 end)

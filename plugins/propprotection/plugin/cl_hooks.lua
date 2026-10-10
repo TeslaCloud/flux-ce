@@ -1,6 +1,8 @@
 --- Client side of the Prop Protection plugin: shows who owns the entity the local player is
 -- looking at and registers the client setting that hides it.
 
+local t = t
+
 --- Color of the owner line on the entities of the local player.
 local own_color = Color('lightgreen')
 
@@ -51,13 +53,14 @@ function PropProtection:DrawEntityTargetID(entity, x, y, dist)
   if !key then return end
   if ClientSettings and ClientSettings:get('show_prop_owners', true) == false then return end
 
+  local client = PLAYER
   local text
   local color = color_white
 
-  if key == self:get_key(PLAYER) then
+  if key == self:get_key(client) then
     text = t'ui.prop_protection.owner_you'
     color = own_color
-  elseif Config.get('prop_owner_display') or self:can_bypass(PLAYER) then
+  elseif Config.get('prop_owner_display') or self:can_bypass(client) then
     local owner = self:find_owner(key)
 
     if owner then

@@ -4,6 +4,9 @@
 -- the same guard: it is cut to the 'max_message_length' config and dropped while the
 -- 'chat_interval' config has not passed since their last submission.
 
+local IsValid = IsValid
+local config_get = Config.get
+
 local default_msg_data = {
   sender = nil,
   listeners = {},
@@ -12,7 +15,7 @@ local default_msg_data = {
   radius = 0,
   filter = nil,
   rich = false,
-  size = Config.get('default_font_size', 20),
+  size = config_get('default_font_size', 20),
   text = nil,
   team_chat = false
 }
@@ -55,15 +58,18 @@ function Chatbox.can_hear(listener, message_data)
     if radius == 0 then return true end
     if radius < 0 then return false end
 
+    local eye_pos = listener:EyePos()
+    local radius_sqr = radius * radius
+
     if istable(position) then
       for k, v in pairs(position) do
-        if isvector(v) and v:Distance(listener:EyePos()) <= radius then
+        if isvector(v) and v:DistToSqr(eye_pos) <= radius_sqr then
           return true
         end
       end
     end
 
-    if isvector(position) and position:Distance(listener:EyePos()) <= radius then
+    if isvector(position) and position:DistToSqr(eye_pos) <= radius_sqr then
       return true
     end
   end
@@ -110,7 +116,7 @@ function Chatbox.add_text(listeners, ...)
     radius = 0,
     filter = nil,
     rich = false,
-    size = Config.get('default_font_size', 20),
+    size = config_get('default_font_size', 20),
     text = nil,
     team_chat = false,
     time = os.time()
@@ -125,14 +131,16 @@ function Chatbox.add_text(listeners, ...)
   end
 
   local last_string = false
+  local pieces = message_data.data
 
   for k, v in ipairs({ ... }) do
     if isstring(v) then
       if !last_string then
-        table.insert(message_data.data, v)
+        pieces[#pieces + 1] = v
       else
-        local str = table.last(message_data.data)
-        message_data.data[#message_data.data] = str..v
+        local last = #pieces
+
+        pieces[last] = pieces[last]..v
       end
 
       if k == 1 then
@@ -144,19 +152,21 @@ function Chatbox.add_text(listeners, ...)
       last_string = false
 
       if isnumber(v) then
-        table.insert(message_data.data, v)
+        pieces[#pieces + 1] = v
       elseif IsColor(v) then
-        table.insert(message_data.data, v)
+        pieces[#pieces + 1] = v
       elseif istable(v) then
         if !v.is_data and !client_mode then
           table.Merge(message_data, v)
+
+          pieces = message_data.data
         elseif v.avatar != nil and !isstring(v.avatar) then
-          table.insert(message_data.data, Chatbox.avatar(v.avatar, v.size, v.margin))
+          pieces[#pieces + 1] = Chatbox.avatar(v.avatar, v.size, v.margin)
         else
-          table.insert(message_data.data, v)
+          pieces[#pieces + 1] = v
         end
       elseif IsValid(v) then
-        table.insert(message_data.data, v)
+        pieces[#pieces + 1] = v
       end
     end
   end
@@ -177,6 +187,7 @@ function Chatbox.add_text(listeners, ...)
   end
 
   local receivers = {}
+  local receiver_count = 0
 
   for k, v in ipairs(listeners) do
     local data = table.Copy(message_data)
@@ -192,7 +203,8 @@ function Chatbox.add_text(listeners, ...)
     if Chatbox.can_hear(v, data) then
       Cable.send(v, 'fl_chat_message_add', data)
 
-      table.insert(receivers, v)
+      receiver_count = receiver_count + 1
+      receivers[receiver_count] = v
     end
   end
 
@@ -229,7 +241,7 @@ function Chatbox.message_to_string(message_data, concatenator)
     if isnumber(v) then continue end
 
     if isstring(v) then
-      table.insert(to_string, v)
+      to_string[#to_string + 1] = v
     elseif IsValid(v) then
       local name = ''
 
@@ -245,7 +257,7 @@ function Chatbox.message_to_string(message_data, concatenator)
         name = tostring(v)
       end
 
-      table.insert(to_string, name)
+      to_string[#to_string + 1] = name
     end
   end
 
@@ -314,7 +326,7 @@ function Chatbox.player_say(actor, text, team_chat)
     { sender = actor }
   }
 
-  if Config.get('chat_avatars') then
+  if config_get('chat_avatars') then
     table.insert(message, 2, Chatbox.avatar(actor))
   end
 
@@ -338,7 +350,7 @@ end
 -- @param actor [Player the player who submits a message]
 -- @return [Boolean false if the player has to wait, true otherwise]
 function Chatbox.check_interval(actor)
-  local interval = (tonumber(Config.get('chat_interval')) or 0) * 0.001
+  local interval = (tonumber(config_get('chat_interval')) or 0) * 0.001
 
   if interval <= 0 then return true end
 
@@ -359,7 +371,7 @@ end
 -- @param text [String the submitted text]
 -- @return [String the text, no longer than the limit]
 function Chatbox.limit_text(text)
-  local limit = Config.get('max_message_length', 512)
+  local limit = config_get('max_message_length', 512)
 
   if #text <= limit then return text end
 

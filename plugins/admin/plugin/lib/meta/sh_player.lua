@@ -67,7 +67,9 @@ end
 -- @param perm [String permission ID]
 -- @return [Number PERM_ value, PERM_NO if the permission is not set]
 function player_meta:get_permission(perm)
-  return self:get_permissions()[perm] or PERM_NO
+  local perms = self:get_nv('permissions')
+
+  return perms and perms[perm] or PERM_NO
 end
 
 --- Returns the player's temporary permissions.
@@ -80,7 +82,9 @@ end
 -- @param perm [String permission ID]
 -- @return [Map table with value (PERM_ value) and expires (unix timestamp), or nil if not set]
 function player_meta:get_temp_permission(perm)
-  return self:get_temp_permissions()[perm]
+  local perms = self:get_nv('temp_permissions')
+
+  return perms and perms[perm]
 end
 
 --- Checks whether the player is at least an assistant: an admin or anyone with the 'staff'

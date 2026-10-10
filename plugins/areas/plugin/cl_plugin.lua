@@ -2,6 +2,8 @@
 -- shows the texts of text areas on the HUD, and receives the areas and the enter and leave
 -- events from the server.
 
+local text_area_color = Color(255, 255, 255)
+
 do
   local cache = nil
   local temp_cache = nil
@@ -9,6 +11,7 @@ do
   local render_color_red = Color(255, 50, 50)
   local last_amt = nil
   local render = render
+  local draw_line = render.DrawLine
   local area_colors = {}
 
   --- Draws wireframes of the areas that belong to the selected mode of the area tool,
@@ -30,16 +33,18 @@ do
       if istable(verts) and (!temp_cache or #temp_cache != #verts) then
         temp_cache = {}
 
-        for k, v in ipairs(verts) do
+        local vert_count = #verts
+
+        for k = 1, vert_count do
           local n
 
-          if k == #verts then
+          if k == vert_count then
             n = verts[1]
           else
             n = verts[k + 1]
           end
 
-          table.insert(temp_cache, { v, n })
+          temp_cache[k] = { verts[k], n }
         end
       elseif !verts then
         temp_cache = nil
@@ -53,19 +58,22 @@ do
         area_colors[mode.area_type] = Areas.get_color(mode.area_type)
 
         for k, v in pairs(area_table) do
+          local add = Vector(0, 0, v.maxh)
+
           for k2, v2 in ipairs(v.polys) do
-            for idx, p in ipairs(v2) do
+            local point_count = #v2
+
+            for idx = 1, point_count do
+              local p = v2[idx]
               local n
 
-              if idx == #v2 then
+              if idx == point_count then
                 n = v2[1]
               else
                 n = v2[idx + 1]
               end
 
-              local add = Vector(0, 0, v.maxh)
-
-              table.insert(cache, { p, n, p + add, n + add })
+              cache[#cache + 1] = { p, n, p + add, n + add }
             end
           end
         end
@@ -74,18 +82,21 @@ do
       local area_render_color = area_colors[mode.area_type]
 
       if cache and areas_count > 0 then
-        for k, v in ipairs(cache) do
+        for i = 1, #cache do
+          local v = cache[i]
           local p, ap = v[1], v[3]
 
-          render.DrawLine(p, v[2], area_render_color)
-          render.DrawLine(ap, v[4], area_render_color)
-          render.DrawLine(ap, p, area_render_color)
+          draw_line(p, v[2], area_render_color)
+          draw_line(ap, v[4], area_render_color)
+          draw_line(ap, p, area_render_color)
         end
       end
 
       if temp_cache then
-        for k, v in ipairs(temp_cache) do
-          render.DrawLine(v[1], v[2], render_color_red)
+        for i = 1, #temp_cache do
+          local v = temp_cache[i]
+
+          draw_line(v[1], v[2], render_color_red)
         end
       end
     end
@@ -98,12 +109,15 @@ function Area:HUDPaint()
   if IsValid(PLAYER) and istable(PLAYER.text_areas) then
     local last_y = 400
     local cur_time = CurTime()
+    local font
 
     for k, v in pairs(PLAYER.text_areas) do
       if istable(v) and v.end_time > cur_time then
         v.alpha = v.alpha or 255
+        font = font or Theme.get_font('text_large')
+        text_area_color.a = v.alpha
 
-        draw.SimpleText(v.text, Theme.get_font('text_large'), 32, last_y, Color(255, 255, 255, v.alpha))
+        draw.SimpleText(v.text, font, 32, last_y, text_area_color)
 
         if cur_time + 2 >= v.end_time then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)

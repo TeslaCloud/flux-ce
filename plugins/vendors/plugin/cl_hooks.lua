@@ -4,6 +4,9 @@
 -- while trading. The trade panel is kept in `Vendors.trade_panel` and the editor in
 -- `Vendors.editor_panel`.
 
+local IsValid = IsValid
+local text_size = util.text_size
+
 local target_distance = 300
 local refresh_delay = 0.3
 
@@ -32,9 +35,11 @@ end
 -- above its head. It is drawn from here rather than as an ordinary target ID, because those
 -- are hidden when the feet of the entity are out of sight, as they are behind a counter.
 function Vendors:HUDDrawTargetID()
-  if !IsValid(PLAYER) or !PLAYER:Alive() then return end
+  local client = PLAYER
 
-  local trace = PLAYER:GetEyeTraceNoCursor()
+  if !IsValid(client) or !client:Alive() then return end
+
+  local trace = client:GetEyeTraceNoCursor()
   local entity = trace.Entity
 
   if !self:is_vendor(entity) then return end
@@ -43,7 +48,11 @@ function Vendors:HUDDrawTargetID()
 
   if distance > target_distance then return end
 
-  local screen_pos = (entity:GetPos() + Vector(0, 0, entity:OBBMaxs().z + 10)):ToScreen()
+  local head_pos = entity:GetPos()
+
+  head_pos.z = head_pos.z + (entity:OBBMaxs().z + 10)
+
+  local screen_pos = head_pos:ToScreen()
 
   if !screen_pos.visible then return end
 
@@ -51,18 +60,20 @@ function Vendors:HUDDrawTargetID()
   local name = entity:get_vendor_name()
   local name_font = Theme.get_font('tooltip_large')
   local desc_font = Theme.get_font('tooltip_normal')
-  local name_w, name_h = util.text_size(name, name_font)
+  local name_w, name_h = text_size(name, name_font)
   local lines = get_description_lines(entity, desc_font, ScrW() * 0.33)
+  local line_count = #lines
   local height = name_h
 
-  for k, v in ipairs(lines) do
-    local line_w, line_h = util.text_size(v, desc_font)
+  for i = 1, line_count do
+    local line_w, line_h = text_size(lines[i], desc_font)
 
     height = height + line_h
   end
 
   local x, y = screen_pos.x, screen_pos.y - height
   local outline_color = color_black:alpha(alpha)
+  local text_color = color_white:alpha(alpha)
 
   draw.SimpleTextOutlined(
     name,
@@ -78,10 +89,11 @@ function Vendors:HUDDrawTargetID()
 
   y = y + name_h
 
-  for k, v in ipairs(lines) do
-    local line_w, line_h = util.text_size(v, desc_font)
+  for i = 1, line_count do
+    local line = lines[i]
+    local line_w, line_h = text_size(line, desc_font)
 
-    draw.SimpleTextOutlined(v, desc_font, x - line_w * 0.5, y, color_white:alpha(alpha), nil, nil, 1, outline_color)
+    draw.SimpleTextOutlined(line, desc_font, x - line_w * 0.5, y, text_color, nil, nil, 1, outline_color)
 
     y = y + line_h
   end

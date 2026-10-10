@@ -28,6 +28,12 @@
 
 mod 'DermaScale'
 
+local IsValid    = IsValid
+local math_floor = math.floor
+local math_ceil  = math.ceil
+local math_min   = math.min
+local math_max   = math.max
+
 -- Originals and wrappers survive code reloads so that a method is never wrapped twice.
 local store = Flux.derma_scale or {
   originals = {},
@@ -42,7 +48,7 @@ local patches = {}
 -- height to 1080, never below 1 so that screens of 1080p or less keep their native sizes.
 -- @return [Number]
 function DermaScale.factor()
-  return math.max(ScrH() / 1080, 1)
+  return math_max(ScrH() / 1080, 1)
 end
 
 --- Scales a size designed for a 1080p screen to the current screen, rounding down.
@@ -56,7 +62,7 @@ function DermaScale.scale(size)
 
   if factor == 1 then return size end
 
-  return math.floor(size * factor)
+  return math_floor(size * factor)
 end
 
 local s = DermaScale.scale
@@ -264,19 +270,22 @@ end)
 DermaScale.replace('DButton', 'PerformLayoutImage', function(self)
   if !IsValid(self.m_Image) then return end
 
-  local target_size = math.min(self:GetWide() - s(4), self:GetTall() - s(4))
+  local target_size = math_min(self:GetWide() - s(4), self:GetTall() - s(4))
   local image_w, image_h = self.m_Image.ActualWidth, self.m_Image.ActualHeight
 
   -- Icons may grow with the screen, but not beyond the scale factor.
-  local zoom = math.min(target_size / image_w, target_size / image_h, DermaScale.factor())
+  local zoom = math_min(target_size / image_w, target_size / image_h, DermaScale.factor())
 
-  self.m_Image:SetWide(math.ceil(image_w * zoom))
-  self.m_Image:SetTall(math.ceil(image_h * zoom))
+  self.m_Image:SetWide(math_ceil(image_w * zoom))
+  self.m_Image:SetTall(math_ceil(image_h * zoom))
 
   if self:GetWide() < self:GetTall() then
     self.m_Image:SetPos(s(4), (self:GetTall() - self.m_Image:GetTall()) * 0.5)
   else
-    self.m_Image:SetPos(s(2) + (target_size - self.m_Image:GetWide()) * 0.5, (self:GetTall() - self.m_Image:GetTall()) * 0.5)
+    self.m_Image:SetPos(
+      s(2) + (target_size - self.m_Image:GetWide()) * 0.5,
+      (self:GetTall() - self.m_Image:GetTall()) * 0.5
+    )
   end
 
   -- For center alignments, reduce the inset of the image, so the text appears more centered visually.
@@ -314,7 +323,7 @@ DermaScale.after('DNumberWang', 'Init', function(panel)
 end)
 
 DermaScale.replace('DNumberWang', 'PerformLayout', function(self)
-  local size = math.floor(self:GetTall() * 0.5)
+  local size = math_floor(self:GetTall() * 0.5)
 
   self.Up:SetSize(size, size - 1)
   self.Up:AlignRight(s(3))
@@ -330,7 +339,7 @@ DermaScale.replace('DNumberWang', 'SizeToContents', function(self)
   local decimals = self:GetDecimals()
   local min = math.Round(self:GetMin(), decimals)
   local max = math.Round(self:GetMax(), decimals)
-  local chars = math.max(string.len(''..min..''), string.len(''..max..''))
+  local chars = math_max(string.len(''..min..''), string.len(''..max..''))
 
   if decimals and decimals > 0 then
     chars = chars + 1 + decimals
@@ -363,10 +372,10 @@ DermaScale.replace('DCheckBoxLabel', 'PerformLayout', function(self)
   local x = self.m_iIndent or 0
 
   self.Button:SetSize(s(15), s(15))
-  self.Button:SetPos(x, math.floor((self:GetTall() - self.Button:GetTall()) / 2))
+  self.Button:SetPos(x, math_floor((self:GetTall() - self.Button:GetTall()) * 0.5))
 
   self.Label:SizeToContents()
-  self.Label:SetPos(x + self.Button:GetWide() + s(9), math.floor((self:GetTall() - self.Label:GetTall()) / 2))
+  self.Label:SetPos(x + self.Button:GetWide() + s(9), math_floor((self:GetTall() - self.Label:GetTall()) * 0.5))
 end)
 
 -- Combo boxes and menus.
@@ -402,7 +411,7 @@ end)
 
 DermaScale.replace('DMenuOption', 'PerformLayout', function(self, w, h)
   local content_w, content_h = self:GetContentSize()
-  w = math.max(self:GetParent():GetWide(), content_w + s(30))
+  w = math_max(self:GetParent():GetWide(), content_w + s(30))
 
   self:SetSize(w, s(22))
 
@@ -1059,16 +1068,15 @@ do
   local overlay_npc_weapon = Material('icon16/monkey.png')
   local overlay_npc_weapon_selected = Material('icon16/monkey_tick.png')
   local shadow_color = Color(0, 0, 0, 200)
-
-  local function draw_text_shadow(text, x, y)
-    draw.SimpleText(text, 'DermaDefault', x + 1, y + 1, shadow_color)
-    draw.SimpleText(text, 'DermaDefault', x, y, color_white)
-  end
+  local set_material = surface.SetMaterial
+  local draw_textured_rect = surface.DrawTexturedRect
 
   DermaScale.replace('ContentIcon', 'Paint', function(self, w, h)
+    local margin = s(8)
+
     if self.Depressed and !self.Dragging then
-      if self.Border != s(8) then
-        self.Border = s(8)
+      if self.Border != margin then
+        self.Border = margin
         self:OnDepressionChanged(true)
       end
     else
@@ -1079,10 +1087,12 @@ do
     end
 
     local border = self.Border
+    local double_border = border * 2
+    local image_pos = s(3) + border
 
     render.PushFilterMag(TEXFILTER.ANISOTROPIC)
     render.PushFilterMin(TEXFILTER.ANISOTROPIC)
-      self.Image:PaintAt(s(3) + border, s(3) + border, w - s(8) - border * 2, h - s(8) - border * 2)
+      self.Image:PaintAt(image_pos, image_pos, w - margin - double_border, h - margin - double_border)
     render.PopFilterMin()
     render.PopFilterMag()
 
@@ -1091,29 +1101,31 @@ do
     local draw_text = false
 
     if !dragndrop.IsDragging() and (self:IsHovered() or self.Depressed or self:IsChildHovered()) then
-      surface.SetMaterial(overlay_hovered)
+      set_material(overlay_hovered)
     else
-      surface.SetMaterial(overlay_normal)
+      set_material(overlay_normal)
       draw_text = true
     end
 
-    surface.DrawTexturedRect(border, border, w - border * 2, h - border * 2)
+    draw_textured_rect(border, border, w - double_border, h - double_border)
+
+    local overlay_pos, overlay_size = border + margin, s(16)
 
     -- Admin only icon.
     if self:GetAdminOnly() then
-      surface.SetMaterial(overlay_admin_only)
-      surface.DrawTexturedRect(border + s(8), border + s(8), s(16), s(16))
+      set_material(overlay_admin_only)
+      draw_textured_rect(overlay_pos, overlay_pos, overlay_size, overlay_size)
     end
 
     -- NPC weapon support icon.
     if self:GetIsNPCWeapon() then
-      surface.SetMaterial(overlay_npc_weapon)
+      set_material(overlay_npc_weapon)
 
       if self:GetSpawnName() == GetConVarString('gmod_npcweapon') then
-        surface.SetMaterial(overlay_npc_weapon_selected)
+        set_material(overlay_npc_weapon_selected)
       end
 
-      surface.DrawTexturedRect(w - border - s(24), border + s(8), s(16), s(16))
+      draw_textured_rect(w - border - s(24), overlay_pos, overlay_size, overlay_size)
     end
 
     self:ScanForNPCWeapons()
@@ -1130,7 +1142,7 @@ do
       surface.SetFont('DermaDefault')
 
       local text_w, text_h = surface.GetTextSize(self.m_NiceName)
-      local x = w / 2 - text_w / 2
+      local x = w * 0.5 - text_w * 0.5
 
       if text_w > (w - buffer * 2) then
         local mx, my = self:ScreenToLocal(input.GetCursorPos())
@@ -1139,7 +1151,10 @@ do
         x = buffer + math.Remap(math.Clamp(mx, 0, w), 0, w, 0, -diff)
       end
 
-      draw_text_shadow(self.m_NiceName, x, h - text_h - s(9))
+      local text_y = h - text_h - s(9)
+
+      draw.SimpleText(self.m_NiceName, 'DermaDefault', x + 1, text_y + 1, shadow_color)
+      draw.SimpleText(self.m_NiceName, 'DermaDefault', x, text_y, color_white)
 
       render.SetScissorRect(0, 0, 0, 0, false)
     end
@@ -1168,11 +1183,11 @@ DermaScale.replace('ContentHeader', 'SizeToContents', function(self)
 
   -- Don't let the text overflow the parent's width.
   if IsValid(self:GetParent()) then
-    w = math.min(w, self:GetParent():GetWide() - s(32))
+    w = math_min(w, self:GetParent():GetWide() - s(32))
   end
 
   -- Add a bit more room so it looks nice as a textbox, and make sure it has at least some width.
-  self:SetSize(math.max(w, s(64)) + s(16), s(64))
+  self:SetSize(math_max(w, s(64)) + s(16), s(64))
 end)
 
 DermaScale.replace('ContextMenu', 'PerformLayout', function(self)
@@ -1182,7 +1197,7 @@ DermaScale.replace('ContextMenu', 'PerformLayout', function(self)
 
   control_panel:InvalidateLayout(true)
 
-  local tall = math.min(control_panel:GetTall() + s(10), ScrH() * 0.8)
+  local tall = math_min(control_panel:GetTall() + s(10), ScrH() * 0.8)
   local wide = s(320)
 
   if self.Canvas:GetTall() != tall then self.Canvas:SetTall(tall) end
@@ -1219,14 +1234,14 @@ end)
 
 DermaScale.after('CtrlColor', 'PerformLayout', function(panel)
   -- Keep the mixer at its target width, which fills the palette rows exactly.
-  local margin = math.max((panel:GetWide() - s(272)) / 2, 0)
+  local margin = math_max((panel:GetWide() - s(272)) * 0.5, 0)
 
   panel.Mixer:DockMargin(margin, s(8), margin, 0)
 
-  local rows = math.ceil(#panel.Mixer.Palette:GetChildren() / 3)
-  local button_size = math.floor(panel:GetWide() / rows)
+  local rows = math_ceil(#panel.Mixer.Palette:GetChildren() / 3)
+  local button_size = math_floor(panel:GetWide() / rows)
 
-  panel.Mixer.Palette:SetButtonSize(math.min(button_size, s(17)))
+  panel.Mixer.Palette:SetButtonSize(math_min(button_size, s(17)))
 end)
 
 DermaScale.after('CtrlNumPad', 'Init', function(panel)
@@ -1315,9 +1330,9 @@ DermaScale.replace('MatSelect', 'PerformLayout', function(self)
   local h = self.ItemHeight
 
   if h < 1 then
-    local num_icons = math.floor(1 / h)
+    local num_icons = math_floor(1 / h)
 
-    h = math.floor((max_w - self.List:GetPadding() * 2 - self.List:GetSpacing() * (num_icons - 1)) / num_icons)
+    h = math_floor((max_w - self.List:GetPadding() * 2 - self.List:GetSpacing() * (num_icons - 1)) / num_icons)
   end
 
   local height = (h * self.Height) + (self.List:GetPadding() * 2) + self.List:GetSpacing() * (self.Height - 1)
@@ -1335,7 +1350,8 @@ DermaScale.replace('PropSelect', 'PerformLayout', function(self, w, h)
   local y = self.BaseClass.PerformLayout(self, w, h)
 
   if self.Height >= 1 then
-    local height = (s(64) + self.List:GetSpacing()) * math.max(self.Height, 1) + self.List:GetPadding() * 2 - self.List:GetSpacing()
+    local height =
+      (s(64) + self.List:GetSpacing()) * math_max(self.Height, 1) + self.List:GetPadding() * 2 - self.List:GetSpacing()
 
     self.List:SetPos(0, y)
     self.List:SetSize(self:GetWide(), height)
@@ -1459,7 +1475,7 @@ DermaScale.replace_global('Derma_Query', function(text, title, ...)
   end
 
   local w, h = label:GetSize()
-  w = math.max(w, button_panel:GetWide())
+  w = math_max(w, button_panel:GetWide())
 
   window:SetSize(w + s(50), h + s(25) + s(45) + s(10))
   window:Center()
@@ -1493,78 +1509,82 @@ end)
 -- @param button_text=#dialog.ok [String text of the confirm button]
 -- @param button_cancel_text=#dialog.cancel [String text of the cancel button]
 -- @return [Panel the DFrame]
-DermaScale.replace_global('Derma_StringRequest', function(title, text, default_text, on_enter, on_cancel, button_text, button_cancel_text)
-  local window = vgui.Create('DFrame')
-  window:SetTitle(title or 'Message Title (First Parameter)')
-  window:SetDraggable(false)
-  window:ShowCloseButton(false)
-  window:SetBackgroundBlur(true)
-  window:SetDrawOnTop(true)
+DermaScale.replace_global(
+  'Derma_StringRequest',
+  function(title, text, default_text, on_enter, on_cancel, button_text, button_cancel_text)
+    local window = vgui.Create('DFrame')
+    window:SetTitle(title or 'Message Title (First Parameter)')
+    window:SetDraggable(false)
+    window:ShowCloseButton(false)
+    window:SetBackgroundBlur(true)
+    window:SetDrawOnTop(true)
 
-  local inner_panel = vgui.Create('DPanel', window)
-  inner_panel:SetPaintBackground(false)
+    local inner_panel = vgui.Create('DPanel', window)
+    inner_panel:SetPaintBackground(false)
 
-  local label = vgui.Create('DLabel', inner_panel)
-  label:SetText(text or 'Message Text (Second Parameter)')
-  label:SizeToContents()
-  label:SetContentAlignment(5)
-  label:SetTextColor(color_white)
+    local label = vgui.Create('DLabel', inner_panel)
+    label:SetText(text or 'Message Text (Second Parameter)')
+    label:SizeToContents()
+    label:SetContentAlignment(5)
+    label:SetTextColor(color_white)
 
-  local text_entry = vgui.Create('DTextEntry', inner_panel)
-  text_entry:SetText(default_text or '')
-  text_entry.OnEnter = function() window:Close() on_enter(text_entry:GetValue()) end
+    local text_entry = vgui.Create('DTextEntry', inner_panel)
+    text_entry:SetText(default_text or '')
+    text_entry.OnEnter = function() window:Close() on_enter(text_entry:GetValue()) end
 
-  local button_panel = vgui.Create('DPanel', window)
-  button_panel:SetTall(s(30))
-  button_panel:SetPaintBackground(false)
+    local button_panel = vgui.Create('DPanel', window)
+    button_panel:SetTall(s(30))
+    button_panel:SetPaintBackground(false)
 
-  local button = vgui.Create('DButton', button_panel)
-  button:SetText(button_text or '#dialog.ok')
-  button:SizeToContents()
-  button:SetTall(s(20))
-  button:SetWide(button:GetWide() + s(20))
-  button:SetPos(s(5), s(5))
-  button.DoClick = function() window:Close() on_enter(text_entry:GetValue()) end
+    local button = vgui.Create('DButton', button_panel)
+    button:SetText(button_text or '#dialog.ok')
+    button:SizeToContents()
+    button:SetTall(s(20))
+    button:SetWide(button:GetWide() + s(20))
+    button:SetPos(s(5), s(5))
+    button.DoClick = function() window:Close() on_enter(text_entry:GetValue()) end
 
-  local button_cancel = vgui.Create('DButton', button_panel)
-  button_cancel:SetText(button_cancel_text or '#dialog.cancel')
-  button_cancel:SizeToContents()
-  button_cancel:SetTall(s(20))
-  button_cancel:SetWide(button:GetWide() + s(20))
-  button_cancel:SetPos(s(5), s(5))
-  button_cancel.DoClick = function()
-    window:Close()
+    local button_cancel = vgui.Create('DButton', button_panel)
+    button_cancel:SetText(button_cancel_text or '#dialog.cancel')
+    button_cancel:SizeToContents()
+    button_cancel:SetTall(s(20))
+    button_cancel:SetWide(button:GetWide() + s(20))
+    button_cancel:SetPos(s(5), s(5))
+    button_cancel.DoClick = function()
+      window:Close()
 
-    if on_cancel then
-      on_cancel(text_entry:GetValue())
+      if on_cancel then
+        on_cancel(text_entry:GetValue())
+      end
     end
+
+    button_cancel:MoveRightOf(button, s(5))
+
+    button_panel:SetWide(button:GetWide() + s(5) + button_cancel:GetWide() + s(10))
+
+    local w, h = label:GetSize()
+    w = math_max(w, s(400))
+
+    window:SetSize(w + s(50), h + s(25) + s(75) + s(10))
+    window:Center()
+
+    inner_panel:StretchToParent(s(5), s(25), s(5), s(45))
+    label:StretchToParent(s(5), s(5), s(5), s(35))
+
+    text_entry:StretchToParent(s(5), nil, s(5), nil)
+    text_entry:AlignBottom(s(5))
+    text_entry:RequestFocus()
+    text_entry:SelectAllText(true)
+
+    button_panel:CenterHorizontal()
+    button_panel:AlignBottom(s(8))
+
+    window:MakePopup()
+    window:DoModal()
+
+    return window
   end
-  button_cancel:MoveRightOf(button, s(5))
-
-  button_panel:SetWide(button:GetWide() + s(5) + button_cancel:GetWide() + s(10))
-
-  local w, h = label:GetSize()
-  w = math.max(w, s(400))
-
-  window:SetSize(w + s(50), h + s(25) + s(75) + s(10))
-  window:Center()
-
-  inner_panel:StretchToParent(s(5), s(25), s(5), s(45))
-  label:StretchToParent(s(5), s(5), s(5), s(35))
-
-  text_entry:StretchToParent(s(5), nil, s(5), nil)
-  text_entry:AlignBottom(s(5))
-  text_entry:RequestFocus()
-  text_entry:SelectAllText(true)
-
-  button_panel:CenterHorizontal()
-  button_panel:AlignBottom(s(8))
-
-  window:MakePopup()
-  window:DoModal()
-
-  return window
-end)
+)
 
 -- Resolution changes.
 
@@ -1572,7 +1592,7 @@ end)
 -- its panels were sized for the previous one. Panels that are open at that moment keep their
 -- sizes until they are created again.
 hook.Add('OnResolutionChanged', 'DermaScale', function(new_w, new_h, old_w, old_h)
-  if math.max(new_h / 1080, 1) == math.max(old_h / 1080, 1) then return end
+  if math_max(new_h / 1080, 1) == math_max(old_h / 1080, 1) then return end
 
   timer.Simple(0, function()
     DermaScale.refresh_menu_bar()

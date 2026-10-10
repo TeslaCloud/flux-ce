@@ -5,6 +5,8 @@
 -- character creation and loading screens and the item icon editor are built on it. Derives
 -- from `fl_base_panel`.
 
+local math_clamp = math.clamp
+
 local PANEL = {}
 PANEL.draggable = false
 
@@ -49,12 +51,12 @@ end
 function PANEL:Think()
   if self.dragging then
     local scrw, scrh = ScrW(), ScrH()
-    local mouse_x = math.clamp(gui.MouseX(), 1, scrw - 1)
-    local mouse_y = math.clamp(gui.MouseY(), 1, scrh - 1)
-    local x, y = mouse_x - self.dragging[1], mouse_y - self.dragging[2]
-
-    x = math.clamp(x, 0, scrw - self:GetWide())
-    y = math.clamp(y, 0, scrh - self:GetTall())
+    local dragging = self.dragging
+    local w, h = self:GetSize()
+    local mouse_x = math_clamp(gui.MouseX(), 1, scrw - 1)
+    local mouse_y = math_clamp(gui.MouseY(), 1, scrh - 1)
+    local x = math_clamp(mouse_x - dragging[1], 0, scrw - w)
+    local y = math_clamp(mouse_y - dragging[2], 0, scrh - h)
 
     self:SetPos(x, y)
   end

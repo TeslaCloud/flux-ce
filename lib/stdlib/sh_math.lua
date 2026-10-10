@@ -6,6 +6,10 @@
 -- the `util` functions for hexadecimal numbers and 2D geometry.
 -- @module [math]
 
+local floor = math.floor
+local ScrW = ScrW
+local ScrH = ScrH
+
 -- Ruby-style names for the built-in math functions.
 math.angle_difference = math.AngleDifference
 math.approach         = math.Approach
@@ -26,6 +30,11 @@ math.truncate         = math.Truncate
 
 do
   local hex_digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' }
+  local hex_values = {}
+
+  for k, v in ipairs(hex_digits) do
+    hex_values[v] = k - 1
+  end
 
   --- Converts a single hexadecimal digit to decimal.
   -- @param hex [String/Number hexadecimal digit, may be prefixed with '-'; numbers pass through]
@@ -44,13 +53,13 @@ do
       negative = true
     end
 
-    for k, v in ipairs(hex_digits) do
-      if v == hex then
-        if !negative then
-          return k - 1
-        else
-          return -(k - 1)
-        end
+    local value = hex_values[hex]
+
+    if value then
+      if !negative then
+        return value
+      else
+        return -value
       end
     end
 
@@ -123,17 +132,19 @@ function util.vector_in_poly(point, poly_vertices)
   end
 
   local intersections = 0
+  local vertex_count = #poly_vertices
+  local far_point = Vector(99999, 99999, 0)
 
   for k, v in ipairs(poly_vertices) do
     local next_vert
 
-    if k < #poly_vertices then
+    if k < vertex_count then
       next_vert = poly_vertices[k + 1]
-    elseif k == #poly_vertices then
+    elseif k == vertex_count then
       next_vert = poly_vertices[1]
     end
 
-    if next_vert and util.vectors_intersect(point, Vector(99999, 99999, 0), v, next_vert) then
+    if next_vert and util.vectors_intersect(point, far_point, v, next_vert) then
       intersections = intersections + 1
     end
   end
@@ -156,7 +167,7 @@ do
   -- @param size [Number size at 1080p]
   -- @return [Number scaled size, rounded down]
   function math.scale(size)
-    return math.floor(size * (ScrH() * scale_factor_y))
+    return floor(size * (ScrH() * scale_factor_y))
   end
 
   --- Scales a size that was designed for a 1920 pixels wide screen to the current screen width.
@@ -164,7 +175,7 @@ do
   -- @param size [Number size at 1920 pixels of width]
   -- @return [Number scaled size, rounded down]
   function math.scale_x(size)
-    return math.floor(size * (ScrW() * scale_factor_x))
+    return floor(size * (ScrW() * scale_factor_x))
   end
 
   --- Scales a width and a height that were designed for a 1920x1080 screen to the current

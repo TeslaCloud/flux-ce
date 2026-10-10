@@ -2,6 +2,9 @@
 -- of doors, locks doors, tells players what they may know about the ownership of a door and
 -- applies what the door menu sends.
 
+local IsValid = IsValid
+local pairs = pairs
+
 Cable.check_networked_string('fl_door_info')
 
 --- Checks whether a player is close enough to a door to use its menu, lock it, trade it,
@@ -10,7 +13,9 @@ Cable.check_networked_string('fl_door_info')
 -- @param entity [Entity the door]
 -- @return [Boolean]
 function Doors:is_in_reach(actor, entity)
-  return actor:GetPos():Distance(entity:GetPos()) <= self.use_distance
+  local reach = self.use_distance
+
+  return actor:GetPos():DistToSqr(entity:GetPos()) <= reach * reach
 end
 
 --- Loads the saved doors when the framework loads its data.

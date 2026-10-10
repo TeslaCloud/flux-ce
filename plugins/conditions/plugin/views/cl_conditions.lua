@@ -5,6 +5,9 @@
 -- it. The tree is read with `get_conditions` and filled with `set_conditions`, and it can be
 -- saved to and loaded from named presets.
 
+local create_panel = vgui.Create
+local play_sound = surface.PlaySound
+
 local PANEL = {}
 
 --- Creates the root node of the condition tree and the buttons
@@ -19,12 +22,14 @@ function PANEL:Init()
     self:node_options(panel, true, #panel.childs == 0)
   end
 
-  self.save = vgui.Create('fl_button', self)
-  self.save:SetSize(math.scale(24), math.scale(24))
+  local button_size = math.scale(24)
+
+  self.save = create_panel('fl_button', self)
+  self.save:SetSize(button_size, button_size)
   self.save:set_icon('fa-save')
   self.save:set_centered(true)
   self.save.DoClick = function(btn)
-    surface.PlaySound('garrysmod/ui_click.wav')
+    play_sound('garrysmod/ui_click.wav')
 
     Derma_StringRequest(t'ui.condition.save.title',
     t'ui.condition.save.message',
@@ -32,27 +37,27 @@ function PANEL:Init()
     function(text)
       Data.save('conditions/'..text, self:get_conditions())
 
-      surface.PlaySound('garrysmod/ui_click.wav')
+      play_sound('garrysmod/ui_click.wav')
     end,
     function(text)
-      surface.PlaySound('garrysmod/ui_click.wav')
+      play_sound('garrysmod/ui_click.wav')
     end)
   end
 
-  self.load = vgui.Create('fl_button', self)
-  self.load:SetSize(math.scale(24), math.scale(24))
+  self.load = create_panel('fl_button', self)
+  self.load:SetSize(button_size, button_size)
   self.load:set_icon('fa-folder-open')
   self.load:set_centered(true)
   self.load.DoClick = function(btn)
-    surface.PlaySound('garrysmod/ui_click.wav')
+    play_sound('garrysmod/ui_click.wav')
 
-    local frame = vgui.Create('DFrame')
+    local frame = create_panel('DFrame')
     frame:SetSize(ScrW() * 0.2, ScrH() * 0.2)
     frame:SetTitle(t'ui.condition.load.title')
     frame:Center()
     frame:MakePopup()
 
-    local list = vgui.Create('DListView', frame)
+    local list = create_panel('DListView', frame)
     list:Dock(FILL)
     list:AddColumn(t'ui.condition.load.column')
 
@@ -61,7 +66,7 @@ function PANEL:Init()
     end
 
     list.OnRowSelected = function(lst, index, line)
-      surface.PlaySound('garrysmod/ui_click.wav')
+      play_sound('garrysmod/ui_click.wav')
 
       self:clear()
       self:set_conditions(self.root, Data.load('conditions/'..line:GetColumnText(1)))
@@ -74,8 +79,11 @@ end
 --- Moves the save and load buttons to the top right corner of the panel.
 -- Should be called after the panel has been resized.
 function PANEL:update()
-  self.save:SetPos(self:GetWide() - self.save:GetWide() - 2, 2)
-  self.load:SetPos(self:GetWide() - self.save:GetWide() * 2 - 4, 2)
+  local wide = self:GetWide()
+  local button_wide = self.save:GetWide()
+
+  self.save:SetPos(wide - button_wide - 2, 2)
+  self.load:SetPos(wide - button_wide * 2 - 4, 2)
 end
 
 --- Opens the context menu of a node: adding a child condition and, for condition nodes,
@@ -112,7 +120,7 @@ function PANEL:node_options(panel, root, first)
         if isfunction(data.set_operator) then
           data.set_operator(id, data, panel, menu)
         elseif isstring(data.set_operator) then
-          local selector = vgui.Create('fl_selector')
+          local selector = create_panel('fl_selector')
           selector:set_title(t(data.name))
           selector:set_text(t'ui.condition.select_operator')
           selector:set_value(t'ui.condition.operators')
@@ -198,7 +206,7 @@ function PANEL:get_conditions(panel)
       node.childs = self:get_conditions(v)
     end
 
-    table.insert(conditions, node)
+    conditions[#conditions + 1] = node
   end
 
   return conditions
@@ -209,7 +217,6 @@ end
 -- @param conditions [List condition nodes as returned by get_conditions]
 function PANEL:set_conditions(parent, conditions)
   for k, v in pairs(conditions) do
-    local data = Conditions:get_all()[v.id]
     local node = self:add_condition(parent, v.id, v.data)
 
     if v.childs then
@@ -246,7 +253,7 @@ end
 -- @param callback [Function called as callback(selector, choice) for every choice]
 -- @return [Panel the created fl_selector panel]
 function PANEL:create_selector(title, message, default_value, choices, callback)
-  local selector = vgui.Create('fl_selector')
+  local selector = create_panel('fl_selector')
   selector:set_title(t(title))
   selector:set_text(t(message))
   selector:set_value(t(default_value))

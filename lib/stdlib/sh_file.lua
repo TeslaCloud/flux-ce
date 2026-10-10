@@ -51,7 +51,7 @@ function File.get_list(folder)
     local file_list = File.get_list(folder..v..'/')
 
     for k, v in ipairs(file_list) do
-      table.insert(files, v)
+      files[#files + 1] = v
     end
   end
 

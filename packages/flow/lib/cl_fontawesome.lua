@@ -1463,22 +1463,25 @@ end
 -- @return [Number width, Number height of the drawn icon; nil if there is no such icon]
 function FontAwesome:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
   if id:start_with('fa ') then
-    id = id:sub(4, id:len())
+    id = id:sub(4)
   end
 
   if !id:start_with('fa-') then
     id = 'fa-'..id
   end
 
-  if !icon_data[id] then return end
+  local glyph = icon_data[id]
 
-  size = size or 16
+  if !glyph then return end
+
+  local font = Font.size('flFontAwesome', size or 16)
+
   color = color or color_white
 
   if outline_width then
     return draw.SimpleTextOutlined(
-      self:get(id),
-      Font.size('flFontAwesome', size),
+      glyph,
+      font,
       x,
       y,
       color,
@@ -1488,6 +1491,6 @@ function FontAwesome:draw(id, x, y, size, color, x_align, y_align, outline_width
       outline_color
     )
   else
-    return draw.SimpleText(self:get(id), Font.size('flFontAwesome', size), x, y, color, x_align, y_align)
+    return draw.SimpleText(glyph, font, x, y, color, x_align, y_align)
   end
 end

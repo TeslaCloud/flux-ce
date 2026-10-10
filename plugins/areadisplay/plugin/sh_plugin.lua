@@ -131,12 +131,13 @@ end
 function AreaDisplay:find_text_areas_at(pos)
   local found = {}
   local height = pos.z + 16
+  local area_type = self.area_type
 
   for id, area in pairs(Areas.all()) do
-    if istable(area) and area.type == self.area_type and istable(area.polys) then
+    if istable(area) and area.type == area_type and istable(area.polys) then
       for k, poly in ipairs(area.polys) do
         if height > poly[1].z and height < area.maxh and util.vector_in_poly(pos, poly) then
-          table.insert(found, area)
+          found[#found + 1] = area
 
           break
         end

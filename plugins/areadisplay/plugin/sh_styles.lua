@@ -7,7 +7,11 @@ local typewriter_style = { name = 'ui.area_display.styles.typewriter' }
 local cinematic_style = { name = 'ui.area_display.styles.cinematic' }
 
 if CLIENT then
+  local get_font, get_color, get_option = Theme.get_font, Theme.get_color, Theme.get_option
+  local max, clamp, scale = math.max, math.Clamp, math.scale
   local fallback_font = 'DermaLarge'
+  local outline_color = Color(0, 0, 0)
+  local text_color = Color(255, 255, 255)
 
   --- Wraps the text of a notice to a part of the screen width and stores the lines in it.
   -- @param display [Map the notice; its `lines` and `layout_width` fields are set]
@@ -44,15 +48,17 @@ if CLIENT then
     end
 
     local line_height = util.font_size(font)
-    local outline_color = Color(0, 0, 0, color.a)
+    local line_count = #lines
 
-    for k, v in ipairs(lines) do
-      draw.SimpleTextOutlined(v, font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
+    outline_color.a = color.a
+
+    for i = 1, line_count do
+      draw.SimpleTextOutlined(lines[i], font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
 
       y = y + line_height
     end
 
-    return #lines * line_height
+    return line_count * line_height
   end
 
   --- Draws the notice as a title in the upper part of the screen, centered horizontally.
@@ -63,30 +69,33 @@ if CLIENT then
   -- @param offset [Number height taken by the notices of this style drawn before this one]
   -- @return [Number height the notice took]
   function fade_style:draw(display, alpha, scrw, scrh, offset)
-    local font = Theme.get_font('area_display_title', fallback_font)
+    local font = get_font('area_display_title', fallback_font)
 
     if display.layout_width != scrw then
       wrap_lines(display, font, scrw, 0.8)
     end
 
-    local color = display.color or Theme.get_color('area_display_text', color_white)
+    local color = display.color or get_color('area_display_text', color_white)
+
+    text_color.r, text_color.g, text_color.b, text_color.a = color.r, color.g, color.b, alpha
+
     local height = draw_lines(
       display.lines,
       font,
       scrw * 0.5,
       scrh * 0.2 + offset,
-      color:alpha(alpha),
+      text_color,
       TEXT_ALIGN_CENTER
     )
 
-    return height + math.scale(12)
+    return height + scale(12)
   end
 
   --- Wraps the text of the notice and splits its lines into the characters to type out.
   -- @param display [Map the notice; its `lines`, `line_chars` and `char_count` fields are set]
   -- @param scrw [Number screen width the layout is made for]
   function typewriter_style:layout(display, scrw)
-    local font = Theme.get_font('area_display_typewriter', fallback_font)
+    local font = get_font('area_display_typewriter', fallback_font)
     local lines = wrap_lines(display, font, scrw, 0.6)
     local line_chars = {}
     local char_count = 0
@@ -95,7 +104,7 @@ if CLIENT then
       local chars = {}
 
       for char in v:gmatch(utf8.charpattern) do
-        table.insert(chars, char)
+        chars[#chars + 1] = char
       end
 
       line_chars[k] = chars
@@ -111,8 +120,8 @@ if CLIENT then
   -- as long as it takes to type it out on top of its usual time.
   -- @param display [Map the notice]
   function typewriter_style:start(display)
-    display.type_interval = math.max(
-      Theme.get_option('area_display_type_interval', AreaDisplay.defaults.type_interval),
+    display.type_interval = max(
+      get_option('area_display_type_interval', AreaDisplay.defaults.type_interval),
       0.01
     )
 
@@ -142,15 +151,15 @@ if CLIENT then
     end
 
     if typed < display.char_count then
-      local current = math.max(#lines, 1)
+      local current = max(#lines, 1)
 
       lines[current] = (lines[current] or '')..'_'
     end
 
     if typed > (display.typed or 0) and last_char and last_char != ' ' then
       local path = Theme.get_sound('area_display_type', AreaDisplay.defaults.type_sound)
-      local volume = math.Clamp(
-        Theme.get_option('area_display_type_volume', AreaDisplay.defaults.type_volume),
+      local volume = clamp(
+        get_option('area_display_type_volume', AreaDisplay.defaults.type_volume),
         0,
         1
       )
@@ -177,7 +186,7 @@ if CLIENT then
       self:layout(display, scrw)
     end
 
-    local typed = math.Clamp(
+    local typed = clamp(
       math.floor((CurTime() - display.start_time) / display.type_interval),
       0,
       display.char_count
@@ -187,19 +196,21 @@ if CLIENT then
       self:advance(display, typed)
     end
 
-    local font = Theme.get_font('area_display_typewriter', fallback_font)
-    local color = display.color or Theme.get_color('area_display_text', color_white)
+    local font = get_font('area_display_typewriter', fallback_font)
+    local color = display.color or get_color('area_display_text', color_white)
+
+    text_color.r, text_color.g, text_color.b, text_color.a = color.r, color.g, color.b, alpha
 
     draw_lines(
       display.typed_lines,
       font,
       scrw * 0.08,
       scrh * 0.6 + offset,
-      color:alpha(alpha),
+      text_color,
       TEXT_ALIGN_LEFT
     )
 
-    return #display.lines * util.font_size(font) + math.scale(12)
+    return #display.lines * util.font_size(font) + scale(12)
   end
 
   --- Checks whether the Cinematics plugin is loaded. The default style is used if it is not.

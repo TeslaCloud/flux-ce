@@ -23,6 +23,10 @@ if !Flux.Lang then require_relative 'sh_lang' end
 
 mod 'Flux::Bars'
 
+local theme_call          = Theme.call
+local math_clamp          = math.Clamp
+local math_round          = math.Round
+
 local stored              = Flux.Bars.stored or {}
 local sorted              = Flux.Bars.sorted or {}
 Flux.Bars.stored          = stored
@@ -116,15 +120,15 @@ function Flux.Bars:set_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    Theme.call('PreBarValueSet', bar, bar.value, new_value)
+    theme_call('PreBarValueSet', bar, bar.value, new_value)
 
     if bar.value != new_value then
       if bar.hinder_display and bar.hinder_value then
-        bar.value = math.Clamp(new_value, 0, bar.max_value - bar.hinder_value + 2)
+        bar.value = math_clamp(new_value, 0, bar.max_value - bar.hinder_value + 2)
       end
 
       bar.interpolated = util.cubic_ease_in_out_t(150, bar.value, new_value)
-      bar.value = math.Clamp(new_value, 0, bar.max_value)
+      bar.value = math_clamp(new_value, 0, bar.max_value)
     end
   end
 end
@@ -137,10 +141,10 @@ function Flux.Bars:hinder_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    Theme.call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
+    theme_call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
 
     if bar.hinder_value != new_value then
-      bar.hinder_value = math.Clamp(new_value, 0, bar.max_value)
+      bar.hinder_value = math_clamp(new_value, 0, bar.max_value)
     end
   end
 end
@@ -162,10 +166,16 @@ function Flux.Bars:prioritize()
     -- @param bar [Map bar data]
     hook.Run('PreBarPrioritized', v)
 
-    sorted[v.priority] = sorted[v.priority] or {}
+    local priority = v.priority
+    local ids = sorted[priority]
+
+    if !ids then
+      ids = {}
+      sorted[priority] = ids
+    end
 
     if v.type == BAR_TOP then
-      table.insert(sorted[v.priority], v.id)
+      ids[#ids + 1] = v.id
     end
   end
 
@@ -180,8 +190,8 @@ function Flux.Bars:position()
   local last_y = self.default_y
 
   for priority, ids in pairs(sorted) do
-    for k, v in pairs(ids) do
-      local bar = self:get(v)
+    for i = 1, #ids do
+      local bar = self:get(ids[i])
 
       if bar and bar.type == BAR_TOP then
         --- Lets plugins offset a top bar while the bars are being stacked. Called on the
@@ -217,7 +227,7 @@ function Flux.Bars:draw(id)
     -- the bar here (advancing its value animation) and converts its texts to upper case.
     -- @param bar_info [Map bar data]
     hook.Run('PreDrawBar', bar_info)
-    Theme.call('PreDrawBar', bar_info)
+    theme_call('PreDrawBar', bar_info)
 
     --- Asks whether a HUD bar should be drawn. Called on the client by `Flux.Bars:draw` every
     -- time a bar is drawn, and by `Flux.Bars:prioritize` for every registered bar when the top
@@ -231,7 +241,7 @@ function Flux.Bars:draw(id)
       return
     end
 
-    Theme.call('DrawBarBackground', bar_info)
+    theme_call('DrawBarBackground', bar_info)
 
     --- Asks whether the fill of a bar should be drawn. Called on the client every time a bar
     -- is drawn, after its background. The fill is always drawn when the value of the bar is
@@ -239,20 +249,20 @@ function Flux.Bars:draw(id)
     -- @param bar_info [Map bar data]
     -- @return [Boolean Return true to draw the fill even though the value of the bar is 0]
     if hook.Run('ShouldFillBar', bar_info) or bar_info.value != 0 then
-      Theme.call('DrawBarFill', bar_info)
+      theme_call('DrawBarFill', bar_info)
     end
 
     if bar_info.hinder_display and bar_info.hinder_display <= bar_info.hinder_value then
-      Theme.call('DrawBarHindrance', bar_info)
+      theme_call('DrawBarHindrance', bar_info)
     end
 
-    Theme.call('DrawBarTexts', bar_info)
+    theme_call('DrawBarTexts', bar_info)
 
     --- Called on the client after a bar has been drawn, before the `PostDrawBar` theme hook.
     -- Not called for bars that `ShouldDrawBar` has hidden.
     -- @param bar_info [Map bar data]
     hook.Run('PostDrawBar', bar_info)
-    Theme.call('PostDrawBar', bar_info)
+    theme_call('PostDrawBar', bar_info)
   end
 end
 
@@ -260,8 +270,8 @@ end
 -- while it paints the HUD of a living player, along with the info displays.
 function Flux.Bars:DrawTopBars()
   for priority, ids in pairs(sorted) do
-    for k, v in ipairs(ids) do
-      self:draw(v)
+    for i = 1, #ids do
+      self:draw(ids[i])
     end
   end
 end
@@ -281,6 +291,8 @@ do
   --- Hook handlers of the bars library, registered as `FLBarHooks`: they keep the bars
   -- positioned and up to date, animate their fill and hide them outside their display range.
   local Bars = {}
+  local upper_texts = setmetatable({}, { __mode = 'k' })
+  local upper_hinder_texts = setmetatable({}, { __mode = 'k' })
 
   --- Repositions the top bars and refreshes the value of every bar that has a callback.
   function Bars:LazyTick()
@@ -289,7 +301,7 @@ do
 
       for k, v in pairs(stored) do
         if v.callback then
-          Flux.Bars:set_value(v.id, v.callback(stored[k]))
+          Flux.Bars:set_value(v.id, v.callback(v))
         end
 
         --- Called on the client for every registered bar each `LazyTick`, after the callback
@@ -306,24 +318,31 @@ do
   -- its texts to upper case.
   -- @param bar [Map bar data]
   function Bars:PreDrawBar(bar)
-    bar.cur_i = bar.cur_i or 1
+    local cur_i = bar.cur_i or 1
+    local interpolated = bar.interpolated
 
     bar.real_fill_width = bar.width * (bar.value / bar.max_value)
 
-    if bar.interpolated == nil then
+    if interpolated == nil then
+      bar.cur_i = cur_i
       bar.fill_width = bar.real_fill_width
+    elseif cur_i > 150 then
+      bar.interpolated = nil
+      bar.cur_i = 1
     else
-      if bar.cur_i > 150 then
-        bar.interpolated = nil
-        bar.cur_i = 1
-      else
-        bar.fill_width = bar.width * (bar.interpolated[math.Round(bar.cur_i)] / bar.max_value)
-        bar.cur_i = bar.cur_i + math.Clamp(math.Round(1 * (FrameTime() / 0.006)), 1, 10)
-      end
+      bar.fill_width = bar.width * (interpolated[math_round(cur_i)] / bar.max_value)
+      bar.cur_i = cur_i + math_clamp(math_round(FrameTime() / 0.006), 1, 10)
     end
 
-    bar.text = string.utf8upper(bar.text)
-    bar.hinder_text = string.utf8upper(bar.hinder_text)
+    if bar.text != upper_texts[bar] then
+      bar.text = string.utf8upper(bar.text)
+      upper_texts[bar] = bar.text
+    end
+
+    if bar.hinder_text != upper_hinder_texts[bar] then
+      bar.hinder_text = string.utf8upper(bar.hinder_text)
+      upper_hinder_texts[bar] = bar.hinder_text
+    end
   end
 
   --- Hides the bar while its value is outside of its display range.

@@ -9,6 +9,9 @@
 -- The server-only half adds saving and restoring of the player's database record.
 
 local player_meta = FindMetaTable('Player')
+local IsValid = IsValid
+local isstring = isstring
+local istable = istable
 
 --- Checks whether the player has finished loading in and has been initialized by Flux.
 -- @return [Boolean]
@@ -100,12 +103,15 @@ end
 --   a count by ammo type name]
 function player_meta:get_weapons_list(with_ammo)
   local weapons_table = {}
+  local weapons = self:GetWeapons()
 
-  for k, v in pairs(self:GetWeapons()) do
+  for i = 1, #weapons do
+    local weapon = weapons[i]
+
     if with_ammo then
-      table.insert(weapons_table, { class = v:GetClass(), clip1 = v:Clip1(), clip2 = v:Clip2() })
+      weapons_table[i] = { class = weapon:GetClass(), clip1 = weapon:Clip1(), clip2 = weapon:Clip2() }
     else
-      table.insert(weapons_table, v:GetClass())
+      weapons_table[i] = weapon:GetClass()
     end
   end
 
@@ -127,6 +133,8 @@ function player_meta:get_weapons_list(with_ammo)
 end
 
 if CLIENT then
+  local LocalPlayer = LocalPlayer
+
   --- Displays a notification to the local player, both as a popup and in the chat.
   -- Clientside variant.
   -- @param message [String text or language phrase]
@@ -245,11 +253,12 @@ end
 -- @see [Entity#freeze]
 function player_meta:freeze_gun()
   local weapon = self:GetActiveWeapon()
-  local cur_time = CurTime()
 
   if IsValid(weapon) then
-    weapon:SetNextPrimaryFire(cur_time + 3600)
-    weapon:SetNextSecondaryFire(cur_time + 3600)
+    local next_fire = CurTime() + 3600
+
+    weapon:SetNextPrimaryFire(next_fire)
+    weapon:SetNextSecondaryFire(next_fire)
 
     weapon:freeze()
   end
@@ -259,11 +268,12 @@ end
 -- @see [Entity#unfreeze]
 function player_meta:unfreeze_gun()
   local weapon = self:GetActiveWeapon()
-  local cur_time = CurTime()
 
   if IsValid(weapon) then
-    weapon:SetNextPrimaryFire(cur_time + 0.1)
-    weapon:SetNextSecondaryFire(cur_time + 0.1)
+    local next_fire = CurTime() + 0.1
+
+    weapon:SetNextPrimaryFire(next_fire)
+    weapon:SetNextSecondaryFire(next_fire)
 
     weapon:unfreeze()
   end
@@ -329,12 +339,13 @@ end
 --- Checks whether the player is alive and moving on foot faster than the walk speed.
 -- @return [Boolean]
 function player_meta:running()
-  if self:Alive() and !self:Crouching() and self:GetMoveType() == MOVETYPE_WALK
-  and self:GetVelocity():Length2DSqr() > (Config.get('walk_speed', 100) + 20) ^ 2 then
-    return true
+  if !self:Alive() or self:Crouching() or self:GetMoveType() != MOVETYPE_WALK then
+    return false
   end
 
-  return false
+  local min_speed = Config.get('walk_speed', 100) + 20
+
+  return self:GetVelocity():Length2DSqr() > min_speed * min_speed
 end
 
 --[[

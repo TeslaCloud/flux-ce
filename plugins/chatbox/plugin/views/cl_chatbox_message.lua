@@ -3,6 +3,11 @@
 -- open. Steam avatars in the message are `AvatarImage` child panels that the message draws
 -- itself.
 
+local simple_text_outlined = draw.SimpleTextOutlined
+local text_color = Color(255, 255, 255)
+local white_alpha = Color(255, 255, 255)
+local outline_alpha = Color(30, 30, 30)
+
 local PANEL = {}
 PANEL.message_data = {}
 PANEL.compiled = {}
@@ -72,25 +77,32 @@ function PANEL:Paint(w, h)
     -- @return [Boolean return true to skip the default drawing]
     if Plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
 
-    local cur_color = Color(255, 255, 255, self.alpha)
-    local white_alpha = Color(255, 255, 255, self.alpha)
-    local outline_alpha = Color(30, 30, 30, self.alpha)
+    local alpha = self.alpha
+    local message_data = self.message_data
     local cur_font = Font.size(Theme.get_font('chatbox_normal'), math.scale(Config.get('default_font_size')))
 
-    for k, v in ipairs(self.message_data) do
+    text_color.r, text_color.g, text_color.b, text_color.a = 255, 255, 255, alpha
+    white_alpha.a = alpha
+    outline_alpha.a = alpha
+
+    for i = 1, #message_data do
+      local v = message_data[i]
+
       if istable(v) then
         if v.text then
-          draw.SimpleTextOutlined(v.text, cur_font, v.x, v.y, cur_color, nil, nil, 1, outline_alpha)
+          simple_text_outlined(v.text, cur_font, v.x, v.y, text_color, nil, nil, 1, outline_alpha)
         elseif IsColor(v) then
-          cur_color = v:alpha(self.alpha)
+          text_color.r, text_color.g, text_color.b, text_color.a = v.r, v.g, v.b, alpha
         elseif v.image then
           draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, white_alpha)
         elseif v.icon then
           FontAwesome:draw(v.icon, v.x, v.y, v.h, white_alpha)
         elseif v.avatar then
-          if IsValid(v.panel) then
-            v.panel:SetAlpha(self.alpha)
-            v.panel:PaintManual()
+          local avatar_panel = v.panel
+
+          if IsValid(avatar_panel) then
+            avatar_panel:SetAlpha(alpha)
+            avatar_panel:PaintManual()
           end
         end
       elseif isnumber(v) then
@@ -147,7 +159,7 @@ function PANEL:create_avatars()
 
       v.panel = avatar
 
-      table.insert(self.avatars, avatar)
+      self.avatars[#self.avatars + 1] = avatar
     end
   end
 end

@@ -116,7 +116,7 @@ function Vendors:get_sellable_items(vendor, actor)
       local item_obj = Item.find_instance_by_id(instance_id)
 
       if item_obj and self:can_buy_item(vendor, item_obj) then
-        table.insert(items, item_obj)
+        items[#items + 1] = item_obj
       end
     end
   end
@@ -140,15 +140,15 @@ function Vendors:get_trade_data(vendor, actor)
     local price = self:get_sell_price(vendor, id, actor)
 
     if price then
-      table.insert(sells, { id = id, price = price, stock = entry.stock })
+      sells[#sells + 1] = { id = id, price = price, stock = entry.stock }
     end
   end
 
   for k, item_obj in ipairs(self:get_sellable_items(vendor, actor)) do
-    table.insert(buys, {
+    buys[#buys + 1] = {
       instance_id = item_obj.instance_id,
       price = self:get_buy_price(vendor, item_obj, actor)
-    })
+    }
   end
 
   return {

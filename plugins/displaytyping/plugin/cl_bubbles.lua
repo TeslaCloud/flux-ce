@@ -17,6 +17,13 @@
 -- 'typing_bubble_spacing', 'typing_bubble_gap' (between bubbles) and 'typing_bubble_dot'
 -- options, or draw them entirely on their own from the `PaintTypingBubble` theme hook.
 
+local max, min, abs, exp, sin = math.max, math.min, math.abs, math.exp, math.sin
+local clamp, round, scale = math.Clamp, math.Round, math.scale
+local get_text_size = surface.GetTextSize
+local rounded_box, simple_text = draw.RoundedBox, draw.SimpleText
+local get_font, get_color, get_option = Theme.get_font, Theme.get_color, Theme.get_option
+local hop_scale = math.pi / 0.45
+
 local bubbles = DisplayTyping.bubbles or {}
 DisplayTyping.bubbles = bubbles
 
@@ -81,7 +88,7 @@ end
 --   difference shrinks to a third]
 -- @return [Number]
 local function approach(value, goal, delta, speed)
-  return value + (goal - value) * (1 - math.exp(-delta * speed))
+  return value + (goal - value) * (1 - exp(-delta * speed))
 end
 
 --- Orders bubbles by age, so that the ones that have been around longer keep their place
@@ -141,41 +148,43 @@ local function wrap_tail(text, font, width, max_lines)
   for word in text:gmatch('%S+') do
     local candidate = current == '' and word or current..' '..word
 
-    if surface.GetTextSize(candidate) <= width then
+    if get_text_size(candidate) <= width then
       current = candidate
     else
       if current != '' then
-        table.insert(pieces, current)
+        pieces[#pieces + 1] = current
       end
 
       current = word
 
-      local current_width = surface.GetTextSize(current)
+      local current_width = get_text_size(current)
 
       while current_width > width do
-        local keep = math.max(math.floor(utf8.len(current) * width / current_width), 1)
+        local keep = max(math.floor(utf8.len(current) * width / current_width), 1)
         local part = current:utf8sub(1, keep)
 
-        while keep > 1 and surface.GetTextSize(part) > width do
+        while keep > 1 and get_text_size(part) > width do
           keep = keep - 1
           part = current:utf8sub(1, keep)
         end
 
-        table.insert(pieces, part)
+        pieces[#pieces + 1] = part
 
         current = current:utf8sub(keep + 1)
-        current_width = surface.GetTextSize(current)
+        current_width = get_text_size(current)
       end
     end
   end
 
   if current != '' then
-    table.insert(pieces, current)
+    pieces[#pieces + 1] = current
   end
 
-  if #pieces == 0 then return end
+  local piece_count = #pieces
 
-  local first = math.max(#pieces - max_lines + 1, 1)
+  if piece_count == 0 then return end
+
+  local first = max(piece_count - max_lines + 1, 1)
 
   if first > 1 or cut then
     pieces[first] = DisplayTyping.placeholder..pieces[first]
@@ -184,13 +193,14 @@ local function wrap_tail(text, font, width, max_lines)
   local lines = {}
   local widest, line_height = 0, 0
 
-  for i = first, #pieces do
-    local w, h = surface.GetTextSize(pieces[i])
+  for i = first, piece_count do
+    local piece = pieces[i]
+    local w, h = get_text_size(piece)
 
-    table.insert(lines, { text = pieces[i], w = w })
+    lines[#lines + 1] = { text = piece, w = w }
 
-    widest = math.max(widest, w)
-    line_height = math.max(line_height, h)
+    widest = max(widest, w)
+    line_height = max(line_height, h)
   end
 
   return lines, widest, line_height
@@ -356,24 +366,24 @@ end
 -- the general fonts and colors of the theme, and whether live text is shown. Done before the
 -- first frame and again after `DisplayTyping:invalidate_metrics`, not every frame.
 function DisplayTyping:update_metrics()
-  metrics.name_font = Theme.get_font('typing_bubble_name', Theme.get_font('text_bar', 'flRoboto'))
-  metrics.kind_font = Theme.get_font('typing_bubble_kind', Theme.get_font('text_smallest', 'flRoboto'))
-  metrics.text_font = Theme.get_font('typing_bubble_text', Theme.get_font('text_small', 'flRoboto'))
-  metrics.background = Theme.get_color('typing_bubble_background', ColorAlpha(Theme.get_color('background'), 230))
-  metrics.text = Theme.get_color('typing_bubble_text', Theme.get_color('text'))
-  metrics.accent = Theme.get_color('typing_bubble_accent', Theme.get_color('accent_light'))
-  metrics.width = Theme.get_option('typing_bubble_width', math.scale(340))
-  metrics.lines = Theme.get_option('typing_bubble_lines', 3)
-  metrics.padding = Theme.get_option('typing_bubble_padding', math.scale(10))
-  metrics.rounding = Theme.get_option('typing_bubble_rounding', math.scale(8))
-  metrics.margin = Theme.get_option('typing_bubble_margin', math.scale(24))
-  metrics.pointer = Theme.get_option('typing_bubble_pointer', math.scale(8))
-  metrics.spacing = Theme.get_option('typing_bubble_spacing', math.scale(8))
-  metrics.gap = Theme.get_option('typing_bubble_gap', math.scale(6))
-  metrics.dot = Theme.get_option('typing_bubble_dot', math.scale(6))
-  metrics.dot_gap = math.max(math.floor(metrics.dot * 0.5), 1)
+  metrics.name_font = get_font('typing_bubble_name', get_font('text_bar', 'flRoboto'))
+  metrics.kind_font = get_font('typing_bubble_kind', get_font('text_smallest', 'flRoboto'))
+  metrics.text_font = get_font('typing_bubble_text', get_font('text_small', 'flRoboto'))
+  metrics.background = get_color('typing_bubble_background', ColorAlpha(get_color('background'), 230))
+  metrics.text = get_color('typing_bubble_text', get_color('text'))
+  metrics.accent = get_color('typing_bubble_accent', get_color('accent_light'))
+  metrics.width = get_option('typing_bubble_width', scale(340))
+  metrics.lines = get_option('typing_bubble_lines', 3)
+  metrics.padding = get_option('typing_bubble_padding', scale(10))
+  metrics.rounding = get_option('typing_bubble_rounding', scale(8))
+  metrics.margin = get_option('typing_bubble_margin', scale(24))
+  metrics.pointer = get_option('typing_bubble_pointer', scale(8))
+  metrics.spacing = get_option('typing_bubble_spacing', scale(8))
+  metrics.gap = get_option('typing_bubble_gap', scale(6))
+  metrics.dot = get_option('typing_bubble_dot', scale(6))
+  metrics.dot_gap = max(math.floor(metrics.dot * 0.5), 1)
   metrics.dots_width = metrics.dot * 3 + metrics.dot_gap * 2
-  metrics.caret = math.max(math.scale(2), 1)
+  metrics.caret = max(scale(2), 1)
   metrics.live = self:live_text_allowed() and self:get_preference('display_typing_live_text')
 end
 
@@ -432,7 +442,7 @@ function DisplayTyping:layout_bubble(bubble)
   local name_width, name_height = bubble.name_width, bubble.name_height
   local label_width, label_height = bubble.label_width, bubble.label_height
   local width = metrics.dots_width + metrics.spacing + name_width
-  local height = math.max(name_height, label_height, metrics.dot)
+  local height = max(name_height, label_height, metrics.dot)
 
   if label_width > 0 then
     width = width + metrics.spacing + label_width
@@ -441,7 +451,7 @@ function DisplayTyping:layout_bubble(bubble)
   bubble.header_height = height
 
   if bubble.lines then
-    width = math.max(width, bubble.lines_width + metrics.caret * 3)
+    width = max(width, bubble.lines_width + metrics.caret * 3)
     height = height + metrics.spacing * 0.5 + #bubble.lines * bubble.line_height
   end
 
@@ -465,7 +475,10 @@ function DisplayTyping:aim_bubble(bubble)
 
   local depth, side, rise = view_offset:Dot(view.forward), view_offset:Dot(view.right), view_offset:Dot(view.up)
   local w, h = bubble.goal_w, bubble.goal_h
+  local half_w, half_h = w * 0.5, h * 0.5
+  local view_w, view_h = view.w, view.h
   local margin = metrics.margin
+  local pointer = metrics.pointer
   local inside = false
   local screen_x, screen_y
 
@@ -474,15 +487,15 @@ function DisplayTyping:aim_bubble(bubble)
     local inset = margin + (bubble.edge and margin or 0)
 
     screen_x, screen_y = screen.x, screen.y
-    inside = screen_x >= inset and screen_x <= view.w - inset and screen_y >= inset and screen_y <= view.h - inset
+    inside = screen_x >= inset and screen_x <= view_w - inset and screen_y >= inset and screen_y <= view_h - inset
   end
 
   if inside then
     bubble.edge = false
     bubble.anchor_x, bubble.anchor_y = screen_x, screen_y
     bubble.direction_x, bubble.direction_y = 0, 1
-    bubble.goal_x = math.Clamp(screen_x, margin + w * 0.5, view.w - margin - w * 0.5)
-    bubble.goal_y = math.Clamp(screen_y - metrics.pointer - h * 0.5, margin + h * 0.5, view.h - margin - h * 0.5)
+    bubble.goal_x = clamp(screen_x, margin + half_w, view_w - margin - half_w)
+    bubble.goal_y = clamp(screen_y - pointer - half_h, margin + half_h, view_h - margin - half_h)
 
     return
   end
@@ -501,15 +514,16 @@ function DisplayTyping:aim_bubble(bubble)
 
   direction_x, direction_y = direction_x / length, direction_y / length
 
-  local reach_x = (view.w * 0.5 - margin - metrics.pointer - w * 0.5) / math.max(math.abs(direction_x), 0.0001)
-  local reach_y = (view.h * 0.5 - margin - metrics.pointer - h * 0.5) / math.max(math.abs(direction_y), 0.0001)
-  local reach = math.min(reach_x, reach_y)
+  local center_x, center_y = view_w * 0.5, view_h * 0.5
+  local reach_x = (center_x - margin - pointer - half_w) / max(abs(direction_x), 0.0001)
+  local reach_y = (center_y - margin - pointer - half_h) / max(abs(direction_y), 0.0001)
+  local reach = min(reach_x, reach_y)
 
   bubble.edge = true
   bubble.anchor_x, bubble.anchor_y = nil, nil
   bubble.direction_x, bubble.direction_y = direction_x, direction_y
-  bubble.goal_x = view.w * 0.5 + direction_x * reach
-  bubble.goal_y = view.h * 0.5 + direction_y * reach
+  bubble.goal_x = center_x + direction_x * reach
+  bubble.goal_y = center_y + direction_y * reach
 end
 
 --- Moves bubbles apart so that they do not cover each other. Older bubbles keep the place
@@ -519,13 +533,15 @@ end
 -- @param count [Number how many bubbles are listed for drawing this frame]
 function DisplayTyping:arrange_bubbles(count)
   local gap = metrics.gap
+  local margin = metrics.margin
+  local view_h = view.h
 
   for i = 1, count do
     local bubble = listed[i]
     local x, y = bubble.goal_x, bubble.goal_y
     local w, h = bubble.goal_w, bubble.goal_h
 
-    bubble.push = bubble.push or (y < view.h * (bubble.edge and 0.5 or 0.25) and 1 or -1)
+    bubble.push = bubble.push or (y < view_h * (bubble.edge and 0.5 or 0.25) and 1 or -1)
 
     for pass = 1, i do
       local moved = false
@@ -535,7 +551,7 @@ function DisplayTyping:arrange_bubbles(count)
         local clear_x = (w + other.goal_w) * 0.5 + gap
         local clear_y = (h + other.goal_h) * 0.5 + gap
 
-        if math.abs(x - other.place_x) < clear_x and math.abs(y - other.place_y) < clear_y then
+        if abs(x - other.place_x) < clear_x and abs(y - other.place_y) < clear_y then
           y = other.place_y + bubble.push * clear_y
           moved = true
         end
@@ -549,7 +565,7 @@ function DisplayTyping:arrange_bubbles(count)
     end
 
     bubble.place_x = x
-    bubble.place_y = math.Clamp(y, metrics.margin + h * 0.5, view.h - metrics.margin - h * 0.5)
+    bubble.place_y = clamp(y, margin + h * 0.5, view_h - margin - h * 0.5)
   end
 end
 
@@ -582,9 +598,10 @@ end
 function DisplayTyping:draw_bubble(bubble, now)
   local fraction = bubble.alpha
   local alpha = fraction * 255
-  local w, h = math.Round(bubble.w), math.Round(bubble.h)
-  local x = math.Round(bubble.x - w * 0.5)
-  local y = math.Round(bubble.y - h * 0.5 + (1 - fraction) * metrics.padding)
+  local padding = metrics.padding
+  local w, h = round(bubble.w), round(bubble.h)
+  local x = round(bubble.x - w * 0.5)
+  local y = round(bubble.y - h * 0.5 + (1 - fraction) * padding)
 
   --- Lets the active theme draw a typing bubble in place of the default drawing. Called on
   -- the client every frame for every visible bubble, from the HUDPaint hook.
@@ -606,18 +623,19 @@ function DisplayTyping:draw_bubble(bubble, now)
 
   local accent = bubble.color or metrics.accent
   local pointer = metrics.pointer
+  local rounding = metrics.rounding
 
   tint(accent_color, accent, alpha)
   tint(text_color, metrics.text, alpha)
   tint(background_color, metrics.background, metrics.background.a * fraction)
 
-  draw.RoundedBox(metrics.rounding, x, y, w, h, background_color)
+  rounded_box(rounding, x, y, w, h, background_color)
 
   if bubble.edge then
     local direction_x, direction_y = bubble.direction_x, bubble.direction_y
-    local reach = math.min(
-      w * 0.5 / math.max(math.abs(direction_x), 0.0001),
-      h * 0.5 / math.max(math.abs(direction_y), 0.0001)
+    local reach = min(
+      w * 0.5 / max(abs(direction_x), 0.0001),
+      h * 0.5 / max(abs(direction_y), 0.0001)
     )
     local base_x = x + w * 0.5 + direction_x * reach
     local base_y = y + h * 0.5 + direction_y * reach
@@ -629,25 +647,30 @@ function DisplayTyping:draw_bubble(bubble, now)
       base_x + direction_y * half, base_y - direction_x * half,
       accent_color
     )
-  elseif bubble.anchor_y and bubble.anchor_y >= y + h and w > (metrics.rounding + pointer) * 2 then
-    local tip_x = math.Clamp(bubble.anchor_x, x + metrics.rounding + pointer, x + w - metrics.rounding - pointer)
+  elseif bubble.anchor_y and bubble.anchor_y >= y + h and w > (rounding + pointer) * 2 then
+    local tip_x = clamp(bubble.anchor_x, x + rounding + pointer, x + w - rounding - pointer)
+    local bottom = y + h
 
-    draw_triangle(tip_x - pointer, y + h, tip_x + pointer, y + h, tip_x, y + h + pointer, background_color)
+    draw_triangle(tip_x - pointer, bottom, tip_x + pointer, bottom, tip_x, bottom + pointer, background_color)
   end
 
   local dot = metrics.dot
-  local left = x + metrics.padding
-  local middle = y + metrics.padding + bubble.header_height * 0.5
+  local half_dot = dot * 0.5
+  local dot_step = dot + metrics.dot_gap
+  local left = x + padding
+  local middle = y + padding + bubble.header_height * 0.5
+  local dot_top = middle - half_dot
+  local cycle_start = now * 1.3 + bubble.phase
 
   render.SetScissorRect(x, y, x + w, y + h, true)
     for i = 0, 2 do
-      local cycle = (now * 1.3 + bubble.phase - i * 0.16) % 1
-      local hop = cycle < 0.45 and math.sin(cycle / 0.45 * math.pi) or 0
+      local cycle = (cycle_start - i * 0.16) % 1
+      local hop = cycle < 0.45 and sin(cycle * hop_scale) or 0
 
-      draw.RoundedBox(
-        dot * 0.5,
-        left + i * (dot + metrics.dot_gap),
-        middle - dot * 0.5 - hop * dot * 0.6,
+      rounded_box(
+        half_dot,
+        left + i * dot_step,
+        dot_top - hop * dot * 0.6,
         dot,
         dot,
         tint(dot_color, accent, alpha * (0.45 + 0.55 * hop))
@@ -656,13 +679,15 @@ function DisplayTyping:draw_bubble(bubble, now)
 
     local name_x = left + metrics.dots_width + metrics.spacing
 
-    draw.SimpleText(
+    simple_text(
       bubble.name or '', metrics.name_font, name_x, middle, text_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER
     )
 
-    if bubble.label and bubble.label != '' then
-      draw.SimpleText(
-        bubble.label,
+    local label = bubble.label
+
+    if label and label != '' then
+      simple_text(
+        label,
         metrics.kind_font,
         name_x + bubble.name_width + metrics.spacing,
         middle,
@@ -676,18 +701,21 @@ function DisplayTyping:draw_bubble(bubble, now)
 
     if lines then
       local line_height = bubble.line_height
-      local line_y = y + metrics.padding + bubble.header_height + metrics.spacing * 0.5
+      local line_y = y + padding + bubble.header_height + metrics.spacing * 0.5
+      local text_font = metrics.text_font
+      local line_count = #lines
+      local caret = metrics.caret
 
-      for i, line in ipairs(lines) do
-        draw.SimpleText(line.text, metrics.text_font, left, line_y + (i - 1) * line_height, text_color)
+      for i = 1, line_count do
+        simple_text(lines[i].text, text_font, left, line_y + (i - 1) * line_height, text_color)
       end
 
       draw.box(
-        left + lines[#lines].w + metrics.caret,
-        line_y + (#lines - 1) * line_height + line_height * 0.15,
-        metrics.caret,
+        left + lines[line_count].w + caret,
+        line_y + (line_count - 1) * line_height + line_height * 0.15,
+        caret,
         line_height * 0.7,
-        tint(caret_color, accent, alpha * (0.5 + 0.5 * math.sin(now * 6 + bubble.phase)))
+        tint(caret_color, accent, alpha * (0.5 + 0.5 * sin(now * 6 + bubble.phase)))
       )
     end
   render.SetScissorRect(0, 0, 0, 0, false)
@@ -702,7 +730,7 @@ function DisplayTyping:draw_bubbles()
   if next(bubbles) == nil then return end
 
   local now = RealTime()
-  local delta = math.min(RealFrameTime(), 0.1)
+  local delta = min(RealFrameTime(), 0.1)
   local enabled = self:get_preference('display_typing_bubbles')
   local angles = EyeAngles()
 

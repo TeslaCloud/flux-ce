@@ -7,6 +7,11 @@
 _MsgC                       = _MsgC         or MsgC
 _ErrorNoHalt                = _ErrorNoHalt  or ErrorNoHalt
 
+local istable               = istable
+local isstring              = isstring
+local tostring              = tostring
+local Msg                   = Msg
+
 local available_colors      = {
   Color(0, 0, 0),       Color(128, 0, 0),     Color(0, 128, 0),
   Color(128, 128, 0),   Color(0, 0, 128),     Color(128, 0, 128),
@@ -104,10 +109,13 @@ local background_sequence   = '\27[48;5;'
 local function color_id_from_color(col)
   local dist, windist, ri
 
+  local r, g, b = col.r, col.g, col.b
+
   for i = 1, n_available_colors do
     local color = available_colors[i]
+    local dr, dg, db = r - color.r, g - color.g, b - color.b
 
-    dist = (col.r - color.r) ^ 2 + (col.g - color.g) ^ 2 + (col.b - color.b) ^ 2
+    dist = dr * dr + dg * dg + db * db
 
     if i == 1 or dist < windist then
       windist = dist

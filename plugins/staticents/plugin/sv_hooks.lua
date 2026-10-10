@@ -1,6 +1,8 @@
 --- Server side of the Static Entities plugin: turns Sandbox's own persistence off, saves and
 -- loads the static entities and handles the requests to make an entity static.
 
+local pairs = pairs
+
 -- Disable default Sandbox persistence.
 hook.Remove('ShutDown', 'SavePersistenceOnShutdown')
 hook.Remove('PersistenceSave', 'PersistenceSave')

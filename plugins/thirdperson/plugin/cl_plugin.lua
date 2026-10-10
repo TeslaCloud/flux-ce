@@ -7,6 +7,8 @@ ThirdPerson.start_time = start_time
 ThirdPerson.offset = offset
 
 local duration = 0.15
+local view = {}
+local trace_data = {}
 
 local flipped_start = ThirdPerson.flipped_start or false
 ThirdPerson.flipped_start = flipped_start
@@ -29,12 +31,13 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
   -- This also fixes a weird view glitch on autorefresh.
   if !is_third_person and !self.was_third_person then return end
 
-  local view = {}
   local cur_time = CurTime()
+  local forward_dir = angles:Forward()
 
   view.origin = pos
   view.angles = angles
   view.fov = fov
+  view.drawviewer = nil
 
   if is_third_person then
     if !start_time or flipped_start then
@@ -42,7 +45,7 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
       flipped_start = false
     end
 
-    local forward = angles:Forward() * 75
+    local forward = forward_dir * 75
     local fraction = (cur_time - start_time) / duration
 
     if fraction <= 1 then
@@ -63,7 +66,7 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
       flipped_start = true
     end
 
-    local forward = angles:Forward() * 75
+    local forward = forward_dir * 75
     local fraction = (cur_time - start_time) / duration
 
     if fraction <= 1 then
@@ -79,17 +82,17 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
     view.origin = pos - offset
   end
 
-  local tr = util.TraceLine({
-    start = pos,
-    endpos = view.origin,
-    filter = client
-  })
+  trace_data.start = pos
+  trace_data.endpos = view.origin
+  trace_data.filter = client
+
+  local tr = util.TraceLine(trace_data)
 
   if tr.HitWorld then
-    view.origin = tr.HitPos + angles:Forward() * 15
+    view.origin = tr.HitPos + forward_dir * 15
   end
 
-  if view.origin:Distance(pos) < 10 then
+  if view.origin:DistToSqr(pos) < 100 then
     view.origin = pos
     view.drawviewer = false
   end

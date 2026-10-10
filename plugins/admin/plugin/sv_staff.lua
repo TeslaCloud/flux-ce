@@ -260,28 +260,32 @@ function Bolt:send_staff_list(target)
 
       for k, v in player.Iterator() do
         if !v:IsBot() then
-          local member = listed[v:SteamID()]
+          local steam_id = v:SteamID()
+          local role = v:GetUserGroup()
+          local member = listed[steam_id]
 
           if member then
             member.name = v:steam_name()
-            member.role = v:GetUserGroup()
+            member.role = role
             member.online = true
-          elseif v:GetUserGroup() != 'user' then
-            table.insert(members, {
-              steam_id = v:SteamID(),
+          elseif role != 'user' then
+            members[#members + 1] = {
+              steam_id = steam_id,
               name = v:steam_name(),
-              role = v:GetUserGroup(),
+              role = role,
               online = true
-            })
+            }
           end
         end
       end
 
       local staff = {}
 
-      for k, v in ipairs(members) do
-        if v.role != 'user' then
-          table.insert(staff, v)
+      for i = 1, #members do
+        local member = members[i]
+
+        if member.role != 'user' then
+          staff[#staff + 1] = member
         end
       end
 

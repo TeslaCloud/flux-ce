@@ -5,6 +5,9 @@
 -- migration's `change` is being reverted. The remaining helpers convert timestamps,
 -- escape and quote SQL through the current adapter, and print queries to the console.
 
+local floor = math.floor
+local isstring = isstring
+
 --- Formats a schema statement and its arguments for the migration output,
 -- e.g. 'add_column("users", "role", "string")'.
 -- @param command [String]
@@ -17,20 +20,20 @@ function ActiveRecord.format_command(command, ...)
     local arg = select(i, ...)
 
     if isstring(arg) then
-      table.insert(parts, '"'..arg..'"')
+      parts[#parts + 1] = '"'..arg..'"'
     elseif istable(arg) then
       local inner = {}
 
       for k, v in pairs(arg) do
         if !isfunction(v) then
-          table.insert(inner, (isnumber(k) and '' or k..' = ')..(isstring(v) and '"'..v..'"' or tostring(v)))
+          inner[#inner + 1] = (isnumber(k) and '' or k..' = ')..(isstring(v) and '"'..v..'"' or tostring(v))
         end
       end
 
       table.sort(inner)
-      table.insert(parts, '{ '..table.concat(inner, ', ')..' }')
+      parts[#parts + 1] = '{ '..table.concat(inner, ', ')..' }'
     elseif arg != nil and !isfunction(arg) then
-      table.insert(parts, tostring(arg))
+      parts[#parts + 1] = tostring(arg)
     end
   end
 
@@ -307,6 +310,8 @@ end
 
 do
   local indent_level = 1
+  local prefix_color = Color('cyan')
+  local query_color = Color(100, 220, 100)
 
   --- Returns the indentation level used when printing queries to the console.
   -- @return [Number]
@@ -342,8 +347,8 @@ do
   -- @param query [String text of the query]
   function print_query(prefix, query)
     if !IS_PRODUCTION or Settings.debug_output_in_production then
-      MsgC(Color('cyan'), string.rep('  ', indent_level)..prefix..' ')
-      MsgC(Color(100, 220, 100), query)
+      MsgC(prefix_color, string.rep('  ', indent_level)..prefix..' ')
+      MsgC(query_color, query)
       Msg('\n')
     end
   end
@@ -369,12 +374,12 @@ function time_from_timestamp(timestamp)
   if !yy then return end
 
   local year, month = tonumber(yy), tonumber(mm)
-  local shift = math.floor((14 - month) / 12)
+  local shift = floor((14 - month) / 12)
   local era_year = year + 4800 - shift
   local era_month = month + 12 * shift - 3
   local unix_epoch_day = 2472633
-  local day_number = tonumber(dd) + math.floor((153 * era_month + 2) / 5) + 365 * era_year
-    + math.floor(era_year / 4) - math.floor(era_year / 100) + math.floor(era_year / 400)
+  local day_number = tonumber(dd) + floor((153 * era_month + 2) / 5) + 365 * era_year
+    + floor(era_year / 4) - floor(era_year / 100) + floor(era_year / 400)
 
   return (day_number - unix_epoch_day) * 86400 + tonumber(hh) * 3600 + tonumber(m) * 60 + tonumber(ss)
 end

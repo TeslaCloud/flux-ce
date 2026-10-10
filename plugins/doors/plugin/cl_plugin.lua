@@ -3,6 +3,10 @@
 -- Also works out the status text that is drawn on ownable doors, which is kept on the door
 -- until its ownership variables, the language or the door_price config change.
 
+local IsValid = IsValid
+local t = t
+local cable_send = Cable.send
+
 Doors.status_generation = Doors.status_generation or 0
 
 --- Makes every door work its status text out again, for when something that every status
@@ -106,7 +110,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
     local locked = entity:get_nv('fl_locked')
 
     menu:AddOption(locked and t'ui.door.unlock' or t'ui.door.lock', function()
-      Cable.send('fl_lock_door', entity, !locked)
+      cable_send('fl_lock_door', entity, !locked)
     end)
 
     options = options + 1
@@ -119,7 +123,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
 
     menu:AddOption(label, function()
       Derma_Query(message, label, yes, function()
-        Cable.send('fl_door_buy', entity)
+        cable_send('fl_door_buy', entity)
       end, no)
     end)
 
@@ -141,7 +145,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
 
     menu:AddOption(label, function()
       Derma_Query(message, label, yes, function()
-        Cable.send('fl_door_evict', entity)
+        cable_send('fl_door_evict', entity)
       end, no)
     end)
 

@@ -32,6 +32,17 @@ local has_initialized = false
 Theme.stored          = stored
 Theme.current_theme   = current_theme
 
+local function hook_result(id, success, ...)
+  if !success then
+    ErrorNoHalt('Theme hook "'..id..'" has failed to run!\n')
+    error_with_traceback((...))
+
+    return
+  end
+
+  return ...
+end
+
 --- Returns all of the registered themes.
 -- @return [Map themes by ID]
 function Theme.all()
@@ -89,16 +100,7 @@ end
 --   it has no such method or the method has failed]
 function Theme.hook(id, ...)
   if isstring(id) and current_theme and current_theme[id] then
-    local result = { pcall(current_theme[id], current_theme, ...) }
-    local success = result[1]
-    table.remove(result, 1)
-
-    if !success then
-      ErrorNoHalt('Theme hook "'..id..'" has failed to run!\n')
-      error_with_traceback(result[1])
-    else
-      return unpack(result)
-    end
+    return hook_result(id, pcall(current_theme[id], current_theme, ...))
   end
 end
 

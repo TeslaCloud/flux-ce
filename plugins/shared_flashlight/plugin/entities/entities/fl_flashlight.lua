@@ -6,6 +6,8 @@
 
 AddCSLuaFile()
 
+local config_get = Config.get
+
 ENT.Type = 'anim'
 ENT.PrintName = 'Flashlight'
 ENT.Category = 'Flux'
@@ -40,23 +42,29 @@ else
       return
     end
 
-    if SharedFlashlight.lights[owner] != self then
-      SharedFlashlight.lights[owner] = self
+    local lights = SharedFlashlight.lights
+
+    if lights[owner] != self then
+      lights[owner] = self
     end
 
-    if !self.light then
-      self.light = ProjectedTexture()
-      self.light:SetTexture('effects/flashlight001')
-      self.light:SetNearZ(12)
+    local light = self.light
+
+    if !light then
+      light = ProjectedTexture()
+      light:SetTexture('effects/flashlight001')
+      light:SetNearZ(12)
+
+      self.light = light
     end
 
-    self.light:SetPos(owner:EyePos())
-    self.light:SetAngles(owner:EyeAngles())
-    self.light:SetFOV(Config.get('flashlight_fov', 50))
-    self.light:SetFarZ(Config.get('flashlight_distance', 1024))
-    self.light:SetBrightness(Config.get('flashlight_brightness', 1))
-    self.light:SetEnableShadows(Config.get('flashlight_shadows', true))
-    self.light:Update()
+    light:SetPos(owner:EyePos())
+    light:SetAngles(owner:EyeAngles())
+    light:SetFOV(config_get('flashlight_fov', 50))
+    light:SetFarZ(config_get('flashlight_distance', 1024))
+    light:SetBrightness(config_get('flashlight_brightness', 1))
+    light:SetEnableShadows(config_get('flashlight_shadows', true))
+    light:Update()
   end
 
   --- Draws nothing: the entity has no model, only the light.

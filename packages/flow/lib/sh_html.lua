@@ -113,12 +113,12 @@ end
 --   by name]
 -- @return [String rendered HTML, empty if there is no such template]
 function Flux.HTML:render_template(id, locals)
-  local header = ''
+  local header = {}
 
   if istable(locals) then
     for k, v in pairs(locals) do
       if isstring(k) then
-        header = header..'local '..k..' = '..val_to_str(v)..'\n'
+        header[#header + 1] = 'local '..k..' = '..val_to_str(v)..'\n'
       end
     end
   end
@@ -137,7 +137,7 @@ function Flux.HTML:render_template(id, locals)
     end
   end)
 
-  contents = header..'local _html = [['..contents..']] return _html'
+  contents = table.concat(header)..'local _html = [['..contents..']] return _html'
 
   local compiled = CompileString(contents, 'Template: '..id)
 
@@ -145,13 +145,13 @@ function Flux.HTML:render_template(id, locals)
 end
 
 local function generate_file_from_table(t, tab_name)
-  local final_file = common_file_header
+  local lines = { common_file_header }
 
   for k, v in pairs(t) do
-    final_file = final_file..tab_name..'["'..k..'"] = [['..v..']]\n'
+    lines[#lines + 1] = tab_name..'["'..k..'"] = [['..v..']]\n'
   end
 
-  return final_file
+  return table.concat(lines)
 end
 
 --- Generates Lua code that adds all of the templates, to be sent to the clients.

@@ -66,9 +66,11 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  local x, y = util.text_size(self.value, self.font)
-  local offset = self.label:GetValue() != '' and self.label:GetTall() or 0
-  draw.SimpleText(self.value, self.font, w * 0.5 - x * 0.5, h * 0.5 - y * 0.5 + offset * 0.5, self.color)
+  local value, font = self.value, self.font
+  local label = self.label
+  local x, y = util.text_size(value, font)
+  local offset = label:GetValue() != '' and label:GetTall() or 0
+  draw.SimpleText(value, font, w * 0.5 - x * 0.5, h * 0.5 - y * 0.5 + offset * 0.5, self.color)
 end
 
 --- Sets the title shown above the counter.

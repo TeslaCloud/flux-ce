@@ -5,6 +5,10 @@
 -- the panel, its width and its height; `get_texts` gives it the texts to draw.
 -- Derives from `fl_base_panel`.
 
+local get_font = Theme.get_font
+local simple_text = draw.SimpleText
+local date_color = Color(255, 255, 255, 180)
+
 local PANEL = {}
 
 --- Makes the clock ignore the mouse and the keyboard.
@@ -41,19 +45,21 @@ function PANEL:Paint(w, h)
 
   if Theme.hook('PaintGameTimeClock', self, w, h) == nil then
     local time_text, date_text = self:get_texts()
-    local time_font = Theme.get_font('main_menu_titles', 'DermaLarge')
-    local date_font = Theme.get_font('text_smaller', 'DermaDefault')
+    local time_font = get_font('main_menu_titles', 'DermaLarge')
+    local date_font = get_font('text_smaller', 'DermaDefault')
     local text_color = Theme.get_color('text', color_white)
     local time_height = util.font_size(time_font)
     local y = (h - time_height - util.font_size(date_font)) * 0.5
 
-    draw.SimpleText(time_text, time_font, w, y, text_color, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
-    draw.SimpleText(
+    date_color.r, date_color.g, date_color.b = text_color.r, text_color.g, text_color.b
+
+    simple_text(time_text, time_font, w, y, text_color, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+    simple_text(
       date_text,
       date_font,
       w,
       y + time_height,
-      text_color:alpha(180),
+      date_color,
       TEXT_ALIGN_RIGHT,
       TEXT_ALIGN_TOP
     )

@@ -5,6 +5,12 @@
 -- items that another of their characters has dropped, and drops the weapons of players
 -- who die, each of which a config key turns on.
 
+local pairs = pairs
+local IsValid = IsValid
+
+local use_distance_sqr = 100 * 100
+local min_aim_dot = math.pi * 0.125
+
 --- Checks whether an item holds other items, the way the container items of the Inventory
 -- plugin do: in its inventory, or in the list of contents that was saved with it.
 -- @param item_obj [Item]
@@ -78,7 +84,7 @@ function Items:PlayerCanUseItem(actor, item_obj, action, ...)
     local player_pos = actor:EyePos()
     local entity_pos = item_entity:GetPos()
 
-    if player_pos:Distance(entity_pos) > 100 then
+    if player_pos:DistToSqr(entity_pos) > use_distance_sqr then
       return false
     end
 
@@ -88,7 +94,7 @@ function Items:PlayerCanUseItem(actor, item_obj, action, ...)
 
     local entity_vector = entity_pos - actor:GetShootPos()
 
-    if (actor:GetAimVector():Dot(entity_vector) / entity_vector:Length()) < math.pi / 8 then
+    if (actor:GetAimVector():Dot(entity_vector) / entity_vector:Length()) < min_aim_dot then
       return false
     end
 
@@ -285,7 +291,7 @@ function Items:drop_weapons(victim)
           local offset = Vector(0, 0, 16 + #dropped * 8)
           local entity = Item.spawn(position + offset, Angle(0, math.random(0, 359), 0), v, victim)
 
-          table.insert(dropped, entity)
+          dropped[#dropped + 1] = entity
 
           --- Called on the server after an equipped weapon item of a dying player has
           -- been taken out of their inventory and dropped into the world.

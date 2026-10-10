@@ -1,5 +1,8 @@
 --- The base panel of character creation stages and the general stage built on it.
 
+local config_get = Config.get
+local math_clamp = math.Clamp
+
 --- Base panel of the stages of character creation (`fl_character_creation_base`). It only
 -- draws its background through the theme; stage panels derive from it and may define the
 -- on_open, on_close and on_validate methods that the character creation screen calls.
@@ -34,10 +37,11 @@ function PANEL:Init()
   local fa_icon_size = math.scale(24)
   local margin = math.scale(20)
   local scrw, scrh = ScrW(), ScrH()
+  local font = Theme.get_font('main_menu_normal')
 
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetText(t'ui.char_create.gender')
-  self.gender_label:SetFont(Theme.get_font('main_menu_normal'))
+  self.gender_label:SetFont(font)
   self.gender_label:SetTextColor(Color('white'))
   self.gender_label:SizeToContents()
   self.gender_label:SetPos(scrw * 0.125 - self.gender_label:GetWide() - 4, math.scale(36) + 6)
@@ -90,7 +94,7 @@ function PANEL:Init()
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(t'ui.char_create.name')
-  self.name_label:SetFont(Theme.get_font('main_menu_normal'))
+  self.name_label:SetFont(font)
   self.name_label:SetTextColor(Color('white'))
   self.name_label:SizeToContents()
   self.name_label:SetPos(scrw * 0.125 - self.name_label:GetWide() - 4, math.scale(72) + 2)
@@ -98,7 +102,7 @@ function PANEL:Init()
   self.name_entry = vgui.Create('DTextEntry', self)
   self.name_entry:SetPos(scrw * 0.125 + 4, math.scale(72))
   self.name_entry:SetSize(scrw * 0.125, fa_icon_size)
-  self.name_entry:SetFont(Theme.get_font('main_menu_normal'))
+  self.name_entry:SetFont(font)
   self.name_entry:SetText('')
 
   if SCHEMA.get_random_name then
@@ -120,7 +124,7 @@ function PANEL:Init()
 
   self.desc_label = vgui.Create('DLabel', self)
   self.desc_label:SetText(t'ui.char_create.desc')
-  self.desc_label:SetFont(Theme.get_font('main_menu_normal'))
+  self.desc_label:SetFont(font)
   self.desc_label:SetTextColor(Color('white'))
   self.desc_label:SizeToContents()
   self.desc_label:SetPos(scrw * 0.125 - self.desc_label:GetWide() - 4, math.scale(108) + 2)
@@ -128,7 +132,7 @@ function PANEL:Init()
   self.desc_entry = vgui.Create('DTextEntry', self)
   self.desc_entry:SetPos(scrw * 0.125 + 4, math.scale(108))
   self.desc_entry:SetSize(scrw * 0.125, math.scale(72))
-  self.desc_entry:SetFont(Theme.get_font('main_menu_normal'))
+  self.desc_entry:SetFont(font)
   self.desc_entry:SetText('')
   self.desc_entry:SetMultiline(true)
   self.desc_entry:SetVerticalScrollbarEnabled(true)
@@ -264,11 +268,13 @@ function PANEL:rebuild_models()
     end
 
     button.Paint = function(btn, w, h)
-      btn.OverlayFade = math.Clamp((btn.OverlayFade or 0) - RealFrameTime() * 640 * 2, 0, 255)
+      local fade_step = RealFrameTime() * 640
+
+      btn.OverlayFade = math_clamp((btn.OverlayFade or 0) - fade_step * 2, 0, 255)
 
       if dragndrop.IsDragging() or (!btn:IsHovered() and !btn.is_active) then return end
 
-      btn.OverlayFade = math.Clamp(btn.OverlayFade + RealFrameTime() * 640 * 8, 0, 255)
+      btn.OverlayFade = math_clamp(btn.OverlayFade + fade_step * 8, 0, 255)
     end
 
     self.models_list.buttons[#self.models_list.buttons + 1] = button
@@ -336,12 +342,12 @@ function PANEL:on_validate()
       return false, t'ui.char_create.name_invalid'
     end
 
-    if utf8.len(name) < Config.get('character_min_name_len') or
-    utf8.len(name) > Config.get('character_max_name_len') then
-      return false, t('ui.char_create.name_len', {
-        min = Config.get('character_min_name_len'),
-        max = Config.get('character_max_name_len')
-      })
+    local length = utf8.len(name)
+    local min_length = config_get('character_min_name_len')
+    local max_length = config_get('character_max_name_len')
+
+    if length < min_length or length > max_length then
+      return false, t('ui.char_create.name_len', { min = min_length, max = max_length })
     end
   end
 
@@ -350,12 +356,12 @@ function PANEL:on_validate()
       return false, t'ui.char_create.desc_invalid'
     end
 
-    if utf8.len(desc) < Config.get('character_min_desc_len') or
-    utf8.len(desc) > Config.get('character_max_desc_len') then
-      return false, t('ui.char_create.desc_len', {
-        min = Config.get('character_min_desc_len'),
-        max = Config.get('character_max_desc_len')
-      })
+    local length = utf8.len(desc)
+    local min_length = config_get('character_min_desc_len')
+    local max_length = config_get('character_max_desc_len')
+
+    if length < min_length or length > max_length then
+      return false, t('ui.char_create.desc_len', { min = min_length, max = max_length })
     end
   end
 

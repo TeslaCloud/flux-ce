@@ -9,6 +9,8 @@
 -- a container, money picked up from the ground or a plugin. `Entity:set_money` sets a
 -- balance directly and does not run that hook.
 
+local Color = Color
+
 do
   local entity_meta = FindMetaTable('Entity')
 
@@ -245,9 +247,10 @@ do
 
       local trace = self:GetEyeTraceNoCursor()
       local pos = trace.HitPos
+      local eye_pos = self:EyePos()
 
-      if self:EyePos():Distance(pos) > 120 then
-        pos = self:EyePos() + trace.Normal * 120
+      if eye_pos:DistToSqr(pos) > 14400 then
+        pos = eye_pos + trace.Normal * 120
       end
 
       if IsValid(trace.Entity) and trace.Entity:IsPlayer() then

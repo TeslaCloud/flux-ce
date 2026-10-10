@@ -4,6 +4,11 @@
 
 -- Default GWEN skin copy-pasta.
 
+local set_draw_color = surface.SetDrawColor
+local draw_rect      = surface.DrawRect
+local shade_color    = Color(0, 0, 0, 100)
+local disabled_tint  = Color(255, 255, 255, 50)
+
 -- Pixel sizes that the paint functions hardcode are scaled with the screen like the stock
 -- Derma panels (see cl_derma_scale.lua), which loads after this file.
 local function scale(size)
@@ -339,8 +344,10 @@ end
 -- @param h [Number height of the panel]
 function SKIN:PaintFrame(panel, w, h)
   if panel.m_bPaintShadow then
+    local offset, grow = scale(4), scale(10)
+
     DisableClipping(true)
-      SKIN.tex.Shadow(-scale(4), -scale(4), w + scale(10), h + scale(10))
+      SKIN.tex.Shadow(-offset, -offset, w + grow, h + grow)
     DisableClipping(false)
   end
 
@@ -450,8 +457,8 @@ end
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintMenuSpacer(panel, w, h)
-  surface.SetDrawColor(Color(0, 0, 0, 100))
-  surface.DrawRect(0, 0, w, h)
+  set_draw_color(shade_color)
+  draw_rect(0, 0, w, h)
 end
 
 --- Paints the highlight of a hovered menu option and the check mark of a checked one.
@@ -464,7 +471,9 @@ function SKIN:PaintMenuOption(panel, w, h)
   end
 
   if panel:GetChecked() then
-    self.tex.Menu_Check(scale(5), h / 2 - scale(7), scale(15), scale(15))
+    local check_size = scale(15)
+
+    self.tex.Menu_Check(scale(5), h * 0.5 - scale(7), check_size, check_size)
   end
 end
 
@@ -517,7 +526,7 @@ function SKIN:PaintWindowCloseButton(panel, w, h)
   if !panel.m_bBackground then return end
 
   if panel:GetDisabled() then
-    return self.tex.Window.Close(0, 0, w, h, Color(255, 255, 255, 50))
+    return self.tex.Window.Close(0, 0, w, h, disabled_tint)
   end
 
   if panel.Depressed or panel:IsSelected() then
@@ -539,7 +548,7 @@ function SKIN:PaintWindowMinimizeButton(panel, w, h)
   if !panel.m_bBackground then return end
 
   if panel:GetDisabled() then
-    return self.tex.Window.Mini(0, 0, w, h, Color(255, 255, 255, 50))
+    return self.tex.Window.Mini(0, 0, w, h, disabled_tint)
   end
 
   if panel.Depressed or panel:IsSelected() then
@@ -561,7 +570,7 @@ function SKIN:PaintWindowMaximizeButton(panel, w, h)
   if !panel.m_bBackground then return end
 
   if panel:GetDisabled() then
-    return self.tex.Window.Maxi(0, 0, w, h, Color(255, 255, 255, 50))
+    return self.tex.Window.Maxi(0, 0, w, h, disabled_tint)
   end
 
   if panel.Depressed or panel:IsSelected() then
@@ -696,15 +705,17 @@ end
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintComboDownArrow(panel, w, h)
-  if panel.ComboBox:GetDisabled() then
+  local combo_box = panel.ComboBox
+
+  if combo_box:GetDisabled() then
     return self.tex.Input.ComboBox.Button.Disabled(0, 0, w, h)
   end
 
-  if panel.ComboBox.Depressed or panel.ComboBox:IsMenuOpen() then
+  if combo_box.Depressed or combo_box:IsMenuOpen() then
     return self.tex.Input.ComboBox.Button.Down(0, 0, w, h)
   end
 
-  if panel.ComboBox.Hovered then
+  if combo_box.Hovered then
     return self.tex.Input.ComboBox.Button.Hover(0, 0, w, h)
   end
 
@@ -786,17 +797,12 @@ end
 function SKIN:PaintTreeNode(panel, w, h)
   if !panel.m_bDrawLines then return end
 
-  surface.SetDrawColor(self.Colours.Tree.Lines)
+  set_draw_color(self.Colours.Tree.Lines)
 
   local x, y = scale(9), scale(7)
 
-  if panel.m_bLastChild then
-    surface.DrawRect(x, 0, 1, y)
-    surface.DrawRect(x, y, x, 1)
-  else
-    surface.DrawRect(x, 0, 1, h)
-    surface.DrawRect(x, y, x, 1)
-  end
+  draw_rect(x, 0, 1, panel.m_bLastChild and y or h)
+  draw_rect(x, y, x, 1)
 end
 
 --- Paints the selection highlight behind the label of a selected tree node.
@@ -839,25 +845,26 @@ function SKIN:PaintSliderKnob(panel, w, h)
   self.tex.Input.Slider.H.Normal(0, 0, w, h)
 end
 
-local function PaintNotches(x, y, w, h, num)
-  if !num then return end
-
-  local space = w / num
-
-  for i = 0, num do
-    surface.DrawRect(x + i * space, y + scale(4), 1, scale(5))
-  end
-end
-
 --- Paints the track of a number slider and its notches.
 -- @param panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintNumSlider(panel, w, h)
-  surface.SetDrawColor(Color(0, 0, 0, 100))
-  surface.DrawRect(scale(8), h * 0.5 - 1, w - scale(15), 1)
+  local x, y = scale(8), h * 0.5 - 1
 
-  PaintNotches(scale(8), h * 0.5 - 1, w - scale(16), 1, panel.m_iNotches)
+  set_draw_color(shade_color)
+  draw_rect(x, y, w - scale(15), 1)
+
+  local notches = panel.m_iNotches
+
+  if !notches then return end
+
+  local space = (w - scale(16)) / notches
+  local notch_y, notch_h = y + scale(4), scale(5)
+
+  for i = 0, notches do
+    draw_rect(x + i * space, notch_y, 1, notch_h)
+  end
 end
 
 --- Paints a progress bar filled according to its fraction.
@@ -894,17 +901,17 @@ end
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintCategoryButton(panel, w, h)
-  if panel.AltLine then
-    if panel.Depressed or panel.m_bSelected then surface.SetDrawColor(self.Colours.Category.LineAlt.Button_Selected)
-    elseif panel.Hovered then surface.SetDrawColor(self.Colours.Category.LineAlt.Button_Hover)
-    else surface.SetDrawColor(self.Colours.Category.LineAlt.Button) end
+  local colours = panel.AltLine and self.Colours.Category.LineAlt or self.Colours.Category.Line
+
+  if panel.Depressed or panel.m_bSelected then
+    set_draw_color(colours.Button_Selected)
+  elseif panel.Hovered then
+    set_draw_color(colours.Button_Hover)
   else
-    if panel.Depressed or panel.m_bSelected then surface.SetDrawColor(self.Colours.Category.Line.Button_Selected)
-    elseif panel.Hovered then surface.SetDrawColor(self.Colours.Category.Line.Button_Hover)
-    else surface.SetDrawColor(self.Colours.Category.Line.Button) end
+    set_draw_color(colours.Button)
   end
 
-  surface.DrawRect(0, 0, w, h)
+  draw_rect(0, 0, w, h)
 end
 
 --- Paints the background of a list view line that is selected, hovered or alternate.

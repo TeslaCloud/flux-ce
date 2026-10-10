@@ -8,6 +8,24 @@
 
 DeriveGamemode('sandbox')
 
+local push_model_matrix                 = cam.PushModelMatrix
+local pop_model_matrix                  = cam.PopModelMatrix
+local surface_set_draw_color            = surface.SetDrawColor
+local render_clear_stencil              = render.ClearStencil
+local render_set_stencil_enable         = render.SetStencilEnable
+local render_set_stencil_write_mask     = render.SetStencilWriteMask
+local render_set_stencil_test_mask      = render.SetStencilTestMask
+local render_set_stencil_reference      = render.SetStencilReferenceValue
+local render_set_stencil_fail_operation = render.SetStencilFailOperation
+local render_set_stencil_compare        = render.SetStencilCompareFunction
+local render_set_scissor_rect           = render.SetScissorRect
+
+local transform_matrix  = Matrix()
+local transform_offset  = Vector()
+local transform_scale   = Vector()
+local transform_angle   = Angle()
+local default_color     = Color(255, 255, 255)
+
 Flux.blur_material = Material('pp/blurscreen')
 Flux.rt_texture = GetRenderTarget('fl_rt_'..os.time(), ScrW(), ScrH(), false)
 Flux.blur_mat = CreateMaterial('fl_mat_'..os.time(), 'UnlitGeneric', {
@@ -45,19 +63,21 @@ end
 -- @param scale [Number scale factor, 1 for the normal size]
 -- @param color [Color]
 function surface.draw_text_scaled(text, font_name, pos_x, pos_y, scale, color)
-  local matrix = Matrix()
-  local pos = Vector(pos_x, pos_y)
+  transform_matrix:Identity()
+  transform_offset:SetUnpacked(pos_x, pos_y, 0)
+  transform_scale:SetUnpacked(scale, scale, scale)
 
-  matrix:Translate(pos)
-  matrix:Scale(Vector(1, 1, 1) * scale)
-  matrix:Translate(-pos)
+  transform_matrix:Translate(transform_offset)
+  transform_matrix:Scale(transform_scale)
+  transform_offset:Negate()
+  transform_matrix:Translate(transform_offset)
 
-  cam.PushModelMatrix(matrix)
+  push_model_matrix(transform_matrix)
     surface.SetFont(font_name)
     surface.SetTextColor(color)
     surface.SetTextPos(pos_x, pos_y)
     surface.DrawText(text)
-  cam.PopModelMatrix()
+  pop_model_matrix()
 end
 
 --- Draws text rotated around its top left corner.
@@ -68,19 +88,21 @@ end
 -- @param angle [Number rotation in degrees]
 -- @param color [Color]
 function surface.draw_text_rotated(text, font_name, pos_x, pos_y, angle, color)
-  local matrix = Matrix()
-  local pos = Vector(pos_x, pos_y)
+  transform_matrix:Identity()
+  transform_offset:SetUnpacked(pos_x, pos_y, 0)
+  transform_angle:SetUnpacked(0, angle, 0)
 
-  matrix:Translate(pos)
-  matrix:Rotate(Angle(0, angle, 0))
-  matrix:Translate(-pos)
+  transform_matrix:Translate(transform_offset)
+  transform_matrix:Rotate(transform_angle)
+  transform_offset:Negate()
+  transform_matrix:Translate(transform_offset)
 
-  cam.PushModelMatrix(matrix)
+  push_model_matrix(transform_matrix)
     surface.SetFont(font_name)
     surface.SetTextColor(color)
     surface.SetTextPos(pos_x, pos_y)
     surface.DrawText(text)
-  cam.PopModelMatrix()
+  pop_model_matrix()
 end
 
 --- Runs a drawing callback with everything it draws scaled around the given point.
@@ -90,19 +112,20 @@ end
 -- @param scale [Number scale factor, 1 for the normal size]
 -- @param callback [Function draws the contents; called with (pos_x, pos_y, scale)]
 function surface.draw_scaled(pos_x, pos_y, scale, callback)
-  local matrix = Matrix()
-  local pos = Vector(pos_x, pos_y)
+  transform_matrix:Identity()
+  transform_offset:SetUnpacked(pos_x, pos_y, 0)
+  transform_scale:SetUnpacked(scale, scale, 0)
 
-  matrix:Translate(pos)
-  matrix:Scale(Vector(1, 1, 0) * scale)
-  matrix:Rotate(Angle(0, 0, 0))
-  matrix:Translate(-pos)
+  transform_matrix:Translate(transform_offset)
+  transform_matrix:Scale(transform_scale)
+  transform_offset:Negate()
+  transform_matrix:Translate(transform_offset)
 
-  cam.PushModelMatrix(matrix)
+  push_model_matrix(transform_matrix)
     if callback then
       try(callback, pos_x, pos_y, scale)
     end
-  cam.PopModelMatrix()
+  pop_model_matrix()
 end
 
 --- Runs a drawing callback with everything it draws rotated around the given point.
@@ -112,18 +135,20 @@ end
 -- @param angle [Number rotation in degrees]
 -- @param callback [Function draws the contents; called with (pos_x, pos_y, angle)]
 function surface.draw_rotated(pos_x, pos_y, angle, callback)
-  local matrix = Matrix()
-  local pos = Vector(pos_x, pos_y)
+  transform_matrix:Identity()
+  transform_offset:SetUnpacked(pos_x, pos_y, 0)
+  transform_angle:SetUnpacked(0, angle, 0)
 
-  matrix:Translate(pos)
-  matrix:Rotate(Angle(0, angle, 0))
-  matrix:Translate(-pos)
+  transform_matrix:Translate(transform_offset)
+  transform_matrix:Rotate(transform_angle)
+  transform_offset:Negate()
+  transform_matrix:Translate(transform_offset)
 
-  cam.PushModelMatrix(matrix)
+  push_model_matrix(transform_matrix)
     if callback then
       try(callback, pos_x, pos_y, angle)
     end
-  cam.PopModelMatrix()
+  pop_model_matrix()
 end
 
 --- Checks whether the mouse cursor is inside a rectangle given in screen coordinates.
@@ -200,22 +225,18 @@ do
       local start_angle, end_angle, step = -90, 360 / 100 * percentage - 90, 360 / passes
 
       if math.abs(start_angle - end_angle) != 0 then
-        table.insert(info, { x = 0, y = 0 })
+        info[1] = { x = x, y = y }
       end
+
+      local clamp, rad, cos, sin = math.Clamp, math.rad, math.cos, math.sin
 
       for i = start_angle, end_angle + step, step do
-        i = math.Clamp(i, start_angle, end_angle)
+        local rads = rad(clamp(i, start_angle, end_angle))
 
-        local rads = math.rad(i)
-        local x = math.cos(rads)
-        local y = math.sin(rads)
-
-        table.insert(info, { x = x, y = y })
-      end
-
-      for k, v in ipairs(info) do
-        v.x = v.x * radius + x
-        v.y = v.y * radius + y
+        info[#info + 1] = {
+          x = cos(rads) * radius + x,
+          y = sin(rads) * radius + y
+        }
       end
 
       cache[id] = info
@@ -231,19 +252,19 @@ do
   -- @param thickness=1 [Number width of the ring in pixels]
   -- @param passes=100 [Number amount of segments; more of them make a smoother circle]
   function surface.draw_circle_outline(x, y, radius, thickness, passes)
-    render.ClearStencil()
-    render.SetStencilEnable(true)
-      render.SetStencilWriteMask(255)
-      render.SetStencilTestMask(255)
-      render.SetStencilReferenceValue(28)
-      render.SetStencilFailOperation(STENCIL_REPLACE)
+    render_clear_stencil()
+    render_set_stencil_enable(true)
+      render_set_stencil_write_mask(255)
+      render_set_stencil_test_mask(255)
+      render_set_stencil_reference(28)
+      render_set_stencil_fail_operation(STENCIL_REPLACE)
 
-      render.SetStencilCompareFunction(STENCIL_EQUAL)
+      render_set_stencil_compare(STENCIL_EQUAL)
       surface.draw_circle(x, y, radius - (thickness or 1), passes)
-      render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
+      render_set_stencil_compare(STENCIL_NOTEQUAL)
       surface.draw_circle(x, y, radius, passes)
-    render.SetStencilEnable(false)
-    render.ClearStencil()
+    render_set_stencil_enable(false)
+    render_clear_stencil()
   end
 
   --- Draws a part of a ring in the current surface draw color, starting at the top and going
@@ -255,19 +276,19 @@ do
   -- @param thickness=1 [Number width of the ring in pixels]
   -- @param passes=360 [Number amount of segments a full circle would have]
   function surface.draw_circle_outline_partial(percentage, x, y, radius, thickness, passes)
-    render.ClearStencil()
-    render.SetStencilEnable(true)
-      render.SetStencilWriteMask(255)
-      render.SetStencilTestMask(255)
-      render.SetStencilReferenceValue(28)
-      render.SetStencilFailOperation(STENCIL_REPLACE)
+    render_clear_stencil()
+    render_set_stencil_enable(true)
+      render_set_stencil_write_mask(255)
+      render_set_stencil_test_mask(255)
+      render_set_stencil_reference(28)
+      render_set_stencil_fail_operation(STENCIL_REPLACE)
 
-      render.SetStencilCompareFunction(STENCIL_EQUAL)
+      render_set_stencil_compare(STENCIL_EQUAL)
       surface.draw_circle_partial(percentage, x, y, radius - (thickness or 1), passes)
-      render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
+      render_set_stencil_compare(STENCIL_NOTEQUAL)
       surface.draw_circle_partial(percentage, x, y, radius, passes)
-    render.SetStencilEnable(false)
-    render.ClearStencil()
+    render_set_stencil_enable(false)
+    render_clear_stencil()
   end
 end
 
@@ -286,19 +307,19 @@ end
 function draw.stenciled(draw_func, stencil_func)
   if !isfunction(draw_func) or !isfunction(stencil_func) then return end
 
-  render.ClearStencil()
-  render.SetStencilEnable(true)
-    render.SetStencilWriteMask(255)
-    render.SetStencilTestMask(255)
-    render.SetStencilReferenceValue(29)
-    render.SetStencilFailOperation(STENCIL_REPLACE)
+  render_clear_stencil()
+  render_set_stencil_enable(true)
+    render_set_stencil_write_mask(255)
+    render_set_stencil_test_mask(255)
+    render_set_stencil_reference(29)
+    render_set_stencil_fail_operation(STENCIL_REPLACE)
 
-    render.SetStencilCompareFunction(STENCIL_EQUAL)
+    render_set_stencil_compare(STENCIL_EQUAL)
     stencil_func()
-    render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
+    render_set_stencil_compare(STENCIL_NOTEQUAL)
     draw_func()
-  render.SetStencilEnable(false)
-  render.ClearStencil()
+  render_set_stencil_enable(false)
+  render_clear_stencil()
 end
 
 --- Draws the outline of a rounded box, leaving its inside untouched.
@@ -331,9 +352,9 @@ end
 function draw.textured_rect(material, x, y, w, h, color)
   if !material then return end
 
-  color = (IsColor(color) and color) or Color(255, 255, 255)
+  color = (IsColor(color) and color) or default_color
 
-  surface.SetDrawColor(color.r, color.g, color.b, color.a)
+  surface_set_draw_color(color.r, color.g, color.b, color.a)
   surface.SetMaterial(material)
   surface.DrawTexturedRect(x, y, w, h)
 end
@@ -345,7 +366,7 @@ end
 -- @param h [Number height]
 -- @param color=Color(255, 255, 255) [Color]
 function draw.box(x, y, w, h, color)
-  surface.SetDrawColor(color or Color(255, 255, 255))
+  surface_set_draw_color(color or default_color)
   surface.DrawRect(x, y, w, h)
 end
 
@@ -365,10 +386,10 @@ end
 -- @param w [Number width]
 -- @param h [Number height]
 function draw.blur_box(x, y, w, h)
-  render.SetScissorRect(x, y, x + w, y + h, true)
+  render_set_scissor_rect(x, y, x + w, y + h, true)
     render.SetMaterial((Flux.should_render_blur != nil) and Flux.blur_mat or Flux.blur_material)
     render.DrawScreenQuad()
-  render.SetScissorRect(0, 0, 0, 0, false)
+  render_set_scissor_rect(0, 0, 0, 0, false)
 
   Flux.should_render_blur = true
 end
@@ -381,10 +402,10 @@ function draw.blur_panel(panel)
   local x, y = panel:GetPos()
   local w, h = panel:GetSize()
 
-  render.SetScissorRect(x, y, x + w, y + h, true)
+  render_set_scissor_rect(x, y, x + w, y + h, true)
     render.SetMaterial((Flux.should_render_blur != nil) and Flux.blur_mat or Flux.blur_material)
     render.DrawScreenQuad()
-  render.SetScissorRect(0, 0, 0, 0, false)
+  render_set_scissor_rect(0, 0, 0, 0, false)
 
   Flux.should_render_blur = true
 end
@@ -396,7 +417,7 @@ end
 -- @param y2 [Number y of the second point]
 -- @param color [Color]
 function draw.line(x, y, x2, y2, color)
-  surface.SetDrawColor(color)
+  surface_set_draw_color(color)
   surface.DrawLine(x, y, x2, y2)
 end
 
@@ -411,7 +432,7 @@ do
   -- @param h [Number height]
   -- @param color=Color(255, 255, 255) [Color]
   function Flux.draw_rotating_cog(x, y, w, h, color)
-    color = color or Color(255, 255, 255)
+    color = color or default_color
 
     surface.draw_rotated(x, y, ang, function(x, y, ang)
       draw.textured_rect(util.get_material('materials/flux/cog.png'), x - w * 0.5, y - h * 0.5, w, h, color)

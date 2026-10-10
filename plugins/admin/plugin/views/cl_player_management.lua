@@ -119,10 +119,14 @@ function PANEL:PerformLayout(w, h)
 
   self.name_label:SetPos(4, 4)
 
-  self.role_label:SetPos(4, 4 + self.name_label:GetTall())
-  self.role_edit:set_icon_size(self.role_label:GetTall())
-  self.role_edit:SetSize(self.role_label:GetTall(), self.role_label:GetTall())
-  self.role_edit:SetPos(8 + self.role_label:GetWide(), 4 + self.name_label:GetTall())
+  local role_label = self.role_label
+  local role_tall = role_label:GetTall()
+  local role_y = 4 + self.name_label:GetTall()
+
+  role_label:SetPos(4, role_y)
+  self.role_edit:set_icon_size(role_tall)
+  self.role_edit:SetSize(role_tall, role_tall)
+  self.role_edit:SetPos(8 + role_label:GetWide(), role_y)
 end
 
 --- Sets the player to display and refreshes the panel.

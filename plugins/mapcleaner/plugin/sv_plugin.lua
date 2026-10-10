@@ -151,20 +151,23 @@ function MapCleaner:clean()
   for k, v in ents.Iterator() do
     local ent_class = v:GetClass()
 
-    if matches[ent_class] == nil then
-      matches[ent_class] = self:class_matches(ent_class, patterns)
+    local matched = matches[ent_class]
+
+    if matched == nil then
+      matched = self:class_matches(ent_class, patterns)
+      matches[ent_class] = matched
     end
 
-    if self:should_remove(v, matches[ent_class]) then
-      table.insert(unwanted, v)
+    if self:should_remove(v, matched) then
+      unwanted[#unwanted + 1] = v
     end
-  end
-
-  for k, v in ipairs(unwanted) do
-    v:Remove()
   end
 
   local count = #unwanted
+
+  for i = 1, count do
+    unwanted[i]:Remove()
+  end
 
   Flux.dev_print('Map Cleaner: removed '..count..' map entities.')
 

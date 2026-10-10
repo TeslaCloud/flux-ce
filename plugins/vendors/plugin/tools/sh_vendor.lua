@@ -4,6 +4,8 @@
 -- vendor picks it for moving, and reload anywhere else then moves it there. The tool requires
 -- the `manage_vendors` permission, which each of its actions checks as well.
 
+local IsValid = IsValid
+
 TOOL.Category = 'Flux'
 TOOL.Name = 'Vendor Tool'
 TOOL.Command = nil

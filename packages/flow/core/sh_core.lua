@@ -8,6 +8,8 @@
 
 AddCSLuaFile()
 
+local debug_color = Color(200, 200, 200)
+
 --- Prints a message to the console. Tables are printed with PrintTable.
 -- @param message [Any]
 function Flux.print(message)
@@ -24,7 +26,7 @@ end
 function Flux.dev_print(message)
   if Flux.development or Settings.debug_output_in_production then
     Msg('Debug: ')
-    MsgC(Color(200, 200, 200), message)
+    MsgC(debug_color, message)
     Msg('\n')
   end
 end
@@ -157,21 +159,21 @@ function Flux.get_schema_info()
 end
 
 do
-  local global_offset = { x = 0, y = 0 }
+  local offset_x, offset_y = 0, 0
 
   --- Sets the offset returned by Flux.global_ui_offset.
   -- @warning [Internal]
   -- @param x [Number]
   -- @param y [Number]
   function Flux.__set_global_offset__(x, y)
-    global_offset = { x = x, y = y }
+    offset_x, offset_y = x, y
   end
 
   --- Returns the global UI offset, which follows the local player's view movement. HUD
   -- elements add it to their position to appear to lag behind the camera.
   -- @return [Number x offset, Number y offset]
   function Flux.global_ui_offset()
-    return global_offset.x, global_offset.y
+    return offset_x, offset_y
   end
 end
 

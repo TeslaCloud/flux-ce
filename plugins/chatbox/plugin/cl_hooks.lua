@@ -2,6 +2,9 @@
 -- the default chat, sets up its fonts and theme options, sends entered text to the server,
 -- adds the messages that arrive from it and shows what is said from the server console.
 
+local scale = math.scale
+local config_get = Config.get
+
 --- Recalculates the size and position options of the chatbox for the new resolution
 -- and removes the chatbox panel so that it gets recreated.
 -- @param new_width [Number new screen width]
@@ -9,9 +12,9 @@
 function Chatbox:OnResolutionChanged(new_width, new_height)
   Theme.set_option('chatbox_width', new_width * 0.375)
   Theme.set_option('chatbox_height', new_height * 0.45)
-  Theme.set_option('chatbox_x', math.scale(8))
-  Theme.set_option('chatbox_y', new_height - Theme.get_option('chatbox_height') - math.scale(64))
-  local entry_height = Theme.set_option('chatbox_text_entry_height', math.scale(38)) or math.scale(38)
+  Theme.set_option('chatbox_x', scale(8))
+  Theme.set_option('chatbox_y', new_height - Theme.get_option('chatbox_height') - scale(64))
+  local entry_height = Theme.set_option('chatbox_text_entry_height', scale(38)) or scale(38)
   Theme.set_option('chatbox_text_entry_text_size', entry_height * 0.9)
 
   if Chatbox.panel then
@@ -89,17 +92,17 @@ end
 function Chatbox:OnThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
-  current_theme:set_option('chatbox_text_small_size', math.scale(Config.get('small_font_size')))
-  current_theme:set_option('chatbox_text_normal_size', math.scale(Config.get('default_font_size')))
-  current_theme:set_option('chatbox_text_big_size', math.scale(Config.get('big_font_size')))
+  current_theme:set_option('chatbox_text_small_size', scale(config_get('small_font_size')))
+  current_theme:set_option('chatbox_text_normal_size', scale(config_get('default_font_size')))
+  current_theme:set_option('chatbox_text_big_size', scale(config_get('big_font_size')))
   current_theme:set_option('chatbox_width', scrw * 0.375)
   current_theme:set_option('chatbox_height', scrh * 0.45)
-  current_theme:set_option('chatbox_x', math.scale(8))
-  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - math.scale(64))
+  current_theme:set_option('chatbox_x', scale(8))
+  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - scale(64))
   current_theme:set_option('chatbox_fix_alignment', true)
-  current_theme:set_option('chatbox_padding', math.scale(8))
+  current_theme:set_option('chatbox_padding', scale(8))
 
-  local entry_height = current_theme:set_option('chatbox_text_entry_height', math.scale(32))
+  local entry_height = current_theme:set_option('chatbox_text_entry_height', scale(32))
   local text_size = current_theme:set_option('chatbox_text_entry_text_size', entry_height * 0.75)
   local font_size = current_theme:get_option('chatbox_text_normal_size')
 
@@ -107,7 +110,7 @@ function Chatbox:OnThemeLoaded(current_theme)
   current_theme:set_font('chatbox_bold',        'chat_font_bold',         font_size)
   current_theme:set_font('chatbox_italic',      'chat_font_italic',       font_size)
   current_theme:set_font('chatbox_italic_bold', 'chat_font_italic_bold',  font_size)
-  current_theme:set_font('chatbox_syntax',      'flRobotoCondensed',      math.scale(24))
+  current_theme:set_font('chatbox_syntax',      'flRobotoCondensed',      scale(24))
   current_theme:set_font('chatbox_text_entry',  'chat_font',              text_size)
 
   current_theme:set_color('chat_text_entry_background', Color(0, 0, 0, 215))
@@ -129,13 +132,16 @@ end
 function Chatbox:ChatboxMessageCompiled(compiled)
   local to_print = {}
 
+  local count = 0
+
   for k, v in pairs(compiled) do
     if istable(v) and v.text or IsColor(v) then
-      table.insert(to_print, IsColor(v) and v or v.text)
+      count = count + 1
+      to_print[count] = IsColor(v) and v or v.text
     end
   end
 
-  table.insert(to_print, '\n')
+  to_print[count + 1] = '\n'
 
   MsgC(unpack(to_print))
 end

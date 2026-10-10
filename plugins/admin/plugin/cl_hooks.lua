@@ -2,6 +2,8 @@
 -- keeping the config editor and the plugin manager up to date with the server, the vanish
 -- indicator on the HUD, fullbright rendering and the voice permission check.
 
+local IsValid = IsValid
+
 --- Returns false for speakers that lack the 'voice' permission.
 -- @param speaker [Player the player that started talking]
 -- @return [Boolean false if the player lacks the permission, nothing otherwise]
@@ -95,8 +97,10 @@ end
 --- Draws the vanish indicator in the bottom right corner while the local player is hidden
 -- from other players.
 function Bolt:HUDPaint()
-  if IsValid(PLAYER) and PLAYER:has_initialized() and PLAYER:Alive()
-  and PLAYER:get_nv('transmission_prevented') then
+  local client = PLAYER
+
+  if IsValid(client) and client:has_initialized() and client:Alive()
+  and client:get_nv('transmission_prevented') then
     local text, font = t'ui.hud.vanish', Theme.get_font('text_normal')
     local w, h = util.text_size(text, font)
     local x, y = ScrW() - w - 16, ScrH() - h - 16
@@ -107,16 +111,20 @@ end
 
 --- Switches to fullbright lighting when the local player's 'should_fullbright' net var is set.
 function Bolt:PostRender()
-  if IsValid(PLAYER) and PLAYER:get_nv('should_fullbright') then
+  local client = PLAYER
+
+  if IsValid(client) and client:get_nv('should_fullbright') then
     render.SetLightingMode(1)
-    PLAYER.fullbright_enabled = true
+    client.fullbright_enabled = true
   end
 end
 
 --- Restores normal lighting before the HUD is drawn if fullbright was switched on.
 function Bolt:PreDrawHUD()
-  if IsValid(PLAYER) and PLAYER.fullbright_enabled then
+  local client = PLAYER
+
+  if IsValid(client) and client.fullbright_enabled then
     render.SetLightingMode(0)
-    PLAYER.fullbright_enabled = false
+    client.fullbright_enabled = false
   end
 end

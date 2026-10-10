@@ -1,6 +1,8 @@
 --- Life of vendors on the map: creating, changing, moving and removing them, and saving
 -- them with the plugin data of the map and loading them back.
 
+local ipairs = ipairs
+
 --- Turns a map of item ID to entry into a list of entries with an `id` field, which survives
 -- being saved as JSON whatever the IDs look like.
 -- @param items [Map item ID to entry]
@@ -9,7 +11,7 @@ local function items_to_list(items)
   local entries = {}
 
   for id, entry in SortedPairs(items) do
-    table.insert(entries, { id = id, price = entry.price, stock = entry.stock })
+    entries[#entries + 1] = { id = id, price = entry.price, stock = entry.stock }
   end
 
   return entries
@@ -130,7 +132,7 @@ function Vendors:save()
 
   for k, v in ipairs(ents.FindByClass(self.entity_class)) do
     if v.vendor_data and !v:IsMarkedForDeletion() then
-      table.insert(vendors, self:to_saveable(v))
+      vendors[#vendors + 1] = self:to_saveable(v)
     end
   end
 

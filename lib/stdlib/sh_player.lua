@@ -24,6 +24,7 @@ function player.find(name, case_sensitive, return_first)
 
   local hits = {}
   local is_steamid = name:start_with('STEAM_')
+  local lower_name
 
   for k, v in player.Iterator() do
     if is_steamid then
@@ -34,12 +35,18 @@ function player.find(name, case_sensitive, return_first)
       continue
     end
 
-    if v:name(true):find(name) then
-      table.insert(hits, v)
-    elseif !case_sensitive and v:name(true):utf8lower():find(name:utf8lower()) then
-      table.insert(hits, v)
-    elseif v:steam_name():utf8lower():find(name:utf8lower()) then
-      table.insert(hits, v)
+    local char_name = v:name(true)
+
+    if char_name:find(name) then
+      hits[#hits + 1] = v
+    else
+      lower_name = lower_name or name:utf8lower()
+
+      if !case_sensitive and char_name:utf8lower():find(lower_name) then
+        hits[#hits + 1] = v
+      elseif v:steam_name():utf8lower():find(lower_name) then
+        hits[#hits + 1] = v
+      end
     end
 
     if return_first and #hits > 0 then

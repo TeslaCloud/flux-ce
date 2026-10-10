@@ -7,6 +7,11 @@
 -- strings.
 -- @module [string]
 
+local ipairs = ipairs
+local istable = istable
+local string_sub = string.sub
+local string_find = string.find
+
 local String = {
   lower = function(...)
     return (string.utf8lower or string.lower)(...)
@@ -156,6 +161,10 @@ function string.is_lower(str)
   return String.lower(str) == str
 end
 
+local function capture_only(v)
+  if isstring(v) then return v end
+end
+
 --- Finds all occurrences of a pattern in a string.
 -- ```
 -- local hits = string.find_all('{data:rank} {callback:get_name}', '{([%w_]+):([%w_]+)}')
@@ -172,19 +181,19 @@ function string.find_all(str, pattern)
   local last_pos = 1
 
   while true do
-    local find_data = { string.find(str, pattern, last_pos) }
+    local find_data = { string_find(str, pattern, last_pos) }
     local start_pos, end_pos = find_data[1], find_data[2]
 
     if !start_pos then
       break
     end
 
-    table.insert(hits, {
+    hits[#hits + 1] = {
       text      = String.sub(str, start_pos, end_pos),
       start_pos = start_pos,
       end_pos   = end_pos,
-      matches   = table.map(find_data, function(v) if isstring(v) then return v end end)
-    })
+      matches   = table.map(find_data, capture_only)
+    }
 
     last_pos = end_pos + 1
   end
@@ -199,7 +208,7 @@ end
 -- @param start_pos=1 [Number position to start searching from]
 -- @return [Number start position of the substring or nil if it was not found, Number end position]
 function string.include(str, substring, start_pos)
-  return string.find(str, substring, start_pos, true)
+  return string_find(str, substring, start_pos, true)
 end
 
 --- Checks if the string is a command or not, i.e. whether it starts with one of the configured
@@ -234,10 +243,7 @@ end
 
 do
   -- IDs should not have any of those characters.
-  local blocked_chars = {
-    "'", '"', '\\', '/', '^',
-    ':', '.', ';', '&', ',', '%'
-  }
+  local blocked_chars = '[\'"\\/%^:%.;&,%%]'
 
   --- Converts a string to an ID: lowercases it, replaces spaces with underscores and removes
   -- the characters that IDs must not have (quotes, slashes and most punctuation).
@@ -246,10 +252,7 @@ do
   function string.to_id(str)
     str = String.lower(str)
     str = str:gsub(' ', '_')
-
-    for k, v in ipairs(blocked_chars) do
-      str = str:replace(v, '')
-    end
+    str = str:gsub(blocked_chars, '')
 
     return str
   end
@@ -306,7 +309,7 @@ function string.count(str, char)
   local hits = 0
 
   for i = 1, str:len() do
-    if str[i] == char then
+    if string_sub(str, i, i) == char then
       hits = hits + 1
     end
   end
@@ -326,8 +329,7 @@ function string.spelling(str, first_lower, no_period)
   local first_char = String.sub(str, 1, 1)
 
   if !str:is_upper() then
-    str = (!first_lower and String.upper(String.sub(str, 1, 1)) or
-          String.lower(String.sub(str, 1, 1)))..String.sub(str, 2, len)
+    str = (!first_lower and String.upper(first_char) or String.lower(first_char))..String.sub(str, 2, len)
   end
 
   if !no_period then
@@ -388,7 +390,7 @@ end
 -- @return [String]
 function string.capitalize(str)
   local len = utf8.len(str)
-  return String.upper(str[1])..(len > 1 and String.sub(str, 2, utf8.len(str)) or '')
+  return String.upper(string_sub(str, 1, 1))..(len > 1 and String.sub(str, 2, len) or '')
 end
 
 --- Finds the table that a `::`-separated path such as 'ActiveRecord::Base' points to.
@@ -447,14 +449,16 @@ function string.parse_parent(str, ref)
   end
 end
 
+local function case_insensitive_letter(percent, letter)
+  if percent != '' or !letter:match('%a') then
+    return percent..letter
+  else
+    return string.format('[%s%s]', letter:lower(), letter:upper())
+  end
+end
+
 local function real_gsub(pat)
-  return pat:gsub('(%%?)(.)', function(percent, letter)
-    if percent != '' or !letter:match('%a') then
-      return percent..letter
-    else
-      return string.format('[%s%s]', letter:lower(), letter:upper())
-    end
-  end)
+  return pat:gsub('(%%?)(.)', case_insensitive_letter)
 end
 
 -- https://stackoverflow.com/questions/11401890/case-insensitive-lua-pattern-matching

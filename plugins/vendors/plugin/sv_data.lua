@@ -13,6 +13,10 @@
 -- the most money a vendor may hold, `Vendors.max_stock` the most of an item a vendor may
 -- have.
 
+local pairs = pairs
+local istable = istable
+local isstring = isstring
+
 Vendors.max_price = 1000000000
 Vendors.max_stock = 1000000
 

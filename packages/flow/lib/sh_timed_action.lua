@@ -36,6 +36,10 @@
 
 mod 'Flux::TimedAction'
 
+local IsValid     = IsValid
+local CurTime     = CurTime
+local math_clamp  = math.Clamp
+
 --- Makes a cancel condition that holds while the player keeps looking at an entity from
 -- close enough. Fails once the entity is removed.
 -- @param entity [Entity the entity the player has to look at]
@@ -80,10 +84,11 @@ end
 -- @return [Function condition for the options of Flux.TimedAction#start]
 function Flux.TimedAction:all_of(...)
   local conditions = { ... }
+  local count = #conditions
 
   return function(actor, action)
-    for k, v in ipairs(conditions) do
-      if !v(actor, action) then return false end
+    for i = 1, count do
+      if !conditions[i](actor, action) then return false end
     end
 
     return true
@@ -285,14 +290,15 @@ if SERVER then
 
       if success != nil then
         ended = ended or {}
-
-        table.insert(ended, { actor = actor, action = action, success = success })
+        ended[#ended + 1] = { actor = actor, action = action, success = success }
       end
     end
 
     if !ended then return end
 
-    for k, v in ipairs(ended) do
+    for i = 1, #ended do
+      local v = ended[i]
+
       if active[v.actor] == v.action then
         finish(v.actor, v.success)
       end
@@ -388,7 +394,7 @@ else
 
     bar.x = scrw * 0.5 - bar.width * 0.5
     bar.y = scrh * 0.5 - bar.height * 0.5
-    bar.value = math.Clamp((cur_time - action.start_time) / action.duration, 0, 1) * bar.max_value
+    bar.value = math_clamp((cur_time - action.start_time) / action.duration, 0, 1) * bar.max_value
     bar.interpolated = nil
     bar.text = action.display_text
 
@@ -406,7 +412,7 @@ function Flux.TimedAction:progress(actor)
 
   if !action then return end
 
-  return math.Clamp((CurTime() - action.start_time) / action.duration, 0, 1)
+  return math_clamp((CurTime() - action.start_time) / action.duration, 0, 1)
 end
 
 local player_meta = FindMetaTable('Player')

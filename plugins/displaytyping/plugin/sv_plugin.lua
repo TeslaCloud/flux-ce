@@ -9,6 +9,8 @@
 -- client has reported it as text that others may see and the 'display_exact_message' config
 -- is enabled; otherwise the receivers get its outline.
 
+local cable_send = Cable.send
+
 local typists = DisplayTyping.typists or {}
 DisplayTyping.typists = typists
 
@@ -152,15 +154,17 @@ function DisplayTyping:stop_typing(actor)
   typists[actor] = nil
 
   local receivers = {}
+  local count = 0
 
   for viewer in pairs(state.recipients) do
     if IsValid(viewer) then
-      table.insert(receivers, viewer)
+      count = count + 1
+      receivers[count] = viewer
     end
   end
 
-  if #receivers > 0 then
-    Cable.send(receivers, 'fl_typing_stop', actor:EntIndex())
+  if count > 0 then
+    cable_send(receivers, 'fl_typing_stop', actor:EntIndex())
   end
 
   --- Called on the server when a player is no longer typing: they have sent or cleared
@@ -182,6 +186,7 @@ function DisplayTyping:relay(actor, state, now)
 
   local previous = state.recipients
   local current, everyone, added, removed = {}, {}, {}, {}
+  local everyone_count, added_count, removed_count = 0, 0, 0
 
   if self:can_display(actor) then
     local ragdoll = self:get_ragdoll(actor)
@@ -190,13 +195,17 @@ function DisplayTyping:relay(actor, state, now)
     local enter, leave = (radius * 1.15) ^ 2, (radius * 1.35) ^ 2
 
     for k, v in player.Iterator() do
-      if v != actor and self:can_receive(v) and origin:DistToSqr(v:EyePos()) <= (previous[v] and leave or enter) then
+      local was_recipient = previous[v]
+
+      if v != actor and self:can_receive(v) and origin:DistToSqr(v:EyePos()) <= (was_recipient and leave or enter) then
         current[v] = true
 
-        table.insert(everyone, v)
+        everyone_count = everyone_count + 1
+        everyone[everyone_count] = v
 
-        if !previous[v] then
-          table.insert(added, v)
+        if !was_recipient then
+          added_count = added_count + 1
+          added[added_count] = v
         end
       end
     end
@@ -204,7 +213,8 @@ function DisplayTyping:relay(actor, state, now)
 
   for viewer in pairs(previous) do
     if !current[viewer] and IsValid(viewer) then
-      table.insert(removed, viewer)
+      removed_count = removed_count + 1
+      removed[removed_count] = viewer
     end
   end
 
@@ -213,8 +223,8 @@ function DisplayTyping:relay(actor, state, now)
   local index = actor:EntIndex()
   local exact = state.exact and self:live_text_allowed()
 
-  if #removed > 0 then
-    Cable.send(removed, 'fl_typing_stop', index)
+  if removed_count > 0 then
+    cable_send(removed, 'fl_typing_stop', index)
   end
 
   local receivers = (state.dirty or state.sent_exact != exact) and everyone or added
@@ -223,6 +233,6 @@ function DisplayTyping:relay(actor, state, now)
   state.sent_exact = exact
 
   if #receivers > 0 then
-    Cable.send(receivers, 'fl_typing_update', index, exact and state.text or state.outline, exact)
+    cable_send(receivers, 'fl_typing_update', index, exact and state.text or state.outline, exact)
   end
 end

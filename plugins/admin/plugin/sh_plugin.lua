@@ -104,8 +104,10 @@ function Bolt:OnPluginsLoaded()
   -- and for every role based on it.
   hook.Run('RegisterPermissions')
 
+  local all_permissions = self:get_all_permissions()
+
   for k, v in pairs(self:get_roles()) do
-    for k1, v1 in pairs(self:get_all_permissions()) do
+    for k1, v1 in pairs(all_permissions) do
       if v.role_id == v1.role then
         self:allow_children(v, k1)
       end

@@ -65,13 +65,12 @@ Area.tool_modes = {
       OnRightClick = data.OnRightClick,
       OnReload = data.OnReload or function(mode, tool, trace)
         local cur_time = CurTime()
+        local pos = trace.HitPos
+        local z = pos.z + 16
 
         for k, v in pairs(Areas.all()) do
           if istable(v.polys) and isstring(v.type) and v.type == data.area_type then
             for k2, v2 in ipairs(v.polys) do
-              local pos = trace.HitPos
-              local z = pos.z + 16
-
               if z > v2[1].z and z < v.maxh then
                 if util.vector_in_poly(pos, v2) then
                   Areas.remove(v.id)

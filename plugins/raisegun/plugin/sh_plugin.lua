@@ -38,6 +38,8 @@
 
 PLUGIN:set_global('RaiseGun')
 
+local config_get = Config.get
+
 BOOL_WEAPON_RAISED = 1
 
 RaiseGun.weapon_items = RaiseGun.weapon_items or {}
@@ -127,11 +129,11 @@ end
 -- @return [Number seconds from the `weapon_raise_fire_delay` config; 0 while the
 --   `weapon_raise_enabled` config is off]
 function RaiseGun:get_fire_delay()
-  if !Config.get('weapon_raise_enabled', true) then
+  if !config_get('weapon_raise_enabled', true) then
     return 0
   end
 
-  return Config.get('weapon_raise_fire_delay', 0)
+  return config_get('weapon_raise_fire_delay', 0)
 end
 
 --- Keeps a weapon from firing, for a day unless `RaiseGun:release_fire` lets it fire again
@@ -178,7 +180,7 @@ end
 -- @param actor [Player]
 -- @param key [Number IN_ enum of the pressed key]
 function RaiseGun:KeyPress(actor, key)
-  if key == IN_RELOAD and Config.get('weapon_raise_enabled', true) then
+  if key == IN_RELOAD and config_get('weapon_raise_enabled', true) then
     timer.Create('fl_weapon_raise_'..actor:SteamID(), 1, 1, function()
       if IsValid(actor) then
         actor:toggle_weapon_raised()

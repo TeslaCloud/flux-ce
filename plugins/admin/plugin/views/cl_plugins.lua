@@ -107,10 +107,10 @@ function PANEL:PerformLayout(w, h)
   local padding = math.scale(8)
   local toggle_size = h - padding
   local label_x = toggle_size + padding * 2
-  local label_width = math.floor((w - label_x - padding) / 2)
+  local label_width = math.floor((w - label_x - padding) * 0.5)
 
   self.toggle:SetSize(toggle_size, toggle_size)
-  self.toggle:SetPos(padding, math.floor(padding / 2))
+  self.toggle:SetPos(padding, math.floor(padding * 0.5))
   self.toggle:set_icon_size(math.floor(toggle_size * 0.75))
 
   self.name_label:SetPos(label_x, 0)

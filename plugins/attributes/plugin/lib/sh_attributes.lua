@@ -12,6 +12,14 @@
 
 mod 'Attributes'
 
+local istable = istable
+local tonumber = tonumber
+local tostring = tostring
+local math_clamp = math.clamp
+local math_max = math.max
+local math_round = math.round
+local os_time = os.time
+
 local stored = Attributes.stored or {}
 Attributes.stored = stored
 
@@ -34,7 +42,7 @@ end
 function Attributes.get_by_type(attribute_type)
   local atts_table = {}
 
-  for k, v in pairs(Attributes.stored) do
+  for k, v in pairs(stored) do
     if v.type == attribute_type then
       atts_table[k] = v
     end
@@ -71,7 +79,7 @@ function Attributes.register(id, data)
   data.description = data.description or 'attribute.other.desc'
   data.max = data.max or 10
   data.min = data.min or 0
-  data.default = math.clamp(tonumber(data.default) or data.min, data.min, data.max)
+  data.default = math_clamp(tonumber(data.default) or data.min, data.min, data.max)
   data.category = data.category or 'attribute.category.other'
   data.icon = data.icon
   data.type = data.type
@@ -116,15 +124,18 @@ end
 -- @return [Number]
 function Attributes.sum_boosts(attribute_table, attribute)
   local boost = 0
+  local boosts = attribute.boosts
 
-  for k, v in pairs(attribute.boosts or {}) do
-    boost = boost + (tonumber(v.value) or 0)
+  if boosts then
+    for k, v in pairs(boosts) do
+      boost = boost + (tonumber(v.value) or 0)
+    end
   end
 
   if attribute_table.boost_limited then
     local level = attribute.level or attribute_table.default
 
-    boost = math.clamp(level + boost, attribute_table.min, attribute_table.max) - level
+    boost = math_clamp(level + boost, attribute_table.min, attribute_table.max) - level
   end
 
   return boost
@@ -244,12 +255,12 @@ if SERVER then
       end
 
       if !expiry or expiry > unix_time then
-        table.insert(entries, {
+        entries[#entries + 1] = {
           value = tonumber(v.value) or 0,
           id = v.identifier != nil and tostring(v.identifier) or nil,
           expires_at = expiry and v.expires_at or nil,
           end_time = expiry and cur_time + (expiry - unix_time) or nil
-        })
+        }
       end
     end
 
@@ -259,10 +270,11 @@ if SERVER then
   --- Converts an Attribute record to the table that is networked.
   -- @param record [Attribute]
   -- @param attribute_table [AttributeBase definition of the record's attribute]
+  -- @param unix_time [Number current os.time()]
+  -- @param cur_time [Number current CurTime()]
   -- @return [Map level, progress, boosts and multipliers, Number earliest unix time at which
   --   a boost or multiplier of the record expires or has expired; nil if none has an expiry]
-  local function record_to_networkable(record, attribute_table)
-    local unix_time, cur_time = os.time(), CurTime()
+  local function record_to_networkable(record, attribute_table, unix_time, cur_time)
     local boosts, boost_expiry = modifiers_to_networkable(record.attribute_boosts or {}, unix_time, cur_time)
     local multipliers, multiplier_expiry =
       modifiers_to_networkable(record.attribute_multipliers or {}, unix_time, cur_time)
@@ -306,7 +318,7 @@ if SERVER then
 
     if !record then return end
 
-    local data = record_to_networkable(record, attribute_table)
+    local data = record_to_networkable(record, attribute_table, os_time(), CurTime())
 
     return data
   end
@@ -335,7 +347,7 @@ if SERVER then
 
         local attribute = Attribute.new()
           attribute.attribute_id = k
-          attribute.level = math.clamp(math.floor(level), v.min, v.max)
+          attribute.level = math_clamp(math.floor(level), v.min, v.max)
           attribute.progress = 0
         table.insert(character.attributes, attribute)
 
@@ -354,13 +366,14 @@ if SERVER then
   --   boost or multiplier of the character expires or has expired; nil if none has an expiry]
   function Attributes.to_networkable(target, attribute_type)
     local attributes = {}
+    local unix_time, cur_time = os_time(), CurTime()
     local earliest
 
     for k, v in ipairs(get_records(target)) do
       local attribute_table = stored[v.attribute_id]
 
       if attribute_table and (attribute_type == nil or attribute_table.type == attribute_type) then
-        local entry, expiry = record_to_networkable(v, attribute_table)
+        local entry, expiry = record_to_networkable(v, attribute_table, unix_time, cur_time)
 
         if expiry and (!earliest or expiry < earliest) then
           earliest = expiry
@@ -391,7 +404,7 @@ if SERVER then
   -- @param target [Player]
   -- @return [Number amount of boosts and multipliers removed]
   function Attributes.remove_expired(target)
-    local unix_time = os.time()
+    local unix_time = os_time()
     local removed = 0
 
     for k, v in ipairs(get_records(target)) do
@@ -426,8 +439,8 @@ if SERVER then
 
     if level != level or progress != progress then return false end
 
-    level = math.clamp(math.round(level), attribute_table.min, attribute_table.max)
-    progress = math.max(progress, 0)
+    level = math_clamp(math_round(level), attribute_table.min, attribute_table.max)
+    progress = math_max(progress, 0)
 
     if level == old_level and progress == old_progress then return false end
 
@@ -488,7 +501,7 @@ if SERVER then
       modifier.identifier = identifier
 
       if duration and duration > 0 then
-        modifier.expires_at = to_datetime(os.time() + math.ceil(duration))
+        modifier.expires_at = to_datetime(os_time() + math.ceil(duration))
       end
     table.insert(record[list_key], modifier)
 
@@ -675,11 +688,15 @@ do
 
     if !attribute then return 1 end
 
-    for k, v in pairs(attribute.multipliers or {}) do
-      multiplier = multiplier + (tonumber(v.value) or 1) - 1
+    local multipliers = attribute.multipliers
+
+    if multipliers then
+      for k, v in pairs(multipliers) do
+        multiplier = multiplier + (tonumber(v.value) or 1) - 1
+      end
     end
 
-    return math.max(multiplier, 0) + 1
+    return math_max(multiplier, 0) + 1
   end
 
   if SERVER then
@@ -748,9 +765,9 @@ do
             modifier = 1 / modifier
           end
 
-          amount = math.round(amount * modifier * scale)
+          amount = math_round(amount * modifier * scale)
         elseif scale != 1 then
-          amount = math.round(amount * scale)
+          amount = math_round(amount * scale)
         end
       end
 
@@ -787,7 +804,7 @@ do
       if !adjusted or adjusted != adjusted then return end
 
       if adjusted != amount then
-        amount = math.round(adjusted)
+        amount = math_round(adjusted)
       end
 
       if amount == 0 then return end

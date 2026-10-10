@@ -3,6 +3,10 @@
 -- A hold is kept in `PickupObjects.holds` under the holding player, as a table with the
 -- entity, collision_group, drag, bone, mass, target and check_time fields.
 
+local IsValid = IsValid
+local CurTime = CurTime
+local config_get = Config.get
+
 PickupObjects.holds = PickupObjects.holds or {}
 
 local max_dist = Unit:meters(2) ^ 2
@@ -12,6 +16,7 @@ local drag_forward = 16
 local drag_height = 32
 local drag_gain = 15
 local drag_max_speed = 400
+local drag_max_speed_sqr = drag_max_speed * drag_max_speed
 local drag_bone_mass = 50
 local pickup_cooldown = 1
 local drop_protection = 1
@@ -22,7 +27,7 @@ local holds = PickupObjects.holds
 -- @param ent [Entity]
 -- @return [Boolean]
 function PickupObjects:should_drag(ent)
-  if ent:IsRagdoll() and Config.get('pickup_drag_ragdolls') then
+  if ent:IsRagdoll() and config_get('pickup_drag_ragdolls') then
     return true
   end
 
@@ -138,7 +143,12 @@ function PickupObjects:update_hold(actor, data, cur_time)
   if !IsValid(phys_obj) or !phys_obj:IsMoveable() then return false end
 
   local shoot_pos = actor:GetShootPos()
-  local goal = shoot_pos + Angle(0, actor:EyeAngles().y, 0):Forward() * drag_forward
+  local heading = actor:EyeAngles()
+
+  heading.p = 0
+  heading.r = 0
+
+  local goal = shoot_pos + heading:Forward() * drag_forward
 
   goal.z = shoot_pos.z - drag_height
 
@@ -147,10 +157,10 @@ function PickupObjects:update_hold(actor, data, cur_time)
   if offset:LengthSqr() > drag_break_dist then return false end
 
   local velocity = offset * drag_gain
-  local speed = velocity:Length()
+  local speed_sqr = velocity:LengthSqr()
 
-  if speed > drag_max_speed then
-    velocity = velocity * (drag_max_speed / speed)
+  if speed_sqr > drag_max_speed_sqr then
+    velocity:Mul(drag_max_speed / math.sqrt(speed_sqr))
   end
 
   if IsValid(data.target) and data.target:get_ragdoll_entity() != ent then
@@ -173,7 +183,7 @@ end
 -- @param ent=nil [Entity the object the player is trying to pick up]
 -- @return [Number mass limit]
 function PickupObjects:get_mass_limit(actor, ent)
-  local info = { limit = tonumber(Config.get('pickup_max_mass')) or 25 }
+  local info = { limit = tonumber(config_get('pickup_max_mass')) or 25 }
 
   --- Lets plugins change the heaviest object a player can carry, for example with the
   -- strength of their character. Called on the server when the plugin's own
@@ -356,7 +366,7 @@ function PickupObjects:throw_entity(actor)
 
   local ent = data.entity
   local info = {
-    force = tonumber(Config.get('pickup_throw_force')) or 1000,
+    force = tonumber(config_get('pickup_throw_force')) or 1000,
     direction = actor:GetAimVector()
   }
 
@@ -384,7 +394,7 @@ function PickupObjects:throw_entity(actor)
     local phys_obj = ent:GetPhysicsObjectNum(i)
 
     if IsValid(phys_obj) then
-      table.insert(parts, phys_obj)
+      parts[#parts + 1] = phys_obj
 
       total_mass = total_mass + phys_obj:GetMass()
     end
@@ -395,9 +405,11 @@ function PickupObjects:throw_entity(actor)
   local mass_factor = math.Remap(math.Clamp(total_mass, 0.5, 15), 0.5, 15, 0.5, 4)
   local velocity = info.direction:GetNormalized() * (force * mass_factor / total_mass)
 
-  for k, v in ipairs(parts) do
-    v:Wake()
-    v:ApplyForceCenter(velocity * v:GetMass())
+  for i = 1, #parts do
+    local part = parts[i]
+
+    part:Wake()
+    part:ApplyForceCenter(velocity * part:GetMass())
   end
 
   return true

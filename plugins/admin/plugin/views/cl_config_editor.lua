@@ -165,27 +165,30 @@ function PANEL:PerformLayout(w, h)
   local padding = math.scale(4)
   local button_size = h - padding * 2
   local flags_width = #self.flags * (button_size + padding)
-  local control_x = math.floor(w / 2)
+  local control_x = math.floor(w * 0.5)
 
   self.text:SetSize(math.max(math.min(self.text_width, control_x - flags_width - padding * 3), 0), h)
   self.text:SetPos(padding, 0)
 
+  local flags_x = padding * 2 + self.text:GetWide()
+  local icon_size = math.floor(button_size * 0.75)
+
   for k, v in ipairs(self.flags) do
     v:SetSize(button_size, button_size)
-    v:SetPos(padding * 2 + self.text:GetWide() + (k - 1) * (button_size + padding), padding)
-    v:set_icon_size(math.floor(button_size * 0.75))
+    v:SetPos(flags_x + (k - 1) * (button_size + padding), padding)
+    v:set_icon_size(icon_size)
   end
 
   self.reset_button:SetSize(button_size, button_size)
   self.reset_button:SetPos(w - button_size - padding, padding)
-  self.reset_button:set_icon_size(math.floor(button_size * 0.75))
+  self.reset_button:set_icon_size(icon_size)
 
   if IsValid(self.control) then
     local control_width = w - control_x - button_size - padding * 3
 
     if self.control == self.check then
       self.control:SetSize(button_size, button_size)
-      self.control:SetPos(control_x + control_width / 2 - button_size / 2, padding)
+      self.control:SetPos(control_x + control_width * 0.5 - button_size * 0.5, padding)
       self.control:set_icon_size(button_size)
     else
       self.control:SetPos(control_x, 2)

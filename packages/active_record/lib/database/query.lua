@@ -20,6 +20,13 @@
   https://teslacloud.net
 --]]
 
+local concat = table.concat
+local gsub = string.gsub
+local tostring = tostring
+local isstring = isstring
+local istable = istable
+local isnumber = isnumber
+
 class 'ActiveRecord::Query'
 
 local queries_with_create = {
@@ -102,9 +109,12 @@ function ActiveRecord.Query:bind(value)
     return 'NULL'
   end
 
-  table.insert(self.bindings, tostring(value))
+  local bindings = self.bindings
+  local index = #bindings + 1
 
-  return ActiveRecord.adapter:placeholder(#self.bindings)
+  bindings[index] = tostring(value)
+
+  return ActiveRecord.adapter:placeholder(index)
 end
 
 --- Changes the table the query operates on.
@@ -130,7 +140,9 @@ end
 -- @param values=nil [List values that are bound in place of the ? placeholders in the
 --   condition. Without it the question marks in the condition are left as they are]
 function ActiveRecord.Query:where_raw(condition, values)
-  table.insert(self.where_list, { condition, values })
+  local where_list = self.where_list
+
+  where_list[#where_list + 1] = { condition, values }
 end
 
 --- Adds a "column = value" condition.
@@ -198,13 +210,15 @@ end
 -- @param key [String/Map column name (sorted in ascending order), or a hash with the
 --   column name stored under the 'asc' or 'desc' key]
 function ActiveRecord.Query:order(key)
+  local order_list = self.order_list
+
   if isstring(key) then
-    table.insert(self.order_list, self:quote_column(key)..' ASC')
+    order_list[#order_list + 1] = self:quote_column(key)..' ASC'
   elseif istable(key) then
     if key['asc'] then
-      table.insert(self.order_list, self:quote_column(key['asc'])..' ASC')
+      order_list[#order_list + 1] = self:quote_column(key['asc'])..' ASC'
     elseif key['desc'] then
-      table.insert(self.order_list, self:quote_column(key['desc'])..' DESC')
+      order_list[#order_list + 1] = self:quote_column(key['desc'])..' DESC'
     end
   end
 end
@@ -220,41 +234,53 @@ end
 -- are added.
 -- @param field_name [String column name]
 function ActiveRecord.Query:select(field_name)
-  table.insert(self.select_list, self:quote_column(field_name))
+  local select_list = self.select_list
+
+  select_list[#select_list + 1] = self:quote_column(field_name)
 end
 
 --- Marks a column to be dropped by a 'change' query.
 -- @param field_name [String column name]
 function ActiveRecord.Query:remove(field_name)
-  table.insert(self.remove_column_list, self:quote_column(field_name))
+  local remove_column_list = self.remove_column_list
+
+  remove_column_list[#remove_column_list + 1] = self:quote_column(field_name)
 end
 
 --- Marks a column to be renamed by a 'change' query.
 -- @param what [String current column name]
 -- @param into [String new column name]
 function ActiveRecord.Query:rename(what, into)
-  table.insert(self.rename_list, { self:quote_column(what), self:quote_column(into) })
+  local rename_list = self.rename_list
+
+  rename_list[#rename_list + 1] = { self:quote_column(what), self:quote_column(into) }
 end
 
 --- Sets the value of a column for an 'insert' query.
 -- @param key [String column name]
 -- @param value [Any value to insert, converted to a string]
 function ActiveRecord.Query:insert(key, value)
-  table.insert(self.insert_list, { key, value })
+  local insert_list = self.insert_list
+
+  insert_list[#insert_list + 1] = { key, value }
 end
 
 --- Sets the new value of a column for an 'update' query.
 -- @param key [String column name]
 -- @param value [Any new value, converted to a string]
 function ActiveRecord.Query:update(key, value)
-  table.insert(self.update_list, { key, value })
+  local update_list = self.update_list
+
+  update_list[#update_list + 1] = { key, value }
 end
 
 --- Adds a column definition to a 'create' or 'change' query.
 -- @param key [String column name]
 -- @param value [String SQL definition of the column, e.g. 'varchar(255) NOT NULL']
 function ActiveRecord.Query:create(key, value)
-  table.insert(self.create_list, { self:quote_column(key), value })
+  local create_list = self.create_list
+
+  create_list[#create_list + 1] = { self:quote_column(key), value }
 end
 
 --- Sets the column used for the PRIMARY KEY clause of a 'create' query.
@@ -299,228 +325,231 @@ function ActiveRecord.Query:if_exists(if_exists)
 end
 
 local function build_where(query_obj)
+  local where_list = query_obj.where_list
   local conditions = {}
 
-  for k, v in ipairs(query_obj.where_list) do
-    local condition, values = v[1], v[2]
+  for i = 1, #where_list do
+    local entry = where_list[i]
+    local condition, values = entry[1], entry[2]
 
     if values then
       local n = 0
 
-      condition = condition:gsub('%?', function()
+      condition = gsub(condition, '%?', function()
         n = n + 1
         return query_obj:bind(values[n])
       end)
     end
 
-    table.insert(conditions, condition)
+    conditions[#conditions + 1] = condition
   end
 
-  return table.concat(conditions, ' AND ')
+  return concat(conditions, ' AND ')
 end
 
 local function build_select_query(query_obj)
+  local select_list = query_obj.select_list
+  local where_list = query_obj.where_list
+  local order_list = query_obj.order_list
+  local limit, offset = query_obj._limit, query_obj._offset
   local query_string = { 'SELECT ' }
 
-  if !istable(query_obj.select_list) or #query_obj.select_list == 0 then
-    table.insert(query_string, ' *')
+  if !istable(select_list) or #select_list == 0 then
+    query_string[2] = ' *'
   else
-    table.insert(query_string, ' '..table.concat(query_obj.select_list, ', '))
+    query_string[2] = ' '..concat(select_list, ', ')
   end
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' FROM '..query_obj:quote_column(query_obj.table_name)..' ')
+    query_string[3] = ' FROM '..query_obj:quote_column(query_obj.table_name)..' '
   else
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
-  if istable(query_obj.where_list) and #query_obj.where_list > 0 then
-    table.insert(query_string, ' WHERE ')
-    table.insert(query_string, build_where(query_obj))
+  if istable(where_list) and #where_list > 0 then
+    query_string[#query_string + 1] = ' WHERE '
+    query_string[#query_string + 1] = build_where(query_obj)
   end
 
-  if istable(query_obj.order_list) and #query_obj.order_list > 0 then
-    table.insert(query_string, ' ORDER BY ')
-    table.insert(query_string, table.concat(query_obj.order_list, ', '))
+  if istable(order_list) and #order_list > 0 then
+    query_string[#query_string + 1] = ' ORDER BY '
+    query_string[#query_string + 1] = concat(order_list, ', ')
   end
 
-  if isnumber(query_obj._limit) then
-    table.insert(query_string, ' LIMIT ')
-    table.insert(query_string, query_obj._limit)
+  if isnumber(limit) then
+    query_string[#query_string + 1] = ' LIMIT '
+    query_string[#query_string + 1] = limit
   end
 
-  if isnumber(query_obj._offset) then
-    if !isnumber(query_obj._limit) then
-      table.insert(query_string, ' LIMIT 9223372036854775807')
+  if isnumber(offset) then
+    if !isnumber(limit) then
+      query_string[#query_string + 1] = ' LIMIT 9223372036854775807'
     end
 
-    table.insert(query_string, ' OFFSET ')
-    table.insert(query_string, query_obj._offset)
+    query_string[#query_string + 1] = ' OFFSET '
+    query_string[#query_string + 1] = offset
   end
 
-  return table.concat(query_string)
+  return concat(query_string)
 end
 
 local function build_insert_query(query_obj)
-  local query_string = { 'INSERT INTO ' }
+  local insert_list = query_obj.insert_list
   local key_list = {}
   local value_list = {}
+  local quoted_table
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
+    quoted_table = query_obj:quote_column(query_obj.table_name)
   else
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
-  for k, v in ipairs(query_obj.insert_list) do
-    table.insert(key_list, query_obj:quote_column(v[1]))
-    table.insert(value_list, query_obj:bind(v[2]))
+  for i = 1, #insert_list do
+    local entry = insert_list[i]
+
+    key_list[i] = query_obj:quote_column(entry[1])
+    value_list[i] = query_obj:bind(entry[2])
   end
 
   if #key_list == 0 then
     return
   end
 
-  table.insert(query_string, ' ('..table.concat(key_list, ', ')..')')
-  table.insert(query_string, ' VALUES ('..table.concat(value_list, ', ')..')')
-
-  return table.concat(query_string)
+  return 'INSERT INTO '..quoted_table..' ('..concat(key_list, ', ')..') VALUES ('..concat(value_list, ', ')..')'
 end
 
 local function build_update_query(query_obj)
+  local update_list = query_obj.update_list
+  local where_list = query_obj.where_list
   local query_string = { 'UPDATE ' }
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
+    query_string[2] = query_obj:quote_column(query_obj.table_name)
   else
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
-  if istable(query_obj.update_list) and #query_obj.update_list > 0 then
-    local update_list = {}
+  if istable(update_list) and #update_list > 0 then
+    local assignments = {}
 
-    table.insert(query_string, ' SET')
+    query_string[3] = ' SET'
 
-    for k, v in ipairs(query_obj.update_list) do
-      table.insert(update_list, v[1]..' = '..query_obj:bind(v[2]))
+    for i = 1, #update_list do
+      local entry = update_list[i]
+
+      assignments[i] = entry[1]..' = '..query_obj:bind(entry[2])
     end
 
-    table.insert(query_string, ' '..table.concat(update_list, ', '))
+    query_string[4] = ' '..concat(assignments, ', ')
   end
 
-  if istable(query_obj.where_list) and #query_obj.where_list > 0 then
-    table.insert(query_string, ' WHERE ')
-    table.insert(query_string, build_where(query_obj))
+  if istable(where_list) and #where_list > 0 then
+    query_string[#query_string + 1] = ' WHERE '
+    query_string[#query_string + 1] = build_where(query_obj)
   end
 
-  return table.concat(query_string)
+  return concat(query_string)
 end
 
 local function build_delete_query(query_obj)
+  local where_list = query_obj.where_list
   local query_string = { 'DELETE FROM ' }
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
+    query_string[2] = query_obj:quote_column(query_obj.table_name)
   else
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
-  if istable(query_obj.where_list) and #query_obj.where_list > 0 then
-    table.insert(query_string, ' WHERE ')
-    table.insert(query_string, build_where(query_obj))
+  if istable(where_list) and #where_list > 0 then
+    query_string[3] = ' WHERE '
+    query_string[4] = build_where(query_obj)
   end
 
   if isnumber(query_obj._limit) then
-    table.insert(query_string, ' LIMIT ')
-    table.insert(query_string, query_obj._limit)
+    query_string[#query_string + 1] = ' LIMIT '
+    query_string[#query_string + 1] = query_obj._limit
   end
 
-  return table.concat(query_string)
+  return concat(query_string)
 end
 
 local function build_drop_query(query_obj)
-  local query_string = { query_obj._if_exists and 'DROP TABLE IF EXISTS ' or 'DROP TABLE ' }
-
-  if isstring(query_obj.table_name) then
-    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
-  else
+  if !isstring(query_obj.table_name) then
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
-  return table.concat(query_string)
+  local prefix = query_obj._if_exists and 'DROP TABLE IF EXISTS ' or 'DROP TABLE '
+
+  return prefix..query_obj:quote_column(query_obj.table_name)
 end
 
 local function build_truncate_query(query_obj)
-  local query_string = { 'TRUNCATE TABLE ' }
-
-  if isstring(query_obj.table_name) then
-    table.insert(query_string, ' '..query_obj:quote_column(query_obj.table_name))
-  else
+  if !isstring(query_obj.table_name) then
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
-  return table.concat(query_string)
+  return 'TRUNCATE TABLE  '..query_obj:quote_column(query_obj.table_name)
 end
 
 local function build_create_query(query_obj)
+  local create_list = query_obj.create_list
   local query_string = { 'DROP TABLE IF EXISTS ' }
 
   if !query_obj._overwrite then
-    query_string = { query_obj._if_not_exists and 'CREATE TABLE IF NOT EXISTS ' or 'CREATE TABLE ' }
+    query_string[1] = query_obj._if_not_exists and 'CREATE TABLE IF NOT EXISTS ' or 'CREATE TABLE '
   end
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
+    query_string[2] = query_obj:quote_column(query_obj.table_name)
   else
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
   if query_obj._overwrite then
-    table.insert(query_string, ';\nCREATE TABLE '..query_obj:quote_column(query_obj.table_name))
+    query_string[3] = ';\nCREATE TABLE '..query_obj:quote_column(query_obj.table_name)
   end
 
-  table.insert(query_string, ' (')
+  query_string[#query_string + 1] = ' ('
 
-  if istable(query_obj.create_list) and #query_obj.create_list > 0 then
-    local create_list = {}
+  if istable(create_list) and #create_list > 0 then
+    local is_sqlite = ActiveRecord.adapter.class_name:lower() == 'sqlite'
+    local columns = {}
 
-    for k, v in ipairs(query_obj.create_list) do
-      if ActiveRecord.adapter.class_name:lower() == 'sqlite' then
-        table.insert(
-          create_list,
-          v[1]..' '..string.gsub(
-            string.gsub(string.gsub(v[2], 'AUTO_INCREMENT', ''), 'AUTOINCREMENT', ''),
-            'INT ',
-            'INTEGER '
-          )
-        )
-      else
-        table.insert(create_list, v[1]..' '..v[2])
+    for i = 1, #create_list do
+      local entry = create_list[i]
+      local definition = entry[2]
+
+      if is_sqlite then
+        definition = gsub(definition, 'AUTO_INCREMENT', ''):gsub('AUTOINCREMENT', ''):gsub('INT ', 'INTEGER ')
       end
+
+      columns[i] = entry[1]..' '..definition
     end
 
-    table.insert(query_string, ' '..table.concat(create_list, ', '))
+    query_string[#query_string + 1] = ' '..concat(columns, ', ')
   end
 
   if isstring(query_obj.prim_key) and ActiveRecord.adapter_name != 'pg' then
-    table.insert(query_string, ', PRIMARY KEY')
-    table.insert(query_string, ' ('..query_obj.prim_key..')')
+    query_string[#query_string + 1] = ', PRIMARY KEY'
+    query_string[#query_string + 1] = ' ('..query_obj.prim_key..')'
   end
 
-  table.insert(query_string, ' )')
+  query_string[#query_string + 1] = ' )'
 
   if query_obj.options then
-    table.insert(query_string, ' '..query_obj.options)
+    query_string[#query_string + 1] = ' '..query_obj.options
   end
 
-  return table.concat(query_string)
+  return concat(query_string)
 end
 
 local function build_change_query(query)
@@ -530,34 +559,46 @@ local function build_change_query(query)
   end
 
   local table_name = query:quote_column(query.table_name)
+  local remove_column_list = query.remove_column_list
+  local rename_list = query.rename_list
+  local create_list = query.create_list
   local clauses = {}
+  local n = 0
 
-  for k, v in ipairs(query.remove_column_list) do
-    table.insert(clauses, 'DROP COLUMN '..v)
+  for i = 1, #remove_column_list do
+    n = n + 1
+    clauses[n] = 'DROP COLUMN '..remove_column_list[i]
   end
 
-  for k, v in ipairs(query.rename_list) do
-    table.insert(clauses, 'RENAME COLUMN '..v[1]..' TO '..v[2])
+  for i = 1, #rename_list do
+    local entry = rename_list[i]
+
+    n = n + 1
+    clauses[n] = 'RENAME COLUMN '..entry[1]..' TO '..entry[2]
   end
 
-  for k, v in ipairs(query.create_list) do
-    table.insert(clauses, 'ADD '..v[1]..' '..v[2])
+  for i = 1, #create_list do
+    local entry = create_list[i]
+
+    n = n + 1
+    clauses[n] = 'ADD '..entry[1]..' '..entry[2]
   end
 
-  if #clauses == 0 then return end
+  if n == 0 then return end
 
   -- SQLite takes a single change per ALTER TABLE statement.
   if ActiveRecord.adapter:is_sqlite() then
+    local prefix = 'ALTER TABLE '..table_name..' '
     local statements = {}
 
-    for k, v in ipairs(clauses) do
-      table.insert(statements, 'ALTER TABLE '..table_name..' '..v)
+    for i = 1, n do
+      statements[i] = prefix..clauses[i]
     end
 
-    return table.concat(statements, ';\n')
+    return concat(statements, ';\n')
   end
 
-  return 'ALTER TABLE '..table_name..' '..table.concat(clauses, ', ')
+  return 'ALTER TABLE '..table_name..' '..concat(clauses, ', ')
 end
 
 --- Builds the SQL string of the query and hands it to the adapter, along with the values
@@ -569,10 +610,11 @@ end
 function ActiveRecord.Query:execute(queue_query)
   local query_string = nil
   local query_type = string.lower(self.query_type)
+  local adapter = ActiveRecord.adapter
 
   self.bindings = {}
 
-  ActiveRecord.adapter:append_query(self, query_type, queue_query)
+  adapter:append_query(self, query_type, queue_query)
 
   if query_type == 'select' then
     query_string = build_select_query(self)
@@ -592,7 +634,7 @@ function ActiveRecord.Query:execute(queue_query)
     query_string = build_change_query(self)
   end
 
-  local hooked = ActiveRecord.adapter:append_query_string(self, query_string, query_type)
+  local hooked = adapter:append_query_string(self, query_string, query_type)
 
   if isstring(hooked) then
     query_string = hooked
@@ -605,9 +647,9 @@ function ActiveRecord.Query:execute(queue_query)
     local bindings = queries_with_bindings[query_type] and self.bindings or nil
 
     if !queue_query then
-      return ActiveRecord.adapter:raw_query(query_string, self._callback, query_type, bindings)
+      return adapter:raw_query(query_string, self._callback, query_type, bindings)
     else
-      return ActiveRecord.adapter:queue(query_string, self._callback, query_type, bindings)
+      return adapter:queue(query_string, self._callback, query_type, bindings)
     end
   end
 end

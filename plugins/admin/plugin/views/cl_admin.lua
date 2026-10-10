@@ -3,6 +3,8 @@
 -- Pages are added from the `AddAdminMenuItems` hook with `add_panel`, may require a
 -- permission, and are created through the theme when their button is clicked.
 
+local back_button_color = Color(255, 255, 255)
+
 local PANEL = {}
 PANEL.cur_panel = nil
 PANEL.panels = {}
@@ -18,7 +20,7 @@ function PANEL:Init()
   self:SetPos(scrw * 0.5 - width * 0.5, scrh * 0.5 - height * 0.5)
 
   self.sidebar = vgui.Create('fl_sidebar', self)
-  self.sidebar:SetSize(width / 5 - 8, height)
+  self.sidebar:SetSize(width * 0.2 - 8, height)
   self.sidebar:SetPos(0, 0)
   self.sidebar.Paint = function(pnl, w, h)
   end
@@ -37,13 +39,15 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
+  local background = Theme.get_color('background')
+
   DisableClipping(true)
 
-  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, Theme.get_color('background'))
+  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, background)
 
   DisableClipping(false)
 
-  draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
+  draw.RoundedBox(0, 0, 0, w, h, background:alpha(150))
 end
 
 --- Lets the active theme draw over the panel through its AdminPanelPaintOver hook.
@@ -133,8 +137,8 @@ function PANEL:set_fullscreen(fullscreen)
       local font = Flux.fonts:GetSize(Theme.get_font('text_small'), 16)
       local font_size = util.font_size(font)
 
-      FontAwesome:draw('fa-chevron-left', math.scale(6), math.scale(5), math.scale(14), Color(255, 255, 255))
-      draw.SimpleText('Go Back', font, 24, 3 * (16 / font_size), Color(255, 255, 255))
+      FontAwesome:draw('fa-chevron-left', math.scale(6), math.scale(5), math.scale(14), back_button_color)
+      draw.SimpleText('Go Back', font, 24, 3 * (16 / font_size), back_button_color)
     end
 
     self.back_button.DoClick = function(btn)

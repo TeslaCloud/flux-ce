@@ -8,6 +8,33 @@
 -- the theme is loaded. A schema theme sets `THEME.parent = 'factory'` and overrides only what
 -- it changes.
 
+local math_clamp = math.Clamp
+local text_size = util.text_size
+local draw_rounded_box = draw.RoundedBox
+local draw_simple_text = draw.SimpleText
+local textured_rect = draw.textured_rect
+local surface_set_draw_color = surface.SetDrawColor
+local surface_draw_rect = surface.DrawRect
+
+local color_white_faded = Color(255, 255, 255, 150)
+local color_frame_background = Color(50, 50, 50, 200)
+local color_backdrop = Color(50, 50, 50, 100)
+local color_slot_gradient = Color(30, 30, 30, 100)
+local color_model_background = Color(0, 0, 0, 100)
+local color_bar_fill = Color(230, 230, 230)
+local color_perm_not_set = Color(120, 120, 120)
+local color_perm_allow = Color(100, 220, 100)
+local color_perm_never = Color(220, 100, 100)
+local color_skin_tab = Color(40, 40, 40)
+local color_skin_line = Color(50, 50, 50, 255)
+local color_skin_line_hovered = Color(100, 100, 100, 255)
+local color_skin_line_alt = Color(75, 75, 75, 255)
+local color_skin_menu = Color(15, 15, 15, 255)
+local color_skin_option_depressed = Color(225, 225, 225, 255)
+local color_skin_button = Color(40, 40, 40, 255)
+local color_skin_frame = Color(10, 10, 10, 150)
+local color_skin_category = Color(30, 30, 30)
+
 -- Create the default Theme that other themes will derive from.
 THEME.author        = 'TeslaCloud Studios'
 THEME.id            = 'factory'
@@ -115,8 +142,8 @@ function THEME:PaintFrame(panel, w, h)
   local text            = t(panel.title)
   local font            = self:get_font('main_menu_titles')
 
-  draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
-  draw.SimpleText(text, font, math.scale(4), math.scale(2), color_white)
+  draw_rounded_box(0, 0, 0, w, h, color_frame_background)
+  draw_simple_text(text, font, math.scale(4), math.scale(2), color_white)
 end
 
 --- Draws the background of the main menu and its top bar with the schema's logo (or name),
@@ -129,51 +156,55 @@ function THEME:PaintMainMenu(panel, width, height)
   local desc                = SCHEMA:get_description()
   local author              = t('ui.main_menu.developed_by', { author = SCHEMA:get_author() })
   local logo                = self:get_material('schema_logo')
-  local title_w,  title_h   = util.text_size(title, self:get_font('text_largest'))
-  local desc_w,   desc_h    = util.text_size(desc, self:get_font('main_menu_titles'))
-  local author_w, author_h  = util.text_size(author, self:get_font('main_menu_titles'))
+  local title_font          = self:get_font('text_largest')
+  local titles_font         = self:get_font('main_menu_titles')
+  local schema_text_color   = self:get_color('schema_text')
+  local menu_background     = self:get_color('menu_background')
+  local title_w,  title_h   = text_size(title, title_font)
+  local desc_w,   desc_h    = text_size(desc, titles_font)
+  local author_w, author_h  = text_size(author, titles_font)
   local bar_height          = math.scale(128)
   local padding             = math.scale(16)
   local text_padding        = math.scale(8)
 
-  surface.SetDrawColor(self:get_color('menu_background'))
-  surface.DrawRect(0, 0, width, height)
+  surface_set_draw_color(menu_background)
+  surface_draw_rect(0, 0, width, height)
 
-  surface.SetDrawColor(self:get_color('menu_background'):lighten(40))
-  surface.DrawRect(0, 0, width, bar_height)
+  surface_set_draw_color(menu_background:lighten(40))
+  surface_draw_rect(0, 0, width, bar_height)
 
   if !logo then
-    draw.SimpleText(
+    draw_simple_text(
       title,
-      self:get_font('text_largest'),
+      title_font,
       width * 0.5 - title_w * 0.5,
       bar_height - title_h - text_padding,
-      self:get_color('schema_text')
+      schema_text_color
     )
   else
-    draw.textured_rect(
+    textured_rect(
       logo,
       width * 0.5 - math.scale(200),
       padding,
       math.scale(400),
       math.scale(96),
-      Color(255, 255, 255)
+      color_white
     )
   end
 
-  draw.SimpleText(
+  draw_simple_text(
     desc,
-    self:get_font('main_menu_titles'),
+    titles_font,
     padding,
     bar_height - desc_h - text_padding,
-    self:get_color('schema_text')
+    schema_text_color
   )
-  draw.SimpleText(
+  draw_simple_text(
     author,
-    self:get_font('main_menu_titles'),
+    titles_font,
     width - author_w - padding,
     bar_height - author_h - text_padding,
-    self:get_color('schema_text')
+    schema_text_color
   )
 end
 
@@ -199,18 +230,20 @@ function THEME:PaintButton(panel, w, h)
 
   if panel.draw_background then
     if panel.draw_outline then
-      surface.SetDrawColor(self:get_color('outline'))
-      surface.DrawRect(0, 0, w, h)
+      surface_set_draw_color(self:get_color('outline'))
+      surface_draw_rect(0, 0, w, h)
     end
 
     if background_color != nil then
-      surface.SetDrawColor(panel.active and background_color or background_color:lighten(cur_amt))
-      surface.DrawRect(math.scale_x(1), math.scale(1), w - math.scale_x(2), h - math.scale(2))
+      surface_set_draw_color(panel.active and background_color or background_color:lighten(cur_amt))
+      surface_draw_rect(math.scale_x(1), math.scale(1), w - math.scale_x(2), h - math.scale(2))
     end
   end
 
-  if title != '' then
-    text_w, text_h = util.text_size(title, font)
+  local has_title = title != ''
+
+  if has_title then
+    text_w, text_h = text_size(title, font)
     text_y = h * 0.5 - text_h * 0.5
 
     if center then
@@ -221,7 +254,7 @@ function THEME:PaintButton(panel, w, h)
   if icon then
     icon_w, icon_h = FontAwesome:get_icon_size(icon, icon_size)
 
-    if title != '' then
+    if has_title then
       text_x = text_x + (left and icon_w * 0.5 or -icon_w * 0.5)
       icon_x = (left and text_x - icon_w - math.scale_x(4) or text_x + text_w + math.scale_x(4))
     else
@@ -231,8 +264,8 @@ function THEME:PaintButton(panel, w, h)
     icon_y = h * 0.5 - icon_h * 0.5
   end
 
-  if title != '' then
-    draw.SimpleText(title, font, text_x, text_y, text_color)
+  if has_title then
+    draw_simple_text(title, font, text_x, text_y, text_color)
   end
 
   if icon then
@@ -246,19 +279,19 @@ end
 -- @param scrw [Number screen width]
 -- @param scrh [Number screen height]
 function THEME:PaintDeathScreen(cur_time, scrw, scrh)
-  local respawn_time  = PLAYER:get_nv('respawn_time', 0) - cur_time
+  local client        = PLAYER
+  local respawn_time  = client:get_nv('respawn_time', 0) - cur_time
   local bar_value     = 100 - 100 * (respawn_time / Config.get('respawn_delay'))
   local font          = self:get_font('text_normal_large')
-  local color_white   = Color(255, 255, 255)
+  local respawn_alpha = math_clamp((client.respawn_alpha or 0) + 1, 0, 200)
 
-  if !PLAYER.respawn_alpha then PLAYER.respawn_alpha = 0 end
+  client.respawn_alpha = respawn_alpha
 
-  PLAYER.respawn_alpha = math.Clamp(PLAYER.respawn_alpha + 1, 0, 200)
+  surface_set_draw_color(0, 0, 0, respawn_alpha)
+  surface_draw_rect(0, 0, scrw, scrh)
 
-  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, PLAYER.respawn_alpha))
-
-  draw.SimpleText(t'ui.hud.player_message.died', font, 16, 16, color_white)
-  draw.SimpleText(
+  draw_simple_text(t'ui.hud.player_message.died', font, 16, 16, color_white)
+  draw_simple_text(
     t('ui.hud.player_message.respawn', { time = math.ceil(respawn_time) }),
     font,
     16,
@@ -266,12 +299,12 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
     color_white
   )
 
-  draw.RoundedBox(0, 0, 0, scrw / 100 * bar_value, 2, color_white)
+  draw_rounded_box(0, 0, 0, scrw * 0.01 * bar_value, 2, color_white)
 
   if respawn_time <= 3 then
-    PLAYER.white_alpha = math.Clamp(255 * (1.5 - respawn_time * 0.5), 0, 255)
+    client.white_alpha = math_clamp(255 * (1.5 - respawn_time * 0.5), 0, 255)
   else
-    PLAYER.white_alpha = 0
+    client.white_alpha = 0
   end
 end
 
@@ -280,13 +313,13 @@ end
 -- @param width [Number panel width]
 -- @param height [Number panel height]
 function THEME:PaintSidebar(panel, width, height)
-  draw.RoundedBox(0, 0, 0, width, height, self:get_color('main_dark'):lighten(10))
+  draw_rounded_box(0, 0, 0, width, height, self:get_color('main_dark'):lighten(10))
 end
 
 --- Draws the background of a HUD bar.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarBackground(bar_info)
-  draw.RoundedBox(
+  draw_rounded_box(
     bar_info.corner_radius,
     bar_info.x,
     bar_info.y,
@@ -301,7 +334,7 @@ end
 function THEME:DrawBarHindrance(bar_info)
   local length = bar_info.width * (bar_info.hinder_value / bar_info.max_value)
 
-  draw.RoundedBox(
+  draw_rounded_box(
     bar_info.corner_radius,
     bar_info.x + bar_info.width - length - 1,
     bar_info.y + 1,
@@ -315,49 +348,21 @@ end
 -- actual value, the difference between the two is drawn in the color of the bar.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarFill(bar_info)
-  if bar_info.real_fill_width < bar_info.fill_width then
-    draw.RoundedBox(
-      bar_info.corner_radius,
-      bar_info.x + 1,
-      bar_info.y + 1,
-      (bar_info.fill_width or bar_info.width) - 2,
-      bar_info.height - 2,
-      bar_info.color
-    )
-    draw.RoundedBox(
-      bar_info.corner_radius,
-      bar_info.x + 1,
-      bar_info.y + 1,
-      bar_info.real_fill_width - 2,
-      bar_info.height - 2,
-      Color(230, 230, 230)
-    )
-  elseif bar_info.real_fill_width > bar_info.fill_width then
-    draw.RoundedBox(
-      bar_info.corner_radius,
-      bar_info.x + 1,
-      bar_info.y + 1,
-      bar_info.real_fill_width - 2,
-      bar_info.height - 2,
-      bar_info.color
-    )
-    draw.RoundedBox(
-      bar_info.corner_radius,
-      bar_info.x + 1,
-      bar_info.y + 1,
-      (bar_info.fill_width or bar_info.width) - 2,
-      bar_info.height - 2,
-      Color(230, 230, 230)
-    )
+  local radius          = bar_info.corner_radius
+  local x, y            = bar_info.x + 1, bar_info.y + 1
+  local fill_h          = bar_info.height - 2
+  local fill_width      = bar_info.fill_width
+  local real_fill_width = bar_info.real_fill_width
+  local fill_w          = (fill_width or bar_info.width) - 2
+
+  if real_fill_width < fill_width then
+    draw_rounded_box(radius, x, y, fill_w, fill_h, bar_info.color)
+    draw_rounded_box(radius, x, y, real_fill_width - 2, fill_h, color_bar_fill)
+  elseif real_fill_width > fill_width then
+    draw_rounded_box(radius, x, y, real_fill_width - 2, fill_h, bar_info.color)
+    draw_rounded_box(radius, x, y, fill_w, fill_h, color_bar_fill)
   else
-    draw.RoundedBox(
-      bar_info.corner_radius,
-      bar_info.x + 1,
-      bar_info.y + 1,
-      (bar_info.fill_width or bar_info.width) - 2,
-      bar_info.height - 2,
-      Color(230, 230, 230)
-    )
+    draw_rounded_box(radius, x, y, fill_w, fill_h, color_bar_fill)
   end
 end
 
@@ -365,47 +370,30 @@ end
 -- and the hindrance text when the hindrance is displayed.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarTexts(bar_info)
-  local font = Theme.get_font(bar_info.font)
+  local font            = Theme.get_font(bar_info.font)
+  local x, y            = bar_info.x, bar_info.y
+  local width           = bar_info.width
+  local bottom          = y + bar_info.height
+  local fill_right      = x + bar_info.real_fill_width
+  local text            = bar_info.text
+  local text_x, text_y  = x + 8, y + bar_info.text_offset
 
-  render.SetScissorRect(
-    bar_info.x + 1,
-    bar_info.y + 1,
-    bar_info.x + bar_info.real_fill_width,
-    bar_info.y + bar_info.height,
-    true
-  )
-    draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('main_dark'))
+  render.SetScissorRect(x + 1, y + 1, fill_right, bottom, true)
+    draw_simple_text(text, font, text_x, text_y, self:get_color('main_dark'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  render.SetScissorRect(
-    bar_info.x + bar_info.real_fill_width,
-    bar_info.y + 1,
-    bar_info.x + bar_info.width,
-    bar_info.y + bar_info.height,
-    true
-  )
-    draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('text'))
+  render.SetScissorRect(fill_right, y + 1, x + width, bottom, true)
+    draw_simple_text(text, font, text_x, text_y, self:get_color('text'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  if bar_info.hinder_display and bar_info.hinder_display <= bar_info.hinder_value then
-    local width     = bar_info.width
-    local text_wide = util.text_size(bar_info.hinder_text, font)
+  local hinder_display = bar_info.hinder_display
+
+  if hinder_display and hinder_display <= bar_info.hinder_value then
+    local text_wide = text_size(bar_info.hinder_text, font)
     local length    = width * (bar_info.hinder_value / bar_info.max_value)
 
-    render.SetScissorRect(
-      bar_info.x + width - length,
-      bar_info.y,
-      bar_info.x + width,
-      bar_info.y + bar_info.height,
-      true
-    )
-      draw.SimpleText(
-        bar_info.hinder_text,
-        font,
-        bar_info.x + width - text_wide - 8,
-        bar_info.y + bar_info.text_offset,
-        Color(255, 255, 255)
-      )
+    render.SetScissorRect(x + width - length, y, x + width, bottom, true)
+      draw_simple_text(bar_info.hinder_text, font, x + width - text_wide - 8, text_y, color_white)
     render.SetScissorRect(0, 0, 0, 0, false)
   end
 end
@@ -454,13 +442,13 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   local font      = self:get_font('text_small')
 
   if perm_type == PERM_NO then
-    color = Color(120, 120, 120)
+    color = color_perm_not_set
     title = t'ui.permission.not_set'
   elseif perm_type == PERM_ALLOW then
-    color = Color(100, 220, 100)
+    color = color_perm_allow
     title = t'ui.permission.allow'
   elseif perm_type == PERM_NEVER then
-    color = Color(220, 100, 100)
+    color = color_perm_never
     title = t'ui.permission.never'
   else
     title = t'ui.permission.error'
@@ -472,23 +460,24 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
     color = color:lighten(30)
   end
 
-  draw.RoundedBox(0, 0, 0, w, h, text_color)
-  draw.RoundedBox(0, 1, 1, w - 2, h - 1, color)
+  draw_rounded_box(0, 0, 0, w, h, text_color)
+  draw_rounded_box(0, 1, 1, w - 2, h - 1, color)
 
-  local tw, th = util.text_size(title, font)
+  local tw, th = text_size(title, font)
 
-  draw.SimpleText(title, font, w * 0.5 - tw * 0.5, 2, text_color)
+  draw_simple_text(title, font, w * 0.5 - tw * 0.5, 2, text_color)
 
   local sqr_size = h * 0.5
+  local sqr_pos = sqr_size * 0.5
 
-  draw.RoundedBox(0, sqr_size * 0.5, sqr_size * 0.5, sqr_size, sqr_size, Color(255, 255, 255))
+  draw_rounded_box(0, sqr_pos, sqr_pos, sqr_size, sqr_size, color_white)
 
   if btn.is_selected then
-    draw.RoundedBox(0, sqr_size * 0.5 + 2, sqr_size * 0.5 + 2, sqr_size - 4, sqr_size - 4, Color(0, 0, 0))
+    draw_rounded_box(0, sqr_pos + 2, sqr_pos + 2, sqr_size - 4, sqr_size - 4, color_black)
   end
 
   if btn.is_temp then
-    FontAwesome:draw('fa-clock-o', w - h - 2, 2, h - 4, Color(255, 255, 255))
+    FontAwesome:draw('fa-clock-o', w - h - 2, 2, h - 4, color_white)
   end
 end
 
@@ -500,29 +489,30 @@ end
 function THEME:PaintScoreboard(panel, width, height)
   local text            = t'ui.scoreboard.title'
   local font            = self:get_font('main_menu_large')
-  local text_w, text_h  = util.text_size(text, font)
+  local text_w, text_h  = text_size(text, font)
+  local text_color      = self:get_color('text')
 
   DisableClipping(true)
-    draw.RoundedBox(0, -4, -4, width + 8, height + 8, Color(50, 50, 50, 100))
-    draw.textured_rect(self:get_material('gradient_down'), -4, -text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
-    draw.SimpleText(text, font, 0, -text_h - 4, color_white)
+    draw_rounded_box(0, -4, -4, width + 8, height + 8, color_backdrop)
+    textured_rect(self:get_material('gradient_down'), -4, -text_h - 4, text_w + 8, text_h, color_backdrop)
+    draw_simple_text(text, font, 0, -text_h - 4, color_white)
   DisableClipping(false)
 
   font = self:get_font('text_small')
 
-  draw.SimpleText(t'ui.scoreboard.help', font, 4, 0, self:get_color('text'))
+  draw_simple_text(t'ui.scoreboard.help', font, 4, 0, text_color)
 
   if panel.get_online_text then
     text = panel:get_online_text()
-    text_w, text_h = util.text_size(text, font)
+    text_w, text_h = text_size(text, font)
 
-    draw.SimpleText(text, font, width * 0.5 - text_w * 0.5, 0, self:get_color('text'))
+    draw_simple_text(text, font, width * 0.5 - text_w * 0.5, 0, text_color)
   end
 
   text = t'ui.scoreboard.ping'
-  text_w, text_h = util.text_size(text, font)
+  text_w, text_h = text_size(text, font)
 
-  draw.SimpleText(text, font, width - text_w - 8, 0, self:get_color('text'))
+  draw_simple_text(text, font, width - text_w - 8, 0, text_color)
 end
 
 --- Draws the translucent background of the button bar of the tab menu.
@@ -530,7 +520,7 @@ end
 -- @param width [Number width of the button bar]
 -- @param height [Number height of the button bar]
 function THEME:PaintTabMenuButtonPanel(panel, width, height)
-  draw.RoundedBox(0, 0, 0, width, height, self:get_color('background'):alpha(125))
+  draw_rounded_box(0, 0, 0, width, height, self:get_color('background'):alpha(125))
 end
 
 --- Blurs the screen behind the tab menu, easing the blur size toward the blur target of
@@ -551,7 +541,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function THEME:PaintItemSlot(panel, w, h)
-  draw.textured_rect(self:get_material('gradient_up'), 0, 0, w, h, Color(30, 30, 30, 100))
+  textured_rect(self:get_material('gradient_up'), 0, 0, w, h, color_slot_gradient)
 end
 
 --- Draws the translucent backdrop around an inventory panel.
@@ -560,7 +550,7 @@ end
 -- @param h [Number panel height]
 function THEME:PaintInventoryBackground(panel, w, h)
   DisableClipping(true)
-    draw.RoundedBox(0, -4, -4, w + 8, h + 8, Color(50, 50, 50, 100))
+    draw_rounded_box(0, -4, -4, w + 8, h + 8, color_backdrop)
   DisableClipping(false)
 end
 
@@ -570,26 +560,28 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function THEME:PaintTabInventoryBackground(panel, w, h)
-  if IsValid(panel.player_model) then
-    local x, y                = panel.player_model:GetPos()
-    local player_w, player_h  = panel.player_model:GetSize()
+  local player_model = panel.player_model
+
+  if IsValid(player_model) then
+    local x, y                = player_model:GetPos()
+    local player_w, player_h  = player_model:GetSize()
     local text                = PLAYER:name()
     local font                = self:get_font('main_menu_large')
-    local text_w, text_h      = util.text_size(text, font)
+    local text_w, text_h      = text_size(text, font)
 
     DisableClipping(true)
-      draw.RoundedBox(0, x - 4, y - 4, player_w + 8, player_h + 8, Color(50, 50, 50, 100))
-      draw.RoundedBox(0, x, y, player_w, player_h, Color(0, 0, 0, 100))
-      draw.textured_rect(self:get_material('gradient_up'), x, y, player_w, player_h, Color(30, 30, 30, 100))
-      draw.textured_rect(
+      draw_rounded_box(0, x - 4, y - 4, player_w + 8, player_h + 8, color_backdrop)
+      draw_rounded_box(0, x, y, player_w, player_h, color_model_background)
+      textured_rect(self:get_material('gradient_up'), x, y, player_w, player_h, color_slot_gradient)
+      textured_rect(
         self:get_material('gradient_down'),
         x - 4,
         y - text_h - 4,
         text_w + 8,
         text_h,
-        Color(50, 50, 50, 100)
+        color_backdrop
       )
-      draw.SimpleText(text, font, x, -text_h, color_white:alpha(150))
+      draw_simple_text(text, font, x, -text_h, color_white_faded)
     DisableClipping(false)
   end
 end
@@ -602,18 +594,18 @@ function THEME:PaintOverInventoryBackground(panel, w, h)
   if panel.title then
     local text            = t(panel.title)
     local font            = self:get_font('main_menu_large')
-    local text_w, text_h  = util.text_size(text, font)
+    local text_w, text_h  = text_size(text, font)
 
     DisableClipping(true)
-      draw.textured_rect(
+      textured_rect(
         self:get_material('gradient_down'),
         -4,
         -text_h - 4,
         text_w + 8,
         text_h,
-        Color(50, 50, 50, 100)
+        color_backdrop
       )
-      draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
+      draw_simple_text(text, font, 0, -text_h - 4, color_white_faded)
     DisableClipping(false)
   end
 end
@@ -636,11 +628,12 @@ end
 function THEME:PaintCharPanel(panel, w, h)
   if panel.char_data then
     local char_data       = panel.char_data
-    local name_w, name_h  = util.text_size(char_data.name, self:get_font('main_menu_titles'))
+    local font            = self:get_font('main_menu_titles')
+    local name_w, name_h  = text_size(char_data.name, font)
 
-    draw.SimpleText(
+    draw_simple_text(
       char_data.name,
-      self:get_font('main_menu_titles'),
+      font,
       w * 0.5 - name_w * 0.5,
       4,
       self:get_color('schema_text')
@@ -659,9 +652,9 @@ end
 -- @param h [Number panel height]
 function THEME:PaintCharCreationMainPanel(panel, w, h)
   local title, font       = t'ui.char_create.text', Theme.get_font 'main_menu_title'
-  local title_w, title_h  = util.text_size(title, font)
+  local title_w, title_h  = text_size(title, font)
 
-  draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
+  draw_simple_text(title, font, w * 0.5 - title_w * 0.5, h * 0.125)
 end
 
 --- Draws the title of the character loading screen.
@@ -670,9 +663,9 @@ end
 -- @param h [Number panel height]
 function THEME:PaintCharCreationLoadPanel(panel, w, h)
   local title, font       = t'ui.char_create.load', Theme.get_font 'main_menu_title'
-  local title_w, title_h  = util.text_size(title, font)
+  local title_w, title_h  = text_size(title, font)
 
-  draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
+  draw_simple_text(title, font, w * 0.5 - title_w * 0.5, h * 0.125)
 end
 
 --- Draws the title of a character creation stage, if the panel has one.
@@ -681,11 +674,13 @@ end
 -- @param h [Number panel height]
 function THEME:PaintCharCreationBasePanel(panel, w, h)
   if isstring(panel.text) then
-    local text_w, text_h = util.text_size(t(panel.text), Theme.get_font('main_menu_large'))
+    local text            = t(panel.text)
+    local font            = Theme.get_font('main_menu_large')
+    local text_w, text_h  = text_size(text, font)
 
-    draw.SimpleText(
-      t(panel.text),
-      Theme.get_font('main_menu_large'),
+    draw_simple_text(
+      text,
+      font,
       w * 0.5 - text_w * 0.5,
       0,
       Theme.get_color('text')
@@ -728,8 +723,8 @@ THEME.skin.fontTab                = 'Exo8'
 -- @param h [Number height]
 -- @param color [Color]
 function THEME.skin:DrawGenericBackground(x, y, w, h, color)
-  surface.SetDrawColor(color)
-  surface.DrawRect(x, y, w, h)
+  surface_set_draw_color(color)
+  surface_draw_rect(x, y, w, h)
 end
 
 --- Lays out the title label and the close button of a frame.
@@ -763,9 +758,12 @@ end
 -- @param h [Number panel height]
 function THEME.skin:PaintTab(panel, w, h)
   if panel:GetPropertySheet():GetActiveTab() == panel then
-    self:DrawGenericBackground(DermaScale.scale(4), 0, w - DermaScale.scale(8), h - DermaScale.scale(8), self.colTab:alpha(220))
+    local scale = DermaScale.scale
+    local margin = scale(8)
+
+    self:DrawGenericBackground(scale(4), 0, w - margin, h - margin, self.colTab:alpha(220))
   else
-    self:DrawGenericBackground(0, 0, w, h, Color(40, 40, 40))
+    self:DrawGenericBackground(0, 0, w, h, color_skin_tab)
   end
 end
 
@@ -784,24 +782,24 @@ end
 -- and sets the text color of its columns.
 -- @param panel [Panel the list view line]
 function THEME.skin:PaintListViewLine(panel)
-  local color       = Color(50, 50, 50, 255)
+  local color       = color_skin_line
   local text_color  = Color(255, 255, 255, 255)
 
   if panel:IsSelected() then
-    color = Color(255, 255, 255, 255)
+    color = color_white
     text_color = Color(0, 0, 0, 255)
   elseif panel.Hovered then
-    color = Color(100, 100, 100, 255)
+    color = color_skin_line_hovered
   elseif panel.m_bAlt then
-    color = Color(75, 75, 75, 255)
+    color = color_skin_line_alt
   end
 
   for k, v in pairs(panel.Columns) do
     v:SetTextColor(text_color)
   end
 
-  surface.SetDrawColor(color.r, color.g, color.b, color.a)
-  surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
+  surface_set_draw_color(color.r, color.g, color.b, color.a)
+  surface_draw_rect(0, 0, panel:GetSize())
 end
 
 --- Sets the text inset and the text color of a list view label.
@@ -816,7 +814,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function THEME.skin:PaintMenu(panel, w, h)
-  surface.SetDrawColor(Color(15, 15, 15, 255))
+  surface_set_draw_color(color_skin_menu)
   panel:DrawFilledRect(0, 0, w, h)
 end
 
@@ -835,21 +833,21 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function THEME.skin:PaintMenuOption(panel, w, h)
-  local text_color = Color(255, 255, 255, 255)
+  local text_color = color_white
 
   if panel.m_bBackground and panel.Hovered then
     local color = nil
 
     if panel.Depressed then
-      color = Color(225, 225, 225, 255)
+      color = color_skin_option_depressed
     else
-      color = Color(255, 255, 255, 255)
+      color = color_white
     end
 
-    surface.SetDrawColor(color.r, color.g, color.b, color.a)
-    surface.DrawRect(0, 0, w, h)
+    surface_set_draw_color(color.r, color.g, color.b, color.a)
+    surface_draw_rect(0, 0, w, h)
 
-    text_color = Color(0, 0, 0, 255)
+    text_color = color_black
   end
 
   panel:SetFGColor(text_color)
@@ -879,22 +877,21 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function THEME.skin:PaintButton(panel, w, h)
-  local text_color = Color(255, 255, 255, 255)
+  local text_color = color_white
 
   if panel.m_bBackground then
-    local color        = Color(40, 40, 40, 255)
-    local border_color = Color(0, 0, 0, 255)
+    local color = color_skin_button
 
     if panel:GetDisabled() then
       color = self.controlColorDark
     elseif panel.Depressed then
-      color = Color(255, 255, 255, 255)
-      text_color = Color(0, 0, 0, 255)
+      color = color_white
+      text_color = color_black
     elseif panel.Hovered then
       color = self.controlColorHighlight
     end
 
-    self:DrawGenericBackground(0, 0, w, h, border_color)
+    self:DrawGenericBackground(0, 0, w, h, color_black)
     self:DrawGenericBackground(1, 1, w - 2, h - 2, color)
   end
 
@@ -904,11 +901,10 @@ end
 --- Draws the grip of a scroll bar as a black box with a white border.
 -- @param panel [Panel the grip]
 function THEME.skin:PaintScrollBarGrip(panel)
-  local w, h  = panel:GetSize()
-  local color = Color(255, 255, 255, 255)
+  local w, h = panel:GetSize()
 
-  self:DrawGenericBackground(0, 0, w, h, color)
-  self:DrawGenericBackground(1, 1, w - 2, h - 2, Color(0, 0, 0, 255))
+  self:DrawGenericBackground(0, 0, w, h, color_white)
+  self:DrawGenericBackground(1, 1, w - 2, h - 2, color_black)
 end
 
 --- Draws the translucent background of a frame and its header gradient in the accent color.
@@ -918,11 +914,11 @@ end
 function THEME.skin:PaintFrame(panel, w, h)
   local color = Theme.get_color('accent')
 
-  surface.SetDrawColor(Color(10, 10, 10, 150))
-  surface.DrawRect(0, 0, w, h)
+  surface_set_draw_color(color_skin_frame)
+  surface_draw_rect(0, 0, w, h)
 
   -- The gradient covers the title bar, which scales with the stock Derma (cl_derma_scale.lua).
-  draw.textured_rect(Theme.get_material('gradient'), 0, 0, w, DermaScale.scale(24), color:alpha(200))
+  textured_rect(Theme.get_material('gradient'), 0, 0, w, DermaScale.scale(24), color:alpha(200))
 end
 
 --- Draws the header background of a collapsible category, darker while it is collapsed,
@@ -937,8 +933,8 @@ function THEME.skin:PaintCollapsibleCategory(panel, w, h)
   local bar_height = panel:GetHeaderHeight() + 1
 
   if h < bar_height then
-    self:DrawGenericBackground(0, 0, w, bar_height, Color(0, 0, 0))
+    self:DrawGenericBackground(0, 0, w, bar_height, color_black)
   else
-    self:DrawGenericBackground(0, 0, w, bar_height, Color(30, 30, 30))
+    self:DrawGenericBackground(0, 0, w, bar_height, color_skin_category)
   end
 end

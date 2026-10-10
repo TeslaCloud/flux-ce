@@ -3,6 +3,10 @@
 -- can be given access, and for the owner a button to sell the door. Every change is sent to
 -- the server at once, and the server answers with the new state of the door.
 
+local IsValid = IsValid
+local t = t
+local scale = math.scale
+
 local PANEL = {}
 
 --- Sets up the frame with the summary, the text entry, the access list and the sell button.
@@ -14,11 +18,11 @@ function PANEL:Init()
 
   Doors.management = self
 
-  local margin = math.scale(4)
+  local margin = scale(4)
   local column_name = t'ui.door.management.character'
   local column_access = t'ui.door.management.access'
 
-  self:SetSize(math.scale(420), math.scale(520))
+  self:SetSize(scale(420), scale(520))
   self:Center()
   self:SetTitle(t'ui.door.management.title')
 
@@ -40,7 +44,7 @@ function PANEL:Init()
   self.text_row = vgui.Create('DPanel', self)
   self.text_row:Dock(TOP)
   self.text_row:DockMargin(0, margin, 0, margin)
-  self.text_row:SetTall(math.scale(24))
+  self.text_row:SetTall(scale(24))
   self.text_row:SetPaintBackground(false)
   self.text_row.Think = function(pnl)
     self:check_door()
@@ -49,7 +53,7 @@ function PANEL:Init()
   self.text_save = vgui.Create('DButton', self.text_row)
   self.text_save:Dock(RIGHT)
   self.text_save:DockMargin(margin, 0, 0, 0)
-  self.text_save:SetWide(math.scale(96))
+  self.text_save:SetWide(scale(96))
   self.text_save:SetText(t'ui.door.management.save')
   self.text_save.DoClick = function(btn)
     self:save_text()
@@ -65,7 +69,7 @@ function PANEL:Init()
   self.sell = vgui.Create('DButton', self)
   self.sell:Dock(BOTTOM)
   self.sell:DockMargin(0, margin, 0, 0)
-  self.sell:SetTall(math.scale(28))
+  self.sell:SetTall(scale(28))
   self.sell:SetVisible(false)
   self.sell.DoClick = function(btn)
     self:confirm_sell()
@@ -107,7 +111,10 @@ function PANEL:check_door()
 
   if door == nil then return end
 
-  if !IsValid(door) or !IsValid(PLAYER) or PLAYER:GetPos():Distance(door:GetPos()) > Doors.use_distance then
+  local client = PLAYER
+  local reach = Doors.use_distance
+
+  if !IsValid(door) or !IsValid(client) or client:GetPos():DistToSqr(door:GetPos()) > reach * reach then
     self:safe_remove()
   end
 end
@@ -233,12 +240,12 @@ function PANEL:rebuild()
 
     listed[v.id] = true
 
-    table.insert(rows, { id = v.id, name = name, level = v.level or DOOR_ACCESS_USE })
+    rows[#rows + 1] = { id = v.id, name = name, level = v.level or DOOR_ACCESS_USE }
   end
 
   for character_id, target in pairs(online) do
     if !listed[character_id] and character_id != owner_id and character_id != own_id then
-      table.insert(rows, { id = character_id, name = target:name(), level = DOOR_ACCESS_NONE })
+      rows[#rows + 1] = { id = character_id, name = target:name(), level = DOOR_ACCESS_NONE }
     end
   end
 

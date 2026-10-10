@@ -18,8 +18,10 @@ function Prefixes:StringIsCommand(text)
   for k, v in pairs(stored) do
     local prefix_table = istable(v.prefix) and v.prefix or { v.prefix }
 
-    if table.reduce(prefix_table, function(a, prefix) return tobool(a) or text:start_with(prefix) end) then
-      return false
+    for k2, prefix in ipairs(prefix_table) do
+      if text:start_with(prefix) then
+        return false
+      end
     end
   end
 end

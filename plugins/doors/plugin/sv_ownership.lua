@@ -9,6 +9,11 @@
 -- right away. Buying and selling live in sv_trade, the access lists and the text of the
 -- owner in sv_access, and how the state is saved and loaded in sv_persistence.
 
+local IsValid = IsValid
+local ipairs = ipairs
+local insert = table.insert
+local ents_iterator = ents.Iterator
+
 --- Returns the ownership state of a door, creating it if the door has none yet. The doors
 -- of a group share one table. Do not change it directly: use the setters, which also
 -- network the change.
@@ -52,9 +57,11 @@ function Doors:get_group(entity)
   local children = root.door_children
 
   if children then
-    for k, v in ipairs(children) do
+    for i = 1, #children do
+      local v = children[i]
+
       if IsValid(v) then
-        table.insert(group, v)
+        group[#group + 1] = v
       end
     end
   end
@@ -70,11 +77,14 @@ function Doors:sync(entity)
   local state = self:get_state(root)
   local owner_id = state.owner and state.owner.id or nil
 
+  local ownable = state.ownable and true or nil
+  local price, text = state.price, state.text
+
   for k, v in ipairs(self:get_group(root)) do
-    v:set_nv('fl_door_ownable', state.ownable and true or nil)
-    v:set_nv('fl_door_price', state.price)
+    v:set_nv('fl_door_ownable', ownable)
+    v:set_nv('fl_door_price', price)
     v:set_nv('fl_door_owner', owner_id)
-    v:set_nv('fl_door_text', state.text)
+    v:set_nv('fl_door_text', text)
   end
 end
 
@@ -232,7 +242,7 @@ end
 function Doors:count_owned(character_id)
   local count = 0
 
-  for k, v in ents.Iterator() do
+  for k, v in ents_iterator() do
     local state = v.door_state
 
     if state and state.owner and state.owner.id == character_id and !IsValid(v.door_parent) then
@@ -254,7 +264,7 @@ function Doors:release_character(character_id)
 
   local released = 0
 
-  for k, v in ents.Iterator() do
+  for k, v in ents_iterator() do
     local state = v.door_state
 
     if state and !IsValid(v.door_parent) then
@@ -290,7 +300,7 @@ function Doors:attach(entity, root)
   elseif entity.door_children then
     for k, v in ipairs(entity.door_children) do
       if IsValid(v) then
-        table.insert(moved, v)
+        insert(moved, v)
       end
     end
 
@@ -305,7 +315,7 @@ function Doors:attach(entity, root)
     v.door_parent = root
     v.door_state = state
 
-    table.insert(root.door_children, v)
+    insert(root.door_children, v)
   end
 end
 
@@ -349,11 +359,11 @@ function Doors:unlink(entity)
 
   if IsValid(parent) then
     table.RemoveByValue(parent.door_children or {}, entity)
-    table.insert(released, entity)
+    insert(released, entity)
   elseif entity.door_children then
     for k, v in ipairs(entity.door_children) do
       if IsValid(v) then
-        table.insert(released, v)
+        insert(released, v)
       end
     end
 

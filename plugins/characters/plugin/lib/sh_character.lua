@@ -19,6 +19,16 @@
 -- the server send the value of that key to the owner of the character, and to nobody else.
 -- @module [Player]
 
+local IsValid = IsValid
+local isnumber = isnumber
+local isstring = isstring
+local istable = istable
+local tobool = tobool
+local tonumber = tonumber
+local cable_send = Cable.send
+local config_get = Config.get
+local string_trim = string.Trim
+
 if !Characters then
   PLUGIN:set_global('Characters')
 end
@@ -80,7 +90,7 @@ end
 -- @param target [Player]
 -- @return [Number]
 function Characters.get_limit(target)
-  local limit = Config.get('character_limit', 5)
+  local limit = config_get('character_limit', 5)
   --- Lets plugins change how many characters a player may have. Called on the server when a
   -- character is about to be created, and on the client for the local player when the main
   -- menu decides whether the creation screen may be opened, so a handler that is meant to be
@@ -167,7 +177,7 @@ function Characters.create(target, data)
     Characters.remember_name(char.name)
     Characters.save(target, char)
 
-    Cable.send(target, 'fl_create_character', Characters.to_networkable(target, char))
+    cable_send(target, 'fl_create_character', Characters.to_networkable(target, char))
   end
 
   return CHAR_SUCCESS
@@ -183,7 +193,7 @@ if SERVER then
   -- @param name [String]
   -- @return [String]
   local function normalize_name(name)
-    return (string.Trim(name):gsub('%s+', ' ')):utf8lower()
+    return (string_trim(name):gsub('%s+', ' ')):utf8lower()
   end
 
   --- Checks whether the player has sent a character request less than a second ago, and
@@ -208,7 +218,7 @@ if SERVER then
   -- @param reason [String text or language phrase]
   -- @param arguments=nil [Map values to substitute into the phrase]
   local function refuse_request(actor, action, reason, arguments)
-    Cable.send(actor, 'fl_character_request_failed', action, reason, arguments)
+    cable_send(actor, 'fl_character_request_failed', action, reason, arguments)
   end
 
   --- Returns the part of the generic data of a character that its owner receives: the keys
@@ -217,10 +227,13 @@ if SERVER then
   -- @return [Map]
   local function get_networked_data(character)
     local networked = {}
+    local custom_data = character.custom_data
 
-    if istable(character.custom_data) then
-      for key, value in pairs(character.custom_data) do
-        if Characters.is_data_networked(key) then
+    if istable(custom_data) then
+      local networked_keys = Characters.networked_data
+
+      for key, value in pairs(custom_data) do
+        if networked_keys[key] == true then
           networked[key] = value
         end
       end
@@ -262,7 +275,7 @@ if SERVER then
       local owner = Characters.get_owner(character)
 
       if owner and !owner:IsBot() then
-        Cable.send(owner, 'fl_character_data', tonumber(character.id), key, value)
+        cable_send(owner, 'fl_character_data', tonumber(character.id), key, value)
       end
     end
   end
@@ -320,10 +333,12 @@ if SERVER then
     local found = {}
 
     for k, v in player.Iterator() do
-      if !v:IsBot() and istable(v.record) and istable(v.record.characters) then
-        for k1, v1 in ipairs(v.record.characters) do
+      local record = v.record
+
+      if !v:IsBot() and istable(record) and istable(record.characters) then
+        for k1, v1 in ipairs(record.characters) do
           if isstring(v1.name) and normalize_name(v1.name) == key then
-            table.insert(found, v1)
+            found[#found + 1] = v1
           end
         end
       end
@@ -335,7 +350,7 @@ if SERVER then
 
     local answered = false
 
-    Character:where('lower(name) = lower(?)', string.Trim(name)):get(function(characters)
+    Character:where('lower(name) = lower(?)', string_trim(name)):get(function(characters)
       if answered then return end
 
       answered = true
@@ -452,7 +467,7 @@ if SERVER then
   function Characters.open_menu(target, message, arguments)
     if !IsValid(target) or target:IsBot() then return end
 
-    Cable.send(target, 'fl_character_menu', message, arguments)
+    cable_send(target, 'fl_character_menu', message, arguments)
   end
 
   --- Writes the health, armor and reserve ammo of a player into a character. A player who
@@ -579,10 +594,10 @@ if SERVER then
       return false
     end
 
-    local new_desc = string.Trim(text):gsub('\n', ' | ')
+    local new_desc = string_trim(text):gsub('\n', ' | ')
     local length = utf8.len(new_desc)
-    local min_length = Config.get('character_min_desc_len')
-    local max_length = Config.get('character_max_desc_len')
+    local min_length = config_get('character_min_desc_len')
+    local max_length = config_get('character_max_desc_len')
 
     if !isnumber(length) or length < min_length or length > max_length then
       actor:notify('ui.char_create.desc_len', { min = min_length, max = max_length })
@@ -601,7 +616,7 @@ if SERVER then
   --- Sends the networkable data of all of a player's characters to that player. Server only.
   -- @param target [Player]
   function Characters.send_to_client(target)
-    Cable.send(target, 'fl_characters_load', Characters.all_to_networkable(target))
+    cable_send(target, 'fl_characters_load', Characters.all_to_networkable(target))
   end
 
   --- Returns the networkable data of every character of a player. Server only.
@@ -982,12 +997,12 @@ else
     Derma_StringRequest(
       t'ui.char_desc.title',
       t('ui.char_desc.message', {
-        min = Config.get('character_min_desc_len'),
-        max = Config.get('character_max_desc_len')
+        min = config_get('character_min_desc_len'),
+        max = config_get('character_max_desc_len')
       }),
       PLAYER:get_phys_desc(),
       function(text)
-        Cable.send('fl_character_physdesc', text)
+        cable_send('fl_character_physdesc', text)
       end,
       nil,
       confirm_text
@@ -1003,9 +1018,13 @@ do
   -- @return [Character/Map the character record on the server or its networked data on the
   --   client, nil if the player has no such character]
   function player_meta:get_character_by_id(id)
-    for k, v in ipairs(self:get_all_characters()) do
-      if id == tonumber(v.id) then
-        return v
+    local characters = self:get_all_characters()
+
+    for i = 1, #characters do
+      local character = characters[i]
+
+      if id == tonumber(character.id) then
+        return character
       end
     end
   end

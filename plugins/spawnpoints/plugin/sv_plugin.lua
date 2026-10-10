@@ -10,11 +10,11 @@ function SpawnPoints:load()
   if istable(stored) then
     for k, v in ipairs(stored) do
       if istable(v) and isnumber(v.x) and isnumber(v.y) and isnumber(v.z) then
-        table.insert(points, {
+        points[#points + 1] = {
           pos = Vector(v.x, v.y, v.z),
           ang = Angle(0, tonumber(v.yaw) or 0, 0),
           group = isstring(v.group) and v.group or 'default'
-        })
+        }
       end
     end
   end
@@ -28,13 +28,15 @@ function SpawnPoints:save()
   local stored = {}
 
   for k, v in ipairs(self.points) do
-    table.insert(stored, {
-      x = v.pos.x,
-      y = v.pos.y,
-      z = v.pos.z,
+    local pos = v.pos
+
+    stored[k] = {
+      x = pos.x,
+      y = pos.y,
+      z = pos.z,
       yaw = v.ang.y,
       group = v.group
-    })
+    }
   end
 
   Data.save_plugin('spawnpoints', stored)
@@ -49,12 +51,12 @@ function SpawnPoints:sync(target)
 
   if target != nil then
     if IsValid(target) and target:IsPlayer() then
-      table.insert(receivers, target)
+      receivers[1] = target
     end
   else
     for k, v in player.Iterator() do
       if !v:IsBot() and v:can('spawnpoints') then
-        table.insert(receivers, v)
+        receivers[#receivers + 1] = v
       end
     end
   end
@@ -83,7 +85,9 @@ function SpawnPoints:add_point(pos, ang, group)
     group = isstring(group) and group != '' and group or 'default'
   }
 
-  table.insert(self.points, point)
+  local points = self.points
+
+  points[#points + 1] = point
 
   self:save()
   self:sync()
@@ -138,9 +142,12 @@ end
 -- @param ignore=nil [Player a player who is not in the way, usually the one who is spawning]
 -- @return [Boolean]
 function SpawnPoints:is_point_free(point, ignore)
-  local found = ents.FindInBox(point.pos + self.hull_mins, point.pos + self.hull_maxs)
+  local pos = point.pos
+  local found = ents.FindInBox(pos + self.hull_mins, pos + self.hull_maxs)
 
-  for k, v in ipairs(found) do
+  for i = 1, #found do
+    local v = found[i]
+
     if v:IsPlayer() and v != ignore and v:Alive() and v:IsSolid() then
       return false
     end
@@ -158,15 +165,17 @@ function SpawnPoints:pick_point(points, ignore)
   if #points == 0 then return end
 
   local free = {}
+  local free_count = 0
 
   for k, v in ipairs(points) do
     if self:is_point_free(v, ignore) then
-      table.insert(free, v)
+      free_count = free_count + 1
+      free[free_count] = v
     end
   end
 
-  if #free > 0 then
-    return free[math.random(#free)]
+  if free_count > 0 then
+    return free[math.random(free_count)]
   end
 
   return points[math.random(#points)]
@@ -183,11 +192,11 @@ function SpawnPoints:get_player_groups(actor)
   local character = Characters and actor:is_character_loaded() and actor:get_character()
 
   if istable(character) and Factions and isstring(character.faction) then
-    table.insert(groups, self:make_group('faction', character.faction))
+    groups[1] = self:make_group('faction', character.faction)
   end
 
   if groups[#groups] != 'default' then
-    table.insert(groups, 'default')
+    groups[#groups + 1] = 'default'
   end
 
   return groups

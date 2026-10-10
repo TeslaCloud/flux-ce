@@ -1,6 +1,8 @@
 --- Shared hooks of the Inventory plugin: turns the slot binds into the `PlayerSelectSlot`
 -- hook, which selects the weapon of the item in that hotbar slot or uses the item.
 
+local IsValid = IsValid
+
 --- Calls the 'PlayerSelectSlot' plugin hook when the player presses one of the slot binds.
 -- @param client [Player]
 -- @param bind [String]

@@ -21,6 +21,12 @@
 
 mod 'Flux::Help'
 
+local isstring   = isstring
+local istable    = istable
+local isfunction = isfunction
+local tostring   = tostring
+local sort       = table.sort
+
 local stored = Flux.Help.stored or {}
 Flux.Help.stored = stored
 
@@ -98,11 +104,11 @@ function Flux.Help:get_pages()
 
   for id, page in pairs(stored) do
     if !isfunction(page.visible) or page.visible(page) then
-      table.insert(pages, page)
+      pages[#pages + 1] = page
     end
   end
 
-  table.sort(pages, function(a, b)
+  sort(pages, function(a, b)
     if a.priority == b.priority then
       return a.id < b.id
     end
@@ -178,7 +184,7 @@ function Flux.Help:get_commands()
         category = { name = name, commands = {} }
         by_name[name] = category
 
-        table.insert(categories, category)
+        categories[#categories + 1] = category
       end
 
       local description = command.description
@@ -195,22 +201,24 @@ function Flux.Help:get_commands()
 
       for k, v in ipairs(command.aliases or {}) do
         if v != command.id then
-          table.insert(aliases, v)
+          aliases[#aliases + 1] = v
         end
       end
 
-      table.insert(category.commands, {
+      local commands = category.commands
+
+      commands[#commands + 1] = {
         id = command.id,
         name = tostring(command.name or command.id),
         syntax = translate(syntax),
         description = translate(description),
         aliases = aliases
-      })
+      }
     end
   end
 
   for k, v in ipairs(categories) do
-    table.sort(v.commands, function(a, b)
+    sort(v.commands, function(a, b)
       local first, second = a.name:utf8lower(), b.name:utf8lower()
 
       if first == second then
@@ -221,7 +229,7 @@ function Flux.Help:get_commands()
     end)
   end
 
-  table.sort(categories, function(a, b)
+  sort(categories, function(a, b)
     return a.name < b.name
   end)
 

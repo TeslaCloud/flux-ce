@@ -10,6 +10,12 @@
 -- loader of faction definition files is here as well.
 -- @module [Player]
 
+local IsValid = IsValid
+local isnumber = isnumber
+local isstring = isstring
+local istable = istable
+local tonumber = tonumber
+
 if !Factions then
   PLUGIN:set_global 'Factions'
 end
@@ -133,7 +139,7 @@ function Factions.get_players(id)
 
   for k, v in player.Iterator() do
     if v:get_faction_id() == id then
-      table.insert(players, v)
+      players[#players + 1] = v
     end
   end
 
@@ -145,13 +151,15 @@ end
 -- @param strict=false [Boolean require the whole ID or name to match]
 -- @return [Faction/Boolean the first matching faction, or false if nothing matched]
 function Factions.find(name, strict)
+  local lowered = name:utf8lower()
+
   for k, v in pairs(stored) do
     if strict then
-      if k:utf8lower() == name:utf8lower() or v.name:utf8lower() == name:utf8lower() then
+      if k:utf8lower() == lowered or v.name:utf8lower() == lowered then
         return v
       end
     else
-      if k:utf8lower():find(name:utf8lower()) or v.name:utf8lower():find(name:utf8lower()) then
+      if k:utf8lower():find(lowered) or v.name:utf8lower():find(lowered) then
         return v
       end
     end
@@ -677,7 +685,7 @@ do
   --- Returns the faction the player belongs to.
   -- @return [Faction the faction, or nil if the player's faction ID is not registered]
   function player_meta:get_faction()
-    return Factions.find_by_id(self:get_faction_id())
+    return stored[self:get_faction_id()]
   end
 
   --- Returns the player's rank in their faction as an index into the faction's rank list.
@@ -710,8 +718,10 @@ do
     local rank = self:get_rank()
 
     if rank != -1 and faction_table then
+      local lowered = string.utf8lower(str_rank)
+
       for k, v in ipairs(faction_table.rank) do
-        if string.utf8lower(v.id) == string.utf8lower(str_rank) then
+        if string.utf8lower(v.id) == lowered then
           return (strict and k == rank) or k <= rank
         end
       end

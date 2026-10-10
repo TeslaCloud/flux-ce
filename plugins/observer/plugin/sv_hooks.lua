@@ -1,6 +1,18 @@
 --- Server side of the Observer plugin: puts players into observer mode when they noclip and
 -- restores them when they leave it.
 
+local invisible_color = Color(0, 0, 0, 0)
+
+--- Leaves the players with the 'moderate' permission out of the players observers are
+-- hidden from.
+-- @param receiver [Player]
+-- @return [Boolean false for moderators, nothing otherwise]
+local function unless_moderator(receiver)
+  if receiver:can('moderate') then
+    return false
+  end
+end
+
 --- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
 -- hidden from players without the 'moderate' permission. The previous position, angles,
 -- color and move type are kept in actor.observer_data. Requires the 'noclip' permission.
@@ -30,18 +42,14 @@ function Observer:PlayerEnterNoclip(actor)
   actor:DrawShadow(false)
   actor:SetNoDraw(true)
   actor:SetNotSolid(true)
-  actor:SetColor(Color(0, 0, 0, 0))
+  actor:SetColor(invisible_color)
   actor:GodEnable()
 
   actor:set_nv('observer', true)
 
   -- Respect that one vanish command from the admin mod.
   if !actor.is_vanished then
-    actor:prevent_transmit_conditional(true, function(ply)
-      if ply:can('moderate') then
-        return false
-      end
-    end)
+    actor:prevent_transmit_conditional(true, unless_moderator)
   end
 
   return false
@@ -83,11 +91,7 @@ function Observer:PlayerExitNoclip(actor)
   actor:set_nv('observer', false)
 
   if !actor.is_vanished then
-    actor:prevent_transmit_conditional(false, function(ply)
-      if ply:can('moderate') then
-        return false
-      end
-    end)
+    actor:prevent_transmit_conditional(false, unless_moderator)
   end
 
   return false

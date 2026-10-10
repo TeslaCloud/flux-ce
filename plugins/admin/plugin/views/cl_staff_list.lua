@@ -60,7 +60,7 @@ function PANEL:set_members(members)
   local text_color = Theme.get_color('text')
   local margin = math.scale(4)
   local row_height = math.scale(40)
-  local by_role, role_ids = {}, {}
+  local by_role, role_ids, sort_names = {}, {}, {}
 
   for k, v in ipairs(members) do
     if istable(v) and isstring(v.steam_id) then
@@ -73,6 +73,8 @@ function PANEL:set_members(members)
       end
 
       table.insert(by_role[role_id], v)
+
+      sort_names[v] = tostring(v.name):utf8lower()
     end
   end
 
@@ -105,7 +107,7 @@ function PANEL:set_members(members)
         return first.online == true
       end
 
-      return tostring(first.name):utf8lower() < tostring(second.name):utf8lower()
+      return sort_names[first] < sort_names[second]
     end)
 
     local header = self.scroll_panel:Add('DLabel')
@@ -191,7 +193,7 @@ function PANEL:PerformLayout(w, h)
   self.status_label:SetSize(status_width, h)
 
   self.demote_button:SetTall(h - padding)
-  self.demote_button:SetPos(w - button_w - padding, math.floor(padding / 2))
+  self.demote_button:SetPos(w - button_w - padding, math.floor(padding * 0.5))
 end
 
 --- Sets whether the row is drawn with a darker background, which the page does for every

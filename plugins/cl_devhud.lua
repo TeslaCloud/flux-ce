@@ -7,6 +7,8 @@ PLUGIN:set_name('Flux Dev HUD')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a developer HUD.')
 
+local version_color = Color(200, 100, 100, 200)
+
 --- Draws the Flux and core version line in the bottom left corner while in development mode.
 -- Skipped when the HUDPaintDeveloper hook returns anything.
 function PLUGIN:HUDPaint()
@@ -24,7 +26,7 @@ function PLUGIN:HUDPaint()
         font,
         math.scale(8),
         ScrH() - math.scale(4) - util.font_size(font),
-        Color(200, 100, 100, 200)
+        version_color
       )
     end
   end

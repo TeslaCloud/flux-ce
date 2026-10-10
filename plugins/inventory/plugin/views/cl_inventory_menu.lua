@@ -4,6 +4,14 @@
 -- and the hotbar at the bottom of the screen. Dropping an equipable item onto the model
 -- equips it.
 
+local math_scale = math.scale
+local math_scale_x = math.scale_x
+
+local desc_background_color = Color(0, 0, 0, 100)
+local desc_text_color = Color('lightgray')
+local desc_saved_color = Color('lightgreen'):alpha(100)
+local desc_unsaved_color = Color('orange'):alpha(100)
+
 local PANEL = {}
 
 --- Draws the background of the inventory tab using the theme.
@@ -43,9 +51,10 @@ end
 -- editor, the equipment slots, the main inventory, the pockets and the hotbar.
 function PANEL:rebuild()
   local w, h = self:GetSize()
+  local model_padding = math_scale(4)
 
   self.player_model = vgui.Create('DModelPanel', self)
-  self.player_model:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
+  self.player_model:DockPadding(model_padding, model_padding, model_padding, model_padding)
   self.player_model:SetFOV(35)
   self.player_model:SetCamPos(Vector(80, 0, 50))
   self.player_model:SetLookAt(Vector(0, 0, 37))
@@ -124,15 +133,13 @@ function PANEL:rebuild()
   end
 
   self.desc.Paint = function(pnl, w, h)
-    draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 100))
+    draw.RoundedBox(0, 0, 0, w, h, desc_background_color)
 
-    pnl:DrawTextEntryText(Color('lightgray'), Theme.get_color('accent'), color_white)
+    pnl:DrawTextEntryText(desc_text_color, Theme.get_color('accent'), color_white)
   end
 
   self.desc.PaintOver = function(pnl, w, h)
-    local color = pnl.saved and Color('lightgreen') or Color('orange')
-
-    surface.SetDrawColor(color:alpha(100))
+    surface.SetDrawColor(pnl.saved and desc_saved_color or desc_unsaved_color)
     surface.DrawOutlinedRect(0, 0, w, h)
   end
 
@@ -151,62 +158,62 @@ function PANEL:rebuild()
   self.player_model:SetSize(w * 0.3, h)
 
   self.equipment_right = vgui.Create('DIconLayout', self)
-  self.equipment_right:SetSpaceY(math.scale(12))
-  self.equipment_right:SetSize(math.scale_x(100), h)
+  self.equipment_right:SetSpaceY(math_scale(12))
+  self.equipment_right:SetSize(math_scale_x(100), h)
   self.equipment_right:SetPos(w - self.equipment_right:GetWide())
 
-  self.player_model:SetPos(w - self.player_model:GetWide() - self.equipment_right:GetWide() - math.scale_x(12))
+  self.player_model:SetPos(w - self.player_model:GetWide() - self.equipment_right:GetWide() - math_scale_x(12))
 
   self.equipment_left = vgui.Create('DIconLayout', self)
-  self.equipment_left:SetSpaceY(math.scale(12))
-  self.equipment_left:SetSize(math.scale_x(100), h)
-  self.equipment_left:SetPos(self.player_model.x - self.equipment_left:GetWide() - math.scale_x(12))
+  self.equipment_left:SetSpaceY(math_scale(12))
+  self.equipment_left:SetSize(math_scale_x(100), h)
+  self.equipment_left:SetPos(self.player_model.x - self.equipment_left:GetWide() - math_scale_x(12))
 
   self.equipment_helmet = PLAYER:get_inventory('equipment_helmet'):create_panel(self)
-  self.equipment_helmet:set_slot_size(math.scale(100))
+  self.equipment_helmet:set_slot_size(math_scale(100))
   self.equipment_helmet:set_title()
   self.equipment_helmet:SizeToContents()
   self.equipment_helmet:rebuild()
   self.equipment_right:Add(self.equipment_helmet)
 
   self.equipment_mask = PLAYER:get_inventory('equipment_mask'):create_panel(self)
-  self.equipment_mask:set_slot_size(math.scale(100))
+  self.equipment_mask:set_slot_size(math_scale(100))
   self.equipment_mask:set_title()
   self.equipment_mask:SizeToContents()
   self.equipment_mask:rebuild()
   self.equipment_right:Add(self.equipment_mask)
 
   self.equipment_torso = PLAYER:get_inventory('equipment_torso'):create_panel(self)
-  self.equipment_torso:set_slot_size(math.scale(100))
+  self.equipment_torso:set_slot_size(math_scale(100))
   self.equipment_torso:set_title()
   self.equipment_torso:SizeToContents()
   self.equipment_torso:rebuild()
   self.equipment_right:Add(self.equipment_torso)
 
   self.equipment_hands = PLAYER:get_inventory('equipment_hands'):create_panel(self)
-  self.equipment_hands:set_slot_size(math.scale(100))
+  self.equipment_hands:set_slot_size(math_scale(100))
   self.equipment_hands:set_title()
   self.equipment_hands:SizeToContents()
   self.equipment_hands:rebuild()
   self.equipment_right:Add(self.equipment_hands)
 
   self.equipment_legs = PLAYER:get_inventory('equipment_legs'):create_panel(self)
-  self.equipment_legs:set_slot_size(math.scale(100))
+  self.equipment_legs:set_slot_size(math_scale(100))
   self.equipment_legs:set_title()
   self.equipment_legs:SizeToContents()
   self.equipment_legs:rebuild()
   self.equipment_right:Add(self.equipment_legs)
 
   self.equipment_back = PLAYER:get_inventory('equipment_back'):create_panel(self)
-  self.equipment_back:set_slot_size(math.scale(100))
+  self.equipment_back:set_slot_size(math_scale(100))
   self.equipment_back:set_title()
   self.equipment_back:SizeToContents()
   self.equipment_back:rebuild()
   self.equipment_left:Add(self.equipment_back)
 
   self.equipment_accessories = PLAYER:get_inventory('equipment_accessories'):create_panel(self)
-  self.equipment_accessories:set_slot_size(math.scale(100))
-  self.equipment_accessories:set_slot_padding(math.scale(12))
+  self.equipment_accessories:set_slot_size(math_scale(100))
+  self.equipment_accessories:set_slot_padding(math_scale(12))
   self.equipment_accessories:set_title()
   self.equipment_accessories:SizeToContents()
   self.equipment_accessories:rebuild()
@@ -225,23 +232,23 @@ function PANEL:rebuild()
   self.main_inventory:rebuild()
 
   self.pockets = PLAYER:get_inventory('pockets'):create_panel(self)
-  self.pockets:set_slot_size(math.scale(48))
+  self.pockets:set_slot_size(math_scale(48))
   self.pockets:SizeToContents()
 
   local title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
-  local x = self.equipment_left.x - self.main_inventory:GetWide() - math.scale(12)
+  local x = self.equipment_left.x - self.main_inventory:GetWide() - math_scale(12)
   local y = h * 0.5 - self.main_inventory:GetTall() * 0.5 - self.pockets:GetTall() * 0.5 - title_h * 0.5
 
   self.main_inventory:SetPos(x, y)
-  self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math.scale(16))
+  self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math_scale(16))
   self.pockets:rebuild()
 
   self.hotbar = PLAYER:get_inventory('hotbar'):create_panel(self:GetParent())
-  self.hotbar:set_slot_size(math.scale(80))
-  self.hotbar:set_slot_padding(math.scale(8))
+  self.hotbar:set_slot_size(math_scale(80))
+  self.hotbar:set_slot_padding(math_scale(8))
   self.hotbar:draw_inventory_slots(true)
   self.hotbar:SizeToContents()
-  self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math.scale(16))
+  self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math_scale(16))
   self.hotbar:rebuild()
 end
 

@@ -13,6 +13,10 @@
 -- The file is also sent to the client, where the methods that need the database are
 -- replaced by stubs.
 
+local concat = table.concat
+local istable = istable
+local isfunction = isfunction
+
 --- Base class for ActiveRecord database-tied objects.
 -- These objects are also referred to as "models".
 class 'ActiveRecord::Base'
@@ -98,11 +102,11 @@ local function bind_list(values, list)
   local placeholders = {}
 
   for k, v in ipairs(list) do
-    table.insert(values, v)
-    table.insert(placeholders, '?')
+    values[#values + 1] = v
+    placeholders[k] = '?'
   end
 
-  return table.concat(placeholders, ', ')
+  return concat(placeholders, ', ')
 end
 
 --- Specifies a WHERE condition in the query.
@@ -131,22 +135,20 @@ function ActiveRecord.Base:where(condition, ...)
       query_str = condition..' = ?'
     end
   elseif istable(condition) then
-    local should_and = false
+    local parts = {}
 
     values = {}
 
     for k, v in pairs(condition) do
-      query_str = query_str..(should_and and ' AND ' or '')..k
-
       if !istable(v) then
-        query_str = query_str..' = ?'
-        table.insert(values, v)
+        parts[#parts + 1] = k..' = ?'
+        values[#values + 1] = v
       else
-        query_str = query_str..' IN ('..bind_list(values, v)..')'
+        parts[#parts + 1] = k..' IN ('..bind_list(values, v)..')'
       end
-
-      should_and = true
     end
+
+    query_str = concat(parts, ' AND ')
   elseif isstring(condition) then
     query_str = condition
   end
@@ -176,22 +178,20 @@ function ActiveRecord.Base:where_not(condition, ...)
     values = args
     query_str = 'NOT ('..condition..')'
   elseif istable(condition) then
-    local should_and = false
+    local parts = {}
 
     values = {}
 
     for k, v in pairs(condition) do
-      query_str = query_str..(should_and and ' AND ' or '')..k
-
       if !istable(v) then
-        query_str = query_str..' != ?'
-        table.insert(values, v)
+        parts[#parts + 1] = k..' != ?'
+        values[#values + 1] = v
       else
-        query_str = query_str..' NOT IN ('..bind_list(values, v)..')'
+        parts[#parts + 1] = k..' NOT IN ('..bind_list(values, v)..')'
       end
-
-      should_and = true
     end
+
+    query_str = concat(parts, ' AND ')
   end
 
   self.query_map:insert { 'where', query_str, values }
@@ -343,11 +343,13 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
 
       if relation.many then
         obj:get(function(res)
-          current_object[relation.as] = {}
+          local children = {}
+
+          current_object[relation.as] = children
 
           for k, v in ipairs(res) do
             v:_process_child(current_object, current_object.class)
-            table.insert(current_object[relation.as], v)
+            children[#children + 1] = v
           end
 
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
@@ -412,8 +414,8 @@ function ActiveRecord.Base:run_query(callback)
       if istable(results) and #results > 0 then
         local objects = {}
 
-        for k, v in ipairs(results) do
-          table.insert(objects, self:_create_restored(v))
+        for i = 1, #results do
+          objects[i] = self:_create_restored(results[i])
         end
 
         if #self.relations == 0 then
@@ -451,9 +453,12 @@ function ActiveRecord.Base:_create_restored(data)
   object.fetched = true
 
   local schema = ActiveRecord.schema[self.table_name]
+  local str_to_type = ActiveRecord.str_to_type
 
   for k, v in pairs(data) do
-    object[k] = ActiveRecord.str_to_type(v, schema[k] and schema[k].type or 'string')
+    local column = schema[k]
+
+    object[k] = str_to_type(v, column and column.type or 'string')
   end
 
   if isfunction(object.restored) then
@@ -494,7 +499,7 @@ function ActiveRecord.Base:get(callback)
     local all_objects = {}
 
     for k, v in ipairs(results) do
-      table.insert(all_objects, v)
+      all_objects[k] = v
     end
 
     callback(all_objects)
@@ -617,25 +622,28 @@ function ActiveRecord.Base:save()
         self:before_create()
       end
 
+      local type_to_db = ActiveRecord.type_to_db
+      local now = to_datetime(os.time())
       local query = ActiveRecord.Database:insert(self.table_name)
         for k, data in pairs(schema) do
           if except[k] then continue end
 
-          query:insert(k, ActiveRecord.type_to_db(self[k], data.type))
+          query:insert(k, type_to_db(self[k], data.type))
         end
 
-        query:insert('created_at', to_datetime(os.time()))
-        query:insert('updated_at', to_datetime(os.time()))
+        query:insert('created_at', now)
+        query:insert('updated_at', now)
         query:callback(gen_callback(self, true))
       query:execute()
     elseif self.id then
+      local type_to_db = ActiveRecord.type_to_db
       local query = ActiveRecord.Database:update(self.table_name)
         query:where('id', self.id)
 
         for k, data in pairs(schema) do
           if except[k] then continue end
 
-          query:update(k, ActiveRecord.type_to_db(self[k], data.type))
+          query:update(k, type_to_db(self[k], data.type))
         end
 
         query:update('updated_at', to_datetime(os.time()))
@@ -814,7 +822,7 @@ function ActiveRecord.Base:validates(column, options)
     if k == 'case_sensitive' then
       current_options.case_sensitive = v
     else
-      table.insert(current_options, { id = k, value = v })
+      current_options[#current_options + 1] = { id = k, value = v }
     end
   end
 

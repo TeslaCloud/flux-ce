@@ -6,6 +6,8 @@
 -- and `set_background_color` and `set_draw_outline` control what is drawn behind the title.
 -- Derives from `fl_base_panel`.
 
+local math_clamp = math.Clamp
+
 local PANEL = {}
 
 PANEL.title = ''
@@ -35,9 +37,9 @@ function PANEL:Think()
   local frame_time = FrameTime() / 0.006
 
   if self:IsHovered() then
-    self.cur_amt = math.Clamp(self.cur_amt + 1 * frame_time, 0, 20)
+    self.cur_amt = math_clamp(self.cur_amt + frame_time, 0, 20)
   else
-    self.cur_amt = math.Clamp(self.cur_amt - 1 * frame_time, 0, 20)
+    self.cur_amt = math_clamp(self.cur_amt - frame_time, 0, 20)
   end
 
   if !self.icon_size_override then

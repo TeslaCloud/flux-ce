@@ -3,6 +3,9 @@
 -- the local player are only worked out again when the damage of a limb or the opacity of
 -- the diagram changes, or the theme is loaded again.
 
+local math_ceil = math.ceil
+local math_floor = math.floor
+
 local healthy_color = Color(166, 243, 76)
 local hurt_color = Color(233, 201, 94)
 local critical_color = Color(222, 57, 57)
@@ -109,16 +112,16 @@ function Limbs:draw_diagram(x, y, height, alpha, limbs)
   limbs = limbs or self:get_all_damage(PLAYER)
 
   local scale = height / diagram_height
-  local padding = math.ceil(8 * scale)
+  local padding = math_ceil(8 * scale)
   local background_alpha = 120 * alpha
   local limb_alpha = 220 * alpha
 
   draw.RoundedBox(
     padding,
-    math.floor(x - padding),
-    math.floor(y - padding),
-    math.ceil(diagram_width * scale + padding * 2),
-    math.ceil(height + padding * 2),
+    math_floor(x - padding),
+    math_floor(y - padding),
+    math_ceil(diagram_width * scale + padding * 2),
+    math_ceil(height + padding * 2),
     own and get_cached_color('background', 0, background_alpha)
       or Theme.get_color('limbs_background', background_color):alpha(background_alpha)
   )
@@ -127,11 +130,11 @@ function Limbs:draw_diagram(x, y, height, alpha, limbs)
     local damage = limbs[v.limb] or 0
 
     draw.RoundedBox(
-      math.floor(v.rounding * scale),
-      math.floor(x + v.x * scale),
-      math.floor(y + v.y * scale),
-      math.ceil(v.w * scale),
-      math.ceil(v.h * scale),
+      math_floor(v.rounding * scale),
+      math_floor(x + v.x * scale),
+      math_floor(y + v.y * scale),
+      math_ceil(v.w * scale),
+      math_ceil(v.h * scale),
       own and get_cached_color(v.limb, damage, limb_alpha) or self:get_color(damage):alpha(limb_alpha)
     )
   end

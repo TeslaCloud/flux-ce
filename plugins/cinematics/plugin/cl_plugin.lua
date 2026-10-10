@@ -5,6 +5,13 @@
 -- slides them out once the queue is empty. `Cinematics.state` holds what is animated: `bars`,
 -- the height of a bar as a fraction of the screen height, and `alpha`, the opacity of the text.
 
+local math_max = math.max
+local font_size = util.font_size
+local get_font = Theme.get_font
+local get_color = Theme.get_color
+local get_option = Theme.get_option
+local draw_text_outlined = draw.SimpleTextOutlined
+
 local queue = Cinematics.queue or {}
 local state = Cinematics.state or { bars = 0, alpha = 0 }
 local defaults = {
@@ -74,13 +81,13 @@ end
 -- @param align=TEXT_ALIGN_CENTER [Number horizontal alignment, one of the TEXT_ALIGN enums]
 -- @return [Number screen y below the last line]
 function Cinematics.draw_lines(lines, font, x, y, color, align)
-  local line_height = util.font_size(font)
+  local line_height = font_size(font)
 
   align = align or TEXT_ALIGN_CENTER
   outline_color.a = color.a
 
-  for k, v in ipairs(lines) do
-    draw.SimpleTextOutlined(v, font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
+  for i = 1, #lines do
+    draw_text_outlined(lines[i], font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
 
     y = y + line_height
   end
@@ -122,10 +129,10 @@ function Cinematics:add(cinematic)
   local entry = {
     color = Cinematics.to_color(cinematic.color),
     title_color = Cinematics.to_color(cinematic.title_color),
-    duration = math.max(tonumber(cinematic.duration) or Theme.get_option('cinematic_duration', defaults.duration), 0),
-    delay = math.max(tonumber(cinematic.delay) or 0, 0),
+    duration = math_max(tonumber(cinematic.duration) or get_option('cinematic_duration', defaults.duration), 0),
+    delay = math_max(tonumber(cinematic.delay) or 0, 0),
     bar_size = math.Clamp(
-      tonumber(cinematic.bar_size) or Theme.get_option('cinematic_bar_size', defaults.bar_size),
+      tonumber(cinematic.bar_size) or get_option('cinematic_bar_size', defaults.bar_size),
       0,
       0.5
     )
@@ -149,7 +156,7 @@ function Cinematics:add(cinematic)
     self:clear()
   end
 
-  table.insert(queue, entry)
+  queue[#queue + 1] = entry
 
   return entry
 end
@@ -237,7 +244,7 @@ function Cinematics:set_stage(stage)
   elseif stage == 'hold' then
     self.time_left = current.duration
   elseif stage == 'open' or stage == 'close' then
-    local slide_time = math.max(Theme.get_option('cinematic_slide_time', defaults.slide_time), 0.01)
+    local slide_time = math_max(get_option('cinematic_slide_time', defaults.slide_time), 0.01)
 
     if stage == 'open' then
       self.tween = Tween.new(slide_time, state, { bars = current.bar_size }, 'outCubic')
@@ -245,7 +252,7 @@ function Cinematics:set_stage(stage)
       self.tween = Tween.new(slide_time, state, { bars = 0 }, 'inCubic')
     end
   elseif stage == 'fade_in' or stage == 'fade_out' then
-    local fade_time = math.max(Theme.get_option('cinematic_fade_time', defaults.fade_time), 0.01)
+    local fade_time = math_max(get_option('cinematic_fade_time', defaults.fade_time), 0.01)
 
     self.tween = Tween.new(fade_time, state, { alpha = stage == 'fade_in' and 255 or 0 })
   end
@@ -315,7 +322,7 @@ function Cinematics:layout(cinematic, scrw)
     local text = cinematic[v]
 
     if text then
-      local wrapped = util.wrap_text(text, Theme.get_font(fonts[v], fallback_font), scrw * wrap_widths[v]) or {}
+      local wrapped = util.wrap_text(text, get_font(fonts[v], fallback_font), scrw * wrap_widths[v]) or {}
 
       for k1, v1 in ipairs(wrapped) do
         wrapped[k1] = v1:strip()
@@ -338,15 +345,16 @@ function Cinematics:draw(scrw, scrh)
   local bar_height = math.ceil(state.bars * scrh)
 
   if bar_height > 0 then
-    local bar_color = Theme.get_color('cinematic_bars', color_black)
+    local bar_color = get_color('cinematic_bars', color_black)
 
     draw.RoundedBox(0, 0, 0, scrw, bar_height, bar_color)
     draw.RoundedBox(0, 0, scrh - bar_height, scrw, bar_height, bar_color)
   end
 
   local current = self.current
+  local alpha = state.alpha
 
-  if !current or state.alpha <= 0 then return end
+  if !current or alpha <= 0 then return end
 
   if current.layout_width != scrw then
     self:layout(current, scrw)
@@ -354,40 +362,40 @@ function Cinematics:draw(scrw, scrh)
 
   local lines = current.lines
   local center_x = scrw * 0.5
-  local text_color = current.color or Theme.get_color('cinematic_text', color_white)
+  local text_color = current.color or get_color('cinematic_text', color_white)
 
   if lines.text then
-    local font = Theme.get_font(fonts.text, fallback_font)
-    local text_height = #lines.text * util.font_size(font)
-    local band_height = math.max(current.bar_size * scrh, text_height + math.scale(32))
+    local font = get_font(fonts.text, fallback_font)
+    local text_height = #lines.text * font_size(font)
+    local band_height = math_max(current.bar_size * scrh, text_height + math.scale(32))
 
     Cinematics.draw_lines(
       lines.text,
       font,
       center_x,
       scrh - band_height * 0.5 - text_height * 0.5,
-      tint(caption_color, text_color, state.alpha)
+      tint(caption_color, text_color, alpha)
     )
   end
 
   if lines.title or lines.subtitle then
-    local title_font = Theme.get_font(fonts.title, fallback_font)
-    local subtitle_font = Theme.get_font(fonts.subtitle, fallback_font)
-    local title_height = lines.title and #lines.title * util.font_size(title_font) or 0
-    local subtitle_height = lines.subtitle and #lines.subtitle * util.font_size(subtitle_font) or 0
+    local title_font = get_font(fonts.title, fallback_font)
+    local subtitle_font = get_font(fonts.subtitle, fallback_font)
+    local title_height = lines.title and #lines.title * font_size(title_font) or 0
+    local subtitle_height = lines.subtitle and #lines.subtitle * font_size(subtitle_font) or 0
     local gap = (lines.title and lines.subtitle) and math.scale(8) or 0
     local y = scrh * 0.4 - (title_height + gap + subtitle_height) * 0.5
 
     if lines.title then
-      local title_color = current.title_color or current.color or Theme.get_color('cinematic_title', color_white)
+      local title_color = current.title_color or current.color or get_color('cinematic_title', color_white)
 
       y = Cinematics.draw_lines(
-        lines.title, title_font, center_x, y, tint(title_draw_color, title_color, state.alpha)
+        lines.title, title_font, center_x, y, tint(title_draw_color, title_color, alpha)
       ) + gap
     end
 
     if lines.subtitle then
-      Cinematics.draw_lines(lines.subtitle, subtitle_font, center_x, y, tint(caption_color, text_color, state.alpha))
+      Cinematics.draw_lines(lines.subtitle, subtitle_font, center_x, y, tint(caption_color, text_color, alpha))
     end
   end
 end

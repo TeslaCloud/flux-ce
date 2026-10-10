@@ -51,6 +51,14 @@ local mappings      = {
   ['y']             = y_const_d
 }
 
+local converters = {}
+
+for k, v in pairs(mappings) do
+  converters[k] = function(this)
+    return this.time * v
+  end
+end
+
 --- Initializes a new Time object that represents a time interval.
 -- ```
 -- local two_days = Time:days(2)
@@ -60,10 +68,8 @@ local mappings      = {
 function Time:init(seconds)
   self.time = seconds or os.time()
 
-  for k, v in pairs(mappings) do
-    self[k] = function(this)
-      return this.time * v
-    end
+  for k, v in pairs(converters) do
+    self[k] = v
   end
 end
 

@@ -12,6 +12,8 @@
 
 mod 'Flux::Player'
 
+local isstring = isstring
+
 Cable.check_networked_string('fl_sound_play')
 Cable.check_networked_string('fl_sound_start')
 Cable.check_networked_string('fl_sound_stop')

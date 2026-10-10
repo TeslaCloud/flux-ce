@@ -2,6 +2,7 @@
 -- the screen passes, add the headbob and the fall shake to the view and register the settings
 -- of the effects with the Settings plugin.
 
+local tonumber = tonumber
 local category = 'settings.categories.screen_effects'
 
 --- Decides whether the switch of an effect is listed in the settings menu: only while the

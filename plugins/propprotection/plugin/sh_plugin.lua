@@ -37,6 +37,9 @@
 -- to it.
 -- @module [PropProtection]
 
+local IsValid = IsValid
+local config_get = Config.get
+
 PLUGIN:set_global('PropProtection')
 
 local rules = {
@@ -226,12 +229,15 @@ function PropProtection:can_manipulate(actor, entity, action, detail)
 
   if !self:can_bypass(actor, action) then
     local physgun_rule = action == 'physgun' and find_physgun_rule(entity) or nil
-    local ownership_rule = find_ownership_rule(actor, entity)
 
-    if physgun_rule and Config.get(rules[physgun_rule]) then
+    if physgun_rule and config_get(rules[physgun_rule]) then
       rule = physgun_rule
-    elseif ownership_rule and Config.get(rules[ownership_rule]) then
-      rule = ownership_rule
+    else
+      local ownership_rule = find_ownership_rule(actor, entity)
+
+      if ownership_rule and config_get(rules[ownership_rule]) then
+        rule = ownership_rule
+      end
     end
   end
 

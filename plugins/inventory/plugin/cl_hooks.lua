@@ -3,6 +3,11 @@
 -- server, and adds the items tab to the spawn menu along with the `fl_icon_editor`
 -- console command.
 
+local IsValid = IsValid
+local math_scale = math.scale
+
+local label_background_color = Color(0, 0, 0, 150)
+
 --- Shows the hotbar and makes it interactive while the context menu is open.
 function Inventories:OnContextMenuOpen()
   if IsValid(PLAYER.hotbar) then
@@ -11,12 +16,14 @@ function Inventories:OnContextMenuOpen()
 
   timer.Destroy('fl_hotbar_popup')
 
-  PLAYER.hotbar = Inventories:create_hotbar()
-  PLAYER.hotbar:SetAlpha(255)
-  PLAYER.hotbar:MakePopup()
-  PLAYER.hotbar:MoveToFront()
-  PLAYER.hotbar:SetMouseInputEnabled(true)
-  PLAYER.hotbar:rebuild()
+  local hotbar = Inventories:create_hotbar()
+
+  PLAYER.hotbar = hotbar
+  hotbar:SetAlpha(255)
+  hotbar:MakePopup()
+  hotbar:MoveToFront()
+  hotbar:SetMouseInputEnabled(true)
+  hotbar:rebuild()
 end
 
 --- Removes the hotbar when the context menu closes.
@@ -56,12 +63,12 @@ end
 -- @return [Panel the fl_inventory panel]
 function Inventories:create_hotbar()
   local hotbar = PLAYER:get_inventory('hotbar'):create_panel()
-  hotbar:set_slot_size(math.scale(80))
-  hotbar:set_slot_padding(math.scale(8))
+  hotbar:set_slot_size(math_scale(80))
+  hotbar:set_slot_padding(math_scale(8))
   hotbar:draw_inventory_slots(true)
   hotbar:set_title()
   hotbar:SizeToContents()
-  hotbar:SetPos(ScrW() * 0.5 - hotbar:GetWide() * 0.5, ScrH() - hotbar:GetTall() - math.scale(16))
+  hotbar:SetPos(ScrW() * 0.5 - hotbar:GetWide() * 0.5, ScrH() - hotbar:GetTall() - math_scale(16))
 
   return hotbar
 end
@@ -74,12 +81,14 @@ function Inventories:popup_hotbar()
     PLAYER.hotbar:rebuild()
 
     timer.Create('fl_hotbar_popup', 0.05, 0, function()
-      if IsValid(PLAYER.hotbar) then
-        local alpha = PLAYER.hotbar:GetAlpha()
-        PLAYER.hotbar:SetAlpha(alpha - 5)
+      local hotbar = PLAYER.hotbar
+
+      if IsValid(hotbar) then
+        local alpha = hotbar:GetAlpha()
+        hotbar:SetAlpha(alpha - 5)
 
         if alpha <= 50 then
-          PLAYER.hotbar:safe_remove()
+          hotbar:safe_remove()
         end
       else
         timer.Destroy('fl_hotbar_popup')
@@ -229,11 +238,11 @@ local function create_item_icon(item_obj, parent)
   local icon = spawnmenu.CreateContentIcon('model', parent, {
     model = item_obj:get_model(),
     skin = item_obj:get_skin(),
-    wide = math.scale(128),
-    tall = math.scale(128)
+    wide = math_scale(128),
+    tall = math_scale(128)
   })
 
-  local padding = math.scale(4)
+  local padding = math_scale(4)
   icon:DockPadding(padding, padding, padding, padding)
 
   local name_label = vgui.Create('DLabel', icon)
@@ -244,11 +253,14 @@ local function create_item_icon(item_obj, parent)
   name_label:SetWrap(true)
   name_label:SetAutoStretchVertical(true)
 
-  padding = math.scale(2)
+  padding = math_scale(2)
+
+  local padding_double = padding * 2
+  local corner_radius = math_scale(4)
 
   name_label.Paint = function(pnl, w, h)
     DisableClipping(true)
-      draw.RoundedBox(math.scale(4), -padding, -padding, w + padding * 2, h + padding * 2, Color(0, 0, 0, 150))
+      draw.RoundedBox(corner_radius, -padding, -padding, w + padding_double, h + padding_double, label_background_color)
     DisableClipping(false)
   end
 
@@ -301,11 +313,14 @@ function Inventories:spawnmenu_populate_items(content_panel, tree, node)
   local categories = {}
 
   for id, item_obj in pairs(Item.all()) do
-    if !categories[item_obj.category] then
-      categories[item_obj.category] = {}
+    local category = categories[item_obj.category]
+
+    if !category then
+      category = {}
+      categories[item_obj.category] = category
     end
 
-    table.insert(categories[item_obj.category], item_obj)
+    category[#category + 1] = item_obj
   end
 
   for name, category in pairs(categories) do
@@ -351,12 +366,12 @@ search.AddProvider(function(query)
 
   for k, item_obj in pairs(Item.all()) do
     if t(item_obj:get_name()):utf8lower():find(query) then
-      table.insert(results, {
+      results[#results + 1] = {
         text = item_obj.id,
         func = function() MVC.push('SpawnMenu::SpawnItem', item_obj.id) end,
         icon = create_item_icon(item_obj),
         words = { item_obj }
-      })
+      }
     end
   end
 

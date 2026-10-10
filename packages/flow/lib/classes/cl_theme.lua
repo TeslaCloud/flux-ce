@@ -75,8 +75,10 @@ end
 -- @param ... [Vararg extra arguments for the callback]
 -- @return [Panel the created panel, or nil if no callback is registered for this ID]
 function ThemeBase:create_panel(id, parent, ...)
-  if self.panels[id] then
-    return self.panels[id](id, parent, ...)
+  local callback = self.panels[id]
+
+  if callback then
+    return callback(id, parent, ...)
   end
 end
 

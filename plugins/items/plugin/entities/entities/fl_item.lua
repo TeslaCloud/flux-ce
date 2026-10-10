@@ -14,6 +14,8 @@
 
 AddCSLuaFile()
 
+local IsValid = IsValid
+
 ENT.Type = 'anim'
 ENT.PrintName = 'Item'
 ENT.Category = 'Flux'
@@ -306,6 +308,10 @@ if SERVER then
     hook.Run('OnEntityItemSet', self, item_obj)
   end
 else
+  local target_text_color = Color(255, 255, 255)
+  local target_outline_color = Color(0, 0, 0)
+  local loading_cog_color = Color(255, 255, 255)
+
   --- Lets the item think.
   function ENT:Think()
     self:item_think()
@@ -337,13 +343,12 @@ else
 
     if distance > 100 then
       local d = distance - 100
-      alpha = math.Clamp(255 * (50 - d) / 50, 0, 255)
+      alpha = math.Clamp(255 * (50 - d) * 0.02, 0, 255)
     end
 
-    local col = Color(255, 255, 255, alpha)
-    local col2 = Color(0, 0, 0, alpha)
+    local item_obj = self.item
 
-    if self.item then
+    if item_obj then
       --- Called on the client every frame before the target ID of an item entity is drawn,
       -- while the local player looks at the entity from at most 150 units away.
       -- @param entity [Entity The `fl_item` entity]
@@ -355,12 +360,12 @@ else
       -- @param distance [Number Distance between the local player and the entity]
       -- @return [Boolean Return false to prevent the name and the description from being
       --   drawn; `PostDrawItemTargetID` is not run then]
-      if hook.Run('PreDrawItemTargetID', self, self.item, x, y, alpha, distance) == false then
+      if hook.Run('PreDrawItemTargetID', self, item_obj, x, y, alpha, distance) == false then
         return
       end
 
-      text = t(self.item:get_name())
-      desc = t(self.item:get_description())
+      text = t(item_obj:get_name())
+      desc = t(item_obj:get_description())
     else
       if !self.data_requested then
         Cable.send('fl_items_data_request', self:EntIndex())
@@ -369,7 +374,7 @@ else
 
       local cog_size = math.scale(48)
 
-      Flux.draw_rotating_cog(x, y - cog_size, cog_size, cog_size, Color(255, 255, 255))
+      Flux.draw_rotating_cog(x, y - cog_size, cog_size, cog_size, loading_cog_color)
 
       return
     end
@@ -396,7 +401,7 @@ else
     local box_width, box_height = max_width + padding * 2, height + desc_height + padding * 2
     local accent_color = Theme.get_color('accent'):alpha(200)
     local ent_pos = self:GetPos():ToScreen()
-    local anim_id = 'itemid_gradient_'..self.item.instance_id
+    local anim_id = 'itemid_gradient_'..item_obj.instance_id
 
     Flux.register_animation(anim_id, box_x - max_width, nil, FrameTime() * 8)
 
@@ -416,6 +421,12 @@ else
     if alpha > 100 then
       draw.line(box_x, y + height + desc_height + padding, ent_pos.x, ent_pos.y, accent_color)
     end
+
+    local col = target_text_color
+    local col2 = target_outline_color
+
+    col.a = alpha
+    col2.a = alpha
 
     draw.SimpleTextOutlined(text, name_font, x - width * 0.5, y, col, nil, nil, 1, col2)
 
@@ -438,6 +449,6 @@ else
     -- @param y [Number Screen y right below the last line of the description]
     -- @param alpha [Number Opacity of the target ID from 0 to 255]
     -- @param distance [Number Distance between the local player and the entity]
-    hook.Run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)
+    hook.Run('PostDrawItemTargetID', self, item_obj, x, y, alpha, distance)
   end
 end

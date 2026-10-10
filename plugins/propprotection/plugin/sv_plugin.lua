@@ -11,6 +11,11 @@
 -- refresh. The spawn hooks of sv_hooks.lua cover the spawn menu; this covers everything
 -- else that Sandbox creates on behalf of a player, such as the entities of the tools.
 
+local IsValid = IsValid
+local CurTime = CurTime
+local config_get = Config.get
+local timer_remove = timer.Remove
+
 local owned = PropProtection.owned or {}
 local held = PropProtection.held or {}
 PropProtection.owned = owned
@@ -36,7 +41,7 @@ local function unlist(key, entity)
 
   if table.IsEmpty(entities) then
     owned[key] = nil
-    timer.Remove(removal_timer(key))
+    timer_remove(removal_timer(key))
   end
 end
 
@@ -148,7 +153,7 @@ function PropProtection:get_owned_entities(key)
   if key and owned[key] then
     for entity, v in pairs(owned[key]) do
       if IsValid(entity) then
-        table.insert(entities, entity)
+        entities[#entities + 1] = entity
       end
     end
   end
@@ -180,7 +185,7 @@ end
 -- @return [Boolean whether the countdown has been started]
 -- @see [PropProtection#schedule_removal]
 function PropProtection:abandon_entities(actor)
-  if !Config.get('remove_staff_entities') and self:can_bypass(actor) then return false end
+  if !config_get('remove_staff_entities') and self:can_bypass(actor) then return false end
 
   return self:schedule_removal(self:get_key(actor))
 end
@@ -190,7 +195,7 @@ end
 -- @param key [String ownership key, see PropProtection:get_key]
 -- @return [Boolean whether the countdown has been started]
 function PropProtection:schedule_removal(key)
-  local delay = tonumber(Config.get('prop_removal_delay')) or 0
+  local delay = tonumber(config_get('prop_removal_delay')) or 0
 
   if !key or delay <= 0 or !owned[key] then return false end
 
@@ -207,7 +212,7 @@ end
 -- belong to nobody from then on.
 -- @param key [String ownership key, see PropProtection:get_key]
 function PropProtection:remove_abandoned(key)
-  timer.Remove(removal_timer(key))
+  timer_remove(removal_timer(key))
 
   if self:find_owner(key) then return end
 
@@ -249,7 +254,7 @@ function PropProtection:return_ownership(actor)
   local was_abandoned = timer.Exists(timer_name)
   local entities = self:get_owned_entities(key)
 
-  timer.Remove(timer_name)
+  timer_remove(timer_name)
 
   if was_abandoned and #entities > 0 then
     actor:notify('notification.prop_protection.returned', { count = #entities })
@@ -307,7 +312,7 @@ end
 -- config, counted from now.
 -- @param entity [Entity]
 function PropProtection:mark_harmless(entity)
-  entity.prop_harmless_until = CurTime() + (tonumber(Config.get('prop_kill_protection_time')) or 0)
+  entity.prop_harmless_until = CurTime() + (tonumber(config_get('prop_kill_protection_time')) or 0)
 end
 
 --- Checks whether an entity is one whose impacts players are protected from: it is held

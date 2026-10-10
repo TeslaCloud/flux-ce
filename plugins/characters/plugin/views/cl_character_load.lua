@@ -67,14 +67,17 @@ function PANEL:rebuild()
   self.list:Clear()
 
   local characters = PLAYER:get_all_characters()
+  local panel_w, panel_h = self.list:GetWide() * 0.125, self.list:GetTall()
 
   for k, v in pairs(characters) do
-    self.chars[k] = vgui.Create('fl_character_panel', self)
-    self.chars[k]:SetSize(self.list:GetWide() * 0.125, self.list:GetTall())
-    self.chars[k]:set_character(v)
-    self.chars[k]:SetParent(self)
+    local char_panel = vgui.Create('fl_character_panel', self)
+    char_panel:SetSize(panel_w, panel_h)
+    char_panel:set_character(v)
+    char_panel:SetParent(self)
 
-    self.list:AddPanel(self.chars[k])
+    self.chars[k] = char_panel
+
+    self.list:AddPanel(char_panel)
   end
 
   if #characters == 0 then
@@ -171,17 +174,17 @@ end
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PerformLayout(w, h)
+  local button_height = Theme.get_option('menu_sidebar_button_height')
+  local button_y = h - button_height
+
   self.model:SetPos(4, 28)
   self.model:SetSize(w - 4, h * .80)
 
-  self.select:SetPos(4, h - Theme.get_option('menu_sidebar_button_height'))
-  self.select:SetSize(
-    self.delete:IsVisible() and w / 3 * 2 - 4 or w - 8,
-    Theme.get_option('menu_sidebar_button_height')
-  )
+  self.select:SetPos(4, button_y)
+  self.select:SetSize(self.delete:IsVisible() and w / 3 * 2 - 4 or w - 8, button_height)
 
-  self.delete:SetPos(w / 3 * 2, h - Theme.get_option('menu_sidebar_button_height'))
-  self.delete:SetSize(w / 3 - 4, Theme.get_option('menu_sidebar_button_height'))
+  self.delete:SetPos(w / 3 * 2, button_y)
+  self.delete:SetSize(w / 3 - 4, button_height)
 end
 
 --- Sets the character shown by the panel and runs the PanelCharacterSet hook. A banned

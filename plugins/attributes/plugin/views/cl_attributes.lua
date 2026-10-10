@@ -7,6 +7,13 @@
 -- 'attribute_hindrance' and 'attribute_progress', which have defaults if a theme does not
 -- set them.
 
+local math_clamp = math.clamp
+local math_floor = math.floor
+local math_scale = math.scale
+local draw_box = draw.box
+local draw_simple_text = draw.SimpleText
+local get_color = Theme.get_color
+
 local default_category = 'attribute.category.other'
 local title_background = Color(50, 50, 50, 100)
 local default_boost_color = Color(100, 200, 100)
@@ -46,9 +53,11 @@ local function active_modifiers(modifiers)
   local cur_time = CurTime()
   local active = {}
 
-  for k, v in pairs(modifiers or {}) do
-    if !v.end_time or v.end_time > cur_time then
-      table.insert(active, v)
+  if modifiers then
+    for k, v in pairs(modifiers) do
+      if !v.end_time or v.end_time > cur_time then
+        active[#active + 1] = v
+      end
     end
   end
 
@@ -88,7 +97,7 @@ local function describe_modifiers(modifiers, prefix, signed)
       })
     end
 
-    table.insert(parts, text)
+    parts[#parts + 1] = text
   end
 
   return table.concat(parts, ', ')
@@ -133,7 +142,7 @@ function PANEL:Paint(w, h)
         text_h,
         title_background
       )
-      draw.SimpleText(text, font, 0, -text_h - 4, color_white)
+      draw_simple_text(text, font, 0, -text_h - 4, color_white)
     DisableClipping(false)
   end
 end
@@ -142,7 +151,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
-  local padding = math.scale(8)
+  local padding = math_scale(8)
 
   self.scroll_panel:SetPos(padding, padding)
   self.scroll_panel:SetSize(w - padding * 2, h - padding * 2)
@@ -197,6 +206,7 @@ function PANEL:get_sections()
   local target = self:get_target()
   local sections = {}
   local by_key = {}
+  local translated_names = {}
 
   for k, v in pairs(Attributes.get_stored()) do
     if self.snapshot or Attributes.is_visible(v, target) then
@@ -217,10 +227,11 @@ function PANEL:get_sections()
         section = { name = name, order = order, attributes = {} }
         by_key[key] = section
 
-        table.insert(sections, section)
+        sections[#sections + 1] = section
       end
 
-      table.insert(section.attributes, v)
+      section.attributes[#section.attributes + 1] = v
+      translated_names[v] = translate(v.name)
     end
   end
 
@@ -234,7 +245,7 @@ function PANEL:get_sections()
 
   for k, v in ipairs(sections) do
     table.sort(v.attributes, function(a, b)
-      local name_a, name_b = translate(a.name), translate(b.name)
+      local name_a, name_b = translated_names[a], translated_names[b]
 
       if name_a != name_b then
         return name_a < name_b
@@ -256,12 +267,12 @@ function PANEL:get_listed(sections)
   local ids = {}
 
   for k, v in ipairs(sections) do
-    table.insert(ids, v.name)
+    ids[#ids + 1] = v.name
 
     for k1, v1 in ipairs(v.attributes) do
       local detailed = has_details(v1, self:get_data(v1.attribute_id))
 
-      table.insert(ids, tostring(v1.attribute_id)..(detailed and '+' or ''))
+      ids[#ids + 1] = tostring(v1.attribute_id)..(detailed and '+' or '')
     end
   end
 
@@ -272,8 +283,8 @@ end
 -- or a notice if there is no attribute to show.
 function PANEL:rebuild()
   local sections = self:get_sections()
-  local text_color = Theme.get_color('text')
-  local margin = math.scale(4)
+  local text_color = get_color('text')
+  local margin = math_scale(4)
 
   self.rows = {}
   self.listed = self:get_listed(sections)
@@ -308,7 +319,7 @@ function PANEL:rebuild()
       row:set_data(self:get_data(v1.attribute_id))
       row:SetTall(row:get_row_height())
 
-      table.insert(self.rows, row)
+      self.rows[#self.rows + 1] = row
     end
   end
 end
@@ -332,7 +343,7 @@ end
 --- Returns the size the tab menu gives this panel when it opens it.
 -- @return [Number width, Number height]
 function PANEL:get_menu_size()
-  return math.scale(960), math.scale(720)
+  return math_scale(960), math_scale(720)
 end
 
 vgui.Register('fl_attributes', PANEL, 'fl_base_panel')
@@ -361,7 +372,7 @@ PANEL.progress_fraction = false
 
 --- Picks the color of the line of details, a darker shade of the text color of the theme.
 function PANEL:Init()
-  self.details_color = Theme.get_color('text'):darken(40)
+  self.details_color = get_color('text'):darken(40)
 end
 
 --- Places the image of the attribute's icon in the top left corner of the row.
@@ -369,7 +380,7 @@ end
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
   if IsValid(self.image) then
-    local padding, size = math.scale(8), math.scale(40)
+    local padding, size = math_scale(8), math_scale(40)
 
     self.image:SetPos(padding, padding)
     self.image:SetSize(size, size)
@@ -384,25 +395,28 @@ end
 function PANEL:Paint(w, h)
   if Theme.hook('PaintAttributeRow', self, w, h) != nil then return end
 
-  draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background_light'))
+  draw.RoundedBox(0, 0, 0, w, h, get_color('background_light'))
 
   if !self.attribute_table then return end
 
-  local padding = math.scale(8)
-  local icon_size = math.scale(40)
-  local text_color = Theme.get_color('text')
-  local background_color = Theme.get_color('background')
-  local boost_color = Theme.get_color('attribute_boost', default_boost_color)
-  local hindrance_color = Theme.get_color('attribute_hindrance', default_hindrance_color)
+  local padding = math_scale(8)
+  local icon_size = math_scale(40)
+  local text_y = math_scale(6)
+  local text_color = get_color('text')
+  local background_color = get_color('background')
+  local boost_color = get_color('attribute_boost', default_boost_color)
+  local hindrance_color = get_color('attribute_hindrance', default_hindrance_color)
   local font = Theme.get_font('text_normal')
   local x, right = padding, w - padding
 
   if self.fa_icon then
+    local icon_center = padding + icon_size * 0.5
+
     FontAwesome:draw(
       self.fa_icon,
-      padding + icon_size * 0.5,
-      padding + icon_size * 0.5,
-      math.scale(28),
+      icon_center,
+      icon_center,
+      math_scale(28),
       text_color,
       TEXT_ALIGN_CENTER,
       TEXT_ALIGN_CENTER
@@ -413,46 +427,46 @@ function PANEL:Paint(w, h)
     x = padding * 2 + icon_size
   end
 
-  draw.SimpleText(self.name_text, font, x, math.scale(6), text_color)
+  draw_simple_text(self.name_text, font, x, text_y, text_color)
 
   if self.boost_text != '' then
-    local boost_w = draw.SimpleText(
+    local boost_w = draw_simple_text(
       self.boost_text,
       font,
       right,
-      math.scale(6),
+      text_y,
       self.boost > 0 and boost_color or hindrance_color,
       TEXT_ALIGN_RIGHT
     )
 
-    right = right - (boost_w or 0) - math.scale(8)
+    right = right - (boost_w or 0) - padding
   end
 
-  draw.SimpleText(self.value_text, font, right, math.scale(6), text_color, TEXT_ALIGN_RIGHT)
+  draw_simple_text(self.value_text, font, right, text_y, text_color, TEXT_ALIGN_RIGHT)
 
-  local bar_w, bar_y, bar_h = w - padding - x, math.scale(36), math.scale(8)
-  local base_w = math.floor(bar_w * self.level_fraction)
-  local boosted_w = math.floor(bar_w * self.boosted_fraction)
+  local bar_w, bar_y, bar_h = w - padding - x, math_scale(36), math_scale(8)
+  local base_w = math_floor(bar_w * self.level_fraction)
+  local boosted_w = math_floor(bar_w * self.boosted_fraction)
 
-  draw.box(x, bar_y, bar_w, bar_h, background_color)
-  draw.box(x, bar_y, math.min(base_w, boosted_w), bar_h, Theme.get_color('attribute_level', Theme.get_color('accent')))
+  draw_box(x, bar_y, bar_w, bar_h, background_color)
+  draw_box(x, bar_y, math.min(base_w, boosted_w), bar_h, get_color('attribute_level', get_color('accent')))
 
   if boosted_w > base_w then
-    draw.box(x + base_w, bar_y, boosted_w - base_w, bar_h, boost_color)
+    draw_box(x + base_w, bar_y, boosted_w - base_w, bar_h, boost_color)
   elseif boosted_w < base_w then
-    draw.box(x + boosted_w, bar_y, base_w - boosted_w, bar_h, hindrance_color)
+    draw_box(x + boosted_w, bar_y, base_w - boosted_w, bar_h, hindrance_color)
   end
 
   if self.progress_fraction then
-    local progress_y, progress_h = bar_y + bar_h + math.scale(2), math.scale(4)
-    local progress_color = Theme.get_color('attribute_progress', Theme.get_color('accent_light'))
+    local progress_y, progress_h = bar_y + bar_h + math_scale(2), math_scale(4)
+    local progress_color = get_color('attribute_progress', get_color('accent_light'))
 
-    draw.box(x, progress_y, bar_w, progress_h, background_color)
-    draw.box(x, progress_y, math.floor(bar_w * self.progress_fraction), progress_h, progress_color)
+    draw_box(x, progress_y, bar_w, progress_h, background_color)
+    draw_box(x, progress_y, math_floor(bar_w * self.progress_fraction), progress_h, progress_color)
   end
 
   if self.details_text != '' then
-    draw.SimpleText(self.details_text, Theme.get_font('text_smaller'), x, math.scale(56), self.details_color)
+    draw_simple_text(self.details_text, Theme.get_font('text_smaller'), x, math_scale(56), self.details_color)
   end
 end
 
@@ -503,7 +517,7 @@ end
 --- Returns the height the row needs: taller if it has a line of details.
 -- @return [Number]
 function PANEL:get_row_height()
-  return math.scale(self.detailed and 82 or 58)
+  return math_scale(self.detailed and 82 or 58)
 end
 
 --- Builds the tooltip of the row: the description of the attribute, the description of
@@ -587,8 +601,8 @@ function PANEL:update()
   end
 
   self.boost_text = boost != 0 and format_number(boost, true) or ''
-  self.level_fraction = range > 0 and math.clamp((base_level - min) / range, 0, 1) or 1
-  self.boosted_fraction = range > 0 and math.clamp((level - min) / range, 0, 1) or 1
+  self.level_fraction = range > 0 and math_clamp((base_level - min) / range, 0, 1) or 1
+  self.boosted_fraction = range > 0 and math_clamp((level - min) / range, 0, 1) or 1
   self.progress_fraction = false
 
   if attribute_table.has_progress != false then
@@ -600,7 +614,7 @@ function PANEL:update()
 
       table.insert(details, translate('ui.attributes.max_level'))
     else
-      self.progress_fraction = math.clamp(progress / total_progress, 0, 1)
+      self.progress_fraction = math_clamp(progress / total_progress, 0, 1)
 
       table.insert(details, translate('ui.attributes.progress', {
         progress = format_number(progress),

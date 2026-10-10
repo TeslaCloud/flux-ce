@@ -84,6 +84,8 @@ do
   local vector_angle = FindMetaTable('Vector').Angle
   local normalize_angle = math.NormalizeAngle
   local get_weapon_hold_type = Flux.Anim.get_weapon_hold_type
+  local ACT_MP_STAND_IDLE = ACT_MP_STAND_IDLE
+  local walk_speed_sqr = 0.5 * 0.5
 
   --- Returns the compiled animations for the hold type of a weapon. Hold types that the
   -- animation table does not define use the 'normal' hold type.
@@ -159,8 +161,9 @@ do
     local base_class = self.BaseClass
     local animations = actor.fl_anim_table
     local on_ground = actor:OnGround()
+    local is_noclipping = actor:GetMoveType() == MOVETYPE_NOCLIP
 
-    if on_ground and actor.m_bWasOnGround == false and actor:GetMoveType() != MOVETYPE_NOCLIP then
+    if on_ground and actor.m_bWasOnGround == false and !is_noclipping then
       if animations then
         local land = hold_type_animations(actor, animations).land
 
@@ -178,23 +181,25 @@ do
       base_class:HandlePlayerJumping(actor, velocity) or
       base_class:HandlePlayerSwimming(actor, velocity) or
       base_class:HandlePlayerDucking(actor, velocity)) then
-      local len_2d = velocity:Length2D()
+      local len_2d_sqr = velocity:Length2DSqr()
       local run_speed = animations and animations.run_speed or 150
+      local keep_running_speed = run_speed * 0.85
 
-      if len_2d > run_speed or (actor.fl_running and len_2d > run_speed * 0.85) then
+      if len_2d_sqr > run_speed * run_speed
+      or (actor.fl_running and len_2d_sqr > keep_running_speed * keep_running_speed) then
         actor.CalcIdeal = ACT_MP_RUN
         actor.fl_running = true
       else
         actor.fl_running = nil
 
-        if len_2d > 0.5 then
+        if len_2d_sqr > walk_speed_sqr then
           actor.CalcIdeal = ACT_MP_WALK
         end
       end
     end
 
     actor.m_bWasOnGround = on_ground
-    actor.m_bWasNoclipping = (actor:GetMoveType() == MOVETYPE_NOCLIP and !actor:InVehicle())
+    actor.m_bWasNoclipping = (is_noclipping and !actor:InVehicle())
 
     return actor.CalcIdeal, (actor.CalcSeqOverride or -1)
   end

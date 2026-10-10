@@ -50,7 +50,6 @@ end
 -- @param y [Number target slot, or nil if the position is yet to be found]
 -- @return [Boolean false to prevent the transfer, nil otherwise]
 function ItemEquipable:can_transfer(inventory, x, y)
-  local owner = self:get_player()
   local inv_type = inventory.type
 
   if inv_type == self.equip_inv then
@@ -78,7 +77,7 @@ function ItemEquipable:can_transfer(inventory, x, y)
       end
     end
   elseif inv_type != self.equip_inv and self.inventory_type == self.equip_inv then
-    if self:can_unequip(owner) == false then
+    if self:can_unequip(self:get_player()) == false then
       return false
     end
   end

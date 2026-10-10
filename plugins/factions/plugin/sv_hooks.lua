@@ -37,15 +37,19 @@ function Factions:PostPlayerSpawn(actor)
     actor:SetTeam(faction_table.team_id or 1)
   end
 
-  if actor:IsBot() then
-    if table.Count(self.all()) > 0 then
-      local random_faction = table.Random(self.all())
+  local is_bot = actor:IsBot()
+
+  if is_bot then
+    local factions = self.all()
+
+    if table.Count(factions) > 0 then
+      local random_faction = table.Random(factions)
 
       actor:set_faction(random_faction.faction_id)
     end
   end
 
-  if actor:IsBot() or actor:is_character_loaded() then
+  if is_bot or actor:is_character_loaded() then
     self.apply_vitals(actor, true)
   end
 end

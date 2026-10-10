@@ -5,6 +5,13 @@
 -- open for the player who asks: a container, or another player whose inventories are being
 -- viewed.
 
+local IsValid = IsValid
+local CurTime = CurTime
+local pairs = pairs
+local cable_send = Cable.send
+
+local reach_sqr = 120 * 120
+
 --- Finds an inventory of an entity that is open for a player, which is what entitles the
 -- player to take the money of that entity.
 -- @param actor [Player the player who wants the money]
@@ -97,11 +104,13 @@ end
 -- @param entity [Entity the fl_money entity]
 -- @return [Boolean false while on cooldown, otherwise nil]
 function Currencies:CanPlayerPickupMoney(actor, entity)
-  if actor.next_money_pickup and actor.next_money_pickup > CurTime() then
+  local cur_time = CurTime()
+
+  if actor.next_money_pickup and actor.next_money_pickup > cur_time then
     return false
   end
 
-  if entity.next_pickup and entity.next_pickup > CurTime() then
+  if entity.next_pickup and entity.next_pickup > cur_time then
     return false
   end
 end
@@ -160,7 +169,7 @@ function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, trace)
     return false, err
   end
 
-  if pos:Distance(actor:EyePos()) > 120 then
+  if pos:DistToSqr(actor:EyePos()) > reach_sqr then
     return false, 'error.too_far'
   end
 
@@ -191,10 +200,8 @@ function Currencies:CanGiveMoney(actor, target, amount, currency)
     return false, 'error.invalid_entity'
   end
 
-  if IsValid(target) then
-    if target:GetPos():Distance(actor:EyePos()) > 120 then
-      return false, 'error.too_far'
-    end
+  if target:GetPos():DistToSqr(actor:EyePos()) > reach_sqr then
+    return false, 'error.too_far'
   end
 end
 
@@ -231,7 +238,7 @@ Cable.receive('fl_currency_give', function(actor, amount, currency, target)
     actor:notify(err)
   end
 
-  Cable.send(actor, 'fl_rebuild_currency_panel')
+  cable_send(actor, 'fl_rebuild_currency_panel')
 end)
 
 Cable.receive('fl_currency_drop', function(actor, amount, currency)
@@ -241,7 +248,7 @@ Cable.receive('fl_currency_drop', function(actor, amount, currency)
     actor:notify(err)
   end
 
-  Cable.send(actor, 'fl_rebuild_currency_panel')
+  cable_send(actor, 'fl_rebuild_currency_panel')
 end)
 
 Cable.receive('fl_currency_take', function(actor, entity, amount, currency)
@@ -257,5 +264,5 @@ Cable.receive('fl_currency_take', function(actor, entity, amount, currency)
     actor:notify(err)
   end
 
-  Cable.send(inventory.receivers, 'fl_rebuild_currency_panel')
+  cable_send(inventory.receivers, 'fl_rebuild_currency_panel')
 end)

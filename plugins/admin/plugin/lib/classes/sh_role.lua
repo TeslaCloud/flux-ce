@@ -95,7 +95,7 @@ function Role:can(actor, action, object)
       if perm.callback then
         return perm.callback(actor, object)
       else
-        return perm and perm.allowed
+        return perm.allowed
       end
     end
   end

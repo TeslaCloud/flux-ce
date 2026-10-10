@@ -16,6 +16,10 @@
 
 mod 'Flux::Command'
 
+local IsValid           = IsValid
+local istable           = istable
+local isstring          = isstring
+
 local command_log_color = Color('orange')
 local stored            = Flux.Command.stored   or {}
 local aliases           = Flux.Command.aliases  or {}
@@ -104,12 +108,8 @@ function Flux.Command:find_all(id)
 
   for k, v in pairs(aliases) do
     if !ids[v] and (k:include(id) or v:include(id)) then
-      if SERVER then
-        table.insert(hits, stored[v])
-      else
-        if PLAYER:can(v) then
-          table.insert(hits, stored[v])
-        end
+      if SERVER or PLAYER:can(v) then
+        hits[#hits + 1] = stored[v]
       end
 
       ids[v] = true
@@ -133,6 +133,15 @@ function Flux.Command:extract_arguments(text)
   local word = ''
   local skip = 0
   local tlen = string.len(text)
+  local chars = {}
+  local pos = 1
+
+  while pos <= tlen do
+    local char_len = utf8.clen(text, pos)
+
+    chars[#chars + 1] = string.sub(text, pos, pos + char_len - 1)
+    pos = pos + char_len
+  end
 
   for i = 1, tlen do
     if raw_args == nil and #arguments > 0 then
@@ -145,7 +154,7 @@ function Flux.Command:extract_arguments(text)
       continue
     end
 
-    local char = text:utf8sub(i, i)
+    local char = chars[i] or ''
 
     if (char == '"' or char == "'") and word == '' then
       local end_pos = text:find('"', i + 1)
@@ -155,14 +164,14 @@ function Flux.Command:extract_arguments(text)
       end
 
       if end_pos then
-        table.insert(arguments, text:utf8sub(i + 1, end_pos - 1))
+        arguments[#arguments + 1] = text:utf8sub(i + 1, end_pos - 1)
         skip = end_pos - i
       else
         word = word..char
       end
     elseif char == ' ' then
       if word != '' then
-        table.insert(arguments, word)
+        arguments[#arguments + 1] = word
         word = ''
       end
     else
@@ -171,7 +180,7 @@ function Flux.Command:extract_arguments(text)
   end
 
   if word != '' then
-    table.insert(arguments, word)
+    arguments[#arguments + 1] = word
   end
 
   return arguments, (raw_args or '')
@@ -186,7 +195,7 @@ if SERVER then
 
       for k, v in player.Iterator() do
         if v:GetUserGroup() == group_name then
-          table.insert(to_ret, v)
+          to_ret[#to_ret + 1] = v
         end
       end
 
@@ -236,9 +245,15 @@ if SERVER then
       local radius = tonumber(str:utf8sub(2, utf8.len(str)))
       local to_ret = {}
 
+      if !radius or radius < 0 then
+        return to_ret, '!'
+      end
+
+      local radius_sqr = radius * radius
+
       for k, v in player.Iterator() do
-        if v != actor and actor:GetPos():Distance(v:GetPos()) <= radius then
-          table.insert(to_ret, v)
+        if v != actor and actor:GetPos():DistToSqr(v:GetPos()) <= radius_sqr then
+          to_ret[#to_ret + 1] = v
         end
       end
 
@@ -293,6 +308,7 @@ if SERVER then
   -- @param from_console=nil [Boolean whether it was run as a console command, passed to the
   --   'PlayerCanRunCommand' hook]
   function Flux.Command:interpret(actor, text, from_console)
+    local actor_valid = IsValid(actor)
     local args, raw_args
 
     if isstring(text) then
@@ -302,7 +318,7 @@ if SERVER then
     end
 
     if !isstring(args[1]) then
-      if !IsValid(actor) then
+      if !actor_valid then
         ErrorNoHalt('[Flux:Command] You must enter a command!\n')
       else
         actor:notify('error.command.you_must_enter_command')
@@ -318,7 +334,7 @@ if SERVER then
     local cmd_table = self:find_by_id(command)
 
     if cmd_table then
-      if (!IsValid(actor) and !cmd_table.no_console) or (IsValid(actor) and actor:can(cmd_table.id)) then
+      if (!actor_valid and !cmd_table.no_console) or (actor_valid and actor:can(cmd_table.id)) then
         --- Called on the server when a player is about to run a command, after the permission
         -- check has passed and before the arguments are checked. The player is not told when a
         -- handler stops the command, so the handler should notify them.
@@ -347,7 +363,7 @@ if SERVER then
                     if IsValid(v2) and !cache[v2] then
                       cache[v2] = true
 
-                      table.insert(targets, v2)
+                      targets[#targets + 1] = v2
                     end
                   end
                 end
@@ -361,11 +377,11 @@ if SERVER then
                   if IsValid(v) and !cache[v] then
                     cache[v] = true
 
-                    table.insert(targets, v)
+                    targets[#targets + 1] = v
                   end
                 end
               else
-                if IsValid(actor) then
+                if actor_valid then
                   actor:notify('error.command.player_invalid', {
                     player = tostring(target_arg)
                   })
@@ -383,7 +399,7 @@ if SERVER then
 
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
-                if cmd_table.immunity and IsValid(actor) and
+                if cmd_table.immunity and actor_valid and
                    --- Called for every player a command with `immunity` set is about to be
                    -- run on, when the command was not run from the server console. The actor
                    -- themselves can be among the targets; the admin plugin's handler always
@@ -406,7 +422,7 @@ if SERVER then
               -- One step less for commands.
               args[cmd_table.player_arg or 1] = targets
             else
-              if IsValid(actor) then
+              if actor_valid then
                 actor:notify('error.command.player_invalid', {
                   player = tostring(target_arg)
                 })
@@ -431,7 +447,7 @@ if SERVER then
           if !hook.Run('PlayerRunCommand', actor, cmd_table, args) then
             local message
 
-            if IsValid(actor) then
+            if actor_valid then
               message =
                 actor:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
             else
@@ -450,7 +466,7 @@ if SERVER then
               command_log_color,
               message,
               'PlayerRunCommand',
-              IsValid(actor) and actor.record.id or 'console',
+              actor_valid and actor.record.id or 'console',
               table.concat(
                 table.map(targets, function(v)
                   return IsValid(v) and v.record and v.record.id
@@ -464,7 +480,7 @@ if SERVER then
             self:run(actor, cmd_table, args, raw_args)
           end
         else
-          if IsValid(actor) then
+          if actor_valid then
             actor:notify('error.command.syntax', {
               command = cmd_table.name,
               syntax = cmd_table.syntax
@@ -474,14 +490,14 @@ if SERVER then
           end
         end
       else
-        if IsValid(actor) then
+        if actor_valid then
           actor:notify('error.command.no_access')
         else
           ErrorNoHalt('This command cannot be run from the console!\n')
         end
       end
     else
-      if IsValid(actor) then
+      if actor_valid then
         actor:notify('error.command.not_valid', {
           command = command
         })

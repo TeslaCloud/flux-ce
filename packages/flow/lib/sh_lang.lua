@@ -35,6 +35,14 @@
 
 mod 'Flux::Lang'
 
+local istable           = istable
+local isstring          = isstring
+local tonumber          = tonumber
+local tostring          = tostring
+local pairs             = pairs
+local string_find       = string.find
+local string_replace    = string.Replace
+
 local current_language  = Flux.Lang.current or 'en'
 local stored            = Flux.Lang.stored or {}
 Flux.Lang.stored        = stored
@@ -79,8 +87,8 @@ do
       if !ref then return false end
     end
 
-    for k, v in ipairs(tabs) do
-      local val = ref[v]
+    for i = 1, #tabs do
+      local val = ref[tabs[i]]
 
       if istable(val) then
         ref = val
@@ -114,8 +122,10 @@ do
 
     if isstring(form) then return form end
 
-    for k, v in ipairs(form_fallbacks) do
-      form = forms[v] or forms[tonumber(v)]
+    for i = 1, #form_fallbacks do
+      local fallback = form_fallbacks[i]
+
+      form = forms[fallback] or forms[tonumber(fallback)]
 
       if isstring(form) then return form end
     end
@@ -135,6 +145,9 @@ do
 
     return translated
   end
+
+  local phrase_parts = {}
+  local no_args = {}
 
   --- Translates a phrase to the current language. English is used if the language is not
   -- available or does not have the phrase, and the phrase itself is returned if it has no
@@ -162,7 +175,11 @@ do
   -- @return [String translated text, Number amount of line breaks that were replaced]
   -- @see [Flux.Lang#get_plural_form]
   function t(phrase, args, force_lang)
-    args = istable(args) and args or { args }
+    if args == nil then
+      args = no_args
+    elseif !istable(args) then
+      args = { args }
+    end
 
     local lang = force_lang or current_language
 
@@ -170,21 +187,30 @@ do
       lang = 'en'
     end
 
-    local tabs = phrase:split('.')
+    local tabs = phrase_parts[phrase] or phrase:split('.')
     local translated = _translate(tabs, lang, args)
 
     if !translated and lang != 'en' then
       translated = _translate(tabs, 'en', args)
     end
 
-    phrase = translated or phrase
+    if translated then
+      phrase_parts[phrase] = tabs
+      phrase = translated
+    end
 
-    for k, v in pairs(args) do
-      if istable(v) and v.nice_time then
-        v = Flux.Lang:nice_time(v.nice_time, lang)
+    if string_find(phrase, '{', 1, true) then
+      for k, v in pairs(args) do
+        if istable(v) and v.nice_time then
+          v = Flux.Lang:nice_time(v.nice_time, lang)
+        end
+
+        phrase = string_replace(phrase, '{'..k..'}', tostring(v))
       end
+    end
 
-      phrase = string.Replace(phrase, '{'..k..'}', tostring(v))
+    if !string_find(phrase, '\n', 1, true) then
+      return phrase, 0
     end
 
     return phrase:gsub('\n', ' ')
@@ -348,7 +374,7 @@ function Flux.Lang:get_languages()
 
   for k, v in pairs(stored) do
     if istable(v) then
-      table.insert(languages, k)
+      languages[#languages + 1] = k
     end
   end
 
@@ -372,6 +398,7 @@ end
 if CLIENT then
   local override = CreateClientConVar('fl_language', '', true, false,
     'Language of the Flux interface. Leave empty to use the language of the game.')
+  local game_language = GetConVar('gmod_language')
 
   --- Returns the language the local player has picked instead of the language of the game.
   -- Clientside only.
@@ -394,7 +421,7 @@ if CLIENT then
       return lang
     end
 
-    return GetConVar('gmod_language'):GetString()
+    return game_language:GetString()
   end
 
   --- Switches the current language of the client. Tells the server the new language of the
@@ -440,7 +467,7 @@ if CLIENT then
 
     override:SetString(lang)
 
-    apply_language(lang != '' and lang or GetConVar('gmod_language'):GetString())
+    apply_language(lang != '' and lang or game_language:GetString())
 
     return true
   end

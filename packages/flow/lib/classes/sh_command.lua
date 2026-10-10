@@ -15,6 +15,9 @@
 
 class 'Command'
 
+local admin_color = Color(255, 128, 128)
+local staff_color = Color(150, 150, 255)
+
 Command.id = 'undefined'
 Command.name = 'Unknown'
 Command.description = 'An undescribed command.'
@@ -82,8 +85,8 @@ function Command:notify(permission, message, arguments, color)
     player_list = player.GetAll()
   end
 
-  for k, v in ipairs(player_list) do
-    v:notify(message, arguments, color)
+  for i = 1, #player_list do
+    player_list[i]:notify(message, arguments, color)
   end
 end
 
@@ -94,7 +97,7 @@ end
 -- @param arguments=nil [Map values to substitute into the phrase]
 -- @see [Command#notify]
 function Command:notify_admin(permission, message, arguments)
-  self:notify(permission, message, arguments, Color(255, 128, 128))
+  self:notify(permission, message, arguments, admin_color)
 end
 
 --- Sends a light blue notification meant for the players with the 'staff' permission.
@@ -109,7 +112,7 @@ end
 -- @param arguments=nil [Map values to substitute into the phrase]
 -- @see [Command#notify]
 function Command:notify_staff(message, arguments)
-  self:notify('staff', message, arguments, Color(150, 150, 255))
+  self:notify('staff', message, arguments, staff_color)
 end
 
 --- Returns the description of the command. Can be overridden to build it dynamically.

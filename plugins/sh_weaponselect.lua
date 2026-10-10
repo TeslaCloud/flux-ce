@@ -5,6 +5,9 @@
 -- without input. Plugins can keep it from reacting with the `ShouldOpenWepselect` hook and
 -- follow it through `OnWeaponIndexChange` and `OnWeaponSelected`.
 
+local abs = math.abs
+local clamp = math.Clamp
+
 PLUGIN:set_name('Weapon Selector')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a custom weapon selector for use with Flux.')
@@ -57,19 +60,24 @@ function PLUGIN:HUDPaint()
   if !IsValid(PLAYER) then return end
 
   if self.is_open then
-    if self.index_offset and self.index_offset != 0 then
-      local dir = (self.index_offset == math.abs(self.index_offset)) -- true = down, false = up
-      local frame_time = FrameTime() * 16
+    local index_offset = self.index_offset
+
+    if index_offset and index_offset != 0 then
+      local dir = index_offset > 0
+      local step = (dir and 1) or -1
+      local lerp_step = FrameTime() * 16 * clamp(abs(index_offset), 1, 100)
+      local display = self.display
       local targets = {}
 
-      if !self.display[1].target then
-        local idx = self.weapon_index - ((dir and self.index_offset - 1) or self.index_offset + 1)
-        targets = self:make_display(idx, true)
+      if !display[1].target then
+        targets = self:make_display(self.weapon_index - (index_offset - step), true)
       end
 
-      for k, v in ipairs(self.display) do
+      for k = 1, #display do
+        local v = display[k]
+
         if !v.target then
-          local next = safe_index(targets, (dir and k - 1) or k + 1)
+          local next = safe_index(targets, k - step)
 
           -- Make the first and last weapons look nicer when scrolling.
           if dir and k == 1 then
@@ -84,46 +92,53 @@ function PLUGIN:HUDPaint()
           v.scale_target = next.scale
           v.weapon = next.weapon
 
-          if k == 3 + ((dir and 1) or -1) then
+          if k == 3 + step then
             v.highlight = true
           end
         end
 
-        if math.abs(v.y - v.target) < 1 then
-          self.index_offset = (dir and self.index_offset - 1) or self.index_offset + 1
+        if abs(v.y - v.target) < 1 then
+          self.index_offset = index_offset - step
           self:make_display(self.weapon_index - self.index_offset)
 
           break
         end
 
-        local abs_offset = math.Clamp(math.abs(self.index_offset), 1, 100)
+        v.y = Lerp(lerp_step, v.y, v.target)
+        v.scale = Lerp(lerp_step, v.scale, v.scale_target)
 
-        self.display[k].y = Lerp(frame_time * abs_offset, v.y, v.target)
-        self.display[k].scale = Lerp(frame_time * abs_offset, v.scale, v.scale_target)
+        local neighbour = display[k + step]
 
-        if self.display[k + ((dir and 1) or -1)] and self.display[k + ((dir and 1) or -1)].highlight then
-          self.display[k].highlight = false
+        if neighbour and neighbour.highlight then
+          v.highlight = false
         end
       end
     end
 
-    local x, y = ScrW() - 306, ScrH() * 0.5 - 84, 200
+    local cur_alpha = self.cur_alpha
+    local x, y = ScrW() - 306, ScrH() * 0.5 - 84
     local w, h = 200, 186
+    local font = Font.size(Theme.get_font('text_normal_large'), 36)
+    local display = self.display
 
     render.SetScissorRect(x, y, x + w, y + h, true)
 
-    draw.RoundedBox(0, x, y, w, h, Color(40, 40, 40, 100 * (self.cur_alpha / 255)))
+    draw.RoundedBox(0, x, y, w, h, Color(40, 40, 40, 100 * (cur_alpha / 255)))
 
-    for k, v in ipairs(self.display) do
-      local color = Color(255, 255, 255, self.cur_alpha * v.scale / 1.3)
+    for k = 1, #display do
+      local v = display[k]
+      local weapon = v.weapon
+      local color
 
       if v.highlight then
         color = Theme.get_color('accent')
+      else
+        color = Color(255, 255, 255, cur_alpha * v.scale / 1.3)
       end
 
       surface.draw_text_scaled(
-        (IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON',
-        Font.size(Theme.get_font('text_normal_large'), 36),
+        (IsValid(weapon) and weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON',
+        font,
         v.x,
         v.y,
         v.scale,
@@ -140,7 +155,7 @@ end
 function PLUGIN:Think()
   if self.is_open then
     if CurTime() - self.open_time > 5 then
-      self.cur_alpha = math.Clamp(self.cur_alpha - 2, 0, 255)
+      self.cur_alpha = clamp(self.cur_alpha - 2, 0, 255)
 
       if self.cur_alpha == 0 then
         self.is_open = false
@@ -162,8 +177,6 @@ do
   -- @param pressed [Boolean whether the bind was pressed rather than released]
   -- @return [Boolean true if the bind was consumed, nil otherwise]
   function PLUGIN:PlayerBindPress(client, bind, pressed)
-    local weapon = client:GetActiveWeapon()
-
     if !client:InVehicle() and !client:KeyDown(IN_ATTACK) then
       --- Asks whether the weapon selector should handle a bind.
       -- Called on the client for every bind the local player presses or releases while they
@@ -174,7 +187,7 @@ do
       -- @return [Boolean Return false to make the selector ignore the bind]
       if hook.Run('ShouldOpenWepselect', client, bind, pressed) != false then
         local cur_time = CurTime()
-        local weapon_count = table.Count(client:GetWeapons())
+        local weapon_count = #client:GetWeapons()
         local old_index = self.weapon_index
         bind = bind:lower()
 
@@ -198,7 +211,7 @@ do
 
             return true
           elseif bind:find('slot') and pressed then
-            local index = tonumber(bind:sub(5, bind:len())) or 1
+            local index = tonumber(bind:sub(5)) or 1
             local classic_scroll = false
 
             if index == prev_index or (index == 2 and prev_index == 1) or (index == 1 and prev_index == 2) then
@@ -259,7 +272,7 @@ function PLUGIN:OnWeaponIndexChange(old_index, index)
 
     local weapon_count = #PLAYER:GetWeapons()
 
-    if math.abs(self.index_offset) == (weapon_count - 1) then
+    if abs(self.index_offset) == (weapon_count - 1) then
       self.index_offset = -(self.index_offset / (weapon_count - 1))
     end
   end
@@ -282,17 +295,19 @@ function PLUGIN:make_display(index, tab)
   local client_weapons = PLAYER:GetWeapons()
   local offsety = 32
   local result = {}
+  local x = ScrW() - 300
+  local base_y = ScrH() * 0.5 - 90
 
   for i = -2, 2 do
-    local scale = 1.1 - math.abs(i * 0.25)
+    local scale = 1.1 - abs(i * 0.25)
 
-    table.insert(result, {
+    result[#result + 1] = {
       weapon = safe_index(client_weapons, index + i),
       scale = scale,
-      x = ScrW() - 300,
-      y = ScrH() * 0.5 - 90 + offsety - 36 * scale * 0.3,
+      x = x,
+      y = base_y + offsety - 36 * scale * 0.3,
       highlight = (i == 0)
-    })
+    }
 
     offsety = offsety + 32
   end

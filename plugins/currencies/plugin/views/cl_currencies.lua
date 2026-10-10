@@ -2,6 +2,12 @@
 -- buttons to give or drop the money of the local player, or to take money from another entity
 -- such as a container. It is created with `Currencies:create_panel`.
 
+local t = t
+local cable_send = Cable.send
+
+local background_color = Color(50, 50, 50, 100)
+local title_color = color_white:alpha(150)
+
 local PANEL = {}
 
 --- Sets the default title of the panel.
@@ -14,7 +20,7 @@ end
 -- @param h [Number]
 function PANEL:Paint(w, h)
   DisableClipping(true)
-    draw.RoundedBox(0, -4, -4, w + 8, h + 8, Color(50, 50, 50, 100))
+    draw.RoundedBox(0, -4, -4, w + 8, h + 8, background_color)
   DisableClipping(false)
 end
 
@@ -34,9 +40,9 @@ function PANEL:PaintOver(w, h)
         -text_h - 4,
         text_w + 8,
         text_h,
-        Color(50, 50, 50, 100)
+        background_color
       )
-      draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
+      draw.SimpleText(text, font, 0, -text_h - 4, title_color)
     DisableClipping(false)
   end
 end
@@ -59,6 +65,8 @@ function PANEL:rebuild()
   self.max_h = 0
   self:Clear()
 
+  local client = PLAYER
+
   for k, v in pairs(Currencies.all()) do
     local amount = self.entity:get_money(k) or 0
 
@@ -77,7 +85,7 @@ function PANEL:rebuild()
       local w = label:GetWide()
 
       if amount > 0 then
-        if self.entity == PLAYER then
+        if self.entity == client then
           local give_button = vgui.Create('fl_button', line)
           give_button:SetSize(button_size, button_size)
           give_button:SetDrawBackground(false)
@@ -86,7 +94,7 @@ function PANEL:rebuild()
           give_button:set_icon_size(button_size)
           give_button:Dock(RIGHT)
           give_button.DoClick = function(btn)
-            local target = PLAYER:GetEyeTraceNoCursor().Entity
+            local target = client:GetEyeTraceNoCursor().Entity
 
             Derma_StringRequest(
               t'ui.currency.give.title',
@@ -96,9 +104,9 @@ function PANEL:rebuild()
                 local value = tonumber(text)
 
                 if value and value > 0 then
-                  Cable.send('fl_currency_give', value, k, target)
+                  cable_send('fl_currency_give', value, k, target)
                 else
-                  PLAYER:notify('error.invalid_amount')
+                  client:notify('error.invalid_amount')
                 end
               end
             )
@@ -122,9 +130,9 @@ function PANEL:rebuild()
                 local value = tonumber(text)
 
                 if value and value > 0 then
-                  Cable.send('fl_currency_drop', value, k)
+                  cable_send('fl_currency_drop', value, k)
                 else
-                  PLAYER:notify('error.invalid_amount')
+                  client:notify('error.invalid_amount')
                 end
               end
             )
@@ -148,9 +156,9 @@ function PANEL:rebuild()
                 local value = tonumber(text)
 
                 if value and value > 0 then
-                  Cable.send('fl_currency_take', self.entity, value, k)
+                  cable_send('fl_currency_take', self.entity, value, k)
                 else
-                  PLAYER:notify('error.invalid_amount')
+                  client:notify('error.invalid_amount')
                 end
               end
             )

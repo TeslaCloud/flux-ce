@@ -81,11 +81,7 @@ function player_meta:is_weapon_raised()
     return true
   end
 
-  if self:GetDTBool(BOOL_WEAPON_RAISED) then
-    return true
-  end
-
-  return false
+  return self:GetDTBool(BOOL_WEAPON_RAISED)
 end
 
 --- Raises the player's active weapon if it is lowered and lowers it if it is raised.

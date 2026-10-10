@@ -5,6 +5,21 @@
 -- Most of Flux's client-side drawing hooks are run from here, such as `FLHUDPaint`,
 -- `ShouldHUDPaint`, `GetDrawPlayerInfo` and `DrawEntityTargetID`.
 
+local IsValid = IsValid
+local CurTime = CurTime
+local ScrW = ScrW
+local ScrH = ScrH
+local math_clamp = math.Clamp
+local surface_set_draw_color = surface.SetDrawColor
+local surface_draw_rect = surface.DrawRect
+
+local color_loading_background = Color(0, 0, 0)
+local color_loading_text = Color(255, 255, 255)
+local color_loading_bar = Color(22, 22, 22)
+local color_loading_fill = Color(245, 245, 245)
+local color_death_blood = Color(255, 0, 0, 200)
+local target_filter = {}
+
 timer.Remove('HintSystem_OpeningMenu')
 timer.Remove('HintSystem_Annoy1')
 timer.Remove('HintSystem_Annoy2')
@@ -182,21 +197,21 @@ function GM:HUDDrawScoreBoard()
       end
     end
 
-    percentage = math.Clamp(percentage, 0, 100)
+    percentage = math_clamp(percentage, 0, 100)
 
     local font = Font.size('flRobotoCondensed', math.scale(24))
     local scrw, scrh = ScrW(), ScrH()
     local w, h = util.text_size(text, font)
 
-    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0))
-    draw.SimpleText(text, font, scrw * 0.5 - w * 0.5, scrh - 128, Color(255, 255, 255))
+    draw.RoundedBox(0, 0, 0, scrw, scrh, color_loading_background)
+    draw.SimpleText(text, font, scrw * 0.5 - w * 0.5, scrh - 128, color_loading_text)
 
     local bar_w, bar_h = scrw / 3.5, 6
     local bar_x, bar_y = scrw * 0.5 - bar_w * 0.5, scrh - 80
-    local fill_w = math.Clamp(bar_w * (percentage / 100), 0, bar_w - 2)
+    local fill_w = math_clamp(bar_w * (percentage * 0.01), 0, bar_w - 2)
 
-    draw.RoundedBox(0, bar_x, bar_y, bar_w, bar_h, Color(22, 22, 22))
-    draw.RoundedBox(0, bar_x + 1, bar_y + 1, fill_w, bar_h - 2, Color(245, 245, 245))
+    draw.RoundedBox(0, bar_x, bar_y, bar_w, bar_h, color_loading_bar)
+    draw.RoundedBox(0, bar_x + 1, bar_y + 1, fill_w, bar_h - 2, color_loading_fill)
 
     --- Called on the client every frame right after the loading screen has been drawn, for
     -- drawing on top of it. Gamemode (`GM`) handlers are not called.
@@ -213,17 +228,21 @@ function GM:HUDPaint()
   -- player has been initialized, from the gamemode's `HUDPaint` handler. HUD elements
   -- that plugins draw on their own, such as the crosshair, can run it too.
   -- @return [Boolean Return false to hide the Flux HUD and the HUD of the base gamemode]
-  if PLAYER:has_initialized() and hook.Run('ShouldHUDPaint') != false then
+  local client = PLAYER
+
+  if client:has_initialized() and hook.Run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
+    local last_damage = client.last_damage
 
-    if PLAYER.last_damage and PLAYER.last_damage > (cur_time - 0.3) then
-      local alpha = math.Clamp(255 - 255 * (cur_time - PLAYER.last_damage) * 3.75, 0, 200)
+    if last_damage and last_damage > (cur_time - 0.3) then
+      local alpha = math_clamp(255 - 255 * (cur_time - last_damage) * 3.75, 0, 200)
       draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scrw, scrh, Color(255, 0, 0, alpha))
-      draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 210, 210, alpha))
+      surface_set_draw_color(255, 210, 210, alpha)
+      surface_draw_rect(0, 0, scrw, scrh)
     end
 
-    if !PLAYER:Alive() then
+    if !client:Alive() then
       --- Called on the client every frame while the local player is dead, before the theme
       -- paints the death screen, for drawing behind it. The gamemode's handler draws a red
       -- blood overlay.
@@ -239,10 +258,12 @@ function GM:HUDPaint()
       -- @param scrh [Number Screen height]
       hook.Run('HUDPaintDeathForeground', cur_time, scrw, scrh)
     else
-      PLAYER.respawn_alpha = 0
+      client.respawn_alpha = 0
 
-      if isnumber(PLAYER.white_alpha) and PLAYER.white_alpha > 0.5 then
-        PLAYER.white_alpha = Lerp(0.04, PLAYER.white_alpha, 0)
+      local white_alpha = client.white_alpha
+
+      if isnumber(white_alpha) and white_alpha > 0.5 then
+        client.white_alpha = Lerp(0.04, white_alpha, 0)
       end
 
       --- Called on the client every frame while the local player is alive and the HUD is
@@ -260,7 +281,8 @@ function GM:HUDPaint()
       end
     end
 
-    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 255, 255, PLAYER.white_alpha or 0))
+    surface_set_draw_color(255, 255, 255, client.white_alpha or 0)
+    surface_draw_rect(0, 0, scrw, scrh)
 
     self.BaseClass:HUDPaint()
   end
@@ -282,7 +304,7 @@ function GM:FLHUDPaint(cur_time, scrw, scrh)
     surface.draw_circle_outline(x, y, 65, 5, 64)
 
     surface.SetDrawColor(Theme.get_color('text'):alpha(alpha))
-    surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 64, 3, 64)
+    surface.draw_circle_outline_partial(math_clamp(percentage, 0, 100), x, y, 64, 3, 64)
 
     PLAYER.circle_action_percentage = nil
   end
@@ -293,47 +315,57 @@ end
 -- @param w [Number screen width]
 -- @param h [Number screen height]
 function GM:HUDPaintDeathBackground(cur_time, w, h)
-  draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, w, h, Color(255, 0, 0, 200))
+  draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, w, h, color_death_blood)
 end
 
 --- Finds the entity the local player is looking at, or the one closest to the crosshair
 -- within a narrow cone, and draws its target ID through the DrawPlayerTargetID hook, the
 -- entity's own DrawTargetID method or the DrawEntityTargetID hook.
 function GM:HUDDrawTargetID()
-  if IsValid(PLAYER) and PLAYER:Alive() then
+  local client = PLAYER
+
+  if IsValid(client) and client:Alive() then
     local client_pos = EyePos()
-    local trace = PLAYER:GetEyeTraceNoCursor()
+    local trace = client:GetEyeTraceNoCursor()
     local trace_ent = trace.Entity
-    local ent, dist, center_distance
+    local ent, pos
 
     if IsValid(trace_ent) then
-      dist = trace_ent:EyePos():Distance(client_pos)
       ent = trace_ent
+      pos = trace_ent:EyePos()
     else
       local entities = ents.FindInCone(client_pos, trace.Normal, 512, 0.98) -- 0.98 gives approximately 10 degrees
+      local center_x, center_y = ScrC()
+      local center_distance
 
-      for k, v in ipairs(entities) do
+      for i = 1, #entities do
+        local v = entities[i]
+
         if !IsValid(v) then continue end
 
-        local pos = v:EyePos()
-        local screen_pos = pos:ToScreen()
-        local x, y = screen_pos.x, screen_pos.y
-        local to_center = math.distance(x, y, ScrC())
+        local eye_pos = v:EyePos()
+        local screen_pos = eye_pos:ToScreen()
+        local dx, dy = screen_pos.x - center_x, screen_pos.y - center_y
+        local to_center = dx * dx + dy * dy
 
         if !center_distance or to_center < center_distance then
           center_distance = to_center
-          dist = pos:Distance(client_pos)
+          pos = eye_pos
           ent = v
         end
       end
     end
 
-    if IsValid(ent) then
-      local pos = ent:EyePos()
+    if ent then
+      target_filter[1], target_filter[2] = ent, client
 
-      if util.vector_obstructed(client_pos, pos, { ent, PLAYER }) then return end
+      if util.vector_obstructed(client_pos, pos, target_filter) then return end
 
-      local screen_pos = (pos + Vector(0, 0, 10 + dist * 0.075)):ToScreen()
+      local dist = pos:Distance(client_pos)
+
+      pos.z = pos.z + 10 + dist * 0.075
+
+      local screen_pos = pos:ToScreen()
       local x, y = screen_pos.x, screen_pos.y
 
       if ent:IsPlayer() and ent:has_initialized() and ent:Alive() then
@@ -413,36 +445,41 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   -- @return [Boolean Return false to draw nothing for this player]
   if hook.Run('PreDrawPlayerInfo', target, x, y, distance, lines) == false then return end
 
+  if distance >= 640 then return end
+
   local alpha = 255
 
-  if distance < 640 then
-    if distance > 500 then
-      local d = distance - 500
+  if distance > 500 then
+    local d = distance - 500
 
-      alpha = math.Clamp(255 * (140 - d) / 140, 0, 255)
-    end
-  else
-    return
+    alpha = math_clamp(255 * (140 - d) / 140, 0, 255)
   end
+
+  local wrap_width = ScrW() * 0.33
+  local outline_color = Color(0, 0, 0, alpha)
+  local text_size = util.text_size
+  local draw_text_outlined = draw.SimpleTextOutlined
 
   for k, v in SortedPairsByMemberValue(lines, 'priority') do
     local font = v.font or Theme.get_font('tooltip_small')
     local color = v.color and v.color:alpha(alpha) or Color(255, 255, 255, alpha)
-    local text = v.text
-    local wrapped = util.wrap_text(text, font, ScrW() * 0.33, 0)
+    local wrapped = util.wrap_text(v.text, font, wrap_width, 0)
+    local offset_x, offset_y = v.offset_x or 0, v.offset_y or 0
 
-    for k1, v1 in pairs(wrapped) do
-      local w, h = util.text_size(v1, font)
-      draw.SimpleTextOutlined(
-        v1,
+    for i = 1, #wrapped do
+      local line = wrapped[i]
+      local w, h = text_size(line, font)
+
+      draw_text_outlined(
+        line,
         font,
-        x - w * 0.5 + (v.offset_x or 0),
-        y + (v.offset_y or 0),
+        x - w * 0.5 + offset_x,
+        y + offset_y,
         color,
         nil,
         nil,
         1,
-        Color(0, 0, 0, alpha)
+        outline_color
       )
 
       y = y + h + 1
@@ -503,19 +540,22 @@ local blur_render_time = 1 / Flux.blur_update_fps
 function GM:RenderScreenspaceEffects()
   if Flux.should_render_blur then
     local cur_time = CurTime()
+    local rt_texture = Flux.rt_texture
 
     if Flux.blur_update_fps == 0 or (cur_time - last_render > blur_render_time) then
-      render.PushRenderTarget(Flux.rt_texture)
-        surface.SetDrawColor(255, 255, 255)
+      local blur_size = Flux.blur_size or 12
+
+      render.PushRenderTarget(rt_texture)
+        surface_set_draw_color(255, 255, 255)
         surface.SetMaterial(Flux.blur_material)
         surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
-        render.BlurRenderTarget(Flux.rt_texture, Flux.blur_size or 12, Flux.blur_size or 12, Flux.blur_passes or 8)
+        render.BlurRenderTarget(rt_texture, blur_size, blur_size, Flux.blur_passes or 8)
       render.PopRenderTarget()
 
       last_render = cur_time
     end
 
-    Flux.blur_mat:SetTexture('$basetexture', Flux.rt_texture)
+    Flux.blur_mat:SetTexture('$basetexture', rt_texture)
     Flux.should_render_blur = false
   else
     Flux.should_render_blur = nil
@@ -739,9 +779,11 @@ do
   --- Updates the global UI offset from the rotation of the local player's view, so that HUD
   -- elements using it sway and settle back. Skipped while the player is frozen.
   function GM:Think()
-    if IsValid(PLAYER) and !PLAYER:IsFlagSet(FL_FROZEN) then
+    local client = PLAYER
+
+    if IsValid(client) and !client:IsFlagSet(FL_FROZEN) then
       local lerp_step = FrameTime() * 6
-      local angles = PLAYER:EyeAngles()
+      local angles = client:EyeAngles()
 
       if !prev_angles then prev_angles = angles end
 

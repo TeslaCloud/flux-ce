@@ -15,12 +15,16 @@
 -- as its last argument, which the Inventory plugin passes whenever a player drops an item
 -- from an inventory.
 
+local pairs = pairs
+local istable = istable
+
 mod 'Item'
 
 local stored = Item.stored or {}
 local instances = Item.instances or {}
 local sorted = Item.sorted or {}
 local entities = Item.entities or {}
+local instance_cache = setmetatable({}, { __mode = 'v' })
 
 Item.stored = stored
 Item.instances = instances
@@ -176,6 +180,12 @@ end
 -- @param id [String item id]
 -- @return [Item the template, or nil if not found]
 function Item.find_by_id(id)
+  local item_obj = stored[id]
+
+  if item_obj then
+    return item_obj
+  end
+
   for k, v in pairs(stored) do
     if k == id or v.id == id then
       return v
@@ -196,10 +206,24 @@ end
 -- @param instance_id [Number]
 -- @return [Item the instance, or nil if not found]
 function Item.find_instance_by_id(instance_id)
+  if instance_id == nil then return end
+
+  local cached = instance_cache[instance_id]
+
+  if cached and cached.instance_id == instance_id then
+    local item_instances = instances[cached.id]
+
+    if istable(item_instances) and item_instances[instance_id] == cached then
+      return cached
+    end
+  end
+
   for item_id, item_instances in pairs(instances) do
     if istable(item_instances) then
       for k, item_obj in pairs(item_instances) do
         if item_obj.instance_id == instance_id then
+          instance_cache[instance_id] = item_obj
+
           return item_obj
         end
       end
@@ -277,15 +301,16 @@ function Item.create(id, data, forced_id)
 
   if item_obj then
     local item_id = forced_id or Item.generate_id()
+    local new_item = table.Copy(item_obj)
 
     instances[id] = instances[id] or {}
-    instances[id][item_id] = table.Copy(item_obj)
+    instances[id][item_id] = new_item
 
     if istable(data) then
-      table.safe_merge(instances[id][item_id], data)
+      table.safe_merge(new_item, data)
     end
 
-    instances[id][item_id].instance_id = item_id
+    new_item.instance_id = item_id
 
     if SERVER then
       --- Called on the server when `Item.create` has created a new item instance.
@@ -294,13 +319,13 @@ function Item.create(id, data, forced_id)
       -- The Items plugin uses the hook to call the `on_created` callback of the item.
       -- It is not run for the instances that `Item.load` restores.
       -- @param item_obj [Item The new item instance]
-      hook.Run('OnItemCreated', instances[id][item_id])
+      hook.Run('OnItemCreated', new_item)
 
       Item.async_save()
       Cable.send(nil, 'fl_items_new_instance', id, (data or 1), item_id)
     end
 
-    return instances[id][item_id]
+    return new_item
   end
 end
 

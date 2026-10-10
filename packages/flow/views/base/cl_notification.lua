@@ -58,18 +58,24 @@ end
 -- @param width [Number panel width]
 -- @param height [Number panel height]
 function PANEL:Paint(width, height)
+  local cur_alpha = self.cur_alpha
+
   if !Theme.hook('PaintNotificationContainer', self, width, height) then
-    draw.blur_panel(self, self.cur_alpha)
-    draw.RoundedBox(0, 0, 0, width, height, self.background_color:alpha(self.cur_alpha))
+    draw.blur_panel(self, cur_alpha)
+    draw.RoundedBox(0, 0, 0, width, height, self.background_color:alpha(cur_alpha))
   end
 
   if !Theme.hook('PaintNotificationText', self, width, height) then
+    local lines = self.notification_text
+    local font = Theme.get_font('menu_normal')
+    local color = self.text_color:alpha(self.cur_alpha + 55)
+    local line_height = self.font_size + 4
     local cur_y = 4
 
-    for k, v in ipairs(self.notification_text) do
-      draw.SimpleText(v, Theme.get_font('menu_normal'), 4, cur_y, self.text_color:alpha(self.cur_alpha + 55))
+    for i = 1, #lines do
+      draw.SimpleText(lines[i], font, 4, cur_y, color)
 
-      cur_y = cur_y + self.font_size + 4
+      cur_y = cur_y + line_height
     end
   end
 end

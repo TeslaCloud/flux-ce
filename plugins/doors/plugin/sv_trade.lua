@@ -4,6 +4,8 @@
 -- Currencies plugin and save the doors. `Doors:get_refund` is what the owner gets back for a
 -- sale, the door_sell_share percent of what was paid.
 
+local Color = Color
+
 --- Returns what the owner of a door gets back for selling it: the door_sell_share percent
 -- of what the door was bought for.
 -- @param entity [Entity the door]

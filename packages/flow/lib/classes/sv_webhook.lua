@@ -82,7 +82,7 @@ function Webhook:get_type(type)
 
   for k, v in pairs(self.hooks) do
     if v:is_type(type) then
-      table.insert(ret, v)
+      ret[#ret + 1] = v
     end
   end
 
@@ -101,7 +101,11 @@ end
 -- @param type [String message type]
 -- @return [Boolean]
 function Webhook:is_type(type)
-  for k, v in ipairs(self.types) do
+  local types = self.types
+
+  for i = 1, #types do
+    local v = types[i]
+
     if v == type or v == 'all' then
       return true
     end

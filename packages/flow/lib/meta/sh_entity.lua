@@ -57,8 +57,8 @@ do
   --- Finds an idle sequence of the entity's model.
   -- @return [Number ID of the first known idle sequence the model has, ACT_IDLE if it has none]
   function ent_meta:idle_animation()
-    for k, v in pairs(idle_anims) do
-      local seq = self:LookupSequence(v)
+    for i = 1, #idle_anims do
+      local seq = self:LookupSequence(idle_anims[i])
 
       if seq > 0 then
         return seq

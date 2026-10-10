@@ -5,6 +5,8 @@
 -- onto the parent of the panel asks the server to drop it into the world. Pressing R
 -- rotates the item that is being dragged.
 
+local IsValid = IsValid
+
 local PANEL = {}
 PANEL.title = nil
 PANEL.slot_size = math.scale(64)
@@ -249,8 +251,10 @@ function PANEL:on_drop(dropped)
     if input.IsKeyDown(KEY_LCONTROL) then
       split = {}
 
+      local instance_ids = dropped.instance_ids
+
       for i2 = 1, dropped.item_count * 0.5 do
-        table.insert(split, dropped.instance_ids[i2])
+        split[#split + 1] = instance_ids[i2]
       end
     elseif input.IsKeyDown(KEY_LSHIFT) then
       split = { dropped.instance_ids[1] }
@@ -280,45 +284,55 @@ end
 --- Recreates the slot panels based on the current contents of the inventory.
 -- Runs the 'OnInventoryRebuild' hook afterward.
 function PANEL:rebuild()
-  dragndrop.Clear()
-  self.scroll:Clear()
+  local scroll = self.scroll
+  local slot_panels = self.slot_panels
+  local inventory = self:get_inventory()
 
-  for i = 1, self:get_inventory_height() do
-    self.slot_panels[i] = {}
-  end
+  dragndrop.Clear()
+  scroll:Clear()
 
   local slot_size = self:get_slot_size()
   local slot_padding = self:get_slot_padding()
-  local width, height = self:get_inventory_size()
+  local slot_step = slot_size + slot_padding
+  local width, height = inventory:get_size()
+  local inventory_id = self:get_inventory_id()
+  local multislot = inventory:is_multislot()
+  local disabled = inventory:is_disabled()
+  local draw_slot_numbers = self.draw_inventory_slots == true
+  local icon = self:get_icon()
 
   for i = 1, height do
+    slot_panels[i] = {}
+  end
+
+  for i = 1, height do
+    local row = slot_panels[i]
+
     for k = 1, width do
-      local slot = vgui.Create('fl_inventory_item', self.scroll)
+      local slot = vgui.Create('fl_inventory_item', scroll)
       slot:SetSize(slot_size, slot_size)
-      slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
+      slot:SetPos((k - 1) * slot_step, (i - 1) * slot_step)
       slot.slot_x = k
       slot.slot_y = i
-      slot.inventory_id = self:get_inventory_id()
-      slot.multislot = self:is_multislot()
+      slot.inventory_id = inventory_id
+      slot.multislot = multislot
 
-      if self.draw_inventory_slots == true then
+      if draw_slot_numbers then
         slot.slot_number = k + (i - 1) * width
       end
-
-      local icon = self:get_icon()
 
       if icon then
         slot.icon = icon
       end
 
-      if self:is_disabled() then
+      if disabled then
         slot.disabled = true
       end
 
-      if self.slot_panels[i][k] == false then
+      if row[k] == false then
         slot:SetVisible(false)
       else
-        local instance_ids = self:get_slot(k, i)
+        local instance_ids = inventory:get_slot(k, i)
 
         if instance_ids and #instance_ids > 0 then
           if #instance_ids == 1 then
@@ -328,24 +342,26 @@ function PANEL:rebuild()
           end
         end
 
-        if self:is_multislot() and slot:IsVisible() then
+        if multislot and slot:IsVisible() then
           local w, h = slot:get_item_size()
 
           if w > 1 or h > 1 then
             for m = 1, h do
+              local covered_row = slot_panels[i + m - 1]
+
               for n = 1, w do
-                self.slot_panels[i + m - 1][k + n - 1] = false
+                covered_row[k + n - 1] = false
               end
             end
 
-            slot:SetSize((slot_size + slot_padding) * w - slot_padding, (slot_size + slot_padding) * h - slot_padding)
+            slot:SetSize(slot_step * w - slot_padding, slot_step * h - slot_padding)
             slot:rebuild()
           end
         end
       end
 
-      self.slot_panels[i][k] = slot
-      self.scroll:AddItem(slot)
+      row[k] = slot
+      scroll:AddItem(slot)
     end
   end
 

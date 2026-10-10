@@ -2,6 +2,10 @@
 -- adds the 'open' option to their interaction menu. A container that was given a name of its
 -- own shows that name instead of the name of its model.
 
+local target_fade = 255 / 300
+local target_desc_color = Color(255, 255, 255)
+local target_outline_color = Color(0, 0, 0)
+
 --- Draws the name and the description of the container that the local player is looking at.
 -- @param entity [Entity]
 -- @param x [Number screen position]
@@ -13,7 +17,10 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
 
     if container_data then
       local title, is_custom = self:get_container_name(entity)
-      local alpha = 255 - 255 * (dist / 300)
+      local alpha = 255 - dist * target_fade
+
+      target_desc_color.a = alpha
+      target_outline_color.a = alpha
 
       if title and !is_custom then
         title = t(title)
@@ -32,7 +39,7 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
           nil,
           nil,
           1,
-          color_black:alpha(alpha)
+          target_outline_color
         )
 
         y = y + text_h + 4
@@ -49,11 +56,11 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
           font,
           x - text_w * 0.5,
           y,
-          color_white:alpha(alpha),
+          target_desc_color,
           nil,
           nil,
           1,
-          color_black:alpha(alpha)
+          target_outline_color
         )
       end
     end

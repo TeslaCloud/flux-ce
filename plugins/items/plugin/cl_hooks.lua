@@ -2,15 +2,21 @@
 -- the use key, and builds the menu of an item with its use, take, drop, destroy and custom
 -- options.
 
+local IsValid = IsValid
+local ScrW = ScrW
+local ScrH = ScrH
+
 --- Fills the circular progress indicator while the local player holds the use key on an item.
 function Items:HUDPaint()
-  if !IsValid(PLAYER) then return end
+  local client = PLAYER
 
-  local hold_start = PLAYER:get_nv('hold_start')
+  if !IsValid(client) then return end
+
+  local hold_start = client:get_nv('hold_start')
 
   if hold_start then
     local diff = math.Clamp(math.Round(CurTime() - hold_start, 3), 0.01, 0.5)
-    local percentage = math.Clamp((diff / 0.5) * 100, 0, 100)
+    local percentage = math.Clamp(diff * 200, 0, 100)
 
     Flux.set_circle_percent(percentage)
   end
@@ -18,9 +24,11 @@ end
 
 --- Draws a halo around the item entity that the local player holds the use key on.
 function Items:PreDrawHalos()
-  if !IsValid(PLAYER) then return end
+  local client = PLAYER
 
-  local ent = PLAYER:get_nv('hold_entity')
+  if !IsValid(client) then return end
+
+  local ent = client:get_nv('hold_entity')
 
   if IsValid(ent) then
     halo.Add({ ent }, color_white)
@@ -29,16 +37,19 @@ end
 
 --- Aborts taking an item once it gets too far from the center of the local player's screen.
 function Items:Think()
-  if !IsValid(PLAYER) or !PLAYER:get_nv('hold_start') then return end
+  local client = PLAYER
 
-  local ent = PLAYER:get_nv('hold_entity')
+  if !IsValid(client) or !client:get_nv('hold_start') then return end
 
-  if IsValid(ent) and PLAYER:get_nv('hold_start') then
+  local ent = client:get_nv('hold_entity')
+
+  if IsValid(ent) then
     local scr_pos = ent:GetPos():ToScreen()
     local x, y = scr_pos.x, scr_pos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5
+    local max_offset = math.scale(350)
 
-    if !scr_pos.visible or math.abs(w - x) > math.scale(350) or math.abs(h - y) > math.scale(350) then
+    if !scr_pos.visible or math.abs(w - x) > max_offset or math.abs(h - y) > max_offset then
       Cable.send('fl_items_abort_hold_start', true)
     end
   end

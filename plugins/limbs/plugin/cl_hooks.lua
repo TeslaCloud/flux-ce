@@ -3,6 +3,10 @@
 -- The strength of the drift is looked up eight times a second; every frame only moves the
 -- view along its path.
 
+local math_approach = math.Approach
+local math_cos = math.cos
+local math_sin = math.sin
+
 local diagram_alpha = 0
 local sway_strength = 0
 local sway_pitch = 0
@@ -79,7 +83,7 @@ function Limbs:FLHUDPaint(cur_time, scrw, scrh)
     visible = false
   end
 
-  diagram_alpha = math.Approach(diagram_alpha, visible and 1 or 0, FrameTime() * 4)
+  diagram_alpha = math_approach(diagram_alpha, visible and 1 or 0, FrameTime() * 4)
 
   if diagram_alpha <= 0 then return end
 
@@ -106,12 +110,14 @@ end
 -- strength comes from the last `LazyTick`.
 -- @param user_cmd [CUserCmd]
 function Limbs:CreateMove(user_cmd)
-  sway_strength = math.Approach(sway_strength, aim_fraction, FrameTime())
+  sway_strength = math_approach(sway_strength, aim_fraction, FrameTime())
+
+  if sway_strength == 0 and sway_pitch == 0 and sway_yaw == 0 then return end
 
   local time = RealTime()
   local angle = sway_strength * self.sway_angle
-  local pitch = (math.sin(time * 1.1) * 0.6 + math.sin(time * 2.3) * 0.4) * angle
-  local yaw = (math.cos(time * 0.9) * 0.6 + math.sin(time * 1.7) * 0.4) * angle
+  local pitch = (math_sin(time * 1.1) * 0.6 + math_sin(time * 2.3) * 0.4) * angle
+  local yaw = (math_cos(time * 0.9) * 0.6 + math_sin(time * 1.7) * 0.4) * angle
 
   if pitch == sway_pitch and yaw == sway_yaw then return end
 

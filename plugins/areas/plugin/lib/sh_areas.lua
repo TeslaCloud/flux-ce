@@ -58,7 +58,7 @@ function Areas.get_by_type(type)
 
   for k, v in pairs(stored) do
     if v.type == type then
-      table.insert(to_ret, v)
+      to_ret[#to_ret + 1] = v
     end
   end
 
@@ -118,19 +118,24 @@ function Areas.create(id, height, data)
   -- area's base height, subsequent vertices are snapped to it.
   -- @param vect [Vector position of the vertex]
   function area:add_vertex(vect)
-    if #self.verts == 0 then
+    local verts = self.verts
+    local count = #verts
+
+    if count == 0 then
       self.minh = vect.z
       self.maxh = self.minh + self.height
     else
       vect.z = self.minh
     end
 
-    table.insert(self.verts, vect)
+    verts[count + 1] = vect
   end
 
   --- Stores the current vertices as a finished polygon and starts a new one.
   function area:finish_poly()
-    table.insert(self.polys, self.verts)
+    local polys = self.polys
+
+    polys[#polys + 1] = self.verts
     self.verts = {}
   end
 

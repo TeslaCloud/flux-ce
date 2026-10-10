@@ -6,6 +6,9 @@
 -- @environment [development]
 -- @module [Profiler]
 
+local clock = os.clock
+local round = math.Round
+
 PLUGIN:set_name('Hook Profiler')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Profile any hooks.')
@@ -16,6 +19,7 @@ if DBugR then return end
 
 hook._profiler_old_call = hook._profiler_old_call or hook.Call
 
+local old_call = hook._profiler_old_call
 local metrics = {}
 local counts = {}
 
@@ -26,12 +30,12 @@ local counts = {}
 -- @param ... [Vararg arguments of the hook]
 -- @return [Any up to six values returned by the original hook.Call]
 function hook.Call(name, gm, ...)
-  local start_time = os.clock()
+  local start_time = clock()
   local total_time = metrics[name] or 0
 
-  local a, b, c, d, e, f = hook._profiler_old_call(name, gm, ...)
+  local a, b, c, d, e, f = old_call(name, gm, ...)
 
-  metrics[name] = total_time + (os.clock() - start_time)
+  metrics[name] = total_time + (clock() - start_time)
   counts[name] = (counts[name] or 0) + 1
 
   return a, b, c, d, e, f
@@ -47,6 +51,7 @@ if CLIENT then
   local metrics_sv = {}
   local counts_sv = {}
   local debug_color = Color(200, 100, 100, 200)
+  local draw_simple_text = draw.SimpleText
 
   Cable.receive('fl_profiler_update', function(metrics_data, counts_data)
     metrics_sv = metrics_data
@@ -96,19 +101,19 @@ if CLIENT then
     local line_height = util.font_size(font)
     local x = math.scale(8)
     -- Sits right above the version line of the developer HUD.
-    local pos = ScrH() - math.scale(8) - line_height * 2
+    local pos = ScrH() - x - line_height * 2
 
-    draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', font, x, pos - line_height * 3, debug_color)
-    draw.SimpleText(
-      largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)',
+    draw_simple_text('SV: '..tostring(round(total_sv * 1000, 2))..'ms', font, x, pos - line_height * 3, debug_color)
+    draw_simple_text(
+      largest_sv..' ('..tostring(round(largest_sv_n * 1000, 2))..'ms)',
       font,
       x,
       pos - line_height * 2,
       debug_color
     )
-    draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', font, x, pos - line_height, debug_color)
-    draw.SimpleText(
-      largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)',
+    draw_simple_text('CL: '..tostring(round(total_cl * 1000, 2))..'ms', font, x, pos - line_height, debug_color)
+    draw_simple_text(
+      largest_cl..' ('..tostring(round(largest_cl_n * 1000, 2))..'ms)',
       font,
       x,
       pos,
@@ -147,23 +152,31 @@ if CLIENT then
   --- Creates the list view if it is missing, then adds or updates one line per serverside
   -- hook with its load in milliseconds and its call count.
   function PANEL:rebuild()
-    if !IsValid(self.sv_list) then
-      self.sv_list = vgui.Create('DListView', self)
-      self.sv_list:Dock(FILL)
-      self.sv_list:AddColumn('Hook')
-      self.sv_list:AddColumn('Load')
-      self.sv_list:AddColumn('Calls')
+    local sv_list = self.sv_list
+
+    if !IsValid(sv_list) then
+      sv_list = vgui.Create('DListView', self)
+      sv_list:Dock(FILL)
+      sv_list:AddColumn('Hook')
+      sv_list:AddColumn('Load')
+      sv_list:AddColumn('Calls')
+
+      self.sv_list = sv_list
     end
 
+    local lines = PANEL.lines
+    local counts_sv = self.counts_sv
+
     for k, v in pairs(self.metrics_sv) do
-      local line = PANEL.lines[k]
+      local line = lines[k]
+      local load_text = tostring(round(v * 1000, 2))..'ms'
 
       if !line then
-        PANEL.lines[k] = self.sv_list:AddLine(k, tostring(math.Round(v * 1000, 2))..'ms', self.counts_sv[k])
+        lines[k] = sv_list:AddLine(k, load_text, counts_sv[k])
       else
         line:SetValue(1, k)
-        line:SetValue(2, tostring(math.Round(v * 1000, 2))..'ms')
-        line:SetValue(3, self.counts_sv[k])
+        line:SetValue(2, load_text)
+        line:SetValue(3, counts_sv[k])
       end
     end
   end

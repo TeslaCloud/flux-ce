@@ -26,12 +26,19 @@ function Area:OneSecond()
 
   for k, v in pairs(Areas.all()) do
     if istable(v.polys) and isstring(v.type) then
+      local area_id = v.id
+      local max_height = v.maxh
+
       for k2, v2 in ipairs(v.polys) do
+        local min_height = v2[1].z
+
         for _, actor in player.Iterator() do
           local pos = actor:GetPos()
+          local last_area = actor.last_area or {}
+          local visited = last_area[area_id] or {}
 
-          actor.last_area = actor.last_area or {}
-          actor.last_area[v.id] = actor.last_area[v.id] or {}
+          actor.last_area = last_area
+          last_area[area_id] = visited
 
           -- The player hasn't moved since our previous check, no need to check again.
           if pos == actor.last_pos then continue end
@@ -40,15 +47,15 @@ function Area:OneSecond()
           local entered_area = false
 
           -- First do height checks
-          if z > v2[1].z and z < v.maxh then
+          if z > min_height and z < max_height then
             if util.vector_in_poly(pos, v2) then
               -- The player entered the area
-              if !table.HasValue(actor.last_area[v.id], k2) then
+              if !table.HasValue(visited, k2) then
                 try(Areas.get_callback(v.type), actor, v, true, pos, cur_time)
 
                 Cable.send(actor, 'fl_player_entered_area', k, pos)
 
-                table.insert(actor.last_area[v.id], k2)
+                visited[#visited + 1] = k2
               end
 
               entered_area = true
@@ -57,12 +64,12 @@ function Area:OneSecond()
 
           if !entered_area then
             -- The player left the area
-            if table.HasValue(actor.last_area[v.id], k2) then
+            if table.HasValue(visited, k2) then
               try(Areas.get_callback(v.type), actor, v, false, pos, cur_time)
 
               Cable.send(actor, 'fl_player_left_area', k, pos)
 
-              table.RemoveByValue(actor.last_area[v.id], k2)
+              table.RemoveByValue(visited, k2)
             end
           end
         end

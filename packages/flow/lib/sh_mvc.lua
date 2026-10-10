@@ -38,10 +38,12 @@ if CLIENT then
 
     mvc_hooks[name] = mvc_hooks[name] or {}
 
-    table.insert(mvc_hooks[name], {
+    local name_hooks = mvc_hooks[name]
+
+    name_hooks[#name_hooks + 1] = {
       handler = handler,
       prevent_remove = prevent_remove
-    })
+    }
   end
 
   --- Sends a request to the server and calls the handler once the server responds to it.
@@ -104,9 +106,10 @@ else
   function MVC.handler(name, handler)
     if !isstring(name) then return end
 
-    mvc_handlers[name] = mvc_handlers[name] or {}
+    local handlers = mvc_handlers[name] or {}
 
-    table.insert(mvc_handlers[name], handler)
+    mvc_handlers[name] = handlers
+    handlers[#handlers + 1] = handler
   end
 
   --- Sends data to the callbacks the clients have registered with MVC.pull, MVC.request
@@ -136,11 +139,11 @@ else
     current_handler = { actor, name }
 
     if handlers then
-      for k, v in ipairs(handlers) do
-        local success, value = pcall(v, actor, ...)
+      for i = 1, #handlers do
+        local success, value = pcall(handlers[i], actor, ...)
 
         if !success then
-          ErrorNoHalt("The '"..name..' - '..tostring(k).."' MVC handler has failed to run!\n")
+          ErrorNoHalt("The '"..name..' - '..tostring(i).."' MVC handler has failed to run!\n")
           error_with_traceback(tostring(value))
         end
       end

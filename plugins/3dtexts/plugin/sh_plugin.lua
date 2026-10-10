@@ -12,6 +12,11 @@ SurfaceText.pictures = SurfaceText.pictures or {}
 
 require_relative 'cl_hooks'
 
+local insert = table.insert
+local remove = table.remove
+local abs = math.abs
+local cable_send = Cable.send
+
 --- Registers the 'texts' and 'pictures' level design permissions.
 function SurfaceText:RegisterPermissions()
   Bolt:register_permission(
@@ -34,8 +39,8 @@ if SERVER then
   --- Sends all stored 3D texts and pictures to the player who has just initialized.
   -- @param actor [Player]
   function SurfaceText:PlayerInitialized(actor)
-    Cable.send(actor, 'fl_surface_text_load', self.texts)
-    Cable.send(actor, 'fl_surface_picture_load', self.pictures)
+    cable_send(actor, 'fl_surface_text_load', self.texts)
+    cable_send(actor, 'fl_surface_picture_load', self.pictures)
   end
 
   --- Loads the stored 3D texts and pictures when the framework loads its data.
@@ -89,11 +94,11 @@ if SERVER then
   function SurfaceText:add_text(data)
     if !data or !data.text or !data.pos or !data.angle or !data.style or !data.scale then return end
 
-    table.insert(SurfaceText.texts, data)
+    insert(SurfaceText.texts, data)
 
     self:save()
 
-    Cable.send(nil, 'fl_surface_text_add', data)
+    cable_send(nil, 'fl_surface_text_add', data)
   end
 
   --- Adds a 3D picture, saves it and broadcasts it to all clients. Serverside only.
@@ -114,11 +119,11 @@ if SERVER then
   function SurfaceText:add_picture(data)
     if !data or !data.url or !data.width or !data.height then return end
 
-    table.insert(SurfaceText.pictures, data)
+    insert(SurfaceText.pictures, data)
 
     self:save()
 
-    Cable.send(nil, 'fl_surface_picture_add', data)
+    cable_send(nil, 'fl_surface_picture_add', data)
   end
 
   --- Asks the player's client to find the 3D text they are looking at and request its removal.
@@ -126,7 +131,7 @@ if SERVER then
   -- @param actor [Player]
   function SurfaceText:remove_text(actor)
     if actor:can('texts') then
-      Cable.send(actor, 'fl_surface_text_calculate', true)
+      cable_send(actor, 'fl_surface_text_calculate', true)
     end
   end
 
@@ -135,17 +140,17 @@ if SERVER then
   -- @param actor [Player]
   function SurfaceText:remove_picture(actor)
     if actor:can('pictures') then
-      Cable.send(actor, 'fl_surface_picture_calculate', true)
+      cable_send(actor, 'fl_surface_picture_calculate', true)
     end
   end
 
   Cable.receive('fl_surface_text_remove', function(actor, idx)
     if actor:can('texts') then
-      table.remove(SurfaceText.texts, idx)
+      remove(SurfaceText.texts, idx)
 
       SurfaceText:save()
 
-      Cable.send(nil, 'fl_surface_text_remove', idx)
+      cable_send(nil, 'fl_surface_text_remove', idx)
 
       actor:notify(t'notification.3d_text.text_removed')
     end
@@ -153,11 +158,11 @@ if SERVER then
 
   Cable.receive('fl_surface_picture_remove', function(actor, idx)
     if actor:can('pictures') then
-      table.remove(SurfaceText.pictures, idx)
+      remove(SurfaceText.pictures, idx)
 
       SurfaceText:save()
 
-      Cable.send(nil, 'fl_surface_picture_remove', idx)
+      cable_send(nil, 'fl_surface_picture_remove', idx)
 
       actor:notify(t'notification.3d_picture.removed')
     end
@@ -170,20 +175,23 @@ else
     if !trace then return false end
 
     local hit_pos = trace.HitPos - trace.HitNormal
+    local hit_z = abs(hit_pos.z)
     local trace_start = trace.StartPos
+    local font = Theme.get_font('text_3d2d')
 
     for k, v in pairs(self.texts) do
       local pos = v.pos
       local normal = v.normal
       local ang = normal:Angle()
-      local w, h = util.text_size(v.text, Theme.get_font('text_3d2d'))
-      local ang_right = -ang:Right()
-      local start_pos = pos - ang_right * (w * 0.05) * v.scale
-      local end_pos = pos + ang_right * (w * 0.05) * v.scale
+      local w, h = util.text_size(v.text, font)
+      local scale = v.scale
+      local offset = -ang:Right() * (w * 0.05) * scale
+      local start_pos = pos - offset
+      local end_pos = pos + offset
 
-      if math.abs(math.abs(hit_pos.z) - math.abs(pos.z)) < 4 * v.scale then
+      if abs(hit_z - abs(pos.z)) < 4 * scale then
         if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-          Cable.send('fl_surface_text_remove', k)
+          cable_send('fl_surface_text_remove', k)
 
           return true
         end
@@ -200,6 +208,7 @@ else
     if !trace then return false end
 
     local hit_pos = trace.HitPos - trace.HitNormal
+    local hit_z = abs(hit_pos.z)
     local trace_start = trace.StartPos
 
     for k, v in pairs(self.pictures) do
@@ -207,13 +216,13 @@ else
       local normal = v.normal
       local ang = normal:Angle()
       local width, height = v.width, v.height
-      local ang_right = -ang:Right()
-      local start_pos = pos - ang_right * (width * 0.05)
-      local end_pos = pos + ang_right * (width * 0.05)
+      local offset = -ang:Right() * (width * 0.05)
+      local start_pos = pos - offset
+      local end_pos = pos + offset
 
-      if math.abs(math.abs(hit_pos.z) - math.abs(pos.z)) < height * 0.05 then
+      if abs(hit_z - abs(pos.z)) < height * 0.05 then
         if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-          Cable.send('fl_surface_picture_remove', k)
+          cable_send('fl_surface_picture_remove', k)
 
           return true
         end
@@ -228,11 +237,11 @@ else
   end)
 
   Cable.receive('fl_surface_text_add', function(data)
-    table.insert(SurfaceText.texts, data)
+    insert(SurfaceText.texts, data)
   end)
 
   Cable.receive('fl_surface_text_remove', function(idx)
-    table.remove(SurfaceText.texts, idx)
+    remove(SurfaceText.texts, idx)
   end)
 
   Cable.receive('fl_surface_picture_load', function(data)
@@ -240,11 +249,11 @@ else
   end)
 
   Cable.receive('fl_surface_picture_add', function(data)
-    table.insert(SurfaceText.pictures, data)
+    insert(SurfaceText.pictures, data)
   end)
 
   Cable.receive('fl_surface_picture_remove', function(idx)
-    table.remove(SurfaceText.pictures, idx)
+    remove(SurfaceText.pictures, idx)
   end)
 
   Cable.receive('fl_surface_text_calculate', function()

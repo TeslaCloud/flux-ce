@@ -25,6 +25,8 @@
 -- changes or refuses the money that an entity is given, `EntityMoneyReceived` reports the
 -- money it was given and `EntityMoneyChanged` reports every change of a balance.
 
+local isstring = isstring
+
 PLUGIN:set_global('Currencies')
 
 local stored = Currencies.stored or {}
@@ -80,9 +82,10 @@ do
   --   currency while none or more than one are registered]
   function Currencies:get_default_currency()
     local id = Config.get('default_currency')
+    local lower_id = isstring(id) and id:lower()
 
-    if isstring(id) and stored[id:lower()] then
-      return id:lower()
+    if lower_id and stored[lower_id] then
+      return lower_id
     end
 
     local only = next(stored)
@@ -100,8 +103,10 @@ do
   --   there is no default currency either]
   -- @see [Currencies:get_default_currency]
   function Currencies:resolve_currency(id)
-    if isstring(id) and stored[id:lower()] then
-      return id:lower()
+    local lower_id = isstring(id) and id:lower()
+
+    if lower_id and stored[lower_id] then
+      return lower_id
     end
 
     return self:get_default_currency()
@@ -115,7 +120,8 @@ do
   -- @return [Number amount, rounded to the decimals of the currency; 0 if the currency is
   --   not registered]
   function Currencies:get_starting_amount(id)
-    local currency_data = isstring(id) and stored[id:lower()]
+    local lower_id = isstring(id) and id:lower()
+    local currency_data = lower_id and stored[lower_id]
 
     if !currency_data then
       return 0
@@ -124,7 +130,7 @@ do
     local amount = tonumber(currency_data.starting_amount) or 0
     local override = Config.get('starting_money')
 
-    if isnumber(override) and override > 0 and id:lower() == self:get_default_currency() then
+    if isnumber(override) and override > 0 and lower_id == self:get_default_currency() then
       amount = override
     end
 

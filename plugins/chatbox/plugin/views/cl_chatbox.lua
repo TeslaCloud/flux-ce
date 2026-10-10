@@ -5,11 +5,17 @@
 -- on the up and down keys, and the commands that match what is being typed are listed.
 -- `Chatbox.create` creates the panel and keeps it in Chatbox.panel.
 
+local get_option, get_font, get_color = Theme.get_option, Theme.get_font, Theme.get_color
+local config_get = Config.get
+local simple_text_outlined = draw.SimpleTextOutlined
+local backdrop_color = Color(0, 0, 0, 150)
+local syntax_color = Color(255, 255, 255)
+
 local PANEL = {}
 PANEL.history = {}
 PANEL.last_pos = 0
 PANEL.is_open = false
-PANEL.padding = Theme.get_option('chatbox_padding', math.scale(8))
+PANEL.padding = get_option('chatbox_padding', math.scale(8))
 
 --- Creates the scroll panel for the messages and the text entry with its input
 -- history, then lays the chatbox out.
@@ -33,7 +39,7 @@ function PANEL:Init()
   self.text_entry = vgui.Create('fl_text_entry', self)
   self.text_entry:SetText('')
   self.text_entry:SetSize(1, 1)
-  self.text_entry:set_limit(Config.get('max_message_length', 512))
+  self.text_entry:set_limit(config_get('max_message_length', 512))
   self.text_entry.history = {}
   self.text_entry.last_index = 0
   self.text_entry:SetMultiline(true)
@@ -44,7 +50,7 @@ function PANEL:Init()
     local offset = div > 2 and 0 or div > 1 and math.scale(25) or math.scale(50)
 
     self:SetSize(Chatbox.width, Chatbox.height + offset)
-    entry:SetTall(Theme.get_option('chatbox_text_entry_height', 40) + offset)
+    entry:SetTall(get_option('chatbox_text_entry_height', 40) + offset)
 
     --- The ChatTextChanged hook of GMod, run by the chatbox because it replaces the default
     -- chat. Called on the client whenever the contents of the text entry change, and with an
@@ -111,10 +117,12 @@ function PANEL:Init()
     local offset = math.scale(4)
 
     DisableClipping(true)
-      draw.RoundedBox(offset * 2, 0, -offset, w, h + offset, Theme.get_color('chat_text_entry_background'))
+      draw.RoundedBox(offset * 2, 0, -offset, w, h + offset, get_color('chat_text_entry_background'))
     DisableClipping(true)
 
-    entry:DrawTextEntryText(Theme.get_color('text'), Theme.get_color('accent'), Theme.get_color('text'))
+    local text_color = get_color('text')
+
+    entry:DrawTextEntryText(text_color, get_color('accent'), text_color)
   end
 
   self:rebuild()
@@ -132,7 +140,9 @@ function PANEL:Think()
       end
     end
   else
-    self.scroll_panel:GetVBar():SetScroll(self.scroll_panel:GetVBar().CanvasSize)
+    local vbar = self.scroll_panel:GetVBar()
+
+    vbar:SetScroll(vbar.CanvasSize)
   end
 end
 
@@ -182,37 +192,37 @@ function PANEL:PaintOver(width, height)
           end
         end
 
-        draw.RoundedBox(0, 0, 0, width, height - entry:GetTall(), Color(0, 0, 0, 150))
+        draw.RoundedBox(0, 0, 0, width, height - entry:GetTall(), backdrop_color)
 
-        local font, color = Theme.get_font('text_normal'), Theme.get_color('accent')
+        local font, color = get_font('text_normal'), get_color('accent')
+        local command_count = #cmds
 
-        if #cmds > 0 then
+        if command_count > 0 then
           local last_y = 0
-          local color_white = Color(255, 255, 255)
 
           for k, v in ipairs(cmds) do
-            local w, h = draw.SimpleTextOutlined('/' + v.name, font, 16, 16 + last_y, color, nil, nil, 0.5, color_black)
-            w, h = draw.SimpleTextOutlined(
+            local w, h = simple_text_outlined('/' + v.name, font, 16, 16 + last_y, color, nil, nil, 0.5, color_black)
+            w, h = simple_text_outlined(
               t(v.syntax),
               font,
               16 + w + 8,
               16 + last_y,
-              color_white,
+              syntax_color,
               nil,
               nil,
               0.5,
               color_black
             )
 
-            if #cmds == 1 then
+            if command_count == 1 then
               local cur_y = 20 + h
-              local small_font = Theme.get_font('text_small')
+              local small_font = get_font('text_small')
               local desc = t(v:get_description())
               local wrapped = util.wrap_text(desc, small_font, width, 16)
 
               for k1, v1 in pairs(wrapped) do
                 local text_w, text_h =
-                  draw.SimpleTextOutlined(v1, small_font, 16, cur_y, color_white, nil, nil, 0.5, color_black)
+                  simple_text_outlined(v1, small_font, 16, cur_y, syntax_color, nil, nil, 0.5, color_black)
 
                 cur_y = cur_y + text_h + math.scale(2)
               end
@@ -223,12 +233,12 @@ function PANEL:PaintOver(width, height)
                 aliases = table.concat(v.aliases or {}, ', ')
               end
 
-              draw.SimpleTextOutlined(
+              simple_text_outlined(
                 t'ui.chat.aliases'..': ' + aliases,
                 small_font,
                 16,
                 cur_y,
-                color_white,
+                syntax_color,
                 nil,
                 nil,
                 0.5,
@@ -241,7 +251,7 @@ function PANEL:PaintOver(width, height)
             if k >= 10 then break end
           end
         else
-          draw.SimpleTextOutlined(t'ui.chat.no_commands_found', font, 16, 16, color, nil, nil, 0.5, color_black)
+          simple_text_outlined(t'ui.chat.no_commands_found', font, 16, 16, color, nil, nil, 0.5, color_black)
         end
       end
     end
@@ -358,7 +368,7 @@ end
 -- Ejects the oldest message first if the 'max_messages' limit has been reached.
 -- @param panel [Panel a fl_chat_message panel]
 function PANEL:add_panel(panel)
-  if #self.history >= Config.get('max_messages') then
+  if #self.history >= config_get('max_messages') then
     local last_history = self.history[1]
 
     if IsValid(last_history) then
@@ -376,7 +386,7 @@ function PANEL:add_panel(panel)
   self.scroll_panel:AddItem(panel)
   self.scroll_panel:GetVBar():AnimateTo(self.last_pos, 1, 0, -1)
 
-  self.last_pos = self.last_pos + Config.get('message_margin') + panel:GetTall()
+  self.last_pos = self.last_pos + config_get('message_margin') + panel:GetTall()
 end
 
 --- Removes the message from the history and rebuilds the history indexes.
@@ -393,27 +403,31 @@ function PANEL:rebuild()
   self:SetSize(Chatbox.width, Chatbox.height)
   self:SetPos(Chatbox.x, Chatbox.y)
 
-  local text_entry_height = Theme.get_option('chatbox_text_entry_height', 40)
+  local text_entry_height = get_option('chatbox_text_entry_height', 40)
 
   self.text_entry:SetSize(Chatbox.width, text_entry_height)
   self.text_entry:SetPos(0, Chatbox.height - text_entry_height)
-  self.text_entry:SetFont(Theme.get_font('chatbox_text_entry'))
-  self.text_entry:SetTextColor(Theme.get_color('text'))
+  self.text_entry:SetFont(get_font('chatbox_text_entry'))
+  self.text_entry:SetTextColor(get_color('text'))
   self.text_entry:RequestFocus()
 
   self.scroll_panel:SetSize(Chatbox.width, Chatbox.height - self.text_entry:GetTall() - 16)
   self.scroll_panel:PerformLayout()
   self.scroll_panel:GetVBar():SetScroll(self.scroll_panel:GetVBar().CanvasSize or 0)
 
-  self.last_pos = 0
+  local padding = self.padding
+  local message_margin = config_get('message_margin')
+  local last_pos = 0
 
   for k, v in ipairs(self.history) do
     if IsValid(v) then
-      v:SetPos(self.padding, self.last_pos)
+      v:SetPos(padding, last_pos)
 
-      self.last_pos = self.last_pos + Config.get('message_margin') + v:GetTall()
+      last_pos = last_pos + message_margin + v:GetTall()
     end
   end
+
+  self.last_pos = last_pos
 end
 
 vgui.Register('fl_chat_panel', PANEL, 'fl_base_panel')

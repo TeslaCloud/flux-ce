@@ -5,6 +5,8 @@
 -- `OnIntroPanelRemoved` hooks.
 -- @module [fl_intro]
 
+local math_clamp = math.Clamp
+
 local PANEL = {}
 
 --- Covers the whole screen, starts the intro animation, schedules the panel to close after
@@ -48,7 +50,8 @@ function PANEL:Paint(w, h)
 
   logo_tween:update(frame_time)
 
-  draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, remove_alpha))
+  surface.SetDrawColor(0, 0, 0, remove_alpha)
+  surface.DrawRect(0, 0, w, h)
 
   draw.textured_rect(
     util.get_material('materials/flux/tc_logo.png'),
@@ -63,35 +66,30 @@ function PANEL:Paint(w, h)
     if self.should_remove then
       self:MoveToFront()
 
-      remove_alpha = math.Clamp(remove_alpha - 3, 0, 255)
-    end
+      remove_alpha = math_clamp(remove_alpha - 3, 0, 255)
+    elseif logo_data.width < logo_w * 0.7 then
+      exx, exy = ScrC()
 
-    if !self.should_remove then
-      if logo_data.width < logo_w * 0.7 then
-        local cx, cy = ScrC()
-        exx, exy = cx, cy
+      if cur_alpha == 0 then
+        cur_alpha = 255
 
-        if cur_alpha == 0 then
-          cur_alpha = 255
-
-          sound.PlayFile(
-            'sound/ambient/machines/thumper_hit.wav',
-            'noplay noblock',
-            function(channel, error, err_string)
-              if channel then
-                channel:SetVolume(0.5)
-                channel:Play()
-              end
+        sound.PlayFile(
+          'sound/ambient/machines/thumper_hit.wav',
+          'noplay noblock',
+          function(channel, error, err_string)
+            if channel then
+              channel:SetVolume(0.5)
+              channel:Play()
             end
-          )
-        end
-
-        surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)
-        surface.draw_circle(exx, exy, cur_radius, 180)
-
-        cur_radius = cur_radius + 3
-        cur_alpha = math.Clamp(Lerp(frame_time * 8, cur_alpha, 1), 0, 255)
+          end
+        )
       end
+
+      surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)
+      surface.draw_circle(exx, exy, cur_radius, 180)
+
+      cur_radius = cur_radius + 3
+      cur_alpha = math_clamp(Lerp(frame_time * 8, cur_alpha, 1), 0, 255)
     end
   end
 end

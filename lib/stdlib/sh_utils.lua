@@ -7,6 +7,11 @@
 -- `include_sandboxed` for running a file in a restricted environment.
 -- @module [util]
 
+local ipairs = ipairs
+local IsValid = IsValid
+local isstring = isstring
+local tostring = tostring
+
 --- Returns the names of all ammo types that are registered in the game.
 -- @return [List<String> ammo type names]
 function game.get_ammo_list()
@@ -101,7 +106,7 @@ end
 -- @return [String the joined list]
 function util.list_to_string(callback, separator, ...)
   if !isfunction(callback) then
-    callback = function(obj) return tostring(obj) end
+    callback = tostring
   end
 
   if !isstring(separator) then
@@ -109,21 +114,26 @@ function util.list_to_string(callback, separator, ...)
   end
 
   local list = { ... }
-  local result = ''
+  local count = #list
+  local pieces = {}
 
   for k, v in ipairs(list) do
     local text = callback(v)
 
     if isstring(text) then
-      result = result..text
+      pieces[#pieces + 1] = text
     end
 
-    if k < #list then
-      result = result..separator
+    if k < count then
+      pieces[#pieces + 1] = separator
     end
   end
 
-  return result
+  return table.concat(pieces)
+end
+
+local function player_name_or_unknown(obj)
+  return (IsValid(obj) and obj:name()) or 'Unknown Player'
 end
 
 --- Joins the names of a list of players into a single comma-separated string.
@@ -138,9 +148,7 @@ function util.player_list_to_string(player_list)
     return 'ui.chat.everyone'
   end
 
-  return util.list_to_string(function(obj)
-    return (IsValid(obj) and obj:name()) or 'Unknown Player'
-  end, nil, unpack(player_list))
+  return util.list_to_string(player_name_or_unknown, nil, unpack(player_list))
 end
 
 --- Removes the newlines and tabs from a string, except for those inside of double quotes.
@@ -148,12 +156,12 @@ end
 -- @return [String]
 function util.remove_newlines(str)
   local pieces = str:split()
-  local to_ret = ''
+  local kept = {}
   local skip = ''
 
   for k, v in ipairs(pieces) do
     if skip != '' then
-      to_ret = to_ret..v
+      kept[#kept + 1] = v
 
       if v == skip then
         skip = ''
@@ -165,7 +173,7 @@ function util.remove_newlines(str)
     if v == '"' then
       skip = '"'
 
-      to_ret = to_ret..v
+      kept[#kept + 1] = v
 
       continue
     end
@@ -174,10 +182,10 @@ function util.remove_newlines(str)
       continue
     end
 
-    to_ret = to_ret..v
+    kept[#kept + 1] = v
   end
 
-  return to_ret
+  return table.concat(kept)
 end
 
 --- Removes the common indentation and the surrounding blank lines from a multi-line string,
@@ -195,7 +203,7 @@ end
 function txt(text)
   local lines = (text or ''):chomp('\n'):split('\n')
   local lowest_indent
-  local output = ''
+  local output = {}
 
   for k, v in ipairs(lines) do
     if v:match('^[%s]+$') then continue end
@@ -211,10 +219,10 @@ function txt(text)
   end
 
   for k, v in ipairs(lines) do
-    output = output..v:trim_start(lowest_indent)..'\n'
+    output[#output + 1] = v:trim_start(lowest_indent)..'\n'
   end
 
-  return output:chomp(' '):chomp('\n')
+  return table.concat(output):chomp(' '):chomp('\n')
 end
 
 --- Returns the Steam name of a player, or the translated name of the console if the player is
@@ -320,7 +328,7 @@ function util.get_operators()
   local list = {}
 
   for k, v in pairs(operators) do
-    table.insert(list, k)
+    list[#list + 1] = k
   end
 
   return list
@@ -402,10 +410,12 @@ function print_traceback(suppress, ...)
   pieces[1] = '' -- remove the actual call to debug.traceback
 
   if !suppress then
+    local trace_color = Color(0, 255, 255)
+
     for k, v in ipairs(pieces) do
       if v and v != '' then
         Msg('    ')
-        MsgC(Color(0, 255, 255), 'from '..v)
+        MsgC(trace_color, 'from '..v)
         Msg('\n')
       end
     end
@@ -424,7 +434,7 @@ function long_error(...)
 
   if len > 200 then
     for i = 1, len / 200 do
-      table.insert(pieces, text:sub((i - 1) * 200 + 1, math.min(i * 200, len)))
+      pieces[#pieces + 1] = text:sub((i - 1) * 200 + 1, math.min(i * 200, len))
     end
   else
     pieces = { text }

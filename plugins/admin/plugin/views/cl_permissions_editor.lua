@@ -22,6 +22,34 @@ function PANEL:rebuild()
   local permission = self:get_permission()
   local quarter = width * 0.25
 
+  local paint_button = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
+  local request_temporary = function(btn)
+    surface.PlaySound('buttons/button14.wav')
+
+    Derma_StringRequest(t'ui.admin.temp_permission.title',
+      t'ui.admin.temp_permission.message',
+      '',
+      function(text)
+        local duration = Bolt:interpret_ban_time(text)
+        local perm_id = self:get_permission().id
+        local perm_value = btn.perm_value
+
+        if text == '' then
+          Cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
+
+          self:set_temporary(perm_value, 0)
+
+          return
+        end
+
+        if duration then
+          Cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
+
+          self:set_temporary(perm_value, os.time() + duration)
+        end
+      end)
+  end
+
   self.container = vgui.Create('fl_base_panel', self)
   self.container:SetSize(width, height)
   self.container:SetPos(0, 0)
@@ -41,7 +69,7 @@ function PANEL:rebuild()
   self.button_allow:SetSize(quarter * 0.9, height)
   self.button_allow:SetText('')
   self.button_allow.perm_value = PERM_ALLOW
-  self.button_allow.Paint = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_allow.Paint = paint_button
   self.button_allow.DoClick = function(btn)
     if btn.is_selected then return end
 
@@ -49,39 +77,14 @@ function PANEL:rebuild()
     self:select_button(btn)
   end
 
-  self.button_allow.DoRightClick = function(btn)
-    surface.PlaySound('buttons/button14.wav')
-
-    Derma_StringRequest(t'ui.admin.temp_permission.title',
-      t'ui.admin.temp_permission.message',
-      '',
-      function(text)
-        local duration = Bolt:interpret_ban_time(text)
-        local perm_id = self:get_permission().id
-        local perm_value = btn.perm_value
-
-        if text == '' then
-          Cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
-
-          self:set_temporary(perm_value, 0)
-
-          return
-        end
-
-        if duration then
-          Cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
-
-          self:set_temporary(perm_value, os.time() + duration)
-        end
-      end)
-  end
+  self.button_allow.DoRightClick = request_temporary
 
   self.button_no = vgui.Create('DButton', self.container)
   self.button_no:SetPos(quarter * 2, 0)
   self.button_no:SetSize(quarter * 0.9, height)
   self.button_no:SetText('')
   self.button_no.perm_value = PERM_NO
-  self.button_no.Paint = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_no.Paint = paint_button
   self.button_no.DoClick = function(btn)
     if btn.is_selected then return end
 
@@ -89,39 +92,14 @@ function PANEL:rebuild()
     self:select_button(btn)
   end
 
-  self.button_no.DoRightClick = function(btn)
-    surface.PlaySound('buttons/button14.wav')
-
-    Derma_StringRequest(t'ui.admin.temp_permission.title',
-      t'ui.admin.temp_permission.message',
-      '',
-      function(text)
-        local duration = Bolt:interpret_ban_time(text)
-        local perm_id = self:get_permission().id
-        local perm_value = btn.perm_value
-
-        if text == '' then
-          Cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
-
-          self:set_temporary(perm_value, 0)
-
-          return
-        end
-
-        if duration then
-          Cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
-
-          self:set_temporary(perm_value, os.time() + duration)
-        end
-      end)
-  end
+  self.button_no.DoRightClick = request_temporary
 
   self.button_never = vgui.Create('DButton', self.container)
   self.button_never:SetPos(quarter * 3, 0)
   self.button_never:SetSize(quarter * 0.9, height)
   self.button_never:SetText('')
   self.button_never.perm_value = PERM_NEVER
-  self.button_never.Paint = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_never.Paint = paint_button
   self.button_never.DoClick = function(btn)
     if btn.is_selected then return end
 
@@ -129,32 +107,7 @@ function PANEL:rebuild()
     self:select_button(btn)
   end
 
-  self.button_never.DoRightClick = function(btn)
-    surface.PlaySound('buttons/button14.wav')
-
-    Derma_StringRequest(t'ui.admin.temp_permission.title',
-      t'ui.admin.temp_permission.message',
-      '',
-      function(text)
-        local duration = Bolt:interpret_ban_time(text)
-        local perm_id = self:get_permission().id
-        local perm_value = btn.perm_value
-
-        if text == '' then
-          Cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
-
-          self:set_temporary(perm_value, 0)
-
-          return
-        end
-
-        if duration then
-          Cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
-
-          self:set_temporary(perm_value, os.time() + duration)
-        end
-      end)
-  end
+  self.button_never.DoRightClick = request_temporary
 end
 
 --- Marks a button as the selected value and, if that differs from the player's current
@@ -277,8 +230,10 @@ function PANEL:get_permissions()
   local perm_list = {}
 
   for k, v in pairs(self.permissions) do
-    if v:get_value() != PERM_NO then
-      perm_list[v:get_permission()] = v:get_value()
+    local value = v:get_value()
+
+    if value != PERM_NO then
+      perm_list[v:get_permission()] = value
     end
   end
 
@@ -297,8 +252,10 @@ function PANEL:set_permissions(perm_list, temp_perm_list)
   end
 
   if temp_perm_list then
+    local now = os.time()
+
     for k, v in pairs(temp_perm_list) do
-      if self.permissions[k] and v.expires > os.time() then
+      if self.permissions[k] and v.expires > now then
         self.permissions[k]:set_temporary(tonumber(v.value), v.expires)
       end
     end
@@ -356,7 +313,7 @@ function PANEL:rebuild()
         t'ui.admin.never_all'
       }
 
-      local quarter = width / 4
+      local quarter = width * 0.25
 
       for k, v in pairs(category_buttons) do
         local button = vgui.Create('fl_button', panel)

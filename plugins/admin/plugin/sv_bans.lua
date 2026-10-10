@@ -110,8 +110,16 @@ function Bolt:send_ban_list(target, page, search_text)
     end
   end
 
+  local sort_names = {}
+
+  for i = 1, #matching do
+    local ban = matching[i]
+
+    sort_names[ban] = tostring(ban.name):utf8lower()
+  end
+
   table.sort(matching, function(first, second)
-    local first_name, second_name = tostring(first.name):utf8lower(), tostring(second.name):utf8lower()
+    local first_name, second_name = sort_names[first], sort_names[second]
 
     if first_name == second_name then
       return tostring(first.steam_id) < tostring(second.steam_id)

@@ -9,6 +9,13 @@ if !Bolt then
   PLUGIN:set_global('Bolt')
 end
 
+local IsValid = IsValid
+local isstring = isstring
+local isnumber = isnumber
+local pairs = pairs
+local os_time = os.time
+local negative_huge = -math.huge
+
 local roles = Bolt.roles or {}
 local permissions = Bolt.permissions or {}
 local players = Bolt.players or {}
@@ -98,7 +105,7 @@ end
 function Bolt:allow_children(role, perm_id)
   role:allow(perm_id)
 
-  for k, v in pairs(self:get_roles()) do
+  for k, v in pairs(roles) do
     if v.base == role.role_id then
       self:allow_children(v, perm_id)
     end
@@ -175,7 +182,7 @@ function Bolt:can(actor, action, object)
   local temp_perm = actor:get_temp_permission(action)
 
   if temp_perm then
-    if temp_perm.expires > os.time() then
+    if temp_perm.expires > os_time() then
       local value = temp_perm.value
 
       if value == PERM_ALLOW then
@@ -207,11 +214,7 @@ end
 -- @param id [String role ID]
 -- @return [Role the role, or nil if there is none]
 function Bolt:find_group(id)
-  if roles[id] then
-    return roles[id]
-  end
-
-  return nil
+  return roles[id]
 end
 
 --- Checks whether a role with the given ID is registered. The role itself is returned rather
@@ -220,6 +223,31 @@ end
 -- @return [Role the role (truthy), or nil if it does not exist]
 function Bolt:group_exists(id)
   return self:find_group(id)
+end
+
+--- Compares the immunity of two roles, either of which may be missing. A missing role counts
+-- as lower than every registered role, and a role without a numeric immunity always passes.
+-- @param actor_role [Role the role of the player performing the action, or nil]
+-- @param target_role [Role the role of whoever is acted on, or nil]
+-- @param can_equal [Boolean also pass when both roles have the same immunity]
+-- @return [Boolean]
+local function compare_immunity(actor_role, target_role, can_equal)
+  local immunity1 = !actor_role and negative_huge or actor_role.immunity
+  local immunity2 = !target_role and negative_huge or target_role.immunity
+
+  if !isnumber(immunity1) or !isnumber(immunity2) then
+    return true
+  end
+
+  if immunity1 > immunity2 then
+    return true
+  end
+
+  if can_equal and immunity1 == immunity2 then
+    return true
+  end
+
+  return false
 end
 
 --- Checks whether a player's role has enough immunity to act on another player. A player may
@@ -239,24 +267,7 @@ function Bolt:check_immunity(actor, target, can_equal)
     return true
   end
 
-  local group1 = self:find_group(actor:GetUserGroup())
-  local group2 = self:find_group(target:GetUserGroup())
-  local immunity1 = !group1 and -math.huge or group1.immunity
-  local immunity2 = !group2 and -math.huge or group2.immunity
-
-  if !isnumber(immunity1) or !isnumber(immunity2) then
-    return true
-  end
-
-  if immunity1 > immunity2 then
-    return true
-  end
-
-  if can_equal and immunity1 == immunity2 then
-    return true
-  end
-
-  return false
+  return compare_immunity(roles[actor:GetUserGroup()], roles[target:GetUserGroup()], can_equal)
 end
 
 --- Checks whether a player's role has enough immunity to act on the holder of a role. This
@@ -274,24 +285,7 @@ function Bolt:check_role_immunity(actor, role_id, can_equal)
     return true
   end
 
-  local group1 = self:find_group(actor:GetUserGroup())
-  local group2 = self:find_group(role_id)
-  local immunity1 = !group1 and -math.huge or group1.immunity
-  local immunity2 = !group2 and -math.huge or group2.immunity
-
-  if !isnumber(immunity1) or !isnumber(immunity2) then
-    return true
-  end
-
-  if immunity1 > immunity2 then
-    return true
-  end
-
-  if can_equal and immunity1 == immunity2 then
-    return true
-  end
-
-  return false
+  return compare_immunity(roles[actor:GetUserGroup()], roles[role_id], can_equal)
 end
 
 --- Checks whether a value has the form of a SteamID, such as 'STEAM_0:1:12345'.
@@ -317,6 +311,19 @@ function Bolt:is_root_steam_id(steam_id)
   return false
 end
 
+--- Looks a permission up by its exact ID in every category.
+-- @param id [String permission ID]
+-- @return [Map permission data, or nil if there is no such permission]
+local function lookup_permission(id)
+  for _, category in pairs(permissions) do
+    local found = category[id]
+
+    if found then
+      return found
+    end
+  end
+end
+
 --- Finds a registered permission by what a person would type for it: its ID in any case,
 -- or the name or an alias of the command the permission belongs to.
 -- ```
@@ -329,8 +336,7 @@ end
 function Bolt:find_permission(id)
   if !isstring(id) or id == '' then return end
 
-  local all_permissions = self:get_all_permissions()
-  local found = all_permissions[id] or all_permissions[id:utf8lower()]
+  local found = lookup_permission(id) or lookup_permission(id:utf8lower())
 
   if found then
     return found
@@ -339,7 +345,7 @@ function Bolt:find_permission(id)
   local cmd = Flux.Command:find_by_id(id)
 
   if cmd then
-    return all_permissions[cmd.id]
+    return lookup_permission(cmd.id)
   end
 end
 
@@ -446,7 +452,7 @@ if SERVER then
       steam_id = target:SteamID()
     end
 
-    local obj = self:add_ban(steam_id, name, os.time() + duration, duration, reason, admin)
+    local obj = self:add_ban(steam_id, name, os_time() + duration, duration, reason, admin)
 
     if !isstring(target) and !prevent_kick then
       target:Kick(self:get_ban_message(obj, Flux.Lang:get_player_lang(target)))
@@ -555,9 +561,11 @@ do
     str = str:Replace("'", '')
     str = str:lower()
 
+    local number = tonumber(str)
+
     -- A regular number was entered?
-    if tonumber(str) then
-      return tonumber(str) * 60
+    if number then
+      return number * 60
     end
 
     str = str:Replace('-', '')

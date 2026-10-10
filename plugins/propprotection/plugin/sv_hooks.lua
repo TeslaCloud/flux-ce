@@ -3,6 +3,8 @@
 -- protection of players from props, and the removal and return of the entities of players
 -- who disconnect or switch characters.
 
+local IsValid = IsValid
+
 --- Refuses to let a player freeze an entity that the rules protect from them. Nothing is
 -- returned for everything else, so that the handlers of other plugins may still refuse and
 -- the gamemode does the freezing.

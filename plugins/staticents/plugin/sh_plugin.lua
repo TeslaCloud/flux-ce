@@ -44,10 +44,12 @@ if CLIENT then
 --- @deprecation [Remove in 1.0_b]
 else
   local function _run_backup(actor)
-    if IsValid(actor) and !actor:IsSuperAdmin() then return end
+    local is_player = IsValid(actor)
 
-    local pn = IsValid(actor) and actor:Name() or 'Console'
-    local sid = IsValid(actor) and actor:SteamID() or 'N/A'
+    if is_player and !actor:IsSuperAdmin() then return end
+
+    local pn = is_player and actor:Name() or 'Console'
+    local sid = is_player and actor:SteamID() or 'N/A'
 
     print('Running persistence backup, as requested by '..pn..' ('..sid..')')
 
@@ -93,7 +95,7 @@ else
 
     print('  -> '..(status and 'done!' or 'error!'))
 
-    if IsValid(actor) then
+    if is_player then
       Cable.send(actor, 'flux_persistence_backup', status)
     end
   end

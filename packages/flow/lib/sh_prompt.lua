@@ -176,12 +176,12 @@ if SERVER then
 
     for id, entry in pairs(pending) do
       if entry.target == actor then
-        table.insert(ids, id)
+        ids[#ids + 1] = id
       end
     end
 
-    for k, id in ipairs(ids) do
-      resolve(id, false)
+    for i = 1, #ids do
+      resolve(ids[i], false)
     end
   end
 

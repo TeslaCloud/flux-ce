@@ -60,6 +60,10 @@
 -- Custom menu options are added with `ItemBase:add_button`, and every menu action goes
 -- through `ItemBase:do_menu_action`.
 
+local pairs = pairs
+local IsValid = IsValid
+local isstring = isstring
+
 class 'ItemBase'
 
 --- Initializes a new item table.

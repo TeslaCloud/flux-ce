@@ -25,22 +25,13 @@
 -- Only the clips of the weapons of a fallen player are stored: `Player:StripWeapons` leaves
 -- the reserve ammo on the player, so the weapons are given back without any.
 
+local IsValid = IsValid
+local CurTime = CurTime
+local max = math.max
 local player_meta = FindMetaTable('Player')
 local burn_time = 8
 local max_force = 800
-
---- Shortens a force so that it does not throw a ragdoll across the map.
--- @param force [Vector]
--- @return [Vector the force, no longer than 800 units]
-local function limit_force(force)
-  local length = force:Length()
-
-  if length > max_force then
-    return force * (max_force / length)
-  end
-
-  return force
-end
+local max_force_sqr = max_force * max_force
 
 --- Removes a ragdoll that no longer belongs to a player, right away or once its decay time
 -- has passed.
@@ -106,7 +97,7 @@ local function stand_up(target, data, ragdoll, reset)
     if ragdoll:IsOnFire() then
       local remaining = (data.burning_until or 0) - CurTime()
 
-      target:Ignite(remaining > 0 and math.max(remaining, 1) or burn_time, 0)
+      target:Ignite(remaining > 0 and max(remaining, 1) or burn_time, 0)
     end
   end
 
@@ -266,7 +257,8 @@ end
 -- @param decay=nil [Number seconds the ragdoll remains after the ragdoll entity is reset;
 --   nil removes it right away]
 -- @param fallen=false [Boolean whether the player has fallen over rather than died]
--- @param force=nil [Vector push to give to every bone of the ragdoll]
+-- @param force=nil [Vector push to give to every bone of the ragdoll, shortened to 800 units
+--   so that it does not throw the ragdoll across the map]
 -- @return [Entity the ragdoll, or nil if it could not be created]
 -- @see [Player#set_ragdoll_state]
 function player_meta:create_ragdoll_entity(decay, fallen, force)
@@ -307,8 +299,8 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
 
   local velocity = self:GetVelocity()
 
-  if force then
-    force = limit_force(force)
+  if force and force:LengthSqr() > max_force_sqr then
+    force = force * (max_force / force:Length())
   end
 
   for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
@@ -462,7 +454,7 @@ function player_meta:pause_getup_time()
 
   if !data or !data.getup_end then return false end
 
-  local remaining = math.max(data.getup_end - CurTime(), 0.1)
+  local remaining = max(data.getup_end - CurTime(), 0.1)
 
   data.getup_end = nil
 
@@ -518,7 +510,7 @@ function player_meta:get_up(duration)
 
   local minimum = Config.get('ragdoll_getup_time', 4)
 
-  return self:set_getup_time(math.Clamp(tonumber(duration) or minimum, minimum, math.max(minimum, 60)))
+  return self:set_getup_time(math.Clamp(tonumber(duration) or minimum, minimum, max(minimum, 60)))
 end
 
 --- Clears the ragdoll state of the player without getting them up: no hook is asked, the

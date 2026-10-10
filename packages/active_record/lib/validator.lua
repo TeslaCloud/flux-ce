@@ -28,9 +28,7 @@ local function run_validation(model, column, v_opts, v_id, success_callback, err
     local validator = ActiveRecord.Validator.validators[vo.id]
 
     if isfunction(validator) then
-      return validator(model, column, vo.value, v_opts, function()
-        process_next()
-      end, error_callback)
+      return validator(model, column, vo.value, v_opts, process_next, error_callback)
     end
   end
 
@@ -51,9 +49,7 @@ local function validate_column(model, schema, validations, column, success_callb
   local v_options = validations[column]
 
   if v_options then
-    run_validation(model, column, v_options, 1, function()
-      process_next()
-    end, error_callback)
+    run_validation(model, column, v_options, 1, process_next, error_callback)
   else
     process_next()
   end

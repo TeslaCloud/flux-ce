@@ -8,6 +8,12 @@
 -- saved to the database in one go by `Damage:flush_logs`, which runs once a second and
 -- when a player dies, so that a hit does not cost a database insert of its own.
 
+local IsValid = IsValid
+local CurTime = CurTime
+local config_get = Config.get
+local math_max = math.max
+local rand = math.Rand
+
 --- Config key of the damage multiplier of each hit location that has one.
 local hitgroup_scales = {
   [HITGROUP_HEAD] = 'damage_scale_head',
@@ -73,7 +79,7 @@ function Damage:get_hitgroup_scale(hitgroup)
     return 1
   end
 
-  return Config.get(key, 1)
+  return config_get(key, 1)
 end
 
 --- Remembers the location of the hit a player is about to take damage from. The engine only
@@ -117,13 +123,13 @@ end
 -- @param target [Player]
 -- @return [Number seconds]
 function Damage:get_regen_interval(target)
-  local share = target:Health() / math.max(target:GetMaxHealth(), 1) * 100
+  local share = target:Health() / math_max(target:GetMaxHealth(), 1) * 100
 
-  if share >= Config.get('health_regen_fast_share', 50) then
-    return Config.get('health_regen_fast_interval', 5)
+  if share >= config_get('health_regen_fast_share', 50) then
+    return config_get('health_regen_fast_interval', 5)
   end
 
-  return Config.get('health_regen_interval', 10)
+  return config_get('health_regen_interval', 10)
 end
 
 --- Runs the health regeneration of a player: heals them by the 'health_regen_amount' config
@@ -167,7 +173,7 @@ function Damage:regenerate_health(target, cur_time)
     return false
   end
 
-  local amount = Config.get('health_regen_amount', 2)
+  local amount = config_get('health_regen_amount', 2)
 
   --- Lets plugins change how much health a player regenerates at once. Called on the
   -- server right before the player is healed, after `PlayerCanRegenerateHealth`.
@@ -218,7 +224,7 @@ function Damage:get_submerged_time(target)
     return 0
   end
 
-  return math.max(CurTime() - target.submerged_since, 0)
+  return math_max(CurTime() - target.submerged_since, 0)
 end
 
 --- Deals drowning damage to a player. The damage is of the DMG_DROWN type with the world as
@@ -255,10 +261,10 @@ function Damage:update_drowning(target, cur_time)
 
   target.submerged_since = target.submerged_since or cur_time
 
-  if cur_time - target.submerged_since < Config.get('drowning_time', 20) then return end
+  if cur_time - target.submerged_since < config_get('drowning_time', 20) then return end
   if target.next_drown_damage and target.next_drown_damage > cur_time then return end
 
-  target.next_drown_damage = cur_time + Config.get('drowning_interval', 1)
+  target.next_drown_damage = cur_time + config_get('drowning_interval', 1)
 
   --- Asks whether a player who has run out of breath takes drowning damage. Called on the
   -- server each time the damage is due, that is every 'drowning_interval' seconds while the
@@ -269,7 +275,7 @@ function Damage:update_drowning(target, cur_time)
   --   apparatus. Return nothing to let other handlers decide]
   if hook.Run('PlayerCanDrown', target) == false then return end
 
-  self:deal_drowning_damage(target, Config.get('drowning_damage', 7))
+  self:deal_drowning_damage(target, config_get('drowning_damage', 7))
 end
 
 --- Punches the view of a player by a random angle that grows with the damage: the damage
@@ -278,14 +284,14 @@ end
 -- @param target [Player]
 -- @param damage [Number damage the player has taken]
 function Damage:punch_view(target, damage)
-  local amount = math.min(damage * Config.get('damage_view_punch_scale', 1), max_view_punch)
+  local amount = math.min(damage * config_get('damage_view_punch_scale', 1), max_view_punch)
 
   if amount <= 0 then return end
 
   target:ViewPunch(Angle(
-    math.Rand(-amount, amount),
-    math.Rand(-amount, amount),
-    math.Rand(-amount, amount) * 0.5
+    rand(-amount, amount),
+    rand(-amount, amount),
+    rand(-amount, amount) * 0.5
   ))
 end
 
@@ -352,9 +358,12 @@ function Damage:get_log_viewers()
   log_viewers = {}
   log_viewers_until = cur_time + 1
 
+  local count = 0
+
   for k, v in player.Iterator() do
     if v:can('view_damage_logs') then
-      table.insert(log_viewers, v)
+      count = count + 1
+      log_viewers[count] = v
     end
   end
 
@@ -383,7 +392,7 @@ function Damage:write_log(color, message, action, object, subject)
     { type = 'colored', color = color }
   )
 
-  table.insert(pending_logs, { body = message, action = action, object = object, subject = subject })
+  pending_logs[#pending_logs + 1] = { body = message, action = action, object = object, subject = subject }
 end
 
 --- Saves the log entries that `Damage:write_log` has queued to the logs table, in the order
@@ -391,14 +400,16 @@ end
 -- @return [Number how many entries were saved]
 function Damage:flush_logs()
   local entries = pending_logs
+  local count = #entries
 
-  if #entries == 0 then
+  if count == 0 then
     return 0
   end
 
   pending_logs = {}
 
-  for k, v in ipairs(entries) do
+  for i = 1, count do
+    local v = entries[i]
     local log = Log.new()
       log.body = v.body
       log.action = v.action
@@ -407,7 +418,7 @@ function Damage:flush_logs()
     log:save()
   end
 
-  return #entries
+  return count
 end
 
 --- Writes a damage log entry: who has taken how much damage, where, from whom and with
@@ -447,10 +458,12 @@ function Damage:log_damage(victim, damage_info, hitgroup)
     message = message..' with '..weapon
   end
 
-  message = message..', leaving them at '..math.max(victim:Health(), 0)..' health'
+  message = message..', leaving them at '..math_max(victim:Health(), 0)..' health'
 
-  if victim:Armor() > 0 then
-    message = message..' and '..victim:Armor()..' armor'
+  local armor = victim:Armor()
+
+  if armor > 0 then
+    message = message..' and '..armor..' armor'
   end
 
   self:write_log(damage_log_color, message..'.', 'player_damage', get_log_id(attacker), get_log_id(victim))

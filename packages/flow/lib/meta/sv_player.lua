@@ -10,6 +10,8 @@
 -- `fl_data` variable, so that nobody else's client learns what is stored about a player.
 
 local player_meta = FindMetaTable('Player')
+local IsValid = IsValid
+local istable = istable
 
 --- Reads the persistent data table out of the database record of a player.
 -- @param record [User the database record]
@@ -243,41 +245,47 @@ function player_meta:find_best_position(margin, filter)
   local pos = self:GetPos()
   local min, max = Vector(-16, -16, 0), Vector(16, 16, 32)
   local positions = {}
+  local step = margin * 10
+  local lift = margin * 1.25
+  local first_start = min + Vector(0, 0, lift)
+  local second_start = Vector(-max.x, -max.y, lift)
+  local second_end = Vector(min.x, min.y, 32)
+  local data = { filter = filter or self }
+  local trace_line, is_in_world = util.TraceLine, util.IsInWorld
 
   for x = -margin, margin do
     for y = -margin, margin do
-      local pick = pos + Vector(x * margin * 10, y * margin * 10, 0)
+      local pick = pos + Vector(x * step, y * step, 0)
 
-      if !util.IsInWorld(pick) then continue end
+      if !is_in_world(pick) then continue end
 
-      local data = {}
-        data.start = pick + min + Vector(0, 0, margin * 1.25)
-        data.endpos = pick + max
-        data.filter = filter or self
-      local trace = util.TraceLine(data)
+      data.start = pick + first_start
+      data.endpos = pick + max
+
+      local trace = trace_line(data)
 
       if trace.StartSolid or trace.Hit then continue end
 
-      data.start = pick + Vector(-max.x, -max.y, margin * 1.25)
-      data.endpos = pick + Vector(min.x, min.y, 32)
+      data.start = pick + second_start
+      data.endpos = pick + second_end
 
-      local trace2 = util.TraceLine(data)
+      local trace2 = trace_line(data)
 
       if trace2.StartSolid or trace2.Hit then continue end
 
       data.start = pos
       data.endpos = pick
 
-      local trace3 = util.TraceLine(data)
+      local trace3 = trace_line(data)
 
       if trace3.Hit then continue end
 
-      table.insert(positions, pick)
+      positions[#positions + 1] = pick
     end
   end
 
   table.sort(positions, function(a, b)
-    return a:Distance(pos) < b:Distance(pos)
+    return a:DistToSqr(pos) < b:DistToSqr(pos)
   end)
 
   return positions

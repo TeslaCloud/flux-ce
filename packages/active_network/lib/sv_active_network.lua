@@ -17,6 +17,11 @@
 
 if ActiveNetwork then return end
 
+local pairs = pairs
+local istable = istable
+local isfunction = isfunction
+local cable_send = Cable.send
+
 mod 'ActiveNetwork'
 
 local stored = ActiveNetwork.stored or {}
@@ -103,7 +108,7 @@ local function list_recipients(allowed)
 
   for target in pairs(allowed) do
     if target:IsValid() then
-      table.insert(targets, target)
+      targets[#targets + 1] = target
     else
       allowed[target] = nil
     end
@@ -140,7 +145,7 @@ end
 -- @param ... [Vararg values to send]
 local function send_restricted(allowed, recv, id, ...)
   if !allowed then
-    Cable.send(recv, id, ...)
+    cable_send(recv, id, ...)
 
     return
   end
@@ -154,13 +159,13 @@ local function send_restricted(allowed, recv, id, ...)
 
     for target in pairs(to_recipient_set(recv)) do
       if allowed[target] then
-        table.insert(targets, target)
+        targets[#targets + 1] = target
       end
     end
   end
 
   if #targets > 0 then
-    Cable.send(targets, id, ...)
+    cable_send(targets, id, ...)
   end
 end
 
@@ -179,19 +184,19 @@ local function send_revoked(old_allowed, allowed, id, ...)
   if old_allowed then
     for k, target in ipairs(list_recipients(old_allowed)) do
       if !allowed[target] then
-        table.insert(targets, target)
+        targets[#targets + 1] = target
       end
     end
   else
     for k, target in player.Iterator() do
       if !allowed[target] then
-        table.insert(targets, target)
+        targets[#targets + 1] = target
       end
     end
   end
 
   if #targets > 0 then
-    Cable.send(targets, id, ...)
+    cable_send(targets, id, ...)
   end
 end
 
@@ -200,8 +205,10 @@ end
 -- @param default=nil [Any value to return if the variable is not set]
 -- @return [Any variable value, or default]
 function ActiveNetwork.get_nv(key, default)
-  if globals[key] != nil then
-    return globals[key]
+  local value = globals[key]
+
+  if value != nil then
+    return value
   end
 
   return default
@@ -294,8 +301,10 @@ end
 -- @param recv=nil [Player/List<Player> who to send the value to; if nil, everyone who may
 --   receive the variable]
 function ent_meta:send_net_var(key, recv)
-  local allowed = recipients[self] and recipients[self][key]
-  local value = stored[self] and stored[self][key]
+  local entity_recipients = recipients[self]
+  local vars = stored[self]
+  local allowed = entity_recipients and entity_recipients[key]
+  local value = vars and vars[key]
 
   send_restricted(allowed, recv, 'fl_netvar_set', self:EntIndex(), key, value)
 end
@@ -305,8 +314,14 @@ end
 -- @param default=nil [Any value to return if the variable is not set]
 -- @return [Any variable value, or default]
 function ent_meta:get_nv(key, default)
-  if stored[self] and stored[self][key] != nil then
-    return stored[self][key]
+  local vars = stored[self]
+
+  if vars then
+    local value = vars[key]
+
+    if value != nil then
+      return value
+    end
   end
 
   return default
@@ -317,7 +332,8 @@ end
 -- @return [List<Player> recipients who are still on the server, or nil if the variable is
 --   public]
 function ent_meta:get_nv_recipients(key)
-  local allowed = recipients[self] and recipients[self][key]
+  local entity_recipients = recipients[self]
+  local allowed = entity_recipients and entity_recipients[key]
 
   if allowed then
     return list_recipients(allowed)
@@ -363,7 +379,7 @@ end
 function ent_meta:clear_net_vars(recv)
   stored[self] = nil
   recipients[self] = nil
-  Cable.send(recv, 'fl_netvar_delete', self:EntIndex())
+  cable_send(recv, 'fl_netvar_delete', self:EntIndex())
 end
 
 --- Sets this entity's networked variable and sends it to clients.
@@ -400,12 +416,16 @@ function ent_meta:set_nv(key, value, send)
 
   if !istable(value) and old_value == value and same_audience then return end
 
-  stored[self] = stored[self] or {}
-  stored[self][key] = value
+  local vars = stored[self] or {}
+
+  stored[self] = vars
+  vars[key] = value
 
   if !same_audience then
-    recipients[self] = recipients[self] or {}
-    recipients[self][key] = allowed
+    local entity_recipients = recipients[self] or {}
+
+    recipients[self] = entity_recipients
+    entity_recipients[key] = allowed
 
     if old_value != nil then
       send_revoked(old_allowed, allowed, 'fl_netvar_set', self:EntIndex(), key, nil)

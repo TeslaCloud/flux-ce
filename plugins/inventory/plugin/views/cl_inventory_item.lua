@@ -4,6 +4,25 @@
 -- can draw on its slot with its `paint_slot` and `paint_over_slot` callbacks and adjust
 -- the model view with `adjust_model_panel`.
 
+local IsValid = IsValid
+local isnumber = isnumber
+local math_scale = math.scale
+local draw_simple_text = draw.SimpleText
+local surface_set_draw_color = surface.SetDrawColor
+local surface_draw_rect = surface.DrawRect
+local surface_draw_outlined_rect = surface.DrawOutlinedRect
+
+local slot_color = Color(30, 30, 30, 100)
+local slot_color_empty = slot_color:darken(25)
+local slot_color_same = slot_color:lighten(30)
+local slot_color_stack = Color(200, 200, 60)
+local slot_color_valid = Color(60, 200, 60, 160)
+local slot_color_invalid = Color(200, 60, 60, 160)
+local slot_icon_color = Color(255, 255, 255, 100)
+local slot_count_color = Color(225, 225, 225)
+local slot_number_color = Color(175, 175, 175)
+local faded_backgrounds = setmetatable({}, { __mode = 'k' })
+
 local PANEL = {}
 PANEL.item_data = nil
 PANEL.item_count = 0
@@ -18,7 +37,8 @@ PANEL.rotated = false
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
-  local draw_color = Color(30, 30, 30, 100)
+  local draw_color = slot_color
+  local item_obj = self.item_data
   local drop_slot = Flux.inventory_drop_slot
 
   if IsValid(drop_slot) and drop_slot:get_inventory_id() == self:get_inventory_id() then
@@ -31,8 +51,6 @@ function PANEL:Paint(w, h)
 
       if self.is_hovered or self:is_multislot() and drop_x <= x and drop_y <= y
       and drop_x + slot_w > x and drop_y + slot_h > y then
-        local item_obj = self.item_data
-
         if item_obj then
           if drag_slot.item_data != item_obj then
             local slot_data = drag_slot.item_data
@@ -40,35 +58,35 @@ function PANEL:Paint(w, h)
             if slot_data.id == item_obj.id and slot_data.stackable
             and drag_slot.item_count < slot_data.max_stack
             and drop_slot.item_count < slot_data.max_stack then
-              draw_color = Color(200, 200, 60)
+              draw_color = slot_color_stack
             else
-              draw_color = Color(200, 60, 60, 160)
+              draw_color = slot_color_invalid
             end
           else
-            draw_color = draw_color:lighten(30)
+            draw_color = slot_color_same
           end
         else
           if drop_slot.out_of_bounds or drop_slot.disabled then
-            draw_color = Color(200, 60, 60, 160)
+            draw_color = slot_color_invalid
           else
-            draw_color = Color(60, 200, 60, 160)
+            draw_color = slot_color_valid
           end
         end
       end
     end
   else
-    if !self.item_data then
-      draw_color = draw_color:darken(25)
+    if !item_obj then
+      draw_color = slot_color_empty
     else
-      if self.item_data.special_color then
-        surface.SetDrawColor(self.item_data.special_color)
-        surface.DrawOutlinedRect(0, 0, w, h)
-        surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+      if item_obj.special_color then
+        surface_set_draw_color(item_obj.special_color)
+        surface_draw_outlined_rect(0, 0, w, h)
+        surface_draw_outlined_rect(1, 1, w - 2, h - 2)
       end
 
       if self:IsHovered() then
-        surface.SetDrawColor(Color(255, 255, 255))
-        surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+        surface_set_draw_color(255, 255, 255)
+        surface_draw_outlined_rect(1, 1, w - 2, h - 2)
       end
     end
   end
@@ -77,34 +95,49 @@ function PANEL:Paint(w, h)
     self.icon = 'fa-times'
   end
 
-  if !self:IsDragging() and self.item_data and self.item_data.background_color then
-    draw.RoundedBox(0, 0, 0, w, h, self.item_data.background_color:alpha(100))
+  local is_dragging = self:IsDragging()
+
+  if !is_dragging and item_obj and item_obj.background_color then
+    local background_color = item_obj.background_color
+    local faded_color = faded_backgrounds[background_color]
+
+    if !faded_color then
+      faded_color = background_color:alpha(100)
+      faded_backgrounds[background_color] = faded_color
+    end
+
+    surface_set_draw_color(faded_color.r, faded_color.g, faded_color.b, faded_color.a)
+    surface_draw_rect(0, 0, w, h)
   end
 
-  if self.icon and !self:IsDragging() then
-    local icon = self.icon
+  local icon = self.icon
+
+  if icon and !is_dragging then
     local icon_size = h * 0.75
 
     if icon:start_with('fa') then
       local icon_text = FontAwesome:get(icon)
       local icon_w, icon_h = util.text_size(icon_text, Font.size('flFontAwesome', icon_size))
 
-      FontAwesome:draw(icon, w * 0.5 - icon_w * 0.5, h * 0.5 - icon_h * 0.5, icon_size, Color(255, 255, 255, 100))
+      FontAwesome:draw(icon, w * 0.5 - icon_w * 0.5, h * 0.5 - icon_h * 0.5, icon_size, slot_icon_color)
     else
-      self.icon_material = self.icon_material or Material(self.icon, 'smooth')
+      local icon_material = self.icon_material or Material(icon, 'smooth')
 
-      surface.SetDrawColor(Color(255, 255, 255, 100))
-      surface.SetMaterial(self.icon_material)
+      self.icon_material = icon_material
+
+      surface_set_draw_color(slot_icon_color)
+      surface.SetMaterial(icon_material)
       surface.DrawTexturedRect(w * 0.5 - icon_size * 0.5, h * 0.5 - icon_size * 0.5, icon_size, icon_size)
     end
   end
 
-  draw.RoundedBox(0, 0, 0, w, h, draw_color)
+  surface_set_draw_color(draw_color.r, draw_color.g, draw_color.b, draw_color.a)
+  surface_draw_rect(0, 0, w, h)
 
   Theme.hook('PaintItemSlot', self, w, h)
 
-  if self.item_data and self.item_data.paint_slot then
-    self.item_data:paint_slot(w, h)
+  if item_obj and item_obj.paint_slot then
+    item_obj:paint_slot(w, h)
   end
 end
 
@@ -113,36 +146,40 @@ end
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PaintOver(w, h)
-  if self.item_count >= 2 then
+  local item_count = self.item_count
+
+  if item_count >= 2 then
     DisableClipping(true)
-      draw.SimpleText(
-        self.item_count,
+      draw_simple_text(
+        item_count,
         Theme.get_font('text_smallest'),
-        w - math.scale(12),
-        h - math.scale(14),
-        Color(225, 225, 225)
+        w - math_scale(12),
+        h - math_scale(14),
+        slot_count_color
       )
     DisableClipping(false)
   end
 
-  if !self:IsDragging() then
-    if isnumber(self.slot_number) then
-      DisableClipping(true)
-        draw.SimpleText(
-          self.slot_number,
-          Theme.get_font('text_smallest'),
-          math.scale(4),
-          h - math.scale(14),
-          Color(175, 175, 175)
-        )
-      DisableClipping(false)
-    end
+  local slot_number = self.slot_number
+
+  if !self:IsDragging() and isnumber(slot_number) then
+    DisableClipping(true)
+      draw_simple_text(
+        slot_number,
+        Theme.get_font('text_smallest'),
+        math_scale(4),
+        h - math_scale(14),
+        slot_number_color
+      )
+    DisableClipping(false)
   end
 
   Theme.hook('PaintOverItemSlot', self, w, h)
 
-  if self.item_data and self.item_data.paint_over_slot then
-    self.item_data:paint_over_slot(w, h)
+  local item_obj = self.item_data
+
+  if item_obj and item_obj.paint_over_slot then
+    item_obj:paint_over_slot(w, h)
   end
 end
 

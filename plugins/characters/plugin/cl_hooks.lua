@@ -5,26 +5,30 @@
 -- about characters, such as a refused request or the order to open the main menu, are in
 -- `lib/sh_character.lua`.
 
+local color_info_text = Color('white')
+
 do
   local cur_volume = 1
 
   --- Mutes the menu music while the game window is unfocused and fades it out and stops it
   -- once the intro panel is gone.
   function Characters:Tick()
-    if Flux.menu_music then
+    local menu_music = Flux.menu_music
+
+    if menu_music then
       if !system.HasFocus() then
-        Flux.menu_music:SetVolume(0)
+        menu_music:SetVolume(0)
       else
-        Flux.menu_music:SetVolume(cur_volume)
+        menu_music:SetVolume(cur_volume)
       end
 
       if !IsValid(Flux.intro_panel) then
         if cur_volume > 0.05 then
           cur_volume = Lerp(0.1, cur_volume, 0)
-          Flux.menu_music:SetVolume(cur_volume)
+          menu_music:SetVolume(cur_volume)
         else
           cur_volume = 1
-          Flux.menu_music:Stop()
+          menu_music:Stop()
           Flux.menu_music = nil
         end
       end
@@ -236,7 +240,7 @@ function Characters:GetDrawPlayerInfo(target, x, y, distance, lines)
   lines['desc'] = {
     text = target:get_phys_desc(),
     font = Theme.get_font('tooltip_small'),
-    color = Color('white'),
+    color = color_info_text,
     priority = 200
   }
 end
@@ -247,8 +251,6 @@ end
 -- @param panel [Panel the main menu]
 -- @param sidebar [Panel the main menu sidebar]
 function Characters:AddMainMenuItems(panel, sidebar)
-  local scrw, scrh = ScrW(), ScrH()
-
   if PLAYER:is_character_loaded() and !PLAYER:is_character_banned() then
     panel:add_button(t'ui.main_menu.continue', function(btn)
       panel:Remove()
@@ -278,7 +280,9 @@ function Characters:AddMainMenuItems(panel, sidebar)
     )
   end)
 
-  if PLAYER:get_all_characters() and #PLAYER:get_all_characters() > 0 then
+  local characters = PLAYER:get_all_characters()
+
+  if characters and #characters > 0 then
     panel:add_button(t'ui.char_create.load', function(btn)
       btn:set_enabled(false)
 

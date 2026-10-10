@@ -55,11 +55,16 @@ end
 --- Animates the schema logo offset toward zero while a submenu is open and back otherwise.
 function PANEL:Think()
   local menu_valid = IsValid(self.menu)
+  local offset = self.schema_logo_offset
 
-  if self.schema_logo_offset > 0 and menu_valid then
-    self.schema_logo_offset = Lerp(FrameTime() * 8, self.schema_logo_offset, 0)
-  elseif self.schema_logo_offset < math.scale(450) and !menu_valid then
-    self.schema_logo_offset = Lerp(FrameTime() * 8, self.schema_logo_offset, math.scale(450))
+  if offset > 0 and menu_valid then
+    self.schema_logo_offset = Lerp(FrameTime() * 8, offset, 0)
+  elseif !menu_valid then
+    local full_offset = math.scale(450)
+
+    if offset < full_offset then
+      self.schema_logo_offset = Lerp(FrameTime() * 8, offset, full_offset)
+    end
   end
 end
 
@@ -89,7 +94,7 @@ function PANEL:RecreateSidebar(create_buttons)
     local x, y = self.sidebar:GetPos()
 
     self.sidebar:SetWide(self.max_wide)
-    self.sidebar:SetPos(x - self.max_wide / 2, y)
+    self.sidebar:SetPos(x - self.max_wide * 0.5, y)
     self.sidebar:center_items()
   end
 end
@@ -127,7 +132,7 @@ function PANEL:to_main_menu(from_right)
     self.sidebar:SetPos(from_right and scrw or -self.sidebar:GetWide(), Theme.get_option('menu_sidebar_y'))
     self.sidebar:SetDisabled(true)
     self.sidebar:MoveTo(
-      Theme.get_option('menu_sidebar_x') - self.max_wide / 2,
+      Theme.get_option('menu_sidebar_x') - self.max_wide * 0.5,
       Theme.get_option('menu_sidebar_y'),
       Theme.get_option('menu_anim_duration'),
       0,

@@ -1,6 +1,9 @@
 --- Registers the condition types that come with the Conditions plugin: 'steamid', 'model',
 -- 'health', 'armor' and 'active_weapon'.
 
+local process_operator = util.process_operator
+local operator_to_symbol = util.operator_to_symbol
+
 Conditions:register_condition('steamid', {
   name = 'condition.steamid.name',
   text = 'condition.steamid.text',
@@ -11,7 +14,7 @@ Conditions:register_condition('steamid', {
   -- @return [Map operator and steam_id, each an empty string while it is not set]
   get_args = function(panel, data)
     local steamid = panel.data.steamid
-    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')' or ''
 
     return { operator = operator, steam_id = parameter }
@@ -24,7 +27,7 @@ Conditions:register_condition('steamid', {
   check = function(target, data)
     if !data.operator or !data.steamid then return false end
 
-    return util.process_operator(data.operator, target:SteamID(), data.steamid)
+    return process_operator(data.operator, target:SteamID(), data.steamid)
   end,
   --- Asks for a SteamID with a text prompt and stores it in the node data.
   -- Prompts again if the input does not start with 'STEAM_'.
@@ -60,7 +63,7 @@ Conditions:register_condition('model', {
   -- @param data [Map the registered condition table]
   -- @return [Map operator and model, each an empty string while it is not set]
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.model or ''
 
     return { operator = operator, model = parameter }
@@ -73,7 +76,7 @@ Conditions:register_condition('model', {
   check = function(target, data)
     if !data.operator or !data.model then return false end
 
-    return util.process_operator(data.operator, target:GetModel(), data.model)
+    return process_operator(data.operator, target:GetModel(), data.model)
   end,
   --- Asks for a model path with a text prompt and stores it in the node data.
   -- Prompts again if the input does not start with 'models'.
@@ -109,7 +112,7 @@ Conditions:register_condition('health', {
   -- @param data [Map the registered condition table]
   -- @return [Map operator and health, each an empty string while it is not set]
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.health or ''
 
     return { operator = operator, health = parameter }
@@ -122,7 +125,7 @@ Conditions:register_condition('health', {
   check = function(target, data)
     if !data.operator or !data.health then return false end
 
-    return util.process_operator(data.operator, target:Health(), data.health)
+    return process_operator(data.operator, target:Health(), data.health)
   end,
   --- Asks for a health value with a text prompt and stores it in the node data as a number.
   -- @param id [String condition id]
@@ -153,7 +156,7 @@ Conditions:register_condition('armor', {
   -- @param data [Map the registered condition table]
   -- @return [Map operator and armor, each an empty string while it is not set]
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.armor or ''
 
     return { operator = operator, armor = parameter }
@@ -166,7 +169,7 @@ Conditions:register_condition('armor', {
   check = function(target, data)
     if !data.operator or !data.armor then return false end
 
-    return util.process_operator(data.operator, target:Armor(), data.armor)
+    return process_operator(data.operator, target:Armor(), data.armor)
   end,
   --- Asks for an armor value with a text prompt and stores it in the node data as a number.
   -- @param id [String condition id]
@@ -197,7 +200,7 @@ Conditions:register_condition('active_weapon', {
   -- @param data [Map the registered condition table]
   -- @return [Map operator and weapon, each an empty string while it is not set]
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.weapon or ''
 
     return { operator = operator, weapon = parameter }
@@ -211,9 +214,12 @@ Conditions:register_condition('active_weapon', {
   --   set or the player has no valid active weapon]
   check = function(target, data)
     if !data.operator or !data.weapon then return false end
-    if !IsValid(target:GetActiveWeapon()) then return false end
 
-    return util.process_operator(data.operator, target:GetActiveWeapon():GetClass(), data.weapon)
+    local weapon = target:GetActiveWeapon()
+
+    if !IsValid(weapon) then return false end
+
+    return process_operator(data.operator, weapon:GetClass(), data.weapon)
   end,
   --- Asks for a weapon class with a text prompt and stores it in the node data.
   -- @param id [String condition id]

@@ -7,6 +7,11 @@
 -- `PlayerThink`, `PlayerOneSecond`, `FLSaveData`, `PostSaveData` and the
 -- `FLPlayerSpawn...` checks.
 
+local IsValid = IsValid
+local CurTime = CurTime
+local config_get = Config.get
+local player_iterator = player.Iterator
+
 DEFINE_BASECLASS('gamemode_base')
 
 --- Does nothing, which disables the default handling of a player's death.
@@ -88,10 +93,12 @@ function GM:PlayerSpawn(actor)
   actor:UnSpectate()
   actor:GodDisable()
 
-  actor:SetCrouchedWalkSpeed(Config.get('crouched_speed') / Config.get('walk_speed'))
-  actor:SetWalkSpeed(Config.get('walk_speed'))
-  actor:SetJumpPower(Config.get('jump_power'))
-  actor:SetRunSpeed(Config.get('run_speed'))
+  local walk_speed = config_get('walk_speed')
+
+  actor:SetCrouchedWalkSpeed(config_get('crouched_speed') / walk_speed)
+  actor:SetWalkSpeed(walk_speed)
+  actor:SetJumpPower(config_get('jump_power'))
+  actor:SetRunSpeed(config_get('run_speed'))
 
   actor:SetNoDraw(false)
   actor:UnLock()
@@ -196,7 +203,7 @@ end
 -- @param inflictor [Entity]
 -- @param attacker [Entity]
 function GM:PlayerDeath(victim, inflictor, attacker)
-  victim:set_nv('respawn_time', CurTime() + Config.get('respawn_delay'))
+  victim:set_nv('respawn_time', CurTime() + config_get('respawn_delay'))
 end
 
 --- Respawns a dead player once their respawn time has passed.
@@ -578,7 +585,7 @@ function GM:OneSecond()
       hook.Run('FLSaveData')
     end
 
-    Flux.next_save_data = cur_time + Config.get('data_save_interval', 360)
+    Flux.next_save_data = cur_time + config_get('data_save_interval', 360)
   end
 
   if !Flux.next_player_count_check then
@@ -722,7 +729,7 @@ end
 function GM:ShutDown()
   hook.Run('FLSaveData')
 
-  for k, v in player.Iterator() do
+  for k, v in player_iterator() do
     v:save_player()
   end
 
@@ -734,15 +741,16 @@ end
 -- @param cur_time [Number current CurTime()]
 function GM:PlayerOneSecond(actor, cur_time)
   local pos = actor:GetPos()
+  local last_pos = actor.last_pos
 
-  if actor.last_pos != pos then
+  if last_pos != pos then
     --- Called on the server when a player is not where they were a second ago. The gamemode
     -- checks this once a second for every player, from its `PlayerOneSecond` handler.
     -- @param actor [Player The player who has moved]
     -- @param old_pos [Vector Position at the previous check; nil at the player's first check]
     -- @param new_pos [Vector Current position]
     -- @param cur_time [Number CurTime() of the check]
-    hook.Run('PlayerPositionChanged', actor, actor.last_pos, pos, cur_time)
+    hook.Run('PlayerPositionChanged', actor, last_pos, pos, cur_time)
   end
 
   actor.last_pos = pos
@@ -782,7 +790,7 @@ end
 
 --- Saves the data of every player before the server restarts.
 function GM:ServerRestart()
-  for k, v in player.Iterator() do
+  for k, v in player_iterator() do
     v:save_player()
   end
 end
@@ -826,19 +834,21 @@ end
 -- @param new_value [Any]
 function GM:OnConfigSet(key, old_value, new_value)
   if key == 'walk_speed' then
-    for k, v in player.Iterator() do
+    for k, v in player_iterator() do
       v:SetWalkSpeed(new_value)
     end
   elseif key == 'run_speed' then
-    for k, v in player.Iterator() do
+    for k, v in player_iterator() do
       v:SetRunSpeed(new_value)
     end
   elseif key == 'crouched_speed' then
-    for k, v in player.Iterator() do
-      v:SetCrouchedWalkSpeed(new_value / Config.get('walk_speed'))
+    local crouched_speed = new_value / config_get('walk_speed')
+
+    for k, v in player_iterator() do
+      v:SetCrouchedWalkSpeed(crouched_speed)
     end
   elseif key == 'jump_power' then
-    for k, v in player.Iterator() do
+    for k, v in player_iterator() do
       v:SetJumpPower(new_value)
     end
   end
@@ -902,7 +912,7 @@ do
     if cur_time >= next_think then
       local one_second_tick = (cur_time >= next_second)
 
-      for k, v in player.Iterator() do
+      for k, v in player_iterator() do
         --- Called on the server eight times a second for every player, including players who
         -- are dead or not initialized yet. Prefer `PlayerOneSecond` when once a second is
         -- often enough. The gamemode's handler runs the player's current action.

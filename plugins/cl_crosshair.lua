@@ -5,6 +5,8 @@
 -- `AdjustCrosshairColor` and `AdjustCrosshairGap` hooks; the plugin itself uses them to tint
 -- and narrow the crosshair when the player aims at a nearby player or item.
 
+local draw_rounded_box = draw.RoundedBox
+
 PLUGIN:set_name('Crosshair')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a crosshair.')
@@ -42,7 +44,6 @@ function PLUGIN:HUDPaint()
     -- @param distance [Number Distance from the local player to the hit position of the trace]
     -- @return [Color Color to draw the crosshair in; white when nothing is returned]
     local draw_color = Plugin.call('AdjustCrosshairColor', trace, distance) or color_white
-    local secondary_draw_color = draw_color:alpha(25)
     local real_gap =
       --- Lets plugins change the gap between the center of the crosshair and its bars.
       -- Called on the client on every frame the crosshair is drawn.
@@ -57,48 +58,19 @@ function PLUGIN:HUDPaint()
       cur_gap = real_gap
     end
 
-    if draw_color != color_white then
-      secondary_draw_color = secondary_draw_color:alpha(255)
-    end
-
-    local scrw, scrh = ScrW(), ScrH()
+    local secondary_draw_color = draw_color:alpha(draw_color != color_white and 255 or 25)
     local gox, goy = Flux.global_ui_offset()
+    local center_x, center_y = gox + ScrW() * 0.5, goy + ScrH() * 0.5
+    local bar_x, bar_y = center_x - size, center_y - size
+    local dot_x, dot_y = center_x - half_size, center_y - half_size
 
-    draw.RoundedBox(0, gox + (scrw * 0.5 - half_size), goy + (scrh * 0.5 - half_size), size, size, draw_color)
+    draw_rounded_box(0, dot_x, dot_y, size, size, draw_color)
 
-    draw.RoundedBox(
-      0,
-      gox + (scrw * 0.5 - half_size - cur_gap),
-      goy + (scrh * 0.5 - size),
-      size,
-      double_size,
-      secondary_draw_color
-    )
-    draw.RoundedBox(
-      0,
-      gox + (scrw * 0.5 - half_size + cur_gap),
-      goy + (scrh * 0.5 - size),
-      size,
-      double_size,
-      secondary_draw_color
-    )
+    draw_rounded_box(0, dot_x - cur_gap, bar_y, size, double_size, secondary_draw_color)
+    draw_rounded_box(0, dot_x + cur_gap, bar_y, size, double_size, secondary_draw_color)
 
-    draw.RoundedBox(
-      0,
-      gox + (scrw * 0.5 - size),
-      goy + (scrh * 0.5 - half_size - cur_gap),
-      double_size,
-      size,
-      secondary_draw_color
-    )
-    draw.RoundedBox(
-      0,
-      gox + (scrw * 0.5 - size),
-      goy + (scrh * 0.5 - half_size + cur_gap),
-      double_size,
-      size,
-      secondary_draw_color
-    )
+    draw_rounded_box(0, bar_x, dot_y - cur_gap, double_size, size, secondary_draw_color)
+    draw_rounded_box(0, bar_x, dot_y + cur_gap, double_size, size, secondary_draw_color)
   end
 end
 

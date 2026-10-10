@@ -375,26 +375,20 @@ function Statements.add_index(table_name, columns, options)
 
   query = query..index_name..' ON '..table_name
 
-  local function _columns(query)
-    query = query..' ('
+  local column_parts = {}
 
-    for k, v in ipairs(cols) do
-      query = query..v
-
-      if len and !sqlite then
-        query = query..'('..(istable(len) and len[v] or len)..')'
-      end
-
-      if k != #cols then
-        query = query..', '
-      end
+  for k, v in ipairs(cols) do
+    if len and !sqlite then
+      column_parts[k] = v..'('..(istable(len) and len[v] or len)..')'
+    else
+      column_parts[k] = v
     end
-
-    return query..')'
   end
 
+  local column_list = ' ('..table.concat(column_parts, ', ')..')'
+
   if !postgres then
-    query = _columns(query)
+    query = query..column_list
   end
 
   if !sqlite then
@@ -402,7 +396,7 @@ function Statements.add_index(table_name, columns, options)
   end
 
   if postgres then
-    query = _columns(query)
+    query = query..column_list
   end
 
   if options.where then

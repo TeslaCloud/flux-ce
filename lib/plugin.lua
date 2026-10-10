@@ -27,6 +27,14 @@ if Plugin then return end
 
 require_relative 'plugin_instance'
 
+local pairs = pairs
+local ipairs = ipairs
+local pcall = pcall
+local istable = istable
+local isstring = isstring
+local isfunction = isfunction
+local tostring = tostring
+
 mod 'Plugin'
 
 local stored = {}
@@ -109,8 +117,10 @@ end
 function Plugin.cache_functions(obj, id)
   for k, v in pairs(obj) do
     if isfunction(v) then
-      hooks_cache[k] = hooks_cache[k] or {}
-      table.insert(hooks_cache[k], { v, obj, id = id })
+      local handlers = hooks_cache[k] or {}
+
+      hooks_cache[k] = handlers
+      handlers[#handlers + 1] = { v, obj, id = id }
     end
   end
 end
@@ -408,10 +418,12 @@ local function collect_dependents(known)
     local id = Plugin.normalize_id(v)
 
     if id then
-      dependents[id] = dependents[id] or {}
+      local list = dependents[id] or {}
 
-      if #dependents[id] == 0 then
-        table.insert(dependents[id], Flux.get_schema_name())
+      dependents[id] = list
+
+      if #list == 0 then
+        list[1] = Flux.get_schema_name()
       end
     end
   end
@@ -422,10 +434,12 @@ local function collect_dependents(known)
         local dependency = Plugin.normalize_id(v)
 
         if dependency and dependency != id then
-          dependents[dependency] = dependents[dependency] or {}
+          local list = dependents[dependency] or {}
 
-          if !table.HasValue(dependents[dependency], info.name) then
-            table.insert(dependents[dependency], info.name)
+          dependents[dependency] = list
+
+          if !table.HasValue(list, info.name) then
+            list[#list + 1] = info.name
           end
         end
       end
@@ -1164,7 +1178,7 @@ end
 function Plugin.add_extra(extra)
   if !isstring(extra) then return end
 
-  table.insert(extras, extra)
+  extras[#extras + 1] = extra
 end
 
 --- Includes all extra folders (lib, classes, config, entities, themes and so on) of a
@@ -1238,8 +1252,10 @@ do
     -- @return [Any values returned by the first handler that returned non-nil (cached plugin
     --   hooks pass on six values at most)]
     function hook.Call(name, gm, ...)
-      if hooks_cache[name] then
-        for k, v in ipairs(hooks_cache[name]) do
+      local handlers = hooks_cache[name]
+
+      if handlers then
+        for k, v in ipairs(handlers) do
           local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
 
           if !success then
@@ -1278,8 +1294,10 @@ do
     -- @return [Any values returned by the first handler that returned non-nil (cached plugin
     --   hooks pass on six values at most)]
     function hook.Call(name, gm, ...)
-      if hooks_cache[name] then
-        for k, v in ipairs(hooks_cache[name]) do
+      local handlers = hooks_cache[name]
+
+      if handlers then
+        for k, v in ipairs(handlers) do
           local a, b, c, d, e, f = v[1](v[2], ...)
 
           if a != nil then

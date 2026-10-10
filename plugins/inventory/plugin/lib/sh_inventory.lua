@@ -12,6 +12,9 @@
 -- `Inventories.find`.
 -- @module [Player]
 
+local pairs = pairs
+local table_add = table.Add
+
 if !Inventories then
   PLUGIN:set_global('Inventories')
 end
@@ -82,7 +85,7 @@ do
       local items = {}
 
       for k, v in pairs(self:get_inventories()) do
-        table.Add(items, v:get_items())
+        table_add(items, v:get_items())
       end
 
       return items
@@ -103,7 +106,7 @@ do
       local items = {}
 
       for k, v in pairs(self:get_inventories()) do
-        table.Add(items, v:get_items_ids())
+        table_add(items, v:get_items_ids())
       end
 
       return items
@@ -190,7 +193,7 @@ do
       local items = {}
 
       for k, v in pairs(self:get_inventories()) do
-        table.Add(items, v:find_items(id))
+        table_add(items, v:find_items(id))
       end
 
       return items
@@ -264,9 +267,13 @@ do
   -- @param weapon_class [String]
   -- @return [Item]
   function player_meta:get_item_from_weapon(weapon_class)
-    for k, v in pairs(self:get_items()) do
-      if v.is_equipped and v:is_equipped() and v.weapon_class == weapon_class then
-        return v
+    local items = self:get_items()
+
+    for i = 1, #items do
+      local item_obj = items[i]
+
+      if item_obj.weapon_class == weapon_class and item_obj.is_equipped and item_obj:is_equipped() then
+        return item_obj
       end
     end
   end
@@ -585,7 +592,7 @@ do
         v:add_receiver(self)
         v:sync()
 
-        table.insert(inventory_ids, v.id)
+        inventory_ids[#inventory_ids + 1] = v.id
       end
 
       Cable.send(self, 'fl_open_player_inventory', target, inventory_ids)

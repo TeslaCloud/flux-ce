@@ -1,6 +1,9 @@
 --- Server-side functions of the Limbs plugin: hurting, healing and resetting the limbs of a
 -- player, and working out which limbs a hit has landed on.
 
+local tonumber = tonumber
+local math_clamp = math.Clamp
+
 --- Applies changes to the limb damage of a player's active character in one go: the new
 -- damage of every limb is kept between 0 and `Limbs.max_damage`, the character data is
 -- written once, which also sends it to the player, and the PlayerLimbDamaged and
@@ -23,9 +26,9 @@ local function change_limbs(target, changes)
     amount = tonumber(amount)
 
     if Limbs:is_limb(limb) and amount and amount == amount and amount != 0 then
-      local current = math.Clamp(tonumber(stored[limb]) or 0, 0, max_damage)
+      local current = math_clamp(tonumber(stored[limb]) or 0, 0, max_damage)
       local rounded = amount > 0 and math.ceil(amount) or -math.ceil(-amount)
-      local new_damage = math.Clamp(current + rounded, 0, max_damage)
+      local new_damage = math_clamp(current + rounded, 0, max_damage)
 
       if new_damage != current then
         stored[limb] = new_damage > 0 and new_damage or nil
@@ -181,8 +184,8 @@ function Limbs:set_damage(target, limb, value)
   end
 
   local stored = self:get_stored(target)
-  local current = math.Clamp(stored and tonumber(stored[limb]) or 0, 0, self.max_damage)
-  local difference = math.Clamp(value, 0, self.max_damage) - current
+  local current = math_clamp(stored and tonumber(stored[limb]) or 0, 0, self.max_damage)
+  local difference = math_clamp(value, 0, self.max_damage) - current
 
   if difference > 0 then
     return self:damage(target, limb, difference)

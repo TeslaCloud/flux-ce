@@ -3,12 +3,16 @@
 local w, h = math.scale(512), math.scale(4)
 local cur_wide = w
 local cur_alpha = 0
+local full_color = Color(0, 225, 0)
+local empty_color = Color(200, 0, 0)
 
 --- Draws the stamina bar, which fades in while stamina is below 98 and out otherwise.
 -- The theme can take over the drawing through its DrawStaminaBar hook.
 function Stamina:HUDPaint()
-  if IsValid(PLAYER) and PLAYER:Alive() then
-    local stamina = PLAYER:get_nv('stamina', 100)
+  local client = PLAYER
+
+  if IsValid(client) and client:Alive() then
+    local stamina = client:get_nv('stamina', 100)
     local frame_time = FrameTime() * 8
     local percentage = (stamina / Config.get('stam_max', 100))
 
@@ -32,7 +36,7 @@ function Stamina:HUDPaint()
         y,
         cur_wide,
         h,
-        LerpColor(1 - percentage, Color(0, 225, 0), Color(200, 0, 0)):alpha(200 * cur_alpha)
+        LerpColor(1 - percentage, full_color, empty_color):alpha(200 * cur_alpha)
       )
     end
   end

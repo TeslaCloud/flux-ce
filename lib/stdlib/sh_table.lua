@@ -7,6 +7,12 @@
 -- with a version that leaves the `class` field of objects alone.
 -- @module [table]
 
+local pairs = pairs
+local ipairs = ipairs
+local istable = istable
+local isfunction = isfunction
+local tostring = tostring
+
 --- Recursively merges the source table into the destination table, overwriting existing keys.
 -- Replaces the built-in table.Merge. Unlike the built-in, a table stored under the `class`
 -- key is assigned by reference instead of being merged.
@@ -72,7 +78,7 @@ function table.map(t, c)
     local val = c(v)
 
     if val != nil then
-      table.insert(new_table, val)
+      new_table[#new_table + 1] = val
     end
   end
 
@@ -94,7 +100,7 @@ function table.map_kv(t, c)
     local val = c(k, v)
 
     if val != nil then
-      table.insert(new_table, val)
+      new_table[#new_table + 1] = val
     end
   end
 
@@ -120,13 +126,13 @@ function table.select(t, what)
   if isfunction(what) then
     for k, v in pairs(t) do
       if what(v, k) != false then
-        table.insert(new_table, v)
+        new_table[#new_table + 1] = v
       end
     end
   else
     for k, v in pairs(t) do
       if istable(v) then
-        table.insert(new_table, v[what])
+        new_table[#new_table + 1] = v[what]
       end
     end
   end
@@ -143,7 +149,7 @@ function table.slice(t, from, to)
   local new_table = a{}
 
   for i = from, to do
-    table.insert(new_table, t[i])
+    new_table[#new_table + 1] = t[i]
   end
 
   return new_table
@@ -220,7 +226,7 @@ function table.flatten(tab)
     if istable(v) and !v.class then
       table.Add(t, table.flatten(v))
     else
-      table.insert(t, v)
+      t[#t + 1] = v
     end
   end
 
@@ -308,18 +314,18 @@ end
 -- @param sep='' [String separator; it is not put between the values by the current code]
 -- @return [String the concatenated values]
 function table.join(tab, sep)
-  local str = ''
+  local pieces = {}
   sep = sep or ''
 
   for k, v in pairs(tab) do
     if !istable(v) then
-      str = str..tostring(v)
+      pieces[#pieces + 1] = tostring(v)
     else
-      str = str..table.join(v, sep)
+      pieces[#pieces + 1] = table.join(v, sep)
     end
   end
 
-  return str
+  return table.concat(pieces)
 end
 
 --- Returns a copy of the table without the entries for which the callback returns true.
@@ -449,9 +455,9 @@ function table.partition(tab, callback)
 
   for k, v in pairs(tab) do
     if callback(k, v) then
-      table.insert(t1, v)
+      t1[#t1 + 1] = v
     else
-      table.insert(t2, v)
+      t2[#t2 + 1] = v
     end
   end
 
@@ -469,7 +475,7 @@ function table.to_array(tab)
   local a = a{}
 
   for k, v in pairs(tab) do
-    table.insert(a, { k, v })
+    a[#a + 1] = { k, v }
   end
 
   return a
@@ -489,7 +495,7 @@ function table.to_hash(tab)
     if istable(v) then
       h[v[1]] = v[2]
     else
-      table.insert(h, v)
+      h[#h + 1] = v
     end
   end
 
@@ -622,7 +628,7 @@ function table.range(from, to)
   local t = {}
 
   for i = from, to do
-    table.insert(t, i)
+    t[#t + 1] = i
   end
 
   return t

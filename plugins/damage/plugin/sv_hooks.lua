@@ -5,6 +5,8 @@
 -- handlers of the schema, of other plugins and of the gamemode still run after them. The one
 -- exception is damage cancelled through `PrePlayerTakeDamage`, which is blocked for everyone.
 
+local config_get = Config.get
+
 --- Remembers the location of a bullet or melee hit on a player and multiplies its damage by
 -- the 'damage_scale_' config of that location.
 -- @param victim [Player]
@@ -30,7 +32,7 @@ function Damage:EntityTakeDamage(entity, damage_info)
   if !IsValid(entity) or !entity:IsPlayer() then return end
 
   if damage_info:IsFallDamage() then
-    local scale = Config.get('damage_scale_fall', 1)
+    local scale = config_get('damage_scale_fall', 1)
 
     if scale != 1 then
       damage_info:ScaleDamage(scale)
@@ -69,14 +71,16 @@ function Damage:PostEntityTakeDamage(entity, damage_info, took)
 
   entity.damage_hitgroup = nil
 
-  if took and damage_info:GetDamage() > 0 then
+  local damage = took and damage_info:GetDamage() or 0
+
+  if damage > 0 then
     entity.next_health_regen = nil
 
-    if entity:Alive() and Config.get('damage_view_punch') then
-      self:punch_view(entity, damage_info:GetDamage())
+    if entity:Alive() and config_get('damage_view_punch') then
+      self:punch_view(entity, damage)
     end
 
-    if Config.get('log_damage') then
+    if config_get('log_damage') then
       self:log_damage(entity, damage_info, hitgroup)
     end
   end
@@ -104,7 +108,7 @@ end
 function Damage:PlayerDeath(victim, inflictor, attacker)
   self:reset_player(victim)
 
-  if Config.get('log_kills') then
+  if config_get('log_kills') then
     self:log_kill(victim, inflictor, attacker)
   end
 
@@ -132,7 +136,7 @@ end
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the tick]
 function Damage:PlayerThink(actor, cur_time)
-  if Config.get('drowning') then
+  if config_get('drowning') then
     self:update_drowning(actor, cur_time)
   elseif actor.submerged_since then
     actor.submerged_since = nil
@@ -144,7 +148,7 @@ end
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the tick]
 function Damage:PlayerOneSecond(actor, cur_time)
-  if Config.get('health_regen') then
+  if config_get('health_regen') then
     self:regenerate_health(actor, cur_time)
   end
 end

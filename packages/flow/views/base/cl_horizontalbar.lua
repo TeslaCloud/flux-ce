@@ -37,14 +37,18 @@ end
 function PANEL:PerformLayout()
   local w, h = self:GetSize()
   local x = 0
+  local panels = self.Panels
+  local overlap = self.m_iOverlap
+  local canvas = self.pnlCanvas
 
-  self.pnlCanvas:SetTall(h)
+  canvas:SetTall(h)
 
   if self.centered then
     local wide = 0
+    local panel_count = #panels
 
-    for k, v in pairs(self.Panels) do
-      wide = wide + v:GetWide() + (k != #self.Panels and self.m_iOverlap or 0)
+    for k, v in pairs(panels) do
+      wide = wide + v:GetWide() + (k != panel_count and overlap or 0)
     end
 
     -- Panels that do not fit start at the left edge instead, as whatever ends up left of
@@ -52,24 +56,26 @@ function PANEL:PerformLayout()
     x = math.max(w * 0.5 - wide * 0.5, 0)
   end
 
-  for k, v in pairs(self.Panels) do
+  for k, v in pairs(panels) do
     if !IsValid(v) then continue end
 
     v:SetPos(x, 0)
     v:SetTall(h)
 
-    x = x + v:GetWide() + self.m_iOverlap
+    x = x + v:GetWide() + overlap
   end
 
-  self.pnlCanvas:SetWide(math.max(x - self.m_iOverlap, 0))
+  canvas:SetWide(math.max(x - overlap, 0))
 
-  if w < self.pnlCanvas:GetWide() then
-    self.OffsetX = math.Clamp(self.OffsetX, 0, self.pnlCanvas:GetWide() - self:GetWide())
+  local canvas_w = canvas:GetWide()
+
+  if w < canvas_w then
+    self.OffsetX = math.Clamp(self.OffsetX, 0, canvas_w - w)
   else
     self.OffsetX = 0
   end
 
-  self.pnlCanvas.x = self.OffsetX * -1
+  canvas.x = self.OffsetX * -1
 
   local button_size = math.scale(16)
 
@@ -81,8 +87,8 @@ function PANEL:PerformLayout()
   self.btnRight:AlignRight(4)
   self.btnRight:CenterVertical()
 
-  self.btnLeft:SetVisible(self.pnlCanvas.x < 0)
-  self.btnRight:SetVisible(self.pnlCanvas.x + self.pnlCanvas:GetWide() > w)
+  self.btnLeft:SetVisible(canvas.x < 0)
+  self.btnRight:SetVisible(canvas.x + canvas_w > w)
 end
 
 --- Sets whether the child panels are centered horizontally instead of aligned to the left.

@@ -5,6 +5,10 @@
 -- @module [Panel]
 
 local panel_meta = FindMetaTable('Panel')
+local scale = math.scale
+local suppress_engine_lighting = render.SuppressEngineLighting
+local set_model_lighting = render.SetModelLighting
+local color_scale = 1 / 255
 
 -- Seriously, Newman? I have to write this myself?
 
@@ -23,14 +27,14 @@ end
 -- @param x [Number x coordinate at 1080p]
 -- @param y [Number y coordinate at 1080p]
 function panel_meta:set_pos_ex(x, y)
-  self:SetPos(math.scale(x), math.scale(y))
+  self:SetPos(scale(x), scale(y))
 end
 
 --- Sets the size of the panel, scaling it to the screen resolution.
 -- @param w [Number width at 1080p]
 -- @param h [Number height at 1080p]
 function panel_meta:set_size_ex(w, h)
-  self:SetSize(math.scale(w), math.scale(h))
+  self:SetSize(scale(w), scale(h))
 end
 
 local model_panel = vgui.GetControlTable('DModelPanel')
@@ -56,29 +60,33 @@ function model_panel:Paint(w, h)
 
   cam.Start3D(self.vCamPos, ang, self.fFOV, x, y, w, h, 5, self.FarZ)
 
-  -- Fix for models being behind the blur texture in the Z-buffer.
-  if Flux.should_render_blur then cam.IgnoreZ(true) end
+  local ignore_z = Flux.should_render_blur
+  local ambient, color = self.colAmbientLight, self.colColor
+  local directional_light = self.DirectionalLight
 
-  render.SuppressEngineLighting(true)
+  -- Fix for models being behind the blur texture in the Z-buffer.
+  if ignore_z then cam.IgnoreZ(true) end
+
+  suppress_engine_lighting(true)
   render.SetLightingOrigin(ent:GetPos())
-  render.ResetModelLighting(self.colAmbientLight.r / 255, self.colAmbientLight.g / 255, self.colAmbientLight.b / 255)
-  render.SetColorModulation(self.colColor.r / 255, self.colColor.g / 255, self.colColor.b / 255)
-  render.SetBlend((self:GetAlpha() / 255) * (self.colColor.a / 255))
+  render.ResetModelLighting(ambient.r * color_scale, ambient.g * color_scale, ambient.b * color_scale)
+  render.SetColorModulation(color.r * color_scale, color.g * color_scale, color.b * color_scale)
+  render.SetBlend((self:GetAlpha() * color_scale) * (color.a * color_scale))
 
   for i = 0, 6 do
-    local col = self.DirectionalLight[i]
+    local col = directional_light[i]
 
     if col then
-      render.SetModelLighting(i, col.r / 255, col.g / 255, col.b / 255)
+      set_model_lighting(i, col.r * color_scale, col.g * color_scale, col.b * color_scale)
     end
   end
 
   self:DrawModel()
 
-  render.SuppressEngineLighting(false)
+  suppress_engine_lighting(false)
 
   -- End fix
-  if Flux.should_render_blur then cam.IgnoreZ(false) end
+  if ignore_z then cam.IgnoreZ(false) end
 
   cam.End3D()
 
