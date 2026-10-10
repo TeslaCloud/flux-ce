@@ -7,8 +7,6 @@
 local math_scale = math.scale
 local math_scale_x = math.scale_x
 
-local desc_background_color = Color(10, 12, 17, 200)
-
 local PANEL = {}
 
 --- Draws the background of the inventory tab using the theme.
@@ -131,21 +129,21 @@ function PANEL:rebuild()
 
   self.desc:SetFont(Theme.get_font('main_menu_small'))
   self.desc:SetTall(math_scale(36))
+  -- A field like any other text entry of the theme, outlined in the accent color while it is
+  -- being edited and in the success or warning color otherwise, to tell a saved description
+  -- from one that has not been saved yet.
   self.desc.Paint = function(pnl, w, h)
     local radius = Theme.get_option('corner_radius_small', math_scale(4))
-    local state_color = Theme.get_color(pnl.saved and 'success' or 'warning')
     local text_color = Theme.get_color('text')
+    local border
 
-    Theme.hook(
-      'DrawCard',
-      0,
-      0,
-      w,
-      h,
-      radius,
-      desc_background_color,
-      pnl:HasFocus() and Theme.get_color('accent') or ColorAlpha(state_color, 160)
-    )
+    if pnl:HasFocus() then
+      border = Theme.get_color('accent')
+    else
+      border = Theme.get_color(pnl.saved and 'success' or 'warning')
+    end
+
+    Theme.hook('DrawCard', 0, 0, w, h, radius, Theme.get_color('field'), border)
 
     pnl:DrawTextEntryText(text_color, ColorAlpha(Theme.get_color('accent'), 120), text_color)
   end

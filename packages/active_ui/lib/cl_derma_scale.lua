@@ -25,6 +25,8 @@
 --   whenever it is attached to a menu.
 -- * When the resolution changes the spawn menu is rebuilt, since its panels were sized for
 --   the previous one.
+-- * The light background that the creation menu sets on its spawn list tree is cleared, so that
+--   the tree is painted by the dark skin like every other one.
 
 mod 'DermaScale'
 
@@ -986,6 +988,14 @@ DermaScale.after('DColorCombo', 'Init', function(panel)
 end)
 
 -- Sandbox spawn menu.
+
+-- The sidebar of the creation menu gives its spawn list tree a light grey background, which the
+-- near-white text of the dark skin is invisible on: let the skin paint the tree instead.
+DermaScale.after('ContentSidebar', 'Init', function(panel)
+  if IsValid(panel.Tree) then
+    panel.Tree:SetBackgroundColor(nil)
+  end
+end)
 
 DermaScale.after('SpawnMenu', 'Init', function(panel)
   local divider = panel.HorizontalDivider

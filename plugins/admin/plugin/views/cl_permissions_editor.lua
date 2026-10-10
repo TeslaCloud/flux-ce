@@ -11,18 +11,14 @@ PANEL.permission = {}
 --- Recreates the row: the permission's title and the allow / not set / never buttons.
 -- The name and the description of the permission are translated if they are language
 -- phrases. Right-clicking a button asks for a duration and makes that value temporary.
+-- The children are positioned by `PerformLayout`, so the row may be resized afterwards.
 function PANEL:rebuild()
   if IsValid(self.container) then
     self.container:safe_remove()
   end
 
-  local width, height = self:GetWide(), self:GetTall()
   local font = Theme.get_font('text_small')
-  local font_size = draw.GetFontHeight(font)
   local permission = self:get_permission()
-  local quarter = width * 0.25
-  local button_y = math.scale(2)
-  local button_h = height - button_y * 2
 
   local paint_button = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
   local request_temporary = function(btn)
@@ -53,23 +49,18 @@ function PANEL:rebuild()
   end
 
   self.container = vgui.Create('fl_base_panel', self)
-  self.container:SetSize(width, height)
-  self.container:SetPos(0, 0)
+  self.container:Dock(FILL)
 
   self.title = vgui.Create('DLabel', self.container)
-  self.title:SetPos(math.scale(8), 0)
   self.title:SetFont(font)
   self.title:SetTextColor(Theme.get_color('text'))
   self.title:SetText(t(permission.name or 'No Permission'))
-  self.title:SetSize(quarter - math.scale(8), height)
 
   if permission.description then
     self.title:SetTooltip(t(permission.description))
   end
 
   self.button_allow = vgui.Create('DButton', self.container)
-  self.button_allow:SetPos(quarter, button_y)
-  self.button_allow:SetSize(quarter * 0.9, button_h)
   self.button_allow:SetText('')
   self.button_allow.perm_value = PERM_ALLOW
   self.button_allow.Paint = paint_button
@@ -83,8 +74,6 @@ function PANEL:rebuild()
   self.button_allow.DoRightClick = request_temporary
 
   self.button_no = vgui.Create('DButton', self.container)
-  self.button_no:SetPos(quarter * 2, button_y)
-  self.button_no:SetSize(quarter * 0.9, button_h)
   self.button_no:SetText('')
   self.button_no.perm_value = PERM_NO
   self.button_no.Paint = paint_button
@@ -98,8 +87,6 @@ function PANEL:rebuild()
   self.button_no.DoRightClick = request_temporary
 
   self.button_never = vgui.Create('DButton', self.container)
-  self.button_never:SetPos(quarter * 3, button_y)
-  self.button_never:SetSize(quarter * 0.9, button_h)
   self.button_never:SetText('')
   self.button_never.perm_value = PERM_NEVER
   self.button_never.Paint = paint_button
@@ -111,6 +98,29 @@ function PANEL:rebuild()
   end
 
   self.button_never.DoRightClick = request_temporary
+
+  self:InvalidateLayout()
+end
+
+--- Lays the row out for its current size: the title in the first quarter and a button in
+-- each of the other three, so that the row follows the width of the list it sits in.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
+function PANEL:PerformLayout(w, h)
+  if !IsValid(self.container) then return end
+
+  local quarter = w * 0.25
+  local padding = math.scale(8)
+  local button_y = math.scale(2)
+  local button_h = h - button_y * 2
+
+  self.title:SetPos(padding, 0)
+  self.title:SetSize(quarter - padding, h)
+
+  for k, button in ipairs({ self.button_allow, self.button_no, self.button_never }) do
+    button:SetPos(quarter * k, button_y)
+    button:SetSize(quarter * 0.9, button_h)
+  end
 end
 
 --- Marks a button as the selected value and, if that differs from the player's current
@@ -283,27 +293,26 @@ function PANEL:get_player()
 end
 
 --- Recreates the list: a collapsible category per permission category with a row for each
--- permission, plus bulk allow / not set / never buttons where a category has several.
+-- permission, plus bulk allow / not set / never buttons where a category has several. The
+-- list is docked into a scroll panel, so the rows keep clear of the scroll bar.
 function PANEL:rebuild()
-  if IsValid(self.list_layout) then
-    self.list_layout:safe_remove()
+  if IsValid(self.scroll_panel) then
+    self.scroll_panel:safe_remove()
   end
 
   local permissions = Bolt:get_permissions()
-  local width, height = self:GetWide(), self:GetTall()
 
   self.scroll_panel = vgui.Create('DScrollPanel', self)
-  self.scroll_panel:SetSize(width, height)
+  self.scroll_panel:Dock(FILL)
 
   self.list_layout = vgui.Create('DListLayout', self.scroll_panel)
-  self.list_layout:SetSize(width, height)
+  self.list_layout:Dock(TOP)
 
   local row_height = math.scale(30)
 
   for category, perms in SortedPairs(permissions) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
     collapsible_category:SetLabel(t(category))
-    collapsible_category:SetSize(width, 21)
     collapsible_category:DockMargin(0, 0, 0, math.scale(6))
     collapsible_category:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
 
@@ -321,12 +330,21 @@ function PANEL:rebuild()
         t'ui.admin.never_all'
       }
 
-      local quarter = width * 0.25
+      local buttons = {}
 
-      for k, v in pairs(category_buttons) do
+      -- The buttons sit over the columns of the rows below, whatever width the list ends up with.
+      panel.PerformLayout = function(pnl, w, h)
+        local quarter = w * 0.25
+
+        for k, button in ipairs(buttons) do
+          button:SetSize(quarter * 0.9, h - math.scale(4))
+          button:SetPos(quarter * k, math.scale(2))
+        end
+      end
+
+      for k, v in ipairs(category_buttons) do
         local button = vgui.Create('fl_button', panel)
-        button:SetSize(quarter * 0.9, row_height - math.scale(4))
-        button:SetPos(quarter * k, math.scale(2))
+        buttons[k] = button
         button:SetFont(Theme.get_font('text_smaller'))
         button:SetDrawBackground(true)
         button:set_draw_outline(true)
@@ -357,11 +375,9 @@ function PANEL:rebuild()
       list:Add(panel)
     end
 
-    local cur_y = 0
-
     for k, v in SortedPairs(perms) do
       local button = vgui.Create('fl_permission', self)
-      button:SetSize(width, row_height)
+      button:SetTall(row_height)
       button:set_permission(v)
       button:set_value(PERM_NO)
       button:set_player(self:get_player())

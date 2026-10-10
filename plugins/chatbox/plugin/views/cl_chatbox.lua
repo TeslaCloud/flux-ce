@@ -31,6 +31,21 @@ function PANEL:Init()
 
   self.scroll_panel:GetVBar():SetWide(0)
 
+  -- Keep the messages at the bottom of the history, next to the text entry, while there are
+  -- too few of them to fill it. Both layout paths of the scroll panel go through this method.
+  local layout = self.scroll_panel.PerformLayoutInternal
+
+  self.scroll_panel.PerformLayoutInternal = function(scroll)
+    layout(scroll)
+
+    local canvas = scroll:GetCanvas()
+    local free = scroll:GetTall() - canvas:GetTall()
+
+    if free > 0 then
+      canvas:SetPos(0, free)
+    end
+  end
+
   self.scroll_panel:SetPos(0, 0)
   self.scroll_panel:SetSize(w, h)
   self.scroll_panel:PerformLayout()

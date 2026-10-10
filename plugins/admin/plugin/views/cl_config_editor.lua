@@ -16,14 +16,16 @@ local PANEL = {}
 -- lines, then asks the server to send the config again, so that the private and pending
 -- values match what the player may see by now.
 function PANEL:Init()
-  local width = self:GetWide()
   local categories = {}
 
   self.lines = {}
 
   self.scroll_panel = vgui.Create('DScrollPanel', self)
+  self.scroll_panel:Dock(FILL)
 
+  -- Docked into the canvas of the scroll panel, so the lines keep clear of the scroll bar.
   self.list_layout = vgui.Create('DListLayout', self.scroll_panel)
+  self.list_layout:Dock(TOP)
 
   for id, menu_entry in pairs(Config.get_menu_keys()) do
     local category = menu_entry.category or { name = id, description = '' }
@@ -57,7 +59,6 @@ function PANEL:Init()
   for k, v in ipairs(categories) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
     collapsible_category:SetLabel(v.name)
-    collapsible_category:SetSize(width, 21)
     collapsible_category:DockMargin(0, 0, 0, math.scale(6))
     collapsible_category:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
 
@@ -72,7 +73,6 @@ function PANEL:Init()
     for k1, v1 in ipairs(v.configs) do
       local config_line = vgui.Create('fl_config_line')
       config_line:set_config(v1.key, v1.config)
-      config_line:SetWide(width)
       config_line.dark = k1 % 2 == 0
 
       config_list:Add(config_line)
@@ -84,14 +84,6 @@ function PANEL:Init()
   Bolt.config_editor = self
 
   Config.request()
-end
-
---- Sizes the scroll panel and the list once the admin panel has opened this page.
-function PANEL:on_opened()
-  local width, height = self:GetWide(), self:GetTall()
-
-  self.scroll_panel:SetSize(width, height)
-  self.list_layout:SetSize(width - 16, height)
 end
 
 --- Brings the line of a config up to date after its value or its pending value has arrived
@@ -315,6 +307,10 @@ function PANEL:create_control()
     slider:SetDecimals(data.decimals or 0)
     slider.Label:SetVisible(false)
     slider.TextArea:SetPaintBackground(true)
+    slider.TextArea:SetFont(small_font)
+    slider.TextArea:SetWide(math.scale(64))
+    -- Room for the knob at the end of the track, so it does not run into the number field.
+    slider.TextArea:DockMargin(math.scale(10), 0, 0, 0)
     slider.PerformLayout = function(pnl)
       pnl.Label:SetWide(0)
     end
