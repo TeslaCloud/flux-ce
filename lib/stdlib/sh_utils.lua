@@ -433,7 +433,7 @@ function long_error(...)
   local pieces = {}
 
   if len > 200 then
-    for i = 1, len / 200 do
+    for i = 1, math.ceil(len / 200) do
       pieces[#pieces + 1] = text:sub((i - 1) * 200 + 1, math.min(i * 200, len))
     end
   else
