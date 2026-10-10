@@ -6,7 +6,7 @@
 local IsValid = IsValid
 local math_scale = math.scale
 
-local label_background_color = Color(0, 0, 0, 150)
+local label_background_color = Color(10, 12, 17, 200)
 
 --- Shows the hotbar and makes it interactive while the context menu is open.
 function Inventories:OnContextMenuOpen()

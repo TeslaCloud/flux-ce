@@ -21,7 +21,7 @@ debug_output_in_production: false
 # not reloading the framework itself, only the schema.
 # This is useful for schema development, but if you are working on
 # Flux itself, set this to false to make Flux refresh.
-lite_refresh: true
+lite_refresh: false
 
 # Set this to true to enable experimental features.
 # These features are unstable and may (and probably will) cause your server to crash.
@@ -43,4 +43,4 @@ server:
     # Root user's SteamID. They have access to everything.
     # Make this a table if you want multiple root users
     # like ['STEAM_0:0:1', 'STEAM_0:0:2']
-    root_steamid: ["STEAM_0:0:00000000", "STEAM_0:0:00000000"]
+    root_steamid: ["STEAM_0:1:14196407", "STEAM_0:0:16697568"]

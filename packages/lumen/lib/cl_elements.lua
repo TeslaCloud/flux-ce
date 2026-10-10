@@ -216,9 +216,11 @@ Lumen.register_element('button', {
   style = {
     font = 'text_normal',
     color = 'text',
-    background = 'main',
+    background = 'surface_raised',
     hover_background = 'main_light',
     active_background = 'accent',
+    disabled_color = 'text_dim',
+    radius = 6,
     padding = { 6, 12 },
     text_align = 'center',
     vertical_align = 'center',

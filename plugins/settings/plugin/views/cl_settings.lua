@@ -3,8 +3,6 @@
 -- Themes can draw both themselves with the `PaintSettingsMenu` and `PaintSettingRow` theme
 -- hooks.
 
-local background_color = Color(50, 50, 50, 100)
-
 --- The settings page of the tab menu (`fl_settings`): a scrollable list with a header for
 -- every category and an `fl_setting_row` for every setting that is visible to the player,
 -- and a button that sets all of them back to their defaults.
@@ -22,13 +20,14 @@ function PANEL:Init()
 
   self.reset_button = vgui.Create('fl_button', self)
   self.reset_button:SetDrawBackground(true)
+  self.reset_button:set_draw_outline(true)
   self.reset_button:SetFont(Theme.get_font('text_small'))
   self.reset_button:set_text(t'ui.settings.reset_all')
   self.reset_button:set_icon('fa-undo')
   self.reset_button:set_icon_size(math.scale(16))
   self.reset_button:set_text_offset(math.scale(8))
   self.reset_button:set_centered(true)
-  self.reset_button:set_background_color(Theme.get_color('background_light'))
+  self.reset_button:set_background_color(Theme.get_color('surface_raised'))
   self.reset_button:SetTall(math.scale(32))
   self.reset_button:SizeToContentsX()
   self.reset_button.DoClick = function(btn)
@@ -46,28 +45,14 @@ function PANEL:Init()
   ClientSettings.menu = self
 end
 
---- Draws the background and the title of the menu, unless the active theme does that in its
+--- Draws the card and the title of the menu, unless the active theme does that in its
 -- PaintSettingsMenu hook.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
   if Theme.hook('PaintSettingsMenu', self, w, h) == nil then
-    local text = t'ui.settings.title'
-    local font = Theme.get_font('main_menu_large')
-    local text_w, text_h = util.text_size(text, font)
-
-    DisableClipping(true)
-      draw.RoundedBox(0, -4, -4, w + 8, h + 8, background_color)
-      draw.textured_rect(
-        Theme.get_material('gradient_down'),
-        -4,
-        -text_h - 4,
-        text_w + 8,
-        text_h,
-        background_color
-      )
-      draw.SimpleText(text, font, 0, -text_h - 4, color_white)
-    DisableClipping(false)
+    Theme.hook('PaintSurface', self, w, h)
+    Theme.hook('PaintSectionTitle', self, t'ui.settings.title', w, h)
   end
 end
 
@@ -84,7 +69,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
-  local padding = math.scale(8)
+  local padding = math.scale(12)
   local button_w, button_h = self.reset_button:GetSize()
 
   self.scroll_panel:SetPos(padding, padding)
@@ -137,8 +122,8 @@ function PANEL:rebuild()
   for k, v in ipairs(categories) do
     local header = self.scroll_panel:Add('DLabel')
     header:SetText(v.name)
-    header:SetFont(Theme.get_font('text_normal'))
-    header:SetTextColor(text_color)
+    header:SetFont(Theme.get_font('menu_normal'))
+    header:SetTextColor(Theme.get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
     header:DockMargin(margin, k == 1 and 0 or margin * 4, 0, margin)
@@ -189,11 +174,8 @@ vgui.Register('fl_settings', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the label of the setting and the button that resets it, and picks the
--- background color of the dark rows.
+--- Creates the label of the setting and the button that resets it.
 function PANEL:Init()
-  self.dark_color = Theme.get_color('background'):alpha(150)
-
   self.label = vgui.Create('DLabel', self)
   self.label:SetFont(Theme.get_font('text_small'))
   self.label:SetTextColor(Theme.get_color('text'))
@@ -212,13 +194,13 @@ function PANEL:Init()
   end
 end
 
---- Draws a darker background on the rows that are marked as dark, unless the active theme
--- draws the row in its PaintSettingRow hook.
+--- Draws the row through the theme's PaintRow hook, unless the active theme draws it in its
+-- PaintSettingRow hook.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  if Theme.hook('PaintSettingRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
+  if Theme.hook('PaintSettingRow', self, w, h) == nil then
+    Theme.hook('PaintRow', self, w, h)
   end
 end
 

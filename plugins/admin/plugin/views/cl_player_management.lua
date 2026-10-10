@@ -14,7 +14,7 @@ function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
   self.player_list = vgui.Create('DListView', self)
-  self.player_list:DockMargin(4, 4, 2, 4)
+  self.player_list:DockMargin(0, 0, math.scale(8), 0)
   self.player_list:Dock(LEFT)
   self.player_list:AddColumn(t('ui.admin.players'), 1)
   self.player_list:SetWide(scrw / 6)
@@ -41,11 +41,11 @@ end
 function PANEL:on_opened()
   local scrw, scrh = ScrW(), ScrH()
 
-  self.player_info:DockMargin(2, 4, 4, 2)
+  self.player_info:DockMargin(0, 0, 0, math.scale(8))
   self.player_info:Dock(TOP)
-  self.player_info:SetTall(scrh / 6)
+  self.player_info:SetTall(scrh / 7)
 
-  self.perm_editor:DockMargin(2, 2, 4, 4)
+  self.perm_editor:DockMargin(0, 0, 0, 0)
   self.perm_editor:Dock(FILL)
   self.perm_editor:SetSize(
     self:GetWide() - self.player_list:GetWide() - 12,
@@ -82,11 +82,11 @@ function PANEL:Init()
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetFont(Theme.get_font('text_normal_large'))
-  self.name_label:SetTextColor(color_white)
+  self.name_label:SetTextColor(Theme.get_color('text'))
 
   self.role_label = vgui.Create('DLabel', self)
   self.role_label:SetFont(Theme.get_font('text_normal'))
-  self.role_label:SetTextColor(color_white)
+  self.role_label:SetTextColor(Theme.get_color('text_muted'))
 
   self.role_edit = vgui.Create('fl_button', self)
   self.role_edit:set_icon('fa-edit')
@@ -110,23 +110,32 @@ function PANEL:Init()
   end
 end
 
+--- Draws the card of the header.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
+function PANEL:Paint(w, h)
+  Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius'), Theme.get_color('surface_raised'), false)
+end
+
 --- Positions the avatar on the right and the labels and the role button on the left.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
-  self.avatar:SetSize(h - 16, h - 16)
-  self.avatar:SetPos(w - self.avatar:GetWide() - 8, 8)
+  local padding = math.scale(12)
 
-  self.name_label:SetPos(4, 4)
+  self.avatar:SetSize(h - padding * 2, h - padding * 2)
+  self.avatar:SetPos(w - self.avatar:GetWide() - padding, padding)
+
+  self.name_label:SetPos(padding, padding)
 
   local role_label = self.role_label
   local role_tall = role_label:GetTall()
-  local role_y = 4 + self.name_label:GetTall()
+  local role_y = padding + self.name_label:GetTall()
 
-  role_label:SetPos(4, role_y)
-  self.role_edit:set_icon_size(role_tall)
+  role_label:SetPos(padding, role_y)
+  self.role_edit:set_icon_size(role_tall * 0.8)
   self.role_edit:SetSize(role_tall, role_tall)
-  self.role_edit:SetPos(8 + role_label:GetWide(), role_y)
+  self.role_edit:SetPos(padding + role_label:GetWide() + math.scale(4), role_y)
 end
 
 --- Sets the player to display and refreshes the panel.

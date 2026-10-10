@@ -32,10 +32,15 @@ function PANEL:on_open(parent)
 
       local label = vgui.Create('DLabel', button)
       label:Dock(BOTTOM)
-      label:DockMargin(4, 0, 0, 0)
       label:SetText(t(v.name))
       label:SetFont(Theme.get_font('text_normal_large'))
+      label:SetTextColor(Theme.get_color('text'))
+      label:SetContentAlignment(5)
       label:SizeToContents()
+      label:SetTall(label:GetTall() + math.scale(16))
+      label.Paint = function(pnl, w, h)
+        draw.RoundedBox(0, 0, 0, w, h, ColorAlpha(Theme.get_color('background'), 200))
+      end
 
       button.DoClick = function(btn)
         if button:is_active() then return end

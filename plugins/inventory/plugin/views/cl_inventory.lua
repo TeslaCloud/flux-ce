@@ -10,7 +10,7 @@ local IsValid = IsValid
 local PANEL = {}
 PANEL.title = nil
 PANEL.slot_size = math.scale(64)
-PANEL.slot_padding = math.scale(1)
+PANEL.slot_padding = math.scale(3)
 PANEL.draw_inventory_slots = false
 
 --- Creates the scrollable grid of slots and makes it accept dragged items.

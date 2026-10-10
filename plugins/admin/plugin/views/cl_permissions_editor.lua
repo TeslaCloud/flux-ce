@@ -17,10 +17,12 @@ function PANEL:rebuild()
   end
 
   local width, height = self:GetWide(), self:GetTall()
-  local font = Font.size(Theme.get_font('text_normal_smaller'), math.scale(18))
+  local font = Theme.get_font('text_small')
   local font_size = draw.GetFontHeight(font)
   local permission = self:get_permission()
   local quarter = width * 0.25
+  local button_y = math.scale(2)
+  local button_h = height - button_y * 2
 
   local paint_button = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
   local request_temporary = function(btn)
@@ -55,18 +57,19 @@ function PANEL:rebuild()
   self.container:SetPos(0, 0)
 
   self.title = vgui.Create('DLabel', self.container)
-  self.title:SetPos(0, height * 0.5 - font_size * 0.5)
+  self.title:SetPos(math.scale(8), 0)
   self.title:SetFont(font)
+  self.title:SetTextColor(Theme.get_color('text'))
   self.title:SetText(t(permission.name or 'No Permission'))
-  self.title:SetSize(quarter, height)
+  self.title:SetSize(quarter - math.scale(8), height)
 
   if permission.description then
     self.title:SetTooltip(t(permission.description))
   end
 
   self.button_allow = vgui.Create('DButton', self.container)
-  self.button_allow:SetPos(quarter, 0)
-  self.button_allow:SetSize(quarter * 0.9, height)
+  self.button_allow:SetPos(quarter, button_y)
+  self.button_allow:SetSize(quarter * 0.9, button_h)
   self.button_allow:SetText('')
   self.button_allow.perm_value = PERM_ALLOW
   self.button_allow.Paint = paint_button
@@ -80,8 +83,8 @@ function PANEL:rebuild()
   self.button_allow.DoRightClick = request_temporary
 
   self.button_no = vgui.Create('DButton', self.container)
-  self.button_no:SetPos(quarter * 2, 0)
-  self.button_no:SetSize(quarter * 0.9, height)
+  self.button_no:SetPos(quarter * 2, button_y)
+  self.button_no:SetSize(quarter * 0.9, button_h)
   self.button_no:SetText('')
   self.button_no.perm_value = PERM_NO
   self.button_no.Paint = paint_button
@@ -95,8 +98,8 @@ function PANEL:rebuild()
   self.button_no.DoRightClick = request_temporary
 
   self.button_never = vgui.Create('DButton', self.container)
-  self.button_never:SetPos(quarter * 3, 0)
-  self.button_never:SetSize(quarter * 0.9, height)
+  self.button_never:SetPos(quarter * 3, button_y)
+  self.button_never:SetSize(quarter * 0.9, button_h)
   self.button_never:SetText('')
   self.button_never.perm_value = PERM_NEVER
   self.button_never.Paint = paint_button
@@ -295,10 +298,14 @@ function PANEL:rebuild()
   self.list_layout = vgui.Create('DListLayout', self.scroll_panel)
   self.list_layout:SetSize(width, height)
 
+  local row_height = math.scale(30)
+
   for category, perms in SortedPairs(permissions) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
     collapsible_category:SetLabel(t(category))
     collapsible_category:SetSize(width, 21)
+    collapsible_category:DockMargin(0, 0, 0, math.scale(6))
+    collapsible_category:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
 
     local list = vgui.Create('DListLayout', self.list_layout)
 
@@ -306,6 +313,7 @@ function PANEL:rebuild()
 
     if table.Count(perms) > 1 then
       local panel = vgui.Create('fl_base_panel')
+      panel:SetTall(row_height + math.scale(4))
 
       local category_buttons = {
         t'ui.admin.allow_all',
@@ -317,9 +325,12 @@ function PANEL:rebuild()
 
       for k, v in pairs(category_buttons) do
         local button = vgui.Create('fl_button', panel)
-        button:SetSize(quarter * 0.9, 20)
-        button:SetPos(quarter * k, 2)
-        button:SetFont(Theme.get_font('text_small'))
+        button:SetSize(quarter * 0.9, row_height - math.scale(4))
+        button:SetPos(quarter * k, math.scale(2))
+        button:SetFont(Theme.get_font('text_smaller'))
+        button:SetDrawBackground(true)
+        button:set_draw_outline(true)
+        button:set_background_color(Theme.get_color('surface_raised'))
         button:set_text(v)
         button:set_centered(true)
         button.DoClick = function(btn)
@@ -350,7 +361,7 @@ function PANEL:rebuild()
 
     for k, v in SortedPairs(perms) do
       local button = vgui.Create('fl_permission', self)
-      button:SetSize(width, 20)
+      button:SetSize(width, row_height)
       button:set_permission(v)
       button:set_value(PERM_NO)
       button:set_player(self:get_player())

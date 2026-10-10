@@ -15,9 +15,8 @@ local draw_simple_text = draw.SimpleText
 local get_color = Theme.get_color
 
 local default_category = 'attribute.category.other'
-local title_background = Color(50, 50, 50, 100)
-local default_boost_color = Color(100, 200, 100)
-local default_hindrance_color = Color(220, 90, 90)
+local default_boost_color = Color(98, 200, 130)
+local default_hindrance_color = Color(228, 92, 104)
 local type_names = {
   'ui.attributes.type.stat',
   'ui.attributes.type.skill',
@@ -121,29 +120,14 @@ function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
 end
 
---- Draws the background and the title of the tab, unless the active theme's
--- PaintAttributesMenu method does it. A list that shows a snapshot draws nothing, as it
--- sits inside a frame.
+--- Draws the card and the title of the tab, unless the active theme's PaintAttributesMenu
+-- method does it. A list that shows a snapshot draws nothing, as it sits inside a frame.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
   if Theme.hook('PaintAttributesMenu', self, w, h) == nil and !self.snapshot then
-    local text = translate('ui.attributes.title')
-    local font = Theme.get_font('main_menu_large')
-    local text_w, text_h = util.text_size(text, font)
-
-    DisableClipping(true)
-      draw.RoundedBox(0, -4, -4, w + 8, h + 8, title_background)
-      draw.textured_rect(
-        Theme.get_material('gradient_down'),
-        -4,
-        -text_h - 4,
-        text_w + 8,
-        text_h,
-        title_background
-      )
-      draw_simple_text(text, font, 0, -text_h - 4, color_white)
-    DisableClipping(false)
+    Theme.hook('PaintSurface', self, w, h)
+    Theme.hook('PaintSectionTitle', self, translate('ui.attributes.title'), w, h)
   end
 end
 
@@ -151,7 +135,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
-  local padding = math_scale(8)
+  local padding = math_scale(self.snapshot and 0 or 12)
 
   self.scroll_panel:SetPos(padding, padding)
   self.scroll_panel:SetSize(w - padding * 2, h - padding * 2)
@@ -305,8 +289,8 @@ function PANEL:rebuild()
   for k, v in ipairs(sections) do
     local header = self.scroll_panel:Add('DLabel')
     header:SetText(v.name)
-    header:SetFont(Theme.get_font('text_normal'))
-    header:SetTextColor(text_color)
+    header:SetFont(Theme.get_font('menu_normal'))
+    header:SetTextColor(get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
     header:DockMargin(margin, k == 1 and 0 or margin * 4, 0, margin)
@@ -370,9 +354,9 @@ PANEL.level_fraction = 0
 PANEL.boosted_fraction = 0
 PANEL.progress_fraction = false
 
---- Picks the color of the line of details, a darker shade of the text color of the theme.
+--- Picks the color of the line of details, the muted text color of the theme.
 function PANEL:Init()
-  self.details_color = get_color('text'):darken(40)
+  self.details_color = get_color('text_muted')
 end
 
 --- Places the image of the attribute's icon in the top left corner of the row.
@@ -395,7 +379,7 @@ end
 function PANEL:Paint(w, h)
   if Theme.hook('PaintAttributeRow', self, w, h) != nil then return end
 
-  draw.RoundedBox(0, 0, 0, w, h, get_color('background_light'))
+  draw.RoundedBox(Theme.get_option('corner_radius_small'), 0, 0, w, h, get_color('surface_raised'))
 
   if !self.attribute_table then return end
 
@@ -403,7 +387,7 @@ function PANEL:Paint(w, h)
   local icon_size = math_scale(40)
   local text_y = math_scale(6)
   local text_color = get_color('text')
-  local background_color = get_color('background')
+  local background_color = get_color('surface_sunken')
   local boost_color = get_color('attribute_boost', default_boost_color)
   local hindrance_color = get_color('attribute_hindrance', default_hindrance_color)
   local font = Theme.get_font('text_normal')
@@ -447,9 +431,17 @@ function PANEL:Paint(w, h)
   local bar_w, bar_y, bar_h = w - padding - x, math_scale(36), math_scale(8)
   local base_w = math_floor(bar_w * self.level_fraction)
   local boosted_w = math_floor(bar_w * self.boosted_fraction)
+  local bar_radius = math_floor(bar_h * 0.5)
 
-  draw_box(x, bar_y, bar_w, bar_h, background_color)
-  draw_box(x, bar_y, math.min(base_w, boosted_w), bar_h, get_color('attribute_level', get_color('accent')))
+  draw.RoundedBox(bar_radius, x, bar_y, bar_w, bar_h, background_color)
+  draw.RoundedBox(
+    bar_radius,
+    x,
+    bar_y,
+    math.min(base_w, boosted_w),
+    bar_h,
+    get_color('attribute_level', get_color('accent'))
+  )
 
   if boosted_w > base_w then
     draw_box(x + base_w, bar_y, boosted_w - base_w, bar_h, boost_color)
@@ -458,11 +450,19 @@ function PANEL:Paint(w, h)
   end
 
   if self.progress_fraction then
-    local progress_y, progress_h = bar_y + bar_h + math_scale(2), math_scale(4)
+    local progress_y, progress_h = bar_y + bar_h + math_scale(3), math_scale(4)
     local progress_color = get_color('attribute_progress', get_color('accent_light'))
+    local progress_radius = math_floor(progress_h * 0.5)
 
-    draw_box(x, progress_y, bar_w, progress_h, background_color)
-    draw_box(x, progress_y, math_floor(bar_w * self.progress_fraction), progress_h, progress_color)
+    draw.RoundedBox(progress_radius, x, progress_y, bar_w, progress_h, background_color)
+    draw.RoundedBox(
+      progress_radius,
+      x,
+      progress_y,
+      math_floor(bar_w * self.progress_fraction),
+      progress_h,
+      progress_color
+    )
   end
 
   if self.details_text != '' then

@@ -48,10 +48,11 @@ function PANEL:Paint(w, h)
     local time_font = get_font('main_menu_titles', 'DermaLarge')
     local date_font = get_font('text_smaller', 'DermaDefault')
     local text_color = Theme.get_color('text', color_white)
+    local muted_color = Theme.get_color('text_muted', text_color)
     local time_height = util.font_size(time_font)
     local y = (h - time_height - util.font_size(date_font)) * 0.5
 
-    date_color.r, date_color.g, date_color.b = text_color.r, text_color.g, text_color.b
+    date_color.r, date_color.g, date_color.b, date_color.a = muted_color.r, muted_color.g, muted_color.b, 255
 
     simple_text(time_text, time_font, w, y, text_color, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
     simple_text(

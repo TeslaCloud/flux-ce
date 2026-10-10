@@ -13,10 +13,10 @@ local math_clamp = math.Clamp
 local surface_set_draw_color = surface.SetDrawColor
 local surface_draw_rect = surface.DrawRect
 
-local color_loading_background = Color(0, 0, 0)
-local color_loading_text = Color(255, 255, 255)
-local color_loading_bar = Color(22, 22, 22)
-local color_loading_fill = Color(245, 245, 245)
+local color_loading_background = Color(10, 12, 17)
+local color_loading_text = Color(240, 242, 248)
+local color_loading_bar = Color(36, 40, 52)
+local color_loading_fill = Color(164, 174, 255)
 local color_death_blood = Color(255, 0, 0, 200)
 local target_filter = {}
 
@@ -158,14 +158,15 @@ function GM:HUDDrawScoreBoard()
     local w, h = util.text_size(text, font)
 
     draw.RoundedBox(0, 0, 0, scrw, scrh, color_loading_background)
-    draw.SimpleText(text, font, scrw * 0.5 - w * 0.5, scrh - 128, color_loading_text)
+    draw.SimpleText(text, font, scrw * 0.5 - w * 0.5, scrh - math.scale(128), color_loading_text)
 
-    local bar_w, bar_h = scrw / 3.5, 6
-    local bar_x, bar_y = scrw * 0.5 - bar_w * 0.5, scrh - 80
+    local bar_w, bar_h = scrw / 3.5, math.scale(6)
+    local bar_x, bar_y = scrw * 0.5 - bar_w * 0.5, scrh - math.scale(80)
     local fill_w = math_clamp(bar_w * (percentage * 0.01), 0, bar_w - 2)
+    local radius = math.floor(bar_h * 0.5)
 
-    draw.RoundedBox(0, bar_x, bar_y, bar_w, bar_h, color_loading_bar)
-    draw.RoundedBox(0, bar_x + 1, bar_y + 1, fill_w, bar_h - 2, color_loading_fill)
+    draw.RoundedBox(radius, bar_x, bar_y, bar_w, bar_h, color_loading_bar)
+    draw.RoundedBox(radius, bar_x + 1, bar_y + 1, fill_w, bar_h - 2, color_loading_fill)
 
     --- Called on the client every frame right after the loading screen has been drawn, for
     -- drawing on top of it. Gamemode (`GM`) handlers are not called.

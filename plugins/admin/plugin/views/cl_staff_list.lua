@@ -112,8 +112,8 @@ function PANEL:set_members(members)
 
     local header = self.scroll_panel:Add('DLabel')
     header:SetText((role and t(role.name) or v)..' ('..#role_members..')')
-    header:SetFont(Theme.get_font('text_normal'))
-    header:SetTextColor(text_color)
+    header:SetFont(Theme.get_font('menu_normal'))
+    header:SetTextColor(Theme.get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
     header:DockMargin(margin, k == 1 and 0 or margin * 4, 0, margin)
@@ -136,12 +136,9 @@ vgui.Register('fl_staff_list', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the labels of the row and the button that demotes the member, and picks the
--- background color of the dark rows.
+--- Creates the labels of the row and the button that demotes the member.
 function PANEL:Init()
   local text_color = Theme.get_color('text')
-
-  self.dark_color = Theme.get_color('background'):alpha(150)
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetFont(Theme.get_font('text_small'))
@@ -149,31 +146,32 @@ function PANEL:Init()
 
   self.status_label = vgui.Create('DLabel', self)
   self.status_label:SetFont(Theme.get_font('text_smaller'))
-  self.status_label:SetTextColor(text_color)
+  self.status_label:SetTextColor(Theme.get_color('text_muted'))
   self.status_label:SetContentAlignment(6)
 
   self.demote_button = vgui.Create('fl_button', self)
   self.demote_button:SetDrawBackground(true)
+  self.demote_button:set_draw_outline(true)
   self.demote_button:SetFont(Theme.get_font('text_small'))
   self.demote_button:set_text(t'ui.admin.staff.demote')
   self.demote_button:set_icon('fa-user-minus')
   self.demote_button:set_icon_size(math.scale(16))
   self.demote_button:set_text_offset(math.scale(8))
   self.demote_button:set_centered(true)
-  self.demote_button:set_background_color(Theme.get_color('background_light'))
+  self.demote_button:set_background_color(Theme.get_color('surface_raised'))
   self.demote_button:SizeToContentsX()
   self.demote_button.DoClick = function(btn)
     self:demote()
   end
 end
 
---- Draws a darker background on the rows that are marked as dark, unless the active theme
--- draws the row in its PaintAdminRow hook.
+--- Draws the row through the theme's PaintRow hook, unless the active theme draws it in its
+-- PaintAdminRow hook.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  if Theme.hook('PaintAdminRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
+  if Theme.hook('PaintAdminRow', self, w, h) == nil then
+    Theme.hook('PaintRow', self, w, h)
   end
 end
 
@@ -215,9 +213,10 @@ function PANEL:set_member(member)
 
   if member.online then
     self.status_label:SetText(t'ui.admin.staff.online')
-    self.status_label:SetTextColor(Theme.get_color('accent_light'))
+    self.status_label:SetTextColor(Theme.get_color('success'))
   else
     self.status_label:SetText(t'ui.admin.staff.offline')
+    self.status_label:SetTextColor(Theme.get_color('text_muted'))
   end
 end
 

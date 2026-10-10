@@ -6,14 +6,19 @@
 local PANEL = {}
 PANEL.limit = 0
 
---- Hides the language indicator and makes the entry report changes on every keystroke.
+--- Hides the language indicator, makes the entry report changes on every keystroke and
+-- applies the text font and color of the theme.
 function PANEL:Init()
   self:SetDrawLanguageID(false)
   self:SetUpdateOnType(true)
+  self:SetFont(Theme.get_font('text_small', 'DermaDefault'))
+  self:SetTextColor(Theme.get_color('text', color_white))
+  self:SetCursorColor(Theme.get_color('text', color_white))
+  self:SetHighlightColor(ColorAlpha(Theme.get_color('accent', color_white), 120))
 end
 
---- Draws the background and the text in theme colors, unless the ChatboxEntryPaint hook
--- returns a truthy value.
+--- Draws the field and the text through the theme's PaintTextEntry hook, unless the
+-- ChatboxEntryPaint hook returns a truthy value.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
@@ -27,12 +32,7 @@ function PANEL:Paint(w, h)
   -- @param h [Number Height of the entry]
   -- @return [Boolean Return true to skip the default background and text]
   if !hook.Run('ChatboxEntryPaint', self, 0, 0, w, h) then
-    local get_color = Theme.get_color
-    local text_color = get_color('text')
-
-    draw.RoundedBox(2, 0, 0, w, h, get_color('background'))
-
-    self:DrawTextEntryText(text_color, get_color('accent'), text_color)
+    Theme.hook('PaintTextEntry', self, w, h)
   end
 end
 

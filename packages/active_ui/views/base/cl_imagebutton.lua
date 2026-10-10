@@ -38,8 +38,9 @@ function PANEL:PaintOver(w, h)
   surface.DrawRect(0, 0, w, h)
 
   if active then
-    surface.SetDrawColor(Theme.get_color('accent'))
-    surface.DrawOutlinedRect(0, 0, w, h)
+    local thickness = math.scale(3)
+
+    draw.box_outlined(0, 0, 0, w, h, thickness, Theme.get_color('accent'))
   end
 end
 

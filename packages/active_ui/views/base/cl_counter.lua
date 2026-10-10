@@ -17,6 +17,8 @@ PANEL.title = ''
 function PANEL:Init()
   local fa_icon_size = math.scale(16)
 
+  self.color = Theme.get_color('text', self.color)
+
   self.label = vgui.Create('DLabel', self)
   self.label:SetText(self.title)
   self.label:SetFont(self.font)

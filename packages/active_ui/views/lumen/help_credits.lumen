@@ -1,6 +1,6 @@
 --- The Credits page of the Help tab: the people behind Flux.
 
-local card_style = { padding = 8, gap = 2, background = Color(0, 0, 0, 150), radius = 8 }
+local card_style = { padding = { 8, 12 }, gap = 2, background = 'surface_raised', radius = 6 }
 
 local sections = {
   {
@@ -37,7 +37,7 @@ local function Entry(props)
   return <view style={card_style}>
     <text style={{ font = 'menu_normal' }}>{props.entry.name}</text>
     {Lumen.map(props.entry.roles, function(role)
-      return <text key={role} style={{ font = 'text_small' }}>{role}</text>
+      return <text key={role} style={{ font = 'text_small', color = 'text_muted' }}>{role}</text>
     end)}
   </view>
 end

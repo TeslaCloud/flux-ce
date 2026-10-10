@@ -116,14 +116,27 @@ function PLUGIN:HUDPaint()
     end
 
     local cur_alpha = self.cur_alpha
+    local fraction = cur_alpha / 255
     local x, y = ScrW() - 306, ScrH() * 0.5 - 84
     local w, h = 200, 186
+    local padding = math.scale(12)
     local font = Font.size(Theme.get_font('text_normal_large'), 36)
     local display = self.display
+    local text_color = Theme.get_color('text')
+    local backdrop = Theme.get_color('hud_backdrop')
 
-    render.SetScissorRect(x, y, x + w, y + h, true)
+    render.SetScissorRect(x - padding, y - padding, x + w + padding, y + h + padding, true)
 
-    draw.RoundedBox(0, x, y, w, h, Color(40, 40, 40, 100 * (cur_alpha / 255)))
+    Theme.hook(
+      'DrawCard',
+      x - padding,
+      y - padding,
+      w + padding * 2,
+      h + padding * 2,
+      Theme.get_option('corner_radius'),
+      ColorAlpha(backdrop, backdrop.a * fraction),
+      ColorAlpha(Theme.get_color('border_light'), 28 * fraction)
+    )
 
     for k = 1, #display do
       local v = display[k]
@@ -131,9 +144,9 @@ function PLUGIN:HUDPaint()
       local color
 
       if v.highlight then
-        color = Theme.get_color('accent')
+        color = ColorAlpha(Theme.get_color('accent_light'), cur_alpha)
       else
-        color = Color(255, 255, 255, cur_alpha * v.scale / 1.3)
+        color = ColorAlpha(text_color, cur_alpha * v.scale / 1.3)
       end
 
       surface.draw_text_scaled(

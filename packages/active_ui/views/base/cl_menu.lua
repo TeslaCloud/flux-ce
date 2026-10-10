@@ -2,6 +2,7 @@
 -- the panel of a single option.
 
 local get_color = Theme.get_color
+local get_option = Theme.get_option
 local color_icon = Color(255, 255, 255)
 
 --- A single option of an `fl_menu`: a `DButton` in the theme's colors with an optional icon.
@@ -11,27 +12,46 @@ local PANEL = {}
 PANEL.icon = nil
 PANEL.icon_w = 16
 PANEL.icon_h = 16
+PANEL.hover_amount = 0
 
 --- Applies the theme's menu font and text color to the item.
 function PANEL:Init()
   self:SetFont(Theme.get_font('main_menu_small'))
   self:SetTextColor(get_color('text'))
+  self:SetTextInset(math.scale(36), 0)
+  self:SetContentAlignment(4)
 end
 
---- Draws the background of the item, lightened while hovered, and its icon if one is set.
+--- Fades the hover highlight in and out.
+function PANEL:Think()
+  local step = FrameTime() * 10
+
+  if self:IsHovered() then
+    self.hover_amount = math.min(self.hover_amount + step, 1)
+  else
+    self.hover_amount = math.max(self.hover_amount - step, 0)
+  end
+end
+
+--- Draws the highlight of the item while it is hovered, and its icon if one is set.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  local col = get_color('background')
+  if self.hover_amount > 0 then
+    local inset = math.scale(4)
 
-  if self:IsHovered() then
-    col = col:lighten(40)
+    draw.RoundedBox(
+      get_option('corner_radius_small'),
+      inset,
+      1,
+      w - inset * 2,
+      h - 2,
+      ColorAlpha(get_color('main_light'), 255 * self.hover_amount)
+    )
   end
 
-  draw.RoundedBox(0, 0, 0, w, h, col)
-
   if self.icon then
-    draw.textured_rect(self.icon, 8, h * 0.5 - self.icon_h * 0.5, self.icon_w, self.icon_h, color_icon)
+    draw.textured_rect(self.icon, math.scale(12), h * 0.5 - self.icon_h * 0.5, self.icon_w, self.icon_h, color_icon)
   end
 end
 
@@ -72,15 +92,27 @@ vgui.Register('fl_menu_item', PANEL, 'DButton')
 -- removed when the Derma menus are closed. The action menu of an item is built with it.
 local PANEL = {}
 PANEL.last = 0
-PANEL.option_height = 32
+PANEL.option_height = math.scale(32)
 PANEL.count = 0
+PANEL.padding = math.scale(4)
+
+--- Starts the menu with the padding that its options are inset by.
+function PANEL:Init()
+  self.last = self.padding
+end
+
+--- Draws the card of the menu.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
+function PANEL:Paint(w, h)
+  Theme.hook('DrawCard', 0, 0, w, h, get_option('corner_radius'), ColorAlpha(get_color('surface_sunken'), 250))
+end
 
 --- Makes the menu and all of its options as wide as the widest option and as tall as the
 -- options combined, capped at 75% of the screen height.
 function PANEL:PerformLayout()
   local w = 0
 
-  -- Find the widest one
   for k, pnl in pairs(self:GetCanvas():GetChildren()) do
     pnl:InvalidateLayout()
     pnl:SizeToContentsX()
@@ -88,11 +120,11 @@ function PANEL:PerformLayout()
     w = math.max(w, pnl:GetWide())
   end
 
-  w = w * 1.2
+  w = w * 1.2 + math.scale(24)
 
   self:SetWide(w)
 
-  local y = 0
+  local y = self.padding * 2
 
   for k, pnl in pairs(self:GetCanvas():GetChildren()) do
     pnl:SetWide(w)
@@ -174,7 +206,7 @@ function PANEL:add_option(name, callback)
   self.count = self.count + 1
 
   self:AddItem(panel)
-  self:SetSize(w, self.last)
+  self:SetSize(w, self.last + self.padding)
 
   return panel
 end
@@ -191,12 +223,9 @@ function PANEL:add_spacer(px)
   panel:MoveToBack()
 
   panel.Paint = function(pan, w, h)
-    local wide = math.ceil(w * 0.1)
-    local background_color = get_color('background')
+    local inset = math.scale(12)
 
-    draw.RoundedBox(0, 0, 0, w, h, get_color('text'))
-    draw.RoundedBox(0, 0, 0, wide, h, background_color)
-    draw.RoundedBox(0, w - wide, 0, wide, h, background_color)
+    draw.RoundedBox(0, inset, 0, w - inset * 2, h, get_color('border'))
   end
 
   panel:MoveTo(0, self.last, 0.15 * self.count)

@@ -17,7 +17,7 @@ local PANEL = {}
 function PANEL:Init()
   self.notice = vgui.Create('DLabel', self)
   self.notice:SetFont(Theme.get_font('text_small'))
-  self.notice:SetTextColor(Theme.get_color('text'))
+  self.notice:SetTextColor(Theme.get_color('text_muted'))
   self.notice:SetText(t'ui.admin.plugins.notice')
   self.notice:SetWrap(true)
   self.notice:SetContentAlignment(7)
@@ -68,11 +68,8 @@ vgui.Register('fl_plugin_manager', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the switch and the labels for the name and the state of the plugin, and picks
--- the background color of the dark rows.
+--- Creates the switch and the labels for the name and the state of the plugin.
 function PANEL:Init()
-  self.dark_color = Theme.get_color('background'):alpha(150)
-
   self.toggle = vgui.Create('fl_button', self)
   self.toggle:SetDrawBackground(false)
   self.toggle:set_centered(true)
@@ -86,17 +83,17 @@ function PANEL:Init()
 
   self.state_label = vgui.Create('DLabel', self)
   self.state_label:SetFont(Theme.get_font('text_smaller'))
-  self.state_label:SetTextColor(Theme.get_color('text'))
+  self.state_label:SetTextColor(Theme.get_color('text_muted'))
   self.state_label:SetContentAlignment(6)
 end
 
---- Draws a darker background on the rows that are marked as dark, unless the active theme
--- draws the row in its PaintAdminRow hook.
+--- Draws the row through the theme's PaintRow hook, unless the active theme draws it in its
+-- PaintAdminRow hook.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  if Theme.hook('PaintAdminRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
+  if Theme.hook('PaintAdminRow', self, w, h) == nil then
+    Theme.hook('PaintRow', self, w, h)
   end
 end
 
@@ -146,13 +143,14 @@ function PANEL:set_plugin(entry)
   if entry.restart_required then
     state = state..' / '..t('ui.admin.plugins.restart.'..(entry.disabled and 'disabled' or 'enabled'))
 
-    self.state_label:SetTextColor(Theme.get_color('accent_light'))
+    self.state_label:SetTextColor(Theme.get_color('warning'))
   end
 
   self.name_label:SetText(name)
   self.state_label:SetText(state)
 
   self.toggle:set_icon(entry.disabled and 'fa-toggle-off' or 'fa-toggle-on')
+  self.toggle:set_text_color(entry.disabled and Theme.get_color('text_dim') or Theme.get_color('success'))
   self.toggle:SetTooltip(entry.disabled and disabled_text or enabled_text)
   self.toggle:set_enabled(entry.id != Plugin.normalize_id(Bolt:get_path()))
 

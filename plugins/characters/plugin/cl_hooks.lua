@@ -176,7 +176,7 @@ function Characters:RebuildScoreboardPlayerCard(card, target)
   card.steam_name = vgui.Create('DLabel', card)
   card.steam_name:SetText(text)
   card.steam_name:SetFont(font)
-  card.steam_name:SetTextColor(Theme.get_color('text'))
+  card.steam_name:SetTextColor(Theme.get_color('text_muted'))
   card.steam_name:SizeToContents()
 
   --- Decides whether a scoreboard card shows the character of its player. Called on the client
@@ -215,7 +215,7 @@ function Characters:RebuildScoreboardPlayerCard(card, target)
     card.desc_label = vgui.Create('DLabel', card)
     card.desc_label:SetText(phys_desc)
     card.desc_label:SetFont(Theme.get_font('text_smallest'))
-    card.desc_label:SetTextColor(Theme.get_color('text'):darken(50))
+    card.desc_label:SetTextColor(Theme.get_color('text_muted'))
     card.desc_label:SizeToContents()
     card.desc_label:SetPos(card.name_label.x, card.name_label.y + card.name_label:GetTall())
   else

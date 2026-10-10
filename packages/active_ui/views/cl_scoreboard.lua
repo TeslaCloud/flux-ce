@@ -98,16 +98,17 @@ function PANEL:rebuild()
     self.player_cards[k] = nil
   end
 
-  local cur_y = math.scale(40)
-  local card_tall = math.scale(32) + math.scale(8)
-  local margin = math.scale(2)
+  local padding = math.scale(12)
+  local cur_y = math.scale(44)
+  local card_tall = math.scale(32) + math.scale(12)
+  local margin = math.scale(4)
 
   for k, v in player.Iterator() do
     if !self:should_show_player(v) then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)
-    player_card:SetSize(w - 8, card_tall)
-    player_card:SetPos(4, cur_y)
+    player_card:SetSize(w - padding * 2, card_tall)
+    player_card:SetPos(padding, cur_y)
     player_card:set_player(v)
 
     self.scroll_panel:AddItem(player_card)
@@ -193,11 +194,11 @@ function PANEL:open_menu()
   menu:safe_remove()
 end
 
---- Draws the background of the player card.
+--- Draws the background of the player card through the theme's PaintScoreboardPlayer hook.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background_light'))
+  Theme.hook('PaintScoreboardPlayer', self, w, h)
 end
 
 --- Sets the player this card represents and rebuilds the card.
@@ -220,9 +221,12 @@ function PANEL:rebuild()
 
   local target = self.player
 
+  local padding = math.scale(6)
+  local avatar_size = math.scale(32)
+
   self.avatar_panel = vgui.Create('fl_avatar_panel', self)
-  self.avatar_panel:SetSize(math.scale_size(32, 32))
-  self.avatar_panel:SetPos(math.scale_size(4, 4))
+  self.avatar_panel:SetSize(avatar_size, avatar_size)
+  self.avatar_panel:SetPos(padding, self:GetTall() * 0.5 - avatar_size * 0.5)
   self.avatar_panel:set_player(target, 64)
 
   local text = target:name()
@@ -231,7 +235,7 @@ function PANEL:rebuild()
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(text)
-  self.name_label:SetPos(math.scale(48), math.scale(4))
+  self.name_label:SetPos(padding * 2 + avatar_size, math.scale(4))
   self.name_label:SetFont(font)
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
@@ -243,7 +247,7 @@ function PANEL:rebuild()
   self.ping:SetText(text)
   self.ping:SetPos(self:GetWide() - text_w - math.scale(16), self:GetTall() * 0.5 - text_h * 0.5)
   self.ping:SetFont(font)
-  self.ping:SetTextColor(Theme.get_color('text'))
+  self.ping:SetTextColor(Theme.get_color('text_muted'))
   self.ping:SizeToContents()
 
   --- Called on the client after a scoreboard player card has created its avatar, name and ping

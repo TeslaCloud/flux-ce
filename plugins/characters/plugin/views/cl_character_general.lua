@@ -2,6 +2,7 @@
 
 local config_get = Config.get
 local math_clamp = math.Clamp
+local color_female = Color(240, 130, 170)
 
 --- Base panel of the stages of character creation (`fl_character_creation_base`). It only
 -- draws its background through the theme; stage panels derive from it and may define the
@@ -38,11 +39,12 @@ function PANEL:Init()
   local margin = math.scale(20)
   local scrw, scrh = ScrW(), ScrH()
   local font = Theme.get_font('main_menu_normal')
+  local label_color = Theme.get_color('text_muted')
 
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetText(t'ui.char_create.gender')
   self.gender_label:SetFont(font)
-  self.gender_label:SetTextColor(Color('white'))
+  self.gender_label:SetTextColor(label_color)
   self.gender_label:SizeToContents()
   self.gender_label:SetPos(scrw * 0.125 - self.gender_label:GetWide() - 4, math.scale(36) + 6)
 
@@ -65,7 +67,7 @@ function PANEL:Init()
       self:rebuild_models()
 
       btn:set_active(true)
-      btn:set_text_color(Color('blue'):lighten(40))
+      btn:set_text_color(Theme.get_color('info'))
     end
   end
 
@@ -88,14 +90,14 @@ function PANEL:Init()
       self:rebuild_models()
 
       btn:set_active(true)
-      btn:set_text_color(Color('red'):lighten(40))
+      btn:set_text_color(color_female)
     end
   end
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(t'ui.char_create.name')
   self.name_label:SetFont(font)
-  self.name_label:SetTextColor(Color('white'))
+  self.name_label:SetTextColor(label_color)
   self.name_label:SizeToContents()
   self.name_label:SetPos(scrw * 0.125 - self.name_label:GetWide() - 4, math.scale(72) + 2)
 
@@ -125,7 +127,7 @@ function PANEL:Init()
   self.desc_label = vgui.Create('DLabel', self)
   self.desc_label:SetText(t'ui.char_create.desc')
   self.desc_label:SetFont(font)
-  self.desc_label:SetTextColor(Color('white'))
+  self.desc_label:SetTextColor(label_color)
   self.desc_label:SizeToContents()
   self.desc_label:SetPos(scrw * 0.125 - self.desc_label:GetWide() - 4, math.scale(108) + 2)
 
@@ -292,12 +294,12 @@ function PANEL:on_open(parent)
 
   if parent.char_data.gender == 'female' then
     self.gender_female:set_active(true)
-    self.gender_female:set_text_color(Color('red'):lighten(40))
+    self.gender_female:set_text_color(color_female)
 
     self:rebuild_models()
   elseif parent.char_data.gender == 'male' then
     self.gender_male:set_active(true)
-    self.gender_male:set_text_color(Color('blue'):lighten(40))
+    self.gender_male:set_text_color(Theme.get_color('info'))
 
     self:rebuild_models()
   end

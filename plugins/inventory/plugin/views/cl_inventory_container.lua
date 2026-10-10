@@ -20,13 +20,19 @@ function PANEL:Init()
   self:Center()
   self:MakePopup()
 
+  local close_size = math_scale(40)
+  local close_margin = math_scale(16)
+
   self.button_close = vgui.Create('fl_button', self)
-  self.button_close:SetSize(32, 32)
-  self.button_close:SetPos(self:GetWide() - self.button_close:GetWide() - 2, 2)
-  self.button_close:SetDrawBackground(false)
+  self.button_close:SetSize(close_size, close_size)
+  self.button_close:SetPos(self:GetWide() - close_size - close_margin, close_margin)
+  self.button_close:SetDrawBackground(true)
+  self.button_close:set_draw_outline(true)
+  self.button_close:set_background_color(Theme.get_color('surface'))
   self.button_close:set_centered(true)
   self.button_close:set_icon('fa-times')
-  self.button_close:set_icon_size(self.button_close:GetSize())
+  self.button_close:set_icon_size(math_scale(18))
+  self.button_close:SetTooltip(t'ui.close')
   self.button_close.DoClick = function(btn)
     self:safe_remove()
   end
@@ -62,11 +68,14 @@ function PANEL:Init()
   Flux.blur_update_fps = 0
 end
 
---- Draws the blurred background of the panel.
+--- Draws the blurred and tinted background of the panel.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
   draw.blur_panel(self)
+
+  surface.SetDrawColor(Theme.get_color('scrim', Color(10, 12, 18, 150)))
+  surface.DrawRect(0, 0, w, h)
 
   Theme.hook('PaintInventoryContainerBackground', self, w, h)
 end

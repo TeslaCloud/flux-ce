@@ -108,13 +108,14 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     panel.faction_categories[k] = nil
   end
 
-  local cur_y = math.scale(40)
-  local card_tall = math.scale(40)
-  local margin = math.scale(2)
+  local padding = math.scale(12)
+  local cur_y = math.scale(44)
+  local card_tall = math.scale(44)
+  local margin = math.scale(4)
 
   local category_list = vgui.Create('DListLayout', panel.scroll_panel)
-  category_list:SetSize(w - 8, h - math.scale(20))
-  category_list:SetPos(4, math.scale(20))
+  category_list:SetSize(w - padding * 2, h - cur_y - padding)
+  category_list:SetPos(padding, cur_y)
 
   local players_table = {}
 
@@ -148,14 +149,17 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     if table.Count(players) == 0 then continue end
 
     local category = vgui.Create('DCollapsibleCategory', panel)
-    category:SetSize(w - 8, 32)
-    category:SetPos(4, cur_y)
+    category:SetSize(w - padding * 2, 32)
+    category:SetPos(padding, cur_y)
     category:SetLabel(isstring(faction) and faction or t(faction.name) or k)
+    category:DockMargin(0, 0, 0, math.scale(6))
+    category:DockPadding(margin, margin, margin, margin)
 
     category_list:Add(category)
 
     local list = vgui.Create('DPanelList', panel)
     list:SetSpacing(margin)
+    list:SetPadding(margin)
     list:EnableHorizontal(false)
 
     category:SetContents(list)
@@ -164,7 +168,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
       if !IsValid(v1) then continue end
 
       local player_card = vgui.Create('fl_scoreboard_player', category)
-      player_card:SetSize(w - 8, card_tall)
+      player_card:SetSize(w - padding * 2 - margin * 4, card_tall)
       player_card:set_player(v1)
       player_card:SetPos(0, 5)
 

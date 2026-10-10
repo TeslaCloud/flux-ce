@@ -8,20 +8,36 @@ local IsValid = IsValid
 local isnumber = isnumber
 local math_scale = math.scale
 local draw_simple_text = draw.SimpleText
+local draw_rounded_box = draw.RoundedBox
 local surface_set_draw_color = surface.SetDrawColor
-local surface_draw_rect = surface.DrawRect
-local surface_draw_outlined_rect = surface.DrawOutlinedRect
+local get_color = Theme.get_color
+local get_option = Theme.get_option
 
-local slot_color = Color(30, 30, 30, 100)
-local slot_color_empty = slot_color:darken(25)
-local slot_color_same = slot_color:lighten(30)
-local slot_color_stack = Color(200, 200, 60)
-local slot_color_valid = Color(60, 200, 60, 160)
-local slot_color_invalid = Color(200, 60, 60, 160)
-local slot_icon_color = Color(255, 255, 255, 100)
-local slot_count_color = Color(225, 225, 225)
-local slot_number_color = Color(175, 175, 175)
+local slot_color = Color(30, 33, 44, 200)
+local slot_color_empty = Color(22, 24, 33, 170)
+local slot_color_same = Color(56, 61, 80, 200)
+local slot_color_stack = Color(236, 186, 86, 170)
+local slot_color_valid = Color(98, 200, 130, 170)
+local slot_color_invalid = Color(228, 92, 104, 170)
+local slot_icon_color = Color(255, 255, 255, 70)
+local slot_badge_color = Color(10, 12, 17, 200)
 local faded_backgrounds = setmetatable({}, { __mode = 'k' })
+local tinted_colors = setmetatable({}, { __mode = 'k' })
+
+--- Returns a translucent copy of a color, kept so that the same copy is used every frame.
+-- @param color [Color]
+-- @param alpha [Number]
+-- @return [Color]
+local function tinted(color, alpha)
+  local cached = tinted_colors[color]
+
+  if !cached or cached.a != alpha then
+    cached = ColorAlpha(color, alpha)
+    tinted_colors[color] = cached
+  end
+
+  return cached
+end
 
 local PANEL = {}
 PANEL.item_data = nil
@@ -32,14 +48,17 @@ PANEL.icon = nil
 PANEL.icon_material = nil
 PANEL.rotated = false
 
---- Draws the slot: its background, the drag and drop highlight and the slot icon.
--- Calls the paint_slot callback of the item afterward.
+--- Draws the slot: its rounded background, the drag and drop highlight, the outline of a
+-- hovered or special item and the slot icon. Calls the paint_slot callback of the item
+-- afterward.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
-  local draw_color = slot_color
+  local draw_color = get_color('surface_raised', slot_color)
+  local outline_color
   local item_obj = self.item_data
   local drop_slot = Flux.inventory_drop_slot
+  local radius = get_option('corner_radius_small', math_scale(4))
 
   if IsValid(drop_slot) and drop_slot:get_inventory_id() == self:get_inventory_id() then
     local drag_slot = Flux.inventory_drag_slot
@@ -58,35 +77,34 @@ function PANEL:Paint(w, h)
             if slot_data.id == item_obj.id and slot_data.stackable
             and drag_slot.item_count < slot_data.max_stack
             and drop_slot.item_count < slot_data.max_stack then
-              draw_color = slot_color_stack
+              draw_color = tinted(get_color('warning', slot_color_stack), 170)
             else
-              draw_color = slot_color_invalid
+              draw_color = tinted(get_color('danger', slot_color_invalid), 170)
             end
           else
             draw_color = slot_color_same
           end
         else
           if drop_slot.out_of_bounds or drop_slot.disabled then
-            draw_color = slot_color_invalid
+            draw_color = tinted(get_color('danger', slot_color_invalid), 170)
           else
-            draw_color = slot_color_valid
+            draw_color = tinted(get_color('success', slot_color_valid), 170)
           end
         end
+      elseif !item_obj then
+        draw_color = tinted(get_color('surface_sunken', slot_color_empty), 170)
       end
     end
   else
     if !item_obj then
-      draw_color = slot_color_empty
+      draw_color = tinted(get_color('surface_sunken', slot_color_empty), 170)
     else
       if item_obj.special_color then
-        surface_set_draw_color(item_obj.special_color)
-        surface_draw_outlined_rect(0, 0, w, h)
-        surface_draw_outlined_rect(1, 1, w - 2, h - 2)
+        outline_color = item_obj.special_color
       end
 
       if self:IsHovered() then
-        surface_set_draw_color(255, 255, 255)
-        surface_draw_outlined_rect(1, 1, w - 2, h - 2)
+        outline_color = get_color('accent_light')
       end
     end
   end
@@ -97,6 +115,8 @@ function PANEL:Paint(w, h)
 
   local is_dragging = self:IsDragging()
 
+  draw_rounded_box(radius, 0, 0, w, h, draw_color)
+
   if !is_dragging and item_obj and item_obj.background_color then
     local background_color = item_obj.background_color
     local faded_color = faded_backgrounds[background_color]
@@ -106,14 +126,13 @@ function PANEL:Paint(w, h)
       faded_backgrounds[background_color] = faded_color
     end
 
-    surface_set_draw_color(faded_color.r, faded_color.g, faded_color.b, faded_color.a)
-    surface_draw_rect(0, 0, w, h)
+    draw_rounded_box(radius, 0, 0, w, h, faded_color)
   end
 
   local icon = self.icon
 
   if icon and !is_dragging then
-    local icon_size = h * 0.75
+    local icon_size = h * 0.6
 
     if icon:start_with('fa') then
       local icon_w, icon_h = FontAwesome:get_icon_size(icon, icon_size)
@@ -130,14 +149,35 @@ function PANEL:Paint(w, h)
     end
   end
 
-  surface_set_draw_color(draw_color.r, draw_color.g, draw_color.b, draw_color.a)
-  surface_draw_rect(0, 0, w, h)
-
   Theme.hook('PaintItemSlot', self, w, h)
+
+  if outline_color then
+    draw.box_outlined(radius, 0, 0, w, h, math.max(math_scale(2), 2), outline_color)
+  end
 
   if item_obj and item_obj.paint_slot then
     item_obj:paint_slot(w, h)
   end
+end
+
+--- Draws a small label on a dark pill in a corner of the slot.
+-- @param text [String/Number]
+-- @param x [Number left edge of the pill]
+-- @param y [Number top edge of the pill]
+-- @param color [Color text color]
+-- @param align_right=false [Boolean grow the pill to the left from x instead of to the right]
+local function draw_badge(text, x, y, color, align_right)
+  local font = Theme.get_font('text_smallest')
+  local text_w, text_h = util.text_size(text, font)
+  local padding = math_scale(4)
+  local w, h = text_w + padding * 2, text_h + padding
+
+  if align_right then
+    x = x - w
+  end
+
+  draw_rounded_box(math.floor(h * 0.5), x, y, w, h, slot_badge_color)
+  draw_simple_text(text, font, x + padding, y + padding * 0.5, color)
 end
 
 --- Draws the amount of items in the stack and the number of the slot.
@@ -146,31 +186,17 @@ end
 -- @param h [Number]
 function PANEL:PaintOver(w, h)
   local item_count = self.item_count
+  local margin = math_scale(3)
+  local badge_h = util.font_size(Theme.get_font('text_smallest')) + math_scale(4)
 
   if item_count >= 2 then
-    DisableClipping(true)
-      draw_simple_text(
-        item_count,
-        Theme.get_font('text_smallest'),
-        w - math_scale(12),
-        h - math_scale(14),
-        slot_count_color
-      )
-    DisableClipping(false)
+    draw_badge(item_count, w - margin, h - badge_h - margin, get_color('text'), true)
   end
 
   local slot_number = self.slot_number
 
   if !self:IsDragging() and isnumber(slot_number) then
-    DisableClipping(true)
-      draw_simple_text(
-        slot_number,
-        Theme.get_font('text_smallest'),
-        math_scale(4),
-        h - math_scale(14),
-        slot_number_color
-      )
-    DisableClipping(false)
+    draw_badge(slot_number, margin, margin, get_color('text_muted'))
   end
 
   Theme.hook('PaintOverItemSlot', self, w, h)

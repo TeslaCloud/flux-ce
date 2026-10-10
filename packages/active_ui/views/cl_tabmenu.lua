@@ -36,35 +36,42 @@ function PANEL:Init()
   --   Number Y position of the buttons; 0 when nothing is returned]
   local cur_x, cur_y = hook.Run('AdjustMenuItemPositions', self)
   local offset = math.scale(16)
-  local size_x, size_y = math.scale(72), math.scale(72)
-  local icon_size = 20
+  local gap = math.scale(6)
+  local bar_height = Theme.get_option('tab_menu_bar_height', math.scale(64))
+  local button_height = Theme.get_option('tab_menu_button_height', math.scale(40))
+  local button_y = math.floor(bar_height * 0.5 - button_height * 0.5)
+  local icon_size = math.scale(18)
+  local font = Theme.get_font('main_menu_normal')
 
   self.button_panel = vgui.Create('EditablePanel', self)
-  self.button_panel:SetPos(0, -size_y)
-  self.button_panel:SetSize(scrw, size_y)
+  self.button_panel:SetPos(0, -bar_height)
+  self.button_panel:SetSize(scrw, bar_height)
   self.button_panel.Paint = function(p, w, h)
     Theme.hook('PaintTabMenuButtonPanel', self, w, h)
   end
 
   self.button_panel:MoveTo(0, 0, Theme.get_option('menu_anim_duration'), 0, 0.5)
 
-  cur_x = cur_x or 0
-  cur_y = cur_y or 0
+  cur_x = cur_x or offset
+  cur_y = cur_y or button_y
 
   self.close_button = vgui.Create('fl_button', self.button_panel)
   self.close_button:SetPos(cur_x, cur_y)
-  self.close_button:SetDrawBackground(false)
-  self.close_button:SetFont(Theme.get_font('main_menu_titles'))
+  self.close_button:SetDrawBackground(true)
+  self.close_button:set_draw_outline(true)
+  self.close_button:SetFont(font)
   self.close_button:set_text(t'ui.tab_menu.close_menu')
-  self.close_button:set_centered(false)
+  self.close_button:set_icon('fa-times')
+  self.close_button:set_icon_size(icon_size)
+  self.close_button:set_centered(true)
   self.close_button:set_text_offset(offset)
   self.close_button:SizeToContentsX()
-  self.close_button:SetTall(size_y)
+  self.close_button:SetTall(button_height)
   self.close_button.DoClick = function(btn)
     self:close_menu()
   end
 
-  cur_x = cur_x + self.close_button:GetWide() + size_x
+  cur_x = cur_x + self.close_button:GetWide() + offset * 2
 
   self.menu_items = {}
   self.buttons = {}
@@ -76,11 +83,11 @@ function PANEL:Init()
 
   for k, v in ipairs(self.menu_items) do
     local button = vgui.Create('fl_button', self.button_panel)
-    button:SetSize(size_x, size_y)
+    button:SetTall(button_height)
     button:SetDrawBackground(true)
     button:SetPos(cur_x, cur_y)
     button:SetTooltip(v.title)
-    button:SetFont(Theme.get_font('main_menu_titles'))
+    button:SetFont(font)
     button:set_text_offset(offset)
     button:set_text(v.title)
     button:set_icon(v.icon)
@@ -108,7 +115,7 @@ function PANEL:Init()
 
           self.active_panel:safe_remove()
 
-          self.active_button:set_background_color(nil)
+          self.active_button:set_active(false)
         end
 
         self.active_panel = vgui.Create(v.panel, self)
@@ -120,7 +127,7 @@ function PANEL:Init()
         end
 
         self.active_button = btn
-        self.active_button:set_background_color(Theme.get_color('accent'))
+        self.active_button:set_active(true)
 
         if self.active_panel.rebuild then
           self.active_panel:rebuild()
@@ -141,10 +148,10 @@ function PANEL:Init()
       end
     end
 
-    cur_x = cur_x + button:GetWide()
+    cur_x = cur_x + button:GetWide() + gap
 
     if cur_x >= scrw - button:GetWide() then
-      cur_y = cur_y + offset
+      cur_y = cur_y + button_height + gap
       cur_x = offset
     end
 
@@ -173,10 +180,10 @@ function PANEL:open_panel(id)
   return true
 end
 
---- Clears the text color override of the active button once its panel is gone.
+--- Deactivates the active button once its panel is gone.
 function PANEL:Think()
   if !IsValid(self.active_panel) and IsValid(self.active_button) then
-    self.active_button:set_text_color(nil)
+    self.active_button:set_active(false)
   end
 end
 

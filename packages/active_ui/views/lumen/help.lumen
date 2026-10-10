@@ -13,17 +13,17 @@ return function(props)
     end
   end
 
-  return <view style={{ gap = 8 }}>
-    <view style={{ direction = 'row', wrap = true, gap = 4 }}>
+  return <view style={{ gap = 12, padding = 12, background = 'surface', radius = 6, border = 'border' }}>
+    <view style={{ direction = 'row', wrap = true, gap = 6 }}>
       {Lumen.map(pages, function(page)
         return <button key={page.id} active={current == page}
-          style={{ font = 'menu_small', padding = { 8, 16 } }}
+          style={{ font = 'menu_small', padding = { 8, 18 } }}
           on_press={function() set_active(page.id) end}>
           {t(page.title)}
         </button>
       end)}
     </view>
-    <scroll style={{ flex = 1, gap = 4, padding = { 0, 8, 0, 0 } }}>
+    <scroll style={{ flex = 1, gap = 6, padding = { 0, 8, 0, 0 } }}>
       {current and Flux.Help:render_page(current)}
     </scroll>
   </view>

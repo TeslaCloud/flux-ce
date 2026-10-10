@@ -12,29 +12,44 @@ PANEL.draggable = false
 
 --- Sets the default title, reserves space for the header and creates the close button.
 function PANEL:Init()
-  local padding = math.scale(4)
+  local padding = Theme.get_option('panel_padding', math.scale(12))
+  local header = Theme.get_option('frame_header_size', math.scale(36))
 
   self:SetTitle('Flux Frame')
-  self:DockPadding(padding, Theme.get_option('frame_header_size') + padding, padding, padding)
+  self:DockPadding(padding, header + padding, padding, padding)
 
   self.button_close = vgui.Create('fl_button', self)
-  self.button_close:SetSize(math.scale_size(20, 20))
+  self.button_close:SetSize(self:get_close_button_size())
   self.button_close:SetPos(0, 0)
   self.button_close:set_icon('fa-times')
+  self.button_close:set_icon_size(math.scale(14))
   self.button_close:set_text('')
   self.button_close:set_centered(true)
   self.button_close:SetDrawBackground(false)
+  self.button_close:SetTooltip(t'ui.close')
   self.button_close.DoClick = function(btn)
     self:safe_remove()
   end
 end
 
---- Keeps the close button in the top right corner of the frame.
+--- Returns the size of the close button, which fits inside the header.
+-- @return [Number width, Number height]
+function PANEL:get_close_button_size()
+  local size = math.max(Theme.get_option('frame_header_size', math.scale(36)) - math.scale(8), math.scale(20))
+
+  return size, size
+end
+
+--- Keeps the close button centered in the right end of the header.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
   if IsValid(self.button_close) then
-    self.button_close:SetPos(w - math.scale_x(20), 0)
+    local header = Theme.get_option('frame_header_size', math.scale(36))
+    local size = self:get_close_button_size()
+
+    self.button_close:SetSize(size, size)
+    self.button_close:SetPos(w - size - math.scale(4), header * 0.5 - size * 0.5)
   end
 end
 

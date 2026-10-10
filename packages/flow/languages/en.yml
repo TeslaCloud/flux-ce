@@ -147,6 +147,7 @@ en:
       help: Help
     ok: OK
     cancel: Cancel
+    close: Close
     yes: "Yes"
     no: "No"
     unit:

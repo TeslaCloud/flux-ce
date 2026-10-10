@@ -14,8 +14,8 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
   Theme.set_option('chatbox_height', new_height * 0.45)
   Theme.set_option('chatbox_x', scale(8))
   Theme.set_option('chatbox_y', new_height - Theme.get_option('chatbox_height') - scale(64))
-  local entry_height = Theme.set_option('chatbox_text_entry_height', scale(38)) or scale(38)
-  Theme.set_option('chatbox_text_entry_text_size', entry_height * 0.9)
+  local entry_height = Theme.set_option('chatbox_text_entry_height', scale(36)) or scale(36)
+  Theme.set_option('chatbox_text_entry_text_size', entry_height * 0.6)
 
   if Chatbox.panel then
     Chatbox.panel:Remove()
@@ -102,8 +102,8 @@ function Chatbox:OnThemeLoaded(current_theme)
   current_theme:set_option('chatbox_fix_alignment', true)
   current_theme:set_option('chatbox_padding', scale(8))
 
-  local entry_height = current_theme:set_option('chatbox_text_entry_height', scale(32))
-  local text_size = current_theme:set_option('chatbox_text_entry_text_size', entry_height * 0.75)
+  local entry_height = current_theme:set_option('chatbox_text_entry_height', scale(36))
+  local text_size = current_theme:set_option('chatbox_text_entry_text_size', entry_height * 0.6)
   local font_size = current_theme:get_option('chatbox_text_normal_size')
 
   current_theme:set_font('chatbox_normal',      'chat_font',              font_size)
@@ -113,7 +113,7 @@ function Chatbox:OnThemeLoaded(current_theme)
   current_theme:set_font('chatbox_syntax',      'flRobotoCondensed',      scale(24))
   current_theme:set_font('chatbox_text_entry',  'chat_font',              text_size)
 
-  current_theme:set_color('chat_text_entry_background', Color(0, 0, 0, 215))
+  current_theme:set_color('chat_text_entry_background', ColorAlpha(current_theme:get_color('field'), 235))
 end
 
 --- Sends the entered text to the server, unless it is empty, along with whether the chatbox

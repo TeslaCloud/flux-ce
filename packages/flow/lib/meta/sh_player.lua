@@ -165,7 +165,7 @@ if CLIENT then
     color = color and Color(color.r, color.g, color.b) or color_white
     message = t(message, arguments)
 
-    Flux.Notification:add(message, 8, color:darken(50))
+    Flux.Notification:add(message, 8, nil, color != color_white and color or nil)
 
     chat.AddText(color, message)
   end

@@ -67,7 +67,9 @@ function PANEL:rebuild()
   self.list:Clear()
 
   local characters = PLAYER:get_all_characters()
-  local panel_w, panel_h = self.list:GetWide() * 0.125, self.list:GetTall()
+  local panel_w, panel_h = self.list:GetWide() * 0.14, self.list:GetTall()
+
+  self.list:SetOverlap(math.scale(12))
 
   for k, v in pairs(characters) do
     local char_panel = vgui.Create('fl_character_panel', self)
@@ -117,8 +119,8 @@ function PANEL:Init()
   self.select = vgui.Create('fl_button', self)
   self.select:SetFont(Theme.get_font('main_menu_normal'))
   self.select:SetTitle(t'ui.char_create.select')
-  self.select:SetDrawBackground(false)
-  self.select:set_text_color(Color('lightgreen'))
+  self.select:SetDrawBackground(true)
+  self.select:set_active(true)
   self.select:set_icon('fa-check')
   self.select:set_icon_size(math.scale(16))
   self.select:set_centered(true)
@@ -134,11 +136,14 @@ function PANEL:Init()
 
   self.delete = vgui.Create('fl_button', self)
   self.delete:SetFont(Theme.get_font('main_menu_normal'))
-  self.delete:SetDrawBackground(false)
-  self.delete:set_text_color(Color('red'))
+  self.delete:SetDrawBackground(true)
+  self.delete:set_draw_outline(true)
+  self.delete:set_background_color(Theme.get_color('surface_raised'))
+  self.delete:set_text_color(Theme.get_color('danger'))
   self.delete:set_icon('fa-trash')
-  self.delete:set_icon_size(math.scale(32))
+  self.delete:set_icon_size(math.scale(18))
   self.delete:set_centered(true)
+  self.delete:SetTooltip(t'ui.char_create.delete')
   self.delete.DoClick = function(btn)
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
@@ -174,17 +179,27 @@ end
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PerformLayout(w, h)
+  local padding = math.scale(8)
+  local header = math.scale(40)
   local button_height = Theme.get_option('menu_sidebar_button_height')
-  local button_y = h - button_height
+  local button_y = h - button_height - padding
+  local gap = math.scale(4)
 
-  self.model:SetPos(4, 28)
-  self.model:SetSize(w - 4, h * .80)
+  self.model:SetPos(padding, header)
+  self.model:SetSize(w - padding * 2, button_y - header - padding)
 
-  self.select:SetPos(4, button_y)
-  self.select:SetSize(self.delete:IsVisible() and w / 3 * 2 - 4 or w - 8, button_height)
+  if self.delete:IsVisible() then
+    local delete_w = math.floor(w / 3) - padding
 
-  self.delete:SetPos(w / 3 * 2, button_y)
-  self.delete:SetSize(w / 3 - 4, button_height)
+    self.select:SetPos(padding, button_y)
+    self.select:SetSize(w - delete_w - padding * 2 - gap, button_height)
+
+    self.delete:SetPos(w - delete_w - padding, button_y)
+    self.delete:SetSize(delete_w, button_height)
+  else
+    self.select:SetPos(padding, button_y)
+    self.select:SetSize(w - padding * 2, button_height)
+  end
 end
 
 --- Sets the character shown by the panel and runs the PanelCharacterSet hook. A banned
@@ -202,8 +217,11 @@ function PANEL:set_character(char_data)
 
     self.select:SetTitle(t'ui.char_create.banned')
     self.select:set_icon('fa-ban')
+    self.select:set_active(false)
+    self.select:set_draw_outline(true)
+    self.select:set_background_color(Theme.get_color('surface_raised'))
     self.select:set_enabled(false)
-    self.select:set_text_color(Color('red'))
+    self.select:set_text_color(Theme.get_color('danger'))
     self.delete:SetVisible(false)
 
     self:InvalidateLayout()

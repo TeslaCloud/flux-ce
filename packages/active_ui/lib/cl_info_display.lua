@@ -1,8 +1,8 @@
 --- The info display: a row of round icons in the top left corner of the HUD that each show a
 -- percentage, such as health and armor. An icon is registered with `InfoDisplay:add` under an
 -- ID, with a Font Awesome icon, a size and a `callback` that updates its `percentage` before
--- every draw. The icon is drawn dimmed and then filled with its color from the bottom up to
--- that percentage. It is hidden while the percentage is outside of the range between
+-- every draw. The icon sits on a dark disc, is drawn dimmed and then filled with its color
+-- from the bottom up to that percentage. It is hidden while the percentage is outside of the range between
 -- `min_percentage` and `max_percentage`, so that the health icon, for example, only appears
 -- once the player is hurt. Flux registers the 'health' and 'armor' icons itself and draws all
 -- of the icons with `InfoDisplay:draw_all` from its HUD paint hook while the local player is
@@ -35,9 +35,11 @@ local back_color    = Color(40, 40, 40, 120)
 -- })
 -- ```
 -- @param id [String unique ID, converted with string.to_id]
--- @param data [Map settings: icon, size, color, back_color, percentage, min_percentage,
---   max_percentage, offset_x, offset_y, and callback, which is called with this hash
---   before every draw; missing keys get defaults]
+-- @param data [Map settings: icon, size, color (of the filled part, the 'text' color of the
+--   theme by default), dim_color (of the empty part, the 'text_dim' color of the theme by
+--   default), back_color (of the disc behind the icon, the 'hud_backdrop' color of the
+--   theme by default), percentage, min_percentage, max_percentage, offset_x, offset_y, and
+--   callback, which is called with this hash before every draw; missing keys get defaults]
 -- @return [InfoDisplay self, for chaining]
 function InfoDisplay:add(id, data)
   id                  = id:to_id()
@@ -47,8 +49,6 @@ function InfoDisplay:add(id, data)
   data.max_percentage = data.max_percentage or 100
   data.size           = data.size           or 80
   data.icon           = data.icon           or 'fa-plus'
-  data.color          = data.color          or white
-  data.back_color     = data.back_color     or back_color
   data.circle         = data.circle         or false
   data.percentage     = data.percentage     or 100
   data.offset_x       = data.offset_x       or 0
@@ -109,18 +109,25 @@ function InfoDisplay:draw(info)
       local half_size = font_size * 0.5
       local icon_x = circle_x - half_size + scale(info.offset_x)
       local icon_y = circle_y - half_size + scale(info.offset_y)
+      local backdrop = info.back_color or Theme.get_color('hud_backdrop', back_color)
+      local dim = info.dim_color or Theme.get_color('text_dim', back_color)
+      local color = info.color or Theme.get_color('text', white)
+      local thickness = math.max(scale(3), 2)
 
-      FontAwesome:draw(info.icon, icon_x, icon_y, font_size, info.back_color)
-      surface.SetDrawColor(info.back_color)
-      surface.draw_circle_outline(circle_x, circle_y, circle_size, 3, 64)
+      surface.SetDrawColor(backdrop)
+      surface.draw_circle(circle_x, circle_y, circle_size, 64)
+
+      FontAwesome:draw(info.icon, icon_x, icon_y, font_size, dim)
+      surface.SetDrawColor(dim)
+      surface.draw_circle_outline(circle_x, circle_y, circle_size, thickness, 64)
 
       if !info.circle then
         local y_pos = size + margin
 
         render.SetScissorRect(x_pos, y_pos - size * 0.01 * info.percentage, x_pos + size, y_pos, true)
-          FontAwesome:draw(info.icon, icon_x, icon_y, font_size, info.color)
-          surface.SetDrawColor(info.color)
-          surface.draw_circle_outline(circle_x, circle_y, circle_size, 3, 64)
+          FontAwesome:draw(info.icon, icon_x, icon_y, font_size, color)
+          surface.SetDrawColor(color)
+          surface.draw_circle_outline(circle_x, circle_y, circle_size, thickness, 64)
         render.SetScissorRect(0, 0, 0, 0, false)
       end
     end

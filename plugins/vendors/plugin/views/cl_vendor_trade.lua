@@ -42,8 +42,7 @@ function PANEL:Init()
   self.button:Dock(RIGHT)
   self.button:SetFont(get_font('main_menu_small'))
   self.button:set_centered(true)
-  self.button:set_draw_outline(true)
-  self.button:set_background_color(get_color('accent'))
+  self.button:set_active(true)
 end
 
 --- Draws the background of the row, the name of the item, the line below it and the price.
@@ -67,13 +66,21 @@ function PANEL:Paint(w, h)
   local text_x = self.icon.x + self.icon:GetWide() + padding
   local price_x = self.button.x - padding - price_w
   local screen_x, screen_y = self:LocalToScreen(0, 0)
+  local hovered = self:IsHovered() or self:IsChildHovered()
 
-  draw.RoundedBox(0, 0, 0, w, h, get_color('background'):alpha(self:IsHovered() and 220 or 180))
+  draw.RoundedBox(
+    Theme.get_option('corner_radius_small'),
+    0,
+    0,
+    w,
+    h,
+    get_color(hovered and 'main_light' or 'surface_raised')
+  )
   simple_text(self.price, name_font, price_x, h * 0.5 - price_h * 0.5, get_color('accent_light'))
 
   render.SetScissorRect(screen_x + text_x, screen_y, screen_x + price_x - padding, screen_y + h, true)
     simple_text(self.name, name_font, text_x, scale(6), text_color)
-    simple_text(self.info, info_font, text_x, h * 0.5 + scale(2), text_color:darken(40))
+    simple_text(self.info, info_font, text_x, h * 0.5 + scale(2), get_color('text_muted'))
   render.SetScissorRect(0, 0, 0, 0, false)
 end
 
@@ -148,15 +155,15 @@ function PANEL:Paint(w, h)
   local title_font = get_font('main_menu_titles')
   local title_w, title_h = text_size(title, title_font)
 
-  draw.RoundedBox(0, 0, 0, w, h, get_color('main_dark'):alpha(150))
-  simple_text(title, title_font, scale(8), header * 0.5 - title_h * 0.5, get_color('text'))
+  Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius'), get_color('surface_sunken'))
+  simple_text(title, title_font, scale(10), header * 0.5 - title_h * 0.5, get_color('text'))
 
   if #self.rows == 0 then
     local text = t(self.empty_text)
     local font = get_font('main_menu_small')
     local text_w, text_h = text_size(text, font)
 
-    simple_text(text, font, w * 0.5 - text_w * 0.5, h * 0.5 - text_h * 0.5, get_color('text'):darken(60))
+    simple_text(text, font, w * 0.5 - text_w * 0.5, h * 0.5 - text_h * 0.5, get_color('text_dim'))
   end
 end
 
@@ -213,7 +220,7 @@ function PANEL:Init()
 
   self.description = vgui.Create('DLabel', self)
   self.description:SetFont(get_font('main_menu_small'))
-  self.description:SetTextColor(get_color('text'))
+  self.description:SetTextColor(get_color('text_muted'))
   self.description:SetContentAlignment(7)
   self.description:SetWrap(true)
   self.description:SetText('')

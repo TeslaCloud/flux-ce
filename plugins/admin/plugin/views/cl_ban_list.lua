@@ -18,7 +18,7 @@ local PANEL = {}
 -- asks the server for the first page and makes the panel known to the plugin.
 function PANEL:Init()
   local text_color = Theme.get_color('text')
-  local hint_color = text_color:darken(40)
+  local hint_color = Theme.get_color('text_dim')
   local small_font = Theme.get_font('text_small')
   local search_hint = t'ui.admin.bans.search'
 
@@ -50,7 +50,8 @@ function PANEL:Init()
   end
 
   self.previous_button = vgui.Create('fl_button', self)
-  self.previous_button:SetDrawBackground(false)
+  self.previous_button:SetDrawBackground(true)
+  self.previous_button:set_draw_outline(true)
   self.previous_button:set_icon('fa-chevron-left')
   self.previous_button:set_centered(true)
   self.previous_button.DoClick = function(btn)
@@ -58,7 +59,8 @@ function PANEL:Init()
   end
 
   self.next_button = vgui.Create('fl_button', self)
-  self.next_button:SetDrawBackground(false)
+  self.next_button:SetDrawBackground(true)
+  self.next_button:set_draw_outline(true)
   self.next_button:set_icon('fa-chevron-right')
   self.next_button:set_centered(true)
   self.next_button.DoClick = function(btn)
@@ -67,7 +69,7 @@ function PANEL:Init()
 
   self.page_label = vgui.Create('DLabel', self)
   self.page_label:SetFont(small_font)
-  self.page_label:SetTextColor(text_color)
+  self.page_label:SetTextColor(Theme.get_color('text_muted'))
   self.page_label:SetContentAlignment(5)
   self.page_label:SetText('')
 
@@ -191,12 +193,9 @@ vgui.Register('fl_ban_list', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.dark = false
 
---- Creates the labels of the row and the button that lifts the ban, and picks the
--- background color of the dark rows.
+--- Creates the labels of the row and the button that lifts the ban.
 function PANEL:Init()
   local text_color = Theme.get_color('text')
-
-  self.dark_color = Theme.get_color('background'):alpha(150)
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetFont(Theme.get_font('text_small'))
@@ -204,35 +203,36 @@ function PANEL:Init()
 
   self.reason_label = vgui.Create('DLabel', self)
   self.reason_label:SetFont(Theme.get_font('text_smaller'))
-  self.reason_label:SetTextColor(text_color:darken(30))
+  self.reason_label:SetTextColor(Theme.get_color('text_muted'))
 
   self.time_label = vgui.Create('DLabel', self)
   self.time_label:SetFont(Theme.get_font('text_small'))
-  self.time_label:SetTextColor(text_color)
+  self.time_label:SetTextColor(Theme.get_color('text_muted'))
   self.time_label:SetContentAlignment(6)
 
   self.unban_button = vgui.Create('fl_button', self)
   self.unban_button:SetDrawBackground(true)
+  self.unban_button:set_draw_outline(true)
   self.unban_button:SetFont(Theme.get_font('text_small'))
   self.unban_button:set_text(t'ui.admin.bans.unban')
   self.unban_button:set_icon('fa-unlock')
   self.unban_button:set_icon_size(math.scale(16))
   self.unban_button:set_text_offset(math.scale(8))
   self.unban_button:set_centered(true)
-  self.unban_button:set_background_color(Theme.get_color('background_light'))
+  self.unban_button:set_background_color(Theme.get_color('surface_raised'))
   self.unban_button:SizeToContentsX()
   self.unban_button.DoClick = function(btn)
     self:unban()
   end
 end
 
---- Draws a darker background on the rows that are marked as dark, unless the active theme
--- draws the row in its PaintAdminRow hook.
+--- Draws the row through the theme's PaintRow hook, unless the active theme draws it in its
+-- PaintAdminRow hook.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  if Theme.hook('PaintAdminRow', self, w, h) == nil and self.dark then
-    draw.RoundedBox(0, 0, 0, w, h, self.dark_color)
+  if Theme.hook('PaintAdminRow', self, w, h) == nil then
+    Theme.hook('PaintRow', self, w, h)
   end
 end
 

@@ -5,57 +5,81 @@
 local t = t
 local cable_send = Cable.send
 
-local background_color = Color(50, 50, 50, 100)
-local title_color = color_white:alpha(150)
-
 local PANEL = {}
+PANEL.padding = math.scale(8)
 
 --- Sets the default title of the panel.
 function PANEL:Init()
   self.title = t'ui.currency.title'
+
+  self:DockPadding(self.padding, self.padding, self.padding, self.padding)
 end
 
---- Draws the translucent background, slightly larger than the panel itself.
+--- Draws the card of the panel.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
-  DisableClipping(true)
-    draw.RoundedBox(0, -4, -4, w + 8, h + 8, background_color)
-  DisableClipping(false)
+  Theme.hook('PaintSurface', self, w, h)
 end
 
---- Draws the translated title on a gradient above the panel.
+--- Draws the translated title in a tag above the panel.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PaintOver(w, h)
   if self.title then
-    local text = t(self.title)
-    local font = Theme.get_font('main_menu_normal_large')
-    local text_w, text_h = util.text_size(text, font)
-
-    DisableClipping(true)
-      draw.textured_rect(
-        Theme.get_material('gradient_down'),
-        -4,
-        -text_h - 4,
-        text_w + 8,
-        text_h,
-        background_color
-      )
-      draw.SimpleText(text, font, 0, -text_h - 4, title_color)
-    DisableClipping(false)
+    Theme.hook('PaintSectionTitle', self, t(self.title), w, h)
   end
 end
 
 --- Resizes the panel to fit the currency lines created by the last rebuild.
 function PANEL:SizeToContents()
-  self:SetSize(self.max_w + math.scale_x(4), self.max_h + math.scale(4))
+  self:SetSize(self.max_w + self.padding * 2 + math.scale_x(4), self.max_h + self.padding * 2)
 end
 
 --- Sets the entity whose money the panel shows. Call rebuild afterward to update it.
 -- @param entity [Entity]
 function PANEL:set_entity(entity)
   self.entity = entity
+end
+
+--- Creates one of the icon buttons of a currency line.
+-- @param line [Panel the line the button goes into]
+-- @param size [Number width and height of the button]
+-- @param icon [String FontAwesome icon ID]
+-- @param tooltip [String]
+-- @param callback [Function called when the button is clicked]
+-- @return [Panel the created fl_button]
+local function create_line_button(line, size, icon, tooltip, callback)
+  local button = vgui.Create('fl_button', line)
+  button:SetSize(size, size)
+  button:SetDrawBackground(false)
+  button:SetTooltip(tooltip)
+  button:set_icon(icon)
+  button:set_icon_size(size * 0.7)
+  button:set_centered(true)
+  button:Dock(RIGHT)
+  button:DockMargin(math.scale(4), 0, 0, 0)
+  button.DoClick = callback
+
+  return button
+end
+
+--- Asks the local player for an amount of money and passes it on, or tells them that the
+-- amount is not valid.
+-- @param title [String translated title of the request]
+-- @param message [String translated message of the request]
+-- @param default [String/Number text the request starts with]
+-- @param callback [Function called with the amount]
+local function request_amount(title, message, default, callback)
+  Derma_StringRequest(title, message, tostring(default or ''), function(text)
+    local value = tonumber(text)
+
+    if value and value > 0 then
+      callback(value)
+    else
+      PLAYER:notify('error.invalid_amount')
+    end
+  end)
 end
 
 --- Recreates a line for every visible currency, with give and drop buttons for the local
@@ -66,6 +90,8 @@ function PANEL:rebuild()
   self:Clear()
 
   local client = PLAYER
+  local font = Theme.get_font('text_normal')
+  local line_height = math.scale(30)
 
   for k, v in pairs(Currencies.all()) do
     local amount = self.entity:get_money(k) or 0
@@ -76,99 +102,58 @@ function PANEL:rebuild()
 
       local label = vgui.Create('DLabel', line)
       label:SetText(t(v.name)..': '..amount..' '..(v.symbol or ''))
-      label:SetFont(Theme.get_font('main_menu_normal'))
-      label:SetTextColor(Color('white'))
+      label:SetFont(font)
+      label:SetTextColor(Theme.get_color('text'))
       label:SizeToContents()
       label:Dock(FILL)
 
-      local button_size = label:GetTall()
-      local w = label:GetWide()
+      local button_size = line_height - math.scale(4)
+      local w = label:GetWide() + math.scale(16)
 
       if amount > 0 then
         if self.entity == client then
-          local give_button = vgui.Create('fl_button', line)
-          give_button:SetSize(button_size, button_size)
-          give_button:SetDrawBackground(false)
-          give_button:SetTooltip(t'ui.currency.give.title')
-          give_button:set_icon('fa-hand-holding-usd')
-          give_button:set_icon_size(button_size)
-          give_button:Dock(RIGHT)
-          give_button.DoClick = function(btn)
+          create_line_button(line, button_size, 'fa-hand-holding-usd', t'ui.currency.give.title', function()
             local target = client:GetEyeTraceNoCursor().Entity
 
-            Derma_StringRequest(
+            request_amount(
               t'ui.currency.give.title',
               t('ui.currency.give.message', { currency = t(v.name) }),
               '',
-              function(text)
-                local value = tonumber(text)
-
-                if value and value > 0 then
-                  cable_send('fl_currency_give', value, k, target)
-                else
-                  client:notify('error.invalid_amount')
-                end
+              function(value)
+                cable_send('fl_currency_give', value, k, target)
               end
             )
-          end
+          end)
 
-          w = w + give_button:GetWide()
-
-          local drop_button = vgui.Create('fl_button', line)
-          drop_button:SetSize(button_size, button_size)
-          drop_button:SetDrawBackground(false)
-          drop_button:SetTooltip(t'ui.currency.drop.title')
-          drop_button:set_icon('coins')
-          drop_button:set_icon_size(button_size)
-          drop_button:Dock(RIGHT)
-          drop_button.DoClick = function(btn)
-            Derma_StringRequest(
+          create_line_button(line, button_size, 'coins', t'ui.currency.drop.title', function()
+            request_amount(
               t'ui.currency.drop.title',
               t('ui.currency.drop.message', { currency = t(v.name) }),
               '',
-              function(text)
-                local value = tonumber(text)
-
-                if value and value > 0 then
-                  cable_send('fl_currency_drop', value, k)
-                else
-                  client:notify('error.invalid_amount')
-                end
+              function(value)
+                cable_send('fl_currency_drop', value, k)
               end
             )
-          end
+          end)
 
-          w = w + drop_button:GetWide()
+          w = w + (button_size + math.scale(4)) * 2
         else
-          local take_button = vgui.Create('fl_button', line)
-          take_button:SetSize(button_size, button_size)
-          take_button:SetDrawBackground(false)
-          take_button:SetTooltip(t'ui.currency.take.title')
-          take_button:set_icon('angle-double-left')
-          take_button:set_icon_size(button_size)
-          take_button:Dock(RIGHT)
-          take_button.DoClick = function(btn)
-            Derma_StringRequest(
+          create_line_button(line, button_size, 'angle-double-left', t'ui.currency.take.title', function()
+            request_amount(
               t'ui.currency.take.title',
               t('ui.currency.take.message', { currency = t(v.name) }),
               amount,
-              function(text)
-                local value = tonumber(text)
-
-                if value and value > 0 then
-                  cable_send('fl_currency_take', self.entity, value, k)
-                else
-                  client:notify('error.invalid_amount')
-                end
+              function(value)
+                cable_send('fl_currency_take', self.entity, value, k)
               end
             )
-          end
+          end)
 
-          w = w + take_button:GetWide()
+          w = w + button_size + math.scale(4)
         end
       end
 
-      line:SetSize(w, label:GetTall())
+      line:SetSize(w, line_height)
       line:Dock(TOP)
 
       if line:GetWide() > self.max_w then

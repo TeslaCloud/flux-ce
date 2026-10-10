@@ -36,10 +36,10 @@ function PANEL:Think()
 
   local frame_time = FrameTime() / 0.006
 
-  if self:IsHovered() then
-    self.cur_amt = math_clamp(self.cur_amt + frame_time, 0, 20)
+  if self:IsHovered() and self.enabled != false then
+    self.cur_amt = math_clamp(self.cur_amt + frame_time * 2, 0, 20)
   else
-    self.cur_amt = math_clamp(self.cur_amt - frame_time, 0, 20)
+    self.cur_amt = math_clamp(self.cur_amt - frame_time * 2, 0, 20)
   end
 
   if !self.icon_size_override then
@@ -111,12 +111,13 @@ function PANEL:toggle()
   self.active = !self.active
 end
 
---- Enables or disables the button. A disabled button ignores mouse input and gets darkened
--- text; enabling it clears any text color set with set_text_color.
+--- Enables or disables the button. A disabled button ignores mouse input and is drawn with
+-- the dimmed text color of the theme; changing the state clears any text color set with
+-- set_text_color.
 -- @param enabled [Boolean]
 function PANEL:set_enabled(enabled)
   self.enabled = enabled
-  self.text_color_override = (!enabled and Theme.get_color('text'):darken(50)) or nil
+  self.text_color_override = nil
 
   self:SetMouseInputEnabled(enabled)
 end

@@ -1,12 +1,12 @@
 --- The Plugins page of the Help tab: the schema, then every plugin with its author and its
 -- description.
 
-local card_style = { padding = 8, gap = 2, background = Color(0, 0, 0, 150), radius = 8 }
+local card_style = { padding = { 8, 12 }, gap = 2, background = 'surface_raised', radius = 6 }
 
 --- The card of the schema or of a plugin.
 -- @param props [Map name (String), author (String), description (String)]
 local function PluginCard(props)
-  local dim = (Lumen.Style.color('text') or color_white):alpha(170)
+  local dim = Lumen.Style.color('text_muted') or color_white
   local author = props.author
   local description = props.description
 

@@ -8,7 +8,13 @@ local math_scale = math.scale
 local math_scale_x = math.scale_x
 local math_round = math.round
 
-local background_color = Color(0, 0, 0, 100)
+--- Draws the sunken card behind a part of the editor.
+-- @param pnl [Panel]
+-- @param w [Number]
+-- @param h [Number]
+local function paint_well(pnl, w, h)
+  Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius_small'), Theme.get_color('surface_sunken'))
+end
 
 local PANEL = {}
 
@@ -39,6 +45,7 @@ function PANEL:Init()
   self.best:SetSize(button_size, button_size)
   self.best:SetPos(x, h - button_size - math_scale(4))
   self.best:set_icon('fa-cube')
+  self.best:set_draw_outline(true)
   self.best:set_centered(true)
   self.best:SetTooltip(t('ui.icon_editor.best'))
   self.best.DoClick = function()
@@ -59,6 +66,7 @@ function PANEL:Init()
   self.front:SetSize(button_size, button_size)
   self.front:SetPos(x, h - button_size - math_scale(4))
   self.front:set_icon('fa-hand-point-up')
+  self.front:set_draw_outline(true)
   self.front:set_centered(true)
   self.front:SetTooltip(t('ui.icon_editor.front'))
   self.front.DoClick = function()
@@ -77,6 +85,7 @@ function PANEL:Init()
   self.above:SetSize(button_size, button_size)
   self.above:SetPos(x, h - button_size - math_scale(4))
   self.above:set_icon('fa-hand-point-down')
+  self.above:set_draw_outline(true)
   self.above:set_centered(true)
   self.above:SetTooltip(t('ui.icon_editor.above'))
   self.above.DoClick = function()
@@ -95,6 +104,7 @@ function PANEL:Init()
   self.right:SetSize(button_size, button_size)
   self.right:SetPos(x, h - button_size - math_scale(4))
   self.right:set_icon('fa-hand-point-left')
+  self.right:set_draw_outline(true)
   self.right:set_centered(true)
   self.right:SetTooltip(t('ui.icon_editor.right'))
   self.right.DoClick = function()
@@ -113,6 +123,7 @@ function PANEL:Init()
   self.center:SetSize(button_size, button_size)
   self.center:SetPos(x, h - button_size - math_scale(4))
   self.center:set_icon('fa-hand-pointer')
+  self.center:set_draw_outline(true)
   self.center:set_centered(true)
   self.center:SetTooltip(t('ui.icon_editor.center'))
   self.center.DoClick = function()
@@ -129,10 +140,8 @@ function PANEL:Init()
   self.preview = vgui.Create('fl_base_panel', self)
   self.preview:Dock(FILL)
   self.preview:DockMargin(math_scale_x(4), 0, 0, 0)
-  self.preview:DockPadding(math_scale_x(4), math_scale(4), math_scale_x(4), math_scale(4))
-  self.preview.Paint = function(pnl, w, h)
-    draw.RoundedBox(0, 0, 0, w, h, background_color)
-  end
+  self.preview:DockPadding(math_scale_x(8), math_scale(8), math_scale_x(8), math_scale(8))
+  self.preview.Paint = paint_well
 
   self.model_path = vgui.Create('DTextEntry', self.preview)
   self.model_path:SetValue(self.model:GetModel())
@@ -178,9 +187,8 @@ function PANEL:Init()
 
   self.item_panel = vgui.Create('fl_base_panel', self.preview)
   self.item_panel:Dock(FILL)
-  self.item_panel.Paint = function(pnl, w, h)
-    draw.RoundedBox(0, 0, 0, w, h, background_color)
-  end
+  self.item_panel:DockMargin(0, math_scale(8), 0, 0)
+  self.item_panel.Paint = paint_well
 
   self.item = vgui.Create('DModelPanel', self.item_panel)
   self.item:SetMouseInputEnabled(false)
@@ -188,7 +196,7 @@ function PANEL:Init()
   end
 
   self.item.PaintOver = function(pnl, w, h)
-    surface.SetDrawColor(color_white)
+    surface.SetDrawColor(Theme.get_color('accent_light'))
     surface.DrawOutlinedRect(0, 0, w, h)
   end
 
@@ -220,6 +228,7 @@ function PANEL:Init()
   self.copy:SetSize(button_size, button_size)
   self.copy:SetPos(w - button_size - math_scale_x(12), h - button_size - math_scale(12))
   self.copy:set_icon('fa-copy')
+  self.copy:set_active(true)
   self.copy:set_centered(true)
   self.copy:SetTooltip(t('ui.icon_editor.copy'))
   self.copy.DoClick = function()

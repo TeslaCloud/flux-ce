@@ -239,14 +239,19 @@ function Theme.remove_theme(id)
   end
 end
 
---- Copies the skin overrides of the active theme into the 'Flux' Derma skin
--- and refreshes the skins of all panels.
+--- Copies the skin overrides of the active theme into the 'Flux' Derma skin, recolors the
+-- skin from the colors of the theme (see `SKIN:apply_theme`) and refreshes the skins of all
+-- panels.
 function Theme.set_derma_skin()
   if current_theme then
     local skin_table = derma.GetNamedSkin('Flux')
 
     for k, v in pairs(current_theme.skin) do
       skin_table[k] = v
+    end
+
+    if isfunction(skin_table.apply_theme) then
+      skin_table:apply_theme(current_theme)
     end
   end
 

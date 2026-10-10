@@ -42,9 +42,10 @@ function Flux.Notification:process_queue()
     panel:set_background_color(notification.back_color)
 
     local w, h = panel:GetSize()
-    local x = scrw - w - 8
+    local margin = math.scale(12)
+    local x = scrw - w - margin
     panel:SetPos(x, -h)
-    panel:MoveTo(x, 8, 0.1)
+    panel:MoveTo(x, margin, 0.15)
 
     entry.panel = panel
     entry.width = w
@@ -104,7 +105,7 @@ end
 function Flux.Notification:reposition(offset)
   if !isnumber(offset) then return end
 
-  local shift = offset + 4
+  local shift = offset + math.scale(6)
 
   for k, v in ipairs(display) do
     local panel = v.panel

@@ -7,10 +7,7 @@
 local math_scale = math.scale
 local math_scale_x = math.scale_x
 
-local desc_background_color = Color(0, 0, 0, 100)
-local desc_text_color = Color('lightgray')
-local desc_saved_color = Color('lightgreen'):alpha(100)
-local desc_unsaved_color = Color('orange'):alpha(100)
+local desc_background_color = Color(10, 12, 17, 200)
 
 local PANEL = {}
 
@@ -132,15 +129,25 @@ function PANEL:rebuild()
     end
   end
 
+  self.desc:SetFont(Theme.get_font('main_menu_small'))
+  self.desc:SetTall(math_scale(36))
   self.desc.Paint = function(pnl, w, h)
-    draw.RoundedBox(0, 0, 0, w, h, desc_background_color)
+    local radius = Theme.get_option('corner_radius_small', math_scale(4))
+    local state_color = Theme.get_color(pnl.saved and 'success' or 'warning')
+    local text_color = Theme.get_color('text')
 
-    pnl:DrawTextEntryText(desc_text_color, Theme.get_color('accent'), color_white)
-  end
+    Theme.hook(
+      'DrawCard',
+      0,
+      0,
+      w,
+      h,
+      radius,
+      desc_background_color,
+      pnl:HasFocus() and Theme.get_color('accent') or ColorAlpha(state_color, 160)
+    )
 
-  self.desc.PaintOver = function(pnl, w, h)
-    surface.SetDrawColor(pnl.saved and desc_saved_color or desc_unsaved_color)
-    surface.DrawOutlinedRect(0, 0, w, h)
+    pnl:DrawTextEntryText(text_color, ColorAlpha(Theme.get_color('accent'), 120), text_color)
   end
 
   self.desc.OnChange = function(pnl, text)

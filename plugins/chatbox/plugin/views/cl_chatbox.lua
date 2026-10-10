@@ -8,8 +8,7 @@
 local get_option, get_font, get_color = Theme.get_option, Theme.get_font, Theme.get_color
 local config_get = Config.get
 local simple_text_outlined = draw.SimpleTextOutlined
-local backdrop_color = Color(0, 0, 0, 150)
-local syntax_color = Color(255, 255, 255)
+local outline_color = Color(0, 0, 0, 120)
 
 local PANEL = {}
 PANEL.history = {}
@@ -114,15 +113,21 @@ function PANEL:Init()
   end
 
   self.text_entry.Paint = function(entry, w, h)
-    local offset = math.scale(4)
-
-    DisableClipping(true)
-      draw.RoundedBox(offset * 2, 0, -offset, w, h + offset, get_color('chat_text_entry_background'))
-    DisableClipping(true)
-
     local text_color = get_color('text')
+    local border = entry:HasFocus() and get_color('accent') or get_color('border')
 
-    entry:DrawTextEntryText(text_color, get_color('accent'), text_color)
+    Theme.hook(
+      'DrawCard',
+      0,
+      0,
+      w,
+      h,
+      get_option('corner_radius', math.scale(6)),
+      get_color('chat_text_entry_background'),
+      border
+    )
+
+    entry:DrawTextEntryText(text_color, ColorAlpha(get_color('accent'), 120), text_color)
   end
 
   self:rebuild()
@@ -192,37 +197,50 @@ function PANEL:PaintOver(width, height)
           end
         end
 
-        draw.RoundedBox(0, 0, 0, width, height - entry:GetTall(), backdrop_color)
+        local padding = math.scale(16)
+        local list_h = height - entry:GetTall() - math.scale(8)
 
-        local font, color = get_font('text_normal'), get_color('accent')
+        Theme.hook(
+          'DrawCard',
+          0,
+          0,
+          width,
+          list_h,
+          get_option('corner_radius', math.scale(6)),
+          ColorAlpha(get_color('surface'), 240)
+        )
+
+        local font, color = get_font('text_normal'), get_color('accent_light')
+        local text_color, muted_color = get_color('text'), get_color('text_muted')
         local command_count = #cmds
 
         if command_count > 0 then
           local last_y = 0
 
           for k, v in ipairs(cmds) do
-            local w, h = simple_text_outlined('/' + v.name, font, 16, 16 + last_y, color, nil, nil, 0.5, color_black)
+            local w, h =
+              simple_text_outlined('/' + v.name, font, padding, padding + last_y, color, nil, nil, 0.5, outline_color)
             w, h = simple_text_outlined(
               t(v.syntax),
               font,
-              16 + w + 8,
-              16 + last_y,
-              syntax_color,
+              padding + w + 8,
+              padding + last_y,
+              muted_color,
               nil,
               nil,
               0.5,
-              color_black
+              outline_color
             )
 
             if command_count == 1 then
-              local cur_y = 20 + h
+              local cur_y = padding + h + math.scale(6)
               local small_font = get_font('text_small')
               local desc = t(v:get_description())
-              local wrapped = util.wrap_text(desc, small_font, width, 16)
+              local wrapped = util.wrap_text(desc, small_font, width - padding * 2, 0)
 
               for k1, v1 in pairs(wrapped) do
                 local text_w, text_h =
-                  simple_text_outlined(v1, small_font, 16, cur_y, syntax_color, nil, nil, 0.5, color_black)
+                  simple_text_outlined(v1, small_font, padding, cur_y, text_color, nil, nil, 0.5, outline_color)
 
                 cur_y = cur_y + text_h + math.scale(2)
               end
@@ -236,22 +254,32 @@ function PANEL:PaintOver(width, height)
               simple_text_outlined(
                 t'ui.chat.aliases'..': ' + aliases,
                 small_font,
-                16,
-                cur_y,
-                syntax_color,
+                padding,
+                cur_y + math.scale(4),
+                muted_color,
                 nil,
                 nil,
                 0.5,
-                color_black
+                outline_color
               )
             end
 
-            last_y = last_y + h + 8
+            last_y = last_y + h + math.scale(8)
 
             if k >= 10 then break end
           end
         else
-          simple_text_outlined(t'ui.chat.no_commands_found', font, 16, 16, color, nil, nil, 0.5, color_black)
+          simple_text_outlined(
+            t'ui.chat.no_commands_found',
+            font,
+            padding,
+            padding,
+            color,
+            nil,
+            nil,
+            0.5,
+            outline_color
+          )
         end
       end
     end

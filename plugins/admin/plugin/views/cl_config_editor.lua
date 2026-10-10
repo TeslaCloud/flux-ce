@@ -58,6 +58,8 @@ function PANEL:Init()
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
     collapsible_category:SetLabel(v.name)
     collapsible_category:SetSize(width, 21)
+    collapsible_category:DockMargin(0, 0, 0, math.scale(6))
+    collapsible_category:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
 
     if isstring(v.description) and v.description != '' then
       collapsible_category.Header:SetTooltip(t(v.description))
@@ -117,8 +119,8 @@ function PANEL:Init()
   self.text_width = 0
 
   self.text = vgui.Create('DLabel', self)
-  self.text:SetFont(Theme.get_font('main_menu_normal'))
-  self.text:SetTextColor(color_white)
+  self.text:SetFont(Theme.get_font('text_small'))
+  self.text:SetTextColor(Theme.get_color('text'))
 
   self.reset_button = vgui.Create('fl_button', self)
   self.reset_button:SetDrawBackground(false)
@@ -252,7 +254,7 @@ function PANEL:set_config(key, config_table)
   self.text:SizeToContents()
   self.text_width = self.text:GetWide()
 
-  self:SetTall(self.text:GetTall() * 1.5)
+  self:SetTall(math.scale(36))
 
   if Config.is_static(key) then
     self:add_flag('fa-lock', static_text)
@@ -284,7 +286,7 @@ function PANEL:create_control()
   local key, config_table = self.key, self.config
   local data = config_table.data
   local data_type = config_table.type == 'bool' and 'boolean' or config_table.type
-  local small_font = Theme.get_font('main_menu_small')
+  local small_font = Theme.get_font('text_small')
 
   if IsValid(self.control) then
     self.control:safe_remove()
@@ -345,7 +347,8 @@ function PANEL:create_control()
     self.check = check
     self.update_control = function(value)
       check.value = value == true
-      check:set_icon(check.value and 'fa-check' or 'fa-ban')
+      check:set_icon(check.value and 'fa-toggle-on' or 'fa-toggle-off')
+      check:set_text_color(check.value and Theme.get_color('success') or Theme.get_color('text_dim'))
     end
   elseif data_type == 'string' then
     local text_entry = vgui.Create('DTextEntry', self)
@@ -455,7 +458,7 @@ function PANEL:update()
     end
 
     self.restart_flag:SetTooltip(tooltip)
-    self.restart_flag:set_text_color(has_pending and Theme.get_color('accent_light') or nil)
+    self.restart_flag:set_text_color(has_pending and Theme.get_color('warning') or nil)
   end
 end
 

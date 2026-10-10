@@ -42,10 +42,10 @@ services:
       FLUX_SCHEMA: ${FLUX_SCHEMA:-reborn}
       FLUX_ENV: ${FLUX_ENV:-development}
       FLUX_WORKSHOP_COLLECTION: ${FLUX_WORKSHOP_COLLECTION:-}
-    command: ["+map", "${FLUX_MAP:-gm_construct}", "+maxplayers", "16", "-tickrate", "30"]
+    command: ["+map", "${FLUX_MAP:-gm_construct}", "+maxplayers", "16", "-tickrate", "30", "+host_workshop_collection", "1683881254"]
     ports:
-      - "127.0.0.1:${FLUX_PORT:-27015}:27015/udp"
-      - "127.0.0.1:${FLUX_PORT:-27015}:27015/tcp"
+      - "${FLUX_PORT:-27015}:27015/udp"
+      - "${FLUX_PORT:-27015}:27015/tcp"
     volumes:
       - .:/home/steam/flux_server/garrysmod/gamemodes/flux
       - ./config:/home/steam/flux_config:ro
