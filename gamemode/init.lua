@@ -5,6 +5,8 @@
 
 local start_time = os.clock()
 
+resource.AddWorkshop('1518849094')
+
 --- Includes a module and returns a boolean depending on success.
 -- Does not throw Lua errors.
 -- @param mod [String module name, as passed to require]
