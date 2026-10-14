@@ -123,8 +123,10 @@ do
 
       local tx, ty = util.text_size(text, font)
 
-      Flux.draw_rotating_cog(cx - 32, cy - 64, 64, 64, color_white)
-      draw.SimpleText(text, font, cx - tx * 0.5, cy + 128, color_white)
+      local cog_size = math.scale(64)
+
+      Flux.draw_rotating_cog(cx - cog_size * 0.5, cy - cog_size, cog_size, cog_size, color_white)
+      draw.SimpleText(text, font, cx - tx * 0.5, cy + math.scale(128), color_white)
 
       return true
     end

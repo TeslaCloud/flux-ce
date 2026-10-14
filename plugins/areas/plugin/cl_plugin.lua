@@ -107,7 +107,7 @@ end
 -- fading each of them out before it expires.
 function Area:HUDPaint()
   if IsValid(PLAYER) and istable(PLAYER.text_areas) then
-    local last_y = 400
+    local last_y = math.scale(400)
     local cur_time = CurTime()
     local font
 
@@ -117,13 +117,13 @@ function Area:HUDPaint()
         font = font or Theme.get_font('text_large')
         text_area_color.a = v.alpha
 
-        draw.SimpleText(v.text, font, 32, last_y, text_area_color)
+        draw.SimpleText(v.text, font, math.scale_x(32), last_y, text_area_color)
 
         if cur_time + 2 >= v.end_time then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)
         end
 
-        last_y = last_y + 50
+        last_y = last_y + math.scale(50)
       end
     end
   end

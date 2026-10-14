@@ -31,21 +31,33 @@ local stored              = Flux.Bars.stored or {}
 local sorted              = Flux.Bars.sorted or {}
 Flux.Bars.stored          = stored
 Flux.Bars.sorted          = sorted
-Flux.Bars.default_x       = 8
-Flux.Bars.default_y       = 8
+Flux.Bars.default_x       = math.scale_x(8)
+Flux.Bars.default_y       = math.scale(8)
 Flux.Bars.default_w       = math.scale_width(312)
-Flux.Bars.default_h       = 18
-Flux.Bars.default_spacing = 6
+Flux.Bars.default_h       = math.scale(18)
+Flux.Bars.default_spacing = math.scale(6)
+
+--- Scales a size given for a 1080p screen, leaving a missing one alone.
+-- @param size [Number size at 1080p, or nil]
+-- @param scale [function the scaling function, math.scale by default]
+-- @return [Number the scaled size, or nil]
+local function scaled(size, scale)
+  if !isnumber(size) then return size end
+
+  return (scale or math.scale)(size)
+end
 
 --- Registers a HUD bar. If a bar with this ID already exists it is returned untouched,
--- unless force is set or Flux runs in development mode.
+-- unless force is set or Flux runs in development mode. The width, height, spacing, text
+-- offset and corner radius are given for a 1080p screen and scaled to the current one; the
+-- position is in actual screen pixels.
 -- ```
 -- Flux.Bars:register('getup', {
 --   text = t'ui.hud.bar_text.getup',
 --   color = Color(50, 200, 50),
 --   max_value = 100,
 --   x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
---   y = ScrH() * 0.5 - 8,
+--   y = ScrH() * 0.5 - math.scale(8),
 --   height = 20,
 --   type = BAR_MANUAL
 -- })
@@ -79,14 +91,14 @@ function Flux.Bars:register(id, data, force)
     hinder_value = data.hinder_value or 0,
     x = data.x or self.default_x,
     y = data.y or self.default_y,
-    width = data.width or self.default_w,
-    height = data.height or self.default_h,
-    corner_radius = data.corner_radius or 0,
+    width = scaled(data.width, math.scale_x) or self.default_w,
+    height = scaled(data.height) or self.default_h,
+    corner_radius = scaled(data.corner_radius) or 0,
     priority = data.priority or table.Count(stored),
     type = data.type or BAR_TOP,
     font = data.font or 'text_bar',
-    spacing = data.spacing or self.default_spacing,
-    text_offset = data.text_offset or 1,
+    spacing = scaled(data.spacing) or self.default_spacing,
+    text_offset = scaled(data.text_offset or 1),
     callback = data.callback
   }
 
@@ -361,7 +373,7 @@ do
     color = Color(50, 200, 50),
     max_value = 100,
     x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
-    y = ScrH() * 0.5 - 8,
+    y = ScrH() * 0.5 - math.scale(8),
     text_offset = 1,
     height = 16,
     type = BAR_MANUAL

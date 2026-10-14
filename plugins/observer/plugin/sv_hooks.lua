@@ -3,21 +3,9 @@
 
 local invisible_color = Color(0, 0, 0, 0)
 
---- Leaves the staff, the players with the 'moderate' permission, out of the players
--- observers are hidden from.
--- @param receiver [Player]
--- @return [Boolean false for players with the 'moderate' permission, nothing otherwise]
-local function unless_staff(receiver)
-  if receiver:can('moderate') then
-    return false
-  end
-end
-
 --- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
 -- hidden from players without the 'moderate' permission. The previous position, angles,
 -- color and move type are kept in actor.observer_data. Requires the 'noclip' permission.
--- A vanished player is already hidden, so their networking is left as the Vanish command
--- set it.
 -- @param actor [Player]
 -- @return [Boolean always false, which blocks the default noclip]
 function Observer:PlayerEnterNoclip(actor)
@@ -48,10 +36,7 @@ function Observer:PlayerEnterNoclip(actor)
   actor:GodEnable()
 
   actor:set_nv('observer', true)
-
-  if !actor.is_vanished then
-    actor:prevent_transmit_conditional(true, unless_staff)
-  end
+  actor:update_visibility()
 
   return false
 end
@@ -91,10 +76,8 @@ function Observer:PlayerExitNoclip(actor)
 
   actor.observer_data = nil
   actor:set_nv('observer', false)
-
-  if !actor.is_vanished then
-    actor:prevent_transmit_conditional(false, unless_staff)
-  end
+  actor:hide_vanished_body()
+  actor:update_visibility()
 
   return false
 end

@@ -1,6 +1,7 @@
 --- Toolgun Render Fix replaces the HUD drawing of the tool gun, so that the name and the
 -- description of Flux tools are translated by the Flux language system instead of the
--- engine's.
+-- engine's, and so that the help box is scaled with the screen like the rest of the
+-- interface.
 
 local draw_text_shadow = draw.TextShadow
 local draw_textured_quad = draw.TexturedQuad
@@ -11,6 +12,16 @@ local draw_textured_rect = surface.DrawTexturedRect
 PLUGIN:set_name('Toolgun Render Fix')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Fixes toolgun help rendering incorrectly with Flux phrases.')
+
+--- Creates scaled copies of the fonts of the tool gun's help box, which the tool gun creates
+-- at fixed sizes for a 1080p screen.
+function PLUGIN:CreateFonts()
+  local s = DermaScale.scale
+
+  Font.create('fl_tool_name', { font = 'Roboto Bk', size = s(80), weight = 1000 })
+  Font.create('fl_tool_subtitle', { font = 'Roboto Bk', size = s(24), weight = 1000 })
+  Font.create('fl_tool_help', { font = 'Roboto Bk', size = s(17), weight = 1000 })
+end
 
 --- Replaces the tool gun's DrawHUD with a version that understands Flux phrases.
 function PLUGIN:FLInitPostEntity()
@@ -35,7 +46,8 @@ function PLUGIN:FLInitPostEntity()
 
     -- This could probably all suck less than it already does
 
-    local x, y = 50, 40
+    local s = DermaScale.scale
+    local x, y = s(50), s(40)
     local w, h = 0, 0
     local is_flux = tool_object.is_flux_tool
 
@@ -46,23 +58,23 @@ function PLUGIN:FLInitPostEntity()
     quad_table.color = background_color
 
     quad_table.x = 0
-    quad_table.y = y - 8
-    quad_table.w = 600
-    quad_table.h = self.ToolNameHeight - (y - 8)
+    quad_table.y = y - s(8)
+    quad_table.w = s(600)
+    quad_table.h = self.ToolNameHeight - (y - s(8))
     draw_textured_quad(quad_table)
 
-    text_table.font = 'GModToolName'
+    text_table.font = 'fl_tool_name'
     text_table.color = title_color
     text_table.pos = { x, y }
     text_table.text = !is_flux and '#tool.'..mode..'.name' or t('tool.'..mode..'.name')
     w, h = draw_text_shadow(text_table, 2)
     y = y + h
 
-    text_table.font = 'GModToolSubtitle'
+    text_table.font = 'fl_tool_subtitle'
     text_table.pos = { x, y }
     text_table.text = !is_flux and '#tool.'..mode..'.desc' or t('tool.'..mode..'.desc')
     w, h = draw_text_shadow(text_table, 1)
-    y = y + h + 8
+    y = y + h + s(8)
 
     self.ToolNameHeight = y
 
@@ -72,9 +84,9 @@ function PLUGIN:FLInitPostEntity()
     quad_table.color = Color(alpha, alpha, alpha, 230)
     draw_textured_quad(quad_table)
 
-    y = y + 4
+    y = y + s(4)
 
-    text_table.font = 'GModToolHelp'
+    text_table.font = 'fl_tool_help'
 
     if !tool_object.Information then
       text_table.pos = { x + self.InfoBoxHeight, y }
@@ -83,9 +95,9 @@ function PLUGIN:FLInitPostEntity()
 
       set_draw_color(255, 255, 255, 255)
       surface.SetTexture(self.InfoIcon)
-      draw_textured_rect(x + 1, y + 1, h - 3, h - 3)
+      draw_textured_rect(x + s(1), y + s(1), h - s(3), h - s(3))
 
-      self.InfoBoxHeight = h + 8
+      self.InfoBoxHeight = h + s(8)
 
       return
     end
@@ -110,7 +122,7 @@ function PLUGIN:FLInitPostEntity()
         text_table.text = '#tool.'..mode..'.'..name
       end
 
-      text_table.pos = { x + 21, y + h2 }
+      text_table.pos = { x + s(21), y + h2 }
 
       w, h = draw_text_shadow(text_table, 1)
 
@@ -142,20 +154,20 @@ function PLUGIN:FLInitPostEntity()
       if icon_material and !icon_material:IsError() then
         set_draw_color(255, 255, 255, 255)
         set_material(icon_material)
-        draw_textured_rect(x, y + h2, 16, 16)
+        draw_textured_rect(x, y + h2, s(16), s(16))
       end
 
       if icon2_material and !icon2_material:IsError() then
         set_draw_color(255, 255, 255, 255)
         set_material(icon2_material)
-        draw_textured_rect(x - 25, y + h2, 16, 16)
+        draw_textured_rect(x - s(25), y + h2, s(16), s(16))
 
-        draw.SimpleText('+', 'default', x - 8, y + h2 + 2, color_white)
+        draw.SimpleText('+', 'Default', x - s(8), y + h2 + s(2), color_white)
       end
 
       h2 = h2 + h
     end
 
-    self.InfoBoxHeight = h2 + 8
+    self.InfoBoxHeight = h2 + s(8)
   end
 end

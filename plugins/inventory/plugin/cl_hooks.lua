@@ -8,8 +8,11 @@ local math_scale = math.scale
 
 local label_background_color = Color(10, 12, 17, 200)
 
---- Shows the hotbar and makes it interactive while the context menu is open.
+--- Shows the hotbar and makes it interactive while the context menu is open, if the player
+-- has one; a player without a character, such as a gamemaster in gamemaster mode, has none.
 function Inventories:OnContextMenuOpen()
+  if !PLAYER:get_inventories().hotbar then return end
+
   if IsValid(PLAYER.hotbar) then
     PLAYER.hotbar:safe_remove()
   end
@@ -33,9 +36,19 @@ function Inventories:OnContextMenuClose()
   end
 end
 
---- Adds the inventory to the tab menu.
+--- Adds the inventory to the tab menu, if the player has inventories. A player without a
+-- character, such as a gamemaster in gamemaster mode, has none; the inventory is then also
+-- forgotten as the page to reopen, since the tab menu expects the page it reopens to exist.
 -- @param menu [Panel the tab menu]
 function Inventories:AddTabMenuItems(menu)
+  if !PLAYER.inventories then
+    if PLAYER.tab_panel == 'inventory' then
+      PLAYER.tab_panel = nil
+    end
+
+    return
+  end
+
   menu:add_menu_item('inventory', {
     title = t'ui.tab_menu.inventory',
     panel = 'fl_inventory_menu',

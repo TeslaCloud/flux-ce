@@ -20,7 +20,7 @@ PANEL.text_color = Color(255, 255, 255)
 PANEL.main_color = Color(255, 100, 100)
 PANEL.accent_color = Color(200, 200, 200)
 PANEL.title = 'Flux Base Panel'
-PANEL.font = Theme.get_font('menu_titles') or 'flRoboto'
+PANEL.font = 'flRoboto'
 
 AccessorFunc(PANEL, 'draw_background', 'DrawBackground')
 AccessorFunc(PANEL, 'background_color', 'BackgroundColor')
@@ -29,6 +29,15 @@ AccessorFunc(PANEL, 'main_color', 'MainColor')
 AccessorFunc(PANEL, 'accent_color', 'AccentColor')
 AccessorFunc(PANEL, 'title', 'Title')
 AccessorFunc(PANEL, 'font', 'Font')
+
+--- Gives the panel the theme's 'main_font', the 'flRoboto' font scaled to the screen, unless
+-- it has been given a font of its own. This happens when the panel is created rather than
+-- when the file is loaded, which is before the theme and its fonts exist.
+function PANEL:Init()
+  if self.font == 'flRoboto' then
+    self.font = Theme.get_font('main_font', 'flRoboto')
+  end
+end
 
 --- Delegates drawing of the panel to the active theme's PaintPanel hook.
 -- @param width [Number panel width]

@@ -10,8 +10,8 @@ local color_icon = Color(255, 255, 255)
 -- material on the left side of one.
 local PANEL = {}
 PANEL.icon = nil
-PANEL.icon_w = 16
-PANEL.icon_h = 16
+PANEL.icon_w = math.scale(16)
+PANEL.icon_h = math.scale(16)
 PANEL.hover_amount = 0
 
 --- Applies the theme's menu font and text color to the item.
@@ -158,7 +158,7 @@ function PANEL:open(x, y)
 
   RegisterDermaMenuForClose(self)
 
-  self:SetWide(200)
+  self:SetWide(math.scale(200))
   self:PerformLayout()
 
   self:SetPos(x, y)

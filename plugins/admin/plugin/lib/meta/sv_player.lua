@@ -1,18 +1,9 @@
 --- Server-side player extensions of the admin plugin: setting and saving the player's role
 -- and their individual and temporary permissions, running commands as the player,
--- teleporting, and vanishing.
+-- teleporting, vanishing, and keeping hidden players (vanished or observing) from being
+-- networked to everyone without the 'moderate' permission.
 
 local player_meta = FindMetaTable('Player')
-
---- Leaves the staff, the players with the 'moderate' permission, out of the players a
--- vanished player is hidden from.
--- @param receiver [Player]
--- @return [Boolean false for players with the 'moderate' permission, nothing otherwise]
-local function unless_staff(receiver)
-  if receiver:can('moderate') then
-    return false
-  end
-end
 
 --- Sets the player's role, overriding the engine method. Networks the role, calls
 -- on_role_taken / on_role_set on the roles involved, saves the role to the database unless
@@ -160,6 +151,7 @@ function player_meta:set_temp_permission(perm_id, value, duration)
   self:set_temp_permissions(perm_table)
 
   Bolt:update_config_access(self)
+  self:update_hidden_players()
 end
 
 --- Runs a command as this player, with the usual permission checks.
@@ -177,25 +169,82 @@ function player_meta:teleport(pos)
   self:unstuck()
 end
 
+--- Checks whether the player is hidden from other players: vanished, or in observer mode.
+-- @return [Boolean]
+function player_meta:is_hidden()
+  return self.is_vanished == true or self:get_nv('observer') == true
+end
+
+--- Starts or stops networking the player, together with everything attached to them such as
+-- their weapons, to one other player, going by whether the player is hidden and whether the
+-- receiver has the 'moderate' permission, which lets them see hidden players.
+-- @param receiver [Player]
+function player_meta:update_transmit(receiver)
+  if !IsValid(receiver) or receiver == self then return end
+
+  local should_prevent = self:is_hidden() and !receiver:can('moderate')
+
+  self:prevent_transmit(receiver, should_prevent)
+
+  for k, v in ipairs(self:GetWeapons()) do
+    v:prevent_transmit(receiver, should_prevent)
+  end
+end
+
+--- Applies whether the player is hidden to the networking of the player to everyone else and
+-- sets their own 'transmission_prevented' net var. Called whenever the player is hidden or
+-- shown, and again whenever something new is attached to a hidden player.
+function player_meta:update_visibility()
+  self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
+
+  for k, v in player.Iterator() do
+    self:update_transmit(v)
+  end
+
+  self:set_nv('transmission_prevented', self:is_hidden(), self)
+end
+
+--- Applies which of the hidden players this player may see to the networking of all of them.
+-- Called when the player joins and whenever their permissions change.
+function player_meta:update_hidden_players()
+  for k, v in player.Iterator() do
+    v:update_transmit(self)
+  end
+end
+
+--- Makes a vanished player invisible and not solid. Also used to hide them again after they
+-- have respawned, which makes them visible.
+-- @param target [Player]
+local function hide_body(target)
+  target:DrawWorldModel(false)
+  target:DrawShadow(false)
+  target:SetNoDraw(true)
+  target:SetNotSolid(true)
+  target:SetColor(Color(0, 0, 0, 0))
+end
+
+--- Makes a vanished player invisible and not solid again after they have respawned, unless
+-- they are in observer mode, which hides them in its own way. Server-side only.
+function player_meta:hide_vanished_body()
+  if self.is_vanished and !self:get_nv('observer') then
+    hide_body(self)
+  end
+end
+
 --- Hides the player from everyone without the 'moderate' permission, or shows them again.
 -- A player in observer mode keeps the look the Observer plugin gave them; anyone else is
 -- made invisible and not solid, and gets their previous color back when they reappear. The
 -- weapon is only drawn again when the player carries nothing, since the engine drops the
 -- carried object as soon as the weapon is drawn and draws the weapon by itself once the
--- object is let go of. Sets the player's is_vanished field and notifies nobody.
+-- object is let go of. A player who leaves vanish while in observer mode stays hidden as an
+-- observer. Sets the player's is_vanished field and notifies nobody.
 -- @param should_vanish [Boolean true to hide the player, false to show them again]
 function player_meta:set_vanished(should_vanish)
-  self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
-
   if !self:get_nv('observer') then
     if should_vanish then
       self.old_color = self:GetColor()
 
-      self:DrawWorldModel(false)
-      self:DrawShadow(false)
-      self:SetNoDraw(true)
-      self:SetNotSolid(true)
-      self:SetColor(Color(0, 0, 0, 0))
+      hide_body(self)
     else
       if !IsValid(self.holding_object) then
         self:DrawWorldModel(true)
@@ -208,7 +257,7 @@ function player_meta:set_vanished(should_vanish)
     end
   end
 
-  self:prevent_transmit_conditional(should_vanish, unless_staff)
-
   self.is_vanished = should_vanish
+
+  self:update_visibility()
 end

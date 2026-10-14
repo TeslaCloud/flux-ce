@@ -140,14 +140,14 @@ function PANEL:Init()
   self.desc_entry:SetVerticalScrollbarEnabled(true)
 
   self.models_list = vgui.Create('fl_sidebar', self)
-  self.models_list:SetPos(4, math.scale(180) + 4)
-  self.models_list:SetSize(scrw * 0.25, 136)
+  self.models_list:SetPos(math.scale(4), math.scale(184))
+  self.models_list:SetSize(scrw * 0.25, math.scale(136))
   self.models_list:SetVisible(false)
   self.models_list.Paint = function() end
 
   self.model = vgui.Create('DModelPanel', self)
-  self.model:SetPos(scrw * 0.25 + 32, 32)
-  self.model:SetSize(scrw * 0.25, scrh * 0.5 - 36)
+  self.model:SetPos(scrw * 0.25 + math.scale(32), math.scale(32))
+  self.model:SetSize(scrw * 0.25, scrh * 0.5 - math.scale(36))
   self.model:SetFOV(50)
   self.model:SetCamPos(Vector(80, 0, 50))
   self.model:SetLookAt(Vector(0, 0, 37))
@@ -176,8 +176,8 @@ function PANEL:Init()
   end
 
   self.skin = vgui.Create('fl_counter', self)
-  self.skin:SetSize(32, 64)
-  self.skin:SetPos(scrw * 0.25 + 48, 48)
+  self.skin:SetSize(math.scale(32), math.scale(64))
+  self.skin:SetPos(scrw * 0.25 + math.scale(48), math.scale(48))
   self.skin:set_text(t'ui.char_create.skin')
   self.skin:set_font(Theme.get_font('tooltip_small'))
   self.skin:set_value(1)
@@ -203,7 +203,9 @@ function PANEL:rebuild_models()
   --   unless a handler returns a list, as the Factions plugin does]
   local models = hook.Run('GetCharacterCreationModels', char_data) or {}
   local i = 0
-  local offset = 4
+  local icon_size = math.scale(64)
+  local step = math.scale(68)
+  local offset = math.scale(4)
 
   if self.models_list.buttons then
     for k, v in ipairs(self.models_list.buttons) do
@@ -230,14 +232,14 @@ function PANEL:rebuild_models()
 
   for k, v in ipairs(models) do
     if i >= 7 then
-      offset = offset + 68
+      offset = offset + step
       i = 0
     end
 
     local button = vgui.Create('SpawnIcon', self.models_list)
-    button:SetSize(64, 64)
+    button:SetSize(icon_size, icon_size)
     button:SetModel(v)
-    button:SetPos(i * 68 + 4, offset)
+    button:SetPos(i * step + math.scale(4), offset)
     button.DoClick = function(btn)
       if IsValid(self.models_list.prev_btn) then
         self.models_list.prev_btn.is_active = false

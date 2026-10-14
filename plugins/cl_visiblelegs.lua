@@ -1,8 +1,8 @@
 --- Visible Legs lets players see the body of their character when they look down in first
 -- person.
 -- It draws a clientside copy of the local player's model that follows their animation, with
--- the head and the arms moved out of view. Nothing is drawn in observer mode, in third person
--- or while the player is dead.
+-- the head and the arms moved out of view. Nothing is drawn in observer mode, while the player
+-- is not drawn (as when they are vanished), in third person or while the player is dead.
 
 PLUGIN:set_global('VisibleLegs')
 PLUGIN:set_name('Visible Legs')
@@ -75,11 +75,13 @@ local offset = Vector(-50, -50, 0)
 local scale = Vector(1, 1, 1)
 
 --- Draws the local player's legs model in first person, following their animation.
--- Skipped while in observer mode, in third person, dead or looking above the horizon.
+-- Skipped while in observer mode, not drawn, in third person, dead or looking above the
+-- horizon.
 function VisibleLegs:RenderScreenspaceEffects()
   local client = PLAYER
 
-  if !IsValid(client) or client:get_nv('observer') or client:ShouldDrawLocalPlayer() or !client:Alive() then return end
+  if !IsValid(client) or client:get_nv('observer') or client:GetNoDraw() or client:ShouldDrawLocalPlayer()
+  or !client:Alive() then return end
 
   local angs = client:EyeAngles()
 

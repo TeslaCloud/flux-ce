@@ -86,7 +86,7 @@ if CLIENT then
     local mode = PLAYER:GetInfoNum('area_mode', 0)
     local list = vgui.Create('DListView')
 
-    list:SetSize(30, 90)
+    list:SetSize(30, DermaScale.scale(90))
     list:AddColumn('Tool Mode')
     list:SetMultiSelect(false)
 

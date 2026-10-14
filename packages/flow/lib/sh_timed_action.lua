@@ -324,7 +324,7 @@ else
       max_value = 100,
       min_display = -1,
       x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
-      y = ScrH() * 0.5 - 10,
+      y = ScrH() * 0.5 - math.scale(10),
       height = 20,
       type = BAR_MANUAL
     })

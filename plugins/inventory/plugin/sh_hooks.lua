@@ -25,13 +25,16 @@ function Inventories:PlayerBindPress(client, bind, pressed)
 end
 
 --- Selects the weapon of the item in the specified hotbar slot, or uses the item
--- if it is not an equipable one. Switches to fists if the slot is empty.
+-- if it is not an equipable one. Switches to fists if the slot is empty. Does nothing for a
+-- player without a hotbar, such as a gamemaster in gamemaster mode.
 -- @param client [Player]
 -- @param slot [Number hotbar slot from 1 to 8]
 function Inventories:PlayerSelectSlot(client, slot)
-  if slot >= 1 and slot < 9 then
+  local hotbar = client:get_inventories().hotbar
+
+  if hotbar and slot >= 1 and slot < 9 then
     local cur_time = CurTime()
-    local instance_id = client:get_inventory('hotbar'):get_first_in_slot(slot, 1)
+    local instance_id = hotbar:get_first_in_slot(slot, 1)
     local item_obj = Item.find_by_instance_id(instance_id)
 
     if !client.next_slot_click or client.next_slot_click <= cur_time then

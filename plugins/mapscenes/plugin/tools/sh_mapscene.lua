@@ -33,7 +33,7 @@ function TOOL.BuildCPanel(CPanel)
   if !can('mapscenes') then return end
 
   local list = vgui.Create('DListView')
-  list:SetSize(30, 90)
+  list:SetSize(30, DermaScale.scale(90))
   list:AddColumn(t'ui.mapscene.title')
   list.Think = function(panel)
     if #Mapscenes.points != #list:GetLines() then

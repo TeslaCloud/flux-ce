@@ -759,6 +759,15 @@ DermaScale.after('DForm', 'AddItem', function(panel, result, left, right)
   end
 end)
 
+-- The combo box of a form row fills the row, which sizes itself to its children, so the row
+-- never grows past the height it had at 1080p and clips the scaled combo box and label. Docked
+-- to the top like the text entry of a row, it keeps its own height, which the row then fits.
+DermaScale.after('DForm', 'ComboBox', function(panel, combo_box)
+  if DermaScale.factor() > 1 and IsValid(combo_box) then
+    combo_box:Dock(TOP)
+  end
+end)
+
 DermaScale.after('DForm', 'Help', function(panel, label)
   if IsValid(label) then
     label:DockMargin(s(8), 0, s(8), s(8))
@@ -794,6 +803,15 @@ end)
 
 DermaScale.after('DTab', 'Init', function(panel)
   panel:SetTextInset(0, s(4))
+end)
+
+-- The icon of a tab is sized to its image, normally a 16 pixel silkicon.
+DermaScale.after('DTab', 'Setup', function(panel)
+  local image = panel.Image
+
+  if IsValid(image) and image.ActualWidth and image.ActualHeight then
+    image:SetSize(s(image.ActualWidth), s(image.ActualHeight))
+  end
 end)
 
 DermaScale.replace('DTab', 'GetTabHeight', function(self)
@@ -1215,6 +1233,39 @@ DermaScale.replace('ContextMenu', 'PerformLayout', function(self)
 
   self.Canvas:SetPos(ScrW() - self.Canvas:GetWide() - s(50), ScrH() - s(50) - tall)
   self.Canvas:InvalidateLayout(true)
+end)
+
+-- The desktop icons of the context menu (the `DesktopWindows` list) are plain buttons that the
+-- sandbox's CreateContextMenu builds with fixed sizes, so they are resized once it has run.
+DermaScale.replace_global('CreateContextMenu', function(...)
+  local original = DermaScale.original('_G.CreateContextMenu')
+
+  if !original then return end
+
+  original(...)
+
+  local layout = IsValid(g_ContextMenu) and g_ContextMenu.DesktopWidgets
+
+  if !IsValid(layout) then return end
+
+  layout:SetBorder(s(8))
+  layout:SetSpaceX(s(8))
+  layout:SetSpaceY(s(8))
+
+  for k, icon in ipairs(layout:GetChildren()) do
+    if !icon.WidgetClass then continue end
+
+    icon:SetSize(s(80), s(82))
+
+    for _, child in ipairs(icon:GetChildren()) do
+      if child.ClassName == 'DImage' then
+        child:SetSize(s(64), s(64))
+        child:DockMargin(s(8), 0, s(8), 0)
+      end
+    end
+  end
+
+  layout:InvalidateLayout()
 end)
 
 -- Sandbox tool controls.

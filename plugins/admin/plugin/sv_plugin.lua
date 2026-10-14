@@ -83,6 +83,7 @@ function Bolt:delete_temp_permission(target, perm_id)
   target:set_temp_permissions(perm_table)
 
   self:update_config_access(target)
+  target:update_hidden_players()
 end
 
 --- Finds the permission that an argument of the Grant, Revoke or ResetPermission command

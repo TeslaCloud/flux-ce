@@ -624,7 +624,7 @@ function PANEL:build_tooltip(level)
   local skill_table = self.skill_table
   local attribute_table = self.attribute_table
   local definition = skill_table or attribute_table
-  local wrap_font, wrap_width = 'DermaDefault', 420
+  local wrap_font, wrap_width = 'DermaDefault', DermaScale.scale(420)
   local lines = {}
 
   table.Add(lines, util.wrap_text(translate(definition.description), wrap_font, wrap_width) or {})

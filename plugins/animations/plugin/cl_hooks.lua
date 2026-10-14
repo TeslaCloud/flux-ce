@@ -33,9 +33,14 @@ function Animations:ContextMenuCreated(context_menu)
   panel.previews = {}
 
   --- Refills the list with a button and model preview tooltip for each animation the
-  -- player's model can play, in the order the animations were registered in. Clicking a
-  -- button asks the server to start the animation, or to leave the one being played.
+  -- player's model can play, in the order the animations were registered in, and widens the
+  -- panel to fit the longest name. Clicking a button asks the server to start the animation,
+  -- or to leave the one being played.
   function panel:rebuild()
+    local gap = math.scale(2)
+    local text_offset = scale_x(4)
+    local widest = 0
+
     scroll:Clear()
 
     local previews = self.previews
@@ -57,9 +62,15 @@ function Animations:ContextMenuCreated(context_menu)
       if !sequences then continue end
 
       local line = vgui.Create('fl_button', scroll)
+      line:SetTall(math.scale(24))
       line:Dock(TOP)
+      line:DockMargin(0, 0, gap, gap)
       line:set_text(t(v.name))
-      line:set_text_offset(scale_x(4))
+      line:set_text_offset(text_offset)
+
+      local text_w = util.text_size(line.title, line.font)
+
+      widest = math.max(widest, text_w)
       line.animation = v.id
       line.DoClick = function(pnl)
         PLAYER:play_animation(pnl.animation)
@@ -85,6 +96,13 @@ function Animations:ContextMenuCreated(context_menu)
 
       scroll:AddItem(line)
     end
+
+    local left, top, right, bottom = self:GetDockPadding()
+
+    self:SetWide(math.max(
+      scale_x(200),
+      left + widest + text_offset * 2 + gap + scroll:GetVBar():GetWide() + right
+    ))
   end
 
   Flux.animations_panel = panel

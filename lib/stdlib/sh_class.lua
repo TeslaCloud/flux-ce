@@ -55,8 +55,18 @@ function class(name, parent_class)
     parent_class = parent_class:parse_table()
   end
 
-  local parent = nil
-  parent, name = name:parse_parent()
+  -- Not string.parse_parent: once the class exists, as it does on a code refresh, that returns
+  -- the class itself rather than the table that holds it.
+  local path = name:split('::')
+
+  name = table.remove(path)
+
+  local parent = #path > 0 and table.concat(path, '::'):parse_table() or _G
+
+  if !istable(parent) then
+    error('cannot create class '..name..', the table it belongs in does not exist\n')
+  end
+
   parent[name] = {}
 
   if name[1]:is_lower() then
