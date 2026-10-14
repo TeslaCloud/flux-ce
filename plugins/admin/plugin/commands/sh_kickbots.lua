@@ -1,8 +1,8 @@
---- The KickBots command kicks every bot from the server. Allowed for moderators by default.
+--- The KickBots command kicks every bot from the server. Allowed for gamemasters by default.
 
 CMD.name = 'KickBots'
 CMD.description = 'command.kickbots.description'
-CMD.permission = 'moderator'
+CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.server_management'
 CMD.aliases = { 'botkick', 'kickbot' }
 

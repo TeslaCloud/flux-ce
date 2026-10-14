@@ -107,6 +107,23 @@ function Characters.get_limit(target)
   return limit
 end
 
+--- Checks whether a player has to have an active character to be in the world. A player who
+-- does is kept hidden and dead, without a HUD or a scoreboard, until they load one, and the
+-- main menu opens for them after the intro. Plugins exempt a player through the
+-- PlayerNeedsCharacter hook, which is how gamemasters stay in the world without a character.
+-- @param target [Player]
+-- @return [Boolean false when a PlayerNeedsCharacter handler has returned false, otherwise true]
+function Characters.needs_character(target)
+  --- Decides whether a player has to have an active character to be in the world. Called on
+  -- both realms: on the server when the player spawns, on the client for the local player
+  -- when the intro closes and when the HUD and the scoreboard are about to be drawn. The
+  -- answer only matters while the player has no active character, or a banned one.
+  -- @param target [Player the player in question]
+  -- @return [Boolean return false to let the player stay in the world without a character;
+  --   nothing to leave the decision to the Characters plugin]
+  return hook.Run('PlayerNeedsCharacter', target) != false
+end
+
 --- Checks whether a player has as many characters as they may have.
 -- On the server the player must have their database record, on the client only the local
 -- player can be checked.
@@ -132,7 +149,10 @@ end
 --   -- status is one of the CHAR_ERR_* codes
 -- end
 -- ```
--- @param target [Player owner of the new character]
+-- The new character belongs to the user record of the player unless a GetCharacterOwner hook
+-- hands it to another `User` record; only a character of the player's own is sent to them.
+-- @param target [Player the player the character is created for, its owner unless a
+--   GetCharacterOwner hook names another record]
 -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin. Set
 --   name_generated to true when the name was not chosen by the player, which lets it
 --   repeat the name of another character, and description_generated to true when the
@@ -153,8 +173,21 @@ function Characters.create(target, data)
     return hook_result
   end
 
+  --- Lets plugins give a character that is being created to another user record than the one
+  -- of the player who creates it. Called by `Characters.create`, which the plugin runs on the
+  -- server, once the creation data has passed the PlayerCreateCharacter hook. A character
+  -- that belongs to another record is saved on its own and is not sent to the player.
+  -- @param target [Player the player the character is created for]
+  -- @param data [Map creation data the character is built from]
+  -- @return [User the record that is to own the character; return nothing to let the player
+  --   own it]
+  local owner_record = hook.Run('GetCharacterOwner', target, data)
+  local record = istable(owner_record) and owner_record or target.record
+
+  record.characters = record.characters or {}
+
   local char = Character.new()
-    char.steam_id = target:SteamID()
+    char.steam_id = record.steam_id or target:SteamID()
     char.name = data.name
     char.model = data.model or ''
     char.skin = data.skin or 0
@@ -162,8 +195,9 @@ function Characters.create(target, data)
     char.phys_desc = data.phys_desc or ''
     char.health = 100
     char.banned = false
-    char.user = target.record
-  table.insert(target.record.characters, char)
+    char.user = record
+    char.user_id = record.id
+  table.insert(record.characters, char)
 
   if SERVER then
     --- Called on the server when a character has been built and added to the record of its
@@ -177,7 +211,9 @@ function Characters.create(target, data)
     Characters.remember_name(char.name)
     Characters.save(target, char)
 
-    cable_send(target, 'fl_create_character', Characters.to_networkable(target, char))
+    if record == target.record then
+      cable_send(target, 'fl_create_character', Characters.to_networkable(target, char))
+    end
   end
 
   return CHAR_SUCCESS
@@ -242,15 +278,25 @@ if SERVER then
     return networked
   end
 
-  --- Returns the player a character belongs to, if they are on the server. Server only.
+  --- Returns the player a character belongs to, if they are on the server. A character whose
+  -- user record has no connected player belongs to the connected player who has it as their
+  -- active character, if there is one. Server only.
   -- @param character [Character]
-  -- @return [Player the owner, or nil when they are not connected]
+  -- @return [Player the owner, or nil when nobody on the server has the character]
   function Characters.get_owner(character)
-    local user = istable(character) and character.user
+    if !istable(character) then return end
+
+    local user = character.user
     local owner = istable(user) and user.player
 
     if IsValid(owner) then
       return owner
+    end
+
+    for k, v in player.Iterator() do
+      if v.current_character == character then
+        return v
+      end
     end
   end
 
@@ -323,20 +369,34 @@ if SERVER then
   end
 
   --- Finds the characters that have a name, compared without regard to letter case. The
-  -- characters of connected players are searched first; only when none of them matches are
-  -- the characters of offline players loaded from the database, which makes the callback run
-  -- later. Server only.
+  -- characters of the user records that are loaded are searched first: those of connected
+  -- players and those that a CollectLoadedUserRecords handler adds. Only when none of them
+  -- matches are the characters of offline players loaded from the database, which makes the
+  -- callback run later. Server only.
   -- @param name [String]
   -- @param callback [Function receives a List<Character>, empty when nothing was found]
   function Characters.find_by_name(name, callback)
     local key = normalize_name(name)
     local found = {}
+    local records = {}
 
     for k, v in player.Iterator() do
-      local record = v.record
+      if !v:IsBot() and istable(v.record) then
+        records[#records + 1] = v.record
+      end
+    end
 
-      if !v:IsBot() and istable(record) and istable(record.characters) then
-        for k1, v1 in ipairs(record.characters) do
+    --- Lets plugins add user records that are loaded although no connected player owns
+    -- them, so that their characters are found in memory rather than loaded again from the
+    -- database. Called on the server by `Characters.find_by_name`, with the records of the
+    -- connected players already in the list.
+    -- @param records [List<User> the records whose characters are searched, added to in
+    --   place]
+    hook.Run('CollectLoadedUserRecords', records)
+
+    for k, v in ipairs(records) do
+      if istable(v.characters) then
+        for k1, v1 in ipairs(v.characters) do
           if isstring(v1.name) and normalize_name(v1.name) == key then
             found[#found + 1] = v1
           end
@@ -658,8 +718,9 @@ if SERVER then
   end
 
   --- Runs the SaveCharacterData hook and saves the player's record to the database, unless a
-  -- PreSaveCharacter hook returns false. Server only.
-  -- @param target [Player]
+  -- PreSaveCharacter hook returns false. A character that belongs to another user record
+  -- than the player's is saved on its own, together with its own relations. Server only.
+  -- @param target [Player the player whose data goes into the character]
   -- @param character [Character]
   function Characters.save(target, character)
     if !IsValid(target) or !istable(character) or
@@ -676,7 +737,11 @@ if SERVER then
     -- @param character [Character the character that is being saved]
     hook.Run('SaveCharacterData', target, character)
 
-    target:save_player()
+    if istable(character.user) and character.user != target.record and isfunction(character.save) then
+      character:save()
+    else
+      target:save_player()
+    end
   end
 
   --- Destroys one of the player's characters, removes it from their record, frees its name
@@ -948,6 +1013,12 @@ else
     table.insert(PLAYER.characters, data)
   end)
 
+  Cable.receive('fl_character_borrowed', function(data)
+    if IsValid(PLAYER) then
+      PLAYER.borrowed_character = istable(data) and data or nil
+    end
+  end)
+
   Cable.receive('fl_character_data', function(character_id, key, value)
     local character = IsValid(PLAYER) and PLAYER:get_character_by_id(character_id)
 
@@ -1013,7 +1084,9 @@ end
 do
   local player_meta = FindMetaTable('Player')
 
-  --- Finds one of the player's own characters by its ID.
+  --- Finds one of the player's own characters by its ID. On the client the active character
+  -- of the local player is found as well when it belongs to somebody else, such as a
+  -- character that the player is playing for its owner.
   -- @param id [Number character ID]
   -- @return [Character/Map the character record on the server or its networked data on the
   --   client, nil if the player has no such character]
@@ -1026,6 +1099,12 @@ do
       if id == tonumber(character.id) then
         return character
       end
+    end
+
+    local borrowed = CLIENT and self.borrowed_character
+
+    if istable(borrowed) and id != nil and id == tonumber(borrowed.id) then
+      return borrowed
     end
   end
 

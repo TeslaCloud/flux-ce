@@ -85,3 +85,12 @@ function Animations:OnActiveCharacterSet(owner, character)
 
   owner.next_animation = nil
 end
+
+--- Ends the animation of a player who drops their character.
+-- @param owner [Player player whose character is being dropped]
+-- @param character [Character the character that is being dropped]
+function Animations:OnActiveCharacterCleared(owner, character)
+  self:stop(owner)
+
+  owner.next_animation = nil
+end

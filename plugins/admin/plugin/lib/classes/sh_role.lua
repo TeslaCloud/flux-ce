@@ -1,4 +1,4 @@
---- A role is a group of players that share a set of permissions, such as `moderator`.
+--- A role is a group of players that share a set of permissions, such as `gamemaster`.
 -- A role has a name, a description, a color, an icon, an immunity level that
 -- `Bolt:check_immunity` compares between players, and optionally a base role (`base`) whose
 -- permissions it shares. Roles are normally defined by a file in a plugin's `roles` folder,

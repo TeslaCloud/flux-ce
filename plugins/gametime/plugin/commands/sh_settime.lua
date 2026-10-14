@@ -1,11 +1,11 @@
 --- The SetTime command sets the game clock to a date, a time of day or both, written as
 -- 'YYYY-MM-DD HH:MM'. A date alone keeps the time of day and a time alone keeps the date.
--- Allowed for moderators by default.
+-- Allowed for gamemasters by default.
 
 CMD.name = 'SetTime'
 CMD.description = 'command.settime.description'
 CMD.syntax = 'command.settime.syntax'
-CMD.permission = 'moderator'
+CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 1
 CMD.aliases = { 'setdate', 'setgametime' }

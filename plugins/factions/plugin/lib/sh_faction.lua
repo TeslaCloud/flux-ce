@@ -284,6 +284,27 @@ function Factions.character_limit_reached(target, faction_id)
   return maximum > 0 and Factions.count_characters(target, faction_id) >= maximum
 end
 
+--- Checks whether a player may create a character in a faction without being whitelisted
+-- for it and beyond the amount of characters the faction allows them, which is what a
+-- PlayerCanBypassFactionCreationLimits handler decides.
+-- @param target [Player]
+-- @param data [Map creation data on the server; on the client the extra data of the creation
+--   screen, nil when it has none]
+-- @return [Boolean]
+function Factions.can_bypass_creation_limits(target, data)
+  --- Decides whether a player may create a character in a faction they are not whitelisted
+  -- for, or beyond the amount of characters the faction allows them. Called on the server
+  -- when a creation request is checked, and on the client for the local player when the
+  -- faction stage of the creation screen lists the factions and checks the chosen one, so
+  -- a handler that is meant to be seen in the menu has to be shared.
+  -- @param target [Player the player who creates the character]
+  -- @param data [Map the creation data on the server; the extra data of the creation screen
+  --   on the client, nil when it has none]
+  -- @return [Boolean return true to let the player create the character regardless of the
+  --   whitelist and the limit]
+  return hook.Run('PlayerCanBypassFactionCreationLimits', target, data) == true
+end
+
 --- Returns the model that a player uses because of their rank, instead of the model of
 -- their character.
 -- @param target [Player]

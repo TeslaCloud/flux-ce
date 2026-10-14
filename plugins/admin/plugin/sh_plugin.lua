@@ -1,6 +1,6 @@
 --- Bolt is the admin mod of Flux: roles, permissions, bans, and the commands and menus that
 -- manage them.
--- Every player has a role (`user`, `assistant`, `moderator` or `admin` out of the box): a
+-- Every player has a role (`user`, `assistant`, `gamemaster` or `admin` out of the box): a
 -- `Role` with an immunity level and a set of allowed permissions. A permission is an ID
 -- registered with `Bolt:register_permission`, normally from a `RegisterPermissions` hook;
 -- every command also gets a permission named after its ID, allowed by default for the role
@@ -8,6 +8,14 @@
 -- `actor:can(id)`, which Bolt answers from the player's unexpired temporary permissions,
 -- then their individual permissions (`PERM_ALLOW` or `PERM_NEVER`), then their role. The
 -- SteamIDs listed in the `root_steamid` config are root players, who may do anything.
+--
+-- Each role is based on the one below it and has every permission allowed for it. Assistants
+-- have the basic staff tools: kicking, banning, vanishing, observer mode, the physics and tool
+-- guns and spawning props, and other addons see them as admins. Gamemasters also get the
+-- tools that run the game world, such as spawning NPCs, vehicles and weapons, handing out
+-- items and money, and managing areas, map scenes and spawn points, and other addons see
+-- them as super admins. Administrators may do anything, including editing the configuration,
+-- permissions and plugins, managing roles and restarting the server.
 --
 -- Bans are stored in the database and checked whenever a player connects. Staff manage
 -- players with the plugin's commands and with the Admin entry of the tab menu, which holds
@@ -176,7 +184,7 @@ function Bolt:RegisterPermissions()
     'Unlimited Physgun',
     'Grants access to pick up any entity with the physics gun.',
     'permission.categories.tools',
-    'moderator'
+    'gamemaster'
   )
 
   Bolt:register_permission(
@@ -205,14 +213,14 @@ function Bolt:RegisterPermissions()
     'Spawn Vehicles',
     'Grants access to spawn vehicles.',
     'permission.categories.spawn',
-    'moderator'
+    'gamemaster'
   )
   Bolt:register_permission(
     'spawn_npcs',
     'Spawn NPCs',
     'Grants access to spawn NPCs.',
     'permission.categories.spawn',
-    'moderator'
+    'gamemaster'
   )
   Bolt:register_permission(
     'spawn_ragdolls',
@@ -226,7 +234,7 @@ function Bolt:RegisterPermissions()
     'Spawn SWEPs',
     'Grants access to spawn scripted weapons.',
     'permission.categories.spawn',
-    'moderator'
+    'gamemaster'
   )
 
   Bolt:register_permission(
@@ -276,15 +284,15 @@ function Bolt:RegisterPermissions()
   Bolt:register_permission(
     'moderate',
     'Admin access',
-    'General access for admins. Other addons will identify the player as admin.',
+    'General staff access, allowed for assistants. Other addons will identify the player as admin.',
     'permission.categories.compatibility',
-    'moderator'
+    'assistant'
   )
   Bolt:register_permission(
     'administrate',
     'Super Admin access',
-    'General access for superadmins. Other addons will identify the player as superadmin.',
+    'Advanced staff access, allowed for gamemasters. Other addons will identify the player as superadmin.',
     'permission.categories.compatibility',
-    'admin'
+    'gamemaster'
   )
 end

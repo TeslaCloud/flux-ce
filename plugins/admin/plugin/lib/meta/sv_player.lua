@@ -1,8 +1,18 @@
 --- Server-side player extensions of the admin plugin: setting and saving the player's role
--- and their individual and temporary permissions, running commands as the player, and
--- teleporting.
+-- and their individual and temporary permissions, running commands as the player,
+-- teleporting, and vanishing.
 
 local player_meta = FindMetaTable('Player')
+
+--- Leaves the staff, the players with the 'moderate' permission, out of the players a
+-- vanished player is hidden from.
+-- @param receiver [Player]
+-- @return [Boolean false for players with the 'moderate' permission, nothing otherwise]
+local function unless_staff(receiver)
+  if receiver:can('moderate') then
+    return false
+  end
+end
 
 --- Sets the player's role, overriding the engine method. Networks the role, calls
 -- on_role_taken / on_role_set on the roles involved, saves the role to the database unless
@@ -165,4 +175,40 @@ function player_meta:teleport(pos)
   self.prev_pos = self:GetPos()
   self:SetPos(pos)
   self:unstuck()
+end
+
+--- Hides the player from everyone without the 'moderate' permission, or shows them again.
+-- A player in observer mode keeps the look the Observer plugin gave them; anyone else is
+-- made invisible and not solid, and gets their previous color back when they reappear. The
+-- weapon is only drawn again when the player carries nothing, since the engine drops the
+-- carried object as soon as the weapon is drawn and draws the weapon by itself once the
+-- object is let go of. Sets the player's is_vanished field and notifies nobody.
+-- @param should_vanish [Boolean true to hide the player, false to show them again]
+function player_meta:set_vanished(should_vanish)
+  self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
+
+  if !self:get_nv('observer') then
+    if should_vanish then
+      self.old_color = self:GetColor()
+
+      self:DrawWorldModel(false)
+      self:DrawShadow(false)
+      self:SetNoDraw(true)
+      self:SetNotSolid(true)
+      self:SetColor(Color(0, 0, 0, 0))
+    else
+      if !IsValid(self.holding_object) then
+        self:DrawWorldModel(true)
+      end
+
+      self:DrawShadow(true)
+      self:SetNoDraw(false)
+      self:SetNotSolid(false)
+      self:SetColor(self.old_color or color_white)
+    end
+  end
+
+  self:prevent_transmit_conditional(should_vanish, unless_staff)
+
+  self.is_vanished = should_vanish
 end

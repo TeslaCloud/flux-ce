@@ -21,10 +21,10 @@ function Characters:ActiveRecordReady()
 end
 
 --- Hides, locks and silently kills players who spawn without an active character or with a
--- banned one.
+-- banned one, unless `Characters.needs_character` exempts them.
 -- @param actor [Player]
 function Characters:PostPlayerSpawn(actor)
-  if !actor:is_character_loaded() or actor:is_character_banned() then
+  if (!actor:is_character_loaded() or actor:is_character_banned()) and Characters.needs_character(actor) then
     actor:SetNoDraw(true)
     actor:SetNotSolid(true)
     actor:Lock()

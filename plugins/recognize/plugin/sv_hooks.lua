@@ -9,6 +9,13 @@ function Recognizes:PostCharacterLoaded(owner, character)
   self:sync(owner)
 end
 
+--- Takes the networked recognitions of a character away from the player who drops it.
+-- @param owner [Player player the character belongs to]
+-- @param character [Character the character that is being dropped]
+function Recognizes:OnActiveCharacterCleared(owner, character)
+  owner:set_nv('fl_recognizes', {})
+end
+
 --- Prevents players from recognizing themselves or, if recog_must_see is set, players they cannot see.
 -- @param actor [Player player introducing themselves]
 -- @param target [Player player that would recognize them]

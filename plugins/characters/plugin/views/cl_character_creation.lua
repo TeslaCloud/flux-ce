@@ -3,7 +3,8 @@
 -- A stage is the ID of a theme panel, added with `add_stage` from the
 -- AddCharacterCreationMenuStages hook. A stage panel may define on_open(parent),
 -- on_close(parent) and on_validate(); it hands over what the player has entered with
--- `collect_data`, and the collected char_data is what is sent to the server.
+-- `collect_data`, and the collected char_data is what is sent to the server, together with
+-- the extra_data table that whoever opened the screen may set on it.
 
 local PANEL = {}
 PANEL.char_data = {}
@@ -263,6 +264,20 @@ function PANEL:next_stage()
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
     Derma_Query(t'ui.char_create.confirm_msg', t'ui.char_create.confirm', t'ui.yes', function()
+      local count_before = #PLAYER:get_all_characters()
+      local request_data = table.Copy(self.char_data)
+
+      if istable(self.extra_data) then
+        table.safe_merge(request_data, self.extra_data)
+      end
+
+      --- Lets plugins add to the data of a character creation request. Called on the client
+      -- right before the request is sent, after the extra_data table of the creation screen
+      -- has been merged into the data the stages have collected.
+      -- @param panel [Panel the fl_char_create panel]
+      -- @param data [Map the data that is about to be sent, changed in place]
+      hook.Run('CollectCharacterCreationData', self, request_data)
+
       self:request('fl_create_character', function(response)
         if IsValid(Flux.intro_panel) and IsValid(self) then
           if response.success then
@@ -271,7 +286,7 @@ function PANEL:next_stage()
             self:goto_stage(0)
             self:clear_data()
 
-            if #chars == 1 then
+            if #chars == 1 and count_before == 0 then
               Flux.intro_panel.hide_sidebar = true
 
               timer.Simple(Theme.get_option('menu_anim_duration') * #self.stages, function()
@@ -326,7 +341,7 @@ function PANEL:next_stage()
         end
 
         self.request_sent = nil
-      end, self.char_data)
+      end, request_data)
 
       self.request_sent = CurTime()
     end,
@@ -351,6 +366,16 @@ function PANEL:close(callback)
   if callback then
     callback()
   end
+end
+
+--- Sets the extra data that is sent with the creation request on top of what the stages
+-- collect, and opens the current stage again so that it can take the data into account.
+-- Meant for whoever opens the screen, right after creating it.
+-- @param data [Map extra request data, nil to send none]
+function PANEL:set_extra_data(data)
+  self.extra_data = data
+
+  self:open_panel(self.stages[self.stage])
 end
 
 --- Merges the data of a stage into the collected character data.

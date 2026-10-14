@@ -1,9 +1,9 @@
---- Staff command that whitelists players for a faction.
+--- Staff command that whitelists players for a faction. Allowed for gamemasters by default.
 
 CMD.name = 'Whitelist'
 CMD.description = 'command.whitelist.description'
 CMD.syntax = 'command.whitelist.syntax'
-CMD.permission = 'moderator'
+CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.player_arg = 1

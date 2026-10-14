@@ -106,6 +106,18 @@ function Stats:OnActiveCharacterSet(owner, character)
   self:apply_faction_bonuses(owner)
 end
 
+--- Takes the networked attributes and skills of a character away from the player who drops
+-- it, and forgets when its next boost expires and the fractions of effects carried over.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function Stats:OnActiveCharacterCleared(owner, character)
+  owner.attribute_expiry = nil
+  owner.stat_effect_carry = nil
+
+  owner:set_private_nv('attributes', {})
+  owner:set_private_nv('skills', {})
+end
+
 --- Removes the boosts that have expired from the characters of the players who have one
 -- due, and networks their attributes again so that the clients stop counting them when the
 -- server does.

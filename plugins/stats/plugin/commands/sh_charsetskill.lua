@@ -1,10 +1,10 @@
 --- The CharSetSkill command sets the rank of a skill of the targeted players' characters.
--- Allowed for moderators by default.
+-- Allowed for gamemasters by default.
 
 CMD.name = 'CharSetSkill'
 CMD.description = 'command.charsetskill.description'
 CMD.syntax = 'command.charsetskill.syntax'
-CMD.permission = 'moderator'
+CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 3
 CMD.player_arg = 1

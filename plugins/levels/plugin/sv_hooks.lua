@@ -105,6 +105,14 @@ function Levels:OnActiveCharacterSet(owner, character)
   self:apply_max_health(owner)
 end
 
+--- Takes the networked level and experience of a character away from the player who drops it.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function Levels:OnActiveCharacterCleared(owner, character)
+  owner:set_private_nv('level', nil)
+  owner:set_private_nv('experience', nil)
+end
+
 --- Loads the time of the first run of the plugin on this server, which the server level is
 -- counted from, and checks the server level.
 function Levels:LoadData()

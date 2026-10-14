@@ -125,6 +125,21 @@ function Factions:PostCharacterLoaded(owner, character)
   self.apply_npc_relations(owner)
 end
 
+--- Takes the faction of a character away from the player who drops it: clears the networked
+-- faction and rank, forgets the rank model, undoes the feelings of NPCs and puts the player
+-- back into the unassigned team.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function Factions:OnActiveCharacterCleared(owner, character)
+  self.reset_npc_relations(owner)
+
+  owner.faction_model = nil
+
+  owner:set_nv('faction', nil)
+  owner:set_nv('rank', nil)
+  owner:SetTeam(TEAM_UNASSIGNED)
+end
+
 --- Copies the faction and the rank from the creation data to the new character, using the
 -- 'player' faction and the default rank of the faction when they are missing. Creation
 -- requests of clients never carry a rank (see Factions:PreCreateCharacter), so their
@@ -290,7 +305,8 @@ end
 
 --- Rejects character creation when the chosen faction is not registered or requires a
 -- whitelist that the player does not have, when the player already has as many characters
--- of the faction as it allows, when the gender does not fit the faction (a faction with
+-- of the faction as it allows (neither applies when `Factions.can_bypass_creation_limits`
+-- lets the player past them), when the gender does not fit the faction (a faction with
 -- genders needs a male or female character, any other faction a genderless one), when the
 -- model is not one of the faction's models for that gender, or when the on_character_create
 -- callback of the faction refuses the character.
@@ -306,12 +322,14 @@ function Factions:PlayerCreateCharacter(actor, data)
     return CHAR_ERR_FACTION
   end
 
-  if faction_table.whitelisted and !actor:has_whitelist(data.faction) then
-    return CHAR_ERR_FACTION
-  end
+  if !Factions.can_bypass_creation_limits(actor, data) then
+    if faction_table.whitelisted and !actor:has_whitelist(data.faction) then
+      return CHAR_ERR_FACTION
+    end
 
-  if Factions.character_limit_reached(actor, data.faction) then
-    return CHAR_ERR_FACTION_LIMIT
+    if Factions.character_limit_reached(actor, data.faction) then
+      return CHAR_ERR_FACTION_LIMIT
+    end
   end
 
   local genderless = data.gender == CHAR_GENDER_NONE

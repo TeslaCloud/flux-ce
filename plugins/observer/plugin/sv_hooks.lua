@@ -3,11 +3,11 @@
 
 local invisible_color = Color(0, 0, 0, 0)
 
---- Leaves the players with the 'moderate' permission out of the players observers are
--- hidden from.
+--- Leaves the staff, the players with the 'moderate' permission, out of the players
+-- observers are hidden from.
 -- @param receiver [Player]
--- @return [Boolean false for moderators, nothing otherwise]
-local function unless_moderator(receiver)
+-- @return [Boolean false for players with the 'moderate' permission, nothing otherwise]
+local function unless_staff(receiver)
   if receiver:can('moderate') then
     return false
   end
@@ -16,6 +16,8 @@ end
 --- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
 -- hidden from players without the 'moderate' permission. The previous position, angles,
 -- color and move type are kept in actor.observer_data. Requires the 'noclip' permission.
+-- A vanished player is already hidden, so their networking is left as the Vanish command
+-- set it.
 -- @param actor [Player]
 -- @return [Boolean always false, which blocks the default noclip]
 function Observer:PlayerEnterNoclip(actor)
@@ -47,9 +49,8 @@ function Observer:PlayerEnterNoclip(actor)
 
   actor:set_nv('observer', true)
 
-  -- Respect that one vanish command from the admin mod.
   if !actor.is_vanished then
-    actor:prevent_transmit_conditional(true, unless_moderator)
+    actor:prevent_transmit_conditional(true, unless_staff)
   end
 
   return false
@@ -57,6 +58,9 @@ end
 
 --- Takes the player out of observer mode and restores what was saved on entering it.
 -- The player is moved back to where they started unless ShouldObserverReset said not to.
+-- The weapon is only drawn again when the player carries nothing, since the engine drops
+-- the carried object as soon as the weapon is drawn and draws the weapon by itself once
+-- the object is let go of. A vanished player stays hidden.
 -- @param actor [Player]
 -- @return [Boolean always false, which blocks the default noclip]
 function Observer:PlayerExitNoclip(actor)
@@ -65,8 +69,6 @@ function Observer:PlayerExitNoclip(actor)
   if data then
     actor:SetMoveType(data.move_type or MOVETYPE_WALK)
 
-    -- The engine drops the carried object as soon as the weapon is drawn again, and
-    -- draws the weapon by itself once the object is let go of.
     if !IsValid(actor.holding_object) then
       actor:DrawWorldModel(true)
     end
@@ -91,7 +93,7 @@ function Observer:PlayerExitNoclip(actor)
   actor:set_nv('observer', false)
 
   if !actor.is_vanished then
-    actor:prevent_transmit_conditional(false, unless_moderator)
+    actor:prevent_transmit_conditional(false, unless_staff)
   end
 
   return false

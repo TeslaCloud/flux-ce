@@ -184,6 +184,13 @@ function PropProtection:OnActiveCharacterSet(owner, character)
   self:return_ownership(owner)
 end
 
+--- Starts the removal countdown for the entities of the character a player drops.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function PropProtection:OnActiveCharacterCleared(owner, character)
+  self:abandon_entities(owner)
+end
+
 --- Hands the entities that a player owned without a character back to them when they
 -- reconnect, which is all there is to return on a server without the Characters plugin.
 -- Done once their client has finished loading, so that the notification reaches it; until

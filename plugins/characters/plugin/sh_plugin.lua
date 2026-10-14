@@ -19,8 +19,12 @@
 -- character creation screen and buttons to the main menu. `GetCharacterLimit` changes the
 -- limit for a player, and `PlayerCanUseCharacter`, `PlayerCanSwitchCharacter` and
 -- `PlayerCanDeleteCharacter` can refuse a request to load or delete a character with a
--- reason. A plugin that only needs to remember something about a character can keep it in the
--- generic character data (`Player:set_character_data`) instead of adding a column.
+-- reason. `PlayerNeedsCharacter` lets a player stay in the world without a character,
+-- `GetCharacterOwner` gives a new character to another user record than its creator's, and
+-- `Characters.activate` and `Player:clear_active_character` let a player play a character of
+-- another record and drop it again, which runs `OnActiveCharacterCleared`. A plugin that only
+-- needs to remember something about a character can keep it in the generic character data
+-- (`Player:set_character_data`) instead of adding a column.
 
 PLUGIN:set_global('Characters')
 

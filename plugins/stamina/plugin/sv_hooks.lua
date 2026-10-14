@@ -176,6 +176,14 @@ function Stamina:PostCharacterLoaded(owner, character)
   end
 end
 
+--- Forgets that the stamina of a player belongs to the character they drop, so that it is
+-- no longer written into that character.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function Stamina:OnActiveCharacterCleared(owner, character)
+  owner.stamina_character_id = nil
+end
+
 --- Writes the stamina of the player into the generic data of their character before it is
 -- saved, under the 'stamina' key. Nothing is kept for a dead player, so that the character
 -- is loaded with full stamina next time, or while the 'stam_persistent' config is off: a

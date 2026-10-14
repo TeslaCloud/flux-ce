@@ -23,9 +23,9 @@ end
 --- Stops or resumes networking this entity to every other player the condition does not
 -- exclude. Also sets the entity's 'transmission_prevented' net var, sent only to itself.
 -- ```
--- -- Hide the player from everyone except moderators.
--- target:prevent_transmit_conditional(true, function(ply)
---   if ply:can('moderate') then
+-- -- Hide the player from everyone without the 'moderate' permission.
+-- target:prevent_transmit_conditional(true, function(receiver)
+--   if receiver:can('moderate') then
 --     return false
 --   end
 -- end)
@@ -42,6 +42,5 @@ function ent_meta:prevent_transmit_conditional(should_prevent, condition)
     end
   end
 
-  -- Let the entity itself know it's gone.
   self:set_nv('transmission_prevented', should_prevent, self)
 end

@@ -1,9 +1,10 @@
---- Staff command that sets how much of a currency one or more players have.
+--- Staff command that sets how much of a currency one or more players have. Allowed for
+-- gamemasters by default.
 
 CMD.name = 'SetMoney'
 CMD.description = 'command.setmoney.description'
 CMD.syntax = 'command.setmoney.syntax'
-CMD.permission = 'moderator'
+CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1

@@ -48,6 +48,13 @@ function Vendors:OnActiveCharacterSet(owner, character)
   self:close(owner, false, true)
 end
 
+--- Stops the trading of a player who drops their character.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function Vendors:OnActiveCharacterCleared(owner, character)
+  self:close(owner, false, true)
+end
+
 --- Closes the trade panel of the customers of a vendor that is being removed.
 -- @param entity [Entity]
 function Vendors:EntityRemoved(entity)

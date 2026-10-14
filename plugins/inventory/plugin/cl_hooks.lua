@@ -155,6 +155,18 @@ Cable.receive('fl_inventory_sync', function(data)
   hook.Run('OnInventorySync', inventory)
 end)
 
+Cable.receive('fl_inventories_clear', function()
+  if !IsValid(PLAYER) then return end
+
+  for id, inventory in pairs(Inventories.stored) do
+    if inventory.owner == PLAYER then
+      Inventories.stored[id] = nil
+    end
+  end
+
+  PLAYER.inventories = nil
+end)
+
 Cable.receive('fl_rebuild_player_panel', function()
   if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() then
     local active_panel = Flux.tab_menu.active_panel

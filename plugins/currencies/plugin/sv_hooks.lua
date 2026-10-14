@@ -99,6 +99,13 @@ function Currencies:OnActiveCharacterSet(owner, character)
   owner:set_nv('fl_currencies', currencies)
 end
 
+--- Clears the networked currency balances of a player who drops their character.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function Currencies:OnActiveCharacterCleared(owner, character)
+  owner:set_nv('fl_currencies', {})
+end
+
 --- Blocks money pickup while the player or the money entity is on its pickup cooldown.
 -- @param actor [Player]
 -- @param entity [Entity the fl_money entity]

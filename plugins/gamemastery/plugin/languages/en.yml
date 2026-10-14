@@ -1,0 +1,45 @@
+en:
+  command:
+    gmrelease:
+      description: "Stop playing the gamemaster character you possess and return to gamemaster mode."
+    gmpossess:
+      description: "Possess a gamemaster character by its name, where you stand."
+      syntax: <character name>
+  error:
+    gamemastery:
+      wait: "Please wait a moment before doing that again."
+      no_permission: "You are not a gamemaster."
+      invalid_character: "There is no such gamemaster character."
+      not_found: "There is no gamemaster character called {name}."
+      ambiguous: "More than one gamemaster character matches {name}."
+      possessed: "{name} is already playing this character."
+      banned: "This character is banned."
+      not_possessing: "You are not playing a gamemaster character."
+      no_spot: "There is no room for the character there."
+      delete_possessed: "You cannot delete a character while somebody is playing it."
+      own_character: "Gamemasters cannot play characters of their own."
+  notification:
+    gamemastery:
+      possessed: "You are now playing {name}."
+      released: "You have released {name}."
+      placed: "{name} has been placed in the world."
+      deleted: "{player} has deleted the gamemaster character {name}."
+  ui:
+    gamemastery:
+      tab_menu: Gamemaster
+      title: Gamemaster Characters
+      hint: "Drag a character onto the world to place it there. Press your use key on a placed character to possess it."
+      empty: "There are no gamemaster characters yet. Create them from the main menu."
+      possess: Possess
+      release: Release
+      taken: "Played by {name}"
+      banned: Banned
+      in_world: In the world
+      delete: Delete
+      delete_title: Delete Character
+      delete_message: "Type {name} to delete this character for good."
+      hud: Gamemaster mode
+      use_hint: "Press your use key to possess"
+      main_menu:
+        return: Gamemaster mode
+        create: Create gamemaster character

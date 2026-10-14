@@ -180,7 +180,8 @@ function Container:get_loot_categories()
   return categories
 end
 
---- Registers the 'manage_containers' and 'fill_containers' level design permissions.
+--- Registers the 'manage_containers' and 'fill_containers' level design permissions, allowed
+-- for assistants and for gamemasters by default.
 function Container:RegisterPermissions()
   Bolt:register_permission(
     'manage_containers',
@@ -194,7 +195,7 @@ function Container:RegisterPermissions()
     'Fill containers',
     'Grants access to fill containers with random items.',
     'permission.categories.level_design',
-    'moderator'
+    'gamemaster'
   )
 end
 

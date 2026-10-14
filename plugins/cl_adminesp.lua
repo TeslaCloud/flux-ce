@@ -1,7 +1,7 @@
 --- Admin ESP shows staff where the other players are while they are noclipping.
 -- For every other player it draws their name and Steam name, an outline box and health and
 -- armor bars, visible through walls. It is only drawn for players with the 'admin_esp'
--- permission, which the plugin registers for moderators, and its colors come from the
+-- permission, which the plugin registers for assistants, and its colors come from the
 -- `esp_red`, `esp_blue` and `esp_grey` colors of the theme.
 
 local draw_simple_text = draw.SimpleText
@@ -13,7 +13,7 @@ PLUGIN:set_name('Admin ESP')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds an ESP for admins.')
 
---- Registers the 'admin_esp' permission, allowed for moderators by default. The plugin only
+--- Registers the 'admin_esp' permission, allowed for assistants by default. The plugin only
 -- exists on the client, which is also the only place where the permission is checked.
 function PLUGIN:RegisterPermissions()
   Bolt:register_permission(
@@ -21,7 +21,7 @@ function PLUGIN:RegisterPermissions()
     'Admin ESP',
     'Grants access to see the other players through walls while noclipping.',
     'permission.categories.administration',
-    'moderator'
+    'assistant'
   )
 end
 

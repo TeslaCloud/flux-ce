@@ -1,10 +1,10 @@
 --- The CharSetAttribute command sets the level of an attribute of the targeted players'
--- characters. Allowed for moderators by default.
+-- characters. Allowed for gamemasters by default.
 
 CMD.name = 'CharSetAttribute'
 CMD.description = 'command.charsetattribute.description'
 CMD.syntax = 'command.charsetattribute.syntax'
-CMD.permission = 'moderator'
+CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 3
 CMD.player_arg = 1

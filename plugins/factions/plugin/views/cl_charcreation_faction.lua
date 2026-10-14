@@ -7,7 +7,9 @@ PANEL.text = 'ui.char_create.faction'
 PANEL.faction_id = ''
 
 --- Builds the faction chooser with a button for every faction the local player may pick,
--- preselecting the faction chosen earlier.
+-- preselecting the faction chosen earlier. A whitelisted faction is offered to players who
+-- have its whitelist, and every faction to a player whom `Factions.can_bypass_creation_limits`
+-- lets past the whitelist for the extra data of the creation screen.
 -- @param parent [Panel the character creation menu]
 function PANEL:on_open(parent)
   self.faction_id = parent.char_data.faction or self.faction_id
@@ -18,8 +20,10 @@ function PANEL:on_open(parent)
   self.chooser:SetOverlap(math.scale(4))
   self.chooser:set_centered(true)
 
+  local bypass = Factions.can_bypass_creation_limits(PLAYER, parent.extra_data)
+
   for k, v in pairs(Factions.all()) do
-    if !v.whitelisted or PLAYER:has_whitelist(v.faction_id) then
+    if bypass or !v.whitelisted or PLAYER:has_whitelist(v.faction_id) then
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() * 0.33, self.chooser:GetTall())
       button:SetImage(v.material)
@@ -83,11 +87,19 @@ end
 
 --- Checks that a faction is selected, that the local player is whitelisted for it when the
 -- faction requires a whitelist, and that they do not have as many characters of the faction
--- as it allows.
+-- as it allows. The last two do not apply to a player whom
+-- `Factions.can_bypass_creation_limits` lets past them for the extra data of the creation
+-- screen.
 -- @return [Boolean false when invalid, String translated error; nothing when valid]
 function PANEL:on_validate()
   if self.faction_id == '' then
     return false, t'ui.char_create.no_faction'
+  end
+
+  local parent = self:GetParent()
+
+  if Factions.can_bypass_creation_limits(PLAYER, IsValid(parent) and parent.extra_data or nil) then
+    return
   end
 
   local faction = Factions.find_by_id(self.faction_id)

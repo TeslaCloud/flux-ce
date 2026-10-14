@@ -63,10 +63,10 @@ function Characters:ShouldMapsceneRender()
   end
 end
 
---- Opens the main menu after the intro if the local player has no character, retrying on a
--- timer until the panel can be created.
+--- Opens the main menu after the intro if the local player has no character and needs one
+-- (see `Characters.needs_character`), retrying on a timer until the panel can be created.
 function Characters:OnIntroPanelRemoved()
-  if !PLAYER:get_character() then
+  if !PLAYER:get_character() and Characters.needs_character(PLAYER) then
     Flux.intro_panel = Theme.create_panel('main_menu')
 
     if IsValid(Flux.intro_panel) then
@@ -143,24 +143,26 @@ function Characters:ShouldDrawLoadingScreen()
   end
 end
 
---- Hides the HUD while the local player has no active character.
--- @return [Boolean false when no character is loaded, otherwise nil]
+--- Hides the HUD while the local player has no active character and needs one.
+-- @return [Boolean false when no character is loaded and one is needed, otherwise nil]
 function Characters:ShouldHUDPaint()
-  if !PLAYER:is_character_loaded() then
+  if !PLAYER:is_character_loaded() and Characters.needs_character(PLAYER) then
     return false
   end
 end
 
---- Lets the scoreboard hide only when the local player has an active character.
+--- Lets the scoreboard hide only when the local player has an active character or does not
+-- need one.
 -- @return [Boolean]
 function Characters:ShouldScoreboardHide()
-  return PLAYER:is_character_loaded()
+  return PLAYER:is_character_loaded() or !Characters.needs_character(PLAYER)
 end
 
---- Lets the scoreboard show only when the local player has an active character.
+--- Lets the scoreboard show only when the local player has an active character or does not
+-- need one.
 -- @return [Boolean]
 function Characters:ShouldScoreboardShow()
-  return PLAYER:is_character_loaded()
+  return PLAYER:is_character_loaded() or !Characters.needs_character(PLAYER)
 end
 
 --- Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook

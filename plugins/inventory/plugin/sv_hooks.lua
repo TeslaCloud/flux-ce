@@ -9,6 +9,8 @@ local IsValid = IsValid
 
 local drop_near_distance_sqr = 80 * 80
 
+Cable.check_networked_string('fl_inventories_clear')
+
 --- Checks the item list of a move or drop request. The list has to name distinct items
 -- that all are in one inventory, and that inventory has to be open for the player.
 -- @param actor [Player the player who sent the request]
@@ -64,6 +66,21 @@ end
 function Inventories:OnActiveCharacterSet(owner, character)
   owner:delete_inventories()
   owner:create_inventories()
+end
+
+--- Takes the inventories of a character away from the player who drops it, leaving them
+-- without inventories as they were before they loaded a character, and tells their client
+-- to forget its copies of them.
+-- @param owner [Player]
+-- @param character [Character the character that is being dropped]
+function Inventories:OnActiveCharacterCleared(owner, character)
+  owner:delete_inventories()
+  owner.inventories = nil
+  owner.default_inventory = nil
+
+  if !owner:IsBot() then
+    Cable.send(owner, 'fl_inventories_clear')
+  end
 end
 
 --- Creates the default set of the player's inventories:
@@ -150,12 +167,14 @@ function Inventories:CreatePlayerInventories(owner, inventories)
   inventories[pockets.type] = pockets
 end
 
---- Stores the instance ids of the player's items in the character,
--- as a comma-separated string.
+--- Stores the instance ids of the player's items in the character, as a comma-separated
+-- string. Only the active character of the player carries their items: any other character
+-- that is saved through the player, such as one that has just been created, keeps the item
+-- ids it has.
 -- @param owner [Player]
 -- @param char [Character]
 function Inventories:SaveCharacterData(owner, char)
-  if owner:get_character_id() == char.id then
+  if owner:get_character() == char then
     char.item_ids = table.concat(owner:get_items_ids(), ',')
   end
 end
