@@ -1,96 +1,96 @@
 ru:
   command:
     charsetlevel:
-      description: "Set the level of a character, from {floor} to {max_level}. Their experience is reset and their unspent skill and attribute points are worked out again for the new level. The level cap does not apply, but the level floor does."
-      syntax: <target> <level>
-      message: "{player} has set {target}'s level to {level}."
+      description: "Установить уровень персонажа, от {floor} до {max_level}. Его опыт сбрасывается, а нераспределённые очки навыков и атрибутов пересчитываются под новый уровень. Верхний предел уровня не действует, а нижний действует."
+      syntax: <цель> <уровень>
+      message: "{player} устанавливает {target} уровень {level}."
     chargiveexperience:
-      description: "Give experience to a character. A negative amount takes experience away and can lower their level. The level cap does not apply, but a character is never lowered below the level floor."
-      syntax: <target> <amount>
-      message: "{player} has given {target} {amount} experience."
-      message_taken: "{player} has taken {amount} experience from {target}."
+      description: "Выдать персонажу опыт. Отрицательное количество отнимает опыт и может понизить уровень. Верхний предел уровня не действует, но персонаж никогда не опускается ниже нижнего предела."
+      syntax: <цель> <количество>
+      message: "{player} выдаёт {target} {amount} опыта."
+      message_taken: "{player} отнимает у {target} {amount} опыта."
     charlevel:
-      description: "View the level and experience of a character."
-      syntax: <target>
-      message: "{target} is level {level} of {max_level} with {experience} / {needed} experience, {remaining} short of the next level."
-      message_max: "{target} is level {level}, the highest level."
-      message_capped: "{target} is level {level} of {max_level} with {experience} experience kept, held back by the level cap of {cap} until the server level rises."
+      description: "Посмотреть уровень и опыт персонажа."
+      syntax: <цель>
+      message: "{target} имеет уровень {level} из {max_level} и {experience} / {needed} опыта, до следующего уровня не хватает {remaining}."
+      message_max: "{target} имеет уровень {level}, наивысший."
+      message_capped: "{target} имеет уровень {level} из {max_level} и {experience} накопленного опыта. Его сдерживает предел уровня {cap}, пока не вырастет уровень сервера."
     serverlevel:
-      description: "View the server level, the time until the next one and the level floor and cap of characters."
-      message: "The server is level {level} of {max_level}: {elapsed} into this level, level {next_level} comes in {time}."
-      message_max: "The server is level {level}, the highest level."
-      limits: "Characters are raised to at least level {floor} and level up through experience to at most level {cap}."
-      progression_off: Server level progression is off, so there is no level floor or level cap.
+      description: "Посмотреть уровень сервера, время до следующего, а также нижний и верхний пределы уровня персонажей."
+      message: "Уровень сервера {level} из {max_level}: с его начала прошло {elapsed}, уровень {next_level} наступит через {time}."
+      message_max: "Уровень сервера {level}, наивысший."
+      limits: "Персонажи поднимаются как минимум до уровня {floor} и могут прокачаться опытом не выше уровня {cap}."
+      progression_off: Рост уровня сервера отключён, поэтому нижнего и верхнего пределов уровня нет.
     setserverlevel:
-      description: "Set the server level, from -1 to {max_level}. The server is put at the very start of that level and characters are brought in line with the new level floor and cap."
-      syntax: <level>
-      message: "{player} has set the server level to {level}."
+      description: "Установить уровень сервера, от -1 до {max_level}. Сервер ставится в самое начало этого уровня, а персонажи приводятся в соответствие с новыми пределами уровня."
+      syntax: <уровень>
+      message: "{player} устанавливает уровень сервера {level}."
   config:
     levels:
-      title: Levels
-      desc: Character levels, experience, level-up points and maximum health.
+      title: Уровни
+      desc: Уровни персонажей, опыт, очки за уровень и максимальное здоровье.
       max_level:
-        name: Maximum Level
-        desc: The highest level a character can reach. Can only be changed in the config files.
+        name: Максимальный уровень
+        desc: Наивысший уровень, которого может достичь персонаж. Меняется только в файлах конфигурации.
       experience_per_level:
-        name: Experience per Level
-        desc: How much experience a character needs to go up one level. Every level needs the same amount.
+        name: Опыт за уровень
+        desc: Сколько опыта нужно персонажу, чтобы подняться на один уровень. Каждый уровень требует одинаковое количество.
       skill_points_per_level:
-        name: Skill Points per Level
-        desc: How many skill points a character gets for every level after the first. A skill point raises a skill by one rank.
+        name: Очки навыков за уровень
+        desc: Сколько очков навыков получает персонаж за каждый уровень после первого. Очко навыка повышает навык на один ранг.
       boost_every:
-        name: Attribute Points Every
-        desc: Every how many levels a character gets attribute points. 0 gives none.
+        name: Очки атрибутов каждые
+        desc: Раз во сколько уровней персонаж получает очки атрибутов. При значении 0 не даются.
       boost_points:
-        name: Attribute Points
-        desc: How many attribute points a character gets every time it reaches a level that grants them. An attribute point raises a stat by one level.
+        name: Очки атрибутов
+        desc: Сколько очков атрибутов получает персонаж каждый раз, когда достигает уровня, который их даёт. Очко атрибута повышает характеристику на один уровень.
       health_base:
-        name: Base Health
-        desc: The maximum health of a level 1 character before endurance is added. Endurance adds its level times the level of the character.
+        name: Базовое здоровье
+        desc: Максимальное здоровье персонажа 1 уровня до прибавки от выносливости. Выносливость прибавляет свой уровень, умноженный на уровень персонажа.
       health_per_level:
-        name: Health per Level
-        desc: How much maximum health a character gains for every level after the first.
+        name: Здоровье за уровень
+        desc: Сколько максимального здоровья получает персонаж за каждый уровень после первого.
       combat_experience:
-        name: Combat Experience
-        desc: Whether players gain experience for the damage they deal to NPCs and other players and for the NPCs they kill.
+        name: Боевой опыт
+        desc: Получают ли игроки опыт за урон, нанесённый NPC и другим игрокам, и за убитых NPC.
       experience_per_damage:
-        name: Experience per Damage
-        desc: How much experience a player gains for every point of damage they deal to an NPC or another player, while combat experience is on.
+        name: Опыт за урон
+        desc: Сколько опыта получает игрок за каждую единицу урона, нанесённую NPC или другому игроку, пока включён боевой опыт.
       experience_per_kill:
-        name: Experience per Kill
-        desc: How much experience a player gains for killing an NPC, while combat experience is on. It is multiplied by a tenth of the maximum health of the NPC, but never by less than 1.
+        name: Опыт за убийство
+        desc: Сколько опыта получает игрок за убийство NPC, пока включён боевой опыт. Умножается на десятую часть максимального здоровья NPC, но не меньше чем на 1.
       server_progression:
-        name: Server Level Progression
-        desc: Whether the server level limits the levels of characters. The server level starts at -1 when the plugin first runs and rises with real time. Characters cannot level past the server level plus the level cap offset through experience, keeping the experience until the cap rises, and are raised to the server level minus the level floor offset.
+        name: Рост уровня сервера
+        desc: Ограничивает ли уровень сервера уровни персонажей. Уровень сервера начинается с -1 при первом запуске плагина и растёт с реальным временем. Персонажи не могут прокачаться опытом выше уровня сервера плюс смещение верхнего предела и копят опыт, пока предел не вырастет, а также поднимаются до уровня сервера минус смещение нижнего предела.
       server_days_per_level:
-        name: Days per Server Level
-        desc: How many days of real time the server takes to go up one level, for every level below the extra day level.
+        name: Дней на уровень сервера
+        desc: Сколько дней реального времени сервер тратит на один уровень, для каждого уровня ниже уровня дополнительных дней.
       server_ramp_level:
-        name: Extra Day Level
-        desc: The first server level that takes longer than the one before it, by the extra days per server level. Every level after it takes that much longer again.
+        name: Уровень дополнительных дней
+        desc: Первый уровень сервера, который длится дольше предыдущего на дополнительные дни за уровень сервера. Каждый следующий уровень длится ещё на столько же дольше.
       server_ramp_days:
-        name: Extra Days per Server Level
-        desc: How many days of real time each server level from the extra day level on takes on top of the one before it. 0 makes every level take the same time.
+        name: Дополнительных дней за уровень сервера
+        desc: Сколько дней реального времени каждый уровень сервера, начиная с уровня дополнительных дней, длится сверх предыдущего. При значении 0 все уровни длятся одинаково.
       server_cap_offset:
-        name: Level Cap Offset
-        desc: How many levels above the server level characters can reach through experience. Staff commands are not limited by it.
+        name: Смещение верхнего предела
+        desc: На сколько уровней выше уровня сервера персонажи могут подняться опытом. Команды администрации им не ограничены.
       server_floor_offset:
-        name: Level Floor Offset
-        desc: How many levels below the server level characters are raised to.
+        name: Смещение нижнего предела
+        desc: На сколько уровней ниже уровня сервера поднимаются персонажи.
   error:
     levels:
-      no_character: "{target} has no active character!"
-      no_active_character: You have no active character!
-      invalid_skill: That is not a skill you can spend skill points on!
-      invalid_stat: That is not a stat you can spend attribute points on!
-      no_skill_points: You have no skill points left to spend!
-      no_attribute_points: You have no attribute points left to spend!
-      skill_maxed: This skill is already at its highest rank!
-      stat_maxed: This stat is already at its highest level!
-      cannot_raise: This attribute cannot be raised right now!
+      no_character: "У игрока {target} нет активного персонажа!"
+      no_active_character: У вас нет активного персонажа!
+      invalid_skill: На этот навык нельзя тратить очки навыков!
+      invalid_stat: На эту характеристику нельзя тратить очки атрибутов!
+      no_skill_points: У вас не осталось очков навыков!
+      no_attribute_points: У вас не осталось очков атрибутов!
+      skill_maxed: Этот навык уже на наивысшем ранге!
+      stat_maxed: Эта характеристика уже на наивысшем уровне!
+      cannot_raise: Этот атрибут сейчас нельзя повысить!
   notification:
     levels:
-      level_up: You have reached level {level}!
-      level_set: Your level was set to {level}.
-      experience_given: You were given {amount} experience.
-      experience_taken: "{amount} experience was taken from you."
+      level_up: Вы достигли уровня {level}!
+      level_set: Ваш уровень установлен на {level}.
+      experience_given: Вам выдано {amount} опыта.
+      experience_taken: "У вас отнято {amount} опыта."

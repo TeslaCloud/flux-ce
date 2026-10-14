@@ -5,10 +5,10 @@
 -- the skills grouped under their key stats, each with its rank, its total modifier and what
 -- that modifier is made of. Every stat and skill has a button that asks the server to roll it
 -- and show the result in the chat ('fl_stats_roll'), and while points are left a button that
--- spends one on it ('fl_levels_spend_attribute', 'fl_levels_spend_skill'). Attributes that
--- `Attributes.is_visible` hides are left out. The level, the experience and the points come
--- from the Levels plugin and are not shown without it; the faction comes from the Factions
--- plugin.
+-- spends one on it ('fl_levels_spend_attribute', 'fl_levels_spend_skill'). Stats that
+-- `Attributes.is_visible` hides and skills that `Skills.is_visible` hides are left out. The
+-- level, the experience and the points come from the Levels plugin and are not shown without
+-- it; the faction comes from the Factions plugin.
 
 local card_style = {
   direction = 'row', align = 'center', gap = 8, padding = { 6, 10 }, background = 'surface_raised', radius = 6
@@ -30,10 +30,10 @@ local function signed(value)
   return '+'..value
 end
 
---- Sorts attribute definitions by their translated names, and by their IDs when the names
--- are the same.
--- @param list [List<AttributeBase> sorted in place]
--- @return [List<AttributeBase> the same list]
+--- Sorts stat or skill definitions by their translated names, and by their IDs when the
+-- names are the same.
+-- @param list [List<AttributeBase/SkillBase> sorted in place]
+-- @return [List<AttributeBase/SkillBase> the same list]
 local function sort_by_name(list)
   local names = {}
 
@@ -46,7 +46,7 @@ local function sort_by_name(list)
       return names[a] < names[b]
     end
 
-    return tostring(a.attribute_id) < tostring(b.attribute_id)
+    return tostring(a.attribute_id or a.skill_id) < tostring(b.attribute_id or b.skill_id)
   end)
 
   return list
@@ -57,9 +57,10 @@ end
 -- @param actor [Player]
 -- @return [List<AttributeBase>]
 local function get_stats(actor)
-  local stats = Attributes.get_by_type(ATTRIBUTE_STAT)
+  local stats = Attributes.get_stored()
   local ordered = {}
   local rest = {}
+  local placed = {}
 
   for k, id in ipairs(stat_order) do
     local stat = stats[id]
@@ -68,11 +69,11 @@ local function get_stats(actor)
       ordered[#ordered + 1] = stat
     end
 
-    stats[id] = nil
+    placed[id] = true
   end
 
   for k, v in pairs(stats) do
-    if Attributes.is_visible(v, actor) then
+    if !placed[k] and Attributes.is_visible(v, actor) then
       rest[#rest + 1] = v
     end
   end
@@ -88,14 +89,14 @@ end
 -- Skills whose key stat is not registered come last, under a group of their own.
 -- @param actor [Player]
 -- @param stats [List<AttributeBase> the stats, as get_stats returns them]
--- @return [List<Map> groups: id (String), title (String) and skills (List<AttributeBase>)]
+-- @return [List<Map> groups: id (String), title (String) and skills (List<SkillBase>)]
 local function get_skill_groups(actor, stats)
   local by_stat = {}
   local groups = {}
   local other = {}
 
-  for k, v in pairs(Attributes.get_by_type(ATTRIBUTE_SKILL)) do
-    if Attributes.is_visible(v, actor) then
+  for k, v in pairs(Skills.get_stored()) do
+    if Skills.is_visible(v, actor) then
       local key_stat = isstring(v.attribute) and Attributes.find(v.attribute)
 
       if key_stat then
@@ -222,7 +223,7 @@ local function Header(props)
 end
 
 --- The button that asks the server to roll a stat or a skill.
--- @param props [Map id (String attribute ID)]
+-- @param props [Map id (String ID of the stat or the skill)]
 local function RollButton(props)
   return <button icon="fa-dice-d20" style={{ font = 'text_small', padding = { 4, 10 } }}
     on_press={function() Cable.send('fl_stats_roll', props.id) end}>
@@ -231,8 +232,8 @@ local function RollButton(props)
 end
 
 --- The button that spends an unspent point on a stat or a skill.
--- @param props [Map message (String Cable message to send), id (String attribute ID),
---   tooltip (String)]
+-- @param props [Map message (String Cable message to send), id (String ID of the stat or
+--   the skill), tooltip (String)]
 local function SpendButton(props)
   return <button icon="fa-plus" tooltip={props.tooltip}
     style={{ font = 'text_small', padding = { 4, 8 }, background = 'accent_dark' }}
@@ -265,14 +266,13 @@ local function StatRow(props)
 end
 
 --- The line of a skill.
--- @param props [Map actor (Player), skill (AttributeBase), can_spend (Boolean whether the
+-- @param props [Map actor (Player), skill (SkillBase), can_spend (Boolean whether the
 --   character has skill points left)]
 local function SkillRow(props)
   local actor, skill = props.actor, props.skill
-  local id = skill.attribute_id
-  local rank = actor:get_attribute(id)
-  local base_rank = actor:get_attribute(id, true)
-  local rank_name = t(skill:get_level_name(rank) or '')
+  local id = skill.skill_id
+  local rank = actor:get_skill(id)
+  local rank_name = t(skill:get_rank_name(rank) or '')
   local proficiency = Stats:get_proficiency(actor, id)
   local key_stat = isstring(skill.attribute) and Attributes.find(skill.attribute)
   local details
@@ -300,7 +300,7 @@ local function SkillRow(props)
       {signed(actor:get_skill_modifier(id))}
     </text>
     <RollButton id={id} />
-    {props.can_spend and base_rank < skill.max and <SpendButton message="fl_levels_spend_skill" id={id}
+    {props.can_spend and rank < skill.max and <SpendButton message="fl_levels_spend_skill" id={id}
       tooltip={t('ui.character_sheet.spend_skill', { name = t(skill.name) })} />}
   </view>
 end
@@ -347,7 +347,7 @@ return function(props)
           return <view key={group.id} style={{ gap = 4, margin_top = index > 1 and 8 or 0 }}>
             <text style={{ font = 'text_normal', color = 'accent_light' }}>{group.title}</text>
             {Lumen.map(group.skills, function(skill)
-              return <SkillRow key={skill.attribute_id} actor={actor} skill={skill} can_spend={can_spend_skill} />
+              return <SkillRow key={skill.skill_id} actor={actor} skill={skill} can_spend={can_spend_skill} />
             end)}
           </view>
         end)}

@@ -210,7 +210,7 @@ function PANEL:on_open(parent)
     end
   end
 
-  for k, v in pairs(Attributes.get_by_type(ATTRIBUTE_STAT)) do
+  for k, v in pairs(Attributes.get_stored()) do
     local stat_line = vgui.Create('DPanel', self.attributes_list)
     stat_line:SetTall(math_scale(64))
     stat_line:Dock(TOP)

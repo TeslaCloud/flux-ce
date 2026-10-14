@@ -7,7 +7,6 @@
 ATTRIBUTE.name = 'attribute.strength.title'
 ATTRIBUTE.description = 'attribute.strength.description'
 ATTRIBUTE.icon = 'flux/icons/weight-lifting-up.png'
-ATTRIBUTE.type = ATTRIBUTE_STAT
 ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3

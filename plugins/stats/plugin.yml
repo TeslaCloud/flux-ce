@@ -1,5 +1,5 @@
 name: Character Stats
-description: Adds character attributes, the stats and skills of every character with their boosts and rolls, and the character sheet.
+description: Adds the attributes and skills of every character, with boosts, ranks and d20 rolls, and the character sheet.
 author: TeslaCloud Studios
 depends:
   - characters

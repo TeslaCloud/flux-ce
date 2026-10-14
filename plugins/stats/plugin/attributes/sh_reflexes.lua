@@ -6,7 +6,6 @@
 ATTRIBUTE.name = 'attribute.reflexes.title'
 ATTRIBUTE.description = 'attribute.reflexes.description'
 ATTRIBUTE.icon = 'flux/icons/body-balance.png'
-ATTRIBUTE.type = ATTRIBUTE_STAT
 ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3

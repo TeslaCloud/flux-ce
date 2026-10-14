@@ -7,7 +7,7 @@
 -- which Flux includes before the other folders of the plugin and before its sh_plugin.lua, so
 -- the attributes folder of the Stats plugin is loaded this way too, as are those of the
 -- plugins and the schema that load after it. For the same reason it includes the sh_enums.lua
--- of the plugin, which defines `ATTRIBUTE_STAT` and `ATTRIBUTE_SKILL`.
+-- of the plugin, which defines `CHAR_ERR_ATTRIBUTE_SUM`.
 --
 -- What a character has of an attribute is kept in an `Attribute` record: a level and any
 -- number of boosts. A level changes only when it is set, by staff or by the code of a
@@ -44,27 +44,11 @@ function Attributes.find(id)
   return stored[id]
 end
 
---- Returns the registered attribute definitions of a single type.
--- @param attribute_type [Number attribute type, ATTRIBUTE_STAT or ATTRIBUTE_SKILL]
--- @return [Map attribute definitions keyed by attribute ID]
-function Attributes.get_by_type(attribute_type)
-  local atts_table = {}
-
-  for k, v in pairs(stored) do
-    if v.type == attribute_type then
-      atts_table[k] = v
-    end
-  end
-
-  return atts_table
-end
-
 --- Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get
 -- defaults: min 0, max 10 and default equal to min.
 -- ```
--- local attribute = AttributeBase.new('lockpicking')
--- attribute.name = 'attribute.lockpicking.name'
--- attribute.type = ATTRIBUTE_SKILL
+-- local attribute = AttributeBase.new('sanity')
+-- attribute.name = 'attribute.sanity.name'
 -- attribute.boostable = false
 --
 -- Attributes.register(attribute.attribute_id, attribute)
@@ -88,7 +72,6 @@ function Attributes.register(id, data)
   data.default = math_clamp(tonumber(data.default) or data.min, data.min, data.max)
   data.category = data.category or 'attribute.category.other'
   data.icon = data.icon
-  data.type = data.type
   data.hidden = data.hidden
   data.boostable = data.boostable
   data.boost_limited = data.boost_limited
@@ -108,7 +91,6 @@ end
 -- ```
 -- -- attributes/sh_strength.lua, registered as 'strength'
 -- ATTRIBUTE.name = 'attribute.strength.name'
--- ATTRIBUTE.type = ATTRIBUTE_STAT
 -- ATTRIBUTE.max = 20
 -- ```
 -- @param directory [String folder to include files from]
@@ -351,10 +333,9 @@ if SERVER then
   --- Builds the table that is networked for a player: the level and the boosts of every
   -- registered attribute their character has a record for.
   -- @param target [Player]
-  -- @param attribute_type=nil [Number only include the attributes of this type]
   -- @return [Map attribute data keyed by attribute ID, Number earliest unix time at which a
   --   boost of the character expires or has expired; nil if none has an expiry]
-  function Attributes.to_networkable(target, attribute_type)
+  function Attributes.to_networkable(target)
     local attributes = {}
     local unix_time, cur_time = os_time(), CurTime()
     local earliest
@@ -362,7 +343,7 @@ if SERVER then
     for k, v in ipairs(get_records(target)) do
       local attribute_table = stored[v.attribute_id]
 
-      if attribute_table and (attribute_type == nil or attribute_table.type == attribute_type) then
+      if attribute_table then
         local entry, expiry = record_to_networkable(v, attribute_table, unix_time, cur_time)
 
         if expiry and (!earliest or expiry < earliest) then
@@ -537,33 +518,16 @@ do
   -- --   }
   -- -- }
   -- ```
-  -- @param attribute_type=nil [Number attribute type to filter by]
   -- @return [Map attribute data keyed by attribute ID; empty if the player has no character
   --   or, on the client, nothing has been networked yet or the player is not the local one]
-  function player_meta:get_attributes(attribute_type)
+  function player_meta:get_attributes()
     if SERVER then
-      local attributes = Attributes.to_networkable(self, attribute_type)
+      local attributes = Attributes.to_networkable(self)
 
       return attributes
     end
 
-    local attributes = self:get_nv('attributes') or {}
-
-    if attribute_type == nil then
-      return attributes
-    end
-
-    local filtered = {}
-
-    for k, v in pairs(attributes) do
-      local attribute_table = stored[k]
-
-      if attribute_table and attribute_table.type == attribute_type then
-        filtered[k] = v
-      end
-    end
-
-    return filtered
+    return self:get_nv('attributes') or {}
   end
 
   --- Returns the level and the boosts of one attribute of the player's character, in the

@@ -7,7 +7,6 @@
 ATTRIBUTE.name = 'attribute.charisma.title'
 ATTRIBUTE.description = 'attribute.charisma.description'
 ATTRIBUTE.icon = 'fa-comments'
-ATTRIBUTE.type = ATTRIBUTE_STAT
 ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3

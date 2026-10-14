@@ -1,7 +1,8 @@
---- The attribute list that shows staff the attributes of a character: `fl_attributes`, the
--- list of a character's attributes grouped by type and category, and `fl_attribute_row`,
--- the line of a single attribute. `Attributes.open_viewer` puts the list into a window with
--- a snapshot of another player's attributes, which the CharAttributes command sends. Themes
+--- The attribute list that shows staff the attributes and skills of a character:
+-- `fl_attributes`, the list of a character's attributes grouped by category followed by its
+-- skills grouped by key stat, and `fl_attribute_row`, the line of a single attribute or
+-- skill. `Attributes.open_viewer` puts the list into a window with a snapshot of another
+-- player's attributes and skills, which the CharAttributes command sends. Themes
 -- can draw both panels with the `PaintAttributesMenu` and `PaintAttributeRow` methods; a
 -- method that returns a value replaces the default look. The colors of the bars are the
 -- theme colors 'attribute_level', 'attribute_boost' and 'attribute_hindrance', which have
@@ -17,11 +18,6 @@ local get_color = Theme.get_color
 local default_category = 'attribute.category.other'
 local default_boost_color = Color(98, 200, 130)
 local default_hindrance_color = Color(228, 92, 104)
-local type_names = {
-  'ui.attributes.type.stat',
-  'ui.attributes.type.skill',
-  'ui.attributes.type.other'
-}
 
 --- Translates a phrase and returns the text alone, without the second value that `t`
 -- returns.
@@ -95,14 +91,32 @@ local function describe_boosts(boosts)
   return table.concat(parts, ', ')
 end
 
---- The attribute list (`fl_attributes`): a scrollable list with a header for every type and
--- category of attributes and an `fl_attribute_row` for every attribute that is visible to
--- the player.
--- By default it shows the attributes of the local player and keeps them current while it is
--- open; after `set_snapshot` it shows the data it was given instead, hidden attributes
--- included. `rebuild` recreates the list. Derives from `fl_base_panel`.
+--- Sorts attribute or skill definitions by their translated names, and by their IDs when
+-- the names are the same.
+-- @param list [List<AttributeBase/SkillBase> sorted in place]
+-- @param translated_names [Map translated names keyed by definition]
+local function sort_definitions(list, translated_names)
+  table.sort(list, function(a, b)
+    local name_a, name_b = translated_names[a], translated_names[b]
+
+    if name_a != name_b then
+      return name_a < name_b
+    end
+
+    return tostring(a.attribute_id or a.skill_id) < tostring(b.attribute_id or b.skill_id)
+  end)
+end
+
+--- The attribute list (`fl_attributes`): a scrollable list with a header for every category
+-- of attributes and every key stat of skills, and an `fl_attribute_row` for every attribute
+-- and skill that is visible to the player.
+-- By default it shows the attributes and skills of the local player and keeps them current
+-- while it is open; after `set_snapshot` it shows the data it was given instead, hidden
+-- attributes and skills included. `rebuild` recreates the list. Derives from
+-- `fl_base_panel`.
 local PANEL = {}
 PANEL.snapshot = false
+PANEL.skill_snapshot = false
 PANEL.target = false
 
 --- Creates the scroll panel that holds the list.
@@ -147,17 +161,20 @@ function PANEL:Think()
   self:update()
 end
 
---- Makes the list show the given attribute data of a player instead of the live attributes
--- of the local player. Hidden attributes are listed too. Call `rebuild` afterwards.
+--- Makes the list show the given attribute data and skill ranks of a player instead of the
+-- live attributes and skills of the local player. Hidden attributes and skills are listed
+-- too. Call `rebuild` afterwards.
 -- @param target [Player player the data belongs to]
 -- @param attributes [Map attribute data keyed by attribute ID, as `Player:get_attributes`
 --   returns it]
-function PANEL:set_snapshot(target, attributes)
+-- @param skills=nil [Map Number ranks keyed by skill ID, as `Player:get_skills` returns it]
+function PANEL:set_snapshot(target, attributes, skills)
   self.target = target
   self.snapshot = istable(attributes) and attributes or {}
+  self.skill_snapshot = istable(skills) and skills or {}
 end
 
---- Returns the player whose attributes the list shows.
+--- Returns the player whose attributes and skills the list shows.
 -- @return [Player the player of the snapshot, otherwise the local player]
 function PANEL:get_target()
   return self.snapshot and self.target or PLAYER
@@ -174,37 +191,49 @@ function PANEL:get_data(attribute_id)
   return PLAYER:get_attribute_data(attribute_id)
 end
 
---- Collects the attributes to list, grouped into sections by type and category. Stats come
--- first, then skills, then attributes of no type; the sections of a type are sorted by name
--- and so are the attributes of a section.
--- @return [List<Map> sections: name (String header text) and attributes
---   (List<AttributeBase>)]
+--- Returns the rank the list shows for a skill.
+-- @param skill_id [String]
+-- @return [Number rank, 0 if there is none]
+function PANEL:get_rank(skill_id)
+  if self.snapshot then
+    return tonumber(self.skill_snapshot[skill_id]) or 0
+  end
+
+  return PLAYER:get_skill(skill_id)
+end
+
+--- Collects the attributes and skills to list, grouped into sections. The sections of the
+-- attributes come first, one for every category, sorted by name; then the sections of the
+-- skills, one for every key stat, in the alphabetical order of the stat names; skills whose
+-- key stat is not registered come last, under a section of their own. The entries of a
+-- section are sorted by name.
+-- @return [List<Map> sections: name (String header text), attributes (List<AttributeBase>)
+--   and skills (List<SkillBase>)]
 function PANEL:get_sections()
   local target = self:get_target()
-  local sections = {}
-  local by_key = {}
+  local attribute_sections = {}
+  local skill_sections = {}
+  local by_category = {}
+  local by_stat = {}
   local translated_names = {}
+  local other_skills
 
   for k, v in pairs(Attributes.get_stored()) do
     if self.snapshot or Attributes.is_visible(v, target) then
-      local order = v.type == ATTRIBUTE_STAT and 1 or v.type == ATTRIBUTE_SKILL and 2 or 3
       local category = v.category or default_category
-      local key = order..'/'..category
-      local section = by_key[key]
+      local section = by_category[category]
 
       if !section then
-        local name = translate(type_names[order])
+        local name = translate('ui.attributes.attributes')
 
         if category != default_category then
-          local category_name = translate(category)
-
-          name = order == 3 and category_name or name..' - '..category_name
+          name = name..' - '..translate(category)
         end
 
-        section = { name = name, order = order, attributes = {} }
-        by_key[key] = section
+        section = { name = name, attributes = {}, skills = {} }
+        by_category[category] = section
 
-        sections[#sections + 1] = section
+        attribute_sections[#attribute_sections + 1] = section
       end
 
       section.attributes[#section.attributes + 1] = v
@@ -212,32 +241,71 @@ function PANEL:get_sections()
     end
   end
 
-  table.sort(sections, function(a, b)
-    if a.order != b.order then
-      return a.order < b.order
-    end
+  for k, v in pairs(Skills.get_stored()) do
+    if self.snapshot or Skills.is_visible(v, target) then
+      local key_stat = isstring(v.attribute) and Attributes.find(v.attribute)
+      local section
 
+      if key_stat then
+        section = by_stat[v.attribute]
+
+        if !section then
+          local stat_name = translate(key_stat.name)
+
+          section = {
+            name = translate('ui.attributes.skills')..' - '..stat_name,
+            stat_name = stat_name,
+            stat_id = v.attribute,
+            attributes = {},
+            skills = {}
+          }
+          by_stat[v.attribute] = section
+
+          skill_sections[#skill_sections + 1] = section
+        end
+      else
+        other_skills = other_skills or { name = translate('ui.attributes.skills'), attributes = {}, skills = {} }
+        section = other_skills
+      end
+
+      section.skills[#section.skills + 1] = v
+      translated_names[v] = translate(v.name)
+    end
+  end
+
+  table.sort(attribute_sections, function(a, b)
     return a.name < b.name
   end)
 
+  table.sort(skill_sections, function(a, b)
+    if a.stat_name != b.stat_name then
+      return a.stat_name < b.stat_name
+    end
+
+    return a.stat_id < b.stat_id
+  end)
+
+  local sections = attribute_sections
+
+  for k, v in ipairs(skill_sections) do
+    sections[#sections + 1] = v
+  end
+
+  if other_skills then
+    sections[#sections + 1] = other_skills
+  end
+
   for k, v in ipairs(sections) do
-    table.sort(v.attributes, function(a, b)
-      local name_a, name_b = translated_names[a], translated_names[b]
-
-      if name_a != name_b then
-        return name_a < name_b
-      end
-
-      return tostring(a.attribute_id) < tostring(b.attribute_id)
-    end)
+    sort_definitions(v.attributes, translated_names)
+    sort_definitions(v.skills, translated_names)
   end
 
   return sections
 end
 
---- Returns the listed attributes as one string, which changes whenever an attribute
--- appears in the list, disappears from it or moves, or its row gains or loses its line of
--- details.
+--- Returns the listed attributes and skills as one string, which changes whenever an
+-- attribute or a skill appears in the list, disappears from it or moves, or the row of an
+-- attribute gains or loses its line of details.
 -- @param sections [List<Map> sections returned by get_sections]
 -- @return [String]
 function PANEL:get_listed(sections)
@@ -251,13 +319,17 @@ function PANEL:get_listed(sections)
 
       ids[#ids + 1] = tostring(v1.attribute_id)..(detailed and '+' or '')
     end
+
+    for k1, v1 in ipairs(v.skills) do
+      ids[#ids + 1] = 'skill:'..tostring(v1.skill_id)
+    end
   end
 
   return table.concat(ids, ';')
 end
 
---- Recreates the list: a header for every section followed by the rows of its attributes,
--- or a notice if there is no attribute to show.
+--- Recreates the list: a header for every section followed by the rows of its attributes
+-- and skills, or a notice if there is nothing to show.
 function PANEL:rebuild()
   local sections = self:get_sections()
   local text_color = get_color('text')
@@ -298,11 +370,23 @@ function PANEL:rebuild()
 
       self.rows[#self.rows + 1] = row
     end
+
+    for k1, v1 in ipairs(v.skills) do
+      local row = self.scroll_panel:Add('fl_attribute_row')
+      row:Dock(TOP)
+      row:DockMargin(0, 0, 0, margin)
+      row:set_skill(v1)
+      row:set_rank(self:get_rank(v1.skill_id))
+      row:SetTall(row:get_row_height())
+
+      self.rows[#self.rows + 1] = row
+    end
   end
 end
 
 --- Brings the list up to date with the data it shows: rebuilds it if the set of listed
--- attributes has changed, otherwise passes every row its current data.
+-- attributes and skills has changed, otherwise passes every attribute row its current data
+-- and every skill row its current rank.
 function PANEL:update()
   if self:get_listed(self:get_sections()) != self.listed then
     self:rebuild()
@@ -312,24 +396,36 @@ function PANEL:update()
 
   for k, v in ipairs(self.rows) do
     if IsValid(v) then
-      v:set_data(self:get_data(v:get_attribute().attribute_id))
+      local skill_table = v:get_skill()
+
+      if skill_table then
+        v:set_rank(self:get_rank(skill_table.skill_id))
+      else
+        v:set_data(self:get_data(v:get_attribute().attribute_id))
+      end
     end
   end
 end
 
 vgui.Register('fl_attributes', PANEL, 'fl_base_panel')
 
---- The line of one attribute in the attribute list (`fl_attribute_row`): its icon and name,
--- its level with boosts counted (as the name of the level if the attribute names its
--- levels), a bar that shows where the level lies between the attribute's min and max with
--- the boosted part in another color, and a line that lists the boosts with the time each
--- has left. The description of the attribute, of its current level and its effects are the
--- tooltip of the row.
--- Assign the attribute with `set_attribute` and its data with `set_data`. Derives from
--- `fl_base_panel`.
+--- The line of one attribute or skill in the attribute list (`fl_attribute_row`).
+-- The line of an attribute shows its icon and name, its level with boosts counted (as the
+-- name of the level if the attribute names its levels), a bar that shows where the level
+-- lies between the attribute's min and max with the boosted part in another color, and a
+-- line that lists the boosts with the time each has left. The description of the attribute,
+-- of its current level and its effects are the tooltip of the row.
+-- The line of a skill shows its icon and name, its rank (as the name of the rank if the
+-- skill names its ranks) and a bar that shows where the rank lies between 0 and the skill's
+-- highest rank. The description of the skill and of its current rank are the tooltip of the
+-- row.
+-- Assign an attribute with `set_attribute` and its data with `set_data`, or a skill with
+-- `set_skill` and its rank with `set_rank`. Derives from `fl_base_panel`.
 local PANEL = {}
 PANEL.attribute_table = false
+PANEL.skill_table = false
 PANEL.data = false
+PANEL.rank = 0
 PANEL.detailed = false
 PANEL.name_text = ''
 PANEL.value_text = ''
@@ -344,7 +440,7 @@ function PANEL:Init()
   self.details_color = get_color('text_muted')
 end
 
---- Places the image of the attribute's icon in the top left corner of the row.
+--- Places the image of the icon in the top left corner of the row.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
@@ -356,8 +452,8 @@ function PANEL:PerformLayout(w, h)
   end
 end
 
---- Draws the row: its background, a FontAwesome icon if the attribute has one, the name and
--- the level, the level bar and the line of details. The active theme's
+--- Draws the row: its background, a FontAwesome icon if the attribute or the skill has one,
+-- the name and the level or rank, the bar and the line of details. The active theme's
 -- PaintAttributeRow method replaces all of it by returning a value.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
@@ -366,7 +462,7 @@ function PANEL:Paint(w, h)
 
   draw.RoundedBox(Theme.get_option('corner_radius_small'), 0, 0, w, h, get_color('surface_raised'))
 
-  if !self.attribute_table then return end
+  if !self.attribute_table and !self.skill_table then return end
 
   local padding = math_scale(8)
   local icon_size = math_scale(40)
@@ -439,14 +535,10 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Sets the attribute this row shows and creates its icon. An icon that starts with 'fa-'
--- is drawn as a FontAwesome icon, any other is loaded as an image.
--- @param attribute_table [AttributeBase attribute definition]
-function PANEL:set_attribute(attribute_table)
-  local icon = attribute_table.icon
-
-  self.attribute_table = attribute_table
-  self.tooltip_level = nil
+--- Creates the icon of the row. An icon that starts with 'fa-' is drawn as a FontAwesome
+-- icon, any other is loaded as an image.
+-- @param icon=nil [String FontAwesome icon name or path of an image]
+function PANEL:set_icon(icon)
   self.fa_icon = nil
 
   if IsValid(self.image) then
@@ -464,14 +556,40 @@ function PANEL:set_attribute(attribute_table)
       self.image:SetMouseInputEnabled(false)
     end
   end
+end
 
+--- Sets the attribute this row shows and creates its icon.
+-- @param attribute_table [AttributeBase attribute definition]
+function PANEL:set_attribute(attribute_table)
+  self.attribute_table = attribute_table
+  self.skill_table = false
+  self.tooltip_level = nil
+
+  self:set_icon(attribute_table.icon)
+  self:update()
+end
+
+--- Sets the skill this row shows and creates its icon.
+-- @param skill_table [SkillBase skill definition]
+function PANEL:set_skill(skill_table)
+  self.skill_table = skill_table
+  self.attribute_table = false
+  self.tooltip_level = nil
+
+  self:set_icon(skill_table.icon)
   self:update()
 end
 
 --- Returns the attribute this row shows.
--- @return [AttributeBase the attribute definition, or false if none has been set]
+-- @return [AttributeBase the attribute definition, or false if the row shows none]
 function PANEL:get_attribute()
   return self.attribute_table
+end
+
+--- Returns the skill this row shows.
+-- @return [SkillBase the skill definition, or false if the row shows none]
+function PANEL:get_skill()
+  return self.skill_table
 end
 
 --- Sets the data of the attribute and brings the row up to date with it.
@@ -483,31 +601,48 @@ function PANEL:set_data(data)
   self:update()
 end
 
+--- Sets the rank of the skill and brings the row up to date with it.
+-- @param rank [Number rank of the skill; anything else shows rank 0]
+function PANEL:set_rank(rank)
+  self.rank = tonumber(rank) or 0
+
+  self:update()
+end
+
 --- Returns the height the row needs: taller if it has a line of details.
 -- @return [Number]
 function PANEL:get_row_height()
   return math_scale(self.detailed and 82 or 58)
 end
 
---- Builds the tooltip of the row: the description of the attribute, the description of
--- the given level if the attribute has one, and the effects the attribute lists.
--- @param level [Number level the tooltip is for, boosts counted]
+--- Builds the tooltip of the row: the description of the attribute or the skill, the
+-- description of the given level or rank if there is one, and the effects an attribute
+-- lists.
+-- @param level [Number level the tooltip is for, boosts counted, or rank of a skill]
 -- @return [String]
 function PANEL:build_tooltip(level)
+  local skill_table = self.skill_table
   local attribute_table = self.attribute_table
+  local definition = skill_table or attribute_table
   local wrap_font, wrap_width = 'DermaDefault', 420
   local lines = {}
 
-  table.Add(lines, util.wrap_text(translate(attribute_table.description), wrap_font, wrap_width) or {})
+  table.Add(lines, util.wrap_text(translate(definition.description), wrap_font, wrap_width) or {})
 
-  local level_description = attribute_table:get_level_description(level)
+  local level_description
+
+  if skill_table then
+    level_description = skill_table:get_rank_description(level)
+  else
+    level_description = attribute_table:get_level_description(level)
+  end
 
   if level_description then
     table.insert(lines, '')
     table.Add(lines, util.wrap_text(translate(level_description), wrap_font, wrap_width) or {})
   end
 
-  if istable(attribute_table.effects) then
+  if attribute_table and istable(attribute_table.effects) then
     local effect_lines = {}
 
     for k, v in ipairs(attribute_table.effects) do
@@ -525,14 +660,61 @@ function PANEL:build_tooltip(level)
   return table.concat(lines, '\n')
 end
 
---- Recalculates what the row shows from its attribute and data: the texts, the fractions
--- of the bars and, when the level has changed, the tooltip. Does nothing if no attribute is
--- set.
+--- Recalculates what the row shows from its skill and rank or from its attribute and data.
+-- Does nothing if neither is set.
 function PANEL:update()
+  if self.skill_table then
+    self:update_skill()
+  elseif self.attribute_table then
+    self:update_attribute()
+  end
+end
+
+--- Recalculates what the row of a skill shows from its rank: the texts, the fraction of the
+-- bar and, when the rank has changed, the tooltip.
+function PANEL:update_skill()
+  local skill_table = self.skill_table
+  local max = skill_table.max
+  local rank = self.rank
+  local rank_name = skill_table:get_rank_name(rank)
+  local fraction = max > 0 and math_clamp(rank / max, 0, 1) or 1
+
+  self.boost = 0
+  self.detailed = false
+  self.name_text = translate(skill_table.name)
+
+  if skill_table.hidden then
+    self.name_text = self.name_text..' '..translate('ui.attributes.hidden')
+  end
+
+  if rank_name then
+    self.value_text = translate('ui.attributes.level_named', {
+      name = translate(rank_name),
+      level = format_number(rank)
+    })
+  else
+    self.value_text = translate('ui.attributes.level', {
+      level = format_number(rank),
+      max = format_number(max)
+    })
+  end
+
+  self.boost_text = ''
+  self.level_fraction = fraction
+  self.boosted_fraction = fraction
+  self.details_text = ''
+
+  if self.tooltip_level != rank then
+    self.tooltip_level = rank
+
+    self:SetTooltip(self:build_tooltip(rank))
+  end
+end
+
+--- Recalculates what the row of an attribute shows from its data: the texts, the fractions
+-- of the bars and, when the level has changed, the tooltip.
+function PANEL:update_attribute()
   local attribute_table = self.attribute_table
-
-  if !attribute_table then return end
-
   local data = self.data or {}
   local min, max = attribute_table.min, attribute_table.max
   local base_level = tonumber(data.level) or attribute_table.default

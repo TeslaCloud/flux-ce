@@ -311,10 +311,10 @@ function D20:get_variables(attacker, damage_info)
     variables.level = tonumber(attacker:get_level()) or 1
   end
 
-  if Attributes and ATTRIBUTE_STAT then
+  if Attributes then
     local has_modifiers = is_player and isfunction(attacker.get_attribute_modifier)
 
-    for id in pairs(Attributes.get_by_type(ATTRIBUTE_STAT)) do
+    for id in pairs(Attributes.get_stored()) do
       variables[id] = has_modifiers and tonumber(attacker:get_attribute_modifier(id)) or 0
     end
   end

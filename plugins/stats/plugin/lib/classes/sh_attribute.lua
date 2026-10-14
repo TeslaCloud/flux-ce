@@ -1,6 +1,6 @@
---- Definition of an attribute: its name, description, category, icon and type, its level
--- range (`min`, `max`, `default`, and `creation_max`, the highest level a new character can
--- pick for a stat), and the `boostable`, `boost_limited` and `hidden` flags.
+--- Definition of an attribute: its name, description, category and icon, its level range
+-- (`min`, `max`, `default`, and `creation_max`, the highest level a new character can pick),
+-- and the `boostable`, `boost_limited` and `hidden` flags.
 -- A file in a plugin's `attributes` folder fills in an `AttributeBase` through the
 -- `ATTRIBUTE` global; `Attributes.register` supplies the defaults of the missing fields.
 --
@@ -10,14 +10,9 @@
 -- `attribute.level.<id>` otherwise. The default `level_order` is the nine step ladder from
 -- 'terrible' through 'superb' to 'heroic' and 'legendary', which fits an attribute that goes
 -- from -3 to 5.
---
--- A skill can name the stat it relies on in its `attribute` field, the ID of that stat. The
--- level of that stat is added to every roll of the skill, and the character sheet groups the
--- skill under it.
 -- ```
 -- -- attributes/sh_endurance.lua
 -- ATTRIBUTE.name = 'attribute.endurance.title'
--- ATTRIBUTE.type = ATTRIBUTE_STAT
 -- ATTRIBUTE.min = -3
 -- ATTRIBUTE.max = 5
 -- ATTRIBUTE.default = 0
@@ -26,11 +21,6 @@
 --   fair = 'attribute.endurance.fair',
 --   terrible = 'attribute.endurance.terrible'
 -- }
---
--- -- attributes/sh_athletics.lua
--- ATTRIBUTE.name = 'attribute.athletics.title'
--- ATTRIBUTE.type = ATTRIBUTE_SKILL
--- ATTRIBUTE.attribute = 'strength'
 -- ```
 
 class 'AttributeBase'
@@ -44,7 +34,6 @@ AttributeBase.level_order = {
 -- local attribute = AttributeBase.new('strength')
 -- attribute.name = 'attribute.strength.name'
 -- attribute.description = 'attribute.strength.desc'
--- attribute.type = ATTRIBUTE_STAT
 -- attribute.max = 20
 -- attribute:register()
 -- ```

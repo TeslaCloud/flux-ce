@@ -778,21 +778,24 @@ do
       return changed
     end
 
-    --- Spends one unspent point on an attribute of a type, raising it by one level.
+    --- Spends one unspent point on a skill or a stat, raising it by one.
     -- @param target [Player]
-    -- @param attribute_id [String]
-    -- @param attribute_type [Number ATTRIBUTE_SKILL or ATTRIBUTE_STAT]
+    -- @param id [String ID of the skill or the stat]
     -- @param pool_key [String character data key of the unspent points]
+    -- @param handlers [Map functions that work on the skill or the stat: find (taking the ID
+    --   and returning the definition, nil if it is not registered), get (taking the player
+    --   and the ID and returning the Number current value without boosts) and raise (taking
+    --   the player and the ID and raising the value by one)]
     -- @param errors [Map phrases to return: invalid, empty and maxed]
     -- @return [Boolean true if the point was spent, String phrase of the reason otherwise]
-    local function spend_point(target, attribute_id, attribute_type, pool_key, errors)
+    local function spend_point(target, id, pool_key, handlers, errors)
       if !target:is_character_loaded() then
         return false, 'error.levels.no_active_character'
       end
 
-      local attribute = isstring(attribute_id) and Attributes.find(attribute_id)
+      local definition = isstring(id) and handlers.find(id)
 
-      if !attribute or attribute.type != attribute_type then
+      if !definition then
         return false, errors.invalid
       end
 
@@ -802,15 +805,15 @@ do
         return false, errors.empty
       end
 
-      local level = target:get_attribute(attribute_id, true)
+      local value = handlers.get(target, id)
 
-      if level >= attribute.max then
+      if value >= definition.max then
         return false, errors.maxed
       end
 
-      target:increase_attribute(attribute_id, 1)
+      handlers.raise(target, id)
 
-      if target:get_attribute(attribute_id, true) <= level then
+      if handlers.get(target, id) <= value then
         return false, 'error.levels.cannot_raise'
       end
 
@@ -822,34 +825,45 @@ do
       return true
     end
 
-    --- Spends one unspent skill point of the player's character on a skill (an attribute of
-    -- type ATTRIBUTE_SKILL), raising it by one rank. Refused when the skill is not
-    -- registered, the character has no skill points left or the skill is at its highest
-    -- rank. Server only.
-    -- @param skill_id [String attribute ID of the skill]
+    local skill_handlers = {
+      find = function(id) return Skills.find(id) end,
+      get = function(target, id) return target:get_skill(id) end,
+      raise = function(target, id) target:increase_skill(id, 1) end
+    }
+
+    local attribute_handlers = {
+      find = function(id) return Attributes.find(id) end,
+      get = function(target, id) return target:get_attribute(id, true) end,
+      raise = function(target, id) target:increase_attribute(id, 1) end
+    }
+
+    --- Spends one unspent skill point of the player's character on a skill of the Stats
+    -- plugin, raising it by one rank. Refused when the skill is not registered, the
+    -- character has no skill points left or the skill is at its highest rank. Server only.
+    -- @param skill_id [String ID of the skill]
     -- @return [Boolean true if the point was spent, String phrase of the reason otherwise:
     --   'error.levels.no_active_character', 'error.levels.invalid_skill',
     --   'error.levels.no_skill_points', 'error.levels.skill_maxed' or
     --   'error.levels.cannot_raise']
     function player_meta:spend_skill_point(skill_id)
-      return spend_point(self, skill_id, ATTRIBUTE_SKILL, 'skill_points', {
+      return spend_point(self, skill_id, 'skill_points', skill_handlers, {
         invalid = 'error.levels.invalid_skill',
         empty = 'error.levels.no_skill_points',
         maxed = 'error.levels.skill_maxed'
       })
     end
 
-    --- Spends one unspent attribute point of the player's character on a stat (an attribute
-    -- of type ATTRIBUTE_STAT), raising it by one level. Refused when the stat is not
-    -- registered, the character has no attribute points left or the stat is at its highest
-    -- level. Server only.
+    --- Spends one unspent attribute point of the player's character on a stat of the Stats
+    -- plugin, raising it by one level. Refused when the stat is not registered, the
+    -- character has no attribute points left or the stat is at its highest level. Server
+    -- only.
     -- @param stat_id [String attribute ID of the stat]
     -- @return [Boolean true if the point was spent, String phrase of the reason otherwise:
     --   'error.levels.no_active_character', 'error.levels.invalid_stat',
     --   'error.levels.no_attribute_points', 'error.levels.stat_maxed' or
     --   'error.levels.cannot_raise']
     function player_meta:spend_attribute_point(stat_id)
-      return spend_point(self, stat_id, ATTRIBUTE_STAT, 'attribute_points', {
+      return spend_point(self, stat_id, 'attribute_points', attribute_handlers, {
         invalid = 'error.levels.invalid_stat',
         empty = 'error.levels.no_attribute_points',
         maxed = 'error.levels.stat_maxed'

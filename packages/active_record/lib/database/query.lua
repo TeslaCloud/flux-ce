@@ -441,7 +441,7 @@ local function build_update_query(query_obj)
     for i = 1, #update_list do
       local entry = update_list[i]
 
-      assignments[i] = entry[1]..' = '..query_obj:bind(entry[2])
+      assignments[i] = query_obj:quote_column(entry[1])..' = '..query_obj:bind(entry[2])
     end
 
     query_string[4] = ' '..concat(assignments, ', ')

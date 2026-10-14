@@ -2,28 +2,28 @@ ru:
   config:
     d20:
       title: D20
-      desc: Dice damage, NPC health, armor class and attack rolls.
+      desc: Урон кубиками, здоровье NPC, класс брони и броски атаки.
       enabled:
-        name: Dice Damage
-        desc: "Roll dice for the damage of every hit on a player or an NPC instead of using the damage of the engine, roll fall damage and scale the health of NPCs."
+        name: Урон кубиками
+        desc: "Бросать кубики для урона каждого попадания по игроку или NPC вместо урона движка, бросать кубики для урона от падения и масштабировать здоровье NPC."
       default_dice:
-        name: Default Damage Dice
-        desc: "The dice formula rolled for a hit that no weapon, NPC or damage type gives a formula for and whose engine damage is 0."
+        name: Кубики урона по умолчанию
+        desc: "Формула кубиков, которая бросается для попадания, для которого ни оружие, ни NPC, ни тип урона не задают формулу и урон которого по движку равен 0."
       fall_dice:
-        name: Fall Damage Dice
-        desc: "The dice formula of fall damage. The steps variable is 1 for the slowest fall that hurts and grows by 1 for every 150 units per second of fall speed. The Fall Damage Multiplier of the Damage plugin still applies."
+        name: Кубики урона от падения
+        desc: "Формула кубиков урона от падения. Переменная steps равна 1 для самого медленного падения, которое наносит урон, и растёт на 1 за каждые 150 юнитов в секунду скорости падения. Множитель урона от падения из плагина Damage по-прежнему действует."
       weapon_dice:
-        name: Weapon Damage Dice
-        desc: "Entries like 'weapon_pistol = 1d8' that set the dice formula of a weapon or projectile class, over the formula the code gives it."
+        name: Кубики урона оружия
+        desc: "Записи вида 'weapon_pistol = 1d8', которые задают формулу кубиков для класса оружия или снаряда поверх формулы, заданной в коде."
       npc_dice:
-        name: NPC Damage Dice
-        desc: "Entries like 'npc_zombie = 1d8' that set the dice formula of the attacks of an NPC class, over the formula the code gives it. An NPC that holds a weapon rolls the dice of the weapon."
+        name: Кубики урона NPC
+        desc: "Записи вида 'npc_zombie = 1d8', которые задают формулу кубиков для атак класса NPC поверх формулы, заданной в коде. NPC с оружием в руках бросает кубики оружия."
       npc_health_scale:
-        name: NPC Health Scale
-        desc: "What the maximum health of an NPC is multiplied by when it spawns, so that it lasts about as many rolled hits as it would last hits of the engine."
+        name: Множитель здоровья NPC
+        desc: "На что умножается максимальное здоровье NPC при появлении, чтобы он выдерживал примерно столько же попаданий с бросками, сколько выдержал бы попаданий движка."
       npc_armor_class:
-        name: NPC Armor Class
-        desc: "The armor class of an NPC: what an attack roll against it has to reach to hit."
+        name: Класс брони NPC
+        desc: "Класс брони NPC: чего должен достичь бросок атаки против него, чтобы попасть."
       npc_attack_bonus:
-        name: NPC Attack Bonus
-        desc: "What an NPC adds to the d20 of its attack rolls."
+        name: Бонус атаки NPC
+        desc: "Что NPC прибавляет к d20 своих бросков атаки."

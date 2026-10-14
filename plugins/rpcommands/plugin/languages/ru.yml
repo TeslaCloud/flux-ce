@@ -32,8 +32,8 @@ ru:
     itsremove:
       description: Удалить надпись, на которую вы смотрите.
     roll:
-      description: "Roll dice: a d20 without an argument, a die with that many sides for a number, a stat or a skill by its name, or a dice formula such as 2d6 + 3, 4d6kh3 or 1d20 + stealth. Looking at a nearby player rolls the same for both of you."
-      syntax: "[sides, stat, skill or formula]"
+      description: "Бросить кубики: d20 без аргумента, кубик с указанным числом граней для числа, характеристику или навык по названию либо формулу кубиков вроде 2d6 + 3, 4d6kh3 или 1d20 + stealth. Если смотреть на игрока поблизости, такой же бросок делается и за него."
+      syntax: "[граней, характеристика, навык или формула]"
   config:
     roleplay_chat:
       title: Ролевой чат
@@ -55,7 +55,7 @@ ru:
         desc: Делать ли бросок и за игрока поблизости, на которого смотрит бросающий.
   error:
     roll:
-      invalid: "Cannot roll that: {message}"
+      invalid: "Не удалось сделать бросок: {message}"
     its_too_close: Слишком близко к другому описанию местности.
     speak:
       dead: Вы не можете говорить и действовать, пока вы мертвы.
@@ -94,10 +94,10 @@ ru:
       say: "говорит"
       yell: "кричит"
       whisper: "шепчет"
-      roll: "has rolled {roll}."
-      roll_named: "has rolled {name}: {roll}."
-      roll_versus: "has rolled {roll} against"
-      roll_versus_named: "has rolled {name}: {roll} against"
-      roll_versus_reply: ", who has rolled {roll}."
-      roll_critical_success: "(critical success)"
-      roll_critical_failure: "(critical failure)"
+      roll: "выбрасывает {roll}."
+      roll_named: "выбрасывает {name}: {roll}."
+      roll_versus: "выбрасывает {roll} против игрока"
+      roll_versus_named: "выбрасывает {name}: {roll} против игрока"
+      roll_versus_reply: ", который выбрасывает {roll}."
+      roll_critical_success: "(критический успех)"
+      roll_critical_failure: "(критический провал)"

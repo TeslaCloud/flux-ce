@@ -1,7 +1,7 @@
 --- Rolls of the Stats plugin, on both realms. A roll is a twenty-sided die plus a modifier,
--- worked out by the `Dice` library: the modifier of a stat is its level, boosts included,
--- and the modifier of a skill is the level of its key stat (the `attribute` field of the
--- skill) plus the proficiency of the character in the skill. An untrained skill has no
+-- worked out by the `Dice` library: the modifier of an attribute is its level, boosts
+-- included, and the modifier of a skill is the level of its key stat (the `attribute` field
+-- of the skill) plus the proficiency of the character in the skill. An untrained skill has no
 -- proficiency; a trained one has its rank times the `stats_rank_bonus` config, plus the
 -- level of the character from the Levels plugin, or 1 without it.
 -- ```
@@ -13,8 +13,9 @@
 -- The AdjustAttributeRoll hook can change the formula of a roll before it is rolled, and
 -- the result reports a natural 20 or 1 in its `critical` field.
 --
--- This file is included before the attributes folder and before sh_plugin.lua, which is why
--- it makes the plugin available as the `Stats` global if no other file has done so yet.
+-- This file is included before the attributes and skills folders and before sh_plugin.lua,
+-- which is why it makes the plugin available as the `Stats` global if no other file has done
+-- so yet.
 
 local tonumber = tonumber
 local math_floor = math.floor
@@ -49,28 +50,15 @@ function Stats:get_character_level(target)
   return 1
 end
 
---- Returns the kind of roll an attribute is rolled with.
--- @param attribute_table [AttributeBase]
--- @return [String 'attribute' for a stat, 'skill' for a skill; nil for any other attribute]
-function Stats:get_roll_kind(attribute_table)
-  if !istable(attribute_table) then return end
-
-  if attribute_table.type == ATTRIBUTE_STAT then
-    return 'attribute'
-  elseif attribute_table.type == ATTRIBUTE_SKILL then
-    return 'skill'
-  end
-end
-
 --- Returns the proficiency of a player in a skill: 0 while the skill is untrained, else the
--- rank of the skill, boosts included, times the rank bonus, plus the level of the character.
+-- rank of the skill times the rank bonus, plus the level of the character.
 -- @param target [Player]
 -- @param skill_id [String ID of the skill]
 -- @return [Number]
 -- @see [Stats:get_rank_bonus]
 -- @see [Stats:get_character_level]
 function Stats:get_proficiency(target, skill_id)
-  local rank = math_floor(target:get_attribute(skill_id))
+  local rank = math_floor(target:get_skill(skill_id))
 
   if rank <= 0 then
     return 0
@@ -95,17 +83,42 @@ function Stats:get_roll_formula(modifier)
   return '1d20'
 end
 
---- Finds the stat or the skill that a player has named, for example as the argument of a
--- command. The name may be the ID of the attribute, or its title or its short name (the
--- phrase `attribute.<id>.short`) in any language, in any case and with spaces or
--- underscores. An ID wins over a title or a short name.
+--- Finds the definition whose title or short name, in any of the given languages, matches
+-- a normalised name.
+-- @param definitions [Map definitions keyed by ID, each with a name phrase]
+-- @param prefix [String start of the short phrase, 'attribute.' or 'skill.'; the phrase is
+--   `<prefix><id>.short`]
+-- @param id [String the name, stripped and converted with `to_id`]
+-- @param languages [List<String> language codes to compare in]
+-- @return [String ID and the definition, or nil if none matches]
+local function find_by_title(definitions, prefix, id, languages)
+  for k, v in pairs(definitions) do
+    local short = prefix..k..'.short'
+
+    for i = 1, #languages do
+      local lang = languages[i]
+
+      if t(v.name, nil, lang):to_id() == id or t(short, nil, lang):to_id() == id then
+        return k, v
+      end
+    end
+  end
+end
+
+--- Finds the attribute or the skill that a player has named, for example as the argument
+-- of a command. The name may be the ID of an attribute or a skill, or its title or its short
+-- name (the phrase `attribute.<id>.short` or `skill.<id>.short`) in any language, in any case
+-- and with spaces or underscores. An attribute ID wins over a skill ID, and an ID wins over a
+-- title or a short name.
 -- ```
--- Stats:find_rollable('Close Combat') -- { id = 'close_combat', kind = 'skill' }
--- Stats:find_rollable('str')          -- { id = 'strength', kind = 'attribute' }
+-- Stats:find_rollable('Close Combat')
+-- -- { id = 'close_combat', kind = 'skill', name = 'skill.close_combat.title' }
+-- Stats:find_rollable('str')
+-- -- { id = 'strength', kind = 'attribute', name = 'attribute.strength.title' }
 -- ```
 -- @param name [String]
--- @return [Map id (String attribute ID) and kind ('attribute' or 'skill'); nil if no stat
---   or skill goes by that name]
+-- @return [Map id (String ID of the attribute or the skill), kind ('attribute' or 'skill')
+--   and name (String phrase of its title); nil if no attribute or skill goes by that name]
 function Stats:find_rollable(name)
   if !isstring(name) then return end
 
@@ -113,33 +126,29 @@ function Stats:find_rollable(name)
 
   if id == '' then return end
 
-  local rollable = {}
+  local attribute_table = Attributes.find(id)
 
-  for k, v in pairs(Attributes.get_stored()) do
-    local kind = self:get_roll_kind(v)
+  if attribute_table then
+    return { id = id, kind = 'attribute', name = attribute_table.name }
+  end
 
-    if kind then
-      if k == id then
-        return { id = k, kind = kind }
-      end
+  local skill = Skills.find(id)
 
-      rollable[k] = kind
-    end
+  if skill then
+    return { id = id, kind = 'skill', name = skill.name }
   end
 
   local languages = Flux.Lang:get_languages()
+  local attribute_id, attribute_match = find_by_title(Attributes.get_stored(), 'attribute.', id, languages)
 
-  for k, kind in pairs(rollable) do
-    local attribute_table = Attributes.find(k)
-    local short = 'attribute.'..k..'.short'
+  if attribute_id then
+    return { id = attribute_id, kind = 'attribute', name = attribute_match.name }
+  end
 
-    for i = 1, #languages do
-      local lang = languages[i]
+  local skill_id, skill_match = find_by_title(Skills.get_stored(), 'skill.', id, languages)
 
-      if t(attribute_table.name, nil, lang):to_id() == id or t(short, nil, lang):to_id() == id then
-        return { id = k, kind = kind }
-      end
-    end
+  if skill_id then
+    return { id = skill_id, kind = 'skill', name = skill_match.name }
   end
 end
 
@@ -204,9 +213,9 @@ do
   -- @return [Number 0 if the skill is not registered]
   -- @see [Stats:get_proficiency]
   function player_meta:get_skill_modifier(skill_id)
-    local skill = Attributes.find(skill_id)
+    local skill = Skills.find(skill_id)
 
-    if !skill or skill.type != ATTRIBUTE_SKILL then
+    if !skill then
       return 0
     end
 
@@ -232,9 +241,7 @@ do
   -- @return [Map the result of `Dice.roll`, or nil and String the reason if nothing was
   --   rolled]
   function player_meta:roll_attribute(stat_id)
-    local attribute_table = Attributes.find(stat_id)
-
-    if Stats:get_roll_kind(attribute_table) != 'attribute' then
+    if !Attributes.find(stat_id) then
       return nil, t('error.stats.not_stat', { name = tostring(stat_id) })
     end
 
@@ -248,9 +255,7 @@ do
   --   rolled]
   -- @see [Player#get_skill_modifier]
   function player_meta:roll_skill(skill_id)
-    local attribute_table = Attributes.find(skill_id)
-
-    if Stats:get_roll_kind(attribute_table) != 'skill' then
+    if !Skills.find(skill_id) then
       return nil, t('error.stats.not_skill', { name = tostring(skill_id) })
     end
 

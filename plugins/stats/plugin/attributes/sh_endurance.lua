@@ -7,7 +7,6 @@
 ATTRIBUTE.name = 'attribute.endurance.title'
 ATTRIBUTE.description = 'attribute.endurance.description'
 ATTRIBUTE.icon = 'flux/icons/hearts.png'
-ATTRIBUTE.type = ATTRIBUTE_STAT
 ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3

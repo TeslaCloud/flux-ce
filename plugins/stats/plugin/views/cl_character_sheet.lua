@@ -15,8 +15,9 @@ PANEL.update_interval = 0.5
 
 --- Builds a string out of everything the sheet shows that the server can change: the name
 -- and the faction of the character, its level, experience, health and unspent points, the
--- config the proficiency depends on and the level and visibility of every attribute. The
--- string differs whenever the sheet would look different.
+-- config the proficiency depends on, the level and visibility of every attribute and the
+-- rank and visibility of every skill. The string differs whenever the sheet would look
+-- different.
 -- @return [String]
 local function get_state_key()
   local actor = PLAYER
@@ -46,6 +47,12 @@ local function get_state_key()
   for id, attribute_table in SortedPairs(Attributes.get_stored()) do
     if Attributes.is_visible(attribute_table, actor) then
       parts[#parts + 1] = id..'='..tostring(actor:get_attribute(id))..'/'..tostring(actor:get_attribute(id, true))
+    end
+  end
+
+  for id, skill in SortedPairs(Skills.get_stored()) do
+    if Skills.is_visible(skill, actor) then
+      parts[#parts + 1] = 'skill:'..id..'='..tostring(actor:get_skill(id))
     end
   end
 

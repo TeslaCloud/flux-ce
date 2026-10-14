@@ -1,17 +1,18 @@
 --- Client side of the Stats plugin: adds the stats stage to character creation, words the
 -- refusal of a character whose stat levels the server did not accept, adds the character
 -- sheet to the tab menu as its first and default page, and opens the window that shows a
--- member of staff the attributes of another player's character when the server sends them,
--- which the CharAttributes command makes it do.
+-- member of staff the attributes and skills of another player's character when the server
+-- sends them, which the CharAttributes command makes it do.
 
---- Opens a window that lists the given attributes of a player's character, hidden
--- attributes included. The list is a snapshot: it does not follow later changes. A window
+--- Opens a window that lists the given attributes and skills of a player's character,
+-- hidden ones included. The list is a snapshot: it does not follow later changes. A window
 -- that is still open from an earlier call is replaced.
--- @param target [Player player the attributes belong to]
+-- @param target [Player player the attributes and skills belong to]
 -- @param attributes [Map attribute data keyed by attribute ID, as `Player:get_attributes`
 --   returns it]
+-- @param skills=nil [Map Number ranks keyed by skill ID, as `Player:get_skills` returns it]
 -- @return [Panel the `fl_frame` that was opened]
-function Attributes.open_viewer(target, attributes)
+function Attributes.open_viewer(target, attributes, skills)
   if IsValid(Attributes.viewer) then
     Attributes.viewer:safe_remove()
   end
@@ -28,7 +29,7 @@ function Attributes.open_viewer(target, attributes)
 
   local attribute_list = vgui.Create('fl_attributes', frame)
   attribute_list:Dock(FILL)
-  attribute_list:set_snapshot(target, attributes)
+  attribute_list:set_snapshot(target, attributes, skills)
   attribute_list:rebuild()
 
   frame.attribute_list = attribute_list
@@ -88,8 +89,8 @@ function Stats:GetCharCreationErrorText(success, status)
   end
 end
 
-Cable.receive('fl_attributes_view', function(target, attributes)
+Cable.receive('fl_attributes_view', function(target, attributes, skills)
   if !istable(attributes) then return end
 
-  Attributes.open_viewer(target, attributes)
+  Attributes.open_viewer(target, attributes, skills)
 end)

@@ -6,7 +6,6 @@
 ATTRIBUTE.name = 'attribute.intelligence.title'
 ATTRIBUTE.description = 'attribute.intelligence.description'
 ATTRIBUTE.icon = 'flux/icons/bookmarklet.png'
-ATTRIBUTE.type = ATTRIBUTE_STAT
 ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3

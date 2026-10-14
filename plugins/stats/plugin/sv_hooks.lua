@@ -1,11 +1,13 @@
---- Server side of the Stats plugin: gives characters their attribute records, networks a
--- character's attributes when it becomes active and removes its boosts as they expire,
--- checks the stats of new characters, keeps the stat bonuses of the faction on every
--- character, applies the effects of the stats through the hooks of the Chatbox, Stamina,
--- Pickup Objects, Damage, Limb Damage and Vendors plugins, and rolls the stats and skills
--- that a player asks for with the 'fl_stats_roll' message. A handler of a plugin that is not
--- loaded is never called. The 'fl_attributes_view' message, which the CharAttributes command
--- sends to show a character's attributes to a member of staff, is registered here.
+--- Server side of the Stats plugin: gives characters their attribute and skill records,
+-- networks a character's attributes and skills when it becomes active and removes its boosts
+-- as they expire, checks the stats of new characters, keeps the stat bonuses of the faction
+-- on every character, applies the effects of the stats through the hooks of the Chatbox,
+-- Stamina, Pickup Objects, Damage, Limb Damage and Vendors plugins, and rolls the attributes
+-- and skills that a player asks for with the 'fl_stats_roll' message. A handler of a plugin
+-- that is not loaded is never called. The 'fl_attributes_view' message, which the
+-- CharAttributes command sends to show a character's attributes and skills to a member of
+-- staff, is registered here; it carries the player, their attributes as
+-- `Player:get_attributes` returns them and their skills as `Player:get_skills` returns them.
 
 local IsValid = IsValid
 local isnumber = isnumber
@@ -58,7 +60,7 @@ function Stats:apply_faction_bonuses(target, enabled)
 
   local changed = 0
 
-  for k, v in pairs(Attributes.get_by_type(ATTRIBUTE_STAT)) do
+  for k, v in pairs(Attributes.get_stored()) do
     local wanted, current = bonuses[k], self:get_faction_boost(target, k)
 
     if wanted and wanted != current then
@@ -76,25 +78,30 @@ function Stats:apply_faction_bonuses(target, enabled)
 end
 
 --- Adds an Attribute record for every registered attribute to a new character, using the
--- level chosen during creation or the attribute's default. A chosen level is rounded down
--- and kept between the attribute's min and max, as the creation data comes from the client.
+-- level chosen during creation or the attribute's default, and a Skill record at rank 0 for
+-- every registered skill. A chosen level is rounded down and kept between the attribute's
+-- min and max, as the creation data comes from the client.
 -- @param owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data; levels are read from its attributes field]
 function Stats:PostCreateCharacter(owner, char, char_data)
   Attributes.create_records(char, char_data.attributes)
+  Skills.create_records(char)
 end
 
---- Prepares the attributes of the character that has become active: adds records for the
--- attributes that were registered after the character was created, removes the boosts that
--- have expired or whose expiry time cannot be read, networks the attributes to the player
--- and gives the character the stat bonuses of its faction.
+--- Prepares the attributes and skills of the character that has become active: adds
+-- records for the attributes and skills that were registered after the character was
+-- created, removes the boosts that have expired or whose expiry time cannot be read,
+-- networks the attributes and skills to the player and gives the character the stat bonuses
+-- of its faction.
 -- @param owner [Player]
 -- @param character [Character the character that is now active]
 function Stats:OnActiveCharacterSet(owner, character)
   Attributes.create_records(character)
   Attributes.remove_expired(owner)
   Attributes.sync(owner)
+  Skills.create_records(character)
+  Skills.sync(owner)
 
   self:apply_faction_bonuses(owner)
 end
@@ -176,7 +183,7 @@ function Stats:PlayerCreateCharacter(actor, data)
     return CHAR_ERR_ATTRIBUTE_SUM
   end
 
-  local stats = Attributes.get_by_type(ATTRIBUTE_STAT)
+  local stats = Attributes.get_stored()
   local sum = 0
 
   for k, v in pairs(levels) do
@@ -330,42 +337,43 @@ function Stats:AdjustVendorPrice(actor, vendor, item_obj, price_info)
   price_info.price = price
 end
 
---- Rolls a stat or a skill of a player and shows the result to the players nearby, the way
+--- Rolls an attribute or a skill of a player and shows the result to the players nearby, the way
 -- the `roll` command of the RolePlay Commands plugin shows a roll. Without that plugin the
 -- result is shown to the player alone, as a notification. A roll that fails, such as one
 -- whose formula a handler of the AdjustAttributeRoll hook has broken, is reported to the
 -- player.
 -- @param actor [Player player who rolls]
--- @param id [String ID of a stat or a skill]
+-- @param id [String ID of an attribute or a skill; an attribute wins over a skill with the
+--   same ID]
 -- @return [Map the Dice result, or nil and String the reason if nothing was rolled]
 -- @see [Player#roll_attribute]
 -- @see [Player#roll_skill]
 function Stats:roll_and_announce(actor, id)
-  local attribute_table = Attributes.find(id)
-  local kind = attribute_table and self:get_roll_kind(attribute_table)
-
-  if !kind then
-    return nil, t('error.stats.unknown_rollable', { name = tostring(id) })
-  end
-
+  local definition = Attributes.find(id)
   local result, err
 
-  if kind == 'skill' then
-    result, err = actor:roll_skill(id)
-  else
+  if definition then
     result, err = actor:roll_attribute(id)
+  else
+    definition = Skills.find(id)
+
+    if !definition then
+      return nil, t('error.stats.unknown_rollable', { name = tostring(id) })
+    end
+
+    result, err = actor:roll_skill(id)
   end
 
   if !result then
-    actor:notify('error.stats.roll', { name = attribute_table.name, message = tostring(err) })
+    actor:notify('error.stats.roll', { name = definition.name, message = tostring(err) })
 
     return nil, err
   end
 
   if RPCommands and isfunction(RPCommands.announce_roll) then
-    RPCommands:announce_roll(actor, result, nil, nil, t(attribute_table.name))
+    RPCommands:announce_roll(actor, result, nil, nil, t(definition.name))
   else
-    actor:notify('notification.stats.roll', { name = attribute_table.name, roll = Dice.format(result) })
+    actor:notify('notification.stats.roll', { name = definition.name, roll = Dice.format(result) })
   end
 
   return result

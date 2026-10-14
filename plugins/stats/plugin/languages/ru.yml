@@ -2,15 +2,9 @@ ru:
   attribute:
     category:
       other: Прочее
-    rank:
-      untrained: Untrained
-      trained: Trained
-      expert: Expert
-      master: Master
-      legendary: Legendary
     level:
-      legendary: Legendary
-      heroic: Heroic
+      legendary: Легендарно
+      heroic: Героически
       superb: Супер
       great: Отлично
       good: Хорошо
@@ -27,14 +21,8 @@ ru:
       description:
         Физические способности и общая сила Вашего персонажа. Используется в силовых
         действиях типа выбивания дверей, поднятия тяжестей.
-      legendary:
-        Your strength is the stuff of stories. Feats that would take several people
-        are a matter of course for you, and few things can hold against your grip.
-        In melee, you are a force that very little can withstand.
-      heroic:
-        Your strength borders on the superhuman. Doors give way under your shoulder,
-        you carry a grown man without slowing down, and a single blow of yours can
-        end a fight.
+      legendary: О Вашей силе слагают легенды. То, на что нужно несколько человек, для Вас обычное дело, и мало что устоит в Вашей хватке. В ближнем бою Вы сила, которой почти ничто не может противостоять.
+      heroic: Ваша сила граничит со сверхчеловеческой. Двери поддаются под Вашим плечом, Вы несёте взрослого мужчину, не сбавляя шага, а один Ваш удар может закончить драку.
       superb: Ваша сила близка к пределу человеческих возможностей. Вы можете поднимать огромные грузы и наносить значительный урон в ближнем бою.
       great: Вы обладаете могучей силой. Вы хорошо справляетесь с подавляющим большинством физических нагрузок.
       good: Ваша сила выше среднего. Переноска тяжестей даётся вам легко, Вы также можете без труда переносить человеческое тело.
@@ -48,13 +36,8 @@ ru:
       description:
         Ловкость, скорость реакции, координация. Применяется для действий вроде
         карманных краж, взлома, акробатики, уклонений.
-      legendary:
-        Your reflexes defy belief. You catch what others never see falling, dance
-        through danger untouched, and no lock or pocket is safe from your fingers.
-      heroic:
-        Your reflexes are nearly preternatural. You move before others have even
-        decided to act, slip past blows as if you saw them coming, and your hands
-        never tremble.
+      legendary: Ваши рефлексы не укладываются в голове. Вы ловите то, падения чего другие даже не замечают, невредимым проходите сквозь опасность, и ни один замок или карман не защищён от Ваших пальцев.
+      heroic: Ваши рефлексы почти сверхъестественны. Вы действуете раньше, чем другие успевают решиться, уходите от ударов, словно предвидя их, и Ваши руки никогда не дрожат.
       superb: Вы невероятно ловки. Для исполнения сложнейших каскадёрских трюков Вам даже не нужна страховка.
       great: Вы весьма ловки. Вы можете легко забраться на высокую преграду, а также исполнять разнообразные акробатические трюки.
       good: Ваша ловкость выше среднего. Вы весьма быстро взбираетесь по лестницам и вряд ли потеряете равновесие в нормльной ситуации.
@@ -69,14 +52,8 @@ ru:
         Работа всех органов чувств, внимательность и осторожность персонажа. Влияет
         на действия, где важна точность - стрельба, броски предметов. Сюда также
         входит умение что-то заметить, вроде мелкой детали или скрывающегося противника.
-      legendary:
-        Nothing escapes you. You read a room the moment you step into it, pick out the
-        faintest sound over the din of the city, and an ambush meant for you is an
-        ambush you saw coming.
-      heroic:
-        Your senses are honed beyond anything ordinary. You hear a whisper through a
-        wall, pick a face out of a crowd at a glance, and almost nothing takes you
-        by surprise.
+      legendary: От Вас ничто не ускользает. Вы читаете обстановку, едва войдя в помещение, различаете тишайший звук сквозь городской шум, а засаду, устроенную на Вас, Вы видите заранее.
+      heroic: Ваши чувства отточены до необычайной остроты. Вы слышите шёпот сквозь стену, с одного взгляда выхватываете лицо из толпы, и почти ничто не застаёт Вас врасплох.
       superb: Вы обладаете незаурядной внимательностью. Вы можете легко обнаружить иголку в стоге сена.
       great: Ваша внимательность крайне высока. Вы можете заметить мельчайшие детали окружения.
       good: Вы весьма внимательны. Вас трудно обыграть в напёрстки.
@@ -91,12 +68,8 @@ ru:
         Физическая крепость и общая тренированность организма, телосложение и
         стойкость. Используется в проверках на иммунитет, отравление; сдерживание
         рвоты. От выносливости зависит то, как Ваш персонаж будет переносить ранения.
-      legendary:
-        Your endurance is unrivalled. Pain, hunger and exhaustion barely touch you,
-        and you keep standing long after anyone else would have collapsed.
-      heroic:
-        Your body is a fortress. You shrug off wounds that would fell others, march
-        for days on little food and sleep, and sickness simply passes you by.
+      legendary: Вашей выносливости нет равных. Боль, голод и изнеможение едва затрагивают Вас, и Вы остаётесь на ногах ещё долго после того, как любой другой свалился бы.
+      heroic: Ваше тело подобно крепости. Вы переносите раны, которые свалили бы других, идёте маршем много дней почти без еды и сна, а болезни просто обходят Вас стороной.
       superb: Ваша выносливость чрезвычайно высока. Вы можете перенести серьёзные ранения без значительных последствий для себя.
       great: Вы крайне выносливы. Вы почти не болеете и без труда осилите горный поход.
       good: Вы довольно выносливы. Физические нагрузки не сильно выматывают Вас.
@@ -111,12 +84,8 @@ ru:
         Умственные способности персонажа, его образованность и знание о мире.
         Может использоваться при работе со сложными устройствами или при поиске уязвимых
         мест противника.
-      legendary:
-        Your mind is one in a generation. There is hardly a subject you cannot grasp,
-        and your insight turns impossible situations into solvable ones.
-      heroic:
-        Your intellect is exceptional. You master new fields in days, see through
-        problems that stump experts, and plan several steps ahead of everyone around you.
+      legendary: Такой ум рождается раз в поколение. Едва ли найдётся предмет, который Вы не способны постичь, а Ваша проницательность превращает безвыходные ситуации в разрешимые.
+      heroic: Ваш интеллект исключителен. Вы осваиваете новые области за считанные дни, видите насквозь задачи, ставящие в тупик экспертов, и просчитываете всё на несколько шагов вперёд всех вокруг.
       superb: Вы - настоящий гений. Ваш IQ намного выше среднего, Ваши знания охватывают множество самых разных сфер.
       great: Вы крайне умны. Сложные науки даются Вам довольно легко.
       good: Ваш IQ выше среднего. Вы весьма эрудированны и можете решать большинство поставленных задач.
@@ -130,12 +99,8 @@ ru:
       description:
         Сила воли и стойкость духа Вашего персонажа. От решимости зависит то, как
         он держится под давлением и превозмогает боль и страх.
-      legendary:
-        Your will is a force of nature. No threat, no torment and no hopelessness can
-        make you yield, and your resolve steadies everyone around you.
-      heroic:
-        Your resolve is ironclad. Fear has no hold on you, and you fight on through
-        wounds and despair that would break almost anyone.
+      legendary: Ваша воля подобна стихии. Ни угрозы, ни мучения, ни безысходность не заставят Вас отступить, а Ваша решимость придаёт сил всем вокруг.
+      heroic: Ваша решимость несокрушима. Страх не имеет над Вами власти, и Вы продолжаете бороться сквозь раны и отчаяние, которые сломили бы почти любого.
       superb: Ваша воля несгибаема. Боль, страх и усталость Вы замечаете и просто отодвигаете в сторону. Вы продолжаете идти там, где любой другой давно бы сдался.
       great: У Вас очень сильная воля. Вас трудно вывести из равновесия, а раны, которые остановили бы большинство людей, Вас лишь замедляют.
       good: Ваша решимость выше среднего. Вы не теряете голову в трудной ситуации и можете перетерпеть боль, когда это необходимо.
@@ -144,225 +109,217 @@ ru:
       poor: Решимости у Вас немного. Вы легко поддаётесь боли и запугиванию и склонны отступать, когда становится тяжело.
       terrible: У Вас совсем нет воли. Малейшей боли или угрозы достаточно, чтобы полностью Вас сломить.
     charisma:
-      title: Charisma
-      short: CHA
-      description:
-        Presence and force of personality of your character. Affects haggling,
-        persuading, lying to and intimidating other characters.
-      legendary:
-        Your presence is magnetic beyond words. People hang on your every word,
-        follow you without question, and even your enemies find themselves wanting
-        your approval.
-      heroic:
-        You are captivating. A few words from you can calm a crowd or turn a
-        stranger into an ally, and you rarely leave a negotiation without what you
-        came for.
-      superb:
-        Your charm is remarkable. People warm to you instantly, trust you easily
-        and find it hard to say no to you.
-      great:
-        You are very likeable and persuasive. You read people well and know just
-        what to say to get them on your side.
-      good:
-        Your social skills are above average. You make a good impression, can talk
-        your way out of minor trouble and get fair deals from traders.
-      fair:
-        You get along with people like anyone else does. You can hold a conversation
-        and make your point, but nobody would call you a smooth talker.
-      mediocre:
-        You are somewhat awkward around others. Your words often come out wrong,
-        and people tend to overlook you or take you less seriously.
-      poor:
-        You put people off. Strangers distrust you, merchants overcharge you, and
-        your attempts to persuade anyone usually fall flat.
-      terrible:
-        You are off-putting to almost everyone. Conversations with you go wrong from
-        the first word, and people avoid you whenever they can.
+      title: Харизма
+      short: ХАР
+      description: Обаяние и сила характера Вашего персонажа. Влияет на торг, убеждение, обман и запугивание других персонажей.
+      legendary: Ваше обаяние невозможно описать словами. Люди ловят каждое Ваше слово, следуют за Вами без раздумий, и даже Ваши враги ловят себя на желании заслужить Ваше одобрение.
+      heroic: Вы пленяете людей. Пара Ваших слов способна успокоить толпу или превратить незнакомца в союзника, и Вы редко уходите с переговоров без того, за чем пришли.
+      superb: Ваше обаяние поразительно. Люди мгновенно проникаются к Вам симпатией, легко доверяют Вам, и им трудно Вам отказать.
+      great: Вы очень приятны в общении и убедительны. Вы хорошо разбираетесь в людях и знаете, что сказать, чтобы склонить их на свою сторону.
+      good: Ваши навыки общения выше среднего. Вы производите хорошее впечатление, можете отговориться от мелких неприятностей и получаете у торговцев честные цены.
+      fair: Вы ладите с людьми не хуже и не лучше других. Вы можете поддержать разговор и донести свою мысль, но никто не назовёт Вас мастером красноречия.
+      mediocre: Вы несколько неловки в общении. Ваши слова часто звучат не так, как задумано, и люди склонны не замечать Вас или не принимать всерьёз.
+      poor: Вы отталкиваете людей. Незнакомцы Вам не доверяют, торговцы завышают для Вас цены, а Ваши попытки кого-то убедить обычно проваливаются.
+      terrible: Вы отталкиваете почти всех. Разговоры с Вами не ладятся с первого слова, и люди избегают Вас, когда только могут.
+  skill:
+    rank:
+      untrained: Не обучен
+      trained: Обучен
+      expert: Эксперт
+      master: Мастер
+      legendary: Легенда
+    other:
+      name: Неизвестный навык
+      desc: У этого навыка нет описания.
     athletics:
-      title: Athletics
-      short: ATH
-      description: Running, climbing, jumping, swimming and other feats of raw physical exertion.
-      untrained: You have no training in athletics and rely on whatever fitness you happen to have.
-      trained: You know how to pace a run, climb a fence and swim without wasting your strength.
-      expert: You scale walls, sprint across rooftops and haul yourself out of trouble with practiced ease.
-      master: Your body is a finely tuned machine that can push through almost any physical obstacle.
-      legendary: Your athletic feats look impossible to onlookers, as if obstacles simply do not apply to you.
+      title: Атлетика
+      short: АТЛ
+      description: Бег, лазание, прыжки, плавание и другие проявления чистой физической силы.
+      untrained: У Вас нет атлетической подготовки, и Вы полагаетесь на ту форму, какая есть.
+      trained: Вы умеете распределять силы на бегу, перелезать через забор и плавать, не выбиваясь из сил.
+      expert: Вы взбираетесь по стенам, бежите по крышам и выбираетесь из передряг с отработанной лёгкостью.
+      master: Ваше тело подобно отлаженному механизму, способному преодолеть почти любое физическое препятствие.
+      legendary: Ваши атлетические подвиги кажутся зрителям невозможными, словно препятствия для Вас просто не существуют.
     close_combat:
-      title: Close Combat
-      short: MEL
-      description: "Fighting at arm's length with fists, blunt weapons, blades and batons."
-      untrained: You swing wildly and hope for the best when a fight gets close.
-      trained: You know how to throw a punch, hold a weapon properly and keep your guard up.
-      expert: You fight with skill and discipline, reading your opponent and striking where it hurts.
-      master: Few can stand against you up close, as you turn every opening into a decisive blow.
-      legendary: "Your skill is fearsome, and a fight at arm's length is one you have already won."
+      title: Ближний бой
+      short: БЛБ
+      description: Бой на расстоянии вытянутой руки кулаками, тупым оружием, клинками и дубинками.
+      untrained: Когда дело доходит до драки, Вы машете руками наугад и надеетесь на лучшее.
+      trained: Вы умеете бить кулаком, правильно держать оружие и не опускать защиту.
+      expert: Вы дерётесь умело и дисциплинированно, читая противника и ударяя туда, где больнее.
+      master: Мало кто устоит против Вас вблизи, ведь Вы обращаете каждую брешь в решающий удар.
+      legendary: Ваше мастерство внушает страх, и бой на расстоянии вытянутой руки Вы уже выиграли.
     acrobatics:
-      title: Acrobatics
-      short: ACR
-      description: Balance, tumbling, dodging and squeezing through tight spaces.
-      untrained: You keep your footing on flat ground, but little else.
-      trained: You can keep your balance on a narrow ledge and roll out of a fall.
-      expert: You vault, tumble and twist out of danger with graceful precision.
-      master: You move through cluttered terrain and falling debris as if it were an open street.
-      legendary: Your agility borders on the unreal, and gravity seems to bend to your will.
+      title: Акробатика
+      short: АКР
+      description: Равновесие, кувырки, уклонение и протискивание в узкие места.
+      untrained: Вы держитесь на ногах на ровной земле, но не более того.
+      trained: Вы можете удержать равновесие на узком карнизе и уйти в перекат при падении.
+      expert: Вы перемахиваете через преграды, кувыркаетесь и выворачиваетесь из опасности с изящной точностью.
+      master: Вы движетесь через завалы и падающие обломки, словно по открытой улице.
+      legendary: Ваша ловкость граничит с невероятным, и сама гравитация, кажется, подчиняется Вашей воле.
     stealth:
-      title: Stealth
-      short: STL
-      description: Moving unseen and unheard, hiding and shadowing others.
-      untrained: You are about as quiet as anyone else walking down a corridor.
-      trained: You know how to watch your step and keep to the shadows.
-      expert: You slip past patrols and cameras with little chance of being noticed.
-      master: You move like a ghost, and people only learn you were there long after you have gone.
-      legendary: You can vanish in plain sight, even under the closest watch.
+      title: Скрытность
+      short: СКР
+      description: Незаметное и бесшумное передвижение, укрытие и слежка за другими.
+      untrained: Вы примерно так же тихи, как любой, кто идёт по коридору.
+      trained: Вы знаете, как смотреть под ноги и держаться в тени.
+      expert: Вы проскальзываете мимо патрулей и камер почти без риска быть замеченным.
+      master: Вы движетесь как призрак, и люди узнают, что Вы были рядом, лишь много позже Вашего ухода.
+      legendary: Вы можете исчезнуть у всех на виду даже под самым пристальным наблюдением.
     larceny:
-      title: Larceny
-      short: LAR
-      description: Picking locks and pockets, sleight of hand and getting past security.
-      untrained: "You would not know where to start with a lock or a stranger's pocket."
-      trained: You can open simple locks and lift a loose wallet when nobody is looking.
-      expert: Most locks and pockets give way to your quick and careful hands.
-      master: You defeat complex locks and lift valuables from wary targets without a trace.
-      legendary: There is no lock you cannot open and no pocket you cannot empty unnoticed.
+      title: Воровство
+      short: ВОР
+      description: Взлом замков, карманные кражи, ловкость рук и обход охраны.
+      untrained: Вы не знали бы, с чего начать, окажись перед Вами замок или чужой карман.
+      trained: Вы можете открыть простой замок и вытащить плохо лежащий кошелёк, пока никто не смотрит.
+      expert: Большинство замков и карманов поддаётся Вашим быстрым и осторожным рукам.
+      master: Вы вскрываете сложные замки и вытаскиваете ценности у настороженных жертв, не оставляя следов.
+      legendary: Нет замка, который Вы не откроете, и кармана, который Вы не опустошите незаметно.
     marksmanship:
-      title: Marksmanship
-      short: MRK
-      description: Accuracy with firearms, crossbows and thrown weapons.
-      untrained: You know which end of a gun to point, but little more.
-      trained: You can hit a target at a reasonable range and handle a firearm safely.
-      expert: Your shots are steady and accurate even under pressure.
-      master: You place your shots precisely where you want them, at almost any range.
-      legendary: Your aim is uncanny, and a single shot from you is often all it takes.
+      title: Стрельба
+      short: СТР
+      description: Меткость при стрельбе из огнестрельного оружия, арбалетов и метательного оружия.
+      untrained: Вы знаете, каким концом направлять оружие, но не намного больше.
+      trained: Вы можете попасть в цель на разумном расстоянии и безопасно обращаться с огнестрельным оружием.
+      expert: Ваши выстрелы уверенны и точны даже под давлением.
+      master: Вы кладёте пули точно туда, куда хотите, почти на любом расстоянии.
+      legendary: Ваша меткость сверхъестественна, и одного Вашего выстрела часто достаточно.
     survival:
-      title: Survival
-      short: SUR
-      description: Finding food, water and shelter, keeping your bearings and enduring harsh conditions outdoors.
-      untrained: Away from the streets you know, you would be lost and hungry within a day.
-      trained: You can find clean water, build a basic shelter and keep your bearings.
-      expert: You live off the land comfortably and steer clear of the dangers of the wilds.
-      master: You thrive where others perish, reading terrain and weather like a book.
-      legendary: No wilderness, ruin or wasteland can kill you, however hard it tries.
+      title: Выживание
+      short: ВЫЖ
+      description: Поиск еды, воды и укрытия, ориентирование и стойкость к суровым условиям под открытым небом.
+      untrained: Вдали от знакомых улиц Вы заблудились бы и проголодались за один день.
+      trained: Вы можете найти чистую воду, соорудить простое укрытие и не терять направления.
+      expert: Вы с удобством живёте тем, что даёт земля, и избегаете опасностей дикой природы.
+      master: Вы процветаете там, где другие гибнут, читая местность и погоду как открытую книгу.
+      legendary: Ни дикая глушь, ни руины, ни пустошь не смогут Вас убить, как бы ни старались.
     fortitude:
-      title: Fortitude
-      short: FOR
-      description: Resisting poison, disease, hunger, cold and the toll of wounds.
-      untrained: "Your body is as vulnerable to illness and hardship as anyone's."
-      trained: You have learned to keep going through hunger, cold and minor illness.
-      expert: You shake off toxins and infections that would lay others low.
-      master: Your body withstands punishment that would kill most people.
-      legendary: Your constitution is nearly indomitable, and very little can bring you down.
+      title: Стойкость
+      short: СТК
+      description: Сопротивление ядам, болезням, голоду, холоду и последствиям ран.
+      untrained: Ваше тело так же уязвимо для болезней и лишений, как и у любого другого.
+      trained: Вы научились держаться, несмотря на голод, холод и лёгкие недомогания.
+      expert: Вы стряхиваете с себя яды и инфекции, которые уложили бы других.
+      master: Ваше тело выдерживает испытания, которые убили бы большинство людей.
+      legendary: Ваше здоровье почти несокрушимо, и очень немногое способно Вас свалить.
     observation:
-      title: Observation
-      short: OBS
-      description: Spotting details, noticing hidden things and reading a scene.
-      untrained: You notice what is right in front of you, and little else.
-      trained: You pick up on details that others walk past.
-      expert: You spot hidden things, tells and traps with a careful look.
-      master: Very little escapes your attention, however well it is concealed.
-      legendary: You see what others cannot, and the smallest detail tells you a whole story.
+      title: Наблюдательность
+      short: НАБ
+      description: Внимание к деталям, обнаружение скрытого и чтение обстановки.
+      untrained: Вы замечаете то, что прямо перед Вами, и немногим больше.
+      trained: Вы подмечаете детали, мимо которых проходят другие.
+      expert: Внимательно присмотревшись, Вы обнаруживаете тайники, невольные знаки и ловушки.
+      master: Очень немногое ускользает от Вашего внимания, как бы хорошо оно ни было скрыто.
+      legendary: Вы видите то, чего не видят другие, и мельчайшая деталь рассказывает Вам целую историю.
     scavenging:
-      title: Scavenging
-      short: SCV
-      description: Searching ruins and refuse for useful supplies and salvage.
-      untrained: You rummage through junk and mostly come away with junk.
-      trained: You know where to look for the useful odds and ends that others miss.
-      expert: You come back from every ruin with something worth having.
-      master: You find supplies where everyone else swears there is nothing left.
-      legendary: Even picked-clean ruins seem to give up their last treasures to you.
+      title: Собирательство
+      short: СОБ
+      description: Поиск полезных припасов и материалов в руинах и отбросах.
+      untrained: Вы роетесь в хламе и в основном уходите с хламом.
+      trained: Вы знаете, где искать полезные мелочи, которые другие упускают.
+      expert: Из каждых руин Вы возвращаетесь с чем-то стоящим.
+      master: Вы находите припасы там, где все остальные клянутся, что ничего не осталось.
+      legendary: Даже вычищенные до нитки руины, кажется, отдают Вам свои последние сокровища.
     medicine:
-      title: Medicine
-      short: MED
-      description: Treating wounds and illnesses, first aid and the knowledge of drugs.
-      untrained: You can put on a bandage, but have no idea what you are really doing.
-      trained: You can clean and dress wounds and treat common ailments.
-      expert: You set bones, stitch wounds and treat serious illness with confidence.
-      master: You perform complex procedures with makeshift tools and bring people back from the brink.
-      legendary: Your medical skill borders on the miraculous, saving those everyone else has given up on.
+      title: Медицина
+      short: МЕД
+      description: Лечение ран и болезней, первая помощь и знание лекарств.
+      untrained: Вы можете наложить повязку, но понятия не имеете, что делаете на самом деле.
+      trained: Вы можете очистить и перевязать рану и лечить обычные недуги.
+      expert: Вы уверенно вправляете кости, зашиваете раны и лечите серьёзные болезни.
+      master: Вы проводите сложные операции подручными инструментами и возвращаете людей с того света.
+      legendary: "Ваше врачебное мастерство граничит с чудом: Вы спасаете тех, от кого все остальные отказались."
     crafting:
-      title: Crafting
-      short: CRF
-      description: Building, repairing and improvising tools, weapons and equipment.
-      untrained: You can hammer a nail, but anything more complicated is beyond you.
-      trained: You can repair simple equipment and put together basic tools.
-      expert: You build reliable gear from scrap and fix most things that break.
-      master: You craft fine equipment from whatever materials are at hand.
-      legendary: Your work is a marvel, and you can make almost anything out of almost nothing.
+      title: Ремесло
+      short: РЕМ
+      description: Изготовление, починка и импровизация инструментов, оружия и снаряжения.
+      untrained: Вы можете забить гвоздь, но всё, что сложнее, Вам не по силам.
+      trained: Вы можете починить простое снаряжение и собрать базовые инструменты.
+      expert: Вы собираете надёжное снаряжение из хлама и чините почти всё, что ломается.
+      master: Вы создаёте превосходное снаряжение из любых материалов, что оказались под рукой.
+      legendary: Ваша работа вызывает восхищение, и Вы можете сделать почти что угодно почти из ничего.
     technology:
-      title: Technology
-      short: TEC
-      description: Electronics, computers and machinery.
-      untrained: Machines and terminals are a mystery to you.
-      trained: You can operate and fix common electronics and simple machines.
-      expert: You hack terminals, rewire devices and keep machinery running.
-      master: You understand and manipulate even the most advanced technology.
-      legendary: There is no system you cannot understand, bypass or rebuild.
+      title: Техника
+      short: ТЕХ
+      description: Электроника, компьютеры и механизмы.
+      untrained: Машины и терминалы для Вас загадка.
+      trained: Вы можете управлять обычной электроникой и простыми механизмами и чинить их.
+      expert: Вы взламываете терминалы, перепаиваете устройства и поддерживаете механизмы в рабочем состоянии.
+      master: Вы понимаете и подчиняете себе даже самые передовые технологии.
+      legendary: Нет системы, которую Вы не смогли бы понять, обойти или собрать заново.
     lore:
-      title: Lore
-      short: LOR
-      description: Knowledge of history, science, culture and the world at large.
-      untrained: You know little beyond what you have seen with your own eyes.
-      trained: You have a solid general education and know the basics of most subjects.
-      expert: You hold deep knowledge in several fields and can recall obscure facts.
-      master: Scholars would envy the breadth and depth of what you know.
-      legendary: Your knowledge is encyclopedic, and you have an answer for nearly every question.
+      title: Эрудиция
+      short: ЭРУ
+      description: Знание истории, науки, культуры и мира в целом.
+      untrained: Вы мало знаете сверх того, что видели своими глазами.
+      trained: У Вас крепкое общее образование, и Вы знаете основы большинства предметов.
+      expert: Вы глубоко разбираетесь в нескольких областях и помните малоизвестные факты.
+      master: Учёные позавидовали бы широте и глубине Ваших знаний.
+      legendary: Ваши знания энциклопедичны, и почти на любой вопрос у Вас найдётся ответ.
     persuasion:
-      title: Persuasion
-      short: PRS
-      description: Convincing others through reason, charm and honest argument.
-      untrained: You state your case and hope that others agree.
-      trained: You can present an argument clearly and win over reasonable people.
-      expert: You know how to find common ground and bring even skeptics around.
-      master: Your words can change minds that seemed set in stone.
-      legendary: You can talk almost anyone into almost anything, and leave them glad of it.
+      title: Убеждение
+      short: УБЖ
+      description: Склонение других на свою сторону доводами, обаянием и честными аргументами.
+      untrained: Вы излагаете свою позицию и надеетесь, что с ней согласятся.
+      trained: Вы можете ясно изложить довод и расположить к себе разумных людей.
+      expert: Вы умеете находить общий язык и переубеждать даже скептиков.
+      master: Ваши слова меняют мнения, казавшиеся высеченными в камне.
+      legendary: Вы можете уговорить почти кого угодно почти на что угодно, и он ещё будет этому рад.
     deception:
-      title: Deception
-      short: DEC
-      description: Lying, bluffing, disguises and misdirection.
-      untrained: Your lies are transparent, and your face gives you away.
-      trained: You can tell a convincing lie to someone who has no reason to doubt you.
-      expert: You bluff with a straight face and keep your stories consistent.
-      master: You weave lies so convincing that even suspicious people believe them.
-      legendary: Your deceptions are flawless, and the truth is whatever you say it is.
+      title: Обман
+      short: ОБМ
+      description: Ложь, блеф, маскировка и отвлечение внимания.
+      untrained: Ваша ложь прозрачна, а лицо Вас выдаёт.
+      trained: Вы можете убедительно солгать тому, у кого нет причин Вам не верить.
+      expert: Вы блефуете с невозмутимым лицом и не путаетесь в своих историях.
+      master: Вы плетёте ложь настолько убедительную, что ей верят даже подозрительные люди.
+      legendary: Ваш обман безупречен, и правда такова, какой Вы её называете.
     intimidation:
-      title: Intimidation
-      short: ITM
-      description: Coercing others through threats, presence and fear.
-      untrained: Your threats tend to be met with shrugs.
-      trained: You can make people uneasy enough to think twice.
-      expert: A hard look and a few words from you make most people back down.
-      master: People crumble under your threats and do as they are told.
-      legendary: Your mere presence is enough to make the bravest lose their nerve.
+      title: Запугивание
+      short: ЗАП
+      description: Принуждение других угрозами, напором и страхом.
+      untrained: На Ваши угрозы обычно лишь пожимают плечами.
+      trained: Вы можете заставить людей занервничать настолько, чтобы они задумались.
+      expert: Тяжёлого взгляда и пары Ваших слов хватает, чтобы большинство людей отступило.
+      master: Люди ломаются под Вашими угрозами и делают, что им велено.
+      legendary: Одного Вашего присутствия достаточно, чтобы самые храбрые теряли самообладание.
     streetwise:
-      title: Streetwise
-      short: STW
-      description: Knowing the streets, the black market, the rumors and the people who matter.
-      untrained: You know little about how things really work on the streets.
-      trained: You know where to find a fence, a rumor or a back alley deal.
-      expert: You have contacts across the city and hear about things before others do.
-      master: Nothing happens on the streets without you learning of it soon after.
-      legendary: The underworld is your home, and every door in it opens for you.
+      title: Знание улиц
+      short: УЛЦ
+      description: Знание улиц, чёрного рынка, слухов и нужных людей.
+      untrained: Вы мало знаете о том, как на самом деле устроена жизнь на улицах.
+      trained: Вы знаете, где найти скупщика, слух или сделку в подворотне.
+      expert: У Вас есть связи по всему городу, и Вы узнаёте о событиях раньше других.
+      master: На улицах ничего не происходит без того, чтобы Вы вскоре об этом не узнали.
+      legendary: Преступный мир Ваш дом, и каждая его дверь открыта для Вас.
     composure:
-      title: Composure
-      short: CMP
-      description: Keeping calm under pressure and resisting fear, interrogation and manipulation.
-      untrained: Pressure gets to you quickly, and it shows.
-      trained: You can keep a level head when things go wrong.
-      expert: You stay calm under fire and give nothing away under questioning.
-      master: Threats, interrogation and panic slide off you like rain.
-      legendary: Your calm is unshakable, whatever the world throws at you.
+      title: Самообладание
+      short: САМ
+      description: Сохранение спокойствия под давлением и сопротивление страху, допросам и манипуляциям.
+      untrained: Давление быстро берёт над Вами верх, и это заметно.
+      trained: Вы можете сохранять трезвую голову, когда всё идёт не так.
+      expert: Вы сохраняете спокойствие под огнём и ничего не выдаёте на допросе.
+      master: Угрозы, допросы и паника стекают с Вас как дождь.
+      legendary: Ваше спокойствие непоколебимо, что бы ни обрушил на Вас мир.
     focus:
-      title: Focus
-      short: FOC
-      description: Concentrating on a task through pain, distraction and fatigue.
-      untrained: Your mind wanders as soon as something else catches your attention.
-      trained: You can concentrate on a task despite noise and minor discomfort.
-      expert: You keep your attention fixed on your work through pain and chaos.
-      master: Once you set your mind to something, nothing can break your concentration.
-      legendary: Your focus is absolute, shutting out everything but the task at hand.
+      title: Концентрация
+      short: КОН
+      description: Сосредоточенность на задаче, несмотря на боль, отвлечения и усталость.
+      untrained: Ваши мысли разбегаются, едва что-то другое привлекает Ваше внимание.
+      trained: Вы можете сосредоточиться на задаче, несмотря на шум и небольшие неудобства.
+      expert: Вы удерживаете внимание на работе сквозь боль и хаос.
+      master: Стоит Вам на чём-то сосредоточиться, и ничто не может сбить Вашу концентрацию.
+      legendary: Ваша сосредоточенность абсолютна и отсекает всё, кроме текущей задачи.
   command:
     charsetattribute:
       description: "Установить атрибут персонажа. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение>
       message: "{player} устанавливает {target} атрибут {attribute} на {value}."
+    charsetskill:
+      description: "Установить ранг навыка персонажа. Навыки: {skills}"
+      syntax: <цель> <навык> <ранг>
+      message: "{player} устанавливает {target} навык {skill} на ранг {value}."
     charattributeboost:
       description: "Усилить атрибут персонажа. Длительность 'perma' дает усиление, которое действует, пока его не снимут. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение> <длительность>
@@ -374,10 +331,12 @@ ru:
       message: "{player} снимает с {target} усиления атрибута {attribute}."
       message_all: "{player} снимает с {target} все усиления атрибутов."
     charattributes:
-      description: "Посмотреть атрибуты персонажа."
+      description: "Посмотреть атрибуты и навыки персонажа."
       syntax: <цель>
       header: "Атрибуты персонажа {target}:"
       line: "{attribute} ({id}): уровень {level}, усиление {boost}"
+      skills_header: "Навыки персонажа {target}:"
+      skill_line: "{skill} ({id}): ранг {rank}"
   condition:
     attribute:
       name: Игрок с определенным атрибутом
@@ -385,6 +344,12 @@ ru:
       message1: Выберите атрибут
       message2: Выберите значение атрибута
     attributes: Атрибуты
+    skill:
+      name: Игрок с определенным рангом навыка
+      text: Навык {skill} {operator} {value}
+      message1: Выберите навык
+      message2: Выберите ранг навыка
+    skills: Навыки
   config:
     stats:
       title: Характеристики
@@ -411,22 +376,23 @@ ru:
         name: "Урон от падения за уровень рефлексов, %"
         desc: На сколько процентов меньше урона от падения получает персонаж за каждый уровень рефлексов, и больше за каждый уровень ниже нуля. Требуется плагин Damage. При значении 0 эффект отключён.
       charisma_prices:
-        name: "Vendor prices per charisma level, %"
-        desc: Percent by which vendors sell cheaper to a character for every level of charisma, and dearer below zero. A price never falls below what the vendor pays for the item. Needs the Vendors plugin. 0 turns the effect off.
+        name: "Цены торговцев за уровень харизмы, %"
+        desc: На сколько процентов дешевле торговцы продают персонажу за каждый уровень харизмы, и дороже при уровне ниже нуля. Цена никогда не опускается ниже той, что торговец платит за предмет. Требуется плагин Vendors. При значении 0 эффект отключён.
       rank_bonus:
-        name: Proficiency per skill rank
-        desc: Bonus that every rank of a trained skill adds to the rolls of the skill. A trained skill also adds the level of the character, an untrained one adds nothing.
+        name: Мастерство за ранг навыка
+        desc: Бонус, который каждый ранг изученного навыка прибавляет к броскам этого навыка. Изученный навык также прибавляет уровень персонажа, неизученный не прибавляет ничего.
       determination_pain:
         name: "Штрафы от ранений за уровень решимости, %"
         desc: На сколько процентов ослабевают замедление и дрожание прицела от повреждённых частей тела за каждый уровень решимости, и усиливаются при уровне ниже нуля. Требуется плагин Limb Damage. При значении 0 эффект отключён.
   error:
     attribute_not_valid: "'{attribute}' не является атрибутом!"
+    skill_not_valid: "'{skill}' не является навыком!"
     attribute_no_character: "У игрока {target} нет активного персонажа!"
     stats:
-      roll: "Cannot roll {name}: {message}"
-      unknown_rollable: "'{name}' is not a stat or a skill."
-      not_stat: "'{name}' is not a stat."
-      not_skill: "'{name}' is not a skill."
+      roll: "Не удалось сделать бросок {name}: {message}"
+      unknown_rollable: "'{name}' не является характеристикой или навыком."
+      not_stat: "'{name}' не является характеристикой."
+      not_skill: "'{name}' не является навыком."
     attribute:
       sum: Сумма атрибутов не равна максимальной сумме атрибутов.
   notification:
@@ -436,6 +402,8 @@ ru:
       boosts_cleared: С вашего атрибута '{attribute}' были сняты усиления.
       boosts_cleared_all: Со всех ваших атрибутов были сняты усиления.
       set: Ваш атрибут '{attribute}' был установлен на {value}.
+    skill:
+      set: Ваш навык '{skill}' был установлен на ранг {value}.
     stats:
       roll: "{name}: {roll}"
   ui:
@@ -448,10 +416,8 @@ ru:
       level_named: "{name} ({level})"
       boosts: "Усиления: {list}"
       timed: "{value} ({time})"
-      type:
-        stat: Характеристики
-        skill: Навыки
-        other: Прочее
+      attributes: Атрибуты
+      skills: Навыки
     effect:
       hearing_radius: Радиус слышимости
       stamina_drain: Расход запаса сил
@@ -473,24 +439,24 @@ ru:
       faction_bonus: "Бонус фракции: {bonus}"
       effects: Эффекты
     character_sheet:
-      title: Character Sheet
-      level: "Level {level} of {max}"
-      experience: "{experience} / {total} XP"
-      level_capped: "Level cap, rises in {time}"
-      max_level: Highest level reached
-      health: Health
-      skill_points: "Unspent skill points: {points}"
-      attribute_points: "Unspent attribute points: {points}"
-      attributes: Attributes
-      skills: Skills
-      other_skills: Other
-      roll: Roll
-      spend_attribute: "Spend an attribute point on {name}"
-      spend_skill: "Spend a skill point on {name}"
-      skill_trained: "{rank} · {attribute} {modifier} + proficiency {proficiency}"
-      skill_untrained: "{rank} · {attribute} {modifier}, no proficiency"
-      no_character: You have no active character.
-      no_attributes: There are no attributes to show.
-      no_skills: There are no skills to show.
+      title: Лист персонажа
+      level: "Уровень {level} из {max}"
+      experience: "{experience} / {total} опыта"
+      level_capped: "Предел уровня, вырастет через {time}"
+      max_level: Достигнут наивысший уровень
+      health: Здоровье
+      skill_points: "Нераспределённые очки навыков: {points}"
+      attribute_points: "Нераспределённые очки атрибутов: {points}"
+      attributes: Атрибуты
+      skills: Навыки
+      other_skills: Прочее
+      roll: Бросок
+      spend_attribute: "Потратить очко атрибута на {name}"
+      spend_skill: "Потратить очко навыка на {name}"
+      skill_trained: "{rank} · {attribute} {modifier} + мастерство {proficiency}"
+      skill_untrained: "{rank} · {attribute} {modifier}, без мастерства"
+      no_character: У вас нет активного персонажа.
+      no_attributes: Нет атрибутов для отображения.
+      no_skills: Нет навыков для отображения.
     tab_menu:
-      character_sheet: Character
+      character_sheet: Персонаж

@@ -200,7 +200,7 @@ function CMD:on_run(actor, ...)
     return
   end
 
-  local label = rollable and t(Attributes.find(rollable.id).name) or nil
+  local label = rollable and t(rollable.name) or nil
   local opponent = find_opponent(actor)
   local opponent_result
 

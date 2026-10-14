@@ -7,7 +7,6 @@
 ATTRIBUTE.name = 'attribute.determination.title'
 ATTRIBUTE.description = 'attribute.determination.description'
 ATTRIBUTE.icon = 'fa-fist-raised'
-ATTRIBUTE.type = ATTRIBUTE_STAT
 ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3

@@ -2,12 +2,6 @@ en:
   attribute:
     category:
       other: Other
-    rank:
-      untrained: Untrained
-      trained: Trained
-      expert: Expert
-      master: Master
-      legendary: Legendary
     level:
       legendary: Legendary
       heroic: Heroic
@@ -287,6 +281,16 @@ en:
       terrible:
         You are off-putting to almost everyone. Conversations with you go wrong from
         the first word, and people avoid you whenever they can.
+  skill:
+    rank:
+      untrained: Untrained
+      trained: Trained
+      expert: Expert
+      master: Master
+      legendary: Legendary
+    other:
+      name: Unknown Skill
+      desc: This skill has no description.
     athletics:
       title: Athletics
       short: ATH
@@ -472,6 +476,10 @@ en:
       description: "Set a character's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value>
       message: "{player} has set {target}'s attribute {attribute} to {value}."
+    charsetskill:
+      description: "Set the rank of a character's skill. Skills: {skills}"
+      syntax: <target> <skill_id> <rank>
+      message: "{player} has set {target}'s skill {skill} to rank {value}."
     charattributeboost:
       description: "Boost a character's attribute. A duration of 'perma' gives a boost that lasts until it is removed. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
@@ -483,10 +491,12 @@ en:
       message: "{player} has removed the boosts of {target}'s attribute {attribute}."
       message_all: "{player} has removed all attribute boosts of {target}."
     charattributes:
-      description: "View the attributes of a character."
+      description: "View the attributes and skills of a character."
       syntax: <target>
       header: "Attributes of {target}:"
       line: "{attribute} ({id}): level {level}, boost {boost}"
+      skills_header: "Skills of {target}:"
+      skill_line: "{skill} ({id}): rank {rank}"
   condition:
     attribute:
       name: Matching Attribute Value
@@ -494,6 +504,12 @@ en:
       message1: Attribute name
       message2: Attribute value
     attributes: Attributes
+    skill:
+      name: Matching Skill Rank
+      text: Skill {skill} {operator} {value}
+      message1: Skill name
+      message2: Skill rank
+    skills: Skills
   config:
     stats:
       title: Stats
@@ -530,6 +546,7 @@ en:
         desc: Percent by which the slowdown and the aim drift of hurt limbs weaken for every level of determination, and grow below zero. Needs the Limb Damage plugin. 0 turns the effect off.
   error:
     attribute_not_valid: "'{attribute}' is not a valid attribute!"
+    skill_not_valid: "'{skill}' is not a valid skill!"
     attribute_no_character: "{target} has no active character!"
     stats:
       roll: "Cannot roll {name}: {message}"
@@ -545,6 +562,8 @@ en:
       boosts_cleared: The boosts of your attribute '{attribute}' were removed.
       boosts_cleared_all: All of your attribute boosts were removed.
       set: Your attribute '{attribute}' was set to {value}.
+    skill:
+      set: Your skill '{skill}' was set to rank {value}.
     stats:
       roll: "{name}: {roll}"
   ui:
@@ -557,10 +576,8 @@ en:
       level_named: "{name} ({level})"
       boosts: "Boosts: {list}"
       timed: "{value} ({time})"
-      type:
-        stat: Stats
-        skill: Skills
-        other: Other
+      attributes: Attributes
+      skills: Skills
     effect:
       hearing_radius: Hearing Radius
       stamina_drain: Stamina Drain

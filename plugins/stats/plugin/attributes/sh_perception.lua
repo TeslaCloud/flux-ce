@@ -6,7 +6,6 @@
 ATTRIBUTE.name = 'attribute.perception.title'
 ATTRIBUTE.description = 'attribute.perception.description'
 ATTRIBUTE.icon = 'flux/icons/eye-target.png'
-ATTRIBUTE.type = ATTRIBUTE_STAT
 ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
