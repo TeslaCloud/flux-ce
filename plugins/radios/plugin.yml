@@ -1,0 +1,8 @@
+name: Radios
+description: Talk to your friends and colleagues.
+author: TeslaCloud Studios
+depends:
+  - "sh_prefixes.lua"
+  - rpcommands
+  - items
+  - inventory

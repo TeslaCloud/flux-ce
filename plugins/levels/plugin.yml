@@ -1,0 +1,6 @@
+name: Levels
+description: Adds character levels, experience, level-up points and maximum health that grows with the level.
+author: TeslaCloud Studios
+depends:
+  - characters
+  - attributes

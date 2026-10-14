@@ -1,0 +1,29 @@
+en:
+  config:
+    d20:
+      title: D20
+      desc: Dice damage, NPC health, armor class and attack rolls.
+      enabled:
+        name: Dice Damage
+        desc: "Roll dice for the damage of every hit on a player or an NPC instead of using the damage of the engine, roll fall damage and scale the health of NPCs."
+      default_dice:
+        name: Default Damage Dice
+        desc: "The dice formula rolled for a hit that no weapon, NPC or damage type gives a formula for and whose engine damage is 0."
+      fall_dice:
+        name: Fall Damage Dice
+        desc: "The dice formula of fall damage. The steps variable is 1 for the slowest fall that hurts and grows by 1 for every 150 units per second of fall speed. The Fall Damage Multiplier of the Damage plugin still applies."
+      weapon_dice:
+        name: Weapon Damage Dice
+        desc: "Entries like 'weapon_pistol = 1d8' that set the dice formula of a weapon or projectile class, over the formula the code gives it."
+      npc_dice:
+        name: NPC Damage Dice
+        desc: "Entries like 'npc_zombie = 1d8' that set the dice formula of the attacks of an NPC class, over the formula the code gives it. An NPC that holds a weapon rolls the dice of the weapon."
+      npc_health_scale:
+        name: NPC Health Scale
+        desc: "What the maximum health of an NPC is multiplied by when it spawns, so that it lasts about as many rolled hits as it would last hits of the engine."
+      npc_armor_class:
+        name: NPC Armor Class
+        desc: "The armor class of an NPC: what an attack roll against it has to reach to hit."
+      npc_attack_bonus:
+        name: NPC Attack Bonus
+        desc: "What an NPC adds to the d20 of its attack rolls."

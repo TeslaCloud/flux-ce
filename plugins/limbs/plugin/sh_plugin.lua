@@ -7,11 +7,14 @@
 --
 -- The server watches the damage that players take without changing it. A hit that was traced
 -- to a body part hurts that limb, a hit on the ragdoll of a fallen player hurts the limb
--- closest to it, and fall damage is split between the legs. Damage without a location, such
--- as an explosion, hurts no limb unless an `AdjustLimbHits` handler says otherwise. Limbs do
--- not heal with health: they recover slowly on their own (the 'limbs_recovery' config), are
--- healed through `Limbs:heal` and `Limbs:heal_all`, which is what medical items should call,
--- and are reset when the player dies.
+-- closest to it, and fall damage is split between the legs. A limb takes the share of the
+-- maximum health of the player that the hit has cost them, as a percentage, times the
+-- 'limbs_damage_scale' config (1 by default), so a hit that takes half of the maximum health
+-- deals 50 damage to the limb however much health the player has. Damage without a
+-- location, such as an explosion, hurts no limb unless an `AdjustLimbHits` handler says
+-- otherwise. Limbs do not heal with health: they recover slowly on their own (the
+-- 'limbs_recovery' config), are healed through `Limbs:heal` and `Limbs:heal_all`, which is
+-- what medical items should call, and are reset when the player dies.
 -- ```
 -- -- A medical item that also treats the limbs of its user.
 -- function ITEM:use(actor)

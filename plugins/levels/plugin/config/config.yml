@@ -1,0 +1,85 @@
+categories:
+  levels:
+    name: config.levels.title
+    description: config.levels.desc
+configs:
+  levels_max_level:
+    name: config.levels.max_level.name
+    description: config.levels.max_level.desc
+    category: levels
+    type: number
+    min_value: 1
+    max_value: 100
+    static: true
+    default_value: 20
+  levels_experience_per_level:
+    name: config.levels.experience_per_level.name
+    description: config.levels.experience_per_level.desc
+    category: levels
+    type: number
+    min_value: 1
+    max_value: 100000
+    default_value: 1000
+  levels_skill_points_per_level:
+    name: config.levels.skill_points_per_level.name
+    description: config.levels.skill_points_per_level.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 10
+    default_value: 1
+  levels_boost_every:
+    name: config.levels.boost_every.name
+    description: config.levels.boost_every.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 5
+  levels_boost_points:
+    name: config.levels.boost_points.name
+    description: config.levels.boost_points.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 10
+    default_value: 2
+  health_base:
+    name: config.levels.health_base.name
+    description: config.levels.health_base.desc
+    category: levels
+    type: number
+    min_value: 1
+    max_value: 1000
+    default_value: 10
+  health_per_level:
+    name: config.levels.health_per_level.name
+    description: config.levels.health_per_level.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 3
+  levels_combat_experience:
+    name: config.levels.combat_experience.name
+    description: config.levels.combat_experience.desc
+    category: levels
+    type: boolean
+    default_value: false
+  levels_experience_per_damage:
+    name: config.levels.experience_per_damage.name
+    description: config.levels.experience_per_damage.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 1000
+    decimals: 2
+    default_value: 2
+  levels_experience_per_kill:
+    name: config.levels.experience_per_kill.name
+    description: config.levels.experience_per_kill.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 100000
+    default_value: 50

@@ -1,0 +1,5 @@
+name: D20
+description: Rolls dice for the damage of every hit, scales the health of NPCs and provides armor class and attack rolls.
+author: TeslaCloud Studios
+depends:
+  - damage

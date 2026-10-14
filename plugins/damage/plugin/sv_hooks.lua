@@ -1,9 +1,10 @@
 --- Server hooks of the Damage plugin: scale the damage players take, run the
--- `PrePlayerTakeDamage` and `PostPlayerTakeDamage` hooks around it, and drive the health
--- regeneration, the drowning and the logs.
+-- `ResolvePlayerDamage`, `PrePlayerTakeDamage` and `PostPlayerTakeDamage` hooks around it,
+-- and drive the health regeneration, the drowning and the logs.
 -- The handlers of GMod's damage hooks change the damage in place and return nothing, so the
--- handlers of the schema, of other plugins and of the gamemode still run after them. The one
--- exception is damage cancelled through `PrePlayerTakeDamage`, which is blocked for everyone.
+-- handlers of the schema, of other plugins and of the gamemode still run after them. The
+-- exceptions are damage blocked through `ResolvePlayerDamage` and damage cancelled through
+-- `PrePlayerTakeDamage`, which are blocked for everyone.
 
 local config_get = Config.get
 
@@ -22,14 +23,45 @@ function Damage:ScalePlayerDamage(victim, hitgroup, damage_info)
   end
 end
 
---- Multiplies the fall damage of a player by the 'damage_scale_fall' config, whichever way
+--- Lets the ResolvePlayerDamage hook work out the amount of any damage to a player,
+-- multiplies the fall damage of a player by the 'damage_scale_fall' config, whichever way
 -- the amount was worked out (the `FLGetFallDamage` hook or the formula of the gamemode), and
 -- lets the PrePlayerTakeDamage hook change or cancel any damage to a player.
 -- @param entity [Entity the entity taking damage]
 -- @param damage_info [CTakeDamageInfo]
--- @return [Boolean true to block damage that the hook has cancelled, nil otherwise]
+-- @return [Boolean true to block damage that one of the hooks has blocked, nil otherwise]
 function Damage:EntityTakeDamage(entity, damage_info)
   if !IsValid(entity) or !entity:IsPlayer() then return end
+
+  local hitgroup = self:get_hitgroup(entity)
+
+  --- Lets a plugin work out the amount of damage a player is about to take from scratch,
+  -- such as by rolling dice for it. Called on the server from the Damage plugin's
+  -- `EntityTakeDamage` handler for every damage to a player, before the fall damage
+  -- multiplier and before `PrePlayerTakeDamage`, so that both of them, and every
+  -- `EntityTakeDamage` handler after the plugin, see the amount that was set here. The hit
+  -- location multiplier of a bullet or melee hit has already been applied to the damage by
+  -- then; a handler that replaces the amount applies `Damage:get_hitgroup_scale(hitgroup)`
+  -- to it again.
+  -- ```
+  -- -- Every hit deals exactly 10 damage before the multipliers.
+  -- function MyPlugin:ResolvePlayerDamage(victim, damage_info, hitgroup)
+  --   if !damage_info:IsFallDamage() then
+  --     damage_info:SetDamage(10 * Damage:get_hitgroup_scale(hitgroup))
+  --   end
+  -- end
+  -- ```
+  -- @param victim [Player The player about to take the damage]
+  -- @param damage_info [CTakeDamageInfo The damage being dealt, changed in place]
+  -- @param hitgroup [Number HITGROUP_ enum of the hit location; HITGROUP_GENERIC when the
+  --   damage does not come from a bullet or melee hit]
+  -- @return [Boolean Return true to block the damage: nothing is dealt and no further
+  --   handler runs. Return nothing to let other handlers run]
+  if hook.Run('ResolvePlayerDamage', entity, damage_info, hitgroup) == true then
+    entity.damage_hitgroup = nil
+
+    return true
+  end
 
   if damage_info:IsFallDamage() then
     local scale = config_get('damage_scale_fall', 1)
@@ -41,17 +73,17 @@ function Damage:EntityTakeDamage(entity, damage_info)
 
   --- Called on the server when a player is about to take damage, before it is applied.
   -- Change `damage_info` in place to adjust the damage, or return false to cancel it.
-  -- Runs from the Damage plugin's `EntityTakeDamage` handler, after the hit location and
-  -- fall damage multipliers. The `EntityTakeDamage` handlers of the schema and of the
-  -- plugins loaded after this one run later and may still change or block the damage;
-  -- use `PostPlayerTakeDamage` for what was dealt in the end.
+  -- Runs from the Damage plugin's `EntityTakeDamage` handler, after `ResolvePlayerDamage`
+  -- and the hit location and fall damage multipliers. The `EntityTakeDamage` handlers of the
+  -- schema and of the plugins loaded after this one run later and may still change or block
+  -- the damage; use `PostPlayerTakeDamage` for what was dealt in the end.
   -- @param victim [Player The player about to take the damage]
   -- @param damage_info [CTakeDamageInfo The damage being dealt]
   -- @param hitgroup [Number HITGROUP_ enum of the hit location; HITGROUP_GENERIC when the
   --   damage does not come from a bullet or melee hit]
   -- @return [Boolean Return false to cancel the damage: nothing is dealt and no further
   --   handler runs. Return nothing to let other handlers run]
-  if hook.Run('PrePlayerTakeDamage', entity, damage_info, self:get_hitgroup(entity)) == false then
+  if hook.Run('PrePlayerTakeDamage', entity, damage_info, hitgroup) == false then
     entity.damage_hitgroup = nil
 
     return true

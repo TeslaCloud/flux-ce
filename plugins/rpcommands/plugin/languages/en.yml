@@ -1,0 +1,103 @@
+en:
+  command:
+    it:
+      description: Describe an impersonal action.
+      syntax: <text>
+    me:
+      description: Describe your character's action. You can use "*text*" instead of this command. (whisper) and yell!! also works here.
+      syntax: <text>
+    whisper:
+      description: Whisper something. You can use "(text)" instead of this command. The number of parentheses affects the volume of the whisper (3 max.).
+      syntax: <text>
+    yell:
+      description: Yell something. You can use "text!!" instead of this command. The number of exclamation marks affects the volume of the yell (4 max.).
+      syntax: <text>
+    event:
+      description: Send a describing message to everyone on the server.
+      syntax: <text>
+    eventlocal:
+      description: Send a describing message to everyone within talking distance of you.
+      syntax: <text>
+    gag:
+      description: Mute player's OOC chats.
+      syntax: <name> <duration> [reason]
+      message: "{admin} has muted {target} from the OOC chat for {time} ({reason})."
+    ungag:
+      description: Unmute player's OOC chats.
+      syntax: <player>
+      message: "{admin} has unmuted {target}."
+    its:
+      description: Place a static text, describing some details of surroundings.
+      syntax: <text>
+    itsremove:
+      description: Remove static text you looking at.
+    roll:
+      description: "Roll dice: a d20 without an argument, a die with that many sides for a number, a stat or a skill by its name, or a dice formula such as 2d6 + 3, 4d6kh3 or 1d20 + stealth. Looking at a nearby player rolls the same for both of you."
+      syntax: "[sides, stat, skill or formula]"
+    togglemask:
+      description: Toggles on/off your mask as part of the CCA.
+      syntax: <none>
+  config:
+    roleplay_chat:
+      title: Roleplay Chat
+      desc: In-character and out-of-character chat settings.
+      talk_radius:
+        name: Talk Radius
+        desc: Distance in units from which regular in-character speech is heard. Whispers, yells, local OOC chat and radios are scaled from it.
+      ooc_interval:
+        name: OOC Cooldown
+        desc: How many seconds a player has to wait between two messages in the OOC chat. Set to 0 to disable.
+      looc_interval:
+        name: LOOC Cooldown
+        desc: How many seconds a player has to wait between two messages in the local OOC chat. Set to 0 to disable.
+      ooc_avatars:
+        name: OOC Avatars
+        desc: Whether to show the Steam avatar of the player before their name in OOC chat messages.
+      roll_versus:
+        name: Versus Rolls
+        desc: Whether rolling while looking at a nearby player also rolls for that player.
+  error:
+    roll:
+      invalid: "Cannot roll that: {message}"
+    its_too_close: Too close to other static texts!
+    speak:
+      dead: You cannot speak or act while you are dead.
+      knocked_out: You cannot speak or act while you are unconscious.
+  notification:
+    cooldown:
+      ooc:
+        "1": "You have to wait {time} more second before using the OOC chat again."
+        "2": "You have to wait {time} more seconds before using the OOC chat again."
+      looc:
+        "1": "You have to wait {time} more second before using the LOOC chat again."
+        "2": "You have to wait {time} more seconds before using the LOOC chat again."
+    mute:
+      "1": "You cannot use Out-Of-Character chat for another {time} second."
+      "2": "You cannot use Out-Of-Character chat for another {time} seconds."
+    muted: You have been muted for {time}.
+    unmuted: You have been unmuted.
+    static_text:
+      added: Static text added.
+      removed: Static text removed.
+      not_found: Static text available for removal not found on this position.
+  permission:
+    categories:
+      roleplay: Roleplay
+  ui:
+    hud:
+      display_typing:
+        talking: TALKING...
+        whispering: WHISPERING...
+        yelling: YELLING...
+        performing: PERFORMING...
+    chat:
+      say: "says"
+      yell: "yells"
+      whisper: "whispers"
+      roll: "has rolled {roll}."
+      roll_named: "has rolled {name}: {roll}."
+      roll_versus: "has rolled {roll} against"
+      roll_versus_named: "has rolled {name}: {roll} against"
+      roll_versus_reply: ", who has rolled {roll}."
+      roll_critical_success: "(critical success)"
+      roll_critical_failure: "(critical failure)"

@@ -1,0 +1,30 @@
+ru:
+  error:
+    frequency: Задана неверная частота. Она должна иметь формат XXX.X
+    radio:
+      unavailable: Вы больше не можете пользоваться этой рацией.
+  notification:
+    no_active_radio: У Вас нет активной рации. Поместите включенную рацию в инвентарь быстрого доступа.
+    radio:
+      frequency_set: "Рация настроена на частоту {frequency}."
+  item:
+    category:
+      communication: Коммуникация
+    slot:
+      communication: Связь
+    option:
+      enable: Включить
+      disable: Выключить
+      frequency: Сменить частоту...
+    radio:
+      name: Рация
+      description: Обыкновенная рация гражданской модели, позволяющая передавать сообщения на малой дистанции.
+  ui:
+    chat:
+      radio: "говорит по рации"
+    hud:
+      display_typing:
+        radioing: ГОВОРИТ ПО РАЦИИ...
+    radio:
+      frequency: Сменить частоту рации
+      frequency_message: Введите желаемую частоту, на которой рация сможет принимать или отправлять сообщения. Она должна иметь формат XXX.X

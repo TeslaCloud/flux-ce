@@ -65,7 +65,8 @@ end
 --- Hurts the limbs of a player who has taken damage. This runs after the damage has been
 -- dealt, so damage that was blocked hurts nothing and damage that other handlers have scaled
 -- counts as it was dealt. Limb damage is worked out from the health the player has lost,
--- which leaves out what their armor has absorbed, times the 'limbs_damage_scale' config.
+-- which leaves out what their armor has absorbed, as a share of their maximum health, see
+-- `Limbs:get_hits`.
 -- @param victim [Player the player who has taken damage]
 -- @param damage_info [CTakeDamageInfo]
 -- @param took [Boolean whether the damage was actually dealt]

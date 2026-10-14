@@ -1,0 +1,349 @@
+--- The character sheet of the local player, the first page of the tab menu: a card with two
+-- columns. The left one holds the name and the faction of the character, its level and the
+-- experience toward the next one, its health and the skill and attribute points it has not
+-- spent yet, followed by the stats with their level names and modifiers. The right one lists
+-- the skills grouped under their key stats, each with its rank, its total modifier and what
+-- that modifier is made of. Every stat and skill has a button that asks the server to roll it
+-- and show the result in the chat ('fl_stats_roll'), and while points are left a button that
+-- spends one on it ('fl_levels_spend_attribute', 'fl_levels_spend_skill'). Attributes that
+-- `Attributes.is_visible` hides are left out. The level, the experience and the points come
+-- from the Levels plugin and are not shown without it; the faction comes from the Factions
+-- plugin.
+
+local card_style = {
+  direction = 'row', align = 'center', gap = 8, padding = { 6, 10 }, background = 'surface_raised', radius = 6
+}
+local stat_order = {
+  'strength', 'reflexes', 'endurance', 'perception', 'intelligence', 'determination', 'charisma'
+}
+
+--- Formats a modifier with its sign: '+2', '-1', '+0'.
+-- @param value [Number]
+-- @return [String]
+local function signed(value)
+  value = math.Round(tonumber(value) or 0, 2)
+
+  if value < 0 then
+    return tostring(value)
+  end
+
+  return '+'..value
+end
+
+--- Sorts attribute definitions by their translated names, and by their IDs when the names
+-- are the same.
+-- @param list [List<AttributeBase> sorted in place]
+-- @return [List<AttributeBase> the same list]
+local function sort_by_name(list)
+  local names = {}
+
+  for k, v in ipairs(list) do
+    names[v] = t(v.name)
+  end
+
+  table.sort(list, function(a, b)
+    if names[a] != names[b] then
+      return names[a] < names[b]
+    end
+
+    return tostring(a.attribute_id) < tostring(b.attribute_id)
+  end)
+
+  return list
+end
+
+--- Returns the stats the local player sees, in the order of `stat_order`, with stats that
+-- are not in that list after them, sorted by name.
+-- @param actor [Player]
+-- @return [List<AttributeBase>]
+local function get_stats(actor)
+  local stats = Attributes.get_by_type(ATTRIBUTE_STAT)
+  local ordered = {}
+  local rest = {}
+
+  for k, id in ipairs(stat_order) do
+    local stat = stats[id]
+
+    if stat and Attributes.is_visible(stat, actor) then
+      ordered[#ordered + 1] = stat
+    end
+
+    stats[id] = nil
+  end
+
+  for k, v in pairs(stats) do
+    if Attributes.is_visible(v, actor) then
+      rest[#rest + 1] = v
+    end
+  end
+
+  for k, v in ipairs(sort_by_name(rest)) do
+    ordered[#ordered + 1] = v
+  end
+
+  return ordered
+end
+
+--- Groups the skills the local player sees under their key stats, in the order of the stats.
+-- Skills whose key stat is not registered come last, under a group of their own.
+-- @param actor [Player]
+-- @param stats [List<AttributeBase> the stats, as get_stats returns them]
+-- @return [List<Map> groups: id (String), title (String) and skills (List<AttributeBase>)]
+local function get_skill_groups(actor, stats)
+  local by_stat = {}
+  local groups = {}
+  local other = {}
+
+  for k, v in pairs(Attributes.get_by_type(ATTRIBUTE_SKILL)) do
+    if Attributes.is_visible(v, actor) then
+      local key_stat = isstring(v.attribute) and Attributes.find(v.attribute)
+
+      if key_stat then
+        by_stat[v.attribute] = by_stat[v.attribute] or {}
+        table.insert(by_stat[v.attribute], v)
+      else
+        other[#other + 1] = v
+      end
+    end
+  end
+
+  for k, v in ipairs(stats) do
+    local skills = by_stat[v.attribute_id]
+
+    if skills then
+      groups[#groups + 1] = { id = v.attribute_id, title = t(v.name), skills = sort_by_name(skills) }
+      by_stat[v.attribute_id] = nil
+    end
+  end
+
+  for id, skills in SortedPairs(by_stat) do
+    groups[#groups + 1] = { id = id, title = t(Attributes.find(id).name), skills = sort_by_name(skills) }
+  end
+
+  if #other > 0 then
+    groups[#groups + 1] = { id = '', title = t'ui.character_sheet.other_skills', skills = sort_by_name(other) }
+  end
+
+  return groups
+end
+
+--- The icon of a stat or a skill: a FontAwesome icon if its name starts with 'fa-',
+-- otherwise an image, or an empty space of the same size if it has none.
+-- @param props [Map icon (String), size (Number), font (String font whose height is the
+--   size of a FontAwesome icon)]
+local function Icon(props)
+  local icon = props.icon
+  local size = props.size
+
+  if !isstring(icon) or icon == '' then
+    return <view style={{ width = size, height = size }} />
+  end
+
+  if icon:start_with('fa-') then
+    return <button icon={icon} style={{
+      width = size, height = size, padding = 0, font = props.font, background = false,
+      hover_background = false, cursor = 'arrow'
+    }} />
+  end
+
+  return <image src={icon} keep_aspect style={{ width = size, height = size }} />
+end
+
+--- A bar that is filled to a fraction.
+-- @param props [Map fraction (Number from 0 to 1), color (String/Color of the filled part)]
+local function Bar(props)
+  local fraction = math.Clamp(tonumber(props.fraction) or 0, 0, 1)
+
+  return <view style={{ height = 8, background = 'surface_sunken', radius = 4 }}>
+    {fraction > 0 and <view style={{ width = (fraction * 100)..'%', height = 8, background = props.color, radius = 4 }} />}
+  </view>
+end
+
+--- A label with a value at its right end.
+-- @param props [Map label (String), value (String), color (String/Color of the value)]
+local function LabeledValue(props)
+  return <view style={{ direction = 'row', align = 'end', gap = 8 }}>
+    <text style={{ flex = 1, font = 'text_small', color = 'text_muted', wrap_text = false }}>{props.label}</text>
+    <text style={{ font = 'text_small', color = props.color, wrap_text = false }}>{props.value}</text>
+  </view>
+end
+
+--- The name, the faction, the level, the experience, the health and the unspent points of
+-- the character.
+-- @param props [Map actor (Player)]
+local function Header(props)
+  local actor = props.actor
+  local faction = Factions and isfunction(actor.get_faction) and actor:get_faction()
+  local has_levels = Levels and isfunction(actor.get_level)
+  local health, max_health = actor:Health(), math.max(actor:GetMaxHealth(), 1)
+  local level, max_level, experience, needed, skill_points, attribute_points, progress
+
+  if has_levels then
+    level = actor:get_level()
+    max_level = Levels.get_max_level()
+    experience = actor:get_experience()
+    needed = Levels.get_experience_for_level(level)
+    skill_points = actor:get_skill_points()
+    attribute_points = actor:get_attribute_points()
+    progress = t'ui.character_sheet.max_level'
+
+    if needed > 0 then
+      progress = t('ui.character_sheet.experience', { experience = experience, total = needed })
+    end
+  end
+
+  return <view style={{ gap = 6, padding = 12, background = 'surface_raised', radius = 6 }}>
+    <text style={{ font = 'text_smaller', color = 'text_muted' }}>{t'ui.character_sheet.title'}</text>
+    <text style={{ font = 'menu_large' }}>{actor:name()}</text>
+    {faction and <text style={{ font = 'text_small', color = faction.color or 'text_muted' }}>{t(faction.name or '')}</text>}
+    {has_levels and <view style={{ gap = 4, margin_top = 4 }}>
+      <LabeledValue label={t('ui.character_sheet.level', { level = level, max = max_level })} value={progress} />
+      <Bar fraction={needed > 0 and experience / needed or 1} color="accent" />
+    </view>}
+    <view style={{ gap = 4, margin_top = 4 }}>
+      <LabeledValue label={t'ui.character_sheet.health'} value={math.max(health, 0)..' / '..max_health} />
+      <Bar fraction={health / max_health} color="danger" />
+    </view>
+    {has_levels and skill_points > 0 and <text style={{ font = 'text_small', color = 'warning' }}>
+      {t('ui.character_sheet.skill_points', { points = skill_points })}
+    </text>}
+    {has_levels and attribute_points > 0 and <text style={{ font = 'text_small', color = 'warning' }}>
+      {t('ui.character_sheet.attribute_points', { points = attribute_points })}
+    </text>}
+  </view>
+end
+
+--- The button that asks the server to roll a stat or a skill.
+-- @param props [Map id (String attribute ID)]
+local function RollButton(props)
+  return <button icon="fa-dice-d20" style={{ font = 'text_small', padding = { 4, 10 } }}
+    on_press={function() Cable.send('fl_stats_roll', props.id) end}>
+    {t'ui.character_sheet.roll'}
+  </button>
+end
+
+--- The button that spends an unspent point on a stat or a skill.
+-- @param props [Map message (String Cable message to send), id (String attribute ID),
+--   tooltip (String)]
+local function SpendButton(props)
+  return <button icon="fa-plus" tooltip={props.tooltip}
+    style={{ font = 'text_small', padding = { 4, 8 }, background = 'accent_dark' }}
+    on_press={function() Cable.send(props.message, props.id) end} />
+end
+
+--- The line of a stat.
+-- @param props [Map actor (Player), stat (AttributeBase), can_spend (Boolean whether the
+--   character has attribute points left)]
+local function StatRow(props)
+  local actor, stat = props.actor, props.stat
+  local id = stat.attribute_id
+  local level = actor:get_attribute(id)
+  local base_level = actor:get_attribute(id, true)
+  local level_name = stat:get_level_name(level)
+
+  return <view style={card_style} tooltip={stat.description and t(stat.description) or nil}>
+    <Icon icon={stat.icon} size={32} font="menu_large" />
+    <view style={{ flex = 1, gap = 0 }}>
+      <text style={{ font = 'text_normal', wrap_text = false }}>{t(stat.name)}</text>
+      {level_name and <text style={{ font = 'text_smaller', color = 'text_muted', wrap_text = false }}>{t(level_name)}</text>}
+    </view>
+    <text style={{ font = 'menu_large', min_width = 48, text_align = 'right', wrap_text = false }}>
+      {signed(actor:get_attribute_modifier(id))}
+    </text>
+    <RollButton id={id} />
+    {props.can_spend and base_level < stat.max and <SpendButton message="fl_levels_spend_attribute" id={id}
+      tooltip={t('ui.character_sheet.spend_attribute', { name = t(stat.name) })} />}
+  </view>
+end
+
+--- The line of a skill.
+-- @param props [Map actor (Player), skill (AttributeBase), can_spend (Boolean whether the
+--   character has skill points left)]
+local function SkillRow(props)
+  local actor, skill = props.actor, props.skill
+  local id = skill.attribute_id
+  local rank = actor:get_attribute(id)
+  local base_rank = actor:get_attribute(id, true)
+  local rank_name = t(skill:get_level_name(rank) or '')
+  local proficiency = Stats:get_proficiency(actor, id)
+  local key_stat = isstring(skill.attribute) and Attributes.find(skill.attribute)
+  local details
+
+  if key_stat then
+    local args = {
+      rank = rank_name,
+      attribute = t('attribute.'..key_stat.attribute_id..'.short'),
+      modifier = signed(actor:get_attribute_modifier(key_stat.attribute_id)),
+      proficiency = signed(proficiency)
+    }
+
+    details = t(proficiency != 0 and 'ui.character_sheet.skill_trained' or 'ui.character_sheet.skill_untrained', args)
+  else
+    details = rank_name
+  end
+
+  return <view style={card_style} tooltip={skill.description and t(skill.description) or nil}>
+    <Icon icon={skill.icon} size={24} font="text_normal" />
+    <view style={{ flex = 1, gap = 0 }}>
+      <text style={{ font = 'text_small', wrap_text = false }}>{t(skill.name)}</text>
+      <text style={{ font = 'text_smallest', color = 'text_muted', wrap_text = false }}>{details}</text>
+    </view>
+    <text style={{ font = 'menu_normal', min_width = 48, text_align = 'right', wrap_text = false }}>
+      {signed(actor:get_skill_modifier(id))}
+    </text>
+    <RollButton id={id} />
+    {props.can_spend and base_rank < skill.max and <SpendButton message="fl_levels_spend_skill" id={id}
+      tooltip={t('ui.character_sheet.spend_skill', { name = t(skill.name) })} />}
+  </view>
+end
+
+--- A notice in place of a list that is empty.
+-- @param props [Map text (String)]
+local function Notice(props)
+  return <view style={{ padding = { 8, 12 }, background = 'surface_raised', radius = 6 }}>
+    <text style={{ font = 'text_small', color = 'text_muted' }}>{props.text}</text>
+  </view>
+end
+
+return function(props)
+  local actor = PLAYER
+
+  if !IsValid(actor) or !actor:is_character_loaded() then
+    return <view style={{ padding = 12, background = 'surface', radius = 6, border = 'border' }}>
+      <Notice text={t'ui.character_sheet.no_character'} />
+    </view>
+  end
+
+  local has_levels = Levels and isfunction(actor.get_level)
+  local can_spend_attribute = has_levels and actor:get_attribute_points() > 0
+  local can_spend_skill = has_levels and actor:get_skill_points() > 0
+  local stats = get_stats(actor)
+  local groups = get_skill_groups(actor, stats)
+
+  return <view style={{ direction = 'row', gap = 12, padding = 12, background = 'surface', radius = 6, border = 'border' }}>
+    <view style={{ width = '44%', gap = 8 }}>
+      <Header actor={actor} />
+      <text style={{ font = 'menu_normal', margin_top = 4, color = 'text_muted' }}>{t'ui.character_sheet.attributes'}</text>
+      <scroll style={{ flex = 1, gap = 4 }}>
+        {#stats == 0 and <Notice text={t'ui.character_sheet.no_attributes'} />}
+        {Lumen.map(stats, function(stat)
+          return <StatRow key={stat.attribute_id} actor={actor} stat={stat} can_spend={can_spend_attribute} />
+        end)}
+      </scroll>
+    </view>
+    <view style={{ flex = 1, gap = 8 }}>
+      <text style={{ font = 'menu_normal', color = 'text_muted' }}>{t'ui.character_sheet.skills'}</text>
+      <scroll style={{ flex = 1, gap = 4, padding = { 0, 8, 0, 0 } }}>
+        {#groups == 0 and <Notice text={t'ui.character_sheet.no_skills'} />}
+        {Lumen.map(groups, function(group, index)
+          return <view key={group.id} style={{ gap = 4, margin_top = index > 1 and 8 or 0 }}>
+            <text style={{ font = 'text_normal', color = 'accent_light' }}>{group.title}</text>
+            {Lumen.map(group.skills, function(skill)
+              return <SkillRow key={skill.attribute_id} actor={actor} skill={skill} can_spend={can_spend_skill} />
+            end)}
+          </view>
+        end)}
+      </scroll>
+    </view>
+  </view>
+end

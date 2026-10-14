@@ -44,7 +44,7 @@ en:
         desc: How many seconds a player can stay completely under water before they start to drown.
       drowning_damage:
         name: Drowning Damage
-        desc: How much damage a drowning player takes at once.
+        desc: "The dice formula of the damage a drowning player takes at once, such as 1d4 or a plain number. A formula that cannot be rolled deals 1 damage."
       drowning_interval:
         name: Drowning Damage Interval
         desc: How many seconds pass between two bits of drowning damage.

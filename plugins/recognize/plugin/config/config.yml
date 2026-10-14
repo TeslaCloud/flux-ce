@@ -1,0 +1,29 @@
+categories:
+  recognize:
+    name: config.recognize.title
+    description: config.recognize.desc
+configs:
+  recog_enabled:
+    name: config.recognize.enabled.name
+    description: config.recognize.enabled.desc
+    category: recognize
+    type: boolean
+    default_value: true
+  recog_must_see:
+    name: config.recognize.must_see.name
+    description: config.recognize.must_see.desc
+    category: recognize
+    type: boolean
+    default_value: true
+  recog_forget_on_death:
+    name: config.recognize.forget_on_death.name
+    description: config.recognize.forget_on_death.desc
+    category: recognize
+    type: boolean
+    default_value: false
+  recog_forgotten_on_death:
+    name: config.recognize.forgotten_on_death.name
+    description: config.recognize.forgotten_on_death.desc
+    category: recognize
+    type: boolean
+    default_value: false

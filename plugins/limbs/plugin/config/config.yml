@@ -17,7 +17,7 @@ configs:
     min_value: 0
     max_value: 10
     decimals: 2
-    default_value: 2
+    default_value: 1
   limbs_legs_slow:
     name: config.limbs.legs_slow.name
     description: config.limbs.legs_slow.desc

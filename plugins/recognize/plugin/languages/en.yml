@@ -1,0 +1,61 @@
+en:
+  command:
+    charforget:
+      description: Make a character forget the characters of other players.
+      syntax: <target> <character to forget>
+      message: "{player} has made {target} forget {forgotten}."
+    charclearrecognition:
+      description: "Clear the recognitions of a character: the characters it knows (own), the characters that know it (others) or both (all)."
+      syntax: "<target> [own|others|all]"
+      message:
+        own: "{player} has made {target} forget everyone."
+        others: "{player} has made everyone forget {target}."
+        all: "{player} has made {target} forget everyone and everyone forget {target}."
+  config:
+    recognize:
+      title: Recognition
+      desc: Settings of the character recognition system.
+      enabled:
+        name: Recognition system
+        desc: Whether characters have to introduce themselves before others know their names. When disabled, everyone recognizes everyone.
+      must_see:
+        name: Introductions need line of sight
+        desc: Whether a character only learns the name of someone who introduces themselves when nothing blocks the view between them.
+      forget_on_death:
+        name: Forget everyone on death
+        desc: Whether a character who dies forgets every character they recognized.
+      forgotten_on_death:
+        name: Be forgotten on death
+        desc: Whether a character who dies is forgotten by everyone who knew them under their real name. Those who only knew a false name keep it.
+  error:
+    recognize:
+      invalid_name: You cannot introduce yourself under this name.
+      invalid_mode: "'{mode}' is not a valid mode! Use own, others or all."
+      no_character: None of these players has a character loaded.
+      nothing_to_forget: None of these characters knows the characters to forget.
+  notification:
+    recognize:
+      new_name: "You have remembered a new name: {name}"
+      change_name: You now know {name} as {new_name}
+      true_name: You introduced yourself as {name} (real name)
+      false_name: You introduced yourself as {name} (fake name)
+      forgotten: You no longer remember {name}.
+      forgot_everyone: You no longer remember anyone you knew.
+  ui:
+    hud:
+      stranger_male: Stranger
+      stranger_female: Stranger
+    recognize:
+      title: Recognition
+      message: What would you like others to know you as?
+      character_name: Real Name
+      fake_name: Fake Name
+      enter_fake_name: Enter Fake Name...
+      forget: Forget
+      range: Range
+      previous_names: You are also known as
+      types:
+        whisper: All characters within whisper range
+        talk: All characters within talk range
+        yell: All characters within yell range
+        target: Character you looking at

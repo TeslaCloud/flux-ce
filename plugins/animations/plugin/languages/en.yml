@@ -1,0 +1,66 @@
+en:
+  animation:
+    sit_ground:
+      name: Sit on the ground
+    sit_wall:
+      name: Sit against a wall
+    lean_back:
+      name: Lean against a wall
+    lean_arms_back:
+      name: Lean against a wall (arms back)
+    lean_arms_down:
+      name: Lean against a wall (arms down)
+    idle_1:
+      name: Idle stance 1
+    idle_2:
+      name: Idle stance 2
+    idle_3:
+      name: Idle stance 3
+    idle_4:
+      name: Idle stance 4
+    pant:
+      name: Catch your breath
+    pant_wall:
+      name: Catch your breath against a wall
+    window:
+      name: Look out of a window
+    cheer:
+      name: Cheer
+    wave:
+      name: Wave
+    wave_close:
+      name: Wave (close)
+    cp_lean:
+      name: Lean against a wall (baton)
+    cp_threat_1:
+      name: Threatening stance 1
+    cp_threat_2:
+      name: Threatening stance 2
+    cp_deny:
+      name: Deny access
+    cp_motion_left:
+      name: Motion to the left
+    cp_motion_right:
+      name: Motion to the right
+  config:
+    animations:
+      title: Animations
+      desc: Stances and gestures that players pick in the context menu.
+      cooldown:
+        name: Animation Cooldown
+        desc: How many seconds a player must wait after starting an animation before they can start another one. Set to 0 to disable.
+      third_person:
+        name: Third Person During Animations
+        desc: Whether players see their character in third person for as long as they play an animation.
+  error:
+    animations:
+      busy: You are already playing an animation!
+      cooldown: "You have to wait {time} s. before you can play another animation."
+      crouching: You cannot do this while you are crouching!
+      model: Your character's model cannot play this animation!
+      not_on_ground: You must be standing on the ground!
+      wall_behind: You must be standing with your back against a wall!
+      wall_front: You must be standing right in front of a wall, facing it!
+  ui:
+    animations:
+      title: Animations

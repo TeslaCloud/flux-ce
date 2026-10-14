@@ -70,7 +70,7 @@ configs:
     type: number
     min_value: 1
     max_value: 100
-    default_value: 2
+    default_value: 1
   health_regen_interval:
     name: config.damage.health_regen_interval.name
     description: config.damage.health_regen_interval.desc
@@ -113,10 +113,8 @@ configs:
     name: config.damage.drowning_damage.name
     description: config.damage.drowning_damage.desc
     category: damage
-    type: number
-    min_value: 1
-    max_value: 100
-    default_value: 7
+    type: string
+    default_value: '1d4'
   drowning_interval:
     name: config.damage.drowning_interval.name
     description: config.damage.drowning_interval.desc

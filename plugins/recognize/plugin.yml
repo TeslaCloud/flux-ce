@@ -1,0 +1,6 @@
+name: Recognize
+description: Advanced recognize system that allows players to introduce themselves with false name or nickname.
+author: TeslaCloud Studios
+depends:
+  - characters
+  - rpcommands

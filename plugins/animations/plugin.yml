@@ -1,0 +1,5 @@
+name: Animations
+description: Adds the ability to play animations of your character.
+author: TeslaCloud Studios
+depends:
+  - thirdperson

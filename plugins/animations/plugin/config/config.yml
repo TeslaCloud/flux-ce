@@ -1,0 +1,20 @@
+categories:
+  animations:
+    name: config.animations.title
+    description: config.animations.desc
+configs:
+  animations_cooldown:
+    name: config.animations.cooldown.name
+    description: config.animations.cooldown.desc
+    category: animations
+    type: number
+    min_value: 0
+    max_value: 60
+    decimals: 1
+    default_value: 2
+  animations_third_person:
+    name: config.animations.third_person.name
+    description: config.animations.third_person.desc
+    category: animations
+    type: boolean
+    default_value: true

@@ -1,0 +1,6 @@
+name: RolePlay Commands
+description: Adds commands designed for roleplay gamemodes.
+author: TeslaCloud Studios
+depends:
+  - chatbox
+  - "sh_prefixes.lua"

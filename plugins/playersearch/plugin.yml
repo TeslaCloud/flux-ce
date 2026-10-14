@@ -1,0 +1,5 @@
+name: Player Search
+description: Adds ability for players to search other players.
+author: TeslaCloud Studios
+depends:
+  - inventory

@@ -1,0 +1,92 @@
+categories:
+  stats:
+    name: config.stats.title
+    description: config.stats.desc
+configs:
+  stats_creation_points:
+    name: config.stats.creation_points.name
+    description: config.stats.creation_points.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 21
+    default_value: 2
+  stats_faction_bonuses:
+    name: config.stats.faction_bonuses.name
+    description: config.stats.faction_bonuses.desc
+    category: stats
+    type: boolean
+    default_value: true
+  stats_perception_hearing:
+    name: config.stats.perception_hearing.name
+    description: config.stats.perception_hearing.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 10
+    decimals: 1
+    default_value: 1.5
+  stats_endurance_stamina:
+    name: config.stats.endurance_stamina.name
+    description: config.stats.endurance_stamina.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 30
+    default_value: 10
+  stats_endurance_recovery:
+    name: config.stats.endurance_recovery.name
+    description: config.stats.endurance_recovery.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 30
+    default_value: 10
+  stats_strength_lifting:
+    name: config.stats.strength_lifting.name
+    description: config.stats.strength_lifting.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 30
+    default_value: 10
+  stats_reflexes_fall:
+    name: config.stats.reflexes_fall.name
+    description: config.stats.reflexes_fall.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 30
+    default_value: 10
+  stats_charisma_prices:
+    name: config.stats.charisma_prices.name
+    description: config.stats.charisma_prices.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 10
+    default_value: 5
+  stats_intelligence_learning:
+    name: config.stats.intelligence_learning.name
+    description: config.stats.intelligence_learning.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 30
+    default_value: 10
+  stats_determination_pain:
+    name: config.stats.determination_pain.name
+    description: config.stats.determination_pain.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 30
+    default_value: 10
+  stats_rank_bonus:
+    name: config.stats.rank_bonus.name
+    description: config.stats.rank_bonus.desc
+    category: stats
+    type: number
+    min_value: 0
+    max_value: 10
+    default_value: 2

@@ -1,0 +1,103 @@
+ru:
+  command:
+    it:
+      description: Опишите безличное действие.
+      syntax: <текст>
+    me:
+      description: Опишите действие своего персонажа. Вы можете использовать "*текст*" вместо этой команды. (шёпот) и крик!! также работают с этой командой.
+      syntax: <текст>
+    whisper:
+      description: Шепните что-нибудь. Вы можете использовать "(текст)" вместо этой команды. Количество скобок влияет на громкость шёпота (макс. 3).
+      syntax: <текст>
+    yell:
+      description: Крикните что-нибудь. Вы можете использовать "текст!!" вместо этой команды. Количество восклицательных знаков влияет на громкость крика (макс. 4).
+      syntax: <текст>
+    event:
+      description: Отправить сообщение с описанием события всем игрокам на сервере.
+      syntax: <текст>
+    eventlocal:
+      description: Отправить сообщение с описанием события игрокам в радиусе речи от вас.
+      syntax: <текст>
+    gag:
+      description: Запретить игроку использовать ООС чаты.
+      syntax: <игрок> <длительность> [причина]
+      message: "{admin} заблокировал OOC чат у {target} на {time} ({reason})."
+    ungag:
+      description: Разрешить игроку использовать ООС чаты.
+      syntax: <игрок>
+      message: "{admin} разблокировал OOC у {target}."
+    its:
+      description: Оставить надпись, описывающие некоторые детали окружения.
+      syntax: <текст>
+    itsremove:
+      description: Удалить надпись, на которую вы смотрите.
+    roll:
+      description: "Roll dice: a d20 without an argument, a die with that many sides for a number, a stat or a skill by its name, or a dice formula such as 2d6 + 3, 4d6kh3 or 1d20 + stealth. Looking at a nearby player rolls the same for both of you."
+      syntax: "[sides, stat, skill or formula]"
+  config:
+    roleplay_chat:
+      title: Ролевой чат
+      desc: Настройки игрового (IC) и неигрового (OOC) чата.
+      talk_radius:
+        name: Радиус речи
+        desc: Расстояние в юнитах, на котором слышна обычная речь персонажа. От него зависят шёпот, крик, локальный OOC чат и рации.
+      ooc_interval:
+        name: Задержка OOC чата
+        desc: Сколько секунд игрок должен подождать между двумя сообщениями в OOC чате. Установите 0, чтобы отключить.
+      looc_interval:
+        name: Задержка LOOC чата
+        desc: Сколько секунд игрок должен подождать между двумя сообщениями в локальном OOC чате. Установите 0, чтобы отключить.
+      ooc_avatars:
+        name: Аватары в OOC чате
+        desc: Показывать ли аватар Steam перед именем игрока в сообщениях OOC чата.
+      roll_versus:
+        name: Встречные броски
+        desc: Делать ли бросок и за игрока поблизости, на которого смотрит бросающий.
+  error:
+    roll:
+      invalid: "Cannot roll that: {message}"
+    its_too_close: Слишком близко к другому описанию местности.
+    speak:
+      dead: Вы не можете говорить и действовать, пока вы мертвы.
+      knocked_out: Вы не можете говорить и действовать, пока вы без сознания.
+  notification:
+    cooldown:
+      ooc:
+        "1": "Подождите ещё {time} секунду, прежде чем снова писать в OOC чат."
+        "2": "Подождите ещё {time} секунды, прежде чем снова писать в OOC чат."
+        "5": "Подождите ещё {time} секунд, прежде чем снова писать в OOC чат."
+      looc:
+        "1": "Подождите ещё {time} секунду, прежде чем снова писать в LOOC чат."
+        "2": "Подождите ещё {time} секунды, прежде чем снова писать в LOOC чат."
+        "5": "Подождите ещё {time} секунд, прежде чем снова писать в LOOC чат."
+    mute:
+      "1": "Вы не можете использовать OOC чат еще {time} секунду."
+      "2": "Вы не можете использовать OOC чат еще {time} секунды."
+      "5": "Вы не можете использовать OOC чат еще {time} секунд."
+    muted: Вам был отключен ООС чат на {time}.
+    unmuted: Вам был включен ООС чат.
+    static_text:
+      added: Описание местности добавлено.
+      removed: Описание местности удалено.
+      not_found: Доступное для удаления описание местности не найдено.
+  permission:
+    categories:
+      roleplay: Ролевая игра
+  ui:
+    hud:
+      display_typing:
+        talking: ГОВОРИТ...
+        whispering: ШЕПЧЕТ...
+        yelling: КРИЧИТ...
+        performing: ДЕЙСТВУЕТ...
+    chat:
+      say: "говорит"
+      yell: "кричит"
+      whisper: "шепчет"
+      roll: "has rolled {roll}."
+      roll_named: "has rolled {name}: {roll}."
+      roll_versus: "has rolled {roll} against"
+      roll_versus_named: "has rolled {name}: {roll} against"
+      roll_versus_reply: ", who has rolled {roll}."
+      roll_critical_success: "(critical success)"
+      roll_critical_failure: "(critical failure)"

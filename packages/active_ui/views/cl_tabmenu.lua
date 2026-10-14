@@ -157,7 +157,7 @@ function PANEL:Init()
 
     self.buttons[v.id] = button
 
-    if v.default then
+    if v.default and !self.default_panel then
       self.default_panel = v.id
     end
   end
@@ -224,7 +224,8 @@ end
 -- @param id [String unique ID of the item]
 -- @param data [Map item options. priority (Number) is required. Optional: title (String),
 --   icon (String FontAwesome ID), panel (String VGUI class to open on click),
---   default (Boolean open this item when none was open before),
+--   default (Boolean the item with the lowest priority that sets it opens when none was
+--   open before),
 --   callback (Function(menu_panel, button) called after the click was handled),
 --   override (Function(menu_panel, button) called instead of opening a panel)]
 -- @param index=nil [Number unused]

@@ -3,6 +3,8 @@ en:
     category:
       other: Other
     level:
+      legendary: Legendary
+      heroic: Heroic
       superb: Superb
       great: Great
       good: Good

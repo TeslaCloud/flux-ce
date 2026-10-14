@@ -1,0 +1,5 @@
+name: Door Keys
+description: Adds keys support for doors.
+author: TeslaCloud Studios
+depends:
+  - doors

@@ -1,0 +1,555 @@
+en:
+  attribute:
+    rank:
+      untrained: Untrained
+      trained: Trained
+      expert: Expert
+      master: Master
+      legendary: Legendary
+    level:
+      legendary: Legendary
+      heroic: Heroic
+      superb: Superb
+      great: Great
+      good: Good
+      fair: Fair
+      mediocre: Mediocre
+      poor: Poor
+      terrible: Terrible
+    strength:
+      title: Strength
+      short: STR
+      description:
+        Physical fitness of your character. Affects the chance of a
+        successful bruteforce action, such as knocking down a door.
+      legendary:
+        Your strength is the stuff of stories. Feats that would take several people
+        are a matter of course for you, and few things can hold against your grip.
+        In melee, you are a force that very little can withstand.
+      heroic:
+        Your strength borders on the superhuman. Doors give way under your shoulder,
+        you carry a grown man without slowing down, and a single blow of yours can
+        end a fight.
+      superb:
+        Your strength is akin to that of an Olympian. You are able
+        to deadlift much weight with minimal effort, and your melee
+        has the potential of being fatal.
+      great:
+        Your muscles are in fine shape. Able to lift heavy objects
+        with some effort, your melee is indeed a strong counter to foes.
+      good:
+        Your strength is above average. You are able to lift heavy objects
+        with strenuous efforts that may fatigue, your melee has good defensive potential.
+      fair:
+        Your strength is average. You have difficulty lifting heavy
+        objects, and you may injure yourself if great caution is not used.
+        In melee, it may be easy to be overpowered.
+      mediocre:
+        Your strength is somewhat poor. Objects with even a small amount of
+        weight to them can feel unwieldy and clumsy. In melee, your efforts
+        largely go wasted without the assistance of a weapon.
+      poor:
+        You hold little to no strength whatsoever. Applying any physical
+        effort to anything, even walking in some cases, can be of extreme
+        difficulty. In melee, you are easily overpowered by mostly everything.
+      terrible:
+        No strength. Applying any strength to any activity may in fact be
+        of some detriment to you. Your melee is unheard of, you are so
+        delicate that a strong breeze could knock you over.
+    reflexes:
+      title: Reflexes
+      short: REF
+      description:
+        Dexterity and reaction timings of your character. Takes effect in
+        lockpicking, dodging, etc.
+      legendary:
+        Your reflexes defy belief. You catch what others never see falling, dance
+        through danger untouched, and no lock or pocket is safe from your fingers.
+      heroic:
+        Your reflexes are nearly preternatural. You move before others have even
+        decided to act, slip past blows as if you saw them coming, and your hands
+        never tremble.
+      superb: 
+        Your reflexes are as sharp as a Ninja. Performing great feats
+        of agility is of no effort to you, and your hands are naturally
+        nimble and clever. Your melee is extremely easy to land, you also
+        avoid strikes with ease.
+      great:
+        Your reflexes are really great. Applying reflexes to anything comes
+        with relative ease, and some acrobatics come naturally to you. Your
+        melee is easy to land, and foes have difficulty landing strikes on you.
+      good:
+        Your agility is above that of the average person. You can make strides
+        up stairs with ease and are unlikely to lose your balance in your average
+        daily affairs. Though you are not a parkour master or an excellent fighter,
+        your skills are notable.
+      fair:
+        Your agility is that of the average human. You have a fair time 
+        getting around normally, but begin to struggle when encountered with 
+        climbing large obstacles or quickly vaulting over objects. Nothing about 
+        your speed or dexterity is notable.
+      mediocre:
+        You have mediocre agility. You may appear clumsy or slow to a 
+        mild degree, and have difficulty climbing or hiking your way around rough 
+        terrain. Your punches land slower than average.
+      poor:
+        Your agility is far below average, you are quite the slow runner 
+        and find yourself having a difficult time when it comes to races 
+        between others.
+      terrible: 
+        You are quite slow, going at speeds that most if not 
+        all can keep up with. This could almost be deemed as a handicap. 
+    perception:
+      title: Perception
+      short: PER
+      description:
+        General awareness of your character. Affects the chance of
+        noticing something quick enough, or something that your opponent cannot see.
+      legendary:
+        Nothing escapes you. You read a room the moment you step into it, pick out the
+        faintest sound over the din of the city, and an ambush meant for you is an
+        ambush you saw coming.
+      heroic:
+        Your senses are honed beyond anything ordinary. You hear a whisper through a
+        wall, pick a face out of a crowd at a glance, and almost nothing takes you
+        by surprise.
+      superb:
+        Your visual and audible senses are extraordinary. Spotting a needle in a 
+        haystack is one of the easiest tasks you can perform, next to being able 
+        to differentiate twins (or even CPs). A sneaking person will have a hard 
+        time getting past you.
+      great:
+        Your attentiveness is very remarkable. Noticing small details even from 
+        a distance is possible while close-up objects are almost viewed in slow 
+        motion. Decrypting noises is also much easier and more effective.
+      good:
+        Your skill to observe from a distance and perceive quiet noises is more 
+        than average. Hard to beat in thimbles, you are likely to spot an enemy 
+        before they spot you and can keep creeping around while paying attention 
+        to distant footsteps.
+      fair:
+        Your senses are in working condition and unremarkable. Sudden changes 
+        are easy to spot while distant figures can be identified over time. 
+        Hearing approaching footsteps is a challenging, but manageable task.
+      mediocre:
+        You have a common issue with your sighting and listening. It is possible 
+        for you to notice objects from far away, but not differentiate or identify 
+        them. Most noises are unclear and very dull compared to each other.
+      poor:
+        Your defect organs of perception work quite poorly. Small animals or objects 
+        are a rare sight, if ever perceived by you in whatever way. Listening to 
+        suppressed noises is not an option since they might confuse you more than 
+        provide information.
+      terrible:
+        Your illnesses associated with hearing or vision have devastating effects. 
+        You are almost deaf or have very bad eyesight. Even processing the most 
+        simple signals by others appears very hard for you.
+    endurance:
+      title: Endurance
+      short: END
+      description:
+        General fitness and toughness of your character. Determines how
+        much beating they can take.
+      legendary:
+        Your endurance is unrivalled. Pain, hunger and exhaustion barely touch you,
+        and you keep standing long after anyone else would have collapsed.
+      heroic:
+        Your body is a fortress. You shrug off wounds that would fell others, march
+        for days on little food and sleep, and sickness simply passes you by.
+      superb:
+        Your body is the true meaning of durability and discipline. There are 
+        many different forms of pain and potential challenges you can put yourself 
+        through and you will most likely come out unscathed.
+      great:
+        You are extremely hardy. You almost do not get sick and easily master 
+        the mountain hike.
+      good:
+        Although strong, your body has only started its journey. You can take 
+        a beating and can outlast most people in physical activities where others falter.
+      fair:
+        Just like nearly everyone else, your physical form is plainly standard. 
+        You tolerate pain and can steadily take on difficulties for a period of time.
+      mediocre:
+        You’re not that fit or tolerant, but can still hold your own. While 
+        you suffer physically like when climbing upstairs and becoming tired, 
+        it doesn’t usually get worse from there.
+      poor:
+        Your body is fragile, more so than most. You attract sickness like a 
+        moth to a flame and your character suffers from walking various distances.
+      terrible:
+        You are constantly exhausted and always want to sleep. You do not even 
+        remember the last time you were properly healthy.
+    intelligence:
+      title: Intelligence
+      short: INT
+      description:
+        Strength of mind. Determines how smart your character is. Can
+        come in handy when mentally assaulting other characters.
+      legendary:
+        Your mind is one in a generation. There is hardly a subject you cannot grasp,
+        and your insight turns impossible situations into solvable ones.
+      heroic:
+        Your intellect is exceptional. You master new fields in days, see through
+        problems that stump experts, and plan several steps ahead of everyone around you.
+      superb:
+        You are a genius. Your IQ is far above average, your knowledge covers 
+        a lot of very different areas. Not many can match you when it comes to 
+        a battle of wits.
+      great:
+        You are extremely smart. Complex sciences are given to you quite easily. 
+        You are mentally fast, able to calculate workarounds much faster than most. 
+      good:
+        Your IQ is above average. You are very erudite and can solve most of 
+        the tasks. You are not bad at making almost perfect decisions.
+      fair:
+        You have a normal level of intelligence. You had a decent education 
+        given to you. You know your way around most problems/situations when they arise.
+      mediocre:
+        You are not too smart. Exact sciences are given to you with difficulty. 
+        You can work your way around a problem if you think hard enough.
+      poor:
+        Your mental abilities are insignificant. It is hard for you to express 
+        your thoughts. You may find it quite hard to exit out of situations 
+        requiring strategical thinking. 
+      terrible:
+        You are weak-minded. It is difficult for you to pronounce words. 
+        Difficult situations are almost impossible for you.
+    determination:
+      title: Determination
+      short: DET
+      description:
+        Willpower and resolve of your character. Determines how well they hold
+        together under pain, fear and pressure.
+      legendary:
+        Your will is a force of nature. No threat, no torment and no hopelessness can
+        make you yield, and your resolve steadies everyone around you.
+      heroic:
+        Your resolve is ironclad. Fear has no hold on you, and you fight on through
+        wounds and despair that would break almost anyone.
+      superb:
+        Your will is unbreakable. Pain, fear and exhaustion are things you notice
+        and then set aside. You carry on long after anyone else would have given up.
+      great:
+        You are remarkably strong-willed. It takes a lot to shake you, and wounds
+        that would stop most people only slow you down.
+      good:
+        Your resolve is above average. You keep your head in a tight spot and can
+        push through pain when it matters.
+      fair:
+        Your willpower is that of the average person. You can grit your teeth for
+        a while, but pain and fear get to you like they do to anyone.
+      mediocre:
+        You are somewhat weak-willed. Pressure wears you down quickly, and a bad
+        wound takes most of the fight out of you.
+      poor:
+        You have little resolve. You give in to pain and intimidation easily and
+        tend to back down when things get rough.
+      terrible:
+        You have no will of your own. The slightest pain or threat is enough to
+        break you completely.
+    charisma:
+      title: Charisma
+      short: CHA
+      description:
+        Presence and force of personality of your character. Affects haggling,
+        persuading, lying to and intimidating other characters.
+      legendary:
+        Your presence is magnetic beyond words. People hang on your every word,
+        follow you without question, and even your enemies find themselves wanting
+        your approval.
+      heroic:
+        You are captivating. A few words from you can calm a crowd or turn a
+        stranger into an ally, and you rarely leave a negotiation without what you
+        came for.
+      superb:
+        Your charm is remarkable. People warm to you instantly, trust you easily
+        and find it hard to say no to you.
+      great:
+        You are very likeable and persuasive. You read people well and know just
+        what to say to get them on your side.
+      good:
+        Your social skills are above average. You make a good impression, can talk
+        your way out of minor trouble and get fair deals from traders.
+      fair:
+        You get along with people like anyone else does. You can hold a conversation
+        and make your point, but nobody would call you a smooth talker.
+      mediocre:
+        You are somewhat awkward around others. Your words often come out wrong,
+        and people tend to overlook you or take you less seriously.
+      poor:
+        You put people off. Strangers distrust you, merchants overcharge you, and
+        your attempts to persuade anyone usually fall flat.
+      terrible:
+        You are off-putting to almost everyone. Conversations with you go wrong from
+        the first word, and people avoid you whenever they can.
+    athletics:
+      title: Athletics
+      short: ATH
+      description: Running, climbing, jumping, swimming and other feats of raw physical exertion.
+      untrained: You have no training in athletics and rely on whatever fitness you happen to have.
+      trained: You know how to pace a run, climb a fence and swim without wasting your strength.
+      expert: You scale walls, sprint across rooftops and haul yourself out of trouble with practiced ease.
+      master: Your body is a finely tuned machine that can push through almost any physical obstacle.
+      legendary: Your athletic feats look impossible to onlookers, as if obstacles simply do not apply to you.
+    close_combat:
+      title: Close Combat
+      short: MEL
+      description: "Fighting at arm's length with fists, blunt weapons, blades and batons."
+      untrained: You swing wildly and hope for the best when a fight gets close.
+      trained: You know how to throw a punch, hold a weapon properly and keep your guard up.
+      expert: You fight with skill and discipline, reading your opponent and striking where it hurts.
+      master: Few can stand against you up close, as you turn every opening into a decisive blow.
+      legendary: "Your skill is fearsome, and a fight at arm's length is one you have already won."
+    acrobatics:
+      title: Acrobatics
+      short: ACR
+      description: Balance, tumbling, dodging and squeezing through tight spaces.
+      untrained: You keep your footing on flat ground, but little else.
+      trained: You can keep your balance on a narrow ledge and roll out of a fall.
+      expert: You vault, tumble and twist out of danger with graceful precision.
+      master: You move through cluttered terrain and falling debris as if it were an open street.
+      legendary: Your agility borders on the unreal, and gravity seems to bend to your will.
+    stealth:
+      title: Stealth
+      short: STL
+      description: Moving unseen and unheard, hiding and shadowing others.
+      untrained: You are about as quiet as anyone else walking down a corridor.
+      trained: You know how to watch your step and keep to the shadows.
+      expert: You slip past patrols and cameras with little chance of being noticed.
+      master: You move like a ghost, and people only learn you were there long after you have gone.
+      legendary: You can vanish in plain sight, even under the closest watch.
+    larceny:
+      title: Larceny
+      short: LAR
+      description: Picking locks and pockets, sleight of hand and getting past security.
+      untrained: "You would not know where to start with a lock or a stranger's pocket."
+      trained: You can open simple locks and lift a loose wallet when nobody is looking.
+      expert: Most locks and pockets give way to your quick and careful hands.
+      master: You defeat complex locks and lift valuables from wary targets without a trace.
+      legendary: There is no lock you cannot open and no pocket you cannot empty unnoticed.
+    marksmanship:
+      title: Marksmanship
+      short: MRK
+      description: Accuracy with firearms, crossbows and thrown weapons.
+      untrained: You know which end of a gun to point, but little more.
+      trained: You can hit a target at a reasonable range and handle a firearm safely.
+      expert: Your shots are steady and accurate even under pressure.
+      master: You place your shots precisely where you want them, at almost any range.
+      legendary: Your aim is uncanny, and a single shot from you is often all it takes.
+    survival:
+      title: Survival
+      short: SUR
+      description: Finding food, water and shelter, keeping your bearings and enduring harsh conditions outdoors.
+      untrained: Away from the streets you know, you would be lost and hungry within a day.
+      trained: You can find clean water, build a basic shelter and keep your bearings.
+      expert: You live off the land comfortably and steer clear of the dangers of the wilds.
+      master: You thrive where others perish, reading terrain and weather like a book.
+      legendary: No wilderness, ruin or wasteland can kill you, however hard it tries.
+    fortitude:
+      title: Fortitude
+      short: FOR
+      description: Resisting poison, disease, hunger, cold and the toll of wounds.
+      untrained: "Your body is as vulnerable to illness and hardship as anyone's."
+      trained: You have learned to keep going through hunger, cold and minor illness.
+      expert: You shake off toxins and infections that would lay others low.
+      master: Your body withstands punishment that would kill most people.
+      legendary: Your constitution is nearly indomitable, and very little can bring you down.
+    observation:
+      title: Observation
+      short: OBS
+      description: Spotting details, noticing hidden things and reading a scene.
+      untrained: You notice what is right in front of you, and little else.
+      trained: You pick up on details that others walk past.
+      expert: You spot hidden things, tells and traps with a careful look.
+      master: Very little escapes your attention, however well it is concealed.
+      legendary: You see what others cannot, and the smallest detail tells you a whole story.
+    scavenging:
+      title: Scavenging
+      short: SCV
+      description: Searching ruins and refuse for useful supplies and salvage.
+      untrained: You rummage through junk and mostly come away with junk.
+      trained: You know where to look for the useful odds and ends that others miss.
+      expert: You come back from every ruin with something worth having.
+      master: You find supplies where everyone else swears there is nothing left.
+      legendary: Even picked-clean ruins seem to give up their last treasures to you.
+    medicine:
+      title: Medicine
+      short: MED
+      description: Treating wounds and illnesses, first aid and the knowledge of drugs.
+      untrained: You can put on a bandage, but have no idea what you are really doing.
+      trained: You can clean and dress wounds and treat common ailments.
+      expert: You set bones, stitch wounds and treat serious illness with confidence.
+      master: You perform complex procedures with makeshift tools and bring people back from the brink.
+      legendary: Your medical skill borders on the miraculous, saving those everyone else has given up on.
+    crafting:
+      title: Crafting
+      short: CRF
+      description: Building, repairing and improvising tools, weapons and equipment.
+      untrained: You can hammer a nail, but anything more complicated is beyond you.
+      trained: You can repair simple equipment and put together basic tools.
+      expert: You build reliable gear from scrap and fix most things that break.
+      master: You craft fine equipment from whatever materials are at hand.
+      legendary: Your work is a marvel, and you can make almost anything out of almost nothing.
+    technology:
+      title: Technology
+      short: TEC
+      description: Electronics, computers and machinery.
+      untrained: Machines and terminals are a mystery to you.
+      trained: You can operate and fix common electronics and simple machines.
+      expert: You hack terminals, rewire devices and keep machinery running.
+      master: You understand and manipulate even the most advanced technology.
+      legendary: There is no system you cannot understand, bypass or rebuild.
+    lore:
+      title: Lore
+      short: LOR
+      description: Knowledge of history, science, culture and the world at large.
+      untrained: You know little beyond what you have seen with your own eyes.
+      trained: You have a solid general education and know the basics of most subjects.
+      expert: You hold deep knowledge in several fields and can recall obscure facts.
+      master: Scholars would envy the breadth and depth of what you know.
+      legendary: Your knowledge is encyclopedic, and you have an answer for nearly every question.
+    persuasion:
+      title: Persuasion
+      short: PRS
+      description: Convincing others through reason, charm and honest argument.
+      untrained: You state your case and hope that others agree.
+      trained: You can present an argument clearly and win over reasonable people.
+      expert: You know how to find common ground and bring even skeptics around.
+      master: Your words can change minds that seemed set in stone.
+      legendary: You can talk almost anyone into almost anything, and leave them glad of it.
+    deception:
+      title: Deception
+      short: DEC
+      description: Lying, bluffing, disguises and misdirection.
+      untrained: Your lies are transparent, and your face gives you away.
+      trained: You can tell a convincing lie to someone who has no reason to doubt you.
+      expert: You bluff with a straight face and keep your stories consistent.
+      master: You weave lies so convincing that even suspicious people believe them.
+      legendary: Your deceptions are flawless, and the truth is whatever you say it is.
+    intimidation:
+      title: Intimidation
+      short: ITM
+      description: Coercing others through threats, presence and fear.
+      untrained: Your threats tend to be met with shrugs.
+      trained: You can make people uneasy enough to think twice.
+      expert: A hard look and a few words from you make most people back down.
+      master: People crumble under your threats and do as they are told.
+      legendary: Your mere presence is enough to make the bravest lose their nerve.
+    streetwise:
+      title: Streetwise
+      short: STW
+      description: Knowing the streets, the black market, the rumors and the people who matter.
+      untrained: You know little about how things really work on the streets.
+      trained: You know where to find a fence, a rumor or a back alley deal.
+      expert: You have contacts across the city and hear about things before others do.
+      master: Nothing happens on the streets without you learning of it soon after.
+      legendary: The underworld is your home, and every door in it opens for you.
+    composure:
+      title: Composure
+      short: CMP
+      description: Keeping calm under pressure and resisting fear, interrogation and manipulation.
+      untrained: Pressure gets to you quickly, and it shows.
+      trained: You can keep a level head when things go wrong.
+      expert: You stay calm under fire and give nothing away under questioning.
+      master: Threats, interrogation and panic slide off you like rain.
+      legendary: Your calm is unshakable, whatever the world throws at you.
+    focus:
+      title: Focus
+      short: FOC
+      description: Concentrating on a task through pain, distraction and fatigue.
+      untrained: Your mind wanders as soon as something else catches your attention.
+      trained: You can concentrate on a task despite noise and minor discomfort.
+      expert: You keep your attention fixed on your work through pain and chaos.
+      master: Once you set your mind to something, nothing can break your concentration.
+      legendary: Your focus is absolute, shutting out everything but the task at hand.
+  config:
+    stats:
+      title: Stats
+      desc: Character stats and what they change in play.
+      creation_points:
+        name: Stat points at creation
+        desc: How many points a new character has to spread over its stats. The chosen stat levels have to add up to this number, and no stat can be raised above 3 at creation.
+      faction_bonuses:
+        name: Faction stat bonuses
+        desc: Give characters the stat bonuses of their faction, as boosts that last for as long as they are in it.
+      perception_hearing:
+        name: Hearing range per perception level
+        desc: Meters added to the range at which a character hears in-character speech for every level of perception, and taken off for every level below zero. 0 turns the effect off.
+      endurance_stamina:
+        name: "Stamina per endurance level, %"
+        desc: Percent by which stamina drains slower and regenerates faster for every level of endurance, and the other way round below zero. 0 turns the effect off.
+      endurance_recovery:
+        name: "Recovery per endurance level, %"
+        desc: Percent by which health regeneration and the recovery of hurt limbs speed up for every level of endurance, and slow down below zero. Needs the Damage and Limb Damage plugins. 0 turns the effect off.
+      strength_lifting:
+        name: "Lifting per strength level, %"
+        desc: Percent by which the heaviest object a character can pick up and the force of their throw grow for every level of strength, and shrink below zero. 0 turns the effect off.
+      reflexes_fall:
+        name: "Fall damage per reflexes level, %"
+        desc: Percent of fall damage a character is spared for every level of reflexes, and takes on top for every level below zero. Needs the Damage plugin. 0 turns the effect off.
+      charisma_prices:
+        name: "Vendor prices per charisma level, %"
+        desc: Percent by which vendors sell cheaper to a character for every level of charisma, and dearer below zero. A price never falls below what the vendor pays for the item. Needs the Vendors plugin. 0 turns the effect off.
+      rank_bonus:
+        name: Proficiency per skill rank
+        desc: Bonus that every rank of a trained skill adds to the rolls of the skill. A trained skill also adds the level of the character, an untrained one adds nothing.
+      intelligence_learning:
+        name: "Skill progress per intelligence level, %"
+        desc: Percent by which the progress a character gains in skills grows for every level of intelligence, and shrinks below zero. 0 turns the effect off.
+      determination_pain:
+        name: "Injury penalties per determination level, %"
+        desc: Percent by which the slowdown and the aim drift of hurt limbs weaken for every level of determination, and grow below zero. Needs the Limb Damage plugin. 0 turns the effect off.
+  error:
+    stats:
+      roll: "Cannot roll {name}: {message}"
+      unknown_rollable: "'{name}' is not a stat or a skill."
+      not_stat: "'{name}' is not a stat."
+      not_skill: "'{name}' is not a skill."
+    attribute:
+      sum: Attribute sum is not equal to the maximum amount of the attributes.
+  notification:
+    stats:
+      roll: "{name}: {roll}"
+  ui:
+    effect:
+      hearing_radius: Hearing Radius
+      stamina_drain: Stamina Drain
+      stamina_regen: Stamina Regeneration
+      health_regen: Health Regeneration
+      limb_recovery: Limb Recovery
+      carry_mass: Carry Weight
+      throw_force: Throw Force
+      fall_damage: Fall Damage
+      vendor_prices: Vendor Prices
+      skill_progress: Skill Progress
+      limb_penalties: Injury Penalties
+    char_create:
+      invalid_points: Invalid amount of points
+      excess_points: You must assign all points
+      stats_points: "Points left: "
+      stats_random: Randomize
+      stats: Stats
+      cur_level: Current level
+      faction_bonus: "Faction bonus: {bonus}"
+      effects: Effects
+    character_sheet:
+      title: Character Sheet
+      level: "Level {level} of {max}"
+      experience: "{experience} / {total} XP"
+      max_level: Highest level reached
+      health: Health
+      skill_points: "Unspent skill points: {points}"
+      attribute_points: "Unspent attribute points: {points}"
+      attributes: Attributes
+      skills: Skills
+      other_skills: Other
+      roll: Roll
+      spend_attribute: "Spend an attribute point on {name}"
+      spend_skill: "Spend a skill point on {name}"
+      skill_trained: "{rank} · {attribute} {modifier} + proficiency {proficiency}"
+      skill_untrained: "{rank} · {attribute} {modifier}, no proficiency"
+      no_character: You have no active character.
+      no_attributes: There are no attributes to show.
+      no_skills: There are no skills to show.
+    tab_menu:
+      character_sheet: Character

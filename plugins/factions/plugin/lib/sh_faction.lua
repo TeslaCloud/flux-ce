@@ -532,7 +532,8 @@ if SERVER then
 
   --- Sets the maximum health and armor of a player to those of their faction and rank. A
   -- player whose faction and rank set none gets the defaults of 100 back if a faction had
-  -- changed them before, and is left alone otherwise. Server only.
+  -- changed them before, and is left alone otherwise. A maximum health returned by the
+  -- GetPlayerMaxHealth hook takes the place of the one of the faction and rank. Server only.
   -- @param target [Player]
   -- @param refill=false [Boolean also set the health and armor of the player to these
   --   maximums, as is done when they spawn]
@@ -541,6 +542,22 @@ if SERVER then
     local faction_table, rank = get_membership(target)
     local max_health = faction_table and faction_table:get_max_health(rank)
     local max_armor = faction_table and faction_table:get_max_armor(rank)
+
+    --- Lets plugins decide the maximum health of a player. Called on the server by
+    -- `Factions.apply_vitals` when a player spawns and when their faction or rank changes,
+    -- after the maximum health of the faction and rank has been looked up. The Levels plugin
+    -- answers it with the maximum health of the player's level.
+    -- @param target [Player The player whose vitals are being applied]
+    -- @param max_health [Number Maximum health of the faction and rank; nil when they set
+    --   none]
+    -- @return [Number Return a maximum health to use instead, rounded down and never lower
+    --   than 1. It is applied, and filled up on spawn, the way the maximum health of a
+    --   faction is. Return nothing to keep the one of the faction and rank]
+    local hook_max_health = hook.Run('GetPlayerMaxHealth', target, max_health)
+
+    if isnumber(hook_max_health) and hook_max_health == hook_max_health then
+      max_health = math.max(math.floor(hook_max_health), 1)
+    end
 
     if max_health then
       target:SetMaxHealth(max_health)

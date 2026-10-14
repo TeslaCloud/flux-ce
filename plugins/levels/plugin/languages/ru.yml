@@ -1,0 +1,67 @@
+ru:
+  command:
+    charsetlevel:
+      description: "Set the level of a character, from 1 to {max_level}. Their experience is reset and their unspent skill and attribute points are worked out again for the new level."
+      syntax: <target> <level>
+      message: "{player} has set {target}'s level to {level}."
+    chargiveexperience:
+      description: "Give experience to a character. A negative amount takes experience away and can lower their level."
+      syntax: <target> <amount>
+      message: "{player} has given {target} {amount} experience."
+      message_taken: "{player} has taken {amount} experience from {target}."
+    charlevel:
+      description: "View the level and experience of a character."
+      syntax: <target>
+      message: "{target} is level {level} of {max_level} with {experience} / {needed} experience, {remaining} short of the next level."
+      message_max: "{target} is level {level}, the highest level."
+  config:
+    levels:
+      title: Levels
+      desc: Character levels, experience, level-up points and maximum health.
+      max_level:
+        name: Maximum Level
+        desc: The highest level a character can reach. Can only be changed in the config files.
+      experience_per_level:
+        name: Experience per Level
+        desc: How much experience a character needs to go up one level. Every level needs the same amount.
+      skill_points_per_level:
+        name: Skill Points per Level
+        desc: How many skill points a character gets for every level after the first. A skill point raises a skill by one rank.
+      boost_every:
+        name: Attribute Points Every
+        desc: Every how many levels a character gets attribute points. 0 gives none.
+      boost_points:
+        name: Attribute Points
+        desc: How many attribute points a character gets every time it reaches a level that grants them. An attribute point raises a stat by one level.
+      health_base:
+        name: Base Health
+        desc: The maximum health of a level 1 character before endurance is added. Endurance adds its level times the level of the character.
+      health_per_level:
+        name: Health per Level
+        desc: How much maximum health a character gains for every level after the first.
+      combat_experience:
+        name: Combat Experience
+        desc: Whether players gain experience for the damage they deal to NPCs and other players and for the NPCs they kill.
+      experience_per_damage:
+        name: Experience per Damage
+        desc: How much experience a player gains for every point of damage they deal to an NPC or another player, while combat experience is on.
+      experience_per_kill:
+        name: Experience per Kill
+        desc: How much experience a player gains for killing an NPC, while combat experience is on. It is multiplied by a tenth of the maximum health of the NPC, but never by less than 1.
+  error:
+    levels:
+      no_character: "{target} has no active character!"
+      no_active_character: You have no active character!
+      invalid_skill: That is not a skill you can spend skill points on!
+      invalid_stat: That is not a stat you can spend attribute points on!
+      no_skill_points: You have no skill points left to spend!
+      no_attribute_points: You have no attribute points left to spend!
+      skill_maxed: This skill is already at its highest rank!
+      stat_maxed: This stat is already at its highest level!
+      cannot_raise: This attribute cannot be raised right now!
+  notification:
+    levels:
+      level_up: You have reached level {level}!
+      level_set: Your level was set to {level}.
+      experience_given: You were given {amount} experience.
+      experience_taken: "{amount} experience was taken from you."

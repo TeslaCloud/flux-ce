@@ -1,8 +1,8 @@
 --- Server side of the Damage plugin: the rules it applies to players.
 -- Looks up the multiplier of a hit location, remembers where a player has just been hit,
--- regenerates health, hurts players who stay under water, punches the view of a player who
--- is hurt and writes the damage and kill log entries. The hooks that call these functions
--- are in `sv_hooks.lua`.
+-- regenerates health, hurts players who stay under water with damage rolled from the
+-- 'drowning_damage' dice formula, punches the view of a player who is hurt and writes the
+-- damage and kill log entries. The hooks that call these functions are in `sv_hooks.lua`.
 --
 -- The log entries are printed and replicated the moment they are written, but they are
 -- saved to the database in one go by `Damage:flush_logs`, which runs once a second and
@@ -11,6 +11,8 @@
 local IsValid = IsValid
 local CurTime = CurTime
 local config_get = Config.get
+local isstring = isstring
+local tonumber = tonumber
 local math_max = math.max
 local rand = math.Rand
 
@@ -173,7 +175,7 @@ function Damage:regenerate_health(target, cur_time)
     return false
   end
 
-  local amount = config_get('health_regen_amount', 2)
+  local amount = config_get('health_regen_amount', 1)
 
   --- Lets plugins change how much health a player regenerates at once. Called on the
   -- server right before the player is healed, after `PlayerCanRegenerateHealth`.
@@ -227,15 +229,53 @@ function Damage:get_submerged_time(target)
   return math_max(CurTime() - target.submerged_since, 0)
 end
 
+--- Works out the amount of drowning damage from a number or a dice formula. A formula is
+-- rolled with `Dice.roll`; one that cannot be rolled, or a value that is neither, comes out
+-- as 1. Serverside only.
+-- ```
+-- Damage:get_drowning_amount('1d4')
+-- -- 3
+-- ```
+-- @param amount [Number/String damage, or a dice formula such as '1d4']
+-- @return [Number damage, never below 0]
+function Damage:get_drowning_amount(amount)
+  if isstring(amount) then
+    local number = tonumber(amount)
+
+    if number then
+      amount = number
+    elseif Dice then
+      local result, err = Dice.roll(amount)
+
+      if result then
+        amount = result.total
+      else
+        Flux.dev_print('Invalid drowning damage formula \''..amount..'\': '..tostring(err))
+      end
+    end
+  end
+
+  if !isnumber(amount) or amount != amount then
+    return 1
+  end
+
+  return math_max(amount, 0)
+end
+
 --- Deals drowning damage to a player. The damage is of the DMG_DROWN type with the world as
--- its attacker, ignores armor, and goes through the usual damage hooks. Serverside only.
+-- its attacker, ignores armor, and goes through the usual damage hooks. A dice formula is
+-- rolled once for this bit of damage, see `Damage:get_drowning_amount`. Serverside only.
+-- ```
+-- Damage:deal_drowning_damage(target, '2d4')
+-- ```
 -- @param target [Player]
--- @param amount [Number damage to deal]
+-- @param amount [Number/String damage to deal, or a dice formula to roll it from; 1 when the
+--   formula cannot be rolled]
 function Damage:deal_drowning_damage(target, amount)
   local world = game.GetWorld()
   local damage_info = DamageInfo()
 
-  damage_info:SetDamage(amount)
+  damage_info:SetDamage(self:get_drowning_amount(amount))
   damage_info:SetDamageType(DMG_DROWN)
   damage_info:SetAttacker(world)
   damage_info:SetInflictor(world)
@@ -244,9 +284,10 @@ function Damage:deal_drowning_damage(target, amount)
 end
 
 --- Runs the drowning of a player: keeps track of how long they have been completely under
--- water and, once that exceeds the 'drowning_time' config, deals the 'drowning_damage'
--- config to them every 'drowning_interval' seconds until they surface. Dead and noclipping
--- players are left alone. Does not check the 'drowning' config. Serverside only.
+-- water and, once that exceeds the 'drowning_time' config, deals damage rolled from the
+-- 'drowning_damage' dice formula to them every 'drowning_interval' seconds until they
+-- surface. Dead and noclipping players are left alone. Does not check the 'drowning'
+-- config. Serverside only.
 -- @param target [Player]
 -- @param cur_time=CurTime() [Number current time]
 function Damage:update_drowning(target, cur_time)
@@ -275,7 +316,7 @@ function Damage:update_drowning(target, cur_time)
   --   apparatus. Return nothing to let other handlers decide]
   if hook.Run('PlayerCanDrown', target) == false then return end
 
-  self:deal_drowning_damage(target, config_get('drowning_damage', 7))
+  self:deal_drowning_damage(target, config_get('drowning_damage', '1d4'))
 end
 
 --- Punches the view of a player by a random angle that grows with the damage: the damage

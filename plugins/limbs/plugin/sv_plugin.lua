@@ -258,9 +258,17 @@ function Limbs:find_ragdoll_limb(target, position)
 end
 
 --- Works out which limbs a hit has landed on and how much damage each of them takes, before
--- the AdjustLimbHits hook has its say. Fall damage is split between the legs when the
+-- the AdjustLimbHits hook has its say. The limb damage is the share of the maximum health of
+-- the player that the hit has taken, as a percentage, times the 'limbs_damage_scale'
+-- config: losing a quarter of the maximum health deals 25 limb damage at a scale of 1,
+-- whatever the maximum health is. Fall damage is split between the legs when the
 -- 'limbs_fall_damage' config is on; other damage goes to the limb of the hit group, or, for
 -- a fallen player, to the limb of their ragdoll that is closest to the hit.
+-- ```
+-- -- A player with 20 maximum health loses 5 health to a shot in the arm.
+-- Limbs:get_hits(victim, damage_info, 5, HITGROUP_LEFTARM)
+-- -- { left_arm = 25 }
+-- ```
 -- @param victim [Player]
 -- @param damage_info [CTakeDamageInfo the damage that was dealt]
 -- @param amount [Number health that the player has lost]
@@ -269,7 +277,8 @@ end
 -- @return [Map limb damage by limb ID; empty if the hit has no location]
 function Limbs:get_hits(victim, damage_info, amount, hitgroup)
   local hits = {}
-  local limb_damage = amount * Config.get('limbs_damage_scale', 2)
+  local share = amount / math.max(victim:GetMaxHealth(), 1) * 100
+  local limb_damage = share * Config.get('limbs_damage_scale', 1)
 
   if limb_damage <= 0 then
     return hits

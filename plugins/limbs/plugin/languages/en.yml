@@ -14,7 +14,7 @@ en:
         desc: Track damage per body part. When off, no limb takes damage, hurt limbs have no effect and the body diagram is hidden.
       damage_scale:
         name: Limb Damage Scale
-        desc: How much damage a limb takes for every point of health the player loses to a hit on it. A limb is crippled at 100.
+        desc: "How much damage a limb takes for every percent of maximum health the player loses to a hit on it. At 1, a hit that takes a quarter of the maximum health deals 25 damage to the limb. A limb is crippled at 100."
       legs_slow:
         name: Hurt Legs Slow Down
         desc: Hurt legs slow running down and lower jumps, down to half for a crippled leg.

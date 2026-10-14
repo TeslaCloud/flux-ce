@@ -7,13 +7,16 @@
 -- `damage_scale_fall`. The multipliers are applied to the damage in place, on top of whatever
 -- the gamemode, the schema and other plugins do in their own `ScalePlayerDamage`,
 -- `FLGetFallDamage` and `EntityTakeDamage` handlers: the handlers of the plugin return
--- nothing, so the others still run. `health_regen` slowly heals hurt players, `drowning` hurts
--- players who stay under water for too long, `damage_view_punch` jolts the view of a player
--- who is hurt, and `log_damage` and `log_kills` write the damage players take and their
--- deaths to the log; staff with the 'view_damage_logs' permission see these entries in
+-- nothing, so the others still run. `health_regen` slowly heals hurt players, `drowning`
+-- hurts players who stay under water for too long with damage rolled from the
+-- `drowning_damage` dice formula (1d4 by default), `damage_view_punch` jolts the view of a
+-- player who is hurt, and `log_damage` and `log_kills` write the damage players take and
+-- their deaths to the log; staff with the 'view_damage_logs' permission see these entries in
 -- their console.
 --
--- Other plugins take part through hooks. `PrePlayerTakeDamage` runs before a player takes
+-- Other plugins take part through hooks. `ResolvePlayerDamage` lets a plugin replace the
+-- amount of any damage to a player before the fall damage multiplier and the other hooks see
+-- it (the D20 plugin rolls dice there), `PrePlayerTakeDamage` runs before a player takes
 -- damage and can change or cancel it, and `PostPlayerTakeDamage` runs once the damage has
 -- been dealt. `PlayerCanRegenerateHealth` and `GetHealthRegeneration` control the health
 -- regeneration of a player, and `PlayerCanDrown` exempts a player from drowning.

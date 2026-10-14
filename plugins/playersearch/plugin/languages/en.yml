@@ -1,0 +1,16 @@
+en:
+  error:
+    must_not_look: Target must not look in your direction!
+    search:
+      already: Target is already being searched!
+      too_often: You requesting search too often! Cooldown time was increased!
+      request: Target already received search request!
+  notification:
+    search:
+      resist: "{player} resists the search."
+  ui:
+    search:
+      title: Search
+      message: "{player} is trying to search you. Will you let them do that?"
+      allow: Allow
+      resist: Resist

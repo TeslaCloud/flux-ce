@@ -1,0 +1,38 @@
+en:
+  door:
+    properties:
+      keys_list:
+        name: Keys Settings
+        select: Select option...
+        show: Keys List
+        create: Create Key
+        add: Bind Existing Key
+  item:
+    category:
+      keys: Keys
+    option:
+      create_key_copy: Create Key Copy
+    key:
+      print_name: Key
+      description: Ordinary metal key.
+    key_blank:
+      print_name: Key Blank
+      description: A formed piece of metal that can be used with molding kit to create a duplicate of any non-tubular key.
+    key_molding_kit:
+      print_name: Key Molding Kit
+      description: A little plastic box that contains tools for making a key copy. There are many casting tools and some molding compound inside.
+  notification:
+    key:
+      create: New key created
+      remove: Key was unbound
+      add: Key was bound
+  ui:
+    key:
+      title: Keys
+      delete:
+        title: Unbound key
+        message: Are you sure that you want to unbind this key from the door?
+      add:
+        title: Bind new key
+        message: Select a key to bind.
+        select: Select key...

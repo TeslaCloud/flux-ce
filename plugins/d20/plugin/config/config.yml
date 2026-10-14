@@ -1,0 +1,60 @@
+categories:
+  d20:
+    name: config.d20.title
+    description: config.d20.desc
+configs:
+  d20_enabled:
+    name: config.d20.enabled.name
+    description: config.d20.enabled.desc
+    category: d20
+    type: boolean
+    default_value: true
+  d20_default_dice:
+    name: config.d20.default_dice.name
+    description: config.d20.default_dice.desc
+    category: d20
+    type: string
+    default_value: '1d6'
+  d20_fall_dice:
+    name: config.d20.fall_dice.name
+    description: config.d20.fall_dice.desc
+    category: d20
+    type: string
+    default_value: '{steps}d6'
+  d20_weapon_dice:
+    name: config.d20.weapon_dice.name
+    description: config.d20.weapon_dice.desc
+    category: d20
+    type: table
+    default_value: []
+  d20_npc_dice:
+    name: config.d20.npc_dice.name
+    description: config.d20.npc_dice.desc
+    category: d20
+    type: table
+    default_value: []
+  d20_npc_health_scale:
+    name: config.d20.npc_health_scale.name
+    description: config.d20.npc_health_scale.desc
+    category: d20
+    type: number
+    min_value: 0.01
+    max_value: 10
+    decimals: 2
+    default_value: 0.25
+  d20_npc_armor_class:
+    name: config.d20.npc_armor_class.name
+    description: config.d20.npc_armor_class.desc
+    category: d20
+    type: number
+    min_value: 0
+    max_value: 40
+    default_value: 12
+  d20_npc_attack_bonus:
+    name: config.d20.npc_attack_bonus.name
+    description: config.d20.npc_attack_bonus.desc
+    category: d20
+    type: number
+    min_value: -10
+    max_value: 20
+    default_value: 2

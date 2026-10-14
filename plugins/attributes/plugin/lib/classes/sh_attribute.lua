@@ -8,14 +8,19 @@
 -- An attribute can name its levels. `levels` is a map of level IDs to the phrases that
 -- describe them, `level_order` lists the level IDs from the lowest level (`min`) upwards,
 -- and `level_names` optionally maps a level ID to the phrase of its name, which is
--- `attribute.level.<id>` otherwise. The default `level_order` is the seven step ladder from
--- 'terrible' to 'superb', which fits an attribute that goes from -3 to 3.
+-- `attribute.level.<id>` otherwise. The default `level_order` is the nine step ladder from
+-- 'terrible' through 'superb' to 'heroic' and 'legendary', which fits an attribute that goes
+-- from -3 to 5.
+--
+-- A skill can name the stat it relies on in its `attribute` field, the ID of that stat. The
+-- Stats plugin adds the level of that stat to every roll of the skill and groups the skill
+-- under it.
 -- ```
 -- -- attributes/sh_endurance.lua
 -- ATTRIBUTE.name = 'attribute.endurance.title'
 -- ATTRIBUTE.type = ATTRIBUTE_STAT
 -- ATTRIBUTE.min = -3
--- ATTRIBUTE.max = 3
+-- ATTRIBUTE.max = 5
 -- ATTRIBUTE.default = 0
 -- ATTRIBUTE.has_progress = false
 -- ATTRIBUTE.levels = {
@@ -23,11 +28,18 @@
 --   fair = 'attribute.endurance.fair',
 --   terrible = 'attribute.endurance.terrible'
 -- }
+--
+-- -- attributes/sh_athletics.lua
+-- ATTRIBUTE.name = 'attribute.athletics.title'
+-- ATTRIBUTE.type = ATTRIBUTE_SKILL
+-- ATTRIBUTE.attribute = 'strength'
 -- ```
 
 class 'AttributeBase'
 
-AttributeBase.level_order = { 'terrible', 'poor', 'mediocre', 'fair', 'good', 'great', 'superb' }
+AttributeBase.level_order = {
+  'terrible', 'poor', 'mediocre', 'fair', 'good', 'great', 'superb', 'heroic', 'legendary'
+}
 
 --- Creates an attribute definition. Fill in its fields and call register to make it available.
 -- ```

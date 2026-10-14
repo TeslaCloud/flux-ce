@@ -1,0 +1,41 @@
+categories:
+  roleplay_chat:
+    name: config.roleplay_chat.title
+    description: config.roleplay_chat.desc
+configs:
+  talk_radius:
+    name: config.roleplay_chat.talk_radius.name
+    description: config.roleplay_chat.talk_radius.desc
+    category: roleplay_chat
+    type: number
+    min_value: 32
+    max_value: 4096
+    default_value: 350
+  ooc_interval:
+    name: config.roleplay_chat.ooc_interval.name
+    description: config.roleplay_chat.ooc_interval.desc
+    category: roleplay_chat
+    type: number
+    min_value: 0
+    max_value: 3600
+    default_value: 0
+  looc_interval:
+    name: config.roleplay_chat.looc_interval.name
+    description: config.roleplay_chat.looc_interval.desc
+    category: roleplay_chat
+    type: number
+    min_value: 0
+    max_value: 3600
+    default_value: 0
+  ooc_avatars:
+    name: config.roleplay_chat.ooc_avatars.name
+    description: config.roleplay_chat.ooc_avatars.desc
+    category: roleplay_chat
+    type: boolean
+    default_value: true
+  roll_versus:
+    name: config.roleplay_chat.roll_versus.name
+    description: config.roleplay_chat.roll_versus.desc
+    category: roleplay_chat
+    type: boolean
+    default_value: true
