@@ -1,7 +1,6 @@
 --- Definition of an attribute: its name, description, category, icon and type, its level
--- range (`min`, `max`, `default`), how the progress needed for a level grows
--- (`total_progress`, `progression_type`, `progression_coefficient`), and the `boostable`,
--- `multipliable`, `boost_limited`, `has_progress` and `hidden` flags.
+-- range (`min`, `max`, `default`, and `creation_max`, the highest level a new character can
+-- pick for a stat), and the `boostable`, `boost_limited` and `hidden` flags.
 -- A file in a plugin's `attributes` folder fills in an `AttributeBase` through the
 -- `ATTRIBUTE` global; `Attributes.register` supplies the defaults of the missing fields.
 --
@@ -13,8 +12,8 @@
 -- from -3 to 5.
 --
 -- A skill can name the stat it relies on in its `attribute` field, the ID of that stat. The
--- Stats plugin adds the level of that stat to every roll of the skill and groups the skill
--- under it.
+-- level of that stat is added to every roll of the skill, and the character sheet groups the
+-- skill under it.
 -- ```
 -- -- attributes/sh_endurance.lua
 -- ATTRIBUTE.name = 'attribute.endurance.title'
@@ -22,7 +21,6 @@
 -- ATTRIBUTE.min = -3
 -- ATTRIBUTE.max = 5
 -- ATTRIBUTE.default = 0
--- ATTRIBUTE.has_progress = false
 -- ATTRIBUTE.levels = {
 --   superb = 'attribute.endurance.superb',
 --   fair = 'attribute.endurance.fair',
@@ -48,7 +46,6 @@ AttributeBase.level_order = {
 -- attribute.description = 'attribute.strength.desc'
 -- attribute.type = ATTRIBUTE_STAT
 -- attribute.max = 20
--- attribute.multipliable = true
 -- attribute:register()
 -- ```
 -- @param id [String unique attribute ID; nothing is set when it is not a string]
@@ -56,26 +53,6 @@ function AttributeBase:init(id)
   if !isstring(id) then return end
 
   self.attribute_id = id
-end
-
---- Returns how much progress is needed to advance from the given level to the next one,
--- according to the attribute's progression type and coefficient.
--- @param level [Number level to advance from]
--- @return [Number]
-function AttributeBase:get_total_progress(level)
-  level = level - 1
-
-  local progress_type = self.progression_type
-  local progress = self.total_progress
-  local coefficient = self.progression_coefficient
-
-  if progress_type == PROGRESSION_LINEAR then
-    return progress
-  elseif progress_type == PROGRESSION_ARITHMETIC then
-    return math.round(progress * (1 + (coefficient - 1) * level))
-  else
-    return math.round(progress * coefficient ^ level)
-  end
 end
 
 --- Returns the ID of the named level that a level of this attribute falls on: the entry of

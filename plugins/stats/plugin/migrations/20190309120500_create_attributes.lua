@@ -1,4 +1,4 @@
---- Migration that creates the tables of the Attributes plugin: `attributes`,
+--- Migration that creates the tables of the attribute system: `attributes`,
 -- `attribute_multipliers` and `attribute_boosts`.
 
 local CreateAttributes = ActiveRecord.Migration.new()

@@ -12,7 +12,6 @@ ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
 ATTRIBUTE.default = 0
-ATTRIBUTE.has_progress = false
 ATTRIBUTE.levels = {
   legendary = 'attribute.determination.legendary',
   heroic = 'attribute.determination.heroic',

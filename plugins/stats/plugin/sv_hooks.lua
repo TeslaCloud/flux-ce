@@ -1,12 +1,17 @@
---- Server side of the Stats plugin: checks the stats of new characters, keeps the stat
--- bonuses of the faction on every character, applies the effects of the stats through the
--- hooks of the Chatbox, Stamina, Pickup Objects, Damage, Limb Damage, Vendors and
--- Attributes plugins, and rolls the stats and skills that a player asks for with the
--- 'fl_stats_roll' message. A handler of a plugin that is not loaded is never called.
+--- Server side of the Stats plugin: gives characters their attribute records, networks a
+-- character's attributes when it becomes active and removes its boosts as they expire,
+-- checks the stats of new characters, keeps the stat bonuses of the faction on every
+-- character, applies the effects of the stats through the hooks of the Chatbox, Stamina,
+-- Pickup Objects, Damage, Limb Damage and Vendors plugins, and rolls the stats and skills
+-- that a player asks for with the 'fl_stats_roll' message. A handler of a plugin that is not
+-- loaded is never called. The 'fl_attributes_view' message, which the CharAttributes command
+-- sends to show a character's attributes to a member of staff, is registered here.
 
 local IsValid = IsValid
 local isnumber = isnumber
 local math_max = math.max
+
+Cable.check_networked_string('fl_attributes_view')
 
 --- Multiplies an amount that is handed out in whole points, keeping the fraction that gets
 -- cut off for the next call. Over time the player receives exactly the scaled amount, which
@@ -70,13 +75,44 @@ function Stats:apply_faction_bonuses(target, enabled)
   return changed
 end
 
---- Gives the character that has become active the stat bonuses of its faction. The
--- Attributes plugin, which this plugin depends on and which is therefore asked first, has
--- made sure by now that the character has a record for every stat.
+--- Adds an Attribute record for every registered attribute to a new character, using the
+-- level chosen during creation or the attribute's default. A chosen level is rounded down
+-- and kept between the attribute's min and max, as the creation data comes from the client.
+-- @param owner [Player]
+-- @param char [Character the character being created]
+-- @param char_data [Map character creation data; levels are read from its attributes field]
+function Stats:PostCreateCharacter(owner, char, char_data)
+  Attributes.create_records(char, char_data.attributes)
+end
+
+--- Prepares the attributes of the character that has become active: adds records for the
+-- attributes that were registered after the character was created, removes the boosts that
+-- have expired or whose expiry time cannot be read, networks the attributes to the player
+-- and gives the character the stat bonuses of its faction.
 -- @param owner [Player]
 -- @param character [Character the character that is now active]
 function Stats:OnActiveCharacterSet(owner, character)
+  Attributes.create_records(character)
+  Attributes.remove_expired(owner)
+  Attributes.sync(owner)
+
   self:apply_faction_bonuses(owner)
+end
+
+--- Removes the boosts that have expired from the characters of the players who have one
+-- due, and networks their attributes again so that the clients stop counting them when the
+-- server does.
+function Stats:OneSecond()
+  local unix_time = os.time()
+
+  for k, v in player.Iterator() do
+    local expiry = v.attribute_expiry
+
+    if expiry and expiry <= unix_time then
+      Attributes.remove_expired(v)
+      Attributes.sync(v)
+    end
+  end
 end
 
 --- Replaces the stat bonuses of a player who has been moved to another faction.
@@ -292,27 +328,6 @@ function Stats:AdjustVendorPrice(actor, vendor, item_obj, price_info)
   end
 
   price_info.price = price
-end
-
---- Raises the progress a player gains in a skill by the `stats_intelligence_learning`
--- config for every level of their intelligence, and lowers it for every level below zero.
--- Progress that is lost, progress in attributes that are not skills and progress that was
--- asked to be left unscaled are not touched.
--- @param actor [Player player whose attribute is progressing]
--- @param attribute_id [String attribute ID]
--- @param progress_data [Map modified in place: amount (Number progress to add), attribute
---   (AttributeBase the attribute definition), no_multiplier (Boolean)]
-function Stats:AdjustAttributeProgress(actor, attribute_id, progress_data)
-  local amount = progress_data.amount
-
-  if progress_data.no_multiplier or !isnumber(amount) or amount <= 0 then return end
-  if !istable(progress_data.attribute) or progress_data.attribute.type != ATTRIBUTE_SKILL then return end
-
-  local scale = self:get_player_effect_scale(actor, 'intelligence', 'stats_intelligence_learning')
-
-  if scale != 1 then
-    progress_data.amount = amount * scale
-  end
 end
 
 --- Rolls a stat or a skill of a player and shows the result to the players nearby, the way

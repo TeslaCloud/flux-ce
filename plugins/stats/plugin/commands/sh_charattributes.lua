@@ -1,6 +1,6 @@
 --- The CharAttributes command shows the caller the attributes of the targeted player's
--- character: every attribute, hidden ones included, with its level, progress, boosts and
--- multipliers. A player gets them in a window, the server console as lines of text.
+-- character: every attribute, hidden ones included, with its level and boosts. A player
+-- gets them in a window, the server console as lines of text.
 -- Allowed for assistants by default.
 
 CMD.name = 'CharAttributes'
@@ -38,15 +38,14 @@ function CMD:on_run(actor, targets)
   Flux.Player:notify(actor, 'command.charattributes.header', { target = target_name })
 
   for k, v in SortedPairs(Attributes.get_stored()) do
-    local level, progress = target:get_attribute(k)
+    local level = target:get_attribute(k)
     local attribute_name = t(v.name)
 
     Flux.Player:notify(actor, 'command.charattributes.line', {
       attribute = attribute_name,
       id = k,
       level = tostring(level),
-      boost = tostring(target:get_attribute_boost(k)),
-      progress = tostring(progress)
+      boost = tostring(target:get_attribute_boost(k))
     })
   end
 end

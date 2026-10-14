@@ -1,5 +1,7 @@
 ru:
   attribute:
+    category:
+      other: Прочее
     rank:
       untrained: Untrained
       trained: Trained
@@ -16,6 +18,9 @@ ru:
       mediocre: Посредственно
       poor: Плохо
       terrible: Ужасно
+    other:
+      name: Неизвестный атрибут
+      desc: У этого атрибута нет описания.
     strength:
       title: Сила
       short: СИЛ
@@ -353,6 +358,33 @@ ru:
       expert: You keep your attention fixed on your work through pain and chaos.
       master: Once you set your mind to something, nothing can break your concentration.
       legendary: Your focus is absolute, shutting out everything but the task at hand.
+  command:
+    charsetattribute:
+      description: "Установить атрибут персонажа. Атрибуты: {attributes}"
+      syntax: <цель> <атрибут> <значение>
+      message: "{player} устанавливает {target} атрибут {attribute} на {value}."
+    charattributeboost:
+      description: "Усилить атрибут персонажа. Длительность 'perma' дает усиление, которое действует, пока его не снимут. Атрибуты: {attributes}"
+      syntax: <цель> <атрибут> <значение> <длительность>
+      message: "{player} усиливает {target} атрибут {attribute} на {value} на {time}."
+      message_permanent: "{player} усиливает {target} атрибут {attribute} на {value} навсегда."
+    charattributeboostclear:
+      description: "Снять усиления с атрибута персонажа или со всех атрибутов, если атрибут не указан. Атрибуты: {attributes}"
+      syntax: "<цель> [атрибут]"
+      message: "{player} снимает с {target} усиления атрибута {attribute}."
+      message_all: "{player} снимает с {target} все усиления атрибутов."
+    charattributes:
+      description: "Посмотреть атрибуты персонажа."
+      syntax: <цель>
+      header: "Атрибуты персонажа {target}:"
+      line: "{attribute} ({id}): уровень {level}, усиление {boost}"
+  condition:
+    attribute:
+      name: Игрок с определенным атрибутом
+      text: Атрибут {attribute} {operator} {value}
+      message1: Выберите атрибут
+      message2: Выберите значение атрибута
+    attributes: Атрибуты
   config:
     stats:
       title: Характеристики
@@ -384,13 +416,12 @@ ru:
       rank_bonus:
         name: Proficiency per skill rank
         desc: Bonus that every rank of a trained skill adds to the rolls of the skill. A trained skill also adds the level of the character, an untrained one adds nothing.
-      intelligence_learning:
-        name: "Развитие навыков за уровень интеллекта, %"
-        desc: На сколько процентов больше прогресса в навыках получает персонаж за каждый уровень интеллекта, и меньше при уровне ниже нуля. При значении 0 эффект отключён.
       determination_pain:
         name: "Штрафы от ранений за уровень решимости, %"
         desc: На сколько процентов ослабевают замедление и дрожание прицела от повреждённых частей тела за каждый уровень решимости, и усиливаются при уровне ниже нуля. Требуется плагин Limb Damage. При значении 0 эффект отключён.
   error:
+    attribute_not_valid: "'{attribute}' не является атрибутом!"
+    attribute_no_character: "У игрока {target} нет активного персонажа!"
     stats:
       roll: "Cannot roll {name}: {message}"
       unknown_rollable: "'{name}' is not a stat or a skill."
@@ -399,9 +430,28 @@ ru:
     attribute:
       sum: Сумма атрибутов не равна максимальной сумме атрибутов.
   notification:
+    attribute:
+      boost: Ваш атрибут '{attribute}' был увеличен на {value} на {time}.
+      boost_permanent: Ваш атрибут '{attribute}' был увеличен на {value} навсегда.
+      boosts_cleared: С вашего атрибута '{attribute}' были сняты усиления.
+      boosts_cleared_all: Со всех ваших атрибутов были сняты усиления.
+      set: Ваш атрибут '{attribute}' был установлен на {value}.
     stats:
       roll: "{name}: {roll}"
   ui:
+    attributes:
+      title: Атрибуты
+      viewer_title: "Атрибуты персонажа {name}"
+      empty: Нет атрибутов для отображения.
+      hidden: "(скрыт)"
+      level: "{level} / {max}"
+      level_named: "{name} ({level})"
+      boosts: "Усиления: {list}"
+      timed: "{value} ({time})"
+      type:
+        stat: Характеристики
+        skill: Навыки
+        other: Прочее
     effect:
       hearing_radius: Радиус слышимости
       stamina_drain: Расход запаса сил
@@ -412,7 +462,6 @@ ru:
       throw_force: Сила броска
       fall_damage: Урон от падения
       vendor_prices: Цены торговцев
-      skill_progress: Развитие навыков
       limb_penalties: Штрафы от ранений
     char_create:
       invalid_points: Недействительное количество очков.

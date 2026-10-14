@@ -1,7 +1,7 @@
 --- Athletics skill: running, climbing, jumping and swimming. Its key stat is strength, whose
 -- level every roll of the skill adds to the d20 together with the proficiency of the rank,
--- from untrained (0) to legendary (4). The skill is listed under strength in the Attributes
--- tab.
+-- from untrained (0) to legendary (4). The skill is listed under strength on the character
+-- sheet.
 
 ATTRIBUTE.name = 'attribute.athletics.title'
 ATTRIBUTE.description = 'attribute.athletics.description'
@@ -12,7 +12,6 @@ ATTRIBUTE.category = 'attribute.strength.title'
 ATTRIBUTE.min = 0
 ATTRIBUTE.max = 4
 ATTRIBUTE.default = 0
-ATTRIBUTE.has_progress = false
 ATTRIBUTE.level_order = { 'untrained', 'trained', 'expert', 'master', 'legendary' }
 ATTRIBUTE.level_names = {
   untrained = 'attribute.rank.untrained',

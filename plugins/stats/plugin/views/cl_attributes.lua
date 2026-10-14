@@ -1,11 +1,11 @@
---- The Attributes tab of the tab menu: `fl_attributes`, the list of a character's attributes
--- grouped by type and category, and `fl_attribute_row`, the line of a single attribute.
--- The same list shows a snapshot of another player's attributes to staff, see
--- `Attributes.open_viewer`. Themes can draw both panels with the `PaintAttributesMenu` and
--- `PaintAttributeRow` methods; a method that returns a value replaces the default look.
--- The colors of the bars are the theme colors 'attribute_level', 'attribute_boost',
--- 'attribute_hindrance' and 'attribute_progress', which have defaults if a theme does not
--- set them.
+--- The attribute list that shows staff the attributes of a character: `fl_attributes`, the
+-- list of a character's attributes grouped by type and category, and `fl_attribute_row`,
+-- the line of a single attribute. `Attributes.open_viewer` puts the list into a window with
+-- a snapshot of another player's attributes, which the CharAttributes command sends. Themes
+-- can draw both panels with the `PaintAttributesMenu` and `PaintAttributeRow` methods; a
+-- method that returns a value replaces the default look. The colors of the bars are the
+-- theme colors 'attribute_level', 'attribute_boost' and 'attribute_hindrance', which have
+-- defaults if a theme does not set them.
 
 local math_clamp = math.clamp
 local math_floor = math.floor
@@ -45,15 +45,15 @@ local function format_number(value, signed)
   return (signed and value > 0 and '+' or '')..tostring(value)
 end
 
---- Returns the boosts or multipliers of a list that have not run out yet.
--- @param modifiers [List<Map> networked boosts or multipliers, can be nil]
+--- Returns the boosts of a list that have not run out yet.
+-- @param boosts [List<Map> networked boosts, can be nil]
 -- @return [List<Map>]
-local function active_modifiers(modifiers)
+local function active_boosts(boosts)
   local cur_time = CurTime()
   local active = {}
 
-  if modifiers then
-    for k, v in pairs(modifiers) do
+  if boosts then
+    for k, v in pairs(boosts) do
       if !v.end_time or v.end_time > cur_time then
         active[#active + 1] = v
       end
@@ -63,31 +63,24 @@ local function active_modifiers(modifiers)
   return active
 end
 
---- Checks whether the row of an attribute has a line of details under its bars: the
--- progress of an attribute that has progress, and the boosts and multipliers.
--- @param attribute_table [AttributeBase]
+--- Checks whether the row of an attribute has a line of details under its bar, which lists
+-- the active boosts.
 -- @param data [Map networked data of the attribute, can be nil]
 -- @return [Boolean]
-local function has_details(attribute_table, data)
-  if attribute_table.has_progress != false then
-    return true
-  end
-
-  return data != nil and (#active_modifiers(data.boosts) > 0 or #active_modifiers(data.multipliers) > 0)
+local function has_details(data)
+  return data != nil and #active_boosts(data.boosts) > 0
 end
 
---- Describes a list of boosts or multipliers in one line, each with the time it has left
--- if it expires.
--- @param modifiers [List<Map> active boosts or multipliers]
--- @param prefix [String text put in front of every value]
--- @param signed [Boolean put a plus in front of positive values]
+--- Describes a list of boosts in one line, each with its sign and the time it has left if
+-- it expires.
+-- @param boosts [List<Map> active boosts]
 -- @return [String]
-local function describe_modifiers(modifiers, prefix, signed)
+local function describe_boosts(boosts)
   local cur_time = CurTime()
   local parts = {}
 
-  for k, v in ipairs(modifiers) do
-    local text = prefix..format_number(v.value, signed)
+  for k, v in ipairs(boosts) do
+    local text = format_number(v.value, true)
 
     if v.end_time then
       text = translate('ui.attributes.timed', {
@@ -102,9 +95,9 @@ local function describe_modifiers(modifiers, prefix, signed)
   return table.concat(parts, ', ')
 end
 
---- The Attributes page of the tab menu (`fl_attributes`): a scrollable list with a header
--- for every type and category of attributes and an `fl_attribute_row` for every attribute
--- that is visible to the player.
+--- The attribute list (`fl_attributes`): a scrollable list with a header for every type and
+-- category of attributes and an `fl_attribute_row` for every attribute that is visible to
+-- the player.
 -- By default it shows the attributes of the local player and keeps them current while it is
 -- open; after `set_snapshot` it shows the data it was given instead, hidden attributes
 -- included. `rebuild` recreates the list. Derives from `fl_base_panel`.
@@ -120,7 +113,7 @@ function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
 end
 
---- Draws the card and the title of the tab, unless the active theme's PaintAttributesMenu
+--- Draws the card and the title of the list, unless the active theme's PaintAttributesMenu
 -- method does it. A list that shows a snapshot draws nothing, as it sits inside a frame.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
@@ -172,7 +165,7 @@ end
 
 --- Returns the data the list shows for an attribute.
 -- @param attribute_id [String]
--- @return [Map level, progress, boosts and multipliers; nil if there is no data]
+-- @return [Map level and boosts; nil if there is no data]
 function PANEL:get_data(attribute_id)
   if self.snapshot then
     return self.snapshot[attribute_id]
@@ -254,7 +247,7 @@ function PANEL:get_listed(sections)
     ids[#ids + 1] = v.name
 
     for k1, v1 in ipairs(v.attributes) do
-      local detailed = has_details(v1, self:get_data(v1.attribute_id))
+      local detailed = has_details(self:get_data(v1.attribute_id))
 
       ids[#ids + 1] = tostring(v1.attribute_id)..(detailed and '+' or '')
     end
@@ -324,20 +317,13 @@ function PANEL:update()
   end
 end
 
---- Returns the size the tab menu gives this panel when it opens it.
--- @return [Number width, Number height]
-function PANEL:get_menu_size()
-  return math_scale(960), math_scale(720)
-end
-
 vgui.Register('fl_attributes', PANEL, 'fl_base_panel')
 
---- The line of one attribute in the Attributes tab (`fl_attribute_row`): its icon and
--- name, its level with boosts counted (as the name of the level if the attribute names its
+--- The line of one attribute in the attribute list (`fl_attribute_row`): its icon and name,
+-- its level with boosts counted (as the name of the level if the attribute names its
 -- levels), a bar that shows where the level lies between the attribute's min and max with
--- the boosted part in another color, a thinner bar for the progress toward the next level,
--- and a line that lists the progress, the boosts and the multipliers with the time each has
--- left. The description of the attribute, of its current level and its effects are the
+-- the boosted part in another color, and a line that lists the boosts with the time each
+-- has left. The description of the attribute, of its current level and its effects are the
 -- tooltip of the row.
 -- Assign the attribute with `set_attribute` and its data with `set_data`. Derives from
 -- `fl_base_panel`.
@@ -352,7 +338,6 @@ PANEL.details_text = ''
 PANEL.boost = 0
 PANEL.level_fraction = 0
 PANEL.boosted_fraction = 0
-PANEL.progress_fraction = false
 
 --- Picks the color of the line of details, the muted text color of the theme.
 function PANEL:Init()
@@ -372,7 +357,7 @@ function PANEL:PerformLayout(w, h)
 end
 
 --- Draws the row: its background, a FontAwesome icon if the attribute has one, the name and
--- the level, the level and progress bars and the line of details. The active theme's
+-- the level, the level bar and the line of details. The active theme's
 -- PaintAttributeRow method replaces all of it by returning a value.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
@@ -449,22 +434,6 @@ function PANEL:Paint(w, h)
     draw_box(x + boosted_w, bar_y, base_w - boosted_w, bar_h, hindrance_color)
   end
 
-  if self.progress_fraction then
-    local progress_y, progress_h = bar_y + bar_h + math_scale(3), math_scale(4)
-    local progress_color = get_color('attribute_progress', get_color('accent_light'))
-    local progress_radius = math_floor(progress_h * 0.5)
-
-    draw.RoundedBox(progress_radius, x, progress_y, bar_w, progress_h, background_color)
-    draw.RoundedBox(
-      progress_radius,
-      x,
-      progress_y,
-      math_floor(bar_w * self.progress_fraction),
-      progress_h,
-      progress_color
-    )
-  end
-
   if self.details_text != '' then
     draw_simple_text(self.details_text, Theme.get_font('text_smaller'), x, math_scale(56), self.details_color)
   end
@@ -506,8 +475,8 @@ function PANEL:get_attribute()
 end
 
 --- Sets the data of the attribute and brings the row up to date with it.
--- @param data [Map level, progress, boosts and multipliers of the attribute; nil or false
---   shows the attribute at its default level]
+-- @param data [Map level and boosts of the attribute; nil or false shows the attribute at
+--   its default level]
 function PANEL:set_data(data)
   self.data = data or false
 
@@ -567,8 +536,7 @@ function PANEL:update()
   local data = self.data or {}
   local min, max = attribute_table.min, attribute_table.max
   local base_level = tonumber(data.level) or attribute_table.default
-  local boosts = active_modifiers(data.boosts)
-  local multipliers = active_modifiers(data.multipliers)
+  local boosts = active_boosts(data.boosts)
   local boost = 0
 
   if attribute_table.boostable != false then
@@ -578,10 +546,9 @@ function PANEL:update()
   local level = base_level + boost
   local level_name = attribute_table:get_level_name(level)
   local range = max - min
-  local details = {}
 
   self.boost = boost
-  self.detailed = has_details(attribute_table, data)
+  self.detailed = has_details(data)
   self.name_text = translate(attribute_table.name)
 
   if attribute_table.hidden then
@@ -603,39 +570,13 @@ function PANEL:update()
   self.boost_text = boost != 0 and format_number(boost, true) or ''
   self.level_fraction = range > 0 and math_clamp((base_level - min) / range, 0, 1) or 1
   self.boosted_fraction = range > 0 and math_clamp((level - min) / range, 0, 1) or 1
-  self.progress_fraction = false
-
-  if attribute_table.has_progress != false then
-    local progress = tonumber(data.progress) or 0
-    local total_progress = attribute_table:get_total_progress(base_level)
-
-    if base_level >= max or total_progress <= 0 then
-      self.progress_fraction = 0
-
-      table.insert(details, translate('ui.attributes.max_level'))
-    else
-      self.progress_fraction = math_clamp(progress / total_progress, 0, 1)
-
-      table.insert(details, translate('ui.attributes.progress', {
-        progress = format_number(progress),
-        total = format_number(total_progress)
-      }))
-    end
-  end
+  self.details_text = ''
 
   if #boosts > 0 then
-    table.insert(details, translate('ui.attributes.boosts', {
-      list = describe_modifiers(boosts, '', true)
-    }))
+    self.details_text = translate('ui.attributes.boosts', {
+      list = describe_boosts(boosts)
+    })
   end
-
-  if #multipliers > 0 then
-    table.insert(details, translate('ui.attributes.multipliers', {
-      list = describe_modifiers(multipliers, 'x', false)
-    }))
-  end
-
-  self.details_text = table.concat(details, '    ')
 
   if self.tooltip_level != level then
     self.tooltip_level = level

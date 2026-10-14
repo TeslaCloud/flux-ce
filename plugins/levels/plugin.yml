@@ -3,4 +3,4 @@ description: Adds character levels, experience, level-up points, maximum health 
 author: TeslaCloud Studios
 depends:
   - characters
-  - attributes
+  - stats

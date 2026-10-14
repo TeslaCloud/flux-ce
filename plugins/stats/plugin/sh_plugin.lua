@@ -4,9 +4,27 @@
 -- A new character spreads the points of the `stats_creation_points` config over them in a
 -- stage of character creation, raising no stat above its `creation_max` (3), and the server
 -- checks the result. The faction of a character adds the bonuses it lists in
--- `FACTION.stats`, as boosts of the Attributes plugin that carry the `Stats.faction_boost_id`
--- identifier and last for as long as the character is in the faction; the
--- `stats_faction_bonuses` config turns them off.
+-- `FACTION.stats`, as attribute boosts that carry the `Stats.faction_boost_id` identifier and
+-- last for as long as the character is in the faction; the `stats_faction_bonuses` config
+-- turns them off.
+--
+-- Stats and skills are attributes, defined as `AttributeBase` objects by the files of the
+-- plugin's `attributes` folder; any plugin or schema that loads after this one can add more
+-- in an `attributes` folder of its own or with `Attributes.register`. Every character keeps
+-- an `Attribute` record with the level of each attribute, created with the character from
+-- the levels picked at creation or the defaults and added for the attributes registered
+-- later when the character is loaded. A level changes only when it is set: by staff, by a
+-- plugin through `Player:set_attribute` and the methods built on it, or by a point spent
+-- through the Levels plugin; `PlayerAttributeChanged` reports every change. A boost
+-- (`Player:boost_attribute`) adds levels on top for a limited time or until it is removed,
+-- and one that is given an identifier can be replaced and removed by it; expired boosts are
+-- removed every second. The server networks the levels and boosts of a character to its
+-- owner alone. The `attribute` condition compares the level of an attribute, boosts
+-- included, with a value. Staff set levels with the CharSetAttribute command, give and
+-- remove boosts with CharAttributeBoost and CharAttributeBoostClear, and look at the
+-- attributes of a character, hidden ones included, with CharAttributes, which opens a
+-- window that lists them. `IsAttributeVisible` hides an attribute from the character
+-- sheet.
 --
 -- Every level of a stat changes something in play by the share its config sets, and a
 -- level below zero changes it the other way:
@@ -18,15 +36,15 @@
 -- * strength: heavier objects can be picked up and are thrown harder
 --   (`stats_strength_lifting`, 10%);
 -- * reflexes: less fall damage (`stats_reflexes_fall`, 10%);
--- * intelligence: more progress in skills that progress (`stats_intelligence_learning`, 10%);
 -- * charisma: lower prices when buying from vendors (`stats_charisma_prices`, 5%);
 -- * determination: weaker slowdown and aim drift from hurt limbs
 --   (`stats_determination_pain`, 10%).
 --
--- The effects run through the hooks of the Stamina, Pickup Objects, Damage, Limb Damage,
--- Vendors and Attributes plugins, so an effect whose plugin is not loaded simply does
--- nothing. Each stat lists its effects in the `effects` field of its definition, which the
--- creation stage and the Attributes tab show.
+-- Intelligence changes nothing in play by itself; it is the key stat of medicine, crafting,
+-- technology and lore. The effects run through the hooks of the Chatbox, Stamina, Pickup
+-- Objects, Damage, Limb Damage and Vendors plugins, so an effect whose plugin is not loaded
+-- simply does nothing. Each stat lists its effects in the `effects` field of its definition, which the
+-- creation stage and the staff attribute viewer show.
 --
 -- The plugin also adds twenty skills, each tied to a key stat by its `attribute` field and
 -- ranked from untrained (0) through trained, expert and master to legendary (4):
@@ -60,7 +78,6 @@ Stats.faction_boost_id = 'faction'
 Stats.roll_interval = 1
 Stats.min_hearing_radius = 1
 
-require_relative 'sh_enums'
 require_relative 'sh_hooks'
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'
@@ -144,4 +161,50 @@ function Stats:get_faction_boost(target, attribute_id)
       return tonumber(v.value)
     end
   end
+end
+
+--- Registers the 'attribute' condition, which compares a player's attribute level to a value.
+function Stats:RegisterConditions()
+  Conditions:register_condition('attribute', {
+    name = 'condition.attribute.name',
+    text = 'condition.attribute.text',
+    get_args = function(panel, data)
+      local attribute_name = ''
+      local operator = util.operator_to_symbol(panel.data.operator) or ''
+      local attribute_value = panel.data.attribute_value or ''
+
+      if panel.data.attribute then
+        attribute_name = Attributes.find(panel.data.attribute).name
+      end
+
+      return { operator = operator, attribute = attribute_name, value = attribute_value }
+    end,
+    icon = 'icon16/chart_bar.png',
+    check = function(target, data)
+      if !data.operator or !data.attribute or !data.attribute_value then return false end
+
+      return util.process_operator(data.operator, target:get_attribute(data.attribute), tonumber(data.attribute_value))
+    end,
+    set_parameters = function(id, data, panel, menu, parent)
+      parent:create_selector(data.name, 'condition.attribute.message1', 'condition.attributes', Attributes.get_stored(),
+      function(selector, value)
+        selector:add_choice(t(value.name), function()
+          panel.data.attribute = value.attribute_id
+
+          panel.update()
+
+          Derma_StringRequest(
+            t(data.name),
+            t'condition.attribute.message2',
+            '',
+            function(text)
+              panel.data.attribute_value = text
+
+              panel.update()
+            end)
+        end)
+      end)
+    end,
+    set_operator = 'relational'
+  })
 end

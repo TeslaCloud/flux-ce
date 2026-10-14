@@ -1,5 +1,0 @@
-name: Attributes
-description: Adds character attributes.
-author: TeslaCloud Studios
-depends:
-  - characters

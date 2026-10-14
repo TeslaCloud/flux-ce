@@ -139,13 +139,14 @@ function Plugin.add_hooks(id, obj)
   Plugin.cache_functions(obj, id)
 end
 
---- Removes all hook handlers that have been registered under an ID.
+--- Removes all hook handlers that have been registered under an ID. The remaining handlers
+-- of each hook move up and keep their order, so none of them is skipped when the hook runs.
 -- @param id [String ID that was passed to Plugin.add_hooks]
 function Plugin.remove_hooks(id)
   for k, v in pairs(hooks_cache) do
-    for k2, v2 in ipairs(v) do
-      if v2.id and v2.id == id then
-        hooks_cache[k][k2] = nil
+    for i = #v, 1, -1 do
+      if v[i].id and v[i].id == id then
+        table.remove(v, i)
       end
     end
   end
@@ -1171,10 +1172,11 @@ do
   end
 end
 
---- Adds a folder to the list of extra folders that are included for every plugin.
+--- Adds a folder to the list of extra folders that are included for every plugin. A folder
+-- that is in the list already is not added again, so it is never included twice.
 -- @param extra [String folder name relative to the plugin's folder, e.g. 'items']
 function Plugin.add_extra(extra)
-  if !isstring(extra) then return end
+  if !isstring(extra) or table.HasValue(extras, extra) then return end
 
   extras[#extras + 1] = extra
 end

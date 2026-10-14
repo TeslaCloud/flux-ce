@@ -1,6 +1,42 @@
 --- Client side of the Stats plugin: adds the stats stage to character creation, words the
--- refusal of a character whose stat levels the server did not accept, and adds the character
--- sheet to the tab menu as its first and default page.
+-- refusal of a character whose stat levels the server did not accept, adds the character
+-- sheet to the tab menu as its first and default page, and opens the window that shows a
+-- member of staff the attributes of another player's character when the server sends them,
+-- which the CharAttributes command makes it do.
+
+--- Opens a window that lists the given attributes of a player's character, hidden
+-- attributes included. The list is a snapshot: it does not follow later changes. A window
+-- that is still open from an earlier call is replaced.
+-- @param target [Player player the attributes belong to]
+-- @param attributes [Map attribute data keyed by attribute ID, as `Player:get_attributes`
+--   returns it]
+-- @return [Panel the `fl_frame` that was opened]
+function Attributes.open_viewer(target, attributes)
+  if IsValid(Attributes.viewer) then
+    Attributes.viewer:safe_remove()
+  end
+
+  local name = IsValid(target) and target:name() or ''
+  local title = t('ui.attributes.viewer_title', { name = name })
+
+  local frame = vgui.Create('fl_frame')
+  frame:SetSize(math.scale(720), math.scale(640))
+  frame:Center()
+  frame:MakePopup()
+  frame:set_title(title)
+  frame:set_draggable(true)
+
+  local attribute_list = vgui.Create('fl_attributes', frame)
+  attribute_list:Dock(FILL)
+  attribute_list:set_snapshot(target, attributes)
+  attribute_list:rebuild()
+
+  frame.attribute_list = attribute_list
+
+  Attributes.viewer = frame
+
+  return frame
+end
 
 --- Registers the stats character creation panel and the character sheet with the theme.
 -- @param current_theme [Theme theme that was loaded]
@@ -51,3 +87,9 @@ function Stats:GetCharCreationErrorText(success, status)
     return t'error.attribute.sum'
   end
 end
+
+Cable.receive('fl_attributes_view', function(target, attributes)
+  if !istable(attributes) then return end
+
+  Attributes.open_viewer(target, attributes)
+end)

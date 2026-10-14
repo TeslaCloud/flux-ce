@@ -1,5 +1,7 @@
 en:
   attribute:
+    category:
+      other: Other
     rank:
       untrained: Untrained
       trained: Trained
@@ -16,6 +18,9 @@ en:
       mediocre: Mediocre
       poor: Poor
       terrible: Terrible
+    other:
+      name: Unknown Attribute
+      desc: This attribute has no description.
     strength:
       title: Strength
       short: STR
@@ -462,6 +467,33 @@ en:
       expert: You keep your attention fixed on your work through pain and chaos.
       master: Once you set your mind to something, nothing can break your concentration.
       legendary: Your focus is absolute, shutting out everything but the task at hand.
+  command:
+    charsetattribute:
+      description: "Set a character's attribute. Attributes: {attributes}"
+      syntax: <target> <attribute_id> <value>
+      message: "{player} has set {target}'s attribute {attribute} to {value}."
+    charattributeboost:
+      description: "Boost a character's attribute. A duration of 'perma' gives a boost that lasts until it is removed. Attributes: {attributes}"
+      syntax: <target> <attribute_id> <value> <duration>
+      message: "{player} has boosted {target}'s attribute {attribute} by {value} for {time}."
+      message_permanent: "{player} has boosted {target}'s attribute {attribute} by {value} permanently."
+    charattributeboostclear:
+      description: "Remove the boosts of a character's attribute, or of all attributes if none is given. Attributes: {attributes}"
+      syntax: "<target> [attribute_id]"
+      message: "{player} has removed the boosts of {target}'s attribute {attribute}."
+      message_all: "{player} has removed all attribute boosts of {target}."
+    charattributes:
+      description: "View the attributes of a character."
+      syntax: <target>
+      header: "Attributes of {target}:"
+      line: "{attribute} ({id}): level {level}, boost {boost}"
+  condition:
+    attribute:
+      name: Matching Attribute Value
+      text: Attribute {attribute} {operator} {value}
+      message1: Attribute name
+      message2: Attribute value
+    attributes: Attributes
   config:
     stats:
       title: Stats
@@ -493,13 +525,12 @@ en:
       rank_bonus:
         name: Proficiency per skill rank
         desc: Bonus that every rank of a trained skill adds to the rolls of the skill. A trained skill also adds the level of the character, an untrained one adds nothing.
-      intelligence_learning:
-        name: "Skill progress per intelligence level, %"
-        desc: Percent by which the progress a character gains in skills grows for every level of intelligence, and shrinks below zero. 0 turns the effect off.
       determination_pain:
         name: "Injury penalties per determination level, %"
         desc: Percent by which the slowdown and the aim drift of hurt limbs weaken for every level of determination, and grow below zero. Needs the Limb Damage plugin. 0 turns the effect off.
   error:
+    attribute_not_valid: "'{attribute}' is not a valid attribute!"
+    attribute_no_character: "{target} has no active character!"
     stats:
       roll: "Cannot roll {name}: {message}"
       unknown_rollable: "'{name}' is not a stat or a skill."
@@ -508,9 +539,28 @@ en:
     attribute:
       sum: Attribute sum is not equal to the maximum amount of the attributes.
   notification:
+    attribute:
+      boost: Your attribute '{attribute}' was boosted by {value} for {time}.
+      boost_permanent: Your attribute '{attribute}' was boosted by {value} permanently.
+      boosts_cleared: The boosts of your attribute '{attribute}' were removed.
+      boosts_cleared_all: All of your attribute boosts were removed.
+      set: Your attribute '{attribute}' was set to {value}.
     stats:
       roll: "{name}: {roll}"
   ui:
+    attributes:
+      title: Attributes
+      viewer_title: "Attributes of {name}"
+      empty: There are no attributes to show.
+      hidden: "(hidden)"
+      level: "{level} / {max}"
+      level_named: "{name} ({level})"
+      boosts: "Boosts: {list}"
+      timed: "{value} ({time})"
+      type:
+        stat: Stats
+        skill: Skills
+        other: Other
     effect:
       hearing_radius: Hearing Radius
       stamina_drain: Stamina Drain
@@ -521,7 +571,6 @@ en:
       throw_force: Throw Force
       fall_damage: Fall Damage
       vendor_prices: Vendor Prices
-      skill_progress: Skill Progress
       limb_penalties: Injury Penalties
     char_create:
       invalid_points: Invalid amount of points

@@ -2,13 +2,20 @@
 -- change the attributes of a player's character.
 -- Definitions are `AttributeBase` objects registered with `Attributes.register`, usually
 -- by `Attributes.include_attributes` loading the files of a plugin's `attributes` folder.
+-- This file adds `attributes` to the extra folders of every plugin and handles that folder
+-- through the PluginIncludeFolder hook. It is part of the lib folder of the Stats plugin,
+-- which Flux includes before the other folders of the plugin and before its sh_plugin.lua, so
+-- the attributes folder of the Stats plugin is loaded this way too, as are those of the
+-- plugins and the schema that load after it. For the same reason it includes the sh_enums.lua
+-- of the plugin, which defines `ATTRIBUTE_STAT` and `ATTRIBUTE_SKILL`.
 --
--- What a character has of an attribute is kept in an `Attribute` record: a level, a progress
--- value, and any number of boosts and progress multipliers. A boost or a multiplier may
--- carry an identifier, which lets the code that gave it replace or remove it later, and may
--- have no expiry, in which case it stays until it is removed. The server networks the
--- attributes of a player to that player alone, in the private 'attributes' networked
--- variable, which the getters read on the client.
+-- What a character has of an attribute is kept in an `Attribute` record: a level and any
+-- number of boosts. A level changes only when it is set, by staff or by the code of a
+-- plugin, such as the Levels plugin spending a point on it. A boost may carry an identifier,
+-- which lets the code that gave it replace or remove it later, and may have no expiry, in
+-- which case it stays until it is removed. The server networks the attributes of a player to
+-- that player alone, in the private 'attributes' networked variable, which the getters read
+-- on the client.
 
 mod 'Attributes'
 
@@ -16,12 +23,13 @@ local istable = istable
 local tonumber = tonumber
 local tostring = tostring
 local math_clamp = math.clamp
-local math_max = math.max
 local math_round = math.round
 local os_time = os.time
 
 local stored = Attributes.stored or {}
 Attributes.stored = stored
+
+require_relative(PLUGIN:get_folder()..'/sh_enums')
 
 --- Returns every registered attribute definition.
 -- @return [Map attribute definitions keyed by attribute ID]
@@ -52,13 +60,11 @@ function Attributes.get_by_type(attribute_type)
 end
 
 --- Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get
--- defaults: min 0, max 10, default equal to min, total_progress 100, geometric progression
--- with coefficient 1.2.
+-- defaults: min 0, max 10 and default equal to min.
 -- ```
 -- local attribute = AttributeBase.new('lockpicking')
 -- attribute.name = 'attribute.lockpicking.name'
 -- attribute.type = ATTRIBUTE_SKILL
--- attribute.progression_type = PROGRESSION_ARITHMETIC
 -- attribute.boostable = false
 --
 -- Attributes.register(attribute.attribute_id, attribute)
@@ -83,13 +89,8 @@ function Attributes.register(id, data)
   data.category = data.category or 'attribute.category.other'
   data.icon = data.icon
   data.type = data.type
-  data.has_progress = data.has_progress
-  data.total_progress = data.total_progress or 100
-  data.progression_type = data.progression_type or PROGRESSION_GEOMETRIC
-  data.progression_coefficient = data.progression_coefficient or 1.2
   data.hidden = data.hidden
   data.boostable = data.boostable
-  data.multipliable = data.multipliable
   data.boost_limited = data.boost_limited
 
   --- Called on both realms when an attribute definition is registered, after its missing
@@ -141,9 +142,9 @@ function Attributes.sum_boosts(attribute_table, attribute)
   return boost
 end
 
---- Checks whether an attribute is shown to a player in the Attributes tab. An attribute with
--- its hidden field set is never shown; any other can be hidden with the IsAttributeVisible
--- hook.
+--- Checks whether an attribute is shown to a player on the character sheet. An attribute
+-- with its hidden field set is never shown; any other can be hidden with the
+-- IsAttributeVisible hook.
 -- @param attribute [AttributeBase attribute definition]
 -- @param target [Player player whose attributes are being shown]
 -- @return [Boolean]
@@ -153,7 +154,7 @@ function Attributes.is_visible(attribute, target)
   --- Lets plugins hide an attribute from a player, for example one that the faction of the
   -- player has no use for. Called on the client for every registered attribute that does
   -- not have its hidden field set, when the tab menu is opened and twice a second while the
-  -- Attributes tab is open, so that the tab follows a changed answer.
+  -- character sheet is open, so that the sheet follows a changed answer.
   -- @param target [Player The player whose attributes are being shown, the local player]
   -- @param attribute [AttributeBase The attribute definition]
   -- @return [Boolean Return false to hide the attribute]
@@ -180,8 +181,8 @@ if SERVER then
     return istable(character) and istable(character.attributes) and character.attributes or {}
   end
 
-  --- Returns the time at which a boost or multiplier record expires.
-  -- @param modifier [AttributeBoost/AttributeMultiplier]
+  --- Returns the time at which a boost record expires.
+  -- @param modifier [AttributeBoost]
   -- @return [Number/Boolean unix timestamp, 0 if the stored time cannot be read, or false
   --   if the record has no expiry]
   local function get_expiry(modifier)
@@ -194,10 +195,10 @@ if SERVER then
     return time_from_timestamp(expires_at) or 0
   end
 
-  --- Deletes a boost or multiplier record from the database. A record that has never been
-  -- saved has nothing to delete, and one that is being inserted is deleted once the
-  -- database has given it an ID.
-  -- @param modifier [AttributeBoost/AttributeMultiplier]
+  --- Deletes a boost record from the database. A record that has never been saved has
+  -- nothing to delete, and one that is being inserted is deleted once the database has given
+  -- it an ID.
+  -- @param modifier [AttributeBoost]
   local function destroy_record(modifier)
     if modifier.id then
       modifier:destroy()
@@ -208,8 +209,8 @@ if SERVER then
     end
   end
 
-  --- Removes boost or multiplier records from a list and deletes them from the database.
-  -- @param modifiers [List<AttributeBoost/AttributeMultiplier> records of one attribute]
+  --- Removes boost records from a list and deletes them from the database.
+  -- @param modifiers [List<AttributeBoost> records of one attribute]
   -- @param identifier=nil [String only remove the records with this identifier, which has
   --   to be a string already]
   -- @param before=nil [Number only remove the records that expire at this unix time or
@@ -236,9 +237,9 @@ if SERVER then
     return removed
   end
 
-  --- Converts the boost or multiplier records of an attribute to the tables that are
-  -- networked, leaving out the ones that have expired.
-  -- @param modifiers [List<AttributeBoost/AttributeMultiplier> records of one attribute]
+  --- Converts the boost records of an attribute to the tables that are networked, leaving
+  -- out the ones that have expired.
+  -- @param modifiers [List<AttributeBoost> records of one attribute]
   -- @param unix_time [Number current os.time()]
   -- @param cur_time [Number current CurTime()]
   -- @return [List<Map> networkable tables, Number earliest unix time at which a record of
@@ -272,23 +273,14 @@ if SERVER then
   -- @param attribute_table [AttributeBase definition of the record's attribute]
   -- @param unix_time [Number current os.time()]
   -- @param cur_time [Number current CurTime()]
-  -- @return [Map level, progress, boosts and multipliers, Number earliest unix time at which
-  --   a boost or multiplier of the record expires or has expired; nil if none has an expiry]
+  -- @return [Map level and boosts, Number earliest unix time at which a boost of the record
+  --   expires or has expired; nil if none has an expiry]
   local function record_to_networkable(record, attribute_table, unix_time, cur_time)
-    local boosts, boost_expiry = modifiers_to_networkable(record.attribute_boosts or {}, unix_time, cur_time)
-    local multipliers, multiplier_expiry =
-      modifiers_to_networkable(record.attribute_multipliers or {}, unix_time, cur_time)
-    local earliest = boost_expiry
-
-    if multiplier_expiry and (!earliest or multiplier_expiry < earliest) then
-      earliest = multiplier_expiry
-    end
+    local boosts, earliest = modifiers_to_networkable(record.attribute_boosts or {}, unix_time, cur_time)
 
     return {
       level = tonumber(record.level) or attribute_table.default,
-      progress = tonumber(record.progress) or 0,
-      boosts = boosts,
-      multipliers = multipliers
+      boosts = boosts
     }, earliest
   end
 
@@ -306,8 +298,8 @@ if SERVER then
     end
   end
 
-  --- Returns the level, progress, boosts and multipliers of one attribute of a player's
-  -- character, in the form that is networked.
+  --- Returns the level and the boosts of one attribute of a player's character, in the form
+  -- that is networked.
   -- @param target [Player]
   -- @param attribute_id [String]
   -- @return [Map attribute data, or nil if the attribute is not registered or the player's
@@ -325,8 +317,7 @@ if SERVER then
 
   --- Gives a character a record for every registered attribute it has none for. A new
   -- record starts at the given level, rounded down and kept between the attribute's min and
-  -- max, or at the attribute's default level, and with no progress. The records are saved
-  -- with the character.
+  -- max, or at the attribute's default level. The records are saved with the character.
   -- @param character [Character]
   -- @param levels=nil [Map starting levels keyed by attribute ID]
   -- @return [Number amount of records added]
@@ -348,7 +339,6 @@ if SERVER then
         local attribute = Attribute.new()
           attribute.attribute_id = k
           attribute.level = math_clamp(math.floor(level), v.min, v.max)
-          attribute.progress = 0
         table.insert(character.attributes, attribute)
 
         added = added + 1
@@ -358,12 +348,12 @@ if SERVER then
     return added
   end
 
-  --- Builds the table that is networked for a player: the level, progress, boosts and
-  -- multipliers of every registered attribute their character has a record for.
+  --- Builds the table that is networked for a player: the level and the boosts of every
+  -- registered attribute their character has a record for.
   -- @param target [Player]
   -- @param attribute_type=nil [Number only include the attributes of this type]
   -- @return [Map attribute data keyed by attribute ID, Number earliest unix time at which a
-  --   boost or multiplier of the character expires or has expired; nil if none has an expiry]
+  --   boost of the character expires or has expired; nil if none has an expiry]
   function Attributes.to_networkable(target, attribute_type)
     local attributes = {}
     local unix_time, cur_time = os_time(), CurTime()
@@ -387,7 +377,7 @@ if SERVER then
   end
 
   --- Networks the attributes of a player's character to that player again and notes when
-  -- the next of its boosts and multipliers expires. Called after every change the plugin
+  -- the next of its boosts expires. Called after every change the plugin
   -- makes; call it yourself after changing the records directly.
   -- @param target [Player]
   function Attributes.sync(target)
@@ -399,87 +389,76 @@ if SERVER then
     target:set_private_nv('attributes', attributes)
   end
 
-  --- Removes the boosts and multipliers of a player's character that have expired, deleting
-  -- their records. Does not network the change, see `Attributes.sync`.
+  --- Removes the boosts of a player's character that have expired, deleting their records.
+  -- Does not network the change, see `Attributes.sync`.
   -- @param target [Player]
-  -- @return [Number amount of boosts and multipliers removed]
+  -- @return [Number amount of boosts removed]
   function Attributes.remove_expired(target)
     local unix_time = os_time()
     local removed = 0
 
     for k, v in ipairs(get_records(target)) do
       removed = removed + remove_modifiers(v.attribute_boosts or {}, nil, unix_time)
-      removed = removed + remove_modifiers(v.attribute_multipliers or {}, nil, unix_time)
     end
 
     return removed
   end
 
-  --- Sets the level and the progress of an attribute of a player's character, networks the
-  -- attributes and runs the PlayerAttributeChanged hook. Nothing happens if neither value
-  -- changes or the character has no record for the attribute.
+  --- Sets the level of an attribute of a player's character, networks the attributes and
+  -- runs the PlayerAttributeChanged hook. Nothing happens if the level does not change or the
+  -- character has no record for the attribute.
   -- @param target [Player]
   -- @param attribute_id [String]
-  -- @param level=nil [Number new level, rounded and kept between the attribute's min and
-  --   max; the level stays as it is if nil]
-  -- @param progress=nil [Number new progress, never lower than 0; the progress stays as it
-  --   is if nil]
-  -- @return [Boolean true if the level or the progress has changed]
-  function Attributes.update(target, attribute_id, level, progress)
+  -- @param level [Number new level, rounded and kept between the attribute's min and max]
+  -- @return [Boolean true if the level has changed]
+  function Attributes.update(target, attribute_id, level)
     local attribute_table = stored[attribute_id]
     local record = attribute_table and Attributes.get_record(get_character(target), attribute_id)
 
     if !record then return false end
 
     local old_level = tonumber(record.level) or attribute_table.default
-    local old_progress = tonumber(record.progress) or 0
 
-    level = tonumber(level) or old_level
-    progress = tonumber(progress) or old_progress
+    level = tonumber(level)
 
-    if level != level or progress != progress then return false end
+    if !level or level != level then return false end
 
     level = math_clamp(math_round(level), attribute_table.min, attribute_table.max)
-    progress = math_max(progress, 0)
 
-    if level == old_level and progress == old_progress then return false end
+    if level == old_level then return false end
 
     record.level = level
-    record.progress = progress
 
     Attributes.sync(target)
 
-    --- Called on the server after the level or the progress of an attribute of a player's
-    -- character has changed and the change has been networked, however it came about:
-    -- through `Player:set_attribute`, `Player:progress_attribute` and the methods built on
-    -- them, or the staff commands. A call of `Player:progress_attribute` that moves the
-    -- attribute over several levels runs the hook once. Boosts do not run it.
+    --- Called on the server after the level of an attribute of a player's character has
+    -- changed and the change has been networked, however it came about: through
+    -- `Player:set_attribute` and the methods built on it, the staff commands or the points
+    -- the Levels plugin lets players spend. Boosts do not run it.
     -- @param actor [Player The player whose character the attribute belongs to]
     -- @param attribute_id [String Attribute ID]
     -- @param level [Number New level, without boosts]
-    -- @param progress [Number New progress toward the next level]
     -- @param old_level [Number Level before the change]
-    -- @param old_progress [Number Progress before the change]
-    hook.Run('PlayerAttributeChanged', target, attribute_id, level, progress, old_level, old_progress)
+    hook.Run('PlayerAttributeChanged', target, attribute_id, level, old_level)
 
     return true
   end
 
-  --- Gives a player's character a boost or a multiplier and networks the attributes. One
-  -- that carries an identifier replaces those of the same attribute with that identifier.
-  -- This is what `Player:boost_attribute` and `Player:multiply_attribute` are built on; it
-  -- does not check whether the attribute is boostable or multipliable.
+  --- Gives a player's character a boost and networks the attributes. A boost that carries an
+  -- identifier replaces those of the same attribute with that identifier. This is what
+  -- `Player:boost_attribute` is built on; it does not check whether the attribute is
+  -- boostable.
   -- @param target [Player]
   -- @param attribute_id [String]
-  -- @param list_key [String field of the Attribute record that holds the records]
-  -- @param model [ActiveRecord::Base class of the records, AttributeBoost or
-  --   AttributeMultiplier]
+  -- @param list_key [String field of the Attribute record that holds the records,
+  --   'attribute_boosts']
+  -- @param model [ActiveRecord::Base class of the records, AttributeBoost]
   -- @param value [Number]
   -- @param duration=nil [Number seconds until it expires; it never expires if this is nil
   --   or not above 0]
   -- @param identifier=nil [Any identifier, converted to a string]
-  -- @return [AttributeBoost/AttributeMultiplier the new record, or nil if the value is not a
-  --   number or the character has no record for the attribute]
+  -- @return [AttributeBoost the new record, or nil if the value is not a number or the
+  --   character has no record for the attribute]
   function Attributes.add_modifier(target, attribute_id, list_key, model, value, duration, identifier)
     local record = Attributes.get_record(get_character(target), attribute_id)
 
@@ -510,11 +489,11 @@ if SERVER then
     return modifier
   end
 
-  --- Removes boosts or multipliers from a player's character and networks the attributes
-  -- if any were removed. This is what `Player:remove_attribute_boosts` and
-  -- `Player:remove_attribute_multipliers` are built on.
+  --- Removes boosts from a player's character and networks the attributes if any were
+  -- removed. This is what `Player:remove_attribute_boosts` is built on.
   -- @param target [Player]
-  -- @param list_key [String field of the Attribute record that holds the records]
+  -- @param list_key [String field of the Attribute record that holds the records,
+  --   'attribute_boosts']
   -- @param attribute_id=nil [String only remove from this attribute]
   -- @param identifier=nil [Any only remove the ones with this identifier]
   -- @return [Number amount removed]
@@ -542,21 +521,20 @@ end
 do
   local player_meta = FindMetaTable('Player')
 
-  --- Returns the level, progress, boosts and multipliers of every attribute of the player's
-  -- character. On the client this is what the server has networked, which it does for the
-  -- local player alone: any other player has no attributes there. A boost or multiplier
-  -- has a value, the identifier it was given (`id`), the time it expires at as a date-time
-  -- string (`expires_at`) and as a CurTime (`end_time`); the last three are nil when not set.
+  --- Returns the level and the boosts of every attribute of the player's character. On the
+  -- client this is what the server has networked, which it does for the local player alone:
+  -- any other player has no attributes there. A boost has a value, the identifier it was
+  -- given (`id`), the time it expires at as a date-time string (`expires_at`) and as a
+  -- CurTime (`end_time`); the last three are nil when not set.
   -- ```
   -- local attributes = target:get_attributes()
   --
   -- -- attributes.strength = {
-  -- --   level = 3, progress = 40,
+  -- --   level = 3,
   -- --   boosts = {
   -- --     { value = 2, expires_at = '2026-01-01T12:00:00Z', end_time = 1520 },
   -- --     { value = -1, id = 'drunk' }
-  -- --   },
-  -- --   multipliers = {}
+  -- --   }
   -- -- }
   -- ```
   -- @param attribute_type=nil [Number attribute type to filter by]
@@ -588,8 +566,8 @@ do
     return filtered
   end
 
-  --- Returns the level, progress, boosts and multipliers of one attribute of the player's
-  -- character, in the form `Player:get_attributes` describes.
+  --- Returns the level and the boosts of one attribute of the player's character, in the
+  -- form `Player:get_attributes` describes.
   -- @param attribute_id [String]
   -- @return [Map attribute data, or nil if the attribute is not registered or the player's
   --   character has no data for it]
@@ -607,22 +585,21 @@ do
     return Attributes.get_data(self, attribute_id)
   end
 
-  --- Returns the player's level in an attribute and their progress toward the next level.
-  -- Active boosts are added to the level unless disabled or the attribute is not boostable.
-  -- A player whose character has no data for the attribute, such as a bot, is at the
-  -- attribute's default level.
+  --- Returns the player's level in an attribute. Active boosts are added to the level unless
+  -- disabled or the attribute is not boostable. A player whose character has no data for the
+  -- attribute, such as a bot, is at the attribute's default level.
   -- @param attribute_id [String]
   -- @param no_boost=false [Boolean leave active boosts out of the level]
-  -- @return [Number level, Number progress; 0 and 0 if the attribute is not registered]
+  -- @return [Number level; 0 if the attribute is not registered]
   function player_meta:get_attribute(attribute_id, no_boost)
     local attribute_table = stored[attribute_id]
 
-    if !attribute_table then return 0, 0 end
+    if !attribute_table then return 0 end
 
     local attribute = self:get_attribute_data(attribute_id)
 
     if !attribute then
-      return attribute_table.default, 0
+      return attribute_table.default
     end
 
     local level = attribute.level or attribute_table.default
@@ -632,7 +609,7 @@ do
       boost = Attributes.sum_boosts(attribute_table, attribute)
     end
 
-    return level + boost, attribute.progress or 0
+    return level + boost
   end
 
   --- Returns the sum of the player's active boosts to an attribute. The server leaves an
@@ -678,30 +655,9 @@ do
     return false
   end
 
-  --- Returns the player's combined progress multiplier for an attribute. Every multiplier adds
-  -- its value minus one on top of 1, and the result is never lower than 1.
-  -- @param attribute_id [String]
-  -- @return [Number]
-  function player_meta:get_attribute_multiplier(attribute_id)
-    local attribute = self:get_attribute_data(attribute_id)
-    local multiplier = 0
-
-    if !attribute then return 1 end
-
-    local multipliers = attribute.multipliers
-
-    if multipliers then
-      for k, v in pairs(multipliers) do
-        multiplier = multiplier + (tonumber(v.value) or 1) - 1
-      end
-    end
-
-    return math_max(multiplier, 0) + 1
-  end
-
   if SERVER then
     --- Sets the player's level in an attribute, rounded and clamped to the attribute's min
-    -- and max, and networks it. The progress stays as it is. Server only.
+    -- and max, and networks it. Server only.
     -- @param attribute_id [String]
     -- @param level [Number]
     -- @see [Attributes.update]
@@ -729,115 +685,6 @@ do
       amount = amount or 1
 
       self:set_attribute(attribute_id, self:get_attribute(attribute_id, true) - amount)
-    end
-
-    --- Adds progress to an attribute, raising or lowering its level whenever a level threshold is
-    -- crossed. Does nothing for attributes whose has_progress is false. Unless told not to,
-    -- the amount is scaled by the player's multiplier, when the attribute is multipliable,
-    -- and by the `attribute_progress_scale` config; the AdjustAttributeProgress hook can then
-    -- change it. Server only.
-    -- ```
-    -- -- Scaled by the player's multiplier when the attribute is multipliable.
-    -- target:progress_attribute('lockpicking', 15)
-    -- -- Always exactly 15, unless a hook changes it.
-    -- target:progress_attribute('lockpicking', 15, true)
-    -- ```
-    -- @param attribute_id [String]
-    -- @param amount [Number progress to add, negative to remove]
-    -- @param no_multiplier=false [Boolean do not scale the amount]
-    function player_meta:progress_attribute(attribute_id, amount, no_multiplier)
-      local attribute_table = stored[attribute_id]
-      local attribute = attribute_table and self:get_attribute_data(attribute_id)
-
-      amount = tonumber(amount)
-
-      if !attribute or !amount or attribute_table.has_progress == false then return end
-
-      local base_amount = amount
-
-      if !no_multiplier then
-        local scale = tonumber(Config.get('attribute_progress_scale')) or 1
-
-        if attribute_table.multipliable then
-          local modifier = self:get_attribute_multiplier(attribute_id)
-
-          if amount < 0 and modifier != 0 then
-            modifier = 1 / modifier
-          end
-
-          amount = math_round(amount * modifier * scale)
-        elseif scale != 1 then
-          amount = math_round(amount * scale)
-        end
-      end
-
-      local progress_data = {
-        amount = amount,
-        base_amount = base_amount,
-        attribute = attribute_table,
-        no_multiplier = no_multiplier == true
-      }
-
-      --- Lets plugins change the progress a player is about to gain or lose in an attribute.
-      -- Called on the server by `Player:progress_attribute`, after the amount has been scaled
-      -- by the player's multiplier and the `attribute_progress_scale` config and before it
-      -- is applied. Every handler may change the table, so a handler should return nothing
-      -- to let the others run.
-      -- ```
-      -- function PLUGIN:AdjustAttributeProgress(actor, attribute_id, progress_data)
-      --   if attribute_id == 'strength' and actor:is_tired() then
-      --     progress_data.amount = progress_data.amount * 0.5
-      --   end
-      -- end
-      -- ```
-      -- @param actor [Player The player whose attribute is progressing]
-      -- @param attribute_id [String Attribute ID]
-      -- @param progress_data [Map The progress, modified in place: amount (Number progress
-      --   that is going to be added, negative to remove; a changed amount is rounded, and 0
-      --   or anything that is not a number cancels the progress), base_amount (Number the
-      --   amount before scaling), attribute (AttributeBase the attribute definition) and
-      --   no_multiplier (Boolean whether the amount was left unscaled)]
-      hook.Run('AdjustAttributeProgress', self, attribute_id, progress_data)
-
-      local adjusted = tonumber(progress_data.amount)
-
-      if !adjusted or adjusted != adjusted then return end
-
-      if adjusted != amount then
-        amount = math_round(adjusted)
-      end
-
-      if amount == 0 then return end
-
-      local level = attribute.level or attribute_table.default
-      local progress = (attribute.progress or 0) + amount
-      local total_progress = attribute_table:get_total_progress(level)
-
-      while progress >= total_progress and level < attribute_table.max do
-        progress = progress - total_progress
-        level = level + 1
-        total_progress = attribute_table:get_total_progress(level)
-      end
-
-      while progress < 0 and level > attribute_table.min do
-        level = level - 1
-        total_progress = attribute_table:get_total_progress(level)
-        progress = progress + total_progress
-      end
-
-      if level == attribute_table.max or progress < 0 then
-        progress = 0
-      end
-
-      Attributes.update(self, attribute_id, level, progress)
-    end
-
-    --- Removes progress from an attribute, lowering its level when needed. Server only.
-    -- @param attribute_id [String]
-    -- @param amount [Number progress to remove]
-    -- @see [Player#progress_attribute]
-    function player_meta:regress_attribute(attribute_id, amount)
-      self:progress_attribute(attribute_id, -amount)
     end
 
     --- Adds a boost to the player's level in an attribute. The boost is stored on the
@@ -899,47 +746,6 @@ do
 
       return self:remove_attribute_boosts(attribute_id, identifier) > 0
     end
-
-    --- Adds a progress multiplier to an attribute of the player. The multiplier is stored on
-    -- the character, networked, and removed when it expires. A multiplier that is given an
-    -- identifier replaces the multipliers of the attribute that carry the same identifier.
-    -- Server only.
-    -- ```
-    -- -- Double strength progress for an hour.
-    -- target:multiply_attribute('strength', 2, 3600)
-    -- ```
-    -- @param attribute_id [String attribute to affect; ignored when multipliable is false]
-    -- @param value [Number multiplier, 2 doubles the progress gained]
-    -- @param duration=nil [Number seconds until the multiplier expires; it never expires if
-    --   this is nil or not above 0]
-    -- @param identifier=nil [Any name of the multiplier, kept as a string]
-    -- @return [AttributeMultiplier the record of the multiplier, or nil if it was not added]
-    -- @see [Player#get_attribute_multiplier]
-    function player_meta:multiply_attribute(attribute_id, value, duration, identifier)
-      local attribute_table = stored[attribute_id]
-
-      if !attribute_table or attribute_table.multipliable == false then return end
-
-      return Attributes.add_modifier(
-        self,
-        attribute_id,
-        'attribute_multipliers',
-        AttributeMultiplier,
-        value,
-        duration,
-        identifier
-      )
-    end
-
-    --- Removes progress multipliers from the player's character: all of them, those of one
-    -- attribute, those with one identifier, or the multiplier of one attribute with one
-    -- identifier. Server only.
-    -- @param attribute_id=nil [String only remove the multipliers of this attribute]
-    -- @param identifier=nil [Any only remove the multipliers with this identifier]
-    -- @return [Number amount of multipliers removed]
-    function player_meta:remove_attribute_multipliers(attribute_id, identifier)
-      return Attributes.clear_modifiers(self, 'attribute_multipliers', attribute_id, identifier)
-    end
   end
 end
 
@@ -953,3 +759,25 @@ Pipeline.register('attribute', function(id, file_name, pipe)
   ATTRIBUTE:register()
   ATTRIBUTE = nil
 end)
+
+--- Hook handlers of the attribute registry, registered as `Attributes` while this file is
+-- included, before the Stats plugin itself is registered, so that they already handle the
+-- folders of the Stats plugin. The handlers registered under that ID by an earlier
+-- inclusion of the file are removed first, so they are never registered twice.
+local hooks = {}
+
+--- Includes a plugin's attributes folder when the 'attributes' extra is being loaded.
+-- @param extra [String name of the extra being loaded]
+-- @param folder [String path of the plugin folder]
+-- @return [Boolean true when the extra was handled here, otherwise nil]
+function hooks:PluginIncludeFolder(extra, folder)
+  if extra == 'attributes' then
+    Attributes.include_attributes(folder..'/attributes')
+
+    return true
+  end
+end
+
+Plugin.remove_hooks('Attributes')
+Plugin.add_hooks('Attributes', hooks)
+Plugin.add_extra('attributes')

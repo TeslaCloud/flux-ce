@@ -5,8 +5,8 @@
 -- of 0 turns the effect off. The server side hook handlers of the plugin ask
 -- `Stats:get_player_effect_scale` for the multiplier to apply, and the files of the
 -- attributes folder build the entries of their `effects` list with `Stats:percent_effect`
--- and `Stats:distance_effect`, so that what the creation stage and the Attributes tab show
--- is worked out the same way as what the server applies.
+-- and `Stats:distance_effect`, so that what the creation stage and the staff attribute
+-- viewer show is worked out the same way as what the server applies.
 --
 -- This file is included before the attributes folder and before sh_plugin.lua, which is why
 -- it is the one that makes the plugin available as the `Stats` global.
@@ -109,8 +109,8 @@ function Stats:get_change_color(change, inverse)
 end
 
 --- Builds an entry of the `effects` list of a stat for an effect that changes a value by a
--- percentage per level. The entry has what the creation stage and the Attributes tab read
--- (`text`, `get_value` and `get_color`, the last two taking a level), plus `is_active`,
+-- percentage per level. The entry has what the creation stage and the staff attribute viewer
+-- read (`text`, `get_value` and `get_color`, the last two taking a level), plus `is_active`,
 -- which tells whether the effect does anything at the moment, and `get_change`, which
 -- returns the change at a level in percent. An effect that is not active shows as '0%'.
 -- ```

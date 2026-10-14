@@ -174,10 +174,8 @@ end
 -- @param actor [Player]
 -- @param attribute_id [String]
 -- @param level [Number]
--- @param progress [Number]
 -- @param old_level [Number]
--- @param old_progress [Number]
-function Levels:PlayerAttributeChanged(actor, attribute_id, level, progress, old_level, old_progress)
+function Levels:PlayerAttributeChanged(actor, attribute_id, level, old_level)
   if attribute_id == 'endurance' then
     self:apply_max_health(actor)
   end
