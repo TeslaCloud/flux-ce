@@ -1,11 +1,11 @@
 ru:
   command:
     charsetlevel:
-      description: "Set the level of a character, from 1 to {max_level}. Their experience is reset and their unspent skill and attribute points are worked out again for the new level."
+      description: "Set the level of a character, from {floor} to {max_level}. Their experience is reset and their unspent skill and attribute points are worked out again for the new level. The level cap does not apply, but the level floor does."
       syntax: <target> <level>
       message: "{player} has set {target}'s level to {level}."
     chargiveexperience:
-      description: "Give experience to a character. A negative amount takes experience away and can lower their level."
+      description: "Give experience to a character. A negative amount takes experience away and can lower their level. The level cap does not apply, but a character is never lowered below the level floor."
       syntax: <target> <amount>
       message: "{player} has given {target} {amount} experience."
       message_taken: "{player} has taken {amount} experience from {target}."
@@ -14,6 +14,17 @@ ru:
       syntax: <target>
       message: "{target} is level {level} of {max_level} with {experience} / {needed} experience, {remaining} short of the next level."
       message_max: "{target} is level {level}, the highest level."
+      message_capped: "{target} is level {level} of {max_level} with {experience} experience kept, held back by the level cap of {cap} until the server level rises."
+    serverlevel:
+      description: "View the server level, the time until the next one and the level floor and cap of characters."
+      message: "The server is level {level} of {max_level}: {elapsed} into this level, level {next_level} comes in {time}."
+      message_max: "The server is level {level}, the highest level."
+      limits: "Characters are raised to at least level {floor} and level up through experience to at most level {cap}."
+      progression_off: Server level progression is off, so there is no level floor or level cap.
+    setserverlevel:
+      description: "Set the server level, from -1 to {max_level}. The server is put at the very start of that level and characters are brought in line with the new level floor and cap."
+      syntax: <level>
+      message: "{player} has set the server level to {level}."
   config:
     levels:
       title: Levels
@@ -48,6 +59,24 @@ ru:
       experience_per_kill:
         name: Experience per Kill
         desc: How much experience a player gains for killing an NPC, while combat experience is on. It is multiplied by a tenth of the maximum health of the NPC, but never by less than 1.
+      server_progression:
+        name: Server Level Progression
+        desc: Whether the server level limits the levels of characters. The server level starts at -1 when the plugin first runs and rises with real time. Characters cannot level past the server level plus the level cap offset through experience, keeping the experience until the cap rises, and are raised to the server level minus the level floor offset.
+      server_days_per_level:
+        name: Days per Server Level
+        desc: How many days of real time the server takes to go up one level, for every level below the extra day level.
+      server_ramp_level:
+        name: Extra Day Level
+        desc: The first server level that takes longer than the one before it, by the extra days per server level. Every level after it takes that much longer again.
+      server_ramp_days:
+        name: Extra Days per Server Level
+        desc: How many days of real time each server level from the extra day level on takes on top of the one before it. 0 makes every level take the same time.
+      server_cap_offset:
+        name: Level Cap Offset
+        desc: How many levels above the server level characters can reach through experience. Staff commands are not limited by it.
+      server_floor_offset:
+        name: Level Floor Offset
+        desc: How many levels below the server level characters are raised to.
   error:
     levels:
       no_character: "{target} has no active character!"

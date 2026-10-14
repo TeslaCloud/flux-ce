@@ -1,5 +1,5 @@
 name: Levels
-description: Adds character levels, experience, level-up points and maximum health that grows with the level.
+description: Adds character levels, experience, level-up points, maximum health that grows with the level and a server level that sets the level cap and level floor of characters.
 author: TeslaCloud Studios
 depends:
   - characters

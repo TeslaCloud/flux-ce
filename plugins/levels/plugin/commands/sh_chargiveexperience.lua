@@ -1,6 +1,8 @@
 --- The CharGiveExperience command gives experience to the targeted players' characters. A
--- negative amount takes experience away, which can lower their level. Allowed for admins by
--- default.
+-- negative amount takes experience away, which can lower their level. The level cap of the
+-- server level does not bind it, so the experience can raise characters above the cap, but
+-- the level floor does: a character that falls below the floor is raised back to it, keeping
+-- its experience. Allowed for admins by default.
 
 CMD.name = 'CharGiveExperience'
 CMD.description = 'command.chargiveexperience.description'
@@ -11,7 +13,8 @@ CMD.arguments = 2
 CMD.player_arg = 1
 CMD.aliases = { 'givexp', 'giveexperience', 'chargivexp' }
 
---- Gives the experience to every target that has an active character, then notifies the
+--- Gives the experience to every target that has an active character, past the level cap
+-- if it is enough, raises those that fell below the level floor back to it, then notifies the
 -- targets and staff.
 -- @param actor [Player the player who ran the command, or an invalid entity for the console]
 -- @param targets [List<Player> players matched by the first command argument]
@@ -36,10 +39,12 @@ function CMD:on_run(actor, targets, amount)
 
   for k, v in ipairs(targets) do
     if v:is_character_loaded() then
-      v:give_experience(amount, 'command')
+      v:give_experience(amount, 'command', true)
       v:notify(taken and 'notification.levels.experience_taken' or 'notification.levels.experience_given', {
         amount = shown_amount
       })
+
+      Levels.raise_to_floor(v)
 
       table.insert(changed, v)
     end

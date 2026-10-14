@@ -25,6 +25,24 @@
 -- `Levels:get_max_health`. The plugin applies it whenever one of them changes and when the
 -- player spawns, and answers the `GetPlayerMaxHealth` hook of the Factions plugin with it,
 -- so the maximum health of a faction never takes its place.
+--
+-- The server has a level of its own, which starts at -1 when the plugin first runs on it and
+-- rises with real time: each level below the `levels_server_ramp_level` config (4) takes the
+-- `levels_server_days_per_level` config (7 days), and every level from there on the
+-- `levels_server_ramp_days` config (1 day) more than the one before, so level 4 takes 8 days
+-- and level 5 9 days; it never goes past `levels_max_level`. The time of the first run is
+-- kept in a data file of the schema, the same for all of its maps, so a map change keeps the
+-- server level.
+-- `Levels.get_server_level` and the ServerLevel command show the level, the SetServerLevel
+-- command and `Levels.set_server_level` change it, and `ServerLevelChanged` reports every
+-- change. Experience cannot take a character past the level cap, the server level plus the
+-- `levels_server_cap_offset` config (2): a character at the cap keeps the experience it gains
+-- and spends it on levels once the cap rises. Characters below the level floor, the server
+-- level minus the `levels_server_floor_offset` config (2), are raised to it and keep their
+-- experience; the floor is applied first, so kept experience is only spent on the levels
+-- above it. Both are applied when a character becomes active and when the server level
+-- changes. The staff commands are not bound by the cap, but the floor applies to them. While
+-- the `levels_server_progression` config is off there is no cap and no floor.
 -- @module [Levels]
 
 PLUGIN:set_global('Levels')

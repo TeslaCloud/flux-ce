@@ -83,3 +83,51 @@ configs:
     min_value: 0
     max_value: 100000
     default_value: 50
+  levels_server_progression:
+    name: config.levels.server_progression.name
+    description: config.levels.server_progression.desc
+    category: levels
+    type: boolean
+    default_value: true
+  levels_server_days_per_level:
+    name: config.levels.server_days_per_level.name
+    description: config.levels.server_days_per_level.desc
+    category: levels
+    type: number
+    min_value: 0.01
+    max_value: 365
+    decimals: 2
+    default_value: 7
+  levels_server_ramp_level:
+    name: config.levels.server_ramp_level.name
+    description: config.levels.server_ramp_level.desc
+    category: levels
+    type: number
+    min_value: 1
+    max_value: 100
+    default_value: 4
+  levels_server_ramp_days:
+    name: config.levels.server_ramp_days.name
+    description: config.levels.server_ramp_days.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 365
+    decimals: 2
+    default_value: 1
+  levels_server_cap_offset:
+    name: config.levels.server_cap_offset.name
+    description: config.levels.server_cap_offset.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 2
+  levels_server_floor_offset:
+    name: config.levels.server_floor_offset.name
+    description: config.levels.server_floor_offset.desc
+    category: levels
+    type: number
+    min_value: 0
+    max_value: 100
+    default_value: 2

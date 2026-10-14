@@ -427,6 +427,7 @@ ru:
       title: Character Sheet
       level: "Level {level} of {max}"
       experience: "{experience} / {total} XP"
+      level_capped: "Level cap, rises in {time}"
       max_level: Highest level reached
       health: Health
       skill_points: "Unspent skill points: {points}"

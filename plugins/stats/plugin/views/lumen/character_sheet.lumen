@@ -169,7 +169,8 @@ local function LabeledValue(props)
 end
 
 --- The name, the faction, the level, the experience, the health and the unspent points of
--- the character.
+-- the character. A character at the level cap of the server level sees the time until the
+-- cap rises in place of its experience.
 -- @param props [Map actor (Player)]
 local function Header(props)
   local actor = props.actor
@@ -187,7 +188,14 @@ local function Header(props)
     attribute_points = actor:get_attribute_points()
     progress = t'ui.character_sheet.max_level'
 
-    if needed > 0 then
+    local eta = needed > 0 and Levels.is_server_progression_enabled() and level == Levels.get_level_cap() and
+      Levels.get_server_level_eta()
+
+    if eta then
+      progress = t('ui.character_sheet.level_capped', {
+        time = Flux.Lang:duration(math.max(eta, 1)), experience = experience
+      })
+    elseif needed > 0 then
       progress = t('ui.character_sheet.experience', { experience = experience, total = needed })
     end
   end
