@@ -156,7 +156,9 @@ local function Bar(props)
   local fraction = math.Clamp(tonumber(props.fraction) or 0, 0, 1)
 
   return <view style={{ height = 8, background = 'surface_sunken', radius = 4 }}>
-    {fraction > 0 and <view style={{ width = (fraction * 100)..'%', height = 8, background = props.color, radius = 4 }} />}
+    {fraction > 0 and <view style={{
+      width = (fraction * 100)..'%', height = 8, background = props.color, radius = 4
+    }} />}
   </view>
 end
 
@@ -204,7 +206,9 @@ local function Header(props)
   return <view style={{ gap = 6, padding = 12, background = 'surface_raised', radius = 6 }}>
     <text style={{ font = 'text_smaller', color = 'text_muted' }}>{t'ui.character_sheet.title'}</text>
     <text style={{ font = 'menu_large' }}>{actor:name()}</text>
-    {faction and <text style={{ font = 'text_small', color = faction.color or 'text_muted' }}>{t(faction.name or '')}</text>}
+    {faction and <text style={{ font = 'text_small', color = faction.color or 'text_muted' }}>
+      {t(faction.name or '')}
+    </text>}
     {has_levels and <view style={{ gap = 4, margin_top = 4 }}>
       <LabeledValue label={t('ui.character_sheet.level', { level = level, max = max_level })} value={progress} />
       <Bar fraction={needed > 0 and experience / needed or 1} color="accent" />
@@ -254,7 +258,9 @@ local function StatRow(props)
     <Icon icon={stat.icon} size={32} font="menu_large" />
     <view style={{ flex = 1, gap = 0 }}>
       <text style={{ font = 'text_normal', wrap_text = false }}>{t(stat.name)}</text>
-      {level_name and <text style={{ font = 'text_smaller', color = 'text_muted', wrap_text = false }}>{t(level_name)}</text>}
+      {level_name and <text style={{ font = 'text_smaller', color = 'text_muted', wrap_text = false }}>
+        {t(level_name)}
+      </text>}
     </view>
     <text style={{ font = 'menu_large', min_width = 48, text_align = 'right', wrap_text = false }}>
       {signed(actor:get_attribute_modifier(id))}
@@ -328,10 +334,14 @@ return function(_props)
   local stats = get_stats(actor)
   local groups = get_skill_groups(actor, stats)
 
-  return <view style={{ direction = 'row', gap = 12, padding = 12, background = 'surface', radius = 6, border = 'border' }}>
+  return <view style={{
+    direction = 'row', gap = 12, padding = 12, background = 'surface', radius = 6, border = 'border'
+  }}>
     <view style={{ width = '44%', gap = 8 }}>
       <Header actor={actor} />
-      <text style={{ font = 'menu_normal', margin_top = 4, color = 'text_muted' }}>{t'ui.character_sheet.attributes'}</text>
+      <text style={{ font = 'menu_normal', margin_top = 4, color = 'text_muted' }}>
+        {t'ui.character_sheet.attributes'}
+      </text>
       <scroll style={{ flex = 1, gap = 4 }}>
         {#stats == 0 and <Notice text={t'ui.character_sheet.no_attributes'} />}
         {Lumen.map(stats, function(stat)
