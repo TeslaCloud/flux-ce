@@ -1,9 +1,8 @@
 --- Gamemastery gives gamemasters a way to run the world without a character of their own.
--- A player with the `gamemastery` permission (allowed for the `gamemaster` role and, through
--- it, for admins) who has no active character is in gamemaster mode: alive, in noclip that
--- cannot be left, invulnerable and vanished, with the `gamemastering` networked variable
--- set. They are not killed and hidden like other players without a character, and the main
--- menu does not open for them after the intro.
+-- A player with the `gamemastery` permission who has no active character is in gamemaster
+-- mode: alive, in noclip that cannot be left, invulnerable and vanished, with the
+-- `gamemastering` networked variable set. They are not killed and hidden like other players
+-- without a character, and the main menu does not open for them after the intro.
 --
 -- Gamemasters share a pool of characters that belong to a dedicated user record. Any of them
 -- can possess a pool character, which turns them into it on the spot, release it to go back
@@ -47,14 +46,13 @@ function Gamemastery.is_in_mode(target)
   return IsValid(target) and target:get_nv('gamemastering') == true
 end
 
---- Registers the 'gamemastery' permission for the `gamemaster` role.
+--- Registers the 'gamemastery' permission.
 function Gamemastery:RegisterPermissions()
   Bolt:register_permission(
     'gamemastery',
     'Gamemastery',
     'Lets the player be in the world without a character and play the shared gamemaster characters.',
-    'permission.categories.administration',
-    'gamemaster'
+    'permission.categories.administration'
   )
 end
 

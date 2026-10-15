@@ -3,7 +3,6 @@
 CMD.name = 'Ungag'
 CMD.description = 'command.ungag.description'
 CMD.syntax = 'command.ungag.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.immunity = true

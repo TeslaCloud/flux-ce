@@ -1,12 +1,10 @@
---- The SetServerLevel command puts the server at the very start of a level by moving the
--- time the server level is counted from, see `Levels.set_server_level`. Characters are
--- brought in line with the new level cap and level floor right away. Allowed for admins by
--- default.
+--- The SetServerLevel command puts the server at the very start of a level by moving the time
+-- the server level is counted from, see `Levels.set_server_level`. Characters are brought in
+-- line with the new level cap and level floor right away.
 
 CMD.name = 'SetServerLevel'
 CMD.description = 'command.setserverlevel.description'
 CMD.syntax = 'command.setserverlevel.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 1
 CMD.aliases = { 'serverlevelset', 'setserverlvl' }

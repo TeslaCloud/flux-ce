@@ -63,16 +63,62 @@ function Bolt:get_bans()
   return bans
 end
 
+--- Builds the own_permissions table of a role given as a plain table, which counts every entry
+-- it has as decided by the role itself.
+-- @param perms [Map permission entries keyed by object name, then by action]
+-- @return [Map true keyed by object name, then by action]
+local function own_entries(perms)
+  local own = {}
+
+  for object, actions in pairs(perms) do
+    local entries = {}
+
+    for action in pairs(actions) do
+      entries[action] = true
+    end
+
+    own[object] = entries
+  end
+
+  return own
+end
+
 --- Stores a role under the given ID, inheriting the permissions and unset fields of the role
--- named in data.base if that role is already registered. Does nothing unless id is a string,
--- and never replaces an existing role.
+-- named in data.base if that role is already registered. Roles registered earlier that are
+-- based on the new role get its permissions too, except for the actions they set themselves.
+-- A role file whose ID is already registered adds its permissions to that role instead: the
+-- allowed and denied actions of data, with their callbacks, replace what the registered role
+-- had for the same actions and count as its own, `allow_anything` carries over, and the
+-- entries are copied into every role based on it, recursively, except where a role decided
+-- the same action itself. The other fields of data are ignored then, and an existing role is
+-- never replaced. Does nothing unless id is a string.
+-- ```
+-- -- A schema plugin's roles/sh_user.lua: lets every player run the plugin's Report command.
+-- function ROLE:define_permissions()
+--   can 'report'
+-- end
+-- ```
 -- @param id [String role ID]
 -- @param data [Role role object (a plain table of role fields also works), modified in place]
 -- @see [Role#register]
 function Bolt:create_role(id, data)
   if !isstring(id) then return end
 
+  local existing = roles[id]
+
+  if existing then
+    if data.can_anything then
+      existing.can_anything = true
+    end
+
+    self:merge_permissions(existing, data.permissions or {}, true)
+
+    return
+  end
+
   data.id = id
+  data.permissions = data.permissions or {}
+  data.own_permissions = data.own_permissions or own_entries(data.permissions)
 
   if data.base then
     local parent = roles[data.base]
@@ -85,7 +131,7 @@ function Bolt:create_role(id, data)
       data.permissions = copy.permissions
 
       for k, v in pairs(copy) do
-        if k == 'permissions' then continue end
+        if k == 'permissions' or k == 'own_permissions' then continue end
 
         if !data[k] then
           data[k] = v
@@ -94,20 +140,56 @@ function Bolt:create_role(id, data)
     end
   end
 
-  if !roles[id] then
-    roles[id] = data
+  roles[id] = data
+
+  for k, v in pairs(roles) do
+    if v.base == id and v != data then
+      self:merge_permissions(v, data.permissions)
+    end
   end
 end
 
---- Allows a permission for a role and, recursively, for every role based on it.
+--- Copies permission entries (allowed or denied actions, with their callbacks) into a role
+-- and, through it, into every registered role based on it. An entry is skipped for a role
+-- whose own role files decided the same action (see `Role:set_own`), and is then not passed
+-- on to the roles based on that role either, since they take after it.
 -- @param role [Role]
--- @param perm_id [String permission ID]
-function Bolt:allow_children(role, perm_id)
-  role:allow(perm_id)
+-- @param perms [Map permission entries (allowed, callback) keyed by object name, then by
+--   action, as in Role#get_permissions]
+-- @param as_own=false [Boolean take the entries as decided by the role itself: they replace
+--   what it had for the same actions and are recorded in its own_permissions]
+function Bolt:merge_permissions(role, perms, as_own)
+  role.permissions = role.permissions or {}
+  role.own_permissions = role.own_permissions or own_entries(role.permissions)
+
+  local applied = {}
+
+  for object, actions in pairs(perms) do
+    local target = role.permissions[object] or {}
+    local own = role.own_permissions[object] or {}
+    local copied = {}
+
+    for action, entry in pairs(actions) do
+      if as_own or !own[action] then
+        target[action] = entry
+        copied[action] = entry
+      end
+
+      if as_own then
+        own[action] = true
+      end
+    end
+
+    role.permissions[object] = target
+    role.own_permissions[object] = own
+    applied[object] = copied
+  end
+
+  local role_id = role.role_id or role.id
 
   for k, v in pairs(roles) do
-    if v.base == role.role_id then
-      self:allow_children(v, perm_id)
+    if v.base == role_id and v != role then
+      self:merge_permissions(v, applied)
     end
   end
 end
@@ -116,7 +198,7 @@ end
 -- is kept unless force is set.
 -- @param id [String permission ID; nothing happens without one]
 -- @param category='general' [String category name or language phrase]
--- @param data [Map permission data (name, description, category, role); id is written into it]
+-- @param data [Map permission data (name, description, category); id is written into it]
 -- @param force=false [Boolean replace an existing permission with the same ID]
 -- @see [Bolt#register_permission]
 function Bolt:add_permission(id, category, data, force)
@@ -131,21 +213,25 @@ function Bolt:add_permission(id, category, data, force)
   end
 end
 
---- Registers a permission that can then be checked with actor:can(id). Permissions registered
--- before plugins finish loading (normally from a RegisterPermissions hook) are then allowed
--- for the given role and for every role based on it.
+--- Registers a permission that can then be checked with actor:can(id), and that the
+-- permission editor lists under its category. Registering a permission does not allow it for
+-- anybody: the role files allow it to roles with `can`, and roles based on those inherit it.
 -- ```
 -- function Doors:RegisterPermissions()
 --   Bolt:register_permission('manage_doors', 'Doors settings access',
---     'Grants access to customize doors.', 'permission.categories.level_design', 'assistant')
+--     'Grants access to customize doors.', 'permission.categories.level_design')
+-- end
+--
+-- -- roles/sh_assistant.lua
+-- function ROLE:define_permissions()
+--   can 'manage_doors'
 -- end
 -- ```
 -- @param id [String permission ID; nothing happens if it is empty or not a string]
 -- @param name=id [String display name]
 -- @param description='No description provided.' [String]
 -- @param category='general' [String category name or language phrase]
--- @param role=nil [String ID of the role that is allowed this permission by default]
-function Bolt:register_permission(id, name, description, category, role)
+function Bolt:register_permission(id, name, description, category)
   if !isstring(id) or id == '' then return end
 
   local data = {}
@@ -153,17 +239,16 @@ function Bolt:register_permission(id, name, description, category, role)
     data.description = description or 'No description provided.'
     data.category = category or 'general'
     data.name = name or id
-    data.role = role
   self:add_permission(id, category, data, true)
 end
 
---- Registers a permission for a command, built from the command's id, name, description,
--- category and permission (the role it is granted to) fields.
+--- Registers a permission for a command, built from the command's id, name, description and
+-- category fields. Role files allow it under the command's ID.
 -- @param cmd [Command command table; nothing happens if it is nil]
 function Bolt:permission_from_command(cmd)
   if !cmd then return end
 
-  self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category, cmd.permission)
+  self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category)
 end
 
 --- Checks whether a player may perform an action. Unexpired temporary permissions are consulted
@@ -331,8 +416,8 @@ end
 -- Bolt:find_permission('plyban')      -- the permission of the Ban command
 -- ```
 -- @param id [String permission ID, command name or command alias]
--- @return [Map permission data (id, name, description, category, role), or nil if there is
---   no such permission]
+-- @return [Map permission data (id, name, description, category), or nil if there is no such
+--   permission]
 function Bolt:find_permission(id)
   if !isstring(id) or id == '' then return end
 
@@ -350,7 +435,8 @@ function Bolt:find_permission(id)
 end
 
 --- Loads every role file in a folder through the 'role' pipeline. Each file fills in the ROLE
--- global and is registered under its file name without the sh_/cl_/sv_ prefix.
+-- global and is registered under its file name without the sh_/cl_/sv_ prefix. A role file
+-- whose ID is already registered adds its permissions to that role, see `Bolt:create_role`.
 -- @param directory [String folder path, as taken by Pipeline.include_folder]
 -- @see [Role#register]
 function Bolt:include_roles(directory)

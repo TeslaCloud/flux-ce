@@ -4,7 +4,6 @@
 CMD.name = 'Gag'
 CMD.description = 'command.gag.description'
 CMD.syntax = 'command.gag.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 2
 CMD.immunity = true

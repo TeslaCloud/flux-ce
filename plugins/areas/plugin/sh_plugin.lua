@@ -19,14 +19,13 @@ if !areas then
   require_relative 'lib/sh_areas'
 end
 
---- Registers the 'areas' level design permission, allowed for gamemasters by default.
+--- Registers the 'areas' level design permission.
 function Area:RegisterPermissions()
   Bolt:register_permission(
     'areas',
     'Manage areas',
     'Grants access to manage areas.',
-    'permission.categories.level_design',
-    'gamemaster'
+    'permission.categories.level_design'
   )
 end
 

@@ -4,7 +4,6 @@
 CMD.name = 'ForceGetUp'
 CMD.description = 'command.forcegetup.description'
 CMD.syntax = 'command.forcegetup.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
 CMD.player_arg = 1

@@ -1,11 +1,9 @@
---- The CharAttributeBoostClear command removes the attribute boosts from the characters of
--- the targeted players: those of one attribute, or all of them if no attribute is given.
--- Allowed for gamemasters by default.
+--- The CharAttributeBoostClear command removes the attribute boosts from the characters of the
+-- targeted players: those of one attribute, or all of them if no attribute is given.
 
 CMD.name = 'CharAttributeBoostClear'
 CMD.description = 'command.charattributeboostclear.description'
 CMD.syntax = 'command.charattributeboostclear.syntax'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.player_arg = 1

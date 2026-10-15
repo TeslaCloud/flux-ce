@@ -1,10 +1,8 @@
 --- The Kick command kicks the targeted players from the server, with an optional reason.
--- Allowed for assistants by default.
 
 CMD.name = 'Kick'
 CMD.description = 'command.kick.description'
 CMD.syntax = 'command.kick.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.immunity = true

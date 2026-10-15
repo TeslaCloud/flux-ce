@@ -1,10 +1,8 @@
---- The SetGroup command sets the role of the targeted players to the role with the given
--- ID. By default only administrators can use it.
+--- The SetGroup command sets the role of the targeted players to the role with the given ID.
 
 CMD.name = 'SetGroup'
 CMD.description = 'command.setgroup.description'
 CMD.syntax = 'command.setgroup.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.immunity = true

@@ -375,13 +375,12 @@ function PropProtection:CanDrive(actor, entity)
   end
 end
 
---- Registers the 'bypass_prop_protection' permission, allowed for gamemasters by default.
+--- Registers the 'bypass_prop_protection' permission.
 function PropProtection:RegisterPermissions()
   Bolt:register_permission(
     'bypass_prop_protection',
     'Bypass Prop Protection',
     'Grants access to the entities of other players, of the map and of nobody.',
-    'permission.categories.tools',
-    'gamemaster'
+    'permission.categories.tools'
   )
 end

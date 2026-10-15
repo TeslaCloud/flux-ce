@@ -1,9 +1,8 @@
---- The Slay command kills the targeted players. Allowed for assistants by default.
+--- The Slay command kills the targeted players.
 
 CMD.name = 'Slay'
 CMD.description = 'command.slay.description'
 CMD.syntax = 'command.slay.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.immunity = true

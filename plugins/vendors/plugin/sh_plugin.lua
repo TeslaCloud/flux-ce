@@ -51,8 +51,7 @@ function Vendors:RegisterPermissions()
     'manage_vendors',
     'Manage vendors',
     'Grants access to place, edit and remove vendors.',
-    'permission.categories.level_design',
-    'assistant'
+    'permission.categories.level_design'
   )
 end
 

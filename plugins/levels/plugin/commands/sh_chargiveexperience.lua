@@ -1,13 +1,12 @@
 --- The CharGiveExperience command gives experience to the targeted players' characters. A
 -- negative amount takes experience away, which can lower their level. The level cap of the
--- server level does not bind it, so the experience can raise characters above the cap, but
--- the level floor does: a character that falls below the floor is raised back to it, keeping
--- its experience. Allowed for admins by default.
+-- server level does not bind it, so the experience can raise characters above the cap, but the
+-- level floor does: a character that falls below the floor is raised back to it, keeping its
+-- experience.
 
 CMD.name = 'CharGiveExperience'
 CMD.description = 'command.chargiveexperience.description'
 CMD.syntax = 'command.chargiveexperience.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1

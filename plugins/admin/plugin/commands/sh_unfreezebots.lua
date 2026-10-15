@@ -1,9 +1,7 @@
---- The UnfreezeBots command unfreezes all bots by turning the `bot_zombie` console variable
--- off. Allowed for gamemasters by default.
+--- The UnfreezeBots command unfreezes all bots by turning the `bot_zombie` console variable off.
 
 CMD.name = 'UnfreezeBots'
 CMD.description = 'command.unfreezebots.description'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.server_management'
 CMD.aliases = { 'botunfreeze', 'unfreezebot', 'bot_unfreeze', 'bot_unzombie' }
 

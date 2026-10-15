@@ -1,7 +1,9 @@
---- The Gamemaster role (`gamemaster`): based on `assistant`, with an immunity of 200. It
--- defines no permissions itself and has those registered for `gamemaster` and for the roles
--- it is based on: the tools that run the game world, such as spawning NPCs and vehicles,
--- handing out items and money, and managing areas, map scenes and spawn points.
+--- The Gamemaster role (`gamemaster`): based on `assistant`, with an immunity of 200. This
+-- file defines the role's default permissions on top of those of `assistant`: the tools that
+-- run the game world, such as gamemaster mode, spawning NPCs, vehicles and weapons, picking
+-- up any entity, handing out items and money, setting the time and the stats of characters,
+-- whitelisting players and managing areas, map scenes, spawn points and container loot.
+-- Other addons see gamemasters as super admins through the `administrate` permission.
 
 ROLE.name = 'Gamemaster'
 ROLE.description = 'role.gamemaster'
@@ -10,7 +12,40 @@ ROLE.icon = 'fa-hat-wizard'
 ROLE.immunity = 200
 ROLE.base = 'assistant'
 
---- Defines the role's permissions. Empty: gamemasters only have what is registered for the
--- 'gamemaster' role and what they inherit from 'assistant'.
+--- Allows the role's default permissions.
 function ROLE:define_permissions()
+  can 'administrate'
+  can 'gamemastery'
+
+  can 'physgun_pickup'
+  can 'bypass_prop_protection'
+
+  can 'spawn_vehicles'
+  can 'spawn_npcs'
+  can 'spawn_sweps'
+
+  can 'areas'
+  can 'mapscenes'
+  can 'spawnpoints'
+  can 'fill_containers'
+
+  can 'addbots'
+  can 'kickbots'
+  can 'freezebots'
+  can 'unfreezebots'
+  can 'fullbright'
+  can 'settime'
+
+  can 'gmpossess'
+  can 'gmrelease'
+
+  can 'giveitem'
+  can 'setmoney'
+  can 'whitelist'
+  can 'unwhitelist'
+
+  can 'charsetattribute'
+  can 'charsetskill'
+  can 'charattributeboost'
+  can 'charattributeboostclear'
 end

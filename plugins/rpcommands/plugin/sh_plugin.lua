@@ -40,8 +40,7 @@ function RPCommands:RegisterPermissions()
     'bypass_chat_cooldown',
     'Bypass chat cooldowns',
     'Lets the player use the OOC and LOOC chats without waiting for the cooldown.',
-    'permission.categories.roleplay',
-    'assistant'
+    'permission.categories.roleplay'
   )
 end
 

@@ -18,8 +18,7 @@ function StaticEnts:RegisterPermissions()
     'static_tool',
     'Static (tool)',
     'Grants access to make entities static / unstatic.',
-    'permission.categories.level_design',
-    'assistant'
+    'permission.categories.level_design'
   )
 end
 

@@ -3,13 +3,14 @@
 -- Every player has a role (`user`, `assistant`, `gamemaster` or `admin` out of the box): a
 -- `Role` with an immunity level and a set of allowed permissions. A permission is an ID
 -- registered with `Bolt:register_permission`, normally from a `RegisterPermissions` hook;
--- every command also gets a permission named after its ID, allowed by default for the role
--- in the command's `permission` field. Code asks whether a player may do something with
--- `actor:can(id)`, which Bolt answers from the player's unexpired temporary permissions,
--- then their individual permissions (`PERM_ALLOW` or `PERM_NEVER`), then their role. The
--- SteamIDs listed in the `root_steamid` config are root players, who may do anything.
+-- every command also gets a permission named after its ID. Which roles have a permission by
+-- default is up to the role files alone: each one lists the permissions it allows with `can`.
+-- Code asks whether a player may do something with `actor:can(id)`, which Bolt answers from
+-- the player's unexpired temporary permissions, then their individual permissions
+-- (`PERM_ALLOW` or `PERM_NEVER`), then their role. The SteamIDs listed in the `root_steamid`
+-- config are root players, who may do anything.
 --
--- Each role is based on the one below it and has every permission allowed for it. Assistants
+-- Each role is based on the one below it and has every permission that role allows. Assistants
 -- have the basic staff tools: kicking, banning, vanishing, observer mode, the physics and tool
 -- guns and spawning props, and other addons see them as admins. Gamemasters also get the
 -- tools that run the game world, such as spawning NPCs, vehicles and weapons, handing out
@@ -24,7 +25,9 @@
 -- manager.
 --
 -- Other plugins extend Bolt by registering permissions, by shipping role files in a `roles`
--- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook.
+-- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook. A role
+-- file whose ID is already registered adds its permissions to that role, which is how a
+-- plugin or schema gives the existing roles the permissions of its own commands.
 -- @module [Bolt]
 
 PLUGIN:set_global('Bolt')
@@ -104,23 +107,12 @@ function Bolt:OnCommandCreated(id, data)
   self:permission_from_command(data)
 end
 
---- Runs the RegisterPermissions hook, then allows each permission for the role it was
--- registered for and for every role based on it.
+--- Runs the RegisterPermissions hook.
 function Bolt:OnPluginsLoaded()
   --- Called on both realms once all plugins have loaded. Register permissions here with
-  -- `Bolt:register_permission`; each one is then allowed for the role it was registered for
-  -- and for every role based on it.
+  -- `Bolt:register_permission`. Registering a permission does not allow it for anybody: the
+  -- role files allow permissions to roles with `can`.
   hook.Run('RegisterPermissions')
-
-  local all_permissions = self:get_all_permissions()
-
-  for k, v in pairs(self:get_roles()) do
-    for k1, v1 in pairs(all_permissions) do
-      if v.role_id == v1.role then
-        self:allow_children(v, k1)
-      end
-    end
-  end
 end
 
 --- Registers the 'bolt_role' condition, which compares a player's role with a chosen one.
@@ -162,79 +154,68 @@ function Bolt:RegisterPermissions()
     'physgun',
     'Physgun',
     'Grants access to the physics gun.',
-    'permission.categories.tools',
-    'assistant'
+    'permission.categories.tools'
   )
   Bolt:register_permission(
     'toolgun',
     'Tool Gun',
     'Grants access to the tool gun.',
-    'permission.categories.tools',
-    'assistant'
+    'permission.categories.tools'
   )
   Bolt:register_permission(
     'physgun_freeze',
     'Freeze Protected Entities',
     'Grants access to freeze protected entities.',
-    'permission.categories.tools',
-    'assistant'
+    'permission.categories.tools'
   )
   Bolt:register_permission(
     'physgun_pickup',
     'Unlimited Physgun',
     'Grants access to pick up any entity with the physics gun.',
-    'permission.categories.tools',
-    'gamemaster'
+    'permission.categories.tools'
   )
 
   Bolt:register_permission(
     'spawn_props',
     'Spawn Props',
     'Grants access to spawn props.',
-    'permission.categories.spawn',
-    'assistant'
+    'permission.categories.spawn'
   )
   Bolt:register_permission(
     'spawn_chairs',
     'Spawn Chairs',
     'Grants access to spawn chairs.',
-    'permission.categories.spawn',
-    'assistant'
+    'permission.categories.spawn'
   )
   Bolt:register_permission(
     'spawn_entities',
     'Spawn All Entities',
     'Grants access to spawn any entity.',
-    'permission.categories.spawn',
-    'assistant'
+    'permission.categories.spawn'
   )
   Bolt:register_permission(
     'spawn_vehicles',
     'Spawn Vehicles',
     'Grants access to spawn vehicles.',
-    'permission.categories.spawn',
-    'gamemaster'
+    'permission.categories.spawn'
   )
   Bolt:register_permission(
     'spawn_npcs',
     'Spawn NPCs',
     'Grants access to spawn NPCs.',
-    'permission.categories.spawn',
-    'gamemaster'
+    'permission.categories.spawn'
   )
   Bolt:register_permission(
     'spawn_ragdolls',
     'Spawn Ragdolls',
     'Grants access to spawn ragdolls.',
-    'permission.categories.spawn',
-    'assistant'
+    'permission.categories.spawn'
   )
   Bolt:register_permission(
     'spawn_sweps',
     'Spawn SWEPs',
     'Grants access to spawn scripted weapons.',
-    'permission.categories.spawn',
-    'gamemaster'
+    'permission.categories.spawn'
   )
 
   Bolt:register_permission(
@@ -247,52 +228,45 @@ function Bolt:RegisterPermissions()
     'context_menu',
     'Context Menu',
     'Grants access to the context menu, to the properties of entities and to driving them.',
-    'permission.categories.general',
-    'assistant'
+    'permission.categories.general'
   )
 
   Bolt:register_permission(
     'manage_permissions',
     'Permission editor',
     'Grants access to the permission editor.',
-    'permission.categories.player_management',
-    'admin'
+    'permission.categories.player_management'
   )
   Bolt:register_permission(
     'manage_configuration',
     'Configuration',
     'Grants access to configuration.',
-    'permission.categories.configuration',
-    'admin'
+    'permission.categories.configuration'
   )
 
   Bolt:register_permission(
     'manage_plugins',
     'permission.manage_plugins.name',
     'permission.manage_plugins.description',
-    'permission.categories.server_management',
-    'admin'
+    'permission.categories.server_management'
   )
 
   Bolt:register_permission(
     'staff',
     'Assistant access',
-    'General access for assistants.',
-    'permission.categories.compatibility',
-    'assistant'
+    'Marks the player as a member of the staff.',
+    'permission.categories.compatibility'
   )
   Bolt:register_permission(
     'moderate',
     'Admin access',
-    'General staff access, allowed for assistants. Other addons will identify the player as admin.',
-    'permission.categories.compatibility',
-    'assistant'
+    'General staff access. Other addons identify the player as an admin.',
+    'permission.categories.compatibility'
   )
   Bolt:register_permission(
     'administrate',
     'Super Admin access',
-    'Advanced staff access, allowed for gamemasters. Other addons will identify the player as superadmin.',
-    'permission.categories.compatibility',
-    'gamemaster'
+    'Advanced staff access. Other addons identify the player as a superadmin.',
+    'permission.categories.compatibility'
   )
 end

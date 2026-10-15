@@ -1,10 +1,8 @@
 --- The Announce command shows a notice with the given text to every player on the server.
--- Allowed for assistants by default.
 
 CMD.name = 'Announce'
 CMD.description = 'command.announce.description'
 CMD.syntax = 'command.announce.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 

@@ -184,8 +184,7 @@ function Doors:RegisterPermissions()
     'manage_doors',
     'Doors settings access',
     'Grants access to customize doors.',
-    'permission.categories.level_design',
-    'assistant'
+    'permission.categories.level_design'
   )
 end
 

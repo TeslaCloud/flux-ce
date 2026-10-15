@@ -4,7 +4,6 @@
 CMD.name = 'CharBan'
 CMD.description = 'command.charban.description'
 CMD.syntax = 'command.charban.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.immunity = true

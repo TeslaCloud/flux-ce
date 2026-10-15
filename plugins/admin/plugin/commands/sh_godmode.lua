@@ -1,10 +1,9 @@
---- The SetGodmode command enables god mode for the targeted players when given a true
--- value, and toggles it otherwise. Allowed for assistants by default.
+--- The SetGodmode command enables god mode for the targeted players when given a true value, and
+-- toggles it otherwise.
 
 CMD.name = 'SetGodmode'
 CMD.description = 'command.godmode.description'
 CMD.syntax = 'command.godmode.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.immunity = true

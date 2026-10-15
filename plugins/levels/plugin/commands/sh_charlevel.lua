@@ -1,12 +1,10 @@
 --- The CharLevel command shows the caller the level of the targeted player's character, its
--- experience and the experience it still needs for the next level, or the level cap that
--- holds it back when it has kept enough experience for the next level at the cap. Allowed
--- for assistants by default.
+-- experience and the experience it still needs for the next level, or the level cap that holds
+-- it back when it has kept enough experience for the next level at the cap.
 
 CMD.name = 'CharLevel'
 CMD.description = 'command.charlevel.description'
 CMD.syntax = 'command.charlevel.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.player_arg = 1

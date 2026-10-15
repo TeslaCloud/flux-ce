@@ -1,11 +1,9 @@
 --- The Respawn command respawns the targeted players, dead or alive, either where they are
--- (`stay`, the default) or at the spot the caller is looking at (`tp`). Allowed for
--- assistants by default.
+-- (`stay`, the default) or at the spot the caller is looking at (`tp`).
 
 CMD.name = 'Respawn'
 CMD.description = 'command.respawn.description'
 CMD.syntax = 'command.respawn.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.immunity = true

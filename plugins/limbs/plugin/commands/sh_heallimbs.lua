@@ -1,10 +1,8 @@
---- Staff command that heals every limb of the targeted players. Allowed for assistants by
--- default.
+--- Staff command that heals every limb of the targeted players.
 
 CMD.name = 'HealLimbs'
 CMD.description = 'command.heallimbs.description'
 CMD.syntax = 'command.heallimbs.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.immunity = true

@@ -1,10 +1,9 @@
---- The Fullbright command turns fullbright rendering, which ignores the map's lighting, on
--- or off for the targeted players. Allowed for gamemasters by default.
+--- The Fullbright command turns fullbright rendering, which ignores the map's lighting, on or
+-- off for the targeted players.
 
 CMD.name = 'Fullbright'
 CMD.description = 'command.fullbright.description'
 CMD.syntax = 'command.fullbright.syntax'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.immunity = true

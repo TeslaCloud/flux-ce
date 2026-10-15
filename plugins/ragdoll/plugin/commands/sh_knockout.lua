@@ -4,7 +4,6 @@
 CMD.name = 'Knockout'
 CMD.description = 'command.knockout.description'
 CMD.syntax = 'command.knockout.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
 CMD.player_arg = 1

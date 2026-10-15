@@ -4,7 +4,6 @@
 CMD.name = 'ForceFall'
 CMD.description = 'command.forcefall.description'
 CMD.syntax = 'command.forcefall.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
 CMD.player_arg = 1

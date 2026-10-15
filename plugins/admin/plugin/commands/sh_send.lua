@@ -1,11 +1,10 @@
---- The Send command teleports the targeted players to another player. It complements Tp,
--- which brings players to the spot the caller is looking at, and Tpto, which takes the
--- caller to a player. Allowed for assistants by default.
+--- The Send command teleports the targeted players to another player. It complements Tp, which
+-- brings players to the spot the caller is looking at, and Tpto, which takes the caller to a
+-- player.
 
 CMD.name = 'Send'
 CMD.description = 'command.send.description'
 CMD.syntax = 'command.send.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 2
 CMD.immunity = true

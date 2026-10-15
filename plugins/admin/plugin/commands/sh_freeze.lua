@@ -1,10 +1,8 @@
---- The Freeze command freezes the targeted players in place. Allowed for assistants by
--- default.
+--- The Freeze command freezes the targeted players in place.
 
 CMD.name = 'Freeze'
 CMD.description = 'command.freeze.description'
 CMD.syntax = 'command.freeze.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.immunity = true

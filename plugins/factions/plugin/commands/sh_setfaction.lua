@@ -3,7 +3,6 @@
 CMD.name = 'SetFaction'
 CMD.description = 'command.setfaction.description'
 CMD.syntax = 'command.setfaction.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1

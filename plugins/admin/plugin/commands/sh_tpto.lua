@@ -1,10 +1,8 @@
---- The Tpto command teleports the caller to the targeted player. Allowed for assistants by
--- default.
+--- The Tpto command teleports the caller to the targeted player.
 
 CMD.name = 'Tpto'
 CMD.description = 'command.tpto.description'
 CMD.syntax = 'command.tpto.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.player_arg = 1

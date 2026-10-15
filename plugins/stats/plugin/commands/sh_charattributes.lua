@@ -1,13 +1,11 @@
 --- The CharAttributes command shows the caller the attributes and skills of the targeted
 -- player's character: every attribute, hidden ones included, with its level and boosts, and
--- every skill, hidden ones included, with its rank. A player gets them in a window, the
--- server console as lines of text.
--- Allowed for assistants by default.
+-- every skill, hidden ones included, with its rank. A player gets them in a window, the server
+-- console as lines of text.
 
 CMD.name = 'CharAttributes'
 CMD.description = 'command.charattributes.description'
 CMD.syntax = 'command.charattributes.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.player_arg = 1

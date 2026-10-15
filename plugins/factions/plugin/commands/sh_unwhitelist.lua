@@ -1,10 +1,8 @@
---- Staff command that takes the whitelist for a faction away from players. Allowed for
--- gamemasters by default.
+--- Staff command that takes the whitelist for a faction away from players.
 
 CMD.name = 'UnWhitelist'
 CMD.description = 'command.unwhitelist.description'
 CMD.syntax = 'command.unwhitelist.syntax'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.player_arg = 1

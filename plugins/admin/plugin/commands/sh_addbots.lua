@@ -1,10 +1,8 @@
---- The AddBots command adds the given number of bots to the server (1 by default, 128 at
--- most). Allowed for gamemasters by default.
+--- The AddBots command adds the given number of bots to the server (1 by default, 128 at most).
 
 CMD.name = 'AddBots'
 CMD.description = 'command.addbots.description'
 CMD.syntax = 'command.addbots.syntax'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 0
 CMD.aliases = { 'bot', 'bots' }

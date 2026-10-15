@@ -1,10 +1,9 @@
 --- The Staff command sends a chat message that only the online players with the `staff`
--- permission receive. Allowed for assistants by default.
+-- permission receive.
 
 CMD.name = 'Staff'
 CMD.description = 'command.staff.description'
 CMD.syntax = 'command.staff.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 

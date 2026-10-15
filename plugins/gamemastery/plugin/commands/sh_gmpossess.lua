@@ -1,11 +1,9 @@
 --- The GMPossess command lets a gamemaster possess a pool character by its name, where they
--- stand. A part of the name is enough when it matches a single character. Allowed for
--- gamemasters by default.
+-- stand. A part of the name is enough when it matches a single character.
 
 CMD.name = 'GMPossess'
 CMD.description = 'command.gmpossess.description'
 CMD.syntax = 'command.gmpossess.syntax'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.no_console = true

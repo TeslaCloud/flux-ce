@@ -2,7 +2,6 @@
 
 CMD.name = 'Itsremove'
 CMD.description = 'command.itsremove.description'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.roleplay'
 CMD.aliases = {
   'removedescribe',

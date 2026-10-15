@@ -4,7 +4,6 @@
 CMD.name = 'CharUnban'
 CMD.description = 'command.charunban.description'
 CMD.syntax = 'command.charunban.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.alias = 'unbanchar'

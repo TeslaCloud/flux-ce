@@ -1,12 +1,10 @@
 --- The Changelevel command changes the map to the given one, optionally after a delay in
 -- seconds. It refuses a map the server does not have, and runs the `FLSaveData` and
--- `ServerRestart` hooks before the change, as the Restart command does. Allowed for
--- administrators by default.
+-- `ServerRestart` hooks before the change, as the Restart command does.
 
 CMD.name = 'Changelevel'
 CMD.description = 'command.changelevel.description'
 CMD.syntax = 'command.changelevel.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 1
 CMD.alias = 'map'

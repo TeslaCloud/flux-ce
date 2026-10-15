@@ -3,7 +3,6 @@
 CMD.name = 'Event'
 CMD.description = 'command.event.description'
 CMD.syntax = 'command.event.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
 

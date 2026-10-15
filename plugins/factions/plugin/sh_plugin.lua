@@ -37,8 +37,7 @@ function Factions:RegisterPermissions()
     'manage_ranks',
     'Manage faction ranks',
     'Grants access to promote and demote any character, regardless of the ranks.',
-    'permission.categories.character_management',
-    'assistant'
+    'permission.categories.character_management'
   )
 end
 

@@ -1,7 +1,6 @@
---- The Ban command bans the targeted players for a duration such as `30` (minutes),
--- `2 hours` or `perma`, with an optional reason, and kicks them. Given a SteamID that belongs
--- to nobody on the server, it bans that SteamID, whether its owner has ever joined or not.
--- Allowed for assistants by default.
+--- The Ban command bans the targeted players for a duration such as `30` (minutes), `2 hours` or
+-- `perma`, with an optional reason, and kicks them. Given a SteamID that belongs to nobody on
+-- the server, it bans that SteamID, whether its owner has ever joined or not.
 --
 -- The command finds its targets itself instead of setting `immunity`, because the command
 -- interpreter only knows the players who are on the server.
@@ -9,7 +8,6 @@
 CMD.name = 'Ban'
 CMD.description = 'command.ban.description'
 CMD.syntax = 'command.ban.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 2
 CMD.alias = 'plyban'

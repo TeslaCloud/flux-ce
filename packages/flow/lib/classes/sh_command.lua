@@ -1,9 +1,9 @@
 --- A chat and console command. A file in a `commands` folder receives a new instance as `CMD`
 -- and describes the command through its fields: `name`, `description` and `syntax` (texts or
--- language phrases), `permission` (the ID of the role that may run it by default, 'user' if
--- not set; the admin plugin registers a permission named after the command's ID and allows
--- it for that role), `arguments` (the minimum amount of arguments), `aliases` (the names it
+-- language phrases), `arguments` (the minimum amount of arguments), `aliases` (the names it
 -- can be called by) and `no_console` (the command cannot be run from the server console).
+-- The admin plugin registers a permission named after the command's ID, which the role files
+-- allow to roles with `can`.
 -- Setting `immunity` or `player_arg` turns one argument into a list of target players: the
 -- first argument, or the one at the position that `player_arg` gives. With `immunity` the
 -- caller must also pass the immunity check (the `CommandCheckImmunity` hook) against every
@@ -48,7 +48,6 @@ end
 -- CMD.name = 'Freeze'
 -- CMD.description = 'command.freeze.description'
 -- CMD.syntax = 'command.freeze.syntax'
--- CMD.permission = 'assistant'
 -- CMD.arguments = 1
 -- CMD.immunity = true
 -- CMD.aliases = { 'freeze', 'plyfreeze' }

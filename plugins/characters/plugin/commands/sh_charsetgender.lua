@@ -3,7 +3,6 @@
 CMD.name = 'CharSetGender'
 CMD.description = 'command.charsetgender.description'
 CMD.syntax = 'command.charsetgender.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1

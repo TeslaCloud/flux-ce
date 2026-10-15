@@ -1,12 +1,11 @@
---- The ResetPermission command removes what was set for the targeted players individually
--- for a permission, be it for good or temporarily, so that their role decides again: it
--- sets the permission to `PERM_NO`, as the middle button of the permission editor does. It
--- undoes both Grant and Revoke. By default only administrators can use it.
+--- The ResetPermission command removes what was set for the targeted players individually for a
+-- permission, be it for good or temporarily, so that their role decides again: it sets the
+-- permission to `PERM_NO`, as the middle button of the permission editor does. It undoes both
+-- Grant and Revoke.
 
 CMD.name = 'ResetPermission'
 CMD.description = 'command.resetpermission.description'
 CMD.syntax = 'command.resetpermission.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.immunity = true

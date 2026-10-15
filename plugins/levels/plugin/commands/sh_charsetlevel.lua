@@ -1,13 +1,11 @@
---- The CharSetLevel command sets the level of the targeted players' characters. Their
--- experience is reset to 0 and their unspent points are worked out again for the new level.
--- The level cap of the server level does not bind it, so staff can set a level above the
--- cap, but the level floor does: a level below the floor is raised to it. Allowed for admins
--- by default.
+--- The CharSetLevel command sets the level of the targeted players' characters. Their experience
+-- is reset to 0 and their unspent points are worked out again for the new level. The level cap
+-- of the server level does not bind it, so staff can set a level above the cap, but the level
+-- floor does: a level below the floor is raised to it.
 
 CMD.name = 'CharSetLevel'
 CMD.description = 'command.charsetlevel.description'
 CMD.syntax = 'command.charsetlevel.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1

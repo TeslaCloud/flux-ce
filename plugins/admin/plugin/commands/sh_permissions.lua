@@ -1,12 +1,10 @@
---- The Permissions command tells its caller which permissions a player has of their own, on
--- top of what their role allows: the ones that were granted or revoked for them
--- individually, and their temporary permissions with the time each has left. By default
--- only administrators can use it.
+--- The Permissions command tells its caller which permissions a player has of their own, on top
+-- of what their role allows: the ones that were granted or revoked for them individually, and
+-- their temporary permissions with the time each has left.
 
 CMD.name = 'Permissions'
 CMD.description = 'command.permissions.description'
 CMD.syntax = 'command.permissions.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.player_arg = 1

@@ -3,8 +3,13 @@
 -- `Bolt:check_immunity` compares between players, and optionally a base role (`base`) whose
 -- permissions it shares. Roles are normally defined by a file in a plugin's `roles` folder,
 -- which fills in the `ROLE` global and may define `define_permissions` to allow or deny
--- actions with `can`, `cannot` and `allow_anything`; see `Role:register`. A player's role
--- is read with `Player:get_role` and set with `Player:SetUserGroup`.
+-- actions with `can`, `cannot` and `allow_anything`; see `Role:register`. The role files are
+-- what decides which permissions each role has by default. A role file whose ID is already
+-- registered adds its permissions to that role (and to the roles based on it) instead of
+-- defining a new one, so that a plugin or schema can give the existing roles the permissions
+-- of its own commands. The actions that a role's own files allow or deny stay as they are
+-- when a base role gets new permissions (`own_permissions`, see `Role:set_own`). A player's
+-- role is read with `Player:get_role` and set with `Player:SetUserGroup`.
 
 class 'Role'
 
@@ -16,13 +21,14 @@ Role.immunity = 0
 Role.protected = false
 Role.base = nil
 
---- Sets the role's ID and gives it an empty permission table. Does nothing without an ID.
+--- Sets the role's ID and gives it empty permission tables. Does nothing without an ID.
 -- @param id [String role ID, normalized with string.to_id]
 function Role:init(id)
   if !id then return end
 
   self.role_id = id:to_id()
   self.permissions = {}
+  self.own_permissions = {}
 end
 
 --- Allows this role to perform an action, optionally only on one kind of object. If a callback
@@ -51,6 +57,7 @@ function Role:allow(action, object, callback)
   }
 
   self.permissions[object] = perm
+  self:set_own(action, object)
 end
 
 --- Explicitly denies an action for this role, overriding a permission inherited from its base.
@@ -68,6 +75,23 @@ function Role:disallow(action, object)
   }
 
   self.permissions[object] = perm
+  self:set_own(action, object)
+end
+
+--- Records that the role's own role files decided an action, so that the permissions its base
+-- role gets later leave that action alone. Role:allow and Role:disallow call this.
+-- @param action [String permission ID]
+-- @param object='anything' [String object name]
+function Role:set_own(action, object)
+  object = object or 'anything'
+
+  local own = self.own_permissions or {}
+  local actions = own[object] or {}
+
+  actions[action] = true
+  own[object] = actions
+
+  self.own_permissions = own
 end
 
 --- Makes every permission check against this role pass.
@@ -171,7 +195,9 @@ end
 
 --- Registers the role with Bolt. If the role has a define_permissions method, it is run first
 -- with the can, cannot and allow_anything globals temporarily bound to this role, followed
--- by the OnDefinePermissions hook.
+-- by the OnDefinePermissions hook. A role file whose ID is already registered adds its
+-- permissions to that role and to the roles based on it that have nothing of their own for
+-- the same actions; its other fields are ignored, see `Bolt:create_role`.
 -- ```
 -- -- roles/sh_helper.lua
 -- ROLE.name = 'Helper'

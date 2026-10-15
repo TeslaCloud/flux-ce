@@ -3,7 +3,6 @@
 CMD.name = 'CharSetModel'
 CMD.description = 'command.charsetmodel.description'
 CMD.syntax = 'command.charsetmodel.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1

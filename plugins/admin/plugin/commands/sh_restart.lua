@@ -1,11 +1,9 @@
---- The Restart command reloads the current map, optionally after a delay in seconds. It
--- runs the `FLSaveData` and `ServerRestart` hooks first. Allowed for administrators by
--- default.
+--- The Restart command reloads the current map, optionally after a delay in seconds. It runs the
+-- `FLSaveData` and `ServerRestart` hooks first.
 
 CMD.name = 'Restart'
 CMD.description = 'command.restart.description'
 CMD.syntax = 'command.restart.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 0
 CMD.alias = 'maprestart'

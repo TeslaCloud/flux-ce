@@ -4,7 +4,6 @@
 CMD.name = 'CharClearRecognition'
 CMD.description = 'command.charclearrecognition.description'
 CMD.syntax = 'command.charclearrecognition.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.immunity = true

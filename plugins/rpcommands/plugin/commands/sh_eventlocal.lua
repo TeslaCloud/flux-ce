@@ -4,7 +4,6 @@
 CMD.name = 'EventLocal'
 CMD.description = 'command.eventlocal.description'
 CMD.syntax = 'command.eventlocal.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.roleplay'
 CMD.aliases = { 'localevent', 'el' }
 CMD.arguments = 1

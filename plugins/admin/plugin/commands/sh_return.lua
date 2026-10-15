@@ -1,10 +1,9 @@
---- The Return command teleports the targeted players back to where they were before they
--- were last teleported. Allowed for assistants by default.
+--- The Return command teleports the targeted players back to where they were before they were
+-- last teleported.
 
 CMD.name = 'Return'
 CMD.description = 'command.return.description'
 CMD.syntax = 'command.return.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.immunity = true

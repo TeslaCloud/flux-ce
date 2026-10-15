@@ -34,7 +34,6 @@ function Damage:RegisterPermissions()
     'view_damage_logs',
     'View damage logs',
     'Prints the damage and kill log entries to the console of the player.',
-    'permission.categories.administration',
-    'assistant'
+    'permission.categories.administration'
   )
 end

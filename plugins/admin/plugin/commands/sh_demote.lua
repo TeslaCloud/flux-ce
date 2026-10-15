@@ -1,7 +1,6 @@
---- The Demote command sets the role of the targeted players back to `user`. Given a SteamID
--- that belongs to nobody on the server, it changes the role that is stored for that SteamID
--- instead, so that staff members can be demoted while they are away. By default only
--- administrators can use it.
+--- The Demote command sets the role of the targeted players back to `user`. Given a SteamID that
+-- belongs to nobody on the server, it changes the role that is stored for that SteamID instead,
+-- so that staff members can be demoted while they are away.
 --
 -- The command finds its targets itself instead of setting `immunity`, because the command
 -- interpreter only knows the players who are on the server.
@@ -9,7 +8,6 @@
 CMD.name = 'Demote'
 CMD.description = 'command.demote.description'
 CMD.syntax = 'command.demote.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.alias = 'plydemote'

@@ -4,7 +4,6 @@
 CMD.name = 'CharForget'
 CMD.description = 'command.charforget.description'
 CMD.syntax = 'command.charforget.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.immunity = true

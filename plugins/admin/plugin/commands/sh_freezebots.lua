@@ -1,9 +1,7 @@
 --- The FreezeBots command freezes all bots by turning the `bot_zombie` console variable on.
--- Allowed for gamemasters by default.
 
 CMD.name = 'FreezeBots'
 CMD.description = 'command.freezebots.description'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.server_management'
 CMD.aliases = { 'botfreeze', 'freezebot', 'bot_freeze', 'bot_zombie' }
 

@@ -5,7 +5,6 @@
 CMD.name = 'DemoteRank'
 CMD.description = 'command.demoterank.description'
 CMD.syntax = 'command.demoterank.syntax'
-CMD.permission = 'user'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.player_arg = 1

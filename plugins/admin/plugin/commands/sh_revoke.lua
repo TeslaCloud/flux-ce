@@ -1,13 +1,11 @@
---- The Revoke command denies a permission to the targeted players individually, whatever
--- their role says: it sets the permission to `PERM_NEVER`, as the Revoke button of the
--- permission editor does. With a duration the permission is denied temporarily. Use
--- ResetPermission to let the role of a player decide again. By default only administrators
--- can use it.
+--- The Revoke command denies a permission to the targeted players individually, whatever their
+-- role says: it sets the permission to `PERM_NEVER`, as the Revoke button of the permission
+-- editor does. With a duration the permission is denied temporarily. Use ResetPermission to let
+-- the role of a player decide again.
 
 CMD.name = 'Revoke'
 CMD.description = 'command.revoke.description'
 CMD.syntax = 'command.revoke.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.immunity = true

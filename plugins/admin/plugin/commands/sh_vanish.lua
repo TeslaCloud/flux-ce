@@ -1,11 +1,9 @@
 --- The Vanish command hides the targeted players from everyone who lacks the `moderate`
--- permission when given a true value, and toggles their visibility otherwise. Allowed for
--- assistants by default.
+-- permission when given a true value, and toggles their visibility otherwise.
 
 CMD.name = 'Vanish'
 CMD.description = 'command.vanish.description'
 CMD.syntax = 'command.vanish.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.immunity = true

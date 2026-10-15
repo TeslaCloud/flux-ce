@@ -1,12 +1,10 @@
---- The CharAttributeBoost command gives the characters of the targeted players a boost of
--- the given number of levels to an attribute, for a duration such as `30` (minutes) or
--- `2 hours`, or until it is removed with a duration such as `perma`. Allowed for gamemasters
--- by default.
+--- The CharAttributeBoost command gives the characters of the targeted players a boost of the
+-- given number of levels to an attribute, for a duration such as `30` (minutes) or `2 hours`,
+-- or until it is removed with a duration such as `perma`.
 
 CMD.name = 'CharAttributeBoost'
 CMD.description = 'command.charattributeboost.description'
 CMD.syntax = 'command.charattributeboost.syntax'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 4
 CMD.player_arg = 1

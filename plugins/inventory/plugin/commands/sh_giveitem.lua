@@ -1,10 +1,8 @@
---- The GiveItem command gives one or several players a number of items. Allowed for
--- gamemasters by default.
+--- The GiveItem command gives one or several players a number of items.
 
 CMD.name = 'GiveItem'
 CMD.description = 'command.giveitem.description'
 CMD.syntax = 'command.giveitem.syntax'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
 CMD.player_arg = 1

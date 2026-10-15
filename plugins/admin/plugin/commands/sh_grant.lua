@@ -1,12 +1,10 @@
---- The Grant command allows a permission for the targeted players individually, whatever
--- their role says: it sets the permission to `PERM_ALLOW`, as the Allow button of the
--- permission editor does. With a duration the permission is granted temporarily. By default
--- only administrators can use it.
+--- The Grant command allows a permission for the targeted players individually, whatever their
+-- role says: it sets the permission to `PERM_ALLOW`, as the Allow button of the permission
+-- editor does. With a duration the permission is granted temporarily.
 
 CMD.name = 'Grant'
 CMD.description = 'command.grant.description'
 CMD.syntax = 'command.grant.syntax'
-CMD.permission = 'admin'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 2
 CMD.immunity = true

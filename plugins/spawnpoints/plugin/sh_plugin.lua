@@ -44,14 +44,13 @@ SpawnPoints.color_default = Color(120, 200, 255)
 --- Angle of the box that stands for a point, which is never rotated.
 SpawnPoints.box_angle = Angle(0, 0, 0)
 
---- Registers the 'spawnpoints' level design permission, allowed for gamemasters by default.
+--- Registers the 'spawnpoints' level design permission.
 function SpawnPoints:RegisterPermissions()
   Bolt:register_permission(
     'spawnpoints',
     'Manage spawn points',
     'Grants access to place and remove spawn points.',
-    'permission.categories.level_design',
-    'gamemaster'
+    'permission.categories.level_design'
   )
 end
 

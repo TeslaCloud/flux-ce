@@ -23,15 +23,13 @@ function SurfaceText:RegisterPermissions()
     'texts',
     'Place / delete texts',
     'Grants access to place and delete texts.',
-    'permission.categories.level_design',
-    'assistant'
+    'permission.categories.level_design'
   )
   Bolt:register_permission(
     'pictures',
     'Place / delete pictures',
     'Grants access to place and delete pictures.',
-    'permission.categories.level_design',
-    'assistant'
+    'permission.categories.level_design'
   )
 end
 

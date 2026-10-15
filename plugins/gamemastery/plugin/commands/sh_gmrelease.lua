@@ -1,9 +1,8 @@
 --- The GMRelease command makes a gamemaster stop playing the pool character they possess and
--- puts them back into gamemaster mode where they stand. Allowed for gamemasters by default.
+-- puts them back into gamemaster mode where they stand.
 
 CMD.name = 'GMRelease'
 CMD.description = 'command.gmrelease.description'
-CMD.permission = 'gamemaster'
 CMD.category = 'permission.categories.administration'
 CMD.alias = 'unpossess'
 CMD.no_console = true

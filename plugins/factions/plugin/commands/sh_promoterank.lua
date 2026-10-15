@@ -5,7 +5,6 @@
 CMD.name = 'PromoteRank'
 CMD.description = 'command.promoterank.description'
 CMD.syntax = 'command.promoterank.syntax'
-CMD.permission = 'user'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
 CMD.player_arg = 1

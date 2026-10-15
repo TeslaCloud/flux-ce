@@ -1,11 +1,9 @@
---- The ServerLevel command shows the caller the server level, how far the server is into it
--- and how long it has left until the next one, together with the level floor and the level
--- cap it sets for characters. Works from the server console. Allowed for assistants by
--- default.
+--- The ServerLevel command shows the caller the server level, how far the server is into it and
+-- how long it has left until the next one, together with the level floor and the level cap it
+-- sets for characters. Works from the server console.
 
 CMD.name = 'ServerLevel'
 CMD.description = 'command.serverlevel.description'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.server_management'
 CMD.aliases = { 'serverlvl', 'checkserverlevel', 'getserverlevel' }
 

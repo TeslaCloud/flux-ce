@@ -1,10 +1,8 @@
---- The Warn command sends the targeted players a warning with the given reason. Allowed for
--- assistants by default.
+--- The Warn command sends the targeted players a warning with the given reason.
 
 CMD.name = 'Warn'
 CMD.description = 'command.warn.description'
 CMD.syntax = 'command.warn.syntax'
-CMD.permission = 'assistant'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.immunity = true
