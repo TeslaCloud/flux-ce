@@ -25,9 +25,9 @@ ActiveRecord.Adapters.Sqlite._sql_syntax = 'sqlite'
 
 --- Calls the callback right away, since the SQLite database built into Garry's Mod
 -- needs no connection.
--- @param settings [Map database settings; unused]
+-- @param _settings [Map database settings; unused]
 -- @param on_connected=nil [Function called with the adapter]
-function ActiveRecord.Adapters.Sqlite:connect(settings, on_connected)
+function ActiveRecord.Adapters.Sqlite:connect(_settings, on_connected)
   if isfunction(on_connected) then on_connected(self) end
 end
 

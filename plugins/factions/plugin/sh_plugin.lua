@@ -164,7 +164,7 @@ function Factions:RegisterConditions()
   Conditions:register_condition('faction', {
     name = 'condition.faction.name',
     text = 'condition.faction.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local operator = util.operator_to_symbol(panel.data.operator)
       local faction_name
 
@@ -180,7 +180,7 @@ function Factions:RegisterConditions()
 
       return util.process_operator(data.operator, target:get_faction_id(), data.faction_id)
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.faction.message', 'condition.factions', self.all(),
       function(selector, _faction)
         selector:add_choice(t(_faction.name), function()
@@ -196,7 +196,7 @@ function Factions:RegisterConditions()
   Conditions:register_condition('rank', {
     name = 'condition.rank.name',
     text = 'condition.rank.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local faction_name = ''
       local rank_name = ''
@@ -227,7 +227,7 @@ function Factions:RegisterConditions()
 
       return util.process_operator(data.operator, target:get_rank(), rank)
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.faction.message', 'condition.factions', self.all(),
       function(faction_selector, _faction)
         if #_faction:get_ranks() == 0 then return end

@@ -29,7 +29,7 @@ function PANEL:Init()
   self.inc:set_icon_size(fa_icon_size)
   self.inc:set_centered(true)
   self.inc:SetDrawBackground(false)
-  self.inc.DoClick = function(btn)
+  self.inc.DoClick = function(_btn)
     self:increase()
   end
 
@@ -38,7 +38,7 @@ function PANEL:Init()
   self.dec:set_icon_size(fa_icon_size)
   self.dec:set_centered(true)
   self.dec:SetDrawBackground(false)
-  self.dec.DoClick = function(btn)
+  self.dec.DoClick = function(_btn)
     self:decrease()
   end
 end
@@ -192,8 +192,8 @@ end
 --   self.model.Entity:SetSkin(value - 1)
 -- end
 -- ```
--- @param value [Number the value about to be set; the old value is passed as a second argument]
-function PANEL:on_click(value)
+-- @param _value [Number the value about to be set; the old value is passed as a second argument]
+function PANEL:on_click(_value)
 end
 
 --- Called after a button click has changed the value. Does nothing by default; meant to

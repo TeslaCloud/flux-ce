@@ -84,9 +84,9 @@ end
 
 --- Keeps players where they are when leaving observer mode if the 'observer_reset' config
 -- is off.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @return [Boolean false if the player should not be moved back, nil otherwise]
-function Observer:ShouldObserverReset(actor)
+function Observer:ShouldObserverReset(_actor)
   if !Config.get('observer_reset') then
     return false
   end

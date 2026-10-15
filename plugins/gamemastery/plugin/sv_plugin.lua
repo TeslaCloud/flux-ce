@@ -131,7 +131,7 @@ function Gamemastery.find_character(id)
 
   if !id then return end
 
-  for k, v in ipairs(Gamemastery.get_pool()) do
+  for _k, v in ipairs(Gamemastery.get_pool()) do
     if tonumber(v.id) == id then
       return v
     end
@@ -182,7 +182,7 @@ function Gamemastery.pool_to_networkable()
   local result = {}
   local world_entities = Gamemastery.world_entities
 
-  for k, v in ipairs(Gamemastery.get_pool()) do
+  for _k, v in ipairs(Gamemastery.get_pool()) do
     local id = tonumber(v.id)
 
     if !id then continue end
@@ -211,7 +211,7 @@ end
 function Gamemastery.get_receivers()
   local receivers = {}
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if v:has_initialized() and Gamemastery.is_gamemaster(v) then
       receivers[#receivers + 1] = v
     end
@@ -245,7 +245,7 @@ function Gamemastery.send_pool(target)
 
   if #receivers == 0 then return end
 
-  for k, v in ipairs(receivers) do
+  for _k, v in ipairs(receivers) do
     v.gm_pool_sent = true
   end
 

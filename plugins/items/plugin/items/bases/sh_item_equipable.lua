@@ -46,10 +46,10 @@ end
 -- for the owner of that inventory or its equipment slot is occupied, and prevents
 -- unequipping it if can_unequip disallows it.
 -- @param inventory [Inventory the inventory the item is being moved to]
--- @param x [Number target slot, or nil if the position is yet to be found]
--- @param y [Number target slot, or nil if the position is yet to be found]
+-- @param _x [Number target slot, or nil if the position is yet to be found]
+-- @param _y [Number target slot, or nil if the position is yet to be found]
 -- @return [Boolean false to prevent the transfer, nil otherwise]
-function ItemEquipable:can_transfer(inventory, x, y)
+function ItemEquipable:can_transfer(inventory, _x, _y)
   local inv_type = inventory.type
 
   if inv_type == self.equip_inv then
@@ -57,16 +57,16 @@ function ItemEquipable:can_transfer(inventory, x, y)
       return false
     end
 
-    for k, v in pairs(inventory:get_items()) do
+    for _k, v in pairs(inventory:get_items()) do
       if v.equip_slot and v:is_equipped() and v.instance_id != self.instance_id then
         if v.equip_slot == self.equip_slot then
           return false
         elseif istable(self.equip_slot) then
-          for k1, v1 in pairs(self.equip_slot) do
+          for _k1, v1 in pairs(self.equip_slot) do
             if v1 == v.equip_slot then
               return false
             elseif istable(v.equip_slot) then
-              for k2, v2 in pairs(v.equip_slot) do
+              for _k2, v2 in pairs(v.equip_slot) do
                 if v1 == v2 then
                   return false
                 end
@@ -85,29 +85,29 @@ end
 
 --- Called by ItemEquipable:can_transfer before the item is equipped.
 -- Override it and return false to prevent the item from being equipped.
--- @param owner [Player the player who is about to wear the item: the owner of the equipment
+-- @param _owner [Player the player who is about to wear the item: the owner of the equipment
 --   inventory it is being put into]
 -- @return [Boolean false to prevent equipping, nil otherwise]
-function ItemEquipable:can_equip(owner)
+function ItemEquipable:can_equip(_owner)
 end
 
 --- Called by ItemEquipable:can_transfer before the item is unequipped.
 -- Override it and return false to prevent the item from being unequipped.
--- @param owner [Player the player that has the item, or nil if no player has it]
+-- @param _owner [Player the player that has the item, or nil if no player has it]
 -- @return [Boolean false to prevent unequipping, nil otherwise]
-function ItemEquipable:can_unequip(owner)
+function ItemEquipable:can_unequip(_owner)
 end
 
 --- Called by ItemEquipable:equip when the item gets equipped.
 -- Override it to apply the effects of the item to the player.
--- @param owner [Player]
-function ItemEquipable:post_equipped(owner)
+-- @param _owner [Player]
+function ItemEquipable:post_equipped(_owner)
 end
 
 --- Called by ItemEquipable:equip when the item gets unequipped.
 -- Override it to remove the effects of the item from the player.
--- @param owner [Player]
-function ItemEquipable:post_unequipped(owner)
+-- @param _owner [Player]
+function ItemEquipable:post_unequipped(_owner)
 end
 
 --- Applies or reverts the equipped state of the item; it does not move the item itself.
@@ -117,11 +117,11 @@ end
 -- @param should_equip [Boolean true to equip the item, false to unequip it]
 function ItemEquipable:equip(owner, should_equip)
   if should_equip then
-    for k, v in pairs(self.disabled_inventories) do
+    for _k, v in pairs(self.disabled_inventories) do
       local inventory = owner:get_inventory(v)
 
       if inventory then
-        for k1, v1 in pairs(inventory:get_items()) do
+        for _k1, v1 in pairs(inventory:get_items()) do
           local success, error_text = owner:transfer_item(v1.instance_id, 'main_inventory')
 
           if !success then
@@ -146,7 +146,7 @@ function ItemEquipable:equip(owner, should_equip)
     -- @realm [server]
     hook.Run('OnItemEquipped', owner, self)
   else
-    for k, v in pairs(self.disabled_inventories) do
+    for _k, v in pairs(self.disabled_inventories) do
       local inventory = owner:get_inventory(v)
 
       if inventory then

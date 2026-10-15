@@ -152,7 +152,7 @@ end
 function player_meta:get_ammo_table()
   local ammo_table = {}
 
-  for k, v in pairs(game.get_ammo_list()) do
+  for k, _v in pairs(game.get_ammo_list()) do
     local ammo_count = self:GetAmmoCount(k)
 
     if ammo_count > 0 then
@@ -282,7 +282,7 @@ end
 function player_meta:unstuck(filter)
   local positions = self:find_best_position(4, filter)
 
-  for k, v in ipairs(positions) do
+  for _k, v in ipairs(positions) do
     self:SetPos(v)
 
     if !self:stuck() then
@@ -313,7 +313,7 @@ end
 function player_meta:give_weapons(weapons_table, ammo)
   local no_ammo = ammo != nil and ammo != false
 
-  for k, v in pairs(weapons_table) do
+  for _k, v in pairs(weapons_table) do
     if istable(v) then
       local weapon = self:Give(v.class, no_ammo)
 

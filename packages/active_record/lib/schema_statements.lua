@@ -28,7 +28,7 @@ function Statements.column_definition(name, type, options)
 end
 
 local function with_print(query, label)
-  query:callback(function(result, query_str, time)
+  query:callback(function(_result, query_str, time)
     print_query(label..' ('..time..'s)', query_str)
   end)
 
@@ -36,7 +36,7 @@ local function with_print(query, label)
 end
 
 local function raw(label, sql)
-  return ActiveRecord.adapter:raw_query(sql, function(result, query_str, time)
+  return ActiveRecord.adapter:raw_query(sql, function(_result, query_str, time)
     print_query(label..' ('..time..'s)', query_str)
   end)
 end
@@ -45,7 +45,7 @@ end
 -- @param table_name [String]
 -- @param query [ActiveRecord::Query]
 function Statements.apply_references(table_name, query)
-  for k, v in ipairs(query._references or {}) do
+  for _k, v in ipairs(query._references or {}) do
     if v.index != false then
       Statements.add_index(table_name, { v.column })
     end
@@ -104,7 +104,7 @@ function Statements.create_table(name, options, callback)
     local quoted = query:quote_column(primary_key)
     local defined = false
 
-    for k, v in ipairs(query.create_list) do
+    for _k, v in ipairs(query.create_list) do
       if v[1] == quoted then defined = true break end
     end
 
@@ -283,8 +283,8 @@ end
 
 --- Removes the 'created_at' and 'updated_at' columns from a table.
 -- @param table_name [String]
--- @param options=nil [Map unused]
-function Statements.remove_timestamps(table_name, options)
+-- @param _options=nil [Map unused]
+function Statements.remove_timestamps(table_name, _options)
   Statements.remove_column(table_name, 'created_at')
   Statements.remove_column(table_name, 'updated_at')
 end

@@ -159,9 +159,9 @@ end
 if CLIENT then
   --- Decides whether the live text setting is listed in the settings menu: only while the
   -- player has typing bubbles turned on and the server allows live text.
-  -- @param setting [Map definition of the setting]
+  -- @param _setting [Map definition of the setting]
   -- @return [Boolean]
-  local function live_text_setting_visible(setting)
+  local function live_text_setting_visible(_setting)
     return ClientSettings:get('display_typing_bubbles') and DisplayTyping:live_text_allowed()
   end
 

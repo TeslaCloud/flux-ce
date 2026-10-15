@@ -126,7 +126,7 @@ function Limbs:draw_diagram(x, y, height, alpha, limbs)
       or Theme.get_color('limbs_background', background_color):alpha(background_alpha)
   )
 
-  for k, v in ipairs(shapes) do
+  for _k, v in ipairs(shapes) do
     local damage = limbs[v.limb] or 0
 
     draw.RoundedBox(

@@ -85,9 +85,9 @@ function TOOL:RightClick(trace)
 end
 
 --- Forgets the door that was picked as the main door of a group.
--- @param trace [Map trace result of the tool owner's aim]
+-- @param _trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true on the client and when a picked door was forgotten, false otherwise]
-function TOOL:Reload(trace)
+function TOOL:Reload(_trace)
   if CLIENT then return true end
 
   local owner = self:GetOwner()

@@ -266,7 +266,7 @@ function D20:get_damage_formula(attacker, victim, damage_info)
     end
   end
 
-  for k, v in ipairs(damage_type_dice) do
+  for _k, v in ipairs(damage_type_dice) do
     if damage_info:IsDamageType(v[1]) then
       return v[2], 'type:'..v[3]
     end
@@ -278,7 +278,7 @@ function D20:get_damage_formula(attacker, victim, damage_info)
     return config_get('d20_default_dice', '1d6'), 'default'
   end
 
-  for k, v in ipairs(damage_bands) do
+  for _k, v in ipairs(damage_bands) do
     if damage <= v[1] then
       return v[2], 'damage'
     end
@@ -464,10 +464,10 @@ end
 -- ```
 -- D20:roll_fall_damage(actor, 700) -- 3d6
 -- ```
--- @param actor [Player the player who has hit the ground]
+-- @param _actor [Player the player who has hit the ground]
 -- @param speed [Number fall speed]
 -- @return [Number damage, nil while the plugin is disabled]
-function D20:roll_fall_damage(actor, speed)
+function D20:roll_fall_damage(_actor, speed)
   if !self:is_enabled() or !Dice then return end
 
   local steps = math_max(1, math_floor((speed - 250) / 150))

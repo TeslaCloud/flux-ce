@@ -60,8 +60,8 @@ end
 -- that the Characters plugin restores once the player has spawned is set on top of these
 -- weapons.
 -- @param actor [Player]
--- @param default_loadout [List<String> weapon classes of the default loadout]
-function Factions:PlayerLoadoutGiven(actor, default_loadout)
+-- @param _default_loadout [List<String> weapon classes of the default loadout]
+function Factions:PlayerLoadoutGiven(actor, _default_loadout)
   actor.faction_weapons = nil
 
   self.give_loadout(actor)
@@ -129,8 +129,8 @@ end
 -- faction and rank, forgets the rank model, undoes the feelings of NPCs and puts the player
 -- back into the unassigned team.
 -- @param owner [Player]
--- @param character [Character the character that is being dropped]
-function Factions:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Factions:OnActiveCharacterCleared(owner, _character)
   self.reset_npc_relations(owner)
 
   owner.faction_model = nil
@@ -184,7 +184,7 @@ function Factions:PlayerRestored(actor, record)
   if record.whitelists then
     local whitelists = {}
 
-    for k, v in pairs(record.whitelists) do
+    for _k, v in pairs(record.whitelists) do
       table.insert(whitelists, v.faction_id)
     end
 
@@ -197,9 +197,9 @@ end
 --- Updates the networked amounts of characters per faction of a player who is deleting one
 -- of their characters.
 -- @param actor [Player]
--- @param id [Number ID of the character]
+-- @param _id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
-function Factions:OnCharacterDelete(actor, id, character)
+function Factions:OnCharacterDelete(actor, _id, character)
   self.send_character_counts(actor, character)
 end
 
@@ -223,10 +223,10 @@ end
 --- Gives the player a random model of their faction that matches the new gender. A player
 -- whose faction is not registered keeps their model.
 -- @param owner [Player]
--- @param char [Character]
--- @param new_gender [Number CHAR_GENDER_* value]
--- @param old_gender [Number CHAR_GENDER_* value]
-function Factions:CharacterGenderChanged(owner, char, new_gender, old_gender)
+-- @param _char [Character]
+-- @param _new_gender [Number CHAR_GENDER_* value]
+-- @param _old_gender [Number CHAR_GENDER_* value]
+function Factions:CharacterGenderChanged(owner, _char, _new_gender, _old_gender)
   local faction_table = owner:get_faction()
 
   if faction_table then
@@ -236,10 +236,10 @@ end
 
 --- Keeps the model of the rank on a player whose character model has been changed.
 -- @param owner [Player]
--- @param char [Character the active character, nil if the player has none]
--- @param model [String the new model of the character]
--- @param old_model [String the model that was networked before the change]
-function Factions:CharacterModelChanged(owner, char, model, old_model)
+-- @param _char [Character the active character, nil if the player has none]
+-- @param _model [String the new model of the character]
+-- @param _old_model [String the model that was networked before the change]
+function Factions:CharacterModelChanged(owner, _char, _model, _old_model)
   self.apply_model(owner)
 end
 

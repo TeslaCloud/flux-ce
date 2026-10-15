@@ -34,7 +34,7 @@ function ItemAmmo:has_weapon_for(actor)
     return false
   end
 
-  for k, v in ipairs(actor:GetWeapons()) do
+  for _k, v in ipairs(actor:GetWeapons()) do
     if v:GetPrimaryAmmoType() == ammo_id or v:GetSecondaryAmmoType() == ammo_id then
       return true
     end

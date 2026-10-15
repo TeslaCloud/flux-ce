@@ -40,8 +40,8 @@ function ItemRadio:is_enabled()
 end
 
 --- Turns the radio on or off.
--- @param actor [Player player toggling the radio]
-function ItemRadio:on_toggle(actor)
+-- @param _actor [Player player toggling the radio]
+function ItemRadio:on_toggle(_actor)
   self:set_data('enabled', !self:is_enabled())
 end
 

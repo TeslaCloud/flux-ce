@@ -218,9 +218,9 @@ function Item.find_instance_by_id(instance_id)
     end
   end
 
-  for item_id, item_instances in pairs(instances) do
+  for _item_id, item_instances in pairs(instances) do
     if istable(item_instances) then
-      for k, item_obj in pairs(item_instances) do
+      for _k, item_obj in pairs(item_instances) do
         if item_obj.instance_id == instance_id then
           instance_cache[instance_id] = item_obj
 
@@ -258,7 +258,7 @@ function Item.find(name)
     return stored[name]
   end
 
-  for k, v in pairs(stored) do
+  for _k, v in pairs(stored) do
     if v.id and v.name and v.print_name then
       if v.id == name or v.name:find(name) or v.print_name:find(name) then
         return v
@@ -491,7 +491,7 @@ if SERVER then
 
     entities = {}
 
-    for k, v in ipairs(item_ents) do
+    for _k, v in ipairs(item_ents) do
       if IsValid(v) and !v:IsMarkedForDeletion() and v.item then
         entities[v.item.id] = entities[v.item.id] or {}
 
@@ -563,7 +563,7 @@ if SERVER then
   function Item.send_to_player(target)
     local item_ents = ents.FindByClass('fl_item')
 
-    for k, v in ipairs(item_ents) do
+    for _k, v in ipairs(item_ents) do
       if v.item then
         Item.network_item(target, v.item.instance_id)
       end
@@ -602,7 +602,7 @@ if SERVER then
 
     ent:set_item(item_obj)
 
-    local mins, maxs = ent:GetCollisionBounds()
+    local _mins, maxs = ent:GetCollisionBounds()
 
     ent:SetPos(position + Vector(0, 0, maxs.z))
 
@@ -689,7 +689,7 @@ else
   end)
 end
 
-Pipeline.register('item', function(id, file_name, pipe)
+Pipeline.register('item', function(id, file_name, _pipe)
   ITEM = ItemBase.new(id)
 
   require_relative(file_name)

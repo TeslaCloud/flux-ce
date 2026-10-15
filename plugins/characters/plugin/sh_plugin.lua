@@ -38,7 +38,7 @@ function Characters:RegisterConditions()
   Conditions:register_condition('character', {
     name = 'condition.character.name',
     text = 'condition.character.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local character_id = panel.data.character_id or ''
 
@@ -50,7 +50,7 @@ function Characters:RegisterConditions()
 
       return util.process_operator(data.operator, target:get_character_id(), data.character_id)
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.character.message', 'condition.characters', player.GetAll(),
       function(selector, target)
         if target:is_character_loaded() then

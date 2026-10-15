@@ -113,7 +113,7 @@ end
 function PANEL:PerformLayout()
   local w = 0
 
-  for k, pnl in pairs(self:GetCanvas():GetChildren()) do
+  for _k, pnl in pairs(self:GetCanvas():GetChildren()) do
     pnl:InvalidateLayout()
     pnl:SizeToContentsX()
 
@@ -126,7 +126,7 @@ function PANEL:PerformLayout()
 
   local y = self.padding * 2
 
-  for k, pnl in pairs(self:GetCanvas():GetChildren()) do
+  for _k, pnl in pairs(self:GetCanvas():GetChildren()) do
     pnl:SetWide(w)
     pnl:InvalidateLayout(true)
     pnl:MoveToFront()
@@ -188,7 +188,7 @@ end
 -- @param callback=nil [Function called with the option's panel when it is clicked]
 -- @return [Panel the created fl_menu_item]
 function PANEL:add_option(name, callback)
-  local w, h = self:GetSize()
+  local w, _h = self:GetSize()
 
   local panel = vgui.Create('fl_menu_item', self)
   panel:SetPos(0, 0)
@@ -222,7 +222,7 @@ function PANEL:add_spacer(px)
   panel:SetPos(0, 0)
   panel:MoveToBack()
 
-  panel.Paint = function(pan, w, h)
+  panel.Paint = function(_pan, w, h)
     local inset = math.scale(12)
 
     draw.RoundedBox(0, inset, 0, w - inset * 2, h, get_color('border'))

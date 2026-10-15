@@ -48,7 +48,7 @@ function PLUGIN:FLInitPostEntity()
 
     local s = DermaScale.scale
     local x, y = s(50), s(40)
-    local w, h = 0, 0
+    local _w, h = 0, 0
     local is_flux = tool_object.is_flux_tool
 
     local text_table = {}
@@ -67,13 +67,13 @@ function PLUGIN:FLInitPostEntity()
     text_table.color = title_color
     text_table.pos = { x, y }
     text_table.text = !is_flux and '#tool.'..mode..'.name' or t('tool.'..mode..'.name')
-    w, h = draw_text_shadow(text_table, 2)
+    _w, h = draw_text_shadow(text_table, 2)
     y = y + h
 
     text_table.font = 'fl_tool_subtitle'
     text_table.pos = { x, y }
     text_table.text = !is_flux and '#tool.'..mode..'.desc' or t('tool.'..mode..'.desc')
-    w, h = draw_text_shadow(text_table, 1)
+    _w, h = draw_text_shadow(text_table, 1)
     y = y + h + s(8)
 
     self.ToolNameHeight = y
@@ -91,7 +91,7 @@ function PLUGIN:FLInitPostEntity()
     if !tool_object.Information then
       text_table.pos = { x + self.InfoBoxHeight, y }
       text_table.text = tool_object:GetHelpText()
-      w, h = draw_text_shadow(text_table, 1)
+      _w, h = draw_text_shadow(text_table, 1)
 
       set_draw_color(255, 255, 255, 255)
       surface.SetTexture(self.InfoIcon)
@@ -107,7 +107,7 @@ function PLUGIN:FLInitPostEntity()
 
     self.Icons = icons
 
-    for k, v in pairs(tool_object.Information) do
+    for _k, v in pairs(tool_object.Information) do
       if isstring(v) then v = { name = v } end
 
       local name = v.name
@@ -124,7 +124,7 @@ function PLUGIN:FLInitPostEntity()
 
       text_table.pos = { x + s(21), y + h2 }
 
-      w, h = draw_text_shadow(text_table, 1)
+      _w, h = draw_text_shadow(text_table, 1)
 
       if !v.icon then
         if name:start_with('info') then v.icon = 'gui/info' end

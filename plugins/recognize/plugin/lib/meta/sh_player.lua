@@ -91,7 +91,7 @@ do
 
       character.recognizes = character.recognizes or {}
 
-      for k, v in ipairs(character.recognizes) do
+      for _k, v in ipairs(character.recognizes) do
         if v.target_id == char_id then
           record = v
 

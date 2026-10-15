@@ -12,7 +12,7 @@ resource.AddWorkshop('1518849094')
 -- @param mod [String module name, as passed to require]
 -- @return [Boolean success]
 function require_module(mod)
-  local success, value = pcall(require, mod)
+  local success, _value = pcall(require, mod)
 
   if !success then
     ErrorNoHalt('Failed to open the "'..mod..'" module!\n')

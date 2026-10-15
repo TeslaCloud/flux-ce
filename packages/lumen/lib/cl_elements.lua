@@ -102,9 +102,9 @@ local function assign_ref(ref, value)
 end
 
 --- Clears the `ref` of an element whose panel is removed.
--- @param panel [Panel]
+-- @param _panel [Panel]
 -- @param props [Map the last props of the element]
-function Lumen.release_ref(panel, props)
+function Lumen.release_ref(_panel, props)
   if istable(props) and props.ref then
     assign_ref(props.ref, nil)
   end
@@ -206,7 +206,7 @@ Lumen.register_element('spacer', {
 Lumen.register_element('text', {
   class = 'lumen_text',
   style = { font = 'text_normal', color = 'text' },
-  update = function(panel, props, old_props)
+  update = function(panel, props, _old_props)
     panel:set_text(Lumen.text_of(props))
   end
 })
@@ -228,7 +228,7 @@ Lumen.register_element('button', {
     cursor = 'hand'
   },
   mouse = true,
-  update = function(panel, props, old_props)
+  update = function(panel, props, _old_props)
     panel:set_text(Lumen.text_of(props))
     panel:set_icon(props.icon)
     panel:set_enabled(props.disabled != true)
@@ -239,7 +239,7 @@ Lumen.register_element('button', {
 Lumen.register_element('scroll', {
   class = 'lumen_scroll',
   children = true,
-  update = function(panel, props, old_props)
+  update = function(panel, props, _old_props)
     panel:set_scrollbar_visible(props.scrollbar != false)
   end
 })
@@ -260,7 +260,7 @@ Lumen.register_element('image', {
 Lumen.register_element('input', {
   class = 'DTextEntry',
   style = { height = 28, font = 'text_small' },
-  mount = function(panel, props)
+  mount = function(panel, _props)
     panel.OnValueChange = function(entry, value)
       call(entry.lumen_props.on_change, value, entry)
     end
@@ -269,7 +269,7 @@ Lumen.register_element('input', {
       call(entry.lumen_props.on_enter, entry:GetValue(), entry)
     end
   end,
-  update = function(panel, props, old_props)
+  update = function(panel, props, _old_props)
     local style = panel.lumen_style
 
     if style.font then
@@ -290,12 +290,12 @@ Lumen.register_element('input', {
 Lumen.register_element('checkbox', {
   class = 'DCheckBoxLabel',
   style = { height = 20, font = 'text_small' },
-  mount = function(panel, props)
+  mount = function(panel, _props)
     panel.OnChange = function(box, value)
       call(box.lumen_props.on_change, value, box)
     end
   end,
-  update = function(panel, props, old_props)
+  update = function(panel, props, _old_props)
     local style = panel.lumen_style
 
     panel:SetText(props.text or '')
@@ -340,7 +340,7 @@ end
 Lumen.register_element('combo', {
   class = 'DComboBox',
   style = { height = 28, font = 'text_small' },
-  mount = function(panel, props)
+  mount = function(panel, _props)
     panel.OnSelect = function(combo, index, text, data)
       local value = data
 
@@ -359,7 +359,7 @@ Lumen.register_element('combo', {
     if options_changed(props.options, old_props and old_props.options) then
       panel:Clear()
 
-      for k, option in ipairs(props.options or {}) do
+      for _k, option in ipairs(props.options or {}) do
         if istable(option) then
           panel:AddChoice(tostring(option.text), option.value)
         else
@@ -392,14 +392,14 @@ Lumen.register_element('combo', {
 Lumen.register_element('slider', {
   class = 'DNumSlider',
   style = { height = 28 },
-  mount = function(panel, props)
+  mount = function(panel, _props)
     panel.OnValueChanged = function(slider, value)
       if slider.lumen_updating then return end
 
       call(slider.lumen_props.on_change, value, slider)
     end
   end,
-  update = function(panel, props, old_props)
+  update = function(panel, props, _old_props)
     panel.lumen_updating = true
     panel:SetMin(props.min or 0)
     panel:SetMax(props.max or 1)

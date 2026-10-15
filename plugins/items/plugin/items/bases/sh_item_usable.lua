@@ -17,12 +17,12 @@ if CLIENT then
   --- Called when the inventory slot of the item is painted over.
   -- Draws the amount of uses left if the item can be used more than once.
   -- @param w [Number width of the slot panel]
-  -- @param h [Number height of the slot panel]
-  function ItemUsable:paint_over_slot(w, h)
+  -- @param _h [Number height of the slot panel]
+  function ItemUsable:paint_over_slot(w, _h)
     if self.max_uses > 1 then
       local text = self:get_uses()..'/'..self.max_uses
       local font = Theme.get_font('text_smallest')
-      local text_w, text_h = util.text_size(text, font)
+      local text_w, _text_h = util.text_size(text, font)
       draw.SimpleText(text, font, w - text_w - math.scale_x(4), math.scale(4), uses_text_color)
     end
   end
@@ -70,13 +70,13 @@ end
 
 --- Called by ItemUsable:on_use when a player uses the item.
 -- Override it to make the item do something.
--- @param actor [Player]
-function ItemUsable:use(actor)
+-- @param _actor [Player]
+function ItemUsable:use(_actor)
 end
 
 --- Called by ItemUsable:on_use before the item is used.
 -- Override it and return false to prevent the item from being used.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @return [Boolean false to prevent the use, nil otherwise]
-function ItemUsable:can_use(actor)
+function ItemUsable:can_use(_actor)
 end

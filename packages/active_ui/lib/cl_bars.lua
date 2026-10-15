@@ -167,7 +167,7 @@ end
 function Flux.Bars:prioritize()
   sorted = {}
 
-  for k, v in pairs(stored) do
+  for _k, v in pairs(stored) do
     if hook.Run('ShouldDrawBar', v) == false then
       continue
     end
@@ -201,7 +201,7 @@ function Flux.Bars:position()
 
   local last_y = self.default_y
 
-  for priority, ids in pairs(sorted) do
+  for _priority, ids in pairs(sorted) do
     for i = 1, #ids do
       local bar = self:get(ids[i])
 
@@ -281,7 +281,7 @@ end
 --- Draws every bar from the prioritized list of top bars. The gamemode calls it every frame
 -- while it paints the HUD of a living player, along with the info displays.
 function Flux.Bars:DrawTopBars()
-  for priority, ids in pairs(sorted) do
+  for _priority, ids in pairs(sorted) do
     for i = 1, #ids do
       self:draw(ids[i])
     end

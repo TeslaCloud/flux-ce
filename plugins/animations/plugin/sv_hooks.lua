@@ -29,8 +29,8 @@ end)
 -- has been dropped, who has been off the ground for two checks in a row, or who has been
 -- moved away from where they started it.
 -- @param actor [Player]
--- @param cur_time [Number current CurTime()]
-function Animations:PlayerThink(actor, cur_time)
+-- @param _cur_time [Number current CurTime()]
+function Animations:PlayerThink(actor, _cur_time)
   local state = actor.animation_data
 
   if !state then return end
@@ -79,8 +79,8 @@ end
 --- Ends the animation of a player who has switched characters and lets the new character
 -- start one right away.
 -- @param owner [Player player whose character was set]
--- @param character [Character newly active character]
-function Animations:OnActiveCharacterSet(owner, character)
+-- @param _character [Character newly active character]
+function Animations:OnActiveCharacterSet(owner, _character)
   self:stop(owner)
 
   owner.next_animation = nil
@@ -88,8 +88,8 @@ end
 
 --- Ends the animation of a player who drops their character.
 -- @param owner [Player player whose character is being dropped]
--- @param character [Character the character that is being dropped]
-function Animations:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Animations:OnActiveCharacterCleared(owner, _character)
   self:stop(owner)
 
   owner.next_animation = nil

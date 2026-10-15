@@ -61,7 +61,7 @@ local function parse_args(args_str)
   local env = {}
   local task = nil
 
-  for k, v in ipairs(string.Trim(args_str or ''):split(' ')) do
+  for _k, v in ipairs(string.Trim(args_str or ''):split(' ')) do
     if v != '' then
       local key, value = v:match('^([%w_]+)=(.*)$')
 
@@ -78,7 +78,7 @@ local function parse_args(args_str)
   return task, env, words
 end
 
-concommand.Add('flux', function(actor, cmd, args, args_str)
+concommand.Add('flux', function(actor, _cmd, _args, args_str)
   if IsValid(actor) then return end
 
   local task, env, words = parse_args(args_str)

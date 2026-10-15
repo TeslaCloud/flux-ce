@@ -119,9 +119,9 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
 end
 
 --- Removes the attack keys from the command when the CanPlayerAttack hook returns false.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param user_cmd [CUserCmd]
-function RaiseGun:StartCommand(actor, user_cmd)
+function RaiseGun:StartCommand(_actor, user_cmd)
   --- Asks whether the local player may attack.
   -- Called on the client for every user command that is built; the plugin's own handler
   -- denies it while the weapon is lowered.

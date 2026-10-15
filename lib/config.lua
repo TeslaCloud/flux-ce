@@ -313,7 +313,7 @@ function Config.display_value(key, value)
   if istable(value) and !IsColor(value) and table.IsSequential(value) then
     local pieces = {}
 
-    for k, v in ipairs(value) do
+    for _k, v in ipairs(value) do
       pieces[#pieces + 1] = tostring(v)
     end
 
@@ -338,7 +338,7 @@ if SERVER then
       return list
     end
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if Config.can_manage(v) then
         list[#list + 1] = v
       end

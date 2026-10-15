@@ -15,7 +15,7 @@ CMD.aliases = { 'return', 'back' }
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to return]
 function CMD:on_run(actor, targets)
-  for k, v in ipairs(targets) do
+  for _k, v in ipairs(targets) do
     if IsValid(v) and v.prev_pos then
       v:notify('notification.return')
       v:teleport(v.prev_pos)

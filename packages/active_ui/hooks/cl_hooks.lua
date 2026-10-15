@@ -19,11 +19,11 @@ function GM:ForceDermaSkin()
 end
 
 --- Recreates the fonts so that they fit the new resolution.
--- @param new_w [Number new screen width]
--- @param new_h [Number new screen height]
--- @param old_w [Number previous screen width]
--- @param old_h [Number previous screen height]
-function GM:OnResolutionChanged(new_w, new_h, old_w, old_h)
+-- @param _new_w [Number new screen width]
+-- @param _new_h [Number new screen height]
+-- @param _old_w [Number previous screen width]
+-- @param _old_h [Number previous screen height]
+function GM:OnResolutionChanged(_new_w, _new_h, _old_w, _old_h)
   Font.create_fonts()
 end
 
@@ -75,8 +75,8 @@ end
 -- card: opening their Steam profile and copying their SteamID. Bots have neither.
 -- @param menu [Panel the DermaMenu being filled]
 -- @param target [Player the player the card shows]
--- @param card [Panel the fl_scoreboard_player card that was clicked]
-function GM:CreateScoreboardPlayerMenu(menu, target, card)
+-- @param _card [Panel the fl_scoreboard_player card that was clicked]
+function GM:CreateScoreboardPlayerMenu(menu, target, _card)
   if target:IsBot() then return end
 
   menu:AddOption(t'ui.scoreboard.menu.profile', function()
@@ -98,7 +98,7 @@ end
 -- hook of that plugin and runs after the plugins that regroup the players.
 -- @param players_table [Map lists of players keyed by category]
 function GM:PreRebuildFactionCategories(players_table)
-  for id, players in pairs(players_table) do
+  for _id, players in pairs(players_table) do
     for k, v in pairs(players) do
       if IsValid(v) and v:has_initialized() and hook.Run('PlayerShouldShowOnScoreboard', v) == false then
         players[k] = nil

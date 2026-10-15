@@ -38,7 +38,7 @@ function CMD:on_run(actor, targets, destination)
   local pos = goal:GetPos()
   local moved = {}
 
-  for k, v in ipairs(targets) do
+  for _k, v in ipairs(targets) do
     if IsValid(v) and v != goal then
       v:teleport(pos)
       v:notify('notification.tp')

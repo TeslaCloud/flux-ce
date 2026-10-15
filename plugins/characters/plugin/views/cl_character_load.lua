@@ -36,7 +36,7 @@ function PANEL:Init()
   self.back:set_icon_size(math.scale(16))
   self.back:set_centered(true)
 
-  self.back.DoClick = function(btn)
+  self.back.DoClick = function(_btn)
     surface.PlaySound(Theme.get_sound('button_click_success_sound'))
 
     self:GetParent():to_main_menu(true)
@@ -114,7 +114,7 @@ function PANEL:Init()
   self.model:SetCamPos(Vector(80, 0, 50))
   self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
-  self.model.LayoutEntity = function(entity) end
+  self.model.LayoutEntity = function(_entity) end
 
   self.select = vgui.Create('fl_button', self)
   self.select:SetFont(Theme.get_font('main_menu_normal'))
@@ -124,7 +124,7 @@ function PANEL:Init()
   self.select:set_icon('fa-check')
   self.select:set_icon_size(math.scale(16))
   self.select:set_centered(true)
-  self.select.DoClick = function(btn)
+  self.select.DoClick = function(_btn)
     local cur_time = CurTime()
 
     if !self.next_click or self.next_click <= cur_time then
@@ -144,7 +144,7 @@ function PANEL:Init()
   self.delete:set_icon_size(math.scale(18))
   self.delete:set_centered(true)
   self.delete:SetTooltip(t'ui.char_create.delete')
-  self.delete.DoClick = function(btn)
+  self.delete.DoClick = function(_btn)
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
     Derma_StringRequest(

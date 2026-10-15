@@ -89,19 +89,19 @@ end
 -- main menu if it is currently open.
 -- @param current_theme [ThemeBase]
 function Characters:OnThemeLoaded(current_theme)
-  current_theme:add_panel('main_menu', function(id, parent, ...)
+  current_theme:add_panel('main_menu', function(_id, parent, ...)
     return vgui.Create('fl_main_menu', parent)
   end)
 
-  current_theme:add_panel('char_create', function(id, parent, ...)
+  current_theme:add_panel('char_create', function(_id, parent, ...)
     return vgui.Create('fl_char_create', parent)
   end)
 
-  current_theme:add_panel('char_create.load', function(id, parent, ...)
+  current_theme:add_panel('char_create.load', function(_id, parent, ...)
     return vgui.Create('fl_char_load', parent)
   end)
 
-  current_theme:add_panel('ui.char_create.general', function(id, parent, ...)
+  current_theme:add_panel('ui.char_create.general', function(_id, parent, ...)
     return vgui.Create('fl_char_create_general', parent)
   end)
 
@@ -120,7 +120,7 @@ function Characters:AddTabMenuItems(menu)
     title = t'ui.tab_menu.main_menu',
     icon = 'fa-bars',
     priority = 10,
-    override = function(menu_panel, button)
+    override = function(menu_panel, _button)
       menu_panel:safe_remove()
       Flux.intro_panel = Theme.create_panel('main_menu')
     end
@@ -128,8 +128,8 @@ function Characters:AddTabMenuItems(menu)
 end
 
 --- Closes the main menu after a character has been loaded.
--- @param char_id [Number]
-function Characters:PostCharacterLoaded(char_id)
+-- @param _char_id [Number]
+function Characters:PostCharacterLoaded(_char_id)
   if IsValid(Flux.intro_panel) then
     Flux.intro_panel:safe_remove()
   end
@@ -170,7 +170,7 @@ end
 -- @param card [Panel the scoreboard player card]
 -- @param target [Player]
 function Characters:RebuildScoreboardPlayerCard(card, target)
-  local x, y = card.name_label:GetPos()
+  local _x, _y = card.name_label:GetPos()
   local text = target:steam_name()
   local font = Theme.get_font('text_normal')
   local text_height = util.text_height(text, font)
@@ -234,11 +234,11 @@ end
 
 --- Adds the physical description to the lines drawn when looking at a player.
 -- @param target [Player]
--- @param x [Number]
--- @param y [Number]
--- @param distance [Number]
+-- @param _x [Number]
+-- @param _y [Number]
+-- @param _distance [Number]
 -- @param lines [Map line definitions keyed by ID, modified in place]
-function Characters:GetDrawPlayerInfo(target, x, y, distance, lines)
+function Characters:GetDrawPlayerInfo(target, _x, _y, _distance, lines)
   lines['desc'] = {
     text = target:get_phys_desc(),
     font = Theme.get_font('tooltip_small'),
@@ -251,10 +251,10 @@ end
 -- menu. There is no continue button while the active character is banned, and the create
 -- button only shows a notice once the player has as many characters as they may have.
 -- @param panel [Panel the main menu]
--- @param sidebar [Panel the main menu sidebar]
-function Characters:AddMainMenuItems(panel, sidebar)
+-- @param _sidebar [Panel the main menu sidebar]
+function Characters:AddMainMenuItems(panel, _sidebar)
   if PLAYER:is_character_loaded() and !PLAYER:is_character_banned() then
-    panel:add_button(t'ui.main_menu.continue', function(btn)
+    panel:add_button(t'ui.main_menu.continue', function(_btn)
       panel:Remove()
     end)
   end
@@ -302,7 +302,7 @@ function Characters:AddMainMenuItems(panel, sidebar)
     end)
   end
 
-  panel:add_button(t'ui.main_menu.disconnect', function(btn)
+  panel:add_button(t'ui.main_menu.disconnect', function(_btn)
     Derma_Query(t'ui.main_menu.disconnect_msg', t'ui.main_menu.disconnect', t'ui.yes', function()
       RunConsoleCommand('disconnect')
     end,

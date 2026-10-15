@@ -70,9 +70,9 @@ if CLIENT then
     end
   end
 
-  local files, folders = file.Find('_flux/client/*.lua', 'LUA')
+  local files, _folders = file.Find('_flux/client/*.lua', 'LUA')
 
-  for k, v in ipairs(files) do
+  for _k, v in ipairs(files) do
     include('_flux/client/'..v)
   end
 end

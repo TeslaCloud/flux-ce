@@ -56,7 +56,7 @@ end
 function Areas.get_by_type(type)
   local to_ret = {}
 
-  for k, v in pairs(stored) do
+  for _k, v in pairs(stored) do
     if v.type == type then
       to_ret[#to_ret + 1] = v
     end
@@ -253,7 +253,7 @@ Areas.register_type(
   'Simple Area',
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',
   Color(255, 0, 255),
-  function(actor, area, has_entered, pos, cur_time)
+  function(actor, area, has_entered, _pos, cur_time)
     if has_entered then
       --- Called when a player enters an area of the `area` type. Runs on the server and on
       -- the client of that player.

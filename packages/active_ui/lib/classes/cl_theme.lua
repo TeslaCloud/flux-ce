@@ -104,7 +104,7 @@ function ThemeBase:register_asset(name, path, options)
       local scrh = ScrH()
       local base_size = 720
 
-      for k, v in ipairs(options.sizes) do
+      for _k, v in ipairs(options.sizes) do
         if scrh < base_size then
           return self:set_material(name, path)
         elseif scrh <= base_size * v then

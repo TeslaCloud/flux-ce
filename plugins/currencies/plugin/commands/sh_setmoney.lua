@@ -13,7 +13,7 @@ CMD.aliases = { 'setcash', 'settokens' }
 function CMD:get_description()
   local currencies = {}
 
-  for k, v in pairs(Currencies:all()) do
+  for k, _v in pairs(Currencies:all()) do
     table.insert(currencies, k)
   end
 
@@ -46,7 +46,7 @@ function CMD:on_run(actor, targets, amount, currency)
 
   local currency_data = Currencies:find_currency(currency)
 
-  for k, v in ipairs(targets) do
+  for _k, v in ipairs(targets) do
     v:set_money(currency, amount)
     v:notify('notification.currency.set', { value = amount, currency = currency_data.name })
   end

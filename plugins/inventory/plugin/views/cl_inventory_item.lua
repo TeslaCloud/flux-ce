@@ -284,7 +284,7 @@ end
 --- Moves the items from the stack of another slot to this one, as many as the stack can fit.
 -- @param panel2 [Panel the fl_inventory_item panel to take the items from]
 function PANEL:combine(panel2)
-  for i = 1, #panel2.instance_ids do
+  for _i = 1, #panel2.instance_ids do
     if #self.instance_ids < self.item_data.max_stack then
       table.insert(self.instance_ids, panel2.instance_ids[1])
       table.remove(panel2.instance_ids, 1)
@@ -339,7 +339,7 @@ function PANEL:rebuild()
     self.icon_panel = vgui.Create('fl_base_panel', self)
     self.icon_panel:Dock(FILL)
     self.icon_panel:SetMouseInputEnabled(false)
-    self.icon_panel.Paint = function(pnl, w, h)
+    self.icon_panel.Paint = function(_pnl, w, h)
       surface.SetDrawColor(255, 255, 255, 255)
       surface.SetMaterial(icon)
       surface.DrawTexturedRectRotated(w * 0.5, h * 0.5, rotated and h or w, rotated and w or h, rotated and 90 or 0)
@@ -360,7 +360,7 @@ function PANEL:rebuild()
     self.model_panel:SetModel(model, self.item_data:get_skin())
     self.model_panel:SetMouseInputEnabled(false)
     self.model_panel:SetAnimated(true)
-    self.model_panel.LayoutEntity = function(pnl, ent)
+    self.model_panel.LayoutEntity = function(_pnl, _ent)
     end
 
     local entity = self.model_panel:GetEntity()

@@ -251,7 +251,7 @@ end
 local function live_receivers(receivers)
   local alive = {}
 
-  for k, v in ipairs(receivers) do
+  for _k, v in ipairs(receivers) do
     if IsValid(v) then
       alive[#alive + 1] = v
     end
@@ -347,7 +347,7 @@ function cable.receive(id, callback)
 
   handlers[id] = callback
 
-  return net.Receive(id, function(length, sender)
+  return net.Receive(id, function(_length, sender)
     local args, count = read_args(id)
 
     dispatch(id, sender, args, count)
@@ -366,14 +366,14 @@ end
 function cable.pending_transfers()
   local count = 0
 
-  for owner, pending in pairs(transfers) do
+  for _owner, pending in pairs(transfers) do
     count = count + table.Count(pending)
   end
 
   return count
 end
 
-net.Receive(CHUNK_MESSAGE, function(length, sender)
+net.Receive(CHUNK_MESSAGE, function(_length, sender)
   local transfer_id = read_uint(32)
   local id = read_string()
   local index = read_uint(16)
@@ -488,7 +488,7 @@ if SERVER then
         timer.Simple(0.1, function()
           delayed[id] = nil
 
-          for k, v in ipairs(queue) do
+          for _k, v in ipairs(queue) do
             cable.send(v.target, id, unpack(v.args, 1, v.count))
           end
         end)
@@ -508,7 +508,7 @@ if SERVER then
     else
       local receivers = {}
 
-      for k, v in pairs(target) do
+      for _k, v in pairs(target) do
         if isentity(v) and IsValid(v) and v:IsPlayer() then
           receivers[#receivers + 1] = v
         end

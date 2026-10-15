@@ -33,7 +33,7 @@ function MapCleaner:get_patterns()
   local classes = Config.get('remove_map_classes')
 
   if istable(classes) then
-    for k, v in pairs(classes) do
+    for _k, v in pairs(classes) do
       if isstring(v) then
         local pattern = v:strip():lower()
 
@@ -71,7 +71,7 @@ end
 function MapCleaner:class_matches(ent_class, patterns)
   ent_class = ent_class:lower()
 
-  for k, v in ipairs(patterns or self:get_patterns()) do
+  for _k, v in ipairs(patterns or self:get_patterns()) do
     if v == ent_class then
       return true
     end
@@ -148,7 +148,7 @@ function MapCleaner:clean()
   local matches = {}
   local unwanted = {}
 
-  for k, v in ents.Iterator() do
+  for _k, v in ents.Iterator() do
     local ent_class = v:GetClass()
 
     local matched = matches[ent_class]

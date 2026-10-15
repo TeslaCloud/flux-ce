@@ -13,7 +13,7 @@ CMD.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 function CMD:get_description()
   local factions = {}
 
-  for k, v in pairs(Factions.all()) do
+  for k, _v in pairs(Factions.all()) do
     table.insert(factions, k)
   end
 

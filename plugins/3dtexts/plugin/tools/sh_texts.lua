@@ -76,9 +76,9 @@ function TOOL:LeftClick(trace)
 end
 
 --- Requests removal of the 3D text the tool owner is looking at.
--- @param trace [Map trace result of the tool owner's aim]
+-- @param _trace [Map trace result of the tool owner's aim]
 -- @return [Boolean always true]
-function TOOL:RightClick(trace)
+function TOOL:RightClick(_trace)
   if CLIENT then return true end
 
   SurfaceText:remove_text(self:GetOwner())

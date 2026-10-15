@@ -36,7 +36,7 @@ function PANEL:Init()
     return pnl:AddScroll(dlta * -2)
   end
 
-  self.scroll:GetCanvas():Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+  self.scroll:GetCanvas():Receiver('fl_item', function(receiver, dropped, is_dropped, _menu_index, mouse_x, mouse_y)
     dropped = dropped[1]
 
     if dropped:IsVisible() then
@@ -88,7 +88,7 @@ function PANEL:Init()
   local parent = self:GetParent()
 
   if IsValid(parent) then
-    parent:Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+    parent:Receiver('fl_item', function(_receiver, dropped, is_dropped, _menu_index, _mouse_x, _mouse_y)
       local dropped = dropped[1]
 
       if is_dropped then

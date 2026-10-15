@@ -14,7 +14,7 @@ end
 -- @param id [Number character ID]
 -- @return [Map the entry, nil when the list has none with the ID]
 function Gamemastery.find_character(id)
-  for k, v in ipairs(Gamemastery.pool) do
+  for _k, v in ipairs(Gamemastery.pool) do
     if v.id == id then
       return v
     end

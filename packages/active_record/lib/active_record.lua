@@ -220,7 +220,7 @@ function ActiveRecord.restore_metadata()
 
       if !istable(result) then return end
 
-      for k, v in ipairs(result) do
+      for _k, v in ipairs(result) do
         local kind, name = tostring(v.key):match('^(%a+_?%a*):(.+)$')
 
         if kind and metadata_kinds[kind] then
@@ -246,7 +246,7 @@ function ActiveRecord.restore_schema()
       print_query('Schema Restore ('..time..'s)', query)
 
       if istable(result) then
-        for k, v in ipairs(result) do
+        for _k, v in ipairs(result) do
           local t = ActiveRecord.schema[v.table_name] or {}
           local null, default = parse_definition(v.definition)
 
@@ -302,7 +302,7 @@ function ActiveRecord.set_meta_key(key, value)
         local q = ActiveRecord.Database:update('ar_metadata')
           q:where('key', key)
           q:update('value', value)
-          q:callback(function(r, query_str, time)
+          q:callback(function(_r, query_str, time)
             print_query('Meta Update ('..time..'s)', query_str)
           end)
         q:execute()
@@ -310,7 +310,7 @@ function ActiveRecord.set_meta_key(key, value)
         local q = ActiveRecord.Database:insert('ar_metadata')
           q:insert('key', key)
           q:insert('value', value)
-          q:callback(function(r, query_str, time)
+          q:callback(function(_r, query_str, time)
             print_query('Meta Insert ('..time..'s)', query_str)
           end)
         q:execute()
@@ -324,7 +324,7 @@ end
 function ActiveRecord.delete_meta_key(key)
   local query = ActiveRecord.Database:delete('ar_metadata')
     query:where('key', key)
-    query:callback(function(r, query_str, time)
+    query:callback(function(_r, query_str, time)
       print_query('Meta Delete ('..time..'s)', query_str)
     end)
   query:execute()
@@ -443,7 +443,7 @@ end
 -- @param meta_only=false [Boolean only drop the internal tables]
 function ActiveRecord.drop_schema(meta_only)
   if !meta_only then
-    for k, v in ipairs(table.GetKeys(ActiveRecord.schema)) do
+    for _k, v in ipairs(table.GetKeys(ActiveRecord.schema)) do
       ActiveRecord.SchemaStatements.drop_table(v, { if_exists = true })
     end
   end
@@ -472,7 +472,7 @@ function ActiveRecord.recreate_schema()
   end)
 end
 
-Pipeline.register('migrations', function(id, file_name, pipe)
+Pipeline.register('migrations', function(_id, file_name, _pipe)
   if file_name:end_with('.lua') then
     ActiveRecord.MigrationContext.add_source(file_name)
   end

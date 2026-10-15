@@ -81,7 +81,7 @@ function PANEL:RecreateSidebar(create_buttons)
   self.sidebar:set_margin(Theme.get_option('menu_sidebar_margin'))
   self.sidebar:add_space(math.scale(16))
 
-  self.sidebar.Paint = function(pnl, w, h)
+  self.sidebar.Paint = function(_pnl, _w, _h)
   end
 
   if create_buttons then
@@ -169,7 +169,7 @@ function PANEL:notify(text)
   self.notification:set_lifetime(6)
   self.notification:set_background_color(Theme.get_color('warning'))
 
-  local w, h = self.notification:GetSize()
+  local w, _h = self.notification:GetSize()
   self.notification:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - math.scale(128))
 
   --- Keeps the notification above the main menu.

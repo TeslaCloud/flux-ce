@@ -120,7 +120,7 @@ function ActiveRecord.Database:setup(settings)
       password = settings.password,
       database = 'postgres'
     }
-    local query = ActiveRecord.adapter:raw_query(txt([[
+    local _query = ActiveRecord.adapter:raw_query(txt([[
       DO
       $do$
       DECLARE
@@ -134,7 +134,7 @@ function ActiveRecord.Database:setup(settings)
         END IF;
       END
       $do$;
-    ]]), function(result, query_str, time)
+    ]]), function(_result, _query_str, time)
       print_query('Create Database ('..time..'s)', 'Success!')
       print 'Please restart your server for changes to take effect!'
     end)
@@ -162,9 +162,9 @@ function ActiveRecord.Database:drop_database(settings)
     password = settings.password,
     database = 'template1'
   }
-  local query = ActiveRecord.adapter:raw_query(
+  local _query = ActiveRecord.adapter:raw_query(
     'DROP DATABASE '..settings.database..';',
-    function(result, query_str, time)
+    function(_result, query_str, time)
       print_query('Drop Database ('..time..'s)', query_str)
     end
   )
@@ -174,8 +174,8 @@ function ActiveRecord.Database:drop_database(settings)
 end
 
 --- Disconnects the active adapter from the database.
--- @param settings=nil [Map unused]
-function ActiveRecord.Database:destroy(settings)
+-- @param _settings=nil [Map unused]
+function ActiveRecord.Database:destroy(_settings)
   ActiveRecord.adapter:disconnect()
 end
 

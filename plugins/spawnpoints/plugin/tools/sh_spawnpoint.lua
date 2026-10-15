@@ -17,11 +17,11 @@ local nearest_radius = 48
 
 --- Adds a spawn point for the selected group at the spot the owner stands on, or the spot on
 -- the ground below them when they are in the air.
--- @param trace [Map trace result of the tool owner's aim]
+-- @param _trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the point was added (always true clientside), false if the
 --   selected group does not exist or there is no room for a point, nil if the owner is not
 --   valid or lacks the 'spawnpoints' permission]
-function TOOL:LeftClick(trace)
+function TOOL:LeftClick(_trace)
   if CLIENT then return true end
 
   local owner = self:GetOwner()
@@ -100,7 +100,7 @@ if CLIENT then
 
     combo_box:SetSortItems(false)
 
-    for k, v in ipairs(SpawnPoints:get_groups()) do
+    for _k, v in ipairs(SpawnPoints:get_groups()) do
       combo_box:AddChoice(SpawnPoints:get_group_label(v), v)
     end
   end

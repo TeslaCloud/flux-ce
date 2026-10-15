@@ -18,7 +18,7 @@ function File.write(file_name, file_contents)
   local pieces = string.split(file_name, '/')
   local current_path = ''
 
-  for k, v in ipairs(pieces) do
+  for _k, v in ipairs(pieces) do
     if File.ext(v) != nil then
       break
     end
@@ -45,12 +45,12 @@ function File.get_list(folder)
     files[k] = folder..v
   end
 
-  for k, v in ipairs(folders) do
+  for _k, v in ipairs(folders) do
     if v:start_with('.') then continue end
 
     local file_list = File.get_list(folder..v..'/')
 
-    for k, v in ipairs(file_list) do
+    for _k, v in ipairs(file_list) do
       files[#files + 1] = v
     end
   end

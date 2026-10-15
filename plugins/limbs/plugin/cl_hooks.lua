@@ -45,8 +45,8 @@ end
 
 --- Forgets the colors of the diagram when a theme is loaded, so that they come from the
 -- new theme.
--- @param current_theme [Theme the theme that has been loaded]
-function Limbs:OnThemeLoaded(current_theme)
+-- @param _current_theme [Theme the theme that has been loaded]
+function Limbs:OnThemeLoaded(_current_theme)
   self:reset_colors()
 end
 
@@ -72,10 +72,10 @@ end
 -- options 'limbs_diagram_x', 'limbs_diagram_y' and 'limbs_diagram_height' move and resize
 -- it, and a theme that has a `DrawLimbDiagram(x, y, height, alpha)` method draws it instead
 -- of `Limbs:draw_diagram`, unless that method returns nil.
--- @param cur_time [Number current CurTime()]
+-- @param _cur_time [Number current CurTime()]
 -- @param scrw [Number screen width]
 -- @param scrh [Number screen height]
-function Limbs:FLHUDPaint(cur_time, scrw, scrh)
+function Limbs:FLHUDPaint(_cur_time, scrw, scrh)
   local mode = self:is_enabled() and self:get_hud_mode() or 'never'
   local visible = mode == 'always' or (mode == 'hurt' and self:is_any_damaged(PLAYER))
 

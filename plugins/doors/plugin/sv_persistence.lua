@@ -68,7 +68,7 @@ function Doors:set_ownership_data(entity, data)
   state.text = isstring(data.text) and data.text != '' and data.text or nil
 
   if istable(data.access) then
-    for k, v in pairs(data.access) do
+    for _k, v in pairs(data.access) do
       local character_id = istable(v) and tonumber(v.id)
       local level = istable(v) and tonumber(v.level)
 
@@ -86,7 +86,7 @@ end
 -- every loaded door. Nothing is saved, since the doors are as they were saved.
 -- @param doors [List<Entity> the doors that were loaded]
 function Doors:restore_links(doors)
-  for k, v in ipairs(doors) do
+  for _k, v in ipairs(doors) do
     local parent_id = v.door_parent_id
 
     if parent_id then
@@ -100,7 +100,7 @@ function Doors:restore_links(doors)
     end
   end
 
-  for k, v in ipairs(doors) do
+  for _k, v in ipairs(doors) do
     if !IsValid(v.door_parent) then
       self:sync(v)
     end

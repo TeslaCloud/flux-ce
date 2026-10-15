@@ -19,7 +19,7 @@ local reach_sqr = 120 * 120
 -- @return [Inventory the open inventory, or nil if the entity has none open for the player]
 local function find_open_inventory(actor, entity)
   if entity:IsPlayer() then
-    for k, v in pairs(entity:get_inventories()) do
+    for _k, v in pairs(entity:get_inventories()) do
       if v:has_receiver(actor) then
         return v
       end
@@ -91,7 +91,7 @@ function Currencies:OnActiveCharacterSet(owner, character)
   local currencies = {}
 
   if character.currencies then
-    for k, v in pairs(character.currencies) do
+    for _k, v in pairs(character.currencies) do
       currencies[v.currency_id] = v.amount
     end
   end
@@ -101,8 +101,8 @@ end
 
 --- Clears the networked currency balances of a player who drops their character.
 -- @param owner [Player]
--- @param character [Character the character that is being dropped]
-function Currencies:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Currencies:OnActiveCharacterCleared(owner, _character)
   owner:set_nv('fl_currencies', {})
 end
 
@@ -156,10 +156,10 @@ end
 -- @param amount [Number]
 -- @param currency [String currency ID]
 -- @param pos [Vector position the money would be dropped at]
--- @param trace [Map eye trace result of the player]
+-- @param _trace [Map eye trace result of the player]
 -- @return [Boolean false when not allowed, String error phrase if there is one; nothing
 --   when allowed]
-function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, trace)
+function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, _trace)
   --- Asks whether an entity may part with an amount of money. Called on the server by the
   -- default handlers of CanPlayerDropMoney and CanGiveMoney, before their own checks. The
   -- handler of the Currencies plugin refuses amounts that are not positive, finite numbers
@@ -228,7 +228,7 @@ function Currencies:PreContainerOpen(entity)
   if !entity.currencies then
     local currencies = {}
 
-    for k, v in pairs(Currencies.all()) do
+    for k, _v in pairs(Currencies.all()) do
       currencies[k] = 0
     end
 

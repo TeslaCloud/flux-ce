@@ -8,7 +8,7 @@ function SpawnPoints:load()
   local points = {}
 
   if istable(stored) then
-    for k, v in ipairs(stored) do
+    for _k, v in ipairs(stored) do
       if istable(v) and isnumber(v.x) and isnumber(v.y) and isnumber(v.z) then
         points[#points + 1] = {
           pos = Vector(v.x, v.y, v.z),
@@ -54,7 +54,7 @@ function SpawnPoints:sync(target)
       receivers[1] = target
     end
   else
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if !v:IsBot() and v:can('spawnpoints') then
         receivers[#receivers + 1] = v
       end
@@ -167,7 +167,7 @@ function SpawnPoints:pick_point(points, ignore)
   local free = {}
   local free_count = 0
 
-  for k, v in ipairs(points) do
+  for _k, v in ipairs(points) do
     if self:is_point_free(v, ignore) then
       free_count = free_count + 1
       free[free_count] = v
@@ -211,7 +211,7 @@ end
 function SpawnPoints:choose_point(actor)
   local points = {}
 
-  for k, v in ipairs(self:get_player_groups(actor)) do
+  for _k, v in ipairs(self:get_player_groups(actor)) do
     points = self:get_points(v)
 
     if #points > 0 then break end

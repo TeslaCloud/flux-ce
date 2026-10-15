@@ -24,7 +24,7 @@ if !ActiveRecord.Base then
     'save', 'has', 'has_many', 'has_one', 'belongs_to'
   }
 
-  for k, v in ipairs(remove_keys) do
+  for _k, v in ipairs(remove_keys) do
     --- Clientside stub that replaces a serverside-only method. Does nothing.
     -- @param self [ActiveRecord::Base]
     -- @return [ActiveRecord::Base(self)]

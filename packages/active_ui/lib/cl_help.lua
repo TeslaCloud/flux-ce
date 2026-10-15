@@ -100,7 +100,7 @@ end
 function Flux.Help:get_pages()
   local pages = {}
 
-  for id, page in pairs(stored) do
+  for _id, page in pairs(stored) do
     if !isfunction(page.visible) or page.visible(page) then
       pages[#pages + 1] = page
     end
@@ -261,7 +261,7 @@ function Flux.Help:get_commands()
     end
   end
 
-  for k, v in ipairs(categories) do
+  for _k, v in ipairs(categories) do
     sort(v.commands, function(a, b)
       local first, second = a.name:utf8lower(), b.name:utf8lower()
 

@@ -165,7 +165,7 @@ end
 --- Runs the cleanups of the effects of an instance, when it is unmounted.
 -- @param instance [Map instance of the component]
 function Lumen.State.cleanup(instance)
-  for k, slot in ipairs(instance.hooks or {}) do
+  for _k, slot in ipairs(instance.hooks or {}) do
     if slot.kind == 'effect' then
       slot.pending = nil
 

@@ -28,7 +28,7 @@ function PANEL:Init()
   self.save:SetSize(button_size, button_size)
   self.save:set_icon('fa-save')
   self.save:set_centered(true)
-  self.save.DoClick = function(btn)
+  self.save.DoClick = function(_btn)
     play_sound('garrysmod/ui_click.wav')
 
     Derma_StringRequest(t'ui.condition.save.title',
@@ -39,7 +39,7 @@ function PANEL:Init()
 
       play_sound('garrysmod/ui_click.wav')
     end,
-    function(text)
+    function(_text)
       play_sound('garrysmod/ui_click.wav')
     end)
   end
@@ -48,7 +48,7 @@ function PANEL:Init()
   self.load:SetSize(button_size, button_size)
   self.load:set_icon('fa-folder-open')
   self.load:set_centered(true)
-  self.load.DoClick = function(btn)
+  self.load.DoClick = function(_btn)
     play_sound('garrysmod/ui_click.wav')
 
     local frame = create_panel('DFrame')
@@ -61,11 +61,11 @@ function PANEL:Init()
     list:Dock(FILL)
     list:AddColumn(t'ui.condition.load.column')
 
-    for k, v in pairs(Data.get_files('conditions')) do
+    for _k, v in pairs(Data.get_files('conditions')) do
       list:AddLine(v)
     end
 
-    list.OnRowSelected = function(lst, index, line)
+    list.OnRowSelected = function(_lst, _index, line)
       play_sound('garrysmod/ui_click.wav')
 
       self:clear()
@@ -89,9 +89,9 @@ end
 --- Opens the context menu of a node: adding a child condition and, for condition nodes,
 -- setting the parameter and the operator or deleting the condition.
 -- @param panel [Panel the tree node that was right-clicked]
--- @param root=nil [Boolean whether the node is the root node, currently unused]
--- @param first=nil [Boolean whether the node has no child conditions, currently unused]
-function PANEL:node_options(panel, root, first)
+-- @param _root=nil [Boolean whether the node is the root node, currently unused]
+-- @param _first=nil [Boolean whether the node has no child conditions, currently unused]
+function PANEL:node_options(panel, _root, _first)
   local menu = DermaMenu()
 
   local sub_menu = menu:AddSubMenu(t'ui.condition.add_condition')
@@ -194,7 +194,7 @@ function PANEL:get_conditions(panel)
 
   local conditions = {}
 
-  for k, v in pairs(panel.childs) do
+  for _k, v in pairs(panel.childs) do
     if !IsValid(v) then continue end
 
     local node = {
@@ -216,7 +216,7 @@ end
 -- @param parent [Panel tree node to add the conditions to, e.g. the root node]
 -- @param conditions [List condition nodes as returned by get_conditions]
 function PANEL:set_conditions(parent, conditions)
-  for k, v in pairs(conditions) do
+  for _k, v in pairs(conditions) do
     local node = self:add_condition(parent, v.id, v.data)
 
     if v.childs then
@@ -227,7 +227,7 @@ end
 
 --- Removes all condition nodes from the tree, leaving only the root node.
 function PANEL:clear()
-  for k, v in pairs(self.root.childs) do
+  for _k, v in pairs(self.root.childs) do
     v:safe_remove()
   end
 
@@ -258,7 +258,7 @@ function PANEL:create_selector(title, message, default_value, choices, callback)
   selector:set_text(t(message))
   selector:set_value(t(default_value))
 
-  for k, v in pairs(choices) do
+  for _k, v in pairs(choices) do
     callback(selector, v)
   end
 

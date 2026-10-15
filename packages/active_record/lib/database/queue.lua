@@ -20,7 +20,7 @@ end
 function ActiveRecord.Queue:run()
   for k, v in pairs(self.stored) do
     create_table(k, function(t)
-      for k2, v2 in ipairs(v) do
+      for _k2, v2 in ipairs(v) do
         t[v2[1]](t, unpack(v2[2]))
       end
     end)
@@ -33,7 +33,7 @@ end
 --- Registers a column type, so that it can be used in queued table definitions.
 -- @param type [String abstract column type, e.g. 'string']
 function ActiveRecord.Queue:add_type(type)
-  self.types[type] = function(obj, ...)
+  self.types[type] = function(_obj, ...)
     self.stored[self.current_table] = self.stored[self.current_table] or {}
     table.insert(self.stored[self.current_table], { type, { ... } })
   end

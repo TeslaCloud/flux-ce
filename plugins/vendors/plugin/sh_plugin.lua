@@ -91,9 +91,9 @@ end
 --- Keeps players without the 'manage_vendors' permission from using tools on vendors.
 -- @param actor [Player]
 -- @param trace [Map trace result of the tool use]
--- @param tool_name [String tool ID]
+-- @param _tool_name [String tool ID]
 -- @return [Boolean false to block the tool, nil otherwise]
-function Vendors:CanTool(actor, trace, tool_name)
+function Vendors:CanTool(actor, trace, _tool_name)
   if self:is_vendor(trace.Entity) and !actor:can('manage_vendors') then
     return false
   end
@@ -102,10 +102,10 @@ end
 --- Keeps players without the 'manage_vendors' permission from using the properties of the
 -- context menu on vendors.
 -- @param actor [Player]
--- @param property [String property ID]
+-- @param _property [String property ID]
 -- @param entity [Entity]
 -- @return [Boolean false to block the property, nil otherwise]
-function Vendors:CanProperty(actor, property, entity)
+function Vendors:CanProperty(actor, _property, entity)
   if self:is_vendor(entity) and !actor:can('manage_vendors') then
     return false
   end

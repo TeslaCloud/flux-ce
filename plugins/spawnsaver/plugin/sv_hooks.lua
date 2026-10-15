@@ -55,9 +55,9 @@ end
 --- Keeps the spot that was saved before while the player is ragdolled, in observer mode or
 -- in noclip.
 -- @param target [Player]
--- @param character [Character the character that is being saved]
+-- @param _character [Character the character that is being saved]
 -- @return [Boolean false when the position of the player should not be saved, otherwise nil]
-function SpawnSaver:ShouldSavePlayerSpawn(target, character)
+function SpawnSaver:ShouldSavePlayerSpawn(target, _character)
   if is_out_of_place(target) then
     return false
   end
@@ -66,10 +66,10 @@ end
 --- Leaves the player at the regular spawn point while they are dead, ragdolled, in observer
 -- mode or in noclip.
 -- @param target [Player]
--- @param character [Character the loaded character]
--- @param spawn_point [Map the saved spot: map, position and angles]
+-- @param _character [Character the loaded character]
+-- @param _spawn_point [Map the saved spot: map, position and angles]
 -- @return [Boolean false when the player should not be moved, otherwise nil]
-function SpawnSaver:ShouldRestorePlayerSpawn(target, character, spawn_point)
+function SpawnSaver:ShouldRestorePlayerSpawn(target, _character, _spawn_point)
   if is_out_of_place(target) then
     return false
   end

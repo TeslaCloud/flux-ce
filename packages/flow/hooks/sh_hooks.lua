@@ -437,8 +437,8 @@ do
   -- disables inverse kinematics for them. Does nothing if no new model is given.
   -- @param target [Player]
   -- @param new_model [String path of the new model]
-  -- @param old_model [String path of the previous model]
-  function GM:PlayerModelChanged(target, new_model, old_model)
+  -- @param _old_model [String path of the previous model]
+  function GM:PlayerModelChanged(target, new_model, _old_model)
     if !new_model then return end
 
     if CLIENT then
@@ -524,14 +524,14 @@ function GM:OnReloaded()
   -- Reload the tools.
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(Flux.Tool.stored) do
+  for _k, v in pairs(Flux.Tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 
   if Flux.development then
     Flux.Anim:invalidate()
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end
   end
@@ -546,7 +546,7 @@ timer.Create('fl_one_minute', 60, 0, function()
 
   local i = 0
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     i = i + 1
 
     timer.Simple(0.25 * i, function()

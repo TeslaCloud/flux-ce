@@ -104,7 +104,7 @@ function PropProtection:find_owner(key)
 
   local owner
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if self:get_key(v) == key then
       owner = v
 
@@ -298,10 +298,10 @@ end
 -- @param actor [Player]
 -- @param trace [Map trace result of the tool use]
 -- @param tool_name [String tool ID]
--- @param tool [Map tool object]
+-- @param _tool [Map tool object]
 -- @param button [Number 1 for the primary attack, 2 for the secondary one, 3 for reload]
 -- @return [Boolean false to block the tool, nothing otherwise]
-function PropProtection:CanTool(actor, trace, tool_name, tool, button)
+function PropProtection:CanTool(actor, trace, tool_name, _tool, button)
   if !IsValid(actor) or !istable(trace) then return end
 
   local flux_tool = Flux.Tool:get(tool_name)

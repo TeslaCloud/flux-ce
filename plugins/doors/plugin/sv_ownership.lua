@@ -80,7 +80,7 @@ function Doors:sync(entity)
   local ownable = state.ownable and true or nil
   local price, text = state.price, state.text
 
-  for k, v in ipairs(self:get_group(root)) do
+  for _k, v in ipairs(self:get_group(root)) do
     v:set_nv('fl_door_ownable', ownable)
     v:set_nv('fl_door_price', price)
     v:set_nv('fl_door_owner', owner_id)
@@ -137,7 +137,7 @@ end
 function Doors:find_character_player(character_id)
   if !character_id then return end
 
-  for k, v in ipairs(player.GetAll()) do
+  for _k, v in ipairs(player.GetAll()) do
     if self:get_character_id(v) == character_id then
       return v
     end
@@ -205,7 +205,7 @@ function Doors:clear_owner(entity)
   state.access = nil
   state.text = nil
 
-  for k, v in ipairs(self:get_group(root)) do
+  for _k, v in ipairs(self:get_group(root)) do
     if v:get_nv('fl_locked') then
       self.properties['locked'].on_load(v, false)
     end
@@ -242,7 +242,7 @@ end
 function Doors:count_owned(character_id)
   local count = 0
 
-  for k, v in ents_iterator() do
+  for _k, v in ents_iterator() do
     local state = v.door_state
 
     if state and state.owner and state.owner.id == character_id and !IsValid(v.door_parent) then
@@ -264,7 +264,7 @@ function Doors:release_character(character_id)
 
   local released = 0
 
-  for k, v in ents_iterator() do
+  for _k, v in ents_iterator() do
     local state = v.door_state
 
     if state and !IsValid(v.door_parent) then
@@ -298,7 +298,7 @@ function Doors:attach(entity, root)
   if IsValid(old_parent) then
     table.RemoveByValue(old_parent.door_children or {}, entity)
   elseif entity.door_children then
-    for k, v in ipairs(entity.door_children) do
+    for _k, v in ipairs(entity.door_children) do
       if IsValid(v) then
         insert(moved, v)
       end
@@ -311,7 +311,7 @@ function Doors:attach(entity, root)
 
   root.door_children = root.door_children or {}
 
-  for k, v in ipairs(moved) do
+  for _k, v in ipairs(moved) do
     v.door_parent = root
     v.door_state = state
 
@@ -361,7 +361,7 @@ function Doors:unlink(entity)
     table.RemoveByValue(parent.door_children or {}, entity)
     insert(released, entity)
   elseif entity.door_children then
-    for k, v in ipairs(entity.door_children) do
+    for _k, v in ipairs(entity.door_children) do
       if IsValid(v) then
         insert(released, v)
       end
@@ -375,7 +375,7 @@ function Doors:unlink(entity)
   local root = IsValid(parent) and parent or entity
   local state = self:get_state(root)
 
-  for k, v in ipairs(released) do
+  for _k, v in ipairs(released) do
     v.door_parent = nil
     v.door_state = { ownable = state.ownable, price = state.price }
 

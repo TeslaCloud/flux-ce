@@ -67,7 +67,7 @@ function Currencies:spawn_money(currency, amount, position, angles)
   money_ent:set_currency_amount(amount)
   money_ent:SetModel(self:get_money_model(currency, amount))
 
-  local mins, maxs = money_ent:GetCollisionBounds()
+  local _mins, maxs = money_ent:GetCollisionBounds()
 
   money_ent:SetPos(position + Vector(0, 0, maxs.z))
 
@@ -88,7 +88,7 @@ end
 function Currencies:save_money()
   local saved = {}
 
-  for k, v in ipairs(ents.FindByClass('fl_money')) do
+  for _k, v in ipairs(ents.FindByClass('fl_money')) do
     local currency = v:get_currency()
     local amount = v:get_currency_amount()
 
@@ -116,7 +116,7 @@ function Currencies:load_money()
 
   if !istable(saved) then return end
 
-  for k, v in pairs(saved) do
+  for _k, v in pairs(saved) do
     if istable(v) and isvector(v.position) then
       local money_ent = self:spawn_money(v.currency, v.amount, v.position, v.angles)
 

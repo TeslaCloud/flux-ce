@@ -57,12 +57,12 @@ end
 function PANEL:set_members(members)
   if !istable(members) then return end
 
-  local text_color = Theme.get_color('text')
+  local _text_color = Theme.get_color('text')
   local margin = math.scale(4)
   local row_height = math.scale(40)
   local by_role, role_ids, sort_names = {}, {}, {}
 
-  for k, v in ipairs(members) do
+  for _k, v in ipairs(members) do
     if istable(v) and isstring(v.steam_id) then
       local role_id = tostring(v.role)
 
@@ -160,7 +160,7 @@ function PANEL:Init()
   self.demote_button:set_centered(true)
   self.demote_button:set_background_color(Theme.get_color('surface_raised'))
   self.demote_button:SizeToContentsX()
-  self.demote_button.DoClick = function(btn)
+  self.demote_button.DoClick = function(_btn)
     self:demote()
   end
 end

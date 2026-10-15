@@ -9,7 +9,7 @@ function Logging:print_admin_log(type, text)
   MsgC(type[2], type[1]..' ', log_text_color, text..'\n')
 end
 
-hook.Add('PlayerHurt', 'Damage_Log', function(target, attacker, health, damage)
+hook.Add('PlayerHurt', 'Damage_Log', function(target, attacker, _health, damage)
   local text = (target:GetName()..' has taken '..math.Round(damage)..' damage from '..attacker:GetName())
   Logging:print_admin_log(LOG_DAMAGE, text)
 end)

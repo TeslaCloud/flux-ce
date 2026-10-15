@@ -16,7 +16,7 @@ CMD.aliases = { 'plyslay', 'plykill' }
 function CMD:on_run(actor, targets)
   local slain = {}
 
-  for k, v in ipairs(targets) do
+  for _k, v in ipairs(targets) do
     if v:Alive() then
       v:Kill()
       v:notify('notification.slay', {

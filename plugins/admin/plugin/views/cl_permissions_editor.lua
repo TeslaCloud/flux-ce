@@ -242,7 +242,7 @@ end
 function PANEL:get_permissions()
   local perm_list = {}
 
-  for k, v in pairs(self.permissions) do
+  for _k, v in pairs(self.permissions) do
     local value = v:get_value()
 
     if value != PERM_NO then
@@ -333,7 +333,7 @@ function PANEL:rebuild()
       local buttons = {}
 
       -- The buttons sit over the columns of the rows below, whatever width the list ends up with.
-      panel.PerformLayout = function(pnl, w, h)
+      panel.PerformLayout = function(_pnl, w, h)
         local quarter = w * 0.25
 
         for k, button in ipairs(buttons) do
@@ -351,10 +351,10 @@ function PANEL:rebuild()
         button:set_background_color(Theme.get_color('surface_raised'))
         button:set_text(v)
         button:set_centered(true)
-        button.DoClick = function(btn)
+        button.DoClick = function(_btn)
           local can_click = false
 
-          for k1, v1 in pairs(perms) do
+          for _k1, v1 in pairs(perms) do
             if self.permissions[v1.id]:get_value() != k - 1 then
               can_click = true
 
@@ -366,7 +366,7 @@ function PANEL:rebuild()
 
           surface.PlaySound('buttons/button4.wav')
 
-          for k1, v1 in pairs(perms) do
+          for _k1, v1 in pairs(perms) do
             self.permissions[v1.id]:set_value(k - 1)
           end
         end
@@ -375,7 +375,7 @@ function PANEL:rebuild()
       list:Add(panel)
     end
 
-    for k, v in SortedPairs(perms) do
+    for _k, v in SortedPairs(perms) do
       local button = vgui.Create('fl_permission', self)
       button:SetTall(row_height)
       button:set_permission(v)

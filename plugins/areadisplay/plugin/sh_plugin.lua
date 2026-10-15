@@ -133,9 +133,9 @@ function AreaDisplay:find_text_areas_at(pos)
   local height = pos.z + 16
   local area_type = self.area_type
 
-  for id, area in pairs(Areas.all()) do
+  for _id, area in pairs(Areas.all()) do
     if istable(area) and area.type == area_type and istable(area.polys) then
-      for k, poly in ipairs(area.polys) do
+      for _k, poly in ipairs(area.polys) do
         if height > poly[1].z and height < area.maxh and util.vector_in_poly(pos, poly) then
           found[#found + 1] = area
 
@@ -309,7 +309,7 @@ function AreaDisplay:AddAreaToolModes(mode_list)
   end
 end
 
-Areas.set_callback(AreaDisplay.area_type, function(actor, area, has_entered, pos, cur_time)
+Areas.set_callback(AreaDisplay.area_type, function(actor, area, has_entered, _pos, cur_time)
   if has_entered then
     --- Called when a player enters a text area. Runs on the server and on the client of that
     -- player. The client-side handler of Area Display shows the notice of the area. Do not

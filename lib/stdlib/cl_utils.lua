@@ -238,7 +238,7 @@ do
             end
           end
 
-          http.Fetch(url, function(body, length, headers, code)
+          http.Fetch(url, function(body, _length, _headers, _code)
             path = path:gsub('.jpeg', '.jpg')
             file.Write(path, body)
             cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
@@ -299,7 +299,7 @@ function util.wrap_text(text, font, width, initial_width)
   local current_word = ''
 
   for k, v in ipairs(pieces) do
-    local w, h = util.text_size(v, font)
+    local w, _h = util.text_size(v, font)
     local remain = width - cur_width
 
     -- The width of the word is LESS OR EQUAL than what we have remaining.

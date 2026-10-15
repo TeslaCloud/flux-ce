@@ -42,7 +42,7 @@ local function Entry(props)
   </view>
 end
 
-return function(props)
+return function(_props)
   return <view style={{ gap = 8 }}>
     {Lumen.map(sections, function(section, index)
       return <view key={index} style={{ gap = 4 }}>

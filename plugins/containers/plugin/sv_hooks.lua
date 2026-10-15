@@ -16,7 +16,7 @@ function Container:EntityRemoved(entity)
   local inventory = entity.inventory
 
   if inventory then
-    for k, v in ipairs(inventory.receivers) do
+    for _k, v in ipairs(inventory.receivers) do
       if IsValid(v) then
         Cable.send(v, 'fl_inventory_close')
       end
@@ -50,7 +50,7 @@ end
 -- of the hook has spawned its entities and given them their saved fields back.
 function Container:PersistenceLoad()
   timer.Simple(0, function()
-    for k, v in ents.Iterator() do
+    for _k, v in ents.Iterator() do
       if (v.container_name or v.container_password) and self:is_container(v) then
         self:update_netvars(v)
       end
@@ -59,19 +59,19 @@ function Container:PersistenceLoad()
 end
 
 --- Makes the spawned prop persistent if its model is a container.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param model [String]
 -- @param entity [Entity]
-function Container:PlayerSpawnedProp(actor, model, entity)
+function Container:PlayerSpawnedProp(_actor, model, entity)
   if self:find(model) then
     entity:SetPersistent(true)
   end
 end
 
 --- Plays the closing sound of the container when its inventory gets closed.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param inventory [Inventory]
-function Container:OnInventoryClosed(actor, inventory)
+function Container:OnInventoryClosed(_actor, inventory)
   local entity = inventory.owner
 
   if IsValid(entity) then
@@ -87,7 +87,7 @@ end
 -- inventory off the entity, so that it is not saved with it, before the persistent
 -- entities are saved. The inventories are put back by the 'PostPersistenceSave' hook.
 function Container:PrePersistenceSave()
-  for k, v in ents.Iterator() do
+  for _k, v in ents.Iterator() do
     if v.inventory and self:find(v:GetModel()) then
       detached_inventories[v] = v.inventory
 

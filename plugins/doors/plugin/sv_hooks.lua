@@ -93,9 +93,9 @@ end
 
 --- Releases the doors of a character that is about to be deleted and takes away the access
 -- it had to the doors of others.
--- @param actor [Player the player who deletes the character]
+-- @param _actor [Player the player who deletes the character]
 -- @param id [Number ID of the character]
--- @param character [Character the character that is about to be deleted]
-function Doors:OnCharacterDelete(actor, id, character)
+-- @param _character [Character the character that is about to be deleted]
+function Doors:OnCharacterDelete(_actor, id, _character)
   self:release_character(id)
 end

@@ -9,7 +9,7 @@ local PANEL = {}
 
 --- Builds the recognize menu with range buttons, a real name button, a fake name entry and the name history.
 function PANEL:Init()
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scr_w, _scr_h = ScrW(), ScrH()
   local margin = scale(4)
   local total_height = 0
 
@@ -100,7 +100,7 @@ function PANEL:Init()
   self.real_name_button:SetTall(scale(24))
   self.real_name_button:set_text(t'ui.recognize.character_name')
   self.real_name_button:set_centered(true)
-  self.real_name_button.DoClick = function(btn)
+  self.real_name_button.DoClick = function(_btn)
     surface.PlaySound('buttons/blip1.wav')
 
     Cable.send('fl_recognize', self.range.type)
@@ -128,7 +128,7 @@ function PANEL:Init()
   self.fake_name.button:SetFont(Theme.get_font('text_normal_smaller'))
   self.fake_name.button:set_text(t'ui.recognize.fake_name')
   self.fake_name.button:set_centered(true)
-  self.fake_name.button.DoClick = function(btn)
+  self.fake_name.button.DoClick = function(_btn)
     local text = self.fake_name.text_entry:GetValue()
 
     surface.PlaySound('buttons/blip1.wav')
@@ -157,11 +157,11 @@ function PANEL:Init()
     self.name_history:Dock(TOP)
     self.name_history:AddColumn(t'ui.recognize.previous_names'..':')
 
-    for k, v in pairs(history) do
+    for _k, v in pairs(history) do
       self.name_history:AddLine(v)
     end
 
-    self.name_history.OnRowSelected = function(list, index, line)
+    self.name_history.OnRowSelected = function(_list, _index, line)
       self.fake_name.text_entry:SetValue(line:GetColumnText(1))
     end
 

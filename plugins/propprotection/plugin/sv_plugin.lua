@@ -151,7 +151,7 @@ function PropProtection:get_owned_entities(key)
   local entities = {}
 
   if key and owned[key] then
-    for entity, v in pairs(owned[key]) do
+    for entity, _v in pairs(owned[key]) do
       if IsValid(entity) then
         entities[#entities + 1] = entity
       end
@@ -216,7 +216,7 @@ function PropProtection:remove_abandoned(key)
 
   if self:find_owner(key) then return end
 
-  for k, v in ipairs(self:get_owned_entities(key)) do
+  for _k, v in ipairs(self:get_owned_entities(key)) do
     if !v.prop_owner_permanent then
       local keep = v:GetPersistent()
 
@@ -278,7 +278,7 @@ end
 -- @return [Boolean whether the action is allowed for all of them, String ID of the rule that
 --   refuses it]
 function PropProtection:can_manipulate_constrained(actor, entity, action, detail)
-  for k, v in pairs(constraint.GetAllConstrainedEntities(entity)) do
+  for _k, v in pairs(constraint.GetAllConstrainedEntities(entity)) do
     if IsValid(v) and v != entity then
       local allowed, rule = self:can_manipulate(actor, v, action, detail)
 

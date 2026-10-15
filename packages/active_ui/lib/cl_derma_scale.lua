@@ -204,7 +204,7 @@ end
 function DermaScale.apply(class_name)
   if !patches[class_name] then return end
 
-  for k, patch in ipairs(patches[class_name]) do
+  for _k, patch in ipairs(patches[class_name]) do
     apply_patch(class_name, patch)
   end
 end
@@ -311,7 +311,7 @@ end)
 DermaScale.replace('DButton', 'SizeToContentsX', function(self, add_value)
   self:PerformLayoutImage()
 
-  local w, h = self:GetContentSize()
+  local w, _h = self:GetContentSize()
 
   self:SetWide(w + s(8) + (add_value or 0))
 end)
@@ -400,7 +400,7 @@ DermaScale.after('DMenu', 'Init', function(panel)
   panel:SetMinimumWidth(s(100))
 end)
 
-DermaScale.after('DMenu', 'AddSpacer', function(panel, spacer)
+DermaScale.after('DMenu', 'AddSpacer', function(_panel, spacer)
   if IsValid(spacer) then
     spacer:SetTall(s(1))
   end
@@ -412,7 +412,7 @@ DermaScale.after('DMenuOption', 'Init', function(panel)
 end)
 
 DermaScale.replace('DMenuOption', 'PerformLayout', function(self, w, h)
-  local content_w, content_h = self:GetContentSize()
+  local content_w, _content_h = self:GetContentSize()
   w = math_max(self:GetParent():GetWide(), content_w + s(30))
 
   self:SetSize(w, s(22))
@@ -453,7 +453,7 @@ function DermaScale.refresh_menu_bar()
 
   menubar.Control:SetTall(s(30))
 
-  for k, child in ipairs(menubar.Control:GetChildren()) do
+  for _k, child in ipairs(menubar.Control:GetChildren()) do
     layout_menu_bar_button(child)
   end
 end
@@ -482,7 +482,7 @@ DermaScale.after('DFrame', 'Init', function(panel)
   panel:DockPadding(s(5), s(24) + s(5), s(5), s(5))
 end)
 
-DermaScale.replace('DFrame', 'PerformLayout', function(self, w, h)
+DermaScale.replace('DFrame', 'PerformLayout', function(self, w, _h)
   w = w or self:GetWide()
 
   local title_push = 0
@@ -727,7 +727,7 @@ DermaScale.after('DCollapsibleCategory', 'Init', function(panel)
   panel:DockMargin(0, 0, 0, s(2))
 end)
 
-DermaScale.after('DCollapsibleCategory', 'Add', function(panel, button)
+DermaScale.after('DCollapsibleCategory', 'Add', function(_panel, button)
   if !IsValid(button) then return end
 
   button:SetTall(s(17))
@@ -744,7 +744,7 @@ DermaScale.after('DForm', 'Init', function(panel)
   panel:SetPadding(s(10))
 end)
 
-DermaScale.after('DForm', 'AddItem', function(panel, result, left, right)
+DermaScale.after('DForm', 'AddItem', function(_panel, _result, left, right)
   if !IsValid(left) then return end
 
   local row = left:GetParent()
@@ -762,19 +762,19 @@ end)
 -- The combo box of a form row fills the row, which sizes itself to its children, so the row
 -- never grows past the height it had at 1080p and clips the scaled combo box and label. Docked
 -- to the top like the text entry of a row, it keeps its own height, which the row then fits.
-DermaScale.after('DForm', 'ComboBox', function(panel, combo_box)
+DermaScale.after('DForm', 'ComboBox', function(_panel, combo_box)
   if DermaScale.factor() > 1 and IsValid(combo_box) then
     combo_box:Dock(TOP)
   end
 end)
 
-DermaScale.after('DForm', 'Help', function(panel, label)
+DermaScale.after('DForm', 'Help', function(_panel, label)
   if IsValid(label) then
     label:DockMargin(s(8), 0, s(8), s(8))
   end
 end)
 
-DermaScale.after('DForm', 'ControlHelp', function(panel, label)
+DermaScale.after('DForm', 'ControlHelp', function(_panel, label)
   if IsValid(label) then
     label:DockMargin(s(32), 0, s(32), s(8))
   end
@@ -850,7 +850,7 @@ DermaScale.after('DColumnSheet', 'Init', function(panel)
   panel.Navigation:DockMargin(s(10), s(10), s(10), 0)
 end)
 
-DermaScale.after('DColumnSheet', 'AddSheet', function(panel, sheet)
+DermaScale.after('DColumnSheet', 'AddSheet', function(_panel, sheet)
   if istable(sheet) and IsValid(sheet.Button) then
     sheet.Button:DockMargin(0, s(1), 0, 0)
   end
@@ -904,7 +904,7 @@ end)
 DermaScale.after('DHTMLControls', 'Init', function(panel)
   local button_size, margin = s(32), s(2)
 
-  for k, name in ipairs({ 'BackButton', 'ForwardButton', 'RefreshButton', 'HomeButton', 'StopButton' }) do
+  for _k, name in ipairs({ 'BackButton', 'ForwardButton', 'RefreshButton', 'HomeButton', 'StopButton' }) do
     local button = panel[name]
 
     if IsValid(button) then
@@ -924,7 +924,7 @@ DermaScale.replace('DModelSelect', 'SetHeight', function(self, rows)
 end)
 
 DermaScale.after('DModelSelect', 'SetModelList', function(panel)
-  for k, icon in ipairs(panel:GetItems()) do
+  for _k, icon in ipairs(panel:GetItems()) do
     if IsValid(icon) then
       icon:SetSize(s(64), s(64))
     end
@@ -957,7 +957,7 @@ DermaScale.after('DColorMixer', 'Init', function(panel)
   panel.WangsPanel:SetWide(s(50))
   panel.WangsPanel:DockMargin(s(4), 0, 0, 0)
 
-  for k, name in ipairs({ 'txtR', 'txtG', 'txtB', 'txtA' }) do
+  for _k, name in ipairs({ 'txtR', 'txtG', 'txtB', 'txtA' }) do
     panel[name]:SetTall(s(20))
 
     if name != 'txtR' then
@@ -972,7 +972,7 @@ DermaScale.after('DColorMixer', 'Init', function(panel)
 end)
 
 DermaScale.after('DColorMixer', 'PerformLayout', function(panel)
-  local left, top, right, bottom = panel.Palette:GetDockMargin()
+  local left, _top, right, _bottom = panel.Palette:GetDockMargin()
 
   panel.Palette:DockMargin(left, s(8), right, 0)
 end)
@@ -997,7 +997,7 @@ DermaScale.after('DColorCombo', 'Init', function(panel)
     panel.Mixer:DockMargin(s(8), 0, s(8), s(8))
   end
 
-  for k, sheet in ipairs(panel.Items or {}) do
+  for _k, sheet in ipairs(panel.Items or {}) do
     if IsValid(sheet.Panel) and sheet.Panel.ClassName == 'DColorPalette' then
       sheet.Panel:DockMargin(s(8), 0, s(8), s(8))
       sheet.Panel:SetButtonSize(s(16))
@@ -1173,7 +1173,7 @@ do
       local x = w * 0.5 - text_w * 0.5
 
       if text_w > (w - buffer * 2) then
-        local mx, my = self:ScreenToLocal(input.GetCursorPos())
+        local mx, _my = self:ScreenToLocal(input.GetCursorPos())
         local diff = text_w - w + buffer * 2
 
         x = buffer + math.Remap(math.Clamp(mx, 0, w), 0, w, 0, -diff)
@@ -1252,7 +1252,7 @@ DermaScale.replace_global('CreateContextMenu', function(...)
   layout:SetSpaceX(s(8))
   layout:SetSpaceY(s(8))
 
-  for k, icon in ipairs(layout:GetChildren()) do
+  for _k, icon in ipairs(layout:GetChildren()) do
     if !icon.WidgetClass then continue end
 
     icon:SetSize(s(80), s(82))
@@ -1270,13 +1270,13 @@ end)
 
 -- Sandbox tool controls.
 
-DermaScale.after('ControlPanel', 'ComboBoxMulti', function(panel, combo_box)
+DermaScale.after('ControlPanel', 'ComboBoxMulti', function(_panel, combo_box)
   if IsValid(combo_box) then
     combo_box:SetTall(s(25))
   end
 end)
 
-DermaScale.after('ControlPanel', 'AddControl', function(panel, control)
+DermaScale.after('ControlPanel', 'AddControl', function(_panel, control)
   if IsValid(control) and control.ClassName == 'CtrlListBox' then
     control:SetTall(s(25))
   end
@@ -1369,7 +1369,7 @@ end)
 DermaScale.replace('MatSelect', 'PerformLayout', function(self)
   self.List:SetPos(0, 0)
 
-  for k, v in pairs(self.List:GetItems()) do
+  for _k, v in pairs(self.List:GetItems()) do
     self:SetItemSize(v)
   end
 
@@ -1652,7 +1652,7 @@ DermaScale.replace_global(
 --- Rebuilds the spawn menu once the fonts have been recreated for the new resolution, since
 -- its panels were sized for the previous one. Panels that are open at that moment keep their
 -- sizes until they are created again.
-hook.Add('OnResolutionChanged', 'DermaScale', function(new_w, new_h, old_w, old_h)
+hook.Add('OnResolutionChanged', 'DermaScale', function(_new_w, new_h, _old_w, old_h)
   if math_max(new_h / 1080, 1) == math_max(old_h / 1080, 1) then return end
 
   timer.Simple(0, function()

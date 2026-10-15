@@ -28,9 +28,9 @@ local CurTime     = CurTime
 local ghost_color = Color(255, 255, 255, 150)
 
 --- Draws the scrolling name of the tool on the screen of the tool gun.
--- @param w [Number width of the screen]
--- @param h [Number height of the screen]
-function Tool:DrawToolScreen(w, h)
+-- @param _w [Number width of the screen]
+-- @param _h [Number height of the screen]
+function Tool:DrawToolScreen(_w, _h)
   surface.SetFont('GModToolScreen')
 
   local text = t('tool.'..self.id..'.name')
@@ -138,7 +138,7 @@ function Tool:ReleaseGhostEntity()
 
   -- This is unused!
   if self.GhostOffset then
-    for k, v in pairs(self.GhostOffset) do
+    for k, _v in pairs(self.GhostOffset) do
       self.GhostOffset[k] = nil
     end
   end
@@ -471,7 +471,7 @@ function Tool:Think()       self:ReleaseGhostEntity() end
 
 --- Clears the selected objects if any of their entities has been removed.
 function Tool:CheckObjects()
-  for k, v in pairs(self.Objects) do
+  for _k, v in pairs(self.Objects) do
     if !v.Ent:IsWorld() and !v.Ent:IsValid() then
       self:ClearObjects()
     end

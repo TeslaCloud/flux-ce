@@ -3,9 +3,9 @@
 
 --- Lowers the player's weapon whenever they switch weapons.
 -- @param actor [Player]
--- @param old_weapon [Weapon]
--- @param new_weapon [Weapon]
-function RaiseGun:PlayerSwitchWeapon(actor, old_weapon, new_weapon)
+-- @param _old_weapon [Weapon]
+-- @param _new_weapon [Weapon]
+function RaiseGun:PlayerSwitchWeapon(actor, _old_weapon, _new_weapon)
   actor:set_weapon_raised(false)
 end
 

@@ -139,7 +139,7 @@ function Stats:default_attribute_points()
   local points = tonumber(Config.get(key)) or tonumber(Config.get_default(key)) or 0
   local highest = 0
 
-  for k, v in pairs(Attributes.get_stored()) do
+  for _k, v in pairs(Attributes.get_stored()) do
     highest = highest + self:get_creation_max(v)
   end
 
@@ -189,7 +189,7 @@ end
 -- @param attribute_id [String ID of the stat]
 -- @return [Number bonus levels, or nil if the stat has no faction bonus]
 function Stats:get_faction_boost(target, attribute_id)
-  for k, v in ipairs(target:get_attribute_boosts(attribute_id)) do
+  for _k, v in ipairs(target:get_attribute_boosts(attribute_id)) do
     if v.id == self.faction_boost_id then
       return tonumber(v.value)
     end
@@ -202,7 +202,7 @@ function Stats:RegisterConditions()
   Conditions:register_condition('attribute', {
     name = 'condition.attribute.name',
     text = 'condition.attribute.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local attribute_name = ''
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local attribute_value = panel.data.attribute_value or ''
@@ -219,7 +219,7 @@ function Stats:RegisterConditions()
 
       return util.process_operator(data.operator, target:get_attribute(data.attribute), tonumber(data.attribute_value))
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.attribute.message1', 'condition.attributes', Attributes.get_stored(),
       function(selector, value)
         selector:add_choice(t(value.name), function()
@@ -245,7 +245,7 @@ function Stats:RegisterConditions()
   Conditions:register_condition('skill', {
     name = 'condition.skill.name',
     text = 'condition.skill.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local skill_name = ''
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local skill_value = panel.data.skill_value or ''
@@ -263,7 +263,7 @@ function Stats:RegisterConditions()
 
       return util.process_operator(data.operator, target:get_skill(data.skill), tonumber(data.skill_value))
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.skill.message1', 'condition.skills', Skills.get_stored(),
       function(selector, value)
         selector:add_choice(t(value.name), function()

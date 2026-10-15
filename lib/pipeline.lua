@@ -103,9 +103,9 @@ function Pipeline.include_folder(id, directory)
     directory = directory..'/'
   end
 
-  local files, dirs = file.Find(directory..'*', 'LUA', 'namedesc')
+  local files, _dirs = file.Find(directory..'*', 'LUA', 'namedesc')
 
-  for k, v in ipairs(files) do
+  for _k, v in ipairs(files) do
     Pipeline.include(pipe, directory..v)
   end
 end

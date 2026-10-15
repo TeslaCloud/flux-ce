@@ -205,9 +205,9 @@ end
 -- compared with the running clock rather than with the old value of the config, because a
 -- code refresh puts the configs back to their defaults without telling the plugin.
 -- @param key [String config key]
--- @param old_value [Any value the config had]
+-- @param _old_value [Any value the config had]
 -- @param new_value [Any value the config is about to get]
-function GameTime:OnConfigSet(key, old_value, new_value)
+function GameTime:OnConfigSet(key, _old_value, new_value)
   local clock = self:get_clock()
 
   if !clock then return end

@@ -135,10 +135,10 @@ end
 -- the client; this is the same check where it counts, since the server asks this hook
 -- before it runs a property. The decision is left to the gamemode for everybody else.
 -- @param actor [Player the player using the property]
--- @param property [String ID of the property, e.g. 'remover']
--- @param entity [Entity the entity the property is used on]
+-- @param _property [String ID of the property, e.g. 'remover']
+-- @param _entity [Entity the entity the property is used on]
 -- @return [Boolean false if the player lacks the permission, nothing otherwise]
-function Bolt:CanProperty(actor, property, entity)
+function Bolt:CanProperty(actor, _property, _entity)
   if IsValid(actor) and !actor:can('context_menu') then
     return false
   end
@@ -147,18 +147,18 @@ end
 --- Keeps players without the 'context_menu' permission from driving entities, which is
 -- started from the context menu. The decision is left to the gamemode for everybody else.
 -- @param actor [Player the player trying to drive]
--- @param entity [Entity the entity to be driven]
+-- @param _entity [Entity the entity to be driven]
 -- @return [Boolean false if the player lacks the permission, nothing otherwise]
-function Bolt:CanDrive(actor, entity)
+function Bolt:CanDrive(actor, _entity)
   if IsValid(actor) and !actor:can('context_menu') then
     return false
   end
 end
 
 --- Registers a permission for every newly created command.
--- @param id [String command ID]
+-- @param _id [String command ID]
 -- @param data [Command command table]
-function Bolt:OnCommandCreated(id, data)
+function Bolt:OnCommandCreated(_id, data)
   self:permission_from_command(data)
 end
 
@@ -178,7 +178,7 @@ function Bolt:RegisterConditions()
   Conditions:register_condition('bolt_role', {
     name = 'condition.role.name',
     text = 'condition.role.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local operator = util.operator_to_symbol(panel.data.operator)
       local parameter = panel.data.role
 
@@ -190,7 +190,7 @@ function Bolt:RegisterConditions()
 
       return util.process_operator(data.operator, target:get_role(), data.role)
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.role.message', 'condition.roles', self:get_roles(),
       function(selector, group)
         selector:add_choice(t(group.name), function()

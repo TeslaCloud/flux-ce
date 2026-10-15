@@ -221,7 +221,7 @@ function string.is_command(str)
   local prefixes = Config.get('command_prefixes') or {}
   local longest
 
-  for k, v in ipairs(prefixes) do
+  for _k, v in ipairs(prefixes) do
     if str:start_with(v) then
       longest = math.max(longest or 0, utf8.len(v))
     end
@@ -406,7 +406,7 @@ function string.parse_table(str, ref)
 
   ref = istable(ref) and ref or _G
 
-  for k, v in ipairs(tables) do
+  for _k, v in ipairs(tables) do
     ref = ref[v]
 
     if !istable(ref) then return false, v end
@@ -432,7 +432,7 @@ function string.parse_parent(str, ref)
 
   ref = istable(ref) and ref or _G
 
-  for k, v in ipairs(tables) do
+  for _k, v in ipairs(tables) do
     local new_ref = ref[v]
 
     if !istable(new_ref) then return ref, v end

@@ -14,8 +14,8 @@ local tick_count = engine.TickCount
 -- plugin is loaded, which passes the location to `PostPlayerTakeDamage`.
 -- @param victim [Player]
 -- @param hitgroup [Number HITGROUP_ enum of the body part that was hit]
--- @param damage_info [CTakeDamageInfo]
-function Limbs:ScalePlayerDamage(victim, hitgroup, damage_info)
+-- @param _damage_info [CTakeDamageInfo]
+function Limbs:ScalePlayerDamage(victim, hitgroup, _damage_info)
   if Damage then return end
 
   victim.limb_hitgroup = hitgroup
@@ -25,8 +25,8 @@ end
 --- Remembers the health of a player who is about to take damage, so that the health they
 -- actually lose is known once the damage has been dealt. The damage is left as it is.
 -- @param entity [Entity the entity that is about to take damage]
--- @param damage_info [CTakeDamageInfo]
-function Limbs:EntityTakeDamage(entity, damage_info)
+-- @param _damage_info [CTakeDamageInfo]
+function Limbs:EntityTakeDamage(entity, _damage_info)
   if IsValid(entity) and entity:IsPlayer() then
     entity.limb_health_before = entity:Health()
     entity.limb_health_tick = tick_count()
@@ -121,9 +121,9 @@ end
 
 --- Resets the limbs of a player who dies, before their character is saved.
 -- @param victim [Player]
--- @param attacker [Entity]
--- @param damage_info [CTakeDamageInfo]
-function Limbs:DoPlayerDeath(victim, attacker, damage_info)
+-- @param _attacker [Entity]
+-- @param _damage_info [CTakeDamageInfo]
+function Limbs:DoPlayerDeath(victim, _attacker, _damage_info)
   self:reset(victim)
 end
 

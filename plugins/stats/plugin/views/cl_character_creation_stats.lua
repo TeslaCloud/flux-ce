@@ -29,7 +29,7 @@ local function create_icon(parent, icon, size)
     local panel = vgui.Create('DPanel', parent)
     panel:SetSize(size, size)
     panel:SetMouseInputEnabled(false)
-    panel.Paint = function(pnl, w, h)
+    panel.Paint = function(_pnl, w, h)
       FontAwesome:draw(icon, w * 0.5, h * 0.5, icon_size, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
@@ -90,7 +90,7 @@ function PANEL:on_open(parent)
   self.attributes_list:DockMargin(0, 0, 0, math_scale(48))
   self.attributes_list:Dock(LEFT)
   self.attributes_list:GetCanvas():DockPadding(math_scale_x(4), math_scale(4), math_scale_x(4), math_scale(4))
-  self.attributes_list.Paint = function(pnl, w, h)
+  self.attributes_list.Paint = function(_pnl, w, h)
     draw.RoundedBox(0, 0, 0, w, h, panel_background)
   end
 
@@ -99,7 +99,7 @@ function PANEL:on_open(parent)
   self.attribute_panel:DockMargin(0, 0, 0, math_scale(48))
   self.attribute_panel:Dock(RIGHT)
   self.attribute_panel:GetCanvas():DockPadding(math_scale_x(48), math_scale(32), math_scale_x(48), math_scale(32))
-  self.attribute_panel.Paint = function(pnl, w, h)
+  self.attribute_panel.Paint = function(_pnl, w, h)
     draw.RoundedBox(0, 0, 0, w, h, panel_background)
   end
 
@@ -182,7 +182,7 @@ function PANEL:on_open(parent)
 
     local active_effects = {}
 
-    for k, v in ipairs(selected_attribute.effects or {}) do
+    for _k, v in ipairs(selected_attribute.effects or {}) do
       if !isfunction(v.is_active) or v.is_active() then
         table.insert(active_effects, v)
       end
@@ -199,7 +199,7 @@ function PANEL:on_open(parent)
       effect_title:Dock(TOP)
       effect_title:SetTall(effect_title:GetTall() + math_scale(32))
 
-      for k, v in ipairs(active_effects) do
+      for _k, v in ipairs(active_effects) do
         local effect = vgui.Create('DLabel', pnl)
         effect:SetText(t(v.text)..' '..t(v.get_value(effect_level)))
         effect:SetFont(get_font('text_normal'))
@@ -222,7 +222,7 @@ function PANEL:on_open(parent)
       end
     end
 
-    stat_line.OnMousePressed = function(pnl)
+    stat_line.OnMousePressed = function(_pnl)
       if selected_attribute != v then
         selected_attribute = v
 
@@ -235,7 +235,7 @@ function PANEL:on_open(parent)
     counter:set_value(v.default)
     counter:set_min_max(v.min, Stats:get_creation_max(v))
     counter:set_font(get_font('main_menu_titles'))
-    counter.on_click = function(btn, new_value, old_value)
+    counter.on_click = function(_btn, new_value, old_value)
       local diff = new_value - old_value
 
       if selected_attribute != v then
@@ -251,7 +251,7 @@ function PANEL:on_open(parent)
       end
     end
 
-    counter.post_click = function(pnl)
+    counter.post_click = function(_pnl)
       self.attribute_panel:rebuild()
     end
 
@@ -281,11 +281,11 @@ function PANEL:on_open(parent)
   self.random:SetFont(get_font('text_normal'))
   self.random:SetTitle(t'ui.char_create.stats_random')
   self.random:SetDrawBackground(false)
-  self.random.DoClick = function(btn)
+  self.random.DoClick = function(_btn)
     local cur_time = CurTime()
 
     if !self.random.next_click or self.random.next_click <= cur_time then
-      for k, v in pairs(self.stats) do
+      for _k, v in pairs(self.stats) do
         local number = v.counter:get_value()
 
         if number > v.attribute_table.min then
@@ -353,7 +353,7 @@ end
 function PANEL:on_validate()
   local sum = 0
 
-  for k, v in pairs(self.stats) do
+  for _k, v in pairs(self.stats) do
     sum = sum + v.counter:get_value()
   end
 

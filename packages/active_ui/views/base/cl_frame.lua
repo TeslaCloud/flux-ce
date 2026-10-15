@@ -27,7 +27,7 @@ function PANEL:Init()
   self.button_close:set_centered(true)
   self.button_close:SetDrawBackground(false)
   self.button_close:SetTooltip(t'ui.close')
-  self.button_close.DoClick = function(btn)
+  self.button_close.DoClick = function(_btn)
     self:safe_remove()
   end
 end
@@ -42,8 +42,8 @@ end
 
 --- Keeps the close button centered in the right end of the header.
 -- @param w [Number panel width]
--- @param h [Number panel height]
-function PANEL:PerformLayout(w, h)
+-- @param _h [Number panel height]
+function PANEL:PerformLayout(w, _h)
   if IsValid(self.button_close) then
     local header = Theme.get_option('frame_header_size', math.scale(36))
     local size = self:get_close_button_size()
@@ -97,8 +97,8 @@ end
 
 --- Makes the frame draggable with the mouse. The argument is currently ignored: dragging
 -- is always turned on and cannot be turned off again through this method.
--- @param bool [Boolean ignored]
-function PANEL:set_draggable(bool)
+-- @param _bool [Boolean ignored]
+function PANEL:set_draggable(_bool)
   self.draggable = true
 end
 

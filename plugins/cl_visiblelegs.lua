@@ -62,10 +62,10 @@ end
 
 --- Removes the local player's legs model whenever any player's model changes.
 -- It is recreated with the current model the next time the legs are rendered.
--- @param target [Player the player whose model has changed]
--- @param new_model [String new model path]
--- @param old_model [String previous model path]
-function VisibleLegs:PlayerModelChanged(target, new_model, old_model)
+-- @param _target [Player the player whose model has changed]
+-- @param _new_model [String new model path]
+-- @param _old_model [String previous model path]
+function VisibleLegs:PlayerModelChanged(_target, _new_model, _old_model)
   if PLAYER.legs then
     PLAYER.legs:Remove()
   end

@@ -18,15 +18,15 @@ end
 
 --- Takes a player out of gamemaster mode once a character has become their active one.
 -- @param owner [Player]
--- @param character [Character]
-function Gamemastery:OnActiveCharacterSet(owner, character)
+-- @param _character [Character]
+function Gamemastery:OnActiveCharacterSet(owner, _character)
   Gamemastery.exit_mode(owner)
 end
 
 --- Moves a player who has possessed a pool character back to where they possessed it.
 -- @param owner [Player]
--- @param character [Character]
-function Gamemastery:PostCharacterLoaded(owner, character)
+-- @param _character [Character]
+function Gamemastery:PostCharacterLoaded(owner, _character)
   if owner.gm_transform then
     Gamemastery.apply_transform(owner)
   end
@@ -35,10 +35,10 @@ end
 --- Keeps the Spawn Saver plugin from moving a player who is about to be put where they
 -- possessed a pool character.
 -- @param target [Player]
--- @param character [Character]
--- @param spawn_point [Map]
+-- @param _character [Character]
+-- @param _spawn_point [Map]
 -- @return [Boolean false while a position is kept for the player, otherwise nil]
-function Gamemastery:ShouldRestorePlayerSpawn(target, character, spawn_point)
+function Gamemastery:ShouldRestorePlayerSpawn(target, _character, _spawn_point)
   if target.gm_transform then
     return false
   end
@@ -46,9 +46,9 @@ end
 
 --- Forgets who played a pool character that its player switches away from.
 -- @param owner [Player]
--- @param new_char [Character the character that is about to become active]
+-- @param _new_char [Character the character that is about to become active]
 -- @param old_char [Character the character that is still active]
-function Gamemastery:OnCharacterChange(owner, new_char, old_char)
+function Gamemastery:OnCharacterChange(owner, _new_char, old_char)
   if istable(old_char) and old_char.possessed_by == owner then
     old_char.possessed_by = nil
 
@@ -84,17 +84,17 @@ end
 
 --- Brings a player whose role has changed in line with their permission.
 -- @param target [Player]
--- @param group [Role]
--- @param old_group [Role]
-function Gamemastery:PlayerUserGroupChanged(target, group, old_group)
+-- @param _group [Role]
+-- @param _old_group [Role]
+function Gamemastery:PlayerUserGroupChanged(target, _group, _old_group)
   Gamemastery.refresh(target)
 end
 
 --- Brings a player whose 'gamemastery' permission has been set individually in line with it.
 -- @param target [Player]
 -- @param perm_id [String]
--- @param value [Number]
-function Gamemastery:PlayerPermissionChanged(target, perm_id, value)
+-- @param _value [Number]
+function Gamemastery:PlayerPermissionChanged(target, perm_id, _value)
   if perm_id == 'gamemastery' then
     Gamemastery.refresh(target)
   end
@@ -133,10 +133,10 @@ function Gamemastery:PreCreateCharacter(actor, data)
 end
 
 --- Refuses a pool character while the pool is not ready to take it.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param data [Map creation data]
 -- @return [Number CHAR_ERR_RECORD when the pool cannot take the character, otherwise nil]
-function Gamemastery:PlayerCreateCharacter(actor, data)
+function Gamemastery:PlayerCreateCharacter(_actor, data)
   if data.gamemaster and !Gamemastery.is_pool_ready() then
     return CHAR_ERR_RECORD
   end
@@ -156,10 +156,10 @@ end
 
 --- Sends the pool to the gamemasters once a new pool character has been saved for the first
 -- time and has its ID.
--- @param owner [Player]
+-- @param _owner [Player]
 -- @param char [Character]
--- @param char_data [Map]
-function Gamemastery:PostCreateCharacter(owner, char, char_data)
+-- @param _char_data [Map]
+function Gamemastery:PostCreateCharacter(_owner, char, _char_data)
   if !Gamemastery.is_pool_character(char) then return end
 
   --- Sends the pool once the new pool character has been inserted into the database.
@@ -181,11 +181,11 @@ end
 
 --- Lets gamemasters play pool characters of factions that are full.
 -- @param actor [Player]
--- @param faction_table [Faction]
--- @param rank_table [Map]
+-- @param _faction_table [Faction]
+-- @param _rank_table [Map]
 -- @param character [Character]
 -- @return [Boolean true for a gamemaster and a pool character, otherwise nil]
-function Gamemastery:PlayerCanBypassFactionLimit(actor, faction_table, rank_table, character)
+function Gamemastery:PlayerCanBypassFactionLimit(actor, _faction_table, _rank_table, character)
   if Gamemastery.is_pool_character(character) and Gamemastery.is_gamemaster(actor) then
     return true
   end

@@ -62,7 +62,7 @@ function Log:to_discord(type, message)
 
     local hooks = Webhook:get_type(string.lower(type))
 
-    for k, v in ipairs(hooks) do
+    for _k, v in ipairs(hooks) do
       v:push(message)
     end
   end
@@ -79,7 +79,7 @@ end
 -- @return [Log the Log class, for chaining]
 -- @see [Log:write]
 function Log:print(message, action, object, subject)
-  return self:write(message, action, object, subject, function(message, action, object, subject)
+  return self:write(message, action, object, subject, function(message, action, _object, _subject)
     local prefix = (isstring(action) and action:capitalize()..' - ' or '')
 
     replication_data = { type = 'print' }
@@ -112,7 +112,7 @@ end
 -- @return [Log the Log class, for chaining]
 -- @see [Log:write]
 function Log:colored(color, message, action, object, subject)
-  return self:write(message, action, object, subject, function(message, action, object, subject)
+  return self:write(message, action, object, subject, function(message, action, _object, _subject)
     MsgC(color, (isstring(action) and action:capitalize()..' - ' or '')..message)
 
     replication_data = { type = 'colored', color = color }
@@ -147,7 +147,7 @@ function Log:replicate(condition)
 
   local has_condition = isfunction(condition)
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if !has_condition or condition(v) then
       Cable.send(
         v,

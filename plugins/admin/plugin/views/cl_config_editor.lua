@@ -56,7 +56,7 @@ function PANEL:Init()
     return first.name < second.name
   end)
 
-  for k, v in ipairs(categories) do
+  for _k, v in ipairs(categories) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
     collapsible_category:SetLabel(v.name)
     collapsible_category:DockMargin(0, 0, 0, math.scale(6))
@@ -119,7 +119,7 @@ function PANEL:Init()
   self.reset_button:SetTooltip(t'ui.admin.config.reset')
   self.reset_button:set_icon('fa-undo')
   self.reset_button:set_centered(true)
-  self.reset_button.DoClick = function(btn)
+  self.reset_button.DoClick = function(_btn)
     if self.key then
       Cable.send('fl_config_reset', self.key)
     end
@@ -217,7 +217,7 @@ function PANEL:add_flag(icon, tooltip, on_click)
   flag:set_centered(true)
 
   if on_click then
-    flag.DoClick = function(btn)
+    flag.DoClick = function(_btn)
       on_click()
     end
   end
@@ -297,7 +297,7 @@ function PANEL:create_control()
     label:SetContentAlignment(5)
 
     self.control = label
-    self.update_control = function(value)
+    self.update_control = function(_value)
       label:SetText(Config.get(key) != nil and Config.display_value(key) or '')
     end
   elseif data_type == 'number' then
@@ -315,7 +315,7 @@ function PANEL:create_control()
       pnl.Label:SetWide(0)
     end
 
-    slider.OnValueChanged = function(pnl, value)
+    slider.OnValueChanged = function(_pnl, _value)
       if !self.updating then
         self.send_at = CurTime() + 0.5
       end
@@ -367,7 +367,7 @@ function PANEL:create_control()
     local values = {}
 
     combo_box:SetSortItems(false)
-    combo_box.OnSelect = function(pnl, index, text, position)
+    combo_box.OnSelect = function(_pnl, _index, _text, position)
       local new_values = table.Copy(values)
 
       if position == 0 then
@@ -413,13 +413,13 @@ function PANEL:create_control()
 
     combo_box:SetSortItems(false)
 
-    for k, v in ipairs(choices) do
+    for _k, v in ipairs(choices) do
       if isstring(v) or isnumber(v) then
         combo_box:AddChoice(t(tostring(v)), v)
       end
     end
 
-    combo_box.OnSelect = function(pnl, index, text, value)
+    combo_box.OnSelect = function(_pnl, _index, _text, value)
       Cable.send('fl_config_change', key, value)
     end
 

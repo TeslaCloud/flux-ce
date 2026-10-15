@@ -33,12 +33,12 @@ local logo_data = {
   x = 0,
   y = 0
 }
-local w_mod, h_mod = 6, 1.1
+local _w_mod, _h_mod = 6, 1.1
 local cur_radius, cur_alpha = 0, 0
 local exx, exy = 0, 0
 local color = Color(140, 0, 220)
 local remove_alpha = 255
-local delta_modifier = 80
+local _delta_modifier = 80
 local logo_tween = Tween.new(1.5, logo_data, { width = logo_w * 0.6, height = logo_h * 0.6 }, 'inOutCubic')
 
 --- Draws the shrinking logo on a black background and the expanding circle effect, and
@@ -76,7 +76,7 @@ function PANEL:Paint(w, h)
         sound.PlayFile(
           'sound/ambient/machines/thumper_hit.wav',
           'noplay noblock',
-          function(channel, error, err_string)
+          function(channel, _error, _err_string)
             if channel then
               channel:SetVolume(0.5)
               channel:Play()

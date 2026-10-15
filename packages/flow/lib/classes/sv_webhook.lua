@@ -80,7 +80,7 @@ end
 function Webhook:get_type(type)
   local ret = {}
 
-  for k, v in pairs(self.hooks) do
+  for _k, v in pairs(self.hooks) do
     if v:is_type(type) then
       ret[#ret + 1] = v
     end

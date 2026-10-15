@@ -104,7 +104,7 @@ function Tasks.migrate_status()
   print(' Status   Migration ID    Migration Name')
   print('--------------------------------------------------')
 
-  for k, v in ipairs(Tasks.context():migrations_status()) do
+  for _k, v in ipairs(Tasks.context():migrations_status()) do
     print(string.format('%8s  %-14s  %s', v.status, v.version, v.name))
   end
 
@@ -253,14 +253,14 @@ local tasks = {
   ['migrate:up']      = function(env) return Tasks.migrate_up(env.VERSION) end,
   ['migrate:down']    = function(env) return Tasks.migrate_down(env.VERSION) end,
   ['migrate:redo']    = function(env) return Tasks.redo(env.STEP, env.VERSION) end,
-  ['migrate:status']  = function(env) return Tasks.migrate_status() end,
+  ['migrate:status']  = function(_env) return Tasks.migrate_status() end,
   ['rollback']        = function(env) return Tasks.rollback(env.STEP) end,
   ['forward']         = function(env) return Tasks.forward(env.STEP) end,
-  ['version']         = function(env) return Tasks.version() end,
-  ['schema:dump']     = function(env) return Tasks.schema_dump() end,
-  ['schema:load']     = function(env) return Tasks.schema_load() end,
-  ['create']          = function(env) return ActiveRecord.Database:setup(ActiveRecord.db_settings) end,
-  ['drop']            = function(env) return ActiveRecord.Database:drop_database(ActiveRecord.db_settings) end
+  ['version']         = function(_env) return Tasks.version() end,
+  ['schema:dump']     = function(_env) return Tasks.schema_dump() end,
+  ['schema:load']     = function(_env) return Tasks.schema_load() end,
+  ['create']          = function(_env) return ActiveRecord.Database:setup(ActiveRecord.db_settings) end,
+  ['drop']            = function(_env) return ActiveRecord.Database:drop_database(ActiveRecord.db_settings) end
 }
 
 -- Tasks that need a connected database.

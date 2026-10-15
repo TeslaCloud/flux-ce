@@ -41,7 +41,7 @@ do
       local font_small = Theme.get_font('text_small')
       local font_smaller = Theme.get_font('text_smaller')
 
-      for k, v in player.Iterator() do
+      for _k, v in player.Iterator() do
         if v == PLAYER then continue end
 
         local pos = v:GetPos()

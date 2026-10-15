@@ -2,15 +2,15 @@
 -- by the server.
 
 --- Blocks the default noclip clientside, since observer mode is handled by the server.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @return [Boolean always false]
-function Observer:PlayerEnterNoclip(actor)
+function Observer:PlayerEnterNoclip(_actor)
   return false
 end
 
 --- Blocks the default noclip clientside, since observer mode is handled by the server.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @return [Boolean always false]
-function Observer:PlayerExitNoclip(actor)
+function Observer:PlayerExitNoclip(_actor)
   return false
 end

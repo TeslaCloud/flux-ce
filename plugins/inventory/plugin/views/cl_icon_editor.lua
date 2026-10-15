@@ -9,10 +9,10 @@ local math_scale_x = math.scale_x
 local math_round = math.round
 
 --- Draws the sunken card behind a part of the editor.
--- @param pnl [Panel]
+-- @param _pnl [Panel]
 -- @param w [Number]
 -- @param h [Number]
-local function paint_well(pnl, w, h)
+local function paint_well(_pnl, w, h)
   Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius_small'), Theme.get_color('surface_sunken'))
 end
 
@@ -161,7 +161,7 @@ function PANEL:Init()
   self.slot_size:SetMinMax(1, 512)
   self.slot_size:SetDecimals(0)
   self.slot_size:SetValue(64)
-  self.slot_size.OnValueChanged = function(pnl, value)
+  self.slot_size.OnValueChanged = function(_pnl, _value)
     self.item:rebuild()
   end
 
@@ -171,7 +171,7 @@ function PANEL:Init()
   self.width:SetMinMax(1, 16)
   self.width:SetDecimals(0)
   self.width:SetValue(1)
-  self.width.OnValueChanged = function(pnl, value)
+  self.width.OnValueChanged = function(_pnl, _value)
     self.item:rebuild()
   end
 
@@ -181,7 +181,7 @@ function PANEL:Init()
   self.height:SetMinMax(1, 16)
   self.height:SetDecimals(0)
   self.height:SetValue(1)
-  self.height.OnValueChanged = function(pnl, value)
+  self.height.OnValueChanged = function(_pnl, _value)
     self.item:rebuild()
   end
 
@@ -195,7 +195,7 @@ function PANEL:Init()
   self.item.LayoutEntity = function()
   end
 
-  self.item.PaintOver = function(pnl, w, h)
+  self.item.PaintOver = function(_pnl, w, h)
     surface.SetDrawColor(Theme.get_color('accent_light'))
     surface.DrawOutlinedRect(0, 0, w, h)
   end

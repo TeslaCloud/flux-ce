@@ -45,7 +45,7 @@ function flux_player:GetHandsModel()
 
   local stripped_model = string.gsub(player_model, '_', '')
 
-  for k, v in pairs(model_list) do
+  for _k, v in pairs(model_list) do
     if string.find(stripped_model, v) then
       model_list[player_model] = v
 
@@ -57,9 +57,9 @@ function flux_player:GetHandsModel()
 end
 
 --- Draws the hands of the local player after the view model has been drawn.
--- @param viewmodel [Entity]
+-- @param _viewmodel [Entity]
 -- @param weapon [Weapon]
-function flux_player:PostDrawViewModel(viewmodel, weapon)
+function flux_player:PostDrawViewModel(_viewmodel, weapon)
   if weapon.UseHands or !weapon:IsScripted() then
     local hands_entity = PLAYER:GetHands()
 

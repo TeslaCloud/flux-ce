@@ -84,10 +84,10 @@ end
 
 --- Gives a new character level 1 and no experience, so that the record has them from the
 -- moment it is first saved.
--- @param owner [Player]
+-- @param _owner [Player]
 -- @param char [Character the character being created]
--- @param char_data [Map character creation data]
-function Levels:PostCreateCharacter(owner, char, char_data)
+-- @param _char_data [Map character creation data]
+function Levels:PostCreateCharacter(_owner, char, _char_data)
   char.level = 1
   char.experience = 0
 end
@@ -96,8 +96,8 @@ end
 -- level and experience, raises it to the level floor, levels it up with its kept experience
 -- as far as the level cap allows and applies its maximum health.
 -- @param owner [Player]
--- @param character [Character]
-function Levels:OnActiveCharacterSet(owner, character)
+-- @param _character [Character]
+function Levels:OnActiveCharacterSet(owner, _character)
   Levels.update_points(owner)
   Levels.sync(owner)
   Levels.apply_server_level(owner)
@@ -107,8 +107,8 @@ end
 
 --- Takes the networked level and experience of a character away from the player who drops it.
 -- @param owner [Player]
--- @param character [Character the character that is being dropped]
-function Levels:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Levels:OnActiveCharacterCleared(owner, _character)
   owner:set_private_nv('level', nil)
   owner:set_private_nv('experience', nil)
 end
@@ -127,10 +127,10 @@ end
 --- Brings the character of every player in line with the new server level: raises it to
 -- the new level floor and levels it up with its kept experience as far as the new level cap
 -- allows.
--- @param level [Number new server level]
--- @param old_level [Number server level before the change]
-function Levels:ServerLevelChanged(level, old_level)
-  for k, v in player.Iterator() do
+-- @param _level [Number new server level]
+-- @param _old_level [Number server level before the change]
+function Levels:ServerLevelChanged(_level, _old_level)
+  for _k, v in player.Iterator() do
     if v:is_character_loaded() then
       Levels.apply_server_level(v)
     end
@@ -140,8 +140,8 @@ end
 --- Applies the maximum health again once the Characters plugin has given the player the
 -- health saved with the character, so that saved health above the maximum is cut down.
 -- @param owner [Player]
--- @param character [Character]
-function Levels:PostCharacterLoaded(owner, character)
+-- @param _character [Character]
+function Levels:PostCharacterLoaded(owner, _character)
   self:apply_max_health(owner)
 end
 
@@ -155,8 +155,8 @@ end
 --- Applies the maximum health of a living player again when it has changed for a reason
 -- that runs no hook, such as a boost to their endurance that has been given or has expired.
 -- @param actor [Player]
--- @param cur_time [Number current CurTime()]
-function Levels:PlayerOneSecond(actor, cur_time)
+-- @param _cur_time [Number current CurTime()]
+function Levels:PlayerOneSecond(actor, _cur_time)
   if !actor:Alive() or !actor:is_character_loaded() then return end
 
   if actor:GetMaxHealth() != self:get_max_health(actor) then
@@ -167,9 +167,9 @@ end
 --- Applies the maximum health of the new level. A player who has gone up and is alive is
 -- healed by as much as the maximum has grown.
 -- @param actor [Player]
--- @param level [Number new level]
--- @param old_level [Number level before the change]
-function Levels:PlayerLevelChanged(actor, level, old_level)
+-- @param _level [Number new level]
+-- @param _old_level [Number level before the change]
+function Levels:PlayerLevelChanged(actor, _level, _old_level)
   local old_max_health = actor:GetMaxHealth()
   local max_health = self:apply_max_health(actor)
 
@@ -181,9 +181,9 @@ end
 --- Applies the maximum health again when the endurance of a player has changed.
 -- @param actor [Player]
 -- @param attribute_id [String]
--- @param level [Number]
--- @param old_level [Number]
-function Levels:PlayerAttributeChanged(actor, attribute_id, level, old_level)
+-- @param _level [Number]
+-- @param _old_level [Number]
+function Levels:PlayerAttributeChanged(actor, attribute_id, _level, _old_level)
   if attribute_id == 'endurance' then
     self:apply_max_health(actor)
   end
@@ -192,10 +192,10 @@ end
 --- Makes the Factions plugin use the maximum health of the player's level instead of the
 -- one of their faction and rank.
 -- @param target [Player]
--- @param max_health [Number maximum health of the faction and rank, or nil]
+-- @param _max_health [Number maximum health of the faction and rank, or nil]
 -- @return [Number maximum health of the player's level, nil for a player without an active
 --   character]
-function Levels:GetPlayerMaxHealth(target, max_health)
+function Levels:GetPlayerMaxHealth(target, _max_health)
   if IsValid(target) and target:is_character_loaded() then
     return self:get_max_health(target)
   end
@@ -207,9 +207,9 @@ end
 -- floor when a config of the server level changes. The hook runs before the new value is
 -- stored, so the work waits for the next tick, when `Config.get` returns the new value.
 -- @param key [String config key]
--- @param old_value [Any]
--- @param new_value [Any]
-function Levels:OnConfigSet(key, old_value, new_value)
+-- @param _old_value [Any]
+-- @param _new_value [Any]
+function Levels:OnConfigSet(key, _old_value, _new_value)
   if !server_configs[key] and !health_configs[key] and !point_configs[key] then return end
 
   timer.Simple(0, function()
@@ -217,7 +217,7 @@ function Levels:OnConfigSet(key, old_value, new_value)
       Levels.check_server_level()
     end
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if IsValid(v) and v:is_character_loaded() then
         if server_configs[key] then
           Levels.apply_server_level(v)
@@ -264,8 +264,8 @@ end
 -- tenth of the maximum health of the NPC but never by less than 1.
 -- @param npc [NPC the NPC that was killed]
 -- @param attacker [Entity]
--- @param inflictor [Entity]
-function Levels:OnNPCKilled(npc, attacker, inflictor)
+-- @param _inflictor [Entity]
+function Levels:OnNPCKilled(npc, attacker, _inflictor)
   if !IsValid(npc) or !can_gain_combat_experience(attacker) then return end
 
   local per_kill = math_max(tonumber(config_get('levels_experience_per_kill', 50)) or 0, 0)

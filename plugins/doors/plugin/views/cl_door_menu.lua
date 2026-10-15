@@ -58,7 +58,7 @@ function PANEL:set_door(entity, conditions)
 
       if row then
         row:SetValue(value)
-        row.DataChanged = function(pnl, data)
+        row.DataChanged = function(_pnl, data)
           self.door_data[k] = data
         end
       end

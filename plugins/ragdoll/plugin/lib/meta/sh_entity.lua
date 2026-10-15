@@ -17,7 +17,7 @@ function entity_meta:get_ragdoll_owner()
     return
   end
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if v:GetDTEntity(ENT_RAGDOLL) == self then
       return v
     end

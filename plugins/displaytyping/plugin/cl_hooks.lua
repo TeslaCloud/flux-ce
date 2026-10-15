@@ -10,25 +10,25 @@ function DisplayTyping:ChatTextChanged(new_text)
 end
 
 --- Has the look of the bubbles read from the theme again once it has been loaded.
--- @param current_theme [ThemeBase]
-function DisplayTyping:OnThemeLoaded(current_theme)
+-- @param _current_theme [ThemeBase]
+function DisplayTyping:OnThemeLoaded(_current_theme)
   self:invalidate_metrics()
 end
 
 --- Has the sizes of the bubbles worked out again for the new size of the screen.
--- @param old_width [Number previous screen width]
--- @param old_height [Number previous screen height]
--- @param new_width [Number new screen width]
--- @param new_height [Number new screen height]
-function DisplayTyping:OnScreenSizeChanged(old_width, old_height, new_width, new_height)
+-- @param _old_width [Number previous screen width]
+-- @param _old_height [Number previous screen height]
+-- @param _new_width [Number new screen width]
+-- @param _new_height [Number new screen height]
+function DisplayTyping:OnScreenSizeChanged(_old_width, _old_height, _new_width, _new_height)
   self:invalidate_metrics()
 end
 
 --- Has the bubbles show or hide the live text when the local player switches the setting.
 -- @param id [String setting id]
--- @param value [Any new value of the setting]
--- @param old_value [Any previous value of the setting]
-function DisplayTyping:ClientSettingChanged(id, value, old_value)
+-- @param _value [Any new value of the setting]
+-- @param _old_value [Any previous value of the setting]
+function DisplayTyping:ClientSettingChanged(id, _value, _old_value)
   if id == 'display_typing_live_text' then
     self:invalidate_metrics()
   end
@@ -37,9 +37,9 @@ end
 --- Has the bubbles show or hide the live text when the server switches the
 -- 'display_exact_message' config.
 -- @param key [String config key]
--- @param old_value [Any value the client had before]
--- @param new_value [Any value that has been received]
-function DisplayTyping:OnConfigReceived(key, old_value, new_value)
+-- @param _old_value [Any value the client had before]
+-- @param _new_value [Any value that has been received]
+function DisplayTyping:OnConfigReceived(key, _old_value, _new_value)
   if key == 'display_exact_message' then
     self:invalidate_metrics()
   end

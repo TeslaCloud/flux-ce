@@ -302,7 +302,7 @@ do
 
     compile_hold_type(data, compiled, 'normal')
 
-    for hold_type, v in pairs(hold_type_parents) do
+    for hold_type, _v in pairs(hold_type_parents) do
       compile_hold_type(data, compiled, hold_type)
     end
 
@@ -312,7 +312,7 @@ do
       end
     end
 
-    for k, v in pairs(compiled) do
+    for _k, v in pairs(compiled) do
       if istable(v) and istable(v.fidgets) and #v.fidgets > 0 then
         compiled.has_fidgets = true
       end
@@ -401,10 +401,10 @@ do
 
   --- Returns the hold type of a weapon translated to one of the hold types used by
   -- the animation tables. The result is cached on the weapon until its HoldType changes.
-  -- @param owner [Player the player who holds the weapon, currently unused]
+  -- @param _owner [Player the player who holds the weapon, currently unused]
   -- @param weapon [Weapon]
   -- @return [String lower case hold type, 'normal' if the weapon is not valid]
-  function Flux.Anim.get_weapon_hold_type(owner, weapon)
+  function Flux.Anim.get_weapon_hold_type(_owner, weapon)
     if !IsValid(weapon) then return 'normal' end
 
     local raw_hold_type = weapon.HoldType

@@ -15,10 +15,10 @@ local stored = {}
 -- @param text [String the text being checked]
 -- @return [Boolean false if the text starts with a registered prefix, nil otherwise]
 function Prefixes:StringIsCommand(text)
-  for k, v in pairs(stored) do
+  for _k, v in pairs(stored) do
     local prefix_table = istable(v.prefix) and v.prefix or { v.prefix }
 
-    for k2, prefix in ipairs(prefix_table) do
+    for _k2, prefix in ipairs(prefix_table) do
       if text:start_with(prefix) then
         return false
       end
@@ -40,7 +40,7 @@ if SERVER then
       for k, v in pairs(stored) do
         local prefix_table = istable(v.prefix) and v.prefix or { v.prefix }
 
-        for k2, v2 in pairs(prefix_table) do
+        for _k2, v2 in pairs(prefix_table) do
           if lower_text:start_with(v2) or v.check and v.check(text) then
             return self:process_prefix(actor, k, v2, text, team_chat)
           end

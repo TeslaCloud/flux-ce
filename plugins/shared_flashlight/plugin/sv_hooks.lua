@@ -6,9 +6,9 @@
 -- player's current state decides which way the toggle goes. Does nothing while the
 -- `shared_flashlight_enabled` config is off, which leaves the decision to the base gamemode.
 -- @param actor [Player]
--- @param on [Boolean whether the engine flashlight is being turned on]
+-- @param _on [Boolean whether the engine flashlight is being turned on]
 -- @return [Boolean false while the plugin is enabled, nil otherwise]
-function SharedFlashlight:PlayerSwitchedFlashlight(actor, on)
+function SharedFlashlight:PlayerSwitchedFlashlight(actor, _on)
   if !self:is_enabled() then return end
 
   actor:set_flashlight(!actor:is_flashlight_on())
@@ -18,9 +18,9 @@ end
 
 --- Puts the flashlight of a player out when they die.
 -- @param victim [Player]
--- @param inflictor [Entity]
--- @param attacker [Entity]
-function SharedFlashlight:PlayerDeath(victim, inflictor, attacker)
+-- @param _inflictor [Entity]
+-- @param _attacker [Entity]
+function SharedFlashlight:PlayerDeath(victim, _inflictor, _attacker)
   victim:set_flashlight(false)
 end
 
@@ -50,11 +50,11 @@ end
 --- Puts every shared flashlight out when the `shared_flashlight_enabled` config is turned
 -- off, so that nobody keeps a light the engine flashlight has taken over from.
 -- @param key [String key of the config that has changed]
--- @param old_value [Any]
+-- @param _old_value [Any]
 -- @param new_value [Any]
-function SharedFlashlight:OnConfigSet(key, old_value, new_value)
+function SharedFlashlight:OnConfigSet(key, _old_value, new_value)
   if key == 'shared_flashlight_enabled' and !new_value then
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if IsValid(v:get_flashlight()) then
         v:set_flashlight(false)
       end

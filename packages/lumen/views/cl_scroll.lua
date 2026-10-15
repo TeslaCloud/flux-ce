@@ -48,11 +48,11 @@ function PANEL:PerformLayout(w, h)
   local canvas = self:GetCanvas()
   local bar = self.VBar
   local children = Lumen.Layout.children_of(self)
-  local content_w, content_h = Lumen.Layout.flex(style, children, w, nil, false)
+  local _content_w, content_h = Lumen.Layout.flex(style, children, w, nil, false)
   local bar_w = (self.scrollbar_visible and content_h > h) and bar:GetWide() or 0
   local canvas_w = math_max(w - bar_w, 1)
 
-  content_w, content_h = Lumen.Layout.flex(style, children, canvas_w, nil, true)
+  _content_w, content_h = Lumen.Layout.flex(style, children, canvas_w, nil, true)
 
   canvas:SetSize(canvas_w, math_max(content_h, h))
   bar:SetUp(h, content_h)
@@ -66,9 +66,9 @@ end
 
 --- Measures the size the content needs, for a scroll panel whose size is auto.
 -- @param max_w [Number width available, nil if unconstrained]
--- @param max_h [Number height available, nil if unconstrained]
+-- @param _max_h [Number height available, nil if unconstrained]
 -- @return [Number width, Number height]
-function PANEL:lumen_measure(max_w, max_h)
+function PANEL:lumen_measure(max_w, _max_h)
   local style = Lumen.Layout.style_of(self)
 
   return Lumen.Layout.flex(style, Lumen.Layout.children_of(self), max_w, nil, false)

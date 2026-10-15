@@ -22,9 +22,9 @@ function PANEL:SetImage(img)
 end
 
 --- Draws nothing: the image is a child panel and the overlay is drawn in PaintOver.
--- @param w [Number panel width]
--- @param h [Number panel height]
-function PANEL:Paint(w, h)
+-- @param _w [Number panel width]
+-- @param _h [Number panel height]
+function PANEL:Paint(_w, _h)
 end
 
 --- Darkens the image while it is not hovered and draws an accent colored outline while the

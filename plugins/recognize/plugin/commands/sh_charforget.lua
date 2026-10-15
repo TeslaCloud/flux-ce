@@ -32,8 +32,8 @@ function CMD:on_run(actor, targets, ...)
 
   local count = 0
 
-  for k, v in ipairs(targets) do
-    for k2, v2 in ipairs(forgotten) do
+  for _k, v in ipairs(targets) do
+    for _k2, v2 in ipairs(forgotten) do
       local known_name = v:get_recognize(v2)
 
       if known_name and v:remove_recognize(v2) then

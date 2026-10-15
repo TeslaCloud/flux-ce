@@ -44,8 +44,8 @@ end
 --- Calls the 'AddDefaultItems' plugin hook for a character that has just been created.
 -- @param owner [Player]
 -- @param char [Character]
--- @param char_data [Map data the character was created from]
-function Inventories:PostCreateCharacter(owner, char, char_data)
+-- @param _char_data [Map data the character was created from]
+function Inventories:PostCreateCharacter(owner, char, _char_data)
   --- Called on the server when a character has just been created, before it is saved
   -- for the first time, so that plugins can give it its starting items. It is run with
   -- `Plugin.call`, so gamemode functions do not receive it.
@@ -62,8 +62,8 @@ end
 
 --- Recreates inventories of the player when their active character changes.
 -- @param owner [Player]
--- @param character [Character]
-function Inventories:OnActiveCharacterSet(owner, character)
+-- @param _character [Character]
+function Inventories:OnActiveCharacterSet(owner, _character)
   owner:delete_inventories()
   owner:create_inventories()
 end
@@ -72,8 +72,8 @@ end
 -- without inventories as they were before they loaded a character, and tells their client
 -- to forget its copies of them.
 -- @param owner [Player]
--- @param character [Character the character that is being dropped]
-function Inventories:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Inventories:OnActiveCharacterCleared(owner, _character)
   owner:delete_inventories()
   owner.inventories = nil
   owner.default_inventory = nil
@@ -85,9 +85,9 @@ end
 
 --- Creates the default set of the player's inventories:
 -- main inventory, hotbar, pockets and the equipment slots.
--- @param owner [Player]
+-- @param _owner [Player]
 -- @param inventories [Map table to put the new inventories into, keyed by inventory type]
-function Inventories:CreatePlayerInventories(owner, inventories)
+function Inventories:CreatePlayerInventories(_owner, inventories)
   local main_inventory = Inventory.new()
     main_inventory.title = 'ui.inventory.main_inventory'
     main_inventory:set_size(Config.get('inventory_width'), Config.get('inventory_height'))
@@ -206,7 +206,7 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
   if IsValid(item_obj.entity) then
     local inv_type
 
-    for k, v in pairs({ ... }) do
+    for _k, v in pairs({ ... }) do
       if istable(v) then
         for k1, v1 in pairs(v) do
           if k1 == 'inv_type' then
@@ -308,11 +308,11 @@ function Inventories:PlayerDropItem(actor, instance_ids)
 end
 
 --- Synchronizes the inventory of an item after a menu action has been performed on it.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param item_obj [Item]
--- @param act [String name of the menu action]
+-- @param _act [String name of the menu action]
 -- @param ... [Vararg extra arguments of the action]
-function Inventories:PlayerUsedItem(actor, item_obj, act, ...)
+function Inventories:PlayerUsedItem(_actor, item_obj, _act, ...)
   local inventory_id = item_obj.inventory_id
 
   if inventory_id then
@@ -337,9 +337,9 @@ end
 --- Closes the inventory of a transferred container item
 -- for the players who were viewing it and do not have the container anymore.
 -- @param item_obj [Item]
--- @param new_inventory [Inventory where the item went, or nil if it was dropped or used up]
--- @param old_inventory [Inventory where the item was, or nil if it was picked up]
-function Inventories:ItemTransferred(item_obj, new_inventory, old_inventory)
+-- @param _new_inventory [Inventory where the item went, or nil if it was dropped or used up]
+-- @param _old_inventory [Inventory where the item was, or nil if it was picked up]
+function Inventories:ItemTransferred(item_obj, _new_inventory, _old_inventory)
   local inventory = item_obj.inventory
 
   if inventory then
@@ -365,7 +365,7 @@ end
 function Inventories:OneSecond()
   local stale = {}
 
-  for id, inventory in pairs(Inventories.all()) do
+  for _id, inventory in pairs(Inventories.all()) do
     local receivers = inventory.receivers
 
     for i = 1, #receivers do
@@ -384,7 +384,7 @@ function Inventories:OneSecond()
   end
 
   for receiver, holders in pairs(stale) do
-    for holder, inventories in pairs(holders) do
+    for _holder, inventories in pairs(holders) do
       receiver:close_inventories(inventories)
     end
   end
@@ -454,8 +454,8 @@ end
 
 --- Takes the equipped throwable items away from the player who has thrown a grenade.
 -- @param actor [Player]
--- @param entity [Entity the grenade]
-function Inventories:PlayerThrewGrenade(actor, entity)
+-- @param _entity [Entity the grenade]
+function Inventories:PlayerThrewGrenade(actor, _entity)
   if !IsValid(actor) or !actor:IsPlayer() then return end
 
   local items = actor:get_items()
@@ -607,7 +607,7 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
 
   local closed_inventory
 
-  for k, v in pairs(inventory_ids) do
+  for _k, v in pairs(inventory_ids) do
     local inventory = Inventories.find(v)
 
     if inventory and inventory.owner != actor and inventory:has_receiver(actor) then

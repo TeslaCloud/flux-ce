@@ -36,7 +36,7 @@ end
 function Bolt:get_all_permissions()
   local perm_table = {}
 
-  for k, v in pairs(permissions) do
+  for _k, v in pairs(permissions) do
     for k1, v1 in pairs(v) do
       perm_table[k1] = v1
     end
@@ -142,7 +142,7 @@ function Bolt:create_role(id, data)
 
   roles[id] = data
 
-  for k, v in pairs(roles) do
+  for _k, v in pairs(roles) do
     if v.base == id and v != data then
       self:merge_permissions(v, data.permissions)
     end
@@ -187,7 +187,7 @@ function Bolt:merge_permissions(role, perms, as_own)
 
   local role_id = role.role_id or role.id
 
-  for k, v in pairs(roles) do
+  for _k, v in pairs(roles) do
     if v.base == role_id and v != role then
       self:merge_permissions(v, applied)
     end
@@ -814,9 +814,9 @@ do
 
     local pieces = str:split(' ')
     local result = 0
-    local token, num = '', 0
+    local _token, num = '', 0
 
-    for k, v in ipairs(pieces) do
+    for _k, v in ipairs(pieces) do
       local n = tonumber(v)
 
       if isstring(v) then
@@ -848,9 +848,9 @@ do
           end
         end
 
-        token, num = '', 0
+        _token, num = '', 0
       else
-        token, num = '', 0
+        _token, num = '', 0
       end
     end
 
@@ -858,7 +858,7 @@ do
   end
 end
 
-Pipeline.register('role', function(id, file_name, pipe)
+Pipeline.register('role', function(id, file_name, _pipe)
   ROLE = Role.new(id)
 
   require_relative(file_name)

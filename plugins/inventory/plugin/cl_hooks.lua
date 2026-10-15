@@ -55,7 +55,7 @@ function Inventories:AddTabMenuItems(menu)
     icon = 'fa-briefcase',
     default = true,
     priority = 30,
-    callback = function(menu_panel, button)
+    callback = function(menu_panel, _button)
       local inv = menu_panel.active_panel
       inv:SetTitle('Inventory')
     end
@@ -113,11 +113,11 @@ function Inventories:popup_hotbar()
 end
 
 --- Closes the windows of all opened container items when a tab menu panel opens.
--- @param menu_panel [Panel the tab menu]
--- @param active_panel [Panel the panel that has been opened]
-function Inventories:OnMenuPanelOpen(menu_panel, active_panel)
+-- @param _menu_panel [Panel the tab menu]
+-- @param _active_panel [Panel the panel that has been opened]
+function Inventories:OnMenuPanelOpen(_menu_panel, _active_panel)
   if PLAYER.opened_containers then
-    for k, v in pairs(PLAYER.opened_containers) do
+    for _k, v in pairs(PLAYER.opened_containers) do
       if IsValid(v) then
         v:safe_remove()
       end
@@ -283,14 +283,14 @@ local function create_item_icon(item_obj, parent)
   local padding_double = padding * 2
   local corner_radius = math_scale(4)
 
-  name_label.Paint = function(pnl, w, h)
+  name_label.Paint = function(_pnl, w, h)
     DisableClipping(true)
       draw.RoundedBox(corner_radius, -padding, -padding, w + padding_double, h + padding_double, label_background_color)
     DisableClipping(false)
   end
 
   icon:SetToolTip(t(item_obj:get_real_name())..'\n'..t(item_obj:get_description()))
-  icon.DoRightClick = function(pnl)
+  icon.DoRightClick = function(_pnl)
     local derma_menu = DermaMenu()
     local give_self = derma_menu:AddSubMenu(t'ui.spawnmenu.give.self', false)
 
@@ -307,7 +307,7 @@ local function create_item_icon(item_obj, parent)
     if player.GetCount() > 1 then
       local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player', false)
 
-      for k, v in player.Iterator() do
+      for _k, v in player.Iterator() do
         if PLAYER == v then continue end
 
         local player_line = give_player:AddSubMenu(v:Name())
@@ -333,11 +333,11 @@ end
 --- Fills the items tab of the spawn menu with a node for every item category.
 -- @param content_panel [Panel the content panel of the tab]
 -- @param tree [Panel the navigation tree of the tab]
--- @param node [Panel]
-function Inventories:spawnmenu_populate_items(content_panel, tree, node)
+-- @param _node [Panel]
+function Inventories:spawnmenu_populate_items(content_panel, tree, _node)
   local categories = {}
 
-  for id, item_obj in pairs(Item.all()) do
+  for _id, item_obj in pairs(Item.all()) do
     local category = categories[item_obj.category]
 
     if !category then
@@ -358,9 +358,9 @@ function Inventories:spawnmenu_populate_items(content_panel, tree, node)
       pnl.list:SetVisible(false)
       pnl.list:SetTriggerSpawnlistChange(false)
 
-      for k, item_obj in SortedPairsByMemberValue(category, 'name') do
+      for _k, item_obj in SortedPairsByMemberValue(category, 'name') do
         local icon = create_item_icon(item_obj, pnl.list)
-        icon.DoClick = function(pnl)
+        icon.DoClick = function(_pnl)
           MVC.push('SpawnMenu::SpawnItem', item_obj.id)
         end
       end
@@ -389,7 +389,7 @@ search.AddProvider(function(query)
 
   local results = {}
 
-  for k, item_obj in pairs(Item.all()) do
+  for _k, item_obj in pairs(Item.all()) do
     if t(item_obj:get_name()):utf8lower():find(query) then
       results[#results + 1] = {
         text = item_obj.id,

@@ -89,7 +89,7 @@ function PANEL:rebuild()
 
   self.player_model:rebuild()
 
-  self.player_model:Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+  self.player_model:Receiver('fl_item', function(_receiver, dropped, is_dropped, _menu_index, _mouse_x, _mouse_y)
     local dropped = dropped[1]
 
     if is_dropped then
@@ -240,7 +240,7 @@ function PANEL:rebuild()
   self.pockets:set_slot_size(math_scale(48))
   self.pockets:SizeToContents()
 
-  local title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
+  local _title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
   local x = self.equipment_left.x - self.main_inventory:GetWide() - math_scale(12)
   local y = h * 0.5 - self.main_inventory:GetTall() * 0.5 - self.pockets:GetTall() * 0.5 - title_h * 0.5
 

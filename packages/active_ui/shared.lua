@@ -23,7 +23,7 @@ if !LITE_REFRESH then
     -- the theme is registered once the file has run; on the server the file is only sent to
     -- the clients. The themes of the schema and of the plugins go through the same pipeline
     -- once they are included, after this package.
-    Pipeline.register('theme', function(id, file_name, pipe)
+    Pipeline.register('theme', function(id, file_name, _pipe)
       if CLIENT then
         THEME = ThemeBase.new(id)
 

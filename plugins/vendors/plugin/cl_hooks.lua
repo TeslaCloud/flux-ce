@@ -66,7 +66,7 @@ function Vendors:HUDDrawTargetID()
   local height = name_h
 
   for i = 1, line_count do
-    local line_w, line_h = text_size(lines[i], desc_font)
+    local _line_w, line_h = text_size(lines[i], desc_font)
 
     height = height + line_h
   end

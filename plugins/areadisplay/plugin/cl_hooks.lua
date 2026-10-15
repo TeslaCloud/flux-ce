@@ -36,8 +36,8 @@ end
 --- Takes the notices off the screen when the local player turns them off.
 -- @param id [String setting id]
 -- @param value [Any new value of the setting]
--- @param old_value [Any previous value of the setting]
-function AreaDisplay:ClientSettingChanged(id, value, old_value)
+-- @param _old_value [Any previous value of the setting]
+function AreaDisplay:ClientSettingChanged(id, value, _old_value)
   if id == 'area_display' and value == false then
     self:clear()
   end
@@ -68,25 +68,25 @@ end
 function AreaDisplay:PlayerInitialized()
   if !IsValid(PLAYER) then return end
 
-  for k, area in ipairs(self:find_text_areas_at(PLAYER:GetPos())) do
+  for _k, area in ipairs(self:find_text_areas_at(PLAYER:GetPos())) do
     self:announce(area)
   end
 end
 
 --- Announces the text area that the local player has entered.
--- @param actor [Player the player who entered the area]
+-- @param _actor [Player the player who entered the area]
 -- @param area [Map the area that was entered]
--- @param cur_time [Number CurTime at the moment of entering]
-function AreaDisplay:PlayerEnteredTextArea(actor, area, cur_time)
+-- @param _cur_time [Number CurTime at the moment of entering]
+function AreaDisplay:PlayerEnteredTextArea(_actor, area, _cur_time)
   self:announce(area)
 end
 
 --- Forgets the text area that the local player has left, if it was still waiting to be
 -- announced.
--- @param actor [Player the player who left the area]
+-- @param _actor [Player the player who left the area]
 -- @param area [Map the area that was left]
--- @param cur_time [Number CurTime at the moment of leaving]
-function AreaDisplay:PlayerLeftTextArea(actor, area, cur_time)
+-- @param _cur_time [Number CurTime at the moment of leaving]
+function AreaDisplay:PlayerLeftTextArea(_actor, area, _cur_time)
   if area.id != nil then
     self.pending[area.id] = nil
   end

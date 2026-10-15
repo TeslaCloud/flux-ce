@@ -106,10 +106,10 @@ if SERVER then
 
   --- Starts trading with the player who has used the vendor.
   -- @param activator [Entity the entity that pressed the use key, normally a Player]
-  -- @param caller [Entity]
-  -- @param use_type [Number USE_ enumerator]
-  -- @param value [Number]
-  function ENT:Use(activator, caller, use_type, value)
+  -- @param _caller [Entity]
+  -- @param _use_type [Number USE_ enumerator]
+  -- @param _value [Number]
+  function ENT:Use(activator, _caller, _use_type, _value)
     if IsValid(activator) and activator:IsPlayer() then
       Vendors:open(activator, self)
     end

@@ -15,10 +15,10 @@ Doors:register_property('name', {
     entity:set_nv('fl_name', data)
   end,
   --- Creates the text row for the name of the door in the door menu.
-  -- @param entity [Entity the door]
+  -- @param _entity [Entity the door]
   -- @param panel [Panel the fl_door_menu panel]
   -- @return [Panel the created property row]
-  create_panel = function(entity, panel)
+  create_panel = function(_entity, panel)
     local name = panel.properties:CreateRow(t'door.categories.general', t'door.properties.name')
     name:Setup('Generic')
 
@@ -40,10 +40,10 @@ Doors:register_property('title_type', {
     entity:set_nv('fl_title_type', data)
   end,
   --- Creates the combo box row with all registered title types in the door menu.
-  -- @param entity [Entity the door]
+  -- @param _entity [Entity the door]
   -- @param panel [Panel the fl_door_menu panel]
   -- @return [Panel the created property row]
-  create_panel = function(entity, panel)
+  create_panel = function(_entity, panel)
     local title_type = panel.properties:CreateRow(t'door.categories.general', t'door.properties.title_type.name')
     title_type:Setup('Combo', { text = t'door.properties.title_type.select' })
 
@@ -110,10 +110,10 @@ Doors:register_property('locked', {
     entity:set_nv('fl_locked', data)
   end,
   --- Creates the checkbox row for the lock state of the door in the door menu.
-  -- @param entity [Entity the door]
+  -- @param _entity [Entity the door]
   -- @param panel [Panel the fl_door_menu panel]
   -- @return [Panel the created property row]
-  create_panel = function(entity, panel)
+  create_panel = function(_entity, panel)
     local locked = panel.properties:CreateRow(t'door.categories.general', t'door.properties.locked')
     locked:Setup('Boolean')
 
@@ -137,10 +137,10 @@ Doors:register_property('ownable', {
     Doors:set_ownable(entity, tobool(data))
   end,
   --- Creates the checkbox row that makes the door ownable in the door menu.
-  -- @param entity [Entity the door]
+  -- @param _entity [Entity the door]
   -- @param panel [Panel the fl_door_menu panel]
   -- @return [Panel the created property row]
-  create_panel = function(entity, panel)
+  create_panel = function(_entity, panel)
     local ownable = panel.properties:CreateRow(t'door.categories.ownership', t'door.properties.ownable')
     ownable:Setup('Boolean')
 
@@ -168,10 +168,10 @@ Doors:register_property('price', {
     Doors:set_price(entity, tonumber(data))
   end,
   --- Creates the text row for the price of the door in the door menu.
-  -- @param entity [Entity the door]
+  -- @param _entity [Entity the door]
   -- @param panel [Panel the fl_door_menu panel]
   -- @return [Panel the created property row]
-  create_panel = function(entity, panel)
+  create_panel = function(_entity, panel)
     local price = panel.properties:CreateRow(t'door.categories.ownership', t'door.properties.price')
     price:Setup('Generic')
 
@@ -186,10 +186,10 @@ Doors:register_title_type('center', {
   -- door (see `Doors:get_status_text`) in a smaller font below it. A door without a name
   -- only gets its status drawn, and nothing is drawn if it has no status either.
   -- @param entity [Entity the door]
-  -- @param w [Number width of the door face in drawing units]
+  -- @param _w [Number width of the door face in drawing units]
   -- @param h [Number height of the door face in drawing units]
   -- @param alpha [Number opacity that fades with distance, up to 255]
-  draw = function(entity, w, h, alpha)
+  draw = function(entity, _w, h, alpha)
     local text = entity:get_nv('fl_name', '')
     local status = Doors:get_status_text(entity)
     local font = Theme.get_font('text_3d2d')
@@ -229,7 +229,7 @@ Doors:register_title_type('center', {
 
     if status then
       local status_font = font and Font.size(font, 128) or font
-      local status_w, status_h = util.text_size(status, status_font)
+      local status_w, _status_h = util.text_size(status, status_font)
 
       draw.SimpleTextOutlined(
         status,

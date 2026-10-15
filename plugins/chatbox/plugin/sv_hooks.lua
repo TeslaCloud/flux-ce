@@ -5,29 +5,29 @@
 
 --- Provides the default icon that is displayed before the name of the player
 -- in their chat messages.
--- @param speaker [Player the speaker]
--- @param text [String the message]
--- @param team_chat [Boolean whether the message was sent to the team chat]
+-- @param _speaker [Player the speaker]
+-- @param _text [String the message]
+-- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [Map icon piece for Chatbox.add_text]
-function Chatbox:ChatboxGetPlayerIcon(speaker, text, team_chat)
+function Chatbox:ChatboxGetPlayerIcon(_speaker, _text, _team_chat)
   return { icon = 'fa-shield-alt', size = 14, margin = 8, is_data = true }
 end
 
 --- Provides the default color of the player's name in their chat messages.
 -- @param speaker [Player the speaker]
--- @param text [String the message]
--- @param team_chat [Boolean whether the message was sent to the team chat]
+-- @param _text [String the message]
+-- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [Color the color of the player's team]
-function Chatbox:ChatboxGetPlayerColor(speaker, text, team_chat)
+function Chatbox:ChatboxGetPlayerColor(speaker, _text, _team_chat)
   return team.GetColor(speaker:Team()) or Color(255, 255, 255)
 end
 
 --- Provides the default color of the text of chat messages.
--- @param speaker [Player the speaker]
--- @param text [String the message]
--- @param team_chat [Boolean whether the message was sent to the team chat]
+-- @param _speaker [Player the speaker]
+-- @param _text [String the message]
+-- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [Color white]
-function Chatbox:ChatboxGetMessageColor(speaker, text, team_chat)
+function Chatbox:ChatboxGetMessageColor(_speaker, _text, _team_chat)
   return Color(255, 255, 255)
 end
 

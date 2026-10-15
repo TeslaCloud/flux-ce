@@ -72,7 +72,7 @@ function Recognizes:sync(owner)
   local names = {}
 
   if character and istable(character.recognizes) then
-    for k, v in ipairs(character.recognizes) do
+    for _k, v in ipairs(character.recognizes) do
       names[v.target_id] = v.name
     end
   end
@@ -118,7 +118,7 @@ function Recognizes:clear_records(character)
 
   if !istable(records) then return 0 end
 
-  for k, v in ipairs(records) do
+  for _k, v in ipairs(records) do
     discard(v, true)
   end
 
@@ -148,13 +148,13 @@ function Recognizes:forget_character(character_id, name)
   local loaded_ids = {}
   local count = 0
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     local characters = istable(v.record) and v.record.characters
 
     if istable(characters) then
       local active = v:get_character()
 
-      for k2, character in pairs(characters) do
+      for _k2, character in pairs(characters) do
         local removed = self:remove_records(character, character_id, name)
         local loaded_id = tonumber(character.id)
 
@@ -277,7 +277,7 @@ function Recognizes:introduce(actor, kind, name, target)
     local distance_sqr = distance * distance
     local eye_pos = actor:EyePos()
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if eye_pos:DistToSqr(v:EyePos()) <= distance_sqr then
         targets[#targets + 1] = v
       end

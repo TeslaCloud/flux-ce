@@ -15,7 +15,7 @@ function Animations:ContextMenuCreated(context_menu)
   panel:SetSize(math.scale_size(200, 224))
   panel:SetPos(scale_x(100), ScrH() * 0.7)
   panel:DockPadding(scale_x(4), math.scale(4), scale_x(4), math.scale(4))
-  panel.Paint = function(pnl, w, h)
+  panel.Paint = function(_pnl, w, h)
     draw.RoundedBox(0, 0, 0, w, h, panel_color)
   end
 
@@ -56,7 +56,7 @@ function Animations:ContextMenuCreated(context_menu)
     previews = {}
     self.previews = previews
 
-    for k, v in ipairs(Animations:get_list()) do
+    for _k, v in ipairs(Animations:get_list()) do
       local sequences = Animations:get_sequences(PLAYER, v)
 
       if !sequences then continue end
@@ -82,7 +82,7 @@ function Animations:ContextMenuCreated(context_menu)
       local preview_model = vgui.Create('DModelPanel', preview_back)
       preview_model:Dock(FILL)
       preview_model:SetModel(PLAYER:GetModel())
-      preview_model.LayoutEntity = function(pnl, entity)
+      preview_model.LayoutEntity = function(pnl, _entity)
         pnl:RunAnimation()
       end
 
@@ -97,7 +97,7 @@ function Animations:ContextMenuCreated(context_menu)
       scroll:AddItem(line)
     end
 
-    local left, top, right, bottom = self:GetDockPadding()
+    local left, _top, right, _bottom = self:GetDockPadding()
 
     self:SetWide(math.max(
       scale_x(200),

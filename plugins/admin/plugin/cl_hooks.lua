@@ -29,8 +29,8 @@ end
 -- permission that the server checks for what the page does; for the config editor that is
 -- the permission named by `Config.permission`.
 -- @param panel [Panel the admin panel]
--- @param sidebar [Panel the admin panel's sidebar]
-function Bolt:AddAdminMenuItems(panel, sidebar)
+-- @param _sidebar [Panel the admin panel's sidebar]
+function Bolt:AddAdminMenuItems(panel, _sidebar)
   panel:add_panel('admin_player_management', t'ui.admin.player_management', 'manage_permissions')
   panel:add_panel('admin_staff_list', t'ui.admin.staff.title', 'manage_permissions')
   panel:add_panel('admin_ban_list', t'ui.admin.bans.title', 'ban')
@@ -41,23 +41,23 @@ end
 --- Registers the constructors of the admin panel's pages with the loaded theme.
 -- @param current_theme [ThemeBase]
 function Bolt:OnThemeLoaded(current_theme)
-  current_theme:add_panel('admin_player_management', function(id, parent, ...)
+  current_theme:add_panel('admin_player_management', function(_id, parent, ...)
     return vgui.Create('fl_player_management', parent)
   end)
 
-  current_theme:add_panel('admin_staff_list', function(id, parent, ...)
+  current_theme:add_panel('admin_staff_list', function(_id, parent, ...)
     return vgui.Create('fl_staff_list', parent)
   end)
 
-  current_theme:add_panel('admin_ban_list', function(id, parent, ...)
+  current_theme:add_panel('admin_ban_list', function(_id, parent, ...)
     return vgui.Create('fl_ban_list', parent)
   end)
 
-  current_theme:add_panel('admin_config_editor', function(id, parent, ...)
+  current_theme:add_panel('admin_config_editor', function(_id, parent, ...)
     return vgui.Create('fl_config_editor', parent)
   end)
 
-  current_theme:add_panel('admin_plugin_manager', function(id, parent, ...)
+  current_theme:add_panel('admin_plugin_manager', function(_id, parent, ...)
     return vgui.Create('fl_plugin_manager', parent)
   end)
 end
@@ -65,9 +65,9 @@ end
 --- Updates the line of a config in the config editor, if it is open, when the value of
 -- the config has arrived from the server.
 -- @param key [String config key]
--- @param old_value [Any value the client had before]
--- @param new_value [Any value that has been received]
-function Bolt:OnConfigReceived(key, old_value, new_value)
+-- @param _old_value [Any value the client had before]
+-- @param _new_value [Any value that has been received]
+function Bolt:OnConfigReceived(key, _old_value, _new_value)
   if IsValid(self.config_editor) then
     self.config_editor:update_config(key)
   end
@@ -76,9 +76,9 @@ end
 --- Updates the line of a config in the config editor, if it is open, when the server
 -- reports that the config has got a pending value or no longer has one.
 -- @param key [String config key]
--- @param is_pending [Boolean whether the config has a pending value now]
--- @param value [Any value the config takes on the next start of the server]
-function Bolt:OnConfigPendingReceived(key, is_pending, value)
+-- @param _is_pending [Boolean whether the config has a pending value now]
+-- @param _value [Any value the config takes on the next start of the server]
+function Bolt:OnConfigPendingReceived(key, _is_pending, _value)
   if IsValid(self.config_editor) then
     self.config_editor:update_config(key)
   end
@@ -86,9 +86,9 @@ end
 
 --- Rebuilds the list of the plugin manager, if it is open, when the server reports that a
 -- plugin has been disabled or enabled.
--- @param id [String normalized ID of the plugin]
--- @param disabled [Boolean true if the plugin will be disabled after the restart]
-function Bolt:OnPluginStateChanged(id, disabled)
+-- @param _id [String normalized ID of the plugin]
+-- @param _disabled [Boolean true if the plugin will be disabled after the restart]
+function Bolt:OnPluginStateChanged(_id, _disabled)
   if IsValid(self.plugin_manager) then
     self.plugin_manager:rebuild()
   end

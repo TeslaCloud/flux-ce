@@ -4,15 +4,15 @@
 
 --- Networks the names a character recognizes others by once it is loaded.
 -- @param owner [Player player the character belongs to]
--- @param character [Character loaded character]
-function Recognizes:PostCharacterLoaded(owner, character)
+-- @param _character [Character loaded character]
+function Recognizes:PostCharacterLoaded(owner, _character)
   self:sync(owner)
 end
 
 --- Takes the networked recognitions of a character away from the player who drops it.
 -- @param owner [Player player the character belongs to]
--- @param character [Character the character that is being dropped]
-function Recognizes:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Recognizes:OnActiveCharacterCleared(owner, _character)
   owner:set_nv('fl_recognizes', {})
 end
 
@@ -35,9 +35,9 @@ end
 -- real name forgets it (`recog_forgotten_on_death`). Nothing happens while the
 -- recognition system is off.
 -- @param victim [Player]
--- @param inflictor [Entity]
--- @param attacker [Entity]
-function Recognizes:PlayerDeath(victim, inflictor, attacker)
+-- @param _inflictor [Entity]
+-- @param _attacker [Entity]
+function Recognizes:PlayerDeath(victim, _inflictor, _attacker)
   if !self:is_enabled() or victim:IsBot() or !victim:is_character_loaded() then return end
 
   if Config.get('recog_forget_on_death') and victim:clear_recognizes() > 0 then
@@ -51,10 +51,10 @@ end
 
 --- Deletes the recognitions of a character that is about to be deleted, and makes every
 -- other character forget it.
--- @param actor [Player player who deletes the character]
+-- @param _actor [Player player who deletes the character]
 -- @param id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
-function Recognizes:OnCharacterDelete(actor, id, character)
+function Recognizes:OnCharacterDelete(_actor, id, character)
   self:clear_records(character)
   self:forget_character(id)
 end
@@ -64,10 +64,10 @@ end
 -- listed by the start of their physical description.
 -- @param actor [Player the player who gives the access]
 -- @param target [Player the player whose active character receives it]
--- @param entity [Entity the door, or the main door of its group]
+-- @param _entity [Entity the door, or the main door of its group]
 -- @return [String the name to list the character under, nil while the recognition system
 --   is off]
-function Recognizes:GetDoorAccessName(actor, target, entity)
+function Recognizes:GetDoorAccessName(actor, target, _entity)
   if !self:is_enabled() then return end
 
   return self:get_known_name(actor, target)

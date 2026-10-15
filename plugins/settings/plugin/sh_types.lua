@@ -4,27 +4,27 @@
 
 ClientSettings:register_type('boolean', {
   --- Returns the default of a boolean setting that does not define one.
-  -- @param setting [Map setting definition]
+  -- @param _setting [Map setting definition]
   -- @return [Boolean false]
-  get_default = function(setting)
+  get_default = function(_setting)
     return false
   end,
   --- Accepts booleans only.
-  -- @param setting [Map setting definition]
+  -- @param _setting [Map setting definition]
   -- @param value [Any value to check]
   -- @return [Boolean the value, or nil if it is not a boolean]
-  sanitize = function(setting, value)
+  sanitize = function(_setting, value)
     if isbool(value) then
       return value
     end
   end,
   --- Creates a switch that turns the setting on and off. Clientside only.
-  -- @param setting [Map setting definition]
+  -- @param _setting [Map setting definition]
   -- @param parent [Panel row of the settings menu to create the control in]
   -- @param value [Boolean current value of the setting]
   -- @param on_change [Function called with the new value when the switch is clicked]
   -- @return [Panel the created fl_button]
-  create_control = function(setting, parent, value, on_change)
+  create_control = function(_setting, parent, value, on_change)
     local button = vgui.Create('fl_button', parent)
     button.value = value
     button:SetDrawBackground(false)
@@ -96,7 +96,7 @@ ClientSettings:register_type('number', {
       pnl.Label:SetWide(0)
     end
 
-    slider.OnValueChanged = function(pnl, new_value)
+    slider.OnValueChanged = function(_pnl, new_value)
       on_change(new_value)
     end
 
@@ -116,7 +116,7 @@ ClientSettings:register_type('choice', {
 
     local choices = {}
 
-    for k, v in ipairs(setting.choices) do
+    for _k, v in ipairs(setting.choices) do
       if istable(v) then
         if v.value != nil then
           table.insert(choices, { value = v.value, name = tostring(v.name or v.value) })
@@ -143,7 +143,7 @@ ClientSettings:register_type('choice', {
   -- @param value [Any value to check]
   -- @return [Any the value, or nil if it is not one of the choices]
   sanitize = function(setting, value)
-    for k, v in ipairs(setting.choices) do
+    for _k, v in ipairs(setting.choices) do
       if v.value == value then
         return value
       end
@@ -165,7 +165,7 @@ ClientSettings:register_type('choice', {
       combo_box:AddChoice(t(v.name), k, v.value == value)
     end
 
-    combo_box.OnSelect = function(pnl, index, text, data)
+    combo_box.OnSelect = function(_pnl, _index, _text, data)
       local choice = setting.choices[data]
 
       if choice then
@@ -185,9 +185,9 @@ ClientSettings:register_type('string', {
     setting.max_length = math.max(math.floor(tonumber(setting.max_length) or 128), 1)
   end,
   --- Returns the default of a string setting that does not define one.
-  -- @param setting [Map setting definition]
+  -- @param _setting [Map setting definition]
   -- @return [String an empty string]
-  get_default = function(setting)
+  get_default = function(_setting)
     return ''
   end,
   --- Accepts strings of valid UTF-8 that are not longer than the setting allows.

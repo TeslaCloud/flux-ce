@@ -192,7 +192,7 @@ function Limbs:get_all_damage(target)
   local stored = self:is_enabled() and self:get_stored(target)
 
   if stored then
-    for k, v in ipairs(limb_ids) do
+    for _k, v in ipairs(limb_ids) do
       local damage = tonumber(stored[v])
 
       if damage and damage > 0 then
@@ -246,7 +246,7 @@ function Limbs:get_worst_damage(target, limbs)
   local worst = 0
 
   if stored then
-    for k, v in ipairs(limbs or limb_ids) do
+    for _k, v in ipairs(limbs or limb_ids) do
       local damage = limb_lookup[v] and tonumber(stored[v])
 
       if damage and damage > worst then

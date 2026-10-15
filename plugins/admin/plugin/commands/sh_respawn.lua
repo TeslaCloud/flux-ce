@@ -21,7 +21,7 @@ CMD.aliases = { 'respawn', 'plyrespawn' }
 function CMD:on_run(actor, targets, spawn_position)
   local look_pos = IsValid(actor) and actor:GetEyeTraceNoCursor().HitPos
 
-  for k, v in ipairs(targets) do
+  for _k, v in ipairs(targets) do
     local alive = v:Alive()
     local angles = v:EyeAngles()
     local pos = alive and v:GetPos() or v.last_pos

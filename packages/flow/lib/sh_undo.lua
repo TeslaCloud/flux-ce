@@ -82,7 +82,7 @@ end
 -- @param obj [Map undo entry]
 function Flux.Undo:execute(obj)
   if istable(obj) and istable(obj.functions) then
-    for k, v in ipairs(obj.functions) do
+    for _k, v in ipairs(obj.functions) do
       local success, exception = pcall(v.func, obj, unpack(v.args))
 
       if !success then

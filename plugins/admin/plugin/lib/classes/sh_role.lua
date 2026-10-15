@@ -129,15 +129,15 @@ end
 
 --- Called when the player's role is being set to this role. Return any non-nil value to keep the
 -- new role from being saved to the database.
--- @param target [Player]
--- @param old_group [Role the player's previous role]
-function Role:on_role_set(target, old_group) end
+-- @param _target [Player]
+-- @param _old_group [Role the player's previous role]
+function Role:on_role_set(_target, _old_group) end
 
 --- Called when the player's role is taken or modified. Return any non-nil value to keep the new
 -- role from being saved to the database.
--- @param target [Player]
--- @param new_group [Role the role the player is being given]
-function Role:on_role_taken(target, new_group) end
+-- @param _target [Player]
+-- @param _new_group [Role the role the player is being given]
+function Role:on_role_taken(_target, _new_group) end
 
 --- Returns the role's ID.
 -- @return [String]
@@ -236,9 +236,9 @@ function Role:register()
       -- define_permissions runs; the arguments are ignored.
       -- @param action=nil [Any ignored]
       -- @param object=nil [Any ignored]
-      -- @param callback=nil [Any ignored]
+      -- @param _callback=nil [Any ignored]
       -- @see [Role#allow_anything]
-      function allow_anything(action, object, callback)
+      function allow_anything(action, object, _callback)
         self:allow_anything(action, object)
       end
 

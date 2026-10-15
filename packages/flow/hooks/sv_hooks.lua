@@ -15,23 +15,23 @@ local player_iterator = player.Iterator
 DEFINE_BASECLASS('gamemode_base')
 
 --- Does nothing, which disables the default handling of a player's death.
--- @param victim [Player the player who died]
--- @param attacker [Entity]
--- @param damage_info [CTakeDamageInfo]
-function GM:DoPlayerDeath(victim, attacker, damage_info)
+-- @param _victim [Player the player who died]
+-- @param _attacker [Entity]
+-- @param _damage_info [CTakeDamageInfo]
+function GM:DoPlayerDeath(_victim, _attacker, _damage_info)
 end
 
 --- Mutes the default death sound.
--- @param victim [Player]
+-- @param _victim [Player]
 -- @return [Boolean always true]
-function GM:PlayerDeathSound(victim)
+function GM:PlayerDeathSound(_victim)
   return true
 end
 
 --- Prevents players from killing themselves through the console.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @return [Boolean always false]
-function GM:CanPlayerSuicide(actor)
+function GM:CanPlayerSuicide(_actor)
   return false
 end
 
@@ -39,7 +39,7 @@ end
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(Flux.Tool.stored) do
+  for _k, v in pairs(Flux.Tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 
@@ -200,9 +200,9 @@ end
 
 --- Stores the time at which the player may respawn, based on the respawn_delay config.
 -- @param victim [Player the player who died]
--- @param inflictor [Entity]
--- @param attacker [Entity]
-function GM:PlayerDeath(victim, inflictor, attacker)
+-- @param _inflictor [Entity]
+-- @param _attacker [Entity]
+function GM:PlayerDeath(victim, _inflictor, _attacker)
   victim:set_nv('respawn_time', CurTime() + config_get('respawn_delay'))
 end
 
@@ -557,8 +557,8 @@ end
 
 --- Notifies the client of the damaged player, which shows the damage flash on their HUD.
 -- @param victim [Player]
--- @param damage_info [CTakeDamageInfo]
-function GM:PlayerTakeDamage(victim, damage_info)
+-- @param _damage_info [CTakeDamageInfo]
+function GM:PlayerTakeDamage(victim, _damage_info)
   Cable.send(victim, 'fl_player_take_damage')
 end
 
@@ -608,9 +608,9 @@ end
 do
   local function purge_client_files()
     if file.Exists('lua/_flux/client', 'GAME') then
-      local files, dirs = file.Find('lua/_flux/client/*', 'GAME')
+      local files, _dirs = file.Find('lua/_flux/client/*', 'GAME')
 
-      for k, v in ipairs(files) do
+      for _k, v in ipairs(files) do
         File.delete('lua/_flux/client/'..v)
       end
     end
@@ -705,7 +705,7 @@ end
 function GM:ShutDown()
   hook.Run('FLSaveData')
 
-  for k, v in player_iterator() do
+  for _k, v in player_iterator() do
     v:save_player()
   end
 
@@ -734,8 +734,8 @@ end
 
 --- Runs the current action of the player, unless it is 'idle' or 'spawning'.
 -- @param actor [Player]
--- @param cur_time [Number current CurTime()]
-function GM:PlayerThink(actor, cur_time)
+-- @param _cur_time [Number current CurTime()]
+function GM:PlayerThink(actor, _cur_time)
   local act = actor:get_action()
 
   if act != 'idle' and act != 'spawning' then
@@ -747,9 +747,9 @@ end
 -- hides them from the chat.
 -- @param actor [Player]
 -- @param text [String the chat message]
--- @param team_chat [Boolean whether the message was sent to the team chat]
+-- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [String an empty string if the message was a command, nil otherwise]
-function GM:PlayerSay(actor, text, team_chat)
+function GM:PlayerSay(actor, text, _team_chat)
   local is_command, length = string.is_command(tostring(text))
 
   if is_command then
@@ -760,22 +760,22 @@ function GM:PlayerSay(actor, text, team_chat)
 end
 
 --- Does nothing, which disables the default help menu.
--- @param actor [Player]
-function GM:ShowHelp(actor)
+-- @param _actor [Player]
+function GM:ShowHelp(_actor)
 end
 
 --- Saves the data of every player before the server restarts.
 function GM:ServerRestart()
-  for k, v in player_iterator() do
+  for _k, v in player_iterator() do
     v:save_player()
   end
 end
 
 --- Prevents players from picking entities up with the use key.
--- @param actor [Player]
--- @param entity [Entity]
+-- @param _actor [Player]
+-- @param _entity [Entity]
 -- @return [Boolean always false]
-function GM:AllowPlayerPickup(actor, entity)
+function GM:AllowPlayerPickup(_actor, _entity)
   return false
 end
 
@@ -806,25 +806,25 @@ end
 --- Applies changes of the walk_speed, run_speed, crouched_speed and jump_power configs to
 -- every player.
 -- @param key [String key of the config that has changed]
--- @param old_value [Any]
+-- @param _old_value [Any]
 -- @param new_value [Any]
-function GM:OnConfigSet(key, old_value, new_value)
+function GM:OnConfigSet(key, _old_value, new_value)
   if key == 'walk_speed' then
-    for k, v in player_iterator() do
+    for _k, v in player_iterator() do
       v:SetWalkSpeed(new_value)
     end
   elseif key == 'run_speed' then
-    for k, v in player_iterator() do
+    for _k, v in player_iterator() do
       v:SetRunSpeed(new_value)
     end
   elseif key == 'crouched_speed' then
     local crouched_speed = new_value / config_get('walk_speed')
 
-    for k, v in player_iterator() do
+    for _k, v in player_iterator() do
       v:SetCrouchedWalkSpeed(crouched_speed)
     end
   elseif key == 'jump_power' then
-    for k, v in player_iterator() do
+    for _k, v in player_iterator() do
       v:SetJumpPower(new_value)
     end
   end
@@ -837,7 +837,7 @@ end
 function GM:PostPlayerLoadout(actor, default_loadout)
   actor:StripWeapons()
 
-  for k, v in pairs(default_loadout) do
+  for _k, v in pairs(default_loadout) do
     actor:Give(v)
   end
 
@@ -888,7 +888,7 @@ do
     if cur_time >= next_think then
       local one_second_tick = (cur_time >= next_second)
 
-      for k, v in player_iterator() do
+      for _k, v in player_iterator() do
         --- Called on the server eight times a second for every player, including players who
         -- are dead or not initialized yet. Prefer `PlayerOneSecond` when once a second is
         -- often enough. The gamemode's handler runs the player's current action.

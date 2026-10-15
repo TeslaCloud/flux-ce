@@ -25,7 +25,7 @@ function PANEL:Init()
   self.sidebar:SetSize(self.sidebar_width - padding * 2, height - padding * 2)
   self.sidebar:SetPos(padding, padding)
   self.sidebar:set_margin(math.scale(4))
-  self.sidebar.Paint = function(pnl, w, h)
+  self.sidebar.Paint = function(_pnl, _w, _h)
   end
 
   self:SetKeyboardInputEnabled(true)
@@ -81,7 +81,7 @@ function PANEL:add_panel(id, title, permission, ...)
   button:set_text_offset(math.scale(12))
   button:set_text_autoposition(true)
   button:set_centered(false)
-  button.DoClick = function(btn)
+  button.DoClick = function(_btn)
     if !self.cur_panel or self.cur_panel.id != id then
       self:open_panel(id)
     end
@@ -149,7 +149,7 @@ function PANEL:set_fullscreen(fullscreen)
     self.back_button:set_icon('fa-chevron-left')
     self.back_button:set_icon_size(math.scale(14))
     self.back_button:set_centered(true)
-    self.back_button.DoClick = function(btn)
+    self.back_button.DoClick = function(_btn)
       self:set_fullscreen(false)
     end
   else

@@ -33,7 +33,7 @@ function util.validate(...)
 
   if #validate <= 0 then return false end
 
-  for k, v in ipairs(validate) do
+  for _k, v in ipairs(validate) do
     if !IsValid(v) then
       return false
     end
@@ -159,7 +159,7 @@ function util.remove_newlines(str)
   local kept = {}
   local skip = ''
 
-  for k, v in ipairs(pieces) do
+  for _k, v in ipairs(pieces) do
     if skip != '' then
       kept[#kept + 1] = v
 
@@ -205,7 +205,7 @@ function txt(text)
   local lowest_indent
   local output = {}
 
-  for k, v in ipairs(lines) do
+  for _k, v in ipairs(lines) do
     if v:match('^[%s]+$') then continue end
 
     local indent = v:match('^([%s]+)')
@@ -218,7 +218,7 @@ function txt(text)
     end
   end
 
-  for k, v in ipairs(lines) do
+  for _k, v in ipairs(lines) do
     output[#output + 1] = v:trim_start(lowest_indent)..'\n'
   end
 
@@ -291,7 +291,7 @@ local operators = {
   ['or'] = function(a, b)
     return a or b
   end,
-  ['not'] = function(a, b)
+  ['not'] = function(a, _b)
     return !a
   end
 }
@@ -327,7 +327,7 @@ end
 function util.get_operators()
   local list = {}
 
-  for k, v in pairs(operators) do
+  for k, _v in pairs(operators) do
     list[#list + 1] = k
   end
 
@@ -412,7 +412,7 @@ function print_traceback(suppress, ...)
   if !suppress then
     local trace_color = Color(0, 255, 255)
 
-    for k, v in ipairs(pieces) do
+    for _k, v in ipairs(pieces) do
       if v and v != '' then
         Msg('    ')
         MsgC(trace_color, 'from '..v)
@@ -440,7 +440,7 @@ function long_error(...)
     pieces = { text }
   end
 
-  for k, v in ipairs(pieces) do
+  for _k, v in ipairs(pieces) do
     ErrorNoHalt(v)
   end
 
@@ -462,7 +462,7 @@ local unsafe = w[[debug require setfenv getfenv File _G _R RunString
                  CompileString rawget rawset rawequal setmetatable
                  coroutine module package newproxy]]
 
-for k, v in ipairs(unsafe) do
+for _k, v in ipairs(unsafe) do
   env[v] = nil
 end
 

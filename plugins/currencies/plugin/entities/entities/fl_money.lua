@@ -61,10 +61,10 @@ if SERVER then
   -- returns false or if the money is refused, as it is when the AdjustReceivedMoney hook
   -- refuses it.
   -- @param activator [Entity]
-  -- @param caller [Entity]
-  -- @param use_type [Number USE_* enum]
-  -- @param value [Number]
-  function ENT:Use(activator, caller, use_type, value)
+  -- @param _caller [Entity]
+  -- @param _use_type [Number USE_* enum]
+  -- @param _value [Number]
+  function ENT:Use(activator, _caller, _use_type, _value)
     if !IsValid(activator) then return end
 
     --- Decides whether money lying in the world may be picked up. Called on the server when

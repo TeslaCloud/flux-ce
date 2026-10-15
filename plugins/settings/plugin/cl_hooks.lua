@@ -29,9 +29,9 @@ end
 
 --- Updates the settings menu, if it is open, when the value of a setting has changed.
 -- @param id [String setting id]
--- @param value [Any new value of the setting]
--- @param old_value [Any previous value of the setting]
-function ClientSettings:ClientSettingChanged(id, value, old_value)
+-- @param _value [Any new value of the setting]
+-- @param _old_value [Any previous value of the setting]
+function ClientSettings:ClientSettingChanged(id, _value, _old_value)
   if IsValid(self.menu) then
     self.menu:update_setting(id)
   end

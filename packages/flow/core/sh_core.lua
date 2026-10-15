@@ -41,7 +41,7 @@ function file.Write(file_name, contents)
   local pieces = file_name:split('/')
   local current_path = ''
 
-  for k, v in ipairs(pieces) do
+  for _k, v in ipairs(pieces) do
     if File.ext(v) != nil then
       break
     end

@@ -223,7 +223,7 @@ function ClientSettings:get_categories()
     end
   end
 
-  for k, v in ipairs(categories) do
+  for _k, v in ipairs(categories) do
     table.sort(v.settings, function(a, b)
       return a.order < b.order
     end)
@@ -256,7 +256,7 @@ function ClientSettings:sync()
   local data = {}
   local count = 0
 
-  for id, v in pairs(pending) do
+  for id, _v in pairs(pending) do
     local setting = stored[id]
 
     if setting and setting.networked then

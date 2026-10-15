@@ -7,7 +7,7 @@
 local IsValid = IsValid
 local config_get = Config.get
 
-local default_msg_data = {
+local _default_msg_data = {
   sender = nil,
   listeners = {},
   data = {},
@@ -62,7 +62,7 @@ function Chatbox.can_hear(listener, message_data)
     local radius_sqr = radius * radius
 
     if istable(position) then
-      for k, v in pairs(position) do
+      for _k, v in pairs(position) do
         if isvector(v) and v:DistToSqr(eye_pos) <= radius_sqr then
           return true
         end
@@ -189,7 +189,7 @@ function Chatbox.add_text(listeners, ...)
   local receivers = {}
   local receiver_count = 0
 
-  for k, v in ipairs(listeners) do
+  for _k, v in ipairs(listeners) do
     local data = table.Copy(message_data)
 
     --- Lets plugins change a message before it is checked against a listener and sent to them.
@@ -237,7 +237,7 @@ end
 function Chatbox.message_to_string(message_data, concatenator)
   local to_string = {}
 
-  for k, v in pairs(message_data) do
+  for _k, v in pairs(message_data) do
     if isnumber(v) then continue end
 
     if isstring(v) then

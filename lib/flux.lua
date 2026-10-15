@@ -30,7 +30,7 @@ if PACKAGE then
   function PACKAGE:__installed__()
     if Flux.initialized then
       if !LITE_REFRESH then
-        for k, v in pairs(self.metadata.deps) do
+        for _k, v in pairs(self.metadata.deps) do
           Package:reload(v)
         end
       else

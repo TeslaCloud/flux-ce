@@ -29,7 +29,7 @@ function ActiveRecord.MigrationGenerator:init(name, fields)
   self.file_name = name:underscore()
   self.fields = {}
 
-  for k, v in ipairs(fields or {}) do
+  for _k, v in ipairs(fields or {}) do
     local column, type = v:match('^([%w_]+):?([%w_]*)$')
 
     if column then
@@ -59,7 +59,7 @@ function ActiveRecord.MigrationGenerator:body()
 
     table.insert(lines, 'create_table('..quote(table_name)..', function(t)')
 
-    for k, v in ipairs(self.fields) do
+    for _k, v in ipairs(self.fields) do
       if v.type == 'references' or v.type == 'belongs_to' then
         table.insert(lines, '  t:references '..quote(v.name))
       else
@@ -73,12 +73,12 @@ function ActiveRecord.MigrationGenerator:body()
     return lines
   end
 
-  local columns, add_table = self.name:match('^Add(.+)To(.+)$')
+  local _columns, add_table = self.name:match('^Add(.+)To(.+)$')
 
   if add_table then
     add_table = table_name_from(add_table)
 
-    for k, v in ipairs(self.fields) do
+    for _k, v in ipairs(self.fields) do
       if v.type == 'references' or v.type == 'belongs_to' then
         table.insert(lines, 'add_reference('..quote(add_table)..', '..quote(v.name)..')')
       else
@@ -89,12 +89,12 @@ function ActiveRecord.MigrationGenerator:body()
     return lines
   end
 
-  local columns, remove_table = self.name:match('^Remove(.+)From(.+)$')
+  local _columns, remove_table = self.name:match('^Remove(.+)From(.+)$')
 
   if remove_table then
     remove_table = table_name_from(remove_table)
 
-    for k, v in ipairs(self.fields) do
+    for _k, v in ipairs(self.fields) do
       if v.type == 'references' or v.type == 'belongs_to' then
         table.insert(lines, 'remove_reference('..quote(remove_table)..', '..quote(v.name)..')')
       else
@@ -137,7 +137,7 @@ function ActiveRecord.MigrationGenerator:generate(context)
 
   context = context or ActiveRecord.migration_context or ActiveRecord.MigrationContext.new()
 
-  for k, v in ipairs(context:migrations()) do
+  for _k, v in ipairs(context:migrations()) do
     if v.name == self.file_name then
       error(
         'ActiveRecord - another migration is already named '..self.file_name..': '..v.filename..

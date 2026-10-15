@@ -106,7 +106,7 @@ end
 -- @return [Map the hint with the id, text, color, play_sound and callback fields, or nil if
 --   there is no such hint]
 function Hints:find(id)
-  for k, v in ipairs(stored) do
+  for _k, v in ipairs(stored) do
     if v.id == id then
       return v
     end
@@ -142,7 +142,7 @@ end
 function Hints:get_eligible()
   local eligible = {}
 
-  for k, v in ipairs(stored) do
+  for _k, v in ipairs(stored) do
     if self:can_display(v) then
       table.insert(eligible, v)
     end

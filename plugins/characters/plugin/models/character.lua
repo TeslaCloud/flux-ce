@@ -50,8 +50,8 @@ end
 --- Called by ActiveRecord before the character is saved. Serializes the custom_data field
 -- into the `data` column; an empty table is stored as NULL. The column is left as it is when
 -- the table cannot be serialized.
--- @param fetched [Boolean true when the record already exists in the database]
-function Character:before_save(fetched)
+-- @param _fetched [Boolean true when the record already exists in the database]
+function Character:before_save(_fetched)
   if !istable(self.custom_data) then return end
 
   if next(self.custom_data) == nil then

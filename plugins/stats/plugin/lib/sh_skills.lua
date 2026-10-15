@@ -131,7 +131,7 @@ if SERVER then
   function Skills.get_record(character, skill_id)
     if !istable(character) or !istable(character.skills) then return end
 
-    for k, v in ipairs(character.skills) do
+    for _k, v in ipairs(character.skills) do
       if v.skill_id == skill_id then
         return v
       end
@@ -178,7 +178,7 @@ if SERVER then
   function Skills.to_networkable(target)
     local skills = {}
 
-    for k, v in ipairs(get_records(target)) do
+    for _k, v in ipairs(get_records(target)) do
       if stored[v.skill_id] then
         skills[v.skill_id] = tonumber(v.rank) or 0
       end
@@ -310,7 +310,7 @@ do
   end
 end
 
-Pipeline.register('skill', function(id, file_name, pipe)
+Pipeline.register('skill', function(id, file_name, _pipe)
   SKILL = SkillBase.new(id)
 
   require_relative(file_name)

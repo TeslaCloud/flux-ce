@@ -21,7 +21,7 @@ function Currencies:OnInventoryRebuild(panel)
 
     local text = t(panel.money.title)
     local font = Theme.get_font('main_menu_normal_large')
-    local text_w, text_h = util.text_size(text, font)
+    local _text_w, text_h = util.text_size(text, font)
 
     if IsValid(panel.main_inventory) then
       panel:SetWide(math.min(panel:GetWide(), panel.main_inventory:GetWide() - panel.money:GetWide() - scale(16)))
@@ -52,7 +52,7 @@ function Currencies:OnContainerOpened(panel, inventory_id)
 
   local text = t(panel.container_money.title)
   local font = Theme.get_font('main_menu_normal_large')
-  local text_w, text_h = util.text_size(text, font)
+  local _text_w, text_h = util.text_size(text, font)
 
   panel.container_money:SetPos(inv_panel.x, inv_panel.y + inv_panel:GetTall() + text_h + scale(8))
 end
@@ -113,7 +113,7 @@ function Currencies:create_panel(entity, parent)
 end
 
 Cable.receive('fl_rebuild_currency_panel', function()
-  for k, v in pairs(Flux.money_panels) do
+  for _k, v in pairs(Flux.money_panels) do
     if IsValid(v) then
       v:rebuild()
     end

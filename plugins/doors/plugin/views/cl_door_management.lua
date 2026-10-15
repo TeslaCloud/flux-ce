@@ -46,7 +46,7 @@ function PANEL:Init()
   self.text_row:DockMargin(0, margin, 0, margin)
   self.text_row:SetTall(scale(24))
   self.text_row:SetPaintBackground(false)
-  self.text_row.Think = function(pnl)
+  self.text_row.Think = function(_pnl)
     self:check_door()
   end
 
@@ -55,14 +55,14 @@ function PANEL:Init()
   self.text_save:DockMargin(margin, 0, 0, 0)
   self.text_save:SetWide(scale(96))
   self.text_save:SetText(t'ui.door.management.save')
-  self.text_save.DoClick = function(btn)
+  self.text_save.DoClick = function(_btn)
     self:save_text()
   end
 
   self.text_entry = vgui.Create('DTextEntry', self.text_row)
   self.text_entry:Dock(FILL)
   self.text_entry:SetPlaceholderText(t'ui.door.management.text')
-  self.text_entry.OnEnter = function(pnl)
+  self.text_entry.OnEnter = function(_pnl)
     self:save_text()
   end
 
@@ -71,7 +71,7 @@ function PANEL:Init()
   self.sell:DockMargin(0, margin, 0, 0)
   self.sell:SetTall(scale(28))
   self.sell:SetVisible(false)
-  self.sell.DoClick = function(btn)
+  self.sell.DoClick = function(_btn)
     self:confirm_sell()
   end
 
@@ -86,11 +86,11 @@ function PANEL:Init()
   self.access_list:SetMultiSelect(false)
   self.access_list:AddColumn(column_name)
   self.access_list:AddColumn(column_access)
-  self.access_list.OnRowRightClick = function(pnl, line_id, line)
+  self.access_list.OnRowRightClick = function(_pnl, _line_id, line)
     self:open_access_menu(line)
   end
 
-  self.access_list.DoDoubleClick = function(pnl, line_id, line)
+  self.access_list.DoDoubleClick = function(_pnl, _line_id, line)
     self:open_access_menu(line)
   end
 end
@@ -220,7 +220,7 @@ function PANEL:rebuild()
   local listed = {}
   local rows = {}
 
-  for k, v in ipairs(player.GetAll()) do
+  for _k, v in ipairs(player.GetAll()) do
     local character_id = Doors:get_character_id(v)
 
     if character_id then
@@ -228,7 +228,7 @@ function PANEL:rebuild()
     end
   end
 
-  for k, v in ipairs(info.access or {}) do
+  for _k, v in ipairs(info.access or {}) do
     local target = online[v.id]
     local name = v.name or ''
 
@@ -263,7 +263,7 @@ function PANEL:rebuild()
 
   self.access_list:Clear()
 
-  for k, v in ipairs(rows) do
+  for _k, v in ipairs(rows) do
     local level_name = self:get_level_name(v.level)
     local line = self.access_list:AddLine(v.name, level_name)
 

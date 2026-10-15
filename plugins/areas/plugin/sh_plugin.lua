@@ -62,14 +62,14 @@ Area.tool_modes = {
       area_type = data.area_type or 'area',
       OnLeftClick = data.OnLeftClick,
       OnRightClick = data.OnRightClick,
-      OnReload = data.OnReload or function(mode, tool, trace)
-        local cur_time = CurTime()
+      OnReload = data.OnReload or function(_mode, _tool, trace)
+        local _cur_time = CurTime()
         local pos = trace.HitPos
         local z = pos.z + 16
 
-        for k, v in pairs(Areas.all()) do
+        for _k, v in pairs(Areas.all()) do
           if istable(v.polys) and isstring(v.type) and v.type == data.area_type then
-            for k2, v2 in ipairs(v.polys) do
+            for _k2, v2 in ipairs(v.polys) do
               if z > v2[1].z and z < v.maxh then
                 if util.vector_in_poly(pos, v2) then
                   Areas.remove(v.id)
@@ -137,9 +137,9 @@ function Area:AddAreaToolModes(mode_list)
 
   --- Registers the text area being built.
   -- @param tool [Tool the area tool]
-  -- @param trace [Map trace result of the tool owner's aim]
+  -- @param _trace [Map trace result of the tool owner's aim]
   -- @return [Boolean true if an area was registered, nil otherwise]
-  function mode:OnRightClick(tool, trace)
+  function mode:OnRightClick(tool, _trace)
     if tool.area then
       tool.area:register()
       tool.area = nil
@@ -170,7 +170,7 @@ Areas.register_type(
   'Text Area',
   'Displays text whenever a player enters the area.',
   Color(255, 0, 255),
-  function(actor, area, has_entered, pos, cur_time)
+  function(actor, area, has_entered, _pos, cur_time)
     actor.text_areas = actor.text_areas or {}
 
     if has_entered then

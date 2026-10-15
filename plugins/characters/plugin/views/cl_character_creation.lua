@@ -44,7 +44,7 @@ function PANEL:Init()
   self.back:set_icon_size(fa_icon_size)
   self.back:set_centered(true)
 
-  self.back.DoClick = function(btn)
+  self.back.DoClick = function(_btn)
     local cur_time = CurTime()
 
     if !self.back.next_click or self.back.next_click < cur_time then
@@ -66,7 +66,7 @@ function PANEL:Init()
   self.next:set_icon_size(fa_icon_size)
   self.next:set_centered(true)
 
-  self.next.DoClick = function(btn)
+  self.next.DoClick = function(_btn)
     local cur_time = CurTime()
 
     if !self.next.next_click or self.next.next_click < cur_time then
@@ -121,7 +121,7 @@ do
         text = t'ui.char_create.error.lag'
       end
 
-      local tx, ty = util.text_size(text, font)
+      local tx, _ty = util.text_size(text, font)
 
       local cog_size = math.scale(64)
 
@@ -160,7 +160,7 @@ function PANEL:rebuild()
       button:set_text_color(Theme.get_color('accent'))
     end
 
-    button.DoClick = function(btn)
+    button.DoClick = function(_btn)
       if self.stage > k then
         local cur_time = CurTime()
 

@@ -33,7 +33,7 @@ function PANEL:Init()
   self.button_close:set_icon('fa-times')
   self.button_close:set_icon_size(math_scale(18))
   self.button_close:SetTooltip(t'ui.close')
-  self.button_close.DoClick = function(btn)
+  self.button_close.DoClick = function(_btn)
     self:safe_remove()
   end
 
@@ -47,7 +47,7 @@ function PANEL:Init()
   self.pockets:set_title('ui.inventory.pockets')
   self.pockets:SizeToContents()
 
-  local title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
+  local _title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
   local x = scrw * 0.5 - self.main_inventory:GetWide() - math_scale(8)
   local y = scrh * 0.5 - self.main_inventory:GetTall() * 0.5 - self.pockets:GetTall() * 0.5 - title_h * 0.5
 
@@ -129,14 +129,14 @@ function PANEL:open_player_inventories(owner, inventory_ids)
 
   self.inventory_ids = inventory_ids
 
-  for k, v in pairs(inventory_ids) do
+  for _k, v in pairs(inventory_ids) do
     local inventory = Inventories.find(v)
     local inventory_panel = inventory:create_panel(self)
 
     self.container[inventory.type] = inventory_panel
   end
 
-  local scrw, scrh = ScrW(), ScrH()
+  local scrw, _scrh = ScrW(), ScrH()
 
   self.container.main_inventory:SetPos(
     self.main_inventory.x + self.main_inventory:GetWide() + math_scale_x(12),
@@ -195,7 +195,7 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   equipment_right:add_slot('equipment_hands')
   equipment_right:add_slot('equipment_legs')
 
-  for k, v in pairs(self.container) do
+  for _k, v in pairs(self.container) do
     v:rebuild()
   end
 end

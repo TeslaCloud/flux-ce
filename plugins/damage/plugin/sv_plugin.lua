@@ -401,7 +401,7 @@ function Damage:get_log_viewers()
 
   local count = 0
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if v:can('view_damage_logs') then
       count = count + 1
       log_viewers[count] = v

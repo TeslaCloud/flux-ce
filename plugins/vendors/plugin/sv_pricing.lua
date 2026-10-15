@@ -111,8 +111,8 @@ function Vendors:get_sellable_items(vendor, actor)
 
   if table.IsEmpty(vendor.vendor_data.buys) then return items end
 
-  for inv_type, inventory in pairs(actor:get_inventories()) do
-    for k, instance_id in ipairs(inventory:get_items_ids()) do
+  for _inv_type, inventory in pairs(actor:get_inventories()) do
+    for _k, instance_id in ipairs(inventory:get_items_ids()) do
       local item_obj = Item.find_instance_by_id(instance_id)
 
       if item_obj and self:can_buy_item(vendor, item_obj) then
@@ -144,7 +144,7 @@ function Vendors:get_trade_data(vendor, actor)
     end
   end
 
-  for k, item_obj in ipairs(self:get_sellable_items(vendor, actor)) do
+  for _k, item_obj in ipairs(self:get_sellable_items(vendor, actor)) do
     buys[#buys + 1] = {
       instance_id = item_obj.instance_id,
       price = self:get_buy_price(vendor, item_obj, actor)

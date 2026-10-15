@@ -110,7 +110,7 @@ function Attributes.sum_boosts(attribute_table, attribute)
   local boosts = attribute.boosts
 
   if boosts then
-    for k, v in pairs(boosts) do
+    for _k, v in pairs(boosts) do
       boost = boost + (tonumber(v.value) or 0)
     end
   end
@@ -230,7 +230,7 @@ if SERVER then
     local entries = {}
     local earliest
 
-    for k, v in ipairs(modifiers) do
+    for _k, v in ipairs(modifiers) do
       local expiry = get_expiry(v)
 
       if expiry and (!earliest or expiry < earliest) then
@@ -273,7 +273,7 @@ if SERVER then
   function Attributes.get_record(character, attribute_id)
     if !istable(character) or !istable(character.attributes) then return end
 
-    for k, v in ipairs(character.attributes) do
+    for _k, v in ipairs(character.attributes) do
       if v.attribute_id == attribute_id then
         return v
       end
@@ -340,7 +340,7 @@ if SERVER then
     local unix_time, cur_time = os_time(), CurTime()
     local earliest
 
-    for k, v in ipairs(get_records(target)) do
+    for _k, v in ipairs(get_records(target)) do
       local attribute_table = stored[v.attribute_id]
 
       if attribute_table then
@@ -378,7 +378,7 @@ if SERVER then
     local unix_time = os_time()
     local removed = 0
 
-    for k, v in ipairs(get_records(target)) do
+    for _k, v in ipairs(get_records(target)) do
       removed = removed + remove_modifiers(v.attribute_boosts or {}, nil, unix_time)
     end
 
@@ -485,7 +485,7 @@ if SERVER then
       identifier = tostring(identifier)
     end
 
-    for k, v in ipairs(get_records(target)) do
+    for _k, v in ipairs(get_records(target)) do
       if attribute_id == nil or v.attribute_id == attribute_id then
         removed = removed + remove_modifiers(v[list_key] or {}, identifier)
       end
@@ -610,7 +610,7 @@ do
 
     identifier = tostring(identifier)
 
-    for k, v in pairs(self:get_attribute_boosts(attribute_id)) do
+    for _k, v in pairs(self:get_attribute_boosts(attribute_id)) do
       if v.id == identifier then
         return true
       end
@@ -713,7 +713,7 @@ do
   end
 end
 
-Pipeline.register('attribute', function(id, file_name, pipe)
+Pipeline.register('attribute', function(id, file_name, _pipe)
   ATTRIBUTE = AttributeBase.new(id)
 
   require_relative(file_name)

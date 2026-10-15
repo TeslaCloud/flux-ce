@@ -34,10 +34,10 @@ end
 
 --- Keeps the list of the players a radio message is sent to out of the copy of the message
 -- that each of them receives, so that a client cannot tell who else is listening.
--- @param listener [Player player the copy of the message is for]
+-- @param _listener [Player player the copy of the message is for]
 -- @param message_data [Map the copy of the message data, radio messages have a frequency
 --   field]
-function Communications:AdjustMessageData(listener, message_data)
+function Communications:AdjustMessageData(_listener, message_data)
   if message_data.frequency then
     message_data.listeners = nil
   end
@@ -57,7 +57,7 @@ end
 
 Prefixes:add('radio', {
   prefix = Communications.prefixes,
-  callback = function(actor, text, team_chat)
+  callback = function(actor, text, _team_chat)
     if !IsValid(actor) then return end
 
     Communications.say_radio(actor, text)

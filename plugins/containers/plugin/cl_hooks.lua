@@ -49,7 +49,7 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
 
       if desc then
         local font = Theme.get_font('tooltip_normal')
-        local text_w, text_h = util.text_size(desc, font)
+        local text_w, _text_h = util.text_size(desc, font)
 
         draw.SimpleTextOutlined(
           desc,

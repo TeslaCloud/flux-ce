@@ -46,7 +46,7 @@ function StaticEnts:PersistenceSave()
 
   local entities = {}
 
-  for k, v in ents.Iterator() do
+  for _k, v in ents.Iterator() do
     if v:GetPersistent() then
       local ent_class = v:GetClass()
       entities[ent_class] = entities[ent_class] or {}
@@ -74,7 +74,7 @@ end
 
 --- Loads the saved static entities of every whitelisted class.
 function StaticEnts:PersistenceLoad()
-  for ent_class, v in pairs(whitelisted_ents) do
+  for ent_class, _v in pairs(whitelisted_ents) do
     self:load_class(ent_class)
   end
 end
@@ -133,7 +133,7 @@ function StaticEnts:load_class(ent_class)
   if !loaded.Entities then return end
   if !loaded.Constraints then return end
 
-  local entities, constraints = duplicator.Paste(nil, loaded.Entities, loaded.Constraints)
+  local entities, _constraints = duplicator.Paste(nil, loaded.Entities, loaded.Constraints)
 
   -- Restore any custom data the static entities might have had.
   for k, v in pairs(entities) do
@@ -144,7 +144,7 @@ function StaticEnts:load_class(ent_class)
     end
   end
 
-  for k, v in pairs(entities) do
+  for _k, v in pairs(entities) do
     v:SetPersistent(true)
   end
 end

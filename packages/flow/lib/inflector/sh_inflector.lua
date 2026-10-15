@@ -123,7 +123,7 @@ function Flow.Inflector:uncountable(words)
   if isstring(words) then
     uncountables[words] = true
   elseif istable(words) then
-    for k, v in ipairs(words) do
+    for _k, v in ipairs(words) do
       uncountables[v] = true
     end
   end

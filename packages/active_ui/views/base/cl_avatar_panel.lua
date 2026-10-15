@@ -16,7 +16,7 @@ function PANEL:Init()
   self.button.Paint = function()
   end
 
-  self.button.DoClick = function(pnl)
+  self.button.DoClick = function(_pnl)
     local target = self.player
 
     if IsValid(target) then
@@ -24,7 +24,7 @@ function PANEL:Init()
     end
   end
 
-  self.button.DoRightClick = function(pnl)
+  self.button.DoRightClick = function(_pnl)
     local target = self.player
 
     if IsValid(target) then

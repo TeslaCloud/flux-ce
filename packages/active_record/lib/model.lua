@@ -29,8 +29,8 @@ end
 -- ```
 -- @param model [ActiveRecord::Base model class]
 -- @param column [String column name]
--- @param type [String abstract column type; unused]
-function ActiveRecord.Model:generate_helpers(model, column, type)
+-- @param _type [String abstract column type; unused]
+function ActiveRecord.Model:generate_helpers(model, column, _type)
   model['find_by_'..column] = function(obj, value, callback)
     return obj:find_by(column, value, callback)
   end
@@ -40,7 +40,7 @@ end
 -- find_by_<column> helpers for its columns.
 -- @return [ActiveRecord::Model(self)]
 function ActiveRecord.Model:populate()
-  for k, v in pairs(self.models) do
+  for _k, v in pairs(self.models) do
     local schema = ActiveRecord.schema[v.table_name]
 
     if schema then

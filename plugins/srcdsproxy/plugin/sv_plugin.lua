@@ -164,7 +164,7 @@ function SrcdsProxy:find_local_steam_id(argument)
     return
   end
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if srcdsproxy.IsProxied(v) then
       if account_id and v:AccountID() == tonumber(account_id) or
          !account_id and srcdsproxy.ClaimedSteamID64(v) == argument then
@@ -192,7 +192,7 @@ function SrcdsProxy:run(actor, verbs)
     verbs = { verbs }
   end
 
-  for k, v in ipairs(verbs) do
+  for _k, v in ipairs(verbs) do
     srcdsproxy.Command(actor, v)
   end
 
@@ -262,7 +262,7 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
   local locals, listed = {}, {}
 
   if istable(found) then
-    for k, v in ipairs(found) do
+    for _k, v in ipairs(found) do
       if IsValid(v) and !listed[v] then
         listed[v] = true
 
@@ -276,7 +276,7 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
   end
 
   if check_immunity and IsValid(actor) then
-    for k, v in ipairs(locals) do
+    for _k, v in ipairs(locals) do
       --- Run by the proxy commands that act on players (Transfer, `netban add` and
       -- `netban addip`) for every player on this server they are about to affect, the same
       -- way the command interpreter runs it for a command with `immunity` set.
@@ -294,7 +294,7 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
 
   local entries = {}
 
-  for k, v in ipairs(locals) do
+  for _k, v in ipairs(locals) do
     local id = srcdsproxy.IsProxied(v) and srcdsproxy.ClaimedSteamID64(v) or ''
 
     if id != '' and id != '0' then
@@ -348,7 +348,7 @@ function SrcdsProxy:ban(actor, name, target, duration, reason)
 
   local verbs = {}
 
-  for k, v in ipairs(entries) do
+  for _k, v in ipairs(entries) do
     verbs[#verbs + 1] = self:verb(name, v.id, duration, reason)
   end
 

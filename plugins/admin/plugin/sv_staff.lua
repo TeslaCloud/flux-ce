@@ -250,7 +250,7 @@ function Bolt:send_staff_list(target)
       local members, listed = {}, {}
 
       if istable(results) then
-        for k, v in ipairs(results) do
+        for _k, v in ipairs(results) do
           local steam_id = tostring(v.steam_id)
           local member = {
             steam_id = steam_id,
@@ -265,7 +265,7 @@ function Bolt:send_staff_list(target)
         end
       end
 
-      for k, v in player.Iterator() do
+      for _k, v in player.Iterator() do
         if !v:IsBot() then
           local steam_id = v:SteamID()
           local role = v:GetUserGroup()

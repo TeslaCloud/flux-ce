@@ -58,8 +58,8 @@ if SERVER then
 
   --- Lets a gamemaster who presses the use key on the entity possess its character.
   -- @param activator [Entity the entity that pressed the use key, normally a Player]
-  -- @param caller [Entity]
-  function ENT:Use(activator, caller)
+  -- @param _caller [Entity]
+  function ENT:Use(activator, _caller)
     if IsValid(activator) and activator:IsPlayer() then
       Gamemastery.use_entity(activator, self)
     end
@@ -76,10 +76,10 @@ else
 
   --- Draws the name of the character above the entity, with a hint about the use key, for
   -- gamemasters who look at it from up to 512 units away.
-  -- @param x [Number screen position]
-  -- @param y [Number screen position]
+  -- @param _x [Number screen position]
+  -- @param _y [Number screen position]
   -- @param distance [Number distance between the local player and the entity]
-  function ENT:DrawTargetID(x, y, distance)
+  function ENT:DrawTargetID(_x, _y, distance)
     if distance > 512 or !IsValid(PLAYER) or !PLAYER:can('gamemastery') then return end
 
     local name = self:get_nv('gm_character_name')

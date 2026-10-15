@@ -66,7 +66,7 @@ function Lumen.Layout.children_of(container, children)
 
   local visible = {}
 
-  for k, child in ipairs(children) do
+  for _k, child in ipairs(children) do
     if IsValid(child) and child:IsVisible() then
       visible[#visible + 1] = child
     end
@@ -99,7 +99,7 @@ function Lumen.Layout.flex(style, children, avail_w, avail_h, apply)
   local cross_avail = row and inner_h or inner_w
   local items = {}
 
-  for k, child in ipairs(children) do
+  for _k, child in ipairs(children) do
     local child_style = Lumen.Layout.style_of(child)
     local margin = child_style.margin
     local max_w = inner_w and math_max(inner_w - margin.left - margin.right, 0)
@@ -135,7 +135,7 @@ function Lumen.Layout.flex(style, children, avail_w, avail_h, apply)
   local line = {}
   local line_used = 0
 
-  for k, item in ipairs(items) do
+  for _k, item in ipairs(items) do
     local size = item.base + item.main_margin
     local needed = line_used + (#line > 0 and gap or 0) + size
 
@@ -157,20 +157,20 @@ function Lumen.Layout.flex(style, children, avail_w, avail_h, apply)
   local content_main = 0
   local cross_pos = 0
 
-  for line_index, current in ipairs(lines) do
+  for _line_index, current in ipairs(lines) do
     local count = #current
     local used = gap * math_max(count - 1, 0)
     local total_flex = 0
     local line_cross = 0
 
-    for k, item in ipairs(current) do
+    for _k, item in ipairs(current) do
       used = used + item.base + item.main_margin
       total_flex = total_flex + item.flex
     end
 
     local free = math_max((main_avail or used) - used, 0)
 
-    for k, item in ipairs(current) do
+    for _k, item in ipairs(current) do
       item.main = item.base
 
       if total_flex > 0 and item.flex > 0 then
@@ -210,7 +210,7 @@ function Lumen.Layout.flex(style, children, avail_w, avail_h, apply)
 
     local main_pos = offset
 
-    for k, item in ipairs(current) do
+    for _k, item in ipairs(current) do
       local margin = item.style.margin
       local cross_size = item.cross
       local align = item.align

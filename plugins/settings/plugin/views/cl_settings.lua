@@ -30,13 +30,13 @@ function PANEL:Init()
   self.reset_button:set_background_color(Theme.get_color('surface_raised'))
   self.reset_button:SetTall(math.scale(32))
   self.reset_button:SizeToContentsX()
-  self.reset_button.DoClick = function(btn)
+  self.reset_button.DoClick = function(_btn)
     local ids = table.GetKeys(self.rows)
     local message, title = t'ui.settings.reset_all_message', t'ui.settings.reset_all'
     local yes, no = t'ui.yes', t'ui.no'
 
     Derma_Query(message, title, yes, function()
-      for k, v in ipairs(ids) do
+      for _k, v in ipairs(ids) do
         ClientSettings:reset(v)
       end
     end, no)
@@ -85,8 +85,8 @@ end
 function PANEL:get_listed(categories)
   local ids = {}
 
-  for k, v in ipairs(categories) do
-    for k1, v1 in ipairs(v.settings) do
+  for _k, v in ipairs(categories) do
+    for _k1, v1 in ipairs(v.settings) do
       table.insert(ids, v1.id)
     end
   end
@@ -187,7 +187,7 @@ function PANEL:Init()
   self.reset_button:set_icon('fa-undo')
   self.reset_button:set_icon_size(math.scale(16))
   self.reset_button:set_centered(true)
-  self.reset_button.DoClick = function(btn)
+  self.reset_button.DoClick = function(_btn)
     if self.setting then
       ClientSettings:reset(self.setting.id)
     end

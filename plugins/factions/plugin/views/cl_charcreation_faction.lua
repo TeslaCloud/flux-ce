@@ -22,7 +22,7 @@ function PANEL:on_open(parent)
 
   local bypass = Factions.can_bypass_creation_limits(PLAYER, parent.extra_data)
 
-  for k, v in pairs(Factions.all()) do
+  for _k, v in pairs(Factions.all()) do
     if bypass or !v.whitelisted or PLAYER:has_whitelist(v.faction_id) then
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() * 0.33, self.chooser:GetTall())
@@ -42,7 +42,7 @@ function PANEL:on_open(parent)
       label:SetContentAlignment(5)
       label:SizeToContents()
       label:SetTall(label:GetTall() + math.scale(16))
-      label.Paint = function(pnl, w, h)
+      label.Paint = function(_pnl, w, h)
         draw.RoundedBox(0, 0, 0, w, h, ColorAlpha(Theme.get_color('background'), 200))
       end
 

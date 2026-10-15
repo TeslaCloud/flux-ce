@@ -37,7 +37,7 @@ end
 local function sort_by_name(list)
   local names = {}
 
-  for k, v in ipairs(list) do
+  for _k, v in ipairs(list) do
     names[v] = t(v.name)
   end
 
@@ -62,7 +62,7 @@ local function get_stats(actor)
   local rest = {}
   local placed = {}
 
-  for k, id in ipairs(stat_order) do
+  for _k, id in ipairs(stat_order) do
     local stat = stats[id]
 
     if stat and Attributes.is_visible(stat, actor) then
@@ -78,7 +78,7 @@ local function get_stats(actor)
     end
   end
 
-  for k, v in ipairs(sort_by_name(rest)) do
+  for _k, v in ipairs(sort_by_name(rest)) do
     ordered[#ordered + 1] = v
   end
 
@@ -95,7 +95,7 @@ local function get_skill_groups(actor, stats)
   local groups = {}
   local other = {}
 
-  for k, v in pairs(Skills.get_stored()) do
+  for _k, v in pairs(Skills.get_stored()) do
     if Skills.is_visible(v, actor) then
       local key_stat = isstring(v.attribute) and Attributes.find(v.attribute)
 
@@ -108,7 +108,7 @@ local function get_skill_groups(actor, stats)
     end
   end
 
-  for k, v in ipairs(stats) do
+  for _k, v in ipairs(stats) do
     local skills = by_stat[v.attribute_id]
 
     if skills then
@@ -313,7 +313,7 @@ local function Notice(props)
   </view>
 end
 
-return function(props)
+return function(_props)
   local actor = PLAYER
 
   if !IsValid(actor) or !actor:is_character_loaded() then

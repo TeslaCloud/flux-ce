@@ -137,7 +137,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
 
   local query_obj = self.connection:query(query)
   local query_start = os.clock()
-  local success_func = function(result, size)
+  local success_func = function(result, _size)
     if callback then
       for k, v in pairs(result) do
         if isstring(v) then
@@ -180,11 +180,11 @@ end
 --- Makes the column the primary key of the table when a 'primary_key' column is created.
 -- @param query [ActiveRecord::Query query the column was added to]
 -- @param column [String column name]
--- @param args [Map unused]
--- @param obj [ActiveRecord::Query unused]
+-- @param _args [Map unused]
+-- @param _obj [ActiveRecord::Query unused]
 -- @param type [String abstract column type]
--- @param def [String unused]
-function ActiveRecord.Adapters.Pg:create_column(query, column, args, obj, type, def)
+-- @param _def [String unused]
+function ActiveRecord.Adapters.Pg:create_column(query, column, _args, _obj, type, _def)
   if type == 'primary_key' then
     query:set_primary_key(column)
   end
@@ -192,11 +192,11 @@ end
 
 --- Appends 'RETURNING id' to insert queries, so that the id of the new row is passed
 -- to the query callback.
--- @param query [ActiveRecord::Query unused]
+-- @param _query [ActiveRecord::Query unused]
 -- @param query_string [String generated SQL]
 -- @param query_type [String lowercase query type]
 -- @return [String the extended SQL for 'insert' queries, nil for other query types]
-function ActiveRecord.Adapters.Pg:append_query_string(query, query_string, query_type)
+function ActiveRecord.Adapters.Pg:append_query_string(_query, query_string, query_type)
   if query_type == 'insert' then
     return query_string..' RETURNING id'
   end

@@ -107,7 +107,7 @@ function Flux.Notification:reposition(offset)
 
   local shift = offset + math.scale(6)
 
-  for k, v in ipairs(display) do
+  for _k, v in ipairs(display) do
     local panel = v.panel
 
     if IsValid(panel) then

@@ -71,7 +71,7 @@ function PANEL:wrap(width)
     if width and style.wrap_text and paragraph != '' and util.wrap_text then
       local wrapped = util.wrap_text(paragraph, font, math_max(width, 1))
 
-      for k, line in ipairs(wrapped or { paragraph }) do
+      for _k, line in ipairs(wrapped or { paragraph }) do
         lines[#lines + 1] = line
       end
     else
@@ -90,7 +90,7 @@ function PANEL:measure_lines(lines)
   local line_height = util.font_size(font)
   local width = 0
 
-  for k, line in ipairs(lines) do
+  for _k, line in ipairs(lines) do
     local w = text_size(line, font)
 
     width = math_max(width, w)
@@ -101,9 +101,9 @@ end
 
 --- Measures the size the text needs, wrapped to the width available.
 -- @param max_w [Number width available, nil if unconstrained]
--- @param max_h [Number height available, nil if unconstrained]
+-- @param _max_h [Number height available, nil if unconstrained]
 -- @return [Number width, Number height]
-function PANEL:lumen_measure(max_w, max_h)
+function PANEL:lumen_measure(max_w, _max_h)
   local pad = Lumen.Layout.style_of(self).padding
   local inner_w = max_w and math_max(max_w - pad.left - pad.right, 0)
   local lines = self:wrap(inner_w)
@@ -115,8 +115,8 @@ end
 
 --- Wraps the text to the width of the panel.
 -- @param w [Number panel width]
--- @param h [Number panel height]
-function PANEL:PerformLayout(w, h)
+-- @param _h [Number panel height]
+function PANEL:PerformLayout(w, _h)
   local pad = Lumen.Layout.style_of(self).padding
   local icon_w = self.get_icon_size and self:get_icon_size() or 0
 
@@ -158,7 +158,7 @@ function PANEL:draw_text(w, h, color, offset_x)
 
   x = math_floor(x)
 
-  for k, line in ipairs(lines) do
+  for _k, line in ipairs(lines) do
     draw_simple_text(line, font, x, math_floor(y), color, align, TEXT_ALIGN_TOP)
 
     y = y + line_height

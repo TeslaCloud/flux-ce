@@ -94,13 +94,13 @@ function Factions.add_faction(id, data)
     local gender_models = data:get_gender_models(k)
 
     if gender_models then
-      for k1, v1 in pairs(gender_models) do
+      for _k1, v1 in pairs(gender_models) do
         Flux.Anim:set_model_class(v1, v)
       end
     end
   end
 
-  for k, v in ipairs(data.rank) do
+  for _k, v in ipairs(data.rank) do
     if isstring(v.model) then
       if v.model_class then
         Flux.Anim:set_model_class(v.model, v.model_class)
@@ -137,7 +137,7 @@ end
 function Factions.get_players(id)
   local players = {}
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if v:get_faction_id() == id then
       players[#players + 1] = v
     end
@@ -236,7 +236,7 @@ function Factions.is_full(id, rank, except)
 
   local members = 0
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if v != except then
       local faction_table, member_rank = get_membership(v)
 
@@ -265,7 +265,7 @@ function Factions.count_characters(target, faction_id)
   local amount = 0
 
   if istable(target.record) and istable(target.record.characters) then
-    for k, v in ipairs(target.record.characters) do
+    for _k, v in ipairs(target.record.characters) do
       if v.faction == faction_id then
         amount = amount + 1
       end
@@ -515,7 +515,7 @@ if SERVER then
     local counts = {}
 
     if istable(target.record.characters) then
-      for k, v in ipairs(target.record.characters) do
+      for _k, v in ipairs(target.record.characters) do
         if v != except and isstring(v.faction) then
           counts[v.faction] = (counts[v.faction] or 0) + 1
         end
@@ -539,7 +539,7 @@ if SERVER then
 
     target.faction_weapons = given
 
-    for weapon_class, v in pairs(given) do
+    for weapon_class, _v in pairs(given) do
       if !table.HasValue(loadout, weapon_class) then
         target:StripWeapon(weapon_class)
 
@@ -547,7 +547,7 @@ if SERVER then
       end
     end
 
-    for k, v in ipairs(loadout) do
+    for _k, v in ipairs(loadout) do
       if !target:HasWeapon(v) then
         target:Give(v)
 
@@ -674,11 +674,11 @@ if SERVER then
 
     if !faction_table or !istable(faction_table.npc_relations) then return end
 
-    for npc_class, v in pairs(faction_table.npc_relations) do
+    for npc_class, _v in pairs(faction_table.npc_relations) do
       local disposition = faction_table:get_npc_disposition(npc_class)
 
       if disposition then
-        for k1, npc in ipairs(ents.FindByClass(npc_class)) do
+        for _k1, npc in ipairs(ents.FindByClass(npc_class)) do
           if npc:IsNPC() then
             set_npc_relation(target, npc, disposition)
           end
@@ -696,7 +696,7 @@ if SERVER then
 
     local npc_class = npc:GetClass()
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       local faction_table = get_membership(v)
       local disposition = faction_table and faction_table:get_npc_disposition(npc_class)
 
@@ -805,7 +805,7 @@ do
       return table.HasValue(whitelists, faction_id)
     end
 
-    for k, v in pairs(whitelists) do
+    for _k, v in pairs(whitelists) do
       if v.faction_id == faction_id then
         return true
       end
@@ -967,7 +967,7 @@ do
   end
 end
 
-Pipeline.register('faction', function(id, file_name, pipe)
+Pipeline.register('faction', function(id, file_name, _pipe)
   FACTION = Faction.new(id)
 
   require_relative(file_name)

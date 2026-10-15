@@ -8,7 +8,7 @@ ITEM:add_button('create_key_copy', {
   name = 'item.option.create_key_copy',
   icon = 'icon16/key_add.png',
   callback = 'on_create_key_copy',
-  on_show = function(item_table)
+  on_show = function(_item_table)
     if PLAYER:has_item('key_blank') then
       return true
     end

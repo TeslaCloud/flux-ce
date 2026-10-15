@@ -24,7 +24,7 @@ ItemThrowable.background_color = Color(150, 150, 50)
 ItemThrowable:add_button('unload', {
   icon = 'icon16/add.png',
   callback = 'on_unload',
-  on_show = function(item_obj)
+  on_show = function(_item_obj)
     return false
   end
 })

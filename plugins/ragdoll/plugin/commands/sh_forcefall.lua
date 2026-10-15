@@ -17,7 +17,7 @@ CMD.aliases = { 'forcefallover', 'plyfall' }
 function CMD:on_run(actor, targets, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
-  for k, v in ipairs(targets) do
+  for _k, v in ipairs(targets) do
     if IsValid(v) and v:Alive() and !v:is_ragdolled() then
       v:set_ragdoll_state(RAGDOLL_FALLENOVER, delay)
     end

@@ -55,7 +55,7 @@ end
 function PANEL:count_players()
   local count = 0
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if !v:has_initialized() or self:should_show_player(v) then
       count = count + 1
     end
@@ -103,7 +103,7 @@ function PANEL:rebuild()
   local card_tall = math.scale(32) + math.scale(12)
   local margin = math.scale(4)
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if !self:should_show_player(v) then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)

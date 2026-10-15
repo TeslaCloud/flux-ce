@@ -74,7 +74,7 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
       if isfunction(on_connected) then on_connected(self) end
     end
 
-    self.connection.onConnectionFailed = function(database, error_text)
+    self.connection.onConnectionFailed = function(_database, error_text)
       self:on_connection_failed(error_text)
     end
 
@@ -174,7 +174,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
   end
 
   query_obj.onSuccess = success_func
-  query_obj.onError = function(query_obj, error_text)
+  query_obj.onError = function(_query_obj, error_text)
     self:query_failed(query, error_text, false)
   end
 
@@ -184,7 +184,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
     -- The callbacks run inside of wait(), so the success callback is called by hand
     -- below instead and the error is reported once the query is done.
     query_obj.onSuccess = nil
-    query_obj.onError = function(query_obj, text)
+    query_obj.onError = function(_query_obj, text)
       error_text = text
     end
 
@@ -208,20 +208,20 @@ end
 --- Sets the table options (InnoDB engine and default charset) on a query before its
 -- SQL is built.
 -- @param query [ActiveRecord::Query]
--- @param query_type [String unused]
--- @param queue=nil [Boolean unused]
-function ActiveRecord.Adapters.Mysqloo:append_query(query, query_type, queue)
+-- @param _query_type [String unused]
+-- @param _queue=nil [Boolean unused]
+function ActiveRecord.Adapters.Mysqloo:append_query(query, _query_type, _queue)
   query.options = 'ENGINE=InnoDB DEFAULT CHARSET='..(ActiveRecord.db_settings.encoding or 'utf8')
 end
 
 --- Makes the column the primary key of the table when a 'primary_key' column is created.
 -- @param query [ActiveRecord::Query query the column was added to]
 -- @param column [String column name]
--- @param args [Map unused]
--- @param obj [ActiveRecord::Query unused]
+-- @param _args [Map unused]
+-- @param _obj [ActiveRecord::Query unused]
 -- @param type [String abstract column type]
--- @param def [String unused]
-function ActiveRecord.Adapters.Mysqloo:create_column(query, column, args, obj, type, def)
+-- @param _def [String unused]
+function ActiveRecord.Adapters.Mysqloo:create_column(query, column, _args, _obj, type, _def)
   if type == 'primary_key' then
     query:set_primary_key(column)
   end

@@ -21,15 +21,15 @@ end
 -- are not of the `gamemaster` role it also adds a button that opens the character creation
 -- screen for a pool character.
 -- @param panel [Panel the main menu]
--- @param sidebar [Panel the main menu sidebar]
-function Gamemastery:AddMainMenuItems(panel, sidebar)
+-- @param _sidebar [Panel the main menu sidebar]
+function Gamemastery:AddMainMenuItems(panel, _sidebar)
   if !PLAYER:can('gamemastery') then return end
 
   local possessing_banned = PLAYER:is_character_loaded() and PLAYER:is_character_banned() and
     Gamemastery.find_character(PLAYER:get_character_id()) != nil
 
   if !PLAYER:is_character_loaded() or possessing_banned then
-    panel:add_button(t'ui.gamemastery.main_menu.return', function(btn)
+    panel:add_button(t'ui.gamemastery.main_menu.return', function(_btn)
       if possessing_banned then
         Gamemastery.request_release()
       end

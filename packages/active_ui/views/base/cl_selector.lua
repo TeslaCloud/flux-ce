@@ -23,7 +23,7 @@ function PANEL:Init()
   self.list = vgui.Create('DComboBox', self)
   self.list:DockMargin(0, DermaScale.scale(8), 0, 0)
   self.list:Dock(TOP)
-  self.list.OnSelect = function(panel, index, text, callback)
+  self.list.OnSelect = function(_panel, _index, _text, callback)
     if callback then
       callback()
     end

@@ -181,7 +181,7 @@ else
       local pos = v.pos
       local normal = v.normal
       local ang = normal:Angle()
-      local w, h = util.text_size(v.text, font)
+      local w, _h = util.text_size(v.text, font)
       local scale = v.scale
       local offset = -ang:Right() * (w * 0.05) * scale
       local start_pos = pos - offset

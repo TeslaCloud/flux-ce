@@ -65,10 +65,10 @@ function ItemWearable:get_equip_model(owner)
 end
 
 --- Returns the bodygroups that the player gets when they equip the item.
--- @param owner [Player]
+-- @param _owner [Player]
 -- @return [Map bodygroup id (Number) or bodygroup name (String) to its value,
 --   or nil if the item does not change bodygroups]
-function ItemWearable:get_bodygroups(owner)
+function ItemWearable:get_bodygroups(_owner)
   return self.equip_bodygroups
 end
 
@@ -94,7 +94,7 @@ function ItemWearable:can_equip(owner)
   local player_model = owner:GetModel():lower()
 
   if valid_models then
-    for k, v in pairs(valid_models) do
+    for _k, v in pairs(valid_models) do
       if v:lower() == player_model then
         return true
       end
@@ -133,7 +133,7 @@ function ItemWearable:post_equipped(owner)
 
     for k, v in pairs(bodygroups) do
       if isstring(k) then
-        for k1, v1 in pairs(bodygroup_data) do
+        for _k1, v1 in pairs(bodygroup_data) do
           if k == v1.name then
             native_bodygroups[v1.id] = owner:GetBodygroup(v1.id)
             owner:SetBodygroup(v1.id, v)

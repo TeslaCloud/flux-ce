@@ -104,7 +104,7 @@ function Bolt:send_ban_list(target, page, search_text)
 
   local matching = {}
 
-  for k, v in pairs(self:get_bans()) do
+  for _k, v in pairs(self:get_bans()) do
     if search_text == '' or ban_matches(v, search_text) then
       matching[#matching + 1] = v
     end
@@ -150,7 +150,7 @@ end
 function Bolt:send_ban_list_changed()
   local viewers = {}
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if v:can('ban') then
       viewers[#viewers + 1] = v
     end
@@ -162,16 +162,16 @@ function Bolt:send_ban_list_changed()
 end
 
 --- Lets open ban list pages know that a ban has been added.
--- @param steam_id [String SteamID that has been banned]
--- @param ban [Ban the ban record]
-function Bolt:OnBanAdded(steam_id, ban)
+-- @param _steam_id [String SteamID that has been banned]
+-- @param _ban [Ban the ban record]
+function Bolt:OnBanAdded(_steam_id, _ban)
   self:send_ban_list_changed()
 end
 
 --- Lets open ban list pages know that a ban has been lifted.
--- @param steam_id [String SteamID that is no longer banned]
--- @param data [Map column values of the deleted ban record]
-function Bolt:OnBanRemoved(steam_id, data)
+-- @param _steam_id [String SteamID that is no longer banned]
+-- @param _data [Map column values of the deleted ban record]
+function Bolt:OnBanRemoved(_steam_id, _data)
   self:send_ban_list_changed()
 end
 

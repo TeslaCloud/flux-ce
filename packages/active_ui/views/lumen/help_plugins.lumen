@@ -17,7 +17,7 @@ local function PluginCard(props)
   </view>
 end
 
-return function(props)
+return function(_props)
   local plugins = {}
 
   for path, plugin in SortedPairsByMemberValue(Plugin.all(), 'author') do

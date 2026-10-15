@@ -92,8 +92,8 @@ if CLIENT then
 
     --- Switches the area tool to the selected mode.
     -- @param id [Number index of the selected row]
-    -- @param line [Panel the selected row]
-    function list:OnRowSelected(id, line)
+    -- @param _line [Panel the selected row]
+    function list:OnRowSelected(id, _line)
       if mode != id then
         RunConsoleCommand('area_setmode', id)
       end
@@ -125,7 +125,7 @@ if CLIENT then
     BuildCPanel(panel)
   end
 
-  concommand.Add('area_setmode', function(client, command, args)
+  concommand.Add('area_setmode', function(_client, _command, args)
     RunConsoleCommand('area_mode', args[1])
 
     timer.Simple(0.05, function()

@@ -115,12 +115,12 @@ else
 
   --- Lists the files inside a folder of the 'flux' data folder. Clientside only.
   -- @param folder [String]
-  -- @param default=nil [Any unused]
+  -- @param _default=nil [Any unused]
   -- @return [List<String> file names, nil if the folder is not a string]
-  function Data.get_files(folder, default)
+  function Data.get_files(folder, _default)
     if !isstring(folder) then return end
 
-    local files, dirs = file.Find('flux/'..folder..'/*', 'DATA')
+    local files, _dirs = file.Find('flux/'..folder..'/*', 'DATA')
 
     return files
   end

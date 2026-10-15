@@ -187,7 +187,7 @@ function SpawnPoints:get_points(group)
   local points = {}
   local count = 0
 
-  for k, v in ipairs(self.points) do
+  for _k, v in ipairs(self.points) do
     if group == nil or v.group == group then
       count = count + 1
       points[count] = v
@@ -212,7 +212,7 @@ function SpawnPoints:find_aimed_point(start, direction, distance)
   local found_index, found_fraction
 
   for k, v in ipairs(self.points) do
-    local hit_pos, hit_normal, fraction = util.IntersectRayWithOBB(
+    local hit_pos, _hit_normal, fraction = util.IntersectRayWithOBB(
       start, delta, v.pos, self.box_angle, self.hull_mins, self.hull_maxs
     )
 

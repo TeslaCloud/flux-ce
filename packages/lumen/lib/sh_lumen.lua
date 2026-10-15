@@ -39,7 +39,7 @@ Lumen.file_paths = file_paths
 -- compiler uses it for `<>...</>`.
 Lumen.Fragment = { lumen_fragment = true }
 
-local isstring   = isstring
+local _isstring = isstring
 local istable    = istable
 local isfunction = isfunction
 local tostring   = tostring
@@ -324,7 +324,7 @@ if SERVER then
     end
   end
 
-  Pipeline.register('lumen', function(id, file_name, pipe)
+  Pipeline.register('lumen', function(id, file_name, _pipe)
     Lumen.include_file(id, file_name)
   end)
 

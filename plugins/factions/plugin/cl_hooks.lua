@@ -63,7 +63,7 @@ end
 --- Registers the faction selection panel with the theme.
 -- @param current_theme [ThemeBase]
 function Factions:OnThemeLoaded(current_theme)
-  current_theme:add_panel('ui.char_create.faction', function(id, parent, ...)
+  current_theme:add_panel('ui.char_create.faction', function(_id, parent, ...)
     return vgui.Create('fl_char_create_faction', parent)
   end)
 end
@@ -119,7 +119,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
   local players_table = {}
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     local faction_id = v:get_faction_id()
 
     if Factions.find_by_id(faction_id) then
@@ -164,7 +164,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
     category:SetContents(list)
 
-    for k1, v1 in pairs(players) do
+    for _k1, v1 in pairs(players) do
       if !IsValid(v1) then continue end
 
       local player_card = vgui.Create('fl_scoreboard_player', category)
@@ -196,10 +196,10 @@ end
 --- Supplies the error text shown when character creation fails because of the faction: no
 -- faction was chosen, the player has too many characters of it, or the faction has refused
 -- the character, in which case the reason the server has sent is shown if there is one.
--- @param success [Boolean]
+-- @param _success [Boolean]
 -- @param status [Number CHAR_* status code sent by the server]
 -- @return [String translated error for the CHAR_ERR_FACTION codes, otherwise nil]
-function Factions:GetCharCreationErrorText(success, status)
+function Factions:GetCharCreationErrorText(_success, status)
   local refusal = self.creation_refusal
 
   self.creation_refusal = nil

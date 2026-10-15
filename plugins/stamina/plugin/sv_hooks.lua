@@ -124,9 +124,9 @@ end
 
 --- Keeps the cached stamina settings in sync with changes of the 'stam_' config keys.
 -- @param key [String config key]
--- @param old_value [Any]
+-- @param _old_value [Any]
 -- @param new_value [Any]
-function Stamina:OnConfigSet(key, old_value, new_value)
+function Stamina:OnConfigSet(key, _old_value, new_value)
   if key == 'stam_drain_scale' then
     drain_scale = 4 * new_value
   elseif key == 'stam_regen_scale' then
@@ -179,8 +179,8 @@ end
 --- Forgets that the stamina of a player belongs to the character they drop, so that it is
 -- no longer written into that character.
 -- @param owner [Player]
--- @param character [Character the character that is being dropped]
-function Stamina:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Stamina:OnActiveCharacterCleared(owner, _character)
   owner.stamina_character_id = nil
 end
 
@@ -253,7 +253,7 @@ end
 function Stamina:PlayerDisconnected(actor)
   local steam_id = actor:SteamID()
 
-  for k, v in ipairs({ 'stam_run_'..steam_id, 'stam_regen_'..steam_id }) do
+  for _k, v in ipairs({ 'stam_run_'..steam_id, 'stam_regen_'..steam_id }) do
     timer_remove(v)
     table.RemoveByValue(self.timer_ids, v)
   end
@@ -264,7 +264,7 @@ end
 --- Removes every stamina timer when the code is reloaded, and forgets what the players
 -- were doing so that the timers are started again.
 function Stamina:OnReloaded()
-  for k, v in ipairs(self.timer_ids) do
+  for _k, v in ipairs(self.timer_ids) do
     if timer_exists(v) then
       timer_remove(v)
     end
@@ -272,7 +272,7 @@ function Stamina:OnReloaded()
 
   self.timer_ids = {}
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     v.was_running = false
     v.stamina_regenerating = false
   end

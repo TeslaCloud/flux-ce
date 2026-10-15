@@ -133,7 +133,7 @@ function ItemBase:is(base)
     base = base:capitalize()
     return (self.bases[base] or self.bases['Item'..base]) != nil
   elseif istable(base) then
-    for k, v in pairs(self.bases) do
+    for _k, v in pairs(self.bases) do
       if base.class_name == v.class_name then
         return true
       end
@@ -287,7 +287,7 @@ function ItemBase:has_menu_action(act)
   end
 
   if self.custom_buttons then
-    for k, v in pairs(self.custom_buttons) do
+    for _k, v in pairs(self.custom_buttons) do
       if v.callback == act then
         return true
       end
@@ -336,27 +336,27 @@ end
 --- Called on the server by the 'CanPlayerDropItem' hook when a player is about to drop the item.
 -- Returning nothing/nil drops the item like normal, returning false
 -- prevents the item from appearing and doesn't remove it from the inventory.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @return [Boolean false to prevent the drop, nil otherwise]
-function ItemBase:on_drop(actor) end
+function ItemBase:on_drop(_actor) end
 
 --- Called on the server when a player is about to destroy the item through its menu, after
 -- the 'PlayerCanDestroyItem' hook has allowed it. Returning nothing/nil lets the item be
 -- destroyed, returning false keeps it where it is.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @return [Boolean false to prevent the destruction, String error phrase to notify the
 --   player with; nothing otherwise]
-function ItemBase:on_destroy(actor) end
+function ItemBase:on_destroy(_actor) end
 
 --- Called on the server right after the player that has the item spawns with their character
 -- loaded. Override it to give the player whatever the item is supposed to provide.
--- @param owner [Player]
-function ItemBase:on_loadout(owner) end
+-- @param _owner [Player]
+function ItemBase:on_loadout(_owner) end
 
 --- Called on the server before the character of the player that has the item is saved.
 -- Override it to store the state of the item.
--- @param owner [Player]
-function ItemBase:on_save(owner) end
+-- @param _owner [Player]
+function ItemBase:on_save(_owner) end
 
 if SERVER then
   --- Sets a custom data value of the item. Server-side only.
@@ -374,7 +374,7 @@ if SERVER then
   --- Finds the player that has the item in one of their inventories. Server-side only.
   -- @return [Player the player, or nil if no player has the item]
   function ItemBase:get_player()
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if v:has_item_by_id(self.instance_id) then
         return v
       end

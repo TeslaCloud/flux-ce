@@ -31,9 +31,9 @@ function TOOL:RightClick(trace)
 end
 
 --- Clears both measurement points.
--- @param trace [Map trace result of the player's aim; unused]
+-- @param _trace [Map trace result of the player's aim; unused]
 -- @return [Boolean always true]
-function TOOL:Reload(trace)
+function TOOL:Reload(_trace)
   if SERVER then return true end
 
   self.first = nil
@@ -78,6 +78,6 @@ function TOOL.BuildCPanel(CPanel)
 
   CPanel:AddControl('Header', { Description = t'tool.measure.system_header' })
 
-  local units =
+  local _units =
     CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'measure_system' } })
 end

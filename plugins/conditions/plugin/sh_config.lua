@@ -10,9 +10,9 @@ Conditions:register_condition('steamid', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the SteamID followed by the player's name.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Map the registered condition table]
+  -- @param _data [Map the registered condition table]
   -- @return [Map operator and steam_id, each an empty string while it is not set]
-  get_args = function(panel, data)
+  get_args = function(panel, _data)
     local steamid = panel.data.steamid
     local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')' or ''
@@ -34,9 +34,9 @@ Conditions:register_condition('steamid', {
   -- @param id [String condition id]
   -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
-  -- @param menu=nil [Panel context menu the option was picked from, unused]
-  -- @param parent=nil [Panel the fl_conditions panel, unused]
-  set_parameters = function(id, data, panel, menu, parent)
+  -- @param _menu=nil [Panel context menu the option was picked from, unused]
+  -- @param _parent=nil [Panel the fl_conditions panel, unused]
+  set_parameters = function(id, data, panel, _menu, _parent)
     Derma_StringRequest(
       t(data.name),
       t'condition.steamid.message',
@@ -60,9 +60,9 @@ Conditions:register_condition('model', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the model path.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Map the registered condition table]
+  -- @param _data [Map the registered condition table]
   -- @return [Map operator and model, each an empty string while it is not set]
-  get_args = function(panel, data)
+  get_args = function(panel, _data)
     local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.model or ''
 
@@ -83,9 +83,9 @@ Conditions:register_condition('model', {
   -- @param id [String condition id]
   -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
-  -- @param menu=nil [Panel context menu the option was picked from, unused]
-  -- @param parent=nil [Panel the fl_conditions panel, unused]
-  set_parameters = function(id, data, panel, menu, parent)
+  -- @param _menu=nil [Panel context menu the option was picked from, unused]
+  -- @param _parent=nil [Panel the fl_conditions panel, unused]
+  set_parameters = function(id, data, panel, _menu, _parent)
     Derma_StringRequest(
       t(data.name),
       t'condition.model.message',
@@ -109,9 +109,9 @@ Conditions:register_condition('health', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the health value.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Map the registered condition table]
+  -- @param _data [Map the registered condition table]
   -- @return [Map operator and health, each an empty string while it is not set]
-  get_args = function(panel, data)
+  get_args = function(panel, _data)
     local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.health or ''
 
@@ -128,12 +128,12 @@ Conditions:register_condition('health', {
     return process_operator(data.operator, target:Health(), data.health)
   end,
   --- Asks for a health value with a text prompt and stores it in the node data as a number.
-  -- @param id [String condition id]
+  -- @param _id [String condition id]
   -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
-  -- @param menu=nil [Panel context menu the option was picked from, unused]
-  -- @param parent=nil [Panel the fl_conditions panel, unused]
-  set_parameters = function(id, data, panel, menu, parent)
+  -- @param _menu=nil [Panel context menu the option was picked from, unused]
+  -- @param _parent=nil [Panel the fl_conditions panel, unused]
+  set_parameters = function(_id, data, panel, _menu, _parent)
     Derma_StringRequest(
       t(data.name),
       t'condition.health.message',
@@ -153,9 +153,9 @@ Conditions:register_condition('armor', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the armor value.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Map the registered condition table]
+  -- @param _data [Map the registered condition table]
   -- @return [Map operator and armor, each an empty string while it is not set]
-  get_args = function(panel, data)
+  get_args = function(panel, _data)
     local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.armor or ''
 
@@ -172,12 +172,12 @@ Conditions:register_condition('armor', {
     return process_operator(data.operator, target:Armor(), data.armor)
   end,
   --- Asks for an armor value with a text prompt and stores it in the node data as a number.
-  -- @param id [String condition id]
+  -- @param _id [String condition id]
   -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
-  -- @param menu=nil [Panel context menu the option was picked from, unused]
-  -- @param parent=nil [Panel the fl_conditions panel, unused]
-  set_parameters = function(id, data, panel, menu, parent)
+  -- @param _menu=nil [Panel context menu the option was picked from, unused]
+  -- @param _parent=nil [Panel the fl_conditions panel, unused]
+  set_parameters = function(_id, data, panel, _menu, _parent)
     Derma_StringRequest(
       t(data.name),
       t'condition.armor.message',
@@ -197,9 +197,9 @@ Conditions:register_condition('active_weapon', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the weapon class.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Map the registered condition table]
+  -- @param _data [Map the registered condition table]
   -- @return [Map operator and weapon, each an empty string while it is not set]
-  get_args = function(panel, data)
+  get_args = function(panel, _data)
     local operator = operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.weapon or ''
 
@@ -222,12 +222,12 @@ Conditions:register_condition('active_weapon', {
     return process_operator(data.operator, weapon:GetClass(), data.weapon)
   end,
   --- Asks for a weapon class with a text prompt and stores it in the node data.
-  -- @param id [String condition id]
+  -- @param _id [String condition id]
   -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
-  -- @param menu=nil [Panel context menu the option was picked from, unused]
-  -- @param parent=nil [Panel the fl_conditions panel, unused]
-  set_parameters = function(id, data, panel, menu, parent)
+  -- @param _menu=nil [Panel context menu the option was picked from, unused]
+  -- @param _parent=nil [Panel the fl_conditions panel, unused]
+  set_parameters = function(_id, data, panel, _menu, _parent)
     Derma_StringRequest(
       t(data.name),
       t'condition.weapon.message',

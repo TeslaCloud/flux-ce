@@ -12,7 +12,7 @@ function Characters:ActiveRecordReady()
       Characters.taken_names = {}
 
       if istable(result) then
-        for k, v in ipairs(result) do
+        for _k, v in ipairs(result) do
           Characters.remember_name(v.name)
         end
       end
@@ -51,9 +51,9 @@ end
 -- character has nothing of its player to keep, and `Characters.set_banned` saves it before
 -- it kills the player.
 -- @param victim [Player]
--- @param inflictor [Entity]
--- @param attacker [Entity]
-function Characters:PlayerDeath(victim, inflictor, attacker)
+-- @param _inflictor [Entity]
+-- @param _attacker [Entity]
+function Characters:PlayerDeath(victim, _inflictor, _attacker)
   if victim:is_character_banned() then return end
 
   victim:save_character()
@@ -61,10 +61,10 @@ end
 
 --- Refuses to let a player switch characters while they are dead or ragdolled.
 -- @param actor [Player]
--- @param character [Character the character the player wants to load]
--- @param current [Character the active character of the player]
+-- @param _character [Character the character the player wants to load]
+-- @param _current [Character the active character of the player]
 -- @return [Boolean false and String the reason when the switch is refused, otherwise nil]
-function Characters:PlayerCanSwitchCharacter(actor, character, current)
+function Characters:PlayerCanSwitchCharacter(actor, _character, _current)
   if !actor:Alive() then
     return false, 'error.character.switch_dead'
   end
@@ -119,10 +119,10 @@ function Characters:PlayerRestored(actor)
 end
 
 --- Replaces line breaks in the new character's physical description with ' | '.
--- @param owner [Player]
+-- @param _owner [Player]
 -- @param char [Character the character being created]
--- @param char_data [Map character creation data]
-function Characters:PostCreateCharacter(owner, char, char_data)
+-- @param _char_data [Map character creation data]
+function Characters:PostCreateCharacter(_owner, char, _char_data)
   char.phys_desc = char.phys_desc:gsub('\n', ' | ')
 end
 
@@ -156,9 +156,9 @@ end
 
 --- Saves the player's current character before they switch to another one.
 -- @param owner [Player]
--- @param new_char [Character]
--- @param old_char [Character]
-function Characters:OnCharacterChange(owner, new_char, old_char)
+-- @param _new_char [Character]
+-- @param _old_char [Character]
+function Characters:OnCharacterChange(owner, _new_char, _old_char)
   owner:save_character()
 end
 
@@ -170,7 +170,7 @@ end
 
 --- Saves the active character of every connected player.
 function Characters:SaveData()
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     v:save_character()
   end
 end

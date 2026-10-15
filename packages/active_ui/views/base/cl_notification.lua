@@ -142,7 +142,7 @@ function PANEL:set_lifetime(time)
 
   timer.Simple(time - 1.5, function()
     if IsValid(self) then
-      local x, y = self:GetPos()
+      local _x, y = self:GetPos()
       self:MoveTo(ScrW(), y, 0.5)
     end
   end)

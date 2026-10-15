@@ -424,10 +424,10 @@ end
 
 --- Find the stack position for the item.
 -- @param item_obj [Item]
--- @param w [Number width of the item]
--- @param h [Number height of the item]
+-- @param _w [Number width of the item]
+-- @param _h [Number height of the item]
 -- @return [Number x, Number y, Boolean is a rotation needed]
-function Inventory:find_stack(item_obj, w, h)
+function Inventory:find_stack(item_obj, _w, _h)
   local items = self:find_items(item_obj.id)
 
   for i = 1, #items do
@@ -677,7 +677,7 @@ if SERVER then
   function Inventory:give_item(id, amount, data)
     amount = amount or 1
 
-    for i = 1, amount do
+    for _i = 1, amount do
       local item_obj = Item.create(id, data)
       local success, error_text = self:add_item(item_obj)
 
@@ -758,7 +758,7 @@ if SERVER then
       return false, 'error.inventory.not_enough_items'
     end
 
-    for i = 1, amount do
+    for _i = 1, amount do
       self:take_item(id)
     end
 
@@ -1110,7 +1110,7 @@ if SERVER then
   function Inventory:sync()
     local ids, networkable
 
-    for k, v in pairs(self.receivers) do
+    for _k, v in pairs(self.receivers) do
       if IsValid(v) then
         if !ids then
           ids = self:get_items_ids()
@@ -1167,7 +1167,7 @@ if SERVER then
   function Inventory:load_items(items_ids)
     local find_instance_by_id = Item.find_instance_by_id
 
-    for k, v in pairs(items_ids) do
+    for _k, v in pairs(items_ids) do
       local item_obj = find_instance_by_id(v)
 
       if item_obj then

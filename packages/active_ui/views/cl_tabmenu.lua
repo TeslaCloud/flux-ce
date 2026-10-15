@@ -46,7 +46,7 @@ function PANEL:Init()
   self.button_panel = vgui.Create('EditablePanel', self)
   self.button_panel:SetPos(0, -bar_height)
   self.button_panel:SetSize(scrw, bar_height)
-  self.button_panel.Paint = function(p, w, h)
+  self.button_panel.Paint = function(_p, w, h)
     Theme.hook('PaintTabMenuButtonPanel', self, w, h)
   end
 
@@ -67,7 +67,7 @@ function PANEL:Init()
   self.close_button:set_text_offset(offset)
   self.close_button:SizeToContentsX()
   self.close_button:SetTall(button_height)
-  self.close_button.DoClick = function(btn)
+  self.close_button.DoClick = function(_btn)
     self:close_menu()
   end
 
@@ -81,7 +81,7 @@ function PANEL:Init()
   -- @param menu [Panel The `fl_tab_menu` being built]
   hook.Run('AddTabMenuItems', self)
 
-  for k, v in ipairs(self.menu_items) do
+  for _k, v in ipairs(self.menu_items) do
     local button = vgui.Create('fl_button', self.button_panel)
     button:SetTall(button_height)
     button:SetDrawBackground(true)
@@ -228,8 +228,8 @@ end
 --   open before),
 --   callback (Function(menu_panel, button) called after the click was handled),
 --   override (Function(menu_panel, button) called instead of opening a panel)]
--- @param index=nil [Number unused]
-function PANEL:add_menu_item(id, data, index)
+-- @param _index=nil [Number unused]
+function PANEL:add_menu_item(id, data, _index)
   data.id = id
   data.title = data.title or 'error'
   data.icon = data.icon or false

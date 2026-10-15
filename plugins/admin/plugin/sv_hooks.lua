@@ -10,12 +10,12 @@
 -- whose end time cannot be read.
 -- @param steam_id64 [String 64-bit SteamID of the connecting player]
 -- @param ip [String]
--- @param sv_pass [String server password]
--- @param cl_pass [String password entered by the client]
+-- @param _sv_pass [String server password]
+-- @param _cl_pass [String password entered by the client]
 -- @param name [String player name]
 -- @return [Boolean true to allow or false to reject (nothing if there is no ban), String
 --   rejection message (only when rejecting)]
-function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
+function Bolt:CheckPassword(steam_id64, ip, _sv_pass, _cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
   local entry = self:get_bans()[steam_id]
 
@@ -49,10 +49,10 @@ end
 
 --- Blocks tools that require a permission the player does not have.
 -- @param actor [Player]
--- @param trace [Map trace result of the tool use]
+-- @param _trace [Map trace result of the tool use]
 -- @param tool_name [String tool ID]
 -- @return [Boolean false to block the tool, nothing otherwise]
-function Bolt:CanTool(actor, trace, tool_name)
+function Bolt:CanTool(actor, _trace, tool_name)
   local tool = Flux.Tool:get(tool_name)
 
   if tool and tool.permission and !actor:can(tool.permission) then
@@ -99,26 +99,26 @@ function Bolt:PlayerSpawnVehicle(actor, model, name, tab)
 end
 
 --- Mutes talkers that lack the 'voice' permission.
--- @param listener [Player the listener]
+-- @param _listener [Player the listener]
 -- @param talker [Player]
 -- @return [Boolean false if the talker may not be heard, nothing otherwise]
-function Bolt:PlayerCanHearPlayersVoice(listener, talker)
+function Bolt:PlayerCanHearPlayersVoice(_listener, talker)
   if !talker:can('voice') then
     return false
   end
 end
 
 --- Defaults the banned flag of a newly created user record to false.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param record [User the player's database record]
-function Bolt:PlayerCreated(actor, record)
+function Bolt:PlayerCreated(_actor, record)
   record.banned = record.banned or false
 end
 
 --- Loads all bans from the database into the ban cache.
 function Bolt:ActiveRecordReady()
   Ban:all():get(function(objects)
-    for k, v in ipairs(objects) do
+    for _k, v in ipairs(objects) do
       self:record_ban(v.steam_id, v)
     end
   end):fetch()
@@ -145,7 +145,7 @@ function Bolt:PlayerRestored(actor, record)
   elseif istable(root_steamid) then
     local steam_id = actor:SteamID()
 
-    for k, v in ipairs(root_steamid) do
+    for _k, v in ipairs(root_steamid) do
       if v == steam_id then
         actor:SetUserGroup('admin')
         actor.can_anything = true
@@ -156,7 +156,7 @@ function Bolt:PlayerRestored(actor, record)
   if record.permissions then
     local perm_table = {}
 
-    for k, v in pairs(record.permissions) do
+    for _k, v in pairs(record.permissions) do
       perm_table[v.permission_id] = v.object
     end
 
@@ -166,7 +166,7 @@ function Bolt:PlayerRestored(actor, record)
   if record.temp_permissions then
     local perm_table = {}
 
-    for k, v in pairs(record.temp_permissions) do
+    for _k, v in pairs(record.temp_permissions) do
       perm_table[v.permission_id] = {
         value = v.object,
         expires = time_from_timestamp(v.expires) or 0
@@ -248,7 +248,7 @@ do
 
     created = {}
 
-    for k, v in ipairs(entities) do
+    for _k, v in ipairs(entities) do
       if IsValid(v) then
         local holder = get_holder(v)
 
@@ -273,20 +273,20 @@ do
   --- Queues a weapon that a player picks up to be checked on the next tick, as it is not a
   -- new entity.
   -- @param weapon [Weapon]
-  -- @param actor [Player]
-  function Bolt:WeaponEquip(weapon, actor)
+  -- @param _actor [Player]
+  function Bolt:WeaponEquip(weapon, _actor)
     self:OnEntityCreated(weapon)
   end
 end
 
 --- Networks a weapon dropped by a hidden player to everyone again: it no longer belongs to
 -- the player.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param weapon [Weapon]
-function Bolt:PlayerDroppedWeapon(actor, weapon)
+function Bolt:PlayerDroppedWeapon(_actor, weapon)
   if !IsValid(weapon) then return end
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     weapon:prevent_transmit(v, false)
   end
 end
@@ -305,10 +305,10 @@ end
 --- Keeps hidden players (vanished or observing) from carrying objects in their hands, which
 -- would show other players an object floating in the air.
 -- @param actor [Player]
--- @param entity [Entity]
--- @param drag [Boolean]
+-- @param _entity [Entity]
+-- @param _drag [Boolean]
 -- @return [Boolean false for a hidden player]
-function Bolt:PlayerPickupObject(actor, entity, drag)
+function Bolt:PlayerPickupObject(actor, _entity, _drag)
   if actor:is_hidden() then
     return false
   end
@@ -334,8 +334,8 @@ end
 -- player again if it has changed their right to edit configs.
 -- @param target [Player]
 -- @param perm_id [String permission ID]
--- @param value [Number new PERM_ value]
-function Bolt:PlayerPermissionChanged(target, perm_id, value)
+-- @param _value [Number new PERM_ value]
+function Bolt:PlayerPermissionChanged(target, perm_id, _value)
   self:update_config_access(target)
   target:update_hidden_players()
 
@@ -357,9 +357,9 @@ end
 -- they are allowed when they spawn. Also sends the config to the player again if the new
 -- role has changed their right to edit configs.
 -- @param target [Player]
--- @param group [Role the player's new role, nil if its ID is not registered]
--- @param old_group [Role the player's previous role]
-function Bolt:PlayerUserGroupChanged(target, group, old_group)
+-- @param _group [Role the player's new role, nil if its ID is not registered]
+-- @param _old_group [Role the player's previous role]
+function Bolt:PlayerUserGroupChanged(target, _group, _old_group)
   self:update_config_access(target)
   target:update_hidden_players()
 
@@ -380,11 +380,11 @@ end
 
 --- Supplies the icon of the player's role for their chat messages.
 -- @param speaker [Player the sender]
--- @param text [String message text]
--- @param team_chat [Boolean]
+-- @param _text [String message text]
+-- @param _team_chat [Boolean]
 -- @return [Map icon data for the chatbox (icon, size, margin, is_data), or nothing if the
 --   player is invalid]
-function Bolt:ChatboxGetPlayerIcon(speaker, text, team_chat)
+function Bolt:ChatboxGetPlayerIcon(speaker, _text, _team_chat)
   if IsValid(speaker) then
     return { icon = speaker:get_role_table().icon or 'fa-user', size = 14, margin = 10, is_data = true }
   end
@@ -393,5 +393,5 @@ end
 --- Get a list of all currently online staff members.
 -- @return [Map - currently online staff members]
 function Bolt:get_staff()
-  return table.keep_if(player.GetAll(), function(k, v) return v:can('staff') end)
+  return table.keep_if(player.GetAll(), function(_k, v) return v:can('staff') end)
 end

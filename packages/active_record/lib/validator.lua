@@ -116,7 +116,7 @@ function ActiveRecord.Validator:add(id, callback)
   return self
 end
 
-ActiveRecord.Validator:add('presence', function(model, column, val, opts, success_callback, error_callback)
+ActiveRecord.Validator:add('presence', function(model, column, _val, _opts, success_callback, error_callback)
   if model[column] != nil then
     success_callback(model)
   else
@@ -124,7 +124,7 @@ ActiveRecord.Validator:add('presence', function(model, column, val, opts, succes
   end
 end)
 
-ActiveRecord.Validator:add('min_length', function(model, column, val, opts, success_callback, error_callback)
+ActiveRecord.Validator:add('min_length', function(model, column, val, _opts, success_callback, error_callback)
   local c = model[column]
 
   if isstring(c) and utf8.len(c) >= val then
@@ -134,7 +134,7 @@ ActiveRecord.Validator:add('min_length', function(model, column, val, opts, succ
   end
 end)
 
-ActiveRecord.Validator:add('max_length', function(model, column, val, opts, success_callback, error_callback)
+ActiveRecord.Validator:add('max_length', function(model, column, val, _opts, success_callback, error_callback)
   local c = model[column]
 
   if isstring(c) and utf8.len(c) <= val then
@@ -144,7 +144,7 @@ ActiveRecord.Validator:add('max_length', function(model, column, val, opts, succ
   end
 end)
 
-ActiveRecord.Validator:add('format', function(model, column, val, opts, success_callback, error_callback)
+ActiveRecord.Validator:add('format', function(model, column, val, _opts, success_callback, error_callback)
   local c = model[column]
 
   if c and c:match(val) then
@@ -154,7 +154,7 @@ ActiveRecord.Validator:add('format', function(model, column, val, opts, success_
   end
 end)
 
-ActiveRecord.Validator:add('uniqueness', function(model, column, val, opts, success_callback, error_callback)
+ActiveRecord.Validator:add('uniqueness', function(model, column, _val, opts, success_callback, error_callback)
   if model[column] == nil then
     success_callback(model)
 

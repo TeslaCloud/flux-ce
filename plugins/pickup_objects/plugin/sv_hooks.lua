@@ -72,7 +72,7 @@ function PickupObjects:Think()
   end
 
   if lost then
-    for k, v in ipairs(lost) do
+    for _k, v in ipairs(lost) do
       self:drop_entity(v, true)
     end
   end
@@ -101,11 +101,11 @@ end
 
 --- Denies dragging the ragdoll of a player who is getting up, as the Ragdoll plugin would
 -- remove the ragdoll in the middle of the drag.
--- @param actor [Player]
--- @param ragdoll [Entity]
+-- @param _actor [Player]
+-- @param _ragdoll [Entity]
 -- @param target [Player the player whose ragdoll it is, nil if it belongs to nobody]
 -- @return [Boolean false to deny the dragging, nil otherwise]
-function PickupObjects:PlayerCanDragRagdoll(actor, ragdoll, target)
+function PickupObjects:PlayerCanDragRagdoll(_actor, _ragdoll, target)
   if IsValid(target) and target:is_doing_action('getup') then
     return false
   end

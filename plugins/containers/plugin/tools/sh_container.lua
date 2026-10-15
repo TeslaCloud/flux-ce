@@ -163,7 +163,7 @@ if CLIENT then
 
     combo_box:SetSortItems(false)
 
-    for k, v in ipairs(choices) do
+    for _k, v in ipairs(choices) do
       combo_box:AddChoice(v.title, v.value)
     end
   end
@@ -179,7 +179,7 @@ if CLIENT then
       table.insert(mode_choices, { title = t('tool.container.mode_'..v), value = tostring(k) })
     end
 
-    for k, v in ipairs(Container:get_loot_categories()) do
+    for _k, v in ipairs(Container:get_loot_categories()) do
       table.insert(category_choices, { title = t(v), value = v })
     end
 

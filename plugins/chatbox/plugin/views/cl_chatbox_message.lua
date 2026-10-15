@@ -131,7 +131,7 @@ end
 -- them along with the rest of the message, so that they fade with it. A piece that holds a
 -- SteamID64 shows the avatar even if that player is not on the server anymore.
 function PANEL:create_avatars()
-  for k, v in ipairs(self.avatars or {}) do
+  for _k, v in ipairs(self.avatars or {}) do
     if IsValid(v) then
       v:Remove()
     end
@@ -139,7 +139,7 @@ function PANEL:create_avatars()
 
   self.avatars = {}
 
-  for k, v in ipairs(self.message_data) do
+  for _k, v in ipairs(self.message_data) do
     if istable(v) and v.avatar and isnumber(v.w) and isnumber(v.h) then
       local source = v.avatar
       local target = isstring(source) and player.GetBySteamID64(source) or source

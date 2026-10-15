@@ -3,10 +3,10 @@
 local drop_name = 'fl_gm_character'
 
 --- Places the pool character of a dropped card in the world, where the cursor points.
--- @param receiver [Panel the panel the card was dropped on]
+-- @param _receiver [Panel the panel the card was dropped on]
 -- @param panels [List<Panel> the dragged panels]
 -- @param is_dropped [Boolean true when the card was dropped, false while it hovers]
-local function drop_on_world(receiver, panels, is_dropped)
+local function drop_on_world(_receiver, panels, is_dropped)
   if !is_dropped then return end
 
   local card = panels[1]
@@ -18,10 +18,10 @@ local function drop_on_world(receiver, panels, is_dropped)
 end
 
 --- Ignores cards that are dropped back onto the gamemaster panel.
--- @param receiver [Panel]
--- @param panels [List<Panel>]
--- @param is_dropped [Boolean]
-local function ignore_drop(receiver, panels, is_dropped)
+-- @param _receiver [Panel]
+-- @param _panels [List<Panel>]
+-- @param _is_dropped [Boolean]
+local function ignore_drop(_receiver, _panels, _is_dropped)
 end
 
 --- The gamemaster panel (`fl_gamemaster_panel`): a scrollable row of cards, one for every
@@ -64,7 +64,7 @@ function PANEL:Init()
   self.release:set_icon_size(math.scale(16))
   self.release:set_centered(true)
   self.release:SetVisible(false)
-  self.release.DoClick = function(btn)
+  self.release.DoClick = function(_btn)
     surface.PlaySound(Theme.get_sound('button_click_success_sound'))
 
     Gamemastery.request_release()
@@ -139,7 +139,7 @@ function PANEL:rebuild()
   local card_w = math.max(math.scale(180), self.list:GetWide() * 0.15)
   local possessing = false
 
-  for k, v in ipairs(pool) do
+  for _k, v in ipairs(pool) do
     local card = vgui.Create('fl_gamemaster_card', self)
     card:SetSize(card_w, self.list:GetTall())
     card:set_character(v)
@@ -174,7 +174,7 @@ function PANEL:Init()
   self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
   self.model:SetDragParent(self)
-  self.model.LayoutEntity = function(entity) end
+  self.model.LayoutEntity = function(_entity) end
 
   self.possess = vgui.Create('fl_button', self)
   self.possess:SetFont(Theme.get_font('main_menu_normal'))
@@ -184,7 +184,7 @@ function PANEL:Init()
   self.possess:set_icon('fa-ghost')
   self.possess:set_icon_size(math.scale(16))
   self.possess:set_centered(true)
-  self.possess.DoClick = function(btn)
+  self.possess.DoClick = function(_btn)
     local cur_time = CurTime()
 
     if self.next_click and self.next_click > cur_time then return end
@@ -208,7 +208,7 @@ function PANEL:Init()
   self.delete:set_icon_size(math.scale(18))
   self.delete:set_centered(true)
   self.delete:SetTooltip(t'ui.gamemastery.delete')
-  self.delete.DoClick = function(btn)
+  self.delete.DoClick = function(_btn)
     local name = self.char_data.name
 
     surface.PlaySound('vo/npc/male01/answer37.wav')
@@ -239,8 +239,8 @@ end
 
 --- Draws the marker of a character that stands in the world under the name.
 -- @param w [Number]
--- @param h [Number]
-function PANEL:PaintOver(w, h)
+-- @param _h [Number]
+function PANEL:PaintOver(w, _h)
   if !istable(self.char_data) or !self.char_data.in_world then return end
 
   local text, font = t'ui.gamemastery.in_world', Theme.get_font('text_small')

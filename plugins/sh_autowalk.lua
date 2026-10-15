@@ -42,8 +42,8 @@ else
   --- Moves the player forward at full speed while auto walk is on (clientside prediction).
   -- @param client [Player]
   -- @param move_data [CMoveData]
-  -- @param cmd_data [CUserCmd]
-  function PLUGIN:SetupMove(client, move_data, cmd_data)
+  -- @param _cmd_data [CUserCmd]
+  function PLUGIN:SetupMove(client, move_data, _cmd_data)
     if !client:get_nv('auto_walk') then return end
 
     move_data:SetForwardSpeed(move_data:GetMaxSpeed())

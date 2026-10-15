@@ -63,8 +63,8 @@ end
 --- Tells the client of the player to open the menu of the item entity they have used.
 -- @param activator [Player]
 -- @param entity [Entity the fl_item entity]
--- @param item_obj [Item]
-function Items:PlayerUseItemEntity(activator, entity, item_obj)
+-- @param _item_obj [Item]
+function Items:PlayerUseItemEntity(activator, entity, _item_obj)
   Cable.send(activator, 'fl_player_use_item_entity', entity)
 end
 
@@ -74,10 +74,10 @@ end
 -- that another of their own characters has dropped.
 -- @param actor [Player]
 -- @param item_obj [Item]
--- @param action [String name of the menu action]
+-- @param _action [String name of the menu action]
 -- @param ... [Vararg extra arguments of the action]
 -- @return [Boolean false to prevent the action, nil otherwise]
-function Items:PlayerCanUseItem(actor, item_obj, action, ...)
+function Items:PlayerCanUseItem(actor, item_obj, _action, ...)
   local item_entity = item_obj.entity
 
   if IsValid(item_entity) then
@@ -112,11 +112,11 @@ end
 
 --- Sends an item that is lying in the world to all clients again
 -- after a menu action has been performed on it.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param item_obj [Item]
--- @param act [String name of the menu action]
+-- @param _act [String name of the menu action]
 -- @param ... [Vararg extra arguments of the action]
-function Items:PlayerUsedItem(actor, item_obj, act, ...)
+function Items:PlayerUsedItem(_actor, item_obj, _act, ...)
   if IsValid(item_obj.entity) then
     Item.network_item(nil, item_obj.instance_id)
     Item.network_entity_data(nil, item_obj.entity)
@@ -234,11 +234,11 @@ end
 
 --- Keeps container items that still have something inside from being damaged while they
 -- lie in the world, so that their contents are not lost along with them.
--- @param entity [Entity the fl_item entity]
+-- @param _entity [Entity the fl_item entity]
 -- @param item_obj [Item]
--- @param damage_info [CTakeDamageInfo]
+-- @param _damage_info [CTakeDamageInfo]
 -- @return [Boolean false to ignore the damage, nil otherwise]
-function Items:ItemEntityTakeDamage(entity, item_obj, damage_info)
+function Items:ItemEntityTakeDamage(_entity, item_obj, _damage_info)
   if has_contents(item_obj) then
     return false
   end
@@ -259,7 +259,7 @@ function Items:drop_weapons(victim)
   local position = victim:GetPos()
   local changed = {}
 
-  for k, v in pairs(victim:get_items()) do
+  for _k, v in pairs(victim:get_items()) do
     local inventory = Inventories.find(v.inventory_id)
 
     if v.weapon_class and v.is_equipped and v:is_equipped() and inventory and inventory.owner == victim then
@@ -306,7 +306,7 @@ function Items:drop_weapons(victim)
     end
   end
 
-  for inventory, v in pairs(changed) do
+  for inventory, _v in pairs(changed) do
     inventory:sync()
   end
 
@@ -318,9 +318,9 @@ end
 -- the weapons are still there for the items to store their clips, and so that the items
 -- are gone from the inventory before the character is saved.
 -- @param victim [Player]
--- @param attacker [Entity]
--- @param damage_info [CTakeDamageInfo]
-function Items:DoPlayerDeath(victim, attacker, damage_info)
+-- @param _attacker [Entity]
+-- @param _damage_info [CTakeDamageInfo]
+function Items:DoPlayerDeath(victim, _attacker, _damage_info)
   if Config.get('drop_weapons_on_death') then
     self:drop_weapons(victim)
   end
@@ -332,7 +332,7 @@ end
 function Items:PostPlayerSpawn(actor)
   if actor:is_character_loaded() then
     timer.Simple(0, function()
-      for k, v in pairs(actor:get_items()) do
+      for _k, v in pairs(actor:get_items()) do
         if v.on_loadout then
           v:on_loadout(actor)
         end
@@ -343,9 +343,9 @@ end
 
 --- Calls the on_save callback of every item that the player has before their character is saved.
 -- @param owner [Player]
--- @param index [Character the character that is being saved]
-function Items:PreSaveCharacter(owner, index)
-  for k, v in pairs(owner:get_items()) do
+-- @param _index [Character the character that is being saved]
+function Items:PreSaveCharacter(owner, _index)
+  for _k, v in pairs(owner:get_items()) do
     if v.on_save then
       v:on_save(owner)
     end

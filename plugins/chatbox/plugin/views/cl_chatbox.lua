@@ -197,7 +197,7 @@ function PANEL:Init()
   end
 
   self.text_entry.OnValueChange = function(entry, value)
-    local value_w, value_h = util.text_size(value, entry:GetFont())
+    local value_w, _value_h = util.text_size(value, entry:GetFont())
     local div = math.round(entry:GetWide() / value_w * 2, 1)
     local offset = div > 2 and 0 or div > 1 and math.scale(25) or math.scale(50)
 
@@ -727,7 +727,7 @@ function PANEL:set_open(is_open)
     self.text_entry:SetVisible(false)
   end
 
-  for k, v in ipairs(self.history) do
+  for _k, v in ipairs(self.history) do
     if IsValid(v) then
       v.force_show = is_open
     end
@@ -757,7 +757,7 @@ function PANEL:create_message(message_data)
   if !parsed then return end
 
   local panel = vgui.Create('fl_chat_message', self)
-  local half_padding = self.padding * 0.5
+  local _half_padding = self.padding * 0.5
 
   panel:SetSize(self:GetWide() - self.padding * 2, self:GetWide() - self.padding * 2)
   panel:set_message(parsed)
@@ -800,7 +800,7 @@ end
 function PANEL:rebuild_history_indexes()
   local new_history = {}
 
-  for k, v in ipairs(self.history) do
+  for _k, v in ipairs(self.history) do
     if IsValid(v) then
       local idx = table.insert(new_history, v)
       v.msg_index = idx
@@ -866,7 +866,7 @@ function PANEL:rebuild()
   local message_margin = config_get('message_margin')
   local last_pos = 0
 
-  for k, v in ipairs(self.history) do
+  for _k, v in ipairs(self.history) do
     if IsValid(v) then
       v:SetPos(padding, last_pos)
 

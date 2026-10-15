@@ -7,7 +7,7 @@ local text_area_color = Color(255, 255, 255)
 do
   local cache = nil
   local temp_cache = nil
-  local render_color = Color(50, 255, 50)
+  local _render_color = Color(50, 255, 50)
   local render_color_red = Color(255, 50, 50)
   local last_amt = nil
   local render = render
@@ -57,10 +57,10 @@ do
 
         area_colors[mode.area_type] = Areas.get_color(mode.area_type)
 
-        for k, v in pairs(area_table) do
+        for _k, v in pairs(area_table) do
           local add = Vector(0, 0, v.maxh)
 
-          for k2, v2 in ipairs(v.polys) do
+          for _k2, v2 in ipairs(v.polys) do
             local point_count = #v2
 
             for idx = 1, point_count do
@@ -111,7 +111,7 @@ function Area:HUDPaint()
     local cur_time = CurTime()
     local font
 
-    for k, v in pairs(PLAYER.text_areas) do
+    for _k, v in pairs(PLAYER.text_areas) do
       if istable(v) and v.end_time > cur_time then
         v.alpha = v.alpha or 255
         font = font or Theme.get_font('text_large')

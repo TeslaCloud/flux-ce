@@ -200,9 +200,9 @@ end
 
 --- Tells the animation code whether to use the raised weapon animations for the player.
 -- @param actor [Player]
--- @param model [String the player's model]
+-- @param _model [String the player's model]
 -- @return [Boolean whether the player's weapon is raised]
-function RaiseGun:ModelWeaponRaised(actor, model)
+function RaiseGun:ModelWeaponRaised(actor, _model)
   return actor:is_weapon_raised()
 end
 

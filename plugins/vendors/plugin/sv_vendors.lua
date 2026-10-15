@@ -93,7 +93,7 @@ end
 function Vendors:remove(vendor)
   if !self:is_vendor(vendor) then return false end
 
-  for k, v in ipairs(self:get_customers(vendor)) do
+  for _k, v in ipairs(self:get_customers(vendor)) do
     self:close(v, false, true)
   end
 
@@ -130,7 +130,7 @@ end
 function Vendors:save()
   local vendors = {}
 
-  for k, v in ipairs(ents.FindByClass(self.entity_class)) do
+  for _k, v in ipairs(ents.FindByClass(self.entity_class)) do
     if v.vendor_data and !v:IsMarkedForDeletion() then
       vendors[#vendors + 1] = self:to_saveable(v)
     end
@@ -141,7 +141,7 @@ end
 
 --- Removes the vendors that are on the map and spawns the saved ones.
 function Vendors:load()
-  for k, v in ipairs(ents.FindByClass(self.entity_class)) do
+  for _k, v in ipairs(ents.FindByClass(self.entity_class)) do
     self:remove(v)
   end
 
@@ -149,7 +149,7 @@ function Vendors:load()
 
   if !istable(saved) then return end
 
-  for k, v in pairs(saved) do
+  for _k, v in pairs(saved) do
     if istable(v) and isvector(v.position) and isangle(v.angles) then
       self:create(v.position, v.angles, v)
     end

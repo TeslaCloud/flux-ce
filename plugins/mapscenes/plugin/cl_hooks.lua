@@ -44,12 +44,12 @@ local view = {}
 --- Replaces the view with the current mapscene point while the ShouldMapsceneRender hook
 -- returns true. Depending on the config it cuts to the next point with a fade, glides
 -- between the points or slowly rotates the camera.
--- @param client [Player]
--- @param origin [Vector]
--- @param angles [Angle]
--- @param fov [Number]
+-- @param _client [Player]
+-- @param _origin [Vector]
+-- @param _angles [Angle]
+-- @param _fov [Number]
 -- @return [Map view table with origin and angles, or nil if no mapscene is shown]
-function Mapscenes:CalcView(client, origin, angles, fov)
+function Mapscenes:CalcView(_client, _origin, _angles, _fov)
   --- Asks whether the mapscene camera should replace the local player's view.
   -- Called on the client on every view calculation. The Characters plugin returns true while
   -- the intro panel or the main menu is open.

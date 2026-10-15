@@ -60,7 +60,7 @@ function Stats:apply_faction_bonuses(target, enabled)
 
   local changed = 0
 
-  for k, v in pairs(Attributes.get_stored()) do
+  for k, _v in pairs(Attributes.get_stored()) do
     local wanted, current = bonuses[k], self:get_faction_boost(target, k)
 
     if wanted and wanted != current then
@@ -81,10 +81,10 @@ end
 -- level chosen during creation or the attribute's default, and a Skill record at rank 0 for
 -- every registered skill. A chosen level is rounded down and kept between the attribute's
 -- min and max, as the creation data comes from the client.
--- @param owner [Player]
+-- @param _owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data; levels are read from its attributes field]
-function Stats:PostCreateCharacter(owner, char, char_data)
+function Stats:PostCreateCharacter(_owner, char, char_data)
   Attributes.create_records(char, char_data.attributes)
   Skills.create_records(char)
 end
@@ -109,8 +109,8 @@ end
 --- Takes the networked attributes and skills of a character away from the player who drops
 -- it, and forgets when its next boost expires and the fractions of effects carried over.
 -- @param owner [Player]
--- @param character [Character the character that is being dropped]
-function Stats:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function Stats:OnActiveCharacterCleared(owner, _character)
   owner.attribute_expiry = nil
   owner.stat_effect_carry = nil
 
@@ -124,7 +124,7 @@ end
 function Stats:OneSecond()
   local unix_time = os.time()
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     local expiry = v.attribute_expiry
 
     if expiry and expiry <= unix_time then
@@ -136,9 +136,9 @@ end
 
 --- Replaces the stat bonuses of a player who has been moved to another faction.
 -- @param target [Player]
--- @param faction_table [Faction the faction the player is in now]
--- @param old_faction [Faction the faction the player was in before, or nil]
-function Stats:OnPlayerFactionChanged(target, faction_table, old_faction)
+-- @param _faction_table [Faction the faction the player is in now]
+-- @param _old_faction [Faction the faction the player was in before, or nil]
+function Stats:OnPlayerFactionChanged(target, _faction_table, _old_faction)
   self:apply_faction_bonuses(target)
 end
 
@@ -150,7 +150,7 @@ end
 function Stats:OnConfigSet(key, old_value, new_value)
   if key != 'stats_faction_bonuses' or old_value == new_value then return end
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     self:apply_faction_bonuses(v, new_value != false)
   end
 end
@@ -183,12 +183,12 @@ end
 
 --- Rejects new characters unless each stat has a whole level between its minimum and its
 -- creation limit and the levels add up to the points a new character gets.
--- @param actor [Player player creating the character]
+-- @param _actor [Player player creating the character]
 -- @param data [Map character creation data]
 -- @return [Number CHAR_ERR_ATTRIBUTE_SUM if the stat levels are not valid, nil otherwise]
 -- @see [Stats:default_attribute_points]
 -- @see [Stats:get_creation_max]
-function Stats:PlayerCreateCharacter(actor, data)
+function Stats:PlayerCreateCharacter(_actor, data)
   local levels = data.attributes
 
   if !istable(levels) then
@@ -198,7 +198,7 @@ function Stats:PlayerCreateCharacter(actor, data)
   local stats = Attributes.get_stored()
   local sum = 0
 
-  for k, v in pairs(levels) do
+  for k, _v in pairs(levels) do
     if !stats[k] then
       return CHAR_ERR_ATTRIBUTE_SUM
     end
@@ -249,9 +249,9 @@ end
 -- `stats_strength_lifting` config for every level of their strength, and lowers it for
 -- every level below zero.
 -- @param actor [Player player picking the object up]
--- @param ent [Entity the object, or nil]
+-- @param _ent [Entity the object, or nil]
 -- @param info [Map modified in place: limit (Number the mass limit)]
-function Stats:AdjustPickupMassLimit(actor, ent, info)
+function Stats:AdjustPickupMassLimit(actor, _ent, info)
   if !IsValid(actor) or !actor:IsPlayer() or !isnumber(info.limit) then return end
 
   info.limit = info.limit * self:get_player_effect_scale(actor, 'strength', 'stats_strength_lifting')
@@ -260,9 +260,9 @@ end
 --- Makes a player throw the object they hold harder by the `stats_strength_lifting` config
 -- for every level of their strength, and weaker for every level below zero.
 -- @param actor [Player player throwing the object]
--- @param ent [Entity the object being thrown]
+-- @param _ent [Entity the object being thrown]
 -- @param info [Map modified in place: force (Number the force of the throw)]
-function Stats:PlayerThrowObject(actor, ent, info)
+function Stats:PlayerThrowObject(actor, _ent, info)
   if !IsValid(actor) or !actor:IsPlayer() or !isnumber(info.force) then return end
 
   info.force = info.force * self:get_player_effect_scale(actor, 'strength', 'stats_strength_lifting')
@@ -272,8 +272,8 @@ end
 -- level of their reflexes, and raises it for every level below zero.
 -- @param victim [Player player about to take the damage]
 -- @param damage_info [CTakeDamageInfo the damage, scaled in place]
--- @param hitgroup [Number HITGROUP_ enum of the hit location]
-function Stats:PrePlayerTakeDamage(victim, damage_info, hitgroup)
+-- @param _hitgroup [Number HITGROUP_ enum of the hit location]
+function Stats:PrePlayerTakeDamage(victim, damage_info, _hitgroup)
   if !damage_info:IsFallDamage() then return end
 
   local scale = self:get_player_effect_scale(victim, 'reflexes', 'stats_reflexes_fall', true)

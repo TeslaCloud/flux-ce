@@ -125,7 +125,7 @@ do
           if istable(records) then
             local found = false
 
-            for k, v in pairs(records) do
+            for _k, v in pairs(records) do
               if v.currency_id == currency then
                 v.amount = value
                 found = true

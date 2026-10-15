@@ -222,7 +222,7 @@ function Faction:get_loadout(rank)
   local rank_table = rank != nil and self.rank[rank]
 
   if istable(self.loadout) then
-    for k, v in ipairs(self.loadout) do
+    for _k, v in ipairs(self.loadout) do
       if !table.HasValue(loadout, v) then
         table.insert(loadout, v)
       end
@@ -230,7 +230,7 @@ function Faction:get_loadout(rank)
   end
 
   if rank_table and istable(rank_table.loadout) then
-    for k, v in ipairs(rank_table.loadout) do
+    for _k, v in ipairs(rank_table.loadout) do
       if !table.HasValue(loadout, v) then
         table.insert(loadout, v)
       end
@@ -405,7 +405,7 @@ function Faction:generate_name(target, rank, default_data)
 
   local helpers = string.find_all(final_name, '{([%w_]+):([%w_]+)}')
 
-  for k, v in ipairs(helpers) do
+  for _k, v in ipairs(helpers) do
     local m1, m2 = v.matches[1], v.matches[2]
 
     if m1 == 'callback' then
@@ -440,14 +440,14 @@ end
 
 --- Called on the server when a player is moved into this faction. Does nothing by default;
 -- override it in the faction definition.
--- @param target [Player]
-function Faction:on_player_join(target)
+-- @param _target [Player]
+function Faction:on_player_join(_target)
 end
 
 --- Called on the server when a player is moved out of this faction. Does nothing by default;
 -- override it in the faction definition.
--- @param target [Player]
-function Faction:on_player_leave(target)
+-- @param _target [Player]
+function Faction:on_player_leave(_target)
 end
 
 --- Called on the server when a character of this faction is about to be created, after the
@@ -461,13 +461,13 @@ end
 --   end
 -- end
 -- ```
--- @param owner [Player the player the character is created for]
--- @param data [Map creation data: name, phys_desc, gender (a CHAR_GENDER_* value), model,
+-- @param _owner [Player the player the character is created for]
+-- @param _data [Map creation data: name, phys_desc, gender (a CHAR_GENDER_* value), model,
 --   skin and faction; rank may be set]
 -- @return [Boolean/Number return false to refuse the character, optionally followed by a
 --   String language phrase that tells the player why and a Map of its arguments; or return
 --   a CHAR_ERR_* code to refuse it with the text of that code]
-function Faction:on_character_create(owner, data)
+function Faction:on_character_create(_owner, _data)
 end
 
 --- Called on the server when `Factions.can_transfer` checks whether a player may be moved
@@ -480,11 +480,11 @@ end
 --   end
 -- end
 -- ```
--- @param target [Player the player who is to be moved into the faction]
--- @param old_faction [Faction the faction the player is in, nil if it is not registered]
+-- @param _target [Player the player who is to be moved into the faction]
+-- @param _old_faction [Faction the faction the player is in, nil if it is not registered]
 -- @return [Boolean return false to refuse the transfer, optionally followed by a String
 --   language phrase that tells why and a Map of its arguments]
-function Faction:can_transfer(target, old_faction)
+function Faction:can_transfer(_target, _old_faction)
 end
 
 --- Registers the faction under its faction ID.

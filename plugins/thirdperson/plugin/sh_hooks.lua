@@ -30,9 +30,9 @@ if CLIENT then
   -- `sprint_lowers_weapon` config keeps the weapon lowered, so that the normal state
   -- applies.
   -- @param actor [Player]
-  -- @param weapon [Weapon active weapon of the player, one that can be raised and lowered]
+  -- @param _weapon [Weapon active weapon of the player, one that can be raised and lowered]
   -- @return [Boolean true while the weapon is predicted to be raised, nil otherwise]
-  function ThirdPerson:ShouldWeaponBeRaised(actor, weapon)
+  function ThirdPerson:ShouldWeaponBeRaised(actor, _weapon)
     if actor != PLAYER or !self:is_controlling(actor) then return end
     if !Config.get('weapon_raise_enabled', true) then return end
     if Config.get('sprint_lowers_weapon') and actor:running() then return end

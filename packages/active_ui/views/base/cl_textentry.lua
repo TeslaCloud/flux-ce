@@ -37,9 +37,9 @@ function PANEL:Paint(w, h)
 end
 
 --- Blocks further input once the text has reached the character limit.
--- @param char [String the character being typed]
+-- @param _char [String the character being typed]
 -- @return [Boolean true to block the character, nil to allow it]
-function PANEL:AllowInput(char)
+function PANEL:AllowInput(_char)
   local text = self:GetValue()
 
   if text and text != '' then

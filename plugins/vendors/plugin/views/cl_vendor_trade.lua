@@ -101,7 +101,7 @@ function PANEL:set_row(data)
 
   self.icon:SetModel(data.model, data.skin or 0)
   self.button:set_text(data.button_text or '')
-  self.button.DoClick = function(btn)
+  self.button.DoClick = function(_btn)
     surface.PlaySound(Theme.get_sound('button_click_success_sound', 'garrysmod/ui_click.wav'))
 
     data.on_click()
@@ -153,7 +153,7 @@ function PANEL:Paint(w, h)
   local header = scale(36)
   local title = t(self.title)
   local title_font = get_font('main_menu_titles')
-  local title_w, title_h = text_size(title, title_font)
+  local _title_w, title_h = text_size(title, title_font)
 
   Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius'), get_color('surface_sunken'))
   simple_text(title, title_font, scale(10), header * 0.5 - title_h * 0.5, get_color('text'))
@@ -264,7 +264,7 @@ end
 function PANEL:PaintOver(w, h)
   if !self.money_text then return end
 
-  local left, top, right, bottom = self:GetDockPadding()
+  local left, _top, right, bottom = self:GetDockPadding()
   local gap = scale(8)
   local font = get_font('main_menu_small')
   local color = get_color('text')
@@ -414,7 +414,7 @@ function PANEL:rebuild()
   self.sell_list:clear()
   self.buy_list:clear()
 
-  for k, v in ipairs(data.sells or {}) do
+  for _k, v in ipairs(data.sells or {}) do
     local item_table = Item.find_by_id(v.id)
 
     if item_table then
@@ -422,7 +422,7 @@ function PANEL:rebuild()
     end
   end
 
-  for k, v in ipairs(data.buys or {}) do
+  for _k, v in ipairs(data.buys or {}) do
     local item_obj = Item.find_instance_by_id(v.instance_id)
 
     if item_obj then
@@ -445,7 +445,7 @@ function PANEL:rebuild()
   table.SortByMember(sells, 'name', true)
   table.SortByMember(buys, 'name', true)
 
-  for k, v in ipairs(sells) do
+  for _k, v in ipairs(sells) do
     local item_table, entry = v.item_table, v.entry
     local row = self.sell_list:add_row({
       name = v.name,
@@ -463,7 +463,7 @@ function PANEL:rebuild()
     self.sell_rows[entry.id] = { row = row, entry = entry }
   end
 
-  for k, v in ipairs(buys) do
+  for _k, v in ipairs(buys) do
     local item_obj = v.item_obj
 
     self.buy_list:add_row({

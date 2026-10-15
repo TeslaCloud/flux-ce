@@ -56,7 +56,7 @@ function PANEL:PerformLayout()
     x = math.max(w * 0.5 - wide * 0.5, 0)
   end
 
-  for k, v in pairs(panels) do
+  for _k, v in pairs(panels) do
     if !IsValid(v) then continue end
 
     v:SetPos(x, 0)

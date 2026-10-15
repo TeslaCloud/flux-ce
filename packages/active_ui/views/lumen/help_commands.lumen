@@ -40,7 +40,7 @@ local function Command(props)
   </view>
 end
 
-return function(props)
+return function(_props)
   local prefix = Flux.Help:get_command_prefix()
   local categories = Flux.Help:get_commands()
 

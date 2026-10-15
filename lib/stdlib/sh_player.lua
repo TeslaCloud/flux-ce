@@ -26,7 +26,7 @@ function player.find(name, case_sensitive, return_first)
   local is_steamid = name:start_with('STEAM_')
   local lower_name
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if is_steamid then
       if v:SteamID() == name then
         return v

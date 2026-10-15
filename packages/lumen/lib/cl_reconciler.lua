@@ -110,7 +110,7 @@ local function collect_panels(instance, into)
   elseif instance.kind == 'component' then
     collect_panels(instance.child, into)
   else
-    for k, child in ipairs(instance.children) do
+    for _k, child in ipairs(instance.children) do
       collect_panels(child, into)
     end
   end
@@ -126,7 +126,7 @@ local function apply_order(host)
 
   local panels = {}
 
-  for k, child in ipairs(host.children or {}) do
+  for _k, child in ipairs(host.children or {}) do
     collect_panels(child, panels)
   end
 
@@ -325,7 +325,7 @@ function reconcile_children(parent, old_children, children)
   local by_key = {}
   local result = {}
 
-  for k, instance in ipairs(old_children or {}) do
+  for _k, instance in ipairs(old_children or {}) do
     by_key[instance.list_key] = instance
   end
 
@@ -349,7 +349,7 @@ function reconcile_children(parent, old_children, children)
     end
   end
 
-  for list_key, instance in pairs(by_key) do
+  for _list_key, instance in pairs(by_key) do
     unmount(instance)
   end
 
@@ -365,7 +365,7 @@ function unmount(instance)
   instance.unmounted = true
 
   if instance.kind == 'host' then
-    for k, child in ipairs(instance.children or {}) do
+    for _k, child in ipairs(instance.children or {}) do
       unmount(child)
     end
 
@@ -382,7 +382,7 @@ function unmount(instance)
       unmount(instance.child)
     end
   else
-    for k, child in ipairs(instance.children or {}) do
+    for _k, child in ipairs(instance.children or {}) do
       unmount(child)
     end
   end
@@ -395,7 +395,7 @@ local function run_effects()
 
   effects = {}
 
-  for k, entry in ipairs(queue) do
+  for _k, entry in ipairs(queue) do
     if !entry[1].unmounted then
       Lumen.State.run_effect(entry[2])
     end
@@ -433,7 +433,7 @@ function Lumen.Reconciler.flush()
 
   dirty = {}
 
-  for k, instance in ipairs(queue) do
+  for _k, instance in ipairs(queue) do
     if instance.dirty and !instance.unmounted then
       local root = instance.root
 
@@ -526,7 +526,7 @@ end
 
 --- Lays the whole tree out again.
 function LumenRoot:invalidate()
-  for k, panel in ipairs(self:get_panels()) do
+  for _k, panel in ipairs(self:get_panels()) do
     panel:InvalidateLayout()
     panel:InvalidateChildren(true)
   end

@@ -73,7 +73,7 @@ function PANEL:Init()
   self.toggle = vgui.Create('fl_button', self)
   self.toggle:SetDrawBackground(false)
   self.toggle:set_centered(true)
-  self.toggle.DoClick = function(btn)
+  self.toggle.DoClick = function(_btn)
     self:toggle_plugin()
   end
 

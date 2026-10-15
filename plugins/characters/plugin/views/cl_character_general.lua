@@ -115,7 +115,7 @@ function PANEL:Init()
     self.name_random:set_icon_size(fa_icon_size, fa_icon_size)
     self.name_random:SetTooltip(t'ui.char_create.random_name')
     self.name_random:SetDrawBackground(false)
-    self.name_random.DoClick = function(btn)
+    self.name_random.DoClick = function(_btn)
       surface.PlaySound('buttons/blip1.wav')
 
       self.name_entry:SetText(
@@ -152,7 +152,7 @@ function PANEL:Init()
   self.model:SetCamPos(Vector(80, 0, 50))
   self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
-  self.model.LayoutEntity = function(entity) end
+  self.model.LayoutEntity = function(_entity) end
   self.model.angles = Angle(0, 0, 0)
 
   self.model.DragMousePress = function(pnl)
@@ -183,7 +183,7 @@ function PANEL:Init()
   self.skin:set_value(1)
   self.skin:SetVisible(false)
   self.skin:set_min(1)
-  self.skin.on_click = function(panel, value)
+  self.skin.on_click = function(_panel, value)
     surface.PlaySound('buttons/blip1.wav')
 
     self.model.Entity:SetSkin(value - 1)
@@ -208,7 +208,7 @@ function PANEL:rebuild_models()
   local offset = math.scale(4)
 
   if self.models_list.buttons then
-    for k, v in ipairs(self.models_list.buttons) do
+    for _k, v in ipairs(self.models_list.buttons) do
       v:Remove()
     end
   end
@@ -230,7 +230,7 @@ function PANEL:rebuild_models()
     self.model:GetEntity():SetSequence(self.model:GetEntity():idle_animation())
   end
 
-  for k, v in ipairs(models) do
+  for _k, v in ipairs(models) do
     if i >= 7 then
       offset = offset + step
       i = 0
@@ -271,7 +271,7 @@ function PANEL:rebuild_models()
       self.models_list.prev_btn = button
     end
 
-    button.Paint = function(btn, w, h)
+    button.Paint = function(btn, _w, _h)
       local fade_step = RealFrameTime() * 640
 
       btn.OverlayFade = math_clamp((btn.OverlayFade or 0) - fade_step * 2, 0, 255)

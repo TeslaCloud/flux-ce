@@ -139,7 +139,7 @@ function Cinematics:add(cinematic)
   }
   local has_text = false
 
-  for k, v in ipairs(text_fields) do
+  for _k, v in ipairs(text_fields) do
     local value = cinematic[v]
 
     if isstring(value) and value != '' then
@@ -318,7 +318,7 @@ end
 function Cinematics:layout(cinematic, scrw)
   local lines = {}
 
-  for k, v in ipairs(text_fields) do
+  for _k, v in ipairs(text_fields) do
     local text = cinematic[v]
 
     if text then

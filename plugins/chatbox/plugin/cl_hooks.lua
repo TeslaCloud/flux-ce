@@ -25,11 +25,11 @@ end
 
 --- Opens the chatbox instead of the default chat when a chat bind is pressed,
 -- remembering whether team chat was requested.
--- @param client [Player]
+-- @param _client [Player]
 -- @param bind [String the bind that was pressed]
 -- @param pressed [Boolean whether the bind was pressed rather than released]
 -- @return [Boolean true to block the bind if the chatbox was opened, nil otherwise]
-function Chatbox:PlayerBindPress(client, bind, pressed)
+function Chatbox:PlayerBindPress(_client, bind, pressed)
   if IsValid(PLAYER) and PLAYER:has_initialized() and
      (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
     if string.find(bind, 'messagemode2') then
@@ -45,9 +45,9 @@ function Chatbox:PlayerBindPress(client, bind, pressed)
 end
 
 --- Closes the chatbox when the player clicks on the game world.
--- @param mouse_code [Number mouse button code]
--- @param aim_vector [Vector direction of the click]
-function Chatbox:GUIMousePressed(mouse_code, aim_vector)
+-- @param _mouse_code [Number mouse button code]
+-- @param _aim_vector [Vector direction of the click]
+function Chatbox:GUIMousePressed(_mouse_code, _aim_vector)
   if IsValid(Chatbox.panel) then
     Chatbox.hide()
   end
@@ -134,7 +134,7 @@ function Chatbox:ChatboxMessageCompiled(compiled)
 
   local count = 0
 
-  for k, v in pairs(compiled) do
+  for _k, v in pairs(compiled) do
     if istable(v) and v.text or IsColor(v) then
       count = count + 1
       to_print[count] = IsColor(v) and v or v.text
@@ -151,10 +151,10 @@ end
 -- through the engine is left to the gamemode.
 -- @param speaker [Player the speaker, an invalid entity for the server console]
 -- @param text [String the message]
--- @param team_chat [Boolean whether the message was sent to the team chat]
--- @param is_dead [Boolean whether the speaker is dead]
+-- @param _team_chat [Boolean whether the message was sent to the team chat]
+-- @param _is_dead [Boolean whether the speaker is dead]
 -- @return [Boolean true to suppress the default handling of a console message, nil otherwise]
-function Chatbox:OnPlayerChat(speaker, text, team_chat, is_dead)
+function Chatbox:OnPlayerChat(speaker, text, _team_chat, _is_dead)
   if IsValid(speaker) then return end
 
   Chatbox.add_message({

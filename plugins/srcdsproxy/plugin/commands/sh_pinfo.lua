@@ -24,7 +24,7 @@ function CMD:on_run(actor, target)
 
   local verbs = {}
 
-  for k, v in ipairs(entries) do
+  for _k, v in ipairs(entries) do
     verbs[#verbs + 1] = SrcdsProxy:verb('info', v.id)
   end
 

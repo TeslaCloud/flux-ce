@@ -156,13 +156,13 @@ function Limbs:heal_all(target, amount)
 
   local changes = {}
 
-  for k, v in ipairs(self:all()) do
+  for _k, v in ipairs(self:all()) do
     changes[v] = -amount
   end
 
   local total = 0
 
-  for limb, healed in pairs(change_limbs(target, changes)) do
+  for _limb, healed in pairs(change_limbs(target, changes)) do
     total = total - healed
   end
 

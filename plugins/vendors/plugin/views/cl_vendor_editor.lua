@@ -55,7 +55,7 @@ function PANEL:Init()
   self.save_button:set_icon('fa-check')
   self.save_button:set_centered(true)
   self.save_button:set_active(true)
-  self.save_button.DoClick = function(btn)
+  self.save_button.DoClick = function(_btn)
     self:save()
   end
 
@@ -69,7 +69,7 @@ function PANEL:Init()
   self.remove_button:set_draw_outline(true)
   self.remove_button:set_text_color(get_color('danger'))
   self.remove_button:set_background_color(get_color('surface_raised'))
-  self.remove_button.DoClick = function(btn)
+  self.remove_button.DoClick = function(_btn)
     Derma_Query(
       t'ui.vendor.editor.remove_message',
       t'ui.vendor.editor.remove',
@@ -94,8 +94,8 @@ function PANEL:Init()
   self.body = vgui.Create('DPanel', self)
   self.body:SetPaintBackground(false)
   self.body:Dock(FILL)
-  self.body.PerformLayout = function(pnl, w, h)
-    for k, v in pairs(self.pages) do
+  self.body.PerformLayout = function(_pnl, w, h)
+    for _k, v in pairs(self.pages) do
       v.panel:SetPos(0, 0)
       v.panel:SetSize(w, h)
     end
@@ -145,7 +145,7 @@ function PANEL:add_page(id, title, class)
   button:set_centered(true)
   button:set_draw_outline(true)
   button:set_background_color(get_color('surface_raised'))
-  button.DoClick = function(btn)
+  button.DoClick = function(_btn)
     self:show_page(id)
   end
 
@@ -220,7 +220,7 @@ function PANEL:add_check_box(page, title, checked, callback)
   check_box:SetText(title)
   check_box:SetTextColor(get_color('text'))
   check_box:SetChecked(checked)
-  check_box.OnChange = function(pnl, value)
+  check_box.OnChange = function(_pnl, value)
     callback(value)
   end
 
@@ -243,7 +243,7 @@ function PANEL:build_general()
   self.model_entry:SetText(tostring(data.model or ''))
 
   self.animation_box = self:add_field(page, t'ui.vendor.editor.animation', 'DComboBox')
-  self.animation_box.OnSelect = function(pnl, index, text, value)
+  self.animation_box.OnSelect = function(_pnl, _index, _text, value)
     data.animation = value
   end
 
@@ -260,7 +260,7 @@ function PANEL:build_general()
   self:add_help(page, t'ui.vendor.editor.animation_help')
 
   self.currency_box = self:add_field(page, t'ui.vendor.editor.currency', 'DComboBox')
-  self.currency_box.OnSelect = function(pnl, index, text, value)
+  self.currency_box.OnSelect = function(_pnl, _index, _text, value)
     data.currency = value
 
     self:refresh_items()
@@ -299,7 +299,7 @@ function PANEL:build_items()
   self.search_entry:Dock(TOP)
   self.search_entry:SetPlaceholderText(t'ui.vendor.editor.search')
   self.search_entry:SetUpdateOnType(true)
-  self.search_entry.OnValueChange = function(pnl, value)
+  self.search_entry.OnValueChange = function(_pnl, _value)
     self:refresh_items()
   end
 
@@ -314,11 +314,11 @@ function PANEL:build_items()
   self.item_list:AddColumn((t'ui.vendor.editor.sell_price'))
   self.item_list:AddColumn((t'ui.vendor.editor.stock'))
   self.item_list:AddColumn((t'ui.vendor.editor.buy_price'))
-  self.item_list.OnRowSelected = function(pnl, line_id, line)
+  self.item_list.OnRowSelected = function(_pnl, _line_id, line)
     self:open_item_menu(line.item_id)
   end
 
-  self.item_list.OnRowRightClick = function(pnl, line_id, line)
+  self.item_list.OnRowRightClick = function(_pnl, _line_id, line)
     self:open_item_menu(line.item_id)
   end
 
@@ -347,7 +347,7 @@ function PANEL:refresh_items()
 
   table.SortByMember(items, 'name', true)
 
-  for k, v in ipairs(items) do
+  for _k, v in ipairs(items) do
     local sells, buys = data.sells[v.id], data.buys[v.id]
     local sell_price, stock, buy_price = '', '', ''
 
@@ -471,7 +471,7 @@ function PANEL:build_access()
       end)
     end
 
-    for id, listed in SortedPairs(table.Copy(data.factions)) do
+    for id, _listed in SortedPairs(table.Copy(data.factions)) do
       if !factions[id] then
         self:add_check_box(page, tostring(id), true, function(value)
           data.factions[id] = value and true or nil
@@ -491,7 +491,7 @@ function PANEL:build_phrases()
 
   self:add_help(page, t'ui.vendor.editor.phrases.help')
 
-  for k, v in ipairs(Vendors.phrases) do
+  for _k, v in ipairs(Vendors.phrases) do
     local entry = self:add_field(page, t('ui.vendor.editor.phrases.'..v), 'DTextEntry')
     entry:SetPlaceholderText(t('vendor.phrase.'..v))
     entry:SetText(tostring(data.phrases[v] or ''))

@@ -194,7 +194,7 @@ function DisplayTyping:relay(actor, state, now)
     local radius = self:get_range() * state.range
     local enter, leave = (radius * 1.15) ^ 2, (radius * 1.35) ^ 2
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       local was_recipient = previous[v]
 
       if v != actor and self:can_receive(v) and origin:DistToSqr(v:EyePos()) <= (was_recipient and leave or enter) then

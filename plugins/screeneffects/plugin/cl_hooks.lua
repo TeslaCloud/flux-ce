@@ -58,10 +58,10 @@ end
 -- from them. Nothing is added while the local player is seen in third person or looks through
 -- another entity.
 -- @param client [Player]
--- @param origin [Vector]
+-- @param _origin [Vector]
 -- @param angles [Angle]
--- @param fov [Number]
-function ScreenEffects:CalcView(client, origin, angles, fov)
+-- @param _fov [Number]
+function ScreenEffects:CalcView(client, _origin, angles, _fov)
   if client:ShouldDrawLocalPlayer() or GetViewEntity() != client then return end
 
   local view = self.view
@@ -74,7 +74,7 @@ end
 --- Registers a switch and a strength slider for every effect with the Settings plugin. The
 -- settings stay on the client: the effects are worked out there.
 function ScreenEffects:RegisterClientSettings()
-  for k, v in ipairs(self.effect_order) do
+  for _k, v in ipairs(self.effect_order) do
     local effect = self.effects[v]
     local phrase = 'settings.screen_effects.'..v
 

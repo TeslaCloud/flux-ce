@@ -116,7 +116,7 @@ function player_meta:set_temp_permission(perm_id, value, duration)
   local create = true
 
   if self.record.temp_permissions then
-    for k, v in pairs(self.record.temp_permissions) do
+    for _k, v in pairs(self.record.temp_permissions) do
       if v.permission_id == perm_id then
         create = false
 
@@ -186,7 +186,7 @@ function player_meta:update_transmit(receiver)
 
   self:prevent_transmit(receiver, should_prevent)
 
-  for k, v in ipairs(self:GetWeapons()) do
+  for _k, v in ipairs(self:GetWeapons()) do
     v:prevent_transmit(receiver, should_prevent)
   end
 end
@@ -197,7 +197,7 @@ end
 function player_meta:update_visibility()
   self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     self:update_transmit(v)
   end
 
@@ -207,7 +207,7 @@ end
 --- Applies which of the hidden players this player may see to the networking of all of them.
 -- Called when the player joins and whenever their permissions change.
 function player_meta:update_hidden_players()
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     v:update_transmit(self)
   end
 end

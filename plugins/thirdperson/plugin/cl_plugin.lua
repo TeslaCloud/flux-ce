@@ -96,7 +96,11 @@ end
 -- @return [Number distance in units, from 50 to 150]
 local function distance_setting()
   if ClientSettings then
-    return math.Clamp(tonumber(ClientSettings:get('thirdperson_distance', default_distance)) or default_distance, 50, 150)
+    return math.Clamp(
+      tonumber(ClientSettings:get('thirdperson_distance', default_distance)) or default_distance,
+      50,
+      150
+    )
   end
 
   return default_distance
@@ -334,7 +338,8 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
 
   local eased = blend * blend * (3 - 2 * blend)
   local forward, right, up = camera_angles:Forward(), camera_angles:Right(), camera_angles:Up()
-  local wanted = pos - forward * (self.camera_distance * eased) + right * (self.camera_side * eased) + up * (self.camera_up * eased)
+  local wanted =
+    pos - forward * (self.camera_distance * eased) + right * (self.camera_side * eased) + up * (self.camera_up * eased)
 
   camera_trace.start = pos
   camera_trace.endpos = wanted

@@ -13,7 +13,7 @@ PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a custom weapon selector for use with Flux.')
 
 if SERVER then
-  concommand.Add('selectweapon', function(actor, command, arguments)
+  concommand.Add('selectweapon', function(actor, _command, arguments)
     local weapon = actor:GetWeapons()[tonumber(arguments[1]) or 1]
 
     if IsValid(weapon) then
@@ -292,8 +292,8 @@ function PLUGIN:OnWeaponIndexChange(old_index, index)
 end
 
 --- Closes the weapon selector and clears its entries once a weapon has been selected.
--- @param index [Number index of the selected weapon in the player's weapon list]
-function PLUGIN:OnWeaponSelected(index)
+-- @param _index [Number index of the selected weapon in the player's weapon list]
+function PLUGIN:OnWeaponSelected(_index)
   self.is_open = false
   self.cur_alpha = 0
   self.display = {}

@@ -118,16 +118,16 @@ end
 
 --- Connects to the database. The abstract implementation only marks the adapter as
 -- connected and never calls the callback; real adapters override it.
--- @param config [Map database settings: host, user, password, port, database]
--- @param on_connected [Function called with the adapter once the connection is ready]
-function ActiveRecord.Adapters.Abstract:connect(config, on_connected)
+-- @param _config [Map database settings: host, user, password, port, database]
+-- @param _on_connected [Function called with the adapter once the connection is ready]
+function ActiveRecord.Adapters.Abstract:connect(_config, _on_connected)
   self._connected = true
 end
 
 --- Closes the database connection. The abstract implementation only clears the
 -- connected flag.
--- @param config=nil [Map unused]
-function ActiveRecord.Adapters.Abstract:disconnect(config)
+-- @param _config=nil [Map unused]
+function ActiveRecord.Adapters.Abstract:disconnect(_config)
   self._connected = false
 end
 
@@ -163,23 +163,23 @@ function ActiveRecord.Adapters.Abstract:quote_name(str)
 end
 
 --- Returns the placeholder that stands for a bind parameter in the SQL of the adapter.
--- @param index [Number position of the parameter in the list of bindings, starting at 1]
+-- @param _index [Number position of the parameter in the list of bindings, starting at 1]
 -- @return [String '?', unless overridden by the adapter]
-function ActiveRecord.Adapters.Abstract:placeholder(index)
+function ActiveRecord.Adapters.Abstract:placeholder(_index)
   return '?'
 end
 
 --- Sends a raw SQL string to the database. Does nothing in the abstract adapter.
 -- Values are best kept out of the SQL itself and passed as bindings instead, which take
 -- the place of the #placeholder of the adapter in the query and need no escaping.
--- @param query [String SQL to run]
--- @param callback=nil [Function called with the result rows, the query string and the
+-- @param _query [String SQL to run]
+-- @param _callback=nil [Function called with the result rows, the query string and the
 --   time the query took in seconds]
--- @param query_type=nil [String lowercase query type, e.g. 'select' or 'insert']
--- @param bindings=nil [List values of the bind parameters of the query, in the order of
+-- @param _query_type=nil [String lowercase query type, e.g. 'select' or 'insert']
+-- @param _bindings=nil [List values of the bind parameters of the query, in the order of
 --   their placeholders; strings, numbers and booleans are supported. A query that is
 --   given bindings has to be a single statement]
-function ActiveRecord.Adapters.Abstract:raw_query(query, callback, query_type, bindings)
+function ActiveRecord.Adapters.Abstract:raw_query(_query, _callback, _query_type, _bindings)
 end
 
 --- Puts a raw SQL string into the queue. Queued queries are run one at a time by #think.
@@ -195,29 +195,29 @@ end
 
 --- Hook called by ActiveRecord::Query#execute before the SQL string is built, so that
 -- the adapter can adjust the query object. Does nothing in the abstract adapter.
--- @param query [ActiveRecord::Query]
--- @param query_type [String lowercase query type, e.g. 'create']
--- @param queue=nil [Boolean whether the query will be queued instead of run right away]
-function ActiveRecord.Adapters.Abstract:append_query(query, query_type, queue)
+-- @param _query [ActiveRecord::Query]
+-- @param _query_type [String lowercase query type, e.g. 'create']
+-- @param _queue=nil [Boolean whether the query will be queued instead of run right away]
+function ActiveRecord.Adapters.Abstract:append_query(_query, _query_type, _queue)
 end
 
 --- Hook called by ActiveRecord::Query#execute once the SQL string is built. Adapters may
 -- return a string to replace it. Does nothing in the abstract adapter.
--- @param query [ActiveRecord::Query]
--- @param query_string [String generated SQL, nil if the query could not be built]
--- @param query_type [String lowercase query type, e.g. 'insert']
-function ActiveRecord.Adapters.Abstract:append_query_string(query, query_string, query_type)
+-- @param _query [ActiveRecord::Query]
+-- @param _query_string [String generated SQL, nil if the query could not be built]
+-- @param _query_type [String lowercase query type, e.g. 'insert']
+function ActiveRecord.Adapters.Abstract:append_query_string(_query, _query_string, _query_type)
 end
 
 --- Hook called after a column is added to a 'create' or 'change' query through one of
 -- the column type methods (t:string, t:integer, ...). Does nothing in the abstract adapter.
--- @param query [ActiveRecord::Query query the column was added to]
--- @param column [String column name]
--- @param args [Map column options, such as null and default]
--- @param obj [ActiveRecord::Query object the column type method was generated for]
--- @param type [String abstract column type, e.g. 'primary_key']
--- @param def [String adapter-specific SQL type definition]
-function ActiveRecord.Adapters.Abstract:create_column(query, column, args, obj, type, def)
+-- @param _query [ActiveRecord::Query query the column was added to]
+-- @param _column [String column name]
+-- @param _args [Map column options, such as null and default]
+-- @param _obj [ActiveRecord::Query object the column type method was generated for]
+-- @param _type [String abstract column type, e.g. 'primary_key']
+-- @param _def [String adapter-specific SQL type definition]
+function ActiveRecord.Adapters.Abstract:create_column(_query, _column, _args, _obj, _type, _def)
 end
 
 --- Runs the oldest queued query, if there is one. Called once a second by a timer.

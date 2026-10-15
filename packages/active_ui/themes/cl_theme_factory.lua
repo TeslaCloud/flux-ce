@@ -43,7 +43,7 @@ local surface_set_draw_color = surface.SetDrawColor
 local surface_draw_rect = surface.DrawRect
 local lerp_color = LerpColor
 
-local color_white_faded = Color(255, 255, 255, 150)
+local _color_white_faded = Color(255, 255, 255, 150)
 local color_model_background = Color(0, 0, 0, 90)
 local color_slot_gradient = Color(255, 255, 255, 10)
 local color_perm_not_set = Color(150, 158, 178)
@@ -56,7 +56,7 @@ THEME.should_reload = true
 --- Defines the defaults of the factory theme: options, sounds, assets, colors, fonts,
 -- materials and the tab menu panel.
 function THEME:on_loaded()
-  local scrw, scrh = ScrW(), ScrH()
+  local _scrw, scrh = ScrW(), ScrH()
 
   self:set_option('corner_radius_base',           6)
   self:set_option('corner_radius_small_base',     4)
@@ -88,10 +88,10 @@ function THEME:on_loaded()
   self:register_asset('gradient',       'materials/flux/gradient.png',    { sizes = { 1, 2, 4 } })
   self:register_asset('gradient_full',  'materials/flux/gradient_fs.png', { sizes = { 1, 2, 4 } })
 
-  local accent_color      = self:set_color('accent',          Color(120, 132, 232))
-  local background_color  = self:set_color('background',      Color(17, 19, 26))
-  local surface_color     = self:set_color('surface',         Color(30, 33, 44, 244))
-  local text_color        = self:set_color('text',            Color(240, 242, 248))
+  local _accent_color      = self:set_color('accent',          Color(120, 132, 232))
+  local _background_color  = self:set_color('background',      Color(17, 19, 26))
+  local _surface_color     = self:set_color('surface',         Color(30, 33, 44, 244))
+  local text_color = self:set_color('text', Color(240, 242, 248))
 
   self:set_color('background_dark',   Color(10, 12, 17))
   self:set_color('background_light',  Color(28, 31, 41))
@@ -158,7 +158,7 @@ function THEME:on_loaded()
   self:set_material('gradient_up',    'vgui/gradient-u')
   self:set_material('gradient_down',  'vgui/gradient-d')
 
-  self:add_panel('tab_menu', function(id, parent, ...)
+  self:add_panel('tab_menu', function(_id, parent, ...)
     return vgui.Create('fl_tab_menu', parent)
   end)
 end
@@ -210,23 +210,23 @@ function THEME:DrawTitleTag(text, x, y, font)
 end
 
 --- Draws the surface that a content panel sits on: a rounded card in the 'surface' color.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintSurface(panel, w, h)
+function THEME:PaintSurface(_panel, w, h)
   self:DrawCard(0, 0, w, h, self:get_option('corner_radius'), self:get_color('surface'))
 end
 
 --- Draws the title of a content panel as a tag that sticks out above its top left corner.
 -- The panel is expected to call it from `PaintOver` or `Paint` with clipping disabled, as
 -- the tag is drawn outside of the panel.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param text [String the title, translated]
--- @param w [Number panel width]
--- @param h [Number panel height]
-function THEME:PaintSectionTitle(panel, text, w, h)
+-- @param _w [Number panel width]
+-- @param _h [Number panel height]
+function THEME:PaintSectionTitle(_panel, text, _w, _h)
   local font = self:get_font('section_title')
-  local text_w, text_h = text_size(text, font)
+  local _text_w, text_h = text_size(text, font)
   local tag_h = text_h + math.scale(8)
 
   DisableClipping(true)
@@ -270,8 +270,8 @@ end
 
 --- Called when the main menu is created, so that a theme can customize it. Does nothing
 -- in the factory theme.
--- @param panel [Panel the main menu]
-function THEME:CreateMainMenu(panel)
+-- @param _panel [Panel the main menu]
+function THEME:CreateMainMenu(_panel)
 end
 
 --- Draws an fl_frame: a rounded card with a header band and the title of the frame in it.
@@ -283,7 +283,7 @@ function THEME:PaintFrame(panel, w, h)
   local font    = self:get_font('main_menu_titles')
   local header  = self:get_option('frame_header_size')
   local radius  = self:get_option('corner_radius')
-  local text_w, text_h = text_size(text, font)
+  local _text_w, text_h = text_size(text, font)
 
   DisableClipping(true)
     draw_rounded_box(radius + 2, -2, -1, w + 4, h + 4, Color(0, 0, 0, 60))
@@ -311,10 +311,10 @@ end
 
 --- Draws the background of the main menu: the blurred game under a dark tint, a band across
 -- the top with the schema's logo (or name), and its description and author below it.
--- @param panel [Panel the main menu]
+-- @param _panel [Panel the main menu]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
-function THEME:PaintMainMenu(panel, width, height)
+function THEME:PaintMainMenu(_panel, width, height)
   local title               = SCHEMA:get_name()
   local desc                = SCHEMA:get_description()
   local author              = t('ui.main_menu.developed_by', { author = SCHEMA:get_author() })
@@ -323,8 +323,8 @@ function THEME:PaintMainMenu(panel, width, height)
   local titles_font         = self:get_font('main_menu_titles')
   local schema_text_color   = self:get_color('schema_text')
   local muted_color         = self:get_color('text_muted')
-  local title_w,  title_h   = text_size(title, title_font)
-  local desc_w,   desc_h    = text_size(desc, titles_font)
+  local title_w, title_h = text_size(title, title_font)
+  local _desc_w, desc_h = text_size(desc, titles_font)
   local author_w, author_h  = text_size(author, titles_font)
   local bar_height          = math.scale(128)
   local padding             = math.scale(16)
@@ -503,10 +503,10 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
 end
 
 --- Draws the background of an fl_sidebar.
--- @param panel [Panel the sidebar being painted]
+-- @param _panel [Panel the sidebar being painted]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
-function THEME:PaintSidebar(panel, width, height)
+function THEME:PaintSidebar(_panel, width, height)
   draw_rounded_box(self:get_option('corner_radius'), 0, 0, width, height, self:get_color('surface_sunken'))
 end
 
@@ -603,10 +603,10 @@ end
 
 --- Draws the footer below the admin panel with the Steam name and user group of the local
 -- player and the version of the admin mod.
--- @param panel [Panel the admin panel]
+-- @param _panel [Panel the admin panel]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
-function THEME:AdminPanelPaintOver(panel, width, height)
+function THEME:AdminPanelPaintOver(_panel, width, height)
   local font            = self:get_font('text_smallest')
   local text_color      = self:get_color('text_muted')
   local version_string  = 'Admin Mod Version: v0.2.0 (indev)'
@@ -635,11 +635,11 @@ end
 --- Draws a button of the permission editor as a pill colored after its permission value:
 -- filled while it is the selected value, outlined otherwise, with a clock icon for temporary
 -- permissions.
--- @param perm_panel [Panel the permission row the button belongs to]
+-- @param _perm_panel [Panel the permission row the button belongs to]
 -- @param btn [Panel the button being painted]
 -- @param w [Number button width]
 -- @param h [Number button height]
-function THEME:PaintPermissionButton(perm_panel, btn, w, h)
+function THEME:PaintPermissionButton(_perm_panel, btn, w, h)
   local color     = color_white
   local title     = ''
   local perm_type = btn.perm_value
@@ -743,10 +743,10 @@ function THEME:PaintScoreboardPlayer(panel, w, h)
 end
 
 --- Draws the bar at the top of the tab menu that holds its buttons.
--- @param panel [Panel the tab menu that owns the button bar]
+-- @param _panel [Panel the tab menu that owns the button bar]
 -- @param width [Number width of the button bar]
 -- @param height [Number height of the button bar]
-function THEME:PaintTabMenuButtonPanel(panel, width, height)
+function THEME:PaintTabMenuButtonPanel(_panel, width, height)
   surface_set_draw_color(ColorAlpha(self:get_color('background'), 235))
   surface_draw_rect(0, 0, width, height)
 
@@ -771,18 +771,18 @@ function THEME:PaintTabMenu(panel, width, height)
 end
 
 --- Draws a faint sheen over an inventory item slot.
--- @param panel [Panel the item slot]
+-- @param _panel [Panel the item slot]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintItemSlot(panel, w, h)
+function THEME:PaintItemSlot(_panel, w, h)
   textured_rect(self:get_material('gradient_up'), 0, 0, w, h, color_slot_gradient)
 end
 
 --- Draws the card around an inventory panel.
--- @param panel [Panel the inventory panel]
+-- @param _panel [Panel the inventory panel]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintInventoryBackground(panel, w, h)
+function THEME:PaintInventoryBackground(_panel, w, h)
   local padding = math.scale(6)
 
   DisableClipping(true)
@@ -800,9 +800,9 @@ end
 --- Draws the card and the character name around the player model of the inventory tab. Does
 -- nothing if the panel has no player model.
 -- @param panel [Panel the inventory menu]
--- @param w [Number panel width]
--- @param h [Number panel height]
-function THEME:PaintTabInventoryBackground(panel, w, h)
+-- @param _w [Number panel width]
+-- @param _h [Number panel height]
+function THEME:PaintTabInventoryBackground(panel, _w, _h)
   local player_model = panel.player_model
 
   if IsValid(player_model) then
@@ -812,7 +812,7 @@ function THEME:PaintTabInventoryBackground(panel, w, h)
     local radius              = self:get_option('corner_radius')
     local font                = self:get_font('section_title')
     local text                = PLAYER:name()
-    local text_w, text_h      = text_size(text, font)
+    local _text_w, text_h = text_size(text, font)
 
     DisableClipping(true)
       self:DrawCard(
@@ -832,14 +832,14 @@ end
 
 --- Draws the title of an inventory above its panel, if it has one.
 -- @param panel [Panel the inventory panel]
--- @param w [Number panel width]
--- @param h [Number panel height]
-function THEME:PaintOverInventoryBackground(panel, w, h)
+-- @param _w [Number panel width]
+-- @param _h [Number panel height]
+function THEME:PaintOverInventoryBackground(panel, _w, _h)
   if panel.title then
     local font            = self:get_font('section_title')
     local text            = t(panel.title)
-    local text_w, text_h  = text_size(text, font)
-    local padding         = math.scale(6)
+    local _text_w, text_h = text_size(text, font)
+    local padding = math.scale(6)
 
     DisableClipping(true)
       self:DrawTitleTag(text, -padding, -padding - text_h - math.scale(8), font)
@@ -899,23 +899,23 @@ function THEME:PaintCharPanel(panel, w, h)
 end
 
 --- Draws the title of the character creation screen.
--- @param panel [Panel the character creation panel]
+-- @param _panel [Panel the character creation panel]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintCharCreationMainPanel(panel, w, h)
-  local title, font       = t'ui.char_create.text', Theme.get_font 'main_menu_title'
-  local title_w, title_h  = text_size(title, font)
+function THEME:PaintCharCreationMainPanel(_panel, w, h)
+  local title, font = t'ui.char_create.text', Theme.get_font 'main_menu_title'
+  local title_w, _title_h = text_size(title, font)
 
   draw_simple_text(title, font, w * 0.5 - title_w * 0.5, h * 0.125, self:get_color('text'))
 end
 
 --- Draws the title of the character loading screen.
--- @param panel [Panel the character loading panel]
+-- @param _panel [Panel the character loading panel]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintCharCreationLoadPanel(panel, w, h)
-  local title, font       = t'ui.char_create.load', Theme.get_font 'main_menu_title'
-  local title_w, title_h  = text_size(title, font)
+function THEME:PaintCharCreationLoadPanel(_panel, w, h)
+  local title, font = t'ui.char_create.load', Theme.get_font 'main_menu_title'
+  local title_w, _title_h = text_size(title, font)
 
   draw_simple_text(title, font, w * 0.5 - title_w * 0.5, h * 0.125, self:get_color('text'))
 end
@@ -930,7 +930,7 @@ function THEME:PaintCharCreationBasePanel(panel, w, h)
   if isstring(panel.text) then
     local text            = t(panel.text)
     local font            = Theme.get_font('main_menu_large')
-    local text_w, text_h  = text_size(text, font)
+    local text_w, _text_h = text_size(text, font)
 
     draw_simple_text(text, font, w * 0.5 - text_w * 0.5, math.scale(8), Theme.get_color('text'))
   end

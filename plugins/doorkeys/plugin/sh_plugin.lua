@@ -9,7 +9,7 @@ local function KeySelect(entity)
   selector:set_value(t'ui.key.add.select')
 
   if keys then
-    for k, v in pairs(keys) do
+    for _k, v in pairs(keys) do
       selector:add_choice('['..v.instance_id..'] '..t(v:get_name()), function()
         Cable.send('fl_key_add', v.instance_id, entity)
       end)
@@ -44,7 +44,7 @@ function PLUGIN:RegisterDoorProperties()
         KeySelect(entity)
       end)
 
-      keys_list.DataChanged = function(pnl, callback)
+      keys_list.DataChanged = function(_pnl, callback)
         if callback then
           callback()
         end
@@ -71,12 +71,12 @@ if CLIENT then
       list:Clear()
 
       if keys then
-        for k, v in pairs(keys) do
+        for _k, v in pairs(keys) do
           local item_table = Item.find_instance_by_id(v)
 
           local line = vgui.Create('fl_base_panel')
           line:Dock(TOP)
-          line.Paint = function(pnl, w, h)
+          line.Paint = function(_pnl, w, h)
             draw.RoundedBox(0, 0, 0, w, h, line_color)
           end
 
@@ -89,7 +89,7 @@ if CLIENT then
           delete:set_icon('fa-trash')
           delete:set_icon_size(button_size)
           delete:Dock(RIGHT)
-          delete.DoClick = function(btn)
+          delete.DoClick = function(_btn)
             Derma_Query(t'ui.key.delete.message',
             t'ui.key.delete.title',
             t'ui.yes',
@@ -118,7 +118,7 @@ if CLIENT then
       local add_button = vgui.Create('DButton')
       add_button:SetText(t'door.properties.keys_list.add')
       add_button:Dock(TOP)
-      add_button.DoClick = function(btn)
+      add_button.DoClick = function(_btn)
         KeySelect(entity)
       end
 
@@ -128,7 +128,7 @@ if CLIENT then
     frame:rebuild()
   end)
 
-  Cable.receive('fl_key_copy', function(instance_id)
+  Cable.receive('fl_key_copy', function(_instance_id)
     local keys = PLAYER:find_items('key')
 
     local selector = vgui.Create('fl_selector')
@@ -137,7 +137,7 @@ if CLIENT then
     selector:set_value(t'ui.key.copy.select')
 
     if keys then
-      for k, v in pairs(keys) do
+      for _k, v in pairs(keys) do
         selector:add_choice('['..v.instance_id..']'..t(v:get_name()), function()
           Cable.send('fl_key_copy', v.instance_id)
         end)

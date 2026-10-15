@@ -20,9 +20,9 @@ end
 --- Remembers the damage of a bullet or melee hit on an NPC before the schema and the
 -- gamemode multiply it by hit location. The damage is left as it is.
 -- @param npc [NPC the NPC that was hit]
--- @param hitgroup [Number HITGROUP_ enum of the body part that was hit]
+-- @param _hitgroup [Number HITGROUP_ enum of the body part that was hit]
 -- @param damage_info [CTakeDamageInfo]
-function D20:ScaleNPCDamage(npc, hitgroup, damage_info)
+function D20:ScaleNPCDamage(npc, _hitgroup, damage_info)
   if self:is_enabled() then
     self:remember_npc_damage(npc, damage_info)
   end
@@ -64,8 +64,8 @@ end
 
 --- Checks the dice formulas of the configs of the plugin when they are set.
 -- @param key [String config key]
--- @param old_value [Any]
+-- @param _old_value [Any]
 -- @param new_value [Any]
-function D20:OnConfigSet(key, old_value, new_value)
+function D20:OnConfigSet(key, _old_value, new_value)
   self:check_config(key, new_value)
 end

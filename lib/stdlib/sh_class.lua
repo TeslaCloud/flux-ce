@@ -116,7 +116,7 @@ function class(name, parent_class)
         return parent_class.init(new_obj, ...)
       end
 
-      real_class.init = isfunction(real_class.init) and real_class.init or function(obj, ...) super(...) end
+      real_class.init = isfunction(real_class.init) and real_class.init or function(_obj, ...) super(...) end
     end
 
     -- If there is a constructor - call it.
@@ -172,7 +172,7 @@ function delegate(obj, t)
   local class = isstring(t.to) and t.to:parse_table() or t.to
 
   if istable(class) and class.class_name then
-    for k, v in ipairs(t) do
+    for _k, v in ipairs(t) do
       obj[v] = class[v]
     end
   end

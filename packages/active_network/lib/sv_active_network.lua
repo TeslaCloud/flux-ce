@@ -87,7 +87,7 @@ local function to_recipient_set(send)
   local allowed = {}
 
   if istable(send) then
-    for k, v in pairs(send) do
+    for _k, v in pairs(send) do
       if isentity(v) and v:IsValid() and v:IsPlayer() then
         allowed[v] = true
       end
@@ -182,13 +182,13 @@ local function send_revoked(old_allowed, allowed, id, ...)
   local targets = {}
 
   if old_allowed then
-    for k, target in ipairs(list_recipients(old_allowed)) do
+    for _k, target in ipairs(list_recipients(old_allowed)) do
       if !allowed[target] then
         targets[#targets + 1] = target
       end
     end
   else
-    for k, target in player.Iterator() do
+    for _k, target in player.Iterator() do
       if !allowed[target] then
         targets[#targets + 1] = target
       end

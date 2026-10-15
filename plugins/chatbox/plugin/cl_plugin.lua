@@ -76,7 +76,7 @@ function Chatbox.compile(msg_table)
   local cur_x, cur_y = 1, 0
   local total_height = 0
   local font = Font.size(get_font('chatbox_normal'), cur_size)
-  local v_offset = 0
+  local _v_offset = 0
   local fix = get_option('chatbox_fix_alignment') == true
   local fix_const = 0.2
 

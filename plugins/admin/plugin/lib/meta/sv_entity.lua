@@ -12,7 +12,7 @@ function ent_meta:prevent_transmit(target, should_prevent)
   if IsValid(target) then
     self:SetPreventTransmit(target, should_prevent)
 
-    for k, child in ipairs(self:GetChildren()) do
+    for _k, child in ipairs(self:GetChildren()) do
       if IsValid(child) then
         child:prevent_transmit(target, should_prevent)
       end
@@ -36,7 +36,7 @@ end
 function ent_meta:prevent_transmit_conditional(should_prevent, condition)
   condition = condition or always_true
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     if v != self and condition(v, self, should_prevent) != false then
       self:prevent_transmit(v, should_prevent)
     end

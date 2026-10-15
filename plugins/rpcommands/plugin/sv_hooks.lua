@@ -72,9 +72,9 @@ end
 
 --- Cancels the message that stands in for a phrase a player was not allowed to say.
 -- @param message_data [Table chat message data]
--- @param listeners [List<Player> players the message is meant for]
+-- @param _listeners [List<Player> players the message is meant for]
 -- @return [Boolean false for a refused phrase, nil otherwise]
-function RPCommands:ChatboxShouldSendMessage(message_data, listeners)
+function RPCommands:ChatboxShouldSendMessage(message_data, _listeners)
   if message_data.refused then
     return false
   end

@@ -12,7 +12,7 @@
 -- @param id [String normalized plugin ID]
 -- @return [String the name from `Plugin.known`, or the ID when no plugin has it]
 local function known_plugin_name(id)
-  for k, v in ipairs(Plugin.known()) do
+  for _k, v in ipairs(Plugin.known()) do
     if v.id == id then
       return v.name
     end

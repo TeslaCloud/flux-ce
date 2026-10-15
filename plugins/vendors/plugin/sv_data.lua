@@ -146,7 +146,7 @@ end
 function Vendors:get_default_data()
   local phrases = {}
 
-  for k, v in ipairs(self.phrases) do
+  for _k, v in ipairs(self.phrases) do
     phrases[v] = ''
   end
 
@@ -212,7 +212,7 @@ function Vendors:sanitize(data, current)
   result.factions = data.factions != nil and clean_ids(data.factions) or current.factions
   result.phrases = {}
 
-  for k, v in ipairs(self.phrases) do
+  for _k, v in ipairs(self.phrases) do
     local text = istable(data.phrases) and data.phrases[v]
 
     result.phrases[v] = clean_text(text, text_limits.phrase, current.phrases[v] or '')

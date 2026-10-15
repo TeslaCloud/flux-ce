@@ -7,9 +7,9 @@ function PANEL:Init()
 end
 
 --- Currently draws nothing.
--- @param w [Number]
--- @param h [Number]
-function PANEL:Paint(w, h)
+-- @param _w [Number]
+-- @param _h [Number]
+function PANEL:Paint(_w, _h)
 end
 
 vgui.Register('fl_chat_moderation', PANEL, 'fl_base_panel')

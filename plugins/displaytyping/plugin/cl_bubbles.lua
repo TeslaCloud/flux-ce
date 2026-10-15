@@ -543,7 +543,7 @@ function DisplayTyping:arrange_bubbles(count)
 
     bubble.push = bubble.push or (y < view_h * (bubble.edge and 0.5 or 0.25) and 1 or -1)
 
-    for pass = 1, i do
+    for _pass = 1, i do
       local moved = false
 
       for j = 1, i - 1 do
@@ -735,7 +735,7 @@ function DisplayTyping:draw_bubbles()
   local angles = EyeAngles()
 
   if now - (self.drawn_at or 0) > 0.5 then
-    for index, bubble in pairs(bubbles) do
+    for _index, bubble in pairs(bubbles) do
       bubble.alpha = 0
       bubble.placed = false
     end

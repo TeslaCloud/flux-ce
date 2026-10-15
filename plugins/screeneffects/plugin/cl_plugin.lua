@@ -420,7 +420,7 @@ end
 -- Called eight times a second while the effects are active; the frames in between only
 -- move the effects towards these values.
 function ScreenEffects:update_settings()
-  for k, v in ipairs(effect_order) do
+  for _k, v in ipairs(effect_order) do
     enabled[v] = self:is_effect_enabled(v)
     strengths[v] = self:get_effect_strength(v)
   end
@@ -429,7 +429,7 @@ function ScreenEffects:update_settings()
 
   compute_screen(base_screen)
 
-  for k, v in ipairs(screen_fields) do
+  for _k, v in ipairs(screen_fields) do
     adjusted_screen[v] = base_screen[v]
   end
 
@@ -447,13 +447,13 @@ function ScreenEffects:update_settings()
   --   picture is blurred, 0 for none; the underwater effect uses 2.5)]
   hook.Run('AdjustScreenEffects', adjusted_screen)
 
-  for k, v in ipairs(screen_fields) do
+  for _k, v in ipairs(screen_fields) do
     local value = to_number(adjusted_screen[v], base_screen[v])
 
     screen_overrides[v] = value != base_screen[v] and value or nil
   end
 
-  for k, v in ipairs(view_fields) do
+  for _k, v in ipairs(view_fields) do
     adjusted_view[v] = view[v] - view_offsets[v]
   end
 
@@ -469,7 +469,7 @@ function ScreenEffects:update_settings()
   --   down), yaw (Number, positive turns left) and roll (Number, positive tilts to the right)]
   hook.Run('AdjustViewEffects', adjusted_view)
 
-  for k, v in ipairs(view_fields) do
+  for _k, v in ipairs(view_fields) do
     view_offsets[v] = to_number(adjusted_view[v], view[v]) - (view[v] - view_offsets[v])
   end
 end

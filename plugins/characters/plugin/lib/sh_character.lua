@@ -293,7 +293,7 @@ if SERVER then
       return owner
     end
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if v.current_character == character then
         return v
       end
@@ -380,7 +380,7 @@ if SERVER then
     local found = {}
     local records = {}
 
-    for k, v in player.Iterator() do
+    for _k, v in player.Iterator() do
       if !v:IsBot() and istable(v.record) then
         records[#records + 1] = v.record
       end
@@ -394,9 +394,9 @@ if SERVER then
     --   place]
     hook.Run('CollectLoadedUserRecords', records)
 
-    for k, v in ipairs(records) do
+    for _k, v in ipairs(records) do
       if istable(v.characters) then
-        for k1, v1 in ipairs(v.characters) do
+        for _k1, v1 in ipairs(v.characters) do
           if isstring(v1.name) and normalize_name(v1.name) == key then
             found[#found + 1] = v1
           end

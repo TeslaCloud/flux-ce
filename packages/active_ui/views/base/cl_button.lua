@@ -63,7 +63,7 @@ end
 
 --- Sets the width of the button to fit its title, icon and text offset.
 function PANEL:SizeToContentsX()
-  local w, h = util.text_size(self.title, self.font)
+  local w, _h = util.text_size(self.title, self.font)
   local offset = self.text_offset or 0
 
   if self.icon then
@@ -77,7 +77,7 @@ end
 
 --- Sets the height of the button to the height of its title text.
 function PANEL:SizeToContentsY()
-  local w, h = util.text_size(self.title, self.font)
+  local _w, h = util.text_size(self.title, self.font)
 
   self:SetTall(h)
 end

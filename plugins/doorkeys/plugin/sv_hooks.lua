@@ -8,7 +8,7 @@ function PLUGIN:PlayerCanLockDoor(actor, entity)
   if keys then
     local door_id = entity:MapCreationID()
 
-    for k, v in pairs(keys) do
+    for _k, v in pairs(keys) do
       if table.HasValue(v:get_data('doors', {}), door_id) then
         return true
       end

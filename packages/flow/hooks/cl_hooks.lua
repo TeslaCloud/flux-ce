@@ -37,7 +37,7 @@ function GM:InitPostEntity()
     Flux.local_player_created = true
   end)
 
-  for k, v in player.Iterator() do
+  for _k, v in player.Iterator() do
     local model = v:GetModel()
 
     hook.Run('PlayerModelChanged', v, model, model)
@@ -155,7 +155,7 @@ function GM:HUDDrawScoreBoard()
 
     local font = Font.size('flRobotoCondensed', math.scale(24))
     local scrw, scrh = ScrW(), ScrH()
-    local w, h = util.text_size(text, font)
+    local w, _h = util.text_size(text, font)
 
     draw.RoundedBox(0, 0, 0, scrw, scrh, color_loading_background)
     draw.SimpleText(text, font, scrw * 0.5 - w * 0.5, scrh - math.scale(128), color_loading_text)
@@ -245,10 +245,10 @@ end
 
 --- Draws the circular action progress indicator in the middle of the screen if a
 -- percentage was set with Flux.set_circle_percent.
--- @param cur_time [Number current CurTime()]
--- @param scrw [Number screen width]
--- @param scrh [Number screen height]
-function GM:FLHUDPaint(cur_time, scrw, scrh)
+-- @param _cur_time [Number current CurTime()]
+-- @param _scrw [Number screen width]
+-- @param _scrh [Number screen height]
+function GM:FLHUDPaint(_cur_time, _scrw, _scrh)
   local percentage = PLAYER.circle_action_percentage
 
   if percentage and percentage > -1 then
@@ -266,10 +266,10 @@ function GM:FLHUDPaint(cur_time, scrw, scrh)
 end
 
 --- Draws the red blood overlay behind the death screen.
--- @param cur_time [Number current CurTime()]
+-- @param _cur_time [Number current CurTime()]
 -- @param w [Number screen width]
 -- @param h [Number screen height]
-function GM:HUDPaintDeathBackground(cur_time, w, h)
+function GM:HUDPaintDeathBackground(_cur_time, w, h)
   draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, w, h, color_death_blood)
 end
 
@@ -352,12 +352,12 @@ end
 
 --- Adds the name of the player to the lines shown in their target ID.
 -- @param target [Player the player being looked at]
--- @param x [Number screen x of the target ID]
--- @param y [Number screen y of the target ID]
--- @param distance [Number distance to the player in units]
+-- @param _x [Number screen x of the target ID]
+-- @param _y [Number screen y of the target ID]
+-- @param _distance [Number distance to the player in units]
 -- @param lines [Map lines to draw, keyed by ID. Each one is a table with the text and
 --   priority fields, and optionally font, color, offset_x and offset_y]
-function GM:GetDrawPlayerInfo(target, x, y, distance, lines)
+function GM:GetDrawPlayerInfo(target, _x, _y, _distance, lines)
   lines['name'] = {
     text = target:name(),
     font = Theme.get_font('tooltip_large'),
@@ -415,7 +415,7 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   local text_size = util.text_size
   local draw_text_outlined = draw.SimpleTextOutlined
 
-  for k, v in SortedPairsByMemberValue(lines, 'priority') do
+  for _k, v in SortedPairsByMemberValue(lines, 'priority') do
     local font = v.font or Theme.get_font('tooltip_small')
     local color = v.color and v.color:alpha(alpha) or Color(255, 255, 255, alpha)
     local wrapped = util.wrap_text(v.text, font, wrap_width, 0)
@@ -443,14 +443,14 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
 end
 
 --- Does nothing, which disables the default item pickup notification.
--- @param item_name [String]
-function GM:HUDItemPickedUp(item_name)
+-- @param _item_name [String]
+function GM:HUDItemPickedUp(_item_name)
 end
 
 --- Does nothing, which disables the default ammo pickup notification.
--- @param item_name [String]
--- @param amount [Number]
-function GM:HUDAmmoPickedUp(item_name, amount)
+-- @param _item_name [String]
+-- @param _amount [Number]
+function GM:HUDAmmoPickedUp(_item_name, _amount)
 end
 
 --- Does nothing, which disables the default pickup history on the HUD.
@@ -481,7 +481,7 @@ end
 function GM:SynchronizeTools()
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(Flux.Tool.stored) do
+  for _k, v in pairs(Flux.Tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 end
@@ -561,7 +561,7 @@ do
 
     local choices = { { value = '', name = 'settings.language.auto' } }
 
-    for k, v in ipairs(Flux.Lang:get_languages()) do
+    for _k, v in ipairs(Flux.Lang:get_languages()) do
       table.insert(choices, { value = v, name = Flux.Lang:get_language_name(v) })
     end
 
@@ -586,16 +586,16 @@ do
 
   --- Keeps the language setting in step when the language of the client changes for
   -- another reason than the setting itself, such as the fl_language console variable.
-  -- @param new_lang [String new language code]
-  -- @param old_lang [String previous language code]
-  function GM:LanguageChanged(new_lang, old_lang)
+  -- @param _new_lang [String new language code]
+  -- @param _old_lang [String previous language code]
+  function GM:LanguageChanged(_new_lang, _old_lang)
     follow_language()
   end
 
   --- Keeps the language setting in step when the fl_language console variable changes
   -- without the language of the client changing with it, which is the case when it is
   -- cleared while the game is set to the same language.
-  cvars.AddChangeCallback('fl_language', function(name, old_value, new_value)
+  cvars.AddChangeCallback('fl_language', function(_name, _old_value, _new_value)
     follow_language()
   end, 'FLLanguageSetting')
 end
@@ -651,9 +651,9 @@ function GM:SpawnlistContentChanged()
 end
 
 --- Asks the server to undo the last Flux undo entry of the local player.
--- @param client [Player unused, the local player is always used]
+-- @param _client [Player unused, the local player is always used]
 -- @return [Boolean true if the local player has entries in their undo queue, nil otherwise]
-function GM:SoftUndo(client)
+function GM:SoftUndo(_client)
   Cable.send('fl_undo_soft')
 
   if #Flux.Undo:get_player(PLAYER) > 0 then return true end

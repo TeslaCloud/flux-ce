@@ -353,10 +353,10 @@ function SKIN:PaintPanel(panel, w, h)
 end
 
 --- Paints a soft drop shadow around a panel.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintShadow(panel, w, h)
+function SKIN:PaintShadow(_panel, w, h)
   local radius = scale(self.radius)
   local shadow = self.frame_shadow
 
@@ -505,18 +505,18 @@ function SKIN:PaintTextEntry(panel, w, h)
 end
 
 --- Paints the background of a menu: a rounded card with a border.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintMenu(panel, w, h)
+function SKIN:PaintMenu(_panel, w, h)
   card(scale(self.radius_small), 0, 0, w, h, self.colMenuBG, self.colMenuBorder)
 end
 
 --- Paints the separator line of a menu.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintMenuSpacer(panel, w, h)
+function SKIN:PaintMenuSpacer(_panel, w, h)
   local inset = scale(8)
 
   set_draw_color(self.frame_border)
@@ -542,10 +542,10 @@ function SKIN:PaintMenuOption(panel, w, h)
 end
 
 --- Paints the arrow of a menu option that opens a submenu.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintMenuRightArrow(panel, w, h)
+function SKIN:PaintMenuRightArrow(_panel, w, h)
   glyph('fa-chevron-right', 0, 0, w, h, h * 0.5, self.text_muted)
 end
 
@@ -589,10 +589,10 @@ end
 
 --- Paints the active tab of a property sheet, joined to the body below it with an accent line
 -- at its top.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintActiveTab(panel, w, h)
+function SKIN:PaintActiveTab(_panel, w, h)
   local radius = scale(self.radius_small)
 
   rounded_box_ex(radius, 0, 0, w, h, self.frame_border, true, true, false, false)
@@ -647,20 +647,20 @@ function SKIN:PaintWindowMaximizeButton(panel, w, h)
 end
 
 --- Paints the track of a vertical scroll bar.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintVScrollBar(panel, w, h)
+function SKIN:PaintVScrollBar(_panel, w, h)
   local inset = math_floor(w * 0.3)
 
   rounded_box(math_floor((w - inset * 2) * 0.5), inset, 0, w - inset * 2, h, ColorAlpha(self.bg_color_dark, 120))
 end
 
 --- Paints the track of a horizontal scroll bar.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintHScrollBar(panel, w, h)
+function SKIN:PaintHScrollBar(_panel, w, h)
   local inset = math_floor(h * 0.3)
 
   rounded_box(math_floor((h - inset * 2) * 0.5), 0, inset, w, h - inset * 2, ColorAlpha(self.bg_color_dark, 120))
@@ -786,10 +786,10 @@ function SKIN:PaintComboBox(panel, w, h)
 end
 
 --- Paints the background of a list box.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintListBox(panel, w, h)
+function SKIN:PaintListBox(_panel, w, h)
   card(scale(self.radius_small), 0, 0, w, h, self.colTextEntryBG, self.frame_border)
 end
 
@@ -811,9 +811,9 @@ end
 
 --- Paints the lines that connect a tree node to its parent, if the tree draws lines.
 -- @param panel [Panel the panel being painted]
--- @param w [Number width of the panel]
+-- @param _w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintTreeNode(panel, w, h)
+function SKIN:PaintTreeNode(panel, _w, h)
   if !panel.m_bDrawLines then return end
 
   set_draw_color(self.Colours.Tree.Lines)
@@ -826,9 +826,9 @@ end
 
 --- Paints the selection highlight behind the label of a selected tree node.
 -- @param panel [Panel the panel being painted]
--- @param w [Number width of the panel]
+-- @param _w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintTreeNodeButton(panel, w, h)
+function SKIN:PaintTreeNodeButton(panel, _w, h)
   if !panel.m_bSelected then return end
 
   local text_w = panel:GetTextSize()
@@ -837,10 +837,10 @@ function SKIN:PaintTreeNodeButton(panel, w, h)
 end
 
 --- Paints a selection highlight.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintSelection(panel, w, h)
+function SKIN:PaintSelection(_panel, w, h)
   rounded_box(scale(self.radius_small), 0, 0, w, h, self.listview_selected)
 end
 
@@ -941,10 +941,10 @@ function SKIN:PaintCollapsibleCategory(panel, w, h)
 end
 
 --- Paints the background of a category list.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintCategoryList(panel, w, h)
+function SKIN:PaintCategoryList(_panel, w, h)
   card(scale(self.radius_small), 0, 0, w, h, self.bg_color_sleep, self.frame_border)
 end
 
@@ -995,10 +995,10 @@ function SKIN:PaintListView(panel, w, h)
 end
 
 --- Paints the header of a list view column.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintListViewColumn(panel, w, h)
+function SKIN:PaintListViewColumn(_panel, w, h)
   set_draw_color(self.frame_header)
   draw_rect(0, 0, w, h)
 
@@ -1008,18 +1008,18 @@ function SKIN:PaintListViewColumn(panel, w, h)
 end
 
 --- Paints the background of a tooltip.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintTooltip(panel, w, h)
+function SKIN:PaintTooltip(_panel, w, h)
   card(scale(self.radius_small), 0, 0, w, h, self.tooltip, self.frame_border)
 end
 
 --- Paints the background of a menu bar.
--- @param panel [Panel the panel being painted]
+-- @param _panel [Panel the panel being painted]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
-function SKIN:PaintMenuBar(panel, w, h)
+function SKIN:PaintMenuBar(_panel, w, h)
   set_draw_color(self.frame_header)
   draw_rect(0, 0, w, h)
 

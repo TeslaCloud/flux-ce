@@ -72,7 +72,7 @@ function Items:RegisterConditions()
   Conditions:register_condition('has_item', {
     name = 'condition.has_item.name',
     text = 'condition.has_item.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local parameter = panel.data.item_id or ''
 
@@ -84,7 +84,7 @@ function Items:RegisterConditions()
 
       return util.process_operator(data.operator, target:has_item(data.item_id), true)
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, _parent)
       Derma_StringRequest(
         t(data.name),
         t'condition.has_item.message',
@@ -101,7 +101,7 @@ function Items:RegisterConditions()
   Conditions:register_condition('has_item_data', {
     name = 'condition.has_item_data.name',
     text = 'condition.has_item_data.text',
-    get_args = function(panel, data)
+    get_args = function(panel, _data)
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local item_id = panel.data.item_id or ''
       local key = panel.data.key or ''
@@ -119,7 +119,7 @@ function Items:RegisterConditions()
         return false
       end
 
-      for k, v in pairs(items) do
+      for _k, v in pairs(items) do
         local value = v:get_data(data.key)
 
         if value then
@@ -129,7 +129,7 @@ function Items:RegisterConditions()
 
       return false
     end,
-    set_parameters = function(id, data, panel, menu, parent)
+    set_parameters = function(_id, data, panel, _menu, _parent)
       Derma_StringRequest(
         t(data.name),
         t'condition.has_item_data.message1',

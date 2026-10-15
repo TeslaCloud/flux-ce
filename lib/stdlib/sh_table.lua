@@ -74,7 +74,7 @@ end
 function table.map(t, c)
   local new_table = a{}
 
-  for k, v in pairs(t) do
+  for _k, v in pairs(t) do
     local val = c(v)
 
     if val != nil then
@@ -130,7 +130,7 @@ function table.select(t, what)
       end
     end
   else
-    for k, v in pairs(t) do
+    for _k, v in pairs(t) do
       if istable(v) then
         new_table[#new_table + 1] = v[what]
       end
@@ -200,7 +200,7 @@ do
       op = ops[op]
     end
 
-    for k, v in ipairs(tab) do
+    for _k, v in ipairs(tab) do
       sum = op(sum, v)
     end
 
@@ -222,7 +222,7 @@ end
 function table.flatten(tab)
   local t = a{}
 
-  for k, v in pairs(tab) do
+  for _k, v in pairs(tab) do
     if istable(v) and !v.class then
       table.Add(t, table.flatten(v))
     else
@@ -317,7 +317,7 @@ function table.join(tab, sep)
   local pieces = {}
   sep = sep or ''
 
-  for k, v in pairs(tab) do
+  for _k, v in pairs(tab) do
     if !istable(v) then
       pieces[#pieces + 1] = tostring(v)
     else
@@ -491,7 +491,7 @@ end
 function table.to_hash(tab)
   local h = a{}
 
-  for k, v in ipairs(tab) do
+  for _k, v in ipairs(tab) do
     if istable(v) then
       h[v[1]] = v[2]
     else
@@ -613,7 +613,7 @@ end
 function wk(str)
   local ret = {}
 
-  for k, v in ipairs(str:split(' ')) do
+  for _k, v in ipairs(str:split(' ')) do
     ret[v] = true
   end
 
@@ -647,7 +647,7 @@ function print_table(t, indent, done, indent_length)
 
   local keys = table.GetKeys(t)
 
-  for k, v in pairs(keys) do
+  for _k, v in pairs(keys) do
     local l = tostring(v):len()
 
     if l > indent_length then

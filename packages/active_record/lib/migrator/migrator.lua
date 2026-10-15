@@ -56,7 +56,7 @@ function ActiveRecord.Migrator:migrated()
   if !self.migrated_versions then
     self.migrated_versions = {}
 
-    for k, v in ipairs(ActiveRecord.SchemaMigration:integer_versions()) do
+    for _k, v in ipairs(ActiveRecord.SchemaMigration:integer_versions()) do
       self.migrated_versions[v] = true
     end
   end
@@ -76,7 +76,7 @@ end
 function ActiveRecord.Migrator:current_version()
   local newest = 0
 
-  for version, v in pairs(self:migrated()) do
+  for version, _v in pairs(self:migrated()) do
     if version > newest then newest = version end
   end
 
@@ -88,7 +88,7 @@ end
 function ActiveRecord.Migrator:current_migration()
   local current = self:current_version()
 
-  for k, v in ipairs(self.migrations) do
+  for _k, v in ipairs(self.migrations) do
     if v.version == current then return v end
   end
 end
@@ -98,7 +98,7 @@ end
 function ActiveRecord.Migrator:target()
   if !self.target_version then return end
 
-  for k, v in ipairs(self.migrations) do
+  for _k, v in ipairs(self.migrations) do
     if v.version == self.target_version then return v end
   end
 end
@@ -114,7 +114,7 @@ end
 function ActiveRecord.Migrator:pending_migrations()
   local pending = {}
 
-  for k, v in ipairs(self.migrations) do
+  for _k, v in ipairs(self.migrations) do
     if !self:ran(v) then
       table.insert(pending, v)
     end
@@ -161,7 +161,7 @@ function ActiveRecord.Migrator:runnable()
 
   local selected = {}
 
-  for k, v in ipairs(runnable) do
+  for _k, v in ipairs(runnable) do
     if self:ran(v) == self:down() then
       table.insert(selected, v)
     end
@@ -179,7 +179,7 @@ function ActiveRecord.Migrator:migrate()
 
   local executed = {}
 
-  for k, v in ipairs(self:runnable()) do
+  for _k, v in ipairs(self:runnable()) do
     if self:execute_migration_in_transaction(v) then
       table.insert(executed, v)
     end

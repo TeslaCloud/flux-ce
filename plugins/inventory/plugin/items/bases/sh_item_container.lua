@@ -33,7 +33,7 @@ ItemContainer:add_button('item.option.open', {
     local containers = PLAYER.opened_containers
 
     if containers then
-      for k, v in pairs(containers) do
+      for _k, v in pairs(containers) do
         if IsValid(v) and v.inventory.instance_id == item_obj.instance_id then
           return false
         end
@@ -99,7 +99,7 @@ function ItemContainer:on_created()
   if !table.IsEmpty(self.default_inventory) then
     self:create_inventory()
 
-    for k, v in pairs(self.default_inventory) do
+    for _k, v in pairs(self.default_inventory) do
       local success, error_text = self.inventory:give_item(v.id, v.amount, v.data)
 
       if !success then

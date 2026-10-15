@@ -50,7 +50,7 @@ function RPCommands:HUDPaint()
   local show_author = input.IsKeyDown(KEY_LALT) and client:is_assistant()
   local offset = 4
 
-  for k, v in pairs(texts) do
+  for _k, v in pairs(texts) do
     local text_pos = v.pos
 
     if client_pos:DistToSqr(text_pos) <= 90000 and !util.vector_obstructed(client_pos, text_pos, client) then
@@ -89,11 +89,11 @@ end
 -- by the server before it gets here, and the lines of the server console are added by the
 -- Chatbox plugin.
 -- @param speaker [Player the speaker, an invalid entity for the server console]
--- @param text [String the message]
--- @param team_chat [Boolean whether the message was sent to the team chat]
--- @param is_dead [Boolean whether the speaker is dead]
+-- @param _text [String the message]
+-- @param _team_chat [Boolean whether the message was sent to the team chat]
+-- @param _is_dead [Boolean whether the speaker is dead]
 -- @return [Boolean true to hide what a player has said, nil for the server console]
-function RPCommands:OnPlayerChat(speaker, text, team_chat, is_dead)
+function RPCommands:OnPlayerChat(speaker, _text, _team_chat, _is_dead)
   if IsValid(speaker) then
     return true
   end
@@ -102,9 +102,9 @@ end
 --- Keeps the colors of the registered kinds of speech in step with the chat colors, which
 -- arrive from the server after the kinds have been registered.
 -- @param key [String config key]
--- @param old_value [Any value the client had before]
--- @param new_value [Any value that has been received]
-function RPCommands:OnConfigReceived(key, old_value, new_value)
+-- @param _old_value [Any value the client had before]
+-- @param _new_value [Any value that has been received]
+function RPCommands:OnConfigReceived(key, _old_value, _new_value)
   if !DisplayTyping or !isfunction(DisplayTyping.find_kind) then return end
 
   for id, data in pairs(self.typing_kinds) do
@@ -192,10 +192,10 @@ end
 
 --- Returns the typing indicator text for emotes, whispers, yells and regular talking. Only
 -- asked when `RPCommands:DisplayTypingGetKind` has not decided the kind of speech.
--- @param target [Player player that is typing]
+-- @param _target [Player player that is typing]
 -- @param text [String text being typed]
 -- @return [String indicator text, nil for other commands]
-function RPCommands:DisplayTypingTextType(target, text)
+function RPCommands:DisplayTypingTextType(_target, text)
   local id = self:get_typing_kind(text)
 
   if id then
@@ -205,10 +205,10 @@ end
 
 --- Shrinks the typing indicator range for whispers and extends it for yells, by as much as
 -- the volume of the phrase changes its hearing radius.
--- @param target [Player player that is typing]
+-- @param _target [Player player that is typing]
 -- @param text [String text being typed]
 -- @return [Number multiplier of the squared range, nil for regular talking]
-function RPCommands:DisplayTypingAdjustFadeoffMultiplier(target, text)
+function RPCommands:DisplayTypingAdjustFadeoffMultiplier(_target, text)
   local id, volume = self:get_typing_kind(text)
 
   if id and volume != 0 then
@@ -230,6 +230,6 @@ Cable.receive('fl_static_text_remove', function(id)
   table.remove(RPCommands.texts, id)
 end)
 
-Cable.receive('fl_notify_self', function(receiver, notification_color, message)
+Cable.receive('fl_notify_self', function(_receiver, notification_color, message)
   chat.AddText(notification_color, message)
 end)

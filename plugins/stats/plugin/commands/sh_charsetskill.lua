@@ -33,7 +33,7 @@ function CMD:on_run(actor, targets, skill_id, value)
   end
 
   if skill then
-    for k, v in ipairs(targets) do
+    for _k, v in ipairs(targets) do
       v:notify('notification.skill.set', {
         skill = skill.name,
         value = value

@@ -16,7 +16,7 @@ function ITEM:get_icon_data()
 end
 
 --- Called on the server when a player uses the item. Prints a message to the console.
--- @param actor [Player]
-function ITEM:on_use(actor)
+-- @param _actor [Player]
+function ITEM:on_use(_actor)
   print('player used item!')
 end

@@ -105,7 +105,7 @@ do
 
     if count then return count end
 
-    for k, v in pairs(args) do
+    for _k, v in pairs(args) do
       if isnumber(v) then
         if count then return end
 
@@ -322,7 +322,7 @@ function Flux.Lang:nice_time(time, lang)
     time = tonumber(time) or 0
   end
 
-  local suffix, from_now, amount = Time:seconds(time):nice()
+  local suffix, _from_now, amount = Time:seconds(time):nice()
 
   if suffix == 'time.just_now' then
     suffix = amount < 2 and 'time.second' or 'time.seconds'
@@ -505,7 +505,7 @@ if CLIENT then
     apply_language(Flux.Lang:get_preferred_language())
   end)
 else
-  Pipeline.register('language', function(id, file_name, pipe)
+  Pipeline.register('language', function(_id, file_name, _pipe)
     if file_name:end_with('.yml') then
       local contents = File.read('gamemodes/'..file_name)
 

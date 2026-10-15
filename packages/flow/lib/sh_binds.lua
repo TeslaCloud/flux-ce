@@ -42,7 +42,7 @@ if CLIENT then
   function Flux.Binds:get_bound()
     local binds = {}
 
-    for k, v in pairs(key_enums) do
+    for k, _v in pairs(key_enums) do
       local bind = input.LookupKeyBinding(k)
 
       if !tonumber(bind) then
@@ -59,7 +59,7 @@ if CLIENT then
   function Flux.Binds:get_unbound()
     local binds = {}
 
-    for k, v in pairs(key_enums) do
+    for k, _v in pairs(key_enums) do
       local bind = input.LookupKeyBinding(k)
 
       if tonumber(bind) then
@@ -94,10 +94,10 @@ if CLIENT then
   -- ```
   -- Flux.Binds:add_bind('ToggleThirdPerson', 'fl_third_person', KEY_P)
   -- ```
-  -- @param id [String name of the bind, currently unused]
+  -- @param _id [String name of the bind, currently unused]
   -- @param command [String console command to run when the button is pressed]
   -- @param key [Number button code, see the KEY and MOUSE enumerations]
-  function Flux.Binds:add_bind(id, command, key)
+  function Flux.Binds:add_bind(_id, command, key)
     self:set_bind(command, key)
   end
 end

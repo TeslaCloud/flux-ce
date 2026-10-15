@@ -50,9 +50,9 @@ function Cinematics:ShouldDrawBar(bar)
 end
 
 --- Keeps the info display from being drawn while the letterbox bars are on screen.
--- @param icons [Map all of the registered icons by ID]
+-- @param _icons [Map all of the registered icons by ID]
 -- @return [Boolean true while the letterbox bars are on screen, otherwise nil]
-function Cinematics:PreDrawInfoDisplay(icons)
+function Cinematics:PreDrawInfoDisplay(_icons)
   if self:is_active() then
     return true
   end

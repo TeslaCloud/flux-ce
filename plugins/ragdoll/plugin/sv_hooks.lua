@@ -105,8 +105,8 @@ end
 -- one as well.
 -- @param actor [Player]
 -- @param action [Map the timed action that has ended]
--- @param success [Boolean whether it ran for its whole duration]
-function Ragdoll:PlayerTimedActionFinished(actor, action, success)
+-- @param _success [Boolean whether it ran for its whole duration]
+function Ragdoll:PlayerTimedActionFinished(actor, action, _success)
   if action.id == 'getup' or !IsValid(actor) then return end
 
   local data = actor.ragdoll_data
@@ -120,10 +120,10 @@ end
 
 --- Mutes knocked out players: nobody hears them over voice chat. Nothing is returned for
 -- everyone else, so that the other handlers may still mute them.
--- @param listener [Player]
+-- @param _listener [Player]
 -- @param talker [Player]
 -- @return [Boolean false if the talker is knocked out, nothing otherwise]
-function Ragdoll:PlayerCanHearPlayersVoice(listener, talker)
+function Ragdoll:PlayerCanHearPlayersVoice(_listener, talker)
   if talker:is_knocked_out() then
     return false
   end
@@ -131,11 +131,11 @@ end
 
 --- Keeps knocked out players from switching characters.
 -- @param actor [Player]
--- @param character [Character the character the player wants to load]
--- @param current [Character their active character]
+-- @param _character [Character the character the player wants to load]
+-- @param _current [Character their active character]
 -- @return [Boolean false and String the reason if the player is knocked out, nothing
 --   otherwise]
-function Ragdoll:PlayerCanSwitchCharacter(actor, character, current)
+function Ragdoll:PlayerCanSwitchCharacter(actor, _character, _current)
   if actor:is_knocked_out() then
     return false, 'error.ragdoll.knocked_out_switch'
   end
@@ -144,8 +144,8 @@ end
 --- Keeps the ragdoll of the player in what is networked to them, however far it ends up
 -- from where they fell.
 -- @param actor [Player]
--- @param view_entity [Entity the entity the player sees through]
-function Ragdoll:SetupPlayerVisibility(actor, view_entity)
+-- @param _view_entity [Entity the entity the player sees through]
+function Ragdoll:SetupPlayerVisibility(actor, _view_entity)
   local ragdoll = actor:GetDTEntity(ENT_RAGDOLL)
 
   if IsValid(ragdoll) then

@@ -1075,10 +1075,10 @@ end
 -- and sends it to the server on the client.
 -- @warning [Internal]
 -- @param actor [Player the player who has run the console command]
--- @param cmd [String name of the console command]
--- @param args [List<String> arguments of the console command]
+-- @param _cmd [String name of the console command]
+-- @param _args [List<String> arguments of the console command]
 -- @param args_text [String arguments as a single string, the Flux command to run]
-function Flux.Command.con_command(actor, cmd, args, args_text)
+function Flux.Command.con_command(actor, _cmd, _args, args_text)
   if SERVER then
     Flux.Command:interpret(actor, args_text, true)
   else
@@ -1107,7 +1107,7 @@ end
 concommand.Add('flCmd', Flux.Command.con_command, Flux.Command.con_autocomplete)
 concommand.Add('flc', Flux.Command.con_command, Flux.Command.con_autocomplete)
 
-Pipeline.register('commands', function(id, file_name, pipe)
+Pipeline.register('commands', function(id, file_name, _pipe)
   if file_name:end_with('.lua') then
     local old_command = CMD
     CMD = Command.new(id)

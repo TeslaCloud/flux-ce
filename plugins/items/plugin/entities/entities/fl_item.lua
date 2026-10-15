@@ -68,8 +68,8 @@ if SERVER then
   -- @param activator [Entity the entity that pressed the use key, normally a Player]
   -- @param caller [Entity]
   -- @param use_type [Number USE_ enumerator]
-  -- @param value [Number]
-  function ENT:Use(activator, caller, use_type, value)
+  -- @param _value [Number]
+  function ENT:Use(activator, caller, use_type, _value)
     local last_activator = self:get_nv('last_activator')
 
     if IsValid(last_activator) and last_activator != activator then return end
@@ -386,7 +386,7 @@ else
     local desc_height = 0
     local wrapped = util.wrap_text(desc, desc_font, ScrW() * 0.33, 0)
 
-    for k, v in pairs(wrapped) do
+    for _k, v in pairs(wrapped) do
       local w, h = util.text_size(v, desc_font)
 
       desc_height = desc_height + h
@@ -433,7 +433,7 @@ else
     -- Move down by the height of the name, which depends on the scaled font size.
     y = y + height
 
-    for k, v in pairs(wrapped) do
+    for _k, v in pairs(wrapped) do
       local w, h = util.text_size(v, desc_font)
 
       draw.SimpleTextOutlined(v, desc_font, x - w * 0.5, y, col, nil, nil, 1, col2)

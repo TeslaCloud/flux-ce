@@ -33,7 +33,7 @@ end
 function Doors:save()
   local doors = {}
 
-  for k, v in ents.Iterator() do
+  for _k, v in ents.Iterator() do
     if v:is_door() then
       local save_table = {
         id = v:MapCreationID()
@@ -67,7 +67,7 @@ function Doors:load()
   if doors and #doors > 0 then
     local loaded = {}
 
-    for k, v in pairs(doors) do
+    for _k, v in pairs(doors) do
       local door = ents.GetMapCreatedEntity(v.id)
 
       if IsValid(door) then

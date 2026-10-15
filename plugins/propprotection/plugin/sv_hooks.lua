@@ -8,12 +8,12 @@ local IsValid = IsValid
 --- Refuses to let a player freeze an entity that the rules protect from them. Nothing is
 -- returned for everything else, so that the handlers of other plugins may still refuse and
 -- the gamemode does the freezing.
--- @param weapon [Weapon the physics gun]
--- @param phys_obj [PhysObj the physics object that is being frozen]
+-- @param _weapon [Weapon the physics gun]
+-- @param _phys_obj [PhysObj the physics object that is being frozen]
 -- @param entity [Entity the entity the physics object belongs to]
 -- @param actor [Player the player who is trying to freeze it]
 -- @return [Boolean false to refuse, nothing otherwise]
-function PropProtection:OnPhysgunFreeze(weapon, phys_obj, entity, actor)
+function PropProtection:OnPhysgunFreeze(_weapon, _phys_obj, entity, actor)
   if !IsValid(actor) or !IsValid(entity) then return end
 
   if !self:can_manipulate(actor, entity, 'freeze') then
@@ -38,9 +38,9 @@ end
 --- Refuses to let a player unfreeze an entity that the rules protect from them.
 -- @param actor [Player]
 -- @param entity [Entity the frozen entity]
--- @param phys_obj [PhysObj the physics object that is being unfrozen]
+-- @param _phys_obj [PhysObj the physics object that is being unfrozen]
 -- @return [Boolean false to refuse, nothing otherwise]
-function PropProtection:CanPlayerUnfreeze(actor, entity, phys_obj)
+function PropProtection:CanPlayerUnfreeze(actor, entity, _phys_obj)
   if !IsValid(actor) or !IsValid(entity) then return end
 
   if !self:can_manipulate(actor, entity, 'unfreeze') then
@@ -60,9 +60,9 @@ end
 
 --- Forgets who held an entity that the physics gun has let go of and keeps the entity
 -- harmless to players for a while, so that it cannot be thrown at them.
--- @param actor [Player the player who has dropped the entity]
+-- @param _actor [Player the player who has dropped the entity]
 -- @param entity [Entity]
-function PropProtection:PhysgunDrop(actor, entity)
+function PropProtection:PhysgunDrop(_actor, entity)
   if IsValid(entity) and !entity:IsPlayer() then
     self.held[entity] = nil
     self:mark_harmless(entity)
@@ -71,25 +71,25 @@ end
 
 --- Makes the prop a player has spawned theirs.
 -- @param actor [Player]
--- @param model [String model of the prop]
+-- @param _model [String model of the prop]
 -- @param entity [Entity the prop]
-function PropProtection:PlayerSpawnedProp(actor, model, entity)
+function PropProtection:PlayerSpawnedProp(actor, _model, entity)
   self:entity_spawned(actor, entity)
 end
 
 --- Makes the ragdoll a player has spawned theirs.
 -- @param actor [Player]
--- @param model [String model of the ragdoll]
+-- @param _model [String model of the ragdoll]
 -- @param entity [Entity the ragdoll]
-function PropProtection:PlayerSpawnedRagdoll(actor, model, entity)
+function PropProtection:PlayerSpawnedRagdoll(actor, _model, entity)
   self:entity_spawned(actor, entity)
 end
 
 --- Makes the effect a player has spawned theirs.
 -- @param actor [Player]
--- @param model [String model of the effect]
+-- @param _model [String model of the effect]
 -- @param entity [Entity the effect]
-function PropProtection:PlayerSpawnedEffect(actor, model, entity)
+function PropProtection:PlayerSpawnedEffect(actor, _model, entity)
   self:entity_spawned(actor, entity)
 end
 
@@ -179,15 +179,15 @@ end
 
 --- Hands the entities of a character back to the player who has loaded it.
 -- @param owner [Player]
--- @param character [Character the character that is now active]
-function PropProtection:OnActiveCharacterSet(owner, character)
+-- @param _character [Character the character that is now active]
+function PropProtection:OnActiveCharacterSet(owner, _character)
   self:return_ownership(owner)
 end
 
 --- Starts the removal countdown for the entities of the character a player drops.
 -- @param owner [Player]
--- @param character [Character the character that is being dropped]
-function PropProtection:OnActiveCharacterCleared(owner, character)
+-- @param _character [Character the character that is being dropped]
+function PropProtection:OnActiveCharacterCleared(owner, _character)
   self:abandon_entities(owner)
 end
 

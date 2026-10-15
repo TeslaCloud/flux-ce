@@ -55,26 +55,26 @@ if is_development then
   --- Prints the amount of registered objects of every debug metric to the console.
   -- @environment [development]
   function print_debug_metrics()
-    for id, objects in pairs(metrics) do
+    for id, _objects in pairs(metrics) do
       print_debug_metric(id)
     end
   end
 else
   --- Does nothing, since debug metrics are only collected in the development environment.
-  -- @param id [String metric name]
-  -- @param obj [Any object to register]
-  function add_debug_metric(id, obj)
+  -- @param _id [String metric name]
+  -- @param _obj [Any object to register]
+  function add_debug_metric(_id, _obj)
   end
 
   --- Does nothing, since debug metrics are only collected in the development environment.
-  -- @param id [String metric name]
-  function get_debug_metric(id)
+  -- @param _id [String metric name]
+  function get_debug_metric(_id)
   end
 
   --- Does nothing, since debug metrics are only collected in the development environment.
-  -- @param id [String metric name]
-  -- @param format=nil [String message]
-  function print_debug_metric(id, format)
+  -- @param _id [String metric name]
+  -- @param _format=nil [String message]
+  function print_debug_metric(_id, _format)
   end
 
   --- Does nothing, since debug metrics are only collected in the development environment.

@@ -55,7 +55,7 @@ function ActiveRecord.Base:init()
   self.fetched = false
   self.saving = false
 
-  for k, v in ipairs(self.relations) do
+  for _k, v in ipairs(self.relations) do
     if !self[v.table_name] and v.many then
       self[v.table_name] = {}
     end
@@ -88,7 +88,7 @@ end
 -- @return [Map schema, ActiveRecord::Base(self)]
 function ActiveRecord.Base:dump()
   local ret = {}
-    for k, data in pairs(self:get_schema()) do
+    for k, _data in pairs(self:get_schema()) do
       ret[k] = self[k]
     end
   return ret, self
@@ -307,7 +307,7 @@ function ActiveRecord.Base:_process_child(obj, target_class)
   end
 
   if !should_stop then
-    for k, v in ipairs(self.relations) do
+    for _k, v in ipairs(self.relations) do
       if v.child and v.target_class == target_class then
         self[v.as] = obj
         break
@@ -347,7 +347,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
 
           current_object[relation.as] = children
 
-          for k, v in ipairs(res) do
+          for _k, v in ipairs(res) do
             v:_process_child(current_object, current_object.class)
             children[#children + 1] = v
           end
@@ -389,7 +389,7 @@ function ActiveRecord.Base:run_query(callback)
   if self.query_map and #self.query_map > 0 then
     local query = ActiveRecord.Database:select(self.table_name)
 
-    for k, v in ipairs(self.query_map) do
+    for _k, v in ipairs(self.query_map) do
       local t, a, b = v[1], v[2], v[3]
 
       if t == 'where' then
@@ -577,7 +577,7 @@ local function gen_callback(self, insert)
       for _, relation in ipairs(self.relations) do
         if !relation.child then
           if relation.many and istable(self[relation.as]) then
-            for k, v in ipairs(self[relation.as]) do
+            for _k, v in ipairs(self[relation.as]) do
               v[relation.column_name] = self.id
               v:save()
             end
@@ -672,7 +672,7 @@ function ActiveRecord.Base:destroy()
   local class_name = self.class_name
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('id', self.id)
-    query:callback(function(result, query, time)
+    query:callback(function(_result, query, time)
       print_query(class_name..' Delete ('..time..'s)', query)
     end)
   query:execute()
@@ -722,7 +722,7 @@ function ActiveRecord.Base:has(what, many)
       relation.many = many
     end
 
-    for k, v in pairs(ActiveRecord.Model:all()) do
+    for _k, v in pairs(ActiveRecord.Model:all()) do
       if v.table_name == table_name then
         relation.model = v
         break

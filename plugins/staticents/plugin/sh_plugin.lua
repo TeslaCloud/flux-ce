@@ -58,7 +58,7 @@ else
 
     local entities = {}
 
-    for k, v in ents.Iterator() do
+    for _k, v in ents.Iterator() do
       if v:GetPersistent() then
         local ent_class = v:GetClass()
         entities[ent_class] = entities[ent_class] or {}

@@ -286,7 +286,7 @@ end
 
 --- Runs the recorded statements in order.
 function ActiveRecord.CommandRecorder:replay()
-  for k, v in ipairs(self.commands) do
+  for _k, v in ipairs(self.commands) do
     ActiveRecord.ddl(v.command, unpack(v.args, 1, v.args.n))
   end
 end
@@ -309,7 +309,7 @@ function ActiveRecord.TableRecorder:init(recorder, table_name)
 
   local types = ActiveRecord.Adapters[ActiveRecord.adapter_name:capitalize()].types or {}
 
-  for type, def in pairs(types) do
+  for type, _def in pairs(types) do
     self[type] = function(s, name, ...)
       local options
       name, options = ActiveRecord.column_args(name, ...)

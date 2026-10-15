@@ -17,7 +17,7 @@ local PANEL = {}
 --- Creates the search field, the page buttons and the scroll panel that holds the list,
 -- asks the server for the first page and makes the panel known to the plugin.
 function PANEL:Init()
-  local text_color = Theme.get_color('text')
+  local _text_color = Theme.get_color('text')
   local hint_color = Theme.get_color('text_dim')
   local small_font = Theme.get_font('text_small')
   local search_hint = t'ui.admin.bans.search'
@@ -35,7 +35,7 @@ function PANEL:Init()
     self:request_bans(1)
   end
 
-  self.search_entry.PaintOver = function(pnl, w, h)
+  self.search_entry.PaintOver = function(pnl, _w, h)
     if pnl:GetValue() == '' and !pnl:HasFocus() then
       draw.SimpleText(
         search_hint,
@@ -54,7 +54,7 @@ function PANEL:Init()
   self.previous_button:set_draw_outline(true)
   self.previous_button:set_icon('fa-chevron-left')
   self.previous_button:set_centered(true)
-  self.previous_button.DoClick = function(btn)
+  self.previous_button.DoClick = function(_btn)
     self:request_bans(self.page - 1)
   end
 
@@ -63,7 +63,7 @@ function PANEL:Init()
   self.next_button:set_draw_outline(true)
   self.next_button:set_icon('fa-chevron-right')
   self.next_button:set_centered(true)
-  self.next_button.DoClick = function(btn)
+  self.next_button.DoClick = function(_btn)
     self:request_bans(self.page + 1)
   end
 
@@ -221,7 +221,7 @@ function PANEL:Init()
   self.unban_button:set_centered(true)
   self.unban_button:set_background_color(Theme.get_color('surface_raised'))
   self.unban_button:SizeToContentsX()
-  self.unban_button.DoClick = function(btn)
+  self.unban_button.DoClick = function(_btn)
     self:unban()
   end
 end

@@ -49,7 +49,7 @@ local function active_boosts(boosts)
   local active = {}
 
   if boosts then
-    for k, v in pairs(boosts) do
+    for _k, v in pairs(boosts) do
       if !v.end_time or v.end_time > cur_time then
         active[#active + 1] = v
       end
@@ -75,7 +75,7 @@ local function describe_boosts(boosts)
   local cur_time = CurTime()
   local parts = {}
 
-  for k, v in ipairs(boosts) do
+  for _k, v in ipairs(boosts) do
     local text = format_number(v.value, true)
 
     if v.end_time then
@@ -218,7 +218,7 @@ function PANEL:get_sections()
   local translated_names = {}
   local other_skills
 
-  for k, v in pairs(Attributes.get_stored()) do
+  for _k, v in pairs(Attributes.get_stored()) do
     if self.snapshot or Attributes.is_visible(v, target) then
       local category = v.category or default_category
       local section = by_category[category]
@@ -241,7 +241,7 @@ function PANEL:get_sections()
     end
   end
 
-  for k, v in pairs(Skills.get_stored()) do
+  for _k, v in pairs(Skills.get_stored()) do
     if self.snapshot or Skills.is_visible(v, target) then
       local key_stat = isstring(v.attribute) and Attributes.find(v.attribute)
       local section
@@ -287,7 +287,7 @@ function PANEL:get_sections()
 
   local sections = attribute_sections
 
-  for k, v in ipairs(skill_sections) do
+  for _k, v in ipairs(skill_sections) do
     sections[#sections + 1] = v
   end
 
@@ -295,7 +295,7 @@ function PANEL:get_sections()
     sections[#sections + 1] = other_skills
   end
 
-  for k, v in ipairs(sections) do
+  for _k, v in ipairs(sections) do
     sort_definitions(v.attributes, translated_names)
     sort_definitions(v.skills, translated_names)
   end
@@ -311,16 +311,16 @@ end
 function PANEL:get_listed(sections)
   local ids = {}
 
-  for k, v in ipairs(sections) do
+  for _k, v in ipairs(sections) do
     ids[#ids + 1] = v.name
 
-    for k1, v1 in ipairs(v.attributes) do
+    for _k1, v1 in ipairs(v.attributes) do
       local detailed = has_details(self:get_data(v1.attribute_id))
 
       ids[#ids + 1] = tostring(v1.attribute_id)..(detailed and '+' or '')
     end
 
-    for k1, v1 in ipairs(v.skills) do
+    for _k1, v1 in ipairs(v.skills) do
       ids[#ids + 1] = 'skill:'..tostring(v1.skill_id)
     end
   end
@@ -360,7 +360,7 @@ function PANEL:rebuild()
     header:Dock(TOP)
     header:DockMargin(margin, k == 1 and 0 or margin * 4, 0, margin)
 
-    for k1, v1 in ipairs(v.attributes) do
+    for _k1, v1 in ipairs(v.attributes) do
       local row = self.scroll_panel:Add('fl_attribute_row')
       row:Dock(TOP)
       row:DockMargin(0, 0, 0, margin)
@@ -371,7 +371,7 @@ function PANEL:rebuild()
       self.rows[#self.rows + 1] = row
     end
 
-    for k1, v1 in ipairs(v.skills) do
+    for _k1, v1 in ipairs(v.skills) do
       local row = self.scroll_panel:Add('fl_attribute_row')
       row:Dock(TOP)
       row:DockMargin(0, 0, 0, margin)
@@ -394,7 +394,7 @@ function PANEL:update()
     return
   end
 
-  for k, v in ipairs(self.rows) do
+  for _k, v in ipairs(self.rows) do
     if IsValid(v) then
       local skill_table = v:get_skill()
 
@@ -441,9 +441,9 @@ function PANEL:Init()
 end
 
 --- Places the image of the icon in the top left corner of the row.
--- @param w [Number panel width]
--- @param h [Number panel height]
-function PANEL:PerformLayout(w, h)
+-- @param _w [Number panel width]
+-- @param _h [Number panel height]
+function PANEL:PerformLayout(_w, _h)
   if IsValid(self.image) then
     local padding, size = math_scale(8), math_scale(40)
 
@@ -645,7 +645,7 @@ function PANEL:build_tooltip(level)
   if attribute_table and istable(attribute_table.effects) then
     local effect_lines = {}
 
-    for k, v in ipairs(attribute_table.effects) do
+    for _k, v in ipairs(attribute_table.effects) do
       if isstring(v.text) and isfunction(v.get_value) then
         table.insert(effect_lines, translate(v.text)..' '..translate(tostring(v.get_value(level))))
       end

@@ -64,7 +64,7 @@ end
 -- @param panel [Panel]
 -- @param center=false [Boolean center the panel horizontally instead of keeping its x position]
 function PANEL:add_panel(panel, center)
-  local x, y = panel:GetPos()
+  local x, _y = panel:GetPos()
 
   if center then
     x = self:GetWide() * 0.5 - panel:GetWide() * 0.5
@@ -124,8 +124,8 @@ end
 function PANEL:center_items()
   local half_w = self:GetWide() * 0.5
 
-  for k, v in ipairs(self:GetCanvas():GetChildren()) do
-    local x, y = v:GetPos()
+  for _k, v in ipairs(self:GetCanvas():GetChildren()) do
+    local _x, y = v:GetPos()
 
     v:SetPos(half_w - v:GetWide() * 0.5, y)
   end
