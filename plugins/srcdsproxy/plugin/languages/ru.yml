@@ -4,8 +4,8 @@ ru:
       description: Показывает, подключены ли вы через прокси и как прокси вас знает.
       not_proxied: Вы подключены к этому серверу напрямую, не через прокси.
       backend: "Вы подключены через прокси (версия {version}) к серверу {backend}."
-      steamid_verified: "Ваш SteamID64 — {steamid}, подтверждён Steam."
-      steamid_claimed: "Ваш SteamID64 — {steamid}, со слов вашей игры. Steam его не подтвердил."
+      steamid_verified: "Ваш SteamID64 - {steamid}, подтверждён Steam."
+      steamid_claimed: "Ваш SteamID64 - {steamid}, со слов вашей игры. Steam его не подтвердил."
       no_steamid: Прокси не знает вашего SteamID.
       address: "Прокси видит ваше подключение с адреса {address}."
       proxy_admin: Вы администратор прокси.
