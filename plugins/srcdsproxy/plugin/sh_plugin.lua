@@ -21,9 +21,20 @@
 -- It also answers the addon's admin check with the `moderate` permission. Without the addon
 -- the plugin does nothing but print a warning, and its commands tell the caller that the
 -- addon is missing.
+--
+-- Server transfer areas move players to another server of the network when they walk into
+-- them. Staff draw one with the Server Transfer Area mode of the Area Tool and give it the
+-- name of a server and a delay; a player who is connected through the proxy and stays in the
+-- area for that many seconds, with a countdown on their HUD, is moved to that server, unless
+-- it is whitelist-only and they may not enter it, which they are told. Leaving the area
+-- cancels the countdown, and a player is moved once per entry. The
+-- `ProxyAreaShouldTransfer` hook lets plugins keep a player from being moved.
 -- @module [SrcdsProxy]
 
 PLUGIN:set_global('SrcdsProxy')
 
+require_relative 'sh_transfer_areas'
+require_relative 'cl_transfer_areas'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
+require_relative 'sv_transfer_areas'

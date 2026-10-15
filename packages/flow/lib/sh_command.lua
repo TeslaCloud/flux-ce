@@ -1,7 +1,7 @@
 --- The command system: keeps the registered chat and console commands and runs them for
 -- players. Commands are `Command` objects. Every file in the `commands` folder of a plugin or
--- schema gets a `CMD` table to fill in (name, description, syntax, aliases and the `on_run`
--- callback) and is registered automatically under an ID taken from its file name; see
+-- schema gets a `CMD` table to fill in (name, description, syntax, permission, aliases and the
+-- `on_run` callback) and is registered automatically under an ID taken from its file name; see
 -- `Command:on_run` for an example. Players run commands by typing them in the chat with a
 -- command prefix or through the `flc` console command, which also works from the server
 -- console.
@@ -31,8 +31,8 @@ Flux.Command.aliases    = aliases
 -- a plugin are registered automatically, see Command#on_run for an example.
 -- @param id [String unique command ID, also the main name it is called by]
 -- @param data [Command/Map command object or a table with the same fields: name, description,
---   syntax, arguments (minimum amount), immunity, player_arg, alias or aliases, no_console and
---   the on_run callback]
+--   syntax, permission (ID of the role it is allowed to), arguments (minimum amount),
+--   immunity, player_arg, alias or aliases, no_console and the on_run callback]
 -- @see [Command#on_run]
 function Flux.Command:create(id, data)
   if !id or !data then return end

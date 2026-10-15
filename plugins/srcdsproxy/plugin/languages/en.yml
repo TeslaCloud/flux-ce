@@ -51,9 +51,24 @@ en:
       remote_target: "{target} is not on this server. Only a caller who is connected through the proxy can move players on other servers."
       server_invalid: "'{server}' is not a valid server name."
       session_id_unchecked: "{target} could be somebody on this server whose immunity cannot be checked. Use their name or SteamID."
+      area_no_backend: Enter the name of the server the area moves players to.
+      area_whitelist: "{server} is whitelist-only."
   notification:
     proxy:
       console: The proxy has answered in your console.
+      area_countdown: "Stay in the area to be moved to {server} in {time}."
+      area_moving: "Moving you to {server}..."
   permission:
     categories:
       proxy: Proxy network
+  tool:
+    proxy_area:
+      title: Server Transfer Area
+      desc: "Create an area that moves the players who stay in it to another server of the network. Left Click: add a point, Right Click: create the area, Reload: remove the transfer area you are looking at."
+      backend: Server
+      delay: Delay (seconds)
+      height: Height
+  ui:
+    proxy:
+      area_countdown: "Moving to {server} in {seconds}..."
+      area_moving: "Moving to {server}..."

@@ -3,7 +3,10 @@
 -- language phrases), `arguments` (the minimum amount of arguments), `aliases` (the names it
 -- can be called by) and `no_console` (the command cannot be run from the server console).
 -- The admin plugin registers a permission named after the command's ID, which the role files
--- allow to roles with `can`.
+-- allow to roles with `can`. `permission` names the role the command is allowed to, along
+-- with the roles based on it, unless a role file decides the command itself; this is the way
+-- for a plugin that adds a single command, while a plugin with several commands allows them
+-- in role files. A command allowed by neither is denied to every player.
 -- Setting `immunity` or `player_arg` turns one argument into a list of target players: the
 -- first argument, or the one at the position that `player_arg` gives. With `immunity` the
 -- caller must also pass the immunity check (the `CommandCheckImmunity` hook) against every
@@ -26,6 +29,7 @@ Command.immunity = false
 Command.player_arg = nil
 Command.arguments = 0
 Command.no_console = false
+Command.permission = nil
 
 --- Converts the command to a string for printing.
 -- @return [String]
@@ -43,21 +47,24 @@ end
 -- in the command file. It receives the player who has run the command (an invalid entity
 -- if it was run from the server console) followed by the arguments as strings. If the
 -- command has immunity or player_arg set, the target argument is a List<Player> instead.
+-- The command below is the only one of its plugin, so it names the role it is allowed to in
+-- `permission` instead of being allowed in a role file.
 -- ```
--- -- plugin/commands/sh_freeze.lua
--- CMD.name = 'Freeze'
--- CMD.description = 'command.freeze.description'
--- CMD.syntax = 'command.freeze.syntax'
+-- -- plugins/slap/plugin/commands/sh_slap.lua
+-- CMD.name = 'Slap'
+-- CMD.description = 'command.slap.description'
+-- CMD.syntax = 'command.slap.syntax'
+-- CMD.permission = 'assistant'
 -- CMD.arguments = 1
 -- CMD.immunity = true
--- CMD.aliases = { 'freeze', 'plyfreeze' }
+-- CMD.aliases = { 'slap', 'plyslap' }
 --
 -- function CMD:on_run(actor, targets)
 --   for k, v in ipairs(targets) do
---     v:Freeze(true)
+--     v:TakeDamage(10, actor)
 --   end
 --
---   self:notify_staff('command.freeze.message', {
+--   self:notify_staff('command.slap.message', {
 --     player = get_player_name(actor),
 --     target = util.player_list_to_string(targets)
 --   })

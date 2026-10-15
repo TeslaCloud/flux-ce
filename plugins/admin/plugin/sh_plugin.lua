@@ -4,7 +4,10 @@
 -- `Role` with an immunity level and a set of allowed permissions. A permission is an ID
 -- registered with `Bolt:register_permission`, normally from a `RegisterPermissions` hook;
 -- every command also gets a permission named after its ID. Which roles have a permission by
--- default is up to the role files alone: each one lists the permissions it allows with `can`.
+-- default is up to the role files: each one lists the permissions it allows with `can`. A
+-- command may name a role in its `permission` field instead, which allows it to that role
+-- and the roles based on it unless a role file decides the command itself; a command that
+-- neither a role file nor its `permission` field allows is denied to every player.
 -- Code asks whether a player may do something with `actor:can(id)`, which Bolt answers from
 -- the player's unexpired temporary permissions, then their individual permissions
 -- (`PERM_ALLOW` or `PERM_NEVER`), then their role. The SteamIDs listed in the `root_steamid`
@@ -27,7 +30,8 @@
 -- Other plugins extend Bolt by registering permissions, by shipping role files in a `roles`
 -- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook. A role
 -- file whose ID is already registered adds its permissions to that role, which is how a
--- plugin or schema gives the existing roles the permissions of its own commands.
+-- plugin or schema with several commands gives the existing roles their permissions. A
+-- plugin with a single command sets the command's `permission` field instead.
 -- @module [Bolt]
 
 PLUGIN:set_global('Bolt')
@@ -107,12 +111,15 @@ function Bolt:OnCommandCreated(id, data)
   self:permission_from_command(data)
 end
 
---- Runs the RegisterPermissions hook.
+--- Runs the RegisterPermissions hook, then allows the commands that name a role in their
+-- `permission` field to that role.
 function Bolt:OnPluginsLoaded()
   --- Called on both realms once all plugins have loaded. Register permissions here with
   -- `Bolt:register_permission`. Registering a permission does not allow it for anybody: the
   -- role files allow permissions to roles with `can`.
   hook.Run('RegisterPermissions')
+
+  self:allow_command_roles()
 end
 
 --- Registers the 'bolt_role' condition, which compares a player's role with a chosen one.

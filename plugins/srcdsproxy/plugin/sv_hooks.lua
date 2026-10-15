@@ -31,7 +31,7 @@ local function run_console_command(actor, cmd, args, args_text)
   local data = console_commands[cmd]
 
   if data then
-    Flux.Command:interpret(actor, data.command..' '..(args_text or ''), true)
+    Flux.Command:interpret(actor, data.command..' '..(args_text or table.concat(args, ' ')), true)
   end
 end
 

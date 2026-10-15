@@ -194,6 +194,27 @@ function Bolt:merge_permissions(role, perms, as_own)
   end
 end
 
+--- Allows every command that names a role in its `permission` field to that role and to the
+-- roles based on it, except where a role file decided the command itself: a `cannot` for
+-- the command in a role file keeps it from that role and the roles based on it. A command
+-- whose role is not registered is reported in the console and stays unallowed.
+-- @see [Bolt#merge_permissions]
+function Bolt:allow_command_roles()
+  for k, cmd in pairs(Flux.Command.stored) do
+    local role_id = cmd.permission
+
+    if !isstring(role_id) then continue end
+
+    local role = roles[role_id]
+
+    if role then
+      self:merge_permissions(role, { anything = { [cmd.id] = { allowed = true } } })
+    else
+      ErrorNoHalt("The '"..tostring(cmd.id).."' command names the '"..role_id.."' role, which does not exist!\n")
+    end
+  end
+end
+
 --- Stores a permission data table under a category. A permission that already exists there
 -- is kept unless force is set.
 -- @param id [String permission ID; nothing happens without one]

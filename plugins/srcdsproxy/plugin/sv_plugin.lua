@@ -102,21 +102,6 @@ function SrcdsProxy:verb(name, ...)
   return table.concat(pieces, ' ')
 end
 
---- Turns what a player typed as the name of a server of the network into a name that is
--- safe to pass to `srcdsproxy.Transfer`, which sends it to the proxy unquoted: whitespace,
--- semicolons and double quotes are removed.
--- @param text [String server name as typed]
--- @return [String the server name, or nil if nothing is left of it]
-function SrcdsProxy:server_name(text)
-  local name = tostring(text or ''):gsub('[%s;"]', '')
-
-  if name == '' then
-    return
-  end
-
-  return name
-end
-
 --- Checks whether a text has the form of an IPv4 or IPv6 address, or of a subnet written as
 -- an address followed by a slash and a prefix length.
 -- ```
