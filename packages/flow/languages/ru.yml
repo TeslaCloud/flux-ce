@@ -34,10 +34,13 @@ ru:
     cant_now: Вы не можете сделать это сейчас!
     command:
       higher_immunity: "{target} имеет более высокий иммунитет, чем вы!"
+      invalid_choice: "'{value}' здесь не подходит, используйте одно из: {choices}"
       no_access: У вас нет доступа к этой команде!
       not_valid: "'{command}' не является командой!"
+      player_ambiguous: "Имя '{player}' носят несколько игроков, укажите SteamID нужного!"
       player_invalid: "'{player}' не является игроком!"
       syntax: "Неверный синтаксис, используйте /{command} {syntax}"
+      unknown_subcommand: "'{subcommand}' не является подкомандой /{command}, используйте одну из: {subcommands}"
       you_must_enter_command: Вы должны ввести команду!
     config:
       unknown: Такой настройки не существует!

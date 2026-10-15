@@ -5,6 +5,7 @@ CMD.description = 'command.slay.description'
 CMD.syntax = 'command.slay.syntax'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
+CMD.arg_types = { 'player' }
 CMD.immunity = true
 CMD.aliases = { 'plyslay', 'plykill' }
 

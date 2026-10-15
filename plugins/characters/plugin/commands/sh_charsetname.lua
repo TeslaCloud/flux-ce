@@ -5,7 +5,7 @@ CMD.description = 'command.charsetname.description'
 CMD.syntax = 'command.charsetname.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
-CMD.player_arg = 1
+CMD.arg_types = { 'player', 'text' }
 CMD.alias = 'setname'
 
 --- Sets the name of the first target's character and notifies staff. The name is refused

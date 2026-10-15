@@ -7,6 +7,7 @@ CMD.syntax = 'command.me.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.aliases = { 'e', 'action', 'perform' }
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 --- Says the text as an emote.

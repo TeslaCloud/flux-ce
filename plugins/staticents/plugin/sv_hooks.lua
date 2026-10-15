@@ -81,11 +81,11 @@ end
 
 --- Makes the entity the player is looking at static, or removes its static status, and
 -- notifies the player about the outcome. The entity's class has to be whitelisted and the
--- player needs the 'static' or 'unstatic' permission respectively.
+-- player needs the 'static' permission.
 -- @param actor [Player]
 -- @param is_static [Boolean true to make the entity static, false to make it unstatic]
 function StaticEnts:PlayerMakeStatic(actor, is_static)
-  if (is_static and !actor:can('static')) or (!is_static and !actor:can('unstatic')) then
+  if !actor:can('static') then
     actor:notify('error.no_permission')
     return
   end

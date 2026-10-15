@@ -7,6 +7,7 @@ CMD.syntax = 'command.it.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.alias = 'do'
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 --- Describes something in the environment to players looking near the speaker, with a volume-based radius.

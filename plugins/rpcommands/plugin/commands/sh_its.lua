@@ -7,6 +7,7 @@ CMD.syntax = 'command.its.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.aliases = { 'action', 'itstatic', 'describe' }
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 --- Places a static text at the player's position unless another one is within 50 units, with a 5 second cooldown.

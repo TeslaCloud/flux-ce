@@ -5,7 +5,7 @@ CMD.description = 'command.setmoney.description'
 CMD.syntax = 'command.setmoney.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
-CMD.player_arg = 1
+CMD.arg_types = { 'player', 'number', 'currency' }
 CMD.aliases = { 'setcash', 'settokens' }
 
 --- Returns the translated command description with every registered currency ID listed.
@@ -24,8 +24,8 @@ end
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param amount [String new balance, parsed with tonumber; negative values become 0]
--- @param currency=nil [String currency ID; the default currency is used when it is omitted
---   or unknown, see `Currencies:get_default_currency`]
+-- @param currency=nil [String currency ID; the default currency is used when it is
+--   omitted, see `Currencies:get_default_currency`]
 function CMD:on_run(actor, targets, amount, currency)
   amount = tonumber(amount)
 

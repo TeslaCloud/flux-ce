@@ -3,7 +3,7 @@
 -- permissions, remove temporary permissions, change and reset config values, and disable
 -- and enable plugins. Every receiver checks the sender's own permission and the values it
 -- was sent; the ones that edit a player also check the sender's immunity against that
--- player, the way the SetGroup and Demote commands do.
+-- player, the way the `role set` and `role remove` commands do.
 --
 -- The receivers of the ban list and of the staff page are in sv_bans.lua and sv_staff.lua.
 
@@ -23,9 +23,9 @@ end
 
 --- Checks a request of the admin panel to edit a player's role or permissions. The sender
 -- needs the 'manage_permissions' permission and a role with a higher immunity than the
--- target's; an equal immunity is not enough, as for the SetGroup and Demote commands. Senders
--- may always edit themselves, and root players anyone. A sender who fails the immunity check
--- is notified.
+-- target's; an equal immunity is not enough, as for the `role set` and `role remove`
+-- commands. Senders may always edit themselves, and root players anyone. A sender who fails
+-- the immunity check is notified.
 -- @param actor [Player the player who sent the request]
 -- @param target [Any the value received as the player to edit]
 -- @return [Boolean true if target is a player with a loaded record whom the sender may edit]
@@ -86,10 +86,10 @@ function Bolt:delete_temp_permission(target, perm_id)
   target:update_hidden_players()
 end
 
---- Finds the permission that an argument of the Grant, Revoke or ResetPermission command
--- names, as Bolt:find_permission does, and tells the caller if there is none.
+--- Finds the permission that an argument of the `permission grant` or `permission revoke`
+-- command names, as Bolt:find_permission does, and tells the caller if there is none.
 -- @param actor [Player the caller, or an invalid entity for the server console]
--- @param text [String permission ID, command name or command alias]
+-- @param text [String permission ID, command ID or command alias]
 -- @return [Map permission data, or nil if there is no such permission]
 function Bolt:find_command_permission(actor, text)
   local permission = self:find_permission(text)
@@ -101,14 +101,16 @@ function Bolt:find_command_permission(actor, text)
   return permission
 end
 
---- Reads the optional duration of the Grant and Revoke commands, which makes the permission
--- they set a temporary one. The caller is told if the text is not a duration.
+--- Reads the optional duration of the `permission grant` and `permission revoke` commands,
+-- which makes the permission they set a temporary one. An empty text or a word for a
+-- permanent duration, such as 'perma', sets it for good. The caller is told if the text is
+-- not a duration.
 -- @param actor [Player the caller, or an invalid entity for the server console]
 -- @param text [String duration as read by Bolt:interpret_ban_time, or an empty string]
 -- @return [Boolean false if the text is neither empty nor a duration, Number duration in
---   seconds; nil if the text is empty]
+--   seconds; nil if the permission is set for good]
 function Bolt:read_permission_duration(actor, text)
-  if text == '' then
+  if text == '' or self:is_permanent_time(text) then
     return true
   end
 
@@ -129,7 +131,7 @@ Cable.receive('fl_bolt_set_role', function(actor, target, role_id)
 
   target:SetUserGroup(role_id)
 
-  Command:notify_staff('command.setgroup.message', {
+  Command:notify_staff('command.role.set.message', {
     player = get_player_name(actor),
     target = target:steam_name(true),
     group = role_id

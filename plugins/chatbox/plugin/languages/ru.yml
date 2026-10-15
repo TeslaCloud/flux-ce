@@ -40,4 +40,6 @@ ru:
     chat:
       aliases: Алиасы
       no_commands_found: Команды не найдены.
+      more_above: "Ещё {count} выше"
+      more_below: "Ещё {count} ниже"
       everyone: весь сервер

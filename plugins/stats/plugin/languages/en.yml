@@ -472,31 +472,33 @@ en:
       master: Once you set your mind to something, nothing can break your concentration.
       legendary: Your focus is absolute, shutting out everything but the task at hand.
   command:
-    charsetattribute:
-      description: "Set a character's attribute. Attributes: {attributes}"
-      syntax: <target> <attribute_id> <value>
-      message: "{player} has set {target}'s attribute {attribute} to {value}."
+    attribute:
+      description: "Set, boost and list the attributes of characters."
+      set:
+        description: "Set a character's attribute. Attributes: {attributes}"
+        syntax: <target> <attribute> <value>
+        message: "{player} has set {target}'s attribute {attribute} to {value}."
+      boost:
+        description: "Boost a character's attribute. A duration of 'perma' gives a boost that lasts until it is removed. Attributes: {attributes}"
+        syntax: <target> <attribute> <value> <duration>
+        message: "{player} has boosted {target}'s attribute {attribute} by {value} for {time}."
+        message_permanent: "{player} has boosted {target}'s attribute {attribute} by {value} permanently."
+      clearboosts:
+        description: "Remove the boosts of a character's attribute, or of all attributes if none is given. Attributes: {attributes}"
+        syntax: "<target> [attribute]"
+        message: "{player} has removed the boosts of {target}'s attribute {attribute}."
+        message_all: "{player} has removed all attribute boosts of {target}."
+      list:
+        description: "View the attributes and skills of a character."
+        syntax: <target>
+        header: "Attributes of {target}:"
+        line: "{attribute} ({id}): level {level}, boost {boost}"
+        skills_header: "Skills of {target}:"
+        skill_line: "{skill} ({id}): rank {rank}"
     charsetskill:
       description: "Set the rank of a character's skill. Skills: {skills}"
-      syntax: <target> <skill_id> <rank>
+      syntax: <target> <skill> <rank>
       message: "{player} has set {target}'s skill {skill} to rank {value}."
-    charattributeboost:
-      description: "Boost a character's attribute. A duration of 'perma' gives a boost that lasts until it is removed. Attributes: {attributes}"
-      syntax: <target> <attribute_id> <value> <duration>
-      message: "{player} has boosted {target}'s attribute {attribute} by {value} for {time}."
-      message_permanent: "{player} has boosted {target}'s attribute {attribute} by {value} permanently."
-    charattributeboostclear:
-      description: "Remove the boosts of a character's attribute, or of all attributes if none is given. Attributes: {attributes}"
-      syntax: "<target> [attribute_id]"
-      message: "{player} has removed the boosts of {target}'s attribute {attribute}."
-      message_all: "{player} has removed all attribute boosts of {target}."
-    charattributes:
-      description: "View the attributes and skills of a character."
-      syntax: <target>
-      header: "Attributes of {target}:"
-      line: "{attribute} ({id}): level {level}, boost {boost}"
-      skills_header: "Skills of {target}:"
-      skill_line: "{skill} ({id}): rank {rank}"
   condition:
     attribute:
       name: Matching Attribute Value

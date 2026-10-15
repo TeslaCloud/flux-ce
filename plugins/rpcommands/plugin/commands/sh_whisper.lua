@@ -7,6 +7,7 @@ CMD.syntax = 'command.whisper.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.alias = 'w'
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 --- Says the text as a whisper.

@@ -1,29 +1,33 @@
 ru:
   command:
     whitelist:
-      description: "Дает игроку доступ к фракции. Фракции: {factions}"
-      syntax: "<игрок> <фракция> [строгий режим поиска]"
-      message: "{player} дает {target} доступ к фракции {faction}."
-    unwhitelist:
-      description: "Убирает у игрока доступ к фракции. Фракции: {factions}"
-      syntax: "<игрок> <фракция> [строгий режим поиска]"
-      message: "{player} забирает у {target} доступ к фракции {faction}."
+      description: "Управляет доступом игроков к фракциям."
+      add:
+        description: "Дает игроку доступ к фракции."
+        syntax: "<игрок> <фракция>"
+        message: "{player} дает {target} доступ к фракции {faction}."
+      remove:
+        description: "Убирает у игрока доступ к фракции."
+        syntax: "<игрок> <фракция>"
+        message: "{player} забирает у {target} доступ к фракции {faction}."
     setfaction:
       description: "Установить фракцию персонажа. Фракции: {factions}"
-      syntax: "<игрок> <фракция> [доп. данные]"
+      syntax: "<игрок> <фракция>"
       message: "{player} меняет фракцию {target} на {faction}."
-    setrank:
-      description: "Установить ранг персонажа во фракции."
-      syntax: "<игрок> <ранг>"
-      message: "{player} установил ранг {target} на {rank}."
-    promoterank:
-      description: "Повысить игрока во фракции."
-      syntax: "<игрок>"
-      message: "{player} повышает {target} в ранге."
-    demoterank:
-      description: "Понизить игрока во фракции."
-      syntax: "<игрок>"
-      message: "{player} понижает {target} в ранге."
+    rank:
+      description: "Меняет ранги персонажей в их фракциях."
+      set:
+        description: "Установить ранг персонажа во фракции по его номеру, ID или названию."
+        syntax: "<игрок> <ранг>"
+        message: "{player} установил ранг {target} на {rank}."
+      promote:
+        description: "Повысить игрока во фракции."
+        syntax: "<игрок>"
+        message: "{player} повышает {target} в ранге."
+      demote:
+        description: "Понизить игрока во фракции."
+        syntax: "<игрок>"
+        message: "{player} понижает {target} в ранге."
   condition:
     faction:
       name: Персонаж, состоящий в определенной фракции
@@ -47,6 +51,7 @@ ru:
     rank:
       cannot_promote: Вы не можете повысить никого из этих игроков.
       cannot_demote: Вы не можете понизить никого из этих игроков.
+      not_found: "Ни в одной из фракций этих персонажей нет ранга '{rank}'."
   notification:
     demote_rank: Вы были понижены до ранга {rank}.
     promote_rank: Вы были повышены до ранга {rank}.

@@ -172,14 +172,67 @@ function Flux.Help:get_command_prefix()
   return isstring(prefixes[1]) and prefixes[1] or '/'
 end
 
+--- Builds the entry of a command or subcommand for the Commands page of the Help tab.
+-- @param command [Command]
+-- @return [Map id (String), name (String the full name), syntax (String, empty if the
+--   command takes no arguments), description (String) and aliases (List<String>)]
+local function describe_command(command)
+  local description = command.description
+  local syntax = command:get_syntax()
+  local aliases = {}
+
+  if isfunction(command.get_description) then
+    description = command:get_description()
+  end
+
+  if syntax == '[-]' then
+    syntax = ''
+  end
+
+  for _, v in ipairs(command.aliases or {}) do
+    if v != command.id then
+      aliases[#aliases + 1] = v
+    end
+  end
+
+  return {
+    id = command:get_full_id(),
+    name = command:get_full_name(),
+    syntax = translate(syntax),
+    description = translate(description),
+    aliases = aliases
+  }
+end
+
+--- Adds the entries of the subcommands of a command that a player may run to a list, along
+-- with the subcommands of those, in the order they were added.
+-- @param list [List<Map> entries to add to]
+-- @param command [Command]
+-- @param client [Player]
+-- @return [List<Map> the list]
+local function describe_subcommands(list, command, client)
+  for _, v in ipairs(command:get_subcommands()) do
+    if v:is_allowed(client) then
+      list[#list + 1] = describe_command(v)
+    end
+
+    describe_subcommands(list, v, client)
+  end
+
+  return list
+end
+
 --- Lists the commands the local player is allowed to run, grouped by category, for the
--- Commands page of the Help tab. The texts are translated to the current language. Commands
--- without a category end up in a category of their own, and categories that translate to the
--- same name are merged.
+-- Commands page of the Help tab. A command is listed if the player may run it or one of its
+-- subcommands, which are listed with it. The texts are translated to the current language.
+-- Commands without a category end up in a category of their own, and categories that
+-- translate to the same name are merged.
 -- @return [List<Map> categories ordered by name: name (String translated name) and
 --   commands (List<Map> ordered by name: id (String), name (String), syntax (String,
---   empty if the command takes no arguments), description (String) and aliases
---   (List<String> the other names the command can be called by))]
+--   empty if the command takes no arguments), description (String), aliases
+--   (List<String> the other names the command can be called by) and subcommands
+--   (List<Map> the subcommands the player may run, in the same form, with their full names
+--   such as 'Whitelist add'))]
 function Flux.Help:get_commands()
   local client = LocalPlayer()
   local categories = {}
@@ -187,8 +240,10 @@ function Flux.Help:get_commands()
 
   if !IsValid(client) then return categories end
 
-  for id, command in pairs(Flux.Command.stored) do
-    if client:can(command.id) then
+  for _, command in pairs(Flux.Command.stored) do
+    local subcommands = describe_subcommands({}, command, client)
+
+    if command:is_allowed(client) or #subcommands > 0 then
       local name = translate(command.category or 'ui.help.commands.uncategorized')
       local category = by_name[name]
 
@@ -199,33 +254,10 @@ function Flux.Help:get_commands()
         categories[#categories + 1] = category
       end
 
-      local description = command.description
-      local syntax = command.syntax
-      local aliases = {}
+      local entry = describe_command(command)
+      entry.subcommands = subcommands
 
-      if isfunction(command.get_description) then
-        description = command:get_description()
-      end
-
-      if syntax == '[-]' then
-        syntax = ''
-      end
-
-      for k, v in ipairs(command.aliases or {}) do
-        if v != command.id then
-          aliases[#aliases + 1] = v
-        end
-      end
-
-      local commands = category.commands
-
-      commands[#commands + 1] = {
-        id = command.id,
-        name = tostring(command.name or command.id),
-        syntax = translate(syntax),
-        description = translate(description),
-        aliases = aliases
-      }
+      category.commands[#category.commands + 1] = entry
     end
   end
 

@@ -5,6 +5,7 @@ CMD.name = 'Fall'
 CMD.description = 'command.fall.description'
 CMD.syntax = 'command.fall.syntax'
 CMD.category = 'permission.categories.roleplay'
+CMD.arg_types = { 'number' }
 CMD.aliases = { 'fallover', 'charfallover' }
 CMD.no_console = true
 

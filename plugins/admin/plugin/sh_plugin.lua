@@ -22,10 +22,12 @@
 -- permissions and plugins, managing roles and restarting the server.
 --
 -- Bans are stored in the database and checked whenever a player connects. Staff manage
--- players with the plugin's commands and with the Admin entry of the tab menu, which holds
--- the player management page (role and permission editor), the staff page (everybody with a
--- role above `user`, connected or not), the ban list, the config editor and the plugin
--- manager.
+-- players with the plugin's commands, such as `/ban add|remove`, `/role set|remove`,
+-- `/permission grant|revoke|reset|list`, `/freeze on|off`, `/kick` and `/tp`, whose
+-- 'permission', 'role', 'map' and 'duration' arguments are completed while they are typed.
+-- They also have the Admin entry of the tab menu, which holds the player management page
+-- (role and permission editor), the staff page (everybody with a role above `user`,
+-- connected or not), the ban list, the config editor and the plugin manager.
 --
 -- Other plugins extend Bolt by registering permissions, by shipping role files in a `roles`
 -- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook. A role
@@ -43,6 +45,55 @@ require_relative 'sv_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_bans'
 require_relative 'sv_staff'
+
+local duration_examples = { '30', '1 hour', '1 day', '1 week', '1 month', 'perma' }
+
+--- Suggests a few durations for the arguments of the 'duration' type, which are read with
+-- `Bolt:interpret_ban_time`: a bare number is minutes, and 'perma' stands for a permanent
+-- duration.
+-- @return [List<String>]
+local function complete_duration()
+  return duration_examples
+end
+
+--- Lists the IDs of every registered permission for the arguments of the 'permission' type.
+-- @return [List<String> permission IDs, sorted]
+local function complete_permission()
+  local ids = {}
+
+  for id in pairs(Bolt:get_all_permissions()) do
+    ids[#ids + 1] = id
+  end
+
+  table.sort(ids)
+
+  return ids
+end
+
+--- Lists the IDs of every registered role for the arguments of the 'role' type.
+-- @return [List<String> role IDs, sorted]
+local function complete_role()
+  local ids = {}
+
+  for id in pairs(Bolt:get_roles()) do
+    ids[#ids + 1] = id
+  end
+
+  table.sort(ids)
+
+  return ids
+end
+
+--- Lists the maps for the arguments of the 'map' type, see `Bolt:get_maps`.
+-- @return [List<String> map names]
+local function complete_map()
+  return Bolt:get_maps()
+end
+
+Flux.Command:add_completer('duration', complete_duration)
+Flux.Command:add_completer('permission', complete_permission)
+Flux.Command:add_completer('role', complete_role)
+Flux.Command:add_completer('map', complete_map)
 
 --- Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.
 function Bolt:OnPluginLoaded()

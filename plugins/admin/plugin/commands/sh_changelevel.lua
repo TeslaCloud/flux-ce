@@ -1,44 +1,36 @@
 --- The Changelevel command changes the map to the given one, optionally after a delay in
--- seconds. It refuses a map the server does not have, and runs the `FLSaveData` and
--- `ServerRestart` hooks before the change, as the Restart command does.
+-- seconds: `/changelevel <map> [delay]`. The map has to be named exactly, and the names of
+-- the maps are suggested while it is typed. It refuses a map the server does not have, and
+-- runs the `FLSaveData` and `ServerRestart` hooks before the change, as the Restart command
+-- does.
 
 CMD.name = 'Changelevel'
 CMD.description = 'command.changelevel.description'
 CMD.syntax = 'command.changelevel.syntax'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 1
+CMD.arg_types = { 'map', 'text' }
 CMD.alias = 'map'
 
---- Checks whether the server has a map with the given name. A name may only consist of
--- letters, digits, underscores, dashes and dots, since it ends up in a file path and in a
--- console command.
--- @param name [String map name without the .bsp extension]
--- @return [Boolean]
-local function map_exists(name)
-  return name:match('^[%w_%-%.]+$') != nil and file.Exists('maps/'..name..'.bsp', 'GAME')
-end
-
---- Changes the map after an optional delay, saving data first, and notifies staff. The
--- caller is told if the server has no map with that name, as it was typed or in lowercase.
+--- Changes the map after an optional delay, saving data first, and notifies staff. The map
+-- has to be named exactly as its file is, without the .bsp extension, in any case; the
+-- caller is told if the server has no such map.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param map [String map name without the .bsp extension]
+-- @param map_name [String map name without the .bsp extension]
 -- @param delay=0 [String delay in seconds]
-function CMD:on_run(actor, map, delay)
-  map = tostring(map)
+function CMD:on_run(actor, map_name, delay)
+  local map = Bolt:find_map(tostring(map_name))
+
   delay = tonumber(delay)
 
   if !delay or delay != delay or delay < 0 or delay == math.huge then
     delay = 0
   end
 
-  if !map_exists(map) then
-    if !map_exists(map:lower()) then
-      Flux.Player:notify(actor, 'error.map_not_valid', { map = map })
+  if !map then
+    Flux.Player:notify(actor, 'error.map_not_valid', { map = tostring(map_name) })
 
-      return
-    end
-
-    map = map:lower()
+    return
   end
 
   self:notify_staff('command.changelevel.message', {

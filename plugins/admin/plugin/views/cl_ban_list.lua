@@ -1,5 +1,5 @@
---- Ban list page of the admin panel, open to players with the permission of the Unban
--- command (`unban`): `fl_ban_list`, the bans of the server a page at a time with a search
+--- Ban list page of the admin panel, open to players with the permission of the Ban
+-- command (`ban`): `fl_ban_list`, the bans of the server a page at a time with a search
 -- field, and `fl_ban_row`, the line of a single ban with the button that lifts it.
 -- The bans are kept on the server. The page asks for the page it shows whenever it opens,
 -- the search or the page number changes, or the server reports that a ban was added or

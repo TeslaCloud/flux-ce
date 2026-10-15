@@ -34,10 +34,13 @@ en:
     cant_now: You cannot do this right now!
     command:
       higher_immunity: "{target} has higher immunity than you!"
+      invalid_choice: "'{value}' is not a valid choice here, use one of: {choices}"
       no_access: You do not have access to this command!
       not_valid: "'{command}' is not a valid command!"
+      player_ambiguous: "Several players are named '{player}', use the SteamID of the one you mean!"
       player_invalid: "'{player}' is not a valid player!"
       syntax: "Incorrect syntax, use /{command} {syntax}"
+      unknown_subcommand: "'{subcommand}' is not a subcommand of /{command}, use one of: {subcommands}"
       you_must_enter_command: You must enter a command!
     config:
       unknown: There is no such config!

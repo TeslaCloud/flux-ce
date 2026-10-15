@@ -33,7 +33,7 @@ end
 function Bolt:AddAdminMenuItems(panel, sidebar)
   panel:add_panel('admin_player_management', t'ui.admin.player_management', 'manage_permissions')
   panel:add_panel('admin_staff_list', t'ui.admin.staff.title', 'manage_permissions')
-  panel:add_panel('admin_ban_list', t'ui.admin.bans.title', 'unban')
+  panel:add_panel('admin_ban_list', t'ui.admin.bans.title', 'ban')
   panel:add_panel('admin_config_editor', t'ui.admin.config_editor', Config.permission)
   panel:add_panel('admin_plugin_manager', t'ui.admin.plugins.title', 'manage_plugins')
 end

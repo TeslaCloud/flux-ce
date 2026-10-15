@@ -2,7 +2,7 @@
 -- refusal of a character whose stat levels the server did not accept, adds the character
 -- sheet to the tab menu as its first and default page, and opens the window that shows a
 -- member of staff the attributes and skills of another player's character when the server
--- sends them, which the CharAttributes command makes it do.
+-- sends them, which the `attribute list` command makes it do.
 
 --- Opens a window that lists the given attributes and skills of a player's character,
 -- hidden ones included. The list is a snapshot: it does not follow later changes. A window

@@ -5,6 +5,7 @@ CMD.description = 'command.warn.description'
 CMD.syntax = 'command.warn.syntax'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
+CMD.arg_types = { 'player', 'text' }
 CMD.immunity = true
 CMD.aliases = { 'plywarn', 'warn' }
 

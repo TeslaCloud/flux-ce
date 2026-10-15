@@ -5,6 +5,7 @@ CMD.description = 'command.tp.description'
 CMD.syntax = 'command.tp.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
+CMD.arg_types = { 'player' }
 CMD.immunity = true
 CMD.aliases = { 'teleport', 'plytp', 'bring' }
 

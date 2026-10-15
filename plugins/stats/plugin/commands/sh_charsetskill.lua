@@ -1,12 +1,13 @@
---- The CharSetSkill command sets the rank of a skill of the targeted players' characters.
+--- The CharSetSkill command sets the rank of a skill of the targeted players' characters:
+-- `/charsetskill <player> <skill> <rank>`, with the skill typed as its ID.
 
 CMD.name = 'CharSetSkill'
 CMD.description = 'command.charsetskill.description'
 CMD.syntax = 'command.charsetskill.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 3
-CMD.player_arg = 1
-CMD.aliases = { 'setskill', 'charsetskill' }
+CMD.arg_types = { 'player', 'skill', 'number' }
+CMD.aliases = { 'setskill' }
 
 --- Returns the translated command description with every registered skill ID listed.
 -- @return [String]
@@ -17,7 +18,7 @@ end
 --- Sets the rank of a skill for every target, then notifies the targets and staff.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
--- @param skill_id [String skill to set, normalized with to_id]
+-- @param skill_id [String ID of the skill to set, in any case]
 -- @param value [String new rank, parsed with tonumber]
 function CMD:on_run(actor, targets, skill_id, value)
   skill_id = skill_id:to_id()

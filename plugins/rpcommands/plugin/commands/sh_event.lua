@@ -5,6 +5,7 @@ CMD.description = 'command.event.description'
 CMD.syntax = 'command.event.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 
 --- Broadcasts an event message to all players and logs it.
 -- @param actor [Player player running the command]

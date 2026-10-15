@@ -7,22 +7,30 @@ CMD.description = 'command.send.description'
 CMD.syntax = 'command.send.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 2
+CMD.arg_types = { 'player', 'player' }
 CMD.immunity = true
 CMD.aliases = { 'sendto', 'plysend', 'plyteleportto' }
 
 --- Teleports the targeted players to the destination player and notifies them and staff.
 -- The previous position of everyone who is moved is kept for the Return command. The
--- destination is found like any other command target, but is not checked for immunity,
--- since nothing happens to them; if it matches several players the first one is used.
+-- destination is found like any other command target, by an exact name, a SteamID or a
+-- target selector, but is not checked for immunity, since nothing happens to them; if a
+-- selector matches several players the first one is used. A name that several players have
+-- is refused.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to teleport]
--- @param destination [String name or target selector of the player to teleport them to]
+-- @param destination [String exact name, SteamID or target selector of the player to
+--   teleport them to]
 function CMD:on_run(actor, targets, destination)
-  local found = Flux.Command:str_to_player(actor, tostring(destination))
+  destination = tostring(destination)
+
+  local found, kind = Flux.Command:str_to_player(actor, destination)
   local goal = istable(found) and found[1]
 
   if !IsValid(goal) then
-    Flux.Player:notify(actor, 'error.command.player_invalid', { player = tostring(destination) })
+    local phrase = kind == 'ambiguous' and 'error.command.player_ambiguous' or 'error.command.player_invalid'
+
+    Flux.Player:notify(actor, phrase, { player = destination })
 
     return
   end

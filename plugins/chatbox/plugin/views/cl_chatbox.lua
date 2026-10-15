@@ -1,14 +1,143 @@
 --- The chatbox panel (`fl_chat_panel`): a scrolling history of message panels above a text
 -- entry.
 -- While it is closed only recent messages are visible until they fade out. While it is open
--- the whole history is shown, the text entry takes the input with a history of earlier entries
--- on the up and down keys, and the commands that match what is being typed are listed.
+-- the whole history is shown and the text entry takes the input, with a history of earlier
+-- entries on the up and down keys. While a command is typed, the suggestions of
+-- `Flux.Command:complete` for the text up to the caret are listed above the entry along with
+-- the name, syntax and description of the command: Tab puts the selected suggestion in place
+-- of the word that is typed, and pressing it again replaces that with the next suggestion
+-- (Shift+Tab goes back); the up and down keys move the selection while there are
+-- suggestions. Enter sends the text as it is typed. The state of the suggestions is kept on
+-- the panel for themes that draw them through the ChatboxPaintOver hook: `completion` (the
+-- result of `Flux.Command:complete`, nil while no command is typed), `completion_index` (the
+-- selected suggestion), `completion_offset` (how many suggestions are scrolled past) and
+-- `completion_prefix` (the command prefix that was typed).
 -- `Chatbox.create` creates the panel and keeps it in Chatbox.panel.
 
 local get_option, get_font, get_color = Theme.get_option, Theme.get_font, Theme.get_color
 local config_get = Config.get
 local simple_text_outlined = draw.SimpleTextOutlined
 local outline_color = Color(0, 0, 0, 120)
+local max_rows = 8
+
+--- Cuts a text after a number of characters.
+-- @param text [String]
+-- @param count [Number how many characters to keep]
+-- @return [String the first characters of the text, or all of it if it is shorter]
+local function cut_chars(text, count)
+  if count <= 0 then return '' end
+
+  local byte = utf8.offset(text, count + 1)
+
+  if !byte then return text end
+
+  return text:sub(1, byte - 1)
+end
+
+--- Counts the characters of a text, or its bytes if it is not valid UTF-8.
+-- @param text [String]
+-- @return [Number]
+local function char_len(text)
+  return utf8.len(text) or #text
+end
+
+--- Moves a position in a list by a step, wrapping around at both ends.
+-- @param index [Number current position]
+-- @param count [Number length of the list]
+-- @param step [Number how far to move, negative to move back]
+-- @return [Number the new position]
+local function wrap_index(index, count, step)
+  return (index - 1 + step) % count + 1
+end
+
+--- Works out how many suggestions to scroll past so that the selected one is visible.
+-- @param offset [Number how many suggestions are scrolled past now]
+-- @param index [Number position of the selected suggestion, nil if none is selected]
+-- @param count [Number how many suggestions there are]
+-- @param rows [Number how many of them are visible at once]
+-- @return [Number the new offset]
+local function scroll_offset(offset, index, count, rows)
+  offset = offset or 0
+
+  if index then
+    if index <= offset then
+      offset = index - 1
+    elseif index > offset + rows then
+      offset = index - rows
+    end
+  end
+
+  return math.max(0, math.min(offset, count - rows))
+end
+
+--- Splits the syntax of a command into the arguments in angle or square brackets and the
+-- text between them.
+-- @param syntax [String]
+-- @return [List<Map> segments: text (String) and arg (Number position of the argument, nil
+--   for the text between arguments), Number how many arguments there are]
+local function split_syntax(syntax)
+  local segments = {}
+  local depth, start, arg = 0, 1, 0
+
+  for i = 1, #syntax do
+    local char = syntax:sub(i, i)
+
+    if char == '<' or char == '[' then
+      if depth == 0 then
+        if i > start then
+          segments[#segments + 1] = { text = syntax:sub(start, i - 1) }
+        end
+
+        start = i
+      end
+
+      depth = depth + 1
+    elseif (char == '>' or char == ']') and depth > 0 then
+      depth = depth - 1
+
+      if depth == 0 then
+        arg = arg + 1
+        segments[#segments + 1] = { text = syntax:sub(start, i), arg = arg }
+        start = i + 1
+      end
+    end
+  end
+
+  if start <= #syntax then
+    segments[#segments + 1] = { text = syntax:sub(start) }
+  end
+
+  return segments, arg
+end
+
+--- Picks the argument of the syntax to emphasise: the one that is typed, or the last one
+-- while further words are typed for a 'text' argument that takes the rest of the text.
+-- @param arg_index [Number position of the argument that is typed, nil if none is]
+-- @param arg_type [String/List<String> its type]
+-- @param arg_count [Number how many arguments the syntax lists]
+-- @return [Number position of the argument in the syntax, nil if none fits]
+local function emphasised_arg(arg_index, arg_type, arg_count)
+  if !arg_index or arg_count < 1 then return end
+
+  if arg_index <= arg_count then
+    return arg_index
+  end
+
+  if arg_type == 'text' then
+    return arg_count
+  end
+end
+
+--- Draws an outlined text in the style of the chatbox.
+-- @param text [String]
+-- @param font [String]
+-- @param x [Number]
+-- @param y [Number]
+-- @param color [Color]
+-- @return [Number width of the text, Number height of the text]
+local function draw_text(text, font, x, y, color)
+  return simple_text_outlined(text, font, x, y, color, nil, nil, 0.5, outline_color)
+end
 
 local PANEL = {}
 PANEL.history = {}
@@ -57,6 +186,15 @@ function PANEL:Init()
   self.text_entry.history = {}
   self.text_entry.last_index = 0
   self.text_entry:SetMultiline(true)
+  self.text_entry:SetTabbingDisabled(true)
+
+  local allow_input = self.text_entry.AllowInput
+
+  self.text_entry.AllowInput = function(entry, char)
+    if char == '\t' then return true end
+
+    return allow_input(entry, char)
+  end
 
   self.text_entry.OnValueChange = function(entry, value)
     local value_w, value_h = util.text_size(value, entry:GetFont())
@@ -98,6 +236,13 @@ function PANEL:Init()
       entry:OnEnter()
 
       return true
+    elseif code == KEY_TAB then
+      self:insert_completion(input.IsShiftDown() and -1 or 1)
+
+      return true
+    elseif (code == KEY_UP or code == KEY_DOWN) and entry:GetValue() != entry.history_value and
+           self:move_completion(code == KEY_UP and -1 or 1) then
+      return true
     elseif code == KEY_DOWN then
       if entry.last_index == 1 then
         entry.last_index = #entry.history
@@ -119,6 +264,7 @@ function PANEL:Init()
     local history_entry = entry.history[entry.last_index]
 
     if history_entry and history_entry != '' and should_set then
+      entry.history_value = history_entry
       entry:SetText(history_entry)
       entry:SetCaretPos(utf8.len(history_entry))
       entry:OnValueChange(history_entry)
@@ -148,8 +294,9 @@ function PANEL:Init()
   self:rebuild()
 end
 
---- Closes the chatbox when escape is pressed. Keeps the messages scrolled to the
--- bottom while the chatbox is closed.
+--- Closes the chatbox when escape is pressed and keeps the suggestions up to date with the
+-- text entry while it is open. Keeps the messages scrolled to the bottom while the chatbox
+-- is closed.
 function PANEL:Think()
   if self.is_open then
     if input.IsKeyDown(KEY_ESCAPE) then
@@ -158,6 +305,8 @@ function PANEL:Think()
       if gui.IsGameUIVisible() then
         gui.HideGameUI()
       end
+    else
+      self:update_completion()
     end
   else
     local vbar = self.scroll_panel:GetVBar()
@@ -176,128 +325,381 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Draws the list of matching commands, or the syntax, description and aliases of a
--- single command, while a command is being typed. The ChatboxPaintOver theme hook can
--- override this.
+--- Draws the suggestions for the command that is being typed above the text entry, see
+-- `PANEL:draw_completion`. The ChatboxPaintOver theme hook can override this.
 -- @param width [Number]
 -- @param height [Number]
 function PANEL:PaintOver(width, height)
-  if Theme.hook('ChatboxPaintOver', self, width, height) == nil then
-    local entry = self.text_entry
+  if Theme.hook('ChatboxPaintOver', self, width, height) == nil and self.completion and
+     IsValid(self.text_entry) then
+    self:draw_completion(width, height - self.text_entry:GetTall() - math.scale(8))
+  end
+end
 
-    if IsValid(entry) then
-      local val = entry:GetValue()
-      local is_command, prefix_len = string.is_command(val)
+--- Forgets the suggestions, so that they are worked out again for the text entry.
+function PANEL:reset_completion()
+  self.completion = nil
+  self.completion_index = nil
+  self.completion_offset = 0
+  self.completion_key = nil
+  self.completion_list = nil
+  self.completion_cycle = nil
+end
 
-      if is_command then
-        local space = string.find(val, ' ')
-        local endpos = space
+--- Works out the suggestions for the command in the text entry with `Flux.Command:complete`,
+-- for the text between the command prefix and the caret. They are worked out again only
+-- once the text or the caret has moved, and stay the ones that are cycled through while Tab
+-- cycles through them. The first suggestion is selected whenever the suggestions change.
+-- @return [Map the completion result, or nil if no command is being typed]
+function PANEL:update_completion()
+  local entry = self.text_entry
 
-        if !endpos then
-          endpos = (string.len(val) + 1)
-        end
+  if !IsValid(entry) then return end
 
-        local cmd = string.utf8lower(string.sub(val, prefix_len + 1, endpos - 1))
-        local cmds = {}
+  local value = entry:GetValue()
+  local caret = entry:GetCaretPos()
+  local key = caret..':'..value
 
-        if cmd == '' or cmd == ' ' then return end
+  if key == self.completion_key then
+    return self.completion
+  end
 
-        if !space then
-          cmds = Flux.Command:find_all(cmd)
-        else
-          local found = Flux.Command:find_by_id(cmd)
+  local cycle = self.completion_cycle
 
-          if found then
-            table.insert(cmds, found)
-          end
-        end
+  if cycle and cycle.value == value and cycle.caret == caret then
+    self.completion_key = key
+    self.completion = cycle.result
+    self.completion_index = cycle.index
 
-        local padding = math.scale(16)
-        local list_h = height - entry:GetTall() - math.scale(8)
+    return self.completion
+  end
 
-        Theme.hook(
-          'DrawCard',
-          0,
-          0,
-          width,
-          list_h,
-          get_option('corner_radius', math.scale(6)),
-          ColorAlpha(get_color('surface'), 240)
-        )
+  self.completion_cycle = nil
 
-        local font, color = get_font('text_normal'), get_color('accent_light')
-        local text_color, muted_color = get_color('text'), get_color('text_muted')
-        local command_count = #cmds
+  local is_command, prefix_len = string.is_command(value)
+  local prefix = is_command and cut_chars(value, prefix_len) or ''
+  local before = cut_chars(value, caret)
 
-        if command_count > 0 then
-          local last_y = 0
+  if !is_command or #before < #prefix then
+    self:reset_completion()
+    self.completion_key = key
 
-          for k, v in ipairs(cmds) do
-            local w, h =
-              simple_text_outlined('/' + v.name, font, padding, padding + last_y, color, nil, nil, 0.5, outline_color)
-            w, h = simple_text_outlined(
-              t(v.syntax),
-              font,
-              padding + w + 8,
-              padding + last_y,
-              muted_color,
-              nil,
-              nil,
-              0.5,
-              outline_color
-            )
+    return
+  end
 
-            if command_count == 1 then
-              local cur_y = padding + h + math.scale(6)
-              local small_font = get_font('text_small')
-              local desc = t(v:get_description())
-              local wrapped = util.wrap_text(desc, small_font, width - padding * 2, 0)
+  local text = before:sub(#prefix + 1)
+  local result = Flux.Command:complete(text, PLAYER)
+  local list = table.concat(result.candidates, '\n')
 
-              for k1, v1 in pairs(wrapped) do
-                local text_w, text_h =
-                  simple_text_outlined(v1, small_font, padding, cur_y, text_color, nil, nil, 0.5, outline_color)
+  if list != self.completion_list then
+    self.completion_list = list
+    self.completion_index = #result.candidates > 0 and 1 or nil
+    self.completion_offset = 0
+  end
 
-                cur_y = cur_y + text_h + math.scale(2)
-              end
+  self.completion_key = key
+  self.completion = result
+  self.completion_prefix = prefix
+  self.completion_text = text
+  self.completion_after = value:sub(#before + 1)
 
-              local aliases = '[-]'
+  return result
+end
 
-              if v.aliases and #v.aliases > 0 then
-                aliases = table.concat(v.aliases or {}, ', ')
-              end
+--- Puts a suggestion in place of the word at the caret, with the caret moved behind it. The
+-- first press puts the selected suggestion in. While the text and the caret stay as that
+-- left them, every further press replaces it with the next suggestion, or the previous one
+-- for a negative step, applied to the text from before the first press. After the only
+-- suggestion has been put in, the next press goes on to the word after it.
+-- @param step [Number 1 for the next suggestion, -1 for the previous one]
+-- @return [Boolean true if a suggestion was put in, nil if there is none]
+function PANEL:insert_completion(step)
+  local result = self:update_completion()
 
-              simple_text_outlined(
-                t'ui.chat.aliases'..': ' + aliases,
-                small_font,
-                padding,
-                cur_y + math.scale(4),
-                muted_color,
-                nil,
-                nil,
-                0.5,
-                outline_color
-              )
-            end
+  if !result or #result.candidates == 0 then return end
 
-            last_y = last_y + h + math.scale(8)
+  local cycle = self.completion_cycle
+  local index
 
-            if k >= 10 then break end
-          end
-        else
-          simple_text_outlined(
-            t'ui.chat.no_commands_found',
-            font,
-            padding,
-            padding,
-            color,
-            nil,
-            nil,
-            0.5,
-            outline_color
-          )
+  if cycle then
+    index = wrap_index(cycle.index, #result.candidates, step)
+  else
+    local after = self.completion_after
+
+    if result.start_byte <= #self.completion_text then
+      after = after:gsub('^%S+', '')
+    end
+
+    cycle = {
+      prefix = self.completion_prefix,
+      text = self.completion_text,
+      after = (after:gsub('^%s+', '')),
+      result = result
+    }
+    index = self.completion_index or 1
+  end
+
+  local applied = cycle.prefix..Flux.Command:apply_completion(cycle.text, cycle.result, index)
+  local value = applied..cycle.after
+  local caret = char_len(applied)
+  local entry = self.text_entry
+
+  entry:SetText(value)
+  entry:SetCaretPos(caret)
+  entry:OnValueChange(value)
+
+  if #cycle.result.candidates > 1 then
+    cycle.index = index
+    cycle.value = value
+    cycle.caret = caret
+    self.completion_cycle = cycle
+  else
+    self.completion_cycle = nil
+  end
+
+  self:update_completion()
+
+  return true
+end
+
+--- Moves the selection through the suggestions, wrapping around at both ends. While Tab
+-- cycles through the suggestions, the newly selected one is put in as Tab does.
+-- @param step [Number 1 to move down the list, -1 to move up]
+-- @return [Boolean true if there were suggestions to move through, nil otherwise]
+function PANEL:move_completion(step)
+  local result = self:update_completion()
+
+  if !result or #result.candidates == 0 then return end
+
+  if self.completion_cycle then
+    return self:insert_completion(step)
+  end
+
+  self.completion_index = wrap_index(self.completion_index or 1, #result.candidates, step)
+
+  return true
+end
+
+--- Lays out the card about a command for `PANEL:draw_completion`: its full name, its syntax
+-- after the name or on a line of its own if it does not fit there, its description wrapped
+-- to the width and its aliases. The layout is kept until the command, its syntax, the
+-- emphasised argument or the width change.
+-- @param cmd [Command the command or subcommand]
+-- @param result [Map the completion result whose typed argument is emphasised in the syntax,
+--   nil to emphasise none]
+-- @param width [Number width the text may take]
+-- @return [Map the layout: name, segments, emphasis, inline, lines, aliases and height]
+function PANEL:layout_command_info(cmd, result, width)
+  local syntax = t(cmd:get_syntax())
+  local segments, arg_count = split_syntax(syntax)
+  local emphasis
+
+  if result and syntax != '[-]' then
+    emphasis = emphasised_arg(result.arg_index, result.arg_type, arg_count)
+  end
+
+  local cached = self.completion_info
+
+  if cached and cached.cmd == cmd and cached.syntax == syntax and cached.emphasis == emphasis and
+     cached.width == width then
+    return cached
+  end
+
+  local font, small_font = get_font('text_normal'), get_font('text_small')
+  local font_h, small_h = draw.GetFontHeight(font), draw.GetFontHeight(small_font)
+  local name = cmd:get_full_name()
+  local inline = util.text_size(name, font) + math.scale(8) + util.text_size(syntax, font) <= width
+  local lines = util.wrap_text(t(cmd:get_description() or ''), small_font, width, 0) or {}
+  local height = inline and font_h or font_h * 2
+  local aliases
+
+  if #lines > 0 then
+    height = height + math.scale(4) + #lines * (small_h + math.scale(2))
+  end
+
+  if istable(cmd.aliases) and #cmd.aliases > 0 then
+    aliases = t'ui.chat.aliases'..': '..table.concat(cmd.aliases, ', ')
+    height = height + math.scale(4) + small_h
+  end
+
+  self.completion_info = {
+    cmd = cmd,
+    syntax = syntax,
+    width = width,
+    name = name,
+    segments = segments,
+    emphasis = emphasis,
+    inline = inline,
+    lines = lines,
+    aliases = aliases,
+    height = height
+  }
+
+  return self.completion_info
+end
+
+--- Draws the card about a command that `PANEL:layout_command_info` laid out.
+-- @param info [Map the layout]
+-- @param y [Number top edge of the card]
+-- @param width [Number width of the card]
+-- @param padding [Number space between the edges of the card and the text]
+function PANEL:draw_command_info(info, y, width, padding)
+  local font, small_font = get_font('text_normal'), get_font('text_small')
+  local font_h = draw.GetFontHeight(font)
+  local text_color, muted_color = get_color('text'), get_color('text_muted')
+  local radius_small = get_option('corner_radius_small', math.scale(4))
+  local emphasis_fill = ColorAlpha(get_color('accent'), 90)
+
+  Theme.hook(
+    'DrawCard',
+    0,
+    y,
+    width,
+    info.height + padding * 2,
+    get_option('corner_radius', math.scale(6)),
+    ColorAlpha(get_color('surface'), 240)
+  )
+
+  local cur_y = y + padding
+  local name_w = draw_text(info.name, font, padding, cur_y, get_color('accent_light'))
+  local x = padding + name_w + math.scale(8)
+
+  if !info.inline then
+    x = padding
+    cur_y = cur_y + font_h
+  end
+
+  for _, v in ipairs(info.segments) do
+    local is_emphasised = v.arg != nil and v.arg == info.emphasis
+
+    if is_emphasised then
+      local segment_w = util.text_size(v.text, font)
+
+      Theme.hook(
+        'DrawCard',
+        x - math.scale(3),
+        cur_y,
+        segment_w + math.scale(6),
+        font_h,
+        radius_small,
+        emphasis_fill,
+        false
+      )
+    end
+
+    x = x + draw_text(v.text, font, x, cur_y, is_emphasised and text_color or muted_color)
+  end
+
+  cur_y = cur_y + font_h + math.scale(4)
+
+  for _, v in ipairs(info.lines) do
+    local _, line_h = draw_text(v, small_font, padding, cur_y, text_color)
+
+    cur_y = cur_y + line_h + math.scale(2)
+  end
+
+  if info.aliases then
+    draw_text(info.aliases, small_font, padding, cur_y + math.scale(2), muted_color)
+  end
+end
+
+--- Draws the suggestions above the text entry: the list of suggestions right above it, with
+-- the selected one highlighted and scrolled into view, and a card about a command above the
+-- list. The card is about the selected suggestion if that is a command or subcommand, else
+-- about the command that has been typed, with the argument that is being typed emphasised
+-- in its syntax. Shows that no commands were found if nothing fits.
+-- @param width [Number width of the area to draw in]
+-- @param bottom [Number bottom edge of the area to draw in; its top edge is 0]
+function PANEL:draw_completion(width, bottom)
+  local result = self.completion
+  local candidates = result.candidates
+  local count = #candidates
+  local index = self.completion_index
+  local selected = index and result.commands[index]
+  local cmd = selected or result.command
+  local padding, gap = math.scale(12), math.scale(6)
+  local radius = get_option('corner_radius', math.scale(6))
+  local background = ColorAlpha(get_color('surface'), 240)
+  local font = get_font('text_normal')
+  local font_h = draw.GetFontHeight(font)
+
+  if !cmd and count == 0 then
+    local card_h = font_h + padding * 2
+
+    Theme.hook('DrawCard', 0, bottom - card_h, width, card_h, radius, background)
+    draw_text(t'ui.chat.no_commands_found', font, padding, bottom - card_h + padding, get_color('accent_light'))
+
+    return
+  end
+
+  local info = cmd and self:layout_command_info(cmd, !selected and result or nil, width - padding * 2)
+  local info_h = info and info.height + padding * 2 or 0
+  local list_y = bottom
+
+  if count > 0 then
+    local small_font = get_font('text_small')
+    local more_h = draw.GetFontHeight(small_font)
+    local row_h = font_h + math.scale(6)
+    local room = bottom - (info and info_h + gap or 0) - padding * 2
+    local rows = math.min(count, max_rows, math.floor(room / row_h))
+
+    if rows < count then
+      rows = math.min(rows, math.floor((room - more_h * 2) / row_h))
+    end
+
+    rows = math.max(rows, 1)
+
+    local overflow = rows < count
+    local list_h = rows * row_h + padding * 2 + (overflow and more_h * 2 or 0)
+    local offset = scroll_offset(self.completion_offset, index, count, rows)
+    local text_color, muted_color = get_color('text'), get_color('text_muted')
+    local highlight = ColorAlpha(get_color('accent'), 200)
+    local radius_small = get_option('corner_radius_small', math.scale(4))
+    local prefix = result.token_index == 1 and self.completion_prefix or ''
+
+    self.completion_offset = offset
+    list_y = bottom - list_h
+
+    Theme.hook('DrawCard', 0, list_y, width, list_h, radius, background)
+
+    local y = list_y + padding
+
+    if overflow then
+      if offset > 0 then
+        draw_text(t('ui.chat.more_above', { count = offset }), small_font, padding, y, muted_color)
+      end
+
+      y = y + more_h
+    end
+
+    for i = offset + 1, offset + rows do
+      local is_selected = i == index
+      local candidate_cmd = result.commands[i]
+
+      if is_selected then
+        Theme.hook('DrawCard', padding * 0.5, y, width - padding, row_h, radius_small, highlight, false)
+      end
+
+      local text_w = draw_text(prefix..candidates[i], font, padding, y + math.scale(3), text_color)
+
+      if candidate_cmd then
+        local syntax = t(candidate_cmd:get_syntax())
+
+        if syntax != '[-]' then
+          draw_text(syntax, font, padding + text_w + gap, y + math.scale(3), is_selected and text_color or muted_color)
         end
       end
+
+      y = y + row_h
     end
+
+    if overflow and offset + rows < count then
+      draw_text(t('ui.chat.more_below', { count = count - offset - rows }), small_font, padding, y, muted_color)
+    end
+  end
+
+  if info then
+    self:draw_command_info(info, list_y - (count > 0 and gap or 0) - info_h, width, padding)
   end
 end
 
@@ -313,11 +715,13 @@ function PANEL:set_open(is_open)
     self.text_entry:SetVisible(true)
     self.text_entry:RequestFocus()
     self.text_entry.last_index = 0
+    self.text_entry.history_value = nil
   else
     if self.text_entry:GetValue():is_command() then
       self.text_entry:SetText('')
     end
 
+    self:reset_completion()
     self:KillFocus()
 
     self.text_entry:SetVisible(false)

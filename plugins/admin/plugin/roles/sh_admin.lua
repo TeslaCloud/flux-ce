@@ -20,17 +20,13 @@ function ROLE:define_permissions()
   can 'manage_permissions'
   can 'manage_plugins'
 
-  can 'setgroup'
-  can 'demote'
-  can 'grant'
-  can 'revoke'
-  can 'resetpermission'
-  can 'permissions'
+  can 'role'
+  can 'permission'
 
   can 'changelevel'
   can 'restart'
 
-  can 'chargiveexperience'
-  can 'charsetlevel'
-  can 'setserverlevel'
+  can 'experience'
+  can 'level'
+  can 'serverlevel'
 end

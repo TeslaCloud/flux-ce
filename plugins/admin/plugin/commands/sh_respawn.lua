@@ -6,6 +6,7 @@ CMD.description = 'command.respawn.description'
 CMD.syntax = 'command.respawn.syntax'
 CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
+CMD.arg_types = { 'player', { 'stay', 'tp' } }
 CMD.immunity = true
 CMD.aliases = { 'respawn', 'plyrespawn' }
 
@@ -19,8 +20,6 @@ CMD.aliases = { 'respawn', 'plyrespawn' }
 --   use 'stay']
 function CMD:on_run(actor, targets, spawn_position)
   local look_pos = IsValid(actor) and actor:GetEyeTraceNoCursor().HitPos
-
-  spawn_position = spawn_position and spawn_position:utf8lower()
 
   for k, v in ipairs(targets) do
     local alive = v:Alive()

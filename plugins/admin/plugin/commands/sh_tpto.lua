@@ -5,7 +5,7 @@ CMD.description = 'command.tpto.description'
 CMD.syntax = 'command.tpto.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
-CMD.player_arg = 1
+CMD.arg_types = { 'player' }
 CMD.alias = 'goto'
 
 --- Teleports the caller to the targeted player and notifies staff.

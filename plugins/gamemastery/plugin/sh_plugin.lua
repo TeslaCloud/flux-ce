@@ -46,6 +46,27 @@ function Gamemastery.is_in_mode(target)
   return IsValid(target) and target:get_nv('gamemastering') == true
 end
 
+--- Completes arguments of the 'gm_character' type with the names of the pool characters:
+-- those the server has sent to the client, or those the server keeps.
+-- @return [List<String> character names, sorted]
+local function complete_gm_character()
+  local names = {}
+
+  for _, v in ipairs(Gamemastery.get_pool()) do
+    if isstring(v.name) then
+      names[#names + 1] = v.name
+    end
+  end
+
+  table.sort(names, function(a, b)
+    return a:utf8lower() < b:utf8lower()
+  end)
+
+  return names
+end
+
+Flux.Command:add_completer('gm_character', complete_gm_character)
+
 --- Registers the 'gamemastery' permission.
 function Gamemastery:RegisterPermissions()
   Bolt:register_permission(

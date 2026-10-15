@@ -5,6 +5,7 @@ CMD.name = 'GetUp'
 CMD.description = 'command.getup.description'
 CMD.syntax = 'command.getup.syntax'
 CMD.category = 'permission.categories.roleplay'
+CMD.arg_types = { 'number' }
 CMD.aliases = { 'chargetup', 'unfall', 'unfallover' }
 CMD.no_console = true
 

@@ -6,6 +6,7 @@ CMD.description = 'command.settime.description'
 CMD.syntax = 'command.settime.syntax'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 CMD.aliases = { 'setdate', 'setgametime' }
 
 --- Sets the game clock to the date and time given in the arguments and notifies staff. The

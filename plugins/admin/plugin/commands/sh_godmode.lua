@@ -1,35 +1,57 @@
---- The SetGodmode command enables god mode for the targeted players when given a true value, and
--- toggles it otherwise.
+--- The Godmode command turns god mode on or off for players: `/godmode on <target>` and
+-- `/godmode off <target>`. Both need the `godmode` permission.
 
-CMD.name = 'SetGodmode'
+CMD.name = 'Godmode'
 CMD.description = 'command.godmode.description'
-CMD.syntax = 'command.godmode.syntax'
 CMD.category = 'permission.categories.player_management'
-CMD.arguments = 1
-CMD.immunity = true
-CMD.aliases = { 'godmode', 'plysetgodmode' }
+CMD.aliases = { 'god', 'plysetgodmode' }
 
---- Enables god mode for the targeted players, or toggles it when no truthy value is given,
--- and notifies them and staff.
+--- Turns god mode on or off for the targeted players and notifies them and staff.
+-- @param cmd [Command the subcommand that runs]
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to affect]
--- @param boolean=nil [String value read with tobool; truthy enables god mode, anything else
---   (or nothing) toggles it]
-function CMD:on_run(actor, targets, boolean)
-  for k, v in ipairs(targets) do
-    boolean = boolean != nil and tobool(boolean) or !v:HasGodMode()
-
-    if boolean then
+-- @param enabled [Boolean]
+local function set_godmode(cmd, actor, targets, enabled)
+  for _, v in ipairs(targets) do
+    if enabled then
       v:GodEnable()
     else
       v:GodDisable()
     end
 
-    v:notify('notification.godmode.'..(boolean and 'enabled' or 'disabled'))
+    v:notify('notification.godmode.'..(enabled and 'enabled' or 'disabled'))
   end
 
-  self:notify_staff('command.godmode.'..(boolean and 'enabled' or 'disabled'), {
+  cmd:notify_staff('command.godmode.'..(enabled and 'on' or 'off')..'.message', {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets)
   })
+end
+
+local on = CMD:subcommand('on')
+on.description = 'command.godmode.on.description'
+on.syntax = 'command.godmode.on.syntax'
+on.arguments = 1
+on.arg_types = { 'player' }
+on.immunity = true
+
+--- Turns god mode on for the targeted players.
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [List<Player> players to affect]
+function on:on_run(actor, targets)
+  set_godmode(self, actor, targets, true)
+end
+
+local off = CMD:subcommand('off')
+off.description = 'command.godmode.off.description'
+off.syntax = 'command.godmode.off.syntax'
+off.arguments = 1
+off.arg_types = { 'player' }
+off.immunity = true
+
+--- Turns god mode off for the targeted players.
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [List<Player> players to affect]
+function off:on_run(actor, targets)
+  set_godmode(self, actor, targets, false)
 end

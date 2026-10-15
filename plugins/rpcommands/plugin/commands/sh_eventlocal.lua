@@ -7,6 +7,7 @@ CMD.syntax = 'command.eventlocal.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.aliases = { 'localevent', 'el' }
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 --- Shows an event message to the players within the talk radius of the caller and logs it.

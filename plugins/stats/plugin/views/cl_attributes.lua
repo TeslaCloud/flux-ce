@@ -2,7 +2,7 @@
 -- `fl_attributes`, the list of a character's attributes grouped by category followed by its
 -- skills grouped by key stat, and `fl_attribute_row`, the line of a single attribute or
 -- skill. `Attributes.open_viewer` puts the list into a window with a snapshot of another
--- player's attributes and skills, which the CharAttributes command sends. Themes
+-- player's attributes and skills, which the `attribute list` command sends. Themes
 -- can draw both panels with the `PaintAttributesMenu` and `PaintAttributeRow` methods; a
 -- method that returns a value replaces the default look. The colors of the bars are the
 -- theme colors 'attribute_level', 'attribute_boost' and 'attribute_hindrance', which have

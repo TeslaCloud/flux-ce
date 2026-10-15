@@ -5,6 +5,7 @@ CMD.description = 'command.announce.description'
 CMD.syntax = 'command.announce.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 
 local announcement_color = Color(255, 210, 100)
 

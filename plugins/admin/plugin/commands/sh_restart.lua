@@ -6,6 +6,7 @@ CMD.description = 'command.restart.description'
 CMD.syntax = 'command.restart.syntax'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 0
+CMD.arg_types = { 'text' }
 CMD.alias = 'maprestart'
 
 --- Restarts the current map after an optional delay, saving data first, and notifies staff.

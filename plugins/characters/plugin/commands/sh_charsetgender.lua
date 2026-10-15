@@ -1,38 +1,34 @@
---- Staff command that sets the gender of the characters of one or more players.
+--- Staff command that sets the gender of the characters of one or more players to male,
+-- female or no_gender.
 
 CMD.name = 'CharSetGender'
 CMD.description = 'command.charsetgender.description'
 CMD.syntax = 'command.charsetgender.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
-CMD.player_arg = 1
+CMD.arg_types = { 'player', { 'male', 'female', 'no_gender' } }
 CMD.alias = 'setgender'
 
---- Sets the gender of every target's character and notifies staff.
+--- The gender values of the words the second argument can be.
+local genders = {
+  male = CHAR_GENDER_MALE,
+  female = CHAR_GENDER_FEMALE,
+  no_gender = CHAR_GENDER_NONE
+}
+
+--- Sets the gender of every target's character and notifies the targets and staff.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
--- @param new_gender [String 'male', 'female' or 'no_gender', in any letter case]
+-- @param new_gender [String 'male', 'female' or 'no_gender']
 function CMD:on_run(actor, targets, new_gender)
-  new_gender = new_gender:utf8lower()
-
-  local valid_genders = {
-    ['male'] = CHAR_GENDER_MALE,
-    ['female'] = CHAR_GENDER_FEMALE,
-    ['no_gender'] = CHAR_GENDER_NONE
-  }
-
-  if valid_genders[new_gender] then
-    for k, v in ipairs(targets) do
-      Characters.set_gender(v, valid_genders[new_gender])
-      v:notify('notification.gender_changed', { gender = 'ui.gender.'..new_gender })
-    end
-
-    self:notify_staff('command.charsetgender.message', {
-      player = get_player_name(actor),
-      target = util.player_list_to_string(targets),
-      gender = 'ui.gender.'..new_gender
-    })
-  else
-    actor:notify('error.invalid_gender', { gender = 'ui.gender.'..new_gender })
+  for _, v in ipairs(targets) do
+    Characters.set_gender(v, genders[new_gender])
+    v:notify('notification.gender_changed', { gender = 'ui.gender.'..new_gender })
   end
+
+  self:notify_staff('command.charsetgender.message', {
+    player = get_player_name(actor),
+    target = util.player_list_to_string(targets),
+    gender = 'ui.gender.'..new_gender
+  })
 end

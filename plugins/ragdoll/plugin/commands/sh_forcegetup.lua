@@ -6,7 +6,7 @@ CMD.description = 'command.forcegetup.description'
 CMD.syntax = 'command.forcegetup.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
-CMD.player_arg = 1
+CMD.arg_types = { 'player', 'number' }
 CMD.aliases = { 'forcegetup', 'plygetup' }
 
 --- Makes every living, ragdolled target get up, and notifies the staff. With a delay the

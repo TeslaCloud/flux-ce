@@ -1,7 +1,23 @@
 --- The Commands page of the Help tab: every command the local player may run, grouped by
--- category, with its syntax, its description and its aliases.
+-- category, with its syntax, its description, its aliases and its subcommands.
 
 local card_style = { padding = { 8, 12 }, gap = 2, background = 'surface_raised', radius = 6 }
+
+--- One subcommand, inside the card of its command.
+-- @param props [Map command (Map a subcommand as `Flux.Help:get_commands` lists them),
+--   prefix (String)]
+local function Subcommand(props)
+  local command = props.command
+  local dim = Lumen.Style.color('text_muted') or color_white
+
+  return <view style={{ gap = 2, margin_top = 4 }}>
+    <view style={{ direction = 'row', gap = 8, align = 'end' }}>
+      <text style={{ font = 'text_small', color = 'accent_light' }}>{props.prefix..command.name}</text>
+      {command.syntax != '' and <text style={{ font = 'text_smaller', color = dim }}>{command.syntax}</text>}
+    </view>
+    {command.description != '' and <text style={{ font = 'text_smallest' }}>{command.description}</text>}
+  </view>
+end
 
 --- One command.
 -- @param props [Map command (Map as `Flux.Help:get_commands` lists them), prefix (String)]
@@ -18,6 +34,9 @@ local function Command(props)
     {#command.aliases > 0 and <text style={{ font = 'text_smallest', color = dim }}>
       {t'ui.help.commands.aliases'..': '..table.concat(command.aliases, ', ')}
     </text>}
+    {Lumen.map(command.subcommands or {}, function(subcommand)
+      return <Subcommand key={subcommand.id} command={subcommand} prefix={props.prefix} />
+    end)}
   </view>
 end
 

@@ -2,7 +2,7 @@ ru:
   command:
     giveitem:
       description: Выдать игроку определенный предмет.
-      syntax: "<игрок> <название или ID>"
+      syntax: "<игрок> <ID или название предмета> [количество]"
       message: "{player} выдает {target} {item} x {amount}."
   config:
     inventory:

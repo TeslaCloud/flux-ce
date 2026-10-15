@@ -7,6 +7,7 @@ CMD.syntax = 'command.yell.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.aliases = { 'y', 'shout', 's' }
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 --- Says the text as a yell.

@@ -6,7 +6,7 @@
 -- the server and, for the local player, on the client.
 --
 -- Experience is given with `Player:give_experience`, which can raise or lower the level by
--- several steps at once, and staff use the CharGiveExperience, CharSetLevel and CharLevel
+-- several steps at once, and staff use the `experience add`, `level set` and `level get`
 -- commands. When the `levels_combat_experience` config is on, players also gain experience
 -- for the damage they deal to NPCs and other players (`levels_experience_per_damage`) and
 -- for the NPCs they kill (`levels_experience_per_kill`, more for NPCs with more health); the
@@ -33,8 +33,8 @@
 -- and level 5 9 days; it never goes past `levels_max_level`. The time of the first run is
 -- kept in a data file of the schema, the same for all of its maps, so a map change keeps the
 -- server level.
--- `Levels.get_server_level` and the ServerLevel command show the level, the SetServerLevel
--- command and `Levels.set_server_level` change it, and `ServerLevelChanged` reports every
+-- `Levels.get_server_level` and the `serverlevel get` command show the level, the
+-- `serverlevel set` command and `Levels.set_server_level` change it, and `ServerLevelChanged` reports every
 -- change. Experience cannot take a character past the level cap, the server level plus the
 -- `levels_server_cap_offset` config (2): a character at the cap keeps the experience it gains
 -- and spends it on levels once the cap rises. Characters below the level floor, the server

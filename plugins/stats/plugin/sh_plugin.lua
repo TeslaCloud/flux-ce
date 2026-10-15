@@ -20,8 +20,8 @@
 -- and one that is given an identifier can be replaced and removed by it; expired boosts are
 -- removed every second. The server networks the levels and boosts of a character to its
 -- owner alone. The `attribute` condition compares the level of an attribute, boosts
--- included, with a value. Staff set levels with the CharSetAttribute command and give and
--- remove boosts with CharAttributeBoost and CharAttributeBoostClear. `IsAttributeVisible`
+-- included, with a value. Staff set levels with the `attribute set` command and give and
+-- remove boosts with `attribute boost` and `attribute clearboosts`. `IsAttributeVisible`
 -- hides an attribute from the character sheet.
 --
 -- Skills are defined as `SkillBase` objects by the files of the plugin's `skills` folder,
@@ -36,7 +36,8 @@
 -- `IsSkillVisible` hides a skill from the character sheet.
 --
 -- Staff look at the attributes and skills of a character, hidden ones included, with the
--- CharAttributes command, which opens a window that lists them.
+-- `attribute list` command, which opens a window that lists them. The commands complete the
+-- IDs of attributes and skills through the 'attribute' and 'skill' argument types.
 --
 -- Every level of a stat changes something in play by the share its config sets, and a
 -- level below zero changes it the other way:
@@ -93,6 +94,26 @@ Stats.min_hearing_radius = 1
 require_relative 'sh_hooks'
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'
+
+--- Lists the IDs of the attributes for the 'attribute' argument type of commands.
+-- @return [List<String> attribute IDs, sorted]
+Flux.Command:add_completer('attribute', function()
+  local ids = table.GetKeys(Attributes.get_stored())
+
+  table.sort(ids)
+
+  return ids
+end)
+
+--- Lists the IDs of the skills for the 'skill' argument type of commands.
+-- @return [List<String> skill IDs, sorted]
+Flux.Command:add_completer('skill', function()
+  local ids = table.GetKeys(Skills.get_stored())
+
+  table.sort(ids)
+
+  return ids
+end)
 
 --- Returns the highest level a new character can pick for a stat: its `creation_max`
 -- field, or its `max` if it has none, never above `max`.

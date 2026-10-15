@@ -17,13 +17,15 @@ en:
       syntax: <target> <new gender>
       message: "{player} has set {target}'s gender to {gender}."
     charban:
-      description: "Ban a player's active character."
-      syntax: <target>
-      message: "{player} has banned the character {target}."
-    charunban:
-      description: "Unban a character by its name, even if its player is offline."
-      syntax: <character name>
-      message: "{player} has unbanned the character {target}."
+      description: "Ban and unban characters."
+      add:
+        description: "Ban a player's active character."
+        syntax: <target>
+        message: "{player} has banned the character {target}."
+      remove:
+        description: "Unban a character by its full name, even if its player is offline."
+        syntax: <character name>
+        message: "{player} has unbanned the character {target}."
     charphysdesc:
       description: "Change your character's physical description."
       syntax: "[new description]"
@@ -53,7 +55,6 @@ en:
         name: Character Limit
         desc: "The maximum number of characters a player may have."
   error:
-    invalid_gender: "Invalid gender."
     character:
       invalid: "You do not have such a character."
       banned: "This character is banned."

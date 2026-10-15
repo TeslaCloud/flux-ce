@@ -1,12 +1,14 @@
 --- The PInfo command has the proxy show its details on players of any server of the network
--- in the caller's console. The player is a name or a target selector for players on this
--- server, or a name, SteamID or `#id` from GList for players on other servers.
+-- in the caller's console. The player is the exact name or a target selector of players on
+-- this server, or a name, SteamID or `#id` from GList for players on other servers.
 
 CMD.name = 'PInfo'
 CMD.description = 'command.pinfo.description'
 CMD.syntax = 'command.pinfo.syntax'
 CMD.category = 'permission.categories.proxy'
 CMD.arguments = 1
+CMD.arg_types = { 'player' }
+CMD.player_arg = false
 CMD.aliases = { 'proxyinfo' }
 CMD.no_console = true
 

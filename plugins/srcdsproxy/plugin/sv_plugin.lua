@@ -205,11 +205,12 @@ end
 -- An argument that has the form of an IP address or a subnet goes to the proxy as it is, and
 -- so does one that starts with `#` (a session ID from GList). Otherwise the players on this
 -- server are looked up by their SteamID64 or SteamID3 and with `Flux.Command:str_to_player`,
--- so the target selectors work for them, and each of them stands for the SteamID64 the proxy
--- knows them by. Those who are not connected through the proxy, or have no SteamID there, are
--- left out and the caller is told about each of them. When nobody on this server matches,
--- the argument goes to the proxy as it is, which finds players on every server of the
--- network by name, SteamID or `#id`.
+-- which matches their names exactly and makes the target selectors work for them, and each
+-- of them stands for the SteamID64 the proxy knows them by. A name that several players here
+-- have targets nobody, and the caller is told to use a SteamID. Those who are not connected
+-- through the proxy, or have no SteamID there, are left out and the caller is told about each
+-- of them. When nobody on this server matches, the argument goes to the proxy as it is, which
+-- finds players on every server of the network by name, SteamID or `#id`.
 -- With check_immunity the caller has to pass the immunity check against every player found
 -- on this server, unless the command is run from the server console; if any of them is
 -- immune, nobody is targeted. Since a `#id` may belong to a player on this server whose
@@ -244,7 +245,20 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
   end
 
   local by_steam_id = self:find_local_steam_id(argument)
-  local found = by_steam_id and { by_steam_id } or Flux.Command:str_to_player(actor, argument)
+  local found, kind
+
+  if by_steam_id then
+    found = { by_steam_id }
+  else
+    found, kind = Flux.Command:str_to_player(actor, argument)
+  end
+
+  if kind == 'ambiguous' then
+    Flux.Player:notify(actor, 'error.command.player_ambiguous', { player = argument })
+
+    return
+  end
+
   local locals, listed = {}, {}
 
   if istable(found) then
@@ -263,9 +277,9 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
 
   if check_immunity and IsValid(actor) then
     for k, v in ipairs(locals) do
-      --- Run by the proxy commands that act on players (Transfer, NetBan and NetBanIP) for
-      -- every player on this server they are about to affect, the same way the command
-      -- interpreter runs it for a command with `immunity` set.
+      --- Run by the proxy commands that act on players (Transfer, `netban add` and
+      -- `netban addip`) for every player on this server they are about to affect, the same
+      -- way the command interpreter runs it for a command with `immunity` set.
       -- @param actor [Player Player who runs the command]
       -- @param target [Player Player the command targets]
       -- @param can_equal [Boolean Whether a target of the same standing may be affected]

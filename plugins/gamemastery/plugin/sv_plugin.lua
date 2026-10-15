@@ -138,37 +138,28 @@ function Gamemastery.find_character(id)
   end
 end
 
---- Finds a pool character by its name, compared without regard to letter case and
--- whitespace. A name that matches no character exactly may match a part of the name of a
--- single character.
+--- Finds a pool character by its whole name, compared without regard to letter case and
+-- repeated or surrounding whitespace.
 -- @param name [String]
--- @return [Character the character, nil when none or more than one matches; Boolean true as
---   the second value when the name is ambiguous]
+-- @return [Character the character, nil when none or more than one has the name; Boolean
+--   true as the second value when several characters have it]
 function Gamemastery.find_character_by_name(name)
   if !isstring(name) or string_trim(name) == '' then return end
 
   local key = normalize_name(name)
-  local partial = {}
+  local found = {}
 
-  for k, v in ipairs(Gamemastery.get_pool()) do
-    if isstring(v.name) then
-      local char_name = normalize_name(v.name)
-
-      if char_name == key then
-        return v
-      end
-
-      if char_name:find(key, 1, true) then
-        partial[#partial + 1] = v
-      end
+  for _, v in ipairs(Gamemastery.get_pool()) do
+    if isstring(v.name) and normalize_name(v.name) == key then
+      found[#found + 1] = v
     end
   end
 
-  if #partial == 1 then
-    return partial[1]
+  if #found == 1 then
+    return found[1]
   end
 
-  return nil, #partial > 1
+  return nil, #found > 1
 end
 
 --- Returns the player who is playing a pool character.

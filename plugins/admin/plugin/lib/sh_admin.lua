@@ -194,24 +194,37 @@ function Bolt:merge_permissions(role, perms, as_own)
   end
 end
 
---- Allows every command that names a role in its `permission` field to that role and to the
--- roles based on it, except where a role file decided the command itself: a `cannot` for
--- the command in a role file keeps it from that role and the roles based on it. A command
--- whose role is not registered is reported in the console and stays unallowed.
--- @see [Bolt#merge_permissions]
-function Bolt:allow_command_roles()
-  for k, cmd in pairs(Flux.Command.stored) do
-    local role_id = cmd.permission
+--- Allows a command to the role named in its `permission` field, if the command has a
+-- permission of its own, then does the same for its subcommands.
+-- @param cmd [Command]
+local function allow_command_role(cmd)
+  local role_id = cmd.permission
 
-    if !isstring(role_id) then continue end
-
+  if isstring(role_id) and cmd:has_own_permission() then
     local role = roles[role_id]
 
     if role then
-      self:merge_permissions(role, { anything = { [cmd.id] = { allowed = true } } })
+      Bolt:merge_permissions(role, { anything = { [cmd:get_permission()] = { allowed = true } } })
     else
-      ErrorNoHalt("The '"..tostring(cmd.id).."' command names the '"..role_id.."' role, which does not exist!\n")
+      ErrorNoHalt("The '"..cmd:get_full_id().."' command names the '"..role_id.."' role, which does not exist!\n")
     end
+  end
+
+  for _, v in ipairs(cmd:get_subcommands()) do
+    allow_command_role(v)
+  end
+end
+
+--- Allows every command that names a role in its `permission` field to that role and to the
+-- roles based on it, except where a role file decided the command itself: a `cannot` for
+-- the command in a role file keeps it from that role and the roles based on it. The same goes
+-- for a subcommand with a permission of its own (`permission_id`), which is allowed under
+-- that permission; the `permission` field of a subcommand without one is ignored. A command
+-- whose role is not registered is reported in the console and stays unallowed.
+-- @see [Bolt#merge_permissions]
+function Bolt:allow_command_roles()
+  for _, cmd in pairs(Flux.Command.stored) do
+    allow_command_role(cmd)
   end
 end
 
@@ -263,13 +276,42 @@ function Bolt:register_permission(id, name, description, category)
   self:add_permission(id, category, data, true)
 end
 
---- Registers a permission for a command, built from the command's id, name, description and
--- category fields. Role files allow it under the command's ID.
+--- Registers the permission named in the `permission_id` of a command or subcommand, unless
+-- it is registered already, and does the same for its subcommands.
+-- @param cmd [Command]
+-- @param category=nil [String category of the command it belongs to, used if it has none]
+local function register_permission_ids(cmd, category)
+  local perm_id = cmd.permission_id
+
+  category = cmd.category or category
+
+  if isstring(perm_id) and perm_id != '' and !Bolt:get_all_permissions()[perm_id] then
+    Bolt:add_permission(perm_id, category, {
+      name = cmd:get_full_name(),
+      description = cmd.description or 'No description provided.',
+      category = category or 'general'
+    })
+  end
+
+  for _, v in ipairs(cmd:get_subcommands()) do
+    register_permission_ids(v, category)
+  end
+end
+
+--- Registers the permissions of a command: one named after the command's ID, or after its
+-- `permission_id` if it sets one, built from the command's name, description and category,
+-- and one for every subcommand that names its own `permission_id`, built from the subcommand's
+-- full name and description. A `permission_id` that is registered already is kept as it is.
+-- Role files allow these permissions under their IDs.
 -- @param cmd [Command command table; nothing happens if it is nil]
 function Bolt:permission_from_command(cmd)
   if !cmd then return end
 
-  self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category)
+  if !cmd.permission_id then
+    self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category)
+  end
+
+  register_permission_ids(cmd)
 end
 
 --- Checks whether a player may perform an action. Unexpired temporary permissions are consulted
@@ -321,6 +363,34 @@ end
 -- @return [Role the role, or nil if there is none]
 function Bolt:find_group(id)
   return roles[id]
+end
+
+--- Finds a role by what a person would type for it: its ID or its name, matched exactly but
+-- in any case.
+-- ```
+-- Bolt:find_role('Admin')         -- the 'admin' role
+-- Bolt:find_role('Administrator') -- the 'admin' role, by its name
+-- ```
+-- @param text [String role ID or role name]
+-- @return [Role the role, or nil if no role has this ID or name]
+function Bolt:find_role(text)
+  if !isstring(text) or text == '' then return end
+
+  if roles[text] then return roles[text] end
+
+  local lower = text:utf8lower()
+
+  for id, v in pairs(roles) do
+    if id:utf8lower() == lower then
+      return v
+    end
+  end
+
+  for _, v in pairs(roles) do
+    if isstring(v.name) and v.name:utf8lower() == lower then
+      return v
+    end
+  end
 end
 
 --- Checks whether a role with the given ID is registered. The role itself is returned rather
@@ -417,7 +487,7 @@ function Bolt:is_root_steam_id(steam_id)
   return false
 end
 
---- Looks a permission up by its exact ID in every category.
+--- Looks a permission up by its ID in every category, matched exactly but in any case.
 -- @param id [String permission ID]
 -- @return [Map permission data, or nil if there is no such permission]
 local function lookup_permission(id)
@@ -428,21 +498,31 @@ local function lookup_permission(id)
       return found
     end
   end
+
+  local lower = id:utf8lower()
+
+  for _, category in pairs(permissions) do
+    for k, v in pairs(category) do
+      if k:utf8lower() == lower then
+        return v
+      end
+    end
+  end
 end
 
---- Finds a registered permission by what a person would type for it: its ID in any case,
--- or the name or an alias of the command the permission belongs to.
+--- Finds a registered permission by what a person would type for it: its ID, or the ID or
+-- an alias of the command the permission belongs to, matched exactly but in any case.
 -- ```
 -- Bolt:find_permission('spawn_props') -- the 'spawn_props' permission
--- Bolt:find_permission('plyban')      -- the permission of the Ban command
+-- Bolt:find_permission('perms')       -- the permission of the Permission command
 -- ```
--- @param id [String permission ID, command name or command alias]
+-- @param id [String permission ID, command ID or command alias]
 -- @return [Map permission data (id, name, description, category), or nil if there is no such
 --   permission]
 function Bolt:find_permission(id)
   if !isstring(id) or id == '' then return end
 
-  local found = lookup_permission(id) or lookup_permission(id:utf8lower())
+  local found = lookup_permission(id)
 
   if found then
     return found
@@ -451,7 +531,50 @@ function Bolt:find_permission(id)
   local cmd = Flux.Command:find_by_id(id)
 
   if cmd then
-    return lookup_permission(cmd.id)
+    return lookup_permission(cmd:get_permission())
+  end
+end
+
+--- Returns the names of the maps that can be loaded, without the .bsp extension and sorted.
+-- Only names made of letters, digits, underscores, dashes and dots are listed, since a map
+-- name ends up in a file path and in a console command. The list is read once and kept; on
+-- the client it holds the maps the client has.
+-- @return [List<String> map names]
+function Bolt:get_maps()
+  if self.map_list then
+    return self.map_list
+  end
+
+  local map_list = {}
+
+  for _, v in ipairs(file.Find('maps/*.bsp', 'GAME') or {}) do
+    local name = v:gsub('%.bsp$', '')
+
+    if name:match('^[%w_%-%.]+$') then
+      map_list[#map_list + 1] = name
+    end
+  end
+
+  table.sort(map_list)
+
+  self.map_list = map_list
+
+  return map_list
+end
+
+--- Finds a map by its name without the .bsp extension, matched exactly but in any case.
+-- @param name [String map name]
+-- @return [String the name of the map as its file has it, or nil if there is no such map]
+-- @see [Bolt#get_maps]
+function Bolt:find_map(name)
+  if !isstring(name) or name == '' then return end
+
+  local lower = name:utf8lower()
+
+  for _, v in ipairs(self:get_maps()) do
+    if v:utf8lower() == lower then
+      return v
+    end
   end
 end
 
@@ -583,9 +706,9 @@ if SERVER then
 
       bans[steam_id] = nil
 
-      --- Called on the server after a ban has been lifted: by the Unban command, from the
-      -- ban list of the admin panel, or because it has expired by the time its owner tried
-      -- to join.
+      --- Called on the server after a ban has been lifted: by the `ban remove` command, from
+      -- the ban list of the admin panel, or because it has expired by the time its owner
+      -- tried to join.
       -- @param steam_id [String SteamID that is no longer banned]
       -- @param data [Map Column values of the deleted ban record]
       hook.Run('OnBanRemoved', steam_id, dump)
@@ -645,6 +768,18 @@ do
     dozen = 12,
     noscope = 420
   }
+
+  --- Checks whether a duration is one of the words that stand for a permanent one, such as
+  -- 'perma', 'permanently' or 'forever'.
+  -- @param str [String duration text]
+  -- @return [Boolean]
+  function Bolt:is_permanent_time(str)
+    if !isstring(str) then return false end
+
+    local word = str:Trim():lower()
+
+    return tokens[word] == 0 or tokens[word:trim_end('s')] == 0
+  end
 
   --- Converts a human-readable duration into seconds. Bare numbers are taken as minutes, and
   -- words such as 'perma' or 'forever' (as well as text with no recognizable duration) give 0,

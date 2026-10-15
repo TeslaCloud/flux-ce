@@ -19,13 +19,15 @@ en:
       description: Send a describing message to everyone within talking distance of you.
       syntax: <text>
     gag:
-      description: Mute player's OOC chats.
-      syntax: <name> <duration> [reason]
-      message: "{admin} has muted {target} from the OOC chat for {time} ({reason})."
-    ungag:
-      description: Unmute player's OOC chats.
-      syntax: <player>
-      message: "{admin} has unmuted {target}."
+      description: Mute and unmute players' OOC chats.
+      add:
+        description: Mute player's OOC chats.
+        syntax: <player> <duration> [reason]
+        message: "{admin} has muted {target} from the OOC chat for {time} ({reason})."
+      remove:
+        description: Unmute player's OOC chats.
+        syntax: <player>
+        message: "{admin} has unmuted {target}."
     its:
       description: Place a static text, describing some details of surroundings.
       syntax: <text>

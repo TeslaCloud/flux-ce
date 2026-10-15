@@ -6,15 +6,9 @@ CMD.description = 'command.charclearrecognition.description'
 CMD.syntax = 'command.charclearrecognition.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
+CMD.arg_types = { 'player', { 'own', 'others', 'all' } }
 CMD.immunity = true
 CMD.aliases = { 'clearrecognition', 'clearrecog' }
-
---- What the second argument of the command can be.
-local modes = {
-  own = true,
-  others = true,
-  all = true
-}
 
 --- Clears the recognitions of the active character of every target that has one and
 -- notifies staff. In the 'own' mode, which is the default, the character forgets everyone
@@ -24,17 +18,11 @@ local modes = {
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param mode='own' [String 'own', 'others' or 'all']
 function CMD:on_run(actor, targets, mode)
-  mode = isstring(mode) and mode:utf8lower() or 'own'
-
-  if !modes[mode] then
-    Flux.Player:notify(actor, 'error.recognize.invalid_mode', { mode = tostring(mode) })
-
-    return
-  end
+  mode = mode or 'own'
 
   local names = {}
 
-  for k, v in ipairs(targets) do
+  for _, v in ipairs(targets) do
     if !v:IsBot() and v:is_character_loaded() then
       if mode != 'others' then
         v:clear_recognizes()

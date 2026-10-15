@@ -5,6 +5,7 @@ CMD.name = 'CharPhysDesc'
 CMD.description = 'command.charphysdesc.description'
 CMD.syntax = 'command.charphysdesc.syntax'
 CMD.category = 'permission.categories.character_management'
+CMD.arg_types = { 'text' }
 CMD.aliases = { 'physdesc', 'chardesc' }
 CMD.no_console = true
 

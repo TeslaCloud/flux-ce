@@ -1,9 +1,11 @@
 en:
   command:
     static:
-      description: Makes the entity you're looking at static.
-    unstatic:
-      description: Makes the entity you're looking at not static.
+      description: Adds and removes the static status of the entity you're looking at.
+      add:
+        description: Makes the entity you're looking at static.
+      remove:
+        description: Makes the entity you're looking at not static.
   error:
     not_valid_entity: This is not a valid entity!
     cannot_static_this: You cannot static this entity!

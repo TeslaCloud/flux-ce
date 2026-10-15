@@ -5,6 +5,7 @@ CMD.description = 'command.kick.description'
 CMD.syntax = 'command.kick.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
+CMD.arg_types = { 'player', 'text' }
 CMD.immunity = true
 CMD.alias = 'plykick'
 

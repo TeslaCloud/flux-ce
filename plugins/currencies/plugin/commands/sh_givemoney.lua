@@ -5,6 +5,7 @@ CMD.description = 'command.givemoney.description'
 CMD.syntax = 'command.givemoney.syntax'
 CMD.category = 'permission.categories.general'
 CMD.arguments = 1
+CMD.arg_types = { 'number', 'currency' }
 CMD.aliases = { 'givecash', 'givetokens' }
 
 --- Returns the translated command description with the available currency IDs listed.
@@ -24,8 +25,8 @@ end
 --- Gives money to the entity the player is looking at.
 -- @param actor [Player the player who ran the command]
 -- @param amount [String amount to give, parsed with tonumber]
--- @param currency=nil [String currency ID; the default currency is used when it is omitted
---   or unknown, see `Currencies:get_default_currency`]
+-- @param currency=nil [String currency ID; the default currency is used when it is
+--   omitted, see `Currencies:get_default_currency`]
 function CMD:on_run(actor, amount, currency)
   amount = tonumber(amount)
 

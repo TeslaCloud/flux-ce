@@ -1,7 +1,7 @@
 --- Server side of what the admin plugin does to players who are not on the server: looking
 -- up the stored user of a SteamID, checking the immunity of whoever acts on them, changing
--- their stored role, and finding the targets of the commands that also take a SteamID (Ban
--- and Demote).
+-- their stored role, and finding the targets of the commands that also take a SteamID
+-- (`ban add` and `role remove`).
 -- Also holds the network receivers behind the staff page of the admin panel, which send the
 -- list of everybody whose role is not `user`, connected or not, and demote a member of it.
 --
@@ -108,22 +108,25 @@ end
 
 --- Finds whom a command argument targets, for the commands that work on players who are
 -- not on the server as well. Players are found and checked for immunity the way the command
--- interpreter does it for a command with `immunity` set: by name or by one of the selectors
--- of `Flux.Command:str_to_player`. An argument that matches nobody but has the form of a
--- SteamID is handed back as such; the caller then checks immunity with
+-- interpreter does it for a command with `immunity` set: by their exact name or SteamID, or
+-- by one of the selectors of `Flux.Command:str_to_player`; a name that several players have
+-- targets nobody. An argument that matches nobody but has the form of a SteamID, in any case,
+-- is handed back as such, in upper case; the caller then checks immunity with
 -- `Bolt:with_offline_target`. The caller of the command is notified when nothing comes of it.
 -- @param actor [Player the player who runs the command, an invalid entity for the server
 --   console]
--- @param argument [String player name, target selector or SteamID]
+-- @param argument [String exact player name, target selector or SteamID]
 -- @param can_equal=false [Boolean let the command affect players of the same immunity]
 -- @return [List<Player> the targets, or nil if there are none or one of them is immune,
 --   String the SteamID if the argument is the SteamID of somebody who is not on the server]
 function Bolt:find_command_targets(actor, argument, can_equal)
-  local found = isstring(argument) and Flux.Command:str_to_player(actor, argument)
+  argument = tostring(argument)
+
+  local found, kind = Flux.Command:str_to_player(actor, argument)
   local targets, listed = {}, {}
 
   if istable(found) then
-    for k, v in ipairs(found) do
+    for _, v in ipairs(found) do
       if IsValid(v) and !listed[v] then
         listed[v] = true
 
@@ -133,20 +136,24 @@ function Bolt:find_command_targets(actor, argument, can_equal)
   end
 
   if #targets == 0 then
-    if self:is_steam_id(argument) then
-      return nil, argument
+    local steam_id = argument:upper()
+
+    if self:is_steam_id(steam_id) then
+      return nil, steam_id
     end
 
-    Flux.Player:notify(actor, 'error.command.player_invalid', { player = tostring(argument) })
+    local phrase = kind == 'ambiguous' and 'error.command.player_ambiguous' or 'error.command.player_invalid'
+
+    Flux.Player:notify(actor, phrase, { player = argument })
 
     return
   end
 
   if IsValid(actor) then
-    for k, v in ipairs(targets) do
-      --- Run by the commands that find their targets themselves (Ban and Demote), for every
-      -- player they are about to affect, the same way the command interpreter runs it for a
-      -- command with `immunity` set.
+    for _, v in ipairs(targets) do
+      --- Run by the commands that find their targets themselves (`ban add` and `role
+      -- remove`), for every player they are about to affect, the same way the command
+      -- interpreter runs it for a command with `immunity` set.
       -- @param actor [Player Player who runs the command]
       -- @param target [Player Player the command targets]
       -- @param can_equal [Boolean Whether a target of the same standing may be affected]
@@ -311,7 +318,7 @@ Cable.receive('fl_bolt_demote', function(actor, steam_id)
   if !Bolt:is_steam_id(steam_id) then return end
 
   Bolt:demote_steam_id(actor, steam_id, function(name)
-    Command:notify_staff('command.demote.message', {
+    Command:notify_staff('command.role.remove.message', {
       player = get_player_name(actor),
       target = name
     })

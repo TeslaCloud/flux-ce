@@ -9,11 +9,13 @@
 -- the server allows it (`srcdsproxy_allow_player_transfer`). Staff list the players of the
 -- whole network with GList, look one up with PInfo and move players with Transfer. The proxy
 -- itself restricts the rest to its own admins (listed in its admins.toml and verified by
--- Steam): ProxyWhitelist edits the whitelists of whitelist-only servers, and NetBan, NetBanIP,
--- NetUnban and NetBans manage the bans of the whole network. A player argument is a name, a
--- target selector or a SteamID for players on this server, while the proxy's `#id` session
--- IDs, IP addresses and subnets, and the names and SteamIDs of players on other servers go to
--- the proxy as typed. Commands that check immunity do not take a `#id` from players.
+-- Steam): `proxywhitelist add`, `remove` and `list` edit and show the whitelists of
+-- whitelist-only servers, and `netban add`, `addip`, `remove` and `list` manage the bans of
+-- the whole network. A player argument is the exact name, a target selector or a SteamID of
+-- players on this server, while the proxy's `#id` session IDs, IP addresses and subnets, and
+-- the names and SteamIDs of players on other servers go to the proxy as typed. Commands that
+-- check immunity do not take a `#id` from players. Only the proxy knows the names of the
+-- servers, so they are not completed.
 -- The proxy answers most commands in the console of the player who has run them.
 --
 -- Once the gamemode has initialized, the plugin turns off the chat commands of the addon and
@@ -32,6 +34,15 @@
 -- @module [SrcdsProxy]
 
 PLUGIN:set_global('SrcdsProxy')
+
+--- Lists example values for the arguments of the 'proxy_duration' type, ban durations in the
+-- form the proxy reads, see `SrcdsProxy:is_duration`.
+-- @return [List<String> durations]
+local function complete_proxy_duration()
+  return { '30m', '2h', '1d', '7d', '1w', 'perm' }
+end
+
+Flux.Command:add_completer('proxy_duration', complete_proxy_duration)
 
 require_relative 'sh_transfer_areas'
 require_relative 'cl_transfer_areas'

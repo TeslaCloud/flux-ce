@@ -19,6 +19,10 @@
 -- `Player:clear_recognizes` change them on the server. The `PlayerRecognizeTarget` hook
 -- makes a player recognize another regardless of what is stored, and `PlayerCanRecognize`
 -- and `PlayerCanForget` can refuse what players ask for.
+--
+-- The plugin also keeps the completion of player arguments of commands from giving names
+-- away: players without the 'staff' permission are only offered the real names of the
+-- characters they know by that name and of their own (see `Recognizes.complete_player`).
 
 PLUGIN:set_global('Recognizes')
 
@@ -64,6 +68,70 @@ function Recognizes:get_known_name(viewer, target)
 
   return self:get_unrecognized_name(target)
 end
+
+if Flux.Command:get_completer('player') != Recognizes.complete_player then
+  Recognizes.base_player_completer = Flux.Command:get_completer('player')
+end
+
+--- Completes arguments of the 'player' type, wrapping the completer that was registered for
+-- that type before. Staff and the server console get all of its suggestions. Other players
+-- are not offered the real name of a character they do not know by that name: they get the
+-- names of their own character and of the characters they know by their real names, along
+-- with Steam names and SteamIDs; the Steam name of a character they do not know is offered
+-- whenever it contains the typed text.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param partial [String the text typed for the argument so far]
+-- @param args [List<String> the arguments typed before it]
+-- @param cmd [Command the command or subcommand the argument belongs to]
+-- @return [List<String> the names to suggest]
+function Recognizes.complete_player(actor, partial, args, cmd)
+  local base = Recognizes.base_player_completer
+  local values = isfunction(base) and base(actor, partial, args, cmd) or {}
+
+  if !IsValid(actor) or actor:can('staff') then
+    return values
+  end
+
+  local lower = isstring(partial) and partial:utf8lower() or ''
+  local hidden, shown, steam_names = {}, {}, {}
+
+  for _, v in player.Iterator() do
+    local char_name = v:name(true)
+    local steam_name = v:steam_name()
+
+    if v == actor or actor:knows_real_name(v) then
+      shown[char_name] = true
+    else
+      hidden[char_name] = true
+
+      if lower != '' and steam_name:utf8lower():find(lower, 1, true) then
+        steam_names[#steam_names + 1] = steam_name
+      end
+    end
+
+    shown[steam_name] = true
+  end
+
+  local allowed, seen = {}, {}
+
+  for _, v in ipairs(values) do
+    if shown[v] or !hidden[v] then
+      allowed[#allowed + 1] = v
+      seen[v] = true
+    end
+  end
+
+  for _, v in ipairs(steam_names) do
+    if !seen[v] then
+      allowed[#allowed + 1] = v
+      seen[v] = true
+    end
+  end
+
+  return allowed
+end
+
+Flux.Command:add_completer('player', Recognizes.complete_player)
 
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'

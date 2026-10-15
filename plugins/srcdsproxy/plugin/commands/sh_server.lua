@@ -6,6 +6,7 @@ CMD.name = 'Server'
 CMD.description = 'command.server.description'
 CMD.syntax = 'command.server.syntax'
 CMD.category = 'permission.categories.proxy'
+CMD.arg_types = { 'server' }
 CMD.aliases = { 'servers' }
 CMD.no_console = true
 

@@ -12,7 +12,7 @@
 -- with the weapons, the maximum health and the maximum armor that the faction and their rank
 -- set, wear the model of their rank if it has one, and are liked, feared or hated by the NPC
 -- classes that the faction names. A rank can let its holders promote and demote other
--- members with the PromoteRank and DemoteRank commands, which staff with the 'manage_ranks'
+-- members with `/rank promote` and `/rank demote`, which staff with the 'manage_ranks'
 -- permission may use on anyone.
 --
 -- The `Factions` functions register and look up factions, and the `Player` extensions read and
@@ -20,7 +20,8 @@
 -- `OnRankChanged` hooks report changes, `ShouldNameGenerate` can stop a name from being
 -- generated, `GetFactionLimit` and `PlayerCanBypassFactionLimit` adjust the limits, and
 -- `PlayerCanTransferFaction` can refuse a transfer by the SetFaction command. The 'faction'
--- and 'rank' conditions are registered for the Conditions plugin.
+-- and 'rank' conditions are registered for the Conditions plugin, and the 'faction', 'rank'
+-- and 'model' argument types for the completion of commands.
 
 PLUGIN:set_global('Factions')
 
@@ -29,6 +30,101 @@ Plugin.add_extra('factions')
 require_relative 'sh_enums'
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'
+
+--- Returns the factions of the players that a command argument names, the way the server
+-- finds them: by their exact name or SteamID, or '^' for the actor.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param target_arg [String the typed player argument]
+-- @return [List<Faction> the factions, empty if the argument names nobody with a faction]
+local function factions_of(actor, target_arg)
+  local targets = target_arg == '^' and IsValid(actor) and { actor } or player.find_exact(target_arg)
+  local found, seen = {}, {}
+
+  for _, v in ipairs(targets) do
+    local faction_table = v:get_faction()
+
+    if faction_table and !seen[faction_table] then
+      seen[faction_table] = true
+      found[#found + 1] = faction_table
+    end
+  end
+
+  return found
+end
+
+--- Returns the factions whose ranks or models are suggested for a command: those of the
+-- players named by the first argument, or every faction if it names nobody.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param args [List<String> the arguments typed before the completed one]
+-- @return [List<Faction>]
+local function suggested_factions(actor, args)
+  local found = isstring(args[1]) and factions_of(actor, args[1]) or {}
+
+  if #found == 0 then
+    for _, v in SortedPairs(Factions.all()) do
+      found[#found + 1] = v
+    end
+  end
+
+  return found
+end
+
+--- Completes arguments of the 'faction' type with the ID of every faction.
+-- @return [List<String> faction IDs, sorted]
+local function complete_faction()
+  local ids = {}
+
+  for k in pairs(Factions.all()) do
+    ids[#ids + 1] = k
+  end
+
+  table.sort(ids)
+
+  return ids
+end
+
+--- Completes arguments of the 'rank' type with the ranks of the factions of the players named
+-- by the first argument, or of every faction: the ID of each rank, or its index if the ID is
+-- empty.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param _partial [String the text typed for the argument so far]
+-- @param args [List<String> the arguments typed before the completed one]
+-- @return [List<String>]
+local function complete_rank(actor, _partial, args)
+  local values = {}
+
+  for _, v in ipairs(suggested_factions(actor, args)) do
+    for k2, v2 in ipairs(v:get_ranks()) do
+      values[#values + 1] = (isstring(v2.id) and v2.id != '') and v2.id or tostring(k2)
+    end
+  end
+
+  return values
+end
+
+--- Completes arguments of the 'model' type with the models of the factions of the players
+-- named by the first argument, or of every faction.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param _partial [String the text typed for the argument so far]
+-- @param args [List<String> the arguments typed before the completed one]
+-- @return [List<String> model paths]
+local function complete_model(actor, _partial, args)
+  local values = {}
+
+  for _, v in ipairs(suggested_factions(actor, args)) do
+    for _, models in SortedPairs(v:get_models() or {}) do
+      for _, v2 in ipairs(istable(models) and models or {}) do
+        values[#values + 1] = v2
+      end
+    end
+  end
+
+  return values
+end
+
+Flux.Command:add_completer('faction', complete_faction)
+Flux.Command:add_completer('rank', complete_rank)
+Flux.Command:add_completer('model', complete_model)
 
 --- Registers the 'manage_ranks' permission, which lets staff promote and demote any member
 -- of any faction, whatever their own rank.

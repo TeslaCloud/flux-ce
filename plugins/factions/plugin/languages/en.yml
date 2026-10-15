@@ -1,29 +1,33 @@
 en:
   command:
     whitelist:
-      description: "Add a player to a faction whitelist. Factions: {factions}"
-      syntax: "<target> <faction> [is faction search strict]"
-      message: "{player} has added {target} to the {faction} whitelist."
-    unwhitelist:
-      description: "Remove a player from a faction whitelist. Factions: {factions}"
-      syntax: "<target> <faction> [is faction search strict]"
-      message: "{player} has removed {target} from the {faction} whitelist."
+      description: "Manage the faction whitelists of players."
+      add:
+        description: "Add a player to a faction whitelist."
+        syntax: "<target> <faction>"
+        message: "{player} has added {target} to the {faction} whitelist."
+      remove:
+        description: "Remove a player from a faction whitelist."
+        syntax: "<target> <faction>"
+        message: "{player} has removed {target} from the {faction} whitelist."
     setfaction:
       description: "Set a character's faction. Factions: {factions}"
-      syntax: "<name> <faction> [data]"
+      syntax: "<target> <faction>"
       message: "{player} has added {target} to the {faction} faction."
-    setrank:
-      description: "Set a character's rank in their faction."
-      syntax: "<target> <rank>"
-      message: "{player} has set {target}'s rank in their faction to {rank}."
-    promoterank:
-      description: "Promote a character in their faction."
-      syntax: "<target>"
-      message: "{player} has promoted {target} in their faction."
-    demoterank:
-      description: "Demote a character in their faction."
-      syntax: "<target>"
-      message: "{player} has demoted {target} in their faction."
+    rank:
+      description: "Change the ranks of characters in their factions."
+      set:
+        description: "Set a character's rank in their faction, by its number, ID or name."
+        syntax: "<target> <rank>"
+        message: "{player} has set {target}'s rank in their faction to {rank}."
+      promote:
+        description: "Promote a character in their faction."
+        syntax: "<target>"
+        message: "{player} has promoted {target} in their faction."
+      demote:
+        description: "Demote a character in their faction."
+        syntax: "<target>"
+        message: "{player} has demoted {target} in their faction."
   condition:
     faction:
       name: Player in specific faction
@@ -47,6 +51,7 @@ en:
     rank:
       cannot_promote: You cannot promote any of these players.
       cannot_demote: You cannot demote any of these players.
+      not_found: "None of these characters' factions has the rank '{rank}'."
   notification:
     demote_rank: You have been demoted to rank {rank}.
     promote_rank: You have been promoted to rank {rank}.

@@ -5,6 +5,7 @@ CMD.description = 'command.heallimbs.description'
 CMD.syntax = 'command.heallimbs.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 1
+CMD.arg_types = { 'player' }
 CMD.immunity = true
 CMD.aliases = { 'charheallimbs', 'plyheallimbs' }
 

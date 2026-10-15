@@ -1,5 +1,5 @@
---- Extensions of the `player` library: picking a random player, finding players by name or
--- SteamID and looking up the Steam name of a SteamID.
+--- Extensions of the `player` library: picking a random player, finding players by a part of
+-- their name, by their exact name or by SteamID, and looking up the Steam name of a SteamID.
 
 --- Selects a random player.
 -- @return [Player random player, or nil if there are no players on the server]
@@ -59,6 +59,52 @@ function player.find(name, case_sensitive, return_first)
   else
     return hits[1]
   end
+end
+
+--- Finds the players a name stands for when it has to match exactly, as for the player
+-- arguments of commands. A SteamID ('STEAM_0:1:12345', in any case) or SteamID64 finds the
+-- player who has it. Any other name is compared, ignoring the case, with the character name
+-- of every player (their name without the 'GetPlayerName' hook) and, if no character name is
+-- equal to it, with their Steam names. Several players can share a name; all of them are
+-- returned then.
+-- @param name [String SteamID, SteamID64, character name or Steam name]
+-- @return [List<Player> the players, empty if nobody has this name]
+function player.find_exact(name)
+  local found = {}
+
+  if !isstring(name) or name == '' then return found end
+
+  local lower = name:utf8lower()
+
+  if lower:sub(1, 6) == 'steam_' or (#name == 17 and tonumber(name)) then
+    local upper = name:upper()
+
+    for _, v in player.Iterator() do
+      if v:SteamID() == upper or v:SteamID64() == name then
+        found[#found + 1] = v
+
+        return found
+      end
+    end
+
+    return found
+  end
+
+  local by_steam_name = {}
+
+  for _, v in player.Iterator() do
+    if v:name(true):utf8lower() == lower then
+      found[#found + 1] = v
+    elseif v:steam_name():utf8lower() == lower then
+      by_steam_name[#by_steam_name + 1] = v
+    end
+  end
+
+  if #found > 0 then
+    return found
+  end
+
+  return by_steam_name
 end
 
 --- Requests the Steam name that belongs to a SteamID through steamworks.

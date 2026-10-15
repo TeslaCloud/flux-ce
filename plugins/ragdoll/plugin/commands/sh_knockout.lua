@@ -6,7 +6,7 @@ CMD.description = 'command.knockout.description'
 CMD.syntax = 'command.knockout.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
-CMD.player_arg = 1
+CMD.arg_types = { 'player', 'number' }
 CMD.aliases = { 'plyknockout', 'forceknockout' }
 
 --- Knocks every living target out, including the ones who are lying on the ground already,

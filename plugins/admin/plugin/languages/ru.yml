@@ -4,65 +4,101 @@ ru:
       description: Показывает объявление всем игрокам на сервере.
       syntax: <текст>
     ban:
-      description: Забанить урода! По Steam ID можно забанить того, кого нет на сервере.
-      syntax: <игрок или Steam ID> <срок блокировки> [причина]
-      message: "{player} банит {target} на {time}. ({reason})"
-      message_permanent: "{player} банит {target} навсегда. ({reason})"
-    freezebots:
-      description: Замораживает всех ботов.
-      message: "{player} замораживает ботов."
-    unfreezebots:
-      description: Размораживает всех ботов.
-      message: "{player} размораживает ботов."
-    addbots:
-      description: Добавляет определенное количество ботов на сервер.
-      syntax: "[количество]"
-      message:
-        "1": "{player} добавляет {amount} бота на сервер."
-        "2": "{player} добавляет {amount} бота на сервер."
-        "5": "{player} добавляет {amount} ботов на сервер."
-    kickbots:
-      description: Кикнуть всех ботов.
-      message: "{player} кикает всех ботов."
+      description: Банит игроков и снимает баны.
+      add:
+        description: Забанить урода! По Steam ID можно забанить того, кого нет на сервере.
+        syntax: <игрок или Steam ID> <срок блокировки> [причина]
+        message: "{player} банит {target} на {time}. ({reason})"
+        message_permanent: "{player} банит {target} навсегда. ({reason})"
+      remove:
+        description: Снимает бан со Steam ID.
+        syntax: <Steam ID>
+        message: "{player} разбанивает {target}."
+    bots:
+      description: Добавляет, кикает, замораживает и размораживает ботов.
+      add:
+        description: Добавляет определенное количество ботов на сервер.
+        syntax: "[количество]"
+        message:
+          "1": "{player} добавляет {amount} бота на сервер."
+          "2": "{player} добавляет {amount} бота на сервер."
+          "5": "{player} добавляет {amount} ботов на сервер."
+      kick:
+        description: Кикнуть всех ботов.
+        message: "{player} кикает всех ботов."
+      freeze:
+        description: Замораживает всех ботов.
+        message: "{player} замораживает ботов."
+      unfreeze:
+        description: Размораживает всех ботов.
+        message: "{player} размораживает ботов."
     changelevel:
       description: Меняет карту на указанную.
       syntax: <карта> [задержка]
       message: "{player} меняет карту на {map} через {delay} секунд!"
-    demote:
-      description: Понижает игрока до пользователя. По Steam ID можно понизить того, кого нет на сервере.
-      syntax: <игрок или Steam ID>
-      message: "{player} понижает {target} до пользователя."
-    grant:
-      description: Выдает игроку разрешение, навсегда или на указанное время.
-      syntax: <игрок> <разрешение> [срок]
-      message: "{player} выдает {target} разрешение {permission}."
-      message_temporary: "{player} выдает {target} разрешение {permission} на {time}."
+    freeze:
+      description: Замораживает игроков на месте или размораживает их.
+      "on":
+        description: Замораживает игрока.
+        syntax: <игрок>
+        message: "{player} заморозил {target}."
+      "off":
+        description: Размораживает игрока.
+        syntax: <игрок>
+        message: "{player} разморозил {target}."
+    fullbright:
+      description: Включает или отключает игроку режим полной яркости, при котором освещение карты не учитывается.
+      "on":
+        description: Включает игроку режим полной яркости.
+        syntax: <игрок>
+        message: "{player} включает ночное видение для {target}."
+      "off":
+        description: Отключает игроку режим полной яркости.
+        syntax: <игрок>
+        message: "{player} отключает ночное видение {target}."
+    godmode:
+      description: Включает или выключает игроку режим бога.
+      "on":
+        description: Включает игроку режим бога.
+        syntax: <игрок>
+        message: "{player} включил режим бога для {target}."
+      "off":
+        description: Выключает игроку режим бога.
+        syntax: <игрок>
+        message: "{player} выключил режим бога для {target}."
     kick:
       description: Выкидывает игрока с сервера.
       syntax: <игрок> [причина]
       message: "{player} кикает {target} ({reason})."
-    permissions:
-      description: Показывает разрешения, заданные игроку лично.
-      syntax: <игрок>
-      role: "Роль игрока {target}: {role}."
-      allowed: "Разрешено игроку {target}: {permissions}."
-      denied: "Запрещено игроку {target}: {permissions}."
-      temporary_allowed: "Временно разрешено игроку {target}: {permission} (осталось: {time})."
-      temporary_denied: "Временно запрещено игроку {target}: {permission} (осталось: {time})."
-      none: "У игрока {target} нет личных разрешений."
-    resetpermission:
-      description: Убирает то, что задано игроку для разрешения лично, и оно снова зависит от роли.
-      syntax: <игрок> <разрешение>
-      message: "{player} сбрасывает разрешение {permission} игрока {target}."
-    revoke:
-      description: Запрещает игроку разрешение, навсегда или на указанное время.
-      syntax: <игрок> <разрешение> [срок]
-      message: "{player} запрещает {target} разрешение {permission}."
-      message_temporary: "{player} запрещает {target} разрешение {permission} на {time}."
-    warn:
-      description: Выносит игроку предупреждение.
-      syntax: <игрок> [причина]
-      message: "{player} выносит {target} предупреждение: {reason}."
+    permission:
+      description: Управляет разрешениями, заданными игрокам лично.
+      grant:
+        description: Выдает игроку разрешение, навсегда или на указанное время.
+        syntax: <игрок> <разрешение> [срок]
+        message: "{player} выдает {target} разрешение {permission}."
+        message_temporary: "{player} выдает {target} разрешение {permission} на {time}."
+      revoke:
+        description: Запрещает игроку разрешение, навсегда или на указанное время.
+        syntax: <игрок> <разрешение> [срок]
+        message: "{player} запрещает {target} разрешение {permission}."
+        message_temporary: "{player} запрещает {target} разрешение {permission} на {time}."
+      reset:
+        description: Убирает то, что задано игроку для разрешения лично, и оно снова зависит от роли.
+        syntax: <игрок> <разрешение>
+        message: "{player} сбрасывает разрешение {permission} игрока {target}."
+      list:
+        description: Показывает разрешения, заданные игроку лично.
+        syntax: <игрок>
+        role: "Роль игрока {target}: {role}."
+        allowed: "Разрешено игроку {target}: {permissions}."
+        denied: "Запрещено игроку {target}: {permissions}."
+        temporary_allowed: "Временно разрешено игроку {target}: {permission} (осталось: {time})."
+        temporary_denied: "Временно запрещено игроку {target}: {permission} (осталось: {time})."
+        none: "У игрока {target} нет личных разрешений."
+    respawn:
+      description: "Возродить игрока там, где он находится, или там, куда вы смотрите."
+      syntax: "<игрок> [stay / tp]"
+      message: "{target} был возрожден благодаря {player}."
     restart:
       description: Перезапускает текущую карту.
       syntax: "[задержка]"
@@ -71,14 +107,20 @@ ru:
       description: Вернуть игрока туда, где он находился до телепорта.
       syntax: <игрок>
       message: "{player} возвращает {target} на предыдущую позицию."
+    role:
+      description: Назначает и снимает роли игроков.
+      set:
+        description: "Назначает игроку роль. Роли: {groups}"
+        syntax: <игрок> <роль>
+        message: "{player} назначает {target} роль {group}."
+      remove:
+        description: Понижает игрока до пользователя. По Steam ID можно понизить того, кого нет на сервере.
+        syntax: <игрок или Steam ID>
+        message: "{player} понижает {target} до пользователя."
     send:
       description: Телепортировать игрока к другому игроку.
       syntax: <игрок> <к кому>
       message: "{player} телепортировал {target} к {destination}."
-    setgroup:
-      description: "Меняет группу пользователя игрока. Группы: {groups}"
-      syntax: <игрок> <группа>
-      message: "{player} добавляет {target} к группе {group}."
     slay:
       description: Убивает игрока.
       syntax: <игрок>
@@ -94,37 +136,20 @@ ru:
       description: Телепортироваться к игроку.
       syntax: <игрок>
       message: "{player} телепортировался к {target}."
-    unban:
-      description: Разбанить игрока по SteamID, если тот находится в блокировке.
-      syntax: <забаненный SteamID>
-      message: "{player} разбанивает {target}."
     vanish:
-      description: "Полностью скрывает игрока от всех, кроме администрации."
-      syntax: "<игрок> [скрыть]"
-      enabled: "{player} делает {target} невидимым."
-      disabled: "{player} делает {target} видимым."
-    fullbright:
-      description: "Отключает темноту."
-      syntax: "<игрок> <отключить_свет>"
-      enabled: "{player} включает ночное видение для {target}."
-      disabled: "{player} отключает ночное видение {target}."
-    freeze:
-      description: "Замораживает игрока."
-      syntax: "<игрок>"
-      message: "{player} заморозил {target}."
-    unfreeze:
-      description: "Размораживает игрока."
-      syntax: "<игрок>"
-      message: "{player} разморозил {target}."
-    respawn:
-      description: "Возродить игрока там, где он находится, или там, куда вы смотрите."
-      syntax: "<игрок> [tp / stay]"
-      message: "{target} был возрожден благодаря {player}."
-    godmode:
-      description: "Активирует режим бога игроку."
-      syntax: "<игрок> [активировать]"
-      enabled: "{player} Включил режим бога для {target}."
-      disabled: "{player} Выключил режим бога для {target}."
+      description: Полностью скрывает игрока от всех, кроме администрации, или снова показывает его.
+      "on":
+        description: Скрывает игрока от всех, кроме администрации.
+        syntax: <игрок>
+        message: "{player} делает {target} невидимым."
+      "off":
+        description: Снова показывает скрытого игрока всем.
+        syntax: <игрок>
+        message: "{player} делает {target} видимым."
+    warn:
+      description: Выносит игроку предупреждение.
+      syntax: <игрок> [причина]
+      message: "{player} выносит {target} предупреждение: {reason}."
   condition:
     role:
       name: Игрок с определенной ролью

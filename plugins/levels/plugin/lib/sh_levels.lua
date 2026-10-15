@@ -438,7 +438,7 @@ if SERVER then
     -- @param old [Number Experience toward the next level before the change, which may have
     --   been a lower level]
     -- @param reason [String What the experience was given for: 'damage' and 'kill' for
-    --   combat experience, 'command' for the CharGiveExperience command, 'level_set' when
+    --   combat experience, 'command' for the `experience add` command, 'level_set' when
     --   the level was set, 'catch_up' when the level cap has risen and kept experience was
     --   spent, 'level_floor' when the character was raised to the level floor, or whatever
     --   the caller of `Player:give_experience` passed; may be nil]

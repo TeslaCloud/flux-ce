@@ -1,8 +1,8 @@
 --- Server side of the ban list: the time a ban has left, the message a banned player is
 -- shown when they are kicked or turned away, and the network receivers behind the ban list
 -- page of the admin panel, which send a page of bans and lift a ban.
--- The list is only sent to players with the permission of the Unban command (`unban`), and
--- only they are told when a ban is added or lifted, so that an open page can refresh itself.
+-- The list is only sent to players with the permission of the Ban command (`ban`), and only
+-- they are told when a ban is added or lifted, so that an open page can refresh itself.
 
 local bans_per_page = 25
 local max_reason_length = 512
@@ -151,7 +151,7 @@ function Bolt:send_ban_list_changed()
   local viewers = {}
 
   for k, v in player.Iterator() do
-    if v:can('unban') then
+    if v:can('ban') then
       viewers[#viewers + 1] = v
     end
   end
@@ -176,7 +176,7 @@ function Bolt:OnBanRemoved(steam_id, data)
 end
 
 Cable.receive('fl_bolt_bans_request', function(actor, page, search_text)
-  if !actor:can('unban') then return end
+  if !actor:can('ban') then return end
 
   local cur_time = CurTime()
 
@@ -188,13 +188,13 @@ Cable.receive('fl_bolt_bans_request', function(actor, page, search_text)
 end)
 
 Cable.receive('fl_bolt_unban', function(actor, steam_id)
-  if !actor:can('unban') then return end
+  if !actor:can('ban') then return end
   if !isstring(steam_id) or steam_id == '' then return end
 
   local success, data = Bolt:remove_ban(steam_id)
 
   if success then
-    Command:notify_staff('command.unban.message', {
+    Command:notify_staff('command.ban.remove.message', {
       player = get_player_name(actor),
       target = data.name
     })

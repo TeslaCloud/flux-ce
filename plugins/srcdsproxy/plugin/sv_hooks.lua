@@ -4,7 +4,8 @@
 -- up.
 
 --- The console commands of the srcdsproxy addon, keyed by their names, with the Flux
--- command each one runs and the usage shown in its console help. The plugin registers these
+-- command, and the subcommand word if it has one, that each one runs and the usage shown in
+-- its console help. The plugin registers these
 -- names again, so that typing one of them in the console runs the Flux command, with its
 -- permission check and logging, instead of the addon's own handler.
 local console_commands = {
@@ -14,10 +15,10 @@ local console_commands = {
   srcdsproxy_pinfo = { command = 'pinfo', usage = '<player>' },
   srcdsproxy_send = { command = 'transfer', usage = '<player> <server> [reason]' },
   srcdsproxy_whitelist = { command = 'proxywhitelist', usage = 'add|remove <server> <player> | list [server]' },
-  srcdsproxy_ban = { command = 'netban', usage = '<player|steamid|ip|subnet> [duration] [reason]' },
-  srcdsproxy_banip = { command = 'netbanip', usage = '<player> [duration] [reason]' },
-  srcdsproxy_unban = { command = 'netunban', usage = '<steamid|ip|subnet>' },
-  srcdsproxy_bans = { command = 'netbans', usage = '' }
+  srcdsproxy_ban = { command = 'netban add', usage = '<player|steamid|ip|subnet> [duration] [reason]' },
+  srcdsproxy_banip = { command = 'netban addip', usage = '<player> [duration] [reason]' },
+  srcdsproxy_unban = { command = 'netban remove', usage = '<steamid|ip|subnet>' },
+  srcdsproxy_bans = { command = 'netban list', usage = '' }
 }
 
 --- Runs the Flux command that stands for one of the addon's console commands, with the

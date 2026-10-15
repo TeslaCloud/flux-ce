@@ -4,80 +4,122 @@ en:
       description: Shows a notice to everyone on the server.
       syntax: <text>
     ban:
-      description: Ban this sucker! A Steam ID bans somebody who is not on the server.
-      syntax: <target or Steam ID> <duration> [reason]
-      message: "{player} has banned {target} for {time}. ({reason})."
-      message_permanent: "{player} has banned {target} permanently. ({reason})."
-    freezebots:
-      description: Freezes all of the bots.
-      message: "{player} has frozen all bots."
-    unfreezebots:
-      description: Unfreezes all of the bots.
-      message: "{player} has unfrozen all bots."
-    addbots:
-      description: Adds the specified amount of bots to the server.
-      syntax: "[number Amount]"
-      message:
-        "1": "{player} has added {amount} bot to the server."
-        "2": "{player} has added {amount} bots to the server."
-    kickbots:
-      description: Kicks all bots.
-      message: "{player} has kicked all bots."
+      description: Bans players and lifts bans.
+      add:
+        description: Ban this sucker! A Steam ID bans somebody who is not on the server.
+        syntax: <target or Steam ID> <duration> [reason]
+        message: "{player} has banned {target} for {time}. ({reason})."
+        message_permanent: "{player} has banned {target} permanently. ({reason})."
+      remove:
+        description: Lifts the ban of a Steam ID.
+        syntax: <Steam ID>
+        message: "{player} has unbanned {target}."
+    bots:
+      description: Adds, kicks, freezes and unfreezes bots.
+      add:
+        description: Adds the specified amount of bots to the server.
+        syntax: "[amount]"
+        message:
+          "1": "{player} has added {amount} bot to the server."
+          "2": "{player} has added {amount} bots to the server."
+      kick:
+        description: Kicks all bots.
+        message: "{player} has kicked all bots."
+      freeze:
+        description: Freezes all of the bots.
+        message: "{player} has frozen all bots."
+      unfreeze:
+        description: Unfreezes all of the bots.
+        message: "{player} has unfrozen all bots."
     changelevel:
       description: Changes the level to the specified map.
-      syntax: <string Map> [number Delay]
+      syntax: <map> [delay]
       message: "{player} is changing the level to {map} in {delay} second(s)!"
-    demote:
-      description: Demote a player to user. A Steam ID demotes somebody who is not on the server.
-      syntax: <target or Steam ID>
-      message: "{player} has demoted {target} to user."
-    grant:
-      description: Allows a permission for a player, for good or for the given time.
-      syntax: <target> <permission> [duration]
-      message: "{player} has granted {target} the {permission} permission."
-      message_temporary: "{player} has granted {target} the {permission} permission for {time}."
+    freeze:
+      description: Freezes players in place or unfreezes them.
+      "on":
+        description: Freezes a player.
+        syntax: <target>
+        message: "{player} has frozen {target}."
+      "off":
+        description: Unfreezes a player.
+        syntax: <target>
+        message: "{player} has unfrozen {target}."
+    fullbright:
+      description: Turns fullbright mode, which ignores the lighting of the map, on or off for a player.
+      "on":
+        description: Turns fullbright mode on for a player.
+        syntax: <target>
+        message: "{player} has enabled fullbright mode for {target}."
+      "off":
+        description: Turns fullbright mode off for a player.
+        syntax: <target>
+        message: "{player} has disabled fullbright mode for {target}."
+    godmode:
+      description: Turns god mode on or off for a player.
+      "on":
+        description: Turns god mode on for a player.
+        syntax: <target>
+        message: "{player} has enabled god mode for {target}."
+      "off":
+        description: Turns god mode off for a player.
+        syntax: <target>
+        message: "{player} has disabled god mode for {target}."
     kick:
       description: Kicks a player from the server.
       syntax: <target> [reason]
       message: "{player} has kicked {target} ({reason})."
-    permissions:
-      description: Lists the permissions that were set for a player individually.
-      syntax: <target>
-      role: "{target} has the {role} role."
-      allowed: "Allowed for {target}: {permissions}."
-      denied: "Denied for {target}: {permissions}."
-      temporary_allowed: "Temporarily allowed for {target}: {permission} ({time} left)."
-      temporary_denied: "Temporarily denied for {target}: {permission} ({time} left)."
-      none: "{target} has no permissions of their own."
-    resetpermission:
-      description: Removes what was set for a permission of a player, so that their role decides again.
-      syntax: <target> <permission>
-      message: "{player} has reset the {permission} permission of {target}."
-    revoke:
-      description: Denies a permission to a player, for good or for the given time.
-      syntax: <target> <permission> [duration]
-      message: "{player} has denied {target} the {permission} permission."
-      message_temporary: "{player} has denied {target} the {permission} permission for {time}."
-    warn:
-      description: Warns a player.
-      syntax: <target> [reason]
-      message: "{player} has warned {target} for {reason}."
+    permission:
+      description: Manages the permissions that are set for players individually.
+      grant:
+        description: Allows a permission for a player, for good or for the given time.
+        syntax: <target> <permission> [duration]
+        message: "{player} has granted {target} the {permission} permission."
+        message_temporary: "{player} has granted {target} the {permission} permission for {time}."
+      revoke:
+        description: Denies a permission to a player, for good or for the given time.
+        syntax: <target> <permission> [duration]
+        message: "{player} has denied {target} the {permission} permission."
+        message_temporary: "{player} has denied {target} the {permission} permission for {time}."
+      reset:
+        description: Removes what was set for a permission of a player, so that their role decides again.
+        syntax: <target> <permission>
+        message: "{player} has reset the {permission} permission of {target}."
+      list:
+        description: Lists the permissions that were set for a player individually.
+        syntax: <target>
+        role: "{target} has the {role} role."
+        allowed: "Allowed for {target}: {permissions}."
+        denied: "Denied for {target}: {permissions}."
+        temporary_allowed: "Temporarily allowed for {target}: {permission} ({time} left)."
+        temporary_denied: "Temporarily denied for {target}: {permission} ({time} left)."
+        none: "{target} has no permissions of their own."
+    respawn:
+      description: "Respawns a player where they are, or where you are looking."
+      syntax: "<target> [stay / tp]"
+      message: "{target} was respawned by {player}."
     restart:
       description: Restarts the current map.
-      syntax: "[number Delay]"
+      syntax: "[delay]"
       message: "{player} is restarting the map in {delay} second(s)!"
     return:
       description: Bring a player back to their previous position before teleport.
       syntax: <target>
       message: "{player} returned {target} to their previous position."
+    role:
+      description: Sets and removes the roles of players.
+      set:
+        description: "Sets the role of a player. Roles: {groups}"
+        syntax: <target> <role>
+        message: "{player} has set {target}'s role to {group}."
+      remove:
+        description: Sets the role of a player back to user. A Steam ID demotes somebody who is not on the server.
+        syntax: <target or Steam ID>
+        message: "{player} has demoted {target} to user."
     send:
       description: Teleport a player to another player.
       syntax: <target> <destination player>
       message: "{player} has teleported {target} to {destination}."
-    setgroup:
-      description: "Sets the player's usergroup. Usergroups: {groups}"
-      syntax: <target> <usergroup>
-      message: "{player} has set {target}'s user group to {group}."
     slay:
       description: Kills a player.
       syntax: <target>
@@ -93,37 +135,20 @@ en:
       description: Teleport to the target's position.
       syntax: <target>
       message: "{player} has teleported to {target}."
-    unban:
-      description: Unban the specified SteamID if it is banned.
-      syntax: <target SteamID>
-      message: "{player} has unbanned {target}."
     vanish:
-      description: "Completely hides the specified player from everyone else on the server."
-      syntax: "<string player> [bool should_vanish]"
-      enabled: "{target} has been vanished by {player}."
-      disabled: "{target} has been unvanished by {player}."
-    fullbright:
-      description: "Disables lights for the specified player."
-      syntax: "<string player> <bool should_hide>"
-      enabled: "{player} has enabled fullbright mode for {target}."
-      disabled: "{player} has disabled fullbright mode for {target}."
-    freeze:
-      description: "Freezes a player."
-      syntax: "<string player>"
-      message: "{player} has frozen {target}."
-    unfreeze:
-      description: "Unfreezes a player."
-      syntax: "<string player>"
-      message: "{player} has unfrozen {target}."
-    respawn:
-      description: "Respawns a player where they are, or where you are looking."
-      syntax: "<string player> [tp / stay]"
-      message: "{target} was respawned by {player}."
-    godmode:
-      description: "Sets god mode for a player."
-      syntax: "<string player> [bool boolean]"
-      enabled: "{player} has enabled god mode for {target}."
-      disabled: "{player} has disabled god mode for {target}."
+      description: Completely hides a player from everyone else on the server, or shows them again.
+      "on":
+        description: Hides a player from everyone but the staff.
+        syntax: <target>
+        message: "{target} has been vanished by {player}."
+      "off":
+        description: Shows a hidden player to everyone again.
+        syntax: <target>
+        message: "{target} has been unvanished by {player}."
+    warn:
+      description: Warns a player.
+      syntax: <target> [reason]
+      message: "{player} has warned {target} for {reason}."
   condition:
     role:
       name: Player with specific role

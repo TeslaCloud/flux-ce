@@ -1,7 +1,7 @@
 --- The Transfer command moves players to another server of the proxy network, with an
--- optional reason. The player is a name or a target selector for players on this server, or
--- a name or SteamID for players on other servers. Players on this server have to pass the
--- caller's immunity check.
+-- optional reason. The player is the exact name or a target selector of players on this
+-- server, or a name or SteamID for players on other servers. Players on this server have to
+-- pass the caller's immunity check.
 --
 -- A caller who is connected through the proxy has the proxy move the targets, which works
 -- for players on every server of the network, and lets a proxy admin send players into
@@ -13,6 +13,8 @@ CMD.description = 'command.transfer.description'
 CMD.syntax = 'command.transfer.syntax'
 CMD.category = 'permission.categories.proxy'
 CMD.arguments = 2
+CMD.arg_types = { 'player', 'server', 'text' }
+CMD.player_arg = false
 CMD.aliases = { 'proxysend' }
 
 --- Moves the targeted players to the named server and notifies staff. The proxy answers the

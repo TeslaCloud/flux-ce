@@ -1,30 +1,36 @@
 en:
   command:
-    charsetlevel:
-      description: "Set the level of a character, from {floor} to {max_level}. Their experience is reset and their unspent skill and attribute points are worked out again for the new level. The level cap does not apply, but the level floor does."
-      syntax: <target> <level>
-      message: "{player} has set {target}'s level to {level}."
-    chargiveexperience:
-      description: "Give experience to a character. A negative amount takes experience away and can lower their level. The level cap does not apply, but a character is never lowered below the level floor."
-      syntax: <target> <amount>
-      message: "{player} has given {target} {amount} experience."
-      message_taken: "{player} has taken {amount} experience from {target}."
-    charlevel:
-      description: "View the level and experience of a character."
-      syntax: <target>
-      message: "{target} is level {level} of {max_level} with {experience} / {needed} experience, {remaining} short of the next level."
-      message_max: "{target} is level {level}, the highest level."
-      message_capped: "{target} is level {level} of {max_level} with {experience} experience kept, held back by the level cap of {cap} until the server level rises."
+    level:
+      description: "View and set the levels of characters."
+      get:
+        description: "View the level and experience of a character."
+        syntax: <target>
+        message: "{target} is level {level} of {max_level} with {experience} / {needed} experience, {remaining} short of the next level."
+        message_max: "{target} is level {level}, the highest level."
+        message_capped: "{target} is level {level} of {max_level} with {experience} experience kept, held back by the level cap of {cap} until the server level rises."
+      set:
+        description: "Set the level of a character, from {floor} to {max_level}. Their experience is reset and their unspent skill and attribute points are worked out again for the new level. The level cap does not apply, but the level floor does."
+        syntax: <target> <level>
+        message: "{player} has set {target}'s level to {level}."
+    experience:
+      description: "Give experience to characters."
+      add:
+        description: "Give experience to a character. A negative amount takes experience away and can lower their level. The level cap does not apply, but a character is never lowered below the level floor."
+        syntax: <target> <amount>
+        message: "{player} has given {target} {amount} experience."
+        message_taken: "{player} has taken {amount} experience from {target}."
     serverlevel:
-      description: "View the server level, the time until the next one and the level floor and cap of characters."
-      message: "The server is level {level} of {max_level}: {elapsed} into this level, level {next_level} comes in {time}."
-      message_max: "The server is level {level}, the highest level."
-      limits: "Characters are raised to at least level {floor} and level up through experience to at most level {cap}."
-      progression_off: Server level progression is off, so there is no level floor or level cap.
-    setserverlevel:
-      description: "Set the server level, from -1 to {max_level}. The server is put at the very start of that level and characters are brought in line with the new level floor and cap."
-      syntax: <level>
-      message: "{player} has set the server level to {level}."
+      description: "View and set the server level."
+      get:
+        description: "View the server level, the time until the next one and the level floor and cap of characters."
+        message: "The server is level {level} of {max_level}: {elapsed} into this level, level {next_level} comes in {time}."
+        message_max: "The server is level {level}, the highest level."
+        limits: "Characters are raised to at least level {floor} and level up through experience to at most level {cap}."
+        progression_off: Server level progression is off, so there is no level floor or level cap.
+      set:
+        description: "Set the server level, from -1 to {max_level}. The server is put at the very start of that level and characters are brought in line with the new level floor and cap."
+        syntax: <level>
+        message: "{player} has set the server level to {level}."
   config:
     levels:
       title: Levels

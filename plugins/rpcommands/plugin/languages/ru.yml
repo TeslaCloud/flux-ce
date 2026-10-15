@@ -19,13 +19,15 @@ ru:
       description: Отправить сообщение с описанием события игрокам в радиусе речи от вас.
       syntax: <текст>
     gag:
-      description: Запретить игроку использовать ООС чаты.
-      syntax: <игрок> <длительность> [причина]
-      message: "{admin} заблокировал OOC чат у {target} на {time} ({reason})."
-    ungag:
-      description: Разрешить игроку использовать ООС чаты.
-      syntax: <игрок>
-      message: "{admin} разблокировал OOC у {target}."
+      description: Запретить или разрешить игрокам использовать ООС чаты.
+      add:
+        description: Запретить игроку использовать ООС чаты.
+        syntax: <игрок> <длительность> [причина]
+        message: "{admin} заблокировал OOC чат у {target} на {time} ({reason})."
+      remove:
+        description: Разрешить игроку использовать ООС чаты.
+        syntax: <игрок>
+        message: "{admin} разблокировал OOC у {target}."
     its:
       description: Оставить надпись, описывающие некоторые детали окружения.
       syntax: <текст>

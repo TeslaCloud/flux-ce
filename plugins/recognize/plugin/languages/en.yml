@@ -30,7 +30,6 @@ en:
   error:
     recognize:
       invalid_name: You cannot introduce yourself under this name.
-      invalid_mode: "'{mode}' is not a valid mode! Use own, others or all."
       no_character: None of these players has a character loaded.
       nothing_to_forget: None of these characters knows the characters to forget.
   notification:

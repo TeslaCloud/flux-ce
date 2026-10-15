@@ -146,22 +146,27 @@ function Factions.get_players(id)
   return players
 end
 
---- Finds a faction by its ID or name, ignoring letter case.
--- @param name [String faction ID or name, or a part of either]
--- @param strict=false [Boolean require the whole ID or name to match]
--- @return [Faction/Boolean the first matching faction, or false if nothing matched]
-function Factions.find(name, strict)
+--- Finds a faction by its whole ID or its whole name, ignoring letter case. The name may be
+-- given as the language phrase the faction is registered with or as its translation. An ID
+-- is matched before any name.
+-- @param name [String faction ID or name]
+-- @return [Faction/Boolean the faction, or false if no faction has this ID or name]
+function Factions.find(name)
+  if !isstring(name) then return false end
+
   local lowered = name:utf8lower()
 
   for k, v in pairs(stored) do
-    if strict then
-      if k:utf8lower() == lowered or v.name:utf8lower() == lowered then
-        return v
-      end
-    else
-      if k:utf8lower():find(lowered) or v.name:utf8lower():find(lowered) then
-        return v
-      end
+    if k:utf8lower() == lowered then
+      return v
+    end
+  end
+
+  for _, v in pairs(stored) do
+    local faction_name = tostring(v.name)
+
+    if faction_name:utf8lower() == lowered or t(faction_name):utf8lower() == lowered then
+      return v
     end
   end
 
@@ -322,7 +327,7 @@ end
 -- members of the same faction, the rank of the actor has to have the can_promote field, and
 -- the rank the target would be promoted to must exist and be no higher than that field
 -- allows. Nobody may promote themselves. The permissions of staff are not looked at here:
--- the PromoteRank command accepts either.
+-- the `/rank promote` command accepts either.
 -- ```
 -- FACTION:add_rank('recruit')
 -- FACTION:add_rank('officer')
@@ -359,7 +364,7 @@ end
 -- members of the same faction, the rank of the actor has to have the can_demote field, and
 -- the target must hold a rank that is not the lowest one and is no higher than that field
 -- allows. Nobody may demote themselves. The permissions of staff are not looked at here:
--- the DemoteRank command accepts either.
+-- the `/rank demote` command accepts either.
 -- @param actor [Player the player who wants to demote]
 -- @param target [Player the player who would be demoted]
 -- @return [Boolean]

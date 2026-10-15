@@ -9,8 +9,8 @@
 --
 -- A player may have as many characters as the `character_limit` config allows, and a name
 -- that a player picks has to be unlike the name of any other character. Staff can ban a
--- character with the CharBan command: it can then be neither loaded nor deleted until
--- CharUnban lifts the ban. Players change their own description with CharPhysDesc.
+-- character with `/charban add`: it can then be neither loaded nor deleted until
+-- `/charban remove` lifts the ban. Players change their own description with CharPhysDesc.
 --
 -- Other plugins build on it through hooks: `PlayerCreateCharacter` validates the data of a new
 -- character, `PostCreateCharacter` and `SaveCharacterData` let them keep their own fields on a

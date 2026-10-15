@@ -96,20 +96,21 @@ do
   end
 
   --- Returns the ID of the currency that a player has named, for instance as the argument
-  -- of a command, or the ID of the default currency if they have named none or one that is
-  -- not registered.
+  -- of a command, or the ID of the default currency if they have named none.
   -- @param id=nil [String currency ID as it was typed, letter case is ignored]
-  -- @return [String currency ID in lower case, or nil if the currency is not registered and
-  --   there is no default currency either]
+  -- @return [String currency ID in lower case, or nil if the named currency is not
+  --   registered, or if none is named and there is no default currency]
   -- @see [Currencies:get_default_currency]
   function Currencies:resolve_currency(id)
-    local lower_id = isstring(id) and id:lower()
-
-    if lower_id and stored[lower_id] then
-      return lower_id
+    if !isstring(id) or id == '' then
+      return self:get_default_currency()
     end
 
-    return self:get_default_currency()
+    local lower_id = id:lower()
+
+    if stored[lower_id] then
+      return lower_id
+    end
   end
 
   --- Returns how much of a currency a new character starts with: the `starting_amount` the
@@ -162,6 +163,28 @@ do
     return model or fallback_model
   end
 end
+
+--- Completes arguments of the 'currency' type with currency IDs: every currency for staff and
+-- the server console, and for other players the currencies that are not hidden along with
+-- the hidden ones they have money in.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @return [List<String> currency IDs, sorted]
+local function complete_currency(actor)
+  local show_all = !IsValid(actor) or actor:can('staff')
+  local ids = {}
+
+  for k, v in pairs(stored) do
+    if show_all or !v.hidden or actor:get_money(k) > 0 then
+      ids[#ids + 1] = k
+    end
+  end
+
+  table.sort(ids)
+
+  return ids
+end
+
+Flux.Command:add_completer('currency', complete_currency)
 
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'

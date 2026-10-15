@@ -6,6 +6,7 @@ CMD.description = 'command.staff.description'
 CMD.syntax = 'command.staff.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
+CMD.arg_types = { 'text' }
 
 --- Sends a chat message to every online player with the 'staff' permission.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]

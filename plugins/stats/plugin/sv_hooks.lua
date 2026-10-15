@@ -5,7 +5,7 @@
 -- Stamina, Pickup Objects, Damage, Limb Damage and Vendors plugins, and rolls the attributes
 -- and skills that a player asks for with the 'fl_stats_roll' message. A handler of a plugin
 -- that is not loaded is never called. The 'fl_attributes_view' message, which the
--- CharAttributes command sends to show a character's attributes and skills to a member of
+-- `attribute list` command sends to show a character's attributes and skills to a member of
 -- staff, is registered here; it carries the player, their attributes as
 -- `Player:get_attributes` returns them and their skills as `Player:get_skills` returns them.
 

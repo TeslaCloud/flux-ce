@@ -1,16 +1,19 @@
---- The CharGiveExperience command gives experience to the targeted players' characters. A
--- negative amount takes experience away, which can lower their level. The level cap of the
--- server level does not bind it, so the experience can raise characters above the cap, but the
--- level floor does: a character that falls below the floor is raised back to it, keeping its
--- experience.
+--- The `experience` staff command: `/experience add <player> <amount>` gives experience to
+-- the targeted players' characters. A negative amount takes experience away, which can lower
+-- their level. The level cap of the server level does not bind it, so the experience can
+-- raise characters above the cap, but the level floor does: a character that falls below the
+-- floor is raised back to it, keeping its experience.
 
-CMD.name = 'CharGiveExperience'
-CMD.description = 'command.chargiveexperience.description'
-CMD.syntax = 'command.chargiveexperience.syntax'
+CMD.name = 'Experience'
+CMD.description = 'command.experience.description'
 CMD.category = 'permission.categories.character_management'
-CMD.arguments = 2
-CMD.player_arg = 1
-CMD.aliases = { 'givexp', 'giveexperience', 'chargivexp' }
+CMD.aliases = { 'xp', 'givexp' }
+
+local add = CMD:subcommand('add')
+add.description = 'command.experience.add.description'
+add.syntax = 'command.experience.add.syntax'
+add.arguments = 2
+add.arg_types = { 'player', 'number' }
 
 --- Gives the experience to every target that has an active character, past the level cap
 -- if it is enough, raises those that fell below the level floor back to it, then notifies the
@@ -19,7 +22,7 @@ CMD.aliases = { 'givexp', 'giveexperience', 'chargivexp' }
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param amount [String experience to give, parsed with tonumber and rounded; negative to
 --   take experience away]
-function CMD:on_run(actor, targets, amount)
+function add:on_run(actor, targets, amount)
   amount = tonumber(amount)
 
   if amount and amount == amount then
@@ -36,7 +39,7 @@ function CMD:on_run(actor, targets, amount)
   local shown_amount = math.abs(amount)
   local changed = {}
 
-  for k, v in ipairs(targets) do
+  for _, v in ipairs(targets) do
     if v:is_character_loaded() then
       v:give_experience(amount, 'command', true)
       v:notify(taken and 'notification.levels.experience_taken' or 'notification.levels.experience_given', {
@@ -55,7 +58,7 @@ function CMD:on_run(actor, targets, amount)
     return
   end
 
-  self:notify_staff('command.chargiveexperience.'..(taken and 'message_taken' or 'message'), {
+  self:notify_staff('command.experience.add.'..(taken and 'message_taken' or 'message'), {
     player = get_player_name(actor),
     target = util.player_list_to_string(changed),
     amount = shown_amount

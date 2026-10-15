@@ -30,7 +30,6 @@ ru:
   error:
     recognize:
       invalid_name: Вы не можете представиться этим именем.
-      invalid_mode: "'{mode}' - недопустимый режим! Используйте own, others или all."
       no_character: Ни у одного из этих игроков не загружен персонаж.
       nothing_to_forget: Никто из этих персонажей не знает тех, кого нужно забыть.
   notification:

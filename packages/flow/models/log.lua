@@ -101,7 +101,7 @@ end
 --   'PlayerRunCommand',
 --   IsValid(actor) and actor.record.id or 'console'
 -- ):replicate(function(listener)
---   return listener:is_staff() and listener:can(cmd_table.id)
+--   return listener:is_staff() and listener:can(cmd_table:get_permission())
 -- end)
 -- ```
 -- @param color [Color color of the console output]

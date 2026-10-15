@@ -107,7 +107,7 @@ function Gamemastery:PostRestoreCharacters(actor)
 end
 
 --- Adds the user record of the pool to the records whose characters are searched by name, so
--- that commands such as CharUnban work on the pool characters that are in memory.
+-- that commands such as `/charban remove` work on the pool characters that are in memory.
 -- @param records [List<User> added to in place]
 function Gamemastery:CollectLoadedUserRecords(records)
   local record = Gamemastery.get_pool_record()

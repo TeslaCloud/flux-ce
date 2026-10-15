@@ -137,10 +137,10 @@ Flux has a built-in administration solution. **Please do not attempt to install 
 Giving yourself admin rights is as simple as running the following command in the srcds console:
 
 ```
-flc setgroup YOUR_NAME_OR_STEAMID admin
+flc role set YOUR_NAME_OR_STEAMID admin
 ```
 
-`admin` is the highest-possible user role in Flux. Replace `YOUR_NAME_OR_STEAMID` with your full or partial username or character name, or your full SteamID (`STEAM_X:X:X`).
+`admin` is the highest-possible user role in Flux. Replace `YOUR_NAME_OR_STEAMID` with your full Steam name or character name (in double quotes if it has spaces in it), or your full SteamID (`STEAM_X:X:X`).
 
 _The `admin` role will have every single permission by default._ Similarly to the `superadmin` user role in other administration solutions, with one important difference: there are no limitations at all, and the role cannot be in any way limited. Any permission is automatically granted to all users with the `admin` role. _Please be careful with who you give this role to._
 

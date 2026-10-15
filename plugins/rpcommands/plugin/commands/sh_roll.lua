@@ -14,6 +14,7 @@ CMD.description = 'command.roll.description'
 CMD.syntax = 'command.roll.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 0
+CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 local max_range = 1000000

@@ -2,7 +2,7 @@ en:
   command:
     giveitem:
       description: Gives the specified item to a player.
-      syntax: "<target> <item name or unique ID>"
+      syntax: "<target> <item ID or name> [amount]"
       message: "{player} has given {item} x {amount} to {target}."
   config:
     inventory:

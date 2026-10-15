@@ -6,7 +6,7 @@ CMD.description = 'command.forcefall.description'
 CMD.syntax = 'command.forcefall.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
-CMD.player_arg = 1
+CMD.arg_types = { 'player', 'number' }
 CMD.aliases = { 'forcefallover', 'plyfall' }
 
 --- Makes every living target that is not ragdolled fall over, and notifies the staff.

@@ -5,7 +5,7 @@ CMD.description = 'command.charsetmodel.description'
 CMD.syntax = 'command.charsetmodel.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
-CMD.player_arg = 1
+CMD.arg_types = { 'player', 'model' }
 CMD.alias = 'setmodel'
 
 --- Sets the model of every target's character and notifies staff.
@@ -13,7 +13,7 @@ CMD.alias = 'setmodel'
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param model [String model path]
 function CMD:on_run(actor, targets, model)
-  for k, v in ipairs(targets) do
+  for _, v in ipairs(targets) do
     v:notify('notification.model_changed', { model = model })
     Characters.set_model(v, model)
   end

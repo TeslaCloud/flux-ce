@@ -312,31 +312,33 @@ ru:
       master: Стоит Вам на чём-то сосредоточиться, и ничто не может сбить Вашу концентрацию.
       legendary: Ваша сосредоточенность абсолютна и отсекает всё, кроме текущей задачи.
   command:
-    charsetattribute:
-      description: "Установить атрибут персонажа. Атрибуты: {attributes}"
-      syntax: <цель> <атрибут> <значение>
-      message: "{player} устанавливает {target} атрибут {attribute} на {value}."
+    attribute:
+      description: "Установить, усилить или посмотреть атрибуты персонажей."
+      set:
+        description: "Установить атрибут персонажа. Атрибуты: {attributes}"
+        syntax: <цель> <атрибут> <значение>
+        message: "{player} устанавливает {target} атрибут {attribute} на {value}."
+      boost:
+        description: "Усилить атрибут персонажа. Длительность 'perma' дает усиление, которое действует, пока его не снимут. Атрибуты: {attributes}"
+        syntax: <цель> <атрибут> <значение> <длительность>
+        message: "{player} усиливает {target} атрибут {attribute} на {value} на {time}."
+        message_permanent: "{player} усиливает {target} атрибут {attribute} на {value} навсегда."
+      clearboosts:
+        description: "Снять усиления с атрибута персонажа или со всех атрибутов, если атрибут не указан. Атрибуты: {attributes}"
+        syntax: "<цель> [атрибут]"
+        message: "{player} снимает с {target} усиления атрибута {attribute}."
+        message_all: "{player} снимает с {target} все усиления атрибутов."
+      list:
+        description: "Посмотреть атрибуты и навыки персонажа."
+        syntax: <цель>
+        header: "Атрибуты персонажа {target}:"
+        line: "{attribute} ({id}): уровень {level}, усиление {boost}"
+        skills_header: "Навыки персонажа {target}:"
+        skill_line: "{skill} ({id}): ранг {rank}"
     charsetskill:
       description: "Установить ранг навыка персонажа. Навыки: {skills}"
       syntax: <цель> <навык> <ранг>
       message: "{player} устанавливает {target} навык {skill} на ранг {value}."
-    charattributeboost:
-      description: "Усилить атрибут персонажа. Длительность 'perma' дает усиление, которое действует, пока его не снимут. Атрибуты: {attributes}"
-      syntax: <цель> <атрибут> <значение> <длительность>
-      message: "{player} усиливает {target} атрибут {attribute} на {value} на {time}."
-      message_permanent: "{player} усиливает {target} атрибут {attribute} на {value} навсегда."
-    charattributeboostclear:
-      description: "Снять усиления с атрибута персонажа или со всех атрибутов, если атрибут не указан. Атрибуты: {attributes}"
-      syntax: "<цель> [атрибут]"
-      message: "{player} снимает с {target} усиления атрибута {attribute}."
-      message_all: "{player} снимает с {target} все усиления атрибутов."
-    charattributes:
-      description: "Посмотреть атрибуты и навыки персонажа."
-      syntax: <цель>
-      header: "Атрибуты персонажа {target}:"
-      line: "{attribute} ({id}): уровень {level}, усиление {boost}"
-      skills_header: "Навыки персонажа {target}:"
-      skill_line: "{skill} ({id}): ранг {rank}"
   condition:
     attribute:
       name: Игрок с определенным атрибутом

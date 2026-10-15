@@ -6,6 +6,7 @@ CMD.description = 'command.charforget.description'
 CMD.syntax = 'command.charforget.syntax'
 CMD.category = 'permission.categories.character_management'
 CMD.arguments = 2
+CMD.arg_types = { 'player', 'player' }
 CMD.immunity = true
 CMD.aliases = { 'forget', 'plyforget' }
 
@@ -17,10 +18,14 @@ CMD.aliases = { 'forget', 'plyforget' }
 -- @param ... [Vararg words of the name or target selector of the players to forget]
 function CMD:on_run(actor, targets, ...)
   local selector = table.concat({ ... }, ' ')
-  local forgotten = Flux.Command:str_to_player(actor, selector)
+  local forgotten, kind = Flux.Command:str_to_player(actor, selector)
 
   if !istable(forgotten) or #forgotten == 0 then
-    Flux.Player:notify(actor, 'error.command.player_invalid', { player = tostring(selector) })
+    Flux.Player:notify(
+      actor,
+      kind == 'ambiguous' and 'error.command.player_ambiguous' or 'error.command.player_invalid',
+      { player = tostring(selector) }
+    )
 
     return
   end

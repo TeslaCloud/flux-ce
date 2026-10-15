@@ -29,10 +29,7 @@ function ROLE:define_permissions()
   can 'spawnpoints'
   can 'fill_containers'
 
-  can 'addbots'
-  can 'kickbots'
-  can 'freezebots'
-  can 'unfreezebots'
+  can 'bots'
   can 'fullbright'
   can 'settime'
 
@@ -42,10 +39,7 @@ function ROLE:define_permissions()
   can 'giveitem'
   can 'setmoney'
   can 'whitelist'
-  can 'unwhitelist'
 
-  can 'charsetattribute'
+  can 'attribute'
   can 'charsetskill'
-  can 'charattributeboost'
-  can 'charattributeboostclear'
 end

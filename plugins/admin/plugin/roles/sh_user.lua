@@ -26,8 +26,7 @@ function ROLE:define_permissions()
   can 'dropmoney'
   can 'givemoney'
 
-  can 'demoterank'
-  can 'promoterank'
+  can 'rank'
 end
 
 --- Called when the player's primary group is being set to this group.

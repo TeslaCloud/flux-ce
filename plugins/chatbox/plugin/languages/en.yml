@@ -40,4 +40,6 @@ en:
     chat:
       aliases: Aliases
       no_commands_found: No commands found!
+      more_above: "{count} more above"
+      more_below: "{count} more below"
       everyone: everyone

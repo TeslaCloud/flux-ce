@@ -26,11 +26,28 @@
 -- `fl_inventory_container` shows another inventory next to the player's own.
 --
 -- The plugin also implements what the take, use and drop actions of the Items plugin do,
--- lets the slot binds select the items of the hotbar, and adds the GiveItem command and
--- an items tab to the spawn menu.
+-- lets the slot binds select the items of the hotbar, and adds the GiveItem command, the
+-- 'item' argument type that completes item IDs for commands, and an items tab to the spawn
+-- menu.
 -- @module [Inventories]
 
 PLUGIN:set_global('Inventories')
+
+--- Completes arguments of the 'item' type with the ID of every registered item.
+-- @return [List<String> item IDs, sorted]
+local function complete_item()
+  local ids = {}
+
+  for k in pairs(Item.all()) do
+    ids[#ids + 1] = k
+  end
+
+  table.sort(ids)
+
+  return ids
+end
+
+Flux.Command:add_completer('item', complete_item)
 
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'

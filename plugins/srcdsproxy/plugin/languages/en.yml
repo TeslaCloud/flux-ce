@@ -23,24 +23,34 @@ en:
       syntax: "<player or SteamID> <server> [reason]"
       message: "{player} is moving {target} to {server} ({reason})."
     proxywhitelist:
-      description: Adds players to or removes them from the whitelist of a whitelist-only server of the network, or lists the whitelists in your console. Proxy admins only.
-      syntax: "add|remove <server> <player or SteamID> | list [server]"
-      message_add: "{player} has added {target} to the whitelist of {server}."
-      message_remove: "{player} has removed {target} from the whitelist of {server}."
+      description: Edits and lists the whitelists of the whitelist-only servers of the network. Proxy admins only.
+      add:
+        description: Adds players to the whitelist of a whitelist-only server of the network. Proxy admins only.
+        syntax: "<server> <player or SteamID>"
+        message: "{player} has added {target} to the whitelist of {server}."
+      remove:
+        description: Removes players from the whitelist of a whitelist-only server of the network. Proxy admins only.
+        syntax: "<server> <player or SteamID>"
+        message: "{player} has removed {target} from the whitelist of {server}."
+      list:
+        description: Lists the whitelists of the network, or the one of a server, in your console. Proxy admins only.
+        syntax: "[server]"
     netban:
-      description: Bans players, SteamIDs, IP addresses or subnets from the whole network, for good or for a duration such as 30m, 2h, 7d or 1w. Proxy admins only.
-      syntax: "<player, SteamID, IP or subnet> [duration] [reason]"
-      message: "{player} has banned {target} from the network ({details})."
-    netbanip:
-      description: Bans the addresses of players from the whole network, for good or for a duration such as 30m, 2h, 7d or 1w. Proxy admins only.
-      syntax: "<player or SteamID> [duration] [reason]"
-      message: "{player} has banned the address of {target} from the network ({details})."
-    netunban:
-      description: Lifts a ban of the network. Proxy admins only.
-      syntax: "<SteamID, IP or subnet>"
-      message: "{player} has lifted the network ban of {target}."
-    netbans:
-      description: Lists the bans of the network in your console. Proxy admins only.
+      description: Bans and unbans players, SteamIDs, IP addresses or subnets on the whole network, and lists the bans. Proxy admins only.
+      add:
+        description: Bans players, SteamIDs, IP addresses or subnets from the whole network, for good or for a duration such as 30m, 2h, 7d or 1w. Proxy admins only.
+        syntax: "<player, SteamID, IP or subnet> [duration] [reason]"
+        message: "{player} has banned {target} from the network ({details})."
+      addip:
+        description: Bans the addresses of players from the whole network, for good or for a duration such as 30m, 2h, 7d or 1w. Proxy admins only.
+        syntax: "<player or SteamID> [duration] [reason]"
+        message: "{player} has banned the address of {target} from the network ({details})."
+      remove:
+        description: Lifts a ban of the network. Proxy admins only.
+        syntax: "<SteamID, IP or subnet>"
+        message: "{player} has lifted the network ban of {target}."
+      list:
+        description: Lists the bans of the network in your console. Proxy admins only.
   error:
     proxy:
       unavailable: The srcdsproxy addon is not installed on this server.

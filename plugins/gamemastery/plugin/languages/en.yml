@@ -11,7 +11,7 @@ en:
       no_permission: "You are not a gamemaster."
       invalid_character: "There is no such gamemaster character."
       not_found: "There is no gamemaster character called {name}."
-      ambiguous: "More than one gamemaster character matches {name}."
+      ambiguous: "More than one gamemaster character is called {name}."
       possessed: "{name} is already playing this character."
       banned: "This character is banned."
       not_possessing: "You are not playing a gamemaster character."
