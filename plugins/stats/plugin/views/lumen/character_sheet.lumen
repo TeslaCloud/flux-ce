@@ -4,11 +4,12 @@
 -- spent yet, followed by the stats with their level names and modifiers. The right one lists
 -- the skills grouped under their key stats, each with its rank, its total modifier and what
 -- that modifier is made of. Every stat and skill has a button that asks the server to roll it
--- and show the result in the chat ('fl_stats_roll'), and while points are left a button that
--- spends one on it ('fl_levels_spend_attribute', 'fl_levels_spend_skill'). Stats that
--- `Attributes.is_visible` hides and skills that `Skills.is_visible` hides are left out. The
--- level, the experience and the points come from the Levels plugin and are not shown without
--- it; the faction comes from the Factions plugin.
+-- and show the result in the chat (`Stats:request_roll`), which tumbles until the result is
+-- back and then shows its total for a few seconds (`roll_button`, see cl_roll_button.lua),
+-- and while points are left a button that spends one on it ('fl_levels_spend_attribute',
+-- 'fl_levels_spend_skill'). Stats that `Attributes.is_visible` hides and skills that
+-- `Skills.is_visible` hides are left out. The level, the experience and the points come from
+-- the Levels plugin and are not shown without it; the faction comes from the Factions plugin.
 
 local card_style = {
   direction = 'row', align = 'center', gap = 8, padding = { 6, 10 }, background = 'surface_raised', radius = 6
@@ -226,13 +227,15 @@ local function Header(props)
   </view>
 end
 
---- The button that asks the server to roll a stat or a skill.
+--- The button that asks the server to roll a stat or a skill and shows the result once it is
+-- back. It is wide enough for a total, so that it keeps its size while it shows one.
 -- @param props [Map id (String ID of the stat or the skill)]
 local function RollButton(props)
-  return <button icon="fa-dice-d20" style={{ font = 'text_small', padding = { 4, 10 } }}
-    on_press={function() Cable.send('fl_stats_roll', props.id) end}>
+  return <roll_button roll_id={props.id} icon="fa-dice-d20"
+    style={{ font = 'text_small', padding = { 4, 10 }, min_width = 88 }}
+    on_press={function() Stats:request_roll(props.id) end}>
     {t'ui.character_sheet.roll'}
-  </button>
+  </roll_button>
 end
 
 --- The button that spends an unspent point on a stat or a skill.

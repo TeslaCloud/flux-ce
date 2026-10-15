@@ -8,12 +8,17 @@
 -- `attribute list` command sends to show a character's attributes and skills to a member of
 -- staff, is registered here; it carries the player, their attributes as
 -- `Player:get_attributes` returns them and their skills as `Player:get_skills` returns them.
+-- So is the 'fl_stats_roll_result' message, the answer to 'fl_stats_roll' that lets the
+-- character sheet show the result on the button that was pressed; it carries the ID of the
+-- stat or the skill and the result (a Map with the formula, total, natural, critical and
+-- rolls fields of the `Dice` result), or nil when nothing was rolled.
 
 local IsValid = IsValid
 local isnumber = isnumber
 local math_max = math.max
 
 Cable.check_networked_string('fl_attributes_view')
+Cable.check_networked_string('fl_stats_roll_result')
 
 --- Multiplies an amount that is handed out in whole points, keeping the fraction that gets
 -- cut off for the next call. Over time the player receives exactly the scaled amount, which
@@ -385,10 +390,36 @@ function Stats:roll_and_announce(actor, id)
   if RPCommands and isfunction(RPCommands.announce_roll) then
     RPCommands:announce_roll(actor, result, nil, nil, t(definition.name))
   else
-    actor:notify('notification.stats.roll', { name = definition.name, roll = Dice.format(result) })
+    actor:notify('notification.stats.roll', { name = definition.name, roll = self:format_roll(result) })
   end
 
   return result
+end
+
+--- Picks the fields of a roll result that the character sheet needs to show it, leaving out
+-- anything a handler of the AdjustAttributeRoll hook may have hung on the result.
+-- @param result [Map result of `Dice.roll`]
+-- @return [Map formula, total, natural, critical and rolls]
+local function roll_summary(result)
+  local rolls = {}
+
+  for i, roll in ipairs(istable(result.rolls) and result.rolls or {}) do
+    rolls[i] = {
+      sides = roll.sides,
+      results = roll.results,
+      kept = roll.kept,
+      dropped = roll.dropped,
+      total = roll.total
+    }
+  end
+
+  return {
+    formula = result.formula,
+    total = result.total,
+    natural = result.natural,
+    critical = result.critical,
+    rolls = rolls
+  }
 end
 
 Cable.receive('fl_stats_roll', function(actor, id)
@@ -396,9 +427,15 @@ Cable.receive('fl_stats_roll', function(actor, id)
 
   local cur_time = CurTime()
 
-  if (actor.next_stats_roll or 0) > cur_time then return end
+  if (actor.next_stats_roll or 0) > cur_time then
+    Cable.send(actor, 'fl_stats_roll_result', id, nil)
+
+    return
+  end
 
   actor.next_stats_roll = cur_time + Stats.roll_interval
 
-  Stats:roll_and_announce(actor, id)
+  local result = Stats:roll_and_announce(actor, id)
+
+  Cable.send(actor, 'fl_stats_roll_result', id, result and roll_summary(result) or nil)
 end)

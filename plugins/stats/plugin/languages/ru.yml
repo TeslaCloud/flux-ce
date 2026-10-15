@@ -453,6 +453,9 @@ ru:
       skills: Навыки
       other_skills: Прочее
       roll: Бросок
+      roll_result: "{name}: {roll}"
+      roll_critical_success: "{roll}, критический успех!"
+      roll_critical_failure: "{roll}, критический провал!"
       spend_attribute: "Потратить очко атрибута на {name}"
       spend_skill: "Потратить очко навыка на {name}"
       skill_trained: "{rank} · {attribute} {modifier} + мастерство {proficiency}"

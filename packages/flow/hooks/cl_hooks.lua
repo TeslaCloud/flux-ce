@@ -275,7 +275,8 @@ end
 
 --- Finds the entity the local player is looking at, or the one closest to the crosshair
 -- within a narrow cone, and draws its target ID through the DrawPlayerTargetID hook, the
--- entity's own DrawTargetID method or the DrawEntityTargetID hook.
+-- entity's own DrawTargetID method or the DrawEntityTargetID hook. The local player is never
+-- a target, even when the camera of the third person view sees them.
 function GM:HUDDrawTargetID()
   local client = PLAYER
 
@@ -296,7 +297,8 @@ function GM:HUDDrawTargetID()
       for i = 1, #entities do
         local v = entities[i]
 
-        if !IsValid(v) then continue end
+        -- The local player is in front of the camera in the third person view.
+        if !IsValid(v) or v == client then continue end
 
         local eye_pos = v:EyePos()
         local screen_pos = eye_pos:ToScreen()

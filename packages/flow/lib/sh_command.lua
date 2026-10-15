@@ -319,7 +319,8 @@ end
 -- writes them into a completion result: the ones that start with it first, then the others,
 -- each in the order they were given. Duplicate values are left out.
 -- @param result [Map completion result, see Flux.Command#complete]
--- @param entries [List<Map> suggestions: value (String) and command (Command, optional)]
+-- @param entries [List<Map> suggestions: value (String), command (Command, optional) and
+--   alias (Boolean true when the value is an alias of the command, optional)]
 -- @param partial [String the typed text]
 local function fill_candidates(result, entries, partial)
   local lower = partial:utf8lower()
@@ -351,54 +352,85 @@ local function fill_candidates(result, entries, partial)
   for index, entry in ipairs(prefixed) do
     result.candidates[index] = entry.value
     result.commands[index] = entry.command
+    result.aliases[index] = entry.alias == true or nil
   end
 end
 
---- Picks the name a command is suggested under: its ID if that contains the typed text,
--- else the first alias that starts with it.
+--- Checks whether a name starts with the typed text, ignoring the case.
+-- @param name [String]
+-- @param lower [String the typed text in lower case]
+-- @return [Boolean]
+local function starts_with(name, lower)
+  return name:utf8lower():sub(1, #lower) == lower
+end
+
+--- Picks the name a command is suggested under: its ID if that starts with the typed text,
+-- else the first of its aliases that does, ignoring the case. A command that neither its ID
+-- nor an alias starts the text of is not suggested at all.
 -- @param id [String command ID]
 -- @param names [List<String> aliases of the command]
 -- @param lower [String the typed text in lower case]
--- @return [String the name, or nil if none of them fits]
+-- @return [String the name, or nil if none of them fits, Boolean true if the name is an
+--   alias]
 local function pick_name(id, names, lower)
-  if id:utf8lower():find(lower, 1, true) then
-    return id
+  if starts_with(id, lower) then
+    return id, false
   end
 
   for _, name in ipairs(names or {}) do
-    if name:utf8lower():find(lower, 1, true) == 1 then
-      return name
+    if starts_with(name, lower) then
+      return name, true
     end
   end
 end
 
---- Lists the commands someone may run, each under the name it is suggested under.
+--- Sorts suggestions of commands: a name that is exactly what was typed first, then by name,
+-- and an ID before an alias of the same name.
+-- @param entries [List<Map> suggestions (value, command, alias), sorted in place]
+-- @param lower [String the typed text in lower case]
+local function sort_command_entries(entries, lower)
+  table.sort(entries, function(a, b)
+    local a_value, b_value = a.value:utf8lower(), b.value:utf8lower()
+    local a_exact, b_exact = a_value == lower, b_value == lower
+
+    if a_exact != b_exact then
+      return a_exact
+    end
+
+    if a_value != b_value then
+      return a_value < b_value
+    end
+
+    return !a.alias and b.alias == true
+  end)
+end
+
+--- Lists the commands someone may run whose ID or one of whose aliases starts with the typed
+-- text, each under the name it is suggested under.
 -- @param actor [Player the player, or nil for the server console]
 -- @param lower [String the typed text in lower case]
--- @return [List<Map> suggestions (value, command), sorted by value]
+-- @return [List<Map> suggestions (value, command, alias), the exact match first, then sorted
+--   by value]
 local function command_entries(actor, lower)
   local entries = {}
 
   for id, cmd in pairs(stored) do
     if is_reachable(cmd, actor) then
-      local value = pick_name(id, cmd.aliases, lower)
+      local value, is_alias = pick_name(id, cmd.aliases, lower)
 
       if value then
-        entries[#entries + 1] = { value = value, command = cmd }
+        entries[#entries + 1] = { value = value, command = cmd, alias = is_alias }
       end
     end
   end
 
-  table.sort(entries, function(a, b)
-    return a.value:utf8lower() < b.value:utf8lower()
-  end)
+  sort_command_entries(entries, lower)
 
   return entries
 end
 
 --- Lists the subcommands of a command someone may run, in the order they were added, each
--- under its ID, or under an alias that starts with the typed text if the ID does not
--- contain it.
+-- under its ID, or under an alias that starts with the typed text if the ID does not.
 -- @param actor [Player the player, or nil for the server console]
 -- @param cmd [Command]
 -- @param lower [String the typed text in lower case]
@@ -408,10 +440,10 @@ local function subcommand_entries(actor, cmd, lower)
 
   for _, subcommand in ipairs(cmd:get_subcommands()) do
     if is_reachable(subcommand, actor) then
-      local value = pick_name(subcommand.id, subcommand.aliases, lower)
+      local value, is_alias = pick_name(subcommand.id, subcommand.aliases, lower)
 
       if value then
-        entries[#entries + 1] = { value = value, command = subcommand }
+        entries[#entries + 1] = { value = value, command = subcommand, alias = is_alias }
       end
     end
   end
@@ -457,10 +489,13 @@ end
 -- whitespace; a double quote that is not closed makes the rest of the text that token. The
 -- suggestions are the commands the player may run, the subcommands of the command that was
 -- typed, or the values of its next argument: the words of a list from `arg_types` or what
--- the completer of the argument's type returns. A command or subcommand is suggested under
--- its ID, or under an alias that starts with the typed text if the ID does not contain it.
--- Only the suggestions that contain the typed text are kept, ignoring the case, those that
--- start with it first. Apply one with `Flux.Command:apply_completion`.
+-- the completer of the argument's type returns. Commands and subcommands the player may not
+-- run are left out. A command or subcommand is suggested only when its ID or one of its
+-- aliases starts with the typed text, ignoring the case: under its ID if that is the one,
+-- else under the alias, which `aliases` marks. The name that is exactly what was typed comes
+-- first, the others are sorted by name. The values of an argument are kept when they contain
+-- the typed text, ignoring the case, those that start with it first, so that a player can be
+-- found by any part of their name. Apply a suggestion with `Flux.Command:apply_completion`.
 -- ```
 -- local result = Flux.Command:complete('whitelist ad', PLAYER)
 -- -- result.kind == 'subcommand', result.candidates == { 'add' }, result.start == 11
@@ -481,8 +516,10 @@ end
 --   that is typed, 1 for the first one after the command or subcommand word, nil while the
 --   command is typed), arg_type (String/List<String> its type from `arg_types`, nil if it has
 --   none), candidates (List<String> the suggestions, as values to be quoted by
---   apply_completion) and commands (Map<Number, Command> the command or subcommand of the
---   suggestion at the same position, for the suggestions that are one)]
+--   apply_completion), commands (Map<Number, Command> the command or subcommand of the
+--   suggestion at the same position, for the suggestions that are one) and aliases
+--   (Map<Number, Boolean> true at the position of a suggestion that is an alias of its
+--   command rather than its ID)]
 -- @see [Flux.Command#add_completer]
 function Flux.Command:complete(text, actor)
   text = isstring(text) and text or ''
@@ -506,7 +543,8 @@ function Flux.Command:complete(text, actor)
     start_byte = current.start,
     token_index = count,
     candidates = {},
-    commands = {}
+    commands = {},
+    aliases = {}
   }
 
   if count == 1 then

@@ -83,6 +83,24 @@ function Stats:get_roll_formula(modifier)
   return '1d20'
 end
 
+--- Describes the result of a roll in short: the dice and the total as
+-- `Dice.format_compact` writes them ('d20 (14) + 3 = 17'), and a note when the roll is a
+-- critical success or failure.
+-- @param result [Map result of `Dice.roll`, or the part of it that has the formula, total,
+--   rolls and critical fields]
+-- @return [String]
+function Stats:format_roll(result)
+  local text = Dice.format_compact(result)
+
+  if result.critical == 'success' then
+    return t('ui.character_sheet.roll_critical_success', { roll = text })
+  elseif result.critical == 'failure' then
+    return t('ui.character_sheet.roll_critical_failure', { roll = text })
+  end
+
+  return text
+end
+
 --- Finds the definition whose title or short name, in any of the given languages, matches
 -- a normalised name.
 -- @param definitions [Map definitions keyed by ID, each with a name phrase]

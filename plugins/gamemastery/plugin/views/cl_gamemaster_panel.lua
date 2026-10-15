@@ -1,6 +1,36 @@
 --- The gamemaster panel of the tab menu and the cards of the pool characters in it.
 
 local drop_name = 'fl_gm_character'
+local panel_meta = FindMetaTable('Panel')
+
+--- Works out the direction from the eyes of the local player to the spot in the world under
+-- the cursor, which is what the server traces along to place a character. The cursor points
+-- from the view, which is not at the eyes in the third person view, so the spot is found with
+-- a trace from the view and the direction is taken from the eyes to it.
+-- @return [Vector normalized direction]
+local function cursor_direction()
+  local client = PLAYER
+  local direction = gui.ScreenToVector(gui.MouseX(), gui.MouseY())
+  local view_origin = MainEyePos()
+  local eye_pos = client:EyePos()
+
+  if view_origin:DistToSqr(eye_pos) < 1 then
+    return direction
+  end
+
+  local hit_pos = util.TraceLine({
+    start = view_origin,
+    endpos = view_origin + direction * 32768,
+    filter = client
+  }).HitPos
+  local to_hit = hit_pos - eye_pos
+
+  if to_hit:LengthSqr() < 1 then
+    return direction
+  end
+
+  return to_hit:GetNormalized()
+end
 
 --- Places the pool character of a dropped card in the world, where the cursor points.
 -- @param _receiver [Panel the panel the card was dropped on]
@@ -14,27 +44,32 @@ local function drop_on_world(_receiver, panels, is_dropped)
 
   if !istable(char_data) then return end
 
-  Gamemastery.request_spawn(char_data.id, gui.ScreenToVector(gui.MouseX(), gui.MouseY()))
+  Gamemastery.request_spawn(char_data.id, cursor_direction())
 end
 
---- Ignores cards that are dropped back onto the gamemaster panel.
--- @param _receiver [Panel]
--- @param _panels [List<Panel>]
--- @param _is_dropped [Boolean]
-local function ignore_drop(_receiver, _panels, _is_dropped)
+--- Checks whether a card of a pool character is being dragged.
+-- @return [Boolean]
+local function is_dragging_card()
+  local dragged = dragndrop.GetDroppable(drop_name)
+
+  return istable(dragged) and IsValid(dragged[1])
 end
 
 --- The gamemaster panel (`fl_gamemaster_panel`): a scrollable row of cards, one for every
 -- pool character, a button that releases the pool character the local player plays and a
--- hint. While the panel is open the tab menu around it takes the cards: a card dropped
--- anywhere outside of the panel places its character in the world where the cursor points.
--- The panel rebuilds itself whenever the pool arrives from the server.
+-- hint. While a card is dragged the whole tab menu fades out of the way so that the world
+-- can be seen, and the card dropped anywhere, over the faded panel too, places its character
+-- in the world where the cursor points; a right click cancels the drag. The panel rebuilds
+-- itself whenever the pool arrives from the server, or once the drag is over when it arrives
+-- during one.
 local PANEL = {}
 
---- Creates the title, the hint, the release button and the card row, makes the tab menu
--- take dropped cards and asks the server for the pool.
+--- Creates the title, the hint, the release button and the card row, makes the panel and
+-- the tab menu take dropped cards and asks the server for the pool.
 function PANEL:Init()
   local font = Theme.get_font('main_menu_normal')
+
+  self.dragging = false
 
   self.title_label = vgui.Create('DLabel', self)
   self.title_label:SetFont(Theme.get_font('main_menu_titles'))
@@ -73,7 +108,7 @@ function PANEL:Init()
   self.list = vgui.Create('fl_horizontalbar', self)
   self.list:SetOverlap(math.scale(12))
 
-  self:Receiver(drop_name, ignore_drop)
+  self:Receiver(drop_name, drop_on_world)
 
   local menu = self:GetParent()
 
@@ -89,12 +124,50 @@ function PANEL:Init()
   Gamemastery.request_pool()
 end
 
---- Stops the tab menu from taking dropped cards once the panel is gone.
+--- Stops the tab menu from taking dropped cards once the panel is gone, and brings the menu
+-- back if the panel goes away during a drag.
 function PANEL:OnRemove()
   local target = self.drop_target
 
   if IsValid(target) and istable(target.m_ReceiverSlot) then
     target.m_ReceiverSlot[drop_name] = nil
+  end
+
+  if self.dragging then
+    self.rebuild_pending = nil
+
+    self:set_dragging(false)
+  end
+end
+
+--- Notices when a card starts or stops being dragged. Watching the drag state rather than
+-- the card makes sure the menu comes back even when the card goes away during the drag.
+function PANEL:Think()
+  self.BaseClass.Think(self)
+
+  local dragging = is_dragging_card()
+
+  if dragging != self.dragging then
+    self:set_dragging(dragging)
+  end
+end
+
+--- Fades the tab menu out while a card is dragged so that the world behind it can be seen,
+-- and brings it back afterwards, rebuilding the cards if the pool arrived in the meantime.
+-- @param dragging [Boolean]
+function PANEL:set_dragging(dragging)
+  self.dragging = dragging
+
+  local menu = self.drop_target
+
+  if IsValid(menu) and menu.set_faded then
+    menu:set_faded(dragging)
+  end
+
+  if !dragging and self.rebuild_pending then
+    self.rebuild_pending = nil
+
+    self:rebuild()
   end
 end
 
@@ -128,9 +201,16 @@ function PANEL:PerformLayout(w, h)
 end
 
 --- Recreates a card for every pool character, shows the release button while the local
--- player plays one and the empty text when there are none.
+-- player plays one and the empty text when there are none. Waits until the drag is over
+-- while a card is dragged, so that the dragged card is not removed under the cursor.
 function PANEL:rebuild()
   if !IsValid(self.list) then return end
+
+  if self.dragging then
+    self.rebuild_pending = true
+
+    return
+  end
 
   self:InvalidateLayout(true)
   self.list:Clear()
@@ -160,7 +240,9 @@ vgui.Register('fl_gamemaster_panel', PANEL, 'fl_base_panel')
 --- A pool character in the gamemaster panel (`fl_gamemaster_card`): its model, a button that
 -- possesses it (or releases it when the local player plays it, or says who plays it), a
 -- button that deletes it once its name has been typed to confirm, and a marker when it
--- stands in the world. The card can be dragged out of the panel onto the world.
+-- stands in the world. The card can be dragged out of the panel onto the world; while it is
+-- dragged, a small tag with its name follows the cursor in place of the whole card, so that
+-- the spot it will be placed on stays in view.
 local PANEL = {}
 
 --- Creates the model preview, the buttons and makes the card draggable.
@@ -228,20 +310,65 @@ function PANEL:Init()
   end
 end
 
---- Draws the card through the theme's PaintCharPanel hook.
+--- Hides the model and the buttons from the copy of the card that follows the cursor.
+function PANEL:OnStartDragging()
+  panel_meta.OnStartDragging(self)
+
+  for _, child in ipairs(self:GetChildren()) do
+    child:SetPaintedManually(true)
+  end
+end
+
+--- Shows the model and the buttons again once the drag is over.
+function PANEL:OnStopDragging()
+  panel_meta.OnStopDragging(self)
+
+  for _, child in ipairs(self:GetChildren()) do
+    child:SetPaintedManually(false)
+  end
+end
+
+--- Draws the card through the theme's PaintCharPanel hook, or the tag that follows the cursor
+-- while the card is dragged.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
-  if self:IsVisible() then
+  if self.PaintingDragging then
+    self:paint_drag_tag(w, h)
+  elseif self:IsVisible() then
     Theme.hook('PaintCharPanel', self, w, h)
   end
+end
+
+--- Draws the tag that follows the cursor while the card is dragged: the name of the character
+-- and how to place it or cancel. Drag and drop paints the card centered on the cursor, so the
+-- tag is drawn below and to the right of the center to keep the spot under the cursor clear.
+-- @param w [Number]
+-- @param h [Number]
+function PANEL:paint_drag_tag(w, h)
+  local name = istable(self.char_data) and self.char_data.name or ''
+  local hint = t'ui.gamemastery.drag_hint'
+  local name_font, hint_font = Theme.get_font('text_normal'), Theme.get_font('text_small')
+  local name_w, name_h = util.text_size(name, name_font)
+  local hint_w, hint_h = util.text_size(hint, hint_font)
+  local padding = math.scale(8)
+  local icon_size = name_h
+  local tag_w = math.max(icon_size + padding + name_w, hint_w) + padding * 2
+  local tag_h = name_h + hint_h + padding * 2
+  local x, y = math.floor(w * 0.5 + math.scale(12)), math.floor(h * 0.5 + math.scale(12))
+
+  Theme.hook('DrawCard', x, y, tag_w, tag_h, Theme.get_option('corner_radius_small'), Theme.get_color('surface'))
+
+  FontAwesome:draw('fa-hat-wizard', x + padding, y + padding, icon_size, Theme.get_color('accent'))
+  draw.SimpleText(name, name_font, x + padding * 2 + icon_size, y + padding, Theme.get_color('text'))
+  draw.SimpleText(hint, hint_font, x + padding, y + padding + name_h, Theme.get_color('text_muted'))
 end
 
 --- Draws the marker of a character that stands in the world under the name.
 -- @param w [Number]
 -- @param _h [Number]
 function PANEL:PaintOver(w, _h)
-  if !istable(self.char_data) or !self.char_data.in_world then return end
+  if self.PaintingDragging or !istable(self.char_data) or !self.char_data.in_world then return end
 
   local text, font = t'ui.gamemastery.in_world', Theme.get_font('text_small')
   local text_w, text_h = util.text_size(text, font)

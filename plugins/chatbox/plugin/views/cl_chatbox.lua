@@ -604,10 +604,11 @@ function PANEL:draw_command_info(info, y, width, padding)
 end
 
 --- Draws the suggestions above the text entry: the list of suggestions right above it, with
--- the selected one highlighted and scrolled into view, and a card about a command above the
--- list. The card is about the selected suggestion if that is a command or subcommand, else
--- about the command that has been typed, with the argument that is being typed emphasised
--- in its syntax. Shows that no commands were found if nothing fits.
+-- the selected one highlighted and scrolled into view and the command a suggested alias
+-- stands for noted after it, and a card about a command above the list. The card is about
+-- the selected suggestion if that is a command or subcommand, else about the command that
+-- has been typed, with the argument that is being typed emphasised in its syntax. Shows that
+-- no commands were found if nothing fits.
 -- @param width [Number width of the area to draw in]
 -- @param bottom [Number bottom edge of the area to draw in; its top edge is 0]
 function PANEL:draw_completion(width, bottom)
@@ -680,13 +681,20 @@ function PANEL:draw_completion(width, bottom)
         Theme.hook('DrawCard', padding * 0.5, y, width - padding, row_h, radius_small, highlight, false)
       end
 
-      local text_w = draw_text(prefix..candidates[i], font, padding, y + math.scale(3), text_color)
+      local text_x = padding + draw_text(prefix..candidates[i], font, padding, y + math.scale(3), text_color)
 
       if candidate_cmd then
         local syntax = t(candidate_cmd:get_syntax())
+        local syntax_color = is_selected and text_color or muted_color
+
+        if result.aliases and result.aliases[i] then
+          local note = t('ui.chat.alias_of', { command = prefix..candidate_cmd.id })
+
+          text_x = text_x + gap + draw_text(note, font, text_x + gap, y + math.scale(3), syntax_color)
+        end
 
         if syntax != '[-]' then
-          draw_text(syntax, font, padding + text_w + gap, y + math.scale(3), is_selected and text_color or muted_color)
+          draw_text(syntax, font, text_x + gap, y + math.scale(3), syntax_color)
         end
       end
 

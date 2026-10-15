@@ -1228,6 +1228,34 @@ function Dice.format(result)
   return string_match(table_concat(parts), '^%s*(.-)%s*$')..' = '..total
 end
 
+--- Formats a result like Dice.format, only shorter, for a line of chat: a term of one die
+-- loses its count ('1d20' becomes 'd20'), and a formula that is a single die and nothing
+-- else shows the die and the total alone, as the face and the total are the same number.
+-- ```
+-- Dice.format_compact(Dice.roll('1d20 + 3')) -- 'd20 (14) + 3 = 17'
+-- Dice.format_compact(Dice.roll('1d20'))     -- 'd20 = 14'
+-- Dice.format_compact(Dice.roll('4d6kh3'))   -- '4d6kh3 (5, 4, 3, [1]) = 12'
+-- ```
+-- @param result [Table result from Dice.roll or Dice.evaluate]
+-- @return [String formatted roll]
+function Dice.format_compact(result)
+  local text = Dice.format(result)
+
+  if text == '' then
+    return text
+  end
+
+  text = string_gsub(text, '%f[%w]1([dD])([%d%%fF%(])', '%1%2')
+
+  local die, face, total = string_match(text, '^([dD][%w%%]+) %(([^%(%)]+)%) = (%S+)$')
+
+  if die and face == total then
+    return die..' = '..total
+  end
+
+  return text
+end
+
 --- Checks whether a formula can be rolled.
 -- Without variables only the syntax is checked. When variables are given, the formula is rolled
 -- once with them, so that unknown variables, dice counts and sides out of range and divisions

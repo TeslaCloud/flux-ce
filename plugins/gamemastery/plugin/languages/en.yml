@@ -29,6 +29,7 @@ en:
       tab_menu: Gamemaster
       title: Gamemaster Characters
       hint: "Drag a character onto the world to place it there. Press your use key on a placed character to possess it."
+      drag_hint: "Release to place it here, right click to cancel"
       empty: "There are no gamemaster characters yet. Create them from the main menu."
       possess: Possess
       release: Release

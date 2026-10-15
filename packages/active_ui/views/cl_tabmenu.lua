@@ -6,10 +6,12 @@
 -- sizes it with the panel's `get_menu_size`, calls its `rebuild` and runs the
 -- `OnMenuPanelOpen` hook. The panel that was open when the menu closed is opened again the
 -- next time. `open_panel` switches to another entry and `close_menu` closes the menu, which
--- runs the `OnTabMenuClosed` hook. Code that wants the menu opened or closed goes through
--- `Flux.TabMenu`.
+-- runs the `OnTabMenuClosed` hook. `set_faded` fades the menu out of the way, so that the
+-- world behind it can be seen while something is dragged out of it. Code that wants the menu
+-- opened or closed goes through `Flux.TabMenu`.
 
 local IsValid = IsValid
+local blur_strength = 6
 
 local PANEL = {}
 PANEL.menu_items = {}
@@ -24,7 +26,7 @@ function PANEL:Init()
 
   draw.set_blur_size(1)
   Flux.blur_update_fps = 0
-  self.blur_target = 6
+  self.blur_target = blur_strength
 
   self:SetPos(0, 0)
   self:SetSize(scrw, scrh)
@@ -236,6 +238,29 @@ function PANEL:add_menu_item(id, data, _index)
 
   table.insert(self.menu_items, data)
   table.sort(self.menu_items, function(a, b) return a.priority < b.priority end)
+end
+
+--- Fades the whole menu out, its blur and tint included, so that the world behind it can be
+-- seen, or fades it back in. The menu keeps taking the mouse while it is faded: panels fade
+-- it while something is dragged out of them onto the world, and the drop still reaches the
+-- receivers of the menu. Does nothing while the menu is closing.
+-- @param faded [Boolean true to fade the menu out, false to bring it back]
+function PANEL:set_faded(faded)
+  faded = faded == true
+
+  if self.closing or self:is_faded() == faded then return end
+
+  self.faded = faded
+  self.blur_target = faded and 0 or blur_strength
+
+  self:Stop()
+  self:AlphaTo(faded and 0 or 255, Theme.get_option('menu_anim_duration') * 0.5, 0)
+end
+
+--- Checks whether the menu has been faded out with set_faded.
+-- @return [Boolean]
+function PANEL:is_faded()
+  return self.faded == true
 end
 
 --- Closes the menu: fades the active panel out, remembers it for the next time the menu

@@ -2,10 +2,14 @@ en:
   settings:
     thirdperson:
       shoulder:
-        name: Third person shoulder
-        desc: "The shoulder the third person camera is over when the view is turned on. The B key moves it to the other shoulder."
+        name: Third person aiming shoulder
+        desc: "The shoulder the third person camera moves over when you aim. The B key moves it to the other shoulder."
         right: Right
         left: Left
       distance:
         name: Third person camera distance
         desc: "How far behind your character the third person camera is while you are not aiming."
+  ui:
+    thirdperson:
+      weapon_raised: Weapon raised
+      weapon_lowered: Weapon lowered

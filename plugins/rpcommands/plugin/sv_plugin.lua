@@ -258,17 +258,18 @@ local function get_roll_position(target)
   return target:GetPos()
 end
 
---- Describes a roll for the chat: the formula with the dice and the total, as `Dice.format`
--- writes it, and a note when the roll is a critical success or failure.
+--- Describes a roll for the chat in short: the formula with the dice and the total, as
+-- `Dice.format_compact` writes it ('d20 (14) + 3 = 17'), and a note when the roll is a
+-- critical success or failure.
 -- @param result [Map result of `Dice.roll`]
 -- @return [String]
 function RPCommands:format_roll(result)
-  local text = Dice.format(result)
+  local text = Dice.format_compact(result)
 
   if result.critical == 'success' then
-    text = text..' '..t'ui.chat.roll_critical_success'
+    return t('ui.chat.roll_critical_success', { roll = text })
   elseif result.critical == 'failure' then
-    text = text..' '..t'ui.chat.roll_critical_failure'
+    return t('ui.chat.roll_critical_failure', { roll = text })
   end
 
   return text

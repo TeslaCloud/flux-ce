@@ -1,27 +1,27 @@
 --- Client side of the Third Person plugin: the GTA V style camera, which orbits the character
--- with angles of its own, the facing of the character, which follows the movement input or,
--- while aiming and firing, the crosshair, the rule that hides the crosshair, the client settings
--- of the camera and the key binds.
+-- with angles of its own, the view angles of the local player, which follow what the middle of
+-- the screen shows, the crosshair and the weapon state indicator, the client settings of the
+-- camera and the key binds.
 --
 -- The camera is turned by the mouse in CreateMove, which keeps the camera angles itself and
--- sends the facing of the character as the view angles of the command. The view angles of the
--- player are therefore the direction the character faces and aims in, while the camera shows
--- the world from its own angles.
+-- sends, as the view angles of the command, the direction from the eyes of the player to what
+-- the camera looks at. Everything that follows the eyes of the player, from shots to spawned
+-- props, therefore goes where the middle of the screen is, while the model of the character
+-- is turned on its own by the shared `UpdateAnimation` handler.
 
 --- Seconds the camera takes to move between the first and the third person view.
 local blend_duration = 0.15
 
---- Offsets of the camera from the eyes of the character, in units, while not aiming: how far it
--- is to the side (towards the shoulder) and above. How far back it is comes from the
+--- Offsets of the camera from the eyes of the character, in units, while not aiming: it is
+-- straight behind them and this far above. How far back it is comes from the
 -- `thirdperson_distance` client setting.
-local idle_side = 25
-local idle_up = 5
+local idle_up = 12
 local default_distance = 90
 
---- Offsets of the camera while aiming: how far back, to the side and above it is, and how much
--- the field of view is narrowed, in degrees.
+--- Offsets of the camera while aiming: how far back, to the side (towards the shoulder) and
+-- above it is, and how much the field of view is narrowed, in degrees.
 local aim_distance = 45
-local aim_side = 20
+local aim_side = 22
 local aim_up = 5
 local aim_fov = -10
 
@@ -36,20 +36,17 @@ local collision_return_speed = 3
 --- The camera falls back to the first person view when it is closer than this to the eyes.
 local min_distance = 10
 
---- How fast, in degrees per second, the character turns towards the way they move.
-local turn_rate = 540
-
 --- How far the aim trace reaches from the camera.
 local aim_range = 32768
 
 --- How far the camera can look up (negative) and down (positive), in degrees. It stops short
--- of the vertical so that the direction from the eyes to what the crosshair is on keeps a
+-- of the vertical so that the direction from the eyes to what the camera looks at keeps a
 -- well-defined yaw.
 local min_pitch = -85
 local max_pitch = 80
 
---- An aim steeper than this many degrees keeps the facing the character already has, since
--- its yaw would be meaningless.
+--- An aim steeper than this many degrees takes its yaw from the camera, since the yaw of the
+-- direction from the eyes would be meaningless.
 local steep_aim_pitch = 85
 
 --- Half the size of the box that is traced from the eyes to the camera.
@@ -60,17 +57,33 @@ local hull_maxs = Vector(4, 4, 4)
 -- pushed in by people walking behind the character.
 local camera_mask = bit.band(MASK_SOLID, bit.bnot(CONTENTS_MONSTER))
 
+--- A next fire further away than this many seconds is the Raise Weapon plugin keeping a
+-- lowered weapon from firing.
+local fire_blocked_after = 3600
+
+--- How long, in seconds, the label that tells that the weapon has been raised or lowered is
+-- shown, and over how many of the last of them it fades out.
+local label_duration = 1.5
+local label_fade = 0.5
+
+--- Colors of the weapon state feedback: the crosshair while the weapon is being raised and
+-- cannot fire yet, the dot shown in the middle of the screen while the crosshair is hidden,
+-- the ring that shows how long the weapon stays raised, and the label.
+local color_raising = Color(230, 170, 90)
+local color_dot = Color(255, 255, 255, 70)
+local color_ring = Color(255, 255, 255, 60)
+local color_label = Color(255, 255, 255)
+local color_label_outline = Color(0, 0, 0)
+
 local view = {}
 local view_angles = Angle(0, 0, 0)
 local camera_trace = {}
 local aim_trace = {}
 local zero_offset = Vector(0, 0, 0)
 
--- State of the camera and the character, kept on the plugin table so that it survives a reload
--- of this file.
+-- State of the camera, kept on the plugin table so that it survives a reload of this file.
 ThirdPerson.camera_angles = ThirdPerson.camera_angles or Angle(0, 0, 0)
 ThirdPerson.camera_offset = ThirdPerson.camera_offset or Vector(0, 0, 0)
-ThirdPerson.facing_yaw = ThirdPerson.facing_yaw or 0
 ThirdPerson.shoulder = ThirdPerson.shoulder or 1
 ThirdPerson.blend = ThirdPerson.blend or 0
 ThirdPerson.collision_fraction = ThirdPerson.collision_fraction or 1
@@ -81,7 +94,7 @@ ThirdPerson.orbiting = ThirdPerson.orbiting or false
 ThirdPerson.aiming = ThirdPerson.aiming or false
 ThirdPerson.firing = ThirdPerson.firing or false
 
---- Reads the shoulder the camera starts over from the `thirdperson_shoulder` client setting.
+--- Reads the shoulder the camera aims over from the `thirdperson_shoulder` client setting.
 -- @return [Number 1 for the right shoulder, -1 for the left one]
 local function shoulder_setting()
   if ClientSettings and ClientSettings:get('thirdperson_shoulder', 'right') == 'left' then
@@ -135,10 +148,10 @@ local function ease_towards(current, target, frame_time)
   return Lerp(1 - math.exp(-smooth_speed * frame_time), current, target)
 end
 
---- Works out the view angles that make the shots of a player land on the crosshair: a trace is
--- run from the camera along its forward direction, and the angles point from the eyes of the
--- player at what it hits. When the hit is closer to the camera than the player is, which is
--- when something is between them, the camera angles are used instead.
+--- Works out the view angles that point the eyes of a player at what the middle of the screen
+-- shows: a trace is run from the camera along its forward direction, and the angles point from
+-- the eyes of the player at what it hits. When the hit is closer to the camera than the player
+-- is, which is when something is between them, the camera angles are used instead.
 -- The camera position is rebuilt from the offset the last CalcView left, turned with the
 -- current camera angles.
 -- @param client [Player]
@@ -167,27 +180,28 @@ function ThirdPerson:get_aim_angles(client)
   aim.y = math.NormalizeAngle(aim.y)
   aim.r = 0
 
-  -- Nearly vertical: the yaw of the direction means nothing, so the character keeps facing
-  -- the way they do.
+  -- Nearly vertical: the yaw of the direction means nothing, so the camera's is used.
   if math.abs(aim.p) > steep_aim_pitch then
-    aim.y = self.facing_yaw
+    aim.y = angles.y
   end
 
   return aim
 end
 
---- Turns the camera with the mouse and decides where the character faces while the camera
--- orbits the character (see `is_orbiting`).
+--- Turns the camera with the mouse and points the eyes of the local player at what the middle
+-- of the screen shows while the camera orbits the character (see `is_orbiting`).
 -- The engine turns the view angles of every command by the mouse, starting from the angles
 -- the previous command was given. The camera therefore takes the difference between the view
--- angles of the command and the angles this handler set last time, which is the mouse
--- movement with the player's own sensitivity and acceleration, and anything else that has
--- turned the view, such as a server that has set the angles of the player.
--- While the control is in effect and the player aims or fires, the character faces what the
--- crosshair is on; otherwise it turns towards the way it is moved, relative to the camera, at
--- a limited rate and walks forward, and keeps its facing when it stops. During an animation
--- of the Animations plugin, which locks the character, the view angles simply follow the
--- camera.
+-- angles of the command and the angles it saw or set last time, which is the mouse movement
+-- with the player's own sensitivity and acceleration, and anything else that has turned the
+-- view, such as a server that has set the angles of the player.
+-- The view angles are only set, and the aim and fire input only read, in the commands that
+-- are sent to the server. The commands that the engine builds between them to sample the
+-- mouse every frame (whose command number is 0) only turn the camera, so that nothing depends
+-- on whether the engine keeps what is done to them.
+-- While the control is in effect the view angles point from the eyes at the hit of a trace
+-- from the camera (see `ThirdPerson:get_aim_angles`). During an animation of the Animations
+-- plugin, which locks the character, they are the camera angles.
 -- While the camera does not orbit the command is left alone and the camera angles follow its
 -- view angles, so that the camera does not jump when the orbit starts. When the orbit ends
 -- with the player on foot, for example when the view is turned off, the view angles are set
@@ -197,11 +211,6 @@ function ThirdPerson:CreateMove(user_cmd)
   local client = PLAYER
 
   if !IsValid(client) then return end
-
-  local cur_time = RealTime()
-  local delta = math.Clamp(cur_time - (self.last_move_time or cur_time), 0, 0.1)
-
-  self.last_move_time = cur_time
 
   local controlling = self:is_controlling(client)
   local orbiting = controlling or is_orbiting(client)
@@ -215,7 +224,6 @@ function ThirdPerson:CreateMove(user_cmd)
     end
 
     self.camera_angles = Angle(angles.p, angles.y, 0)
-    self.facing_yaw = angles.y
     self.was_orbiting = false
     self.orbiting = false
     self.last_view_angles = nil
@@ -237,7 +245,6 @@ function ThirdPerson:CreateMove(user_cmd)
     )
 
     self.camera_angles = camera_angles
-    self.facing_yaw = camera_angles.y
     self.was_orbiting = true
   else
     camera_angles.p = math.Clamp(camera_angles.p + math.AngleDifference(angles.p, last_angles.p), min_pitch, max_pitch)
@@ -247,38 +254,24 @@ function ThirdPerson:CreateMove(user_cmd)
 
   self.orbiting = true
 
+  -- A command built to sample the mouse between the sent ones: only the camera turns.
+  if user_cmd:CommandNumber() == 0 then
+    self.last_view_angles = Angle(angles.p, angles.y, 0)
+
+    return
+  end
+
   local new_angles
 
-  if !controlling then
+  if controlling then
+    self.aiming, self.firing = self:read_input(user_cmd:GetButtons(), client:GetActiveWeapon())
+
+    new_angles = self:get_aim_angles(client)
+  else
     self.aiming = false
     self.firing = false
 
     new_angles = Angle(camera_angles.p, camera_angles.y, 0)
-  else
-    local aiming, firing = self:read_input(user_cmd:GetButtons(), client:GetActiveWeapon())
-
-    self.aiming = aiming
-    self.firing = firing
-
-    if aiming or firing then
-      new_angles = self:get_aim_angles(client)
-      self.facing_yaw = new_angles.y
-    else
-      local forward_move = user_cmd:GetForwardMove()
-      local side_move = user_cmd:GetSideMove()
-
-      if forward_move != 0 or side_move != 0 then
-        -- Positive side movement is to the right, positive yaw to the left.
-        local wish_yaw = camera_angles.y + math.deg(math.atan2(-side_move, forward_move))
-
-        self.facing_yaw = math.NormalizeAngle(math.ApproachAngle(self.facing_yaw, wish_yaw, turn_rate * delta))
-
-        user_cmd:SetForwardMove(math.sqrt(forward_move * forward_move + side_move * side_move))
-        user_cmd:SetSideMove(0)
-      end
-
-      new_angles = Angle(camera_angles.p, self.facing_yaw, 0)
-    end
   end
 
   user_cmd:SetViewAngles(new_angles)
@@ -288,13 +281,13 @@ end
 
 --- Places the camera while the third person view is on, and while it eases back into the first
 -- person view after being turned off.
--- The camera orbits the eyes of the character over a shoulder, with the camera angles while
--- it orbits on its own (see `is_orbiting`) and the view angles otherwise; while aiming it moves
--- in closer and narrows the field of view. Every offset eases towards its target, and the
--- view eases between the first and the third person over 0.15 seconds. A box is traced from
--- the eyes to the camera so that it stops in front of walls, and the view becomes first person
--- when the camera ends up too close to the eyes. Picks up the shoulder from the
--- `thirdperson_shoulder` client setting whenever the view is turned on.
+-- The camera orbits the eyes of the character from straight behind them, with the camera angles
+-- while it orbits on its own (see `is_orbiting`) and the view angles otherwise. While aiming it
+-- moves in over a shoulder and narrows the field of view. Every offset eases towards its
+-- target, and the view eases between the first and the third person over 0.15 seconds. A box
+-- is traced from the eyes to the camera so that it stops in front of walls, and the view
+-- becomes first person when the camera ends up too close to the eyes. Picks up the shoulder
+-- from the `thirdperson_shoulder` client setting whenever the view is turned on.
 -- @param client [Player]
 -- @param pos [Vector]
 -- @param angles [Angle]
@@ -327,7 +320,7 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
   local aiming = self.orbiting and self.aiming
   local camera_angles = self.orbiting and self.camera_angles or angles
   local target_distance = aiming and aim_distance or distance_setting()
-  local target_side = (aiming and aim_side or idle_side) * self.shoulder
+  local target_side = aiming and aim_side * self.shoulder or 0
   local target_up = aiming and aim_up or idle_up
   local target_fov = aiming and aim_fov or 0
 
@@ -385,12 +378,145 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
   return view
 end
 
---- Hides the crosshair while the third person control is in effect and the local player is
--- neither aiming nor firing.
+--- Works out the raised state of the local player's weapon for the weapon state feedback.
+-- @param client [Player the local player]
+-- @return [String 'raised' when the server has raised the weapon and it can fire, 'raising'
+--   while the player aims or fires or the weapon is to stay raised but it cannot fire yet,
+--   'lowered' otherwise; nil without the Raise Weapon plugin, while its `weapon_raise_enabled`
+--   config is off, without a weapon and for a weapon whose state is fixed]
+local function weapon_state(client)
+  if !RaiseGun or !Config.get('weapon_raise_enabled', true) then return end
+
+  local weapon = client:GetActiveWeapon()
+
+  if !IsValid(weapon) or RaiseGun:get_fixed_state(weapon) != nil then return end
+
+  local cur_time = CurTime()
+
+  if client:GetDTBool(BOOL_WEAPON_RAISED) and weapon:GetNextPrimaryFire() < cur_time + fire_blocked_after then
+    return 'raised'
+  end
+
+  if ThirdPerson.aiming or ThirdPerson.firing or cur_time < (ThirdPerson.local_raise_until or 0) then
+    return 'raising'
+  end
+
+  return 'lowered'
+end
+
+--- Hides the crosshair while the third person control is in effect and the model of the local
+-- player does not face their aim, that is while their weapon is lowered and they neither aim
+-- nor fire. The tools that are always raised, such as the physgun and the tool gun, keep it.
+-- A faint dot is drawn in its place by the `HUDPaint` handler. Nothing is answered while that
+-- handler asks the other plugins whether they hide the crosshair.
 -- @return [Boolean false to hide the crosshair, nil otherwise]
 function ThirdPerson:ShouldHUDPaintCrosshair()
-  if self:is_controlling(PLAYER) and !self.aiming and !self.firing then
+  if self.asking_crosshair then return end
+
+  if self:is_controlling(PLAYER) and !self:faces_aim(PLAYER) then
     return false
+  end
+end
+
+--- Tints the crosshair while the local player's weapon is being raised in third person and
+-- cannot fire yet.
+-- @param trace [Map trace result of the local player's aim]
+-- @param distance [Number distance from the local player to the trace hit position]
+-- @return [Color the tint, or nil to leave the color alone]
+function ThirdPerson:AdjustCrosshairColor(trace, distance)
+  if self:is_controlling(PLAYER) and weapon_state(PLAYER) == 'raising' then
+    return color_raising
+  end
+end
+
+--- Draws the weapon state feedback of third person control: a faint dot in the middle of the
+-- screen while the crosshair is hidden, so that the player sees what they would use or spawn
+-- something at; a ring around the crosshair that runs down while the weapon stays raised
+-- after the player has stopped aiming and firing; and a label under it for a moment after
+-- the weapon has been raised or lowered.
+function ThirdPerson:HUDPaint()
+  local client = PLAYER
+
+  if !IsValid(client) or !self:is_controlling(client) or !client:Alive() then
+    self.last_weapon_state = nil
+    self.weapon_label = nil
+
+    return
+  end
+
+  --- Flux's `ShouldHUDPaint` hook, asked here before the weapon state feedback is drawn.
+  -- @return [Boolean Return false to hide the HUD and the feedback with it]
+  if hook.Run('ShouldHUDPaint') == false then return end
+
+  local state = weapon_state(client)
+  local now = RealTime()
+  local last_state = self.last_weapon_state
+
+  if state != last_state then
+    if last_state and (state == 'raised' or state == 'lowered') then
+      self.weapon_label = state
+      self.weapon_label_time = now
+    end
+
+    self.last_weapon_state = state
+  end
+
+  local gox, goy = Flux.global_ui_offset()
+  local center_x, center_y = gox + ScrW() * 0.5, goy + ScrH() * 0.5
+
+  if !self:faces_aim(client) then
+    -- The dot stands in for the crosshair, so it is hidden whenever another plugin hides the
+    -- crosshair, during a cinematic or while running for example.
+    self.asking_crosshair = true
+
+    local crosshair_hidden = hook.Run('ShouldHUDPaintCrosshair') == false
+
+    self.asking_crosshair = nil
+
+    if !crosshair_hidden then
+      local size = math.scale(2)
+
+      draw.RoundedBox(0, center_x - size * 0.5, center_y - size * 0.5, size, size, color_dot)
+    end
+  elseif state == 'raised' and !self.aiming and !self.firing then
+    local remaining = ((self.local_raise_until or 0) - CurTime()) / self.raise_grace
+
+    if remaining > 0 then
+      draw.NoTexture()
+      surface.SetDrawColor(color_ring)
+      surface.draw_circle_outline_partial(
+        math.Clamp(remaining * 100, 0, 100),
+        center_x,
+        center_y,
+        math.scale(16),
+        math.scale(2),
+        48
+      )
+    end
+  end
+
+  local label = self.weapon_label
+
+  if label then
+    local age = now - (self.weapon_label_time or now)
+
+    if age >= label_duration then
+      self.weapon_label = nil
+    else
+      local alpha = 255 * math.Clamp((label_duration - age) / label_fade, 0, 1)
+
+      draw.SimpleTextOutlined(
+        t(label == 'raised' and 'ui.thirdperson.weapon_raised' or 'ui.thirdperson.weapon_lowered'),
+        Theme.get_font('text_small'),
+        center_x,
+        center_y + math.scale(24),
+        color_label:alpha(alpha),
+        TEXT_ALIGN_CENTER,
+        TEXT_ALIGN_TOP,
+        1,
+        color_label_outline:alpha(alpha * 0.6)
+      )
+    end
   end
 end
 
@@ -402,7 +528,7 @@ local function apply_shoulder(value)
 end
 
 --- Registers the client settings of the camera with the Settings plugin:
--- 'thirdperson_shoulder', the shoulder the camera is over when the view is turned on, and
+-- 'thirdperson_shoulder', the shoulder the camera aims over when the view is turned on, and
 -- 'thirdperson_distance', how far behind the character it is while not aiming. Only called
 -- when the Settings plugin is loaded.
 function ThirdPerson:RegisterClientSettings()
@@ -431,7 +557,8 @@ function ThirdPerson:RegisterClientSettings()
   })
 end
 
---- Moves the camera over the other shoulder. Run by the `fl_switch_shoulder` console command.
+--- Moves the aiming camera over the other shoulder. Run by the `fl_switch_shoulder` console
+-- command.
 local function switch_shoulder()
   ThirdPerson.shoulder = -(ThirdPerson.shoulder or 1)
 end

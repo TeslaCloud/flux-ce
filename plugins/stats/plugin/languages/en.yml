@@ -613,6 +613,9 @@ en:
       skills: Skills
       other_skills: Other
       roll: Roll
+      roll_result: "{name}: {roll}"
+      roll_critical_success: "{roll}, critical success!"
+      roll_critical_failure: "{roll}, critical failure!"
       spend_attribute: "Spend an attribute point on {name}"
       spend_skill: "Spend a skill point on {name}"
       skill_trained: "{rank} · {attribute} {modifier} + proficiency {proficiency}"

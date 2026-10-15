@@ -80,9 +80,9 @@
 -- one, its health and its unspent skill and attribute points, then every visible stat with
 -- its level name and modifier and every visible skill under its key stat with its rank, its
 -- total modifier and the parts that make it up. Each of them has a button that rolls it
--- through the 'fl_stats_roll' message, and while points are left a button that spends one on
--- it through the Levels plugin. The sheet follows changes that arrive from the server while
--- it is open.
+-- through the 'fl_stats_roll' message and shows the total that comes back, and while points
+-- are left a button that spends one on it through the Levels plugin. The sheet follows
+-- changes that arrive from the server while it is open.
 -- @module [Stats]
 
 PLUGIN:set_global('Stats')

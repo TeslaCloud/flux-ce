@@ -39,6 +39,7 @@ en:
   ui:
     chat:
       aliases: Aliases
+      alias_of: "(alias of {command})"
       no_commands_found: No commands found!
       more_above: "{count} more above"
       more_below: "{count} more below"
