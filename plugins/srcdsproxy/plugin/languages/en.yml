@@ -1,0 +1,59 @@
+en:
+  command:
+    proxy:
+      description: Shows whether you are connected through the proxy and how the proxy knows you.
+      not_proxied: You are connected to this server directly, not through the proxy.
+      backend: "You are connected through the proxy (version {version}) to the {backend} server."
+      steamid_verified: "Your SteamID64 is {steamid}, verified by Steam."
+      steamid_claimed: "Your SteamID64 is {steamid}, as your game claims it. Steam has not verified it."
+      no_steamid: The proxy knows no SteamID of yours.
+      address: "The proxy sees you connecting from {address}."
+      proxy_admin: You are a proxy admin.
+    server:
+      description: Moves you to another server of the network. Without a name, lists the servers in your console.
+      syntax: "[server]"
+      message: "Moving you to {server}..."
+    glist:
+      description: Lists every player of the network, on all of its servers, in your console.
+    pinfo:
+      description: Shows the proxy's details on a player of any server of the network in your console.
+      syntax: "<player, SteamID or #id>"
+    transfer:
+      description: Moves players to another server of the network. Players on other servers can only be moved by a caller who is connected through the proxy.
+      syntax: "<player or SteamID> <server> [reason]"
+      message: "{player} is moving {target} to {server} ({reason})."
+    proxywhitelist:
+      description: Adds players to or removes them from the whitelist of a whitelist-only server of the network, or lists the whitelists in your console. Proxy admins only.
+      syntax: "add|remove <server> <player or SteamID> | list [server]"
+      message_add: "{player} has added {target} to the whitelist of {server}."
+      message_remove: "{player} has removed {target} from the whitelist of {server}."
+    netban:
+      description: Bans players, SteamIDs, IP addresses or subnets from the whole network, for good or for a duration such as 30m, 2h, 7d or 1w. Proxy admins only.
+      syntax: "<player, SteamID, IP or subnet> [duration] [reason]"
+      message: "{player} has banned {target} from the network ({details})."
+    netbanip:
+      description: Bans the addresses of players from the whole network, for good or for a duration such as 30m, 2h, 7d or 1w. Proxy admins only.
+      syntax: "<player or SteamID> [duration] [reason]"
+      message: "{player} has banned the address of {target} from the network ({details})."
+    netunban:
+      description: Lifts a ban of the network. Proxy admins only.
+      syntax: "<SteamID, IP or subnet>"
+      message: "{player} has lifted the network ban of {target}."
+    netbans:
+      description: Lists the bans of the network in your console. Proxy admins only.
+  error:
+    proxy:
+      unavailable: The srcdsproxy addon is not installed on this server.
+      not_proxied: You are not connected through the proxy, which proxy commands need.
+      not_proxy_admin: Only proxy admins, who are listed in the proxy's admins.toml and verified by Steam, can do that.
+      transfer_disabled: Moving between servers is disabled here.
+      target_not_proxied: "{target} is not connected through the proxy."
+      remote_target: "{target} is not on this server. Only a caller who is connected through the proxy can move players on other servers."
+      server_invalid: "'{server}' is not a valid server name."
+      session_id_unchecked: "{target} could be somebody on this server whose immunity cannot be checked. Use their name or SteamID."
+  notification:
+    proxy:
+      console: The proxy has answered in your console.
+  permission:
+    categories:
+      proxy: Proxy network

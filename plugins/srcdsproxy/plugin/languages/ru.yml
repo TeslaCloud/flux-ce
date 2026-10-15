@@ -1,0 +1,59 @@
+ru:
+  command:
+    proxy:
+      description: Показывает, подключены ли вы через прокси и как прокси вас знает.
+      not_proxied: Вы подключены к этому серверу напрямую, не через прокси.
+      backend: "Вы подключены через прокси (версия {version}) к серверу {backend}."
+      steamid_verified: "Ваш SteamID64 — {steamid}, подтверждён Steam."
+      steamid_claimed: "Ваш SteamID64 — {steamid}, со слов вашей игры. Steam его не подтвердил."
+      no_steamid: Прокси не знает вашего SteamID.
+      address: "Прокси видит ваше подключение с адреса {address}."
+      proxy_admin: Вы администратор прокси.
+    server:
+      description: Переносит вас на другой сервер сети. Без названия выводит список серверов в консоль.
+      syntax: "[сервер]"
+      message: "Переносим вас на {server}..."
+    glist:
+      description: Выводит в консоль всех игроков сети со всех её серверов.
+    pinfo:
+      description: Выводит в консоль сведения прокси об игроке с любого сервера сети.
+      syntax: "<игрок, SteamID или #id>"
+    transfer:
+      description: Переносит игроков на другой сервер сети. Игроков с других серверов может переносить только тот, кто подключён через прокси.
+      syntax: "<игрок или SteamID> <сервер> [причина]"
+      message: "{player} переносит {target} на {server} ({reason})."
+    proxywhitelist:
+      description: Добавляет игроков в белый список сервера сети или убирает их оттуда, либо выводит белые списки в консоль. Только для администраторов прокси.
+      syntax: "add|remove <сервер> <игрок или SteamID> | list [сервер]"
+      message_add: "{player} добавляет {target} в белый список {server}."
+      message_remove: "{player} убирает {target} из белого списка {server}."
+    netban:
+      description: Банит игроков, SteamID, IP-адреса или подсети во всей сети, навсегда или на срок вроде 30m, 2h, 7d или 1w. Только для администраторов прокси.
+      syntax: "<игрок, SteamID, IP или подсеть> [срок] [причина]"
+      message: "{player} банит {target} во всей сети ({details})."
+    netbanip:
+      description: Банит адреса игроков во всей сети, навсегда или на срок вроде 30m, 2h, 7d или 1w. Только для администраторов прокси.
+      syntax: "<игрок или SteamID> [срок] [причина]"
+      message: "{player} банит адрес {target} во всей сети ({details})."
+    netunban:
+      description: Снимает бан сети. Только для администраторов прокси.
+      syntax: "<SteamID, IP или подсеть>"
+      message: "{player} снимает сетевой бан с {target}."
+    netbans:
+      description: Выводит в консоль баны сети. Только для администраторов прокси.
+  error:
+    proxy:
+      unavailable: Аддон srcdsproxy не установлен на этом сервере.
+      not_proxied: Вы подключены не через прокси, а команды прокси требуют этого.
+      not_proxy_admin: Это могут только администраторы прокси, перечисленные в его admins.toml и подтверждённые Steam.
+      transfer_disabled: Переход между серверами здесь отключён.
+      target_not_proxied: "{target} подключён не через прокси."
+      remote_target: "{target} нет на этом сервере. Игроков с других серверов может переносить только тот, кто подключён через прокси."
+      server_invalid: "'{server}' не является названием сервера."
+      session_id_unchecked: "{target} может оказаться игроком с этого сервера, чей иммунитет нельзя проверить. Укажите его имя или SteamID."
+  notification:
+    proxy:
+      console: Прокси ответил в вашу консоль.
+  permission:
+    categories:
+      proxy: Сеть прокси

@@ -1,0 +1,5 @@
+name: srcdsproxy
+description: Runs the commands of the srcdsproxy network through Flux, with Bolt permissions.
+author: TeslaCloud Studios
+depends:
+  - admin
