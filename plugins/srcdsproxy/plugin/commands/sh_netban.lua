@@ -23,18 +23,17 @@ add.arg_types = { 'player', 'proxy_duration', 'text' }
 add.player_arg = false
 
 --- Has the proxy ban the targets from the network and notifies staff. A second argument that
--- is not a duration is the first word of the reason.
+-- is not a duration is the start of the reason.
 -- @param actor [Player the caller]
 -- @param target [String player name, target selector, SteamID, address or subnet]
--- @param duration=nil [String ban duration, or the first word of the reason]
--- @param ... [Vararg words of the reason]
-function add:on_run(actor, target, duration, ...)
-  local reason = table.concat({ ... }, ' ')
+-- @param duration=nil [String ban duration, or the start of the reason]
+-- @param reason=nil [String the rest of the reason, as it was typed]
+function add:on_run(actor, target, duration, reason)
   local entries = SrcdsProxy:ban(actor, 'ban', target, duration, reason)
 
   if !entries then return end
 
-  local details = table.concat({ duration, ... }, ' ')
+  local details = reason and duration..' '..reason or duration or ''
 
   self:notify_staff('command.netban.add.message', {
     player = get_player_name(actor),
@@ -51,18 +50,17 @@ addip.arg_types = { 'player', 'proxy_duration', 'text' }
 addip.player_arg = false
 
 --- Has the proxy ban the addresses of the targets from the network and notifies staff. A
--- second argument that is not a duration is the first word of the reason.
+-- second argument that is not a duration is the start of the reason.
 -- @param actor [Player the caller]
 -- @param target [String player name, target selector or SteamID]
--- @param duration=nil [String ban duration, or the first word of the reason]
--- @param ... [Vararg words of the reason]
-function addip:on_run(actor, target, duration, ...)
-  local reason = table.concat({ ... }, ' ')
+-- @param duration=nil [String ban duration, or the start of the reason]
+-- @param reason=nil [String the rest of the reason, as it was typed]
+function addip:on_run(actor, target, duration, reason)
   local entries = SrcdsProxy:ban(actor, 'banip', target, duration, reason)
 
   if !entries then return end
 
-  local details = table.concat({ duration, ... }, ' ')
+  local details = reason and duration..' '..reason or duration or ''
 
   self:notify_staff('command.netban.addip.message', {
     player = get_player_name(actor),
@@ -75,7 +73,7 @@ local remove = CMD:subcommand('remove')
 remove.description = 'command.netban.remove.description'
 remove.syntax = 'command.netban.remove.syntax'
 remove.arguments = 1
-remove.arg_types = { 'text' }
+remove.arg_types = { 'proxy_ban' }
 
 --- Has the proxy lift the ban and notifies staff. The proxy answers in the caller's console,
 -- also when nothing was banned.

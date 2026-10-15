@@ -56,10 +56,11 @@ remove.arg_types = { 'text' }
 -- character or that it is not banned. The characters of connected players are looked up
 -- first, then the database.
 -- @param actor [Player the player who ran the command, or an invalid entity for the console]
--- @param ... [Vararg words of the character name, joined with spaces]
+-- @param text [String the character name as it was typed; a pair of double quotes around all
+--   of it is left out]
 -- @see [Characters.find_by_name]
-function remove:on_run(actor, ...)
-  local name = table.concat({ ... }, ' ')
+function remove:on_run(actor, text)
+  local name = text:match('^"([^"]*)"$') or text
 
   Characters.find_by_name(name, function(characters)
     local names = {}

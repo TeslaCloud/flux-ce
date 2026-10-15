@@ -11,7 +11,7 @@ CMD.aliases = { 'bot' }
 local add = CMD:subcommand('add')
 add.description = 'command.bots.add.description'
 add.syntax = 'command.bots.add.syntax'
-add.arg_types = { 'text' }
+add.arg_types = { 'number' }
 
 --- Adds bots to the server, one every 0.2 seconds, and notifies staff.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]

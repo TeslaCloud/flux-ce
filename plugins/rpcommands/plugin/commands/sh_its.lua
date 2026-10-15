@@ -5,14 +5,15 @@ CMD.name = 'Its'
 CMD.description = 'command.its.description'
 CMD.syntax = 'command.its.syntax'
 CMD.category = 'permission.categories.roleplay'
-CMD.aliases = { 'action', 'itstatic', 'describe' }
+CMD.aliases = { 'itstatic', 'describe' }
 CMD.arguments = 1
 CMD.arg_types = { 'text' }
 CMD.no_console = true
 
 --- Places a static text at the player's position unless another one is within 50 units, with a 5 second cooldown.
 -- @param actor [Player player running the command]
-function CMD:on_run(actor, ...)
+-- @param text [String the static text, as it was typed]
+function CMD:on_run(actor, text)
   local cur_time = CurTime()
 
   if actor.next_its and actor.next_its >= cur_time then
@@ -22,9 +23,10 @@ function CMD:on_run(actor, ...)
   end
 
   local pos = actor:GetPos()
-  local text = table.concat({ ... }, ' '):chomp(' '):spelling()
 
-  for k, v in pairs(RPCommands.texts) do
+  text = text:chomp(' '):spelling()
+
+  for _, v in pairs(RPCommands.texts) do
     if v.pos:DistToSqr(pos) <= 2500 then
       actor:notify('error.its_too_close')
 

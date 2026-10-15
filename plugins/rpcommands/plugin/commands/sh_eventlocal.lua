@@ -12,9 +12,8 @@ CMD.no_console = true
 
 --- Shows an event message to the players within the talk radius of the caller and logs it.
 -- @param actor [Player player running the command]
-function CMD:on_run(actor, ...)
-  local text = table.concat({ ... }, ' ')
-
+-- @param text [String the event, as it was typed]
+function CMD:on_run(actor, text)
   Chatbox.add_text(nil, Color('orange'):lighten(30), text, {
     sender = actor,
     position = actor:EyePos(),

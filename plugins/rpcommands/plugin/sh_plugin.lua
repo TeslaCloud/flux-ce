@@ -90,7 +90,7 @@ function RPCommands:get_phrase_volume(text)
 
   volume = math.clamp(volume, -3, 3)
 
-  text:strip()
+  text = text:strip()
 
   return text, volume
 end

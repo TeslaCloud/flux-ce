@@ -23,8 +23,8 @@ CMD.aliases = { 'proxysend' }
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param target [String player name, target selector or SteamID]
 -- @param server [String name of the server to move the players to]
--- @param ... [Vararg words of the reason]
-function CMD:on_run(actor, target, server, ...)
+-- @param reason=nil [String the reason, as it was typed]
+function CMD:on_run(actor, target, server, reason)
   if !SrcdsProxy:check_available(actor) then return end
 
   local name = SrcdsProxy:server_name(server)
@@ -35,7 +35,8 @@ function CMD:on_run(actor, target, server, ...)
     return
   end
 
-  local reason = table.concat({ ... }, ' ')
+  reason = reason or ''
+
   local entries = SrcdsProxy:find_targets(actor, target, true)
 
   if !entries then return end
@@ -45,7 +46,7 @@ function CMD:on_run(actor, target, server, ...)
   if srcdsproxy.IsProxied(actor) then
     local verbs = {}
 
-    for k, v in ipairs(entries) do
+    for _, v in ipairs(entries) do
       verbs[#verbs + 1] = SrcdsProxy:verb('send', v.id, name, reason)
     end
 
@@ -53,7 +54,7 @@ function CMD:on_run(actor, target, server, ...)
 
     moved = entries
   else
-    for k, v in ipairs(entries) do
+    for _, v in ipairs(entries) do
       if IsValid(v.player) then
         if srcdsproxy.Transfer(v.player, name, reason != '' and reason or nil) then
           moved[#moved + 1] = v

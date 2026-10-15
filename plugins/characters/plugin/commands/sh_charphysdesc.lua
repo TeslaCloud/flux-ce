@@ -13,10 +13,10 @@ CMD.no_console = true
 -- their client when no text is given. A caller without a character is told that they cannot
 -- do this now.
 -- @param actor [Player the player who ran the command]
--- @param ... [Vararg words of the new description, joined with spaces]
+-- @param new_desc=nil [String the new description, as it was typed]
 -- @see [Characters.change_desc]
-function CMD:on_run(actor, ...)
-  local new_desc = table.concat({ ... }, ' ')
+function CMD:on_run(actor, new_desc)
+  new_desc = new_desc or ''
 
   if new_desc == '' and actor:is_character_loaded() then
     Cable.send(actor, 'fl_character_desc_prompt')

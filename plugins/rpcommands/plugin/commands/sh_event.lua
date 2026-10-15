@@ -9,9 +9,8 @@ CMD.arg_types = { 'text' }
 
 --- Broadcasts an event message to all players and logs it.
 -- @param actor [Player player running the command]
-function CMD:on_run(actor, ...)
-  local text = table.concat({ ... }, ' ')
-
+-- @param text [String the event, as it was typed]
+function CMD:on_run(actor, text)
   Chatbox.add_text(nil, Color('orange'):lighten(30), text)
 
   Log:print(text, 'event')

@@ -12,12 +12,16 @@ CMD.no_console = true
 
 --- Describes something in the environment to players looking near the speaker, with a volume-based radius.
 -- @param actor [Player player running the command]
-function CMD:on_run(actor, ...)
-  local text, volume = RPCommands:get_phrase_volume(table.concat({ ... }, ' '):spelling())
+-- @param text [String the description, as it was typed]
+function CMD:on_run(actor, text)
+  local phrase, volume = RPCommands:get_phrase_volume(text)
+
+  phrase = phrase:spelling()
+
   local msg_table = {
     Config.get('chat_it_color'):saturate(volume * 10):lighten(volume * 10),
     Config.get('default_font_size'),
-    '(', actor, ') ', text
+    '(', actor, ') ', phrase
   }
 
   table.insert(msg_table, {

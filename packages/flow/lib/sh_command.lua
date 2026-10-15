@@ -869,7 +869,8 @@ if SERVER then
   -- matched exactly in any case. Checks that the player has access to the command or
   -- subcommand, that enough arguments were given and that the arguments with a list of words
   -- in `arg_types` are one of them, resolves the targets and their immunity, logs the command
-  -- and runs it. The player is notified of any failure (it is printed to the console for the
+  -- and runs it. A trailing 'text' argument is passed on exactly as it was typed, see
+  -- `Command:get_text_index`. The player is notified of any failure (it is printed to the console for the
   -- server console). Serverside only.
   -- @param actor [Player the player who runs the command, an invalid entity for server console]
   -- @param text [String command ID followed by its subcommand word, if any, and its arguments]
@@ -959,6 +960,22 @@ if SERVER then
       syntax_error(actor, cmd_table)
 
       return
+    end
+
+    local text_index = cmd_table:get_text_index()
+    local text_token = text_index and tokens[index + text_index - 1]
+
+    if text_token then
+      for i = #args, text_index + 1, -1 do
+        args[i] = nil
+      end
+
+      if text_token.quoted and text_token.closed and !tokens[index + text_index] and
+         !text_token.value:find('%S') then
+        args[text_index] = ''
+      else
+        args[text_index] = (text:sub(text_token.start):gsub('%s+$', ''))
+      end
     end
 
     if !check_choices(actor, cmd_table, args) then return end

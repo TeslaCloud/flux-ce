@@ -12,15 +12,13 @@ CMD.alias = 'plykick'
 --- Kicks the targeted players with an optional reason and notifies staff.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to kick]
--- @param ... [Vararg words of the kick reason]
-function CMD:on_run(actor, targets, ...)
-  local reason = table.concat({ ... }, ' ')
-
+-- @param reason=nil [String the kick reason, as it was typed]
+function CMD:on_run(actor, targets, reason)
   if !reason or reason == '' then
     reason = 'ui.no_reason'
   end
 
-  for k, v in ipairs(targets) do
+  for _, v in ipairs(targets) do
     v:Kick(reason)
   end
 

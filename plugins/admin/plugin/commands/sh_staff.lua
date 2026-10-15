@@ -10,10 +10,8 @@ CMD.arg_types = { 'text' }
 
 --- Sends a chat message to every online player with the 'staff' permission.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param ... [Vararg words of the message]
-function CMD:on_run(actor, ...)
-  local text = table.concat({ ... }, ' ')
-
+-- @param text [String the message, as it was typed]
+function CMD:on_run(actor, text)
   local msg_table = {
     Color(234, 255, 208),
     '@staff ',

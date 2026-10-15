@@ -180,8 +180,12 @@ end
 -- a versus roll, which rolls the same thing for that player and is shown to the players
 -- near either of them. A formula that cannot be rolled is reported to the caller.
 -- @param actor [Player player running the command]
-function CMD:on_run(actor, ...)
-  local formula, rollable = resolve(table.concat({ ... }, ' '):strip())
+-- @param text=nil [String what to roll, as it was typed; a pair of double quotes around all of
+--   it is left out]
+function CMD:on_run(actor, text)
+  text = (text or ''):strip()
+
+  local formula, rollable = resolve((text:match('^"([^"]*)"$') or text):strip())
 
   if !rollable then
     local ast, err = Dice.parse(formula)

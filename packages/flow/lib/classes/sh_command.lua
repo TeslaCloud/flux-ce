@@ -21,7 +21,8 @@
 -- completer (see `Flux.Command:add_completer`), such as 'player', or a list of the exact
 -- words the argument may be, such as `{ 'on', 'off' }`. The server only accepts one of those
 -- words, in any case, and passes it on as it is written in the list. The last entry applies
--- to the arguments after it as well if it is 'text', free text that nothing is suggested for.
+-- to the arguments after it as well if it is 'text', free text that nothing is suggested for
+-- and that `on_run` receives as one string, exactly as it was typed.
 --
 -- A command can be split into subcommands with `Command:subcommand`: `/whitelist add` and
 -- `/whitelist remove` are two subcommands of the Whitelist command. Each one is a `Command`
@@ -296,6 +297,20 @@ function Command:get_arg_type(index)
   end
 
   return arg_type
+end
+
+--- Returns the position of the argument that takes the rest of the text: the last entry of
+-- `arg_types` if it is 'text'. That argument reaches `on_run` as one string, exactly as it
+-- was typed, with its quotes and spaces, and only the whitespace at its end removed. A text
+-- that is nothing but a pair of double quotes with only whitespace between them arrives as an
+-- empty string.
+-- @return [Number position of the argument, nil if the command has no such argument]
+function Command:get_text_index()
+  local arg_types = self.arg_types
+
+  if istable(arg_types) and #arg_types > 0 and arg_types[#arg_types] == 'text' then
+    return #arg_types
+  end
 end
 
 --- Returns the position of the first 'player' entry of `arg_types`.

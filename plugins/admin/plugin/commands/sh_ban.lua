@@ -28,9 +28,8 @@ add.player_arg = false
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param target [String exact player name, target selector or SteamID]
 -- @param duration [String ban length as read by Bolt:interpret_ban_time, e.g. '30' or 'perma']
--- @param ... [Vararg words of the ban reason]
-function add:on_run(actor, target, duration, ...)
-  local reason = table.concat({ ... }, ' ')
+-- @param reason=nil [String the ban reason, as it was typed]
+function add:on_run(actor, target, duration, reason)
   local ban_time = Bolt:interpret_ban_time(duration)
 
   if !reason or reason == '' then
@@ -79,7 +78,7 @@ local remove = CMD:subcommand('remove')
 remove.description = 'command.ban.remove.description'
 remove.syntax = 'command.ban.remove.syntax'
 remove.arguments = 1
-remove.arg_types = { 'text' }
+remove.arg_types = { 'steamid' }
 
 --- Lifts the ban on a SteamID, typed in any case, and notifies staff, or tells the caller
 -- that it is not banned.

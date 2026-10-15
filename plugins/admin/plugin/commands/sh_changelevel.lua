@@ -9,7 +9,7 @@ CMD.description = 'command.changelevel.description'
 CMD.syntax = 'command.changelevel.syntax'
 CMD.category = 'permission.categories.server_management'
 CMD.arguments = 1
-CMD.arg_types = { 'map', 'text' }
+CMD.arg_types = { 'map', 'number' }
 CMD.alias = 'map'
 
 --- Changes the map after an optional delay, saving data first, and notifies staff. The map

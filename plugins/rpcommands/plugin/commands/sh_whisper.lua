@@ -12,8 +12,7 @@ CMD.no_console = true
 
 --- Says the text as a whisper.
 -- @param actor [Player player running the command]
-function CMD:on_run(actor, ...)
-  local text = table.concat({ ... }, ' ')
-
+-- @param text [String the whisper, as it was typed]
+function CMD:on_run(actor, text)
   Chatbox.player_say(actor, RPCommands:wrap_speech('whisper', text))
 end

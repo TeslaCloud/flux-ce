@@ -12,8 +12,7 @@ CMD.no_console = true
 
 --- Says the text as an emote.
 -- @param actor [Player player running the command]
-function CMD:on_run(actor, ...)
-  local text = table.concat({ ... }, ' ')
-
+-- @param text [String the action, as it was typed]
+function CMD:on_run(actor, text)
   Chatbox.player_say(actor, RPCommands:wrap_speech('me', text))
 end

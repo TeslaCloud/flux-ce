@@ -9,14 +9,14 @@ CMD.arguments = 1
 CMD.arg_types = { 'text' }
 CMD.aliases = { 'setdate', 'setgametime' }
 
---- Sets the game clock to the date and time given in the arguments and notifies staff. The
--- caller is told when the arguments are not a date or a time, or when the clock cannot be
+--- Sets the game clock to the date and time given in the argument and notifies staff. The
+-- caller is told when the argument is not a date or a time, or when the clock cannot be
 -- set because it follows the real time of the server.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param ... [Vararg the date, the time of day or both, as the pieces the command line was
---   split into]
-function CMD:on_run(actor, ...)
-  local timestamp = GameTime:parse(table.concat({ ... }, ' '))
+-- @param text [String the date, the time of day or both, as they were typed; a pair of
+--   double quotes around all of it is left out]
+function CMD:on_run(actor, text)
+  local timestamp = GameTime:parse(text:match('^"([^"]*)"$') or text)
 
   if !timestamp then
     Flux.Player:notify(actor, 'error.gametime.invalid_format')

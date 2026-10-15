@@ -13,9 +13,9 @@ local announcement_color = Color(255, 210, 100)
 -- signs in the text are doubled before it is sent: the text is a phrase argument, and `t`
 -- would read a single one as the start of a capture reference.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param ... [Vararg words of the announcement]
-function CMD:on_run(actor, ...)
-  local text = table.concat({ ... }, ' '):chomp(' ')
+-- @param text [String the announcement, as it was typed]
+function CMD:on_run(actor, text)
+  text = (text or ''):chomp(' ')
 
   if text == '' then
     Flux.Player:notify(actor, 'error.command.syntax', {

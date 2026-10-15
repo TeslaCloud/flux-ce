@@ -20,8 +20,8 @@ add.immunity = true
 -- @param actor [Player player running the command; not valid when run from the server console]
 -- @param targets [List<Player> players to gag]
 -- @param duration [String gag duration, parsed like a ban time]
-function add:on_run(actor, targets, duration, ...)
-  local reason = table.concat({ ... }, ' ')
+-- @param reason=nil [String the gag reason, as it was typed]
+function add:on_run(actor, targets, duration, reason)
   local entered = tostring(duration):gsub('%%', '')
 
   duration = Bolt:interpret_ban_time(duration)

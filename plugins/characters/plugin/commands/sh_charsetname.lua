@@ -12,9 +12,10 @@ CMD.alias = 'setname'
 -- when another character already has it.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
--- @param ... [Vararg words of the new name, joined with spaces]
-function CMD:on_run(actor, targets, ...)
-  local new_name = table.concat({ ... }, ' ')
+-- @param name [String the new name as it was typed; a pair of double quotes around all of
+--   it is left out and runs of whitespace become single spaces]
+function CMD:on_run(actor, targets, name)
+  local new_name = (name:match('^"([^"]*)"$') or name):gsub('%s+', ' '):strip()
   local target = targets[1]
 
   if Characters.is_name_taken(new_name, target:get_character()) then
