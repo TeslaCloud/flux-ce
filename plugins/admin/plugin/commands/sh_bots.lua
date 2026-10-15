@@ -39,9 +39,9 @@ function kick:on_run(actor)
     player = get_player_name(actor)
   })
 
-  for _, v in player.Iterator() do
-    if v:IsBot() then
-      v:Kick('Kicking bots')
+  for _, client in player.Iterator() do
+    if client:IsBot() then
+      client:Kick('Kicking bots')
     end
   end
 end

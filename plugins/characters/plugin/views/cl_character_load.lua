@@ -71,13 +71,13 @@ function PANEL:rebuild()
 
   self.list:SetOverlap(math.scale(12))
 
-  for k, v in pairs(characters) do
+  for index, char_data in pairs(characters) do
     local char_panel = vgui.Create('fl_character_panel', self)
     char_panel:SetSize(panel_w, panel_h)
-    char_panel:set_character(v)
+    char_panel:set_character(char_data)
     char_panel:SetParent(self)
 
-    self.chars[k] = char_panel
+    self.chars[index] = char_panel
 
     self.list:AddPanel(char_panel)
   end

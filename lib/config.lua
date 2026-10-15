@@ -313,8 +313,8 @@ function Config.display_value(key, value)
   if istable(value) and !IsColor(value) and table.IsSequential(value) then
     local pieces = {}
 
-    for _k, v in ipairs(value) do
-      pieces[#pieces + 1] = tostring(v)
+    for _, element in ipairs(value) do
+      pieces[#pieces + 1] = tostring(element)
     end
 
     return table.concat(pieces, ', ')
@@ -338,9 +338,9 @@ if SERVER then
       return list
     end
 
-    for _k, v in player.Iterator() do
-      if Config.can_manage(v) then
-        list[#list + 1] = v
+    for _, client in player.Iterator() do
+      if Config.can_manage(client) then
+        list[#list + 1] = client
       end
     end
 
@@ -397,39 +397,39 @@ if SERVER then
       return stored
     end
 
-    for k, v in pairs(loaded) do
-      if !istable(v) then continue end
+    for key, saved in pairs(loaded) do
+      if !istable(saved) then continue end
 
-      local entry = stored[k]
-      local value = v.value
+      local entry = stored[key]
+      local value = saved.value
 
-      if v.pending then
-        value = v.pending_value
+      if saved.pending then
+        value = saved.pending_value
       end
 
       if !entry then
-        Plugin.call('OnConfigSet', k, nil, value)
+        Plugin.call('OnConfigSet', key, nil, value)
 
-        v.value = value
-        v.pending = nil
-        v.pending_value = nil
+        saved.value = value
+        saved.pending = nil
+        saved.pending_value = nil
 
-        stored[k] = v
-        cache[k] = value
-      elseif !Config.is_static(k) and (definitions[k] or v.changed or v.pending) then
-        local valid, converted = Config.validate(k, value)
+        stored[key] = saved
+        cache[key] = value
+      elseif !Config.is_static(key) and (definitions[key] or saved.changed or saved.pending) then
+        local valid, converted = Config.validate(key, value)
 
         if valid then
           value = restore_value(entry.value, converted)
 
-          Plugin.call('OnConfigSet', k, entry.value, value)
+          Plugin.call('OnConfigSet', key, entry.value, value)
 
           entry.value = value
-          entry.changed = v.changed
+          entry.changed = saved.changed
           entry.pending = nil
           entry.pending_value = nil
 
-          cache[k] = value
+          cache[key] = value
         end
       end
     end
@@ -646,26 +646,26 @@ if SERVER then
     local resend = self.fl_has_sent_config
     local can_manage
 
-    for k, v in pairs(stored) do
-      if !v.hidden then
-        local is_private = Config.is_private(k)
-        local has_pending = v.pending == true
-        local clear_pending = resend and (has_pending or Config.needs_restart(k))
+    for key, entry in pairs(stored) do
+      if !entry.hidden then
+        local is_private = Config.is_private(key)
+        local has_pending = entry.pending == true
+        local clear_pending = resend and (has_pending or Config.needs_restart(key))
 
         if can_manage == nil and (is_private or has_pending) then
           can_manage = Config.can_manage(self)
         end
 
         if !is_private or can_manage then
-          Cable.send(self, 'fl_config_set_var', k, v.value)
+          Cable.send(self, 'fl_config_set_var', key, entry.value)
         elseif resend then
-          Cable.send(self, 'fl_config_set_var', k, nil)
+          Cable.send(self, 'fl_config_set_var', key, nil)
         end
 
         if has_pending and can_manage then
-          Cable.send(self, 'fl_config_set_pending', k, true, v.pending_value)
+          Cable.send(self, 'fl_config_set_pending', key, true, entry.pending_value)
         elseif clear_pending then
-          Cable.send(self, 'fl_config_set_pending', k, false, nil)
+          Cable.send(self, 'fl_config_set_pending', key, false, nil)
         end
       end
     end
@@ -904,14 +904,14 @@ if SERVER then
       return
     end
 
-    for k, v in pairs(config_table) do
+    for key, value in pairs(config_table) do
       --- Called on the server for every key that `Config.import` is about to set.
       -- @param key [String config key]
       -- @param value [Any value read from the imported file or table]
       -- @return [Boolean Return any value other than nil to skip the key and keep its current
       --   value]
-      if k != 'depends' and k != 'depends_development' and Plugin.call('ShouldConfigImport', k, v) == nil then
-        Config.set(k, v, nil, from_config)
+      if key != 'depends' and key != 'depends_development' and Plugin.call('ShouldConfigImport', key, value) == nil then
+        Config.set(key, value, nil, from_config)
       end
     end
 

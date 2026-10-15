@@ -184,8 +184,8 @@ function Factions:PlayerRestored(actor, record)
   if record.whitelists then
     local whitelists = {}
 
-    for _k, v in pairs(record.whitelists) do
-      table.insert(whitelists, v.faction_id)
+    for _, whitelist in pairs(record.whitelists) do
+      table.insert(whitelists, whitelist.faction_id)
     end
 
     actor:set_nv('whitelists', whitelists)

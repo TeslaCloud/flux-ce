@@ -139,14 +139,14 @@ function PANEL:rebuild()
   local card_w = math.max(math.scale(180), self.list:GetWide() * 0.15)
   local possessing = false
 
-  for _k, v in ipairs(pool) do
+  for _, char_data in ipairs(pool) do
     local card = vgui.Create('fl_gamemaster_card', self)
     card:SetSize(card_w, self.list:GetTall())
-    card:set_character(v)
+    card:set_character(char_data)
 
     self.list:AddPanel(card)
 
-    if Gamemastery.is_possessing(v) then
+    if Gamemastery.is_possessing(char_data) then
       possessing = true
     end
   end

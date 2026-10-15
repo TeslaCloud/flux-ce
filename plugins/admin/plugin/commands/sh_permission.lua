@@ -45,19 +45,19 @@ local function set_permission(cmd, actor, targets, permission_id, duration_text,
   local granted = value == PERM_ALLOW
   local affected = {}
 
-  for _, v in ipairs(targets) do
-    if v.record then
+  for _, target in ipairs(targets) do
+    if target.record then
       if duration then
-        v:set_temp_permission(permission.id, value, duration)
+        target:set_temp_permission(permission.id, value, duration)
       else
-        v:set_permission(permission.id, value)
+        target:set_permission(permission.id, value)
       end
 
-      v:notify(granted and 'notification.permission.granted' or 'notification.permission.revoked', {
+      target:notify(granted and 'notification.permission.granted' or 'notification.permission.revoked', {
         permission = permission.id
       })
 
-      table.insert(affected, v)
+      table.insert(affected, target)
     end
   end
 
@@ -134,15 +134,15 @@ function reset:on_run(actor, targets, permission_id)
   local id = permission and permission.id or tostring(permission_id)
   local affected = {}
 
-  for _, v in ipairs(targets) do
-    if v.record and has_own_value(v, id) then
-      v:set_permission(id, PERM_NO)
+  for _, client in ipairs(targets) do
+    if client.record and has_own_value(client, id) then
+      client:set_permission(id, PERM_NO)
 
-      Bolt:delete_temp_permission(v, id)
+      Bolt:delete_temp_permission(client, id)
 
-      v:notify('notification.permission.reset', { permission = id })
+      client:notify('notification.permission.reset', { permission = id })
 
-      table.insert(affected, v)
+      table.insert(affected, client)
     end
   end
 
@@ -182,11 +182,11 @@ function list_cmd:on_run(actor, targets)
   local allowed, denied = {}, {}
   local temporary = 0
 
-  for k, v in SortedPairs(target:get_permissions()) do
-    if v == PERM_ALLOW then
-      table.insert(allowed, k)
-    elseif v == PERM_NEVER then
-      table.insert(denied, k)
+  for perm_id, value in SortedPairs(target:get_permissions()) do
+    if value == PERM_ALLOW then
+      table.insert(allowed, perm_id)
+    elseif value == PERM_NEVER then
+      table.insert(denied, perm_id)
     end
   end
 
@@ -209,17 +209,17 @@ function list_cmd:on_run(actor, targets)
     })
   end
 
-  for k, v in SortedPairs(target:get_temp_permissions()) do
-    local time_left = (tonumber(v.expires) or 0) - os.time()
+  for perm_id, entry in SortedPairs(target:get_temp_permissions()) do
+    local time_left = (tonumber(entry.expires) or 0) - os.time()
 
-    if time_left > 0 and (v.value == PERM_ALLOW or v.value == PERM_NEVER) then
+    if time_left > 0 and (entry.value == PERM_ALLOW or entry.value == PERM_NEVER) then
       temporary = temporary + 1
 
-      local phrase = v.value == PERM_ALLOW and 'temporary_allowed' or 'temporary_denied'
+      local phrase = entry.value == PERM_ALLOW and 'temporary_allowed' or 'temporary_denied'
 
       Flux.Player:notify(actor, 'command.permission.list.'..phrase, {
         target = name,
-        permission = k,
+        permission = perm_id,
         time = Flux.Lang:duration(time_left)
       })
     end

@@ -231,9 +231,9 @@ do
           local directories = path:split('/')
           local current_path = ''
 
-          for k, v in pairs(directories) do
-            if k < #directories then
-              current_path = current_path..v..'/'
+          for index, dir_name in pairs(directories) do
+            if index < #directories then
+              current_path = current_path..dir_name..'/'
               file.CreateDir(current_path)
             end
           end
@@ -298,23 +298,23 @@ function util.wrap_text(text, font, width, initial_width)
   local cur_width = initial_width or 0
   local current_word = ''
 
-  for k, v in ipairs(pieces) do
-    local w, _h = util.text_size(v, font)
+  for index, word in ipairs(pieces) do
+    local w, _h = util.text_size(word, font)
     local remain = width - cur_width
 
     -- The width of the word is LESS OR EQUAL than what we have remaining.
     if w <= remain then
-      if k != #pieces then
-        current_word = current_word..v..' '
+      if index != #pieces then
+        current_word = current_word..word..' '
         cur_width = cur_width + w + space_width
       else
-        current_word = current_word..v
+        current_word = current_word..word
         cur_width = cur_width + w
       end
     else -- The width of the word is MORE than what we have remaining.
       if w > width then -- The width is more than the total width we have available.
-        for i = 1, utf8.len(v) do
-          local char = v:utf8sub(i, i)
+        for i = 1, utf8.len(word) do
+          local char = word:utf8sub(i, i)
           local char_width, _ = util.text_size(char, font)
 
           remain = width - cur_width
@@ -334,7 +334,7 @@ function util.wrap_text(text, font, width, initial_width)
       else -- The width is LESS than the total width
         output[#output + 1] = current_word
 
-        current_word = v..' '
+        current_word = word..' '
 
         local wide = util.text_size(current_word, font)
 

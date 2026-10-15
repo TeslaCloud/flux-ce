@@ -29,8 +29,8 @@ function ActiveRecord.MigrationGenerator:init(name, fields)
   self.file_name = name:underscore()
   self.fields = {}
 
-  for _k, v in ipairs(fields or {}) do
-    local column, type = v:match('^([%w_]+):?([%w_]*)$')
+  for _, spec in ipairs(fields or {}) do
+    local column, type = spec:match('^([%w_]+):?([%w_]*)$')
 
     if column then
       table.insert(self.fields, { name = column, type = type != '' and type or 'string' })
@@ -59,11 +59,11 @@ function ActiveRecord.MigrationGenerator:body()
 
     table.insert(lines, 'create_table('..quote(table_name)..', function(t)')
 
-    for _k, v in ipairs(self.fields) do
-      if v.type == 'references' or v.type == 'belongs_to' then
-        table.insert(lines, '  t:references '..quote(v.name))
+    for _, field in ipairs(self.fields) do
+      if field.type == 'references' or field.type == 'belongs_to' then
+        table.insert(lines, '  t:references '..quote(field.name))
       else
-        table.insert(lines, '  t:'..v.type..' '..quote(v.name))
+        table.insert(lines, '  t:'..field.type..' '..quote(field.name))
       end
     end
 
@@ -78,11 +78,11 @@ function ActiveRecord.MigrationGenerator:body()
   if add_table then
     add_table = table_name_from(add_table)
 
-    for _k, v in ipairs(self.fields) do
-      if v.type == 'references' or v.type == 'belongs_to' then
-        table.insert(lines, 'add_reference('..quote(add_table)..', '..quote(v.name)..')')
+    for _, field in ipairs(self.fields) do
+      if field.type == 'references' or field.type == 'belongs_to' then
+        table.insert(lines, 'add_reference('..quote(add_table)..', '..quote(field.name)..')')
       else
-        table.insert(lines, 'add_column('..quote(add_table)..', '..quote(v.name)..', '..quote(v.type)..')')
+        table.insert(lines, 'add_column('..quote(add_table)..', '..quote(field.name)..', '..quote(field.type)..')')
       end
     end
 
@@ -94,11 +94,12 @@ function ActiveRecord.MigrationGenerator:body()
   if remove_table then
     remove_table = table_name_from(remove_table)
 
-    for _k, v in ipairs(self.fields) do
-      if v.type == 'references' or v.type == 'belongs_to' then
-        table.insert(lines, 'remove_reference('..quote(remove_table)..', '..quote(v.name)..')')
+    for _, field in ipairs(self.fields) do
+      if field.type == 'references' or field.type == 'belongs_to' then
+        table.insert(lines, 'remove_reference('..quote(remove_table)..', '..quote(field.name)..')')
       else
-        table.insert(lines, 'remove_column('..quote(remove_table)..', '..quote(v.name)..', '..quote(v.type)..')')
+        table.insert(lines,
+          'remove_column('..quote(remove_table)..', '..quote(field.name)..', '..quote(field.type)..')')
       end
     end
 
@@ -137,10 +138,10 @@ function ActiveRecord.MigrationGenerator:generate(context)
 
   context = context or ActiveRecord.migration_context or ActiveRecord.MigrationContext.new()
 
-  for _k, v in ipairs(context:migrations()) do
-    if v.name == self.file_name then
+  for _, other in ipairs(context:migrations()) do
+    if other.name == self.file_name then
       error(
-        'ActiveRecord - another migration is already named '..self.file_name..': '..v.filename..
+        'ActiveRecord - another migration is already named '..self.file_name..': '..other.filename..
           '. Use a different name.',
         0
       )

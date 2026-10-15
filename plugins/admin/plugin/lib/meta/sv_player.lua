@@ -56,17 +56,17 @@ function player_meta:set_permission(perm_id, value)
   local create = true
 
   if self.record.permissions then
-    for k, v in pairs(self.record.permissions) do
-      if v.permission_id == perm_id then
+    for index, perm_row in pairs(self.record.permissions) do
+      if perm_row.permission_id == perm_id then
         create = false
 
         if value != PERM_NO then
-          if value != v.object then
-            v.object = value
+          if value != perm_row.object then
+            perm_row.object = value
           end
         else
-          v:destroy()
-          table.remove(self.record.permissions, k)
+          perm_row:destroy()
+          table.remove(self.record.permissions, index)
         end
 
         break
@@ -116,17 +116,17 @@ function player_meta:set_temp_permission(perm_id, value, duration)
   local create = true
 
   if self.record.temp_permissions then
-    for _k, v in pairs(self.record.temp_permissions) do
-      if v.permission_id == perm_id then
+    for _, perm_row in pairs(self.record.temp_permissions) do
+      if perm_row.permission_id == perm_id then
         create = false
 
-        if v.object == value then
-          expires = math.max(time_from_timestamp(v.expires) or 0, os.time()) + duration
+        if perm_row.object == value then
+          expires = math.max(time_from_timestamp(perm_row.expires) or 0, os.time()) + duration
         else
-          v.object = value
+          perm_row.object = value
         end
 
-        v.expires = to_datetime(expires)
+        perm_row.expires = to_datetime(expires)
 
         break
       end
@@ -186,8 +186,8 @@ function player_meta:update_transmit(receiver)
 
   self:prevent_transmit(receiver, should_prevent)
 
-  for _k, v in ipairs(self:GetWeapons()) do
-    v:prevent_transmit(receiver, should_prevent)
+  for _, weapon in ipairs(self:GetWeapons()) do
+    weapon:prevent_transmit(receiver, should_prevent)
   end
 end
 
@@ -197,8 +197,8 @@ end
 function player_meta:update_visibility()
   self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
 
-  for _k, v in player.Iterator() do
-    self:update_transmit(v)
+  for _, client in player.Iterator() do
+    self:update_transmit(client)
   end
 
   self:set_nv('transmission_prevented', self:is_hidden(), self)
@@ -207,8 +207,8 @@ end
 --- Applies which of the hidden players this player may see to the networking of all of them.
 -- Called when the player joins and whenever their permissions change.
 function player_meta:update_hidden_players()
-  for _k, v in player.Iterator() do
-    v:update_transmit(self)
+  for _, client in player.Iterator() do
+    client:update_transmit(self)
   end
 end
 

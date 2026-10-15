@@ -18,8 +18,8 @@ function CMD:on_run(actor, targets, reason)
     reason = 'ui.no_reason'
   end
 
-  for _, v in ipairs(targets) do
-    v:Kick(reason)
+  for _, client in ipairs(targets) do
+    client:Kick(reason)
   end
 
   self:notify_staff('command.kick.message', {

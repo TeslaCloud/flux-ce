@@ -56,8 +56,8 @@ function ActiveRecord.Migrator:migrated()
   if !self.migrated_versions then
     self.migrated_versions = {}
 
-    for _k, v in ipairs(ActiveRecord.SchemaMigration:integer_versions()) do
-      self.migrated_versions[v] = true
+    for _, version in ipairs(ActiveRecord.SchemaMigration:integer_versions()) do
+      self.migrated_versions[version] = true
     end
   end
 
@@ -76,7 +76,7 @@ end
 function ActiveRecord.Migrator:current_version()
   local newest = 0
 
-  for version, _v in pairs(self:migrated()) do
+  for version in pairs(self:migrated()) do
     if version > newest then newest = version end
   end
 
@@ -88,8 +88,8 @@ end
 function ActiveRecord.Migrator:current_migration()
   local current = self:current_version()
 
-  for _k, v in ipairs(self.migrations) do
-    if v.version == current then return v end
+  for _, migration in ipairs(self.migrations) do
+    if migration.version == current then return migration end
   end
 end
 
@@ -98,8 +98,8 @@ end
 function ActiveRecord.Migrator:target()
   if !self.target_version then return end
 
-  for _k, v in ipairs(self.migrations) do
-    if v.version == self.target_version then return v end
+  for _, migration in ipairs(self.migrations) do
+    if migration.version == self.target_version then return migration end
   end
 end
 
@@ -114,9 +114,9 @@ end
 function ActiveRecord.Migrator:pending_migrations()
   local pending = {}
 
-  for _k, v in ipairs(self.migrations) do
-    if !self:ran(v) then
-      table.insert(pending, v)
+  for _, migration in ipairs(self.migrations) do
+    if !self:ran(migration) then
+      table.insert(pending, migration)
     end
   end
 
@@ -161,9 +161,9 @@ function ActiveRecord.Migrator:runnable()
 
   local selected = {}
 
-  for _k, v in ipairs(runnable) do
-    if self:ran(v) == self:down() then
-      table.insert(selected, v)
+  for _, migration in ipairs(runnable) do
+    if self:ran(migration) == self:down() then
+      table.insert(selected, migration)
     end
   end
 
@@ -179,9 +179,9 @@ function ActiveRecord.Migrator:migrate()
 
   local executed = {}
 
-  for _k, v in ipairs(self:runnable()) do
-    if self:execute_migration_in_transaction(v) then
-      table.insert(executed, v)
+  for _, migration in ipairs(self:runnable()) do
+    if self:execute_migration_in_transaction(migration) then
+      table.insert(executed, migration)
     end
   end
 

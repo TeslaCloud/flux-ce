@@ -47,8 +47,8 @@ function PANEL:PerformLayout()
     local wide = 0
     local panel_count = #panels
 
-    for k, v in pairs(panels) do
-      wide = wide + v:GetWide() + (k != panel_count and overlap or 0)
+    for index, panel in pairs(panels) do
+      wide = wide + panel:GetWide() + (index != panel_count and overlap or 0)
     end
 
     -- Panels that do not fit start at the left edge instead, as whatever ends up left of
@@ -56,13 +56,13 @@ function PANEL:PerformLayout()
     x = math.max(w * 0.5 - wide * 0.5, 0)
   end
 
-  for _k, v in pairs(panels) do
-    if !IsValid(v) then continue end
+  for _, panel in pairs(panels) do
+    if !IsValid(panel) then continue end
 
-    v:SetPos(x, 0)
-    v:SetTall(h)
+    panel:SetPos(x, 0)
+    panel:SetTall(h)
 
-    x = x + v:GetWide() + overlap
+    x = x + panel:GetWide() + overlap
   end
 
   canvas:SetWide(math.max(x - overlap, 0))

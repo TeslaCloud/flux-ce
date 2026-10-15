@@ -61,16 +61,16 @@ local function parse_args(args_str)
   local env = {}
   local task = nil
 
-  for _k, v in ipairs(string.Trim(args_str or ''):split(' ')) do
-    if v != '' then
-      local key, value = v:match('^([%w_]+)=(.*)$')
+  for _, word in ipairs(string.Trim(args_str or ''):split(' ')) do
+    if word != '' then
+      local key, value = word:match('^([%w_]+)=(.*)$')
 
       if !task then
-        task = v
+        task = word
       elseif key then
         env[key:upper()] = value
       else
-        table.insert(words, v)
+        table.insert(words, word)
       end
     end
   end

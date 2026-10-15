@@ -105,7 +105,7 @@ local function resolve_box(style, name, scaled)
       box.bottom = scale(value[3], scaled)
       box.left = scale(value[4], scaled)
     else
-      for _k, side in ipairs(sides) do
+      for _, side in ipairs(sides) do
         if isnumber(value[side]) then
           box[side] = scale(value[side], scaled)
         end
@@ -113,7 +113,7 @@ local function resolve_box(style, name, scaled)
     end
   end
 
-  for _k, side in ipairs(sides) do
+  for _, side in ipairs(sides) do
     local override = style[name..'_'..side]
 
     if isnumber(override) then
@@ -211,29 +211,29 @@ function Lumen.Style.resolve(style, defaults)
   local merged = {}
 
   if istable(defaults) then
-    for k, v in pairs(defaults) do
-      merged[k] = v
+    for key, value in pairs(defaults) do
+      merged[key] = value
     end
   end
 
   if istable(style) then
-    for k, v in pairs(style) do
-      merged[k] = v
+    for key, value in pairs(style) do
+      merged[key] = value
     end
   end
 
   local scaled = merged.scale != false
   local resolved = { scaled = scaled }
 
-  for _k, key in ipairs(plain_keys) do
+  for _, key in ipairs(plain_keys) do
     resolved[key] = merged[key]
   end
 
-  for _k, key in ipairs(size_keys) do
+  for _, key in ipairs(size_keys) do
     resolved[key] = resolve_size(merged[key], scaled)
   end
 
-  for _k, key in ipairs(color_keys) do
+  for _, key in ipairs(color_keys) do
     resolved[key] = Lumen.Style.color(merged[key])
   end
 

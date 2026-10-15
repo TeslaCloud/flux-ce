@@ -91,7 +91,7 @@ function Package:describe(callback)
 
   if SERVER and meta.clientside then
     if istable(meta.file) then
-      for _k, filename in ipairs(meta.file) do
+      for _, filename in ipairs(meta.file) do
         AddCSLuaFile(filename)
       end
     elseif isstring(meta.file) then
@@ -105,19 +105,19 @@ function Package:describe(callback)
     meta.global = { meta.global }
   end
 
-  for _k, v in ipairs(meta.global) do
-    if isstring(v) then
-      _G[v] = istable(_G[v]) and _G[v] or {}
+  for _, global_name in ipairs(meta.global) do
+    if isstring(global_name) then
+      _G[global_name] = istable(_G[global_name]) and _G[global_name] or {}
 
-      if !_G[v].__package__ then
-        _G[v].__package__ = meta
+      if !_G[global_name].__package__ then
+        _G[global_name].__package__ = meta
       end
     end
   end
 
   -- Once globals are set-up, include dependencies!
   if istable(meta.deps) then
-    for _k, name in ipairs(meta.deps) do
+    for _, name in ipairs(meta.deps) do
       if name:end_with('.lua') then
         include(self.current.__path__..name)
         continue
@@ -141,24 +141,24 @@ function Package:describe(callback)
 
   if SERVER then
     if istable(client_files) then
-      for _k, v in ipairs(client_files) do
-        AddCSLuaFile(v)
+      for _, file_name in ipairs(client_files) do
+        AddCSLuaFile(file_name)
       end
     end
 
     if istable(server_files) then
-      for _k, v in ipairs(server_files) do
-        include(v)
+      for _, file_name in ipairs(server_files) do
+        include(file_name)
       end
     end
   elseif istable(client_files) then
-    for _k, v in ipairs(client_files) do
-      include(self.current.__path__..v)
+    for _, file_name in ipairs(client_files) do
+      include(self.current.__path__..file_name)
     end
   end
 
   if istable(meta.file) then
-    for _k, filename in ipairs(meta.file) do
+    for _, filename in ipairs(meta.file) do
       require_relative(full_path..filename)
     end
   elseif isstring(meta.file) then
@@ -196,7 +196,7 @@ function Package:find(name)
   local files, _ = file.Find(folder_path..'packagespec.lua', 'LUA')
 
   if !istable(files) or #files == 0 then
-    for path, _v in pairs(search_paths) do
+    for path in pairs(search_paths) do
       local full_path = path..folder_path:ensure_end('/')
       local files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
 
@@ -405,7 +405,7 @@ do
       local files, _ = file.Find(folder_path..'packagespec.lua', 'LUA')
 
       if !istable(files) or #files == 0 then
-        for path, _v in pairs(search_paths) do
+        for path in pairs(search_paths) do
           local full_path = path..folder_path:ensure_end('/')
           local files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
 

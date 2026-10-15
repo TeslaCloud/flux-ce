@@ -30,8 +30,8 @@ if PACKAGE then
   function PACKAGE:__installed__()
     if Flux.initialized then
       if !LITE_REFRESH then
-        for _k, v in pairs(self.metadata.deps) do
-          Package:reload(v)
+        for _, dep_name in pairs(self.metadata.deps) do
+          Package:reload(dep_name)
         end
       else
         -- Reload flow and active_ui either way since we actually need their shared files.

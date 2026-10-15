@@ -67,12 +67,12 @@ Area.tool_modes = {
         local pos = trace.HitPos
         local z = pos.z + 16
 
-        for _k, v in pairs(Areas.all()) do
-          if istable(v.polys) and isstring(v.type) and v.type == data.area_type then
-            for _k2, v2 in ipairs(v.polys) do
-              if z > v2[1].z and z < v.maxh then
-                if util.vector_in_poly(pos, v2) then
-                  Areas.remove(v.id)
+        for _, area in pairs(Areas.all()) do
+          if istable(area.polys) and isstring(area.type) and area.type == data.area_type then
+            for _, poly in ipairs(area.polys) do
+              if z > poly[1].z and z < area.maxh then
+                if util.vector_in_poly(pos, poly) then
+                  Areas.remove(area.id)
 
                   return true
                 end

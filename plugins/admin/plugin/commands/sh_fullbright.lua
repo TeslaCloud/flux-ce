@@ -13,9 +13,9 @@ CMD.aliases = { 'fb' }
 -- @param targets [List<Player> players to affect]
 -- @param enabled [Boolean]
 local function set_fullbright(cmd, actor, targets, enabled)
-  for _, v in ipairs(targets) do
-    v:set_nv('should_fullbright', enabled)
-    v:notify('notification.fullbright.'..(enabled and 'enabled' or 'disabled'))
+  for _, client in ipairs(targets) do
+    client:set_nv('should_fullbright', enabled)
+    client:notify('notification.fullbright.'..(enabled and 'enabled' or 'disabled'))
   end
 
   cmd:notify_staff('command.fullbright.'..(enabled and 'on' or 'off')..'.message', {

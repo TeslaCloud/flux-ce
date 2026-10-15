@@ -204,7 +204,7 @@ end
 function DermaScale.apply(class_name)
   if !patches[class_name] then return end
 
-  for _k, patch in ipairs(patches[class_name]) do
+  for _, patch in ipairs(patches[class_name]) do
     apply_patch(class_name, patch)
   end
 end
@@ -453,7 +453,7 @@ function DermaScale.refresh_menu_bar()
 
   menubar.Control:SetTall(s(30))
 
-  for _k, child in ipairs(menubar.Control:GetChildren()) do
+  for _, child in ipairs(menubar.Control:GetChildren()) do
     layout_menu_bar_button(child)
   end
 end
@@ -904,7 +904,7 @@ end)
 DermaScale.after('DHTMLControls', 'Init', function(panel)
   local button_size, margin = s(32), s(2)
 
-  for _k, name in ipairs({ 'BackButton', 'ForwardButton', 'RefreshButton', 'HomeButton', 'StopButton' }) do
+  for _, name in ipairs({ 'BackButton', 'ForwardButton', 'RefreshButton', 'HomeButton', 'StopButton' }) do
     local button = panel[name]
 
     if IsValid(button) then
@@ -924,7 +924,7 @@ DermaScale.replace('DModelSelect', 'SetHeight', function(self, rows)
 end)
 
 DermaScale.after('DModelSelect', 'SetModelList', function(panel)
-  for _k, icon in ipairs(panel:GetItems()) do
+  for _, icon in ipairs(panel:GetItems()) do
     if IsValid(icon) then
       icon:SetSize(s(64), s(64))
     end
@@ -957,7 +957,7 @@ DermaScale.after('DColorMixer', 'Init', function(panel)
   panel.WangsPanel:SetWide(s(50))
   panel.WangsPanel:DockMargin(s(4), 0, 0, 0)
 
-  for _k, name in ipairs({ 'txtR', 'txtG', 'txtB', 'txtA' }) do
+  for _, name in ipairs({ 'txtR', 'txtG', 'txtB', 'txtA' }) do
     panel[name]:SetTall(s(20))
 
     if name != 'txtR' then
@@ -997,7 +997,7 @@ DermaScale.after('DColorCombo', 'Init', function(panel)
     panel.Mixer:DockMargin(s(8), 0, s(8), s(8))
   end
 
-  for _k, sheet in ipairs(panel.Items or {}) do
+  for _, sheet in ipairs(panel.Items or {}) do
     if IsValid(sheet.Panel) and sheet.Panel.ClassName == 'DColorPalette' then
       sheet.Panel:DockMargin(s(8), 0, s(8), s(8))
       sheet.Panel:SetButtonSize(s(16))
@@ -1252,7 +1252,7 @@ DermaScale.replace_global('CreateContextMenu', function(...)
   layout:SetSpaceX(s(8))
   layout:SetSpaceY(s(8))
 
-  for _k, icon in ipairs(layout:GetChildren()) do
+  for _, icon in ipairs(layout:GetChildren()) do
     if !icon.WidgetClass then continue end
 
     icon:SetSize(s(80), s(82))
@@ -1369,8 +1369,8 @@ end)
 DermaScale.replace('MatSelect', 'PerformLayout', function(self)
   self.List:SetPos(0, 0)
 
-  for _k, v in pairs(self.List:GetItems()) do
-    self:SetItemSize(v)
+  for _, item in pairs(self.List:GetItems()) do
+    self:SetItemSize(item)
   end
 
   if self.m_bSizeToContent then

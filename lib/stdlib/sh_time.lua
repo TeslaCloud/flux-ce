@@ -53,9 +53,9 @@ local mappings      = {
 
 local converters = {}
 
-for k, v in pairs(mappings) do
-  converters[k] = function(this)
-    return this.time * v
+for unit, factor in pairs(mappings) do
+  converters[unit] = function(this)
+    return this.time * factor
   end
 end
 
@@ -68,8 +68,8 @@ end
 function Time:init(seconds)
   self.time = seconds or os.time()
 
-  for k, v in pairs(converters) do
-    self[k] = v
+  for unit, converter in pairs(converters) do
+    self[unit] = converter
   end
 end
 

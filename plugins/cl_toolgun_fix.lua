@@ -107,14 +107,14 @@ function PLUGIN:FLInitPostEntity()
 
     self.Icons = icons
 
-    for _k, v in pairs(tool_object.Information) do
-      if isstring(v) then v = { name = v } end
+    for _, entry in pairs(tool_object.Information) do
+      if isstring(entry) then entry = { name = entry } end
 
-      local name = v.name
+      local name = entry.name
 
       if !name then continue end
-      if v.stage and v.stage != self:GetStage() then continue end
-      if v.op and v.op != tool_object:GetOperation() then continue end
+      if entry.stage and entry.stage != self:GetStage() then continue end
+      if entry.op and entry.op != tool_object:GetOperation() then continue end
 
       if name == 'info' then
         text_table.text = tool_object:GetHelpText()
@@ -126,17 +126,17 @@ function PLUGIN:FLInitPostEntity()
 
       _w, h = draw_text_shadow(text_table, 1)
 
-      if !v.icon then
-        if name:start_with('info') then v.icon = 'gui/info' end
-        if name:start_with('left') then v.icon = 'gui/lmb.png' end
-        if name:start_with('right') then v.icon = 'gui/rmb.png' end
-        if name:start_with('reload') then v.icon = 'gui/r.png' end
-        if name:start_with('use') then v.icon = 'gui/e.png' end
+      if !entry.icon then
+        if name:start_with('info') then entry.icon = 'gui/info' end
+        if name:start_with('left') then entry.icon = 'gui/lmb.png' end
+        if name:start_with('right') then entry.icon = 'gui/rmb.png' end
+        if name:start_with('reload') then entry.icon = 'gui/r.png' end
+        if name:start_with('use') then entry.icon = 'gui/e.png' end
       end
 
-      if !v.icon2 and !name:start_with('use') and name:end_with('use') then v.icon2 = 'gui/e.png' end
+      if !entry.icon2 and !name:start_with('use') and name:end_with('use') then entry.icon2 = 'gui/e.png' end
 
-      local icon, icon2 = v.icon, v.icon2
+      local icon, icon2 = entry.icon, entry.icon2
       local icon_material = icon and icons[icon]
 
       if icon and !icon_material then

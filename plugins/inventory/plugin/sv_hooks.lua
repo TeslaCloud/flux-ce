@@ -29,13 +29,13 @@ local function find_requested_stack(actor, instance_ids)
   local listed = {}
   local find_instance_by_id = Item.find_instance_by_id
 
-  for k, v in ipairs(instance_ids) do
-    local stack_item = find_instance_by_id(v)
+  for index, instance_id in ipairs(instance_ids) do
+    local stack_item = find_instance_by_id(instance_id)
 
-    if !stack_item or stack_item.inventory_id != inventory.id or listed[v] then return end
+    if !stack_item or stack_item.inventory_id != inventory.id or listed[instance_id] then return end
 
-    listed[v] = true
-    stack[k] = v
+    listed[instance_id] = true
+    stack[index] = instance_id
   end
 
   return inventory, stack
@@ -206,11 +206,11 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
   if IsValid(item_obj.entity) then
     local inv_type
 
-    for _k, v in pairs({ ... }) do
-      if istable(v) then
-        for k1, v1 in pairs(v) do
-          if k1 == 'inv_type' then
-            inv_type = v1
+    for _, argument in pairs({ ... }) do
+      if istable(argument) then
+        for key, value in pairs(argument) do
+          if key == 'inv_type' then
+            inv_type = value
           end
         end
       end
@@ -273,8 +273,8 @@ function Inventories:PlayerDropItem(actor, instance_ids)
 
   local drop_near = trace.HitPos:DistToSqr(actor:GetPos()) < drop_near_distance_sqr
 
-  for k, v in pairs(instance_ids) do
-    local item_obj = Item.find_instance_by_id(v)
+  for index, instance_id in pairs(instance_ids) do
+    local item_obj = Item.find_instance_by_id(instance_id)
 
     --- Called on the server before a player drops an item from an inventory into the
     -- world, once for every item of a dropped stack. The Items plugin uses it to ask the
@@ -287,12 +287,12 @@ function Inventories:PlayerDropItem(actor, instance_ids)
 
     hook.Run('PreItemTransfer', item_obj, nil, inventory)
 
-    inventory:take_item_by_id(v)
+    inventory:take_item_by_id(instance_id)
 
     hook.Run('ItemTransferred', item_obj, nil, inventory)
 
     if drop_near then
-      Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_obj, actor)
+      Item.spawn(trace.HitPos + Vector(0, 0, 5) * index, Angle(0, 0, 0), item_obj, actor)
     else
       local ent = Item.spawn(actor:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_obj, actor)
       local phys_obj = ent:GetPhysicsObject()
@@ -607,8 +607,8 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
 
   local closed_inventory
 
-  for _k, v in pairs(inventory_ids) do
-    local inventory = Inventories.find(v)
+  for _, inventory_id in pairs(inventory_ids) do
+    local inventory = Inventories.find(inventory_id)
 
     if inventory and inventory.owner != actor and inventory:has_receiver(actor) then
       inventory:remove_receiver(actor)

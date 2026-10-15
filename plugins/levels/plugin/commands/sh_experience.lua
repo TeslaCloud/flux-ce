@@ -39,16 +39,16 @@ function add:on_run(actor, targets, amount)
   local shown_amount = math.abs(amount)
   local changed = {}
 
-  for _, v in ipairs(targets) do
-    if v:is_character_loaded() then
-      v:give_experience(amount, 'command', true)
-      v:notify(taken and 'notification.levels.experience_taken' or 'notification.levels.experience_given', {
+  for _, target in ipairs(targets) do
+    if target:is_character_loaded() then
+      target:give_experience(amount, 'command', true)
+      target:notify(taken and 'notification.levels.experience_taken' or 'notification.levels.experience_given', {
         amount = shown_amount
       })
 
-      Levels.raise_to_floor(v)
+      Levels.raise_to_floor(target)
 
-      table.insert(changed, v)
+      table.insert(changed, target)
     end
   end
 

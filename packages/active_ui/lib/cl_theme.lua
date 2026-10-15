@@ -246,8 +246,8 @@ function Theme.set_derma_skin()
   if current_theme then
     local skin_table = derma.GetNamedSkin('Flux')
 
-    for k, v in pairs(current_theme.skin) do
-      skin_table[k] = v
+    for key, value in pairs(current_theme.skin) do
+      skin_table[key] = value
     end
 
     if isfunction(skin_table.apply_theme) then

@@ -16,10 +16,10 @@ CMD.aliases = { 'teleport', 'plytp', 'bring' }
 function CMD:on_run(actor, targets)
   local pos = actor:GetEyeTraceNoCursor().HitPos
 
-  for _k, v in pairs(targets) do
-    if IsValid(v) then
-      v:teleport(pos)
-      v:notify('notification.tp')
+  for _, client in pairs(targets) do
+    if IsValid(client) then
+      client:teleport(pos)
+      client:notify('notification.tp')
     end
   end
 

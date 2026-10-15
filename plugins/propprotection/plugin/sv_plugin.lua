@@ -151,7 +151,7 @@ function PropProtection:get_owned_entities(key)
   local entities = {}
 
   if key and owned[key] then
-    for entity, _v in pairs(owned[key]) do
+    for entity in pairs(owned[key]) do
       if IsValid(entity) then
         entities[#entities + 1] = entity
       end
@@ -216,9 +216,9 @@ function PropProtection:remove_abandoned(key)
 
   if self:find_owner(key) then return end
 
-  for _k, v in ipairs(self:get_owned_entities(key)) do
-    if !v.prop_owner_permanent then
-      local keep = v:GetPersistent()
+  for _, ent in ipairs(self:get_owned_entities(key)) do
+    if !ent.prop_owner_permanent then
+      local keep = ent:GetPersistent()
 
       if !keep then
         --- Asks whether an entity should be removed now that its owner has been gone, or
@@ -228,13 +228,13 @@ function PropProtection:remove_abandoned(key)
         -- @param entity [Entity]
         -- @param key [String ownership key of the owner, see PropProtection:get_key]
         -- @return [Boolean return false to keep the entity, which then belongs to nobody]
-        keep = hook.Run('ShouldRemoveAbandonedEntity', v, key) == false
+        keep = hook.Run('ShouldRemoveAbandonedEntity', ent, key) == false
       end
 
       if keep then
-        self:take_ownership(v)
+        self:take_ownership(ent)
       else
-        v:Remove()
+        ent:Remove()
       end
     end
   end
@@ -278,9 +278,9 @@ end
 -- @return [Boolean whether the action is allowed for all of them, String ID of the rule that
 --   refuses it]
 function PropProtection:can_manipulate_constrained(actor, entity, action, detail)
-  for _k, v in pairs(constraint.GetAllConstrainedEntities(entity)) do
-    if IsValid(v) and v != entity then
-      local allowed, rule = self:can_manipulate(actor, v, action, detail)
+  for _, constrained in pairs(constraint.GetAllConstrainedEntities(entity)) do
+    if IsValid(constrained) and constrained != entity then
+      local allowed, rule = self:can_manipulate(actor, constrained, action, detail)
 
       if !allowed then
         return false, rule

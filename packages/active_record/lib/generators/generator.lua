@@ -65,8 +65,8 @@ end
 function ActiveRecord.generate_create_funcs(obj)
   local tab = ActiveRecord.Adapters[ActiveRecord.adapter_name:capitalize()].types or {}
 
-  for k, v in pairs(tab) do
-    ActiveRecord.generate_create_func(obj, k, v)
+  for type_name, definition in pairs(tab) do
+    ActiveRecord.generate_create_func(obj, type_name, definition)
   end
 
   --- Adds the 'created_at' and 'updated_at' datetime columns, NOT NULL unless told otherwise.

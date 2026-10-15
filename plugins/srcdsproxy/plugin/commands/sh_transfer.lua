@@ -46,21 +46,21 @@ function CMD:on_run(actor, target, server, reason)
   if srcdsproxy.IsProxied(actor) then
     local verbs = {}
 
-    for _, v in ipairs(entries) do
-      verbs[#verbs + 1] = SrcdsProxy:verb('send', v.id, name, reason)
+    for _, entry in ipairs(entries) do
+      verbs[#verbs + 1] = SrcdsProxy:verb('send', entry.id, name, reason)
     end
 
     if !SrcdsProxy:run(actor, verbs) then return end
 
     moved = entries
   else
-    for _, v in ipairs(entries) do
-      if IsValid(v.player) then
-        if srcdsproxy.Transfer(v.player, name, reason != '' and reason or nil) then
-          moved[#moved + 1] = v
+    for _, entry in ipairs(entries) do
+      if IsValid(entry.player) then
+        if srcdsproxy.Transfer(entry.player, name, reason != '' and reason or nil) then
+          moved[#moved + 1] = entry
         end
       else
-        Flux.Player:notify(actor, 'error.proxy.remote_target', { target = v.id })
+        Flux.Player:notify(actor, 'error.proxy.remote_target', { target = entry.id })
       end
     end
   end

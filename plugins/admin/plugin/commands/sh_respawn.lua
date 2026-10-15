@@ -21,26 +21,26 @@ CMD.aliases = { 'respawn', 'plyrespawn' }
 function CMD:on_run(actor, targets, spawn_position)
   local look_pos = IsValid(actor) and actor:GetEyeTraceNoCursor().HitPos
 
-  for _k, v in ipairs(targets) do
-    local alive = v:Alive()
-    local angles = v:EyeAngles()
-    local pos = alive and v:GetPos() or v.last_pos
+  for _, client in ipairs(targets) do
+    local alive = client:Alive()
+    local angles = client:EyeAngles()
+    local pos = alive and client:GetPos() or client.last_pos
 
     if spawn_position == 'tp' and look_pos then
       pos = look_pos
     end
 
-    v:Spawn()
+    client:Spawn()
 
     if pos then
-      v:teleport(pos)
+      client:teleport(pos)
     end
 
     if alive then
-      v:SetEyeAngles(angles)
+      client:SetEyeAngles(angles)
     end
 
-    v:notify('notification.respawn', {
+    client:notify('notification.respawn', {
       player = IsValid(actor) and actor or get_player_name(actor)
     })
   end

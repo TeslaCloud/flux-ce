@@ -72,7 +72,7 @@ if CLIENT then
 
   local files, _folders = file.Find('_flux/client/*.lua', 'LUA')
 
-  for _k, v in ipairs(files) do
-    include('_flux/client/'..v)
+  for _, file_name in ipairs(files) do
+    include('_flux/client/'..file_name)
   end
 end

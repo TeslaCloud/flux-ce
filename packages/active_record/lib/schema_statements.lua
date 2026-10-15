@@ -45,16 +45,16 @@ end
 -- @param table_name [String]
 -- @param query [ActiveRecord::Query]
 function Statements.apply_references(table_name, query)
-  for _k, v in ipairs(query._references or {}) do
-    if v.index != false then
-      Statements.add_index(table_name, { v.column })
+  for _, reference in ipairs(query._references or {}) do
+    if reference.index != false then
+      Statements.add_index(table_name, { reference.column })
     end
 
-    if v.foreign_key then
-      local fk = istable(v.foreign_key) and v.foreign_key or {}
+    if reference.foreign_key then
+      local fk = istable(reference.foreign_key) and reference.foreign_key or {}
 
-      Statements.add_foreign_key(table_name, fk.to_table or v.to_table, {
-        column = v.column,
+      Statements.add_foreign_key(table_name, fk.to_table or reference.to_table, {
+        column = reference.column,
         primary_key = fk.primary_key,
         on_delete = fk.on_delete,
         name = fk.name
@@ -104,8 +104,8 @@ function Statements.create_table(name, options, callback)
     local quoted = query:quote_column(primary_key)
     local defined = false
 
-    for _k, v in ipairs(query.create_list) do
-      if v[1] == quoted then defined = true break end
+    for _, column_def in ipairs(query.create_list) do
+      if column_def[1] == quoted then defined = true break end
     end
 
     if !defined then
@@ -377,11 +377,11 @@ function Statements.add_index(table_name, columns, options)
 
   local column_parts = {}
 
-  for k, v in ipairs(cols) do
+  for index, column in ipairs(cols) do
     if len and !sqlite then
-      column_parts[k] = v..'('..(istable(len) and len[v] or len)..')'
+      column_parts[index] = column..'('..(istable(len) and len[column] or len)..')'
     else
-      column_parts[k] = v
+      column_parts[index] = column
     end
   end
 

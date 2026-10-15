@@ -117,8 +117,8 @@ function PANEL:PerformLayout(w, h)
   self.title:SetPos(padding, 0)
   self.title:SetSize(quarter - padding, h)
 
-  for k, button in ipairs({ self.button_allow, self.button_no, self.button_never }) do
-    button:SetPos(quarter * k, button_y)
+  for i, button in ipairs({ self.button_allow, self.button_no, self.button_never }) do
+    button:SetPos(quarter * i, button_y)
     button:SetSize(quarter * 0.9, button_h)
   end
 end
@@ -242,11 +242,11 @@ end
 function PANEL:get_permissions()
   local perm_list = {}
 
-  for _k, v in pairs(self.permissions) do
-    local value = v:get_value()
+  for _, perm_panel in pairs(self.permissions) do
+    local value = perm_panel:get_value()
 
     if value != PERM_NO then
-      perm_list[v:get_permission()] = value
+      perm_list[perm_panel:get_permission()] = value
     end
   end
 
@@ -258,18 +258,18 @@ end
 -- @param temp_perm_list=nil [Map tables with value and expires (unix timestamp) fields,
 --   keyed by permission ID]
 function PANEL:set_permissions(perm_list, temp_perm_list)
-  for k, v in pairs(perm_list) do
-    if self.permissions[k] then
-      self.permissions[k]:set_value(tonumber(v))
+  for perm_id, value in pairs(perm_list) do
+    if self.permissions[perm_id] then
+      self.permissions[perm_id]:set_value(tonumber(value))
     end
   end
 
   if temp_perm_list then
     local now = os.time()
 
-    for k, v in pairs(temp_perm_list) do
-      if self.permissions[k] and v.expires > now then
-        self.permissions[k]:set_temporary(tonumber(v.value), v.expires)
+    for perm_id, entry in pairs(temp_perm_list) do
+      if self.permissions[perm_id] and entry.expires > now then
+        self.permissions[perm_id]:set_temporary(tonumber(entry.value), entry.expires)
       end
     end
   end
@@ -336,26 +336,26 @@ function PANEL:rebuild()
       panel.PerformLayout = function(_pnl, w, h)
         local quarter = w * 0.25
 
-        for k, button in ipairs(buttons) do
+        for i, button in ipairs(buttons) do
           button:SetSize(quarter * 0.9, h - math.scale(4))
-          button:SetPos(quarter * k, math.scale(2))
+          button:SetPos(quarter * i, math.scale(2))
         end
       end
 
-      for k, v in ipairs(category_buttons) do
+      for i, label in ipairs(category_buttons) do
         local button = vgui.Create('fl_button', panel)
-        buttons[k] = button
+        buttons[i] = button
         button:SetFont(Theme.get_font('text_smaller'))
         button:SetDrawBackground(true)
         button:set_draw_outline(true)
         button:set_background_color(Theme.get_color('surface_raised'))
-        button:set_text(v)
+        button:set_text(label)
         button:set_centered(true)
         button.DoClick = function(_btn)
           local can_click = false
 
-          for _k1, v1 in pairs(perms) do
-            if self.permissions[v1.id]:get_value() != k - 1 then
+          for _, perm in pairs(perms) do
+            if self.permissions[perm.id]:get_value() != i - 1 then
               can_click = true
 
               break
@@ -366,8 +366,8 @@ function PANEL:rebuild()
 
           surface.PlaySound('buttons/button4.wav')
 
-          for _k1, v1 in pairs(perms) do
-            self.permissions[v1.id]:set_value(k - 1)
+          for _, perm in pairs(perms) do
+            self.permissions[perm.id]:set_value(i - 1)
           end
         end
       end
@@ -375,16 +375,16 @@ function PANEL:rebuild()
       list:Add(panel)
     end
 
-    for _k, v in SortedPairs(perms) do
+    for _, perm in SortedPairs(perms) do
       local button = vgui.Create('fl_permission', self)
       button:SetTall(row_height)
-      button:set_permission(v)
+      button:set_permission(perm)
       button:set_value(PERM_NO)
       button:set_player(self:get_player())
 
       list:Add(button)
 
-      self.permissions[v.id] = button
+      self.permissions[perm.id] = button
     end
   end
 end

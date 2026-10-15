@@ -164,11 +164,11 @@ function SrcdsProxy:find_local_steam_id(argument)
     return
   end
 
-  for _k, v in player.Iterator() do
-    if srcdsproxy.IsProxied(v) then
-      if account_id and v:AccountID() == tonumber(account_id) or
-         !account_id and srcdsproxy.ClaimedSteamID64(v) == argument then
-        return v
+  for _, client in player.Iterator() do
+    if srcdsproxy.IsProxied(client) then
+      if account_id and client:AccountID() == tonumber(account_id) or
+         !account_id and srcdsproxy.ClaimedSteamID64(client) == argument then
+        return client
       end
     end
   end
@@ -192,8 +192,8 @@ function SrcdsProxy:run(actor, verbs)
     verbs = { verbs }
   end
 
-  for _k, v in ipairs(verbs) do
-    srcdsproxy.Command(actor, v)
+  for _, verb in ipairs(verbs) do
+    srcdsproxy.Command(actor, verb)
   end
 
   Flux.Player:notify(actor, 'notification.proxy.console')
@@ -262,11 +262,11 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
   local locals, listed = {}, {}
 
   if istable(found) then
-    for _k, v in ipairs(found) do
-      if IsValid(v) and !listed[v] then
-        listed[v] = true
+    for _, target in ipairs(found) do
+      if IsValid(target) and !listed[target] then
+        listed[target] = true
 
-        locals[#locals + 1] = v
+        locals[#locals + 1] = target
       end
     end
   end
@@ -276,7 +276,7 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
   end
 
   if check_immunity and IsValid(actor) then
-    for _k, v in ipairs(locals) do
+    for _, target in ipairs(locals) do
       --- Run by the proxy commands that act on players (Transfer, `netban add` and
       -- `netban addip`) for every player on this server they are about to affect, the same
       -- way the command interpreter runs it for a command with `immunity` set.
@@ -284,8 +284,8 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
       -- @param target [Player Player the command targets]
       -- @param can_equal [Boolean Whether a target of the same standing may be affected]
       -- @return [Boolean Return false if the target is immune to the actor]
-      if hook.Run('CommandCheckImmunity', actor, v, false) == false then
-        Flux.Player:notify(actor, 'error.command.higher_immunity', { target = get_player_name(v) })
+      if hook.Run('CommandCheckImmunity', actor, target, false) == false then
+        Flux.Player:notify(actor, 'error.command.higher_immunity', { target = get_player_name(target) })
 
         return
       end
@@ -294,13 +294,13 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
 
   local entries = {}
 
-  for _k, v in ipairs(locals) do
-    local id = srcdsproxy.IsProxied(v) and srcdsproxy.ClaimedSteamID64(v) or ''
+  for _, target in ipairs(locals) do
+    local id = srcdsproxy.IsProxied(target) and srcdsproxy.ClaimedSteamID64(target) or ''
 
     if id != '' and id != '0' then
-      entries[#entries + 1] = { id = id, player = v }
+      entries[#entries + 1] = { id = id, player = target }
     else
-      Flux.Player:notify(actor, 'error.proxy.target_not_proxied', { target = get_player_name(v) })
+      Flux.Player:notify(actor, 'error.proxy.target_not_proxied', { target = get_player_name(target) })
     end
   end
 
@@ -348,8 +348,8 @@ function SrcdsProxy:ban(actor, name, target, duration, reason)
 
   local verbs = {}
 
-  for _k, v in ipairs(entries) do
-    verbs[#verbs + 1] = self:verb(name, v.id, duration, reason)
+  for _, entry in ipairs(entries) do
+    verbs[#verbs + 1] = self:verb(name, entry.id, duration, reason)
   end
 
   if !self:run(actor, verbs) then return end

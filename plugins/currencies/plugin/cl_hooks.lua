@@ -67,20 +67,20 @@ function Currencies:CreatePlayerInteractions(menu, target)
 
   local client = PLAYER
 
-  for k, v in pairs(Currencies.all()) do
-    local amount = client:get_money(k) or 0
+  for currency_id, currency_data in pairs(Currencies.all()) do
+    local amount = client:get_money(currency_id) or 0
 
-    if !v.hidden or v.hidden and amount > 0 then
-      money_menu:AddOption(t'ui.currency.menu.give'..' '..t(v.name), function()
+    if !currency_data.hidden or currency_data.hidden and amount > 0 then
+      money_menu:AddOption(t'ui.currency.menu.give'..' '..t(currency_data.name), function()
         Derma_StringRequest(
           t'ui.currency.give.title',
-          t('ui.currency.give.message', { currency = t(v.name) }),
+          t('ui.currency.give.message', { currency = t(currency_data.name) }),
           '',
           function(text)
             local value = tonumber(text)
 
             if value and value > 0 then
-              Cable.send('fl_currency_give', value, k, target)
+              Cable.send('fl_currency_give', value, currency_id, target)
             else
               client:notify('error.invalid_amount')
             end
@@ -113,9 +113,9 @@ function Currencies:create_panel(entity, parent)
 end
 
 Cable.receive('fl_rebuild_currency_panel', function()
-  for _k, v in pairs(Flux.money_panels) do
-    if IsValid(v) then
-      v:rebuild()
+  for _, money_panel in pairs(Flux.money_panels) do
+    if IsValid(money_panel) then
+      money_panel:rebuild()
     end
   end
 end)

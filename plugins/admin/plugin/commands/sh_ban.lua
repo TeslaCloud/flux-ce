@@ -50,8 +50,8 @@ function add:on_run(actor, target, duration, reason)
   if targets then
     local names = util.player_list_to_string(targets)
 
-    for _, v in ipairs(targets) do
-      Bolt:ban(v, ban_time, reason, false, actor)
+    for _, client in ipairs(targets) do
+      Bolt:ban(client, ban_time, reason, false, actor)
     end
 
     self:notify_staff(message, {

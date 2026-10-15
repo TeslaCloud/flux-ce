@@ -159,8 +159,8 @@ function ActiveRecord.MigrationContext:init(migrations_paths)
 
   self.migrations_paths = migrations_paths or { ActiveRecord.MigrationContext.default_migrations_path() }
 
-  for k, v in ipairs(self.migrations_paths) do
-    self.migrations_paths[k] = v:ensure_end('/')
+  for index, path in ipairs(self.migrations_paths) do
+    self.migrations_paths[index] = path:ensure_end('/')
   end
 
   return self
@@ -171,11 +171,11 @@ end
 function ActiveRecord.MigrationContext:migration_files()
   local files = {}
 
-  for _k, path in ipairs(self.migrations_paths) do
+  for _, path in ipairs(self.migrations_paths) do
     local found = file.Find(path..'*.lua', 'LUA')
 
-    for _k2, v in ipairs(found or {}) do
-      table.insert(files, path..v)
+    for _, file_name in ipairs(found or {}) do
+      table.insert(files, path..file_name)
     end
   end
 
@@ -191,7 +191,7 @@ function ActiveRecord.MigrationContext:migrations()
   local by_version = {}
   local by_name = {}
 
-  for _k, file_name in ipairs(self:migration_files()) do
+  for _, file_name in ipairs(self:migration_files()) do
     local version, name, scope = ActiveRecord.MigrationContext.parse_migration_filename(file_name)
 
     if version then
@@ -250,15 +250,15 @@ end
 function ActiveRecord.MigrationContext:pending_migration_versions()
   local ran = {}
 
-  for _k, v in ipairs(self:get_all_versions()) do
-    ran[v] = true
+  for _, version in ipairs(self:get_all_versions()) do
+    ran[version] = true
   end
 
   local pending = {}
 
-  for _k, v in ipairs(self:migrations()) do
-    if !ran[v.version] then
-      table.insert(pending, v.version)
+  for _, migration in ipairs(self:migrations()) do
+    if !ran[migration.version] then
+      table.insert(pending, migration.version)
     end
   end
 
@@ -375,15 +375,15 @@ end
 function ActiveRecord.MigrationContext:versions_without_file()
   local present = {}
 
-  for _k, v in ipairs(self:migrations()) do
-    present[v.version] = true
+  for _, migration in ipairs(self:migrations()) do
+    present[migration.version] = true
   end
 
   local missing = {}
 
-  for _k, v in ipairs(self:get_all_versions()) do
-    if !present[v] then
-      missing[#missing + 1] = v
+  for _, version in ipairs(self:get_all_versions()) do
+    if !present[version] then
+      missing[#missing + 1] = version
     end
   end
 
@@ -397,29 +397,29 @@ end
 function ActiveRecord.MigrationContext:migrations_status()
   local ran = {}
 
-  for _k, v in ipairs(self:get_all_versions()) do
-    ran[v] = true
+  for _, version in ipairs(self:get_all_versions()) do
+    ran[version] = true
   end
 
   local status = {}
 
-  for _k, v in ipairs(self:migrations()) do
-    local name = v.name:gsub('_', ' '):capitalize()
+  for _, migration in ipairs(self:migrations()) do
+    local name = migration.name:gsub('_', ' '):capitalize()
 
-    if v.scope and v.scope != '' then
-      name = name..' ('..v.scope..')'
+    if migration.scope and migration.scope != '' then
+      name = name..' ('..migration.scope..')'
     end
 
     table.insert(status, {
-      status = ran[v.version] and 'up' or 'down',
-      version = ActiveRecord.SchemaMigration:normalize_migration_number(v.version),
+      status = ran[migration.version] and 'up' or 'down',
+      version = ActiveRecord.SchemaMigration:normalize_migration_number(migration.version),
       name = name
     })
 
-    ran[v.version] = nil
+    ran[migration.version] = nil
   end
 
-  for version, _v in pairs(ran) do
+  for version in pairs(ran) do
     table.insert(status, {
       status = 'up',
       version = ActiveRecord.SchemaMigration:normalize_migration_number(version),
@@ -443,17 +443,17 @@ function ActiveRecord.MigrationContext:assume_migrated_upto_version(version)
 
   local ran = {}
 
-  for _k, v in ipairs(self:get_all_versions()) do
-    ran[v] = true
+  for _, ran_version in ipairs(self:get_all_versions()) do
+    ran[ran_version] = true
   end
 
   if !ran[version] then
     ActiveRecord.SchemaMigration:create_version(version)
   end
 
-  for _k, v in ipairs(self:migrations()) do
-    if v.version < version and !ran[v.version] then
-      ActiveRecord.SchemaMigration:create_version(v.version)
+  for _, migration in ipairs(self:migrations()) do
+    if migration.version < version and !ran[migration.version] then
+      ActiveRecord.SchemaMigration:create_version(migration.version)
     end
   end
 end
@@ -488,11 +488,11 @@ local function recorded_installed_versions()
 
       if !istable(result) then return versions end
 
-      for _k, v in ipairs(result) do
-        local key = tostring(v.key)
+      for _, row in ipairs(result) do
+        local key = tostring(row.key)
 
         if key:start_with(installed_version_prefix) then
-          versions[key:sub(#installed_version_prefix + 1)] = tonumber(v.value)
+          versions[key:sub(#installed_version_prefix + 1)] = tonumber(row.value)
         end
       end
 
@@ -519,7 +519,7 @@ function ActiveRecord.MigrationContext:install_migrations()
   local used_versions = {}
   local last_version = 0
 
-  for _k, file_name in ipairs(self:migration_files()) do
+  for _, file_name in ipairs(self:migration_files()) do
     local version, name = ActiveRecord.MigrationContext.parse_migration_filename(file_name)
 
     if version then
@@ -547,9 +547,9 @@ function ActiveRecord.MigrationContext:install_migrations()
   -- registered in. Unversioned files go last, in registration order.
   local ordered = {}
 
-  for k, source in ipairs(source_list) do
+  for index, source in ipairs(source_list) do
     local version = ActiveRecord.MigrationContext.parse_migration_filename(source)
-    table.insert(ordered, { source = source, version = version or math.huge, index = k })
+    table.insert(ordered, { source = source, version = version or math.huge, index = index })
   end
 
   table.sort(ordered, function(a, b)
@@ -558,7 +558,7 @@ function ActiveRecord.MigrationContext:install_migrations()
     return a.index < b.index
   end)
 
-  for _k, entry in ipairs(ordered) do
+  for _, entry in ipairs(ordered) do
     local source = entry.source
     local version, name = ActiveRecord.MigrationContext.parse_migration_filename(source)
     local unversioned = version == nil

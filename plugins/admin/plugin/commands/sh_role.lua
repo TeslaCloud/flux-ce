@@ -47,11 +47,11 @@ function set:on_run(actor, targets, role_name)
     return
   end
 
-  for _, v in ipairs(targets) do
-    v:notify('notification.setgroup', {
+  for _, client in ipairs(targets) do
+    client:notify('notification.setgroup', {
       group = role.id
     })
-    v:SetUserGroup(role.id)
+    client:SetUserGroup(role.id)
   end
 
   self:notify_staff('command.role.set.message', {
@@ -77,11 +77,11 @@ function remove:on_run(actor, target)
   local targets, steam_id = Bolt:find_command_targets(actor, target)
 
   if targets then
-    for _, v in ipairs(targets) do
-      v:notify('notification.demote', {
-        group = v:GetUserGroup()
+    for _, client in ipairs(targets) do
+      client:notify('notification.demote', {
+        group = client:GetUserGroup()
       })
-      v:SetUserGroup('user')
+      client:SetUserGroup('user')
     end
 
     self:notify_staff('command.role.remove.message', {

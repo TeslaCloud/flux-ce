@@ -32,14 +32,14 @@ function CMD:on_run(actor, targets, ...)
 
   local count = 0
 
-  for _k, v in ipairs(targets) do
-    for _k2, v2 in ipairs(forgotten) do
-      local known_name = v:get_recognize(v2)
+  for _, client in ipairs(targets) do
+    for _, forgotten_client in ipairs(forgotten) do
+      local known_name = client:get_recognize(forgotten_client)
 
-      if known_name and v:remove_recognize(v2) then
+      if known_name and client:remove_recognize(forgotten_client) then
         count = count + 1
 
-        v:notify('notification.recognize.forgotten', { name = tostring(known_name) }, Color('salmon'))
+        client:notify('notification.recognize.forgotten', { name = tostring(known_name) }, Color('salmon'))
       end
     end
   end

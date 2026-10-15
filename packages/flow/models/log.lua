@@ -62,8 +62,8 @@ function Log:to_discord(type, message)
 
     local hooks = Webhook:get_type(string.lower(type))
 
-    for _k, v in ipairs(hooks) do
-      v:push(message)
+    for _, webhook in ipairs(hooks) do
+      webhook:push(message)
     end
   end
 
@@ -147,10 +147,10 @@ function Log:replicate(condition)
 
   local has_condition = isfunction(condition)
 
-  for _k, v in player.Iterator() do
-    if !has_condition or condition(v) then
+  for _, client in player.Iterator() do
+    if !has_condition or condition(client) then
       Cable.send(
-        v,
+        client,
         'log_replicate',
         last_log.message,
         last_log.action,

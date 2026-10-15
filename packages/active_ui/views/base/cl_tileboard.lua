@@ -17,9 +17,9 @@ function PANEL:Think()
   local cur_time = CurTime()
 
   if cur_time > self.next_think then
-    for k, v in ipairs(self.docked) do
-      if !IsValid(v.panel) then
-        table.remove(self.docked, k)
+    for index, entry in ipairs(self.docked) do
+      if !IsValid(entry.panel) then
+        table.remove(self.docked, index)
       end
     end
 

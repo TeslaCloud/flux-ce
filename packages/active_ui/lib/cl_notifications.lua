@@ -107,8 +107,8 @@ function Flux.Notification:reposition(offset)
 
   local shift = offset + math.scale(6)
 
-  for _k, v in ipairs(display) do
-    local panel = v.panel
+  for _, notification in ipairs(display) do
+    local panel = notification.panel
 
     if IsValid(panel) then
       local x, y = panel:GetPos()

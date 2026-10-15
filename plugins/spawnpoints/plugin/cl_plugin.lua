@@ -8,11 +8,11 @@ function SpawnPoints:set_points(points)
   self.points = istable(points) and points or {}
   self.received = true
 
-  for k, v in ipairs(self.points) do
-    local group_label = self:get_group_label(v.group)
+  for index, point in ipairs(self.points) do
+    local group_label = self:get_group_label(point.group)
 
-    v.label = t('ui.spawnpoints.label', { id = k, group = group_label })
-    v.color = self:get_group_color(v.group)
+    point.label = t('ui.spawnpoints.label', { id = index, group = group_label })
+    point.color = self:get_group_color(point.group)
   end
 end
 

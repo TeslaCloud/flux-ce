@@ -86,8 +86,8 @@ end
 -- add.arg_types = { 'player', 'faction' }
 --
 -- function add:on_run(actor, targets, faction_id)
---   for k, v in ipairs(targets) do
---     v:give_whitelist(faction_id)
+--   for _, target in ipairs(targets) do
+--     target:give_whitelist(faction_id)
 --   end
 -- end
 --
@@ -118,9 +118,9 @@ function Command:subcommand(id)
   if !self.subcommands[id] then
     self.subcommand_list[#self.subcommand_list + 1] = sub
   else
-    for k, v in ipairs(self.subcommand_list) do
-      if v.id == id then
-        self.subcommand_list[k] = sub
+    for index, subcommand in ipairs(self.subcommand_list) do
+      if subcommand.id == id then
+        self.subcommand_list[index] = sub
       end
     end
   end
@@ -155,10 +155,10 @@ function Command:find_subcommand(word)
 
   if found then return found end
 
-  for _, v in ipairs(self.subcommand_list) do
-    for _, v2 in ipairs(v.aliases or {}) do
-      if v2:utf8lower() == word then
-        return v
+  for _, subcommand in ipairs(self.subcommand_list) do
+    for _, alias in ipairs(subcommand.aliases or {}) do
+      if alias:utf8lower() == word then
+        return subcommand
       end
     end
   end
@@ -209,8 +209,8 @@ function Command:get_syntax()
   if (!self.syntax or self.syntax == '[-]') and self:has_subcommands() then
     local ids = {}
 
-    for _, v in ipairs(self.subcommand_list) do
-      ids[#ids + 1] = v.id
+    for _, subcommand in ipairs(self.subcommand_list) do
+      ids[#ids + 1] = subcommand.id
     end
 
     return '<'..table.concat(ids, '|')..'>'
@@ -316,9 +316,9 @@ end
 --- Returns the position of the first 'player' entry of `arg_types`.
 -- @return [Number the position, or nil if there is no such entry]
 function Command:find_player_arg()
-  for k, v in ipairs(istable(self.arg_types) and self.arg_types or {}) do
-    if v == 'player' then
-      return k
+  for index, arg_type in ipairs(istable(self.arg_types) and self.arg_types or {}) do
+    if arg_type == 'player' then
+      return index
     end
   end
 end
@@ -344,8 +344,8 @@ end
 -- CMD.aliases = { 'slap', 'plyslap' }
 --
 -- function CMD:on_run(actor, targets)
---   for k, v in ipairs(targets) do
---     v:TakeDamage(10, actor)
+--   for _, target in ipairs(targets) do
+--     target:TakeDamage(10, actor)
 --   end
 --
 --   self:notify_staff('command.slap.message', {

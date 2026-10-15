@@ -182,9 +182,9 @@ function PANEL:on_open(parent)
 
     local active_effects = {}
 
-    for _k, v in ipairs(selected_attribute.effects or {}) do
-      if !isfunction(v.is_active) or v.is_active() then
-        table.insert(active_effects, v)
+    for _, effect_data in ipairs(selected_attribute.effects or {}) do
+      if !isfunction(effect_data.is_active) or effect_data.is_active() then
+        table.insert(active_effects, effect_data)
       end
     end
 
@@ -199,23 +199,23 @@ function PANEL:on_open(parent)
       effect_title:Dock(TOP)
       effect_title:SetTall(effect_title:GetTall() + math_scale(32))
 
-      for _k, v in ipairs(active_effects) do
+      for _, effect_data in ipairs(active_effects) do
         local effect = vgui.Create('DLabel', pnl)
-        effect:SetText(t(v.text)..' '..t(v.get_value(effect_level)))
+        effect:SetText(t(effect_data.text)..' '..t(effect_data.get_value(effect_level)))
         effect:SetFont(get_font('text_normal'))
-        effect:SetColor(v.get_color(effect_level))
+        effect:SetColor(effect_data.get_color(effect_level))
         effect:SizeToContents()
         effect:Dock(TOP)
       end
     end
   end
 
-  for k, v in pairs(Attributes.get_stored()) do
+  for attribute_id, attribute_table in pairs(Attributes.get_stored()) do
     local stat_line = vgui.Create('DPanel', self.attributes_list)
     stat_line:SetTall(math_scale(64))
     stat_line:Dock(TOP)
     stat_line:DockMargin(0, 0, 0, math_scale(4))
-    stat_line.attribute_table = v
+    stat_line.attribute_table = attribute_table
     stat_line.Paint = function(pnl, w, h)
       if selected_attribute and selected_attribute.attribute_id == pnl.attribute_table.attribute_id then
         draw.box_outlined(0, 0, 0, w, h, 2, Theme.get_color('accent'), 0)
@@ -223,8 +223,8 @@ function PANEL:on_open(parent)
     end
 
     stat_line.OnMousePressed = function(_pnl)
-      if selected_attribute != v then
-        selected_attribute = v
+      if selected_attribute != attribute_table then
+        selected_attribute = attribute_table
 
         self.attribute_panel:rebuild()
       end
@@ -232,14 +232,14 @@ function PANEL:on_open(parent)
 
     local counter = vgui.Create('fl_counter', stat_line)
     counter:Dock(RIGHT)
-    counter:set_value(v.default)
-    counter:set_min_max(v.min, Stats:get_creation_max(v))
+    counter:set_value(attribute_table.default)
+    counter:set_min_max(attribute_table.min, Stats:get_creation_max(attribute_table))
     counter:set_font(get_font('main_menu_titles'))
     counter.on_click = function(_btn, new_value, old_value)
       local diff = new_value - old_value
 
-      if selected_attribute != v then
-        selected_attribute = v
+      if selected_attribute != attribute_table then
+        selected_attribute = attribute_table
       end
 
       if diff > 0 and self.points - diff < 0 then
@@ -256,21 +256,21 @@ function PANEL:on_open(parent)
     end
 
     local icon_size = stat_line:GetTall() * 0.75
-    local icon = create_icon(stat_line, v.icon, icon_size)
+    local icon = create_icon(stat_line, attribute_table.icon, icon_size)
 
     if icon then
       icon:SetPos(math_scale_x(4), stat_line:GetTall() * 0.5 - icon_size * 0.5)
     end
 
     local title = vgui.Create('DLabel', stat_line)
-    title:SetText(t(v.name))
+    title:SetText(t(attribute_table.name))
     title:SetFont(get_font('main_menu_titles'))
     title:SetColor(color_white)
     title:SetPos(icon and icon:GetWide() + math_scale_x(24) or 0, stat_line:GetTall() * 0.5 - title:GetTall() * 0.5)
     title:SizeToContents()
 
     stat_line.counter = counter
-    self.stats[k] = stat_line
+    self.stats[attribute_id] = stat_line
   end
 
   self.random = vgui.Create('fl_button', self)
@@ -285,12 +285,12 @@ function PANEL:on_open(parent)
     local cur_time = CurTime()
 
     if !self.random.next_click or self.random.next_click <= cur_time then
-      for _k, v in pairs(self.stats) do
-        local number = v.counter:get_value()
+      for _, stat_line in pairs(self.stats) do
+        local number = stat_line.counter:get_value()
 
-        if number > v.attribute_table.min then
-          self.points = self.points + (number - v.attribute_table.min)
-          v.counter:set_value(v.attribute_table.min)
+        if number > stat_line.attribute_table.min then
+          self.points = self.points + (number - stat_line.attribute_table.min)
+          stat_line.counter:set_value(stat_line.attribute_table.min)
         end
       end
 
@@ -316,14 +316,14 @@ function PANEL:on_open(parent)
   local spent = 0
 
   if istable(saved_levels) then
-    for k, v in pairs(self.stats) do
-      local attribute_table = v.attribute_table
-      local level = tonumber(saved_levels[k])
+    for attribute_id, stat_line in pairs(self.stats) do
+      local attribute_table = stat_line.attribute_table
+      local level = tonumber(saved_levels[attribute_id])
 
       if level then
         level = math.Clamp(math.floor(level), attribute_table.min, Stats:get_creation_max(attribute_table))
 
-        v.counter:set_value(level)
+        stat_line.counter:set_value(level)
 
         spent = spent + level - attribute_table.default
       end
@@ -339,8 +339,8 @@ end
 function PANEL:on_close(parent)
   local stats_table = {}
 
-  for k, v in pairs(self.stats) do
-    stats_table[k] = v.counter:get_value()
+  for attribute_id, stat_line in pairs(self.stats) do
+    stats_table[attribute_id] = stat_line.counter:get_value()
   end
 
   parent:collect_data({
@@ -353,8 +353,8 @@ end
 function PANEL:on_validate()
   local sum = 0
 
-  for _k, v in pairs(self.stats) do
-    sum = sum + v.counter:get_value()
+  for _, stat_line in pairs(self.stats) do
+    sum = sum + stat_line.counter:get_value()
   end
 
   if self.points < 0 or sum > self.start_points then

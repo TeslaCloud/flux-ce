@@ -68,7 +68,7 @@ end
 function AreaDisplay:PlayerInitialized()
   if !IsValid(PLAYER) then return end
 
-  for _k, area in ipairs(self:find_text_areas_at(PLAYER:GetPos())) do
+  for _, area in ipairs(self:find_text_areas_at(PLAYER:GetPos())) do
     self:announce(area)
   end
 end

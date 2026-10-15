@@ -144,9 +144,9 @@ function class(name, parent_class)
 
     if !istable(module_table) then return end
 
-    for k, v in pairs(module_table) do
-      if !self[k] then
-        self[k] = v
+    for member_name, member in pairs(module_table) do
+      if !self[member_name] then
+        self[member_name] = member
       end
     end
 
@@ -172,8 +172,8 @@ function delegate(obj, t)
   local class = isstring(t.to) and t.to:parse_table() or t.to
 
   if istable(class) and class.class_name then
-    for _k, v in ipairs(t) do
-      obj[v] = class[v]
+    for _, method_name in ipairs(t) do
+      obj[method_name] = class[method_name]
     end
   end
 

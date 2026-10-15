@@ -100,7 +100,7 @@ function Lumen.text_of(props)
 
   local parts = {}
 
-  for _k, child in ipairs(children) do
+  for _, child in ipairs(children) do
     if isstring(child) then
       parts[#parts + 1] = child
     elseif isnumber(child) then

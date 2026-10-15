@@ -93,15 +93,15 @@ function PANEL:rebuild()
   local font = Theme.get_font('text_normal')
   local line_height = math.scale(30)
 
-  for k, v in pairs(Currencies.all()) do
-    local amount = self.entity:get_money(k) or 0
+  for currency_id, currency_data in pairs(Currencies.all()) do
+    local amount = self.entity:get_money(currency_id) or 0
 
-    if !v.hidden or v.hidden and amount > 0 then
+    if !currency_data.hidden or currency_data.hidden and amount > 0 then
       local line = vgui.Create('DPanel', self)
       line:SetPaintBackground(false)
 
       local label = vgui.Create('DLabel', line)
-      label:SetText(t(v.name)..': '..amount..' '..(v.symbol or ''))
+      label:SetText(t(currency_data.name)..': '..amount..' '..(currency_data.symbol or ''))
       label:SetFont(font)
       label:SetTextColor(Theme.get_color('text'))
       label:SizeToContents()
@@ -117,10 +117,10 @@ function PANEL:rebuild()
 
             request_amount(
               t'ui.currency.give.title',
-              t('ui.currency.give.message', { currency = t(v.name) }),
+              t('ui.currency.give.message', { currency = t(currency_data.name) }),
               '',
               function(value)
-                cable_send('fl_currency_give', value, k, target)
+                cable_send('fl_currency_give', value, currency_id, target)
               end
             )
           end)
@@ -128,10 +128,10 @@ function PANEL:rebuild()
           create_line_button(line, button_size, 'coins', t'ui.currency.drop.title', function()
             request_amount(
               t'ui.currency.drop.title',
-              t('ui.currency.drop.message', { currency = t(v.name) }),
+              t('ui.currency.drop.message', { currency = t(currency_data.name) }),
               '',
               function(value)
-                cable_send('fl_currency_drop', value, k)
+                cable_send('fl_currency_drop', value, currency_id)
               end
             )
           end)
@@ -141,10 +141,10 @@ function PANEL:rebuild()
           create_line_button(line, button_size, 'angle-double-left', t'ui.currency.take.title', function()
             request_amount(
               t'ui.currency.take.title',
-              t('ui.currency.take.message', { currency = t(v.name) }),
+              t('ui.currency.take.message', { currency = t(currency_data.name) }),
               amount,
               function(value)
-                cable_send('fl_currency_take', self.entity, value, k)
+                cable_send('fl_currency_take', self.entity, value, currency_id)
               end
             )
           end)

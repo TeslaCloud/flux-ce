@@ -26,26 +26,26 @@ function player.find(name, case_sensitive, return_first)
   local is_steamid = name:start_with('STEAM_')
   local lower_name
 
-  for _k, v in player.Iterator() do
+  for _, client in player.Iterator() do
     if is_steamid then
-      if v:SteamID() == name then
-        return v
+      if client:SteamID() == name then
+        return client
       end
 
       continue
     end
 
-    local char_name = v:name(true)
+    local char_name = client:name(true)
 
     if char_name:find(name) then
-      hits[#hits + 1] = v
+      hits[#hits + 1] = client
     else
       lower_name = lower_name or name:utf8lower()
 
       if !case_sensitive and char_name:utf8lower():find(lower_name) then
-        hits[#hits + 1] = v
-      elseif v:steam_name():utf8lower():find(lower_name) then
-        hits[#hits + 1] = v
+        hits[#hits + 1] = client
+      elseif client:steam_name():utf8lower():find(lower_name) then
+        hits[#hits + 1] = client
       end
     end
 
@@ -79,9 +79,9 @@ function player.find_exact(name)
   if lower:sub(1, 6) == 'steam_' or (#name == 17 and tonumber(name)) then
     local upper = name:upper()
 
-    for _, v in player.Iterator() do
-      if v:SteamID() == upper or v:SteamID64() == name then
-        found[#found + 1] = v
+    for _, client in player.Iterator() do
+      if client:SteamID() == upper or client:SteamID64() == name then
+        found[#found + 1] = client
 
         return found
       end
@@ -92,11 +92,11 @@ function player.find_exact(name)
 
   local by_steam_name = {}
 
-  for _, v in player.Iterator() do
-    if v:name(true):utf8lower() == lower then
-      found[#found + 1] = v
-    elseif v:steam_name():utf8lower() == lower then
-      by_steam_name[#by_steam_name + 1] = v
+  for _, client in player.Iterator() do
+    if client:name(true):utf8lower() == lower then
+      found[#found + 1] = client
+    elseif client:steam_name():utf8lower() == lower then
+      by_steam_name[#by_steam_name + 1] = client
     end
   end
 

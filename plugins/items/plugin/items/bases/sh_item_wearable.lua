@@ -94,8 +94,8 @@ function ItemWearable:can_equip(owner)
   local player_model = owner:GetModel():lower()
 
   if valid_models then
-    for _k, v in pairs(valid_models) do
-      if v:lower() == player_model then
+    for _, model in pairs(valid_models) do
+      if model:lower() == player_model then
         return true
       end
     end
@@ -131,17 +131,17 @@ function ItemWearable:post_equipped(owner)
     local bodygroup_data = owner:GetBodyGroups()
     local native_bodygroups = {}
 
-    for k, v in pairs(bodygroups) do
-      if isstring(k) then
-        for _k1, v1 in pairs(bodygroup_data) do
-          if k == v1.name then
-            native_bodygroups[v1.id] = owner:GetBodygroup(v1.id)
-            owner:SetBodygroup(v1.id, v)
+    for bodygroup, value in pairs(bodygroups) do
+      if isstring(bodygroup) then
+        for _, group_info in pairs(bodygroup_data) do
+          if bodygroup == group_info.name then
+            native_bodygroups[group_info.id] = owner:GetBodygroup(group_info.id)
+            owner:SetBodygroup(group_info.id, value)
           end
         end
       else
-        native_bodygroups[k] = owner:GetBodygroup(k)
-        owner:SetBodygroup(k, v)
+        native_bodygroups[bodygroup] = owner:GetBodygroup(bodygroup)
+        owner:SetBodygroup(bodygroup, value)
       end
     end
 

@@ -124,10 +124,10 @@ end
 function PANEL:center_items()
   local half_w = self:GetWide() * 0.5
 
-  for _k, v in ipairs(self:GetCanvas():GetChildren()) do
-    local _x, y = v:GetPos()
+  for _, child in ipairs(self:GetCanvas():GetChildren()) do
+    local _x, y = child:GetPos()
 
-    v:SetPos(half_w - v:GetWide() * 0.5, y)
+    child:SetPos(half_w - child:GetWide() * 0.5, y)
   end
 end
 

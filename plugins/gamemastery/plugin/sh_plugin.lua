@@ -52,9 +52,9 @@ end
 local function complete_gm_character()
   local names = {}
 
-  for _, v in ipairs(Gamemastery.get_pool()) do
-    if isstring(v.name) then
-      names[#names + 1] = v.name
+  for _, char_data in ipairs(Gamemastery.get_pool()) do
+    if isstring(char_data.name) then
+      names[#names + 1] = char_data.name
     end
   end
 

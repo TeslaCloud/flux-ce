@@ -24,13 +24,13 @@ end
 function Area:OneSecond()
   local cur_time = CurTime()
 
-  for k, v in pairs(Areas.all()) do
-    if istable(v.polys) and isstring(v.type) then
-      local area_id = v.id
-      local max_height = v.maxh
+  for id, area in pairs(Areas.all()) do
+    if istable(area.polys) and isstring(area.type) then
+      local area_id = area.id
+      local max_height = area.maxh
 
-      for k2, v2 in ipairs(v.polys) do
-        local min_height = v2[1].z
+      for poly_index, poly in ipairs(area.polys) do
+        local min_height = poly[1].z
 
         for _, actor in player.Iterator() do
           local pos = actor:GetPos()
@@ -48,14 +48,14 @@ function Area:OneSecond()
 
           -- First do height checks
           if z > min_height and z < max_height then
-            if util.vector_in_poly(pos, v2) then
+            if util.vector_in_poly(pos, poly) then
               -- The player entered the area
-              if !table.HasValue(visited, k2) then
-                try(Areas.get_callback(v.type), actor, v, true, pos, cur_time)
+              if !table.HasValue(visited, poly_index) then
+                try(Areas.get_callback(area.type), actor, area, true, pos, cur_time)
 
-                Cable.send(actor, 'fl_player_entered_area', k, pos)
+                Cable.send(actor, 'fl_player_entered_area', id, pos)
 
-                visited[#visited + 1] = k2
+                visited[#visited + 1] = poly_index
               end
 
               entered_area = true
@@ -64,12 +64,12 @@ function Area:OneSecond()
 
           if !entered_area then
             -- The player left the area
-            if table.HasValue(visited, k2) then
-              try(Areas.get_callback(v.type), actor, v, false, pos, cur_time)
+            if table.HasValue(visited, poly_index) then
+              try(Areas.get_callback(area.type), actor, area, false, pos, cur_time)
 
-              Cable.send(actor, 'fl_player_left_area', k, pos)
+              Cable.send(actor, 'fl_player_left_area', id, pos)
 
-              table.RemoveByValue(visited, k2)
+              table.RemoveByValue(visited, poly_index)
             end
           end
         end

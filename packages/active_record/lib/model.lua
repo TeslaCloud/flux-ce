@@ -40,17 +40,17 @@ end
 -- find_by_<column> helpers for its columns.
 -- @return [ActiveRecord::Model(self)]
 function ActiveRecord.Model:populate()
-  for _k, v in pairs(self.models) do
-    local schema = ActiveRecord.schema[v.table_name]
+  for _, model in pairs(self.models) do
+    local schema = ActiveRecord.schema[model.table_name]
 
     if schema then
       for column, data in pairs(schema) do
         if !isstring(column) or !istable(data) then continue end
 
-        self:generate_helpers(v, column, data.type)
+        self:generate_helpers(model, column, data.type)
       end
 
-      v.schema = schema
+      model.schema = schema
     end
   end
 

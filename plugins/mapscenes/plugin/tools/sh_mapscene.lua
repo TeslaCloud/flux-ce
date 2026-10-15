@@ -39,9 +39,9 @@ function TOOL.BuildCPanel(CPanel)
     if #Mapscenes.points != #list:GetLines() then
       list:Clear()
 
-      for k, _v in pairs(Mapscenes.points) do
-        local line = list:AddLine(t'ui.mapscene.title'..' #'..k)
-        line.id = k
+      for point_id in pairs(Mapscenes.points) do
+        local line = list:AddLine(t'ui.mapscene.title'..' #'..point_id)
+        line.id = point_id
       end
     end
   end

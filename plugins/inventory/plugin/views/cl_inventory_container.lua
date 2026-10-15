@@ -129,8 +129,8 @@ function PANEL:open_player_inventories(owner, inventory_ids)
 
   self.inventory_ids = inventory_ids
 
-  for _k, v in pairs(inventory_ids) do
-    local inventory = Inventories.find(v)
+  for _, inventory_id in pairs(inventory_ids) do
+    local inventory = Inventories.find(inventory_id)
     local inventory_panel = inventory:create_panel(self)
 
     self.container[inventory.type] = inventory_panel
@@ -195,8 +195,8 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   equipment_right:add_slot('equipment_hands')
   equipment_right:add_slot('equipment_legs')
 
-  for _k, v in pairs(self.container) do
-    v:rebuild()
+  for _, inventory_panel in pairs(self.container) do
+    inventory_panel:rebuild()
   end
 end
 

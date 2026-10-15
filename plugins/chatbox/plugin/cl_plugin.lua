@@ -114,7 +114,7 @@ function Chatbox.compile(msg_table)
       total_height = h + message_margin
     end
 
-    for k, v in ipairs(data) do
+    for index, piece in ipairs(data) do
       --- Lets plugins compile a single piece of a message. Called on the client for every
       -- piece in order, unless ChatboxCompileMessage has taken over the whole message;
       -- gamemode hooks are not called.
@@ -122,16 +122,16 @@ function Chatbox.compile(msg_table)
       --   entity]
       -- @param compiled [Map the message compiled so far, to append to]
       -- @return [Boolean return true to skip the default handling of this piece]
-      if Plugin.call('ChatboxCompileMessageData', v, compiled) == true then
+      if Plugin.call('ChatboxCompileMessageData', piece, compiled) == true then
         continue
       end
 
-      if isstring(v) then
+      if isstring(piece) then
         if should_translate then
-          data[k] = t(v)
+          data[index] = t(piece)
         end
 
-        local wrapped = util.wrap_text(v, font, wrap_width, cur_x)
+        local wrapped = util.wrap_text(piece, font, wrap_width, cur_x)
         local line_count = #wrapped
 
         for k2 = 1, line_count do
@@ -159,31 +159,31 @@ function Chatbox.compile(msg_table)
             cur_x = 0
           end
         end
-      elseif isnumber(v) then
-        cur_size = scale(v)
+      elseif isnumber(piece) then
+        cur_size = scale(piece)
 
         font = Font.size(get_font('chatbox_normal'), cur_size)
 
         compiled[#compiled + 1] = cur_size
-      elseif istable(v) then
-        if v.image or v.icon then
-          v.height  = v.height  or v.size
-          v.width   = v.width   or v.size
+      elseif istable(piece) then
+        if piece.image or piece.icon then
+          piece.height  = piece.height  or piece.size
+          piece.width   = piece.width   or piece.size
 
-          local margin = scale(v.margin or 2)
+          local margin = scale(piece.margin or 2)
           local margin_side = math.ceil(margin * 0.5)
-          local scaled = scale(v.height)
+          local scaled = scale(piece.height)
           local image_data = {
-            image = v.image,
+            image = piece.image,
             x     = cur_x + margin_side,
             y     = cur_y,
-            w     = scale(v.width),
+            w     = scale(piece.width),
             h     = scaled
           }
 
-          if v.icon then
+          if piece.icon then
             image_data.image  = nil
-            image_data.icon   = v.icon
+            image_data.icon   = piece.icon
           end
 
           cur_x = cur_x + image_data.w + margin
@@ -193,15 +193,15 @@ function Chatbox.compile(msg_table)
           if total_height < scaled then
             total_height = scaled + message_margin
           end
-        elseif v.avatar then
+        elseif piece.avatar then
           local _, line_height = text_size('W', font)
 
           if fix then
             line_height = line_height - line_height * fix_const
           end
 
-          local size = math.floor(isnumber(v.size) and scale(v.size) or line_height)
-          local margin = scale(isnumber(v.margin) and v.margin or 8)
+          local size = math.floor(isnumber(piece.size) and scale(piece.size) or line_height)
+          local margin = scale(isnumber(piece.margin) and piece.margin or 8)
 
           if cur_x > 1 and cur_x + size + margin > wrap_width then
             cur_x = 0
@@ -209,7 +209,7 @@ function Chatbox.compile(msg_table)
           end
 
           compiled[#compiled + 1] = {
-            avatar  = v.avatar,
+            avatar  = piece.avatar,
             x       = cur_x + math.ceil(margin * 0.5),
             y       = cur_y + math.max(0, math.floor((line_height - size) * 0.5)),
             w       = size,
@@ -218,13 +218,13 @@ function Chatbox.compile(msg_table)
 
           cur_x = cur_x + size + margin
           total_height = math.max(total_height, cur_y + size + message_margin)
-        elseif v.r and v.g and v.b and v.a then
-          compiled[#compiled + 1] = Color(v.r, v.g, v.b, v.a)
+        elseif piece.r and piece.g and piece.b and piece.a then
+          compiled[#compiled + 1] = Color(piece.r, piece.g, piece.b, piece.a)
         end
-      elseif IsValid(v) then
+      elseif IsValid(piece) then
         local to_insert = ''
 
-        if v:IsPlayer() then
+        if piece:IsPlayer() then
           to_insert =
             --- Decides whether the name of a player in a message goes through the
             -- GetPlayerName hook. Called on the client by `Chatbox.compile` for every
@@ -232,9 +232,10 @@ function Chatbox.compile(msg_table)
             -- @param target [Player the player whose name is displayed]
             -- @param message_data [Map message data received from the server]
             -- @return [Boolean return false to display the true name of the player]
-            hook.Run('ShouldProcessPlayerName', v, msg_table) != false and hook.Run('GetPlayerName', v) or v:name(true)
+            hook.Run('ShouldProcessPlayerName', piece, msg_table) != false and
+              hook.Run('GetPlayerName', piece) or piece:name(true)
         else
-          to_insert = tostring(v)
+          to_insert = tostring(piece)
         end
 
         local w, h = text_size(to_insert, font)

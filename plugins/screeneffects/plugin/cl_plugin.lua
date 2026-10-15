@@ -420,17 +420,17 @@ end
 -- Called eight times a second while the effects are active; the frames in between only
 -- move the effects towards these values.
 function ScreenEffects:update_settings()
-  for _k, v in ipairs(effect_order) do
-    enabled[v] = self:is_effect_enabled(v)
-    strengths[v] = self:get_effect_strength(v)
+  for _, effect_id in ipairs(effect_order) do
+    enabled[effect_id] = self:is_effect_enabled(effect_id)
+    strengths[effect_id] = self:get_effect_strength(effect_id)
   end
 
   self:update_headbob_target()
 
   compute_screen(base_screen)
 
-  for _k, v in ipairs(screen_fields) do
-    adjusted_screen[v] = base_screen[v]
+  for _, field in ipairs(screen_fields) do
+    adjusted_screen[field] = base_screen[field]
   end
 
   --- Lets plugins change what the screen passes of the Screen Effects plugin draw. Called on
@@ -447,14 +447,14 @@ function ScreenEffects:update_settings()
   --   picture is blurred, 0 for none; the underwater effect uses 2.5)]
   hook.Run('AdjustScreenEffects', adjusted_screen)
 
-  for _k, v in ipairs(screen_fields) do
-    local value = to_number(adjusted_screen[v], base_screen[v])
+  for _, field in ipairs(screen_fields) do
+    local value = to_number(adjusted_screen[field], base_screen[field])
 
-    screen_overrides[v] = value != base_screen[v] and value or nil
+    screen_overrides[field] = value != base_screen[field] and value or nil
   end
 
-  for _k, v in ipairs(view_fields) do
-    adjusted_view[v] = view[v] - view_offsets[v]
+  for _, key in ipairs(view_fields) do
+    adjusted_view[key] = view[key] - view_offsets[key]
   end
 
   --- Lets plugins change what the Screen Effects plugin adds to the view angles of the local
@@ -469,8 +469,8 @@ function ScreenEffects:update_settings()
   --   down), yaw (Number, positive turns left) and roll (Number, positive tilts to the right)]
   hook.Run('AdjustViewEffects', adjusted_view)
 
-  for _k, v in ipairs(view_fields) do
-    view_offsets[v] = to_number(adjusted_view[v], view[v]) - (view[v] - view_offsets[v])
+  for _, key in ipairs(view_fields) do
+    view_offsets[key] = to_number(adjusted_view[key], view[key]) - (view[key] - view_offsets[key])
   end
 end
 
@@ -497,8 +497,8 @@ function ScreenEffects:update_screen(frame_time)
 
   compute_screen(screen)
 
-  for k, v in pairs(screen_overrides) do
-    screen[k] = v
+  for field, value in pairs(screen_overrides) do
+    screen[field] = value
   end
 
   apply_color_pass(to_number(screen.saturation, 1), to_number(screen.brightness, 0), to_number(screen.contrast, 1))

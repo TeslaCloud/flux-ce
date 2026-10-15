@@ -29,9 +29,9 @@ local function find_rank(faction_table, word)
 
   local lowered = word:utf8lower()
 
-  for k, v in ipairs(faction_table:get_ranks()) do
-    if isstring(v.name) and v.name:utf8lower() == lowered then
-      return k, v
+  for rank_index, rank_data in ipairs(faction_table:get_ranks()) do
+    if isstring(rank_data.name) and rank_data.name:utf8lower() == lowered then
+      return rank_index, rank_data
     end
   end
 end
@@ -71,8 +71,8 @@ set.arg_types = { 'player', 'rank' }
 function set:on_run(actor, targets, rank)
   local changed = {}
 
-  for _, v in ipairs(targets) do
-    local faction_table = v:get_faction()
+  for _, target in ipairs(targets) do
+    local faction_table = target:get_faction()
     local index, rank_table
 
     if faction_table then
@@ -80,10 +80,10 @@ function set:on_run(actor, targets, rank)
     end
 
     if index then
-      v:set_rank(index)
-      v:notify('notification.rank_changed', { rank = rank_table.id })
+      target:set_rank(index)
+      target:notify('notification.rank_changed', { rank = rank_table.id })
 
-      table.insert(changed, v)
+      table.insert(changed, target)
     end
   end
 
@@ -114,11 +114,11 @@ function promote:on_run(actor, targets)
   local is_staff = !IsValid(actor) or actor:can('manage_ranks')
   local promoted = {}
 
-  for _, v in ipairs(targets) do
-    if (is_staff or Factions.can_promote(actor, v)) and v:promote_rank() then
-      table.insert(promoted, v)
+  for _, target in ipairs(targets) do
+    if (is_staff or Factions.can_promote(actor, target)) and target:promote_rank() then
+      table.insert(promoted, target)
 
-      v:notify('notification.promote_rank', { rank = v:get_rank_name() }, Color('lightgreen'))
+      target:notify('notification.promote_rank', { rank = target:get_rank_name() }, Color('lightgreen'))
     end
   end
 
@@ -145,11 +145,11 @@ function demote:on_run(actor, targets)
   local is_staff = !IsValid(actor) or actor:can('manage_ranks')
   local demoted = {}
 
-  for _, v in ipairs(targets) do
-    if (is_staff or Factions.can_demote(actor, v)) and v:demote_rank() then
-      table.insert(demoted, v)
+  for _, target in ipairs(targets) do
+    if (is_staff or Factions.can_demote(actor, target)) and target:demote_rank() then
+      table.insert(demoted, target)
 
-      v:notify('notification.demote_rank', { rank = v:get_rank_name() }, Color('salmon'))
+      target:notify('notification.demote_rank', { rank = target:get_rank_name() }, Color('salmon'))
     end
   end
 

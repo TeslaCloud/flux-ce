@@ -9,9 +9,9 @@ local function KeySelect(entity)
   selector:set_value(t'ui.key.add.select')
 
   if keys then
-    for _k, v in pairs(keys) do
-      selector:add_choice('['..v.instance_id..'] '..t(v:get_name()), function()
-        Cable.send('fl_key_add', v.instance_id, entity)
+    for _, key_item in pairs(keys) do
+      selector:add_choice('['..key_item.instance_id..'] '..t(key_item:get_name()), function()
+        Cable.send('fl_key_add', key_item.instance_id, entity)
       end)
     end
   end
@@ -71,8 +71,8 @@ if CLIENT then
       list:Clear()
 
       if keys then
-        for _k, v in pairs(keys) do
-          local item_table = Item.find_instance_by_id(v)
+        for _, instance_id in pairs(keys) do
+          local item_table = Item.find_instance_by_id(instance_id)
 
           local line = vgui.Create('fl_base_panel')
           line:Dock(TOP)
@@ -94,9 +94,9 @@ if CLIENT then
             t'ui.key.delete.title',
             t'ui.yes',
             function()
-              Cable.send('fl_key_remove', v, entity)
+              Cable.send('fl_key_remove', instance_id, entity)
 
-              table.RemoveByValue(keys, v)
+              table.RemoveByValue(keys, instance_id)
 
               frame:rebuild()
             end, t'ui.no')
@@ -137,9 +137,9 @@ if CLIENT then
     selector:set_value(t'ui.key.copy.select')
 
     if keys then
-      for _k, v in pairs(keys) do
-        selector:add_choice('['..v.instance_id..']'..t(v:get_name()), function()
-          Cable.send('fl_key_copy', v.instance_id)
+      for _, key_item in pairs(keys) do
+        selector:add_choice('['..key_item.instance_id..']'..t(key_item:get_name()), function()
+          Cable.send('fl_key_copy', key_item.instance_id)
         end)
       end
     end

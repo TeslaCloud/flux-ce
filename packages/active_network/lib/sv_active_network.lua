@@ -52,8 +52,8 @@ local function contains_function(value, seen)
 
   seen[value] = true
 
-  for k, v in pairs(value) do
-    if contains_function(k, seen) or contains_function(v, seen) then
+  for key, entry in pairs(value) do
+    if contains_function(key, seen) or contains_function(entry, seen) then
       return true
     end
   end
@@ -87,9 +87,9 @@ local function to_recipient_set(send)
   local allowed = {}
 
   if istable(send) then
-    for _k, v in pairs(send) do
-      if isentity(v) and v:IsValid() and v:IsPlayer() then
-        allowed[v] = true
+    for _, recipient in pairs(send) do
+      if isentity(recipient) and recipient:IsValid() and recipient:IsPlayer() then
+        allowed[recipient] = true
       end
     end
   elseif isentity(send) and send:IsValid() and send:IsPlayer() then
@@ -182,13 +182,13 @@ local function send_revoked(old_allowed, allowed, id, ...)
   local targets = {}
 
   if old_allowed then
-    for _k, target in ipairs(list_recipients(old_allowed)) do
+    for _, target in ipairs(list_recipients(old_allowed)) do
       if !allowed[target] then
         targets[#targets + 1] = target
       end
     end
   else
-    for _k, target in player.Iterator() do
+    for _, target in player.Iterator() do
       if !allowed[target] then
         targets[#targets + 1] = target
       end
@@ -450,17 +450,17 @@ end
 --- Sends the current networked globals and the networked variables of all entities to this
 -- player, leaving out the private variables the player is not a recipient of.
 function player_meta:sync_nv()
-  for k, v in pairs(globals) do
-    send_restricted(global_recipients[k], self, 'fl_netvar_global_set', k, v)
+  for key, value in pairs(globals) do
+    send_restricted(global_recipients[key], self, 'fl_netvar_global_set', key, value)
   end
 
-  for k, v in pairs(stored) do
-    if IsValid(k) then
-      local allowed = recipients[k]
-      local ent_idx = k:EntIndex()
+  for ent, vars in pairs(stored) do
+    if IsValid(ent) then
+      local allowed = recipients[ent]
+      local ent_idx = ent:EntIndex()
 
-      for k2, v2 in pairs(v) do
-        send_restricted(allowed and allowed[k2], self, 'fl_netvar_set', ent_idx, k2, v2)
+      for key, value in pairs(vars) do
+        send_restricted(allowed and allowed[key], self, 'fl_netvar_set', ent_idx, key, value)
       end
     end
   end

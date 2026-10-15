@@ -220,17 +220,17 @@ function PANEL:rebuild()
   local listed = {}
   local rows = {}
 
-  for _k, v in ipairs(player.GetAll()) do
-    local character_id = Doors:get_character_id(v)
+  for _, client in ipairs(player.GetAll()) do
+    local character_id = Doors:get_character_id(client)
 
     if character_id then
-      online[character_id] = v
+      online[character_id] = client
     end
   end
 
-  for _k, v in ipairs(info.access or {}) do
-    local target = online[v.id]
-    local name = v.name or ''
+  for _, entry in ipairs(info.access or {}) do
+    local target = online[entry.id]
+    local name = entry.name or ''
 
     if IsValid(target) then
       name = target:name()
@@ -238,9 +238,9 @@ function PANEL:rebuild()
       name = t('ui.door.management.away', { name = name })
     end
 
-    listed[v.id] = true
+    listed[entry.id] = true
 
-    rows[#rows + 1] = { id = v.id, name = name, level = v.level or DOOR_ACCESS_USE }
+    rows[#rows + 1] = { id = entry.id, name = name, level = entry.level or DOOR_ACCESS_USE }
   end
 
   for character_id, target in pairs(online) do
@@ -263,12 +263,12 @@ function PANEL:rebuild()
 
   self.access_list:Clear()
 
-  for _k, v in ipairs(rows) do
-    local level_name = self:get_level_name(v.level)
-    local line = self.access_list:AddLine(v.name, level_name)
+  for _, row in ipairs(rows) do
+    local level_name = self:get_level_name(row.level)
+    local line = self.access_list:AddLine(row.name, level_name)
 
-    line.character_id = v.id
-    line.level = v.level
+    line.character_id = row.id
+    line.level = row.level
   end
 end
 

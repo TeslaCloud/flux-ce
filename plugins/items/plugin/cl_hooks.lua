@@ -85,17 +85,18 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
   if item_obj.name then
     if item_obj.custom_buttons then
-      for k, v in pairs(item_obj.custom_buttons) do
-        if !v.on_show or v.on_show(item_obj) != false then
-          local button = item_menu:add_option(t(v.get_name and v.get_name(item_obj) or v.name or k), function()
-            if v.on_click then
-              v.on_click(item_obj)
+      for id, custom_button in pairs(item_obj.custom_buttons) do
+        if !custom_button.on_show or custom_button.on_show(item_obj) != false then
+          local button = item_menu:add_option(t(custom_button.get_name and custom_button.get_name(item_obj)
+            or custom_button.name or id), function()
+            if custom_button.on_click then
+              custom_button.on_click(item_obj)
             end
 
-            item_obj:do_menu_action(v.callback)
+            item_obj:do_menu_action(custom_button.callback)
           end)
 
-          button:SetIcon(v.get_icon and v.get_icon(item_obj) or v.icon)
+          button:SetIcon(custom_button.get_icon and custom_button.get_icon(item_obj) or custom_button.icon)
         end
       end
     end
@@ -159,9 +160,9 @@ end
 
 --- Requests the item data of every item entity from the server.
 function Items:OnItemDataReceived()
-  for _k, v in ents.Iterator() do
-    if IsValid(v) and v:GetClass() == 'fl_item' then
-      Cable.send('fl_items_data_request', v:EntIndex())
+  for _, entity in ents.Iterator() do
+    if IsValid(entity) and entity:GetClass() == 'fl_item' then
+      Cable.send('fl_items_data_request', entity:EntIndex())
     end
   end
 end

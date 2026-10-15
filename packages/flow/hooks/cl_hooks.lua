@@ -37,10 +37,10 @@ function GM:InitPostEntity()
     Flux.local_player_created = true
   end)
 
-  for _k, v in player.Iterator() do
-    local model = v:GetModel()
+  for _, client in player.Iterator() do
+    local model = client:GetModel()
 
-    hook.Run('PlayerModelChanged', v, model, model)
+    hook.Run('PlayerModelChanged', client, model, model)
   end
 
   --- Called on the client when the tool gun has to learn about the Flux tools: once the
@@ -415,11 +415,11 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   local text_size = util.text_size
   local draw_text_outlined = draw.SimpleTextOutlined
 
-  for _k, v in SortedPairsByMemberValue(lines, 'priority') do
-    local font = v.font or Theme.get_font('tooltip_small')
-    local color = v.color and v.color:alpha(alpha) or Color(255, 255, 255, alpha)
-    local wrapped = util.wrap_text(v.text, font, wrap_width, 0)
-    local offset_x, offset_y = v.offset_x or 0, v.offset_y or 0
+  for _, entry in SortedPairsByMemberValue(lines, 'priority') do
+    local font = entry.font or Theme.get_font('tooltip_small')
+    local color = entry.color and entry.color:alpha(alpha) or Color(255, 255, 255, alpha)
+    local wrapped = util.wrap_text(entry.text, font, wrap_width, 0)
+    local offset_x, offset_y = entry.offset_x or 0, entry.offset_y or 0
 
     for i = 1, #wrapped do
       local line = wrapped[i]
@@ -481,8 +481,8 @@ end
 function GM:SynchronizeTools()
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for _k, v in pairs(Flux.Tool.stored) do
-    toolgun.Tool[v.Mode] = v
+  for _, tool in pairs(Flux.Tool.stored) do
+    toolgun.Tool[tool.Mode] = tool
   end
 end
 
@@ -561,8 +561,8 @@ do
 
     local choices = { { value = '', name = 'settings.language.auto' } }
 
-    for _k, v in ipairs(Flux.Lang:get_languages()) do
-      table.insert(choices, { value = v, name = Flux.Lang:get_language_name(v) })
+    for _, lang in ipairs(Flux.Lang:get_languages()) do
+      table.insert(choices, { value = lang, name = Flux.Lang:get_language_name(lang) })
     end
 
     ClientSettings:register_setting('language', {

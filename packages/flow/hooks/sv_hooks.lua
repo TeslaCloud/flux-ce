@@ -39,8 +39,8 @@ end
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for _k, v in pairs(Flux.Tool.stored) do
-    toolgun.Tool[v.Mode] = v
+  for _, tool in pairs(Flux.Tool.stored) do
+    toolgun.Tool[tool.Mode] = tool
   end
 
   --- Called once the map's entities have been created, for plugins to load their saved
@@ -610,8 +610,8 @@ do
     if file.Exists('lua/_flux/client', 'GAME') then
       local files, _dirs = file.Find('lua/_flux/client/*', 'GAME')
 
-      for _k, v in ipairs(files) do
-        File.delete('lua/_flux/client/'..v)
+      for _, file_name in ipairs(files) do
+        File.delete('lua/_flux/client/'..file_name)
       end
     end
   end
@@ -705,8 +705,8 @@ end
 function GM:ShutDown()
   hook.Run('FLSaveData')
 
-  for _k, v in player_iterator() do
-    v:save_player()
+  for _, client in player_iterator() do
+    client:save_player()
   end
 
   Flux.shutting_down = true
@@ -766,8 +766,8 @@ end
 
 --- Saves the data of every player before the server restarts.
 function GM:ServerRestart()
-  for _k, v in player_iterator() do
-    v:save_player()
+  for _, client in player_iterator() do
+    client:save_player()
   end
 end
 
@@ -810,22 +810,22 @@ end
 -- @param new_value [Any]
 function GM:OnConfigSet(key, _old_value, new_value)
   if key == 'walk_speed' then
-    for _k, v in player_iterator() do
-      v:SetWalkSpeed(new_value)
+    for _, client in player_iterator() do
+      client:SetWalkSpeed(new_value)
     end
   elseif key == 'run_speed' then
-    for _k, v in player_iterator() do
-      v:SetRunSpeed(new_value)
+    for _, client in player_iterator() do
+      client:SetRunSpeed(new_value)
     end
   elseif key == 'crouched_speed' then
     local crouched_speed = new_value / config_get('walk_speed')
 
-    for _k, v in player_iterator() do
-      v:SetCrouchedWalkSpeed(crouched_speed)
+    for _, client in player_iterator() do
+      client:SetCrouchedWalkSpeed(crouched_speed)
     end
   elseif key == 'jump_power' then
-    for _k, v in player_iterator() do
-      v:SetJumpPower(new_value)
+    for _, client in player_iterator() do
+      client:SetJumpPower(new_value)
     end
   end
 end
@@ -837,8 +837,8 @@ end
 function GM:PostPlayerLoadout(actor, default_loadout)
   actor:StripWeapons()
 
-  for _k, v in pairs(default_loadout) do
-    actor:Give(v)
+  for _, weapon_class in pairs(default_loadout) do
+    actor:Give(weapon_class)
   end
 
   actor:SelectWeapon(default_loadout[1])
@@ -888,13 +888,13 @@ do
     if cur_time >= next_think then
       local one_second_tick = (cur_time >= next_second)
 
-      for _k, v in player_iterator() do
+      for _, client in player_iterator() do
         --- Called on the server eight times a second for every player, including players who
         -- are dead or not initialized yet. Prefer `PlayerOneSecond` when once a second is
         -- often enough. The gamemode's handler runs the player's current action.
         -- @param actor [Player The player to process]
         -- @param cur_time [Number CurTime() of the call]
-        hook.Call('PlayerThink', self, v, cur_time)
+        hook.Call('PlayerThink', self, client, cur_time)
 
         if one_second_tick then
           --- Called on the server once a second for every player, right after that player's
@@ -902,7 +902,7 @@ do
           -- `PlayerPositionChanged`).
           -- @param actor [Player The player to process]
           -- @param cur_time [Number CurTime() of the call]
-          hook.Call('PlayerOneSecond', self, v, cur_time)
+          hook.Call('PlayerOneSecond', self, client, cur_time)
         end
       end
 

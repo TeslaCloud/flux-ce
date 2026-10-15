@@ -38,9 +38,9 @@ function add:on_run(actor, targets, duration, reason)
     return
   end
 
-  for _, v in ipairs(targets) do
-    RPCommands:set_ooc_mute(v, duration)
-    v:notify('notification.muted', { time = Flux.Lang:duration(duration) })
+  for _, target in ipairs(targets) do
+    RPCommands:set_ooc_mute(target, duration)
+    target:notify('notification.muted', { time = Flux.Lang:duration(duration) })
   end
 
   self:notify_staff('command.gag.add.message', {
@@ -62,9 +62,9 @@ remove.immunity = true
 -- @param actor [Player player running the command; not valid when run from the server console]
 -- @param targets [List<Player> players to ungag]
 function remove:on_run(actor, targets)
-  for _, v in ipairs(targets) do
-    RPCommands:set_ooc_mute(v)
-    v:notify('notification.unmuted')
+  for _, target in ipairs(targets) do
+    RPCommands:set_ooc_mute(target)
+    target:notify('notification.unmuted')
   end
 
   self:notify_staff('command.gag.remove.message', {

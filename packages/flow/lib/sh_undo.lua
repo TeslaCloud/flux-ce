@@ -70,9 +70,9 @@ function Flux.Undo:remove(owner, id)
   local queue_table = queue[owner]
 
   if queue_table then
-    for k, v in ipairs(queue_table) do
-      if v.id == id then
-        queue[owner][k] = nil
+    for index, entry in ipairs(queue_table) do
+      if entry.id == id then
+        queue[owner][index] = nil
       end
     end
   end
@@ -82,8 +82,8 @@ end
 -- @param obj [Map undo entry]
 function Flux.Undo:execute(obj)
   if istable(obj) and istable(obj.functions) then
-    for _k, v in ipairs(obj.functions) do
-      local success, exception = pcall(v.func, obj, unpack(v.args))
+    for _, callback in ipairs(obj.functions) do
+      local success, exception = pcall(callback.func, obj, unpack(callback.args))
 
       if !success then
         error_with_traceback('[Undo] Failed to undo!\n'..tostring(exception))

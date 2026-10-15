@@ -21,9 +21,9 @@ local genders = {
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param new_gender [String 'male', 'female' or 'no_gender']
 function CMD:on_run(actor, targets, new_gender)
-  for _, v in ipairs(targets) do
-    Characters.set_gender(v, genders[new_gender])
-    v:notify('notification.gender_changed', { gender = 'ui.gender.'..new_gender })
+  for _, client in ipairs(targets) do
+    Characters.set_gender(client, genders[new_gender])
+    client:notify('notification.gender_changed', { gender = 'ui.gender.'..new_gender })
   end
 
   self:notify_staff('command.charsetgender.message', {

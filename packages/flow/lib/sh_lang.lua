@@ -105,11 +105,11 @@ do
 
     if count then return count end
 
-    for _k, v in pairs(args) do
-      if isnumber(v) then
+    for _, arg_value in pairs(args) do
+      if isnumber(arg_value) then
         if count then return end
 
-        count = v
+        count = arg_value
       end
     end
 
@@ -201,12 +201,12 @@ do
     end
 
     if string_find(phrase, '{', 1, true) then
-      for k, v in pairs(args) do
-        if istable(v) and v.nice_time then
-          v = Flux.Lang:nice_time(v.nice_time, lang)
+      for placeholder, replacement in pairs(args) do
+        if istable(replacement) and replacement.nice_time then
+          replacement = Flux.Lang:nice_time(replacement.nice_time, lang)
         end
 
-        phrase = string_replace(phrase, '{'..k..'}', tostring(v))
+        phrase = string_replace(phrase, '{'..placeholder..'}', tostring(replacement))
       end
     end
 
@@ -242,8 +242,8 @@ function Flux.Lang:add(index, value, reference)
   if istable(value) then
     reference[index] = reference[index] or {}
 
-    for k, v in pairs(value) do
-      self:add(k, v, reference[index])
+    for sub_index, sub_value in pairs(value) do
+      self:add(sub_index, sub_value, reference[index])
     end
   else
     reference[index] = value
@@ -373,9 +373,9 @@ end
 function Flux.Lang:get_languages()
   local languages = {}
 
-  for k, v in pairs(stored) do
-    if istable(v) then
-      languages[#languages + 1] = k
+  for lang_code, phrases in pairs(stored) do
+    if istable(phrases) then
+      languages[#languages + 1] = lang_code
     end
   end
 
@@ -510,8 +510,8 @@ else
       local contents = File.read('gamemodes/'..file_name)
 
       if contents then
-        for k, v in pairs(YAML.eval(contents)) do
-          Flux.Lang:add(k, v)
+        for lang_code, phrases in pairs(YAML.eval(contents)) do
+          Flux.Lang:add(lang_code, phrases)
         end
       end
     end

@@ -167,8 +167,8 @@ end
 function Flux.Bars:prioritize()
   sorted = {}
 
-  for _k, v in pairs(stored) do
-    if hook.Run('ShouldDrawBar', v) == false then
+  for _, bar in pairs(stored) do
+    if hook.Run('ShouldDrawBar', bar) == false then
       continue
     end
 
@@ -176,9 +176,9 @@ function Flux.Bars:prioritize()
     -- sorted into the prioritized list of top bars. This happens every `LazyTick` and is the
     -- place to change the `priority` of a bar.
     -- @param bar [Map bar data]
-    hook.Run('PreBarPrioritized', v)
+    hook.Run('PreBarPrioritized', bar)
 
-    local priority = v.priority
+    local priority = bar.priority
     local ids = sorted[priority]
 
     if !ids then
@@ -186,8 +186,8 @@ function Flux.Bars:prioritize()
       sorted[priority] = ids
     end
 
-    if v.type == BAR_TOP then
-      ids[#ids + 1] = v.id
+    if bar.type == BAR_TOP then
+      ids[#ids + 1] = bar.id
     end
   end
 
@@ -311,9 +311,9 @@ do
     if IsValid(PLAYER) then
       Flux.Bars:position()
 
-      for k, v in pairs(stored) do
-        if v.callback then
-          Flux.Bars:set_value(v.id, v.callback(v))
+      for id, bar in pairs(stored) do
+        if bar.callback then
+          Flux.Bars:set_value(bar.id, bar.callback(bar))
         end
 
         --- Called on the client for every registered bar each `LazyTick`, after the callback
@@ -321,7 +321,7 @@ do
         -- place.
         -- @param id [String bar ID]
         -- @param bar [Map bar data]
-        hook.Run('AdjustBarInfo', k, stored[k])
+        hook.Run('AdjustBarInfo', id, stored[id])
       end
     end
   end

@@ -104,12 +104,12 @@ function set:on_run(actor, targets, level)
 
   local changed = {}
 
-  for _, v in ipairs(targets) do
-    if v:is_character_loaded() then
-      v:set_level(level)
-      v:notify('notification.levels.level_set', { level = level })
+  for _, target in ipairs(targets) do
+    if target:is_character_loaded() then
+      target:set_level(level)
+      target:notify('notification.levels.level_set', { level = level })
 
-      table.insert(changed, v)
+      table.insert(changed, target)
     end
   end
 

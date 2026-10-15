@@ -49,9 +49,9 @@ local function active_boosts(boosts)
   local active = {}
 
   if boosts then
-    for _k, v in pairs(boosts) do
-      if !v.end_time or v.end_time > cur_time then
-        active[#active + 1] = v
+    for _, boost in pairs(boosts) do
+      if !boost.end_time or boost.end_time > cur_time then
+        active[#active + 1] = boost
       end
     end
   end
@@ -75,13 +75,13 @@ local function describe_boosts(boosts)
   local cur_time = CurTime()
   local parts = {}
 
-  for _k, v in ipairs(boosts) do
-    local text = format_number(v.value, true)
+  for _, boost in ipairs(boosts) do
+    local text = format_number(boost.value, true)
 
-    if v.end_time then
+    if boost.end_time then
       text = translate('ui.attributes.timed', {
         value = text,
-        time = Flux.Lang:nice_time(math.max(math.ceil(v.end_time - cur_time), 1))
+        time = Flux.Lang:nice_time(math.max(math.ceil(boost.end_time - cur_time), 1))
       })
     end
 
@@ -218,9 +218,9 @@ function PANEL:get_sections()
   local translated_names = {}
   local other_skills
 
-  for _k, v in pairs(Attributes.get_stored()) do
-    if self.snapshot or Attributes.is_visible(v, target) then
-      local category = v.category or default_category
+  for _, attribute_table in pairs(Attributes.get_stored()) do
+    if self.snapshot or Attributes.is_visible(attribute_table, target) then
+      local category = attribute_table.category or default_category
       local section = by_category[category]
 
       if !section then
@@ -236,18 +236,18 @@ function PANEL:get_sections()
         attribute_sections[#attribute_sections + 1] = section
       end
 
-      section.attributes[#section.attributes + 1] = v
-      translated_names[v] = translate(v.name)
+      section.attributes[#section.attributes + 1] = attribute_table
+      translated_names[attribute_table] = translate(attribute_table.name)
     end
   end
 
-  for _k, v in pairs(Skills.get_stored()) do
-    if self.snapshot or Skills.is_visible(v, target) then
-      local key_stat = isstring(v.attribute) and Attributes.find(v.attribute)
+  for _, skill_table in pairs(Skills.get_stored()) do
+    if self.snapshot or Skills.is_visible(skill_table, target) then
+      local key_stat = isstring(skill_table.attribute) and Attributes.find(skill_table.attribute)
       local section
 
       if key_stat then
-        section = by_stat[v.attribute]
+        section = by_stat[skill_table.attribute]
 
         if !section then
           local stat_name = translate(key_stat.name)
@@ -255,11 +255,11 @@ function PANEL:get_sections()
           section = {
             name = translate('ui.attributes.skills')..' - '..stat_name,
             stat_name = stat_name,
-            stat_id = v.attribute,
+            stat_id = skill_table.attribute,
             attributes = {},
             skills = {}
           }
-          by_stat[v.attribute] = section
+          by_stat[skill_table.attribute] = section
 
           skill_sections[#skill_sections + 1] = section
         end
@@ -268,8 +268,8 @@ function PANEL:get_sections()
         section = other_skills
       end
 
-      section.skills[#section.skills + 1] = v
-      translated_names[v] = translate(v.name)
+      section.skills[#section.skills + 1] = skill_table
+      translated_names[skill_table] = translate(skill_table.name)
     end
   end
 
@@ -287,17 +287,17 @@ function PANEL:get_sections()
 
   local sections = attribute_sections
 
-  for _k, v in ipairs(skill_sections) do
-    sections[#sections + 1] = v
+  for _, section in ipairs(skill_sections) do
+    sections[#sections + 1] = section
   end
 
   if other_skills then
     sections[#sections + 1] = other_skills
   end
 
-  for _k, v in ipairs(sections) do
-    sort_definitions(v.attributes, translated_names)
-    sort_definitions(v.skills, translated_names)
+  for _, section in ipairs(sections) do
+    sort_definitions(section.attributes, translated_names)
+    sort_definitions(section.skills, translated_names)
   end
 
   return sections
@@ -311,17 +311,17 @@ end
 function PANEL:get_listed(sections)
   local ids = {}
 
-  for _k, v in ipairs(sections) do
-    ids[#ids + 1] = v.name
+  for _, section in ipairs(sections) do
+    ids[#ids + 1] = section.name
 
-    for _k1, v1 in ipairs(v.attributes) do
-      local detailed = has_details(self:get_data(v1.attribute_id))
+    for _, attribute_table in ipairs(section.attributes) do
+      local detailed = has_details(self:get_data(attribute_table.attribute_id))
 
-      ids[#ids + 1] = tostring(v1.attribute_id)..(detailed and '+' or '')
+      ids[#ids + 1] = tostring(attribute_table.attribute_id)..(detailed and '+' or '')
     end
 
-    for _k1, v1 in ipairs(v.skills) do
-      ids[#ids + 1] = 'skill:'..tostring(v1.skill_id)
+    for _, skill_table in ipairs(section.skills) do
+      ids[#ids + 1] = 'skill:'..tostring(skill_table.skill_id)
     end
   end
 
@@ -351,32 +351,32 @@ function PANEL:rebuild()
     notice:DockMargin(0, margin * 4, 0, 0)
   end
 
-  for k, v in ipairs(sections) do
+  for index, section in ipairs(sections) do
     local header = self.scroll_panel:Add('DLabel')
-    header:SetText(v.name)
+    header:SetText(section.name)
     header:SetFont(Theme.get_font('menu_normal'))
     header:SetTextColor(get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
-    header:DockMargin(margin, k == 1 and 0 or margin * 4, 0, margin)
+    header:DockMargin(margin, index == 1 and 0 or margin * 4, 0, margin)
 
-    for _k1, v1 in ipairs(v.attributes) do
+    for _, attribute_table in ipairs(section.attributes) do
       local row = self.scroll_panel:Add('fl_attribute_row')
       row:Dock(TOP)
       row:DockMargin(0, 0, 0, margin)
-      row:set_attribute(v1)
-      row:set_data(self:get_data(v1.attribute_id))
+      row:set_attribute(attribute_table)
+      row:set_data(self:get_data(attribute_table.attribute_id))
       row:SetTall(row:get_row_height())
 
       self.rows[#self.rows + 1] = row
     end
 
-    for _k1, v1 in ipairs(v.skills) do
+    for _, skill_table in ipairs(section.skills) do
       local row = self.scroll_panel:Add('fl_attribute_row')
       row:Dock(TOP)
       row:DockMargin(0, 0, 0, margin)
-      row:set_skill(v1)
-      row:set_rank(self:get_rank(v1.skill_id))
+      row:set_skill(skill_table)
+      row:set_rank(self:get_rank(skill_table.skill_id))
       row:SetTall(row:get_row_height())
 
       self.rows[#self.rows + 1] = row
@@ -394,14 +394,14 @@ function PANEL:update()
     return
   end
 
-  for _k, v in ipairs(self.rows) do
-    if IsValid(v) then
-      local skill_table = v:get_skill()
+  for _, row in ipairs(self.rows) do
+    if IsValid(row) then
+      local skill_table = row:get_skill()
 
       if skill_table then
-        v:set_rank(self:get_rank(skill_table.skill_id))
+        row:set_rank(self:get_rank(skill_table.skill_id))
       else
-        v:set_data(self:get_data(v:get_attribute().attribute_id))
+        row:set_data(self:get_data(row:get_attribute().attribute_id))
       end
     end
   end
@@ -645,9 +645,9 @@ function PANEL:build_tooltip(level)
   if attribute_table and istable(attribute_table.effects) then
     local effect_lines = {}
 
-    for _k, v in ipairs(attribute_table.effects) do
-      if isstring(v.text) and isfunction(v.get_value) then
-        table.insert(effect_lines, translate(v.text)..' '..translate(tostring(v.get_value(level))))
+    for _, effect in ipairs(attribute_table.effects) do
+      if isstring(effect.text) and isfunction(effect.get_value) then
+        table.insert(effect_lines, translate(effect.text)..' '..translate(tostring(effect.get_value(level))))
       end
     end
 

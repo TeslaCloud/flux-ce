@@ -19,8 +19,8 @@ function PANEL:Init()
   self.player_list:AddColumn(t('ui.admin.players'), 1)
   self.player_list:SetWide(scrw / 6)
 
-  for _k, v in player.Iterator() do
-    self.player_list:AddLine(v:steam_name(true)..' ('..v:name(true)..')').player = v
+  for _, client in player.Iterator() do
+    self.player_list:AddLine(client:steam_name(true)..' ('..client:name(true)..')').player = client
   end
 
   self.player_list.OnRowSelected = function(_list, _index, panel)
@@ -98,9 +98,9 @@ function PANEL:Init()
     selector:set_text(t'ui.admin.selector.message')
     selector:set_value(t'ui.admin.selector.roles')
 
-    for _k, v in pairs(Bolt:get_roles()) do
-      selector:add_choice(v.name, function()
-        Cable.send('fl_bolt_set_role', self.player, v.role_id)
+    for _, role in pairs(Bolt:get_roles()) do
+      selector:add_choice(role.name, function()
+        Cable.send('fl_bolt_set_role', self.player, role.role_id)
 
         timer.Simple(0.05, function()
           self:rebuild()

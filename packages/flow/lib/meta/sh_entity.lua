@@ -84,8 +84,8 @@ end
 --- Sets several bodygroups of the entity at once.
 -- @param bodygroups [Map bodygroup values by bodygroup ID, as returned by Entity#bodygroups]
 function ent_meta:set_bodygroups(bodygroups)
-  for k, v in pairs(bodygroups) do
-    self:SetBodygroup(k, v)
+  for group_id, group_value in pairs(bodygroups) do
+    self:SetBodygroup(group_id, group_value)
   end
 end
 

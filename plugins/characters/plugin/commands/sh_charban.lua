@@ -23,8 +23,8 @@ add.immunity = true
 function add:on_run(actor, targets)
   local names = {}
 
-  for _, v in ipairs(targets) do
-    local character = !v:IsBot() and v:is_character_loaded() and v:get_character()
+  for _, client in ipairs(targets) do
+    local character = !client:IsBot() and client:is_character_loaded() and client:get_character()
 
     if character and !tobool(character.banned) then
       table.insert(names, character.name)
@@ -65,11 +65,11 @@ function remove:on_run(actor, text)
   Characters.find_by_name(name, function(characters)
     local names = {}
 
-    for _, v in ipairs(characters) do
-      if tobool(v.banned) then
-        table.insert(names, v.name)
+    for _, character in ipairs(characters) do
+      if tobool(character.banned) then
+        table.insert(names, character.name)
 
-        Characters.set_banned(v, false)
+        Characters.set_banned(character, false)
       end
     end
 

@@ -569,11 +569,11 @@ function PANEL:draw_command_info(info, y, width, padding)
     cur_y = cur_y + font_h
   end
 
-  for _, v in ipairs(info.segments) do
-    local is_emphasised = v.arg != nil and v.arg == info.emphasis
+  for _, segment in ipairs(info.segments) do
+    local is_emphasised = segment.arg != nil and segment.arg == info.emphasis
 
     if is_emphasised then
-      local segment_w = util.text_size(v.text, font)
+      local segment_w = util.text_size(segment.text, font)
 
       Theme.hook(
         'DrawCard',
@@ -587,13 +587,13 @@ function PANEL:draw_command_info(info, y, width, padding)
       )
     end
 
-    x = x + draw_text(v.text, font, x, cur_y, is_emphasised and text_color or muted_color)
+    x = x + draw_text(segment.text, font, x, cur_y, is_emphasised and text_color or muted_color)
   end
 
   cur_y = cur_y + font_h + math.scale(4)
 
-  for _, v in ipairs(info.lines) do
-    local _, line_h = draw_text(v, small_font, padding, cur_y, text_color)
+  for _, line_text in ipairs(info.lines) do
+    local _, line_h = draw_text(line_text, small_font, padding, cur_y, text_color)
 
     cur_y = cur_y + line_h + math.scale(2)
   end
@@ -727,9 +727,9 @@ function PANEL:set_open(is_open)
     self.text_entry:SetVisible(false)
   end
 
-  for _k, v in ipairs(self.history) do
-    if IsValid(v) then
-      v.force_show = is_open
+  for _, message in ipairs(self.history) do
+    if IsValid(message) then
+      message.force_show = is_open
     end
   end
 end
@@ -800,10 +800,10 @@ end
 function PANEL:rebuild_history_indexes()
   local new_history = {}
 
-  for _k, v in ipairs(self.history) do
-    if IsValid(v) then
-      local idx = table.insert(new_history, v)
-      v.msg_index = idx
+  for _, message in ipairs(self.history) do
+    if IsValid(message) then
+      local idx = table.insert(new_history, message)
+      message.msg_index = idx
     end
   end
 
@@ -866,11 +866,11 @@ function PANEL:rebuild()
   local message_margin = config_get('message_margin')
   local last_pos = 0
 
-  for _k, v in ipairs(self.history) do
-    if IsValid(v) then
-      v:SetPos(padding, last_pos)
+  for _, message in ipairs(self.history) do
+    if IsValid(message) then
+      message:SetPos(padding, last_pos)
 
-      last_pos = last_pos + message_margin + v:GetTall()
+      last_pos = last_pos + message_margin + message:GetTall()
     end
   end
 

@@ -130,9 +130,9 @@ end
 -- @param _level [Number new server level]
 -- @param _old_level [Number server level before the change]
 function Levels:ServerLevelChanged(_level, _old_level)
-  for _k, v in player.Iterator() do
-    if v:is_character_loaded() then
-      Levels.apply_server_level(v)
+  for _, client in player.Iterator() do
+    if client:is_character_loaded() then
+      Levels.apply_server_level(client)
     end
   end
 end
@@ -217,14 +217,14 @@ function Levels:OnConfigSet(key, _old_value, _new_value)
       Levels.check_server_level()
     end
 
-    for _k, v in player.Iterator() do
-      if IsValid(v) and v:is_character_loaded() then
+    for _, client in player.Iterator() do
+      if IsValid(client) and client:is_character_loaded() then
         if server_configs[key] then
-          Levels.apply_server_level(v)
+          Levels.apply_server_level(client)
         elseif health_configs[key] then
-          self:apply_max_health(v)
+          self:apply_max_health(client)
         else
-          Levels.update_points(v)
+          Levels.update_points(client)
         end
       end
     end

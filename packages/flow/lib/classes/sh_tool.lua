@@ -127,9 +127,9 @@ function Tool:ReleaseGhostEntity()
 
   -- This is unused!
   if self.GhostEntities then
-    for k, v in pairs(self.GhostEntities) do
-      if IsValid(v) then v:Remove() end
-      self.GhostEntities[k] = nil
+    for index, ghost in pairs(self.GhostEntities) do
+      if IsValid(ghost) then ghost:Remove() end
+      self.GhostEntities[index] = nil
     end
 
     self.GhostEntities = nil
@@ -138,8 +138,8 @@ function Tool:ReleaseGhostEntity()
 
   -- This is unused!
   if self.GhostOffset then
-    for k, _v in pairs(self.GhostOffset) do
-      self.GhostOffset[k] = nil
+    for index in pairs(self.GhostOffset) do
+      self.GhostOffset[index] = nil
     end
   end
 end
@@ -394,7 +394,7 @@ function Tool:BuildConVarList()
   local mode = self:GetMode()
   local convars = {}
 
-  for k, v in pairs(self.ClientConVar) do convars[mode..'_'..k] = v end
+  for name, default in pairs(self.ClientConVar) do convars[mode..'_'..name] = default end
 
   return convars
 end
@@ -471,8 +471,8 @@ function Tool:Think()       self:ReleaseGhostEntity() end
 
 --- Clears the selected objects if any of their entities has been removed.
 function Tool:CheckObjects()
-  for _k, v in pairs(self.Objects) do
-    if !v.Ent:IsWorld() and !v.Ent:IsValid() then
+  for _, object in pairs(self.Objects) do
+    if !object.Ent:IsWorld() and !object.Ent:IsValid() then
       self:ClearObjects()
     end
   end

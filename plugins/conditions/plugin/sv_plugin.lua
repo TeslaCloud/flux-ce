@@ -3,11 +3,11 @@
 local function CheckConditions(target, conditions)
   local stored = Conditions:get_all()
 
-  for _k, v in pairs(conditions) do
-    local condition_table = stored[v.id]
+  for _, condition in pairs(conditions) do
+    local condition_table = stored[condition.id]
 
-    if condition_table.check and condition_table.check(target, v.data) == false or
-    #v.childs != 0 and CheckConditions(target, v.childs) == false then
+    if condition_table.check and condition_table.check(target, condition.data) == false or
+    #condition.childs != 0 and CheckConditions(target, condition.childs) == false then
       continue
     end
 

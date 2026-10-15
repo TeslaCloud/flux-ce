@@ -156,8 +156,8 @@ function Limbs:heal_all(target, amount)
 
   local changes = {}
 
-  for _k, v in ipairs(self:all()) do
-    changes[v] = -amount
+  for _, limb_id in ipairs(self:all()) do
+    changes[limb_id] = -amount
   end
 
   local total = 0

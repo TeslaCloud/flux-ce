@@ -38,8 +38,8 @@ PLUGIN:set_global('Inventories')
 local function complete_item()
   local ids = {}
 
-  for k in pairs(Item.all()) do
-    ids[#ids + 1] = k
+  for item_id in pairs(Item.all()) do
+    ids[#ids + 1] = item_id
   end
 
   table.sort(ids)

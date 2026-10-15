@@ -46,11 +46,11 @@ function StaticEnts:PersistenceSave()
 
   local entities = {}
 
-  for _k, v in ents.Iterator() do
-    if v:GetPersistent() then
-      local ent_class = v:GetClass()
+  for _, ent in ents.Iterator() do
+    if ent:GetPersistent() then
+      local ent_class = ent:GetClass()
       entities[ent_class] = entities[ent_class] or {}
-      table.insert(entities[ent_class], v)
+      table.insert(entities[ent_class], ent)
     end
   end
 
@@ -60,10 +60,10 @@ function StaticEnts:PersistenceSave()
     to_save[ent_class] = duplicator.CopyEnts(entities)
   end
 
-  for ent_class, v in pairs(to_save) do
-    if !istable(v) then continue end
+  for ent_class, save_data in pairs(to_save) do
+    if !istable(save_data) then continue end
 
-    Data.save_plugin('static/'..ent_class, v)
+    Data.save_plugin('static/'..ent_class, save_data)
   end
 
   --- Called on the server right after the static entities have been copied and saved, so
@@ -74,7 +74,7 @@ end
 
 --- Loads the saved static entities of every whitelisted class.
 function StaticEnts:PersistenceLoad()
-  for ent_class, _v in pairs(whitelisted_ents) do
+  for ent_class in pairs(whitelisted_ents) do
     self:load_class(ent_class)
   end
 end
@@ -136,16 +136,16 @@ function StaticEnts:load_class(ent_class)
   local entities, _constraints = duplicator.Paste(nil, loaded.Entities, loaded.Constraints)
 
   -- Restore any custom data the static entities might have had.
-  for k, v in pairs(entities) do
-    local ent_data = loaded.Entities[k]
+  for index, ent in pairs(entities) do
+    local ent_data = loaded.Entities[index]
 
     if ent_data then
-      table.safe_merge(v:GetTable(), ent_data)
+      table.safe_merge(ent:GetTable(), ent_data)
     end
   end
 
-  for _k, v in pairs(entities) do
-    v:SetPersistent(true)
+  for _, ent in pairs(entities) do
+    ent:SetPersistent(true)
   end
 end
 

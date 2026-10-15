@@ -88,11 +88,11 @@ local function read_overrides(key)
     return overrides
   end
 
-  for k, v in pairs(value) do
-    if isstring(k) and isstring(v) then
-      overrides[k:lower()] = v
-    elseif isstring(v) then
-      local class, formula = v:match('^%s*([^%s=]+)%s*=%s*(.-)%s*$')
+  for entry_key, entry in pairs(value) do
+    if isstring(entry_key) and isstring(entry) then
+      overrides[entry_key:lower()] = entry
+    elseif isstring(entry) then
+      local class, formula = entry:match('^%s*([^%s=]+)%s*=%s*(.-)%s*$')
 
       if class and formula != '' then
         overrides[class:lower()] = formula
@@ -266,9 +266,9 @@ function D20:get_damage_formula(attacker, victim, damage_info)
     end
   end
 
-  for _k, v in ipairs(damage_type_dice) do
-    if damage_info:IsDamageType(v[1]) then
-      return v[2], 'type:'..v[3]
+  for _, type_dice in ipairs(damage_type_dice) do
+    if damage_info:IsDamageType(type_dice[1]) then
+      return type_dice[2], 'type:'..type_dice[3]
     end
   end
 
@@ -278,9 +278,9 @@ function D20:get_damage_formula(attacker, victim, damage_info)
     return config_get('d20_default_dice', '1d6'), 'default'
   end
 
-  for _k, v in ipairs(damage_bands) do
-    if damage <= v[1] then
-      return v[2], 'damage'
+  for _, band in ipairs(damage_bands) do
+    if damage <= band[1] then
+      return band[2], 'damage'
     end
   end
 

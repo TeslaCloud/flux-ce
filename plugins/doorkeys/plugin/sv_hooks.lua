@@ -8,8 +8,8 @@ function PLUGIN:PlayerCanLockDoor(actor, entity)
   if keys then
     local door_id = entity:MapCreationID()
 
-    for _k, v in pairs(keys) do
-      if table.HasValue(v:get_data('doors', {}), door_id) then
+    for _, key_item in pairs(keys) do
+      if table.HasValue(key_item:get_data('doors', {}), door_id) then
         return true
       end
     end
@@ -70,10 +70,10 @@ Cable.receive('fl_key_show_list', function(actor, entity)
   local instances = Item.find_all_instances('key')
 
   if instances then
-    for k, v in pairs(instances) do
-      if table.HasValue(v:get_data('doors', {}), door_id) then
-        Item.network_item(actor, k)
-        table.insert(keys, k)
+    for instance_id, key_item in pairs(instances) do
+      if table.HasValue(key_item:get_data('doors', {}), door_id) then
+        Item.network_item(actor, instance_id)
+        table.insert(keys, instance_id)
       end
     end
   end

@@ -29,8 +29,8 @@ local function edit_whitelist(cmd, actor, action, server, target)
 
   local verbs = {}
 
-  for _k, v in ipairs(entries) do
-    verbs[#verbs + 1] = SrcdsProxy:verb('whitelist '..action, server, v.id)
+  for _, entry in ipairs(entries) do
+    verbs[#verbs + 1] = SrcdsProxy:verb('whitelist '..action, server, entry.id)
   end
 
   if !SrcdsProxy:run(actor, verbs) then return end

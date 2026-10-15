@@ -98,9 +98,9 @@ function Recognizes:CreatePlayerInteractions(menu, target)
     end)
   end)
 
-  for _k, v in pairs(history) do
-    fake_name:AddOption(v, function()
-      Cable.send('fl_recognize', 'target', v, target)
+  for _, name in pairs(history) do
+    fake_name:AddOption(name, function()
+      Cable.send('fl_recognize', 'target', name, target)
     end)
   end
 
@@ -136,11 +136,11 @@ function Recognizes:PreRebuildFactionCategories(players_table)
   local client = PLAYER
   local players_online = {}
 
-  for _k, v in pairs(players_table) do
-    for k1, v1 in pairs(v) do
-      if !client:recognizes(v1) then
-        players_online[#players_online + 1] = v1
-        v[k1] = nil
+  for _, group in pairs(players_table) do
+    for index, member in pairs(group) do
+      if !client:recognizes(member) then
+        players_online[#players_online + 1] = member
+        group[index] = nil
       end
     end
   end

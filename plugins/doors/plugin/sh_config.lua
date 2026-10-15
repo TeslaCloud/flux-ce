@@ -47,8 +47,8 @@ Doors:register_property('title_type', {
     local title_type = panel.properties:CreateRow(t'door.categories.general', t'door.properties.title_type.name')
     title_type:Setup('Combo', { text = t'door.properties.title_type.select' })
 
-    for k, v in pairs(Doors.title_types) do
-      title_type:AddChoice(t(v.name), k)
+    for type_id, type_data in pairs(Doors.title_types) do
+      title_type:AddChoice(t(type_data.name), type_id)
     end
 
     title_type:AddChoice(t'door.title_type.none', '')

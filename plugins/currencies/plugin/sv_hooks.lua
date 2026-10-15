@@ -19,9 +19,9 @@ local reach_sqr = 120 * 120
 -- @return [Inventory the open inventory, or nil if the entity has none open for the player]
 local function find_open_inventory(actor, entity)
   if entity:IsPlayer() then
-    for _k, v in pairs(entity:get_inventories()) do
-      if v:has_receiver(actor) then
-        return v
+    for _, inventory in pairs(entity:get_inventories()) do
+      if inventory:has_receiver(actor) then
+        return inventory
       end
     end
   elseif entity.inventory and entity.inventory:has_receiver(actor) then
@@ -36,8 +36,8 @@ end
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
 function Currencies:PostCreateCharacter(owner, char, char_data)
-  for k, v in pairs(Currencies.all()) do
-    local amount = self:get_starting_amount(k)
+  for currency_id, currency_data in pairs(Currencies.all()) do
+    local amount = self:get_starting_amount(currency_id)
 
     --- Lets plugins decide how much of a currency a new character starts with, for instance
     -- by its faction. Called on the server for every registered currency while a character
@@ -50,14 +50,14 @@ function Currencies:PostCreateCharacter(owner, char, char_data)
     -- @param char_data [Map creation data the character was built from]
     -- @return [Number return the amount the character should start with; it is rounded to
     --   the decimals of the currency and never below 0. Return nothing to keep the amount]
-    local result = hook.Run('GetStartingMoney', owner, char, k, amount, char_data)
+    local result = hook.Run('GetStartingMoney', owner, char, currency_id, amount, char_data)
 
     if isnumber(result) and result == result and result != math.huge then
-      amount = math.max(0, math.round(result, v.decimals or 0))
+      amount = math.max(0, math.round(result, currency_data.decimals or 0))
     end
 
     local currency = Currency.new()
-      currency.currency_id = k
+      currency.currency_id = currency_id
       currency.amount = amount
     table.insert(char.currencies, currency)
   end
@@ -91,8 +91,8 @@ function Currencies:OnActiveCharacterSet(owner, character)
   local currencies = {}
 
   if character.currencies then
-    for _k, v in pairs(character.currencies) do
-      currencies[v.currency_id] = v.amount
+    for _, currency in pairs(character.currencies) do
+      currencies[currency.currency_id] = currency.amount
     end
   end
 
@@ -228,8 +228,8 @@ function Currencies:PreContainerOpen(entity)
   if !entity.currencies then
     local currencies = {}
 
-    for k, _v in pairs(Currencies.all()) do
-      currencies[k] = 0
+    for currency_id in pairs(Currencies.all()) do
+      currencies[currency_id] = 0
     end
 
     entity.currencies = currencies

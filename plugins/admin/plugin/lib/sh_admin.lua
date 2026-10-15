@@ -36,9 +36,9 @@ end
 function Bolt:get_all_permissions()
   local perm_table = {}
 
-  for _k, v in pairs(permissions) do
-    for k1, v1 in pairs(v) do
-      perm_table[k1] = v1
+  for _, category in pairs(permissions) do
+    for id, permission in pairs(category) do
+      perm_table[id] = permission
     end
   end
 
@@ -130,11 +130,11 @@ function Bolt:create_role(id, data)
 
       data.permissions = copy.permissions
 
-      for k, v in pairs(copy) do
-        if k == 'permissions' or k == 'own_permissions' then continue end
+      for key, value in pairs(copy) do
+        if key == 'permissions' or key == 'own_permissions' then continue end
 
-        if !data[k] then
-          data[k] = v
+        if !data[key] then
+          data[key] = value
         end
       end
     end
@@ -142,9 +142,9 @@ function Bolt:create_role(id, data)
 
   roles[id] = data
 
-  for _k, v in pairs(roles) do
-    if v.base == id and v != data then
-      self:merge_permissions(v, data.permissions)
+  for _, child_role in pairs(roles) do
+    if child_role.base == id and child_role != data then
+      self:merge_permissions(child_role, data.permissions)
     end
   end
 end
@@ -187,9 +187,9 @@ function Bolt:merge_permissions(role, perms, as_own)
 
   local role_id = role.role_id or role.id
 
-  for _k, v in pairs(roles) do
-    if v.base == role_id and v != role then
-      self:merge_permissions(v, applied)
+  for _, child_role in pairs(roles) do
+    if child_role.base == role_id and child_role != role then
+      self:merge_permissions(child_role, applied)
     end
   end
 end
@@ -210,8 +210,8 @@ local function allow_command_role(cmd)
     end
   end
 
-  for _, v in ipairs(cmd:get_subcommands()) do
-    allow_command_role(v)
+  for _, subcommand in ipairs(cmd:get_subcommands()) do
+    allow_command_role(subcommand)
   end
 end
 
@@ -293,8 +293,8 @@ local function register_permission_ids(cmd, category)
     })
   end
 
-  for _, v in ipairs(cmd:get_subcommands()) do
-    register_permission_ids(v, category)
+  for _, subcommand in ipairs(cmd:get_subcommands()) do
+    register_permission_ids(subcommand, category)
   end
 end
 
@@ -380,15 +380,15 @@ function Bolt:find_role(text)
 
   local lower = text:utf8lower()
 
-  for id, v in pairs(roles) do
+  for id, role in pairs(roles) do
     if id:utf8lower() == lower then
-      return v
+      return role
     end
   end
 
-  for _, v in pairs(roles) do
-    if isstring(v.name) and v.name:utf8lower() == lower then
-      return v
+  for _, role in pairs(roles) do
+    if isstring(role.name) and role.name:utf8lower() == lower then
+      return role
     end
   end
 end
@@ -502,9 +502,9 @@ local function lookup_permission(id)
   local lower = id:utf8lower()
 
   for _, category in pairs(permissions) do
-    for k, v in pairs(category) do
-      if k:utf8lower() == lower then
-        return v
+    for perm_id, perm in pairs(category) do
+      if perm_id:utf8lower() == lower then
+        return perm
       end
     end
   end
@@ -547,8 +547,8 @@ function Bolt:get_maps()
 
   local map_list = {}
 
-  for _, v in ipairs(file.Find('maps/*.bsp', 'GAME') or {}) do
-    local name = v:gsub('%.bsp$', '')
+  for _, file_name in ipairs(file.Find('maps/*.bsp', 'GAME') or {}) do
+    local name = file_name:gsub('%.bsp$', '')
 
     if name:match('^[%w_%-%.]+$') then
       map_list[#map_list + 1] = name
@@ -571,9 +571,9 @@ function Bolt:find_map(name)
 
   local lower = name:utf8lower()
 
-  for _, v in ipairs(self:get_maps()) do
-    if v:utf8lower() == lower then
-      return v
+  for _, map_name in ipairs(self:get_maps()) do
+    if map_name:utf8lower() == lower then
+      return map_name
     end
   end
 end
@@ -816,21 +816,21 @@ do
     local result = 0
     local _token, num = '', 0
 
-    for _k, v in ipairs(pieces) do
-      local n = tonumber(v)
+    for _, piece in ipairs(pieces) do
+      local n = tonumber(piece)
 
-      if isstring(v) then
-        v = v:trim_end('s')
+      if isstring(piece) then
+        piece = piece:trim_end('s')
       end
 
-      if !n and !tokens[v] and !num_tokens[v] then continue end
+      if !n and !tokens[piece] and !num_tokens[piece] then continue end
 
       if n then
         num = n
-      elseif isstring(v) then
-        v = v:trim_end('s')
+      elseif isstring(piece) then
+        piece = piece:trim_end('s')
 
-        local ntok = num_tokens[v]
+        local ntok = num_tokens[piece]
 
         if ntok then
           num = ntok
@@ -838,7 +838,7 @@ do
           continue
         end
 
-        local tok = tokens[v]
+        local tok = tokens[piece]
 
         if tok then
           if tok == 0 then

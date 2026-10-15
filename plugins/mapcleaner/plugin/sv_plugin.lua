@@ -33,9 +33,9 @@ function MapCleaner:get_patterns()
   local classes = Config.get('remove_map_classes')
 
   if istable(classes) then
-    for _k, v in pairs(classes) do
-      if isstring(v) then
-        local pattern = v:strip():lower()
+    for _, entry in pairs(classes) do
+      if isstring(entry) then
+        local pattern = entry:strip():lower()
 
         if pattern != '' then
           table.insert(patterns, pattern)
@@ -71,12 +71,12 @@ end
 function MapCleaner:class_matches(ent_class, patterns)
   ent_class = ent_class:lower()
 
-  for _k, v in ipairs(patterns or self:get_patterns()) do
-    if v == ent_class then
+  for _, pattern in ipairs(patterns or self:get_patterns()) do
+    if pattern == ent_class then
       return true
     end
 
-    if v:find('*', 1, true) and ent_class:find(to_lua_pattern(v)) then
+    if pattern:find('*', 1, true) and ent_class:find(to_lua_pattern(pattern)) then
       return true
     end
   end
@@ -148,8 +148,8 @@ function MapCleaner:clean()
   local matches = {}
   local unwanted = {}
 
-  for _k, v in ents.Iterator() do
-    local ent_class = v:GetClass()
+  for _, ent in ents.Iterator() do
+    local ent_class = ent:GetClass()
 
     local matched = matches[ent_class]
 
@@ -158,8 +158,8 @@ function MapCleaner:clean()
       matches[ent_class] = matched
     end
 
-    if self:should_remove(v, matched) then
-      unwanted[#unwanted + 1] = v
+    if self:should_remove(ent, matched) then
+      unwanted[#unwanted + 1] = ent
     end
   end
 

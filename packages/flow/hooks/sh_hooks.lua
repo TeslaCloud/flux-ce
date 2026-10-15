@@ -524,15 +524,15 @@ function GM:OnReloaded()
   -- Reload the tools.
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for _k, v in pairs(Flux.Tool.stored) do
-    toolgun.Tool[v.Mode] = v
+  for _, tool in pairs(Flux.Tool.stored) do
+    toolgun.Tool[tool.Mode] = tool
   end
 
   if Flux.development then
     Flux.Anim:invalidate()
 
-    for _k, v in player.Iterator() do
-      self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
+    for _, client in player.Iterator() do
+      self:PlayerModelChanged(client, client:GetModel(), client:GetModel())
     end
   end
 
@@ -546,15 +546,15 @@ timer.Create('fl_one_minute', 60, 0, function()
 
   local i = 0
 
-  for _k, v in player.Iterator() do
+  for _, client in player.Iterator() do
     i = i + 1
 
     timer.Simple(0.25 * i, function()
-      if IsValid(v) then
+      if IsValid(client) then
         --- Called once a minute for every player, on both realms. The calls are spread out:
         -- each player's call comes a quarter of a second after the previous player's.
         -- @param actor [Player The player the call is for]
-        hook.Run('PlayerOneMinute', v)
+        hook.Run('PlayerOneMinute', client)
       end
     end)
   end

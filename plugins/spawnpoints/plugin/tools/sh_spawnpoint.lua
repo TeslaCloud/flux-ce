@@ -100,8 +100,8 @@ if CLIENT then
 
     combo_box:SetSortItems(false)
 
-    for _k, v in ipairs(SpawnPoints:get_groups()) do
-      combo_box:AddChoice(SpawnPoints:get_group_label(v), v)
+    for _, group in ipairs(SpawnPoints:get_groups()) do
+      combo_box:AddChoice(SpawnPoints:get_group_label(group), group)
     end
   end
 end

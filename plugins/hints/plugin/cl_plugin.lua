@@ -69,9 +69,9 @@ function Hints:add(id, text, color, play_sound, callback)
 
   local hint = { id = id, text = text, color = color, play_sound = play_sound or false, callback = callback }
 
-  for k, v in ipairs(stored) do
-    if v.id == id then
-      stored[k] = hint
+  for index, entry in ipairs(stored) do
+    if entry.id == id then
+      stored[index] = hint
 
       return hint
     end
@@ -90,9 +90,9 @@ end
 -- @param id [String identifier of the hint]
 -- @return [Boolean true if the hint has been removed, false if there is no such hint]
 function Hints:remove(id)
-  for k, v in ipairs(stored) do
-    if v.id == id then
-      table.remove(stored, k)
+  for index, entry in ipairs(stored) do
+    if entry.id == id then
+      table.remove(stored, index)
 
       return true
     end
@@ -106,9 +106,9 @@ end
 -- @return [Map the hint with the id, text, color, play_sound and callback fields, or nil if
 --   there is no such hint]
 function Hints:find(id)
-  for _k, v in ipairs(stored) do
-    if v.id == id then
-      return v
+  for _, entry in ipairs(stored) do
+    if entry.id == id then
+      return entry
     end
   end
 end
@@ -142,9 +142,9 @@ end
 function Hints:get_eligible()
   local eligible = {}
 
-  for _k, v in ipairs(stored) do
-    if self:can_display(v) then
-      table.insert(eligible, v)
+  for _, entry in ipairs(stored) do
+    if self:can_display(entry) then
+      table.insert(eligible, entry)
     end
   end
 
@@ -158,9 +158,9 @@ function Hints:pick_random()
   local eligible = self:get_eligible()
 
   if #eligible > 1 and self.last_id then
-    for k, v in ipairs(eligible) do
-      if v.id == self.last_id then
-        table.remove(eligible, k)
+    for index, entry in ipairs(eligible) do
+      if entry.id == self.last_id then
+        table.remove(eligible, index)
 
         break
       end

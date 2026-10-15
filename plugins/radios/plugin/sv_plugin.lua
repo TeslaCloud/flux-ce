@@ -142,9 +142,9 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   local tuned_in = info.listeners
   local is_tuned_to = Communications.is_tuned_to
 
-  for _k, v in player.Iterator() do
-    if v == speaker or is_tuned_to(v, frequency) then
-      tuned_in[#tuned_in + 1] = v
+  for _, client in player.Iterator() do
+    if client == speaker or is_tuned_to(client, frequency) then
+      tuned_in[#tuned_in + 1] = client
     end
   end
 
@@ -172,9 +172,9 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   }
 
   if istable(info.listeners) then
-    for _k, v in pairs(info.listeners) do
-      if IsValid(v) and v:IsPlayer() then
-        transmission_listeners[v] = true
+    for _, listener in pairs(info.listeners) do
+      if IsValid(listener) and listener:IsPlayer() then
+        transmission_listeners[listener] = true
       end
     end
   end

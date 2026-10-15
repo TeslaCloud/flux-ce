@@ -152,11 +152,11 @@ end
 function player_meta:get_ammo_table()
   local ammo_table = {}
 
-  for k, _v in pairs(game.get_ammo_list()) do
-    local ammo_count = self:GetAmmoCount(k)
+  for ammo_id in pairs(game.get_ammo_list()) do
+    local ammo_count = self:GetAmmoCount(ammo_id)
 
     if ammo_count > 0 then
-      ammo_table[k] = ammo_count
+      ammo_table[ammo_id] = ammo_count
     end
   end
 
@@ -180,8 +180,8 @@ function player_meta:restore_player()
 
     local data = read_record_data(obj)
 
-    for k, v in pairs(self:get_data()) do
-      data[k] = v
+    for key, value in pairs(self:get_data()) do
+      data[key] = value
     end
 
     obj.player = self
@@ -282,8 +282,8 @@ end
 function player_meta:unstuck(filter)
   local positions = self:find_best_position(4, filter)
 
-  for _k, v in ipairs(positions) do
-    self:SetPos(v)
+  for _, pos in ipairs(positions) do
+    self:SetPos(pos)
 
     if !self:stuck() then
       return
@@ -313,21 +313,21 @@ end
 function player_meta:give_weapons(weapons_table, ammo)
   local no_ammo = ammo != nil and ammo != false
 
-  for _k, v in pairs(weapons_table) do
-    if istable(v) then
-      local weapon = self:Give(v.class, no_ammo)
+  for _, entry in pairs(weapons_table) do
+    if istable(entry) then
+      local weapon = self:Give(entry.class, no_ammo)
 
       if IsValid(weapon) then
-        if isnumber(v.clip1) then
-          weapon:SetClip1(v.clip1)
+        if isnumber(entry.clip1) then
+          weapon:SetClip1(entry.clip1)
         end
 
-        if isnumber(v.clip2) then
-          weapon:SetClip2(v.clip2)
+        if isnumber(entry.clip2) then
+          weapon:SetClip2(entry.clip2)
         end
       end
     else
-      self:Give(v, no_ammo)
+      self:Give(entry, no_ammo)
     end
   end
 

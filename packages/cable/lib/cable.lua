@@ -251,9 +251,9 @@ end
 local function live_receivers(receivers)
   local alive = {}
 
-  for _k, v in ipairs(receivers) do
-    if IsValid(v) then
-      alive[#alive + 1] = v
+  for _, receiver in ipairs(receivers) do
+    if IsValid(receiver) then
+      alive[#alive + 1] = receiver
     end
   end
 
@@ -488,8 +488,8 @@ if SERVER then
         timer.Simple(0.1, function()
           delayed[id] = nil
 
-          for _k, v in ipairs(queue) do
-            cable.send(v.target, id, unpack(v.args, 1, v.count))
+          for _, pending in ipairs(queue) do
+            cable.send(pending.target, id, unpack(pending.args, 1, pending.count))
           end
         end)
       end
@@ -508,9 +508,9 @@ if SERVER then
     else
       local receivers = {}
 
-      for _k, v in pairs(target) do
-        if isentity(v) and IsValid(v) and v:IsPlayer() then
-          receivers[#receivers + 1] = v
+      for _, recipient in pairs(target) do
+        if isentity(recipient) and IsValid(recipient) and recipient:IsPlayer() then
+          receivers[#receivers + 1] = recipient
         end
       end
 

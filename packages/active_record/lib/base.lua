@@ -55,9 +55,9 @@ function ActiveRecord.Base:init()
   self.fetched = false
   self.saving = false
 
-  for _k, v in ipairs(self.relations) do
-    if !self[v.table_name] and v.many then
-      self[v.table_name] = {}
+  for _, relation in ipairs(self.relations) do
+    if !self[relation.table_name] and relation.many then
+      self[relation.table_name] = {}
     end
   end
 end
@@ -88,8 +88,8 @@ end
 -- @return [Map schema, ActiveRecord::Base(self)]
 function ActiveRecord.Base:dump()
   local ret = {}
-    for k, _data in pairs(self:get_schema()) do
-      ret[k] = self[k]
+    for column in pairs(self:get_schema()) do
+      ret[column] = self[column]
     end
   return ret, self
 end
@@ -101,9 +101,9 @@ end
 local function bind_list(values, list)
   local placeholders = {}
 
-  for k, v in ipairs(list) do
-    values[#values + 1] = v
-    placeholders[k] = '?'
+  for index, value in ipairs(list) do
+    values[#values + 1] = value
+    placeholders[index] = '?'
   end
 
   return concat(placeholders, ', ')
@@ -139,12 +139,12 @@ function ActiveRecord.Base:where(condition, ...)
 
     values = {}
 
-    for k, v in pairs(condition) do
-      if !istable(v) then
-        parts[#parts + 1] = k..' = ?'
-        values[#values + 1] = v
+    for column, value in pairs(condition) do
+      if !istable(value) then
+        parts[#parts + 1] = column..' = ?'
+        values[#values + 1] = value
       else
-        parts[#parts + 1] = k..' IN ('..bind_list(values, v)..')'
+        parts[#parts + 1] = column..' IN ('..bind_list(values, value)..')'
       end
     end
 
@@ -182,12 +182,12 @@ function ActiveRecord.Base:where_not(condition, ...)
 
     values = {}
 
-    for k, v in pairs(condition) do
-      if !istable(v) then
-        parts[#parts + 1] = k..' != ?'
-        values[#values + 1] = v
+    for column, value in pairs(condition) do
+      if !istable(value) then
+        parts[#parts + 1] = column..' != ?'
+        values[#values + 1] = value
       else
-        parts[#parts + 1] = k..' NOT IN ('..bind_list(values, v)..')'
+        parts[#parts + 1] = column..' NOT IN ('..bind_list(values, value)..')'
       end
     end
 
@@ -307,9 +307,9 @@ function ActiveRecord.Base:_process_child(obj, target_class)
   end
 
   if !should_stop then
-    for _k, v in ipairs(self.relations) do
-      if v.child and v.target_class == target_class then
-        self[v.as] = obj
+    for _, relation in ipairs(self.relations) do
+      if relation.child and relation.target_class == target_class then
+        self[relation.as] = obj
         break
       end
     end
@@ -347,9 +347,9 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
 
           current_object[relation.as] = children
 
-          for _k, v in ipairs(res) do
-            v:_process_child(current_object, current_object.class)
-            children[#children + 1] = v
+          for _, child in ipairs(res) do
+            child:_process_child(current_object, current_object.class)
+            children[#children + 1] = child
           end
 
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
@@ -389,8 +389,8 @@ function ActiveRecord.Base:run_query(callback)
   if self.query_map and #self.query_map > 0 then
     local query = ActiveRecord.Database:select(self.table_name)
 
-    for _k, v in ipairs(self.query_map) do
-      local t, a, b = v[1], v[2], v[3]
+    for _, entry in ipairs(self.query_map) do
+      local t, a, b = entry[1], entry[2], entry[3]
 
       if t == 'where' then
         query:where_raw(a, b)
@@ -455,10 +455,10 @@ function ActiveRecord.Base:_create_restored(data)
   local schema = ActiveRecord.schema[self.table_name]
   local str_to_type = ActiveRecord.str_to_type
 
-  for k, v in pairs(data) do
-    local column = schema[k]
+  for column_name, value in pairs(data) do
+    local column = schema[column_name]
 
-    object[k] = str_to_type(v, column and column.type or 'string')
+    object[column_name] = str_to_type(value, column and column.type or 'string')
   end
 
   if isfunction(object.restored) then
@@ -498,8 +498,8 @@ function ActiveRecord.Base:get(callback)
   self._get = function(results)
     local all_objects = {}
 
-    for k, v in ipairs(results) do
-      all_objects[k] = v
+    for index, object in ipairs(results) do
+      all_objects[index] = object
     end
 
     callback(all_objects)
@@ -577,9 +577,9 @@ local function gen_callback(self, insert)
       for _, relation in ipairs(self.relations) do
         if !relation.child then
           if relation.many and istable(self[relation.as]) then
-            for _k, v in ipairs(self[relation.as]) do
-              v[relation.column_name] = self.id
-              v:save()
+            for _, child in ipairs(self[relation.as]) do
+              child[relation.column_name] = self.id
+              child:save()
             end
           elseif !relation.many and istable(self[relation.as]) then
             local rel = self[relation.as]
@@ -625,10 +625,10 @@ function ActiveRecord.Base:save()
       local type_to_db = ActiveRecord.type_to_db
       local now = to_datetime(os.time())
       local query = ActiveRecord.Database:insert(self.table_name)
-        for k, data in pairs(schema) do
-          if except[k] then continue end
+        for column, data in pairs(schema) do
+          if except[column] then continue end
 
-          query:insert(k, type_to_db(self[k], data.type))
+          query:insert(column, type_to_db(self[column], data.type))
         end
 
         query:insert('created_at', now)
@@ -640,10 +640,10 @@ function ActiveRecord.Base:save()
       local query = ActiveRecord.Database:update(self.table_name)
         query:where('id', self.id)
 
-        for k, data in pairs(schema) do
-          if except[k] then continue end
+        for column, data in pairs(schema) do
+          if except[column] then continue end
 
-          query:update(k, type_to_db(self[k], data.type))
+          query:update(column, type_to_db(self[column], data.type))
         end
 
         query:update('updated_at', to_datetime(os.time()))
@@ -722,9 +722,9 @@ function ActiveRecord.Base:has(what, many)
       relation.many = many
     end
 
-    for _k, v in pairs(ActiveRecord.Model:all()) do
-      if v.table_name == table_name then
-        relation.model = v
+    for _, model in pairs(ActiveRecord.Model:all()) do
+      if model.table_name == table_name then
+        relation.model = model
         break
       end
     end
@@ -818,11 +818,11 @@ end
 function ActiveRecord.Base:validates(column, options)
   local current_options = self.validations[column] or {}
 
-  for k, v in pairs(options) do
-    if k == 'case_sensitive' then
-      current_options.case_sensitive = v
+  for option, value in pairs(options) do
+    if option == 'case_sensitive' then
+      current_options.case_sensitive = value
     else
-      current_options[#current_options + 1] = { id = k, value = v }
+      current_options[#current_options + 1] = { id = option, value = value }
     end
   end
 

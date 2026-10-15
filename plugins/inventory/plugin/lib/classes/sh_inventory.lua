@@ -238,8 +238,8 @@ function Inventory:get_items_ids()
       local stack = row[k]
 
       if istable(stack) then
-        for _, v in pairs(stack) do
-          items[v] = true
+        for _, instance_id in pairs(stack) do
+          items[instance_id] = true
         end
       end
     end
@@ -247,8 +247,8 @@ function Inventory:get_items_ids()
 
   local ids = {}
 
-  for k in pairs(items) do
-    ids[#ids + 1] = k
+  for instance_id in pairs(items) do
+    ids[#ids + 1] = instance_id
   end
 
   return ids
@@ -1110,20 +1110,20 @@ if SERVER then
   function Inventory:sync()
     local ids, networkable
 
-    for _k, v in pairs(self.receivers) do
-      if IsValid(v) then
+    for _, receiver in pairs(self.receivers) do
+      if IsValid(receiver) then
         if !ids then
           ids = self:get_items_ids()
           networkable = self:to_networkable()
         end
 
         for i = 1, #ids do
-          Item.network_item(v, ids[i])
+          Item.network_item(receiver, ids[i])
         end
 
-        Cable.send(v, 'fl_inventory_sync', networkable)
+        Cable.send(receiver, 'fl_inventory_sync', networkable)
       else
-        self:remove_receiver(v)
+        self:remove_receiver(receiver)
       end
     end
   end
@@ -1167,8 +1167,8 @@ if SERVER then
   function Inventory:load_items(items_ids)
     local find_instance_by_id = Item.find_instance_by_id
 
-    for _k, v in pairs(items_ids) do
-      local item_obj = find_instance_by_id(v)
+    for _, instance_id in pairs(items_ids) do
+      local item_obj = find_instance_by_id(instance_id)
 
       if item_obj then
         self:add_item(item_obj, item_obj.x, item_obj.y)

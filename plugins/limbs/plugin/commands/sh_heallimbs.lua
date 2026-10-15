@@ -13,10 +13,10 @@ CMD.aliases = { 'charheallimbs', 'plyheallimbs' }
 -- @param actor [Player the player who ran the command, or an invalid entity for the console]
 -- @param targets [List<Player> players matched by the first command argument]
 function CMD:on_run(actor, targets)
-  for _k, v in ipairs(targets) do
-    Limbs:reset(v)
+  for _, target in ipairs(targets) do
+    Limbs:reset(target)
 
-    v:notify('command.heallimbs.notification')
+    target:notify('command.heallimbs.notification')
   end
 
   self:notify_staff('command.heallimbs.message', {

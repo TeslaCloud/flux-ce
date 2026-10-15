@@ -104,8 +104,8 @@ local text_styles = {
 function TOOL.BuildCPanel(CPanel)
   local options = {}
 
-  for k, v in pairs(text_styles) do
-    options[t(k)] = { ['texts_style'] = v }
+  for phrase, style_id in pairs(text_styles) do
+    options[t(phrase)] = { ['texts_style'] = style_id }
   end
 
   CPanel:AddControl('Header', { Description = t'tool.texts.desc' })

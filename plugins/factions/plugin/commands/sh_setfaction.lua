@@ -13,8 +13,8 @@ CMD.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 function CMD:get_description()
   local factions = {}
 
-  for k, _v in pairs(Factions.all()) do
-    table.insert(factions, k)
+  for faction_id in pairs(Factions.all()) do
+    table.insert(factions, faction_id)
   end
 
   return t(self.description, { factions = table.concat(factions, ', ') })
@@ -37,17 +37,17 @@ function CMD:on_run(actor, targets, name)
 
   local transferred = {}
 
-  for _, v in ipairs(targets) do
-    if v:IsBot() or v:is_character_loaded() then
-      local allowed, reason, arguments = Factions.can_transfer(v, faction_table)
+  for _, target in ipairs(targets) do
+    if target:IsBot() or target:is_character_loaded() then
+      local allowed, reason, arguments = Factions.can_transfer(target, faction_table)
 
       if allowed then
-        table.insert(transferred, v)
+        table.insert(transferred, target)
       else
         Flux.Player:notify(actor, reason, arguments)
       end
     else
-      Flux.Player:notify(actor, 'error.faction.no_character', { target = v:name() })
+      Flux.Player:notify(actor, 'error.faction.no_character', { target = target:name() })
     end
   end
 
@@ -59,8 +59,8 @@ function CMD:on_run(actor, targets, name)
     faction = faction_table.name
   })
 
-  for _, v in ipairs(transferred) do
-    v:set_faction(faction_table.faction_id)
-    v:notify('notification.faction_changed', { faction = faction_table.name }, faction_table.color)
+  for _, target in ipairs(transferred) do
+    target:set_faction(faction_table.faction_id)
+    target:notify('notification.faction_changed', { faction = faction_table.name }, faction_table.color)
   end
 end

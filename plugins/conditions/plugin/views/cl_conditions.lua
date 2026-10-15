@@ -61,8 +61,8 @@ function PANEL:Init()
     list:Dock(FILL)
     list:AddColumn(t'ui.condition.load.column')
 
-    for _k, v in pairs(Data.get_files('conditions')) do
-      list:AddLine(v)
+    for _, file_name in pairs(Data.get_files('conditions')) do
+      list:AddLine(file_name)
     end
 
     list.OnRowSelected = function(_lst, _index, line)
@@ -96,10 +96,10 @@ function PANEL:node_options(panel, _root, _first)
 
   local sub_menu = menu:AddSubMenu(t'ui.condition.add_condition')
 
-  for k, v in pairs(Conditions:get_all()) do
-    sub_menu:AddOption(t(v.name), function()
-      self:add_condition(panel, k)
-    end):SetIcon(v.icon)
+  for condition_id, condition_data in pairs(Conditions:get_all()) do
+    sub_menu:AddOption(t(condition_data.name), function()
+      self:add_condition(panel, condition_id)
+    end):SetIcon(condition_data.icon)
   end
 
   local id = panel.id
@@ -125,9 +125,9 @@ function PANEL:node_options(panel, _root, _first)
           selector:set_text(t'ui.condition.select_operator')
           selector:set_value(t'ui.condition.operators')
 
-          for k, v in pairs(util['get_'..data.set_operator..'_operators']()) do
-            selector:add_choice(t('operator.'..k)..' ('..v..')', function()
-              panel.data.operator = k
+          for operator, symbol in pairs(util['get_'..data.set_operator..'_operators']()) do
+            selector:add_choice(t('operator.'..operator)..' ('..symbol..')', function()
+              panel.data.operator = operator
 
               panel.update()
             end)
@@ -163,14 +163,14 @@ function PANEL:add_condition(parent, id, data)
   node.update = function()
     local args = {}
 
-    for k, v in pairs(condition_data.get_args(node, condition_data)) do
-      if v != '' then
-        args[k] = t(v)
+    for index, arg_text in pairs(condition_data.get_args(node, condition_data)) do
+      if arg_text != '' then
+        args[index] = t(arg_text)
       else
-        if k == 1 then
-          args[k] = t'ui.condition.select_operator'
+        if index == 1 then
+          args[index] = t'ui.condition.select_operator'
         else
-          args[k] = t'ui.condition.select_parameter'
+          args[index] = t'ui.condition.select_parameter'
         end
       end
     end
@@ -194,16 +194,16 @@ function PANEL:get_conditions(panel)
 
   local conditions = {}
 
-  for _k, v in pairs(panel.childs) do
-    if !IsValid(v) then continue end
+  for _, child in pairs(panel.childs) do
+    if !IsValid(child) then continue end
 
     local node = {
-      id = v.id,
-      data = v.data
+      id = child.id,
+      data = child.data
     }
 
-    if v.childs then
-      node.childs = self:get_conditions(v)
+    if child.childs then
+      node.childs = self:get_conditions(child)
     end
 
     conditions[#conditions + 1] = node
@@ -216,19 +216,19 @@ end
 -- @param parent [Panel tree node to add the conditions to, e.g. the root node]
 -- @param conditions [List condition nodes as returned by get_conditions]
 function PANEL:set_conditions(parent, conditions)
-  for _k, v in pairs(conditions) do
-    local node = self:add_condition(parent, v.id, v.data)
+  for _, condition in pairs(conditions) do
+    local node = self:add_condition(parent, condition.id, condition.data)
 
-    if v.childs then
-      self:set_conditions(node, v.childs)
+    if condition.childs then
+      self:set_conditions(node, condition.childs)
     end
   end
 end
 
 --- Removes all condition nodes from the tree, leaving only the root node.
 function PANEL:clear()
-  for _k, v in pairs(self.root.childs) do
-    v:safe_remove()
+  for _, child in pairs(self.root.childs) do
+    child:safe_remove()
   end
 
   self.root.childs = {}
@@ -258,8 +258,8 @@ function PANEL:create_selector(title, message, default_value, choices, callback)
   selector:set_text(t(message))
   selector:set_value(t(default_value))
 
-  for _k, v in pairs(choices) do
-    callback(selector, v)
+  for _, choice in pairs(choices) do
+    callback(selector, choice)
   end
 
   return selector

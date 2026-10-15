@@ -73,16 +73,16 @@ if CLIENT then
     local hooks = mvc_hooks[name]
 
     if hooks then
-      for k, v in ipairs(hooks) do
-        local success, value = pcall(v.handler, ...)
+      for index, mvc_hook in ipairs(hooks) do
+        local success, value = pcall(mvc_hook.handler, ...)
 
         if !success then
-          ErrorNoHalt("The '"..name..' - '..tostring(k).."' MVC callback has failed to run!\n")
+          ErrorNoHalt("The '"..name..' - '..tostring(index).."' MVC callback has failed to run!\n")
           error_with_traceback(tostring(value))
         end
 
-        if !v.prevent_remove then
-          table.remove(mvc_hooks[name], k)
+        if !mvc_hook.prevent_remove then
+          table.remove(mvc_hooks[name], index)
         end
       end
     end

@@ -126,16 +126,16 @@ function Limbs:draw_diagram(x, y, height, alpha, limbs)
       or Theme.get_color('limbs_background', background_color):alpha(background_alpha)
   )
 
-  for _k, v in ipairs(shapes) do
-    local damage = limbs[v.limb] or 0
+  for _, shape in ipairs(shapes) do
+    local damage = limbs[shape.limb] or 0
 
     draw.RoundedBox(
-      math_floor(v.rounding * scale),
-      math_floor(x + v.x * scale),
-      math_floor(y + v.y * scale),
-      math_ceil(v.w * scale),
-      math_ceil(v.h * scale),
-      own and get_cached_color(v.limb, damage, limb_alpha) or self:get_color(damage):alpha(limb_alpha)
+      math_floor(shape.rounding * scale),
+      math_floor(x + shape.x * scale),
+      math_floor(y + shape.y * scale),
+      math_ceil(shape.w * scale),
+      math_ceil(shape.h * scale),
+      own and get_cached_color(shape.limb, damage, limb_alpha) or self:get_color(damage):alpha(limb_alpha)
     )
   end
 end

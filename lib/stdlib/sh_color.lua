@@ -44,8 +44,8 @@ function util.hex_to_color(hex)
 
   local color = {}
 
-  for _k, v in ipairs(hex_colors) do
-    table.insert(color, util.hex_to_dec(v))
+  for _, hex_pair in ipairs(hex_colors) do
+    table.insert(color, util.hex_to_dec(hex_pair))
   end
 
   return Color(color[1], color[2], color[3], (color[4] or 255))

@@ -134,10 +134,10 @@ function Chatbox:ChatboxMessageCompiled(compiled)
 
   local count = 0
 
-  for _k, v in pairs(compiled) do
-    if istable(v) and v.text or IsColor(v) then
+  for _, piece in pairs(compiled) do
+    if istable(piece) and piece.text or IsColor(piece) then
       count = count + 1
-      to_print[count] = IsColor(v) and v or v.text
+      to_print[count] = IsColor(piece) and piece or piece.text
     end
   end
 

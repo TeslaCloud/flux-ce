@@ -33,23 +33,23 @@ end
 function Doors:save()
   local doors = {}
 
-  for _k, v in ents.Iterator() do
-    if v:is_door() then
+  for _, entity in ents.Iterator() do
+    if entity:is_door() then
       local save_table = {
-        id = v:MapCreationID()
+        id = entity:MapCreationID()
       }
 
-      for k1, v1 in pairs(self.properties) do
-        if v1.get_save_data then
-          save_table[k1] = v1.get_save_data(v)
+      for property_id, property in pairs(self.properties) do
+        if property.get_save_data then
+          save_table[property_id] = property.get_save_data(entity)
         end
       end
 
-      if v.conditions then
-        save_table.conditions = v.conditions
+      if entity.conditions then
+        save_table.conditions = entity.conditions
       end
 
-      save_table.ownership = self:get_ownership_data(v)
+      save_table.ownership = self:get_ownership_data(entity)
 
       table.insert(doors, save_table)
     end
@@ -67,19 +67,19 @@ function Doors:load()
   if doors and #doors > 0 then
     local loaded = {}
 
-    for _k, v in pairs(doors) do
-      local door = ents.GetMapCreatedEntity(v.id)
+    for _, door_data in pairs(doors) do
+      local door = ents.GetMapCreatedEntity(door_data.id)
 
       if IsValid(door) then
-        for k1, v1 in pairs(self.properties) do
-          if v1.on_load then
-            v1.on_load(door, v[k1])
+        for property_id, property in pairs(self.properties) do
+          if property.on_load then
+            property.on_load(door, door_data[property_id])
           end
         end
 
-        door.conditions = v.conditions
+        door.conditions = door_data.conditions
 
-        self:set_ownership_data(door, v.ownership)
+        self:set_ownership_data(door, door_data.ownership)
 
         table.insert(loaded, door)
       end
@@ -181,8 +181,8 @@ function Doors:get_menu_info(actor, entity)
   if level >= DOOR_ACCESS_MANAGE then
     local access = {}
 
-    for k, v in pairs(state.access or {}) do
-      table.insert(access, { id = k, name = v.name, level = v.level })
+    for character_id, entry in pairs(state.access or {}) do
+      table.insert(access, { id = character_id, name = entry.name, level = entry.level })
     end
 
     table.sort(access, function(a, b)

@@ -60,7 +60,7 @@ end
 function Vendors:EntityRemoved(entity)
   if !self:is_vendor(entity) then return end
 
-  for _k, v in ipairs(self:get_customers(entity)) do
-    self:close(v, false, true)
+  for _, customer in ipairs(self:get_customers(entity)) do
+    self:close(customer, false, true)
   end
 end

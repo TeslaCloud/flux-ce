@@ -118,8 +118,8 @@ end
 --- Loads all bans from the database into the ban cache.
 function Bolt:ActiveRecordReady()
   Ban:all():get(function(objects)
-    for _k, v in ipairs(objects) do
-      self:record_ban(v.steam_id, v)
+    for _, ban in ipairs(objects) do
+      self:record_ban(ban.steam_id, ban)
     end
   end):fetch()
 end
@@ -145,8 +145,8 @@ function Bolt:PlayerRestored(actor, record)
   elseif istable(root_steamid) then
     local steam_id = actor:SteamID()
 
-    for _k, v in ipairs(root_steamid) do
-      if v == steam_id then
+    for _, root_id in ipairs(root_steamid) do
+      if root_id == steam_id then
         actor:SetUserGroup('admin')
         actor.can_anything = true
       end
@@ -156,8 +156,8 @@ function Bolt:PlayerRestored(actor, record)
   if record.permissions then
     local perm_table = {}
 
-    for _k, v in pairs(record.permissions) do
-      perm_table[v.permission_id] = v.object
+    for _, perm_row in pairs(record.permissions) do
+      perm_table[perm_row.permission_id] = perm_row.object
     end
 
     actor:set_permissions(perm_table)
@@ -166,10 +166,10 @@ function Bolt:PlayerRestored(actor, record)
   if record.temp_permissions then
     local perm_table = {}
 
-    for _k, v in pairs(record.temp_permissions) do
-      perm_table[v.permission_id] = {
-        value = v.object,
-        expires = time_from_timestamp(v.expires) or 0
+    for _, perm_row in pairs(record.temp_permissions) do
+      perm_table[perm_row.permission_id] = {
+        value = perm_row.object,
+        expires = time_from_timestamp(perm_row.expires) or 0
       }
     end
 
@@ -248,9 +248,9 @@ do
 
     created = {}
 
-    for _k, v in ipairs(entities) do
-      if IsValid(v) then
-        local holder = get_holder(v)
+    for _, ent in ipairs(entities) do
+      if IsValid(ent) then
+        local holder = get_holder(ent)
 
         if holder and holder:is_hidden() then
           holder:update_visibility()
@@ -286,8 +286,8 @@ end
 function Bolt:PlayerDroppedWeapon(_actor, weapon)
   if !IsValid(weapon) then return end
 
-  for _k, v in player.Iterator() do
-    weapon:prevent_transmit(v, false)
+  for _, client in player.Iterator() do
+    weapon:prevent_transmit(client, false)
   end
 end
 
@@ -319,9 +319,9 @@ end
 function Bolt:PlayerOneMinute(actor)
   local now = os.time()
 
-  for k, v in pairs(actor:get_temp_permissions()) do
-    if v.expires <= now then
-      self:delete_temp_permission(actor, k)
+  for perm_id, entry in pairs(actor:get_temp_permissions()) do
+    if entry.expires <= now then
+      self:delete_temp_permission(actor, perm_id)
     end
   end
 end

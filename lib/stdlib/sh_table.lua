@@ -20,11 +20,11 @@ local tostring = tostring
 -- @param source [Map table to take the values from]
 -- @return [Map dest]
 function table.Merge(dest, source)
-  for k, v in pairs(source) do
-    if istable(v) and istable(dest[k]) and k != 'class' then
-      table.Merge(dest[k], v)
+  for key, value in pairs(source) do
+    if istable(value) and istable(dest[key]) and key != 'class' then
+      table.Merge(dest[key], value)
     else
-      dest[k] = v
+      dest[key] = value
     end
   end
 
@@ -43,17 +43,17 @@ function table.safe_merge(to, from)
   to.__index = nil
   from.__index = nil
 
-  for k, v in pairs(from) do
-    if v == from or k == 'class' then
-      references[k] = v
-      from[k] = nil
+  for key, value in pairs(from) do
+    if value == from or key == 'class' then
+      references[key] = value
+      from[key] = nil
     end
   end
 
   table.Merge(to, from)
 
-  for k, v in pairs(references) do
-    from[k] = v
+  for key, value in pairs(references) do
+    from[key] = value
   end
 
   to.__index = old_idx_to
@@ -74,8 +74,8 @@ end
 function table.map(t, c)
   local new_table = a{}
 
-  for _k, v in pairs(t) do
-    local val = c(v)
+  for _, value in pairs(t) do
+    local val = c(value)
 
     if val != nil then
       new_table[#new_table + 1] = val
@@ -96,8 +96,8 @@ end
 function table.map_kv(t, c)
   local new_table = {}
 
-  for k, v in pairs(t) do
-    local val = c(k, v)
+  for key, value in pairs(t) do
+    local val = c(key, value)
 
     if val != nil then
       new_table[#new_table + 1] = val
@@ -124,15 +124,15 @@ function table.select(t, what)
   local new_table = a{}
 
   if isfunction(what) then
-    for k, v in pairs(t) do
-      if what(v, k) != false then
-        new_table[#new_table + 1] = v
+    for key, value in pairs(t) do
+      if what(value, key) != false then
+        new_table[#new_table + 1] = value
       end
     end
   else
-    for _k, v in pairs(t) do
-      if istable(v) then
-        new_table[#new_table + 1] = v[what]
+    for _, entry in pairs(t) do
+      if istable(entry) then
+        new_table[#new_table + 1] = entry[what]
       end
     end
   end
@@ -160,11 +160,11 @@ end
 -- @return [Any the same object]
 function table.remove_functions(obj)
   if istable(obj) then
-    for k, v in pairs(obj) do
-      if isfunction(v) then
-        obj[k] = nil
-      elseif istable(v) then
-        obj[k] = table.remove_functions(v)
+    for key, value in pairs(obj) do
+      if isfunction(value) then
+        obj[key] = nil
+      elseif istable(value) then
+        obj[key] = table.remove_functions(value)
       end
     end
   end
@@ -200,8 +200,8 @@ do
       op = ops[op]
     end
 
-    for _k, v in ipairs(tab) do
-      sum = op(sum, v)
+    for _, value in ipairs(tab) do
+      sum = op(sum, value)
     end
 
     return sum
@@ -222,11 +222,11 @@ end
 function table.flatten(tab)
   local t = a{}
 
-  for _k, v in pairs(tab) do
-    if istable(v) and !v.class then
-      table.Add(t, table.flatten(v))
+  for _, value in pairs(tab) do
+    if istable(value) and !value.class then
+      table.Add(t, table.flatten(value))
     else
-      t[#t + 1] = v
+      t[#t + 1] = value
     end
   end
 
@@ -245,10 +245,10 @@ function table.uniq(tab, condition)
 
   condition = condition or function(v) return vals[v] end
 
-  for k, v in pairs(tab) do
-    if !condition(v) then
-      t[k] = v
-      vals[v] = true
+  for key, value in pairs(tab) do
+    if !condition(value) then
+      t[key] = value
+      vals[value] = true
     end
   end
 
@@ -280,18 +280,18 @@ do
 
     local t1, t2 = 0, 0
 
-    for k, v in pairs(tab1) do
+    for key, value in pairs(tab1) do
       t1 = t1 + 1
 
-      if !run_comp(k, v, tab2) then
+      if !run_comp(key, value, tab2) then
         return false
       end
     end
 
-    for k, v in pairs(tab2) do
+    for key, value in pairs(tab2) do
       t2 = t2 + 1
 
-      if !run_comp(k, v, tab1) then
+      if !run_comp(key, value, tab1) then
         return false
       end
     end
@@ -317,11 +317,11 @@ function table.join(tab, sep)
   local pieces = {}
   sep = sep or ''
 
-  for _k, v in pairs(tab) do
-    if !istable(v) then
-      pieces[#pieces + 1] = tostring(v)
+  for _, value in pairs(tab) do
+    if !istable(value) then
+      pieces[#pieces + 1] = tostring(value)
     else
-      pieces[#pieces + 1] = table.join(v, sep)
+      pieces[#pieces + 1] = table.join(value, sep)
     end
   end
 
@@ -337,9 +337,9 @@ end
 function table.delete_if(tab, callback)
   local new_tab = a{}
 
-  for k, v in pairs(tab) do
-    if callback(k, v) != true then
-      new_tab[k] = v
+  for key, value in pairs(tab) do
+    if callback(key, value) != true then
+      new_tab[key] = value
     end
   end
 
@@ -352,9 +352,9 @@ end
 -- @return [Map/List the same table]
 -- @see [table.delete_if]
 function table.delete(tab, callback)
-  for k, v in pairs(tab) do
-    if callback(k, v) == true then
-      tab[k] = nil
+  for key, value in pairs(tab) do
+    if callback(key, value) == true then
+      tab[key] = nil
     end
   end
 
@@ -370,9 +370,9 @@ end
 function table.keep_if(tab, callback)
   local new_tab = a{}
 
-  for k, v in pairs(tab) do
-    if callback(k, v) == true then
-      new_tab[k] = v
+  for key, value in pairs(tab) do
+    if callback(key, value) == true then
+      new_tab[key] = value
     end
   end
 
@@ -385,9 +385,9 @@ end
 -- @return [Map/List the same table]
 -- @see [table.keep_if]
 function table.keep(tab, callback)
-  for k, v in pairs(tab) do
-    if callback(k, v) != true then
-      tab[k] = nil
+  for key, value in pairs(tab) do
+    if callback(key, value) != true then
+      tab[key] = nil
     end
   end
 
@@ -415,8 +415,8 @@ end
 function table.one(tab, callback)
   local hit = false
 
-  for k, v in pairs(tab) do
-    if callback(k, v) then
+  for key, value in pairs(tab) do
+    if callback(key, value) then
       if !hit then
         hit = true
       else
@@ -433,8 +433,8 @@ end
 -- @param callback [Function callback(key, value)]
 -- @return [Boolean]
 function table.none(tab, callback)
-  for k, v in pairs(tab) do
-    if callback(k, v) then
+  for key, value in pairs(tab) do
+    if callback(key, value) then
       return false
     end
   end
@@ -453,11 +453,11 @@ end
 function table.partition(tab, callback)
   local t1, t2 = a{}, a{}
 
-  for k, v in pairs(tab) do
-    if callback(k, v) then
-      t1[#t1 + 1] = v
+  for key, value in pairs(tab) do
+    if callback(key, value) then
+      t1[#t1 + 1] = value
     else
-      t2[#t2 + 1] = v
+      t2[#t2 + 1] = value
     end
   end
 
@@ -474,8 +474,8 @@ end
 function table.to_array(tab)
   local a = a{}
 
-  for k, v in pairs(tab) do
-    a[#a + 1] = { k, v }
+  for key, value in pairs(tab) do
+    a[#a + 1] = { key, value }
   end
 
   return a
@@ -491,11 +491,11 @@ end
 function table.to_hash(tab)
   local h = a{}
 
-  for _k, v in ipairs(tab) do
-    if istable(v) then
-      h[v[1]] = v[2]
+  for _, entry in ipairs(tab) do
+    if istable(entry) then
+      h[entry[1]] = entry[2]
     else
-      h[#h + 1] = v
+      h[#h + 1] = entry
     end
   end
 
@@ -613,8 +613,8 @@ end
 function wk(str)
   local ret = {}
 
-  for _k, v in ipairs(str:split(' ')) do
-    ret[v] = true
+  for _, word in ipairs(str:split(' ')) do
+    ret[word] = true
   end
 
   return ret
@@ -647,8 +647,8 @@ function print_table(t, indent, done, indent_length)
 
   local keys = table.GetKeys(t)
 
-  for _k, v in pairs(keys) do
-    local l = tostring(v):len()
+  for _, key in pairs(keys) do
+    local l = tostring(key):len()
 
     if l > indent_length then
       indent_length = l

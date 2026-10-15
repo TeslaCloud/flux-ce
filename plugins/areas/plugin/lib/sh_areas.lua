@@ -56,9 +56,9 @@ end
 function Areas.get_by_type(type)
   local to_ret = {}
 
-  for _k, v in pairs(stored) do
-    if v.type == type then
-      to_ret[#to_ret + 1] = v
+  for _, area in pairs(stored) do
+    if area.type == type then
+      to_ret[#to_ret + 1] = area
     end
   end
 

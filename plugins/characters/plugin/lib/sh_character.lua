@@ -293,9 +293,9 @@ if SERVER then
       return owner
     end
 
-    for _k, v in player.Iterator() do
-      if v.current_character == character then
-        return v
+    for _, client in player.Iterator() do
+      if client.current_character == character then
+        return client
       end
     end
   end
@@ -380,9 +380,9 @@ if SERVER then
     local found = {}
     local records = {}
 
-    for _k, v in player.Iterator() do
-      if !v:IsBot() and istable(v.record) then
-        records[#records + 1] = v.record
+    for _, client in player.Iterator() do
+      if !client:IsBot() and istable(client.record) then
+        records[#records + 1] = client.record
       end
     end
 
@@ -394,11 +394,11 @@ if SERVER then
     --   place]
     hook.Run('CollectLoadedUserRecords', records)
 
-    for _k, v in ipairs(records) do
-      if istable(v.characters) then
-        for _k1, v1 in ipairs(v.characters) do
-          if isstring(v1.name) and normalize_name(v1.name) == key then
-            found[#found + 1] = v1
+    for _, record in ipairs(records) do
+      if istable(record.characters) then
+        for _, character in ipairs(record.characters) do
+          if isstring(character.name) and normalize_name(character.name) == key then
+            found[#found + 1] = character
           end
         end
       end
@@ -687,8 +687,8 @@ if SERVER then
     local characters = target.record and target.record.characters or {}
     local ret = {}
 
-    for k, v in pairs(characters) do
-      ret[k] = Characters.to_networkable(target, v)
+    for index, character in pairs(characters) do
+      ret[index] = Characters.to_networkable(target, character)
     end
 
     return ret
@@ -757,9 +757,9 @@ if SERVER then
 
       Characters.forget_name(char.name)
 
-      for k, v in pairs(target:get_all_characters()) do
-        if tonumber(v.id) == id then
-          table.remove(target.record.characters, k)
+      for index, character in pairs(target:get_all_characters()) do
+        if tonumber(character.id) == id then
+          table.remove(target.record.characters, index)
 
           break
         end

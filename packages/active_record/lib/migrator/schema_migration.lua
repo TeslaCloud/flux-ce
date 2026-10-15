@@ -41,8 +41,8 @@ function ActiveRecord.SchemaMigration:all_versions()
       local versions = {}
 
       if istable(result) then
-        for _k, v in ipairs(result) do
-          table.insert(versions, self:normalize_migration_number(v.version))
+        for _, row in ipairs(result) do
+          table.insert(versions, self:normalize_migration_number(row.version))
         end
       end
 
@@ -56,8 +56,8 @@ end
 function ActiveRecord.SchemaMigration:integer_versions()
   local versions = {}
 
-  for _k, v in ipairs(self:all_versions()) do
-    table.insert(versions, tonumber(v))
+  for _, version in ipairs(self:all_versions()) do
+    table.insert(versions, tonumber(version))
   end
 
   return versions

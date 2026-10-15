@@ -18,12 +18,12 @@ function File.write(file_name, file_contents)
   local pieces = string.split(file_name, '/')
   local current_path = ''
 
-  for _k, v in ipairs(pieces) do
-    if File.ext(v) != nil then
+  for _, piece in ipairs(pieces) do
+    if File.ext(piece) != nil then
       break
     end
 
-    current_path = current_path..v..'/'
+    current_path = current_path..piece..'/'
 
     if !file.Exists(current_path, 'GAME') then
       File.mkdir(current_path)
@@ -41,17 +41,17 @@ function File.get_list(folder)
   folder = folder:ensure_end('/')
   local files, folders = file.Find(folder..'*', 'GAME')
 
-  for k, v in ipairs(files) do
-    files[k] = folder..v
+  for index, file_name in ipairs(files) do
+    files[index] = folder..file_name
   end
 
-  for _k, v in ipairs(folders) do
-    if v:start_with('.') then continue end
+  for _, folder_name in ipairs(folders) do
+    if folder_name:start_with('.') then continue end
 
-    local file_list = File.get_list(folder..v..'/')
+    local file_list = File.get_list(folder..folder_name..'/')
 
-    for _k, v in ipairs(file_list) do
-      files[#files + 1] = v
+    for _, file_path in ipairs(file_list) do
+      files[#files + 1] = file_path
     end
   end
 

@@ -10,8 +10,8 @@ DEFINE_BASECLASS('player_default')
 
 local model_list = {}
 
-for k, v in pairs(player_manager.AllValidModels()) do
-  model_list[v:lower()] = k
+for model_name, model_path in pairs(player_manager.AllValidModels()) do
+  model_list[model_path:lower()] = model_name
 end
 
 flux_player.loadout = {
@@ -45,9 +45,9 @@ function flux_player:GetHandsModel()
 
   local stripped_model = string.gsub(player_model, '_', '')
 
-  for _k, v in pairs(model_list) do
-    if string.find(stripped_model, v) then
-      model_list[player_model] = v
+  for _, model_name in pairs(model_list) do
+    if string.find(stripped_model, model_name) then
+      model_list[player_model] = model_name
 
       break
     end

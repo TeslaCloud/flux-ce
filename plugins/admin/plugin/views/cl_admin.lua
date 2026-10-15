@@ -114,9 +114,9 @@ function PANEL:open_panel(id)
     local padding = math.scale(8)
     local x = self.sidebar_width + padding
 
-    for k, v in pairs(self.buttons) do
-      if IsValid(v) then
-        v:set_active(k == id)
+    for button_id, button in pairs(self.buttons) do
+      if IsValid(button) then
+        button:set_active(button_id == id)
       end
     end
 

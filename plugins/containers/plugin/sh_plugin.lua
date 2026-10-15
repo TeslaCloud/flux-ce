@@ -52,8 +52,8 @@ do
   --   inventory in slots), and optionally open_sound and close_sound]
   function Container:register_prop(model, data)
     if istable(model) then
-      for _k, v in pairs(model) do
-        stored[v:lower()] = data
+      for _, model_path in pairs(model) do
+        stored[model_path:lower()] = data
       end
     else
       stored[model:lower()] = data
@@ -165,7 +165,7 @@ function Container:get_loot_categories()
   local categories = {}
   local seen = {}
 
-  for _k, item_table in ipairs(self:get_loot_items()) do
+  for _, item_table in ipairs(self:get_loot_items()) do
     local category = item_table.category
 
     if isstring(category) and !seen[category] then

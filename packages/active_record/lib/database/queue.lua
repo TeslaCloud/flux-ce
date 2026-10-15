@@ -18,10 +18,10 @@ end
 
 --- Creates every table that was recorded with #add and clears the queue.
 function ActiveRecord.Queue:run()
-  for k, v in pairs(self.stored) do
-    create_table(k, function(t)
-      for _k2, v2 in ipairs(v) do
-        t[v2[1]](t, unpack(v2[2]))
+  for table_name, columns in pairs(self.stored) do
+    create_table(table_name, function(t)
+      for _, column in ipairs(columns) do
+        t[column[1]](t, unpack(column[2]))
       end
     end)
   end

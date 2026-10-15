@@ -414,41 +414,41 @@ function PANEL:rebuild()
   self.sell_list:clear()
   self.buy_list:clear()
 
-  for _k, v in ipairs(data.sells or {}) do
-    local item_table = Item.find_by_id(v.id)
+  for _, sale in ipairs(data.sells or {}) do
+    local item_table = Item.find_by_id(sale.id)
 
     if item_table then
-      sells[#sells + 1] = { name = t(item_table:get_name()), item_table = item_table, entry = v }
+      sells[#sells + 1] = { name = t(item_table:get_name()), item_table = item_table, entry = sale }
     end
   end
 
-  for _k, v in ipairs(data.buys or {}) do
-    local item_obj = Item.find_instance_by_id(v.instance_id)
+  for _, offer in ipairs(data.buys or {}) do
+    local item_obj = Item.find_instance_by_id(offer.instance_id)
 
     if item_obj then
       local name = t(item_obj:get_name())
-      local key = item_obj.id..'\n'..name..'\n'..tostring(v.price)
+      local key = item_obj.id..'\n'..name..'\n'..tostring(offer.price)
       local group = groups[key]
 
       if !group then
-        group = { name = name, item_obj = item_obj, price = v.price, instance_ids = {} }
+        group = { name = name, item_obj = item_obj, price = offer.price, instance_ids = {} }
         groups[key] = group
         buys[#buys + 1] = group
       end
 
       local instance_ids = group.instance_ids
 
-      instance_ids[#instance_ids + 1] = v.instance_id
+      instance_ids[#instance_ids + 1] = offer.instance_id
     end
   end
 
   table.SortByMember(sells, 'name', true)
   table.SortByMember(buys, 'name', true)
 
-  for _k, v in ipairs(sells) do
-    local item_table, entry = v.item_table, v.entry
+  for _, listing in ipairs(sells) do
+    local item_table, entry = listing.item_table, listing.entry
     local row = self.sell_list:add_row({
-      name = v.name,
+      name = listing.name,
       info = self:get_stock_text(entry),
       price = Vendors:format_money(entry.price, currency),
       tooltip = t(item_table:get_description()),
@@ -463,19 +463,19 @@ function PANEL:rebuild()
     self.sell_rows[entry.id] = { row = row, entry = entry }
   end
 
-  for _k, v in ipairs(buys) do
-    local item_obj = v.item_obj
+  for _, group in ipairs(buys) do
+    local item_obj = group.item_obj
 
     self.buy_list:add_row({
-      name = v.name,
-      info = t('ui.vendor.owned', { count = #v.instance_ids }),
-      price = Vendors:format_money(v.price, currency),
+      name = group.name,
+      info = t('ui.vendor.owned', { count = #group.instance_ids }),
+      price = Vendors:format_money(group.price, currency),
       tooltip = t(item_obj:get_description()),
       model = item_obj:get_model(),
       skin = item_obj:get_skin(),
       button_text = t'ui.vendor.sell',
       on_click = function()
-        cable_send('fl_vendor_sell', self.vendor, v.instance_ids[1])
+        cable_send('fl_vendor_sell', self.vendor, group.instance_ids[1])
       end
     })
   end

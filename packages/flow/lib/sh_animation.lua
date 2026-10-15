@@ -239,23 +239,23 @@ do
     result = {}
 
     if hold_type == 'normal' then
-      for k, v in pairs(normal_defaults) do
-        result[k] = v
+      for anim_name, anim in pairs(normal_defaults) do
+        result[anim_name] = anim
       end
 
-      for k, v in pairs(class) do
-        if !istable(v) and class_settings[k] == nil then
-          result[k] = v
+      for anim_name, anim in pairs(class) do
+        if !istable(anim) and class_settings[anim_name] == nil then
+          result[anim_name] = anim
         end
       end
     else
       local parent = compile_hold_type(class, compiled, hold_type_parents[hold_type] or 'normal')
 
-      for k, v in pairs(parent) do
-        if pair_keys[k] then
-          result[k] = { v[1], v[2] }
+      for anim_name, anim in pairs(parent) do
+        if pair_keys[anim_name] then
+          result[anim_name] = { anim[1], anim[2] }
         else
-          result[k] = v
+          result[anim_name] = anim
         end
       end
     end
@@ -263,11 +263,11 @@ do
     local source = class[hold_type]
 
     if istable(source) then
-      for k, v in pairs(source) do
-        if pair_keys[k] then
-          result[k] = copy_pair(v)
+      for anim_name, anim in pairs(source) do
+        if pair_keys[anim_name] then
+          result[anim_name] = copy_pair(anim)
         else
-          result[k] = v
+          result[anim_name] = anim
         end
       end
     end
@@ -292,28 +292,28 @@ do
       has_fidgets = false
     }
 
-    for k, v in pairs(class_settings) do
-      if data[k] != nil then
-        compiled[k] = data[k]
+    for setting, default in pairs(class_settings) do
+      if data[setting] != nil then
+        compiled[setting] = data[setting]
       else
-        compiled[k] = v
+        compiled[setting] = default
       end
     end
 
     compile_hold_type(data, compiled, 'normal')
 
-    for hold_type, _v in pairs(hold_type_parents) do
+    for hold_type in pairs(hold_type_parents) do
       compile_hold_type(data, compiled, hold_type)
     end
 
-    for k, v in pairs(data) do
-      if istable(v) and k != 'vehicle' and class_settings[k] == nil and !compiled[k] then
-        compile_hold_type(data, compiled, k)
+    for key, entry in pairs(data) do
+      if istable(entry) and key != 'vehicle' and class_settings[key] == nil and !compiled[key] then
+        compile_hold_type(data, compiled, key)
       end
     end
 
-    for _k, v in pairs(compiled) do
-      if istable(v) and istable(v.fidgets) and #v.fidgets > 0 then
+    for _, entry in pairs(compiled) do
+      if istable(entry) and istable(entry.fidgets) and #entry.fidgets > 0 then
         compiled.has_fidgets = true
       end
     end
@@ -321,11 +321,11 @@ do
     if istable(data.vehicle) then
       local vehicles = {}
 
-      for k, v in pairs(data.vehicle) do
-        if istable(v) then
-          vehicles[k] = { v[1], v[2] }
+      for vehicle_key, anim in pairs(data.vehicle) do
+        if istable(anim) then
+          vehicles[vehicle_key] = { anim[1], anim[2] }
         else
-          vehicles[k] = { v }
+          vehicles[vehicle_key] = { anim }
         end
       end
 

@@ -186,9 +186,9 @@ function Item.find_by_id(id)
     return item_obj
   end
 
-  for k, v in pairs(stored) do
-    if k == id or v.id == id then
-      return v
+  for item_id, template in pairs(stored) do
+    if item_id == id or template.id == id then
+      return template
     end
   end
 end
@@ -220,7 +220,7 @@ function Item.find_instance_by_id(instance_id)
 
   for _item_id, item_instances in pairs(instances) do
     if istable(item_instances) then
-      for _k, item_obj in pairs(item_instances) do
+      for _, item_obj in pairs(item_instances) do
         if item_obj.instance_id == instance_id then
           instance_cache[instance_id] = item_obj
 
@@ -258,15 +258,15 @@ function Item.find(name)
     return stored[name]
   end
 
-  for _k, v in pairs(stored) do
-    if v.id and v.name and v.print_name then
-      if v.id == name or v.name:find(name) or v.print_name:find(name) then
-        return v
+  for _, template in pairs(stored) do
+    if template.id and template.name and template.print_name then
+      if template.id == name or template.name:find(name) or template.print_name:find(name) then
+        return template
       end
 
       if CLIENT then
-        if v.print_name:find(name) then
-          return v
+        if template.print_name:find(name) then
+          return template
         end
       end
     end
@@ -377,11 +377,11 @@ function Item.apply_bodygroups(entity, item_obj)
 
   if !istable(bodygroups) then return end
 
-  for k, v in pairs(bodygroups) do
-    local index = tonumber(k) or entity:FindBodygroupByName(k)
+  for bodygroup, value in pairs(bodygroups) do
+    local index = tonumber(bodygroup) or entity:FindBodygroupByName(bodygroup)
 
     if index and index >= 0 then
-      entity:SetBodygroup(index, tonumber(v) or 0)
+      entity:SetBodygroup(index, tonumber(value) or 0)
     end
   end
 end
@@ -428,12 +428,12 @@ if SERVER then
         local item_obj = Item.find_by_id(id)
 
         if item_obj then
-          for k, v in pairs(instance_table) do
+          for instance_id, instance_data in pairs(instance_table) do
             local new_item = table.Copy(item_obj)
 
-            table.safe_merge(new_item, v)
+            table.safe_merge(new_item, instance_data)
 
-            loaded[id][k] = new_item
+            loaded[id][instance_id] = new_item
           end
         end
       end
@@ -446,11 +446,11 @@ if SERVER then
 
     if loaded and !table.IsEmpty(loaded) then
       for id, instance_table in pairs(loaded) do
-        for k, v in pairs(instance_table) do
-          if instances[id] and instances[id][k] then
-            Item.spawn(v.position, v.angles, instances[id][k], v.dropped_by or false)
+        for instance_id, entry in pairs(instance_table) do
+          if instances[id] and instances[id][instance_id] then
+            Item.spawn(entry.position, entry.angles, instances[id][instance_id], entry.dropped_by or false)
           else
-            loaded[id][k] = nil
+            loaded[id][instance_id] = nil
           end
         end
       end
@@ -464,17 +464,17 @@ if SERVER then
   function Item.save_instances()
     local to_save = {}
 
-    for k, v in pairs(instances) do
-      if k == 'count' then
-        to_save[k] = v
+    for item_id, item_instances in pairs(instances) do
+      if item_id == 'count' then
+        to_save[item_id] = item_instances
       else
-        to_save[k] = {}
+        to_save[item_id] = {}
       end
 
-      if istable(v) then
-        for k2, v2 in pairs(v) do
-          if istable(v2) then
-            to_save[k][k2] = Item.to_saveable(v2)
+      if istable(item_instances) then
+        for instance_id, item_obj in pairs(item_instances) do
+          if istable(item_obj) then
+            to_save[item_id][instance_id] = Item.to_saveable(item_obj)
           end
         end
       end
@@ -491,14 +491,14 @@ if SERVER then
 
     entities = {}
 
-    for _k, v in ipairs(item_ents) do
-      if IsValid(v) and !v:IsMarkedForDeletion() and v.item then
-        entities[v.item.id] = entities[v.item.id] or {}
+    for _, entity in ipairs(item_ents) do
+      if IsValid(entity) and !entity:IsMarkedForDeletion() and entity.item then
+        entities[entity.item.id] = entities[entity.item.id] or {}
 
-        entities[v.item.id][v.item.instance_id] = {
-          position = v:GetPos(),
-          angles = v:GetAngles(),
-          dropped_by = v.dropped_by
+        entities[entity.item.id][entity.item.instance_id] = {
+          position = entity:GetPos(),
+          angles = entity:GetAngles(),
+          dropped_by = entity.dropped_by
         }
       end
     end
@@ -563,9 +563,9 @@ if SERVER then
   function Item.send_to_player(target)
     local item_ents = ents.FindByClass('fl_item')
 
-    for _k, v in ipairs(item_ents) do
-      if v.item then
-        Item.network_item(target, v.item.instance_id)
+    for _, entity in ipairs(item_ents) do
+      if entity.item then
+        Item.network_item(target, entity.item.instance_id)
       end
     end
 

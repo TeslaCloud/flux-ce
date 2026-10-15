@@ -220,11 +220,11 @@ function ActiveRecord.restore_metadata()
 
       if !istable(result) then return end
 
-      for _k, v in ipairs(result) do
-        local kind, name = tostring(v.key):match('^(%a+_?%a*):(.+)$')
+      for _, row in ipairs(result) do
+        local kind, name = tostring(row.key):match('^(%a+_?%a*):(.+)$')
 
         if kind and metadata_kinds[kind] then
-          local entry = util.JSONToTable(tostring(v.value))
+          local entry = util.JSONToTable(tostring(row.value))
 
           if istable(entry) then
             ActiveRecord.metadata[metadata_kinds[kind]][name] = entry
@@ -246,15 +246,15 @@ function ActiveRecord.restore_schema()
       print_query('Schema Restore ('..time..'s)', query)
 
       if istable(result) then
-        for _k, v in ipairs(result) do
-          local t = ActiveRecord.schema[v.table_name] or {}
-          local null, default = parse_definition(v.definition)
+        for _, row in ipairs(result) do
+          local t = ActiveRecord.schema[row.table_name] or {}
+          local null, default = parse_definition(row.definition)
 
-          v.id = tonumber(v.id) or 0
-          t[v.column_name] = { id = v.id, type = v.abstract_type, null = null, default = default }
-          ActiveRecord.schema[v.table_name] = t
+          row.id = tonumber(row.id) or 0
+          t[row.column_name] = { id = row.id, type = row.abstract_type, null = null, default = default }
+          ActiveRecord.schema[row.table_name] = t
 
-          next_column_id = math.max(next_column_id, v.id + 1)
+          next_column_id = math.max(next_column_id, row.id + 1)
         end
       end
 
@@ -443,8 +443,8 @@ end
 -- @param meta_only=false [Boolean only drop the internal tables]
 function ActiveRecord.drop_schema(meta_only)
   if !meta_only then
-    for _k, v in ipairs(table.GetKeys(ActiveRecord.schema)) do
-      ActiveRecord.SchemaStatements.drop_table(v, { if_exists = true })
+    for _, table_name in ipairs(table.GetKeys(ActiveRecord.schema)) do
+      ActiveRecord.SchemaStatements.drop_table(table_name, { if_exists = true })
     end
   end
 

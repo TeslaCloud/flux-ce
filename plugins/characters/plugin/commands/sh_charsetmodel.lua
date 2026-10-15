@@ -13,9 +13,9 @@ CMD.alias = 'setmodel'
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param model [String model path]
 function CMD:on_run(actor, targets, model)
-  for _, v in ipairs(targets) do
-    v:notify('notification.model_changed', { model = model })
-    Characters.set_model(v, model)
+  for _, client in ipairs(targets) do
+    client:notify('notification.model_changed', { model = model })
+    Characters.set_model(client, model)
   end
 
   self:notify_staff('command.charsetmodel.message', {

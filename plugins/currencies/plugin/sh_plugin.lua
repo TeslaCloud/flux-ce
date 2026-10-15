@@ -153,9 +153,9 @@ do
     local model = currency_data.model
 
     if istable(currency_data.model_table) then
-      for k, v in SortedPairs(currency_data.model_table) do
-        if k <= amount then
-          model = v
+      for min_amount, model_path in SortedPairs(currency_data.model_table) do
+        if min_amount <= amount then
+          model = model_path
         end
       end
     end
@@ -173,9 +173,9 @@ local function complete_currency(actor)
   local show_all = !IsValid(actor) or actor:can('staff')
   local ids = {}
 
-  for k, v in pairs(stored) do
-    if show_all or !v.hidden or actor:get_money(k) > 0 then
-      ids[#ids + 1] = k
+  for currency_id, currency_data in pairs(stored) do
+    if show_all or !currency_data.hidden or actor:get_money(currency_id) > 0 then
+      ids[#ids + 1] = currency_id
     end
   end
 

@@ -79,9 +79,9 @@ end
 -- @param vendor [Entity]
 -- @param actor=nil [Player the only customer to send it to; all of them if nil]
 function Vendors:update_customers(vendor, actor)
-  for _k, v in ipairs(self:get_customers(vendor)) do
-    if !actor or actor == v then
-      cable_send(v, 'fl_vendor_update', vendor, self:get_trade_data(vendor, v))
+  for _, customer in ipairs(self:get_customers(vendor)) do
+    if !actor or actor == customer then
+      cable_send(customer, 'fl_vendor_update', vendor, self:get_trade_data(vendor, customer))
     end
   end
 end
@@ -98,9 +98,9 @@ function Vendors:send_trade_change(vendor, actor, item_id)
   local stock = entry and entry.stock or nil
   local others = {}
 
-  for _k, v in ipairs(self:get_customers(vendor)) do
-    if v != actor then
-      others[#others + 1] = v
+  for _, customer in ipairs(self:get_customers(vendor)) do
+    if customer != actor then
+      others[#others + 1] = customer
     end
   end
 

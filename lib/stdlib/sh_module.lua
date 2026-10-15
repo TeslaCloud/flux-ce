@@ -34,9 +34,9 @@ function mod(name)
 
     if !istable(module_table) then return end
 
-    for k, v in pairs(module_table) do
-      if !self[k] then
-        self[k] = v
+    for member_name, member in pairs(module_table) do
+      if !self[member_name] then
+        self[member_name] = member
       end
     end
 

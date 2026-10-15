@@ -131,9 +131,9 @@ function Gamemastery.find_character(id)
 
   if !id then return end
 
-  for _k, v in ipairs(Gamemastery.get_pool()) do
-    if tonumber(v.id) == id then
-      return v
+  for _, char_data in ipairs(Gamemastery.get_pool()) do
+    if tonumber(char_data.id) == id then
+      return char_data
     end
   end
 end
@@ -149,9 +149,9 @@ function Gamemastery.find_character_by_name(name)
   local key = normalize_name(name)
   local found = {}
 
-  for _, v in ipairs(Gamemastery.get_pool()) do
-    if isstring(v.name) and normalize_name(v.name) == key then
-      found[#found + 1] = v
+  for _, char_data in ipairs(Gamemastery.get_pool()) do
+    if isstring(char_data.name) and normalize_name(char_data.name) == key then
+      found[#found + 1] = char_data
     end
   end
 
@@ -182,21 +182,21 @@ function Gamemastery.pool_to_networkable()
   local result = {}
   local world_entities = Gamemastery.world_entities
 
-  for _k, v in ipairs(Gamemastery.get_pool()) do
-    local id = tonumber(v.id)
+  for _, char_data in ipairs(Gamemastery.get_pool()) do
+    local id = tonumber(char_data.id)
 
     if !id then continue end
 
-    local possessor = Gamemastery.get_possessor(v)
+    local possessor = Gamemastery.get_possessor(char_data)
 
     result[#result + 1] = {
       id = id,
-      name = v.name,
-      model = v.model or default_model,
-      skin = tonumber(v.skin) or 0,
-      phys_desc = v.phys_desc or '',
-      faction = isstring(v.faction) and v.faction or nil,
-      banned = tobool(v.banned),
+      name = char_data.name,
+      model = char_data.model or default_model,
+      skin = tonumber(char_data.skin) or 0,
+      phys_desc = char_data.phys_desc or '',
+      faction = isstring(char_data.faction) and char_data.faction or nil,
+      banned = tobool(char_data.banned),
       possessed_by = possessor and possessor:steam_name() or nil,
       in_world = IsValid(world_entities[id])
     }
@@ -211,9 +211,9 @@ end
 function Gamemastery.get_receivers()
   local receivers = {}
 
-  for _k, v in player.Iterator() do
-    if v:has_initialized() and Gamemastery.is_gamemaster(v) then
-      receivers[#receivers + 1] = v
+  for _, client in player.Iterator() do
+    if client:has_initialized() and Gamemastery.is_gamemaster(client) then
+      receivers[#receivers + 1] = client
     end
   end
 
@@ -245,8 +245,8 @@ function Gamemastery.send_pool(target)
 
   if #receivers == 0 then return end
 
-  for _k, v in ipairs(receivers) do
-    v.gm_pool_sent = true
+  for _, receiver in ipairs(receivers) do
+    receiver.gm_pool_sent = true
   end
 
   cable_send(receivers, 'fl_gm_pool', Gamemastery.pool_to_networkable())
@@ -577,9 +577,9 @@ function Gamemastery.delete(actor, character)
 
   Characters.forget_name(name)
 
-  for k, v in ipairs(pool) do
-    if v == character then
-      table.remove(pool, k)
+  for index, char_data in ipairs(pool) do
+    if char_data == character then
+      table.remove(pool, index)
 
       break
     end

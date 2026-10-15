@@ -90,24 +90,24 @@ function Factions.add_faction(id, data)
   stored[data.faction_id] = data
   count = count + 1
 
-  for k, v in pairs(data.model_classes) do
-    local gender_models = data:get_gender_models(k)
+  for gender, model_class in pairs(data.model_classes) do
+    local gender_models = data:get_gender_models(gender)
 
     if gender_models then
-      for _k1, v1 in pairs(gender_models) do
-        Flux.Anim:set_model_class(v1, v)
+      for _, model_path in pairs(gender_models) do
+        Flux.Anim:set_model_class(model_path, model_class)
       end
     end
   end
 
-  for _k, v in ipairs(data.rank) do
-    if isstring(v.model) then
-      if v.model_class then
-        Flux.Anim:set_model_class(v.model, v.model_class)
+  for _, rank_table in ipairs(data.rank) do
+    if isstring(rank_table.model) then
+      if rank_table.model_class then
+        Flux.Anim:set_model_class(rank_table.model, rank_table.model_class)
       end
-    elseif istable(v.model) then
-      for gender, model in pairs(v.model) do
-        local model_class = v.model_class or data.model_classes[gender]
+    elseif istable(rank_table.model) then
+      for gender, model in pairs(rank_table.model) do
+        local model_class = rank_table.model_class or data.model_classes[gender]
 
         if isstring(model) and model_class then
           Flux.Anim:set_model_class(model, model_class)
@@ -137,9 +137,9 @@ end
 function Factions.get_players(id)
   local players = {}
 
-  for _k, v in player.Iterator() do
-    if v:get_faction_id() == id then
-      players[#players + 1] = v
+  for _, client in player.Iterator() do
+    if client:get_faction_id() == id then
+      players[#players + 1] = client
     end
   end
 
@@ -156,17 +156,17 @@ function Factions.find(name)
 
   local lowered = name:utf8lower()
 
-  for k, v in pairs(stored) do
-    if k:utf8lower() == lowered then
-      return v
+  for faction_id, faction_table in pairs(stored) do
+    if faction_id:utf8lower() == lowered then
+      return faction_table
     end
   end
 
-  for _, v in pairs(stored) do
-    local faction_name = tostring(v.name)
+  for _, faction_table in pairs(stored) do
+    local faction_name = tostring(faction_table.name)
 
     if faction_name:utf8lower() == lowered or t(faction_name):utf8lower() == lowered then
-      return v
+      return faction_table
     end
   end
 
@@ -236,9 +236,9 @@ function Factions.is_full(id, rank, except)
 
   local members = 0
 
-  for _k, v in player.Iterator() do
-    if v != except then
-      local faction_table, member_rank = get_membership(v)
+  for _, client in player.Iterator() do
+    if client != except then
+      local faction_table, member_rank = get_membership(client)
 
       if faction_table and faction_table.faction_id == id and (rank == nil or member_rank == rank) then
         members = members + 1
@@ -265,8 +265,8 @@ function Factions.count_characters(target, faction_id)
   local amount = 0
 
   if istable(target.record) and istable(target.record.characters) then
-    for _k, v in ipairs(target.record.characters) do
-      if v.faction == faction_id then
+    for _, char in ipairs(target.record.characters) do
+      if char.faction == faction_id then
         amount = amount + 1
       end
     end
@@ -515,9 +515,9 @@ if SERVER then
     local counts = {}
 
     if istable(target.record.characters) then
-      for _k, v in ipairs(target.record.characters) do
-        if v != except and isstring(v.faction) then
-          counts[v.faction] = (counts[v.faction] or 0) + 1
+      for _, char in ipairs(target.record.characters) do
+        if char != except and isstring(char.faction) then
+          counts[char.faction] = (counts[char.faction] or 0) + 1
         end
       end
     end
@@ -539,7 +539,7 @@ if SERVER then
 
     target.faction_weapons = given
 
-    for weapon_class, _v in pairs(given) do
+    for weapon_class in pairs(given) do
       if !table.HasValue(loadout, weapon_class) then
         target:StripWeapon(weapon_class)
 
@@ -547,11 +547,11 @@ if SERVER then
       end
     end
 
-    for _k, v in ipairs(loadout) do
-      if !target:HasWeapon(v) then
-        target:Give(v)
+    for _, weapon_class in ipairs(loadout) do
+      if !target:HasWeapon(weapon_class) then
+        target:Give(weapon_class)
 
-        given[v] = true
+        given[weapon_class] = true
       end
     end
   end
@@ -674,11 +674,11 @@ if SERVER then
 
     if !faction_table or !istable(faction_table.npc_relations) then return end
 
-    for npc_class, _v in pairs(faction_table.npc_relations) do
+    for npc_class in pairs(faction_table.npc_relations) do
       local disposition = faction_table:get_npc_disposition(npc_class)
 
       if disposition then
-        for _k1, npc in ipairs(ents.FindByClass(npc_class)) do
+        for _, npc in ipairs(ents.FindByClass(npc_class)) do
           if npc:IsNPC() then
             set_npc_relation(target, npc, disposition)
           end
@@ -696,12 +696,12 @@ if SERVER then
 
     local npc_class = npc:GetClass()
 
-    for _k, v in player.Iterator() do
-      local faction_table = get_membership(v)
+    for _, client in player.Iterator() do
+      local faction_table = get_membership(client)
       local disposition = faction_table and faction_table:get_npc_disposition(npc_class)
 
       if disposition then
-        set_npc_relation(v, npc, disposition)
+        set_npc_relation(client, npc, disposition)
       end
     end
   end
@@ -763,9 +763,9 @@ do
     if rank != -1 and faction_table then
       local lowered = string.utf8lower(str_rank)
 
-      for k, v in ipairs(faction_table.rank) do
-        if string.utf8lower(v.id) == lowered then
-          return (strict and k == rank) or k <= rank
+      for index, rank_table in ipairs(faction_table.rank) do
+        if string.utf8lower(rank_table.id) == lowered then
+          return (strict and index == rank) or index <= rank
         end
       end
     end
@@ -805,8 +805,8 @@ do
       return table.HasValue(whitelists, faction_id)
     end
 
-    for _k, v in pairs(whitelists) do
-      if v.faction_id == faction_id then
+    for _, whitelist in pairs(whitelists) do
+      if whitelist.faction_id == faction_id then
         return true
       end
     end
@@ -950,10 +950,10 @@ do
     -- @param faction_id [String]
     function player_meta:take_whitelist(faction_id)
       if self:has_whitelist(faction_id) then
-        for k, v in pairs(self.record.whitelists) do
-          if v.faction_id == faction_id then
-            v:destroy()
-            table.remove(self.record.whitelists, k)
+        for index, whitelist in pairs(self.record.whitelists) do
+          if whitelist.faction_id == faction_id then
+            whitelist:destroy()
+            table.remove(self.record.whitelists, index)
 
             break
           end

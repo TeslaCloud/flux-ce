@@ -21,16 +21,16 @@ local function find_item(word)
     return items[word]
   end
 
-  for k, v in pairs(items) do
-    if isstring(k) and k:utf8lower() == lowered then
-      return v
+  for item_id, template in pairs(items) do
+    if isstring(item_id) and item_id:utf8lower() == lowered then
+      return template
     end
   end
 
-  for _, v in pairs(items) do
-    for _, name in ipairs({ v.name, v.print_name }) do
+  for _, template in pairs(items) do
+    for _, name in ipairs({ template.name, template.print_name }) do
       if isstring(name) and (name:utf8lower() == lowered or t(name):utf8lower() == lowered) then
-        return v
+        return template
       end
     end
   end
@@ -52,11 +52,11 @@ function CMD:on_run(actor, targets, item_name, amount)
 
   amount = tonumber(amount) or 1
 
-  for _, v in ipairs(targets) do
-    local success, error_text = v:give_item(item_obj.id, amount)
+  for _, target in ipairs(targets) do
+    local success, error_text = target:give_item(item_obj.id, amount)
 
     if success then
-      v:notify('notification.item_given', {
+      target:notify('notification.item_given', {
         amount = amount,
         item = item_obj.name
       })

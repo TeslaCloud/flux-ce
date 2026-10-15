@@ -329,12 +329,12 @@ function SKIN:apply_theme(theme)
   colours.Category.Header             = text
   colours.Category.Header_Closed      = text_muted
 
-  for k, line in ipairs({ colours.Category.Line, colours.Category.LineAlt }) do
+  for index, line in ipairs({ colours.Category.Line, colours.Category.LineAlt }) do
     line.Text             = text
     line.Text_Hover       = bright
     line.Text_Selected    = bright
     line.Text_Disabled    = text_dim
-    line.Button           = k == 1 and surface_color or raised
+    line.Button           = index == 1 and surface_color or raised
     line.Button_Hover     = main_light
     line.Button_Selected  = selection
   end

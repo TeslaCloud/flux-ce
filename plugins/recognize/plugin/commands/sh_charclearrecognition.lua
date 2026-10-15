@@ -22,18 +22,18 @@ function CMD:on_run(actor, targets, mode)
 
   local names = {}
 
-  for _, v in ipairs(targets) do
-    if !v:IsBot() and v:is_character_loaded() then
+  for _, client in ipairs(targets) do
+    if !client:IsBot() and client:is_character_loaded() then
       if mode != 'others' then
-        v:clear_recognizes()
-        v:notify('notification.recognize.forgot_everyone', nil, Color('salmon'))
+        client:clear_recognizes()
+        client:notify('notification.recognize.forgot_everyone', nil, Color('salmon'))
       end
 
       if mode != 'own' then
-        Recognizes:forget_character(v:get_character_id())
+        Recognizes:forget_character(client:get_character_id())
       end
 
-      table.insert(names, tostring(v:name(true)))
+      table.insert(names, tostring(client:name(true)))
     end
   end
 

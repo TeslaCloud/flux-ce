@@ -139,8 +139,8 @@ function Stats:default_attribute_points()
   local points = tonumber(Config.get(key)) or tonumber(Config.get_default(key)) or 0
   local highest = 0
 
-  for _k, v in pairs(Attributes.get_stored()) do
-    highest = highest + self:get_creation_max(v)
+  for _, attribute_table in pairs(Attributes.get_stored()) do
+    highest = highest + self:get_creation_max(attribute_table)
   end
 
   return math.min(math.floor(points), highest)
@@ -172,11 +172,11 @@ function Stats:get_faction_bonuses(faction_table)
 
   local stats = Attributes.get_stored()
 
-  for k, v in pairs(faction_table.stats) do
-    local bonus = tonumber(v)
+  for stat_id, value in pairs(faction_table.stats) do
+    local bonus = tonumber(value)
 
-    if stats[k] and bonus and bonus == bonus and bonus != 0 then
-      bonuses[k] = bonus
+    if stats[stat_id] and bonus and bonus == bonus and bonus != 0 then
+      bonuses[stat_id] = bonus
     end
   end
 
@@ -189,9 +189,9 @@ end
 -- @param attribute_id [String ID of the stat]
 -- @return [Number bonus levels, or nil if the stat has no faction bonus]
 function Stats:get_faction_boost(target, attribute_id)
-  for _k, v in ipairs(target:get_attribute_boosts(attribute_id)) do
-    if v.id == self.faction_boost_id then
-      return tonumber(v.value)
+  for _, boost in ipairs(target:get_attribute_boosts(attribute_id)) do
+    if boost.id == self.faction_boost_id then
+      return tonumber(boost.value)
     end
   end
 end

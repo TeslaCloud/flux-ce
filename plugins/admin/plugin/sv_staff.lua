@@ -126,11 +126,11 @@ function Bolt:find_command_targets(actor, argument, can_equal)
   local targets, listed = {}, {}
 
   if istable(found) then
-    for _, v in ipairs(found) do
-      if IsValid(v) and !listed[v] then
-        listed[v] = true
+    for _, client in ipairs(found) do
+      if IsValid(client) and !listed[client] then
+        listed[client] = true
 
-        table.insert(targets, v)
+        table.insert(targets, client)
       end
     end
   end
@@ -150,7 +150,7 @@ function Bolt:find_command_targets(actor, argument, can_equal)
   end
 
   if IsValid(actor) then
-    for _, v in ipairs(targets) do
+    for _, target in ipairs(targets) do
       --- Run by the commands that find their targets themselves (`ban add` and `role
       -- remove`), for every player they are about to affect, the same way the command
       -- interpreter runs it for a command with `immunity` set.
@@ -158,8 +158,8 @@ function Bolt:find_command_targets(actor, argument, can_equal)
       -- @param target [Player Player the command targets]
       -- @param can_equal [Boolean Whether a target of the same standing may be affected]
       -- @return [Boolean Return false if the target is immune to the actor]
-      if hook.Run('CommandCheckImmunity', actor, v, can_equal) == false then
-        actor:notify('error.command.higher_immunity', { target = get_player_name(v) })
+      if hook.Run('CommandCheckImmunity', actor, target, can_equal) == false then
+        actor:notify('error.command.higher_immunity', { target = get_player_name(target) })
 
         return
       end
@@ -250,12 +250,12 @@ function Bolt:send_staff_list(target)
       local members, listed = {}, {}
 
       if istable(results) then
-        for _k, v in ipairs(results) do
-          local steam_id = tostring(v.steam_id)
+        for _, row in ipairs(results) do
+          local steam_id = tostring(row.steam_id)
           local member = {
             steam_id = steam_id,
-            name = tostring(v.name or steam_id),
-            role = tostring(v.role),
+            name = tostring(row.name or steam_id),
+            role = tostring(row.role),
             online = false
           }
 
@@ -265,20 +265,20 @@ function Bolt:send_staff_list(target)
         end
       end
 
-      for _k, v in player.Iterator() do
-        if !v:IsBot() then
-          local steam_id = v:SteamID()
-          local role = v:GetUserGroup()
+      for _, client in player.Iterator() do
+        if !client:IsBot() then
+          local steam_id = client:SteamID()
+          local role = client:GetUserGroup()
           local member = listed[steam_id]
 
           if member then
-            member.name = v:steam_name()
+            member.name = client:steam_name()
             member.role = role
             member.online = true
           elseif role != 'user' then
             members[#members + 1] = {
               steam_id = steam_id,
-              name = v:steam_name(),
+              name = client:steam_name(),
               role = role,
               online = true
             }

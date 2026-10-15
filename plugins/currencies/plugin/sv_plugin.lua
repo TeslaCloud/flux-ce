@@ -88,18 +88,18 @@ end
 function Currencies:save_money()
   local saved = {}
 
-  for _k, v in ipairs(ents.FindByClass('fl_money')) do
-    local currency = v:get_currency()
-    local amount = v:get_currency_amount()
+  for _, entity in ipairs(ents.FindByClass('fl_money')) do
+    local currency = entity:get_currency()
+    local amount = entity:get_currency_amount()
 
-    if !v:IsMarkedForDeletion() and isstring(currency) and isnumber(amount) and amount > 0 then
-      local phys_obj = v:GetPhysicsObject()
+    if !entity:IsMarkedForDeletion() and isstring(currency) and isnumber(amount) and amount > 0 then
+      local phys_obj = entity:GetPhysicsObject()
 
       saved[#saved + 1] = {
         currency = currency,
         amount = amount,
-        position = v:GetPos(),
-        angles = v:GetAngles(),
+        position = entity:GetPos(),
+        angles = entity:GetAngles(),
         frozen = IsValid(phys_obj) and !phys_obj:IsMotionEnabled()
       }
     end
@@ -116,14 +116,14 @@ function Currencies:load_money()
 
   if !istable(saved) then return end
 
-  for _k, v in pairs(saved) do
-    if istable(v) and isvector(v.position) then
-      local money_ent = self:spawn_money(v.currency, v.amount, v.position, v.angles)
+  for _, entry in pairs(saved) do
+    if istable(entry) and isvector(entry.position) then
+      local money_ent = self:spawn_money(entry.currency, entry.amount, entry.position, entry.angles)
 
       if IsValid(money_ent) then
-        money_ent:SetPos(v.position)
+        money_ent:SetPos(entry.position)
 
-        if v.frozen then
+        if entry.frozen then
           local phys_obj = money_ent:GetPhysicsObject()
 
           if IsValid(phys_obj) then

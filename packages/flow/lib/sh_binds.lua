@@ -16,11 +16,11 @@ if CLIENT then
   Flux.Binds.key_enums  = key_enums
 
   if #key_enums == 0 then
-    for k, v in pairs(_G) do
-      if string.sub(k, 1, 6) == 'MOUSE_' then
-        key_enums[v] = k
-      elseif string.sub(k, 1, 4) == 'KEY_' then
-        key_enums[v] = k
+    for global_name, enum_value in pairs(_G) do
+      if string.sub(global_name, 1, 6) == 'MOUSE_' then
+        key_enums[enum_value] = global_name
+      elseif string.sub(global_name, 1, 4) == 'KEY_' then
+        key_enums[enum_value] = global_name
       end
     end
   end
@@ -42,11 +42,11 @@ if CLIENT then
   function Flux.Binds:get_bound()
     local binds = {}
 
-    for k, _v in pairs(key_enums) do
-      local bind = input.LookupKeyBinding(k)
+    for button in pairs(key_enums) do
+      local bind = input.LookupKeyBinding(button)
 
       if !tonumber(bind) then
-        binds[k] = bind
+        binds[button] = bind
       end
     end
 
@@ -59,11 +59,11 @@ if CLIENT then
   function Flux.Binds:get_unbound()
     local binds = {}
 
-    for k, _v in pairs(key_enums) do
-      local bind = input.LookupKeyBinding(k)
+    for button in pairs(key_enums) do
+      local bind = input.LookupKeyBinding(button)
 
       if tonumber(bind) then
-        binds[k] = bind
+        binds[button] = bind
       end
     end
 
@@ -81,9 +81,9 @@ if CLIENT then
   -- @param command [String console command to run when the button is pressed]
   -- @param key [Number button code, see the KEY and MOUSE enumerations]
   function Flux.Binds:set_bind(command, key)
-    for k, v in pairs(stored) do
-      if v == command then
-        stored[k] = nil
+    for button, bound_command in pairs(stored) do
+      if bound_command == command then
+        stored[button] = nil
       end
     end
 

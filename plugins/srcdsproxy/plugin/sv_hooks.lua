@@ -64,10 +64,10 @@ function SrcdsProxy:take_over()
   srcdsproxy.ChatCommands = false
   srcdsproxy.IsAdmin = is_admin
 
-  for k, v in pairs(console_commands) do
-    local name = k:gsub('^srcdsproxy_', '')
+  for cmd_name, cmd_data in pairs(console_commands) do
+    local name = cmd_name:gsub('^srcdsproxy_', '')
 
-    concommand.Add(k, run_console_command, nil, 'srcdsproxy '..name..' '..v.usage)
+    concommand.Add(cmd_name, run_console_command, nil, 'srcdsproxy '..name..' '..cmd_data.usage)
   end
 end
 

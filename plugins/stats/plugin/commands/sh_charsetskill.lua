@@ -33,12 +33,12 @@ function CMD:on_run(actor, targets, skill_id, value)
   end
 
   if skill then
-    for _k, v in ipairs(targets) do
-      v:notify('notification.skill.set', {
+    for _, target in ipairs(targets) do
+      target:notify('notification.skill.set', {
         skill = skill.name,
         value = value
       })
-      v:set_skill(skill_id, value)
+      target:set_skill(skill_id, value)
     end
 
     self:notify_staff('command.charsetskill.message', {

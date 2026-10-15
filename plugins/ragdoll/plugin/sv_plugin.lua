@@ -285,8 +285,8 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
   ragdoll:SetMaterial(self:GetMaterial())
   ragdoll:SetColor(self:GetColor())
 
-  for _k, v in ipairs(self:GetBodyGroups()) do
-    ragdoll:SetBodygroup(v.id, self:GetBodygroup(v.id))
+  for _, body_group in ipairs(self:GetBodyGroups()) do
+    ragdoll:SetBodygroup(body_group.id, self:GetBodygroup(body_group.id))
   end
 
   ragdoll.player = self

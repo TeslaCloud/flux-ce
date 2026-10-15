@@ -53,7 +53,7 @@ local function position_in_area(pos, area)
 
   local z = pos.z + 16
 
-  for _k, poly in ipairs(area.polys) do
+  for _, poly in ipairs(area.polys) do
     if z > poly[1].z and z < area.maxh and util.vector_in_poly(pos, poly) then
       return true
     end
@@ -260,7 +260,7 @@ function SrcdsProxy:enter_transfer_areas_at(actor, areas)
 
   local pos = actor:GetPos()
 
-  for _k, area in ipairs(areas) do
+  for _, area in ipairs(areas) do
     local handled = state and state.handled[area.id]
 
     if !handled and position_in_area(pos, area) then
@@ -294,7 +294,7 @@ function SrcdsProxy:LazyTick()
 
   if #areas == 0 then return end
 
-  for _k, actor in player.Iterator() do
+  for _, actor in player.Iterator() do
     self:enter_transfer_areas_at(actor, areas)
   end
 end

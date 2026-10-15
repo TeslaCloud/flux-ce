@@ -172,9 +172,9 @@ function Faction:find_rank(rank)
 
   local lowered = rank:utf8lower()
 
-  for k, v in ipairs(self.rank) do
-    if v.id:utf8lower() == lowered then
-      return k, v
+  for index, rank_table in ipairs(self.rank) do
+    if rank_table.id:utf8lower() == lowered then
+      return index, rank_table
     end
   end
 end
@@ -183,9 +183,9 @@ end
 -- added with the default field set, or else the lowest rank.
 -- @return [Number rank index; 1 as well when the faction has no ranks]
 function Faction:get_default_rank()
-  for k, v in ipairs(self.rank) do
-    if v.default then
-      return k
+  for index, rank_table in ipairs(self.rank) do
+    if rank_table.default then
+      return index
     end
   end
 
@@ -222,17 +222,17 @@ function Faction:get_loadout(rank)
   local rank_table = rank != nil and self.rank[rank]
 
   if istable(self.loadout) then
-    for _k, v in ipairs(self.loadout) do
-      if !table.HasValue(loadout, v) then
-        table.insert(loadout, v)
+    for _, weapon_class in ipairs(self.loadout) do
+      if !table.HasValue(loadout, weapon_class) then
+        table.insert(loadout, weapon_class)
       end
     end
   end
 
   if rank_table and istable(rank_table.loadout) then
-    for _k, v in ipairs(rank_table.loadout) do
-      if !table.HasValue(loadout, v) then
-        table.insert(loadout, v)
+    for _, weapon_class in ipairs(rank_table.loadout) do
+      if !table.HasValue(loadout, weapon_class) then
+        table.insert(loadout, weapon_class)
       end
     end
   end
@@ -394,9 +394,9 @@ function Faction:generate_name(target, rank, default_data)
   end
 
   if final_name:find('{rank}') then
-    for k, v in ipairs(self.rank) do
-      if v.id == rank or k == rank then
-        final_name = final_name:replace('{rank}', v.name)
+    for index, rank_table in ipairs(self.rank) do
+      if rank_table.id == rank or index == rank then
+        final_name = final_name:replace('{rank}', rank_table.name)
 
         break
       end
@@ -405,20 +405,20 @@ function Faction:generate_name(target, rank, default_data)
 
   local helpers = string.find_all(final_name, '{([%w_]+):([%w_]+)}')
 
-  for _k, v in ipairs(helpers) do
-    local m1, m2 = v.matches[1], v.matches[2]
+  for _, helper in ipairs(helpers) do
+    local m1, m2 = helper.matches[1], helper.matches[2]
 
     if m1 == 'callback' then
       local callback = self[m2]
 
       if isfunction(callback) then
-        final_name = final_name:replace(v.text, callback(self, target))
+        final_name = final_name:replace(helper.text, callback(self, target))
       end
     elseif m1 == 'data' then
       local data = default_data[m2] or self.data[m2] or ''
 
       if isstring(data) then
-        final_name = final_name:replace(v.text, data)
+        final_name = final_name:replace(helper.text, data)
       end
     end
   end

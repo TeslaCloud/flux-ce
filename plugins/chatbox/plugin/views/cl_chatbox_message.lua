@@ -131,23 +131,23 @@ end
 -- them along with the rest of the message, so that they fade with it. A piece that holds a
 -- SteamID64 shows the avatar even if that player is not on the server anymore.
 function PANEL:create_avatars()
-  for _k, v in ipairs(self.avatars or {}) do
-    if IsValid(v) then
-      v:Remove()
+  for _, avatar in ipairs(self.avatars or {}) do
+    if IsValid(avatar) then
+      avatar:Remove()
     end
   end
 
   self.avatars = {}
 
-  for _k, v in ipairs(self.message_data) do
-    if istable(v) and v.avatar and isnumber(v.w) and isnumber(v.h) then
-      local source = v.avatar
+  for _, piece in ipairs(self.message_data) do
+    if istable(piece) and piece.avatar and isnumber(piece.w) and isnumber(piece.h) then
+      local source = piece.avatar
       local target = isstring(source) and player.GetBySteamID64(source) or source
-      local resolution = v.h > 32 and 64 or 32
+      local resolution = piece.h > 32 and 64 or 32
       local avatar = vgui.Create('AvatarImage', self)
 
-      avatar:SetPos(v.x, v.y)
-      avatar:SetSize(v.w, v.h)
+      avatar:SetPos(piece.x, piece.y)
+      avatar:SetSize(piece.w, piece.h)
       avatar:SetMouseInputEnabled(false)
       avatar:SetPaintedManually(true)
 
@@ -157,7 +157,7 @@ function PANEL:create_avatars()
         avatar:SetSteamID(source, resolution)
       end
 
-      v.panel = avatar
+      piece.panel = avatar
 
       self.avatars[#self.avatars + 1] = avatar
     end

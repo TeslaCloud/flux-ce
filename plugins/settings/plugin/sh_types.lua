@@ -116,13 +116,13 @@ ClientSettings:register_type('choice', {
 
     local choices = {}
 
-    for _k, v in ipairs(setting.choices) do
-      if istable(v) then
-        if v.value != nil then
-          table.insert(choices, { value = v.value, name = tostring(v.name or v.value) })
+    for _, entry in ipairs(setting.choices) do
+      if istable(entry) then
+        if entry.value != nil then
+          table.insert(choices, { value = entry.value, name = tostring(entry.name or entry.value) })
         end
       else
-        table.insert(choices, { value = v, name = tostring(v) })
+        table.insert(choices, { value = entry, name = tostring(entry) })
       end
     end
 
@@ -143,8 +143,8 @@ ClientSettings:register_type('choice', {
   -- @param value [Any value to check]
   -- @return [Any the value, or nil if it is not one of the choices]
   sanitize = function(setting, value)
-    for _k, v in ipairs(setting.choices) do
-      if v.value == value then
+    for _, choice in ipairs(setting.choices) do
+      if choice.value == value then
         return value
       end
     end
@@ -161,8 +161,8 @@ ClientSettings:register_type('choice', {
     local combo_box = vgui.Create('DComboBox', parent)
     combo_box:SetSortItems(false)
 
-    for k, v in ipairs(setting.choices) do
-      combo_box:AddChoice(t(v.name), k, v.value == value)
+    for index, choice in ipairs(setting.choices) do
+      combo_box:AddChoice(t(choice.name), index, choice.value == value)
     end
 
     combo_box.OnSelect = function(_pnl, _index, _text, data)

@@ -8,12 +8,12 @@ function SpawnPoints:load()
   local points = {}
 
   if istable(stored) then
-    for _k, v in ipairs(stored) do
-      if istable(v) and isnumber(v.x) and isnumber(v.y) and isnumber(v.z) then
+    for _, entry in ipairs(stored) do
+      if istable(entry) and isnumber(entry.x) and isnumber(entry.y) and isnumber(entry.z) then
         points[#points + 1] = {
-          pos = Vector(v.x, v.y, v.z),
-          ang = Angle(0, tonumber(v.yaw) or 0, 0),
-          group = isstring(v.group) and v.group or 'default'
+          pos = Vector(entry.x, entry.y, entry.z),
+          ang = Angle(0, tonumber(entry.yaw) or 0, 0),
+          group = isstring(entry.group) and entry.group or 'default'
         }
       end
     end
@@ -27,15 +27,15 @@ end
 function SpawnPoints:save()
   local stored = {}
 
-  for k, v in ipairs(self.points) do
-    local pos = v.pos
+  for index, point in ipairs(self.points) do
+    local pos = point.pos
 
-    stored[k] = {
+    stored[index] = {
       x = pos.x,
       y = pos.y,
       z = pos.z,
-      yaw = v.ang.y,
-      group = v.group
+      yaw = point.ang.y,
+      group = point.group
     }
   end
 
@@ -54,9 +54,9 @@ function SpawnPoints:sync(target)
       receivers[1] = target
     end
   else
-    for _k, v in player.Iterator() do
-      if !v:IsBot() and v:can('spawnpoints') then
-        receivers[#receivers + 1] = v
+    for _, client in player.Iterator() do
+      if !client:IsBot() and client:can('spawnpoints') then
+        receivers[#receivers + 1] = client
       end
     end
   end
@@ -167,10 +167,10 @@ function SpawnPoints:pick_point(points, ignore)
   local free = {}
   local free_count = 0
 
-  for _k, v in ipairs(points) do
-    if self:is_point_free(v, ignore) then
+  for _, point in ipairs(points) do
+    if self:is_point_free(point, ignore) then
       free_count = free_count + 1
-      free[free_count] = v
+      free[free_count] = point
     end
   end
 
@@ -211,8 +211,8 @@ end
 function SpawnPoints:choose_point(actor)
   local points = {}
 
-  for _k, v in ipairs(self:get_player_groups(actor)) do
-    points = self:get_points(v)
+  for _, group in ipairs(self:get_player_groups(actor)) do
+    points = self:get_points(group)
 
     if #points > 0 then break end
   end

@@ -72,8 +72,8 @@ function PickupObjects:Think()
   end
 
   if lost then
-    for _k, v in ipairs(lost) do
-      self:drop_entity(v, true)
+    for _, holder in ipairs(lost) do
+      self:drop_entity(holder, true)
     end
   end
 end

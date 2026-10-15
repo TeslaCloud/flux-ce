@@ -12,14 +12,14 @@ CMD.aliases = { 'god', 'plysetgodmode' }
 -- @param targets [List<Player> players to affect]
 -- @param enabled [Boolean]
 local function set_godmode(cmd, actor, targets, enabled)
-  for _, v in ipairs(targets) do
+  for _, client in ipairs(targets) do
     if enabled then
-      v:GodEnable()
+      client:GodEnable()
     else
-      v:GodDisable()
+      client:GodDisable()
     end
 
-    v:notify('notification.godmode.'..(enabled and 'enabled' or 'disabled'))
+    client:notify('notification.godmode.'..(enabled and 'enabled' or 'disabled'))
   end
 
   cmd:notify_staff('command.godmode.'..(enabled and 'on' or 'off')..'.message', {

@@ -198,9 +198,9 @@ end
 local function header_value(headers, name)
   if !istable(headers) then return end
 
-  for k, v in pairs(headers) do
-    if isstring(k) and k:lower() == name then
-      return v
+  for header, value in pairs(headers) do
+    if isstring(header) and header:lower() == name then
+      return value
     end
   end
 end
@@ -319,16 +319,16 @@ function Client:chat(request, callback)
   local provider = llm.providers[self.provider]
   local path, headers, body = provider.build(self, request)
 
-  for k, v in pairs(self.extra or {}) do
-    body[k] = v
+  for field, value in pairs(self.extra or {}) do
+    body[field] = value
   end
 
-  for k, v in pairs(request.extra or {}) do
-    body[k] = v
+  for field, value in pairs(request.extra or {}) do
+    body[field] = value
   end
 
-  for k, v in pairs(self.headers or {}) do
-    headers[k] = v
+  for header, value in pairs(self.headers or {}) do
+    headers[header] = value
   end
 
   send(self, provider, self.base_url..path, headers, llm.to_json(body), 1, callback)

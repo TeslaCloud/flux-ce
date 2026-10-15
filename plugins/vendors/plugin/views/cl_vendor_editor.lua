@@ -95,9 +95,9 @@ function PANEL:Init()
   self.body:SetPaintBackground(false)
   self.body:Dock(FILL)
   self.body.PerformLayout = function(_pnl, w, h)
-    for _k, v in pairs(self.pages) do
-      v.panel:SetPos(0, 0)
-      v.panel:SetSize(w, h)
+    for _, page in pairs(self.pages) do
+      page.panel:SetPos(0, 0)
+      page.panel:SetSize(w, h)
     end
   end
 end
@@ -157,9 +157,9 @@ end
 --- Shows one page of the editor and hides the others.
 -- @param id [String ID of the page]
 function PANEL:show_page(id)
-  for k, v in pairs(self.pages) do
-    v.panel:SetVisible(k == id)
-    v.button:set_active(k == id)
+  for page_id, page in pairs(self.pages) do
+    page.panel:SetVisible(page_id == id)
+    page.button:set_active(page_id == id)
   end
 
   self.body:InvalidateLayout()
@@ -347,12 +347,12 @@ function PANEL:refresh_items()
 
   table.SortByMember(items, 'name', true)
 
-  for _k, v in ipairs(items) do
-    local sells, buys = data.sells[v.id], data.buys[v.id]
+  for _, row in ipairs(items) do
+    local sells, buys = data.sells[row.id], data.buys[row.id]
     local sell_price, stock, buy_price = '', '', ''
 
     if sells then
-      sell_price = Vendors:format_money(sells.price or v.cost, data.currency)
+      sell_price = Vendors:format_money(sells.price or row.cost, data.currency)
       stock = sells.stock and tostring(sells.stock) or t'ui.vendor.editor.unlimited'
 
       if !sells.price then
@@ -361,14 +361,14 @@ function PANEL:refresh_items()
     end
 
     if buys then
-      buy_price = Vendors:format_money(buys.price or math.Round(v.cost * buy_rate / 100, 2), data.currency)
+      buy_price = Vendors:format_money(buys.price or math.Round(row.cost * buy_rate / 100, 2), data.currency)
 
       if !buys.price then
         buy_price = buy_price..' '..t'ui.vendor.editor.by_default'
       end
     end
 
-    self.item_list:AddLine(v.name, sell_price, stock, buy_price).item_id = v.id
+    self.item_list:AddLine(row.name, sell_price, stock, buy_price).item_id = row.id
   end
 end
 
@@ -491,12 +491,12 @@ function PANEL:build_phrases()
 
   self:add_help(page, t'ui.vendor.editor.phrases.help')
 
-  for _k, v in ipairs(Vendors.phrases) do
-    local entry = self:add_field(page, t('ui.vendor.editor.phrases.'..v), 'DTextEntry')
-    entry:SetPlaceholderText(t('vendor.phrase.'..v))
-    entry:SetText(tostring(data.phrases[v] or ''))
+  for _, phrase in ipairs(Vendors.phrases) do
+    local entry = self:add_field(page, t('ui.vendor.editor.phrases.'..phrase), 'DTextEntry')
+    entry:SetPlaceholderText(t('vendor.phrase.'..phrase))
+    entry:SetText(tostring(data.phrases[phrase] or ''))
 
-    self.phrase_entries[v] = entry
+    self.phrase_entries[phrase] = entry
   end
 end
 
@@ -510,8 +510,8 @@ function PANEL:save()
   data.money = to_amount(self.money_entry:GetText())
   data.buy_rate = to_amount(self.rate_entry:GetText()) or data.buy_rate
 
-  for k, v in pairs(self.phrase_entries) do
-    data.phrases[k] = v:GetText()
+  for phrase, text_entry in pairs(self.phrase_entries) do
+    data.phrases[phrase] = text_entry:GetText()
   end
 
   Cable.send('fl_vendor_save', self.vendor, data)

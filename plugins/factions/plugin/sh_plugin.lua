@@ -40,8 +40,8 @@ local function factions_of(actor, target_arg)
   local targets = target_arg == '^' and IsValid(actor) and { actor } or player.find_exact(target_arg)
   local found, seen = {}, {}
 
-  for _, v in ipairs(targets) do
-    local faction_table = v:get_faction()
+  for _, target in ipairs(targets) do
+    local faction_table = target:get_faction()
 
     if faction_table and !seen[faction_table] then
       seen[faction_table] = true
@@ -61,8 +61,8 @@ local function suggested_factions(actor, args)
   local found = isstring(args[1]) and factions_of(actor, args[1]) or {}
 
   if #found == 0 then
-    for _, v in SortedPairs(Factions.all()) do
-      found[#found + 1] = v
+    for _, faction_table in SortedPairs(Factions.all()) do
+      found[#found + 1] = faction_table
     end
   end
 
@@ -74,8 +74,8 @@ end
 local function complete_faction()
   local ids = {}
 
-  for k in pairs(Factions.all()) do
-    ids[#ids + 1] = k
+  for faction_id in pairs(Factions.all()) do
+    ids[#ids + 1] = faction_id
   end
 
   table.sort(ids)
@@ -93,9 +93,9 @@ end
 local function complete_rank(actor, _partial, args)
   local values = {}
 
-  for _, v in ipairs(suggested_factions(actor, args)) do
-    for k2, v2 in ipairs(v:get_ranks()) do
-      values[#values + 1] = (isstring(v2.id) and v2.id != '') and v2.id or tostring(k2)
+  for _, faction_table in ipairs(suggested_factions(actor, args)) do
+    for index, rank in ipairs(faction_table:get_ranks()) do
+      values[#values + 1] = (isstring(rank.id) and rank.id != '') and rank.id or tostring(index)
     end
   end
 
@@ -111,10 +111,10 @@ end
 local function complete_model(actor, _partial, args)
   local values = {}
 
-  for _, v in ipairs(suggested_factions(actor, args)) do
-    for _, models in SortedPairs(v:get_models() or {}) do
-      for _, v2 in ipairs(istable(models) and models or {}) do
-        values[#values + 1] = v2
+  for _, faction_table in ipairs(suggested_factions(actor, args)) do
+    for _, models in SortedPairs(faction_table:get_models() or {}) do
+      for _, model_path in ipairs(istable(models) and models or {}) do
+        values[#values + 1] = model_path
       end
     end
   end

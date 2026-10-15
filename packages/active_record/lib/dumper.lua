@@ -20,8 +20,8 @@ end
 local function column_list(columns)
   local quoted = {}
 
-  for _k, v in ipairs(columns) do
-    table.insert(quoted, quote(v))
+  for _, column in ipairs(columns) do
+    table.insert(quoted, quote(column))
   end
 
   return '{ '..table.concat(quoted, ', ')..' }'
@@ -30,7 +30,7 @@ end
 local function options_literal(options, order)
   local parts = {}
 
-  for _k, key in ipairs(order) do
+  for _, key in ipairs(order) do
     local value = options[key]
 
     if value != nil then
@@ -76,7 +76,7 @@ function ActiveRecord.dump_schema(version)
     end
   end
 
-  for k, table_name in ipairs(tables) do
+  for index, table_name in ipairs(tables) do
     local structure = ActiveRecord.schema[table_name]
     local columns = {}
     local primary_key = nil
@@ -113,7 +113,7 @@ function ActiveRecord.dump_schema(version)
 
     table.insert(lines, '  create_table('..quote(table_name)..', { '..table.concat(options, ', ')..' }, function(t)')
 
-    for _k2, column in ipairs(columns) do
+    for _, column in ipairs(columns) do
       local column_options = {}
 
       if column.null != nil then
@@ -136,7 +136,7 @@ function ActiveRecord.dump_schema(version)
 
     table.insert(lines, '  end)')
 
-    if k < #tables then
+    if index < #tables then
       table.insert(lines, '')
     end
   end

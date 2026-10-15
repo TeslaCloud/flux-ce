@@ -359,7 +359,7 @@ Lumen.register_element('combo', {
     if options_changed(props.options, old_props and old_props.options) then
       panel:Clear()
 
-      for _k, option in ipairs(props.options or {}) do
+      for _, option in ipairs(props.options or {}) do
         if istable(option) then
           panel:AddChoice(tostring(option.text), option.value)
         else
@@ -373,13 +373,13 @@ Lumen.register_element('combo', {
     end
 
     if props.value != nil then
-      for k, option in ipairs(props.options or {}) do
+      for i, option in ipairs(props.options or {}) do
         local value = istable(option) and option.value or option
         local text = istable(option) and option.text or option
 
         if value == props.value or text == props.value then
-          if panel:GetSelectedID() != k then
-            panel:ChooseOptionID(k)
+          if panel:GetSelectedID() != i then
+            panel:ChooseOptionID(i)
           end
 
           break

@@ -56,28 +56,28 @@ function PANEL:Init()
     return first.name < second.name
   end)
 
-  for _k, v in ipairs(categories) do
+  for _, category in ipairs(categories) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
-    collapsible_category:SetLabel(v.name)
+    collapsible_category:SetLabel(category.name)
     collapsible_category:DockMargin(0, 0, 0, math.scale(6))
     collapsible_category:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
 
-    if isstring(v.description) and v.description != '' then
-      collapsible_category.Header:SetTooltip(t(v.description))
+    if isstring(category.description) and category.description != '' then
+      collapsible_category.Header:SetTooltip(t(category.description))
     end
 
     local config_list = vgui.Create('DListLayout', self.list_layout)
 
     collapsible_category:SetContents(config_list)
 
-    for k1, v1 in ipairs(v.configs) do
+    for index, entry in ipairs(category.configs) do
       local config_line = vgui.Create('fl_config_line')
-      config_line:set_config(v1.key, v1.config)
-      config_line.dark = k1 % 2 == 0
+      config_line:set_config(entry.key, entry.config)
+      config_line.dark = index % 2 == 0
 
       config_list:Add(config_line)
 
-      self.lines[v1.key] = config_line
+      self.lines[entry.key] = config_line
     end
   end
 
@@ -167,10 +167,10 @@ function PANEL:PerformLayout(w, h)
   local flags_x = padding * 2 + self.text:GetWide()
   local icon_size = math.floor(button_size * 0.75)
 
-  for k, v in ipairs(self.flags) do
-    v:SetSize(button_size, button_size)
-    v:SetPos(flags_x + (k - 1) * (button_size + padding), padding)
-    v:set_icon_size(icon_size)
+  for i, flag in ipairs(self.flags) do
+    flag:SetSize(button_size, button_size)
+    flag:SetPos(flags_x + (i - 1) * (button_size + padding), padding)
+    flag:set_icon_size(icon_size)
   end
 
   self.reset_button:SetSize(button_size, button_size)
@@ -397,10 +397,10 @@ function PANEL:create_control()
 
       combo_box:Clear()
 
-      for k, v in ipairs(values) do
-        names[k] = tostring(v)
+      for i, choice in ipairs(values) do
+        names[i] = tostring(choice)
 
-        combo_box:AddChoice(names[k], k)
+        combo_box:AddChoice(names[i], i)
       end
 
       combo_box:AddChoice(new_title, 0)
@@ -413,9 +413,9 @@ function PANEL:create_control()
 
     combo_box:SetSortItems(false)
 
-    for _k, v in ipairs(choices) do
-      if isstring(v) or isnumber(v) then
-        combo_box:AddChoice(t(tostring(v)), v)
+    for _, choice in ipairs(choices) do
+      if isstring(choice) or isnumber(choice) then
+        combo_box:AddChoice(t(tostring(choice)), choice)
       end
     end
 

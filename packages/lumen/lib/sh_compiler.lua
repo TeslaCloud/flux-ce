@@ -662,11 +662,11 @@ function parse_element(state)
   elseif #groups > 0 then
     local parts = {}
 
-    for k, group in ipairs(groups) do
+    for i, group in ipairs(groups) do
       if isstring(group) then
-        parts[k] = group
+        parts[i] = group
       else
-        parts[k] = '{ '..table_concat(group, ', ')..' }'
+        parts[i] = '{ '..table_concat(group, ', ')..' }'
       end
     end
 

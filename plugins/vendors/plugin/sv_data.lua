@@ -96,12 +96,12 @@ local function clean_items(entries, currency, with_stock)
 
   if !istable(entries) then return result end
 
-  for k, v in pairs(entries) do
-    local id = istable(v) and isstring(v.id) and v.id or k
+  for key, raw_entry in pairs(entries) do
+    local id = istable(raw_entry) and isstring(raw_entry.id) and raw_entry.id or key
     local item_table = isstring(id) and Item.find_by_id(id)
 
     if item_table and !item_table.is_base then
-      local entry = istable(v) and v or {}
+      local entry = istable(raw_entry) and raw_entry or {}
       local price = Vendors:clean_number(entry.price, 0, Vendors.max_price)
       local cleaned = { price = price and Vendors:round_money(currency, price) or false }
 
@@ -129,8 +129,8 @@ local function clean_ids(ids)
 
   if !istable(ids) then return result end
 
-  for k, v in pairs(ids) do
-    local id = isstring(v) and v or (v == true and k)
+  for key, value in pairs(ids) do
+    local id = isstring(value) and value or (value == true and key)
 
     if isstring(id) and id != '' and #id <= 64 and !result[id] and count < max_ids then
       result[id] = true
@@ -146,8 +146,8 @@ end
 function Vendors:get_default_data()
   local phrases = {}
 
-  for _k, v in ipairs(self.phrases) do
-    phrases[v] = ''
+  for _, phrase in ipairs(self.phrases) do
+    phrases[phrase] = ''
   end
 
   return {
@@ -212,10 +212,10 @@ function Vendors:sanitize(data, current)
   result.factions = data.factions != nil and clean_ids(data.factions) or current.factions
   result.phrases = {}
 
-  for _k, v in ipairs(self.phrases) do
-    local text = istable(data.phrases) and data.phrases[v]
+  for _, phrase in ipairs(self.phrases) do
+    local text = istable(data.phrases) and data.phrases[phrase]
 
-    result.phrases[v] = clean_text(text, text_limits.phrase, current.phrases[v] or '')
+    result.phrases[phrase] = clean_text(text, text_limits.phrase, current.phrases[phrase] or '')
   end
 
   return result

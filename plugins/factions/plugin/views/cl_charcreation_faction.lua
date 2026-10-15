@@ -22,21 +22,21 @@ function PANEL:on_open(parent)
 
   local bypass = Factions.can_bypass_creation_limits(PLAYER, parent.extra_data)
 
-  for _k, v in pairs(Factions.all()) do
-    if bypass or !v.whitelisted or PLAYER:has_whitelist(v.faction_id) then
+  for _, faction_table in pairs(Factions.all()) do
+    if bypass or !faction_table.whitelisted or PLAYER:has_whitelist(faction_table.faction_id) then
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() * 0.33, self.chooser:GetTall())
-      button:SetImage(v.material)
-      button.faction = v
+      button:SetImage(faction_table.material)
+      button.faction = faction_table
 
-      if v.faction_id == self.faction_id then
+      if faction_table.faction_id == self.faction_id then
         button:set_active(true)
         self.prev_button = button
       end
 
       local label = vgui.Create('DLabel', button)
       label:Dock(BOTTOM)
-      label:SetText(t(v.name))
+      label:SetText(t(faction_table.name))
       label:SetFont(Theme.get_font('text_normal_large'))
       label:SetTextColor(Theme.get_color('text'))
       label:SetContentAlignment(5)
@@ -52,9 +52,9 @@ function PANEL:on_open(parent)
         local cur_time = CurTime()
 
         if !self.chooser.next_click or self.chooser.next_click <= cur_time then
-          if v.menu_sound then
+          if faction_table.menu_sound then
             surface.PlaySound('buttons/blip1.wav')
-            surface.PlaySound(table.Random(v.menu_sound))
+            surface.PlaySound(table.Random(faction_table.menu_sound))
           end
 
           btn:set_active(true)
@@ -64,7 +64,7 @@ function PANEL:on_open(parent)
           end
 
           self.prev_button = btn
-          self.faction_id = v.faction_id
+          self.faction_id = faction_table.faction_id
 
           self.chooser.next_click = cur_time + 2
         end

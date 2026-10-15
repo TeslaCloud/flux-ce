@@ -24,9 +24,10 @@ function ActiveRecord.format_command(command, ...)
     elseif istable(arg) then
       local inner = {}
 
-      for k, v in pairs(arg) do
-        if !isfunction(v) then
-          inner[#inner + 1] = (isnumber(k) and '' or k..' = ')..(isstring(v) and '"'..v..'"' or tostring(v))
+      for key, value in pairs(arg) do
+        if !isfunction(value) then
+          inner[#inner + 1] = (isnumber(key) and '' or key..' = ')
+            ..(isstring(value) and '"'..value..'"' or tostring(value))
         end
       end
 

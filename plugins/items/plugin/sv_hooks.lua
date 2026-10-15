@@ -259,10 +259,10 @@ function Items:drop_weapons(victim)
   local position = victim:GetPos()
   local changed = {}
 
-  for _k, v in pairs(victim:get_items()) do
-    local inventory = Inventories.find(v.inventory_id)
+  for _, entry in pairs(victim:get_items()) do
+    local inventory = Inventories.find(entry.inventory_id)
 
-    if v.weapon_class and v.is_equipped and v:is_equipped() and inventory and inventory.owner == victim then
+    if entry.weapon_class and entry.is_equipped and entry:is_equipped() and inventory and inventory.owner == victim then
       --- Called on the server before an equipped weapon item of a dying player is dropped
       -- into the world, which happens when the `drop_weapons_on_death` config is on. The
       -- `CanPlayerDropItem` hook, and with it the `on_drop` callback of the item, is asked
@@ -270,7 +270,7 @@ function Items:drop_weapons(victim)
       -- @param victim [Player The player who is dying]
       -- @param item_obj [Item The equipped weapon item]
       -- @return [Boolean Return false to leave the item in the inventory of the player]
-      local can_drop = hook.Run('PlayerCanDropWeaponOnDeath', victim, v) != false
+      local can_drop = hook.Run('PlayerCanDropWeaponOnDeath', victim, entry) != false
 
       --- Called on the server before an item is dropped from an inventory into the world.
       -- The Items plugin runs it here for every equipped weapon item of a dying player
@@ -280,16 +280,16 @@ function Items:drop_weapons(victim)
       -- @param actor [Player The player dropping the item]
       -- @param item_obj [Item The item that is about to be dropped]
       -- @return [Boolean Return false to prevent the drop]
-      if can_drop and hook.Run('CanPlayerDropItem', victim, v) != false then
-        hook.Run('PreItemTransfer', v, nil, inventory)
+      if can_drop and hook.Run('CanPlayerDropItem', victim, entry) != false then
+        hook.Run('PreItemTransfer', entry, nil, inventory)
 
-        if v.inventory_id == inventory.id then
-          inventory:take_item_by_id(v.instance_id)
+        if entry.inventory_id == inventory.id then
+          inventory:take_item_by_id(entry.instance_id)
 
-          hook.Run('ItemTransferred', v, nil, inventory)
+          hook.Run('ItemTransferred', entry, nil, inventory)
 
           local offset = Vector(0, 0, 16 + #dropped * 8)
-          local entity = Item.spawn(position + offset, Angle(0, math.random(0, 359), 0), v, victim)
+          local entity = Item.spawn(position + offset, Angle(0, math.random(0, 359), 0), entry, victim)
 
           dropped[#dropped + 1] = entity
 
@@ -298,7 +298,7 @@ function Items:drop_weapons(victim)
           -- @param victim [Player The player who is dying]
           -- @param item_obj [Item The weapon item]
           -- @param entity [Entity The `fl_item` entity the item lies in the world as]
-          hook.Run('PlayerDroppedWeaponOnDeath', victim, v, entity)
+          hook.Run('PlayerDroppedWeaponOnDeath', victim, entry, entity)
         end
 
         changed[inventory] = true
@@ -306,7 +306,7 @@ function Items:drop_weapons(victim)
     end
   end
 
-  for inventory, _v in pairs(changed) do
+  for inventory in pairs(changed) do
     inventory:sync()
   end
 
@@ -332,9 +332,9 @@ end
 function Items:PostPlayerSpawn(actor)
   if actor:is_character_loaded() then
     timer.Simple(0, function()
-      for _k, v in pairs(actor:get_items()) do
-        if v.on_loadout then
-          v:on_loadout(actor)
+      for _, item_obj in pairs(actor:get_items()) do
+        if item_obj.on_loadout then
+          item_obj:on_loadout(actor)
         end
       end
     end)
@@ -345,9 +345,9 @@ end
 -- @param owner [Player]
 -- @param _index [Character the character that is being saved]
 function Items:PreSaveCharacter(owner, _index)
-  for _k, v in pairs(owner:get_items()) do
-    if v.on_save then
-      v:on_save(owner)
+  for _, item_obj in pairs(owner:get_items()) do
+    if item_obj.on_save then
+      item_obj:on_save(owner)
     end
   end
 end

@@ -17,9 +17,9 @@ on.immunity = true
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to freeze]
 function on:on_run(actor, targets)
-  for _, v in ipairs(targets) do
-    v:Freeze(true)
-    v:notify('notification.freeze', {
+  for _, client in ipairs(targets) do
+    client:Freeze(true)
+    client:notify('notification.freeze', {
       player = actor
     })
   end
@@ -41,9 +41,9 @@ off.immunity = true
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to unfreeze]
 function off:on_run(actor, targets)
-  for _, v in ipairs(targets) do
-    v:Freeze(false)
-    v:notify('notification.unfreeze', {
+  for _, client in ipairs(targets) do
+    client:Freeze(false)
+    client:notify('notification.unfreeze', {
       player = actor
     })
   end

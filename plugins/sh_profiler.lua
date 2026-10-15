@@ -61,21 +61,21 @@ if CLIENT then
     largest_cl_n = 0
     largest_sv_n = 0
 
-    for k, v in pairs(metrics_sv) do
-      total_sv = total_sv + v
+    for hook_name, load_time in pairs(metrics_sv) do
+      total_sv = total_sv + load_time
 
-      if v > largest_sv_n then
-        largest_sv_n = v
-        largest_sv = k
+      if load_time > largest_sv_n then
+        largest_sv_n = load_time
+        largest_sv = hook_name
       end
     end
 
-    for k, v in pairs(metrics) do
-      total_cl = total_cl + v
+    for hook_name, load_time in pairs(metrics) do
+      total_cl = total_cl + load_time
 
-      if v > largest_cl_n then
-        largest_cl_n = v
-        largest_cl = k
+      if load_time > largest_cl_n then
+        largest_cl_n = load_time
+        largest_cl = hook_name
       end
     end
 
@@ -167,16 +167,16 @@ if CLIENT then
     local lines = PANEL.lines
     local counts_sv = self.counts_sv
 
-    for k, v in pairs(self.metrics_sv) do
-      local line = lines[k]
-      local load_text = tostring(round(v * 1000, 2))..'ms'
+    for hook_name, load_time in pairs(self.metrics_sv) do
+      local line = lines[hook_name]
+      local load_text = tostring(round(load_time * 1000, 2))..'ms'
 
       if !line then
-        lines[k] = sv_list:AddLine(k, load_text, counts_sv[k])
+        lines[hook_name] = sv_list:AddLine(hook_name, load_text, counts_sv[hook_name])
       else
-        line:SetValue(1, k)
+        line:SetValue(1, hook_name)
         line:SetValue(2, load_text)
-        line:SetValue(3, counts_sv[k])
+        line:SetValue(3, counts_sv[hook_name])
       end
     end
   end

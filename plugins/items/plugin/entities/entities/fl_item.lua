@@ -386,8 +386,8 @@ else
     local desc_height = 0
     local wrapped = util.wrap_text(desc, desc_font, ScrW() * 0.33, 0)
 
-    for _k, v in pairs(wrapped) do
-      local w, h = util.text_size(v, desc_font)
+    for _, line in pairs(wrapped) do
+      local w, h = util.text_size(line, desc_font)
 
       desc_height = desc_height + h
 
@@ -433,10 +433,10 @@ else
     -- Move down by the height of the name, which depends on the scaled font size.
     y = y + height
 
-    for _k, v in pairs(wrapped) do
-      local w, h = util.text_size(v, desc_font)
+    for _, line in pairs(wrapped) do
+      local w, h = util.text_size(line, desc_font)
 
-      draw.SimpleTextOutlined(v, desc_font, x - w * 0.5, y, col, nil, nil, 1, col2)
+      draw.SimpleTextOutlined(line, desc_font, x - w * 0.5, y, col, nil, nil, 1, col2)
 
       y = y + h
     end

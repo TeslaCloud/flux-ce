@@ -117,9 +117,9 @@ end
 -- @param _active_panel [Panel the panel that has been opened]
 function Inventories:OnMenuPanelOpen(_menu_panel, _active_panel)
   if PLAYER.opened_containers then
-    for _k, v in pairs(PLAYER.opened_containers) do
-      if IsValid(v) then
-        v:safe_remove()
+    for _, container in pairs(PLAYER.opened_containers) do
+      if IsValid(container) then
+        container:safe_remove()
       end
     end
 
@@ -307,19 +307,19 @@ local function create_item_icon(item_obj, parent)
     if player.GetCount() > 1 then
       local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player', false)
 
-      for _k, v in player.Iterator() do
-        if PLAYER == v then continue end
+      for _, client in player.Iterator() do
+        if PLAYER == client then continue end
 
-        local player_line = give_player:AddSubMenu(v:Name())
+        local player_line = give_player:AddSubMenu(client:Name())
 
         if item_obj.stackable then
           player_line:AddOption(t'ui.spawnmenu.give.stack', function()
-            MVC.push('SpawnMenu::GiveItem', v, item_obj.id, item_obj.max_stack)
+            MVC.push('SpawnMenu::GiveItem', client, item_obj.id, item_obj.max_stack)
           end)
         end
 
         player_line:AddOption(t'ui.spawnmenu.give.one', function()
-          MVC.push('SpawnMenu::GiveItem', v, item_obj.id, 1)
+          MVC.push('SpawnMenu::GiveItem', client, item_obj.id, 1)
         end)
       end
     end
@@ -358,7 +358,7 @@ function Inventories:spawnmenu_populate_items(content_panel, tree, _node)
       pnl.list:SetVisible(false)
       pnl.list:SetTriggerSpawnlistChange(false)
 
-      for _k, item_obj in SortedPairsByMemberValue(category, 'name') do
+      for _, item_obj in SortedPairsByMemberValue(category, 'name') do
         local icon = create_item_icon(item_obj, pnl.list)
         icon.DoClick = function(_pnl)
           MVC.push('SpawnMenu::SpawnItem', item_obj.id)
@@ -389,7 +389,7 @@ search.AddProvider(function(query)
 
   local results = {}
 
-  for _k, item_obj in pairs(Item.all()) do
+  for _, item_obj in pairs(Item.all()) do
     if t(item_obj:get_name()):utf8lower():find(query) then
       results[#results + 1] = {
         text = item_obj.id,

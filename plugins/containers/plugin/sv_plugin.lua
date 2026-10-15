@@ -89,7 +89,7 @@ end
 local function destroy_items(item_ids, inventory, seen)
   seen = seen or {}
 
-  for _k, instance_id in pairs(item_ids) do
+  for _, instance_id in pairs(item_ids) do
     local item_obj = !seen[instance_id] and Item.find_instance_by_id(instance_id)
 
     seen[instance_id] = true
@@ -116,7 +116,7 @@ end
 -- @param inventory [Inventory the inventory of the container, nil if it was never created]
 -- @param item_ids [List<Number> instance ids of the items of the container]
 local function spill_items(origin, inventory, item_ids)
-  for _k, instance_id in pairs(item_ids) do
+  for _, instance_id in pairs(item_ids) do
     local item_obj = Item.find_instance_by_id(instance_id)
 
     if item_obj and !is_held_elsewhere(item_obj, inventory) then

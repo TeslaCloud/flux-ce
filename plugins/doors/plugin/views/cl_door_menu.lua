@@ -36,8 +36,8 @@ end
 function PANEL:OnRemove()
   CloseDermaMenus()
 
-  for k, v in pairs(self:get_door_data()) do
-    Cable.send('fl_send_door_data', self:get_door(), k, v)
+  for property_id, value in pairs(self:get_door_data()) do
+    Cable.send('fl_send_door_data', self:get_door(), property_id, value)
   end
 
   Cable.send('fl_send_door_conditions', self:get_door(), self.conditions:get_conditions())
@@ -50,16 +50,16 @@ end
 function PANEL:set_door(entity, conditions)
   self.door = entity
 
-  for k, v in pairs(Doors.properties) do
-    if v.create_panel then
-      local value = v.get_save_data(entity)
+  for property_id, property in pairs(Doors.properties) do
+    if property.create_panel then
+      local value = property.get_save_data(entity)
 
-      local row = v.create_panel(entity, self)
+      local row = property.create_panel(entity, self)
 
       if row then
         row:SetValue(value)
         row.DataChanged = function(_pnl, data)
-          self.door_data[k] = data
+          self.door_data[property_id] = data
         end
       end
     end

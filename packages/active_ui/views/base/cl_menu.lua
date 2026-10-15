@@ -113,11 +113,11 @@ end
 function PANEL:PerformLayout()
   local w = 0
 
-  for _k, pnl in pairs(self:GetCanvas():GetChildren()) do
-    pnl:InvalidateLayout()
-    pnl:SizeToContentsX()
+  for _, option in pairs(self:GetCanvas():GetChildren()) do
+    option:InvalidateLayout()
+    option:SizeToContentsX()
 
-    w = math.max(w, pnl:GetWide())
+    w = math.max(w, option:GetWide())
   end
 
   w = w * 1.2 + math.scale(24)
@@ -126,12 +126,12 @@ function PANEL:PerformLayout()
 
   local y = self.padding * 2
 
-  for _k, pnl in pairs(self:GetCanvas():GetChildren()) do
-    pnl:SetWide(w)
-    pnl:InvalidateLayout(true)
-    pnl:MoveToFront()
+  for _, option in pairs(self:GetCanvas():GetChildren()) do
+    option:SetWide(w)
+    option:InvalidateLayout(true)
+    option:MoveToFront()
 
-    y = y + pnl:GetTall()
+    y = y + option:GetTall()
   end
 
   self:SetTall(math.min(y, ScrH() * 0.75))

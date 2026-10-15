@@ -173,13 +173,13 @@ function PANEL:set_bans(data)
 
   self.scroll_panel:Clear()
 
-  for k, v in ipairs(data.bans) do
-    if istable(v) then
+  for i, ban in ipairs(data.bans) do
+    if istable(ban) then
       local row = self.scroll_panel:Add('fl_ban_row')
       row:SetTall(row_height)
       row:Dock(TOP)
-      row:set_dark(k % 2 == 1)
-      row:set_ban(v)
+      row:set_dark(i % 2 == 1)
+      row:set_ban(ban)
     end
   end
 end

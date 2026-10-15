@@ -110,8 +110,8 @@ function Attributes.sum_boosts(attribute_table, attribute)
   local boosts = attribute.boosts
 
   if boosts then
-    for _k, v in pairs(boosts) do
-      boost = boost + (tonumber(v.value) or 0)
+    for _, boost_data in pairs(boosts) do
+      boost = boost + (tonumber(boost_data.value) or 0)
     end
   end
 
@@ -230,8 +230,8 @@ if SERVER then
     local entries = {}
     local earliest
 
-    for _k, v in ipairs(modifiers) do
-      local expiry = get_expiry(v)
+    for _, modifier in ipairs(modifiers) do
+      local expiry = get_expiry(modifier)
 
       if expiry and (!earliest or expiry < earliest) then
         earliest = expiry
@@ -239,9 +239,9 @@ if SERVER then
 
       if !expiry or expiry > unix_time then
         entries[#entries + 1] = {
-          value = tonumber(v.value) or 0,
-          id = v.identifier != nil and tostring(v.identifier) or nil,
-          expires_at = expiry and v.expires_at or nil,
+          value = tonumber(modifier.value) or 0,
+          id = modifier.identifier != nil and tostring(modifier.identifier) or nil,
+          expires_at = expiry and modifier.expires_at or nil,
           end_time = expiry and cur_time + (expiry - unix_time) or nil
         }
       end
@@ -273,9 +273,9 @@ if SERVER then
   function Attributes.get_record(character, attribute_id)
     if !istable(character) or !istable(character.attributes) then return end
 
-    for _k, v in ipairs(character.attributes) do
-      if v.attribute_id == attribute_id then
-        return v
+    for _, record in ipairs(character.attributes) do
+      if record.attribute_id == attribute_id then
+        return record
       end
     end
   end
@@ -310,17 +310,17 @@ if SERVER then
 
     local added = 0
 
-    for k, v in pairs(stored) do
-      if !Attributes.get_record(character, k) then
-        local level = tonumber(levels[k])
+    for attribute_id, attribute_table in pairs(stored) do
+      if !Attributes.get_record(character, attribute_id) then
+        local level = tonumber(levels[attribute_id])
 
         if !level or level != level then
-          level = v.default
+          level = attribute_table.default
         end
 
         local attribute = Attribute.new()
-          attribute.attribute_id = k
-          attribute.level = math_clamp(math.floor(level), v.min, v.max)
+          attribute.attribute_id = attribute_id
+          attribute.level = math_clamp(math.floor(level), attribute_table.min, attribute_table.max)
         table.insert(character.attributes, attribute)
 
         added = added + 1
@@ -340,17 +340,17 @@ if SERVER then
     local unix_time, cur_time = os_time(), CurTime()
     local earliest
 
-    for _k, v in ipairs(get_records(target)) do
-      local attribute_table = stored[v.attribute_id]
+    for _, record in ipairs(get_records(target)) do
+      local attribute_table = stored[record.attribute_id]
 
       if attribute_table then
-        local entry, expiry = record_to_networkable(v, attribute_table, unix_time, cur_time)
+        local entry, expiry = record_to_networkable(record, attribute_table, unix_time, cur_time)
 
         if expiry and (!earliest or expiry < earliest) then
           earliest = expiry
         end
 
-        attributes[v.attribute_id] = entry
+        attributes[record.attribute_id] = entry
       end
     end
 
@@ -378,8 +378,8 @@ if SERVER then
     local unix_time = os_time()
     local removed = 0
 
-    for _k, v in ipairs(get_records(target)) do
-      removed = removed + remove_modifiers(v.attribute_boosts or {}, nil, unix_time)
+    for _, record in ipairs(get_records(target)) do
+      removed = removed + remove_modifiers(record.attribute_boosts or {}, nil, unix_time)
     end
 
     return removed
@@ -485,9 +485,9 @@ if SERVER then
       identifier = tostring(identifier)
     end
 
-    for _k, v in ipairs(get_records(target)) do
-      if attribute_id == nil or v.attribute_id == attribute_id then
-        removed = removed + remove_modifiers(v[list_key] or {}, identifier)
+    for _, record in ipairs(get_records(target)) do
+      if attribute_id == nil or record.attribute_id == attribute_id then
+        removed = removed + remove_modifiers(record[list_key] or {}, identifier)
       end
     end
 
@@ -610,8 +610,8 @@ do
 
     identifier = tostring(identifier)
 
-    for _k, v in pairs(self:get_attribute_boosts(attribute_id)) do
-      if v.id == identifier then
+    for _, boost in pairs(self:get_attribute_boosts(attribute_id)) do
+      if boost.id == identifier then
         return true
       end
     end

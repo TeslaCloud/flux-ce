@@ -99,9 +99,9 @@ end
 -- @param players_table [Map lists of players keyed by category]
 function GM:PreRebuildFactionCategories(players_table)
   for _id, players in pairs(players_table) do
-    for k, v in pairs(players) do
-      if IsValid(v) and v:has_initialized() and hook.Run('PlayerShouldShowOnScoreboard', v) == false then
-        players[k] = nil
+    for key, client in pairs(players) do
+      if IsValid(client) and client:has_initialized() and hook.Run('PlayerShouldShowOnScoreboard', client) == false then
+        players[key] = nil
       end
     end
   end

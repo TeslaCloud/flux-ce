@@ -135,7 +135,7 @@ function AreaDisplay:find_text_areas_at(pos)
 
   for _id, area in pairs(Areas.all()) do
     if istable(area) and area.type == area_type and istable(area.polys) then
-      for _k, poly in ipairs(area.polys) do
+      for _, poly in ipairs(area.polys) do
         if height > poly[1].z and height < area.maxh and util.vector_in_poly(pos, poly) then
           found[#found + 1] = area
 

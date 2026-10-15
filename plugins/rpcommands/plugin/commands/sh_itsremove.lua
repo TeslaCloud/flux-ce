@@ -23,14 +23,14 @@ function CMD:on_run(actor)
     local hit_pos = trace.HitPos
     local steamid = actor:SteamID()
 
-    for k, v in pairs(RPCommands.texts) do
-      if hit_pos:DistToSqr(v.pos) <= 2500 and (v.steamid == steamid or actor:is_assistant()) then
-        RPCommands.remove_static_text(k)
+    for text_id, static_text in pairs(RPCommands.texts) do
+      if hit_pos:DistToSqr(static_text.pos) <= 2500 and (static_text.steamid == steamid or actor:is_assistant()) then
+        RPCommands.remove_static_text(text_id)
         actor:notify('notification.static_text.removed')
 
         Log:print(
-          actor:Name(true)..' ('..steamid..') removed static text: '..tostring(v.text)..
-          '; pos: '..tostring(v.pos),
+          actor:Name(true)..' ('..steamid..') removed static text: '..tostring(static_text.text)..
+          '; pos: '..tostring(static_text.pos),
           'player_action'
         )
 

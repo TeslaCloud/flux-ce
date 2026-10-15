@@ -80,11 +80,11 @@ function Doors:sync(entity)
   local ownable = state.ownable and true or nil
   local price, text = state.price, state.text
 
-  for _k, v in ipairs(self:get_group(root)) do
-    v:set_nv('fl_door_ownable', ownable)
-    v:set_nv('fl_door_price', price)
-    v:set_nv('fl_door_owner', owner_id)
-    v:set_nv('fl_door_text', text)
+  for _, door in ipairs(self:get_group(root)) do
+    door:set_nv('fl_door_ownable', ownable)
+    door:set_nv('fl_door_price', price)
+    door:set_nv('fl_door_owner', owner_id)
+    door:set_nv('fl_door_text', text)
   end
 end
 
@@ -137,9 +137,9 @@ end
 function Doors:find_character_player(character_id)
   if !character_id then return end
 
-  for _k, v in ipairs(player.GetAll()) do
-    if self:get_character_id(v) == character_id then
-      return v
+  for _, client in ipairs(player.GetAll()) do
+    if self:get_character_id(client) == character_id then
+      return client
     end
   end
 end
@@ -205,9 +205,9 @@ function Doors:clear_owner(entity)
   state.access = nil
   state.text = nil
 
-  for _k, v in ipairs(self:get_group(root)) do
-    if v:get_nv('fl_locked') then
-      self.properties['locked'].on_load(v, false)
+  for _, door in ipairs(self:get_group(root)) do
+    if door:get_nv('fl_locked') then
+      self.properties['locked'].on_load(door, false)
     end
   end
 
@@ -242,10 +242,10 @@ end
 function Doors:count_owned(character_id)
   local count = 0
 
-  for _k, v in ents_iterator() do
-    local state = v.door_state
+  for _, door in ents_iterator() do
+    local state = door.door_state
 
-    if state and state.owner and state.owner.id == character_id and !IsValid(v.door_parent) then
+    if state and state.owner and state.owner.id == character_id and !IsValid(door.door_parent) then
       count = count + 1
     end
   end
@@ -264,16 +264,16 @@ function Doors:release_character(character_id)
 
   local released = 0
 
-  for _k, v in ents_iterator() do
-    local state = v.door_state
+  for _, door in ents_iterator() do
+    local state = door.door_state
 
-    if state and !IsValid(v.door_parent) then
+    if state and !IsValid(door.door_parent) then
       if state.owner and state.owner.id == character_id then
-        self:clear_owner(v)
+        self:clear_owner(door)
 
         released = released + 1
       elseif state.access and state.access[character_id] then
-        self:set_access(v, character_id, DOOR_ACCESS_NONE)
+        self:set_access(door, character_id, DOOR_ACCESS_NONE)
       end
     end
   end
@@ -298,9 +298,9 @@ function Doors:attach(entity, root)
   if IsValid(old_parent) then
     table.RemoveByValue(old_parent.door_children or {}, entity)
   elseif entity.door_children then
-    for _k, v in ipairs(entity.door_children) do
-      if IsValid(v) then
-        insert(moved, v)
+    for _, child in ipairs(entity.door_children) do
+      if IsValid(child) then
+        insert(moved, child)
       end
     end
 
@@ -311,11 +311,11 @@ function Doors:attach(entity, root)
 
   root.door_children = root.door_children or {}
 
-  for _k, v in ipairs(moved) do
-    v.door_parent = root
-    v.door_state = state
+  for _, door in ipairs(moved) do
+    door.door_parent = root
+    door.door_state = state
 
-    insert(root.door_children, v)
+    insert(root.door_children, door)
   end
 end
 
@@ -361,9 +361,9 @@ function Doors:unlink(entity)
     table.RemoveByValue(parent.door_children or {}, entity)
     insert(released, entity)
   elseif entity.door_children then
-    for _k, v in ipairs(entity.door_children) do
-      if IsValid(v) then
-        insert(released, v)
+    for _, child in ipairs(entity.door_children) do
+      if IsValid(child) then
+        insert(released, child)
       end
     end
 
@@ -375,11 +375,11 @@ function Doors:unlink(entity)
   local root = IsValid(parent) and parent or entity
   local state = self:get_state(root)
 
-  for _k, v in ipairs(released) do
-    v.door_parent = nil
-    v.door_state = { ownable = state.ownable, price = state.price }
+  for _, door in ipairs(released) do
+    door.door_parent = nil
+    door.door_state = { ownable = state.ownable, price = state.price }
 
-    self:sync(v)
+    self:sync(door)
   end
 
   self:sync(root)

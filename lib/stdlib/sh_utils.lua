@@ -33,8 +33,8 @@ function util.validate(...)
 
   if #validate <= 0 then return false end
 
-  for _k, v in ipairs(validate) do
-    if !IsValid(v) then
+  for _, object in ipairs(validate) do
+    if !IsValid(object) then
       return false
     end
   end
@@ -117,14 +117,14 @@ function util.list_to_string(callback, separator, ...)
   local count = #list
   local pieces = {}
 
-  for k, v in ipairs(list) do
-    local text = callback(v)
+  for index, element in ipairs(list) do
+    local text = callback(element)
 
     if isstring(text) then
       pieces[#pieces + 1] = text
     end
 
-    if k < count then
+    if index < count then
       pieces[#pieces + 1] = separator
     end
   end
@@ -159,30 +159,30 @@ function util.remove_newlines(str)
   local kept = {}
   local skip = ''
 
-  for _k, v in ipairs(pieces) do
+  for _, char in ipairs(pieces) do
     if skip != '' then
-      kept[#kept + 1] = v
+      kept[#kept + 1] = char
 
-      if v == skip then
+      if char == skip then
         skip = ''
       end
 
       continue
     end
 
-    if v == '"' then
+    if char == '"' then
       skip = '"'
 
-      kept[#kept + 1] = v
+      kept[#kept + 1] = char
 
       continue
     end
 
-    if v == '\n' or v == '\t' then
+    if char == '\n' or char == '\t' then
       continue
     end
 
-    kept[#kept + 1] = v
+    kept[#kept + 1] = char
   end
 
   return table.concat(kept)
@@ -205,10 +205,10 @@ function txt(text)
   local lowest_indent
   local output = {}
 
-  for _k, v in ipairs(lines) do
-    if v:match('^[%s]+$') then continue end
+  for _, line in ipairs(lines) do
+    if line:match('^[%s]+$') then continue end
 
-    local indent = v:match('^([%s]+)')
+    local indent = line:match('^([%s]+)')
     if !indent then continue end
 
     if !lowest_indent then lowest_indent = indent end
@@ -218,8 +218,8 @@ function txt(text)
     end
   end
 
-  for _k, v in ipairs(lines) do
-    output[#output + 1] = v:trim_start(lowest_indent)..'\n'
+  for _, line in ipairs(lines) do
+    output[#output + 1] = line:trim_start(lowest_indent)..'\n'
   end
 
   return table.concat(output):chomp(' '):chomp('\n')
@@ -327,8 +327,8 @@ end
 function util.get_operators()
   local list = {}
 
-  for k, _v in pairs(operators) do
-    list[#list + 1] = k
+  for op in pairs(operators) do
+    list[#list + 1] = op
   end
 
   return list
@@ -412,10 +412,10 @@ function print_traceback(suppress, ...)
   if !suppress then
     local trace_color = Color(0, 255, 255)
 
-    for _k, v in ipairs(pieces) do
-      if v and v != '' then
+    for _, trace_line in ipairs(pieces) do
+      if trace_line and trace_line != '' then
         Msg('    ')
-        MsgC(trace_color, 'from '..v)
+        MsgC(trace_color, 'from '..trace_line)
         Msg('\n')
       end
     end
@@ -440,8 +440,8 @@ function long_error(...)
     pieces = { text }
   end
 
-  for _k, v in ipairs(pieces) do
-    ErrorNoHalt(v)
+  for _, piece in ipairs(pieces) do
+    ErrorNoHalt(piece)
   end
 
   if text:end_with('\n') then
@@ -462,8 +462,8 @@ local unsafe = w[[debug require setfenv getfenv File _G _R RunString
                  CompileString rawget rawset rawequal setmetatable
                  coroutine module package newproxy]]
 
-for _k, v in ipairs(unsafe) do
-  env[v] = nil
+for _, name in ipairs(unsafe) do
+  env[name] = nil
 end
 
 env['string']['dump'] = nil

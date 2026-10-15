@@ -62,8 +62,8 @@ function Chatbox.can_hear(listener, message_data)
     local radius_sqr = radius * radius
 
     if istable(position) then
-      for _k, v in pairs(position) do
-        if isvector(v) and v:DistToSqr(eye_pos) <= radius_sqr then
+      for _, origin in pairs(position) do
+        if isvector(origin) and origin:DistToSqr(eye_pos) <= radius_sqr then
           return true
         end
       end
@@ -133,40 +133,40 @@ function Chatbox.add_text(listeners, ...)
   local last_string = false
   local pieces = message_data.data
 
-  for k, v in ipairs({ ... }) do
-    if isstring(v) then
+  for index, piece in ipairs({ ... }) do
+    if isstring(piece) then
       if !last_string then
-        pieces[#pieces + 1] = v
+        pieces[#pieces + 1] = piece
       else
         local last = #pieces
 
-        pieces[last] = pieces[last]..v
+        pieces[last] = pieces[last]..piece
       end
 
-      if k == 1 then
-        message_data.text = v
+      if index == 1 then
+        message_data.text = piece
       end
 
       last_string = true
     else
       last_string = false
 
-      if isnumber(v) then
-        pieces[#pieces + 1] = v
-      elseif IsColor(v) then
-        pieces[#pieces + 1] = v
-      elseif istable(v) then
-        if !v.is_data and !client_mode then
-          table.Merge(message_data, v)
+      if isnumber(piece) then
+        pieces[#pieces + 1] = piece
+      elseif IsColor(piece) then
+        pieces[#pieces + 1] = piece
+      elseif istable(piece) then
+        if !piece.is_data and !client_mode then
+          table.Merge(message_data, piece)
 
           pieces = message_data.data
-        elseif v.avatar != nil and !isstring(v.avatar) then
-          pieces[#pieces + 1] = Chatbox.avatar(v.avatar, v.size, v.margin)
+        elseif piece.avatar != nil and !isstring(piece.avatar) then
+          pieces[#pieces + 1] = Chatbox.avatar(piece.avatar, piece.size, piece.margin)
         else
-          pieces[#pieces + 1] = v
+          pieces[#pieces + 1] = piece
         end
-      elseif IsValid(v) then
-        pieces[#pieces + 1] = v
+      elseif IsValid(piece) then
+        pieces[#pieces + 1] = piece
       end
     end
   end
@@ -189,7 +189,7 @@ function Chatbox.add_text(listeners, ...)
   local receivers = {}
   local receiver_count = 0
 
-  for _k, v in ipairs(listeners) do
+  for _, listener in ipairs(listeners) do
     local data = table.Copy(message_data)
 
     --- Lets plugins change a message before it is checked against a listener and sent to them.
@@ -198,13 +198,13 @@ function Chatbox.add_text(listeners, ...)
     -- @param listener [Player the player who may receive the message]
     -- @param message_data [Map message data: data (the pieces), sender, position, radius, size
     --   and the other options given to Chatbox.add_text]
-    hook.Run('AdjustMessageData', v, data)
+    hook.Run('AdjustMessageData', listener, data)
 
-    if Chatbox.can_hear(v, data) then
-      Cable.send(v, 'fl_chat_message_add', data)
+    if Chatbox.can_hear(listener, data) then
+      Cable.send(listener, 'fl_chat_message_add', data)
 
       receiver_count = receiver_count + 1
-      receivers[receiver_count] = v
+      receivers[receiver_count] = listener
     end
   end
 
@@ -237,24 +237,24 @@ end
 function Chatbox.message_to_string(message_data, concatenator)
   local to_string = {}
 
-  for _k, v in pairs(message_data) do
-    if isnumber(v) then continue end
+  for _, piece in pairs(message_data) do
+    if isnumber(piece) then continue end
 
-    if isstring(v) then
-      to_string[#to_string + 1] = v
-    elseif IsValid(v) then
+    if isstring(piece) then
+      to_string[#to_string + 1] = piece
+    elseif IsValid(piece) then
       local name = ''
 
-      if v:IsPlayer() then
+      if piece:IsPlayer() then
         --- Asks for the name to display for a player, here while a message is being turned
         -- into a string. It is the hook behind `Player:name`; `Chatbox.compile` also runs it
         -- on the client for the players in a message, unless the ShouldProcessPlayerName hook
         -- returns false.
         -- @param target [Player]
         -- @return [String name to use instead of the name of the player]
-        name = hook.Run('GetPlayerName', v) or v:name()
+        name = hook.Run('GetPlayerName', piece) or piece:name()
       else
-        name = tostring(v)
+        name = tostring(piece)
       end
 
       to_string[#to_string + 1] = name
@@ -436,9 +436,9 @@ Cable.receive('fl_chat_text_add', function(actor, ...)
 
   local pieces = { ... }
 
-  for k, v in ipairs(pieces) do
-    if isstring(v) then
-      pieces[k] = Chatbox.limit_text(v)
+  for index, piece in ipairs(pieces) do
+    if isstring(piece) then
+      pieces[index] = Chatbox.limit_text(piece)
     end
   end
 

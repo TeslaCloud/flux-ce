@@ -190,11 +190,11 @@ end
 function MsgC(...)
   local this_sequence = color_clear_sequence
 
-  for _k, v in ipairs({ ... }) do
-    if istable(v) then
-      this_sequence = color_start_sequence..color_id_from_color(v)..'m'
+  for _, arg in ipairs({ ... }) do
+    if istable(arg) then
+      this_sequence = color_start_sequence..color_id_from_color(arg)..'m'
     else
-      print_colored(tostring(v), this_sequence)
+      print_colored(tostring(arg), this_sequence)
     end
   end
 end

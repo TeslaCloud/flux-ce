@@ -60,15 +60,15 @@ function Stats:apply_faction_bonuses(target, enabled)
 
   local changed = 0
 
-  for k, _v in pairs(Attributes.get_stored()) do
-    local wanted, current = bonuses[k], self:get_faction_boost(target, k)
+  for stat_id in pairs(Attributes.get_stored()) do
+    local wanted, current = bonuses[stat_id], self:get_faction_boost(target, stat_id)
 
     if wanted and wanted != current then
-      if target:boost_attribute(k, wanted, nil, self.faction_boost_id) then
+      if target:boost_attribute(stat_id, wanted, nil, self.faction_boost_id) then
         changed = changed + 1
       end
     elseif !wanted and current then
-      if target:remove_attribute_boost(k, self.faction_boost_id) then
+      if target:remove_attribute_boost(stat_id, self.faction_boost_id) then
         changed = changed + 1
       end
     end
@@ -124,12 +124,12 @@ end
 function Stats:OneSecond()
   local unix_time = os.time()
 
-  for _k, v in player.Iterator() do
-    local expiry = v.attribute_expiry
+  for _, client in player.Iterator() do
+    local expiry = client.attribute_expiry
 
     if expiry and expiry <= unix_time then
-      Attributes.remove_expired(v)
-      Attributes.sync(v)
+      Attributes.remove_expired(client)
+      Attributes.sync(client)
     end
   end
 end
@@ -150,8 +150,8 @@ end
 function Stats:OnConfigSet(key, old_value, new_value)
   if key != 'stats_faction_bonuses' or old_value == new_value then return end
 
-  for _k, v in player.Iterator() do
-    self:apply_faction_bonuses(v, new_value != false)
+  for _, client in player.Iterator() do
+    self:apply_faction_bonuses(client, new_value != false)
   end
 end
 
@@ -198,16 +198,16 @@ function Stats:PlayerCreateCharacter(_actor, data)
   local stats = Attributes.get_stored()
   local sum = 0
 
-  for k, _v in pairs(levels) do
-    if !stats[k] then
+  for stat_id in pairs(levels) do
+    if !stats[stat_id] then
       return CHAR_ERR_ATTRIBUTE_SUM
     end
   end
 
-  for k, v in pairs(stats) do
-    local level = levels[k]
+  for stat_id, stat in pairs(stats) do
+    local level = levels[stat_id]
 
-    if !isnumber(level) or level != math.floor(level) or level < v.min or level > self:get_creation_max(v) then
+    if !isnumber(level) or level != math.floor(level) or level < stat.min or level > self:get_creation_max(stat) then
       return CHAR_ERR_ATTRIBUTE_SUM
     end
 

@@ -54,9 +54,9 @@ end
 -- @param new_value [Any]
 function SharedFlashlight:OnConfigSet(key, _old_value, new_value)
   if key == 'shared_flashlight_enabled' and !new_value then
-    for _k, v in player.Iterator() do
-      if IsValid(v:get_flashlight()) then
-        v:set_flashlight(false)
+    for _, client in player.Iterator() do
+      if IsValid(client:get_flashlight()) then
+        client:set_flashlight(false)
       end
     end
   end

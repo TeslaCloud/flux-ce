@@ -62,9 +62,9 @@ function PANEL:set_members(members)
   local row_height = math.scale(40)
   local by_role, role_ids, sort_names = {}, {}, {}
 
-  for _k, v in ipairs(members) do
-    if istable(v) and isstring(v.steam_id) then
-      local role_id = tostring(v.role)
+  for _, member in ipairs(members) do
+    if istable(member) and isstring(member.steam_id) then
+      local role_id = tostring(member.role)
 
       if !by_role[role_id] then
         by_role[role_id] = {}
@@ -72,9 +72,9 @@ function PANEL:set_members(members)
         table.insert(role_ids, role_id)
       end
 
-      table.insert(by_role[role_id], v)
+      table.insert(by_role[role_id], member)
 
-      sort_names[v] = tostring(v.name):utf8lower()
+      sort_names[member] = tostring(member.name):utf8lower()
     end
   end
 
@@ -98,9 +98,9 @@ function PANEL:set_members(members)
 
   self.scroll_panel:Clear()
 
-  for k, v in ipairs(role_ids) do
-    local role = Bolt:find_group(v)
-    local role_members = by_role[v]
+  for i, role_id in ipairs(role_ids) do
+    local role = Bolt:find_group(role_id)
+    local role_members = by_role[role_id]
 
     table.sort(role_members, function(first, second)
       if first.online != second.online then
@@ -111,19 +111,19 @@ function PANEL:set_members(members)
     end)
 
     local header = self.scroll_panel:Add('DLabel')
-    header:SetText((role and t(role.name) or v)..' ('..#role_members..')')
+    header:SetText((role and t(role.name) or role_id)..' ('..#role_members..')')
     header:SetFont(Theme.get_font('menu_normal'))
     header:SetTextColor(Theme.get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
-    header:DockMargin(margin, k == 1 and 0 or margin * 4, 0, margin)
+    header:DockMargin(margin, i == 1 and 0 or margin * 4, 0, margin)
 
-    for k1, v1 in ipairs(role_members) do
+    for index, member in ipairs(role_members) do
       local row = self.scroll_panel:Add('fl_staff_row')
       row:SetTall(row_height)
       row:Dock(TOP)
-      row:set_dark(k1 % 2 == 1)
-      row:set_member(v1)
+      row:set_dark(index % 2 == 1)
+      row:set_member(member)
     end
   end
 end

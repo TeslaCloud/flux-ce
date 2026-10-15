@@ -208,8 +208,8 @@ function Lumen.props(...)
     local props = select(i, ...)
 
     if istable(props) then
-      for k, v in pairs(props) do
-        merged[k] = v
+      for key, value in pairs(props) do
+        merged[key] = value
       end
     end
   end

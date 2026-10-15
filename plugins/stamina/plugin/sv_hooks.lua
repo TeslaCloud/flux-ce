@@ -253,9 +253,9 @@ end
 function Stamina:PlayerDisconnected(actor)
   local steam_id = actor:SteamID()
 
-  for _k, v in ipairs({ 'stam_run_'..steam_id, 'stam_regen_'..steam_id }) do
-    timer_remove(v)
-    table.RemoveByValue(self.timer_ids, v)
+  for _, timer_id in ipairs({ 'stam_run_'..steam_id, 'stam_regen_'..steam_id }) do
+    timer_remove(timer_id)
+    table.RemoveByValue(self.timer_ids, timer_id)
   end
 
   self.running[steam_id] = nil
@@ -264,17 +264,17 @@ end
 --- Removes every stamina timer when the code is reloaded, and forgets what the players
 -- were doing so that the timers are started again.
 function Stamina:OnReloaded()
-  for _k, v in ipairs(self.timer_ids) do
-    if timer_exists(v) then
-      timer_remove(v)
+  for _, timer_id in ipairs(self.timer_ids) do
+    if timer_exists(timer_id) then
+      timer_remove(timer_id)
     end
   end
 
   self.timer_ids = {}
 
-  for _k, v in player.Iterator() do
-    v.was_running = false
-    v.stamina_regenerating = false
+  for _, client in player.Iterator() do
+    client.was_running = false
+    client.stamina_regenerating = false
   end
 end
 

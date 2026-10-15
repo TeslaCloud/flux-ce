@@ -65,8 +65,8 @@ local limb_ids = {
 
 local limb_lookup = {}
 
-for k, v in ipairs(limb_ids) do
-  limb_lookup[v] = k
+for index, limb_id in ipairs(limb_ids) do
+  limb_lookup[limb_id] = index
 end
 
 local hitgroup_limbs = {
@@ -192,11 +192,11 @@ function Limbs:get_all_damage(target)
   local stored = self:is_enabled() and self:get_stored(target)
 
   if stored then
-    for _k, v in ipairs(limb_ids) do
-      local damage = tonumber(stored[v])
+    for _, limb_id in ipairs(limb_ids) do
+      local damage = tonumber(stored[limb_id])
 
       if damage and damage > 0 then
-        result[v] = math_min(damage, self.max_damage)
+        result[limb_id] = math_min(damage, self.max_damage)
       end
     end
   end
@@ -246,8 +246,8 @@ function Limbs:get_worst_damage(target, limbs)
   local worst = 0
 
   if stored then
-    for _k, v in ipairs(limbs or limb_ids) do
-      local damage = limb_lookup[v] and tonumber(stored[v])
+    for _, limb_id in ipairs(limbs or limb_ids) do
+      local damage = limb_lookup[limb_id] and tonumber(stored[limb_id])
 
       if damage and damage > worst then
         worst = damage

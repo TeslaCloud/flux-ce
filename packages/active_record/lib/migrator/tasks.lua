@@ -104,8 +104,8 @@ function Tasks.migrate_status()
   print(' Status   Migration ID    Migration Name')
   print('--------------------------------------------------')
 
-  for _k, v in ipairs(Tasks.context():migrations_status()) do
-    print(string.format('%8s  %-14s  %s', v.status, v.version, v.name))
+  for _, migration in ipairs(Tasks.context():migrations_status()) do
+    print(string.format('%8s  %-14s  %s', migration.status, migration.version, migration.name))
   end
 
   print('')

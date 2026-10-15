@@ -57,20 +57,20 @@ do
 
         area_colors[mode.area_type] = Areas.get_color(mode.area_type)
 
-        for _k, v in pairs(area_table) do
-          local add = Vector(0, 0, v.maxh)
+        for _, area in pairs(area_table) do
+          local add = Vector(0, 0, area.maxh)
 
-          for _k2, v2 in ipairs(v.polys) do
-            local point_count = #v2
+          for _, poly in ipairs(area.polys) do
+            local point_count = #poly
 
             for idx = 1, point_count do
-              local p = v2[idx]
+              local p = poly[idx]
               local n
 
               if idx == point_count then
-                n = v2[1]
+                n = poly[1]
               else
-                n = v2[idx + 1]
+                n = poly[idx + 1]
               end
 
               cache[#cache + 1] = { p, n, p + add, n + add }
@@ -111,16 +111,16 @@ function Area:HUDPaint()
     local cur_time = CurTime()
     local font
 
-    for _k, v in pairs(PLAYER.text_areas) do
-      if istable(v) and v.end_time > cur_time then
-        v.alpha = v.alpha or 255
+    for _, text_area in pairs(PLAYER.text_areas) do
+      if istable(text_area) and text_area.end_time > cur_time then
+        text_area.alpha = text_area.alpha or 255
         font = font or Theme.get_font('text_large')
-        text_area_color.a = v.alpha
+        text_area_color.a = text_area.alpha
 
-        draw.SimpleText(v.text, font, math.scale_x(32), last_y, text_area_color)
+        draw.SimpleText(text_area.text, font, math.scale_x(32), last_y, text_area_color)
 
-        if cur_time + 2 >= v.end_time then
-          v.alpha = math.Clamp(v.alpha - 1, 0, 255)
+        if cur_time + 2 >= text_area.end_time then
+          text_area.alpha = math.Clamp(text_area.alpha - 1, 0, 255)
         end
 
         last_y = last_y + math.scale(50)

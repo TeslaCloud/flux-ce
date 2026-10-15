@@ -286,8 +286,8 @@ end
 
 --- Runs the recorded statements in order.
 function ActiveRecord.CommandRecorder:replay()
-  for _k, v in ipairs(self.commands) do
-    ActiveRecord.ddl(v.command, unpack(v.args, 1, v.args.n))
+  for _, entry in ipairs(self.commands) do
+    ActiveRecord.ddl(entry.command, unpack(entry.args, 1, entry.args.n))
   end
 end
 

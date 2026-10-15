@@ -95,11 +95,11 @@ function Recognizes.complete_player(actor, partial, args, cmd)
   local lower = isstring(partial) and partial:utf8lower() or ''
   local hidden, shown, steam_names = {}, {}, {}
 
-  for _, v in player.Iterator() do
-    local char_name = v:name(true)
-    local steam_name = v:steam_name()
+  for _, client in player.Iterator() do
+    local char_name = client:name(true)
+    local steam_name = client:steam_name()
 
-    if v == actor or actor:knows_real_name(v) then
+    if client == actor or actor:knows_real_name(client) then
       shown[char_name] = true
     else
       hidden[char_name] = true
@@ -114,17 +114,17 @@ function Recognizes.complete_player(actor, partial, args, cmd)
 
   local allowed, seen = {}, {}
 
-  for _, v in ipairs(values) do
-    if shown[v] or !hidden[v] then
-      allowed[#allowed + 1] = v
-      seen[v] = true
+  for _, value in ipairs(values) do
+    if shown[value] or !hidden[value] then
+      allowed[#allowed + 1] = value
+      seen[value] = true
     end
   end
 
-  for _, v in ipairs(steam_names) do
-    if !seen[v] then
-      allowed[#allowed + 1] = v
-      seen[v] = true
+  for _, steam_name in ipairs(steam_names) do
+    if !seen[steam_name] then
+      allowed[#allowed + 1] = steam_name
+      seen[steam_name] = true
     end
   end
 

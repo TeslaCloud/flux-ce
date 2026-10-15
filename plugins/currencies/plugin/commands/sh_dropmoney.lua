@@ -13,9 +13,9 @@ CMD.aliases = { 'dropcash', 'droptokens' }
 function CMD:get_description()
   local currencies = {}
 
-  for k, v in pairs(Currencies:all()) do
-    if !v.hidden or PLAYER:get_money(k) > 0 then
-      table.insert(currencies, k)
+  for currency_id, currency_data in pairs(Currencies:all()) do
+    if !currency_data.hidden or PLAYER:get_money(currency_id) > 0 then
+      table.insert(currencies, currency_id)
     end
   end
 

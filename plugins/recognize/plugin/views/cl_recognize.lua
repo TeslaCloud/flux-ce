@@ -60,17 +60,17 @@ function PANEL:Init()
 
   self.ranges = {}
 
-  for k, v in pairs(range_buttons) do
+  for range_id, range_data in pairs(range_buttons) do
     local button = vgui.Create('fl_button', self.range_buttons)
     button:SetSize(icon_size, icon_size)
     button:SetDrawBackground(true)
-    button:set_icon(v.icon)
+    button:set_icon(range_data.icon)
     button:set_icon_size(icon_size * 0.8, icon_size * 0.8)
     button:set_centered(true)
-    button:SetTooltip(v.name)
+    button:SetTooltip(range_data.name)
     button:Dock(RIGHT)
     button:DockMargin(margin, 0, 0, 0)
-    button.type = k
+    button.type = range_id
     button.DoClick = function(btn)
       if self.range then
         self.range:set_active(false)
@@ -81,7 +81,7 @@ function PANEL:Init()
       btn:set_active(true)
     end
 
-    self.ranges[k] = button
+    self.ranges[range_id] = button
   end
 
   self.range_label = vgui.Create('DLabel', self.range_buttons)
@@ -157,8 +157,8 @@ function PANEL:Init()
     self.name_history:Dock(TOP)
     self.name_history:AddColumn(t'ui.recognize.previous_names'..':')
 
-    for _k, v in pairs(history) do
-      self.name_history:AddLine(v)
+    for _, name in pairs(history) do
+      self.name_history:AddLine(name)
     end
 
     self.name_history.OnRowSelected = function(_list, _index, line)

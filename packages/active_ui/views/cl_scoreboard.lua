@@ -55,8 +55,8 @@ end
 function PANEL:count_players()
   local count = 0
 
-  for _k, v in player.Iterator() do
-    if !v:has_initialized() or self:should_show_player(v) then
+  for _, client in player.Iterator() do
+    if !client:has_initialized() or self:should_show_player(client) then
       count = count + 1
     end
   end
@@ -90,12 +90,12 @@ function PANEL:rebuild()
     return
   end
 
-  for k, v in ipairs(self.player_cards) do
-    if IsValid(v) then
-      v:safe_remove()
+  for index, card in ipairs(self.player_cards) do
+    if IsValid(card) then
+      card:safe_remove()
     end
 
-    self.player_cards[k] = nil
+    self.player_cards[index] = nil
   end
 
   local padding = math.scale(12)
@@ -103,13 +103,13 @@ function PANEL:rebuild()
   local card_tall = math.scale(32) + math.scale(12)
   local margin = math.scale(4)
 
-  for _k, v in player.Iterator() do
-    if !self:should_show_player(v) then continue end
+  for _, client in player.Iterator() do
+    if !self:should_show_player(client) then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)
     player_card:SetSize(w - padding * 2, card_tall)
     player_card:SetPos(padding, cur_y)
-    player_card:set_player(v)
+    player_card:set_player(client)
 
     self.scroll_panel:AddItem(player_card)
 

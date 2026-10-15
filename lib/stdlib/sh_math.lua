@@ -32,8 +32,8 @@ do
   local hex_digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' }
   local hex_values = {}
 
-  for k, v in ipairs(hex_digits) do
-    hex_values[v] = k - 1
+  for index, digit in ipairs(hex_digits) do
+    hex_values[digit] = index - 1
   end
 
   --- Converts a single hexadecimal digit to decimal.
@@ -135,16 +135,16 @@ function util.vector_in_poly(point, poly_vertices)
   local vertex_count = #poly_vertices
   local far_point = Vector(99999, 99999, 0)
 
-  for k, v in ipairs(poly_vertices) do
+  for index, vertex in ipairs(poly_vertices) do
     local next_vert
 
-    if k < vertex_count then
-      next_vert = poly_vertices[k + 1]
-    elseif k == vertex_count then
+    if index < vertex_count then
+      next_vert = poly_vertices[index + 1]
+    elseif index == vertex_count then
       next_vert = poly_vertices[1]
     end
 
-    if next_vert and util.vectors_intersect(point, far_point, v, next_vert) then
+    if next_vert and util.vectors_intersect(point, far_point, vertex, next_vert) then
       intersections = intersections + 1
     end
   end

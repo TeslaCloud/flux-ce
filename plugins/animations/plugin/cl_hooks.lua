@@ -56,8 +56,8 @@ function Animations:ContextMenuCreated(context_menu)
     previews = {}
     self.previews = previews
 
-    for _k, v in ipairs(Animations:get_list()) do
-      local sequences = Animations:get_sequences(PLAYER, v)
+    for _, animation in ipairs(Animations:get_list()) do
+      local sequences = Animations:get_sequences(PLAYER, animation)
 
       if !sequences then continue end
 
@@ -65,13 +65,13 @@ function Animations:ContextMenuCreated(context_menu)
       line:SetTall(math.scale(24))
       line:Dock(TOP)
       line:DockMargin(0, 0, gap, gap)
-      line:set_text(t(v.name))
+      line:set_text(t(animation.name))
       line:set_text_offset(text_offset)
 
       local text_w = util.text_size(line.title, line.font)
 
       widest = math.max(widest, text_w)
-      line.animation = v.id
+      line.animation = animation.id
       line.DoClick = function(pnl)
         PLAYER:play_animation(pnl.animation)
       end

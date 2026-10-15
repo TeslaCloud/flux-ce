@@ -104,9 +104,9 @@ function PropProtection:find_owner(key)
 
   local owner
 
-  for _k, v in player.Iterator() do
-    if self:get_key(v) == key then
-      owner = v
+  for _, client in player.Iterator() do
+    if self:get_key(client) == key then
+      owner = client
 
       break
     end

@@ -116,8 +116,8 @@ function SpawnPoints:get_groups()
 
     table.sort(ids)
 
-    for k, v in ipairs(ids) do
-      groups[k + 1] = self:make_group('faction', v)
+    for index, faction_id in ipairs(ids) do
+      groups[index + 1] = self:make_group('faction', faction_id)
     end
   end
 
@@ -187,10 +187,10 @@ function SpawnPoints:get_points(group)
   local points = {}
   local count = 0
 
-  for _k, v in ipairs(self.points) do
-    if group == nil or v.group == group then
+  for _, point in ipairs(self.points) do
+    if group == nil or point.group == group then
       count = count + 1
-      points[count] = v
+      points[count] = point
     end
   end
 
@@ -211,13 +211,13 @@ function SpawnPoints:find_aimed_point(start, direction, distance)
   local delta = direction * distance
   local found_index, found_fraction
 
-  for k, v in ipairs(self.points) do
+  for index, point in ipairs(self.points) do
     local hit_pos, _hit_normal, fraction = util.IntersectRayWithOBB(
-      start, delta, v.pos, self.box_angle, self.hull_mins, self.hull_maxs
+      start, delta, point.pos, self.box_angle, self.hull_mins, self.hull_maxs
     )
 
     if hit_pos and (!found_fraction or (fraction or 0) < found_fraction) then
-      found_index = k
+      found_index = index
       found_fraction = fraction or 0
     end
   end
@@ -236,11 +236,11 @@ function SpawnPoints:find_nearest_point(pos, radius)
   local found_index
   local found_distance = (radius or 64) ^ 2
 
-  for k, v in ipairs(self.points) do
-    local distance = v.pos:DistToSqr(pos)
+  for index, point in ipairs(self.points) do
+    local distance = point.pos:DistToSqr(pos)
 
     if distance <= found_distance then
-      found_index = k
+      found_index = index
       found_distance = distance
     end
   end

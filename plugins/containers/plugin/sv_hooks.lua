@@ -16,9 +16,9 @@ function Container:EntityRemoved(entity)
   local inventory = entity.inventory
 
   if inventory then
-    for _k, v in ipairs(inventory.receivers) do
-      if IsValid(v) then
-        Cable.send(v, 'fl_inventory_close')
+    for _, receiver in ipairs(inventory.receivers) do
+      if IsValid(receiver) then
+        Cable.send(receiver, 'fl_inventory_close')
       end
     end
 
@@ -50,9 +50,9 @@ end
 -- of the hook has spawned its entities and given them their saved fields back.
 function Container:PersistenceLoad()
   timer.Simple(0, function()
-    for _k, v in ents.Iterator() do
-      if (v.container_name or v.container_password) and self:is_container(v) then
-        self:update_netvars(v)
+    for _, entity in ents.Iterator() do
+      if (entity.container_name or entity.container_password) and self:is_container(entity) then
+        self:update_netvars(entity)
       end
     end
   end)
@@ -87,12 +87,12 @@ end
 -- inventory off the entity, so that it is not saved with it, before the persistent
 -- entities are saved. The inventories are put back by the 'PostPersistenceSave' hook.
 function Container:PrePersistenceSave()
-  for _k, v in ents.Iterator() do
-    if v.inventory and self:find(v:GetModel()) then
-      detached_inventories[v] = v.inventory
+  for _, entity in ents.Iterator() do
+    if entity.inventory and self:find(entity:GetModel()) then
+      detached_inventories[entity] = entity.inventory
 
-      v.items = v.inventory:get_items_ids()
-      v.inventory = nil
+      entity.items = entity.inventory:get_items_ids()
+      entity.inventory = nil
     end
   end
 end

@@ -208,8 +208,8 @@ function PANEL:rebuild_models()
   local offset = math.scale(4)
 
   if self.models_list.buttons then
-    for _k, v in ipairs(self.models_list.buttons) do
-      v:Remove()
+    for _, button in ipairs(self.models_list.buttons) do
+      button:Remove()
     end
   end
 
@@ -230,7 +230,7 @@ function PANEL:rebuild_models()
     self.model:GetEntity():SetSequence(self.model:GetEntity():idle_animation())
   end
 
-  for _k, v in ipairs(models) do
+  for _, model_path in ipairs(models) do
     if i >= 7 then
       offset = offset + step
       i = 0
@@ -238,16 +238,16 @@ function PANEL:rebuild_models()
 
     local button = vgui.Create('SpawnIcon', self.models_list)
     button:SetSize(icon_size, icon_size)
-    button:SetModel(v)
+    button:SetModel(model_path)
     button:SetPos(i * step + math.scale(4), offset)
     button.DoClick = function(btn)
       if IsValid(self.models_list.prev_btn) then
         self.models_list.prev_btn.is_active = false
       end
 
-      self.models_list.model = v
-      self:GetParent().char_data.model = v
-      self.model:SetModel(v)
+      self.models_list.model = model_path
+      self:GetParent().char_data.model = model_path
+      self.model:SetModel(model_path)
       self.model:GetEntity():SetSequence(self.model:GetEntity():idle_animation())
 
       local skins = self.model.Entity:SkinCount()
@@ -265,7 +265,7 @@ function PANEL:rebuild_models()
       self.models_list.prev_btn = btn
     end
 
-    if self.models_list.model == v then
+    if self.models_list.model == model_path then
       button.is_active = true
 
       self.models_list.prev_btn = button

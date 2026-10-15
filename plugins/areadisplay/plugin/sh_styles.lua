@@ -22,8 +22,8 @@ if CLIENT then
   local function wrap_lines(display, font, scrw, fraction)
     local lines = util.wrap_text(display.text, font, scrw * fraction) or {}
 
-    for k, v in ipairs(lines) do
-      lines[k] = v:strip()
+    for index, line in ipairs(lines) do
+      lines[index] = line:strip()
     end
 
     display.lines = lines
@@ -100,14 +100,14 @@ if CLIENT then
     local line_chars = {}
     local char_count = 0
 
-    for k, v in ipairs(lines) do
+    for index, line in ipairs(lines) do
       local chars = {}
 
-      for char in v:gmatch(utf8.charpattern) do
+      for char in line:gmatch(utf8.charpattern) do
         chars[#chars + 1] = char
       end
 
-      line_chars[k] = chars
+      line_chars[index] = chars
       char_count = char_count + #chars
     end
 
@@ -140,12 +140,12 @@ if CLIENT then
     local remaining = typed
     local last_char
 
-    for k, chars in ipairs(display.line_chars) do
+    for index, chars in ipairs(display.line_chars) do
       if remaining <= 0 then break end
 
       local amount = math.min(#chars, remaining)
 
-      lines[k] = table.concat(chars, '', 1, amount)
+      lines[index] = table.concat(chars, '', 1, amount)
       last_char = chars[amount]
       remaining = remaining - amount
     end

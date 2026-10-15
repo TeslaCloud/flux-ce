@@ -27,8 +27,8 @@ function Doors:get_ownership_data(entity)
 
   local access = {}
 
-  for k, v in pairs(state.access or {}) do
-    table.insert(access, { id = k, name = v.name, level = v.level })
+  for character_id, entry in pairs(state.access or {}) do
+    table.insert(access, { id = character_id, name = entry.name, level = entry.level })
   end
 
   return {
@@ -68,14 +68,14 @@ function Doors:set_ownership_data(entity, data)
   state.text = isstring(data.text) and data.text != '' and data.text or nil
 
   if istable(data.access) then
-    for _k, v in pairs(data.access) do
-      local character_id = istable(v) and tonumber(v.id)
-      local level = istable(v) and tonumber(v.level)
+    for _, entry in pairs(data.access) do
+      local character_id = istable(entry) and tonumber(entry.id)
+      local level = istable(entry) and tonumber(entry.level)
 
       if character_id and level and level > DOOR_ACCESS_NONE and character_id != state.owner.id then
         state.access[character_id] = {
           level = math.min(math.floor(level), DOOR_ACCESS_MANAGE),
-          name = isstring(v.name) and v.name or ''
+          name = isstring(entry.name) and entry.name or ''
         }
       end
     end
@@ -86,23 +86,23 @@ end
 -- every loaded door. Nothing is saved, since the doors are as they were saved.
 -- @param doors [List<Entity> the doors that were loaded]
 function Doors:restore_links(doors)
-  for _k, v in ipairs(doors) do
-    local parent_id = v.door_parent_id
+  for _, door in ipairs(doors) do
+    local parent_id = door.door_parent_id
 
     if parent_id then
-      v.door_parent_id = nil
+      door.door_parent_id = nil
 
       local parent = ents.GetMapCreatedEntity(parent_id)
 
-      if IsValid(parent) and parent:is_door() and parent != v and self:get_root(v) != self:get_root(parent) then
-        self:attach(v, self:get_root(parent))
+      if IsValid(parent) and parent:is_door() and parent != door and self:get_root(door) != self:get_root(parent) then
+        self:attach(door, self:get_root(parent))
       end
     end
   end
 
-  for _k, v in ipairs(doors) do
-    if !IsValid(v.door_parent) then
-      self:sync(v)
+  for _, door in ipairs(doors) do
+    if !IsValid(door.door_parent) then
+      self:sync(door)
     end
   end
 end

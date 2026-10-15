@@ -85,9 +85,9 @@ function AreaDisplay:add(info, area)
   if !self:is_enabled() or !self:is_ready() then return end
 
   if info.area_id != nil then
-    for _k, v in ipairs(active) do
-      if v.area_id == info.area_id then
-        return v
+    for _, display in ipairs(active) do
+      if display.area_id == info.area_id then
+        return display
       end
     end
   end

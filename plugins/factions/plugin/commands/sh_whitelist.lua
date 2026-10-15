@@ -26,9 +26,9 @@ function add:on_run(actor, targets, faction_id)
     return
   end
 
-  for _, v in ipairs(targets) do
-    v:give_whitelist(faction_table.faction_id)
-    v:notify('notification.whitelist_given', { faction = faction_table.name }, faction_table.color)
+  for _, target in ipairs(targets) do
+    target:give_whitelist(faction_table.faction_id)
+    target:notify('notification.whitelist_given', { faction = faction_table.name }, faction_table.color)
   end
 
   self:notify_staff('command.whitelist.add.message', {
@@ -58,10 +58,10 @@ function remove:on_run(actor, targets, faction_id)
     return
   end
 
-  for _, v in ipairs(targets) do
-    if v:has_whitelist(faction_table.faction_id) then
-      v:take_whitelist(faction_table.faction_id)
-      v:notify('notification.whitelist_taken', { faction = faction_table.name }, Color('salmon'))
+  for _, target in ipairs(targets) do
+    if target:has_whitelist(faction_table.faction_id) then
+      target:take_whitelist(faction_table.faction_id)
+      target:notify('notification.whitelist_taken', { faction = faction_table.name }, Color('salmon'))
     end
   end
 

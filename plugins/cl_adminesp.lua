@@ -41,10 +41,10 @@ do
       local font_small = Theme.get_font('text_small')
       local font_smaller = Theme.get_font('text_smaller')
 
-      for _k, v in player.Iterator() do
-        if v == PLAYER then continue end
+      for _, target in player.Iterator() do
+        if target == PLAYER then continue end
 
-        local pos = v:GetPos()
+        local pos = target:GetPos()
         local screen_pos = pos:ToScreen()
         local head_pos = Vector(pos.x, pos.y, pos.z + 60):ToScreen()
         local text_pos = Vector(pos.x, pos.y, pos.z + 90):ToScreen()
@@ -53,9 +53,9 @@ do
         local size = 52 * math.abs(350 / client_pos:Distance(pos))
         local half_size = size * 0.5
         local box_height = (screen_pos.y - y) * 1.25
-        local team_color = team.GetColor(v:Team()) or color_fallback
-        local name = v:name()
-        local steam_name = v:steam_name()
+        local team_color = team.GetColor(target:Team()) or color_fallback
+        local name = target:name()
+        local steam_name = target:steam_name()
 
         draw_simple_text(name, font_small, text_x - text_size(name, font_small) * 0.5, text_y, team_color)
         draw_simple_text(
@@ -66,7 +66,7 @@ do
           color_lightblue
         )
 
-        if v:Alive() then
+        if target:Alive() then
           surface.SetDrawColor(team_color)
           surface.DrawOutlinedRect(x - half_size, y - half_size, size, box_height)
         else
@@ -82,14 +82,14 @@ do
         end
 
         local bx, by = x - half_size, y - half_size + box_height
-        local health = clamp((v:Health() or 0) / v:GetMaxHealth(), 0, 1)
+        local health = clamp((target:Health() or 0) / target:GetMaxHealth(), 0, 1)
 
         if health > 0 then
           draw_rounded_box(0, bx, by, size, 2, color_grey)
           draw_rounded_box(0, bx, by, size * health, 2, color_red)
         end
 
-        local armor = clamp((v:Armor() or 0) * 0.01, 0, 1)
+        local armor = clamp((target:Armor() or 0) * 0.01, 0, 1)
 
         if armor > 0 then
           draw_rounded_box(0, bx, by + 3, size, 2, color_grey)

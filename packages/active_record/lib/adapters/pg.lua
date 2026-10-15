@@ -139,9 +139,9 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
   local query_start = os.clock()
   local success_func = function(result, _size)
     if callback then
-      for k, v in pairs(result) do
-        if isstring(v) then
-          result[k] = self.connection:unescape(v)
+      for key, value in pairs(result) do
+        if isstring(value) then
+          result[key] = self.connection:unescape(value)
         end
       end
 

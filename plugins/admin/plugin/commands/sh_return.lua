@@ -15,11 +15,11 @@ CMD.aliases = { 'return', 'back' }
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to return]
 function CMD:on_run(actor, targets)
-  for _k, v in ipairs(targets) do
-    if IsValid(v) and v.prev_pos then
-      v:notify('notification.return')
-      v:teleport(v.prev_pos)
-      v.prev_pos = nil
+  for _, client in ipairs(targets) do
+    if IsValid(client) and client.prev_pos then
+      client:notify('notification.return')
+      client:teleport(client.prev_pos)
+      client.prev_pos = nil
     end
   end
 

@@ -139,13 +139,13 @@ function Cinematics:add(cinematic)
   }
   local has_text = false
 
-  for _k, v in ipairs(text_fields) do
-    local value = cinematic[v]
+  for _, field in ipairs(text_fields) do
+    local value = cinematic[field]
 
     if isstring(value) and value != '' then
       local translated = t(value, cinematic.arguments)
 
-      entry[v] = translated
+      entry[field] = translated
       has_text = true
     end
   end
@@ -318,17 +318,17 @@ end
 function Cinematics:layout(cinematic, scrw)
   local lines = {}
 
-  for _k, v in ipairs(text_fields) do
-    local text = cinematic[v]
+  for _, field in ipairs(text_fields) do
+    local text = cinematic[field]
 
     if text then
-      local wrapped = util.wrap_text(text, get_font(fonts[v], fallback_font), scrw * wrap_widths[v]) or {}
+      local wrapped = util.wrap_text(text, get_font(fonts[field], fallback_font), scrw * wrap_widths[field]) or {}
 
-      for k1, v1 in ipairs(wrapped) do
-        wrapped[k1] = v1:strip()
+      for line_index, line in ipairs(wrapped) do
+        wrapped[line_index] = line:strip()
       end
 
-      lines[v] = wrapped
+      lines[field] = wrapped
     end
   end
 

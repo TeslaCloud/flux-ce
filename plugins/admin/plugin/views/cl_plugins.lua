@@ -49,12 +49,12 @@ function PANEL:rebuild()
 
   self.scroll_panel:Clear()
 
-  for k, v in ipairs(Plugin.known()) do
+  for i, plugin_info in ipairs(Plugin.known()) do
     local row = self.scroll_panel:Add('fl_plugin_row')
     row:SetTall(row_height)
     row:Dock(TOP)
-    row:set_dark(k % 2 == 1)
-    row:set_plugin(v)
+    row:set_dark(i % 2 == 1)
+    row:set_plugin(plugin_info)
   end
 end
 

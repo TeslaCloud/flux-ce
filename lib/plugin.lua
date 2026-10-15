@@ -88,10 +88,11 @@ function Plugin.clear_cache()
     load_cache = {}
   else
     for hook_name, hook_table in pairs(hooks_cache) do
-      for k, obj in ipairs(hook_table) do
-        if istable(obj) and istable(obj[2]) and isstring(obj[2].path) and !obj[2].path:include('flux') then
-          load_cache[obj[2].id] = nil
-          hooks_cache[hook_name][k] = nil
+      for index, handler in ipairs(hook_table) do
+        if istable(handler) and istable(handler[2]) and isstring(handler[2].path)
+          and !handler[2].path:include('flux') then
+          load_cache[handler[2].id] = nil
+          hooks_cache[hook_name][index] = nil
         end
       end
     end
@@ -113,12 +114,12 @@ end
 -- @param obj [Map table with functions named after hooks, e.g. a plugin object]
 -- @param id=nil [String ID to store with the entries, see Plugin.remove_hooks]
 function Plugin.cache_functions(obj, id)
-  for k, v in pairs(obj) do
-    if isfunction(v) then
-      local handlers = hooks_cache[k] or {}
+  for hook_name, callback in pairs(obj) do
+    if isfunction(callback) then
+      local handlers = hooks_cache[hook_name] or {}
 
-      hooks_cache[k] = handlers
-      handlers[#handlers + 1] = { v, obj, id = id }
+      hooks_cache[hook_name] = handlers
+      handlers[#handlers + 1] = { callback, obj, id = id }
     end
   end
 end
@@ -143,10 +144,10 @@ end
 -- of each hook move up and keep their order, so none of them is skipped when the hook runs.
 -- @param id [String ID that was passed to Plugin.add_hooks]
 function Plugin.remove_hooks(id)
-  for _k, v in pairs(hooks_cache) do
-    for i = #v, 1, -1 do
-      if v[i].id and v[i].id == id then
-        table.remove(v, i)
+  for _, handlers in pairs(hooks_cache) do
+    for i = #handlers, 1, -1 do
+      if handlers[i].id and handlers[i].id == id then
+        table.remove(handlers, i)
       end
     end
   end
@@ -159,9 +160,10 @@ function Plugin.find(id)
   if stored[id] then
     return stored[id], id
   else
-    for k, v in pairs(stored) do
-      if v.id == id or v:get_folder() == id or v:get_path() == id or v:get_name() == id then
-        return v, k
+    for path, plugin_table in pairs(stored) do
+      if plugin_table.id == id or plugin_table:get_folder() == id or plugin_table:get_path() == id
+        or plugin_table:get_name() == id then
+        return plugin_table, path
       end
     end
   end
@@ -187,12 +189,12 @@ function Plugin.remove_from_cache(id)
       end
     end
 
-    for k, v in pairs(plugin_table) do
-      if !isfunction(v) or !hooks_cache[k] then continue end
+    for hook_name, member in pairs(plugin_table) do
+      if !isfunction(member) or !hooks_cache[hook_name] then continue end
 
-      for index, tab in ipairs(hooks_cache[k]) do
+      for index, tab in ipairs(hooks_cache[hook_name]) do
         if tab[2] == plugin_table then
-          table.remove(hooks_cache[k], index)
+          table.remove(hooks_cache[hook_name], index)
           break
         end
       end
@@ -389,7 +391,7 @@ local function known_info()
     end
   end
 
-  for id, _v in pairs(pending_set()) do
+  for id in pairs(pending_set()) do
     if !known[id] then
       known[id] = {
         id = id,
@@ -413,8 +415,8 @@ local function collect_dependents(known)
   local dependents = {}
   local pending = pending_set()
 
-  for _k, v in ipairs(schema_depends) do
-    local id = Plugin.normalize_id(v)
+  for _, dependency in ipairs(schema_depends) do
+    local id = Plugin.normalize_id(dependency)
 
     if id then
       local list = dependents[id] or {}
@@ -429,8 +431,8 @@ local function collect_dependents(known)
 
   for id, info in pairs(known) do
     if !pending[id] then
-      for _k, v in ipairs(info.depends) do
-        local dependency = Plugin.normalize_id(v)
+      for _, dep_name in ipairs(info.depends) do
+        local dependency = Plugin.normalize_id(dep_name)
 
         if dependency and dependency != id then
           local list = dependents[dependency] or {}
@@ -517,8 +519,8 @@ function Plugin.known()
   local pending = pending_set()
   local schema_ids = {}
 
-  for _k, v in ipairs(schema_depends) do
-    local id = Plugin.normalize_id(v)
+  for _, dependency in ipairs(schema_depends) do
+    local id = Plugin.normalize_id(dependency)
 
     if id then
       schema_ids[id] = true
@@ -562,13 +564,13 @@ if SERVER then
     local disabled = {}
 
     if istable(loaded) then
-      for k, v in pairs(loaded) do
+      for key, entry in pairs(loaded) do
         local id
 
-        if isstring(v) then
-          id = Plugin.normalize_id(v)
-        elseif v == true then
-          id = Plugin.normalize_id(tostring(k))
+        if isstring(entry) then
+          id = Plugin.normalize_id(entry)
+        elseif entry == true then
+          id = Plugin.normalize_id(tostring(key))
         end
 
         if id then
@@ -589,8 +591,8 @@ if SERVER then
   local function pending_list()
     local list = {}
 
-    for k, _v in pairs(pending_set()) do
-      list[#list + 1] = k
+    for id in pairs(pending_set()) do
+      list[#list + 1] = id
     end
 
     table.sort(list)
@@ -705,9 +707,9 @@ else
     pending_disabled = {}
 
     if istable(list) then
-      for _k, v in ipairs(list) do
-        if isstring(v) then
-          pending_disabled[v] = true
+      for _, plugin_id in ipairs(list) do
+        if isstring(plugin_id) then
+          pending_disabled[plugin_id] = true
         end
       end
     end
@@ -850,12 +852,14 @@ function Plugin.include(path)
       end)
     end
 
-    for _k, v in ipairs(data.depends) do
-      if !Plugin.require(v) then
-        if !is_unavailable(v) then
-          ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
+    for _, dependency in ipairs(data.depends) do
+      if !Plugin.require(dependency) then
+        if !is_unavailable(dependency) then
+          ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"
+            ..tostring(dependency).."'!\n")
         elseif SERVER then
-          print("Not loading the '"..tostring(path).."' plugin: the '"..tostring(v).."' plugin is not available.")
+          print("Not loading the '"..tostring(path).."' plugin: the '"..tostring(dependency)
+            .."' plugin is not available.")
         end
 
         mark_unloaded(data, 'dependency')
@@ -935,11 +939,11 @@ function Plugin.include_schema()
   schema_depends = istable(deps) and deps or {}
 
   if istable(deps) then
-    for _k, v in ipairs(deps) do
-      if !Plugin.require(v) and !is_unavailable(v) then
+    for _, dependency in ipairs(deps) do
+      if !Plugin.require(dependency) and !is_unavailable(dependency) then
         long_error(
           "Unable to load the schema! Dependency missing: '"..
-          tostring(v)..
+          tostring(dependency)..
           "'!\nPlease install this plugin in your schema's 'plugins' folder!\n"..
           'Alternatively please make sure that your server can download packages from the cloud!\n'
         )
@@ -1012,13 +1016,13 @@ do
         (Flux.get_schema_folder() or 'flux')..'/plugins/'
       }
 
-      for _k, v in ipairs(search_paths) do
-        local should_include = !LITE_REFRESH or !v:include('flux')
+      for _, search_path in ipairs(search_paths) do
+        local should_include = !LITE_REFRESH or !search_path:include('flux')
 
         for _, ending in ipairs(tolerance) do
-          if file.Exists(v..name..ending, 'LUA') then
+          if file.Exists(search_path..name..ending, 'LUA') then
             if should_include then
-              Plugin.include(v..name)
+              Plugin.include(search_path..name)
             end
 
             return !is_unavailable(name)
@@ -1026,9 +1030,9 @@ do
         end
 
         for _, prefix in pairs({ 'sv_', 'sh_', 'cl_' }) do
-          if file.Exists(v..prefix..name..'.lua', 'LUA') then
+          if file.Exists(search_path..prefix..name..'.lua', 'LUA') then
             if should_include then
-              Plugin.include(v..prefix..name..'.lua')
+              Plugin.include(search_path..prefix..name..'.lua')
             end
 
             if prefix == 'sv_' then
@@ -1064,14 +1068,14 @@ end
 function Plugin.include_plugins(folder)
   local files, folders = file.Find(folder..'/*', 'LUA')
 
-  for _k, v in ipairs(files) do
-    if File.ext(v) == 'lua' then
-      Plugin.include(folder..'/'..v)
+  for _, file_name in ipairs(files) do
+    if File.ext(file_name) == 'lua' then
+      Plugin.include(folder..'/'..file_name)
     end
   end
 
-  for _k, v in ipairs(folders) do
-    Plugin.include(folder..'/'..v)
+  for _, folder_name in ipairs(folders) do
+    Plugin.include(folder..'/'..folder_name)
   end
 end
 
@@ -1109,15 +1113,15 @@ do
   function Plugin.include_entities(folder)
     local _, dirs = file.Find(folder..'/*', 'LUA')
 
-    for _k, v in ipairs(dirs) do
-      if !ent_data[v] then continue end
+    for _, dir_name in ipairs(dirs) do
+      if !ent_data[dir_name] then continue end
 
-      local dir = folder..'/'..v
-      local data = ent_data[v]
+      local dir = folder..'/'..dir_name
+      local data = ent_data[dir_name]
       local files, folders = file.Find(dir..'/*', 'LUA')
 
-      for _k, v in ipairs(folders) do
-        local path = dir..'/'..v
+      for _, folder_name in ipairs(folders) do
+        local path = dir..'/'..folder_name
         local id = (File.name(path) or ''):gsub('%.lua$', ''):to_id()
         local register = false
         local var = data.table
@@ -1152,8 +1156,8 @@ do
         _G[var] = nil
       end
 
-      for _k, v in ipairs(files) do
-        local path = dir..'/'..v
+      for _, file_name in ipairs(files) do
+        local path = dir..'/'..file_name
         local id = (File.name(path) or ''):gsub('%.lua$', ''):to_id()
         local var = data.table
 
@@ -1186,7 +1190,7 @@ end
 -- PluginIncludeFolder hook.
 -- @param folder [String plugin or schema folder, without a trailing slash]
 function Plugin.include_folders(folder)
-  for _k, v in ipairs(extras) do
+  for _, extra in ipairs(extras) do
     --- Called for every extra folder of a plugin or of the schema before Flux includes it: the
     -- default ones such as 'lib' or 'config' and those added with `Plugin.add_extra`.
     -- Lets a plugin load the folders it has added in its own way, as the items and factions
@@ -1195,24 +1199,24 @@ function Plugin.include_folders(folder)
     -- @param folder [String folder of the plugin or schema, without a trailing slash]
     -- @return [Boolean Return any value other than nil to take the folder over, so that Flux
     --   does not include it itself]
-    if Plugin.call('PluginIncludeFolder', v, folder) == nil then
-      if v == 'entities' then
-        Plugin.include_entities(folder..'/'..v)
-      elseif v == 'themes' then
+    if Plugin.call('PluginIncludeFolder', extra, folder) == nil then
+      if extra == 'entities' then
+        Plugin.include_entities(folder..'/'..extra)
+      elseif extra == 'themes' then
         Pipeline.include_folder('theme', folder..'/themes/')
-      elseif v == 'tools' then
+      elseif extra == 'tools' then
         Pipeline.include_folder('tool', folder..'/tools/')
-      elseif v == 'commands' then
+      elseif extra == 'commands' then
         Pipeline.include_folder('commands', folder..'/commands/')
-      elseif v == 'config' then
+      elseif extra == 'config' then
         if SERVER then
           local files, _folders = file.Find('gamemodes/'..folder..'/config/*.yml', 'GAME')
 
           if files then
             local configs = {}
 
-            for _k, v in pairs(files) do
-              table.Merge(configs, Config.read('gamemodes/'..folder..'/config/'..v))
+            for _, file_name in pairs(files) do
+              table.Merge(configs, Config.read('gamemodes/'..folder..'/config/'..file_name))
             end
 
             Flux.shared.configs[folder] = configs
@@ -1221,17 +1225,17 @@ function Plugin.include_folders(folder)
           Config.read(Flux.shared.configs[folder])
         end
       elseif SERVER then
-        if v == 'languages' then
+        if extra == 'languages' then
           Pipeline.include_folder('language', folder..'/languages/')
-        elseif v == 'migrations' then
+        elseif extra == 'migrations' then
           Pipeline.include_folder('migrations', folder..'/migrations/')
-        elseif v == 'views/lumen' then
-          Pipeline.include_folder('lumen', folder..'/'..v)
+        elseif extra == 'views/lumen' then
+          Pipeline.include_folder('lumen', folder..'/'..extra)
         else
-          require_relative_folder(folder..'/'..v)
+          require_relative_folder(folder..'/'..extra)
         end
       else
-        require_relative_folder(folder..'/'..v)
+        require_relative_folder(folder..'/'..extra)
       end
     end
   end
@@ -1255,11 +1259,11 @@ do
       local handlers = hooks_cache[name]
 
       if handlers then
-        for _k, v in ipairs(handlers) do
-          local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
+        for _, entry in ipairs(handlers) do
+          local success, a, b, c, d, e, f = pcall(entry[1], entry[2], ...)
 
           if !success then
-            ErrorNoHalt('[Flux - '..(v.id or v[2]:get_name())..'] The '..name..' hook has failed to run!\n')
+            ErrorNoHalt('[Flux - '..(entry.id or entry[2]:get_name())..'] The '..name..' hook has failed to run!\n')
             error_with_traceback(tostring(a))
 
             if name != 'OnHookError' then
@@ -1272,7 +1276,7 @@ do
               -- @param entry [Map hook cache entry: the handler at index 1, the table it
               --   belongs to at index 2 and the ID given to `Plugin.add_hooks` in the `id`
               --   field]
-              hook.Call('OnHookError', gm, name, v)
+              hook.Call('OnHookError', gm, name, entry)
             end
           elseif a != nil then
             return a, b, c, d, e, f
@@ -1297,8 +1301,8 @@ do
       local handlers = hooks_cache[name]
 
       if handlers then
-        for _k, v in ipairs(handlers) do
-          local a, b, c, d, e, f = v[1](v[2], ...)
+        for _, entry in ipairs(handlers) do
+          local a, b, c, d, e, f = entry[1](entry[2], ...)
 
           if a != nil then
             return a, b, c, d, e, f

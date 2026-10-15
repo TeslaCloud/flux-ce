@@ -20,9 +20,9 @@ function CMD:on_run(actor, targets, delay)
 
   local options = { attacker = IsValid(actor) and actor or nil }
 
-  for _k, v in ipairs(targets) do
-    if IsValid(v) and v:Alive() then
-      v:knock_out(delay, options)
+  for _, target in ipairs(targets) do
+    if IsValid(target) and target:Alive() then
+      target:knock_out(delay, options)
     end
   end
 

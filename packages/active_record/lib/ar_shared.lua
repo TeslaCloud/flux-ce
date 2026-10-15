@@ -24,11 +24,11 @@ if !ActiveRecord.Base then
     'save', 'has', 'has_many', 'has_one', 'belongs_to'
   }
 
-  for _k, v in ipairs(remove_keys) do
+  for _, method_name in ipairs(remove_keys) do
     --- Clientside stub that replaces a serverside-only method. Does nothing.
     -- @param self [ActiveRecord::Base]
     -- @return [ActiveRecord::Base(self)]
-    ActiveRecord.Base[v] = function(self) return self end
+    ActiveRecord.Base[method_name] = function(self) return self end
   end
 
   --- Clientside stand-in for model definition. Only declares a class that extends

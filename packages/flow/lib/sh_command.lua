@@ -66,8 +66,8 @@ local function prepare(cmd)
     cmd.player_arg = cmd:find_player_arg()
   end
 
-  for _, v in ipairs(cmd:get_subcommands()) do
-    prepare(v)
+  for _, subcommand in ipairs(cmd:get_subcommands()) do
+    prepare(subcommand)
   end
 end
 
@@ -80,8 +80,8 @@ local function is_reachable(cmd, actor)
     return true
   end
 
-  for _, v in ipairs(cmd:get_subcommands()) do
-    if is_reachable(v, actor) then
+  for _, subcommand in ipairs(cmd:get_subcommands()) do
+    if is_reachable(subcommand, actor) then
       return true
     end
   end
@@ -128,8 +128,8 @@ function Flux.Command:create(id, data)
   if !isfunction(data.get_permission) then
     local cmd = Command.new(id)
 
-    for k, v in pairs(data) do
-      cmd[k] = v
+    for field, value in pairs(data) do
+      cmd[field] = value
     end
 
     data = cmd
@@ -142,8 +142,8 @@ function Flux.Command:create(id, data)
   stored[id] = data
   aliases[id] = data.id
 
-  for _, v in ipairs(data.aliases or {}) do
-    aliases[v:utf8lower()] = id
+  for _, alias in ipairs(data.aliases or {}) do
+    aliases[alias:utf8lower()] = id
   end
 
   --- Called on the server and the client after a command has been registered with
@@ -172,13 +172,13 @@ function Flux.Command:find_all(id)
   local hits = {}
   local ids = {}
 
-  for k, v in pairs(aliases) do
-    if !ids[v] and stored[v] and (k:include(id) or v:include(id)) then
-      if SERVER or is_reachable(stored[v], LocalPlayer()) then
-        hits[#hits + 1] = stored[v]
+  for alias, cmd_id in pairs(aliases) do
+    if !ids[cmd_id] and stored[cmd_id] and (alias:include(id) or cmd_id:include(id)) then
+      if SERVER or is_reachable(stored[cmd_id], LocalPlayer()) then
+        hits[#hits + 1] = stored[cmd_id]
       end
 
-      ids[v] = true
+      ids[cmd_id] = true
     end
   end
 
@@ -259,8 +259,8 @@ function Flux.Command:extract_arguments(text)
   local tokens = self:tokenize(text)
   local arguments = {}
 
-  for k, v in ipairs(tokens) do
-    arguments[k] = v.value
+  for index, token in ipairs(tokens) do
+    arguments[index] = token.value
   end
 
   return arguments, (tokens[2] and text:sub(tokens[2].start) or '')
@@ -325,32 +325,32 @@ local function fill_candidates(result, entries, partial)
   local lower = partial:utf8lower()
   local prefixed, inner, seen = {}, {}, {}
 
-  for _, v in ipairs(entries) do
-    local value = tostring(v.value)
+  for _, entry in ipairs(entries) do
+    local value = tostring(entry.value)
 
     if !seen[value] then
       local pos = value:utf8lower():find(lower, 1, true)
 
       if pos then
         seen[value] = true
-        v.value = value
+        entry.value = value
 
         if pos == 1 then
-          prefixed[#prefixed + 1] = v
+          prefixed[#prefixed + 1] = entry
         else
-          inner[#inner + 1] = v
+          inner[#inner + 1] = entry
         end
       end
     end
   end
 
-  for _, v in ipairs(inner) do
-    prefixed[#prefixed + 1] = v
+  for _, entry in ipairs(inner) do
+    prefixed[#prefixed + 1] = entry
   end
 
-  for k, v in ipairs(prefixed) do
-    result.candidates[k] = v.value
-    result.commands[k] = v.command
+  for index, entry in ipairs(prefixed) do
+    result.candidates[index] = entry.value
+    result.commands[index] = entry.command
   end
 end
 
@@ -365,9 +365,9 @@ local function pick_name(id, names, lower)
     return id
   end
 
-  for _, v in ipairs(names or {}) do
-    if v:utf8lower():find(lower, 1, true) == 1 then
-      return v
+  for _, name in ipairs(names or {}) do
+    if name:utf8lower():find(lower, 1, true) == 1 then
+      return name
     end
   end
 end
@@ -406,12 +406,12 @@ end
 local function subcommand_entries(actor, cmd, lower)
   local entries = {}
 
-  for _, v in ipairs(cmd:get_subcommands()) do
-    if is_reachable(v, actor) then
-      local value = pick_name(v.id, v.aliases, lower)
+  for _, subcommand in ipairs(cmd:get_subcommands()) do
+    if is_reachable(subcommand, actor) then
+      local value = pick_name(subcommand.id, subcommand.aliases, lower)
 
       if value then
-        entries[#entries + 1] = { value = value, command = v }
+        entries[#entries + 1] = { value = value, command = subcommand }
       end
     end
   end
@@ -444,8 +444,8 @@ local function argument_entries(actor, cmd, arg_type, partial, args)
 
   local entries = {}
 
-  for k, v in ipairs(istable(values) and values or {}) do
-    entries[k] = { value = v }
+  for index, value in ipairs(istable(values) and values or {}) do
+    entries[index] = { value = value }
   end
 
   return entries
@@ -552,8 +552,8 @@ function Flux.Command:complete(text, actor)
     result.arg_index = count - index + 1
     result.arg_type = cmd:get_arg_type(result.arg_index)
 
-    for _, v in ipairs(argument_entries(actor, cmd, result.arg_type, partial, args)) do
-      entries[#entries + 1] = v
+    for _, entry in ipairs(argument_entries(actor, cmd, result.arg_type, partial, args)) do
+      entries[#entries + 1] = entry
     end
   end
 
@@ -590,16 +590,16 @@ local function complete_player(_actor, partial)
   local values = {}
 
   if lower:sub(1, 6) == 'steam_' then
-    for _, v in player.Iterator() do
-      values[#values + 1] = v:SteamID()
+    for _, client in player.Iterator() do
+      values[#values + 1] = client:SteamID()
     end
 
     return values
   end
 
-  for _, v in player.Iterator() do
-    local char_name = v:name(true)
-    local steam_name = v:steam_name()
+  for _, client in player.Iterator() do
+    local char_name = client:name(true)
+    local steam_name = client:steam_name()
 
     values[#values + 1] = char_name
 
@@ -624,9 +624,9 @@ if SERVER then
       local group_name = str:utf8sub(2, utf8.len(str)):utf8lower()
       local to_ret = {}
 
-      for _, v in player.Iterator() do
-        if v:GetUserGroup() == group_name then
-          to_ret[#to_ret + 1] = v
+      for _, client in player.Iterator() do
+        if client:GetUserGroup() == group_name then
+          to_ret[#to_ret + 1] = client
         end
       end
 
@@ -649,9 +649,9 @@ if SERVER then
     ['['] = function(_actor, str)
       local name = str:utf8sub(2, utf8.len(str) - 1)
 
-      for _, v in player.Iterator() do
-        if v:name() == name then
-          return { v }, '['
+      for _, client in player.Iterator() do
+        if client:name() == name then
+          return { client }, '['
         end
       end
 
@@ -677,9 +677,9 @@ if SERVER then
 
       local radius_sqr = radius * radius
 
-      for _, v in player.Iterator() do
-        if v != actor and actor:GetPos():DistToSqr(v:GetPos()) <= radius_sqr then
-          to_ret[#to_ret + 1] = v
+      for _, client in player.Iterator() do
+        if client != actor and actor:GetPos():DistToSqr(client:GetPos()) <= radius_sqr then
+          to_ret[#to_ret + 1] = client
         end
       end
 
@@ -742,8 +742,8 @@ if SERVER then
 
     local translated = {}
 
-    for k, v in pairs(args or {}) do
-      translated[k] = isstring(v) and t(v) or v
+    for key, value in pairs(args or {}) do
+      translated[key] = isstring(value) and t(value) or value
     end
 
     ErrorNoHalt('[Flux:Command] '..t(phrase, translated)..'\n')
@@ -783,9 +783,9 @@ if SERVER then
         local value = args[i]:utf8lower()
         local found
 
-        for _, v in ipairs(arg_type) do
-          if tostring(v):utf8lower() == value then
-            found = v
+        for _, choice in ipairs(arg_type) do
+          if tostring(choice):utf8lower() == value then
+            found = choice
 
             break
           end
@@ -818,11 +818,11 @@ if SERVER then
     local targets, cache = {}, {}
 
     if istable(found) then
-      for _, v in ipairs(found) do
-        if IsValid(v) and !cache[v] then
-          cache[v] = true
+      for _, target in ipairs(found) do
+        if IsValid(target) and !cache[target] then
+          cache[target] = true
 
-          targets[#targets + 1] = v
+          targets[#targets + 1] = target
         end
       end
     end
@@ -840,7 +840,7 @@ if SERVER then
     end
 
     if cmd.immunity and IsValid(actor) then
-      for _, v in ipairs(targets) do
+      for _, target in ipairs(targets) do
         --- Called for every player a command with `immunity` set is about to be run on, when
         -- the command was not run from the server console. The actor themselves can be among
         -- the targets; the admin plugin's handler always lets that pass, and lets root players
@@ -851,9 +851,9 @@ if SERVER then
         --   the same standing as the actor may be affected]
         -- @return [Boolean Return false if the target is immune to the actor; the command is
         --   then not run and the actor is notified]
-        if hook.Run('CommandCheckImmunity', actor, v, cmd.can_equal) == false then
+        if hook.Run('CommandCheckImmunity', actor, target, cmd.can_equal) == false then
           actor:notify('error.command.higher_immunity', {
-            target = get_player_name(v)
+            target = get_player_name(target)
           })
 
           return
@@ -913,8 +913,8 @@ if SERVER then
         elseif word then
           local ids = {}
 
-          for _, v in ipairs(cmd_table:get_subcommands()) do
-            ids[#ids + 1] = v.id
+          for _, subcommand in ipairs(cmd_table:get_subcommands()) do
+            ids[#ids + 1] = subcommand.id
           end
 
           command_error(actor, 'error.command.unknown_subcommand', {

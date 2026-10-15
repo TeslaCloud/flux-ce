@@ -38,12 +38,12 @@ function CMD:on_run(actor, targets, destination)
   local pos = goal:GetPos()
   local moved = {}
 
-  for _k, v in ipairs(targets) do
-    if IsValid(v) and v != goal then
-      v:teleport(pos)
-      v:notify('notification.tp')
+  for _, client in ipairs(targets) do
+    if IsValid(client) and client != goal then
+      client:teleport(pos)
+      client:notify('notification.tp')
 
-      table.insert(moved, v)
+      table.insert(moved, client)
     end
   end
 

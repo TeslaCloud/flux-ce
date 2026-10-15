@@ -84,8 +84,8 @@ do
     else
       local items = {}
 
-      for _k, v in pairs(self:get_inventories()) do
-        table_add(items, v:get_items())
+      for _, inventory in pairs(self:get_inventories()) do
+        table_add(items, inventory:get_items())
       end
 
       return items
@@ -105,8 +105,8 @@ do
     else
       local items = {}
 
-      for _k, v in pairs(self:get_inventories()) do
-        table_add(items, v:get_items_ids())
+      for _, inventory in pairs(self:get_inventories()) do
+        table_add(items, inventory:get_items_ids())
       end
 
       return items
@@ -146,8 +146,8 @@ do
     else
       local count = 0
 
-      for _k, v in pairs(self:get_inventories()) do
-        count = count + v:get_items_count(id)
+      for _, inventory in pairs(self:get_inventories()) do
+        count = count + inventory:get_items_count(id)
       end
 
       return count
@@ -167,8 +167,8 @@ do
     if inv_type then
       return self:get_inventory(inv_type):find_item(id)
     else
-      for _k, v in pairs(self:get_inventories()) do
-        local item_obj = v:find_item(id)
+      for _, inventory in pairs(self:get_inventories()) do
+        local item_obj = inventory:find_item(id)
 
         if item_obj then
           return item_obj
@@ -192,8 +192,8 @@ do
     else
       local items = {}
 
-      for _k, v in pairs(self:get_inventories()) do
-        table_add(items, v:find_items(id))
+      for _, inventory in pairs(self:get_inventories()) do
+        table_add(items, inventory:find_items(id))
       end
 
       return items
@@ -213,8 +213,8 @@ do
     if inv_type then
       return self:get_inventory(inv_type):has_item(id)
     else
-      for _k, v in pairs(self:get_inventories()) do
-        local found, item_obj = v:has_item(id)
+      for _, inventory in pairs(self:get_inventories()) do
+        local found, item_obj = inventory:has_item(id)
 
         if found then
           return true, item_obj
@@ -238,8 +238,8 @@ do
     if inv_type then
       return self:get_inventory(inv_type):has_item_by_id(instance_id)
     else
-      for _k, v in pairs(self:get_inventories()) do
-        local found, item_obj = v:has_item_by_id(instance_id)
+      for _, inventory in pairs(self:get_inventories()) do
+        local found, item_obj = inventory:has_item_by_id(instance_id)
 
         if found then
           return true, item_obj
@@ -315,13 +315,13 @@ do
       --   to be filled in place]
       hook.Run('CreatePlayerInventories', self, inventories)
 
-      for _k, v in pairs(inventories) do
-        if !self.default_inventory and v:is_default() then
-          self.default_inventory = v.type
+      for _, inventory in pairs(inventories) do
+        if !self.default_inventory and inventory:is_default() then
+          self.default_inventory = inventory.type
         end
 
-        v:add_receiver(self)
-        v.owner = self
+        inventory:add_receiver(self)
+        inventory.owner = self
       end
 
       self.inventories = inventories
@@ -334,10 +334,10 @@ do
     function player_meta:load_inventories()
       local item_ids = (self:get_character().item_ids or ''):split(',')
 
-      for _k, v in pairs(item_ids) do
-        v = tonumber(v)
+      for _, instance_id in pairs(item_ids) do
+        instance_id = tonumber(instance_id)
 
-        local item_obj = Item.find_instance_by_id(v)
+        local item_obj = Item.find_instance_by_id(instance_id)
 
         if item_obj and item_obj.inventory_type then
           local x, y = item_obj.x, item_obj.y
@@ -360,17 +360,17 @@ do
     --- @warning [Internal]
     -- Deletes the player's inventories from the server cache.
     function player_meta:delete_inventories()
-      for _k, v in pairs(self:get_inventories()) do
-        if v.owner == self then
-          stored[v.id] = nil
+      for _, inventory in pairs(self:get_inventories()) do
+        if inventory.owner == self then
+          stored[inventory.id] = nil
         end
       end
     end
 
     --- Synchronize all the inventories that the player has.
     function player_meta:sync_inventories()
-      for _k, v in pairs(self:get_inventories()) do
-        v:sync()
+      for _, inventory in pairs(self:get_inventories()) do
+        inventory:sync()
       end
     end
 
@@ -442,11 +442,11 @@ do
 
         return success, error_text
       else
-        for _k, v in pairs(self:get_inventories()) do
-          if v:has_item(id) then
-            local success, error_text = v:take_item(id)
+        for _, inventory in pairs(self:get_inventories()) do
+          if inventory:has_item(id) then
+            local success, error_text = inventory:take_item(id)
 
-            v:sync()
+            inventory:sync()
 
             return success, error_text
           end
@@ -479,10 +479,10 @@ do
         if self:get_items_count(id) < amount then
           return false, 'error.inventory.not_enough_items'
         else
-          for _k, v in pairs(self:get_inventories()) do
-            if amount > 0 and v:has_item(id) then
-              v:take_item(id)
-              v:sync()
+          for _, inventory in pairs(self:get_inventories()) do
+            if amount > 0 and inventory:has_item(id) then
+              inventory:take_item(id)
+              inventory:sync()
 
               amount = amount - 1
             end
@@ -588,11 +588,11 @@ do
     function player_meta:open_player_inventory(target)
       local inventory_ids = {}
 
-      for _k, v in pairs(target:get_inventories()) do
-        v:add_receiver(self)
-        v:sync()
+      for _, inventory in pairs(target:get_inventories()) do
+        inventory:add_receiver(self)
+        inventory:sync()
 
-        inventory_ids[#inventory_ids + 1] = v.id
+        inventory_ids[#inventory_ids + 1] = inventory.id
       end
 
       Cable.send(self, 'fl_open_player_inventory', target, inventory_ids)
@@ -606,13 +606,13 @@ do
     function player_meta:close_inventories(inventories)
       local closed_inventory
 
-      for _k, v in pairs(inventories) do
-        if v.owner != self and v:has_receiver(self) then
-          v:remove_receiver(self)
+      for _, inventory in pairs(inventories) do
+        if inventory.owner != self and inventory:has_receiver(self) then
+          inventory:remove_receiver(self)
 
-          Cable.send(self, 'fl_inventory_close', v.id)
+          Cable.send(self, 'fl_inventory_close', inventory.id)
 
-          closed_inventory = closed_inventory or v
+          closed_inventory = closed_inventory or inventory
         end
       end
 

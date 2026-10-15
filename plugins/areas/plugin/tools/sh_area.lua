@@ -99,11 +99,11 @@ if CLIENT then
       end
     end
 
-    for k, v in ipairs(mode_list) do
-      if mode == k then
-        list:AddLine(' '..k..' >> '..v.title)
+    for mode_id, mode_data in ipairs(mode_list) do
+      if mode == mode_id then
+        list:AddLine(' '..mode_id..' >> '..mode_data.title)
       else
-        list:AddLine(' '..k..'  '..v.title)
+        list:AddLine(' '..mode_id..'  '..mode_data.title)
       end
     end
 

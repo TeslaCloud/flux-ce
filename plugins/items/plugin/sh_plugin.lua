@@ -119,8 +119,8 @@ function Items:RegisterConditions()
         return false
       end
 
-      for _k, v in pairs(items) do
-        local value = v:get_data(data.key)
+      for _, item_obj in pairs(items) do
+        local value = item_obj:get_data(data.key)
 
         if value then
           return util.process_operator(data.operator, value, data.value)

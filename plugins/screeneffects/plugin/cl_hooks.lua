@@ -74,9 +74,9 @@ end
 --- Registers a switch and a strength slider for every effect with the Settings plugin. The
 -- settings stay on the client: the effects are worked out there.
 function ScreenEffects:RegisterClientSettings()
-  for _k, v in ipairs(self.effect_order) do
-    local effect = self.effects[v]
-    local phrase = 'settings.screen_effects.'..v
+  for _, effect_id in ipairs(self.effect_order) do
+    local effect = self.effects[effect_id]
+    local phrase = 'settings.screen_effects.'..effect_id
 
     ClientSettings:register_setting(effect.setting, {
       type = 'boolean',
@@ -84,7 +84,7 @@ function ScreenEffects:RegisterClientSettings()
       category = category,
       name = phrase..'.name',
       description = phrase..'.desc',
-      effect = v,
+      effect = effect_id,
       visible = is_switch_visible
     })
 
@@ -96,7 +96,7 @@ function ScreenEffects:RegisterClientSettings()
       category = category,
       name = phrase..'.strength.name',
       description = phrase..'.strength.desc',
-      effect = v,
+      effect = effect_id,
       visible = is_strength_visible
     })
   end

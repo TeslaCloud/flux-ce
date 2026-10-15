@@ -163,8 +163,8 @@ if CLIENT then
 
     combo_box:SetSortItems(false)
 
-    for _k, v in ipairs(choices) do
-      combo_box:AddChoice(v.title, v.value)
+    for _, choice in ipairs(choices) do
+      combo_box:AddChoice(choice.title, choice.value)
     end
   end
 
@@ -175,12 +175,12 @@ if CLIENT then
     local mode_choices = {}
     local category_choices = { { title = t'tool.container.any_category', value = 'all' } }
 
-    for k, v in ipairs(modes) do
-      table.insert(mode_choices, { title = t('tool.container.mode_'..v), value = tostring(k) })
+    for i, mode in ipairs(modes) do
+      table.insert(mode_choices, { title = t('tool.container.mode_'..mode), value = tostring(i) })
     end
 
-    for _k, v in ipairs(Container:get_loot_categories()) do
-      table.insert(category_choices, { title = t(v), value = v })
+    for _, category in ipairs(Container:get_loot_categories()) do
+      table.insert(category_choices, { title = t(category), value = category })
     end
 
     panel:AddControl('Header', { Description = t'tool.container.desc' })

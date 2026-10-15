@@ -136,13 +136,13 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
     -- Prepared statements take a single statement, without the semicolon that ends it.
     query_obj = self.connection:prepare((query:gsub(';%s*$', '')))
 
-    for k, v in ipairs(bindings) do
-      if isnumber(v) then
-        query_obj:setNumber(k, v)
-      elseif isbool(v) then
-        query_obj:setBoolean(k, v)
+    for index, value in ipairs(bindings) do
+      if isnumber(value) then
+        query_obj:setNumber(index, value)
+      elseif isbool(value) then
+        query_obj:setBoolean(index, value)
       else
-        query_obj:setString(k, tostring(v))
+        query_obj:setString(index, tostring(value))
       end
     end
   else
@@ -156,9 +156,9 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
         result = { { id = query_obj:lastInsert() } }
       end
 
-      for k, v in pairs(result) do
-        if isstring(v) then
-          result[k] = self:unescape(v)
+      for key, value in pairs(result) do
+        if isstring(value) then
+          result[key] = self:unescape(value)
         end
       end
 

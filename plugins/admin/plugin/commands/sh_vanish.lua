@@ -13,9 +13,9 @@ CMD.aliases = { 'v' }
 -- @param targets [List<Player> players to affect]
 -- @param should_vanish [Boolean true to hide them, false to show them again]
 local function set_vanished(cmd, actor, targets, should_vanish)
-  for _, v in ipairs(targets) do
-    v:set_vanished(should_vanish)
-    v:notify('notification.vanish.'..(should_vanish and 'enabled' or 'disabled'))
+  for _, client in ipairs(targets) do
+    client:set_vanished(should_vanish)
+    client:notify('notification.vanish.'..(should_vanish and 'enabled' or 'disabled'))
   end
 
   cmd:notify_staff('command.vanish.'..(should_vanish and 'on' or 'off')..'.message', {

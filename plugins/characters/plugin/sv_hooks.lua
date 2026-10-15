@@ -12,8 +12,8 @@ function Characters:ActiveRecordReady()
       Characters.taken_names = {}
 
       if istable(result) then
-        for _k, v in ipairs(result) do
-          Characters.remember_name(v.name)
+        for _, row in ipairs(result) do
+          Characters.remember_name(row.name)
         end
       end
     end)
@@ -170,8 +170,8 @@ end
 
 --- Saves the active character of every connected player.
 function Characters:SaveData()
-  for _k, v in player.Iterator() do
-    v:save_character()
+  for _, client in player.Iterator() do
+    client:save_character()
   end
 end
 

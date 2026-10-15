@@ -143,12 +143,12 @@ if CLIENT then
   -- @param color=color_white [Color]
   function player_meta:notify(message, arguments, color)
     if istable(arguments) then
-      for k, v in pairs(arguments) do
-        if isstring(v) then
-          arguments[k] = t(v)
-        elseif isentity(v) and IsValid(v) then
-          if v:IsPlayer() then
-            arguments[k] = hook.Run('GetPlayerName', v) or v:name()
+      for key, value in pairs(arguments) do
+        if isstring(value) then
+          arguments[key] = t(value)
+        elseif isentity(value) and IsValid(value) then
+          if value:IsPlayer() then
+            arguments[key] = hook.Run('GetPlayerName', value) or value:name()
           else
             --- Lets plugins give a display name to an entity that is not a player. Called on
             -- both realms by `Entity:get_name`, and on the client for entities passed as
@@ -156,7 +156,7 @@ if CLIENT then
             -- @param entity [Entity The entity whose name is requested]
             -- @return [String Name to show; when nothing is returned, the string
             --   representation of the entity is used]
-            arguments[k] = hook.Run('GetEntityName', v) or tostring(v)
+            arguments[key] = hook.Run('GetEntityName', value) or tostring(value)
           end
         end
       end

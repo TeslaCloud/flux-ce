@@ -131,9 +131,9 @@ if SERVER then
   function Skills.get_record(character, skill_id)
     if !istable(character) or !istable(character.skills) then return end
 
-    for _k, v in ipairs(character.skills) do
-      if v.skill_id == skill_id then
-        return v
+    for _, record in ipairs(character.skills) do
+      if record.skill_id == skill_id then
+        return record
       end
     end
   end
@@ -151,17 +151,17 @@ if SERVER then
 
     local added = 0
 
-    for k, v in pairs(stored) do
-      if !Skills.get_record(character, k) then
-        local rank = tonumber(ranks[k])
+    for skill_id, skill_table in pairs(stored) do
+      if !Skills.get_record(character, skill_id) then
+        local rank = tonumber(ranks[skill_id])
 
         if !rank or rank != rank then
           rank = 0
         end
 
         local skill = Skill.new()
-          skill.skill_id = k
-          skill.rank = math_clamp(math.floor(rank), 0, v.max)
+          skill.skill_id = skill_id
+          skill.rank = math_clamp(math.floor(rank), 0, skill_table.max)
         table.insert(character.skills, skill)
 
         added = added + 1
@@ -178,9 +178,9 @@ if SERVER then
   function Skills.to_networkable(target)
     local skills = {}
 
-    for _k, v in ipairs(get_records(target)) do
-      if stored[v.skill_id] then
-        skills[v.skill_id] = tonumber(v.rank) or 0
+    for _, record in ipairs(get_records(target)) do
+      if stored[record.skill_id] then
+        skills[record.skill_id] = tonumber(record.rank) or 0
       end
     end
 

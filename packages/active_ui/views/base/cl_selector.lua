@@ -73,9 +73,9 @@ end
 -- selector:set_text(t'ui.admin.selector.message')
 -- selector:set_value(t'ui.admin.selector.roles')
 --
--- for k, v in pairs(Bolt:get_roles()) do
---   selector:add_choice(v.name, function()
---     Cable.send('fl_bolt_set_role', self.player, v.role_id)
+-- for _, role in pairs(Bolt:get_roles()) do
+--   selector:add_choice(role.name, function()
+--     Cable.send('fl_bolt_set_role', self.player, role.role_id)
 --   end)
 -- end
 -- ```

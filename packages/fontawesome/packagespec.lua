@@ -9,7 +9,7 @@ Package:describe(function(s)
   s.website     = 'https://fontawesome.com'
   s.license     = 'file'
 
-  for _k, v in ipairs(file.Find('resource/fonts/fa-*.ttf', 'GAME')) do
-    resource.AddSingleFile('resource/fonts/'..v)
+  for _, file_name in ipairs(file.Find('resource/fonts/fa-*.ttf', 'GAME')) do
+    resource.AddSingleFile('resource/fonts/'..file_name)
   end
 end)

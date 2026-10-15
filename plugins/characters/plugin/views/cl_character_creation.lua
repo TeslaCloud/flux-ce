@@ -142,30 +142,30 @@ function PANEL:rebuild()
   local font = Theme.get_font('main_menu_normal')
   local icon_size = math.scale(16)
 
-  for k, v in ipairs(self.stages) do
+  for stage_index, stage_name in ipairs(self.stages) do
     local button = vgui.Create('fl_button', self.stage_list)
     button:SetSize(button_w, button_h)
     button:SetFont(font)
-    button:SetTitle(t(v))
+    button:SetTitle(t(stage_name))
     button:SetDrawBackground(false)
     button:set_icon('fa-chevron-right', true)
     button:set_icon_size(icon_size)
     button:set_centered(true)
     button:SizeToContents()
 
-    if k > self.stage then
+    if stage_index > self.stage then
       button:set_enabled(false)
-    elseif k == self.stage then
+    elseif stage_index == self.stage then
       button:set_enabled(true)
       button:set_text_color(Theme.get_color('accent'))
     end
 
     button.DoClick = function(_btn)
-      if self.stage > k then
+      if self.stage > stage_index then
         local cur_time = CurTime()
 
         if !self.stage_list.next_click or self.stage_list.next_click <= cur_time then
-          self:goto_stage(k)
+          self:goto_stage(stage_index)
 
           self.stage_list.next_click = cur_time + 1
         end

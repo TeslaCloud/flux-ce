@@ -41,14 +41,14 @@ function PANEL:SizeToContents()
   local font = Theme.get_font('menu_normal')
   local line_gap = math.scale(2)
 
-  for k, v in ipairs(self.notification_text) do
-    local w, h = util.text_size(v, font)
+  for index, line in ipairs(self.notification_text) do
+    local w, h = util.text_size(line, font)
 
     self.font_size = h
 
     if bx < w then bx = w end
 
-    by = by + h + (k > 1 and line_gap or 0)
+    by = by + h + (index > 1 and line_gap or 0)
   end
 
   self:SetSize(bx + self.padding_x * 2 + self.stripe, by + self.padding_y * 2)

@@ -81,31 +81,31 @@ function PANEL:Init()
   -- @param menu [Panel The `fl_tab_menu` being built]
   hook.Run('AddTabMenuItems', self)
 
-  for _k, v in ipairs(self.menu_items) do
+  for _, menu_item in ipairs(self.menu_items) do
     local button = vgui.Create('fl_button', self.button_panel)
     button:SetTall(button_height)
     button:SetDrawBackground(true)
     button:SetPos(cur_x, cur_y)
-    button:SetTooltip(v.title)
+    button:SetTooltip(menu_item.title)
     button:SetFont(font)
     button:set_text_offset(offset)
-    button:set_text(v.title)
-    button:set_icon(v.icon)
+    button:set_text(menu_item.title)
+    button:set_icon(menu_item.icon)
     button:set_centered(true)
     button:set_icon_size(icon_size)
     button:set_background_color(nil)
     button:SizeToContentsX()
 
     button.DoClick = function(btn)
-      if IsValid(self.active_panel) and v.id == self.active_panel.id then return end
+      if IsValid(self.active_panel) and menu_item.id == self.active_panel.id then return end
 
-      if v.override then
-        v.override(self, btn)
+      if menu_item.override then
+        menu_item.override(self, btn)
 
         return
       end
 
-      if v.panel then
+      if menu_item.panel then
         surface.PlaySound('garrysmod/ui_hover.wav')
 
         if IsValid(self.active_panel) then
@@ -118,7 +118,7 @@ function PANEL:Init()
           self.active_button:set_active(false)
         end
 
-        self.active_panel = vgui.Create(v.panel, self)
+        self.active_panel = vgui.Create(menu_item.panel, self)
 
         if self.active_panel.get_menu_size then
           self.active_panel:SetSize(self.active_panel:get_menu_size())
@@ -133,7 +133,7 @@ function PANEL:Init()
           self.active_panel:rebuild()
         end
 
-        self.active_panel.id = v.id
+        self.active_panel.id = menu_item.id
 
         --- Called on the client when a panel of the tab menu is opened, after the panel has
         -- been created, sized and rebuilt.
@@ -143,8 +143,8 @@ function PANEL:Init()
         hook.Run('OnMenuPanelOpen', self, self.active_panel)
       end
 
-      if v.callback then
-        v.callback(self, button)
+      if menu_item.callback then
+        menu_item.callback(self, button)
       end
     end
 
@@ -155,10 +155,10 @@ function PANEL:Init()
       cur_x = offset
     end
 
-    self.buttons[v.id] = button
+    self.buttons[menu_item.id] = button
 
-    if v.default and !self.default_panel then
-      self.default_panel = v.id
+    if menu_item.default and !self.default_panel then
+      self.default_panel = menu_item.id
     end
   end
 

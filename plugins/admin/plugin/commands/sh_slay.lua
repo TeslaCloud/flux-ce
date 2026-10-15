@@ -16,14 +16,14 @@ CMD.aliases = { 'plyslay', 'plykill' }
 function CMD:on_run(actor, targets)
   local slain = {}
 
-  for _k, v in ipairs(targets) do
-    if v:Alive() then
-      v:Kill()
-      v:notify('notification.slay', {
+  for _, client in ipairs(targets) do
+    if client:Alive() then
+      client:Kill()
+      client:notify('notification.slay', {
         player = IsValid(actor) and actor or get_player_name(actor)
       })
 
-      table.insert(slain, v)
+      table.insert(slain, client)
     end
   end
 

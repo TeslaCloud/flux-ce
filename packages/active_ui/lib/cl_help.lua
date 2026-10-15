@@ -151,8 +151,8 @@ function Flux.Help:render_page(page)
   local props = { page = page }
 
   if istable(page.props) then
-    for k, v in pairs(page.props) do
-      props[k] = v
+    for key, value in pairs(page.props) do
+      props[key] = value
     end
   end
 
@@ -189,9 +189,9 @@ local function describe_command(command)
     syntax = ''
   end
 
-  for _, v in ipairs(command.aliases or {}) do
-    if v != command.id then
-      aliases[#aliases + 1] = v
+  for _, alias in ipairs(command.aliases or {}) do
+    if alias != command.id then
+      aliases[#aliases + 1] = alias
     end
   end
 
@@ -211,12 +211,12 @@ end
 -- @param client [Player]
 -- @return [List<Map> the list]
 local function describe_subcommands(list, command, client)
-  for _, v in ipairs(command:get_subcommands()) do
-    if v:is_allowed(client) then
-      list[#list + 1] = describe_command(v)
+  for _, subcommand in ipairs(command:get_subcommands()) do
+    if subcommand:is_allowed(client) then
+      list[#list + 1] = describe_command(subcommand)
     end
 
-    describe_subcommands(list, v, client)
+    describe_subcommands(list, subcommand, client)
   end
 
   return list
@@ -261,8 +261,8 @@ function Flux.Help:get_commands()
     end
   end
 
-  for _k, v in ipairs(categories) do
-    sort(v.commands, function(a, b)
+  for _, category in ipairs(categories) do
+    sort(category.commands, function(a, b)
       local first, second = a.name:utf8lower(), b.name:utf8lower()
 
       if first == second then

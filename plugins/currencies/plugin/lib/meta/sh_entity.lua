@@ -125,9 +125,9 @@ do
           if istable(records) then
             local found = false
 
-            for _k, v in pairs(records) do
-              if v.currency_id == currency then
-                v.amount = value
+            for _, record in pairs(records) do
+              if record.currency_id == currency then
+                record.amount = value
                 found = true
 
                 break

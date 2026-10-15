@@ -92,14 +92,14 @@ end
 -- @param languages [List<String> language codes to compare in]
 -- @return [String ID and the definition, or nil if none matches]
 local function find_by_title(definitions, prefix, id, languages)
-  for k, v in pairs(definitions) do
-    local short = prefix..k..'.short'
+  for def_id, definition in pairs(definitions) do
+    local short = prefix..def_id..'.short'
 
     for i = 1, #languages do
       local lang = languages[i]
 
-      if t(v.name, nil, lang):to_id() == id or t(short, nil, lang):to_id() == id then
-        return k, v
+      if t(definition.name, nil, lang):to_id() == id or t(short, nil, lang):to_id() == id then
+        return def_id, definition
       end
     end
   end

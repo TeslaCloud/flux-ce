@@ -50,8 +50,8 @@ function RPCommands:HUDPaint()
   local show_author = input.IsKeyDown(KEY_LALT) and client:is_assistant()
   local offset = 4
 
-  for _k, v in pairs(texts) do
-    local text_pos = v.pos
+  for _, text_data in pairs(texts) do
+    local text_pos = text_data.pos
 
     if client_pos:DistToSqr(text_pos) <= 90000 and !util.vector_obstructed(client_pos, text_pos, client) then
       local pos = text_pos:ToScreen()
@@ -59,12 +59,12 @@ function RPCommands:HUDPaint()
       local distance_mult = (1 - client_pos:Distance(text_pos) / 300)
       local alpha = 255 * cam_mult * distance_mult
       local col1, col2 = Color(255, 255, 255, alpha), Color(0, 0, 0, alpha)
-      local full_w, full_h = text_size(v.text, font)
-      local lines = util.wrap_text(v.text, font, scrw * 0.25, cx - full_w * 0.5)
+      local full_w, full_h = text_size(text_data.text, font)
+      local lines = util.wrap_text(text_data.text, font, scrw * 0.25, cx - full_w * 0.5)
 
       if show_author then
-        lines[#lines + 1] = v.name..' ('..v.steamid..')'
-        lines[#lines + 1] = v.time
+        lines[#lines + 1] = text_data.name..' ('..text_data.steamid..')'
+        lines[#lines + 1] = text_data.time
       end
 
       local cur_y = pos.y - ((full_h + offset) * #lines) * 0.5

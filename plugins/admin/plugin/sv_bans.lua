@@ -104,9 +104,9 @@ function Bolt:send_ban_list(target, page, search_text)
 
   local matching = {}
 
-  for _k, v in pairs(self:get_bans()) do
-    if search_text == '' or ban_matches(v, search_text) then
-      matching[#matching + 1] = v
+  for _, ban in pairs(self:get_bans()) do
+    if search_text == '' or ban_matches(ban, search_text) then
+      matching[#matching + 1] = ban
     end
   end
 
@@ -150,9 +150,9 @@ end
 function Bolt:send_ban_list_changed()
   local viewers = {}
 
-  for _k, v in player.Iterator() do
-    if v:can('ban') then
-      viewers[#viewers + 1] = v
+  for _, client in player.Iterator() do
+    if client:can('ban') then
+      viewers[#viewers + 1] = client
     end
   end
 

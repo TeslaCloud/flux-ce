@@ -33,8 +33,8 @@ ItemContainer:add_button('item.option.open', {
     local containers = PLAYER.opened_containers
 
     if containers then
-      for _k, v in pairs(containers) do
-        if IsValid(v) and v.inventory.instance_id == item_obj.instance_id then
+      for _, container in pairs(containers) do
+        if IsValid(container) and container.inventory.instance_id == item_obj.instance_id then
           return false
         end
       end
@@ -99,8 +99,8 @@ function ItemContainer:on_created()
   if !table.IsEmpty(self.default_inventory) then
     self:create_inventory()
 
-    for _k, v in pairs(self.default_inventory) do
-      local success, error_text = self.inventory:give_item(v.id, v.amount, v.data)
+    for _, entry in pairs(self.default_inventory) do
+      local success, error_text = self.inventory:give_item(entry.id, entry.amount, entry.data)
 
       if !success then
         Flux.dev_print('Failed to give a default item to ItemContainer: '..error_text)

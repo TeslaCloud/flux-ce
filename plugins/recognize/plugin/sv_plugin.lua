@@ -41,15 +41,15 @@ end
 --   server cannot run into the limit that a database puts on bound values]
 local function delete_rows(conditions, except_ids)
   local query = ActiveRecord.Database:delete('recognizes')
-    for k, v in pairs(conditions) do
-      query:where(k, v)
+    for column, value in pairs(conditions) do
+      query:where(column, value)
     end
 
     if except_ids and #except_ids > 0 then
       local ids = {}
 
-      for k, v in ipairs(except_ids) do
-        ids[k] = string.format('%d', v)
+      for index, except_id in ipairs(except_ids) do
+        ids[index] = string.format('%d', except_id)
       end
 
       query:where_raw(query:quote_column('character_id')..' NOT IN ('..table.concat(ids, ', ')..')')
@@ -72,8 +72,8 @@ function Recognizes:sync(owner)
   local names = {}
 
   if character and istable(character.recognizes) then
-    for _k, v in ipairs(character.recognizes) do
-      names[v.target_id] = v.name
+    for _, entry in ipairs(character.recognizes) do
+      names[entry.target_id] = entry.name
     end
   end
 
@@ -118,8 +118,8 @@ function Recognizes:clear_records(character)
 
   if !istable(records) then return 0 end
 
-  for _k, v in ipairs(records) do
-    discard(v, true)
+  for _, record in ipairs(records) do
+    discard(record, true)
   end
 
   character.recognizes = {}
@@ -148,13 +148,13 @@ function Recognizes:forget_character(character_id, name)
   local loaded_ids = {}
   local count = 0
 
-  for _k, v in player.Iterator() do
-    local characters = istable(v.record) and v.record.characters
+  for _, client in player.Iterator() do
+    local characters = istable(client.record) and client.record.characters
 
     if istable(characters) then
-      local active = v:get_character()
+      local active = client:get_character()
 
-      for _k2, character in pairs(characters) do
+      for _, character in pairs(characters) do
         local removed = self:remove_records(character, character_id, name)
         local loaded_id = tonumber(character.id)
 
@@ -166,7 +166,7 @@ function Recognizes:forget_character(character_id, name)
           count = count + removed
 
           if character == active then
-            self:sync(v)
+            self:sync(client)
           end
         end
       end
@@ -277,9 +277,9 @@ function Recognizes:introduce(actor, kind, name, target)
     local distance_sqr = distance * distance
     local eye_pos = actor:EyePos()
 
-    for _k, v in player.Iterator() do
-      if eye_pos:DistToSqr(v:EyePos()) <= distance_sqr then
-        targets[#targets + 1] = v
+    for _, client in player.Iterator() do
+      if eye_pos:DistToSqr(client:EyePos()) <= distance_sqr then
+        targets[#targets + 1] = client
       end
     end
   else

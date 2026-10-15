@@ -41,12 +41,12 @@ function file.Write(file_name, contents)
   local pieces = file_name:split('/')
   local current_path = ''
 
-  for _k, v in ipairs(pieces) do
-    if File.ext(v) != nil then
+  for _, piece in ipairs(pieces) do
+    if File.ext(piece) != nil then
       break
     end
 
-    current_path = current_path..v..'/'
+    current_path = current_path..piece..'/'
 
     if !file.Exists(current_path, 'DATA') then
       file.CreateDir(current_path)

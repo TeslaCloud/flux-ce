@@ -57,17 +57,17 @@ function ItemEquipable:can_transfer(inventory, _x, _y)
       return false
     end
 
-    for _k, v in pairs(inventory:get_items()) do
-      if v.equip_slot and v:is_equipped() and v.instance_id != self.instance_id then
-        if v.equip_slot == self.equip_slot then
+    for _, other in pairs(inventory:get_items()) do
+      if other.equip_slot and other:is_equipped() and other.instance_id != self.instance_id then
+        if other.equip_slot == self.equip_slot then
           return false
         elseif istable(self.equip_slot) then
-          for _k1, v1 in pairs(self.equip_slot) do
-            if v1 == v.equip_slot then
+          for _, own_slot in pairs(self.equip_slot) do
+            if own_slot == other.equip_slot then
               return false
-            elseif istable(v.equip_slot) then
-              for _k2, v2 in pairs(v.equip_slot) do
-                if v1 == v2 then
+            elseif istable(other.equip_slot) then
+              for _, other_slot in pairs(other.equip_slot) do
+                if own_slot == other_slot then
                   return false
                 end
               end
@@ -117,12 +117,12 @@ end
 -- @param should_equip [Boolean true to equip the item, false to unequip it]
 function ItemEquipable:equip(owner, should_equip)
   if should_equip then
-    for _k, v in pairs(self.disabled_inventories) do
-      local inventory = owner:get_inventory(v)
+    for _, inventory_type in pairs(self.disabled_inventories) do
+      local inventory = owner:get_inventory(inventory_type)
 
       if inventory then
-        for _k1, v1 in pairs(inventory:get_items()) do
-          local success, error_text = owner:transfer_item(v1.instance_id, 'main_inventory')
+        for _, item_obj in pairs(inventory:get_items()) do
+          local success, error_text = owner:transfer_item(item_obj.instance_id, 'main_inventory')
 
           if !success then
             owner:notify(error_text)
@@ -146,8 +146,8 @@ function ItemEquipable:equip(owner, should_equip)
     -- @realm [server]
     hook.Run('OnItemEquipped', owner, self)
   else
-    for _k, v in pairs(self.disabled_inventories) do
-      local inventory = owner:get_inventory(v)
+    for _, inventory_type in pairs(self.disabled_inventories) do
+      local inventory = owner:get_inventory(inventory_type)
 
       if inventory then
         inventory:set_disabled(false)

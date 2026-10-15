@@ -64,12 +64,12 @@ function set:on_run(actor, targets, attribute_text, value)
     return
   end
 
-  for _, v in ipairs(targets) do
-    v:notify('notification.attribute.set', {
+  for _, target in ipairs(targets) do
+    target:notify('notification.attribute.set', {
       attribute = attribute.name,
       value = value
     })
-    v:set_attribute(attribute_id, value)
+    target:set_attribute(attribute_id, value)
   end
 
   self:notify_staff('command.attribute.set.message', {
@@ -128,13 +128,13 @@ function boost:on_run(actor, targets, attribute_text, value, duration)
 
   local permanent = duration <= 0
 
-  for _, v in ipairs(targets) do
-    v:notify(permanent and 'notification.attribute.boost_permanent' or 'notification.attribute.boost', {
+  for _, target in ipairs(targets) do
+    target:notify(permanent and 'notification.attribute.boost_permanent' or 'notification.attribute.boost', {
       attribute = attribute.name,
       value = value,
       time = Flux.Lang:duration(duration)
     })
-    v:boost_attribute(attribute_id, value, duration)
+    target:boost_attribute(attribute_id, value, duration)
   end
 
   self:notify_staff('command.attribute.boost.'..(permanent and 'message_permanent' or 'message'), {
@@ -176,11 +176,12 @@ function clearboosts:on_run(actor, targets, attribute_text)
     end
   end
 
-  for _, v in ipairs(targets) do
-    local removed = v:remove_attribute_boosts(attribute_id)
+  for _, target in ipairs(targets) do
+    local removed = target:remove_attribute_boosts(attribute_id)
 
     if removed > 0 then
-      v:notify(attribute and 'notification.attribute.boosts_cleared' or 'notification.attribute.boosts_cleared_all', {
+      target:notify(attribute and 'notification.attribute.boosts_cleared'
+        or 'notification.attribute.boosts_cleared_all', {
         attribute = attribute and attribute.name
       })
     end
@@ -225,25 +226,25 @@ function list_cmd:on_run(actor, targets)
 
   Flux.Player:notify(actor, 'command.attribute.list.header', { target = target_name })
 
-  for k, v in SortedPairs(Attributes.get_stored()) do
-    local level = target:get_attribute(k)
-    local attribute_name = t(v.name)
+  for attribute_id, attribute_table in SortedPairs(Attributes.get_stored()) do
+    local level = target:get_attribute(attribute_id)
+    local attribute_name = t(attribute_table.name)
 
     Flux.Player:notify(actor, 'command.attribute.list.line', {
       attribute = attribute_name,
-      id = k,
+      id = attribute_id,
       level = tostring(level),
-      boost = tostring(target:get_attribute_boost(k))
+      boost = tostring(target:get_attribute_boost(attribute_id))
     })
   end
 
   Flux.Player:notify(actor, 'command.attribute.list.skills_header', { target = target_name })
 
-  for k, v in SortedPairs(Skills.get_stored()) do
+  for skill_id, skill_table in SortedPairs(Skills.get_stored()) do
     Flux.Player:notify(actor, 'command.attribute.list.skill_line', {
-      skill = t(v.name),
-      id = k,
-      rank = tostring(target:get_skill(k))
+      skill = t(skill_table.name),
+      id = skill_id,
+      rank = tostring(target:get_skill(skill_id))
     })
   end
 end

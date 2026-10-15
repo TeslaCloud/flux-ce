@@ -36,8 +36,8 @@ function PANEL:Init()
     local yes, no = t'ui.yes', t'ui.no'
 
     Derma_Query(message, title, yes, function()
-      for _k, v in ipairs(ids) do
-        ClientSettings:reset(v)
+      for _, setting_id in ipairs(ids) do
+        ClientSettings:reset(setting_id)
       end
     end, no)
   end
@@ -85,9 +85,9 @@ end
 function PANEL:get_listed(categories)
   local ids = {}
 
-  for _k, v in ipairs(categories) do
-    for _k1, v1 in ipairs(v.settings) do
-      table.insert(ids, v1.id)
+  for _, category in ipairs(categories) do
+    for _, setting in ipairs(category.settings) do
+      table.insert(ids, setting.id)
     end
   end
 
@@ -119,23 +119,23 @@ function PANEL:rebuild()
     notice:DockMargin(0, margin * 4, 0, 0)
   end
 
-  for k, v in ipairs(categories) do
+  for index, category in ipairs(categories) do
     local header = self.scroll_panel:Add('DLabel')
-    header:SetText(v.name)
+    header:SetText(category.name)
     header:SetFont(Theme.get_font('menu_normal'))
     header:SetTextColor(Theme.get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
-    header:DockMargin(margin, k == 1 and 0 or margin * 4, 0, margin)
+    header:DockMargin(margin, index == 1 and 0 or margin * 4, 0, margin)
 
-    for k1, v1 in ipairs(v.settings) do
+    for setting_index, setting in ipairs(category.settings) do
       local row = self.scroll_panel:Add('fl_setting_row')
       row:SetTall(row_height)
       row:Dock(TOP)
-      row:set_dark(k1 % 2 == 1)
-      row:set_setting(v1)
+      row:set_dark(setting_index % 2 == 1)
+      row:set_setting(setting)
 
-      self.rows[v1.id] = row
+      self.rows[setting.id] = row
     end
   end
 

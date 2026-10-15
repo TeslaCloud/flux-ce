@@ -19,10 +19,10 @@ CMD.aliases = { 'forcegetup', 'plygetup' }
 function CMD:on_run(actor, targets, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
-  for _k, v in ipairs(targets) do
-    if IsValid(v) and v:Alive() and v:is_ragdolled() then
-      if delay <= 0 or !v:set_getup_time(delay) then
-        v:set_ragdoll_state(RAGDOLL_NONE)
+  for _, target in ipairs(targets) do
+    if IsValid(target) and target:Alive() and target:is_ragdolled() then
+      if delay <= 0 or !target:set_getup_time(delay) then
+        target:set_ragdoll_state(RAGDOLL_NONE)
       end
     end
   end

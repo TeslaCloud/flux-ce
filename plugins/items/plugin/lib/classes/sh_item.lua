@@ -109,9 +109,9 @@ function ItemBase:base_off(what)
 
   if !istable(module_table) then return end
 
-  for k, v in pairs(module_table) do
-    if !self[k] or isfunction(v) then
-      self[k] = v
+  for key, value in pairs(module_table) do
+    if !self[key] or isfunction(value) then
+      self[key] = value
     end
   end
 
@@ -133,8 +133,8 @@ function ItemBase:is(base)
     base = base:capitalize()
     return (self.bases[base] or self.bases['Item'..base]) != nil
   elseif istable(base) then
-    for _k, v in pairs(self.bases) do
-      if base.class_name == v.class_name then
+    for _, parent_base in pairs(self.bases) do
+      if base.class_name == parent_base.class_name then
         return true
       end
     end
@@ -287,8 +287,8 @@ function ItemBase:has_menu_action(act)
   end
 
   if self.custom_buttons then
-    for _k, v in pairs(self.custom_buttons) do
-      if v.callback == act then
+    for _, button in pairs(self.custom_buttons) do
+      if button.callback == act then
         return true
       end
     end
@@ -374,9 +374,9 @@ if SERVER then
   --- Finds the player that has the item in one of their inventories. Server-side only.
   -- @return [Player the player, or nil if no player has the item]
   function ItemBase:get_player()
-    for _k, v in player.Iterator() do
-      if v:has_item_by_id(self.instance_id) then
-        return v
+    for _, client in player.Iterator() do
+      if client:has_item_by_id(self.instance_id) then
+        return client
       end
     end
   end

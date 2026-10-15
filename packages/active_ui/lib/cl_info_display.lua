@@ -146,8 +146,8 @@ function InfoDisplay:draw_all()
   -- @param icons [Map all of the registered icons by ID]
   -- @return [Any Return any non-nil value to prevent the info display from being drawn]
   if hook.Run('PreDrawInfoDisplay', stored) == nil then
-    for _k, v in pairs(stored) do
-      last_x = last_x + self:draw(v)
+    for _, info in pairs(stored) do
+      last_x = last_x + self:draw(info)
     end
   end
 

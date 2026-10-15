@@ -58,11 +58,11 @@ else
 
     local entities = {}
 
-    for _k, v in ents.Iterator() do
-      if v:GetPersistent() then
-        local ent_class = v:GetClass()
+    for _, ent in ents.Iterator() do
+      if ent:GetPersistent() then
+        local ent_class = ent:GetClass()
         entities[ent_class] = entities[ent_class] or {}
-        table.insert(entities[ent_class], v)
+        table.insert(entities[ent_class], ent)
       end
     end
 
@@ -81,15 +81,15 @@ else
 
     local status = true
 
-    for ent_class, v in pairs(to_save) do
-      if !istable(v) then
+    for ent_class, save_data in pairs(to_save) do
+      if !istable(save_data) then
         print('  -> error: saveable data is not a table! ('..ent_class..')')
         status = false
         break
       end
 
       print('  -> '..ent_class)
-      file.Write(target_dir..'/'..ent_class..'.txt', util.TableToJSON(v))
+      file.Write(target_dir..'/'..ent_class..'.txt', util.TableToJSON(save_data))
     end
 
     print('  -> '..(status and 'done!' or 'error!'))

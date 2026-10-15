@@ -90,22 +90,22 @@ end
 -- @param h [Number]
 -- @return [Boolean always true, which stops the default rebuild]
 function Factions:PreRebuildScoreboard(panel, w, h)
-  for k, v in ipairs(panel.player_cards) do
-    if IsValid(v) then
-      v:safe_remove()
+  for index, card in ipairs(panel.player_cards) do
+    if IsValid(card) then
+      card:safe_remove()
     end
 
-    panel.player_cards[k] = nil
+    panel.player_cards[index] = nil
   end
 
   panel.faction_categories = panel.faction_categories or {}
 
-  for k, v in ipairs(panel.faction_categories) do
-    if IsValid(v) then
-      v:safe_remove()
+  for index, category_panel in ipairs(panel.faction_categories) do
+    if IsValid(category_panel) then
+      category_panel:safe_remove()
     end
 
-    panel.faction_categories[k] = nil
+    panel.faction_categories[index] = nil
   end
 
   local padding = math.scale(12)
@@ -119,8 +119,8 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
   local players_table = {}
 
-  for _k, v in player.Iterator() do
-    local faction_id = v:get_faction_id()
+  for _, client in player.Iterator() do
+    local faction_id = client:get_faction_id()
 
     if Factions.find_by_id(faction_id) then
       local players = players_table[faction_id]
@@ -130,7 +130,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
         players_table[faction_id] = players
       end
 
-      players[#players + 1] = v
+      players[#players + 1] = client
     end
   end
 
@@ -142,16 +142,16 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   --   other key has to be the ID of a registered faction]
   hook.Run('PreRebuildFactionCategories', players_table)
 
-  for k, v in pairs(players_table) do
-    local faction = (k == 'players_online' and t'ui.scoreboard.players_online') or Factions.find_by_id(k)
-    local players = v
+  for id, members in pairs(players_table) do
+    local faction = (id == 'players_online' and t'ui.scoreboard.players_online') or Factions.find_by_id(id)
+    local players = members
 
     if table.Count(players) == 0 then continue end
 
     local category = vgui.Create('DCollapsibleCategory', panel)
     category:SetSize(w - padding * 2, 32)
     category:SetPos(padding, cur_y)
-    category:SetLabel(isstring(faction) and faction or t(faction.name) or k)
+    category:SetLabel(isstring(faction) and faction or t(faction.name) or id)
     category:DockMargin(0, 0, 0, math.scale(6))
     category:DockPadding(margin, margin, margin, margin)
 
@@ -164,19 +164,19 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
     category:SetContents(list)
 
-    for _k1, v1 in pairs(players) do
-      if !IsValid(v1) then continue end
+    for _, client in pairs(players) do
+      if !IsValid(client) then continue end
 
       local player_card = vgui.Create('fl_scoreboard_player', category)
       player_card:SetSize(w - padding * 2 - margin * 4, card_tall)
-      player_card:set_player(v1)
+      player_card:set_player(client)
       player_card:SetPos(0, 5)
 
-      local timer_name = 'ping_updater_'..v1:SteamID()
+      local timer_name = 'ping_updater_'..client:SteamID()
 
       timer.Create(timer_name, 1, 0, function()
-        if IsValid(player_card) and IsValid(v1) then
-          player_card.ping:SetText(v1:Ping())
+        if IsValid(player_card) and IsValid(client) then
+          player_card.ping:SetText(client:Ping())
         else
           timer.Remove(timer_name)
         end

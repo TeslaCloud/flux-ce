@@ -71,7 +71,7 @@ function PANEL:wrap(width)
     if width and style.wrap_text and paragraph != '' and util.wrap_text then
       local wrapped = util.wrap_text(paragraph, font, math_max(width, 1))
 
-      for _k, line in ipairs(wrapped or { paragraph }) do
+      for _, line in ipairs(wrapped or { paragraph }) do
         lines[#lines + 1] = line
       end
     else
@@ -90,7 +90,7 @@ function PANEL:measure_lines(lines)
   local line_height = util.font_size(font)
   local width = 0
 
-  for _k, line in ipairs(lines) do
+  for _, line in ipairs(lines) do
     local w = text_size(line, font)
 
     width = math_max(width, w)
@@ -158,7 +158,7 @@ function PANEL:draw_text(w, h, color, offset_x)
 
   x = math_floor(x)
 
-  for _k, line in ipairs(lines) do
+  for _, line in ipairs(lines) do
     draw_simple_text(line, font, x, math_floor(y), color, align, TEXT_ALIGN_TOP)
 
     y = y + line_height
