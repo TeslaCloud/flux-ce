@@ -28,7 +28,6 @@ mod 'Theme'
 
 local stored          = Theme.stored        or {}
 local current_theme   = Theme.current_theme or nil
-local has_initialized = false
 Theme.stored          = stored
 Theme.current_theme   = current_theme
 
@@ -360,29 +359,13 @@ end
 --- Checks whether the default theme has been loaded for the local player.
 -- @return [Boolean]
 function Theme.initialized()
-  return has_initialized
+  return Theme.has_initialized == true
 end
 
-do
-  --- Hook handlers of the theme library, registered as `flThemeHooks`: they load the default
-  -- theme once the local player has been initialized and reload it when the code is refreshed.
-  local theme_hooks = {}
-
-  --- Loads the default theme of the schema, or the 'factory' theme if there is none.
-  function theme_hooks:PlayerInitialized()
-    if !SCHEMA or !SCHEMA.default_theme then
-      Theme.load_theme('factory')
-    else
-      Theme.load_theme(SCHEMA.default_theme or 'factory')
-    end
-
-    has_initialized = true
-  end
-
-  --- Reloads the active theme when the code is refreshed.
-  function theme_hooks:OnReloaded()
-    Theme.reload()
-  end
-
-  Plugin.add_hooks('flThemeHooks', theme_hooks)
+--- Loads the default theme of the schema, or the 'factory' theme if the schema has none, and
+-- marks the theme library as initialized. Called by the `flThemeHooks` handlers once the
+-- local player has been initialized.
+function Theme.load_default()
+  Theme.load_theme((SCHEMA and SCHEMA.default_theme) or 'factory')
+  Theme.has_initialized = true
 end
