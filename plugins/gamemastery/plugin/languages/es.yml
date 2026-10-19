@@ -1,0 +1,46 @@
+es:
+  command:
+    gmrelease:
+      description: "Deja de jugar con el personaje de gamemaster que posees y vuelve al modo gamemaster."
+    gmpossess:
+      description: "Posee un personaje de gamemaster por su nombre, en el lugar donde estás."
+      syntax: <nombre del personaje>
+  error:
+    gamemastery:
+      wait: "Espera un momento antes de volver a hacerlo."
+      no_permission: "No eres gamemaster."
+      invalid_character: "No existe ese personaje de gamemaster."
+      not_found: "No hay ningún personaje de gamemaster llamado {name}."
+      ambiguous: "Hay más de un personaje de gamemaster llamado {name}."
+      possessed: "{name} ya está jugando con este personaje."
+      banned: "Este personaje está bloqueado."
+      not_possessing: "No estás jugando con un personaje de gamemaster."
+      no_spot: "No hay espacio para el personaje ahí."
+      delete_possessed: "No puedes eliminar un personaje mientras alguien está jugando con él."
+      own_character: "Los gamemasters no pueden jugar con sus propios personajes."
+  notification:
+    gamemastery:
+      possessed: "Ahora estás jugando con {name}."
+      released: "Has liberado a {name}."
+      placed: "{name} ha sido colocado en el mundo."
+      deleted: "{player} ha eliminado el personaje de gamemaster {name}."
+  ui:
+    gamemastery:
+      tab_menu: Gamemaster
+      title: Personajes de gamemaster
+      hint: "Arrastra un personaje al mundo para colocarlo ahí. Pulsa tu tecla de usar sobre un personaje colocado para poseerlo."
+      drag_hint: "Suelta para colocarlo aquí, clic derecho para cancelar"
+      empty: "Todavía no hay personajes de gamemaster. Créalos desde el menú principal."
+      possess: Poseer
+      release: Liberar
+      taken: "Jugado por {name}"
+      banned: Bloqueado
+      in_world: En el mundo
+      delete: Eliminar
+      delete_title: Eliminar personaje
+      delete_message: "Escribe {name} para eliminar este personaje para siempre."
+      hud: Modo gamemaster
+      use_hint: "Pulsa tu tecla de usar para poseer"
+      main_menu:
+        return: Modo gamemaster
+        create: Crear personaje de gamemaster

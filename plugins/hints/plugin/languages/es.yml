@@ -1,0 +1,10 @@
+es:
+  hint:
+    forums: ¡Puedes visitar los foros de TeslaCloud para obtener soporte, descargar schemas y charlar con otros usuarios de Flux!
+    hints: Puedes desactivar estas pistas en la pestaña Ajustes del menú.
+    tab: "Pulsa la tecla «Mostrar marcador» (por defecto: TAB) para abrir el menú de Flux."
+    commands: Empieza a escribir un comando en el chat para ver una lista de todos los comandos disponibles y la ayuda de su sintaxis.
+    bugs: "¿Has encontrado un error? ¿Tienes una idea que deberíamos añadir a Flux sin falta? ¡Visita nuestros foros en https://teslacloud.net y cuéntanoslo!"
+    setting:
+      name: Mostrar pistas
+      desc: Muestra de vez en cuando una pista de juego aleatoria en la pantalla.

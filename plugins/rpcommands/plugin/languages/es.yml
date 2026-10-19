@@ -1,0 +1,105 @@
+es:
+  command:
+    it:
+      description: Describe una acción impersonal.
+      syntax: <texto>
+    me:
+      description: Describe la acción de tu personaje. Puedes usar "*texto*" en lugar de este comando. (susurro) y grito!! también funcionan aquí.
+      syntax: <texto>
+    whisper:
+      description: Susurra algo. Puedes usar "(texto)" en lugar de este comando. El número de paréntesis afecta al volumen del susurro (máx. 3).
+      syntax: <texto>
+    yell:
+      description: Grita algo. Puedes usar "texto!!" en lugar de este comando. El número de signos de exclamación afecta al volumen del grito (máx. 4).
+      syntax: <texto>
+    event:
+      description: Envía un mensaje descriptivo a todos los jugadores del servidor.
+      syntax: <texto>
+    eventlocal:
+      description: Envía un mensaje descriptivo a todos los que estén lo bastante cerca para oírte hablar.
+      syntax: <texto>
+    gag:
+      description: Silencia y quita el silencio de los chats OOC de los jugadores.
+      add:
+        description: Silencia los chats OOC de un jugador.
+        syntax: <jugador> <duración> [motivo]
+        message: "{admin} ha silenciado a {target} en el chat OOC durante {time} ({reason})."
+      remove:
+        description: Quita el silencio de los chats OOC de un jugador.
+        syntax: <jugador>
+        message: "{admin} ha quitado el silencio a {target}."
+    its:
+      description: Coloca un texto fijo que describe algún detalle del entorno.
+      syntax: <texto>
+    itsremove:
+      description: Elimina el texto fijo que estás mirando.
+    roll:
+      description: "Tira dados: un d20 sin argumento, un dado con ese número de caras si das un número, una estadística o habilidad por su nombre, o una fórmula de dados como 2d6 + 3, 4d6kh3 o 1d20 + stealth. Si miras a un jugador cercano, se tira lo mismo para los dos."
+      syntax: "[caras, estadística, habilidad o fórmula]"
+    togglemask:
+      description: Activa o desactiva tu máscara como miembro de Protección Civil.
+      syntax: <ninguno>
+  config:
+    roleplay_chat:
+      title: Chat de rol
+      desc: Ajustes del chat dentro del personaje (IC) y fuera del personaje (OOC).
+      talk_radius:
+        name: Radio de habla
+        desc: Distancia en unidades desde la que se oye el habla normal dentro del personaje. Los susurros, los gritos, el chat OOC local y las radios se calculan a partir de ella.
+      ooc_interval:
+        name: Espera del OOC
+        desc: Cuántos segundos debe esperar un jugador entre dos mensajes en el chat OOC. Pon 0 para desactivarlo.
+      looc_interval:
+        name: Espera del LOOC
+        desc: Cuántos segundos debe esperar un jugador entre dos mensajes en el chat OOC local. Pon 0 para desactivarlo.
+      ooc_avatars:
+        name: Avatares en OOC
+        desc: Si se muestra el avatar de Steam del jugador delante de su nombre en los mensajes del chat OOC.
+      roll_versus:
+        name: Tiradas enfrentadas
+        desc: Si al tirar mientras miras a un jugador cercano también se tira por ese jugador.
+  error:
+    roll:
+      invalid: "No se puede tirar eso: {message}"
+    its_too_close: ¡Demasiado cerca de otros textos fijos!
+    speak:
+      dead: No puedes hablar ni actuar mientras estás muerto.
+      knocked_out: No puedes hablar ni actuar mientras estás inconsciente.
+  notification:
+    cooldown:
+      ooc:
+        "1": "Tienes que esperar {time} segundo más antes de volver a usar el chat OOC."
+        "2": "Tienes que esperar {time} segundos más antes de volver a usar el chat OOC."
+      looc:
+        "1": "Tienes que esperar {time} segundo más antes de volver a usar el chat LOOC."
+        "2": "Tienes que esperar {time} segundos más antes de volver a usar el chat LOOC."
+    mute:
+      "1": "No puedes usar el chat OOC durante {time} segundo más."
+      "2": "No puedes usar el chat OOC durante {time} segundos más."
+    muted: Te han silenciado durante {time}.
+    unmuted: Te han quitado el silencio.
+    static_text:
+      added: Texto fijo añadido.
+      removed: Texto fijo eliminado.
+      not_found: No se ha encontrado en esta posición ningún texto fijo que se pueda eliminar.
+  permission:
+    categories:
+      roleplay: Rol
+  ui:
+    hud:
+      display_typing:
+        talking: HABLANDO...
+        whispering: SUSURRANDO...
+        yelling: GRITANDO...
+        performing: ACTUANDO...
+    chat:
+      say: "dice"
+      yell: "grita"
+      whisper: "susurra"
+      roll: "saca {roll}"
+      roll_named: "saca en {name}: {roll}"
+      roll_versus: "saca {roll} contra"
+      roll_versus_named: "saca en {name}: {roll} contra"
+      roll_versus_reply: ": {roll}"
+      roll_critical_success: "{roll}, ¡éxito crítico!"
+      roll_critical_failure: "{roll}, ¡fallo crítico!"

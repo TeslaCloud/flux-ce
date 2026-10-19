@@ -1,0 +1,30 @@
+es:
+  error:
+    frequency: Frecuencia no válida. Debe tener el formato XXX.X.
+    radio:
+      unavailable: Ya no puedes usar esa radio.
+  notification:
+    no_active_radio: No tienes una radio activa. Pon una radio encendida en la barra rápida.
+    radio:
+      frequency_set: "La radio está sintonizada ahora en {frequency}."
+  item:
+    category:
+      communication: Comunicaciones
+    slot:
+      communication: Comunicación
+    option:
+      enable: Encender
+      disable: Apagar
+      frequency: Establecer frecuencia...
+    radio:
+      name: Radio
+      description: Una radio civil corriente que permite transmitir mensajes a corta distancia.
+  ui:
+    chat:
+      radio: "habla por radio"
+    hud:
+      display_typing:
+        radioing: HABLANDO POR RADIO...
+    radio:
+      frequency: Establecer frecuencia de radio
+      frequency_message: Introduce la frecuencia en la que la radio puede recibir o enviar mensajes. Debe tener el formato XXX.X.

@@ -1,0 +1,6 @@
+es:
+  config:
+    character:
+      spawn_where_left:
+        name: Aparecer donde se salió
+        desc: "Si los personajes vuelven a colocarse donde estaban cuando sus jugadores se desconectaron, siempre que el mapa sea el mismo."

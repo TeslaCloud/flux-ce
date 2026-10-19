@@ -1,0 +1,60 @@
+es:
+  command:
+    charforget:
+      description: Hace que un personaje olvide a los personajes de otros jugadores.
+      syntax: <jugador> <personaje a olvidar>
+      message: "{player} ha hecho que {target} olvide a {forgotten}."
+    charclearrecognition:
+      description: "Borra los reconocimientos de un personaje: los personajes que conoce (own), los personajes que lo conocen (others) o ambos (all)."
+      syntax: "<jugador> [own|others|all]"
+      message:
+        own: "{player} ha hecho que {target} olvide a todos."
+        others: "{player} ha hecho que todos olviden a {target}."
+        all: "{player} ha hecho que {target} olvide a todos y que todos olviden a {target}."
+  config:
+    recognize:
+      title: Reconocimiento
+      desc: Ajustes del sistema de reconocimiento de personajes.
+      enabled:
+        name: Sistema de reconocimiento
+        desc: Si los personajes tienen que presentarse antes de que los demás sepan sus nombres. Si está desactivado, todos reconocen a todos.
+      must_see:
+        name: Presentaciones con línea de visión
+        desc: Si un personaje solo aprende el nombre de quien se presenta cuando nada bloquea la vista entre ambos.
+      forget_on_death:
+        name: Olvidar a todos al morir
+        desc: Si un personaje que muere olvida a todos los personajes que reconocía.
+      forgotten_on_death:
+        name: Ser olvidado al morir
+        desc: Si un personaje que muere es olvidado por todos los que lo conocían por su nombre real. Quienes solo conocían un nombre falso lo conservan.
+  error:
+    recognize:
+      invalid_name: No puedes presentarte con este nombre.
+      no_character: Ninguno de estos jugadores tiene un personaje cargado.
+      nothing_to_forget: Ninguno de estos personajes conoce a los personajes que hay que olvidar.
+  notification:
+    recognize:
+      new_name: "Has memorizado un nuevo nombre: {name}"
+      change_name: Ahora conoces a {name} como {new_name}
+      true_name: Te has presentado como {name} (nombre real)
+      false_name: Te has presentado como {name} (nombre falso)
+      forgotten: Ya no recuerdas a {name}.
+      forgot_everyone: Ya no recuerdas a nadie de los que conocías.
+  ui:
+    hud:
+      stranger_male: Desconocido
+      stranger_female: Desconocida
+    recognize:
+      title: Reconocimiento
+      message: ¿Cómo quieres que te conozcan los demás?
+      character_name: Nombre real
+      fake_name: Nombre falso
+      enter_fake_name: Introduce un nombre falso...
+      forget: Olvidar
+      range: Alcance
+      previous_names: También se te conoce como
+      types:
+        whisper: Todos los personajes al alcance de un susurro
+        talk: Todos los personajes al alcance de la voz
+        yell: Todos los personajes al alcance de un grito
+        target: El personaje al que miras

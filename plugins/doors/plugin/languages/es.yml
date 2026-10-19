@@ -1,0 +1,133 @@
+es:
+  config:
+    doors:
+      title: Puertas
+      desc: Ajustes de propiedad y cierre de puertas.
+      price:
+        name: Precio de puerta
+        desc: Lo que cuesta una puerta comprable si el staff no le ha puesto un precio propio. Pon 0 para que las puertas sean gratis.
+      sell_share:
+        name: Reembolso por venta
+        desc: El porcentaje del precio pagado por una puerta que su dueño recupera al venderla.
+      limit:
+        name: Límite de puertas
+        desc: Cuántas puertas puede poseer un personaje; las puertas vinculadas cuentan como una. Pon 0 para desactivar el límite.
+      lock_time:
+        name: Tiempo para cerrar
+        desc: Cuántos segundos se tarda en cerrar una puerta con llave. Pon 0 para cerrarlas al instante.
+      unlock_time:
+        name: Tiempo para abrir
+        desc: Cuántos segundos se tarda en abrir una puerta cerrada con llave. Pon 0 para abrirlas al instante.
+      text_length:
+        name: Longitud del texto de puerta
+        desc: El texto más largo, en caracteres, que el dueño de una puerta puede poner en ella.
+      access_entries:
+        name: Entradas de acceso
+        desc: A cuántos personajes se puede dar acceso a una misma puerta; las puertas vinculadas cuentan como una.
+  door:
+    categories:
+      general: General
+      ownership: Propiedad
+    properties:
+      name: Nombre
+      title_type:
+        name: Tipo de título
+        select: Selecciona...
+      locked: Cerrada con llave
+      ownable: Se puede poseer
+      price: Precio (vacío para el predeterminado)
+    title_type:
+      none: "Desactivado"
+      center: "Centrado"
+  error:
+    door:
+      not_a_door: ¡Esto no es una puerta!
+      too_far: ¡Estás demasiado lejos de la puerta!
+      not_ownable: ¡Esta puerta no se puede poseer!
+      already_owned: ¡Esta puerta ya tiene dueño!
+      not_owned: ¡Esta puerta no es de nadie!
+      not_owner: ¡Esta puerta no es tuya!
+      no_access: ¡No tienes permiso para gestionar esta puerta!
+      owner_only: ¡Solo el dueño de la puerta puede hacer eso!
+      limit: "¡No puedes poseer más puertas, el límite es {limit}!"
+      cant_afford: "¡No puedes permitirte esta puerta, cuesta {value} {currency}!"
+      cannot_buy: ¡No puedes comprar esta puerta!
+      cannot_sell: ¡No puedes vender esta puerta!
+      cannot_change_access: ¡No puedes cambiar el acceso a esta puerta!
+      invalid_character: ¡No se puede dar ni quitar el acceso a este personaje!
+      invalid_text: ¡Ese texto no se puede poner en una puerta!
+      access_full: ¡Ya hay demasiados personajes con acceso a esta puerta!
+      already_linked: ¡Estas puertas ya están vinculadas!
+      not_linked: ¡Esta puerta no está vinculada a ninguna otra!
+      link_owned: Una puerta que tiene dueño no se puede vincular. ¡Desvincúlala o desaloja primero a su dueño!
+  notification:
+    door:
+      bought: "Has comprado la puerta por {value} {currency}."
+      taken: Ahora la puerta es tuya.
+      sold: "Has vendido la puerta por {value} {currency}."
+      abandoned: La puerta ya no es tuya.
+      evicted: Has perdido la propiedad de una puerta.
+      evict_done: Se ha desalojado al dueño de la puerta.
+      text_set: Se ha cambiado el texto de la puerta.
+      access:
+        use: "{name} ahora puede cerrar y abrir la puerta con llave."
+        manage: "{name} ahora puede gestionar la puerta."
+        none: "{name} ya no tiene acceso a la puerta."
+      access_received:
+        use: Te han permitido cerrar y abrir una puerta con llave.
+        manage: Te han permitido gestionar una puerta.
+        none: Te han quitado el acceso a una puerta.
+      link_picked: Puerta principal elegida. Haz clic izquierdo en las puertas que quieras vincular a ella.
+      linked: "Puerta vinculada. Puertas en el grupo: {count}."
+      unlinked: Se ha desvinculado la puerta.
+      link_cleared: Se ha olvidado la puerta elegida.
+  tool:
+    door_link:
+      name: Vinculador de puertas
+      desc: Vincula puertas en grupos que se poseen juntos.
+      "0": "Clic izquierdo: elegir la puerta principal y luego vincularle puertas. Clic derecho: desvincular. Recargar: olvidar la puerta elegida."
+  ui:
+    door:
+      title: Puertas
+      unlock: Abrir
+      lock: Cerrar
+      settings: Ajustes
+      price: "{value} {currency}"
+      buy: "Comprar ({price})"
+      buy_message: "¿Quieres comprar esta puerta por {price}?"
+      take: Apropiarse
+      take_message: ¿Quieres convertirte en el dueño de esta puerta?
+      manage: Gestionar
+      evict: "Desalojar al dueño ({name})"
+      evict_message: ¿Quieres quitarle esta puerta a su dueño? No se le devolverá nada.
+      status:
+        for_sale: "En venta: {price}"
+        free: Disponible
+        owned: Con dueño
+      access:
+        none: Sin acceso
+        use: Cerrar y abrir
+        manage: Cerrar, abrir y gestionar
+        give_use: Permitir cerrar y abrir
+        give_manage: Permitir gestionar
+        take: Quitar acceso
+      management:
+        title: Gestión de puerta
+        you_own: Esta puerta es tuya.
+        owner: "Dueño: {name}"
+        group: Esta puerta está vinculada con otras. Todo lo que hagas aquí se aplica a todas ellas.
+        text: Texto de la puerta
+        save: Poner texto
+        character: Personaje
+        access: Acceso
+        away: "{name} (ausente)"
+        hint: Haz clic derecho o doble clic en un personaje para cambiar su acceso.
+        sell: "Vender ({price})"
+        abandon: Renunciar a la puerta
+        sell_title: Vender puerta
+        sell_message: "¿Quieres vender esta puerta por {price}?"
+        abandon_message: ¿Quieres renunciar a esta puerta? No recibirás nada a cambio.
+    hud:
+      bar_text:
+        lock_door: CERRANDO LA PUERTA...
+        unlock_door: ABRIENDO LA PUERTA...

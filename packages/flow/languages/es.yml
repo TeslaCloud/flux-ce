@@ -1,0 +1,166 @@
+es:
+  config:
+    general:
+      title: Ajustes generales
+      desc: Ajustes generales relacionados con el propio framework Flux.
+      prefixes:
+        name: Prefijos de comandos
+        desc: Qué prefijos del chat se consideran prefijos de comandos (<prefijo>somecommand, p. ej. /somecommand).
+      walk_speed:
+        name: Velocidad al caminar
+        desc: Lo rápido que camina el jugador.
+      run_speed:
+        name: Velocidad al correr
+        desc: Lo rápido que corre el jugador (manteniendo SHIFT por defecto).
+      crouch_speed:
+        name: Velocidad agachado
+        desc: Lo rápido que camina el jugador agachado (manteniendo CTRL por defecto).
+      jump_power:
+        name: Potencia de salto
+        desc: La altura a la que salta el jugador por defecto.
+      respawn_time:
+        name: Tiempo de reaparición
+        desc: Cuánto tarda un jugador en reaparecer tras su muerte (en segundos).
+      root_steamid:
+        name: SteamID con acceso root
+        desc: Otorga acceso root al jugador con este SteamID.
+      data_save_interval:
+        name: Intervalo de guardado del servidor
+        desc: Tiempo entre cada guardado de los datos del servidor.
+      player_data_save_interval:
+        name: Intervalo de guardado de jugadores
+        desc: Tiempo entre cada guardado de los datos de los jugadores.
+  error:
+    cant_now: ¡No puedes hacer esto ahora mismo!
+    command:
+      higher_immunity: "¡{target} tiene más inmunidad que tú!"
+      invalid_choice: "'{value}' no es una opción válida aquí, usa una de estas: {choices}"
+      no_access: ¡No tienes acceso a este comando!
+      not_valid: "¡'{command}' no es un comando válido!"
+      player_ambiguous: "Hay varios jugadores llamados '{player}', ¡usa el SteamID del que buscas!"
+      player_invalid: "¡'{player}' no es un jugador válido!"
+      syntax: "Sintaxis incorrecta, usa /{command} {syntax}"
+      unknown_subcommand: "'{subcommand}' no es un subcomando de /{command}, usa uno de estos: {subcommands}"
+      you_must_enter_command: ¡Debes introducir un comando!
+    config:
+      unknown: ¡No existe ese ajuste!
+      static: ¡Este ajuste no se puede cambiar en el juego!
+      invalid_value: ¡Este no es un valor válido para este ajuste!
+      not_a_number: ¡El valor de este ajuste tiene que ser un número!
+      not_a_boolean: "¡El valor de este ajuste tiene que ser 'true' o 'false'!"
+      not_a_string: ¡El valor de este ajuste tiene que ser una línea de texto!
+      not_a_table: ¡El valor de este ajuste tiene que ser una lista!
+      no_default: ¡Este ajuste no tiene valor por defecto!
+    plugin:
+      unknown: ¡No existe ese plugin!
+      required: "Este plugin no se puede desactivar, lo necesitan: {plugins}"
+    invalid_time: "¡'{time}' no se ha podido interpretar como tiempo!"
+    invalid_value: "¡Has indicado un valor de argumento no válido!"
+    invalid_amount: ¡Has indicado una cantidad no válida!
+    invalid_entity: ¡Esta no es una entidad válida!
+    too_far: ¡El objetivo está demasiado lejos!
+    wait: No puedes hacerlo ahora mismo, ¡espera un momento!
+  language:
+    name: Español
+  notification:
+    console: Consola
+  operator:
+    less: Menor
+    greater: Mayor
+    less_equal: Menor o igual
+    greater_equal: Mayor o igual
+    equal: Igual
+    unequal: Distinto
+    and: "Y"
+    or: "O"
+    not: "NO"
+  settings:
+    language:
+      name: Idioma
+      desc: El idioma de la interfaz de Flux. No cambia el idioma del propio juego.
+      auto: El mismo que el juego
+  time:
+    just_now: "justo ahora"
+    second: "segundo"
+    seconds: "segundos"
+    minute: "minuto"
+    minutes: "minutos"
+    hour: "hora"
+    hours: "horas"
+    day: "día"
+    days: "días"
+    week: "semana"
+    weeks: "semanas"
+    month: "mes"
+    months: "meses"
+    year: "año"
+    years: "años"
+    from_now: "dentro de {time}"
+    ago: "hace {time}"
+    over: "más de"
+    about: "unos"
+    permanently: permanentemente
+    for: "durante {time}"
+    and: "y"
+  tool:
+    measure:
+      name: Herramienta de medición
+      desc: Úsala para medir la distancia entre dos puntos.
+      system_header: Sistema de medida
+  ui:
+    hud:
+      dead: "*MUERTO*"
+      bar_text:
+        getup: LEVANTÁNDOTE...
+        respawn: ESPERANDO PARA REAPARECER...
+      loading:
+        local_player: Preparando la secuencia de carga, espera...
+        player_object: Esperando a que se cree el jugador local, espera...
+        schema: Cargando el schema y los plugins, espera...
+      player_message:
+        died: HAS MUERTO
+        respawn:
+          "1": "REAPARECERÁS EN {time} SEGUNDO."
+          "2": "REAPARECERÁS EN {time} SEGUNDOS."
+    avatar_tooltip: Clic izquierdo - Abrir perfil, Clic derecho - Copiar SteamID
+    help:
+      commands:
+        title: Comandos
+        empty: No hay comandos que puedas usar.
+        aliases: Alias
+        uncategorized: Otros
+      plugins:
+        title: Plugins
+        schema: Schema
+      credits:
+        title: Créditos
+    scoreboard:
+      help: Al hacer clic en la tarjeta de un jugador pueden aparecer algunas opciones.
+      menu:
+        profile: Abrir perfil de Steam
+        copy_steam_id: Copiar SteamID
+      online: "Jugadores conectados: {count} / {max}"
+      ping: Ping
+      players_online: Jugadores conectados
+      title: LISTA DE JUGADORES
+    tab_menu:
+      admin: Admin
+      close_menu: Volver
+      scoreboard: Jugadores
+      help: Ayuda
+    ok: Aceptar
+    cancel: Cancelar
+    close: Cerrar
+    yes: "Sí"
+    no: "No"
+    unit:
+      title:
+        imperial: Imperial
+        metric: Métrico
+        units: Unidades de Source Engine
+      mm: mm
+      cm: cm
+      m: m
+      km: km
+      mi: mi
+      units: unidades

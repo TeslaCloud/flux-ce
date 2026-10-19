@@ -1,0 +1,38 @@
+es:
+  condition:
+    steamid:
+      name: Jugador con un SteamID concreto
+      text: SteamID {operator} {steam_id}
+      message: Introduce el SteamID del jugador
+    model:
+      name: Jugador con un modelo concreto
+      text: Modelo {operator} {model}
+      message: Introduce la ruta del modelo
+    health:
+      name: Jugador con cierto valor de salud
+      text: Salud {operator} {health}
+      message: Introduce el valor de salud
+    armor:
+      name: Jugador con cierto valor de armadura
+      text: Armadura {operator} {armor}
+      message: Introduce el valor de armadura
+    weapon:
+      name: Jugador con un arma concreta en las manos
+      text: Clase del arma activa {operator} {weapon}
+      message: Introduce la clase del arma
+  ui:
+    condition:
+      select_operator: <Selecciona operador>
+      select_parameter: <Selecciona parámetro>
+      right_click: Haz clic derecho aquí para añadir una nueva condición
+      add_condition: Añadir condición
+      set_parameter: Establecer parámetro...
+      set_operator: Establecer operador...
+      operators: Operadores
+      delete: Eliminar condición
+      save:
+        title: Guardar condición
+        message: Indica un nombre para el preset.
+      load:
+        title: Cargar condición
+        column: Selecciona un preset

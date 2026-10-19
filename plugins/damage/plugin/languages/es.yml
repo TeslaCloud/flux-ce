@@ -1,0 +1,62 @@
+es:
+  config:
+    damage:
+      title: Daño
+      desc: Multiplicadores de daño, regeneración de salud, ahogamiento y registros de daño.
+      scale_head:
+        name: Multiplicador de daño en la cabeza
+        desc: Por cuánto se multiplica el daño de un impacto en la cabeza, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+      scale_chest:
+        name: Multiplicador de daño en el pecho
+        desc: Por cuánto se multiplica el daño de un impacto en el pecho, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+      scale_stomach:
+        name: Multiplicador de daño en el estómago
+        desc: Por cuánto se multiplica el daño de un impacto en el estómago, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+      scale_arms:
+        name: Multiplicador de daño en los brazos
+        desc: Por cuánto se multiplica el daño de un impacto en un brazo, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+      scale_legs:
+        name: Multiplicador de daño en las piernas
+        desc: Por cuánto se multiplica el daño de un impacto en una pierna, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+      scale_fall:
+        name: Multiplicador de daño por caída
+        desc: Por cuánto se multiplica el daño por caída. 1 no cambia nada, 0 desactiva el daño por caída.
+      health_regen:
+        name: Regeneración de salud
+        desc: Si los jugadores heridos recuperan salud poco a poco con el tiempo.
+      health_regen_amount:
+        name: Cantidad de regeneración de salud
+        desc: Cuánta salud recupera un jugador de una vez.
+      health_regen_interval:
+        name: Intervalo de regeneración de salud
+        desc: Cuántos segundos pasan entre dos recuperaciones de salud. La espera vuelve a empezar cuando el jugador recibe daño.
+      health_regen_fast_interval:
+        name: Intervalo de regeneración rápida de salud
+        desc: Cuántos segundos pasan entre dos recuperaciones de salud mientras la salud del jugador está en el umbral de regeneración rápida o por encima.
+      health_regen_fast_share:
+        name: Umbral de regeneración rápida de salud
+        desc: El porcentaje de la salud máxima a partir del cual se usa el intervalo rápido.
+      drowning:
+        name: Ahogamiento
+        desc: Si los jugadores que permanecen demasiado tiempo bajo el agua reciben daño hasta que salen a la superficie.
+      drowning_time:
+        name: Tiempo de aire
+        desc: Cuántos segundos puede permanecer un jugador completamente bajo el agua antes de empezar a ahogarse.
+      drowning_damage:
+        name: Daño por ahogamiento
+        desc: "La fórmula de dados del daño que recibe de una vez un jugador que se ahoga, como 1d4 o un número simple. Una fórmula que no se puede tirar causa 1 de daño."
+      drowning_interval:
+        name: Intervalo de daño por ahogamiento
+        desc: Cuántos segundos pasan entre dos daños por ahogamiento.
+      view_punch:
+        name: Sacudida de cámara por daño
+        desc: Si la vista de un jugador se sacude cuando recibe daño.
+      view_punch_scale:
+        name: Escala de sacudida de cámara por daño
+        desc: Cuántos grados como máximo se sacude la vista por cada punto de daño. Un solo impacto nunca la sacude más de 30 grados.
+      log_damage:
+        name: Registrar daño
+        desc: Si el daño que reciben los jugadores se escribe en el registro.
+      log_kills:
+        name: Registrar muertes
+        desc: Si las muertes de los jugadores se escriben en el registro.

@@ -1,0 +1,65 @@
+es:
+  condition:
+    has_item:
+      name: Personaje con cierto objeto en el inventario
+      text: "Tiene el objeto {operator} {item}"
+      message: Introduce el id del objeto
+    has_item_data:
+      name: Personaje con un objeto que contiene cierto valor de datos
+      text: "Tiene el objeto {item} con el dato {key} {operator} {value}"
+      message1: Introduce el id del objeto
+      message2: Introduce la clave de datos del objeto
+      message3: Introduce el valor de datos del objeto
+  config:
+    items:
+      title: Objetos
+      desc: Ajustes de los objetos y de los objetos que hay en el mundo.
+      destroy:
+        name: Permitir destruir objetos
+        desc: Si los jugadores pueden destruir los objetos de sus inventarios a través del menú del objeto. Un objeto puede permitirlo o prohibirlo independientemente de este ajuste.
+      entity_health:
+        name: Salud de los objetos soltados
+        desc: Cuánto daño aguanta un objeto que está en el mundo antes de destruirse. Pon 0 para que los objetos soltados sean indestructibles. Se aplica a los objetos que se suelten a partir de ahora.
+      drop_ownership:
+        name: Separar los objetos soltados de cada personaje
+        desc: Si se impide que los jugadores recojan y usen los objetos que ha soltado otro de sus propios personajes.
+      ammo_requires_weapon:
+        name: La munición requiere un arma
+        desc: Si la munición solo puede cargarla un jugador que lleve un arma que la use.
+      drop_weapons_on_death:
+        name: Soltar armas al morir
+        desc: Si las armas equipadas de un jugador caen al mundo cuando el jugador muere.
+  error:
+    item:
+      other_character: No puedes tocar un objeto que ha soltado otro de tus personajes.
+      no_weapon_for_ammo: No llevas ningún arma que use esta munición.
+      destroy_not_empty: Vacía este objeto antes de destruirlo.
+  item:
+    category:
+      consumables: Consumibles
+      equipment: Equipo
+      clothing: Ropa
+      other: Otros
+      weapon: Arma
+      ammo: Munición
+      throwable: Arma arrojadiza
+    slot:
+      primary: Principal
+      secondary: Secundaria
+      heavy: Pesada
+      melee: Cuerpo a cuerpo
+      throwable: Arrojadiza
+    option:
+      use: Usar
+      take: Tomar
+      drop: Soltar
+      cancel: Cancelar
+      equip: Equipar
+      unequip: Desequipar
+      unload: Descargar
+      load: Cargar
+      destroy: Destruir
+  ui:
+    item:
+      destroy_title: Destruir objeto
+      destroy_message: "¿Seguro que quieres destruir {item}? Esto no se puede deshacer."

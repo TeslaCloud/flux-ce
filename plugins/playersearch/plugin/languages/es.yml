@@ -1,0 +1,16 @@
+es:
+  error:
+    must_not_look: ¡El objetivo no debe estar mirando hacia ti!
+    search:
+      already: ¡Ya están registrando al objetivo!
+      too_often: ¡Estás pidiendo registros con demasiada frecuencia! Se ha aumentado el tiempo de espera.
+      request: ¡El objetivo ya ha recibido una solicitud de registro!
+  notification:
+    search:
+      resist: "{player} se resiste al registro."
+  ui:
+    search:
+      title: Registro
+      message: "{player} intenta registrarte. ¿Se lo permites?"
+      allow: Permitir
+      resist: Resistirse

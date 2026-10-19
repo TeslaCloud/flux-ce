@@ -1,0 +1,29 @@
+es:
+  config:
+    d20:
+      title: D20
+      desc: Daño con dados, salud de NPC, clase de armadura y tiradas de ataque.
+      enabled:
+        name: Daño con dados
+        desc: "Tira dados para el daño de cada golpe a un jugador o NPC en lugar de usar el daño del motor, tira dados para el daño por caída y escala la salud de los NPC."
+      default_dice:
+        name: Dados de daño predeterminados
+        desc: "La fórmula de dados que se tira para un golpe para el que ningún arma, NPC o tipo de daño da una fórmula y cuyo daño del motor es 0."
+      fall_dice:
+        name: Dados de daño por caída
+        desc: "La fórmula de dados del daño por caída. La variable steps vale 1 para la caída más lenta que hace daño y aumenta en 1 por cada 150 unidades por segundo de velocidad de caída. El multiplicador de daño por caída del plugin Damage sigue aplicándose."
+      weapon_dice:
+        name: Dados de daño de armas
+        desc: "Entradas como 'weapon_pistol = 1d8' que establecen la fórmula de dados de una clase de arma o proyectil, por encima de la fórmula que le da el código."
+      npc_dice:
+        name: Dados de daño de NPC
+        desc: "Entradas como 'npc_zombie = 1d8' que establecen la fórmula de dados de los ataques de una clase de NPC, por encima de la fórmula que le da el código. Un NPC que lleva un arma tira los dados del arma."
+      npc_health_scale:
+        name: Escala de salud de NPC
+        desc: "Por cuánto se multiplica la salud máxima de un NPC al aparecer, para que aguante aproximadamente tantos golpes tirados como golpes del motor aguantaría."
+      npc_armor_class:
+        name: Clase de armadura de NPC
+        desc: "La clase de armadura de un NPC: el valor que debe alcanzar una tirada de ataque contra él para impactar."
+      npc_attack_bonus:
+        name: Bonificación de ataque de NPC
+        desc: "Lo que un NPC suma al d20 de sus tiradas de ataque."

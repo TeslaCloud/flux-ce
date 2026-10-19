@@ -1,0 +1,12 @@
+es:
+  notification:
+    mapscene:
+      point_added: Punto añadido
+  tool:
+    mapscene:
+      name: Fondo del menú principal
+      desc: Establece la posición de la cámara del menú principal.
+      "0": "Clic izquierdo: añadir nodo"
+  ui:
+    mapscene:
+      title: Escena del mapa

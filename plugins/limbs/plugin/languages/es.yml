@@ -1,0 +1,45 @@
+es:
+  command:
+    heallimbs:
+      description: "Cura todas las extremidades del personaje de un jugador."
+      syntax: <jugador>
+      message: "{player} ha curado las extremidades de {target}."
+      notification: Tus extremidades han sido curadas.
+  config:
+    limbs:
+      title: Daño en extremidades
+      desc: Ajustes del daño en extremidades.
+      enabled:
+        name: Daño en extremidades
+        desc: Registra el daño por parte del cuerpo. Si está desactivado, ninguna extremidad recibe daño, las extremidades heridas no tienen efecto y el diagrama del cuerpo se oculta.
+      damage_scale:
+        name: Escala de daño en extremidades
+        desc: "Cuánto daño recibe una extremidad por cada porcentaje de la salud máxima que el jugador pierde por un golpe en ella. Con 1, un golpe que quita un cuarto de la salud máxima causa 25 de daño a la extremidad. Una extremidad queda inutilizada al llegar a 100."
+      legs_slow:
+        name: Las piernas heridas ralentizan
+        desc: Las piernas heridas reducen la velocidad al correr y la altura de los saltos, hasta la mitad con una pierna inutilizada.
+      fall_damage:
+        name: El daño por caída hiere las piernas
+        desc: Reparte el daño por caída entre ambas piernas.
+      arms_sway:
+        name: Los brazos heridos desvían la puntería
+        desc: Los brazos heridos hacen que la puntería del arma en la mano se desvíe.
+      recovery:
+        name: Recuperación de extremidades
+        desc: Cuánto daño recupera cada extremidad herida por minuto por sí sola. Pon 0 para que las extremidades solo se curen con tratamiento o al morir.
+  settings:
+    limbs_hud:
+      name: Diagrama del cuerpo
+      desc: Cuándo mostrar el diagrama de tus extremidades en el HUD.
+      hurt: Al estar herido
+      always: Siempre
+      never: Nunca
+  ui:
+    limbs:
+      head: Cabeza
+      chest: Pecho
+      stomach: Estómago
+      left_arm: Brazo izquierdo
+      right_arm: Brazo derecho
+      left_leg: Pierna izquierda
+      right_leg: Pierna derecha

@@ -1,0 +1,66 @@
+es:
+  animation:
+    sit_ground:
+      name: Sentarse en el suelo
+    sit_wall:
+      name: Sentarse contra una pared
+    lean_back:
+      name: Apoyarse en una pared
+    lean_arms_back:
+      name: Apoyarse en una pared (brazos atrás)
+    lean_arms_down:
+      name: Apoyarse en una pared (brazos abajo)
+    idle_1:
+      name: Postura de espera 1
+    idle_2:
+      name: Postura de espera 2
+    idle_3:
+      name: Postura de espera 3
+    idle_4:
+      name: Postura de espera 4
+    pant:
+      name: Recuperar el aliento
+    pant_wall:
+      name: Recuperar el aliento contra una pared
+    window:
+      name: Mirar por una ventana
+    cheer:
+      name: Celebrar
+    wave:
+      name: Saludar con la mano
+    wave_close:
+      name: Saludar con la mano (de cerca)
+    cp_lean:
+      name: Apoyarse en una pared (porra)
+    cp_threat_1:
+      name: Postura amenazante 1
+    cp_threat_2:
+      name: Postura amenazante 2
+    cp_deny:
+      name: Denegar el paso
+    cp_motion_left:
+      name: Señalar a la izquierda
+    cp_motion_right:
+      name: Señalar a la derecha
+  config:
+    animations:
+      title: Animaciones
+      desc: Posturas y gestos que los jugadores eligen en el menú contextual.
+      cooldown:
+        name: Espera entre animaciones
+        desc: Cuántos segundos debe esperar un jugador tras iniciar una animación antes de poder iniciar otra. Pon 0 para desactivarlo.
+      third_person:
+        name: Tercera persona durante animaciones
+        desc: Si los jugadores ven a su personaje en tercera persona mientras reproducen una animación.
+  error:
+    animations:
+      busy: ¡Ya estás reproduciendo una animación!
+      cooldown: "Tienes que esperar {time} s. antes de poder reproducir otra animación."
+      crouching: ¡No puedes hacer esto mientras estás agachado!
+      model: ¡El modelo de tu personaje no puede reproducir esta animación!
+      not_on_ground: ¡Tienes que estar de pie en el suelo!
+      wall_behind: ¡Tienes que estar de pie con la espalda contra una pared!
+      wall_front: ¡Tienes que estar de pie justo delante de una pared, mirando hacia ella!
+  ui:
+    animations:
+      title: Animaciones

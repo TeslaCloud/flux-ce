@@ -1,0 +1,18 @@
+es:
+  settings:
+    categories:
+      general: General
+      interface: Interfaz
+      gameplay: Jugabilidad
+      chat: Chat
+      sound: Sonido
+      admin: Administración
+  ui:
+    tab_menu:
+      settings: Ajustes
+    settings:
+      title: Ajustes
+      empty: Todavía no hay ajustes que cambiar.
+      reset: Restablecer valor predeterminado
+      reset_all: Restablecer todo
+      reset_all_message: ¿Seguro que quieres restablecer todos estos ajustes a sus valores predeterminados?

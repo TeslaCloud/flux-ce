@@ -1,0 +1,135 @@
+es:
+  command:
+    charsetname:
+      description: "Cambia el nombre de un personaje."
+      syntax: <jugador> <nuevo nombre>
+      message: "{player} ha cambiado el nombre de {target} a {name}."
+    charsetmodel:
+      description: "Cambia el modelo de un personaje."
+      syntax: <jugador> <nuevo modelo>
+      message: "{player} ha cambiado el modelo de {target} a {model}."
+    charsetdesc:
+      description: "Cambia la descripción física de un personaje."
+      syntax: <jugador> <nueva descripción>
+      message: "{player} ha cambiado la descripción de {target} a {desc}."
+    charsetgender:
+      description: "Cambia el género de un personaje: male, female o no_gender."
+      syntax: <jugador> <nuevo género>
+      message: "{player} ha cambiado el género de {target} a {gender}."
+    charban:
+      description: "Bloquea y desbloquea personajes."
+      add:
+        description: "Bloquea el personaje activo de un jugador."
+        syntax: <jugador>
+        message: "{player} ha bloqueado al personaje {target}."
+      remove:
+        description: "Desbloquea un personaje por su nombre completo, aunque su jugador no esté conectado."
+        syntax: <nombre del personaje>
+        message: "{player} ha desbloqueado al personaje {target}."
+    charphysdesc:
+      description: "Cambia la descripción física de tu personaje."
+      syntax: "[nueva descripción]"
+  condition:
+    character:
+      name: Personaje concreto
+      text: "Personaje {operator} {character}"
+      message: Selecciona un personaje
+    characters: Personajes
+  config:
+    character:
+      title: Personaje
+      desc: Ajustes del sistema de personajes.
+      min_name_len:
+        name: Longitud mínima del nombre
+        desc: "La longitud mínima del nombre del personaje."
+      max_name_len:
+        name: Longitud máxima del nombre
+        desc: "La longitud máxima del nombre del personaje."
+      min_desc_len:
+        name: Longitud mínima de la descripción
+        desc: "La longitud mínima de la descripción física del personaje."
+      max_desc_len:
+        name: Longitud máxima de la descripción
+        desc: "La longitud máxima de la descripción física del personaje."
+      limit:
+        name: Límite de personajes
+        desc: "El número máximo de personajes que puede tener un jugador."
+  error:
+    character:
+      invalid: "No tienes ese personaje."
+      banned: "Este personaje está bloqueado."
+      already_active: "Ya estás jugando con este personaje."
+      cannot_use: "No puedes cargar este personaje ahora mismo."
+      cannot_switch: "No puedes cambiar de personaje ahora mismo."
+      cannot_delete: "No puedes borrar este personaje."
+      switch_dead: "No puedes cambiar de personaje mientras estás muerto."
+      switch_ragdolled: "No puedes cambiar de personaje mientras estás en el suelo."
+      delete_active: "No puedes borrar el personaje con el que estás jugando."
+      delete_banned: "No puedes borrar un personaje bloqueado."
+      name_taken: "El nombre '{name}' ya lo usa otro personaje."
+      nobody_to_ban: "Ninguno de estos jugadores tiene un personaje que se pueda bloquear."
+      not_found: "No hay ningún personaje llamado '{name}'."
+      not_banned: "El personaje '{name}' no está bloqueado."
+  notification:
+    name_changed: "El nombre de tu personaje se ha cambiado a {name}."
+    model_changed: "El modelo de tu personaje se ha cambiado a {model}."
+    desc_changed: "La descripción de tu personaje se ha cambiado a {desc}."
+    gender_changed: "El género de tu personaje se ha cambiado a {gender}."
+    character_banned: "Tu personaje {name} ha sido bloqueado. Elige otro personaje."
+  permission:
+    categories:
+      character_management: Gestión de personajes
+  ui:
+    gender:
+      male: Masculino
+      female: Femenino
+      no_gender: Sin género
+    hud:
+      loading:
+        characters: Cargando personajes, espera...
+    main_menu:
+      disconnect: Desconectar
+      disconnect_msg: ¿Seguro que quieres desconectarte de este servidor?
+      continue: Continuar
+      developed_by: Desarrollado por {author}.
+    char_create:
+      title: CREAR UN PERSONAJE
+      text: CREACIÓN DE PERSONAJE
+      create: CREAR
+      load: CARGAR PERSONAJE
+      select: Seleccionar
+      delete: Borrar
+      general: Información general del personaje
+      name: "Nombre completo:"
+      random_name: Nombre aleatorio.
+      desc: "Descripción:"
+      gender: "Género:"
+      skin: "Aspecto"
+      back: ATRÁS
+      next: SIGUIENTE
+      main_menu: MENÚ PRINCIPAL
+      confirm: Crear personaje
+      confirm_msg: ¿Seguro que quieres crear este personaje?
+      delete_confirm: Borrar personaje
+      delete_confirm_msg: "Escribe el nombre de tu personaje para confirmar que quieres borrarlo: {name}"
+      banned: Bloqueado
+      limit: "No puedes tener más de {limit} personajes."
+      name_taken: "Otro personaje ya tiene este nombre."
+      name_invalid: Nombre no válido.
+      name_len: "El nombre de tu personaje debe tener entre {min} y {max} caracteres."
+      desc_invalid: Descripción física no válida.
+      desc_len: "La descripción física de tu personaje debe tener entre {min} y {max} caracteres."
+      unknown_error: Error desconocido. Seguramente Luna ha vuelto a meter la pata.
+      no_gender: Debes seleccionar un género.
+      no_model: Debes seleccionar un modelo.
+      error:
+        fatal: "Probablemente algo ha salido mal, intenta reconectarte."
+        critical: "Puede que el servidor tenga problemas de conexión, espera..."
+        lag: "La petición está tardando un poco, aguanta..."
+        record: "ActiveRecord ha vuelto a fallar, intenta reconectarte o reiniciar el servidor..."
+    char_desc:
+      title: Descripción física
+      message: "Describe el aspecto de tu personaje, en {min} a {max} caracteres."
+      confirm: Cambiar
+    tab_menu:
+      main_menu: Menú principal

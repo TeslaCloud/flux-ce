@@ -1,0 +1,45 @@
+es:
+  config:
+    screen_effects:
+      title: Efectos de pantalla
+      desc: Configuración del plugin de efectos de pantalla
+      low_health:
+        name: Permitir efecto de salud baja
+        desc: Permite que los colores se apaguen y la imagen se desenfoque a medida que un jugador pierde salud, y que la pantalla se vuelva gris al morir.
+      heartbeat:
+        name: Permitir latidos
+        desc: Permite que los jugadores oigan un latido que se acelera a medida que baja su salud.
+      underwater:
+        name: Permitir efecto bajo el agua
+        desc: Permite que la imagen se desenfoque y distorsione mientras la vista de un jugador está bajo el agua.
+      headbob:
+        name: Permitir balanceo de cabeza
+        desc: Permite que la vista se balancee mientras un jugador camina o corre y que tiemble al aterrizar tras una caída.
+  settings:
+    categories:
+      screen_effects: Efectos de pantalla
+    screen_effects:
+      low_health:
+        name: Efecto de salud baja
+        desc: Apaga los colores y desenfoca la imagen a medida que baja tu salud.
+        strength:
+          name: Intensidad del efecto de salud baja
+          desc: Lo intenso que es el efecto de salud baja, en porcentaje.
+      heartbeat:
+        name: Latidos
+        desc: Reproduce un latido que se acelera a medida que baja tu salud.
+        strength:
+          name: Volumen de los latidos
+          desc: Lo fuerte que suena el latido, en porcentaje.
+      underwater:
+        name: Efecto bajo el agua
+        desc: Desenfoca y distorsiona la imagen mientras estás bajo el agua.
+        strength:
+          name: Intensidad del efecto bajo el agua
+          desc: Lo intenso que es el efecto bajo el agua, en porcentaje.
+      headbob:
+        name: Balanceo de cabeza
+        desc: Balancea la vista mientras caminas o corres y la sacude al aterrizar tras una caída.
+        strength:
+          name: Intensidad del balanceo de cabeza
+          desc: Lo intensos que son el balanceo y la sacudida al aterrizar, en porcentaje.

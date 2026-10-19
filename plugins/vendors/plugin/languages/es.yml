@@ -1,0 +1,101 @@
+es:
+  config:
+    vendors:
+      title: Vendedores
+      desc: Ajustes de los vendedores NPC.
+      buy_rate:
+        name: Tasa de recompra predeterminada
+        desc: "Qué porcentaje del coste de un objeto paga por él un vendedor recién colocado."
+  error:
+    vendor:
+      equipped: Desequipa este objeto antes de venderlo.
+      not_empty: Vacía este objeto antes de venderlo.
+      cannot_sell: No puedes vender este objeto.
+      cannot_buy: No puedes comprar este objeto.
+      not_vendor: ¡Esto no es un vendedor!
+      invalid_model: Este modelo no existe, así que el vendedor conserva el que tenía.
+  notification:
+    vendor:
+      bought: "Has comprado {item} por {price} {currency}."
+      sold: "Has vendido {item} por {price} {currency}."
+      created: Has colocado un vendedor.
+      saved: Has guardado el vendedor.
+      removed: Has eliminado el vendedor.
+      picked: Ahora pulsa Recargar donde deba estar el vendedor.
+      moved: Has movido el vendedor.
+  tool:
+    vendor:
+      name: Herramienta de vendedores
+      desc: Coloca, edita, mueve y elimina vendedores NPC.
+      "0": "Clic izquierdo: colocar o editar un vendedor, clic derecho: eliminar un vendedor, recargar: mover un vendedor."
+      model: Modelo de los vendedores nuevos
+  ui:
+    vendor:
+      title: Vendedor
+      sells: En venta
+      sells_nothing: Este vendedor no tiene nada en venta.
+      buys: Tus objetos
+      buys_nothing: No tienes nada que este vendedor quiera comprar.
+      buy: Comprar
+      sell: Vender
+      stock: "En stock: {count}"
+      sold_out: Agotado
+      owned: "Tienes: {count}"
+      your_money: Tu dinero
+      vendor_money: "Dinero del vendedor"
+      editor:
+        title: Editor de vendedor
+        save: Guardar
+        remove: Eliminar vendedor
+        remove_message: ¿Seguro que quieres eliminar este vendedor?
+        general: General
+        name: Nombre
+        description: Descripción
+        model: Modelo
+        animation: Animación
+        animation_auto: Automática
+        animation_help: "La lista contiene las animaciones del modelo actual. Guarda el vendedor y vuelve a abrir el editor después de cambiar el modelo."
+        currency: Moneda
+        money: Fondo de dinero
+        money_help: "Cuánto dinero tiene el vendedor: aumenta cuando vende y disminuye cuando compra. Déjalo vacío para un vendedor que nunca se quede sin dinero."
+        buy_rate: "Tasa de recompra, %"
+        buy_rate_help: "Qué porcentaje del coste de un objeto paga el vendedor por él, salvo que el objeto tenga un precio de compra establecido."
+        items: Objetos
+        search: Buscar por nombre o ID...
+        items_help: "Haz clic en un objeto para elegir si el vendedor lo vende o lo compra, a qué precio y con cuánto stock. Sin un precio propio, un objeto se vende por su coste y se compra por su coste según la tasa de recompra."
+        item: Objeto
+        sell_price: Lo vende por
+        stock: Stock
+        buy_price: Lo compra por
+        unlimited: Ilimitado
+        by_default: "(predeterminado)"
+        start_selling: Vender este objeto
+        stop_selling: Dejar de vender
+        set_sell_price: Establecer el precio de venta...
+        set_stock: Establecer el stock...
+        start_buying: Comprar este objeto
+        stop_buying: Dejar de comprar
+        set_buy_price: Establecer el precio de compra...
+        price_message: Introduce el precio. Déjalo vacío para usar el precio predeterminado.
+        stock_message: Introduce cuántas unidades tiene el vendedor. Déjalo vacío para un stock ilimitado.
+        access: Acceso
+        access_help: "No marques nada para que todos puedan comerciar. Si no, el cliente necesita pertenecer a una de las facciones marcadas."
+        phrases:
+          title: Frases
+          help: Lo que el vendedor le dice a su cliente. Deja una frase vacía para usar la predeterminada.
+          greeting: Al empezar a comerciar
+          refuse: Cuando el cliente no puede comerciar
+          no_money: Cuando el cliente no puede pagar un objeto
+          no_stock: Cuando un objeto está agotado
+          broke: Cuando el vendedor no puede pagar un objeto
+          thanks: Cuando se va un cliente que ha comerciado
+  vendor:
+    default_name: Vendedor
+    says: dice
+    phrase:
+      greeting: ¿En qué puedo ayudarte?
+      refuse: No puedo comerciar contigo.
+      no_money: No tienes dinero suficiente para eso.
+      no_stock: Se me han agotado.
+      broke: No puedo permitirme eso.
+      thanks: Gracias, vuelve pronto.

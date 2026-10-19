@@ -116,12 +116,12 @@ ru:
       "1": "год"
       "2": "года"
       "5": "лет"
-    from_now: "спустя"
-    ago: "назад"
+    from_now: "через {time}"
+    ago: "{time} назад"
     over: "более чем"
     about: "примерно"
     permanently: навсегда
-    for: на
+    for: "на {time}"
     and: и
   tool:
     measure:

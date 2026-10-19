@@ -1,0 +1,64 @@
+es:
+  command:
+    fall:
+      description: Cae al suelo.
+      syntax: "[tiempo para levantarse]"
+    forcefall:
+      description: Obliga a un jugador a caer al suelo.
+      syntax: "<jugador> [tiempo para levantarse]"
+      message: "{player} ha hecho caer a {target} durante {time} s."
+    forcegetup:
+      description: Obliga a un jugador a levantarse.
+      syntax: "<jugador> [tiempo para levantarse]"
+      message: "{player} ha obligado a {target} a levantarse en {time} s."
+    getup:
+      description: Levántate si estás en el suelo.
+      syntax: "[tiempo para levantarse]"
+    knockout:
+      description: Deja inconsciente a un jugador. No podrá levantarse por sí mismo hasta que recupere el conocimiento.
+      syntax: "<jugador> [tiempo hasta recuperar el conocimiento]"
+      message: "{player} ha dejado inconsciente a {target} durante {time} s."
+  config:
+    ragdoll:
+      title: Ragdoll
+      desc: Caídas, noqueos y cadáveres.
+      getup_time:
+        name: Tiempo para levantarse
+        desc: Cuántos segundos tarda en levantarse un jugador caído.
+      fall_cooldown:
+        name: Espera entre caídas
+        desc: Cuántos segundos debe esperar un jugador antes de volver a usar el comando de caída. Pon 0 para desactivarlo.
+      immunity_time:
+        name: Tiempo de inmunidad del ragdoll
+        desc: Durante cuántos segundos tras caer el ragdoll de un jugador ignora el daño que no haya causado un jugador, como el golpe contra el suelo. Pon 0 para desactivarlo.
+      decay_time:
+        name: Tiempo de desaparición de cadáveres
+        desc: Cuántos segundos permanece el ragdoll de un jugador después de que reaparezca o abandone el servidor. Pon 0 para eliminarlo al instante.
+      fall_damage:
+        name: Derribo por caídas
+        desc: Una caída que cause al menos este daño hace que el jugador caiga al suelo. Pon 0 para desactivarlo.
+      hit_damage:
+        name: Derribo por golpes
+        desc: Un único golpe que cause al menos este daño hace que el jugador caiga al suelo. Pon 0 para desactivarlo.
+      hit_time:
+        name: Tiempo en el suelo tras un golpe
+        desc: Cuántos segundos permanece en el suelo un jugador derribado por un golpe fuerte antes de levantarse. Pon 0 para que se levante por sí mismo.
+      knockout_on_damage:
+        name: Noqueo por golpes cuerpo a cuerpo
+        desc: Si un golpe cuerpo a cuerpo, como el de una porra eléctrica, deja inconsciente a un jugador cuando su salud es lo bastante baja.
+      knockout_health:
+        name: Salud para noqueo
+        desc: Un golpe cuerpo a cuerpo que deje a un jugador con esta salud o menos lo deja inconsciente.
+      knockout_time:
+        name: Tiempo de inconsciencia
+        desc: Cuántos segundos permanece inconsciente un jugador noqueado por un golpe cuerpo a cuerpo. Pon 0 para que siga inconsciente hasta que alguien lo levante.
+  error:
+    ragdoll:
+      fall_cooldown: "Tienes que esperar {time} s. antes de volver a caer."
+      knocked_out_switch: No puedes cambiar de personaje mientras estás inconsciente.
+  ui:
+    hud:
+      press_jump_to_getup: Pulsa la tecla de 'salto' para levantarte...
+      knocked_out: Estás inconsciente...
+      bar_text:
+        wakeup: RECUPERANDO EL CONOCIMIENTO...

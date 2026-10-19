@@ -1,0 +1,26 @@
+es:
+  config:
+    display_typing:
+      title: Indicador de escritura
+      desc: Configuración del plugin de indicador de escritura
+      exact_message:
+        name: Mostrar el mensaje exacto
+        desc: Permite que los jugadores vean el texto que escribe un jugador cercano mientras lo escribe. Si está desactivado, solo se muestra la burbuja de escritura y el texto no se envía a otros jugadores.
+      range:
+        name: Alcance de la burbuja de escritura
+        desc: Distancia en unidades desde la que los jugadores ven que alguien está escribiendo. Los tipos de habla, como susurrar y gritar, la modifican.
+      through_walls:
+        name: Burbujas de escritura a través de paredes
+        desc: Muestra las burbujas de escritura de los jugadores que están dentro del alcance pero detrás de una pared.
+  settings:
+    display_typing:
+      bubbles:
+        name: Burbujas de escritura
+        desc: Muestra una burbuja sobre los jugadores cercanos que están escribiendo.
+      live_text:
+        name: Texto en directo
+        desc: Muestra lo que escriben los jugadores cercanos mientras lo escriben, si el servidor lo permite.
+  ui:
+    hud:
+      display_typing:
+        typing: ESCRIBIENDO...

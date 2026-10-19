@@ -1,0 +1,9 @@
+es:
+  tool:
+    area:
+      name: Herramienta de áreas
+      desc: Crea áreas poligonales de forma sencilla.
+      "0": "Clic izquierdo: añadir punto del área, clic derecho: crear área."
+      text: ID del área
+      height: Altura
+      type: Tipo

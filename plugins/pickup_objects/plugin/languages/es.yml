@@ -1,0 +1,14 @@
+es:
+  config:
+    pickup:
+      title: Recoger objetos
+      desc: Llevar, lanzar y arrastrar objetos con las manos.
+      max_mass:
+        name: Masa máxima transportable
+        desc: El objeto más pesado, en kilogramos, que un jugador puede recoger y llevar con las manos. Los plugins pueden cambiar el límite por jugador.
+      throw_force:
+        name: Fuerza de lanzamiento
+        desc: Con cuánta fuerza se lanza un objeto que se lleva. Pon 0 para desactivar los lanzamientos.
+      drag_ragdolls:
+        name: Arrastrar ragdolls
+        desc: Si un ragdoll se arrastra por el suelo agarrado de la extremidad en lugar de llevarse en brazos, pese lo que pese.

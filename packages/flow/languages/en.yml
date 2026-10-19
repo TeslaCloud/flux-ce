@@ -95,8 +95,8 @@ en:
     months: "months"
     year: "year"
     years: "years"
-    from_now: "from now"
-    ago: "ago"
+    from_now: "{time} from now"
+    ago: "{time} ago"
     over: "over"
     about: "about"
     permanently: permanently

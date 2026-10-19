@@ -1,0 +1,37 @@
+es:
+  notification:
+    3d_text:
+      text_added: Has añadido un texto 3D.
+      text_removed: Has eliminado un texto 3D.
+    3d_picture:
+      placed: Imagen colocada.
+      removed: Imagen eliminada.
+  tool:
+    texts:
+      name: Herramienta de texto
+      desc: Añade textos 3D a las superficies.
+      "0": "Clic izquierdo: añadir texto, clic derecho: eliminar texto."
+      text: Texto
+      style: Estilo
+      color: Color
+      extra_color: Color secundario
+      scale: Escala del texto
+      fade: Ajuste de distancia de desvanecimiento
+      opt1: Texto normal
+      opt2: Texto solo con sombra lejana
+      opt3: Texto solo con sombra negra
+      opt4: Texto con ambas sombras
+      opt5: Texto dentro de un recuadro
+      opt6: Texto dentro de un recuadro parpadeante
+      opt7: Texto dentro de un recuadro (estilo 2)
+      opt8: Texto dentro de un recuadro (estilo 3)
+      opt9: Texto dentro de un recuadro (estilo 4)
+      opt91: Texto dentro de un recuadro (borroso)
+    pictures:
+      name: Colocador de imágenes
+      desc: Añade imágenes a superficies 3D.
+      "0": "Clic izquierdo: añadir imagen, clic derecho: eliminar imagen."
+      url: URL
+      width: Ancho
+      height: Alto
+      fade: Ajuste de distancia de desvanecimiento

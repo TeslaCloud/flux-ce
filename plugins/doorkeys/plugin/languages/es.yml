@@ -1,0 +1,38 @@
+es:
+  door:
+    properties:
+      keys_list:
+        name: Ajustes de llaves
+        select: Selecciona una opción...
+        show: Lista de llaves
+        create: Crear llave
+        add: Vincular llave existente
+  item:
+    category:
+      keys: Llaves
+    option:
+      create_key_copy: Crear copia de llave
+    key:
+      print_name: Llave
+      description: Una llave de metal corriente.
+    key_blank:
+      print_name: Llave en bruto
+      description: Una pieza de metal moldeada que puede usarse con un kit de moldeado para crear un duplicado de cualquier llave no tubular.
+    key_molding_kit:
+      print_name: Kit de moldeado de llaves
+      description: Una pequeña caja de plástico con herramientas para hacer copias de llaves. Dentro hay muchas herramientas de fundición y algo de compuesto para moldear.
+  notification:
+    key:
+      create: Nueva llave creada
+      remove: La llave fue desvinculada
+      add: La llave fue vinculada
+  ui:
+    key:
+      title: Llaves
+      delete:
+        title: Desvincular llave
+        message: ¿Seguro que quieres desvincular esta llave de la puerta?
+      add:
+        title: Vincular nueva llave
+        message: Selecciona una llave para vincular.
+        select: Selecciona una llave...

@@ -223,6 +223,11 @@ end
 -- amount is rounded down, with 'about' or 'over' in front of it if anything was cut off, and
 -- is never shown as less than 1. The unit is translated in the plural form that fits the
 -- rounded amount, for languages whose time phrases have plural forms.
+--
+-- The 'time.from_now' and 'time.ago' phrases are templates with a `{time}` placeholder for
+-- the amount and unit, so that every language puts them where its grammar needs them
+-- ('{time} ago', 'hace {time}', '{time} назад'). A phrase without the placeholder is
+-- appended after the amount and unit.
 -- ```
 -- local text = Time:format_nice(Time:minutes(5):nice()) -- e.g. '5 minutes from now'
 -- ```
@@ -233,22 +238,33 @@ end
 -- @param lang=current language [String language to translate to]
 -- @return [String phrases]
 function Time:format_nice(suffix, from_now, amt, lang)
-  if suffix != 'time.just_now' then
-    local floored = math.max(math.floor(amt or 1), 1)
-    local dec = amt - floored
-    local dec_prefix
-
-    if dec > 0 then
-      dec_prefix = t(dec > 0.6 and 'time.over' or 'time.about', nil, lang)
-    end
-
-    return (dec_prefix and dec_prefix..' ' or '')..
-           tostring(floored)..' '..
-           t(suffix, { count = floored }, lang)..
-           (from_now != '' and ' '..t(from_now, nil, lang) or '')
-  else
+  if suffix == 'time.just_now' then
     return t(suffix, nil, lang)
   end
+
+  local floored = math.max(math.floor(amt or 1), 1)
+  local dec = amt - floored
+  local dec_prefix
+
+  if dec > 0 then
+    dec_prefix = t(dec > 0.6 and 'time.over' or 'time.about', nil, lang)
+  end
+
+  local text = (dec_prefix and dec_prefix..' ' or '')..
+               tostring(floored)..' '..
+               t(suffix, { count = floored }, lang)
+
+  if from_now == '' then
+    return text
+  end
+
+  local relative = t(from_now, nil, lang)
+
+  if !relative:find('{time}', 1, true) then
+    return text..' '..relative
+  end
+
+  return t(from_now, { time = text }, lang)
 end
 
 --- Formats date-time using a format string.

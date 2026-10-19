@@ -1,0 +1,46 @@
+es:
+  config:
+    chatbox:
+      title: Chat
+      desc: ¡Personaliza cómo funciona el chat en tu servidor!
+      message_margin:
+        name: Margen de mensajes
+        desc: Cuánto espacio vertical dejar entre dos mensajes.
+      message_fade_delay:
+        name: Retraso de desvanecimiento
+        desc: Cuánto tiempo deben permanecer los mensajes en pantalla antes de desvanecerse.
+      max_messages:
+        name: Máximo de mensajes
+        desc: Cuántos mensajes debe guardar el historial del chat.
+      default_font_size:
+        name: Tamaño de fuente predeterminado
+        desc: Tamaño de fuente predeterminado del chat.
+      small_font_size:
+        name: Tamaño de fuente pequeño
+        desc: Tamaño de fuente para el texto más pequeño del chat.
+      big_font_size:
+        name: Tamaño de fuente grande
+        desc: Tamaño de fuente para el texto más grande del chat.
+      max_message_length:
+        name: Longitud máxima de mensaje
+        desc: Lo largo que puede ser un mensaje de chat.
+      chat_interval:
+        name: Intervalo entre mensajes
+        desc: El tiempo mínimo, en milisegundos, entre dos mensajes de chat del mismo jugador. 0 desactiva el límite.
+      chat_avatars:
+        name: Avatares en el chat
+        desc: Si se muestra el avatar de Steam de quien habla antes de su nombre en los mensajes normales del chat.
+      chat_timestamps:
+        name: Marcas de tiempo
+        desc: Si se muestra la hora a la que se envió cada mensaje antes de él.
+  error:
+    chat:
+      too_fast: ¡Estás enviando mensajes demasiado rápido!
+  ui:
+    chat:
+      aliases: Alias
+      alias_of: "(alias de {command})"
+      no_commands_found: ¡No se encontraron comandos!
+      more_above: "{count} más arriba"
+      more_below: "{count} más abajo"
+      everyone: todos

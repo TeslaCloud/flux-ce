@@ -1,0 +1,50 @@
+es:
+  command:
+    givemoney:
+      description: "Da dinero al jugador que estás mirando. Monedas: {currencies}"
+      syntax: <cantidad> [moneda]
+    dropmoney:
+      description: "Suelta dinero en el lugar al que apuntas. Monedas: {currencies}"
+      syntax: <cantidad> [moneda]
+    setmoney:
+      description: "Establece el dinero de un jugador. Monedas: {currencies}"
+      syntax: <jugador> <cantidad> [moneda]
+      message: "{player} ha establecido {currency} de {target} en {value}."
+  config:
+    currencies:
+      title: Monedas
+      desc: Ajustes de dinero y monedas.
+      default_currency:
+        name: Moneda predeterminada
+        desc: ID de la moneda que se usa cuando no se indica ninguna, por ejemplo en los comandos de dinero. Déjalo vacío para usar la única moneda registrada.
+      starting_money:
+        name: Dinero inicial
+        desc: Cuánta moneda predeterminada tienen los personajes nuevos al empezar. Déjalo en 0 para usar la cantidad con la que está registrada la propia moneda.
+      save_dropped_money:
+        name: Guardar dinero soltado
+        desc: Si el dinero que está en el suelo debe guardarse y volver a colocarse cuando se cargue de nuevo el mapa.
+  error:
+    not_enough_money: Fondos insuficientes.
+    invalid_currency: Esta no es una moneda válida.
+    money_refused: El dinero no fue aceptado.
+  notification:
+    currency:
+      pickup: Has recogido {value} {currency}.
+      receive: Has recibido {value} {currency} de {target}.
+      give: Has dado {value} {currency} a {target}.
+      drop: Has soltado {value} {currency}.
+      set: Tu saldo de {currency} se ha establecido en {value}.
+  ui:
+    currency:
+      menu:
+        give: Dar
+      title: Dinero
+      give:
+        title: Dar dinero
+        message: Introduce la cantidad de {currency} que quieres dar.
+      drop:
+        title: Soltar dinero
+        message: Introduce la cantidad de {currency} que quieres soltar.
+      take:
+        title: Tomar dinero
+        message: Introduce la cantidad de {currency} que quieres tomar.

@@ -1,0 +1,22 @@
+es:
+  command:
+    static:
+      description: Añade o quita el estado estático de la entidad a la que miras.
+      add:
+        description: Hace estática la entidad a la que miras.
+      remove:
+        description: Hace que la entidad a la que miras deje de ser estática.
+  error:
+    not_valid_entity: ¡Esta no es una entidad válida!
+    cannot_static_this: ¡No puedes hacer estática esta entidad!
+    already_static: ¡Esta entidad ya es estática!
+    not_static: ¡Esta entidad no es estática!
+  notification:
+    static:
+      added: ¡Has añadido una entidad estática!
+      removed: ¡Has eliminado esta entidad estática!
+  tool:
+    static:
+      name: Añadir/quitar estáticas
+      desc: Añade y elimina entidades estáticas.
+      "0": "Clic izquierdo: añadir, clic derecho: eliminar."

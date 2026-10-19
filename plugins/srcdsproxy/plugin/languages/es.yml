@@ -1,0 +1,84 @@
+es:
+  command:
+    proxy:
+      description: Muestra si estás conectado a través del proxy y cómo te conoce el proxy.
+      not_proxied: Estás conectado a este servidor directamente, no a través del proxy.
+      backend: "Estás conectado a través del proxy (versión {version}) al servidor {backend}."
+      steamid_verified: "Tu SteamID64 es {steamid}, verificado por Steam."
+      steamid_claimed: "Tu SteamID64 es {steamid}, según indica tu juego. Steam no lo ha verificado."
+      no_steamid: El proxy no conoce ningún SteamID tuyo.
+      address: "El proxy ve que te conectas desde {address}."
+      proxy_admin: Eres administrador del proxy.
+    server:
+      description: Te lleva a otro servidor de la red. Sin un nombre, muestra la lista de servidores en tu consola.
+      syntax: "[servidor]"
+      message: "Llevándote a {server}..."
+    glist:
+      description: Muestra en tu consola a todos los jugadores de la red, en todos sus servidores.
+    pinfo:
+      description: Muestra en tu consola los datos del proxy sobre un jugador de cualquier servidor de la red.
+      syntax: "<jugador, SteamID o #id>"
+    transfer:
+      description: Lleva jugadores a otro servidor de la red. Solo quien esté conectado a través del proxy puede mover a jugadores de otros servidores.
+      syntax: "<jugador o SteamID> <servidor> [motivo]"
+      message: "{player} está llevando a {target} a {server} ({reason})."
+    proxywhitelist:
+      description: Edita y muestra las listas blancas de los servidores de la red que solo admiten lista blanca. Solo para administradores del proxy.
+      add:
+        description: Añade jugadores a la lista blanca de un servidor de la red que solo admite lista blanca. Solo para administradores del proxy.
+        syntax: "<servidor> <jugador o SteamID>"
+        message: "{player} ha añadido a {target} a la lista blanca de {server}."
+      remove:
+        description: Quita jugadores de la lista blanca de un servidor de la red que solo admite lista blanca. Solo para administradores del proxy.
+        syntax: "<servidor> <jugador o SteamID>"
+        message: "{player} ha quitado a {target} de la lista blanca de {server}."
+      list:
+        description: Muestra en tu consola las listas blancas de la red, o la de un servidor. Solo para administradores del proxy.
+        syntax: "[servidor]"
+    netban:
+      description: Banea y desbanea jugadores, SteamID, direcciones IP o subredes en toda la red, y muestra la lista de baneos. Solo para administradores del proxy.
+      add:
+        description: Banea jugadores, SteamID, direcciones IP o subredes de toda la red, para siempre o durante un tiempo como 30m, 2h, 7d o 1w. Solo para administradores del proxy.
+        syntax: "<jugador, SteamID, IP o subred> [duración] [motivo]"
+        message: "{player} ha baneado a {target} de la red ({details})."
+      addip:
+        description: Banea las direcciones de jugadores de toda la red, para siempre o durante un tiempo como 30m, 2h, 7d o 1w. Solo para administradores del proxy.
+        syntax: "<jugador o SteamID> [duración] [motivo]"
+        message: "{player} ha baneado la dirección de {target} de la red ({details})."
+      remove:
+        description: Retira un baneo de la red. Solo para administradores del proxy.
+        syntax: "<SteamID, IP o subred>"
+        message: "{player} ha retirado el baneo de red de {target}."
+      list:
+        description: Muestra en tu consola los baneos de la red. Solo para administradores del proxy.
+  error:
+    proxy:
+      unavailable: El addon srcdsproxy no está instalado en este servidor.
+      not_proxied: No estás conectado a través del proxy, y los comandos del proxy lo necesitan.
+      not_proxy_admin: Solo los administradores del proxy, que figuran en el admins.toml del proxy y están verificados por Steam, pueden hacer eso.
+      transfer_disabled: Moverse entre servidores está desactivado aquí.
+      target_not_proxied: "{target} no está conectado a través del proxy."
+      remote_target: "{target} no está en este servidor. Solo quien esté conectado a través del proxy puede mover a jugadores de otros servidores."
+      server_invalid: "'{server}' no es un nombre de servidor válido."
+      session_id_unchecked: "{target} podría ser alguien de este servidor cuya inmunidad no se puede comprobar. Usa su nombre o su SteamID."
+      area_no_backend: Introduce el nombre del servidor al que el área lleva a los jugadores.
+      area_whitelist: "{server} solo admite lista blanca."
+  notification:
+    proxy:
+      console: El proxy ha respondido en tu consola.
+      area_countdown: "Permanece en el área para ser llevado a {server} en {time}."
+      area_moving: "Llevándote a {server}..."
+  permission:
+    categories:
+      proxy: Red del proxy
+  tool:
+    proxy_area:
+      title: Área de traslado de servidor
+      desc: "Crea un área que lleva a otro servidor de la red a los jugadores que permanecen en ella. Clic izquierdo: añadir un punto, clic derecho: crear el área, recargar: eliminar el área de traslado que estás mirando."
+      backend: Servidor
+      delay: Retraso (segundos)
+      height: Altura
+  ui:
+    proxy:
+      area_countdown: "Viajando a {server} en {seconds}..."
+      area_moving: "Viajando a {server}..."

@@ -1,0 +1,134 @@
+es:
+  config:
+    containers:
+      title: Contenedores
+      desc: ¡Personaliza cómo funcionan los contenedores en tu servidor!
+      password_delay:
+        name: Espera tras contraseña incorrecta
+        desc: Cuántos segundos debe esperar un jugador tras introducir una contraseña de contenedor incorrecta antes de poder intentarlo de nuevo.
+      spill_items:
+        name: Soltar objetos al eliminar
+        desc: Si los objetos de un contenedor caen al suelo cuando se elimina el contenedor. De lo contrario, se destruyen con él.
+  container:
+    box:
+      title: Caja de cartón
+      desc: Una caja de cartón normal. No, no puedes esconderte dentro.
+    cupboard:
+      title: Armario
+      desc: "Un armario de madera viejo y desvencijado."
+    drawer:
+      title: Cajonera
+      desc: "Una cajonera de madera llena de arañazos."
+    small_drawer:
+      title: Mesita de noche
+      desc: "Una pequeña cajonera que suele ponerse junto a la cama."
+    tall_drawer:
+      title: Cajonera alta
+      desc: "Una cajonera alta para guardar objetos pequeños."
+    dresser:
+      title: Cómoda
+      desc: "Una cómoda grande y de aspecto antiguo, usada para guardar ropa."
+    fridge:
+      title: Nevera
+      desc: "Una nevera pequeña. Apesta a anticongelante."
+    lockers:
+      title: Taquilla
+      desc: "Una taquilla oxidada. Chirría al abrirla."
+    barrel:
+      title: Barril
+      desc: "Un barril metálico alto que apesta a productos químicos viejos."
+    desk:
+      title: Escritorio
+      desc: "Un escritorio de madera ancho con varios cajones."
+    medium_box:
+      title: Caja
+      desc: "Una caja de cartón endeble."
+    small_box:
+      title: Caja pequeña
+      desc: "Una caja de cartón pequeña."
+    trash_bin:
+      title: Cubo de basura
+      desc: "Un cubo de basura normal. El fondo está cubierto de una capa de páginas de manga pegajosas."
+    dumpster:
+      title: Contenedor de basura
+      desc: "Un contenedor grande para grandes cantidades de basura. Apesta a un cóctel de olores repugnantes."
+    wooden_crate:
+      title: Cajón
+      desc: "Un cajón de madera para guardar objetos diversos."
+    big_wooden_crate:
+      title: Cajón grande
+      desc: "Un cajón de madera grande usado para transportar objetos."
+    file_cabinet:
+      title: Archivador
+      desc: "Un archivador oxidado con dos cajones grandes."
+    tall_file_cabinet:
+      title: Archivador alto
+      desc: "Un archivador grande y oxidado con varios cajones."
+    storage_closet:
+      title: Armario metálico
+      desc: "Un armario metálico grande usado como almacén."
+    large_fridge:
+      title: Nevera industrial
+      desc: "Una nevera industrial para guardar alimentos de cualquier tipo."
+    counter:
+      title: Mostrador
+      desc: "Un mostrador metálico grande que suele usarse para guardar dinero."
+    metal_box:
+      title: Caja metálica
+      desc: "Una caja metálica pequeña. Parece tener óxido en los bordes."
+    medium_wooden_crate:
+      title: Cajón de madera
+      desc: "Un cajón de madera bastante grande. Cruje al moverlo."
+    small_parts_bin:
+      title: Caja de piezas
+      desc: "Una caja pequeña para guardar componentes mecánicos pequeños."
+    small_dresser_table:
+      title: Tocador
+      desc: "Un tocador de maquillaje; parece que le falta el espejo."
+    medium_water_barrel:
+      title: Barril de agua
+      desc: "Un barril de plástico alto. ¡Flota!"
+    medium_cash_reg:
+      title: Caja registradora
+      desc: "Una caja registradora de tamaño mediano; parece que le falta la cerradura."
+  error:
+    container:
+      not_valid: ¡Esto no es un contenedor!
+      wrong_password: ¡Has introducido una contraseña incorrecta!
+      password_wait: "¡Tienes que esperar {time} antes de volver a introducir una contraseña!"
+      no_items: ¡No hay objetos con los que llenar este contenedor!
+      no_space: ¡No se ha podido añadir nada a este contenedor!
+  notification:
+    container:
+      message: "{name}: {message}"
+      name_set: "Has llamado a este contenedor '{name}'."
+      name_removed: Has quitado el nombre de este contenedor.
+      message_set: Has establecido el mensaje de este contenedor.
+      message_removed: Has quitado el mensaje de este contenedor.
+      password_set: "Has establecido la contraseña de este contenedor en '{password}'."
+      password_removed: Has quitado la contraseña de este contenedor.
+      filled:
+        "1": "Has añadido {count} objeto aleatorio a este contenedor."
+        "2": "Has añadido {count} objetos aleatorios a este contenedor."
+  tool:
+    container:
+      name: Herramienta de contenedores
+      desc: Pon nombre, mensaje o contraseña a los contenedores, o llénalos de objetos aleatorios.
+      "0": "Clic izquierdo: aplicar, clic derecho: quitar el nombre, el mensaje o la contraseña."
+      mode: Modo
+      mode_name: Establecer el nombre
+      mode_message: Establecer el mensaje
+      mode_password: Establecer la contraseña
+      mode_fill: Llenar con objetos aleatorios
+      custom_name: Nombre
+      message: Mensaje
+      password: Contraseña
+      share: "Llenar hasta (% de huecos)"
+      category: Categoría de objeto
+      any_category: Cualquier categoría
+  ui:
+    container:
+      open: Abrir
+      password:
+        title: Contraseña
+        message: ¿Cuál es la contraseña de este contenedor?

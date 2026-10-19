@@ -1,0 +1,311 @@
+es:
+  command:
+    announce:
+      description: Muestra un aviso a todos los del servidor.
+      syntax: <texto>
+    ban:
+      description: Banea jugadores y levanta baneos.
+      add:
+        description: ¡Banea a este infeliz! Con un Steam ID puedes banear a alguien que no está en el servidor.
+        syntax: <jugador o Steam ID> <duración> [motivo]
+        message: "{player} ha baneado a {target} durante {time}. ({reason})."
+        message_permanent: "{player} ha baneado a {target} permanentemente. ({reason})."
+      remove:
+        description: Levanta el baneo de un Steam ID.
+        syntax: <Steam ID>
+        message: "{player} ha desbaneado a {target}."
+    bots:
+      description: Añade, expulsa, congela y descongela bots.
+      add:
+        description: Añade al servidor la cantidad de bots indicada.
+        syntax: "[cantidad]"
+        message:
+          "1": "{player} ha añadido {amount} bot al servidor."
+          "2": "{player} ha añadido {amount} bots al servidor."
+      kick:
+        description: Expulsa a todos los bots.
+        message: "{player} ha expulsado a todos los bots."
+      freeze:
+        description: Congela a todos los bots.
+        message: "{player} ha congelado a todos los bots."
+      unfreeze:
+        description: Descongela a todos los bots.
+        message: "{player} ha descongelado a todos los bots."
+    changelevel:
+      description: Cambia el nivel al mapa indicado.
+      syntax: <mapa> [retraso]
+      message: "¡{player} va a cambiar el nivel a {map} en {delay} segundo(s)!"
+    freeze:
+      description: Congela a jugadores en su sitio o los descongela.
+      "on":
+        description: Congela a un jugador.
+        syntax: <jugador>
+        message: "{player} ha congelado a {target}."
+      "off":
+        description: Descongela a un jugador.
+        syntax: <jugador>
+        message: "{player} ha descongelado a {target}."
+    fullbright:
+      description: Activa o desactiva para un jugador el modo de brillo total, que ignora la iluminación del mapa.
+      "on":
+        description: Activa el modo de brillo total para un jugador.
+        syntax: <jugador>
+        message: "{player} ha activado el modo de brillo total para {target}."
+      "off":
+        description: Desactiva el modo de brillo total para un jugador.
+        syntax: <jugador>
+        message: "{player} ha desactivado el modo de brillo total para {target}."
+    godmode:
+      description: Activa o desactiva el modo dios para un jugador.
+      "on":
+        description: Activa el modo dios para un jugador.
+        syntax: <jugador>
+        message: "{player} ha activado el modo dios para {target}."
+      "off":
+        description: Desactiva el modo dios para un jugador.
+        syntax: <jugador>
+        message: "{player} ha desactivado el modo dios para {target}."
+    kick:
+      description: Expulsa a un jugador del servidor.
+      syntax: <jugador> [motivo]
+      message: "{player} ha expulsado a {target} ({reason})."
+    permission:
+      description: Gestiona los permisos asignados a cada jugador de forma individual.
+      grant:
+        description: Concede un permiso a un jugador, para siempre o durante el tiempo indicado.
+        syntax: <jugador> <permiso> [duración]
+        message: "{player} ha concedido a {target} el permiso {permission}."
+        message_temporary: "{player} ha concedido a {target} el permiso {permission} durante {time}."
+      revoke:
+        description: Deniega un permiso a un jugador, para siempre o durante el tiempo indicado.
+        syntax: <jugador> <permiso> [duración]
+        message: "{player} ha denegado a {target} el permiso {permission}."
+        message_temporary: "{player} ha denegado a {target} el permiso {permission} durante {time}."
+      reset:
+        description: Quita lo que se haya asignado a un jugador para un permiso, de modo que vuelva a decidirlo su rol.
+        syntax: <jugador> <permiso>
+        message: "{player} ha restablecido el permiso {permission} de {target}."
+      list:
+        description: Muestra los permisos asignados a un jugador de forma individual.
+        syntax: <jugador>
+        role: "{target} tiene el rol {role}."
+        allowed: "Permitido para {target}: {permissions}."
+        denied: "Denegado para {target}: {permissions}."
+        temporary_allowed: "Permitido temporalmente para {target}: {permission} (quedan {time})."
+        temporary_denied: "Denegado temporalmente para {target}: {permission} (quedan {time})."
+        none: "{target} no tiene permisos propios."
+    respawn:
+      description: "Hace reaparecer a un jugador donde está, o donde estás mirando."
+      syntax: "<jugador> [stay / tp]"
+      message: "{player} ha hecho reaparecer a {target}."
+    restart:
+      description: Reinicia el mapa actual.
+      syntax: "[retraso]"
+      message: "¡{player} va a reiniciar el mapa en {delay} segundo(s)!"
+    return:
+      description: Devuelve a un jugador a la posición en la que estaba antes de teletransportarse.
+      syntax: <jugador>
+      message: "{player} ha devuelto a {target} a su posición anterior."
+    role:
+      description: Asigna y quita los roles de los jugadores.
+      set:
+        description: "Asigna el rol de un jugador. Roles: {groups}"
+        syntax: <jugador> <rol>
+        message: "{player} ha asignado a {target} el rol {group}."
+      remove:
+        description: Devuelve a un jugador al rol de usuario. Con un Steam ID puedes degradar a alguien que no está en el servidor.
+        syntax: <jugador o Steam ID>
+        message: "{player} ha degradado a {target} a usuario."
+    send:
+      description: Teletransporta a un jugador hasta otro jugador.
+      syntax: <jugador> <jugador de destino>
+      message: "{player} ha teletransportado a {target} hasta {destination}."
+    slay:
+      description: Mata a un jugador.
+      syntax: <jugador>
+      message: "{player} ha matado a {target}."
+    staff:
+      description: 'Habla con los demás miembros del staff.'
+      syntax: <mensaje>
+    tp:
+      description: Teletransporta al jugador a la posición a la que estás mirando.
+      syntax: <jugador>
+      message: "{player} ha teletransportado a {target}."
+    tpto:
+      description: Te teletransporta a la posición del objetivo.
+      syntax: <jugador>
+      message: "{player} se ha teletransportado hasta {target}."
+    vanish:
+      description: Oculta por completo a un jugador del resto del servidor, o lo vuelve a mostrar.
+      "on":
+        description: Oculta a un jugador de todos excepto del staff.
+        syntax: <jugador>
+        message: "{player} ha vuelto invisible a {target}."
+      "off":
+        description: Vuelve a mostrar a todos un jugador oculto.
+        syntax: <jugador>
+        message: "{player} ha vuelto visible a {target}."
+    warn:
+      description: Advierte a un jugador.
+      syntax: <jugador> [motivo]
+      message: "{player} ha advertido a {target} por {reason}."
+  condition:
+    role:
+      name: Jugador con un rol concreto
+      text: Rol {operator} {role}
+      message: Selecciona un rol
+    roles: Roles
+  config:
+    admin:
+      title: Administración
+      desc: Ajustes del mod de administración.
+      ban_message_language:
+        name: Idioma del mensaje de baneo
+        desc: Código del idioma (como en o ru) del mensaje que leen los jugadores baneados al intentar entrar.
+  error:
+    already_user: "{target} ya es usuario."
+    banned:
+      temporary: "Estás baneado de este servidor. Motivo: {reason}. El baneo termina en {time}."
+      permanent: "Estás baneado permanentemente de este servidor. Motivo: {reason}."
+    group_not_valid: "¡'{group}' no es un grupo de usuarios válido!"
+    map_not_valid: "¡El servidor no tiene ningún mapa llamado '{map}'!"
+    not_banned: ¡El Steam ID '{steam_id}' no está baneado!
+    no_permission: No tienes permiso para hacer eso.
+    permission_not_set: "No hay nada asignado para el permiso {permission} de estos jugadores."
+    permission_not_valid: "¡'{permission}' no es un permiso válido!"
+    permission_not_yours: "No puedes conceder ni retirar el permiso {permission}, porque tú no lo tienes."
+    plugin:
+      admin: El plugin de administración no se puede desactivar desde su propio menú.
+    send_same: No se puede enviar a un jugador hasta sí mismo.
+    slay: Ninguno de estos jugadores está vivo.
+    user_not_found: "Nadie con el Steam ID '{steam_id}' ha entrado nunca en este servidor."
+  notification:
+    announcement: "[Anuncio] {text}"
+    demote: Te han degradado de {group} a usuario.
+    fullbright:
+      enabled: Modo de brillo total activado.
+      disabled: Modo de brillo total desactivado.
+    permission:
+      granted: "Te han concedido el permiso {permission}."
+      revoked: "Te han denegado el permiso {permission}."
+      reset: "Tu permiso {permission} se ha restablecido a lo que permite tu rol."
+    plugin_disabled: "{player} ha desactivado el plugin {plugin}. Seguirá cargado hasta que se reinicie el servidor."
+    plugin_enabled: "{player} ha activado el plugin {plugin}. Se cargará cuando se reinicie el servidor."
+    return: Has vuelto a tu posición anterior.
+    setgroup: Tu grupo de usuario se ha cambiado a {group}.
+    slay: "{player} te ha matado."
+    tp: Te han teletransportado.
+    vanish:
+      enabled: Ahora eres invisible.
+      disabled: Ahora eres visible.
+    freeze: "{player} te ha congelado."
+    unfreeze: "{player} te ha descongelado."
+    warn: "Te han advertido por {reason}."
+    godmode:
+      enabled: "Modo dios activado."
+      disabled: "Modo dios desactivado."
+    respawn: "{player} te ha hecho reaparecer."
+    config_changed: "{player} ha cambiado el ajuste {config} a {value}."
+    config_changed_restart: "{player} ha cambiado el ajuste {config} a {value}. El cambio se aplicará cuando se reinicie el servidor."
+  permission:
+    categories:
+      administration: Administración
+      tools: Herramientas
+      spawn: Spawn
+      general: General
+      misc: Varios
+      level_design: Diseño de niveles
+      server_management: Gestión del servidor
+      player_management: Gestión de jugadores
+      configuration: Configuración
+      compatibility: Compatibilidad
+    manage_plugins:
+      name: Gestor de plugins
+      description: Da acceso para desactivar y activar plugins.
+  role:
+    user: El rango base que se da automáticamente al jugador.
+    assistant: Un rango de staff con las herramientas básicas de moderación, como expulsar, banear, volverse invisible y noclip.
+    gamemaster: Un rango de staff de confianza que dirige el mundo del juego, con las herramientas de spawn, objetos, dinero y diseño de niveles.
+    admin: El rango de staff más alto, con acceso a todo, incluidos los ajustes, los permisos y los plugins.
+  ui:
+    hud:
+      vanish: "Eres invisible"
+    admin:
+      player_management: Gestión de jugadores
+      players: Jugadores
+      role: Rol
+      allow_all: Permitir todo
+      no_all: "'No' para todo"
+      never_all: Prohibir todo
+      expires: Caduca en
+      loading: Cargando...
+      temp_permission:
+        title: Dar permiso temporal
+        message: Indica la duración del permiso. Si el permiso ya está concedido, este tiempo se le sumará. Déjalo vacío para retirar el permiso temporal.
+      selector:
+        title: Cambiar el rol del jugador
+        message: Selecciona un rol nuevo.
+        roles: Roles
+      config_editor: Editor de ajustes
+      new_config: Añadir valor a la tabla
+      new_config_text: Introduce un valor nuevo.
+      delete_config: Borrar valor de la tabla
+      delete_config_text: ¿Seguro que quieres borrar este valor?
+      config:
+        reset: Restablecer al valor por defecto
+        static: Este ajuste se define en los archivos del servidor y no se puede cambiar en el juego.
+        reveal: Mostrar u ocultar el valor
+        needs_restart: Los cambios de este ajuste se aplican cuando se reinicia el servidor.
+        pending: "Hasta entonces su valor es: {value}"
+        select: Selecciona un valor
+      bans:
+        title: Baneos
+        search: Buscar por nombre, Steam ID o motivo
+        page:
+          "1": "Página {page} de {pages} ({count} baneo)"
+          "2": "Página {page} de {pages} ({count} baneos)"
+        empty: No hay baneos que mostrar.
+        permanent: Permanente
+        expired: Caducado
+        banned_by: "baneado por {admin}"
+        unban: Desbanear
+        unban_message: "¿Seguro que quieres desbanear a {name}?"
+      staff:
+        title: Staff
+        empty: Nadie tiene un rol distinto de usuario.
+        online: Conectado
+        offline: Desconectado
+        demote: Degradar
+        demote_message: "¿Seguro que quieres degradar a {name} de {role} a usuario?"
+      plugins:
+        title: Plugins
+        notice: Desactivar o activar un plugin solo surte efecto cuando el servidor se reinicia o cambia de mapa. Hasta entonces, un plugin desactivado sigue cargado y uno activado sigue sin cargarse.
+        enabled: Activado. Haz clic para desactivarlo.
+        disabled: Desactivado. Haz clic para activarlo.
+        author: "Autor: {author}"
+        depends: "Depende de: {plugins}"
+        required_by: "Necesario para: {plugins}"
+        state:
+          loaded: Cargado
+          disabled: "No cargado: desactivado"
+          dependency: "No cargado: un plugin del que depende no está disponible"
+          environment: "No cargado: no está pensado para este entorno"
+          unknown: No cargado
+        restart:
+          disabled: "desactivado tras el reinicio"
+          enabled: "activado tras el reinicio"
+        force:
+          title: Desactivar un plugin necesario
+          message: "{plugin} es necesario para: {plugins}. Todo lo que dependa de él tampoco se cargará, y el schema puede romperse sin él. ¿Desactivarlo de todos modos?"
+          confirm: Desactivar de todos modos
+    cmd_desc:
+      usage: "Sintaxis:"
+      aliases: "Alias:"
+    permission:
+      not_set: No (heredar)
+      allow: Permitir
+      never: Revocar
+      error: Permiso no válido
+    tab_menu:
+      admin: Admin
+    no_reason: Motivo no especificado

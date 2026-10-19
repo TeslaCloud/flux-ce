@@ -1,0 +1,14 @@
+es:
+  config:
+    weapon_raise:
+      title: Levantar armas
+      desc: Ajustes para bajar y levantar armas.
+      enabled:
+        name: Sistema de levantar armas
+        desc: Si las armas permanecen bajadas hasta que el jugador las levanta manteniendo pulsada la tecla de recarga. Si está desactivado, las armas están levantadas salvo que algo las mantenga bajadas.
+      sprint_lowers_weapon:
+        name: Correr baja el arma
+        desc: Si el arma de un jugador que corre se baja y no puede disparar hasta que vaya más despacio.
+      fire_delay:
+        name: Retraso de disparo al levantar
+        desc: Cuántos segundos no puede disparar un arma después de levantarla. Pon 0 para desactivarlo.

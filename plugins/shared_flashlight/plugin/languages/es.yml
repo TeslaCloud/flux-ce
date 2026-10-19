@@ -1,0 +1,20 @@
+es:
+  config:
+    shared_flashlight:
+      title: Linterna compartida
+      desc: Ajustes de la linterna que todos los jugadores pueden ver.
+      enabled:
+        name: Linterna compartida
+        desc: Si la linterna es una luz que ven todos los jugadores. Si está desactivada, se usa la linterna del motor, que solo ve quien la lleva.
+      fov:
+        name: Ancho del haz
+        desc: El ángulo del haz de la linterna, en grados.
+      distance:
+        name: Alcance del haz
+        desc: Hasta dónde ilumina la linterna, en unidades.
+      brightness:
+        name: Brillo
+        desc: Lo brillante que es la linterna. 1 equivale al brillo de la linterna del motor.
+      shadows:
+        name: Sombras
+        desc: Si la linterna proyecta sombras. Las sombras reducen el rendimiento en servidores concurridos.

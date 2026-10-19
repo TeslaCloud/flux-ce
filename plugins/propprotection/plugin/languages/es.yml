@@ -1,0 +1,55 @@
+es:
+  config:
+    prop_protection:
+      title: Protección de props
+      desc: La propiedad de las entidades y las reglas de sandbox que se basan en ella.
+      owned:
+        name: Proteger entidades con dueño
+        desc: Si se impide o no que los jugadores recojan, congelen, conduzcan y usen herramientas y propiedades en las entidades de otros personajes.
+      map:
+        name: Proteger entidades del mapa
+        desc: Si se impide o no que los jugadores hagan lo mismo con las entidades que forman parte del mapa.
+      world:
+        name: Proteger entidades sin dueño
+        desc: Si se impide o no que los jugadores hagan lo mismo con las entidades que no pertenecen a nadie, como objetos, jugadores, ragdolls y props estáticos.
+      players:
+        name: Proteger a los jugadores de la pistola física
+        desc: Si se impide o no que los jugadores levanten a otros jugadores con la pistola física.
+      vehicles:
+        name: Proteger vehículos ocupados de la pistola física
+        desc: Si se impide o no que los jugadores levanten vehículos que tengan conductor, incluidos los suyos.
+      ragdolls:
+        name: Proteger ragdolls de jugadores de la pistola física
+        desc: Si se impide o no que los jugadores levanten los ragdolls de jugadores muertos o noqueados.
+      owner_display:
+        name: Mostrar dueños de entidades
+        desc: Si los jugadores ven o no quién es el dueño de la entidad que están mirando. El staff que ignora la protección de props siempre lo ve.
+      removal_delay:
+        name: Retraso de eliminación de entidades abandonadas
+        desc: Cuánto tiempo permanecen las entidades de un jugador después de que se desconecte o cambie de personaje (en segundos). Si vuelve a tiempo, conserva las entidades. Pon 0 para no eliminarlas nunca.
+      remove_staff:
+        name: Eliminar entidades abandonadas del staff
+        desc: Si las entidades del staff que ignora la protección de props también se eliminan o no cuando se va.
+      prop_kill:
+        name: Protección contra prop kill
+        desc: Si los jugadores están protegidos o no de los impactos de props sostenidos con la pistola física, recién soltados por ella o recién generados.
+      prop_kill_time:
+        name: Tiempo de protección contra prop kill
+        desc: Cuánto tiempo un prop sigue siendo inofensivo para los jugadores después de generarse o de soltarlo la pistola física (en segundos).
+  error:
+    prop_protection:
+      not_yours: ¡Esto no te pertenece!
+      protected: ¡Esta entidad está protegida!
+  notification:
+    prop_protection:
+      returned: "Tus entidades vuelven a ser tuyas ({count})."
+  settings:
+    prop_protection:
+      show_owners:
+        name: Mostrar dueños de entidades
+        desc: Si se muestra o no sobre la entidad que estás mirando quién es su dueño.
+  ui:
+    prop_protection:
+      owner: "Dueño: {name}"
+      owner_you: Esto te pertenece
+      owner_away: El dueño está ausente
