@@ -224,8 +224,8 @@ function ActiveRecord.Query:order(key)
 end
 
 --- Sets the function that is called once the query has been run.
--- @param callback [Function receives the result rows, the SQL string and the time the
---   query took in seconds]
+-- @param callback [Function receives the result rows, the SQL string, the time the
+--   query took in seconds and the List of values bound to its placeholders]
 function ActiveRecord.Query:callback(callback)
   self._callback = callback
 end

@@ -119,8 +119,8 @@ end
 -- A query that is given bindings is run as a prepared statement.
 -- @param query [String SQL to run]
 -- @param callback=nil [Function called with the result rows (a List of row Maps), the
---   query string and the time the query took in seconds. For 'insert' queries the
---   result is a single row with the id of the new row instead]
+--   query string, the time the query took in seconds and the bindings. For 'insert'
+--   queries the result is a single row with the id of the new row instead]
 -- @param query_type=nil [String lowercase query type, e.g. 'insert']
 -- @param bindings=nil [List values of the ? placeholders in the query. A query that is
 --   given bindings has to be a single statement]
@@ -162,7 +162,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
         end
       end
 
-      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
+      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
 
       if !status then
         ErrorNoHalt('ActiveRecord - MySQL Callback Error!\n')

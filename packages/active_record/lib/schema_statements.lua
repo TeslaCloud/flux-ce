@@ -28,8 +28,8 @@ function Statements.column_definition(name, type, options)
 end
 
 local function with_print(query, label)
-  query:callback(function(_result, query_str, time)
-    print_query(label..' ('..time..'s)', query_str)
+  query:callback(function(_result, query_str, time, bindings)
+    print_query(label..' ('..time..'s)', query_str, bindings)
   end)
 
   return query

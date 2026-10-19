@@ -173,8 +173,8 @@ end
 -- Values are best kept out of the SQL itself and passed as bindings instead, which take
 -- the place of the #placeholder of the adapter in the query and need no escaping.
 -- @param _query [String SQL to run]
--- @param _callback=nil [Function called with the result rows, the query string and the
---   time the query took in seconds]
+-- @param _callback=nil [Function called with the result rows, the query string, the
+--   time the query took in seconds and the bindings]
 -- @param _query_type=nil [String lowercase query type, e.g. 'select' or 'insert']
 -- @param _bindings=nil [List values of the bind parameters of the query, in the order of
 --   their placeholders; strings, numbers and booleans are supported. A query that is

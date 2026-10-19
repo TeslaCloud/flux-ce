@@ -65,9 +65,9 @@ end
 -- string, but takes several statements at once.
 -- @param query [String SQL to run]
 -- @param callback=nil [Function called with the result rows (a List of row Maps; nil
---   if a query without bindings produced no rows), the query string and the time taken
---   in seconds. For 'insert' queries the result is a single row with the id of the new
---   row instead]
+--   if a query without bindings produced no rows), the query string, the time taken
+--   in seconds and the bindings. For 'insert' queries the result is a single row with
+--   the id of the new row instead]
 -- @param query_type=nil [String lowercase query type, e.g. 'insert']
 -- @param bindings=nil [List values of the ? placeholders in the query. A query that is
 --   given bindings has to be a single statement]
@@ -90,7 +90,7 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bin
     end
 
     if callback then
-      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
+      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
 
       if !status then
         ErrorNoHalt('ActiveRecord - SQLite Callback Error!\n')

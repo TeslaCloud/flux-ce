@@ -215,8 +215,8 @@ function ActiveRecord.restore_metadata()
   ActiveRecord.metadata = { indexes = {}, references = {}, prim_keys = {} }
 
   local query = ActiveRecord.Database:select('ar_metadata')
-    query:callback(function(result, query_str, time)
-      print_query('Metadata Restore ('..time..'s)', query_str)
+    query:callback(function(result, query_str, time, bindings)
+      print_query('Metadata Restore ('..time..'s)', query_str, bindings)
 
       if !istable(result) then return end
 
@@ -242,8 +242,8 @@ function ActiveRecord.restore_schema()
   ActiveRecord.schema = {}
 
   local query = ActiveRecord.Database:select('ar_schema')
-    query:callback(function(result, query, time)
-      print_query('Schema Restore ('..time..'s)', query)
+    query:callback(function(result, query, time, bindings)
+      print_query('Schema Restore ('..time..'s)', query, bindings)
 
       if istable(result) then
         for _, row in ipairs(result) do
@@ -278,8 +278,8 @@ function ActiveRecord.get_meta_key(key, default)
   local query = ActiveRecord.Database:select('ar_metadata')
     query:where('key', key)
     query:limit(1)
-    query:callback(function(res, query_str, time)
-      print_query('Meta Get ('..time..'s)', query_str)
+    query:callback(function(res, query_str, time, bindings)
+      print_query('Meta Get ('..time..'s)', query_str, bindings)
 
       if istable(res) and #res > 0 then
         return res[1] and res[1].value or default
@@ -302,16 +302,16 @@ function ActiveRecord.set_meta_key(key, value)
         local q = ActiveRecord.Database:update('ar_metadata')
           q:where('key', key)
           q:update('value', value)
-          q:callback(function(_r, query_str, time)
-            print_query('Meta Update ('..time..'s)', query_str)
+          q:callback(function(_r, query_str, time, bindings)
+            print_query('Meta Update ('..time..'s)', query_str, bindings)
           end)
         q:execute()
       else
         local q = ActiveRecord.Database:insert('ar_metadata')
           q:insert('key', key)
           q:insert('value', value)
-          q:callback(function(_r, query_str, time)
-            print_query('Meta Insert ('..time..'s)', query_str)
+          q:callback(function(_r, query_str, time, bindings)
+            print_query('Meta Insert ('..time..'s)', query_str, bindings)
           end)
         q:execute()
       end
@@ -324,8 +324,8 @@ end
 function ActiveRecord.delete_meta_key(key)
   local query = ActiveRecord.Database:delete('ar_metadata')
     query:where('key', key)
-    query:callback(function(_r, query_str, time)
-      print_query('Meta Delete ('..time..'s)', query_str)
+    query:callback(function(_r, query_str, time, bindings)
+      print_query('Meta Delete ('..time..'s)', query_str, bindings)
     end)
   query:execute()
 end

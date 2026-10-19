@@ -313,6 +313,17 @@ do
   local indent_level = 1
   local prefix_color = Color('cyan')
   local query_color = Color(100, 220, 100)
+  local bindings_color = Color(200, 200, 200)
+
+  local function format_binding(value)
+    value = tostring(value)
+
+    if value:match('^%-?%d+%.?%d*$') then
+      return value
+    end
+
+    return '"'..value:gsub('\\', '\\\\'):gsub('"', '\\"'):gsub('\n', '\\n')..'"'
+  end
 
   --- Returns the indentation level used when printing queries to the console.
   -- @return [Number]
@@ -344,12 +355,30 @@ do
 
   --- Prints a query to the console at the current indentation level. Does nothing in
   -- production, unless Settings.debug_output_in_production is set.
+  -- The values of the bind parameters, if any, are printed after the query, in the order
+  -- of their placeholders.
+  -- ```
+  -- print_query('Character Load (0s)', 'SELECT * FROM characters WHERE user_id = ?;', { 42 })
+  -- -- Character Load (0s) SELECT * FROM characters WHERE user_id = ?; [42]
+  -- ```
   -- @param prefix [String label printed in front of the query, e.g. 'User Load (0.001s)']
   -- @param query [String text of the query]
-  function print_query(prefix, query)
+  -- @param bindings=nil [List values of the bind parameters of the query]
+  function print_query(prefix, query, bindings)
     if !IS_PRODUCTION or Settings.debug_output_in_production then
       MsgC(prefix_color, string.rep('  ', indent_level)..prefix..' ')
       MsgC(query_color, query)
+
+      if istable(bindings) and #bindings > 0 then
+        local values = {}
+
+        for index, value in ipairs(bindings) do
+          values[index] = format_binding(value)
+        end
+
+        MsgC(bindings_color, ' ['..table.concat(values, ', ')..']')
+      end
+
       Msg('\n')
     end
   end

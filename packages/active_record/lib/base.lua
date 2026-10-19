@@ -408,8 +408,8 @@ function ActiveRecord.Base:run_query(callback)
     end
 
     self.query_map = a{}
-    query:callback(function(results, query, time)
-      print_query(self.class_name..' Load ('..time..'s)', query)
+    query:callback(function(results, query, time, bindings)
+      print_query(self.class_name..' Load ('..time..'s)', query, bindings)
 
       if istable(results) and #results > 0 then
         local objects = {}
@@ -553,8 +553,8 @@ local except = {
 
 --- @ignore
 local function gen_callback(self, insert)
-  return function(result, query, time)
-    print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query)
+  return function(result, query, time, bindings)
+    print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query, bindings)
     self.saving = false
 
     -- Set #id to the last insert id.
@@ -672,8 +672,8 @@ function ActiveRecord.Base:destroy()
   local class_name = self.class_name
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('id', self.id)
-    query:callback(function(_result, query, time)
-      print_query(class_name..' Delete ('..time..'s)', query)
+    query:callback(function(_result, query, time, bindings)
+      print_query(class_name..' Delete ('..time..'s)', query, bindings)
     end)
   query:execute()
   self = nil

@@ -123,7 +123,7 @@ end
 -- query is done; without a connection the query is put into the queue instead.
 -- @param query [String SQL to run]
 -- @param callback=nil [Function called with the result rows (a List of row Maps), the
---   query string and the time the query took in seconds]
+--   query string, the time the query took in seconds and the bindings]
 -- @param query_type=nil [String unused]
 -- @param bindings=nil [List values of $1, $2 and so on in the query. A query that is
 --   given bindings has to be a single statement]
@@ -145,7 +145,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
         end
       end
 
-      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
+      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
 
       if !status then
         ErrorNoHalt('ActiveRecord - PostgreSQL Callback Error!\n')

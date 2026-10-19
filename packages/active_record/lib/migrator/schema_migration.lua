@@ -35,8 +35,8 @@ end
 function ActiveRecord.SchemaMigration:all_versions()
   local query = ActiveRecord.Database:select(self.table_name)
     query:order('version')
-    query:callback(function(result, query_str, time)
-      print_query('Schema Migrations Load ('..time..'s)', query_str)
+    query:callback(function(result, query_str, time, bindings)
+      print_query('Schema Migrations Load ('..time..'s)', query_str, bindings)
 
       local versions = {}
 
@@ -68,8 +68,8 @@ end
 function ActiveRecord.SchemaMigration:create_version(version)
   local query = ActiveRecord.Database:insert(self.table_name)
     query:insert('version', self:normalize_migration_number(version))
-    query:callback(function(_result, query_str, time)
-      print_query('Schema Migration Create ('..time..'s)', query_str)
+    query:callback(function(_result, query_str, time, bindings)
+      print_query('Schema Migration Create ('..time..'s)', query_str, bindings)
     end)
   query:execute()
 end
@@ -79,8 +79,8 @@ end
 function ActiveRecord.SchemaMigration:delete_version(version)
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('version', self:normalize_migration_number(version))
-    query:callback(function(_result, query_str, time)
-      print_query('Schema Migration Delete ('..time..'s)', query_str)
+    query:callback(function(_result, query_str, time, bindings)
+      print_query('Schema Migration Delete ('..time..'s)', query_str, bindings)
     end)
   query:execute()
 end
@@ -88,8 +88,8 @@ end
 --- Forgets every migration version that has been run.
 function ActiveRecord.SchemaMigration:delete_all_versions()
   local query = ActiveRecord.Database:delete(self.table_name)
-    query:callback(function(_result, query_str, time)
-      print_query('Schema Migration Delete ('..time..'s)', query_str)
+    query:callback(function(_result, query_str, time, bindings)
+      print_query('Schema Migration Delete ('..time..'s)', query_str, bindings)
     end)
   query:execute()
 end
