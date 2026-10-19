@@ -314,6 +314,7 @@ do
   local prefix_color = Color('cyan')
   local query_color = Color(100, 220, 100)
   local bindings_color = Color(200, 200, 200)
+  local max_binding_length = 255
 
   local function format_binding(value)
     value = tostring(value)
@@ -322,7 +323,15 @@ do
       return value
     end
 
-    return '"'..value:gsub('\\', '\\\\'):gsub('"', '\\"'):gsub('\n', '\\n')..'"'
+    local length = #value
+    local suffix = '"'
+
+    if length > max_binding_length then
+      value = value:sub(1, max_binding_length)
+      suffix = '..." ('..length..' characters)'
+    end
+
+    return '"'..value:gsub('\\', '\\\\'):gsub('"', '\\"'):gsub('\n', '\\n')..suffix
   end
 
   --- Returns the indentation level used when printing queries to the console.
@@ -356,7 +365,7 @@ do
   --- Prints a query to the console at the current indentation level. Does nothing in
   -- production, unless Settings.debug_output_in_production is set.
   -- The values of the bind parameters, if any, are printed after the query, in the order
-  -- of their placeholders.
+  -- of their placeholders. Values longer than 255 characters are cut short.
   -- ```
   -- print_query('Character Load (0s)', 'SELECT * FROM characters WHERE user_id = ?;', { 42 })
   -- -- Character Load (0s) SELECT * FROM characters WHERE user_id = ?; [42]
