@@ -1,4 +1,6 @@
 --- Shorthand wrappers around built-in Lua functions: `typeof` and `try`.
+-- On Linux servers `ErrorNoHalt` is also replaced to print errors on a red background,
+-- with the original kept as `_ErrorNoHalt`.
 
 --- Gets the type of an object while ensuring the output is always lowercase.
 -- Functions exactly the same as `type`.
@@ -22,4 +24,19 @@ function try(func, ...)
   end
 
   return a, b, c, d, e, f
+end
+
+if SERVER and system.IsLinux() then
+  _ErrorNoHalt = _ErrorNoHalt or ErrorNoHalt
+
+  --- Prints the error in bold on a red background using ANSI escape sequences.
+  -- Trailing newlines are printed after the styling is reset.
+  -- @param msg [String error message]
+  function ErrorNoHalt(msg)
+    local new_msg, count = tostring(msg):gsub('\n+$', '')
+
+    Msg('\27[41;15m\27[1m')
+    _ErrorNoHalt(new_msg)
+    Msg('\27[0m'..string.rep('\n', count))
+  end
 end

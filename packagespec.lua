@@ -10,10 +10,6 @@ Package:describe(function(s)
   s.website     = 'https://teslacloud.net'
   s.license     = 'MIT'
 
-  if system.IsLinux() then
-    s.depends 'colorfix'
-  end
-
   s.depends     'sfs'
   s.depends     'cable'
   s.depends     'utf8'
