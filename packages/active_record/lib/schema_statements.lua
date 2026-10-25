@@ -35,10 +35,10 @@ local function with_print(query, label)
   return query
 end
 
-local function raw(label, sql)
+local function raw(label, sql, bindings)
   return ActiveRecord.adapter:raw_query(sql, function(_result, query_str, time)
-    print_query(label..' ('..time..'s)', query_str)
-  end)
+    print_query(label..' ('..time..'s)', query_str, bindings)
+  end, nil, bindings)
 end
 
 --- Creates the indexes and foreign keys that t:references queued on a query.
@@ -266,6 +266,79 @@ local function index_covers(index_sql, columns)
   return false
 end
 
+--- @ignore
+local function rows(result)
+  return result
+end
+
+--- Lists the tables of an SQLite database, leaving out the internal ones of SQLite.
+-- @return [List<String> sorted by name]
+local function sqlite_table_names()
+  local result = ActiveRecord.adapter:raw_query(
+    "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name;", rows
+  )
+  local names = {}
+
+  for _, row in ipairs(istable(result) and result or {}) do
+    names[#names + 1] = row.name
+  end
+
+  return names
+end
+
+--- Reads the CREATE TABLE statement of an SQLite table.
+-- @param table_name [String]
+-- @return [String, or nil if the table does not exist]
+local function sqlite_table_sql(table_name)
+  local result = ActiveRecord.adapter:raw_query(
+    "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?;", rows, 'select', { table_name }
+  )
+
+  return istable(result) and result[1] and result[1].sql or nil
+end
+
+--- Checks whether the primary key of an SQLite table is AUTOINCREMENT.
+-- @param table_name [String]
+-- @return [Boolean]
+local function sqlite_autoincrement(table_name)
+  local definition = sqlite_table_sql(table_name)
+
+  return isstring(definition) and definition:upper():find('%f[%w_]AUTOINCREMENT%f[^%w_]') != nil
+end
+
+--- Returns the column of an SQLite table that SQLite makes AUTOINCREMENT if asked to: a
+-- single primary key column of the INTEGER type.
+-- @param columns [List<Map> the columns, as PRAGMA table_info returns them]
+-- @return [String the name of the column, or nil]
+local function sqlite_integer_primary_key(columns)
+  local found = nil
+
+  for _, column in ipairs(columns) do
+    if tonumber(column.pk) and tonumber(column.pk) > 0 then
+      if found or tonumber(column.pk) != 1 or tostring(column.type):upper() != 'INTEGER' then
+        return
+      end
+
+      found = column.name
+    end
+  end
+
+  return found
+end
+
+--- Reads the last id that SQLite has given out for an AUTOINCREMENT table.
+-- @param table_name [String]
+-- @return [Number 0 if the table has given out none or is not AUTOINCREMENT]
+local function sqlite_sequence(table_name)
+  if !sqlite_table_sql('sqlite_sequence') then return 0 end
+
+  local result = ActiveRecord.adapter:raw_query(
+    'SELECT seq FROM sqlite_sequence WHERE name = ?;', rows, 'select', { table_name }
+  )
+
+  return istable(result) and result[1] and tonumber(result[1].seq) or 0
+end
+
 --- Reads the foreign keys of an SQLite table.
 -- @param table_name [String]
 -- @return [List<Map> the foreign keys, each with the List<String> of its columns (from),
@@ -273,7 +346,7 @@ end
 --   for the primary key) and its on_update and on_delete actions]
 local function sqlite_foreign_keys(table_name)
   local result = ActiveRecord.adapter:raw_query(
-    'PRAGMA foreign_key_list('..sql_quote_name(table_name)..');', function(rows) return rows end
+    'PRAGMA foreign_key_list('..sql_quote_name(table_name)..');', rows
   )
   local by_id = {}
   local list = {}
@@ -346,45 +419,18 @@ local function foreign_key_clause(fk)
   return clause
 end
 
---- Rebuilds an SQLite table, which is how columns are removed from a table and foreign keys
--- are added to or removed from it on the SQLite of Garry's Mod, since its ALTER TABLE can do
--- none of these. The table is created anew with the remaining columns, each with its
--- declared type, NOT NULL, DEFAULT and a single-column primary key, and with its foreign
--- keys; the rows are copied over, and the indexes that do not name a removed column are
--- created again. Tables that have anything else in their definition, such as a composite
--- primary key or a UNIQUE, CHECK or COLLATE clause, are refused with an error rather than
--- rebuilt without it.
---
--- Dropping the old table would delete the rows that refer to it through a foreign key with
--- ON DELETE CASCADE, so the table is only rebuilt while foreign keys are not enforced.
--- Outside of a transaction, the enforcement is turned off for the rebuild, which runs in a
--- transaction of its own and is rolled back if it leaves more rows of the table breaking one
--- of its foreign keys than before, as adding a foreign key that rows already break does. Inside of a transaction, the enforcement cannot be changed: the migrator
--- turns it off before it starts the transaction of a migration and checks the foreign keys
--- before it commits, and a rebuild inside of a transaction that enforces them is refused.
--- @param statement [String name of the schema statement, used in error messages]
+--- Explains why an SQLite table cannot be rebuilt by rebuild_sqlite_table: its definition
+-- holds something that the rebuild would not carry over.
 -- @param table_name [String]
--- @param changes [Map removed (names of the columns to remove, as keys), foreign_key (a
---   foreign key to add, as returned by sqlite_foreign_keys) and drop_foreign_key (Function
---   that receives a foreign key of the table and returns true to remove it)]
-local function rebuild_sqlite_table(statement, table_name, changes)
-  local adapter = ActiveRecord.adapter
-  local quoted_table = sql_quote_name(table_name)
-  local removed = changes.removed or {}
-  local function rows(result) return result end
-  local columns = adapter:raw_query('PRAGMA table_info('..quoted_table..');', rows)
+-- @return [String the reason, or nil if the table can be rebuilt]
+local function sqlite_rebuild_refusal(table_name)
+  local columns = ActiveRecord.adapter:raw_query('PRAGMA table_info('..sql_quote_name(table_name)..');', rows)
 
   if !istable(columns) then
-    error(statement..' - the table '..tostring(table_name)..' does not exist!', 0)
+    return 'the table does not exist'
   end
 
-  local definition_sql = adapter:raw_query(
-    "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?;", rows, 'select', { table_name }
-  )
-
-  definition_sql = istable(definition_sql) and definition_sql[1] and definition_sql[1].sql or ''
-
-  local upper = definition_sql:upper()
+  local upper = (sqlite_table_sql(table_name) or ''):upper()
   local primary_keys = 0
 
   for _, column in ipairs(columns) do
@@ -395,23 +441,125 @@ local function rebuild_sqlite_table(statement, table_name, changes)
 
   for _, keyword in ipairs({ 'UNIQUE', 'CHECK', 'COLLATE', 'GENERATED' }) do
     if upper:find('%f[%w_]'..keyword..'%f[^%w_]') then
-      error(statement..' - cannot rebuild the SQLite table '..table_name..', it has a '
-        ..keyword..' clause!', 0)
+      return 'it has a '..keyword..' clause'
     end
   end
 
   if primary_keys > 1 then
-    error(statement..' - cannot rebuild the SQLite table '..table_name
-      ..', it has a composite primary key!', 0)
+    return 'it has a composite primary key'
+  end
+end
+
+--- Runs a function that rebuilds SQLite tables while foreign keys are not enforced, since
+-- dropping a table would otherwise delete the rows that refer to it through a foreign key
+-- with ON DELETE CASCADE. Outside of a transaction, the enforcement is turned off for the
+-- function, which runs in a transaction of its own; the transaction is rolled back if the
+-- function fails or leaves more rows breaking a foreign key than there were before. Inside of
+-- a transaction, the enforcement cannot be changed: the migrator turns it off before it
+-- starts the transaction of a migration and checks the foreign keys before it commits, and
+-- the function is refused inside of a transaction that enforces them.
+-- @param statement [String name of the schema statement, used in error messages]
+-- @param subject [String what is rebuilt, e.g. 'the SQLite table users', used in error
+--   messages]
+-- @param table_name=nil [String only check the rows of this table for broken foreign keys]
+-- @param callback [Function]
+-- @return [Any whatever the function returns]
+local function without_sqlite_foreign_keys(statement, subject, table_name, callback)
+  local adapter = ActiveRecord.adapter
+
+  if adapter:in_transaction() then
+    if adapter:foreign_keys_enabled() then
+      error(statement..' - cannot rebuild '..subject
+        ..' inside of a transaction while foreign keys are enforced!', 0)
+    end
+
+    return callback()
   end
 
-  local in_transaction = adapter:in_transaction()
+  local enforced = adapter:disable_foreign_keys()
 
-  if in_transaction and adapter:foreign_keys_enabled() then
+  if adapter:foreign_keys_enabled() then
+    error(statement..' - cannot rebuild '..subject
+      ..', the enforcement of foreign keys could not be turned off!', 0)
+  end
+
+  local raise_errors = adapter._raise_errors
+  local violations = adapter:foreign_key_violations(table_name)
+
+  adapter:raise_errors(true)
+  adapter:begin_transaction()
+
+  local success, result = pcall(function()
+    local value = callback()
+
+    adapter:check_foreign_keys(table_name, violations)
+
+    return value
+  end)
+
+  if success then
+    adapter:commit_transaction()
+  else
+    adapter:rollback_transaction()
+  end
+
+  adapter:raise_errors(raise_errors)
+
+  if enforced then
+    adapter:enable_foreign_keys()
+  end
+
+  if !success then
+    error(result, 0)
+  end
+
+  return result
+end
+
+--- Rebuilds an SQLite table, which is how columns are removed from a table, foreign keys are
+-- added to or removed from it and its primary key is made AUTOINCREMENT on the SQLite of
+-- Garry's Mod, since its ALTER TABLE can do none of these. The table is created anew with
+-- the remaining columns, each with its declared type, NOT NULL, DEFAULT and a single-column
+-- primary key, and with its foreign keys; the rows are copied over, and the indexes that do
+-- not name a removed column are created again. A primary key of the INTEGER type is always
+-- made AUTOINCREMENT, and the last id that the table has given out is kept, or set to the
+-- highest id of its rows if that is higher, so that no id is given out again. Tables that
+-- have anything else in their definition, such as a composite primary key or a UNIQUE,
+-- CHECK or COLLATE clause, are refused with an error rather than rebuilt without it.
+--
+-- The rebuild runs while foreign keys are not enforced (see without_sqlite_foreign_keys);
+-- outside of a transaction it is rolled back if it leaves more rows of the table breaking one
+-- of its foreign keys than before, as adding a foreign key that rows already break does.
+-- @param statement [String name of the schema statement, used in error messages]
+-- @param table_name [String]
+-- @param changes=nil [Map removed (names of the columns to remove, as keys), foreign_keys
+--   (List of the foreign keys to add, as returned by sqlite_foreign_keys) and
+--   drop_foreign_key (Function that receives a foreign key of the table and returns true to
+--   remove it)]
+local function rebuild_sqlite_table(statement, table_name, changes)
+  changes = changes or {}
+
+  local adapter = ActiveRecord.adapter
+  local quoted_table = sql_quote_name(table_name)
+  local removed = changes.removed or {}
+
+  if !sqlite_table_sql(table_name) then
+    error(statement..' - the table '..tostring(table_name)..' does not exist!', 0)
+  end
+
+  local refusal = sqlite_rebuild_refusal(table_name)
+
+  if refusal then
+    error(statement..' - cannot rebuild the SQLite table '..table_name..', '..refusal..'!', 0)
+  end
+
+  if adapter:in_transaction() and adapter:foreign_keys_enabled() then
     error(statement..' - cannot rebuild the SQLite table '..table_name
       ..' inside of a transaction while foreign keys are enforced!', 0)
   end
 
+  local columns = adapter:raw_query('PRAGMA table_info('..quoted_table..');', rows)
+  local primary_key = sqlite_integer_primary_key(columns)
   local indexes = adapter:raw_query(
     "SELECT name, sql FROM sqlite_master WHERE type = 'index' AND tbl_name = ? AND sql IS NOT NULL;",
     rows, 'select', { table_name }
@@ -425,7 +573,9 @@ local function rebuild_sqlite_table(statement, table_name, changes)
       local quoted = sql_quote_name(column.name)
       local definition = quoted..' '..(column.type or '')
 
-      if tonumber(column.pk) == 1 then
+      if column.name == primary_key then
+        definition = definition..' PRIMARY KEY AUTOINCREMENT'
+      elseif tonumber(column.pk) == 1 then
         definition = definition..' PRIMARY KEY'
       end
 
@@ -454,14 +604,16 @@ local function rebuild_sqlite_table(statement, table_name, changes)
     end
   end
 
-  if changes.foreign_key then
-    definitions[#definitions + 1] = foreign_key_clause(changes.foreign_key)
+  for _, fk in ipairs(changes.foreign_keys or {}) do
+    definitions[#definitions + 1] = foreign_key_clause(fk)
   end
 
   local temporary = sql_quote_name(table_name..'_rebuilt')
   local column_list = table.concat(kept, ', ')
 
   local function rebuild()
+    local last_id = primary_key and sqlite_sequence(table_name) or 0
+
     raw('Rebuild Table', 'CREATE TABLE '..temporary..' ('..table.concat(definitions, ', ')..');')
     raw('Rebuild Table',
       'INSERT INTO '..temporary..' ('..column_list..') SELECT '..column_list..' FROM '..quoted_table..';')
@@ -473,57 +625,69 @@ local function rebuild_sqlite_table(statement, table_name, changes)
         raw('Rebuild Table', index.sql..';')
       end
     end
-  end
 
-  -- The indexes that named a removed column are gone with the old table.
-  local function forget_indexes()
-    for _, index in ipairs(indexes) do
-      if index_covers(index.sql, removed) then
-        ActiveRecord.forget_metadata('index', index.name)
-      end
+    -- The copied rows have set the sequence to their highest id, which is lower than the last
+    -- id given out if the rows with the highest ids have been deleted.
+    if last_id > sqlite_sequence(table_name) then
+      raw('Rebuild Table', 'DELETE FROM sqlite_sequence WHERE name = ?;', { table_name })
+      raw('Rebuild Table', 'INSERT INTO sqlite_sequence (name, seq) VALUES (?, ?);', { table_name, last_id })
     end
   end
 
-  if in_transaction then
-    rebuild()
+  without_sqlite_foreign_keys(statement, 'the SQLite table '..table_name, table_name, rebuild)
 
-    return forget_indexes()
+  -- The indexes that named a removed column are gone with the old table.
+  for _, index in ipairs(indexes) do
+    if index_covers(index.sql, removed) then
+      ActiveRecord.forget_metadata('index', index.name)
+    end
+  end
+end
+
+--- Turns an on_delete action, as the foreign key statements take it or as SQLite reports it,
+-- into 'cascade', 'nullify' or the action in lower case.
+-- @param on_delete [String/nil]
+-- @return [String 'no action' if none is given]
+local function normalize_on_delete(on_delete)
+  local action = isstring(on_delete) and on_delete:lower() or 'no action'
+
+  if action == 'set null' then
+    return 'nullify'
   end
 
-  local enforced = adapter:disable_foreign_keys()
+  return action
+end
 
-  if adapter:foreign_keys_enabled() then
-    error(statement..' - cannot rebuild the SQLite table '..table_name
-      ..', the enforcement of foreign keys could not be turned off!', 0)
-  end
+--- Builds the condition that the rows of a table meet when their column refers to a row of
+-- another table that does not exist. The referenced keys are read through a derived table,
+-- which MySQL needs to read them from the table that the rows are deleted from.
+-- @param column [String]
+-- @param to_table [String]
+-- @param primary_key [String]
+-- @return [String]
+local function orphan_condition(column, to_table, primary_key)
+  local quoted_column = sql_quote_name(column)
+  local quoted_key = sql_quote_name(primary_key)
 
-  local raise_errors = adapter._raise_errors
-  local violations = adapter:foreign_key_violations(table_name)
+  return quoted_column..' IS NOT NULL AND '..quoted_column..' NOT IN (SELECT '..quoted_key
+    ..' FROM (SELECT '..quoted_key..' FROM '..sql_quote_name(to_table)..') referenced_keys)'
+end
 
-  adapter:raise_errors(true)
-  adapter:begin_transaction()
+--- Counts the rows of a table whose column refers to a row of another table that does not
+-- exist. Has to be called while the adapter is in sync mode.
+-- @param from_table [String]
+-- @param column [String]
+-- @param to_table [String]
+-- @param primary_key [String]
+-- @return [Number]
+local function count_orphans(from_table, column, to_table, primary_key)
+  local result = ActiveRecord.adapter:raw_query(
+    'SELECT COUNT(*) AS orphans FROM '..sql_quote_name(from_table)..' WHERE '
+      ..orphan_condition(column, to_table, primary_key)..';',
+    rows
+  )
 
-  local success, exception = pcall(function()
-    rebuild()
-    adapter:check_foreign_keys(table_name, violations)
-  end)
-
-  if success then
-    adapter:commit_transaction()
-    forget_indexes()
-  else
-    adapter:rollback_transaction()
-  end
-
-  adapter:raise_errors(raise_errors)
-
-  if enforced then
-    adapter:enable_foreign_keys()
-  end
-
-  if !success then
-    error(exception, 0)
-  end
+  return istable(result) and result[1] and tonumber(result[1].orphans) or 0
 end
 
 --- Removes a column from an existing table. On SQLite the table is rebuilt without the
@@ -793,7 +957,9 @@ function Statements.add_foreign_key(from_table, to_table, options)
   if ActiveRecord.adapter:is_sqlite() then
     if !find_sqlite_foreign_key(from_table, column, to_table) then
       rebuild_sqlite_table('add_foreign_key', from_table, {
-        foreign_key = { from = { column }, table = to_table, to = { primary_key }, on_delete = on_delete }
+        foreign_keys = {
+          { from = { column }, table = to_table, to = { primary_key }, on_delete = on_delete }
+        }
       })
     end
   else
@@ -866,6 +1032,301 @@ function Statements.remove_foreign_key(from_table, to_table, options)
   end
 
   ActiveRecord.forget_metadata('foreign_key', name)
+end
+
+--- Checks whether a foreign key is recorded in the metadata.
+-- ```
+-- foreign_key_exists('characters', 'users')
+-- foreign_key_exists('items', { column = 'dropped_by_character_id' })
+-- ```
+-- @param from_table [String table that holds the key]
+-- @param to_table=nil [String/Map table the key refers to, or the options]
+-- @param options=nil [Map column or name of the constraint]
+-- @return [Boolean]
+function Statements.foreign_key_exists(from_table, to_table, options)
+  if istable(to_table) then
+    options, to_table = to_table, nil
+  end
+
+  options = options or {}
+
+  if options.name then
+    return ActiveRecord.metadata.references[options.name] != nil
+  end
+
+  for _, fk in pairs(ActiveRecord.metadata.references) do
+    if fk.from_table == from_table and (!to_table or fk.to_table == to_table)
+      and (!options.column or fk.column == options.column) then
+      return true
+    end
+  end
+
+  return false
+end
+
+--- Checks whether a table is part of the schema that ActiveRecord keeps, which holds every
+-- table created through it.
+-- @param table_name [String]
+-- @return [Boolean]
+function Statements.table_exists(table_name)
+  return istable(ActiveRecord.schema[table_name])
+end
+
+--- Applies the ON DELETE action of a foreign key to the rows that refer to rows that do not
+-- exist, the way the database applies it to the rows of a referenced row that is deleted:
+-- with 'cascade' the rows are deleted, with 'nullify' their column is set to NULL. Rows of a
+-- foreign key with any other action, and rows whose column cannot be NULL, are left as they
+-- are and only counted. A foreign key can only be added to a table once none of its rows
+-- refers to a row that does not exist, so this is run before a foreign key is added to a
+-- table that already holds rows. The rows that are deleted are not followed further: the
+-- rows that refer to them are left for the foreign keys of their own table. Has to be called
+-- while the adapter is in sync mode.
+-- ```
+-- clean_orphans('character_permissions', 'characters', { on_delete = 'cascade' })
+-- add_foreign_key('character_permissions', 'characters', { on_delete = 'cascade' })
+-- ```
+-- @param from_table [String table that holds the key]
+-- @param to_table [String table the key refers to]
+-- @param options=nil [Map column (defaults to '<singular of to_table>_id'), primary_key
+--   ('id' by default) and on_delete ('cascade', 'nullify', or anything else to leave the
+--   rows alone)]
+-- @return [Number the rows that were deleted or set to NULL, or that are left as they are;
+--   String what was done with them: 'deleted', 'nullified' or 'kept']
+function Statements.clean_orphans(from_table, to_table, options)
+  options = options or {}
+
+  local column = options.column or Flow.Inflector:singularize(to_table)..'_id'
+  local primary_key = options.primary_key or 'id'
+  local action = normalize_on_delete(options.on_delete)
+  local count = count_orphans(from_table, column, to_table, primary_key)
+  local schema_column = istable(ActiveRecord.schema[from_table]) and ActiveRecord.schema[from_table][column]
+
+  if action == 'nullify' and istable(schema_column) and schema_column.null == false then
+    action = 'not null'
+  end
+
+  if count == 0 or (action != 'cascade' and action != 'nullify') then
+    return count, 'kept'
+  end
+
+  local condition = orphan_condition(column, to_table, primary_key)
+  local result = nil
+
+  if action == 'cascade' then
+    raw('Clean Orphans', 'DELETE FROM '..sql_quote_name(from_table)..' WHERE '..condition..';')
+    result = 'deleted'
+  else
+    raw('Clean Orphans', 'UPDATE '..sql_quote_name(from_table)..' SET '..sql_quote_name(column)
+      ..' = NULL WHERE '..condition..';')
+    result = 'nullified'
+  end
+
+  if result == 'deleted' then
+    print('ActiveRecord - Deleted '..count..' row(s) of '..from_table..' whose '..column
+      ..' referred to a row of '..to_table..' that does not exist.')
+  else
+    print('ActiveRecord - Set '..from_table..'.'..column..' to NULL in '..count
+      ..' row(s) that referred to a row of '..to_table..' that does not exist.')
+  end
+
+  return count, result
+end
+
+--- Creates the foreign keys that the metadata declares but the tables of an SQLite database
+-- do not have, such as those of a table that was created or copied without them. Does
+-- nothing on other databases, which create a foreign key when it is declared, and on an
+-- SQLite database that has every declared foreign key.
+--
+-- Before the foreign keys are created, the rows that refer to rows that do not exist through
+-- any foreign key of the database, declared or created, are dealt with by the action of that
+-- foreign key (see clean_orphans), over and over until the deleted rows leave no more such
+-- rows behind. A foreign key whose rows still refer to rows that do not exist then, because
+-- its action is neither 'cascade' nor 'nullify', is not created: a warning names the table,
+-- the column and the number of those rows, which are left untouched. The tables are rebuilt
+-- to create the foreign keys (see rebuild_sqlite_table), each table once, and a table that
+-- cannot be rebuilt is left without them, with a warning. What has been cleaned and created
+-- is printed. Runs in a transaction of its own while foreign keys are not enforced, unless it
+-- is called inside of a migration, which runs in one already.
+-- @return [Map numbers of the foreign keys that were created (created) and of those that were
+--   left out (skipped), and of the rows that were deleted (deleted) and set to NULL
+--   (nullified)]
+function Statements.add_missing_foreign_keys()
+  local summary = { created = 0, skipped = 0, deleted = 0, nullified = 0 }
+
+  if !ActiveRecord.adapter:is_sqlite() then return summary end
+
+  local tables = {}
+
+  for _, table_name in ipairs(sqlite_table_names()) do
+    tables[table_name] = true
+  end
+
+  local foreign_keys = {}
+  local by_key = {}
+  local missing = {}
+
+  local function remember(fk)
+    local key = fk.from_table..'.'..fk.column..' -> '..fk.to_table
+
+    if by_key[key] then return by_key[key] end
+
+    by_key[key] = fk
+    foreign_keys[#foreign_keys + 1] = fk
+
+    return fk
+  end
+
+  for _name, fk in SortedPairs(ActiveRecord.metadata.references) do
+    if istable(fk) and isstring(fk.from_table) and isstring(fk.to_table) then
+      if tables[fk.from_table] and tables[fk.to_table] then
+        local declared = remember({
+          from_table = fk.from_table,
+          to_table = fk.to_table,
+          column = fk.column or Flow.Inflector:singularize(fk.to_table)..'_id',
+          primary_key = fk.primary_key or 'id',
+          on_delete = fk.on_delete
+        })
+
+        if !find_sqlite_foreign_key(declared.from_table, declared.column, declared.to_table) then
+          missing[#missing + 1] = declared
+        end
+      end
+    end
+  end
+
+  if #missing == 0 then return summary end
+
+  for table_name in SortedPairs(tables) do
+    for _, fk in ipairs(sqlite_foreign_keys(table_name)) do
+      if #fk.from == 1 then
+        remember({
+          from_table = table_name,
+          to_table = fk.table,
+          column = fk.from[1],
+          primary_key = fk.to[1] or 'id',
+          on_delete = fk.on_delete
+        })
+      end
+    end
+  end
+
+  without_sqlite_foreign_keys('add_missing_foreign_keys', 'the SQLite tables', nil, function()
+    local changed = true
+
+    while changed do
+      changed = false
+
+      for _, fk in ipairs(foreign_keys) do
+        if tables[fk.to_table] then
+          local count, result = Statements.clean_orphans(fk.from_table, fk.to_table, fk)
+
+          if result != 'kept' then
+            summary[result] = summary[result] + count
+            changed = true
+          end
+        end
+      end
+    end
+
+    local to_create = {}
+    local table_order = {}
+
+    for _, fk in ipairs(missing) do
+      local count = count_orphans(fk.from_table, fk.column, fk.to_table, fk.primary_key)
+
+      if count > 0 then
+        summary.skipped = summary.skipped + 1
+
+        ErrorNoHalt('ActiveRecord - Not creating the foreign key from '..fk.from_table..'.'..fk.column
+          ..' to '..fk.to_table..': '..count..' row(s) of '..fk.from_table..' refer to a row of '
+          ..fk.to_table..' that does not exist, and its ON DELETE action ('
+          ..normalize_on_delete(fk.on_delete)..') leaves them as they are. Delete those rows or '
+          ..'set their '..fk.column..' to NULL and run add_missing_foreign_keys again.\n')
+      else
+        if !to_create[fk.from_table] then
+          to_create[fk.from_table] = {}
+          table_order[#table_order + 1] = fk.from_table
+        end
+
+        table.insert(to_create[fk.from_table], fk)
+      end
+    end
+
+    for _, table_name in ipairs(table_order) do
+      local list = to_create[table_name]
+      local refusal = sqlite_rebuild_refusal(table_name)
+
+      if refusal then
+        summary.skipped = summary.skipped + #list
+
+        ErrorNoHalt('ActiveRecord - Not creating the foreign keys of '..table_name..': the table cannot be '
+          ..'rebuilt, '..refusal..'.\n')
+      else
+        local clauses = {}
+
+        for index, fk in ipairs(list) do
+          local on_delete = normalize_on_delete(fk.on_delete)
+
+          clauses[index] = {
+            from = { fk.column },
+            table = fk.to_table,
+            to = { fk.primary_key },
+            on_delete = on_delete_clauses[on_delete] or on_delete:upper()
+          }
+        end
+
+        rebuild_sqlite_table('add_missing_foreign_keys', table_name, { foreign_keys = clauses })
+
+        for _, fk in ipairs(list) do
+          print('ActiveRecord - Created the foreign key from '..table_name..'.'..fk.column
+            ..' to '..fk.to_table..'.')
+        end
+
+        summary.created = summary.created + #list
+      end
+    end
+  end)
+
+  print('ActiveRecord - Foreign keys: '..summary.created..' created, '..summary.skipped..' left out; '
+    ..summary.deleted..' row(s) deleted and '..summary.nullified..' set to NULL.')
+
+  return summary
+end
+
+--- Makes the primary key of an SQLite table AUTOINCREMENT, so that the id of a deleted row is
+-- never given to a new one; without it, SQLite gives the highest id of the table plus one,
+-- which is the id of the last row again once that row has been deleted. The table is
+-- rebuilt for it (see rebuild_sqlite_table), which keeps its rows and their ids. Does nothing
+-- on other databases, whose primary keys never give an id out twice, and for a table that is
+-- AUTOINCREMENT already, that has no primary key of the INTEGER type or that does not exist.
+-- A table that cannot be rebuilt is left as it is, with a warning.
+-- @param table_name [String]
+-- @return [Boolean whether the table was rebuilt]
+function Statements.add_autoincrement(table_name)
+  local adapter = ActiveRecord.adapter
+
+  if !adapter:is_sqlite() or !sqlite_table_sql(table_name) or sqlite_autoincrement(table_name) then
+    return false
+  end
+
+  local columns = adapter:raw_query('PRAGMA table_info('..sql_quote_name(table_name)..');', rows)
+
+  if !istable(columns) or !sqlite_integer_primary_key(columns) then
+    return false
+  end
+
+  local refusal = sqlite_rebuild_refusal(table_name)
+
+  if refusal then
+    ErrorNoHalt('ActiveRecord - Not making the primary key of '..table_name
+      ..' AUTOINCREMENT: the table cannot be rebuilt, '..refusal..'.\n')
+
+    return false
+  end
+
+  rebuild_sqlite_table('add_autoincrement', table_name)
+
+  return true
 end
 
 --- Adds a foreign key constraint along with an index on the key column.

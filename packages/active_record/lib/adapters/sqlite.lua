@@ -4,11 +4,12 @@
 -- it is done, and schema changes can be rolled back, so migrations run in a transaction.
 -- Foreign keys are enforced: the adapter turns their enforcement on when it connects, and it
 -- lasts as long as the connection, which Garry's Mod keeps open while the server runs.
+-- Primary keys are AUTOINCREMENT, so the id of a deleted row is never given to a new one.
 
 class 'ActiveRecord::Adapters::Sqlite' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Sqlite.types = {
-  primary_key = 'INTEGER PRIMARY KEY NOT NULL',
+  primary_key = 'INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL',
   string = 'varchar',
   text = 'text',
   integer = 'integer',

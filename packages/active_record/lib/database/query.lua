@@ -535,7 +535,12 @@ local function build_create_query(query_obj)
       local definition = entry[2]
 
       if is_sqlite then
-        definition = gsub(definition, 'AUTO_INCREMENT', ''):gsub('AUTOINCREMENT', ''):gsub('INT ', 'INTEGER ')
+        definition = gsub(definition, 'AUTO_INCREMENT', ''):gsub('INT ', 'INTEGER ')
+
+        -- SQLite only takes AUTOINCREMENT on an INTEGER PRIMARY KEY column.
+        if !definition:upper():find('INTEGER PRIMARY KEY', 1, true) then
+          definition = gsub(definition, 'AUTOINCREMENT', '')
+        end
       end
 
       columns[i] = entry[1]..' '..definition

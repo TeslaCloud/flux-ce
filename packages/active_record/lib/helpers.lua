@@ -244,6 +244,58 @@ function remove_foreign_key(from_table, to_table, options)
   return ActiveRecord.ddl('remove_foreign_key', from_table, to_table, options)
 end
 
+--- Checks whether a foreign key is recorded in the metadata. Runs no statement, so it can
+-- be used anywhere in a migration.
+-- ```
+-- if foreign_key_exists('recognizes', { column = 'target_id' }) then ... end
+-- ```
+-- @param from_table [String table that holds the key]
+-- @param to_table=nil [String/Map table the key refers to, or the options]
+-- @param options=nil [Map column or name of the constraint]
+-- @return [Boolean]
+function foreign_key_exists(from_table, to_table, options)
+  return ActiveRecord.SchemaStatements.foreign_key_exists(from_table, to_table, options)
+end
+
+--- Checks whether a table is part of the schema that ActiveRecord keeps. Runs no statement,
+-- so it can be used anywhere in a migration.
+-- @param table_name [String]
+-- @return [Boolean]
+function table_exists(table_name)
+  return ActiveRecord.SchemaStatements.table_exists(table_name)
+end
+
+--- Deletes the rows that refer to rows that do not exist through a foreign key, or sets
+-- their column to NULL, as the ON DELETE action of the foreign key says. Meant to be run
+-- right before the foreign key is added to a table that holds rows. Not reversible.
+-- ```
+-- clean_orphans('character_permissions', 'characters', { on_delete = 'cascade' })
+-- ```
+-- @param from_table [String table that holds the key]
+-- @param to_table [String table the key refers to]
+-- @param options=nil [Map column, primary_key and on_delete ('cascade' or 'nullify'; rows of
+--   any other action are left as they are)]
+-- @return [Number the rows concerned, String 'deleted', 'nullified' or 'kept']
+function clean_orphans(from_table, to_table, options)
+  return ActiveRecord.ddl('clean_orphans', from_table, to_table, options)
+end
+
+--- Creates the foreign keys that the metadata declares but the tables of an SQLite database
+-- do not have, after dealing with the rows that break them. Does nothing on other databases.
+-- Not reversible.
+-- @return [Map numbers of the foreign keys created and left out and of the rows cleaned]
+function add_missing_foreign_keys()
+  return ActiveRecord.ddl('add_missing_foreign_keys')
+end
+
+--- Makes the primary key of an SQLite table AUTOINCREMENT, so that ids are never given out
+-- twice. Does nothing on other databases. Not reversible.
+-- @param table_name [String]
+-- @return [Boolean whether the table was rebuilt]
+function add_autoincrement(table_name)
+  return ActiveRecord.ddl('add_autoincrement', table_name)
+end
+
 --- Adds a foreign key constraint along with an index on the key column.
 -- @param args [Map table_name, key, foreign_table and foreign_key, optionally cascade
 --   (Boolean, adds ON DELETE CASCADE) and name (name of the constraint)]
