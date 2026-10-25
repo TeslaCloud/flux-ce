@@ -1,8 +1,13 @@
 --- Player extensions of the admin plugin: the player's role, their individual and temporary
--- permissions, and the staff level checks. The engine's `GetUserGroup`, `IsAdmin` and
--- `IsSuperAdmin` are overridden so that other addons see Flux roles and permissions.
+-- permissions, those of their active character, and the staff level checks. The engine's
+-- `GetUserGroup`, `IsAdmin` and `IsSuperAdmin` are overridden so that other addons see Flux
+-- roles and permissions.
 
 local player_meta = FindMetaTable('Player')
+
+-- Returned while a player has no character permissions, so that the permission checks do not
+-- create a table every time. It is never written to.
+local no_permissions = {}
 
 -- Implement common admin interfaces.
 
@@ -83,6 +88,39 @@ end
 -- @return [Map table with value (PERM_ value) and expires (unix timestamp), or nil if not set]
 function player_meta:get_temp_permission(perm)
   local perms = self:get_nv('temp_permissions')
+
+  return perms and perms[perm]
+end
+
+--- Returns the permissions set on the player's active character, not counting those of the
+-- player and of their role. They are networked to every client while the character is
+-- loaded. The table is empty when no character is loaded; it must not be modified.
+-- @return [Map PERM_ values keyed by permission ID]
+function player_meta:get_character_permissions()
+  return self:get_nv('character_permissions') or no_permissions
+end
+
+--- Returns the value of one of the permissions set on the player's active character.
+-- @param perm [String permission ID]
+-- @return [Number PERM_ value, PERM_NO if the permission is not set or no character is loaded]
+function player_meta:get_character_permission(perm)
+  local perms = self:get_nv('character_permissions')
+
+  return perms and perms[perm] or PERM_NO
+end
+
+--- Returns the temporary permissions of the player's active character.
+-- @return [Map tables with value and expires (unix timestamp) fields, keyed by permission ID;
+--   empty when no character is loaded. The table must not be modified]
+function player_meta:get_character_temp_permissions()
+  return self:get_nv('character_temp_permissions') or no_permissions
+end
+
+--- Returns one of the temporary permissions of the player's active character.
+-- @param perm [String permission ID]
+-- @return [Map table with value (PERM_ value) and expires (unix timestamp), or nil if not set]
+function player_meta:get_character_temp_permission(perm)
+  local perms = self:get_nv('character_temp_permissions')
 
   return perms and perms[perm]
 end

@@ -1,9 +1,10 @@
 --- Server side of the admin plugin: removal of temporary permissions, and the network
 -- receivers behind the admin panel, which set a player's role, permissions and temporary
--- permissions, remove temporary permissions, change and reset config values, and disable
--- and enable plugins. Every receiver checks the sender's own permission and the values it
--- was sent; the ones that edit a player also check the sender's immunity against that
--- player, the way the `role set` and `role remove` commands do.
+-- permissions and those of their active character, remove temporary permissions, change and
+-- reset config values, and disable and enable plugins. Every receiver checks the sender's
+-- own permission and the values it was sent; the ones that edit a player also check the
+-- sender's immunity against that player, the way the `role set` and `role remove` commands
+-- do.
 --
 -- The receivers of the ban list and of the staff page are in sv_bans.lua and sv_staff.lua.
 
@@ -157,6 +158,88 @@ Cable.receive('fl_delete_temp_permission', function(actor, target, perm_id)
   if !can_manage_player(actor, target) or !is_permission_id(perm_id) then return end
 
   Bolt:delete_temp_permission(target, perm_id)
+end)
+
+--- Checks a request of the admin panel to edit the permissions of a player's active
+-- character. The sender needs the 'charpermission' permission, which the `charpermission`
+-- command needs as well, has to be allowed to edit the player, as checked by
+-- can_manage_player, and the player has to have a character loaded.
+-- @param actor [Player the player who sent the request]
+-- @param target [Any the value received as the player whose character to edit]
+-- @return [Character the active character of the target, nil if the request is to be ignored]
+local function managed_character(actor, target)
+  if !actor:can('charpermission') or !can_manage_player(actor, target) then return end
+
+  return Bolt:get_active_character(target)
+end
+
+--- Checks that the sender of a request may set a value of a character permission: as with the
+-- `charpermission` command, only a permission that the sender has can be allowed or denied.
+-- Unsetting it is always possible. A sender who fails the check is notified.
+-- @param actor [Player the player who sent the request]
+-- @param perm_id [String permission ID]
+-- @param value [Number PERM_ value]
+-- @return [Boolean]
+local function can_set_character_value(actor, perm_id, value)
+  if value == PERM_NO or actor:can(perm_id) then return true end
+
+  actor:notify('error.permission_not_yours', { permission = perm_id })
+
+  return false
+end
+
+--- Tells staff that a player has changed a permission of a character from the admin panel,
+-- with the same messages as the `charpermission` command.
+-- @param actor [Player the player who made the change]
+-- @param target [Player the player who has the character loaded]
+-- @param character [Character]
+-- @param phrase [String language phrase of the message]
+-- @param perm_id [String permission ID]
+-- @param duration=nil [Number seconds a temporary permission lasts]
+local function announce_character_change(actor, target, character, phrase, perm_id, duration)
+  Command:notify_staff(phrase, {
+    player = get_player_name(actor),
+    character = Bolt:get_character_label(target, character),
+    permission = perm_id,
+    time = duration and Flux.Lang:duration(duration) or nil
+  })
+end
+
+Cable.receive('fl_bolt_set_character_permission', function(actor, target, perm_id, value)
+  local character = managed_character(actor, target)
+
+  if !character or !is_permission_id(perm_id) or !is_permission_value(value) then return end
+  if !can_set_character_value(actor, perm_id, value) then return end
+  if Bolt:get_character_permissions(character)[perm_id] == (value != PERM_NO and value or nil) then return end
+  if !Bolt:set_character_permission(character, perm_id, value) then return end
+
+  local phrase = value == PERM_ALLOW and 'grant' or value == PERM_NEVER and 'revoke' or 'reset'
+
+  announce_character_change(actor, target, character, 'command.charpermission.'..phrase..'.message', perm_id)
+end)
+
+Cable.receive('fl_bolt_character_temp_permission', function(actor, target, perm_id, value, duration)
+  local character = managed_character(actor, target)
+
+  if !character or !is_permission_id(perm_id) then return end
+  if value != PERM_ALLOW and value != PERM_NEVER then return end
+  if !Bolt:is_temp_duration(duration) or !can_set_character_value(actor, perm_id, value) then return end
+  if !Bolt:set_character_temp_permission(character, perm_id, value, duration) then return end
+
+  local phrase = value == PERM_ALLOW and 'grant' or 'revoke'
+
+  announce_character_change(actor, target, character, 'command.charpermission.'..phrase..'.message_temporary',
+    perm_id, duration)
+end)
+
+Cable.receive('fl_bolt_delete_character_temp_permission', function(actor, target, perm_id)
+  local character = managed_character(actor, target)
+
+  if !character or !is_permission_id(perm_id) then return end
+
+  if Bolt:delete_character_temp_permission(character, perm_id) then
+    announce_character_change(actor, target, character, 'command.charpermission.reset.message_temporary', perm_id)
+  end
 end)
 
 --- Checks whether two config values are the same. Lists are compared by their contents.

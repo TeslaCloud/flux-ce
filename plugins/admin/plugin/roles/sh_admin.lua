@@ -2,7 +2,7 @@
 -- file defines the role's default permissions. `allow_anything` already lets administrators
 -- do anything; the permissions listed after it are the defaults that stop at this role: the
 -- configuration, the permission editor and the plugin manager, and the commands that manage
--- roles, permissions, levels and the server.
+-- roles, permissions (of players and of characters), levels and the server.
 
 ROLE.name = 'Administrator'
 ROLE.description = 'role.admin'
@@ -22,6 +22,7 @@ function ROLE:define_permissions()
 
   can 'role'
   can 'permission'
+  can 'charpermission'
 
   can 'changelevel'
   can 'restart'

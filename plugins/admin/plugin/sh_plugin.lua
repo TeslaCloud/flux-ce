@@ -9,9 +9,15 @@
 -- and the roles based on it unless a role file decides the command itself; a command that
 -- neither a role file nor its `permission` field allows is denied to every player.
 -- Code asks whether a player may do something with `actor:can(id)`, which Bolt answers from
--- the player's unexpired temporary permissions, then their individual permissions
--- (`PERM_ALLOW` or `PERM_NEVER`), then their role. The SteamIDs listed in the `root_steamid`
--- config are root players, who may do anything.
+-- the permissions set on the player individually and those set on their active character
+-- (`PERM_ALLOW` or `PERM_NEVER`, each lasting or temporary), then from their role, see
+-- `Bolt:get_permission_layer`. A `PERM_NEVER` in either of them denies the permission, and
+-- otherwise a `PERM_ALLOW` in either of them allows it. So one character of a player can be
+-- allowed something that the role lacks, or denied something, while the player's other
+-- characters are not, but no character undoes what the player is denied. The permissions of
+-- a character belong to the character and apply to whoever has it loaded, such as a
+-- gamemaster who plays a character that several players share. The SteamIDs listed in the
+-- `root_steamid` config are root players, who may do anything.
 --
 -- Each role is based on the one below it and has every permission that role allows. Assistants
 -- have the basic staff tools: kicking, banning, vanishing, observer mode, the physics and tool
@@ -23,11 +29,12 @@
 --
 -- Bans are stored in the database and checked whenever a player connects. Staff manage
 -- players with the plugin's commands, such as `/ban add|remove`, `/role set|remove`,
--- `/permission grant|revoke|reset|list`, `/freeze on|off`, `/kick` and `/tp`, whose
--- 'permission', 'role', 'map' and 'duration' arguments are completed while they are typed.
--- They also have the Admin entry of the tab menu, which holds the player management page
--- (role and permission editor), the staff page (everybody with a role above `user`,
--- connected or not), the ban list, the config editor and the plugin manager.
+-- `/permission grant|revoke|reset|list`, `/charpermission grant|revoke|reset|list`,
+-- `/freeze on|off`, `/kick` and `/tp`, whose 'permission', 'role', 'map' and 'duration'
+-- arguments are completed while they are typed. They also have the Admin entry of the tab
+-- menu, which holds the player management page (role and permission editor, for players and
+-- their active characters), the staff page (everybody with a role above `user`, connected or
+-- not), the ban list, the config editor and the plugin manager.
 --
 -- Other plugins extend Bolt by registering permissions, by shipping role files in a `roles`
 -- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook. A role
@@ -45,6 +52,7 @@ require_relative 'sv_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_bans'
 require_relative 'sv_staff'
+require_relative 'sv_character_permissions'
 
 local duration_examples = { '30', '1 hour', '1 day', '1 week', '1 month', 'perma' }
 
@@ -162,9 +170,23 @@ function Bolt:OnCommandCreated(_id, data)
   self:permission_from_command(data)
 end
 
+--- Ties the character permission models to the `Character` model of the Characters plugin,
+-- which loads after this plugin, so that the permissions of a character are loaded together
+-- with it. Does nothing without the Characters plugin, or when it has been done already.
+local function relate_character_permissions()
+  if !istable(Character) or !isfunction(Character.has_many) then return end
+  if Character.relations['character_permissions'] then return end
+
+  CharacterPermission:belongs_to 'Character'
+  CharacterTempPermission:belongs_to 'Character'
+end
+
 --- Runs the RegisterPermissions hook, then allows the commands that name a role in their
--- `permission` field to that role.
+-- `permission` field to that role. Also ties the character permission models to the
+-- `Character` model.
 function Bolt:OnPluginsLoaded()
+  relate_character_permissions()
+
   --- Called on both realms once all plugins have loaded. Register permissions here with
   -- `Bolt:register_permission`. Registering a permission does not allow it for anybody: the
   -- role files allow permissions to roles with `can`.

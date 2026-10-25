@@ -7,7 +7,8 @@
 -- permission is set temporarily. `/permission reset <target> <permission>` removes what was set
 -- for the targeted players, for good or temporarily, so that their role decides again: it sets
 -- the permission to `PERM_NO`, as the middle button does. `/permission list <target>` tells
--- the caller the role of a player and the permissions set for them individually.
+-- the caller the role of a player, the permissions set for them individually and those that
+-- their loaded character decides.
 --
 -- A permission is named by its ID or by the ID or an alias of the command it belongs to,
 -- exactly but in any case.
@@ -169,8 +170,9 @@ list_cmd.arg_types = { 'player' }
 
 --- Sends the caller the role of the targeted player and the permissions set for that player
 -- individually, as one notification per kind of permission, and one for every temporary
--- permission with the time it has left. Only the first of several targeted players is
--- listed.
+-- permission with the time it has left. The permissions that the loaded character of the
+-- player decides, see `Bolt:get_permission_layer`, are listed as well. Only the first of
+-- several targeted players is listed.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> targeted players; only the first one is used]
 function list_cmd:on_run(actor, targets)
@@ -207,6 +209,42 @@ function list_cmd:on_run(actor, targets)
       target = name,
       permissions = table.concat(denied, ', ')
     })
+  end
+
+  local character = Bolt:get_active_character(target)
+
+  if character then
+    local label = Bolt:get_character_label(target, character)
+    local character_ids = {}
+    local char_allowed, char_denied = {}, {}
+
+    for _, perm_table in ipairs({ target:get_character_permissions(), target:get_character_temp_permissions() }) do
+      for perm_id in pairs(perm_table) do
+        character_ids[perm_id] = true
+      end
+    end
+
+    for perm_id in SortedPairs(character_ids) do
+      local allowed, layer = Bolt:get_permission_layer(target, perm_id)
+
+      if layer == 'character' or layer == 'character_temporary' then
+        table.insert(allowed and char_allowed or char_denied, perm_id)
+      end
+    end
+
+    if #char_allowed > 0 then
+      Flux.Player:notify(actor, 'command.permission.list.character_allowed', {
+        character = label,
+        permissions = table.concat(char_allowed, ', ')
+      })
+    end
+
+    if #char_denied > 0 then
+      Flux.Player:notify(actor, 'command.permission.list.character_denied', {
+        character = label,
+        permissions = table.concat(char_denied, ', ')
+      })
+    end
   end
 
   for perm_id, entry in SortedPairs(target:get_temp_permissions()) do

@@ -35,6 +35,31 @@ en:
       description: Changes the level to the specified map.
       syntax: <map> [delay]
       message: "{player} is changing the level to {map} in {delay} second(s)!"
+    charpermission:
+      description: Manages the permissions that are set for the characters that players have loaded.
+      grant:
+        description: Allows a permission for the character a player has loaded, for good or for the given time, whatever the role allows, unless the player is denied it.
+        syntax: <target> <permission> [duration]
+        message: "{player} has granted the character {character} the {permission} permission."
+        message_temporary: "{player} has granted the character {character} the {permission} permission for {time}."
+      revoke:
+        description: Denies a permission to the character a player has loaded, for good or for the given time, whatever the player and their role have.
+        syntax: <target> <permission> [duration]
+        message: "{player} has denied the character {character} the {permission} permission."
+        message_temporary: "{player} has denied the character {character} the {permission} permission for {time}."
+      reset:
+        description: Removes what was set for a permission of the character a player has loaded, so that the player's own permissions and role decide again.
+        syntax: <target> <permission>
+        message: "{player} has reset the {permission} permission of the character {character}."
+        message_temporary: "{player} has removed the temporary value of the {permission} permission of the character {character}."
+      list:
+        description: Lists the permissions that were set for the character a player has loaded.
+        syntax: <target>
+        allowed: "Allowed for the character {character}: {permissions}."
+        denied: "Denied for the character {character}: {permissions}."
+        temporary_allowed: "Temporarily allowed for the character {character}: {permission} ({time} left)."
+        temporary_denied: "Temporarily denied for the character {character}: {permission} ({time} left)."
+        none: "The character {character} has no permissions of its own."
     freeze:
       description: Freezes players in place or unfreezes them.
       "on":
@@ -94,6 +119,8 @@ en:
         temporary_allowed: "Temporarily allowed for {target}: {permission} ({time} left)."
         temporary_denied: "Temporarily denied for {target}: {permission} ({time} left)."
         none: "{target} has no permissions of their own."
+        character_allowed: "Allowed by the loaded character {character}: {permissions}."
+        character_denied: "Denied by the loaded character {character}: {permissions}."
     respawn:
       description: "Respawns a player where they are, or where you are looking."
       syntax: "<target> [stay / tp]"
@@ -167,6 +194,9 @@ en:
     banned:
       temporary: "You are banned from this server. Reason: {reason}. The ban ends in {time}."
       permanent: "You are permanently banned from this server. Reason: {reason}."
+    character_permission:
+      no_character: None of these players has a character loaded.
+      not_set: "Nothing is set for the {permission} permission of the characters of these players."
     group_not_valid: "'{group}' is not a valid user group!"
     map_not_valid: "The server has no map called '{map}'!"
     not_banned: Steam ID '{steam_id}' is not banned!
@@ -181,6 +211,10 @@ en:
     user_not_found: "Nobody with the Steam ID '{steam_id}' has ever joined this server."
   notification:
     announcement: "[Announcement] {text}"
+    character_permission:
+      granted: "Your character has been granted the {permission} permission."
+      revoked: "Your character has been denied the {permission} permission."
+      reset: "The {permission} permission of your character has been reset to what you and your role have."
     demote: You have been demoted from {group} to user.
     fullbright:
       enabled: Fullbright mode enabled.
@@ -239,6 +273,22 @@ en:
       never_all: Forbid all
       expires: Expires in
       loading: Loading...
+      layer:
+        user: Player
+        user_tooltip: The permissions of the player, on top of what their role allows. They apply to all of the player's characters.
+        character: "Character: {name}"
+        character_tooltip: The permissions of the character the player has loaded. They only apply while this character is loaded. A denial here or on the player always wins; an allowance here or on the player comes before the role.
+        no_character: No character loaded
+      decided:
+        allowed: Allowed
+        denied: Denied
+        tooltip: What the player may do now, and what decides it. A denial set on the character or on the player wins, then an allowance set on either of them, then the role; a temporary value comes before a lasting one.
+        root: root access
+        character: character
+        character_temporary: character, temporary
+        user: player
+        user_temporary: player, temporary
+        role: role
       temp_permission:
         title: Give temporary permission
         message: Specify the permission duration. If the permission is already given, this time will be added to it. Leave empty to take the temporary permission.

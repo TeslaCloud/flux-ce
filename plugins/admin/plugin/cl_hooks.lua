@@ -1,6 +1,7 @@
 --- Client-side hooks of the admin plugin: the Admin entry of the tab menu and its pages,
--- keeping the config editor and the plugin manager up to date with the server, the vanish
--- indicator on the HUD, fullbright rendering and the voice permission check.
+-- keeping the config editor, the plugin manager and the permission editor up to date with
+-- the server, the vanish indicator on the HUD, fullbright rendering and the voice permission
+-- check.
 
 local IsValid = IsValid
 
@@ -91,6 +92,18 @@ end
 function Bolt:OnPluginStateChanged(_id, _disabled)
   if IsValid(self.plugin_manager) then
     self.plugin_manager:rebuild()
+  end
+end
+
+--- Lets the permission editor, if it is open, follow the changes to the role, the permissions
+-- and the active character of the player it edits.
+-- @param entity [Entity the entity whose networked variable has changed]
+-- @param key [String name of the variable]
+-- @param _old_value [Any previous value]
+-- @param _new_value [Any new value]
+function Bolt:NetVarChanged(entity, key, _old_value, _new_value)
+  if IsValid(self.permissions_editor) then
+    self.permissions_editor:on_net_var_changed(entity, key)
   end
 end
 

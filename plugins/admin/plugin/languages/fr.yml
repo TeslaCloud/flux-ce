@@ -35,33 +35,58 @@ fr:
       description: "Change de niveau pour la carte indiquée."
       syntax: "<carte> [délai]"
       message: "{player} change de niveau pour {map} dans {delay} seconde(s) !"
+    charpermission:
+      description: "Gère les permissions attribuées aux personnages que les joueurs ont chargés."
+      grant:
+        description: "Accorde une permission au personnage qu'un joueur a chargé, définitivement ou pour la durée indiquée, quoi qu'en dise le rôle, sauf si elle est refusée au joueur."
+        syntax: "<cible> <permission> [durée]"
+        message: "{player} a accordé au personnage {character} la permission {permission}."
+        message_temporary: "{player} a accordé au personnage {character} la permission {permission} pour {time}."
+      revoke:
+        description: "Refuse une permission au personnage qu'un joueur a chargé, définitivement ou pour la durée indiquée, quoi qu'en disent le joueur et son rôle."
+        syntax: "<cible> <permission> [durée]"
+        message: "{player} a refusé au personnage {character} la permission {permission}."
+        message_temporary: "{player} a refusé au personnage {character} la permission {permission} pour {time}."
+      reset:
+        description: "Retire ce qui a été défini pour une permission du personnage qu'un joueur a chargé, afin que les permissions propres du joueur et son rôle décident de nouveau."
+        syntax: "<cible> <permission>"
+        message: "{player} a réinitialisé la permission {permission} du personnage {character}."
+        message_temporary: "{player} a retiré la valeur temporaire de la permission {permission} du personnage {character}."
+      list:
+        description: "Affiche les permissions définies pour le personnage qu'un joueur a chargé."
+        syntax: "<cible>"
+        allowed: "Autorisé pour le personnage {character} : {permissions}."
+        denied: "Refusé pour le personnage {character} : {permissions}."
+        temporary_allowed: "Autorisé temporairement pour le personnage {character} : {permission} ({time} restant)."
+        temporary_denied: "Refusé temporairement pour le personnage {character} : {permission} ({time} restant)."
+        none: "Le personnage {character} n'a aucune permission propre."
     freeze:
       description: "Gèle des joueurs sur place ou les dégèle."
-      "on":
+      on:
         description: "Gèle un joueur."
         syntax: "<cible>"
         message: "{player} a gelé {target}."
-      "off":
+      off:
         description: "Dégèle un joueur."
         syntax: "<cible>"
         message: "{player} a dégelé {target}."
     fullbright:
       description: "Active ou désactive pour un joueur le mode pleine lumière, qui ignore l'éclairage de la carte."
-      "on":
+      on:
         description: "Active le mode pleine lumière pour un joueur."
         syntax: "<cible>"
         message: "{player} a activé le mode pleine lumière pour {target}."
-      "off":
+      off:
         description: "Désactive le mode pleine lumière pour un joueur."
         syntax: "<cible>"
         message: "{player} a désactivé le mode pleine lumière pour {target}."
     godmode:
       description: "Active ou désactive le mode dieu pour un joueur."
-      "on":
+      on:
         description: "Active le mode dieu pour un joueur."
         syntax: "<cible>"
         message: "{player} a activé le mode dieu pour {target}."
-      "off":
+      off:
         description: "Désactive le mode dieu pour un joueur."
         syntax: "<cible>"
         message: "{player} a désactivé le mode dieu pour {target}."
@@ -94,6 +119,8 @@ fr:
         temporary_allowed: "Accordée temporairement à {target} : {permission} ({time} restant)."
         temporary_denied: "Refusée temporairement à {target} : {permission} ({time} restant)."
         none: "{target} n'a aucune permission qui lui soit propre."
+        character_allowed: "Autorisé par le personnage chargé {character} : {permissions}."
+        character_denied: "Refusé par le personnage chargé {character} : {permissions}."
     respawn:
       description: "Fait réapparaître un joueur là où il se trouve, ou là où vous regardez."
       syntax: "<cible> [stay / tp]"
@@ -137,11 +164,11 @@ fr:
       message: "{player} s'est téléporté auprès de {target}."
     vanish:
       description: "Rend un joueur complètement invisible pour tous les autres joueurs du serveur, ou le rend de nouveau visible."
-      "on":
+      on:
         description: "Rend un joueur invisible pour tous, sauf pour l'équipe."
         syntax: "<cible>"
         message: "{target} a été rendu invisible par {player}."
-      "off":
+      off:
         description: "Rend un joueur invisible de nouveau visible pour tous."
         syntax: "<cible>"
         message: "{target} a été rendu visible par {player}."
@@ -167,6 +194,9 @@ fr:
     banned:
       temporary: "Vous êtes banni de ce serveur. Raison : {reason}. Le bannissement prend fin dans {time}."
       permanent: "Vous êtes banni définitivement de ce serveur. Raison : {reason}."
+    character_permission:
+      no_character: "Aucun de ces joueurs n'a de personnage chargé."
+      not_set: "Rien n'est défini pour la permission {permission} des personnages de ces joueurs."
     group_not_valid: "« {group} » n'est pas un groupe d'utilisateurs valide !"
     map_not_valid: "Le serveur n'a aucune carte nommée « {map} » !"
     not_banned: "Le Steam ID « {steam_id} » n'est pas banni !"
@@ -181,6 +211,10 @@ fr:
     user_not_found: "Personne avec le Steam ID « {steam_id} » ne s'est jamais connecté à ce serveur."
   notification:
     announcement: "[Annonce] {text}"
+    character_permission:
+      granted: "Votre personnage a reçu la permission {permission}."
+      revoked: "La permission {permission} a été refusée à votre personnage."
+      reset: "La permission {permission} de votre personnage a été réinitialisée selon ce que vous et votre rôle avez."
     demote: "Vous avez été rétrogradé de {group} au rang d'utilisateur."
     fullbright:
       enabled: "Mode pleine lumière activé."
@@ -239,6 +273,22 @@ fr:
       never_all: "Tout interdire"
       expires: "Expire dans"
       loading: "Chargement..."
+      layer:
+        user: "Joueur"
+        user_tooltip: "Les permissions du joueur, en plus de ce que son rôle autorise. Elles s'appliquent à tous les personnages du joueur."
+        character: "Personnage : {name}"
+        character_tooltip: "Les permissions du personnage que le joueur a chargé. Elles ne s'appliquent que tant que ce personnage est chargé. Un refus ici ou sur le joueur l'emporte toujours ; une autorisation ici ou sur le joueur passe avant le rôle."
+        no_character: "Aucun personnage chargé"
+      decided:
+        allowed: "Autorisé"
+        denied: "Refusé"
+        tooltip: "Ce que le joueur peut faire maintenant, et ce qui en décide. Un refus défini sur le personnage ou sur le joueur l'emporte, puis une autorisation définie sur l'un des deux, puis le rôle ; une valeur temporaire passe avant une valeur permanente."
+        root: "accès root"
+        character: "personnage"
+        character_temporary: "personnage, temporaire"
+        user: "joueur"
+        user_temporary: "joueur, temporaire"
+        role: "rôle"
       temp_permission:
         title: "Accorder une permission temporaire"
         message: "Indiquez la durée de la permission. Si la permission est déjà accordée, cette durée s'y ajoute. Laissez vide pour retirer la permission temporaire."

@@ -35,6 +35,31 @@ es:
       description: Cambia el nivel al mapa indicado.
       syntax: <mapa> [retraso]
       message: "¡{player} va a cambiar el nivel a {map} en {delay} segundo(s)!"
+    charpermission:
+      description: Gestiona los permisos establecidos para los personajes que los jugadores tienen cargados.
+      grant:
+        description: Concede un permiso al personaje que un jugador tiene cargado, para siempre o durante el tiempo indicado, sin importar lo que permita el rol, salvo que al jugador se le haya denegado.
+        syntax: <objetivo> <permiso> [duración]
+        message: "{player} ha concedido al personaje {character} el permiso {permission}."
+        message_temporary: "{player} ha concedido al personaje {character} el permiso {permission} durante {time}."
+      revoke:
+        description: Deniega un permiso al personaje que un jugador tiene cargado, para siempre o durante el tiempo indicado, sin importar lo que tengan el jugador y su rol.
+        syntax: <objetivo> <permiso> [duración]
+        message: "{player} ha denegado al personaje {character} el permiso {permission}."
+        message_temporary: "{player} ha denegado al personaje {character} el permiso {permission} durante {time}."
+      reset:
+        description: Quita lo que se estableció para un permiso del personaje que un jugador tiene cargado, para que vuelvan a decidir los permisos propios del jugador y su rol.
+        syntax: <objetivo> <permiso>
+        message: "{player} ha restablecido el permiso {permission} del personaje {character}."
+        message_temporary: "{player} ha quitado el valor temporal del permiso {permission} del personaje {character}."
+      list:
+        description: Muestra los permisos establecidos para el personaje que un jugador tiene cargado.
+        syntax: <objetivo>
+        allowed: "Permitido para el personaje {character}: {permissions}."
+        denied: "Denegado para el personaje {character}: {permissions}."
+        temporary_allowed: "Permitido temporalmente para el personaje {character}: {permission} (quedan {time})."
+        temporary_denied: "Denegado temporalmente para el personaje {character}: {permission} (quedan {time})."
+        none: "El personaje {character} no tiene permisos propios."
     freeze:
       description: Congela a jugadores en su sitio o los descongela.
       "on":
@@ -94,6 +119,8 @@ es:
         temporary_allowed: "Permitido temporalmente para {target}: {permission} (quedan {time})."
         temporary_denied: "Denegado temporalmente para {target}: {permission} (quedan {time})."
         none: "{target} no tiene permisos propios."
+        character_allowed: "Permitido por el personaje cargado {character}: {permissions}."
+        character_denied: "Denegado por el personaje cargado {character}: {permissions}."
     respawn:
       description: "Hace reaparecer a un jugador donde está, o donde estás mirando."
       syntax: "<jugador> [stay / tp]"
@@ -167,6 +194,9 @@ es:
     banned:
       temporary: "Estás baneado de este servidor. Motivo: {reason}. El baneo termina en {time}."
       permanent: "Estás baneado permanentemente de este servidor. Motivo: {reason}."
+    character_permission:
+      no_character: Ninguno de estos jugadores tiene un personaje cargado.
+      not_set: "No hay nada establecido para el permiso {permission} de los personajes de estos jugadores."
     group_not_valid: "¡'{group}' no es un grupo de usuarios válido!"
     map_not_valid: "¡El servidor no tiene ningún mapa llamado '{map}'!"
     not_banned: ¡El Steam ID '{steam_id}' no está baneado!
@@ -181,6 +211,10 @@ es:
     user_not_found: "Nadie con el Steam ID '{steam_id}' ha entrado nunca en este servidor."
   notification:
     announcement: "[Anuncio] {text}"
+    character_permission:
+      granted: "Se ha concedido a tu personaje el permiso {permission}."
+      revoked: "Se ha denegado a tu personaje el permiso {permission}."
+      reset: "El permiso {permission} de tu personaje se ha restablecido a lo que tenéis tú y tu rol."
     demote: Te han degradado de {group} a usuario.
     fullbright:
       enabled: Modo de brillo total activado.
@@ -239,6 +273,22 @@ es:
       never_all: Prohibir todo
       expires: Caduca en
       loading: Cargando...
+      layer:
+        user: Jugador
+        user_tooltip: Los permisos del jugador, además de lo que permite su rol. Se aplican a todos los personajes del jugador.
+        character: "Personaje: {name}"
+        character_tooltip: Los permisos del personaje que el jugador tiene cargado. Solo se aplican mientras este personaje está cargado. Una denegación aquí o en el jugador siempre prevalece; un permiso aquí o en el jugador va antes que el rol.
+        no_character: Ningún personaje cargado
+      decided:
+        allowed: Permitido
+        denied: Denegado
+        tooltip: Lo que el jugador puede hacer ahora y lo que lo decide. Prevalece una denegación establecida en el personaje o en el jugador, luego un permiso establecido en cualquiera de los dos y luego el rol; un valor temporal va antes que uno permanente.
+        root: acceso root
+        character: personaje
+        character_temporary: personaje, temporal
+        user: jugador
+        user_temporary: jugador, temporal
+        role: rol
       temp_permission:
         title: Dar permiso temporal
         message: Indica la duración del permiso. Si el permiso ya está concedido, este tiempo se le sumará. Déjalo vacío para retirar el permiso temporal.

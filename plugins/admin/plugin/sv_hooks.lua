@@ -314,7 +314,7 @@ function Bolt:PlayerPickupObject(actor, _entity, _drag)
   end
 end
 
---- Removes the player's expired temporary permissions.
+--- Removes the expired temporary permissions of the player and of their active character.
 -- @param actor [Player]
 function Bolt:PlayerOneMinute(actor)
   local now = os.time()
@@ -324,14 +324,17 @@ function Bolt:PlayerOneMinute(actor)
       self:delete_temp_permission(actor, perm_id)
     end
   end
+
+  self:expire_character_permissions(actor)
 end
 
---- Gives or strips the tool gun or the physgun when the matching individual permission
--- changes, going by what the player may do now (role, individual and temporary permissions
--- together): unsetting the permission leaves the tool with a player whose role allows it,
--- and PERM_NEVER takes it away. Does nothing while the player is dead; they get the tools
--- they are allowed when they spawn. Any permission change also sends the config to the
--- player again if it has changed their right to edit configs.
+--- Gives or strips the tool gun or the physgun when the matching individual permission, or
+-- the value that the active character sets for it, changes, going by what the player may do
+-- now (character, individual and temporary permissions and role together): unsetting the
+-- permission leaves the tool with a player whose role allows it, and PERM_NEVER takes it
+-- away. Does nothing while the player is dead; they get the tools they are allowed when they
+-- spawn. Any permission change also sends the config to the player again if it has changed
+-- their right to edit configs.
 -- @param target [Player]
 -- @param perm_id [String permission ID]
 -- @param _value [Number new PERM_ value]
@@ -352,10 +355,10 @@ function Bolt:PlayerPermissionChanged(target, perm_id, _value)
 end
 
 --- Gives or strips the tool gun and the physgun after the player's role has changed, going
--- by the 'toolgun' and 'physgun' permissions the player has now (role, individual and
--- temporary permissions together). Does nothing while the player is dead; they get the tools
--- they are allowed when they spawn. Also sends the config to the player again if the new
--- role has changed their right to edit configs.
+-- by the 'toolgun' and 'physgun' permissions the player has now (role, individual, temporary
+-- and character permissions together). Does nothing while the player is dead; they get the
+-- tools they are allowed when they spawn. Also sends the config to the player again if the
+-- new role has changed their right to edit configs.
 -- @param target [Player]
 -- @param _group [Role the player's new role, nil if its ID is not registered]
 -- @param _old_group [Role the player's previous role]

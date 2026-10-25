@@ -1,7 +1,8 @@
 --- Server-side player extensions of the admin plugin: setting and saving the player's role
--- and their individual and temporary permissions, running commands as the player,
--- teleporting, vanishing, and keeping hidden players (vanished or observing) from being
--- networked to everyone without the 'moderate' permission.
+-- and their individual and temporary permissions and those of their active character,
+-- running commands as the player, teleporting, vanishing, and keeping hidden players
+-- (vanished or observing) from being networked to everyone without the 'moderate'
+-- permission.
 
 local player_meta = FindMetaTable('Player')
 
@@ -87,11 +88,18 @@ function player_meta:set_permission(perm_id, value)
 
   self:set_permissions(perm_table)
 
-  --- Called on the server after one of a player's individual permissions has been set with
-  -- `Player:set_permission`. Temporary permissions do not run this hook.
+  --- Called on the server after a permission of a player has changed in one of the layers
+  -- that `Bolt:get_permission_layer` consults: when one of the player's individual
+  -- permissions has been set with `Player:set_permission`, and when the value that the
+  -- player's active character sets for a permission has changed, which happens when a
+  -- character is loaded, switched or dropped, when a lasting or temporary permission of the
+  -- loaded character is set or removed, and when a temporary one expires. The temporary
+  -- permissions of the player themselves do not run this hook. Use `Player:can` to learn what
+  -- the player may do now.
   -- @param target [Player The player whose permission has changed]
   -- @param perm_id [String Permission ID]
-  -- @param value [Number New value: PERM_ALLOW, PERM_NEVER, or PERM_NO when it was unset]
+  -- @param value [Number New value in the layer that has changed: PERM_ALLOW, PERM_NEVER, or
+  --   PERM_NO when it was unset]
   hook.Run('PlayerPermissionChanged', self, perm_id, value)
 end
 
@@ -152,6 +160,29 @@ function player_meta:set_temp_permission(perm_id, value, duration)
 
   Bolt:update_config_access(self)
   self:update_hidden_players()
+end
+
+--- Sets one of the permissions of the player's active character, which apply together with
+-- the player's own permissions while that character is loaded, see
+-- `Bolt:get_permission_layer`. Writes it to the database and runs the PlayerPermissionChanged
+-- hook if the character's value has changed.
+-- @param perm_id [String permission ID]
+-- @param value [Number PERM_ALLOW or PERM_NEVER, or PERM_NO to remove the permission]
+-- @return [Boolean false if no character is loaded or an argument is not valid]
+-- @see [Bolt#set_character_permission]
+function player_meta:set_character_permission(perm_id, value)
+  return Bolt:set_character_permission(Bolt:get_active_character(self), perm_id, value)
+end
+
+--- Gives the player's active character a temporary permission value that takes precedence
+-- over its lasting permissions until it expires.
+-- @param perm_id [String permission ID]
+-- @param value [Number PERM_ALLOW or PERM_NEVER]
+-- @param duration [Number seconds until the permission expires]
+-- @return [Boolean false if no character is loaded or an argument is not valid]
+-- @see [Bolt#set_character_temp_permission]
+function player_meta:set_character_temp_permission(perm_id, value, duration)
+  return Bolt:set_character_temp_permission(Bolt:get_active_character(self), perm_id, value, duration)
 end
 
 --- Runs a command as this player, with the usual permission checks.

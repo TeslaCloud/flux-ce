@@ -1,9 +1,11 @@
 --- Core of the Bolt library: the registries of roles and permissions, the permission and
 -- immunity checks, bans (server side) and the parsing of human-readable ban durations.
 -- Also defines the `can` global and the `role` pipeline that loads role files.
--- The checks come in two kinds: `Bolt:check_immunity` compares two players who are on the
--- server, and `Bolt:check_role_immunity` together with `Bolt:is_root_steam_id` does the same
--- for somebody who is not, going by the role that is stored for them.
+-- Permissions are decided in layers, see `Bolt:get_permission_layer`: the player's and the
+-- active character's own permissions, where a denial wins, then the role.
+-- The immunity checks come in two kinds: `Bolt:check_immunity` compares two players who are on
+-- the server, and `Bolt:check_role_immunity` together with `Bolt:is_root_steam_id` does the
+-- same for somebody who is not, going by the role that is stored for them.
 
 if !Bolt then
   PLUGIN:set_global('Bolt')
@@ -314,48 +316,112 @@ function Bolt:permission_from_command(cmd)
   register_permission_ids(cmd)
 end
 
---- Checks whether a player may perform an action. Unexpired temporary permissions are consulted
--- first, then the player's own permissions, then the player's role; invalid players (such as
--- the server console) and root players are always allowed.
--- @param actor [Player]
--- @param action [String permission ID; an empty string is always allowed]
--- @param object=nil [String object name the permission was allowed for, passed on to Role#can]
--- @return [Boolean whether the action is allowed (a role permission callback's return value
---   is passed through as is)]
-function Bolt:can(actor, action, object)
-  if !IsValid(actor) or actor:is_root() or action == '' then
-    return true
-  end
+--- Reads the value that one layer of a player's own permissions (the player's, or their
+-- active character's) sets for an action: an unexpired temporary value comes first, then the
+-- lasting one. Only `PERM_ALLOW` and `PERM_NEVER` decide anything; `PERM_NO`, a missing value
+-- and an expired temporary value leave the action to the next layer.
+-- @param temp_entry [Map temporary permission with value and expires (unix timestamp) fields,
+--   or nil]
+-- @param value [Number lasting PERM_ value, or nil]
+-- @param now=os.time() [Number unix timestamp to compare the expiry with]
+-- @return [Number PERM_ALLOW or PERM_NEVER, nil if the layer does not decide the action,
+--   Boolean true if the temporary value decides it]
+function Bolt:get_layer_value(temp_entry, value, now)
+  if istable(temp_entry) and (tonumber(temp_entry.expires) or 0) > (now or os_time()) then
+    local temp_value = temp_entry.value
 
-  local temp_perm = actor:get_temp_permission(action)
-
-  if temp_perm then
-    if temp_perm.expires > os_time() then
-      local value = temp_perm.value
-
-      if value == PERM_ALLOW then
-        return true
-      elseif value == PERM_NEVER then
-        return false
-      end
+    if temp_value == PERM_ALLOW or temp_value == PERM_NEVER then
+      return temp_value, true
     end
   end
 
-  local perm = actor:get_permission(action)
+  if value == PERM_ALLOW or value == PERM_NEVER then
+    return value, false
+  end
+end
 
-  if perm == PERM_ALLOW then
+--- Decides whether a player may perform an action and names the layer that decides it.
+-- A player's own permissions come in two layers, those of the player (`'user'`) and those of
+-- the active character (`'character'`), and in each of them an unexpired temporary value
+-- comes before the lasting one (`'user_temporary'`, `'character_temporary'`). They are
+-- consulted in this order:
+--
+-- 1. `'root'`: root players are always allowed.
+-- 2. If either layer says `PERM_NEVER`, the action is denied, the character's denial being
+--    named first. A character cannot undo what the player is denied.
+-- 3. Otherwise, if either layer says `PERM_ALLOW`, the action is allowed, the character's
+--    permission being named first. A character can be allowed what the role does not allow.
+-- 4. `'role'`: the player's role, together with the roles it is based on.
+--
+-- The character layer only applies while the character is loaded. Invalid players (such as
+-- the server console) and an empty action are always allowed, with no layer. Immunity is not
+-- a permission: `Bolt:check_immunity` only compares roles, so character permissions never
+-- change whom a player may act on.
+-- ```
+-- local allowed, layer = Bolt:get_permission_layer(target, 'physgun')
+-- -- true, 'character' when the active character was granted the physgun
+-- ```
+-- @param actor [Player]
+-- @param action [String permission ID]
+-- @param object=nil [String object name the permission was allowed for, passed on to Role#can]
+-- @return [Boolean whether the action is allowed (a role permission callback's return value
+--   is passed through as is), String the deciding layer, nil when no layer applies]
+function Bolt:get_permission_layer(actor, action, object)
+  if !IsValid(actor) or action == '' then
     return true
-  elseif perm == PERM_NEVER then
-    return false
+  end
+
+  if actor:is_root() then
+    return true, 'root'
+  end
+
+  local now = os_time()
+  local char_value, char_temporary = self:get_layer_value(actor:get_character_temp_permission(action),
+    actor:get_character_permission(action), now)
+  local user_value, user_temporary = self:get_layer_value(actor:get_temp_permission(action),
+    actor:get_permission(action), now)
+  local char_layer = char_temporary and 'character_temporary' or 'character'
+  local user_layer = user_temporary and 'user_temporary' or 'user'
+
+  if char_value == PERM_NEVER then
+    return false, char_layer
+  elseif user_value == PERM_NEVER then
+    return false, user_layer
+  elseif char_value == PERM_ALLOW then
+    return true, char_layer
+  elseif user_value == PERM_ALLOW then
+    return true, user_layer
   end
 
   local role = roles[actor:GetUserGroup()]
 
   if istable(role) and isfunction(role.can) then
-    return role:can(actor, action, object)
+    return role:can(actor, action, object), 'role'
   end
 
-  return false
+  return false, 'role'
+end
+
+--- Checks whether a player may perform an action. This is what `Player:can` answers with, on
+-- both realms; see `Bolt:get_permission_layer` for how it is decided.
+-- @param actor [Player]
+-- @param action [String permission ID; an empty string is always allowed]
+-- @param object=nil [String object name the permission was allowed for, passed on to Role#can]
+-- @return [Boolean whether the action is allowed (a role permission callback's return value is
+--   passed through as is)]
+function Bolt:can(actor, action, object)
+  return (self:get_permission_layer(actor, action, object))
+end
+
+--- The longest duration of a temporary character permission, in seconds: ten years.
+Bolt.max_temp_duration = 60 * 60 * 24 * 365 * 10
+
+--- Checks whether a value can be the duration of a temporary character permission: a number
+-- of seconds above 0 and at most `Bolt.max_temp_duration`.
+-- @param duration [Any]
+-- @return [Boolean]
+function Bolt:is_temp_duration(duration)
+  return isnumber(duration) and duration > 0 and duration <= self.max_temp_duration
 end
 
 --- Returns the role registered under the given ID.
