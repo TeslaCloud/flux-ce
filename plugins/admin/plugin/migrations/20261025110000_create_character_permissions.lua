@@ -1,9 +1,9 @@
 --- Migration that creates the tables of the character permissions of the admin plugin,
 -- `character_permissions` and `character_temp_permissions`. They hold the same columns as
 -- `permissions` and `temp_permissions`, but belong to a character instead of a user. The
--- `character_id` column is indexed but has no foreign key, since the admin plugin also runs
--- without the Characters plugin; the plugin deletes the rows of a character when a player
--- deletes it.
+-- `character_id` column is indexed; its foreign key to `characters` is added by a later
+-- migration, which only adds it if the `characters` table exists, since the admin plugin also
+-- runs without the Characters plugin.
 
 local CreateCharacterPermissions = ActiveRecord.Migration.new()
 

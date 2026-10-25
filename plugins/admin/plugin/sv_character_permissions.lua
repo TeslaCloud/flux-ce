@@ -8,7 +8,10 @@
 -- A character has lasting permissions (`CharacterPermission` records) and temporary ones
 -- (`CharacterTempPermission` records), with the same values as those of players: `PERM_ALLOW`,
 -- `PERM_NEVER`, or `PERM_NO` for not set. They are loaded with the character, written to the
--- database as soon as they change and deleted when a player deletes the character.
+-- database as soon as they change and deleted when a player deletes the character. Where the
+-- Characters plugin was present when the migrations ran, the tables have foreign keys to
+-- `characters` with ON DELETE CASCADE, which delete them with a character however it is
+-- deleted, e.g. along with its user.
 --
 -- When a character is loaded, switched or dropped, and whenever the permissions of a loaded
 -- character change, the permissions of the active character are networked to every client
@@ -404,7 +407,10 @@ function Bolt:OnActiveCharacterSet(owner, character)
   self:apply_character_permissions(owner, character)
 end
 
---- Deletes the permissions of a character that a player is about to delete.
+--- Deletes the permissions of a character that a player is about to delete, from the
+-- character and from the database. The foreign keys of the tables delete the rows with the
+-- character as well, but they only exist where the Characters plugin was present when the
+-- migrations ran.
 -- @param _actor [Player the player who deletes the character]
 -- @param id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
