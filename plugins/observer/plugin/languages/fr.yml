@@ -1,0 +1,6 @@
+fr:
+  config:
+    general:
+      observer_reset:
+        name: "Retour après le mode observateur"
+        desc: "La position du joueur doit-elle être restaurée lorsqu'il quitte le mode observateur ?"

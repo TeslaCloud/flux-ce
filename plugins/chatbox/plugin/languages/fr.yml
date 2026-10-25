@@ -1,0 +1,46 @@
+fr:
+  config:
+    chatbox:
+      title: "Chat"
+      desc: "Personnalisez le fonctionnement du chat sur votre serveur !"
+      message_margin:
+        name: "Marge entre les messages"
+        desc: "Espace vertical entre deux messages."
+      message_fade_delay:
+        name: "Délai de disparition des messages"
+        desc: "Durée pendant laquelle les messages restent à l'écran avant de s'estomper."
+      max_messages:
+        name: "Nombre maximal de messages"
+        desc: "Nombre de messages que l'historique du chat conserve."
+      default_font_size:
+        name: "Taille de police par défaut"
+        desc: "Taille de police utilisée par défaut dans le chat."
+      small_font_size:
+        name: "Petite taille de police"
+        desc: "Taille de police utilisée pour le petit texte dans le chat."
+      big_font_size:
+        name: "Grande taille de police"
+        desc: "Taille de police utilisée pour le grand texte dans le chat."
+      max_message_length:
+        name: "Longueur maximale des messages"
+        desc: "Longueur maximale d'un message dans le chat."
+      chat_interval:
+        name: "Intervalle entre les messages"
+        desc: "Temps minimal, en millisecondes, entre deux messages d'un même joueur. 0 désactive la limite."
+      chat_avatars:
+        name: "Avatars dans le chat"
+        desc: "Indique si l'avatar Steam de l'auteur est affiché devant son nom dans les messages normaux du chat."
+      chat_timestamps:
+        name: "Horodatage des messages"
+        desc: "Indique si l'heure d'envoi est affichée devant chaque message du chat."
+  error:
+    chat:
+      too_fast: "Vous envoyez des messages trop rapidement !"
+  ui:
+    chat:
+      aliases: "Alias"
+      alias_of: "(alias de {command})"
+      no_commands_found: "Aucune commande trouvée !"
+      more_above: "{count} de plus au-dessus"
+      more_below: "{count} de plus en dessous"
+      everyone: "tout le monde"

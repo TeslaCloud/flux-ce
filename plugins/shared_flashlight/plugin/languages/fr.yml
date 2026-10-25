@@ -1,0 +1,20 @@
+fr:
+  config:
+    shared_flashlight:
+      title: "Lampe torche partagée"
+      desc: "Paramètres de la lampe torche visible par tous les joueurs."
+      enabled:
+        name: "Lampe torche partagée"
+        desc: "Indique si la lampe torche est une lumière que tous les joueurs voient. Désactivé, la lampe torche du moteur est utilisée, que seul son porteur voit."
+      fov:
+        name: "Largeur du faisceau"
+        desc: "Angle du faisceau de la lampe torche, en degrés."
+      distance:
+        name: "Portée du faisceau"
+        desc: "Distance jusqu'à laquelle la lampe torche éclaire, en unités."
+      brightness:
+        name: "Luminosité"
+        desc: "Intensité de la lampe torche. 1 correspond à la luminosité de la lampe torche du moteur."
+      shadows:
+        name: "Ombres"
+        desc: "Indique si la lampe torche projette des ombres. Les ombres coûtent des performances sur les serveurs chargés."

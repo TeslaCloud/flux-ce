@@ -1,0 +1,14 @@
+fr:
+  config:
+    weapon_raise:
+      title: "Lever les armes"
+      desc: "Paramètres pour baisser et lever les armes."
+      enabled:
+        name: "Système de levée des armes"
+        desc: "Indique si les armes restent baissées jusqu'à ce que le joueur les lève en maintenant la touche de rechargement. Désactivé, les armes sont levées sauf si quelque chose d'autre les maintient baissées."
+      sprint_lowers_weapon:
+        name: "Le sprint baisse l'arme"
+        desc: "Indique si l'arme d'un joueur qui court est baissée et ne peut pas tirer tant qu'il ne ralentit pas."
+      fire_delay:
+        name: "Délai de tir après la levée"
+        desc: "Nombre de secondes pendant lesquelles une arme ne peut pas tirer après avoir été levée. 0 pour désactiver."

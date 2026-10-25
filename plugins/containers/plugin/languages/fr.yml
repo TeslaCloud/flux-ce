@@ -1,0 +1,134 @@
+fr:
+  config:
+    containers:
+      title: "Conteneurs"
+      desc: "Personnalisez le fonctionnement des conteneurs sur votre serveur !"
+      password_delay:
+        name: "Délai entre deux mots de passe"
+        desc: "Combien de temps un joueur doit attendre après avoir saisi un mauvais mot de passe de conteneur avant de pouvoir réessayer (en secondes)."
+      spill_items:
+        name: "Répandre les objets à la suppression"
+        desc: "Indique si les objets d'un conteneur tombent au sol lorsque le conteneur est supprimé. Sinon, ils sont détruits avec lui."
+  container:
+    box:
+      title: "Carton"
+      desc: "Un carton ordinaire. Non, vous ne pouvez pas vous cacher dedans."
+    cupboard:
+      title: "Placard"
+      desc: "Un vieux placard en bois tout abîmé."
+    drawer:
+      title: "Commode"
+      desc: "Une commode en bois éraflée."
+    small_drawer:
+      title: "Petite commode"
+      desc: "Une petite commode que l'on place d'habitude à côté des lits."
+    tall_drawer:
+      title: "Haute commode"
+      desc: "Une haute commode qui contient de petits objets."
+    dresser:
+      title: "Chiffonnier"
+      desc: "Un grand chiffonnier qui semble avoir pris de l'âge, utilisé pour ranger des vêtements."
+    fridge:
+      title: "Réfrigérateur"
+      desc: "Un petit réfrigérateur. Il empeste l'antigel."
+    lockers:
+      title: "Casier"
+      desc: "Un casier rouillé. Il grince quand on l'ouvre."
+    barrel:
+      title: "Baril"
+      desc: "Un grand baril en métal qui empeste les vieux produits chimiques."
+    desk:
+      title: "Bureau"
+      desc: "Un large bureau en bois avec plusieurs tiroirs."
+    medium_box:
+      title: "Boîte"
+      desc: "Une boîte en carton fragile."
+    small_box:
+      title: "Petite boîte"
+      desc: "Une petite boîte en carton."
+    trash_bin:
+      title: "Poubelle"
+      desc: "Une poubelle ordinaire. Son fond est tapissé d'une couche de pages de manga collantes."
+    dumpster:
+      title: "Benne à ordures"
+      desc: "Une grande benne servant à contenir d'importantes quantités de déchets. Elle dégage un cocktail d'odeurs répugnantes."
+    wooden_crate:
+      title: "Caisse"
+      desc: "Une caisse en bois servant à contenir divers objets."
+    big_wooden_crate:
+      title: "Grande caisse"
+      desc: "Une grande caisse en bois servant au transport d'objets."
+    file_cabinet:
+      title: "Classeur à tiroirs"
+      desc: "Un classeur rouillé composé de deux grands tiroirs."
+    tall_file_cabinet:
+      title: "Grand classeur à tiroirs"
+      desc: "Un grand classeur rouillé composé de nombreux tiroirs."
+    storage_closet:
+      title: "Armoire"
+      desc: "Une grande armoire métallique servant au rangement."
+    large_fridge:
+      title: "Réfrigérateur industriel"
+      desc: "Un réfrigérateur de qualité industrielle servant à conserver toutes sortes d'aliments."
+    counter:
+      title: "Comptoir"
+      desc: "Un grand comptoir en métal souvent utilisé pour ranger de l'argent."
+    metal_box:
+      title: "Boîte en métal"
+      desc: "Une petite boîte en métal. Ses bords semblent rouillés."
+    medium_wooden_crate:
+      title: "Caisse en bois"
+      desc: "Une caisse en bois assez grande. Elle grince quand on la déplace."
+    small_parts_bin:
+      title: "Bac à pièces"
+      desc: "Un petit bac servant à ranger de petites pièces mécaniques."
+    small_dresser_table:
+      title: "Coiffeuse"
+      desc: "Une coiffeuse à laquelle il semble manquer un miroir."
+    medium_water_barrel:
+      title: "Baril d'eau"
+      desc: "Un grand baril en plastique. Il flotte !"
+    medium_cash_reg:
+      title: "Caisse enregistreuse"
+      desc: "Une caisse enregistreuse de taille moyenne, à laquelle il semble manquer une serrure."
+  error:
+    container:
+      not_valid: "Ce n'est pas un conteneur !"
+      wrong_password: "Vous avez saisi un mot de passe incorrect !"
+      password_wait: "Vous devez attendre {time} avant de pouvoir saisir à nouveau un mot de passe !"
+      no_items: "Il n'y a aucun objet pour remplir ce conteneur !"
+      no_space: "Rien n'a pu être ajouté à ce conteneur !"
+  notification:
+    container:
+      message: "{name} : {message}"
+      name_set: "Vous avez nommé ce conteneur « {name} »."
+      name_removed: "Vous avez retiré le nom de ce conteneur."
+      message_set: "Vous avez défini le message de ce conteneur."
+      message_removed: "Vous avez retiré le message de ce conteneur."
+      password_set: "Vous avez défini le mot de passe de ce conteneur sur « {password} »."
+      password_removed: "Vous avez retiré le mot de passe de ce conteneur."
+      filled:
+        "1": "Vous avez ajouté {count} objet aléatoire à ce conteneur."
+        "2": "Vous avez ajouté {count} objets aléatoires à ce conteneur."
+  tool:
+    container:
+      name: "Outil des conteneurs"
+      desc: "Nommez des conteneurs, donnez-leur un message ou un mot de passe, ou remplissez-les d'objets aléatoires."
+      "0": "Clic gauche : appliquer, clic droit : retirer le nom, le message ou le mot de passe."
+      mode: "Mode"
+      mode_name: "Définir le nom"
+      mode_message: "Définir le message"
+      mode_password: "Définir le mot de passe"
+      mode_fill: "Remplir d'objets aléatoires"
+      custom_name: "Nom"
+      message: "Message"
+      password: "Mot de passe"
+      share: "Remplir jusqu'à (% des emplacements)"
+      category: "Catégorie d'objets"
+      any_category: "Toutes les catégories"
+  ui:
+    container:
+      open: "Ouvrir"
+      password:
+        title: "Mot de passe"
+        message: "Quel est le mot de passe de ce conteneur ?"

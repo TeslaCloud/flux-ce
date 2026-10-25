@@ -1,0 +1,166 @@
+fr:
+  config:
+    general:
+      title: "Paramètres généraux"
+      desc: "Paramètres généraux du framework Flux lui-même."
+      prefixes:
+        name: "Préfixes de commande"
+        desc: "Les préfixes du chat qui sont considérés comme des préfixes de commande (<préfixe>commande, par ex. /commande)."
+      walk_speed:
+        name: "Vitesse de marche"
+        desc: "La vitesse à laquelle le joueur marche."
+      run_speed:
+        name: "Vitesse de course"
+        desc: "La vitesse à laquelle le joueur court (en maintenant SHIFT par défaut)."
+      crouch_speed:
+        name: "Vitesse accroupi"
+        desc: "La vitesse à laquelle le joueur avance accroupi (en maintenant CTRL par défaut)."
+      jump_power:
+        name: "Puissance de saut"
+        desc: "La hauteur à laquelle le joueur saute par défaut."
+      respawn_time:
+        name: "Délai de réapparition"
+        desc: "Le temps qu'il faut à un joueur pour réapparaître après sa mort (en secondes)."
+      root_steamid:
+        name: "SteamID avec accès root"
+        desc: "Donne l'accès root au joueur qui a ce SteamID."
+      data_save_interval:
+        name: "Intervalle de sauvegarde du serveur"
+        desc: "Le temps entre deux sauvegardes des données du serveur."
+      player_data_save_interval:
+        name: "Intervalle de sauvegarde des joueurs"
+        desc: "Le temps entre deux sauvegardes des données des joueurs."
+  error:
+    cant_now: "Vous ne pouvez pas faire cela pour le moment !"
+    command:
+      higher_immunity: "{target} a une immunité supérieure à la vôtre !"
+      invalid_choice: "« {value} » n'est pas un choix valide ici, utilisez l'un de ceux-ci : {choices}"
+      no_access: "Vous n'avez pas accès à cette commande !"
+      not_valid: "« {command} » n'est pas une commande valide !"
+      player_ambiguous: "Plusieurs joueurs s'appellent « {player} », utilisez le SteamID de celui que vous voulez !"
+      player_invalid: "« {player} » n'est pas un joueur valide !"
+      syntax: "Syntaxe incorrecte, utilisez /{command} {syntax}"
+      unknown_subcommand: "« {subcommand} » n'est pas une sous-commande de /{command}, utilisez l'une de celles-ci : {subcommands}"
+      you_must_enter_command: "Vous devez saisir une commande !"
+    config:
+      unknown: "Ce paramètre n'existe pas !"
+      static: "Ce paramètre ne peut pas être modifié en jeu !"
+      invalid_value: "Ce n'est pas une valeur valide pour ce paramètre !"
+      not_a_number: "La valeur de ce paramètre doit être un nombre !"
+      not_a_boolean: "La valeur de ce paramètre doit être soit « true », soit « false » !"
+      not_a_string: "La valeur de ce paramètre doit être une ligne de texte !"
+      not_a_table: "La valeur de ce paramètre doit être une liste !"
+      no_default: "Ce paramètre n'a pas de valeur par défaut !"
+    plugin:
+      unknown: "Ce plugin n'existe pas !"
+      required: "Ce plugin ne peut pas être désactivé, il est requis par : {plugins}"
+    invalid_time: "« {time} » n'a pas pu être interprété comme une durée !"
+    invalid_value: "Vous avez indiqué une valeur d'argument invalide !"
+    invalid_amount: "Vous avez indiqué une quantité invalide !"
+    invalid_entity: "Ce n'est pas une entité valide !"
+    too_far: "La cible est trop loin !"
+    wait: "Vous ne pouvez pas faire cela pour le moment, veuillez patienter !"
+  language:
+    name: "Français"
+  notification:
+    console: "Console"
+  operator:
+    less: "Inférieur"
+    greater: "Supérieur"
+    less_equal: "Inférieur ou égal"
+    greater_equal: "Supérieur ou égal"
+    equal: "Égal"
+    unequal: "Différent"
+    and: "ET"
+    or: "OU"
+    not: "NON"
+  settings:
+    language:
+      name: "Langue"
+      desc: "La langue de l'interface de Flux. Elle ne change pas la langue du jeu lui-même."
+      auto: "Identique au jeu"
+  time:
+    just_now: "à l'instant"
+    second: "seconde"
+    seconds: "secondes"
+    minute: "minute"
+    minutes: "minutes"
+    hour: "heure"
+    hours: "heures"
+    day: "jour"
+    days: "jours"
+    week: "semaine"
+    weeks: "semaines"
+    month: "mois"
+    months: "mois"
+    year: "an"
+    years: "ans"
+    from_now: "dans {time}"
+    ago: "il y a {time}"
+    over: "plus de"
+    about: "environ"
+    permanently: "définitivement"
+    for: "pendant {time}"
+    and: "et"
+  tool:
+    measure:
+      name: "Outil de mesure"
+      desc: "Permet de mesurer la distance entre deux points."
+      system_header: "Système de mesure"
+  ui:
+    hud:
+      dead: "*MORT*"
+      bar_text:
+        getup: "RELÈVEMENT EN COURS..."
+        respawn: "EN ATTENTE DE RÉAPPARITION..."
+      loading:
+        local_player: "Préparation du chargement, veuillez patienter..."
+        player_object: "En attente de la création du joueur local, veuillez patienter..."
+        schema: "Chargement du schéma et des plugins, veuillez patienter..."
+      player_message:
+        died: "VOUS ÊTES MORT"
+        respawn:
+          "1": "RÉAPPARITION DANS {time} SECONDE."
+          "2": "RÉAPPARITION DANS {time} SECONDES."
+    avatar_tooltip: "Clic gauche : ouvrir le profil, clic droit : copier le SteamID"
+    help:
+      commands:
+        title: "Commandes"
+        empty: "Aucune commande ne vous est accessible."
+        aliases: "Alias"
+        uncategorized: "Autres"
+      plugins:
+        title: "Plugins"
+        schema: "Schéma"
+      credits:
+        title: "Crédits"
+    scoreboard:
+      help: "Cliquer sur la carte d'un joueur peut afficher des options."
+      menu:
+        profile: "Ouvrir le profil Steam"
+        copy_steam_id: "Copier le SteamID"
+      online: "Joueurs en ligne : {count} / {max}"
+      ping: "Ping"
+      players_online: "Joueurs en ligne"
+      title: "LISTE DES JOUEURS"
+    tab_menu:
+      admin: "Administration"
+      close_menu: "Retour"
+      scoreboard: "Joueurs"
+      help: "Aide"
+    ok: "OK"
+    cancel: "Annuler"
+    close: "Fermer"
+    yes: "Oui"
+    no: "Non"
+    unit:
+      title:
+        imperial: "Impérial"
+        metric: "Métrique"
+        units: "Unités du Source Engine"
+      mm: "mm"
+      cm: "cm"
+      m: "m"
+      km: "km"
+      mi: "mi"
+      units: "unités"

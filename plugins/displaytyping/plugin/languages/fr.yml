@@ -1,0 +1,26 @@
+fr:
+  config:
+    display_typing:
+      title: "Affichage de la saisie"
+      desc: "Configuration du plugin d'affichage de la saisie"
+      exact_message:
+        name: "Afficher le message exact"
+        desc: "Permet aux joueurs de voir le texte qu'un joueur proche est en train de taper, au fur et à mesure. Désactivé, seule la bulle de saisie est affichée et le texte n'est pas envoyé aux autres joueurs."
+      range:
+        name: "Portée des bulles de saisie"
+        desc: "Distance en unités à laquelle les joueurs voient que quelqu'un est en train d'écrire. Les types de parole, comme le chuchotement et le cri, la modifient."
+      through_walls:
+        name: "Bulles de saisie à travers les murs"
+        desc: "Affiche les bulles de saisie des joueurs à portée mais derrière un mur."
+  settings:
+    display_typing:
+      bubbles:
+        name: "Bulles de saisie"
+        desc: "Affiche une bulle au-dessus des joueurs proches qui sont en train d'écrire."
+      live_text:
+        name: "Texte en direct"
+        desc: "Affiche ce que les joueurs proches tapent au fur et à mesure, si le serveur le permet."
+  ui:
+    hud:
+      display_typing:
+        typing: "ÉCRIT..."

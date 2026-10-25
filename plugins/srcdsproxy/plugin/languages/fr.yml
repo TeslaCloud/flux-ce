@@ -1,0 +1,84 @@
+fr:
+  command:
+    proxy:
+      description: "Indique si vous êtes connecté via le proxy et comment le proxy vous identifie."
+      not_proxied: "Vous êtes connecté à ce serveur directement, pas via le proxy."
+      backend: "Vous êtes connecté via le proxy (version {version}) au serveur {backend}."
+      steamid_verified: "Votre SteamID64 est {steamid}, vérifié par Steam."
+      steamid_claimed: "Votre SteamID64 est {steamid}, tel que votre jeu l'annonce. Steam ne l'a pas vérifié."
+      no_steamid: "Le proxy ne connaît aucun SteamID vous appartenant."
+      address: "Le proxy vous voit vous connecter depuis {address}."
+      proxy_admin: "Vous êtes administrateur du proxy."
+    server:
+      description: "Vous transfère vers un autre serveur du réseau. Sans nom, liste les serveurs dans votre console."
+      syntax: "[serveur]"
+      message: "Transfert vers {server}..."
+    glist:
+      description: "Liste dans votre console tous les joueurs du réseau, sur l'ensemble de ses serveurs."
+    pinfo:
+      description: "Affiche dans votre console les informations du proxy sur un joueur de n'importe quel serveur du réseau."
+      syntax: "<joueur, SteamID ou #id>"
+    transfer:
+      description: "Transfère des joueurs vers un autre serveur du réseau. Les joueurs d'autres serveurs ne peuvent être transférés que par quelqu'un connecté via le proxy."
+      syntax: "<joueur ou SteamID> <serveur> [raison]"
+      message: "{player} transfère {target} vers {server} ({reason})."
+    proxywhitelist:
+      description: "Modifie et liste les listes blanches des serveurs du réseau réservés à leur liste blanche. Administrateurs du proxy uniquement."
+      add:
+        description: "Ajoute des joueurs à la liste blanche d'un serveur du réseau réservé à sa liste blanche. Administrateurs du proxy uniquement."
+        syntax: "<serveur> <joueur ou SteamID>"
+        message: "{player} a ajouté {target} à la liste blanche de {server}."
+      remove:
+        description: "Retire des joueurs de la liste blanche d'un serveur du réseau réservé à sa liste blanche. Administrateurs du proxy uniquement."
+        syntax: "<serveur> <joueur ou SteamID>"
+        message: "{player} a retiré {target} de la liste blanche de {server}."
+      list:
+        description: "Liste dans votre console les listes blanches du réseau, ou celle d'un serveur. Administrateurs du proxy uniquement."
+        syntax: "[serveur]"
+    netban:
+      description: "Bannit et débannit des joueurs, SteamID, adresses IP ou sous-réseaux sur tout le réseau, et liste les bannissements. Administrateurs du proxy uniquement."
+      add:
+        description: "Bannit des joueurs, SteamID, adresses IP ou sous-réseaux de tout le réseau, définitivement ou pour une durée comme 30m, 2h, 7d ou 1w. Administrateurs du proxy uniquement."
+        syntax: "<joueur, SteamID, IP ou sous-réseau> [durée] [raison]"
+        message: "{player} a banni {target} du réseau ({details})."
+      addip:
+        description: "Bannit les adresses de joueurs de tout le réseau, définitivement ou pour une durée comme 30m, 2h, 7d ou 1w. Administrateurs du proxy uniquement."
+        syntax: "<joueur ou SteamID> [durée] [raison]"
+        message: "{player} a banni l'adresse de {target} du réseau ({details})."
+      remove:
+        description: "Lève un bannissement du réseau. Administrateurs du proxy uniquement."
+        syntax: "<SteamID, IP ou sous-réseau>"
+        message: "{player} a levé le bannissement réseau de {target}."
+      list:
+        description: "Liste dans votre console les bannissements du réseau. Administrateurs du proxy uniquement."
+  error:
+    proxy:
+      unavailable: "L'addon srcdsproxy n'est pas installé sur ce serveur."
+      not_proxied: "Vous n'êtes pas connecté via le proxy, ce que requièrent les commandes du proxy."
+      not_proxy_admin: "Seuls les administrateurs du proxy, listés dans le fichier admins.toml du proxy et vérifiés par Steam, peuvent faire cela."
+      transfer_disabled: "Le transfert entre serveurs est désactivé ici."
+      target_not_proxied: "{target} n'est pas connecté via le proxy."
+      remote_target: "{target} n'est pas sur ce serveur. Seule une personne connectée via le proxy peut transférer des joueurs d'autres serveurs."
+      server_invalid: "« {server} » n'est pas un nom de serveur valide."
+      session_id_unchecked: "{target} pourrait être quelqu'un de ce serveur dont l'immunité ne peut pas être vérifiée. Utilisez son nom ou son SteamID."
+      area_no_backend: "Saisissez le nom du serveur vers lequel la zone transfère les joueurs."
+      area_whitelist: "{server} est réservé à sa liste blanche."
+  notification:
+    proxy:
+      console: "Le proxy a répondu dans votre console."
+      area_countdown: "Restez dans la zone pour être transféré vers {server} dans {time}."
+      area_moving: "Transfert vers {server}..."
+  permission:
+    categories:
+      proxy: "Réseau du proxy"
+  tool:
+    proxy_area:
+      title: "Zone de transfert de serveur"
+      desc: "Crée une zone qui transfère les joueurs qui y restent vers un autre serveur du réseau. Clic gauche : ajouter un point, clic droit : créer la zone, recharger : supprimer la zone de transfert que vous regardez."
+      backend: "Serveur"
+      delay: "Délai (secondes)"
+      height: "Hauteur"
+  ui:
+    proxy:
+      area_countdown: "Transfert vers {server} dans {seconds}..."
+      area_moving: "Transfert vers {server}..."

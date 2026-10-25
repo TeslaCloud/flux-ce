@@ -1,0 +1,105 @@
+fr:
+  command:
+    it:
+      description: "Décrit une action impersonnelle."
+      syntax: "<texte>"
+    me:
+      description: "Décrit l'action de votre personnage. Vous pouvez écrire « *texte* » au lieu d'utiliser cette commande. (chuchoter) et crier!! fonctionnent aussi ici."
+      syntax: "<texte>"
+    whisper:
+      description: "Chuchote quelque chose. Vous pouvez écrire « (texte) » au lieu d'utiliser cette commande. Le nombre de parenthèses détermine le volume du chuchotement (3 au maximum)."
+      syntax: "<texte>"
+    yell:
+      description: "Crie quelque chose. Vous pouvez écrire « texte!! » au lieu d'utiliser cette commande. Le nombre de points d'exclamation détermine le volume du cri (4 au maximum)."
+      syntax: "<texte>"
+    event:
+      description: "Envoie un message descriptif à tout le serveur."
+      syntax: "<texte>"
+    eventlocal:
+      description: "Envoie un message descriptif à tous ceux qui se trouvent à portée de voix."
+      syntax: "<texte>"
+    gag:
+      description: "Interdit ou autorise de nouveau le chat HRP à des joueurs."
+      add:
+        description: "Interdit le chat HRP à un joueur."
+        syntax: "<joueur> <durée> [raison]"
+        message: "{admin} a interdit le chat HRP à {target} pour {time} ({reason})."
+      remove:
+        description: "Autorise de nouveau le chat HRP à un joueur."
+        syntax: "<joueur>"
+        message: "{admin} a de nouveau autorisé le chat HRP à {target}."
+    its:
+      description: "Place un texte fixe qui décrit un détail des environs."
+      syntax: "<texte>"
+    itsremove:
+      description: "Supprime le texte fixe que vous regardez."
+    roll:
+      description: "Lance des dés : un d20 sans argument, un dé à autant de faces pour un nombre, une statistique ou une compétence par son nom, ou une formule de dés comme 2d6 + 3, 4d6kh3 ou 1d20 + stealth. Si vous regardez un joueur proche, le même jet est fait pour vous deux."
+      syntax: "[faces, statistique, compétence ou formule]"
+    togglemask:
+      description: "Met ou retire votre masque de membre de la Protection civile."
+      syntax: "<aucun>"
+  config:
+    roleplay_chat:
+      title: "Chat roleplay"
+      desc: "Paramètres du chat RP et du chat HRP."
+      talk_radius:
+        name: "Portée de la voix"
+        desc: "Distance en unités à laquelle on entend la parole RP normale. La portée des chuchotements, des cris, du chat HRP local et des radios en découle."
+      ooc_interval:
+        name: "Délai du chat HRP"
+        desc: "Nombre de secondes qu'un joueur doit attendre entre deux messages dans le chat HRP. 0 pour désactiver."
+      looc_interval:
+        name: "Délai du chat HRP local"
+        desc: "Nombre de secondes qu'un joueur doit attendre entre deux messages dans le chat HRP local. 0 pour désactiver."
+      ooc_avatars:
+        name: "Avatars dans le chat HRP"
+        desc: "Indique si l'avatar Steam du joueur est affiché devant son nom dans les messages du chat HRP."
+      roll_versus:
+        name: "Jets en opposition"
+        desc: "Indique si lancer les dés en regardant un joueur proche fait aussi un jet pour ce joueur."
+  error:
+    roll:
+      invalid: "Impossible de faire ce jet : {message}"
+    its_too_close: "Trop près d'autres textes fixes !"
+    speak:
+      dead: "Vous ne pouvez ni parler ni agir tant que vous êtes mort."
+      knocked_out: "Vous ne pouvez ni parler ni agir tant que vous êtes inconscient."
+  notification:
+    cooldown:
+      ooc:
+        "1": "Vous devez encore attendre {time} seconde avant d'utiliser de nouveau le chat HRP."
+        "2": "Vous devez encore attendre {time} secondes avant d'utiliser de nouveau le chat HRP."
+      looc:
+        "1": "Vous devez encore attendre {time} seconde avant d'utiliser de nouveau le chat HRP local."
+        "2": "Vous devez encore attendre {time} secondes avant d'utiliser de nouveau le chat HRP local."
+    mute:
+      "1": "Vous ne pouvez pas utiliser le chat hors roleplay (HRP) pendant encore {time} seconde."
+      "2": "Vous ne pouvez pas utiliser le chat hors roleplay (HRP) pendant encore {time} secondes."
+    muted: "Le chat HRP vous est interdit pour {time}."
+    unmuted: "Le chat HRP vous est de nouveau autorisé."
+    static_text:
+      added: "Texte fixe ajouté."
+      removed: "Texte fixe supprimé."
+      not_found: "Aucun texte fixe à supprimer n'a été trouvé à cet endroit."
+  permission:
+    categories:
+      roleplay: "Roleplay"
+  ui:
+    hud:
+      display_typing:
+        talking: "PARLE..."
+        whispering: "CHUCHOTE..."
+        yelling: "CRIE..."
+        performing: "AGIT..."
+    chat:
+      say: "dit"
+      yell: "crie"
+      whisper: "chuchote"
+      roll: "a obtenu {roll}"
+      roll_named: "a obtenu en {name} : {roll}"
+      roll_versus: "a obtenu {roll} contre"
+      roll_versus_named: "a obtenu en {name} : {roll} contre"
+      roll_versus_reply: " : {roll}"
+      roll_critical_success: "{roll}, réussite critique !"
+      roll_critical_failure: "{roll}, échec critique !"

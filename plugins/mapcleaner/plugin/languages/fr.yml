@@ -1,0 +1,14 @@
+fr:
+  config:
+    mapcleaner:
+      title: "Nettoyage de la carte"
+      desc: "Paramètres des entités retirées de la carte."
+      classes:
+        name: "Classes d'entités retirées"
+        desc: "Classes des entités retirées de la carte à son chargement et après un nettoyage de la carte. Un astérisque remplace un nombre quelconque de caractères, comme dans weapon_*. Seules les entités créées par la carte elle-même sont retirées."
+      physics:
+        name: "Retirer les props physiques de la carte"
+        desc: "Indique si les props physiques de la carte sont retirés à son chargement et après un nettoyage de la carte."
+      vehicles:
+        name: "Retirer les véhicules de la carte"
+        desc: "Indique si les véhicules de la carte sont retirés à son chargement et après un nettoyage de la carte. Cela inclut les sièges intégrés à la carte."

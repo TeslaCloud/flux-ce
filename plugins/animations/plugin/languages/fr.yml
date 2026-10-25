@@ -1,0 +1,66 @@
+fr:
+  animation:
+    sit_ground:
+      name: "S'asseoir par terre"
+    sit_wall:
+      name: "S'asseoir contre un mur"
+    lean_back:
+      name: "S'adosser à un mur"
+    lean_arms_back:
+      name: "S'adosser à un mur (bras derrière)"
+    lean_arms_down:
+      name: "S'adosser à un mur (bras le long du corps)"
+    idle_1:
+      name: "Posture d'attente 1"
+    idle_2:
+      name: "Posture d'attente 2"
+    idle_3:
+      name: "Posture d'attente 3"
+    idle_4:
+      name: "Posture d'attente 4"
+    pant:
+      name: "Reprendre son souffle"
+    pant_wall:
+      name: "Reprendre son souffle contre un mur"
+    window:
+      name: "Regarder par une fenêtre"
+    cheer:
+      name: "Acclamer"
+    wave:
+      name: "Faire signe de la main"
+    wave_close:
+      name: "Faire signe de la main (de près)"
+    cp_lean:
+      name: "S'adosser à un mur (matraque)"
+    cp_threat_1:
+      name: "Posture menaçante 1"
+    cp_threat_2:
+      name: "Posture menaçante 2"
+    cp_deny:
+      name: "Refuser l'accès"
+    cp_motion_left:
+      name: "Faire signe d'aller à gauche"
+    cp_motion_right:
+      name: "Faire signe d'aller à droite"
+  config:
+    animations:
+      title: "Animations"
+      desc: "Postures et gestes que les joueurs choisissent dans le menu contextuel."
+      cooldown:
+        name: "Délai entre les animations"
+        desc: "Nombre de secondes qu'un joueur doit attendre après avoir lancé une animation avant de pouvoir en lancer une autre. 0 pour désactiver."
+      third_person:
+        name: "Troisième personne pendant les animations"
+        desc: "Indique si les joueurs voient leur personnage en troisième personne tant qu'ils jouent une animation."
+  error:
+    animations:
+      busy: "Vous jouez déjà une animation !"
+      cooldown: "Vous devez attendre {time} s avant de pouvoir jouer une autre animation."
+      crouching: "Vous ne pouvez pas faire cela en étant accroupi !"
+      model: "Le modèle de votre personnage ne peut pas jouer cette animation !"
+      not_on_ground: "Vous devez vous tenir sur le sol !"
+      wall_behind: "Vous devez vous tenir dos à un mur !"
+      wall_front: "Vous devez vous tenir juste devant un mur, face à lui !"
+  ui:
+    animations:
+      title: "Animations"

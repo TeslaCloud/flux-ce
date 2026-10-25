@@ -1,0 +1,102 @@
+fr:
+  command:
+    level:
+      description: "Affiche et définit le niveau des personnages."
+      get:
+        description: "Affiche le niveau et l'expérience d'un personnage."
+        syntax: "<cible>"
+        message: "{target} est de niveau {level} sur {max_level} avec {experience} / {needed} d'expérience, il lui en manque {remaining} pour le niveau suivant."
+        message_max: "{target} est de niveau {level}, le niveau le plus élevé."
+        message_capped: "{target} est de niveau {level} sur {max_level} avec {experience} d'expérience en réserve, bloqué par le plafond de niveau {cap} jusqu'à ce que le niveau du serveur augmente."
+      set:
+        description: "Définit le niveau d'un personnage, de {floor} à {max_level}. Son expérience est remise à zéro et ses points de compétence et d'attribut non dépensés sont recalculés pour le nouveau niveau. Le plafond de niveau ne s'applique pas, mais le niveau plancher si."
+        syntax: "<cible> <niveau>"
+        message: "{player} a défini le niveau de {target} à {level}."
+    experience:
+      description: "Donne de l'expérience aux personnages."
+      add:
+        description: "Donne de l'expérience à un personnage. Une quantité négative retire de l'expérience et peut faire baisser son niveau. Le plafond de niveau ne s'applique pas, mais un personnage ne descend jamais sous le niveau plancher."
+        syntax: "<cible> <quantité>"
+        message: "{player} a donné {amount} d'expérience à {target}."
+        message_taken: "{player} a retiré {amount} d'expérience à {target}."
+    serverlevel:
+      description: "Affiche et définit le niveau du serveur."
+      get:
+        description: "Affiche le niveau du serveur, le temps restant avant le suivant, ainsi que le niveau plancher et le plafond de niveau des personnages."
+        message: "Le serveur est de niveau {level} sur {max_level} : {elapsed} écoulé dans ce niveau, le niveau {next_level} arrive dans {time}."
+        message_max: "Le serveur est de niveau {level}, le niveau le plus élevé."
+        limits: "Les personnages sont montés au moins au niveau {floor} et progressent par l'expérience jusqu'au niveau {cap} au plus."
+        progression_off: "La progression de niveau du serveur est désactivée, il n'y a donc ni niveau plancher ni plafond de niveau."
+      set:
+        description: "Définit le niveau du serveur, de -1 à {max_level}. Le serveur est placé au tout début de ce niveau et les personnages sont ajustés au nouveau niveau plancher et au nouveau plafond de niveau."
+        syntax: "<niveau>"
+        message: "{player} a défini le niveau du serveur à {level}."
+  config:
+    levels:
+      title: "Niveaux"
+      desc: "Niveaux des personnages, expérience, points gagnés en montant de niveau et santé maximale."
+      max_level:
+        name: "Niveau maximal"
+        desc: "Le niveau le plus élevé qu'un personnage peut atteindre. Ne peut être modifié que dans les fichiers de configuration."
+      experience_per_level:
+        name: "Expérience par niveau"
+        desc: "La quantité d'expérience dont un personnage a besoin pour monter d'un niveau. Chaque niveau demande la même quantité."
+      skill_points_per_level:
+        name: "Points de compétence par niveau"
+        desc: "Le nombre de points de compétence qu'un personnage reçoit pour chaque niveau après le premier. Un point de compétence augmente une compétence d'un rang."
+      boost_every:
+        name: "Points d'attribut tous les"
+        desc: "Tous les combien de niveaux un personnage reçoit des points d'attribut. 0 n'en donne aucun."
+      boost_points:
+        name: "Points d'attribut"
+        desc: "Le nombre de points d'attribut qu'un personnage reçoit chaque fois qu'il atteint un niveau qui en accorde. Un point d'attribut augmente une caractéristique d'un niveau."
+      health_base:
+        name: "Santé de base"
+        desc: "La santé maximale d'un personnage de niveau 1 avant l'ajout de la constitution. La constitution ajoute son niveau multiplié par le niveau du personnage."
+      health_per_level:
+        name: "Santé par niveau"
+        desc: "La santé maximale qu'un personnage gagne pour chaque niveau après le premier."
+      combat_experience:
+        name: "Expérience de combat"
+        desc: "Indique si les joueurs gagnent de l'expérience pour les dégâts qu'ils infligent aux PNJ et aux autres joueurs et pour les PNJ qu'ils tuent."
+      experience_per_damage:
+        name: "Expérience par dégât"
+        desc: "La quantité d'expérience qu'un joueur gagne pour chaque point de dégâts infligé à un PNJ ou à un autre joueur, tant que l'expérience de combat est activée."
+      experience_per_kill:
+        name: "Expérience par élimination"
+        desc: "La quantité d'expérience qu'un joueur gagne en tuant un PNJ, tant que l'expérience de combat est activée. Elle est multipliée par un dixième de la santé maximale du PNJ, mais jamais par moins de 1."
+      server_progression:
+        name: "Progression de niveau du serveur"
+        desc: "Indique si le niveau du serveur limite le niveau des personnages. Le niveau du serveur commence à -1 au premier lancement du plugin et augmente avec le temps réel. Par l'expérience, les personnages ne peuvent pas dépasser le niveau du serveur plus le décalage du plafond de niveau, et gardent leur expérience jusqu'à ce que le plafond augmente ; ils sont aussi montés au niveau du serveur moins le décalage du niveau plancher."
+      server_days_per_level:
+        name: "Jours par niveau du serveur"
+        desc: "Le nombre de jours de temps réel dont le serveur a besoin pour monter d'un niveau, pour chaque niveau inférieur au niveau des jours supplémentaires."
+      server_ramp_level:
+        name: "Niveau des jours supplémentaires"
+        desc: "Le premier niveau du serveur qui dure plus longtemps que le précédent, du nombre de jours supplémentaires par niveau du serveur. Chaque niveau suivant dure encore autant de plus."
+      server_ramp_days:
+        name: "Jours supplémentaires par niveau du serveur"
+        desc: "Le nombre de jours de temps réel que chaque niveau du serveur, à partir du niveau des jours supplémentaires, dure en plus du précédent. 0 donne la même durée à tous les niveaux."
+      server_cap_offset:
+        name: "Décalage du plafond de niveau"
+        desc: "Le nombre de niveaux au-dessus du niveau du serveur que les personnages peuvent atteindre par l'expérience. Les commandes de l'équipe n'y sont pas soumises."
+      server_floor_offset:
+        name: "Décalage du niveau plancher"
+        desc: "Le nombre de niveaux sous le niveau du serveur auquel les personnages sont montés."
+  error:
+    levels:
+      no_character: "{target} n'a aucun personnage actif !"
+      no_active_character: "Vous n'avez aucun personnage actif !"
+      invalid_skill: "Ce n'est pas une compétence dans laquelle vous pouvez dépenser des points de compétence !"
+      invalid_stat: "Ce n'est pas une caractéristique dans laquelle vous pouvez dépenser des points d'attribut !"
+      no_skill_points: "Il ne vous reste aucun point de compétence à dépenser !"
+      no_attribute_points: "Il ne vous reste aucun point d'attribut à dépenser !"
+      skill_maxed: "Cette compétence est déjà à son rang le plus élevé !"
+      stat_maxed: "Cette caractéristique est déjà à son niveau le plus élevé !"
+      cannot_raise: "Cet attribut ne peut pas être augmenté pour le moment !"
+  notification:
+    levels:
+      level_up: "Vous avez atteint le niveau {level} !"
+      level_set: "Votre niveau a été défini à {level}."
+      experience_given: "Vous avez reçu {amount} d'expérience."
+      experience_taken: "{amount} d'expérience vous a été retirée."

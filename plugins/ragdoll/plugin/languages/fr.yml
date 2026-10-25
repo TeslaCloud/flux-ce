@@ -1,0 +1,64 @@
+fr:
+  command:
+    fall:
+      description: "Tombe au sol."
+      syntax: "[délai avant de se relever]"
+    forcefall:
+      description: "Force un joueur à tomber au sol."
+      syntax: "<cible> [délai avant de se relever]"
+      message: "{player} a fait tomber {target} pour {time} s."
+    forcegetup:
+      description: "Force un joueur à se relever."
+      syntax: "<cible> [délai avant de se relever]"
+      message: "{player} a forcé {target} à se relever en {time} s."
+    getup:
+      description: "Vous relève si vous êtes à terre."
+      syntax: "[délai avant de se relever]"
+    knockout:
+      description: "Assomme un joueur. Il ne peut pas se relever seul avant d'avoir repris connaissance."
+      syntax: "<cible> [délai avant de reprendre connaissance]"
+      message: "{player} a assommé {target} pour {time} s."
+  config:
+    ragdoll:
+      title: "Ragdoll"
+      desc: "Chutes, assommements et cadavres."
+      getup_time:
+        name: "Délai pour se relever"
+        desc: "Nombre de secondes qu'il faut à un joueur à terre pour se relever."
+      fall_cooldown:
+        name: "Délai entre les chutes"
+        desc: "Nombre de secondes qu'un joueur doit attendre avant d'utiliser de nouveau la commande de chute. 0 pour désactiver."
+      immunity_time:
+        name: "Durée d'immunité du ragdoll"
+        desc: "Pendant combien de secondes après une chute le ragdoll d'un joueur ignore les dégâts qui ne viennent pas d'un joueur, comme le choc contre le sol. 0 pour désactiver."
+      decay_time:
+        name: "Durée de vie des cadavres"
+        desc: "Nombre de secondes pendant lesquelles le ragdoll d'un joueur reste en place après sa réapparition ou son départ du serveur. 0 pour le supprimer immédiatement."
+      fall_damage:
+        name: "Tomber à cause des chutes"
+        desc: "Une chute qui inflige au moins autant de dégâts fait tomber le joueur à terre. 0 pour désactiver."
+      hit_damage:
+        name: "Tomber à cause des coups"
+        desc: "Un seul coup qui inflige au moins autant de dégâts fait tomber le joueur à terre. 0 pour désactiver."
+      hit_time:
+        name: "Temps à terre après un coup"
+        desc: "Nombre de secondes pendant lesquelles un joueur jeté à terre par un coup violent reste au sol avant de se relever. 0 pour le laisser se relever lui-même."
+      knockout_on_damage:
+        name: "Assommer avec les coups de mêlée"
+        desc: "Indique si un coup au corps à corps, par exemple de matraque électrique, assomme un joueur dont la santé est assez basse."
+      knockout_health:
+        name: "Santé d'assommement"
+        desc: "Un coup de mêlée qui laisse un joueur avec autant de santé ou moins l'assomme."
+      knockout_time:
+        name: "Durée d'assommement"
+        desc: "Nombre de secondes pendant lesquelles un joueur assommé par un coup de mêlée reste inconscient. 0 pour le laisser inconscient jusqu'à ce que quelqu'un le relève."
+  error:
+    ragdoll:
+      fall_cooldown: "Vous devez attendre {time} s avant de pouvoir tomber de nouveau."
+      knocked_out_switch: "Vous ne pouvez pas changer de personnage tant que vous êtes inconscient."
+  ui:
+    hud:
+      press_jump_to_getup: "Appuyez sur la touche de saut pour vous relever..."
+      knocked_out: "Vous êtes inconscient..."
+      bar_text:
+        wakeup: "REPRISE DE CONNAISSANCE..."

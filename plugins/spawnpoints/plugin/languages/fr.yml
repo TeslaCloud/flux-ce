@@ -1,0 +1,22 @@
+fr:
+  error:
+    spawnpoints:
+      invalid_group: "Cette faction n'existe pas. Choisissez un autre groupe dans les paramètres de l'outil."
+      no_room: "Il n'y a pas assez de place pour un point d'apparition ici. Placez-vous là où les joueurs doivent apparaître."
+      none_aimed: "Vous ne visez aucun point d'apparition."
+  notification:
+    spawnpoints:
+      added: "Point d'apparition ajouté ({group})."
+      removed: "Point d'apparition retiré ({group})."
+  tool:
+    spawnpoint:
+      name: "Outil des points d'apparition"
+      desc: "Clic gauche : ajouter un point d'apparition là où vous vous trouvez. Clic droit : retirer le point d'apparition que vous visez."
+      "0": "Clic gauche : ajouter un point d'apparition, clic droit : retirer un point d'apparition."
+      group: "Point d'apparition pour"
+  ui:
+    spawnpoints:
+      label: "Point d'apparition n°{id} : {group}"
+      group:
+        default: "Tout le monde"
+        faction: "Faction : {name}"

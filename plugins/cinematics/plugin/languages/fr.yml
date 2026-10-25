@@ -1,0 +1,12 @@
+fr:
+  config:
+    cinematics:
+      title: "Cinématiques"
+      desc: "Configuration du plugin de cinématiques"
+      intro:
+        name: "Introduction du personnage"
+        desc: "Affiche le nom et la description du schéma entre des bandes cinématiques lorsqu'un joueur charge un personnage pour la première fois après s'être connecté."
+  ui:
+    hud:
+      cinematics:
+        intro_credits: "Un jeu de rôle par {author}."

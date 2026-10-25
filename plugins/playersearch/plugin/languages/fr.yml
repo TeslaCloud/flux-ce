@@ -1,0 +1,16 @@
+fr:
+  error:
+    must_not_look: "La cible ne doit pas regarder dans votre direction !"
+    search:
+      already: "La cible est déjà en train d'être fouillée !"
+      too_often: "Vous demandez des fouilles trop souvent ! Le délai d'attente a été augmenté !"
+      request: "La cible a déjà reçu une demande de fouille !"
+  notification:
+    search:
+      resist: "{player} résiste à la fouille."
+  ui:
+    search:
+      title: "Fouille"
+      message: "{player} essaie de vous fouiller. L'acceptez-vous ?"
+      allow: "Accepter"
+      resist: "Résister"

@@ -1,0 +1,30 @@
+fr:
+  error:
+    frequency: "Fréquence invalide. Elle doit être au format XXX.X."
+    radio:
+      unavailable: "Vous ne pouvez plus utiliser cette radio."
+  notification:
+    no_active_radio: "Vous n'avez pas de radio active. Placez une radio allumée dans la barre d'accès rapide de votre inventaire."
+    radio:
+      frequency_set: "La radio est maintenant réglée sur {frequency}."
+  item:
+    category:
+      communication: "Communications"
+    slot:
+      communication: "Communication"
+    option:
+      enable: "Allumer"
+      disable: "Éteindre"
+      frequency: "Régler la fréquence..."
+    radio:
+      name: "Radio"
+      description: "Radio civile ordinaire, qui permet de transmettre des messages à courte distance."
+  ui:
+    chat:
+      radio: "parle à la radio"
+    hud:
+      display_typing:
+        radioing: "PARLE À LA RADIO..."
+    radio:
+      frequency: "Régler la fréquence de la radio"
+      frequency_message: "Saisissez la fréquence sur laquelle la radio peut recevoir ou envoyer des messages. Elle doit être au format XXX.X."

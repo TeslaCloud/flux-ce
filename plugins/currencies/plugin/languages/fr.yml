@@ -1,0 +1,50 @@
+fr:
+  command:
+    givemoney:
+      description: "Donne de l'argent au joueur que vous regardez. Monnaies : {currencies}"
+      syntax: "<montant> [monnaie]"
+    dropmoney:
+      description: "Lâche de l'argent à l'endroit que vous visez. Monnaies : {currencies}"
+      syntax: "<montant> [monnaie]"
+    setmoney:
+      description: "Définit l'argent d'un joueur. Monnaies : {currencies}"
+      syntax: "<cible> <montant> [monnaie]"
+      message: "{player} a défini le solde de {currency} de {target} à {value}."
+  config:
+    currencies:
+      title: "Monnaies"
+      desc: "Paramètres de l'argent et des monnaies."
+      default_currency:
+        name: "Monnaie par défaut"
+        desc: "ID de la monnaie utilisée chaque fois qu'aucune n'est précisée, par exemple par les commandes d'argent. Laissez vide pour utiliser la seule monnaie enregistrée."
+      starting_money:
+        name: "Argent de départ"
+        desc: "La somme de monnaie par défaut avec laquelle commencent les nouveaux personnages. Laissez 0 pour utiliser le montant avec lequel la monnaie elle-même est enregistrée."
+      save_dropped_money:
+        name: "Sauvegarder l'argent lâché"
+        desc: "Indique si l'argent qui traîne au sol doit être sauvegardé et remis en place au rechargement de la carte."
+  error:
+    not_enough_money: "Fonds insuffisants."
+    invalid_currency: "Ce n'est pas une monnaie valide."
+    money_refused: "L'argent n'a pas été accepté."
+  notification:
+    currency:
+      pickup: "Vous avez ramassé {value} {currency}."
+      receive: "Vous avez reçu {value} {currency} de {target}."
+      give: "Vous avez donné {value} {currency} à {target}."
+      drop: "Vous avez lâché {value} {currency}."
+      set: "Votre solde de {currency} a été défini à {value}."
+  ui:
+    currency:
+      menu:
+        give: "Donner"
+      title: "Argent"
+      give:
+        title: "Donner de l'argent"
+        message: "Veuillez saisir la somme de {currency} à donner."
+      drop:
+        title: "Lâcher de l'argent"
+        message: "Veuillez saisir la somme de {currency} à lâcher."
+      take:
+        title: "Prendre de l'argent"
+        message: "Veuillez saisir la somme de {currency} à prendre."

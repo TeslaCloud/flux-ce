@@ -1,0 +1,9 @@
+fr:
+  tool:
+    area:
+      name: "Outil de zone"
+      desc: "Crée des zones polygonales, en toute simplicité."
+      "0": "Clic gauche : ajouter un point de zone, clic droit : créer la zone."
+      text: "ID de la zone"
+      height: "Hauteur"
+      type: "Type"

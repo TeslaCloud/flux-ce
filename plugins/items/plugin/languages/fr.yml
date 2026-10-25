@@ -1,0 +1,65 @@
+fr:
+  condition:
+    has_item:
+      name: "Personnage ayant un certain objet dans son inventaire"
+      text: "A l'objet {operator} {item}"
+      message: "Saisissez l'ID de l'objet"
+    has_item_data:
+      name: "Personnage ayant un objet qui contient une certaine valeur de données"
+      text: "A l'objet {item} avec la donnée {key} {operator} {value}"
+      message1: "Saisissez l'ID de l'objet"
+      message2: "Saisissez la clé de donnée de l'objet"
+      message3: "Saisissez la valeur de donnée de l'objet"
+  config:
+    items:
+      title: "Objets"
+      desc: "Paramètres des objets et des objets qui se trouvent dans le monde."
+      destroy:
+        name: "Autoriser la destruction d'objets"
+        desc: "Indique si les joueurs peuvent détruire les objets de leur inventaire depuis le menu de l'objet. Un objet peut l'autoriser ou l'interdire indépendamment de ce paramètre."
+      entity_health:
+        name: "Santé des objets lâchés"
+        desc: "Combien de dégâts un objet posé dans le monde subit avant d'être détruit. Mettez 0 pour rendre les objets lâchés indestructibles. S'applique aux objets lâchés à partir de maintenant."
+      drop_ownership:
+        name: "Séparer les objets lâchés de chaque personnage"
+        desc: "Indique si les joueurs sont empêchés de ramasser et d'utiliser les objets qu'un autre de leurs propres personnages a lâchés."
+      ammo_requires_weapon:
+        name: "Les munitions nécessitent une arme"
+        desc: "Indique si les munitions ne peuvent être chargées que par un joueur qui porte une arme qui les utilise."
+      drop_weapons_on_death:
+        name: "Lâcher les armes à la mort"
+        desc: "Indique si les armes équipées d'un joueur tombent dans le monde lorsque le joueur meurt."
+  error:
+    item:
+      other_character: "Vous ne pouvez pas toucher un objet qu'un autre de vos personnages a lâché."
+      no_weapon_for_ammo: "Vous ne portez aucune arme qui utilise ces munitions."
+      destroy_not_empty: "Videz cet objet avant de le détruire."
+  item:
+    category:
+      consumables: "Consommables"
+      equipment: "Équipement"
+      clothing: "Vêtements"
+      other: "Autre"
+      weapon: "Arme"
+      ammo: "Munitions"
+      throwable: "Arme de jet"
+    slot:
+      primary: "Principale"
+      secondary: "Secondaire"
+      heavy: "Lourde"
+      melee: "Corps à corps"
+      throwable: "De jet"
+    option:
+      use: "Utiliser"
+      take: "Prendre"
+      drop: "Lâcher"
+      cancel: "Annuler"
+      equip: "Équiper"
+      unequip: "Déséquiper"
+      unload: "Décharger"
+      load: "Charger"
+      destroy: "Détruire"
+  ui:
+    item:
+      destroy_title: "Détruire l'objet"
+      destroy_message: "Voulez-vous vraiment détruire {item} ? Cette action est irréversible."

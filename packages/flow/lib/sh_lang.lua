@@ -19,7 +19,7 @@
 --       "5": часов
 -- ```
 -- Which form a number takes is decided by the plural rule of the language. Flux has the rules
--- of English, which is also used for languages without a rule of their own, and of Russian;
+-- of English (also used for languages without a rule of their own), French and Russian;
 -- `Flux.Lang:set_plural_rule` adds others.
 --
 -- On the client the current language follows the `gmod_language` setting of the game, unless
@@ -56,6 +56,14 @@ local form_fallbacks    = { '5', '2', '1' }
 -- @return [String '1' or '2']
 plural_rules['en'] = function(count)
   return count == 1 and '1' or '2'
+end
+
+--- Plural rule of French: amounts below 2 take the '1' form, so 0, 1 and 1.5 are singular,
+-- and any other amount the '2' form.
+-- @param count [Number amount of things]
+-- @return [String '1' or '2']
+plural_rules['fr'] = function(count)
+  return math.abs(count) < 2 and '1' or '2'
 end
 
 --- Plural rule of Russian: '1' for amounts that end in 1 but not in 11 (1, 21, 101), '2' for

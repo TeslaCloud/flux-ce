@@ -1,0 +1,67 @@
+fr:
+  command:
+    whitelist:
+      description: "Gère les listes blanches de factions des joueurs."
+      add:
+        description: "Ajoute un joueur à la liste blanche d'une faction."
+        syntax: "<cible> <faction>"
+        message: "{player} a ajouté {target} à la liste blanche de la faction {faction}."
+      remove:
+        description: "Retire un joueur de la liste blanche d'une faction."
+        syntax: "<cible> <faction>"
+        message: "{player} a retiré {target} de la liste blanche de la faction {faction}."
+    setfaction:
+      description: "Change la faction d'un personnage. Factions : {factions}"
+      syntax: "<cible> <faction>"
+      message: "{player} a ajouté {target} à la faction {faction}."
+    rank:
+      description: "Change le grade des personnages dans leur faction."
+      set:
+        description: "Définit le grade d'un personnage dans sa faction, d'après son numéro, son ID ou son nom."
+        syntax: "<cible> <grade>"
+        message: "{player} a défini le grade de {target} dans sa faction : {rank}."
+      promote:
+        description: "Promeut un personnage dans sa faction."
+        syntax: "<cible>"
+        message: "{player} a promu {target} dans sa faction."
+      demote:
+        description: "Rétrograde un personnage dans sa faction."
+        syntax: "<cible>"
+        message: "{player} a rétrogradé {target} dans sa faction."
+  condition:
+    faction:
+      name: "Joueur d'une faction précise"
+      text: "Faction {operator} {faction}"
+      message: "Sélectionnez une faction"
+    rank:
+      name: "Joueur d'un certain grade dans une faction précise"
+      text: "Grade {faction} {operator} {rank}"
+      message: "Sélectionnez un grade"
+    factions: "Factions"
+    ranks: "Grades"
+  error:
+    faction:
+      invalid: "« {faction} » n'est pas une faction valide !"
+      not_selected: "Vous n'avez pas sélectionné de faction."
+      full: "La faction {faction} n'a plus de place pour un nouveau membre pour le moment."
+      rank_full: "Le grade {rank} de la faction de ce personnage n'a plus de place pour un nouveau membre pour le moment."
+      creation_refused: "Cette faction n'accepte pas ce personnage."
+      transfer_refused: "{target} ne peut pas être transféré dans la faction {faction}."
+      no_character: "{target} n'a pas de personnage."
+    rank:
+      cannot_promote: "Vous ne pouvez promouvoir aucun de ces joueurs."
+      cannot_demote: "Vous ne pouvez rétrograder aucun de ces joueurs."
+      not_found: "Aucune des factions de ces personnages n'a le grade « {rank} »."
+  notification:
+    demote_rank: "Vous avez été rétrogradé au grade {rank}."
+    promote_rank: "Vous avez été promu au grade {rank}."
+    faction_changed: "Votre faction est désormais {faction}."
+    rank_changed: "Votre grade dans la faction est désormais {rank}."
+    whitelist_taken: "Vous avez perdu l'accès à la faction {faction}."
+    whitelist_given: "Vous avez obtenu l'accès à la faction {faction}."
+  ui:
+    char_create:
+      faction: "Faction"
+      no_whitelist: "Vous n'avez pas accès à cette faction."
+      no_faction: "Vous n'avez pas choisi de faction."
+      faction_limit: "Vous ne pouvez plus avoir de personnages dans cette faction."

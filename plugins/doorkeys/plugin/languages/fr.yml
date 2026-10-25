@@ -1,0 +1,38 @@
+fr:
+  door:
+    properties:
+      keys_list:
+        name: "Paramètres des clés"
+        select: "Choisir une option..."
+        show: "Liste des clés"
+        create: "Créer une clé"
+        add: "Associer une clé existante"
+  item:
+    category:
+      keys: "Clés"
+    option:
+      create_key_copy: "Créer un double de la clé"
+    key:
+      print_name: "Clé"
+      description: "Une clé en métal ordinaire."
+    key_blank:
+      print_name: "Clé vierge"
+      description: "Un morceau de métal façonné qui, avec un kit de moulage, permet de reproduire n'importe quelle clé non tubulaire."
+    key_molding_kit:
+      print_name: "Kit de moulage de clés"
+      description: "Une petite boîte en plastique contenant des outils pour faire un double de clé. On y trouve de nombreux outils de moulage et un peu de pâte à empreinte."
+  notification:
+    key:
+      create: "Nouvelle clé créée"
+      remove: "La clé a été dissociée"
+      add: "La clé a été associée"
+  ui:
+    key:
+      title: "Clés"
+      delete:
+        title: "Dissocier la clé"
+        message: "Voulez-vous vraiment dissocier cette clé de la porte ?"
+      add:
+        title: "Associer une nouvelle clé"
+        message: "Choisissez une clé à associer."
+        select: "Choisir une clé..."

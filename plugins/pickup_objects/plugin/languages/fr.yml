@@ -1,0 +1,14 @@
+fr:
+  config:
+    pickup:
+      title: "Ramassage d'objets"
+      desc: "Porter, lancer et traîner des objets à la main."
+      max_mass:
+        name: "Masse maximale portée"
+        desc: "Le poids maximal, en kilogrammes, d'un objet qu'un joueur peut ramasser et porter à la main. Les plugins peuvent modifier cette limite pour chaque joueur."
+      throw_force:
+        name: "Force de lancer"
+        desc: "La force avec laquelle un objet porté est lancé. Mettez 0 pour désactiver le lancer."
+      drag_ragdolls:
+        name: "Traîner les ragdolls"
+        desc: "Indique si un ragdoll est traîné au sol par le membre saisi au lieu d'être porté, quel que soit son poids."

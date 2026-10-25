@@ -1,0 +1,38 @@
+fr:
+  condition:
+    steamid:
+      name: "Joueur avec un SteamID précis"
+      text: "SteamID {operator} {steam_id}"
+      message: "Saisissez le SteamID du joueur"
+    model:
+      name: "Joueur avec un modèle précis"
+      text: "Modèle {operator} {model}"
+      message: "Saisissez le chemin du modèle"
+    health:
+      name: "Joueur avec une certaine valeur de santé"
+      text: "Santé {operator} {health}"
+      message: "Saisissez la valeur de santé"
+    armor:
+      name: "Joueur avec une certaine valeur d'armure"
+      text: "Armure {operator} {armor}"
+      message: "Saisissez la valeur d'armure"
+    weapon:
+      name: "Joueur avec une arme précise en main"
+      text: "Classe de l'arme en main {operator} {weapon}"
+      message: "Saisissez la classe de l'arme"
+  ui:
+    condition:
+      select_operator: "<Choisir un opérateur>"
+      select_parameter: "<Choisir un paramètre>"
+      right_click: "Faites un clic droit ici pour ajouter une condition"
+      add_condition: "Ajouter une condition"
+      set_parameter: "Définir le paramètre..."
+      set_operator: "Définir l'opérateur..."
+      operators: "Opérateurs"
+      delete: "Supprimer la condition"
+      save:
+        title: "Enregistrement de la condition"
+        message: "Indiquez un nom de préréglage."
+      load:
+        title: "Chargement de la condition"
+        column: "Choisir un préréglage"

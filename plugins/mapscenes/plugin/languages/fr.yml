@@ -1,0 +1,12 @@
+fr:
+  notification:
+    mapscene:
+      point_added: "Point ajouté"
+  tool:
+    mapscene:
+      name: "Arrière-plan du menu principal"
+      desc: "Définit la position de la caméra du menu principal."
+      "0": "Clic gauche : ajouter un point"
+  ui:
+    mapscene:
+      title: "Scène de carte"

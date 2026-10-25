@@ -1,0 +1,46 @@
+fr:
+  command:
+    gmrelease:
+      description: "Cesse d'incarner le personnage de maître du jeu que vous possédez et revient au mode maître du jeu."
+    gmpossess:
+      description: "Prend possession d'un personnage de maître du jeu par son nom, là où vous vous trouvez."
+      syntax: "<nom du personnage>"
+  error:
+    gamemastery:
+      wait: "Veuillez patienter un instant avant de recommencer."
+      no_permission: "Vous n'êtes pas maître du jeu."
+      invalid_character: "Ce personnage de maître du jeu n'existe pas."
+      not_found: "Aucun personnage de maître du jeu ne s'appelle {name}."
+      ambiguous: "Plusieurs personnages de maître du jeu s'appellent {name}."
+      possessed: "{name} incarne déjà ce personnage."
+      banned: "Ce personnage est banni."
+      not_possessing: "Vous n'incarnez pas de personnage de maître du jeu."
+      no_spot: "Il n'y a pas de place pour le personnage à cet endroit."
+      delete_possessed: "Vous ne pouvez pas supprimer un personnage pendant que quelqu'un l'incarne."
+      own_character: "Les maîtres du jeu ne peuvent pas incarner leurs propres personnages."
+  notification:
+    gamemastery:
+      possessed: "Vous incarnez maintenant {name}."
+      released: "Vous avez libéré {name}."
+      placed: "{name} a été placé dans le monde."
+      deleted: "{player} a supprimé le personnage de maître du jeu {name}."
+  ui:
+    gamemastery:
+      tab_menu: "Maître du jeu"
+      title: "Personnages de maître du jeu"
+      hint: "Faites glisser un personnage dans le monde pour l'y placer. Appuyez sur votre touche d'utilisation sur un personnage placé pour en prendre possession."
+      drag_hint: "Relâchez pour le placer ici, clic droit pour annuler"
+      empty: "Il n'y a encore aucun personnage de maître du jeu. Créez-en depuis le menu principal."
+      possess: "Posséder"
+      release: "Libérer"
+      taken: "Incarné par {name}"
+      banned: "Banni"
+      in_world: "Dans le monde"
+      delete: "Supprimer"
+      delete_title: "Supprimer le personnage"
+      delete_message: "Tapez {name} pour supprimer définitivement ce personnage."
+      hud: "Mode maître du jeu"
+      use_hint: "Appuyez sur votre touche d'utilisation pour en prendre possession"
+      main_menu:
+        return: "Mode maître du jeu"
+        create: "Créer un personnage de maître du jeu"

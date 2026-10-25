@@ -1,0 +1,45 @@
+fr:
+  config:
+    screen_effects:
+      title: "Effets d'écran"
+      desc: "Configuration du plugin d'effets d'écran"
+      low_health:
+        name: "Autoriser l'effet de santé faible"
+        desc: "Autorise les couleurs à s'atténuer et l'image à devenir floue à mesure qu'un joueur perd de la santé, et l'écran à passer au gris à sa mort."
+      heartbeat:
+        name: "Autoriser les battements de cœur"
+        desc: "Autorise les joueurs à entendre des battements de cœur qui s'accélèrent à mesure que leur santé baisse."
+      underwater:
+        name: "Autoriser l'effet sous l'eau"
+        desc: "Autorise l'image à être floue et déformée quand la vue d'un joueur est sous l'eau."
+      headbob:
+        name: "Autoriser le balancement de la tête"
+        desc: "Autorise la vue à osciller quand un joueur marche ou court et à trembler quand il atterrit après une chute."
+  settings:
+    categories:
+      screen_effects: "Effets d'écran"
+    screen_effects:
+      low_health:
+        name: "Effet de santé faible"
+        desc: "Atténue les couleurs et rend l'image floue à mesure que votre santé baisse."
+        strength:
+          name: "Intensité de l'effet de santé faible"
+          desc: "Intensité de l'effet de santé faible, en pour cent."
+      heartbeat:
+        name: "Battements de cœur"
+        desc: "Joue des battements de cœur qui s'accélèrent à mesure que votre santé baisse."
+        strength:
+          name: "Volume des battements de cœur"
+          desc: "Volume des battements de cœur, en pour cent."
+      underwater:
+        name: "Effet sous l'eau"
+        desc: "Rend l'image floue et déformée quand vous êtes sous l'eau."
+        strength:
+          name: "Intensité de l'effet sous l'eau"
+          desc: "Intensité de l'effet sous l'eau, en pour cent."
+      headbob:
+        name: "Balancement de la tête"
+        desc: "Fait osciller la vue quand vous marchez ou courez et la fait trembler quand vous atterrissez après une chute."
+        strength:
+          name: "Intensité du balancement de la tête"
+          desc: "Intensité de l'oscillation et du tremblement à l'atterrissage, en pour cent."

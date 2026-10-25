@@ -1,0 +1,22 @@
+fr:
+  command:
+    static:
+      description: "Ajoute ou retire le statut statique de l'entité que vous regardez."
+      add:
+        description: "Rend statique l'entité que vous regardez."
+      remove:
+        description: "Retire le statut statique de l'entité que vous regardez."
+  error:
+    not_valid_entity: "Ce n'est pas une entité valide !"
+    cannot_static_this: "Vous ne pouvez pas rendre cette entité statique !"
+    already_static: "Cette entité est déjà statique !"
+    not_static: "Cette entité n'est pas statique !"
+  notification:
+    static:
+      added: "Vous avez ajouté une entité statique !"
+      removed: "Vous avez retiré cette entité statique !"
+  tool:
+    static:
+      name: "Ajout/retrait statique"
+      desc: "Ajoutez et retirez des entités statiques."
+      "0": "Clic gauche : ajouter, clic droit : retirer."

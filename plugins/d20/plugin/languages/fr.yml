@@ -1,0 +1,29 @@
+fr:
+  config:
+    d20:
+      title: "D20"
+      desc: "Dégâts aux dés, santé des PNJ, classe d'armure et jets d'attaque."
+      enabled:
+        name: "Dégâts aux dés"
+        desc: "Lance les dés pour les dégâts de chaque coup porté à un joueur ou à un PNJ au lieu d'utiliser les dégâts du moteur, lance les dégâts de chute et adapte la santé des PNJ."
+      default_dice:
+        name: "Dés de dégâts par défaut"
+        desc: "Formule de dés lancée pour un coup dont aucune arme, aucun PNJ ni aucun type de dégâts ne donne la formule et dont les dégâts du moteur sont de 0."
+      fall_dice:
+        name: "Dés des dégâts de chute"
+        desc: "Formule de dés des dégâts de chute. La variable steps vaut 1 pour la chute la plus lente qui blesse et augmente de 1 toutes les 150 unités par seconde de vitesse de chute. Le multiplicateur des dégâts de chute du plugin de dégâts s'applique toujours."
+      weapon_dice:
+        name: "Dés de dégâts des armes"
+        desc: "Entrées comme « weapon_pistol = 1d8 » qui définissent la formule de dés d'une classe d'arme ou de projectile, à la place de celle que lui donne le code."
+      npc_dice:
+        name: "Dés de dégâts des PNJ"
+        desc: "Entrées comme « npc_zombie = 1d8 » qui définissent la formule de dés des attaques d'une classe de PNJ, à la place de celle que lui donne le code. Un PNJ qui tient une arme lance les dés de cette arme."
+      npc_health_scale:
+        name: "Échelle de santé des PNJ"
+        desc: "Facteur par lequel la santé maximale d'un PNJ est multipliée à son apparition, pour qu'il résiste à peu près à autant de coups aux dés qu'il résisterait à des coups du moteur."
+      npc_armor_class:
+        name: "Classe d'armure des PNJ"
+        desc: "Classe d'armure d'un PNJ : le résultat qu'un jet d'attaque contre lui doit atteindre pour toucher."
+      npc_attack_bonus:
+        name: "Bonus d'attaque des PNJ"
+        desc: "Ce qu'un PNJ ajoute au d20 de ses jets d'attaque."

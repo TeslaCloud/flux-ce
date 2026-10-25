@@ -1,0 +1,61 @@
+fr:
+  command:
+    settime:
+      description: "Règle la date et l'heure du jeu. Indiquez une date, une heure ou les deux, par exemple 2020-01-01 08:00."
+      syntax: "[AAAA-MM-JJ] [HH:MM]"
+      message: "{player} a réglé l'heure du jeu sur {time}."
+  config:
+    gametime:
+      title: "Heure du jeu"
+      desc: "Paramètres de l'horloge et du calendrier du jeu."
+      minute_length:
+        name: "Durée d'une minute"
+        desc: "Nombre de secondes réelles que dure une minute du jeu. À 60, l'horloge du jeu avance aussi vite qu'une vraie."
+      start:
+        name: "Date de départ"
+        desc: "La date et l'heure à partir desquelles l'horloge du jeu démarre tant qu'aucune heure du jeu n'a été sauvegardée, au format AAAA-MM-JJ HH:MM."
+      real_time:
+        name: "Suivre l'heure réelle"
+        desc: "L'horloge du jeu affiche la date et l'heure réelles du serveur au lieu d'avancer par elle-même."
+  error:
+    gametime:
+      invalid: "Cette date est en dehors du calendrier du jeu."
+      invalid_format: "Ce n'est pas une date ou une heure valide. Écrivez-la au format AAAA-MM-JJ HH:MM, ou indiquez seulement la date ou seulement l'heure."
+      not_ready: "L'horloge du jeu n'a pas encore démarré."
+      real_time: "L'horloge du jeu suit l'heure réelle du serveur et ne peut pas être réglée."
+  gametime:
+    am: "AM"
+    pm: "PM"
+    format:
+      date: "{weekday} {day} {month} {year}"
+      date_short: "{day}/{month}/{year}"
+      date_time: "{date}, {time}"
+    months:
+      january: "janvier"
+      february: "février"
+      march: "mars"
+      april: "avril"
+      may: "mai"
+      june: "juin"
+      july: "juillet"
+      august: "août"
+      september: "septembre"
+      october: "octobre"
+      november: "novembre"
+      december: "décembre"
+    weekdays:
+      monday: "lundi"
+      tuesday: "mardi"
+      wednesday: "mercredi"
+      thursday: "jeudi"
+      friday: "vendredi"
+      saturday: "samedi"
+      sunday: "dimanche"
+  settings:
+    gametime:
+      clock:
+        name: "Afficher l'horloge du jeu"
+        desc: "Affiche la date et l'heure du jeu dans le coin supérieur droit du menu qu'ouvre la touche TAB."
+      twelve_hour:
+        name: "Horloge du jeu sur 12 heures"
+        desc: "Affiche l'heure du jeu au format 12 heures (5:05 PM) au lieu du format 24 heures (17:05)."

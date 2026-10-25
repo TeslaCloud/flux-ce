@@ -1,0 +1,135 @@
+fr:
+  command:
+    charsetname:
+      description: "Change le nom d'un personnage."
+      syntax: "<cible> <nouveau nom>"
+      message: "{player} a changé le nom de {target} en {name}."
+    charsetmodel:
+      description: "Change le modèle d'un personnage."
+      syntax: "<cible> <nouveau modèle>"
+      message: "{player} a changé le modèle de {target} en {model}."
+    charsetdesc:
+      description: "Change la description physique d'un personnage."
+      syntax: "<cible> <nouvelle description>"
+      message: "{player} a changé la description de {target} en {desc}."
+    charsetgender:
+      description: "Change le genre d'un personnage : male, female ou no_gender."
+      syntax: "<cible> <nouveau genre>"
+      message: "{player} a changé le genre de {target} en {gender}."
+    charban:
+      description: "Bannit et débannit des personnages."
+      add:
+        description: "Bannit le personnage actif d'un joueur."
+        syntax: "<cible>"
+        message: "{player} a banni le personnage {target}."
+      remove:
+        description: "Débannit un personnage d'après son nom complet, même si son joueur n'est pas connecté."
+        syntax: "<nom du personnage>"
+        message: "{player} a débanni le personnage {target}."
+    charphysdesc:
+      description: "Change la description physique de votre personnage."
+      syntax: "[nouvelle description]"
+  condition:
+    character:
+      name: "Personnage précis"
+      text: "Personnage {operator} {character}"
+      message: "Sélectionnez un personnage"
+    characters: "Personnages"
+  config:
+    character:
+      title: "Personnage"
+      desc: "Paramètres du système de personnages."
+      min_name_len:
+        name: "Longueur minimale du nom"
+        desc: "La longueur minimale du nom du personnage."
+      max_name_len:
+        name: "Longueur maximale du nom"
+        desc: "La longueur maximale du nom du personnage."
+      min_desc_len:
+        name: "Longueur minimale de la description"
+        desc: "La longueur minimale de la description physique du personnage."
+      max_desc_len:
+        name: "Longueur maximale de la description"
+        desc: "La longueur maximale de la description physique du personnage."
+      limit:
+        name: "Limite de personnages"
+        desc: "Le nombre maximal de personnages qu'un joueur peut avoir."
+  error:
+    character:
+      invalid: "Vous n'avez pas ce personnage."
+      banned: "Ce personnage est banni."
+      already_active: "Vous jouez déjà ce personnage."
+      cannot_use: "Vous ne pouvez pas charger ce personnage pour le moment."
+      cannot_switch: "Vous ne pouvez pas changer de personnage pour le moment."
+      cannot_delete: "Vous ne pouvez pas supprimer ce personnage."
+      switch_dead: "Vous ne pouvez pas changer de personnage pendant que vous êtes mort."
+      switch_ragdolled: "Vous ne pouvez pas changer de personnage pendant que vous êtes à terre."
+      delete_active: "Vous ne pouvez pas supprimer le personnage que vous jouez."
+      delete_banned: "Vous ne pouvez pas supprimer un personnage banni."
+      name_taken: "Le nom « {name} » est déjà pris par un autre personnage."
+      nobody_to_ban: "Aucun de ces joueurs n'a de personnage qui pourrait être banni."
+      not_found: "Il n'y a aucun personnage nommé « {name} »."
+      not_banned: "Le personnage « {name} » n'est pas banni."
+  notification:
+    name_changed: "Le nom de votre personnage a été changé en {name}."
+    model_changed: "Le modèle de votre personnage a été changé en {model}."
+    desc_changed: "La description de votre personnage a été changée en {desc}."
+    gender_changed: "Le genre de votre personnage a été changé en {gender}."
+    character_banned: "Votre personnage {name} a été banni. Choisissez un autre personnage."
+  permission:
+    categories:
+      character_management: "Gestion des personnages"
+  ui:
+    gender:
+      male: "Masculin"
+      female: "Féminin"
+      no_gender: "Sans genre"
+    hud:
+      loading:
+        characters: "Chargement des personnages, veuillez patienter..."
+    main_menu:
+      disconnect: "Se déconnecter"
+      disconnect_msg: "Voulez-vous vraiment vous déconnecter de ce serveur ?"
+      continue: "Continuer"
+      developed_by: "Développé par {author}."
+    char_create:
+      title: "CRÉER UN PERSONNAGE"
+      text: "CRÉATION DE PERSONNAGE"
+      create: "CRÉER"
+      load: "CHARGER UN PERSONNAGE"
+      select: "Sélectionner"
+      delete: "Supprimer"
+      general: "Informations générales du personnage"
+      name: "Nom complet :"
+      random_name: "Nom aléatoire."
+      desc: "Description :"
+      gender: "Genre :"
+      skin: "Skin"
+      back: "RETOUR"
+      next: "SUIVANT"
+      main_menu: "MENU PRINCIPAL"
+      confirm: "Créer le personnage"
+      confirm_msg: "Voulez-vous vraiment créer ce personnage ?"
+      delete_confirm: "Supprimer le personnage"
+      delete_confirm_msg: "Saisissez le nom de votre personnage pour confirmer sa suppression : {name}"
+      banned: "Banni"
+      limit: "Vous ne pouvez pas avoir plus de {limit} personnages."
+      name_taken: "Un autre personnage porte déjà ce nom."
+      name_invalid: "Nom invalide."
+      name_len: "Le nom de votre personnage doit comporter entre {min} et {max} caractères."
+      desc_invalid: "Description physique invalide."
+      desc_len: "La description physique de votre personnage doit comporter entre {min} et {max} caractères."
+      unknown_error: "Erreur inconnue. Luna a sûrement encore fait une bêtise."
+      no_gender: "Vous devez sélectionner un genre."
+      no_model: "Vous devez sélectionner un modèle."
+      error:
+        fatal: "Quelque chose s'est probablement mal passé, essayez de vous reconnecter."
+        critical: "Le serveur rencontre peut-être des problèmes de connexion, veuillez patienter..."
+        lag: "La requête prend un peu de temps, patientez..."
+        record: "ActiveRecord a encore planté, essayez de vous reconnecter ou de redémarrer votre serveur..."
+    char_desc:
+      title: "Description physique"
+      message: "Décrivez l'apparence de votre personnage, en {min} à {max} caractères."
+      confirm: "Modifier"
+    tab_menu:
+      main_menu: "Menu principal"

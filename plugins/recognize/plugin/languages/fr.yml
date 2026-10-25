@@ -1,0 +1,60 @@
+fr:
+  command:
+    charforget:
+      description: "Fait oublier à un personnage les personnages d'autres joueurs."
+      syntax: "<cible> <personnage à oublier>"
+      message: "{player} a fait oublier {forgotten} à {target}."
+    charclearrecognition:
+      description: "Efface les reconnaissances d'un personnage : les personnages qu'il connaît (own), les personnages qui le connaissent (others) ou les deux (all)."
+      syntax: "<cible> [own|others|all]"
+      message:
+        own: "{player} a fait oublier tout le monde à {target}."
+        others: "{player} a fait oublier {target} à tout le monde."
+        all: "{player} a fait oublier tout le monde à {target} et {target} à tout le monde."
+  config:
+    recognize:
+      title: "Reconnaissance"
+      desc: "Paramètres du système de reconnaissance des personnages."
+      enabled:
+        name: "Système de reconnaissance"
+        desc: "Indique si les personnages doivent se présenter avant que les autres connaissent leur nom. Une fois désactivé, tout le monde reconnaît tout le monde."
+      must_see:
+        name: "Présentations à vue uniquement"
+        desc: "Indique si un personnage n'apprend le nom de quelqu'un qui se présente que si rien ne bloque la vue entre eux."
+      forget_on_death:
+        name: "Tout oublier à la mort"
+        desc: "Indique si un personnage qui meurt oublie tous les personnages qu'il reconnaissait."
+      forgotten_on_death:
+        name: "Être oublié à la mort"
+        desc: "Indique si un personnage qui meurt est oublié de tous ceux qui le connaissaient sous son vrai nom. Ceux qui ne connaissaient qu'un faux nom le gardent."
+  error:
+    recognize:
+      invalid_name: "Vous ne pouvez pas vous présenter sous ce nom."
+      no_character: "Aucun de ces joueurs n'a de personnage chargé."
+      nothing_to_forget: "Aucun de ces personnages ne connaît les personnages à oublier."
+  notification:
+    recognize:
+      new_name: "Vous avez retenu un nouveau nom : {name}"
+      change_name: "Vous connaissez désormais {name} sous le nom de {new_name}"
+      true_name: "Vous vous êtes présenté sous le nom de {name} (vrai nom)"
+      false_name: "Vous vous êtes présenté sous le nom de {name} (faux nom)"
+      forgotten: "Vous ne vous souvenez plus de {name}."
+      forgot_everyone: "Vous ne vous souvenez plus de personne parmi ceux que vous connaissiez."
+  ui:
+    hud:
+      stranger_male: "Inconnu"
+      stranger_female: "Inconnue"
+    recognize:
+      title: "Reconnaissance"
+      message: "Sous quel nom voulez-vous que les autres vous connaissent ?"
+      character_name: "Vrai nom"
+      fake_name: "Faux nom"
+      enter_fake_name: "Saisissez un faux nom..."
+      forget: "Oublier"
+      range: "Portée"
+      previous_names: "Vous êtes aussi connu sous le nom de"
+      types:
+        whisper: "Tous les personnages à portée de chuchotement"
+        talk: "Tous les personnages à portée de voix"
+        yell: "Tous les personnages à portée de cri"
+        target: "Le personnage que vous regardez"

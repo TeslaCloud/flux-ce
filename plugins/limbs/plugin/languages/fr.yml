@@ -1,0 +1,45 @@
+fr:
+  command:
+    heallimbs:
+      description: "Soigne tous les membres du personnage d'un joueur."
+      syntax: "<cible>"
+      message: "{player} a soigné les membres de {target}."
+      notification: "Vos membres ont été soignés."
+  config:
+    limbs:
+      title: "Dégâts aux membres"
+      desc: "Paramètres des dégâts aux membres."
+      enabled:
+        name: "Dégâts aux membres"
+        desc: "Suit les dégâts par partie du corps. Désactivé, aucun membre ne subit de dégâts, les membres blessés n'ont aucun effet et le schéma du corps est masqué."
+      damage_scale:
+        name: "Échelle des dégâts aux membres"
+        desc: "Dégâts que subit un membre pour chaque pour cent de santé maximale que le joueur perd à cause d'un coup sur ce membre. À 1, un coup qui retire un quart de la santé maximale inflige 25 points de dégâts au membre. Un membre est estropié à 100."
+      legs_slow:
+        name: "Les jambes blessées ralentissent"
+        desc: "Des jambes blessées ralentissent la course et réduisent la hauteur des sauts, jusqu'à la moitié pour une jambe estropiée."
+      fall_damage:
+        name: "Les chutes blessent les jambes"
+        desc: "Répartit les dégâts de chute entre les deux jambes."
+      arms_sway:
+        name: "Les bras blessés font dévier la visée"
+        desc: "Des bras blessés font dériver la visée de l'arme en main."
+      recovery:
+        name: "Récupération des membres"
+        desc: "Dégâts que chaque membre blessé récupère de lui-même par minute. 0 pour que les membres ne guérissent que par des soins ou la mort."
+  settings:
+    limbs_hud:
+      name: "Schéma du corps"
+      desc: "Quand afficher le schéma de vos membres sur le HUD."
+      hurt: "En cas de blessure"
+      always: "Toujours"
+      never: "Jamais"
+  ui:
+    limbs:
+      head: "Tête"
+      chest: "Torse"
+      stomach: "Ventre"
+      left_arm: "Bras gauche"
+      right_arm: "Bras droit"
+      left_leg: "Jambe gauche"
+      right_leg: "Jambe droite"

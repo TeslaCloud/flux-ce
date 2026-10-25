@@ -1,0 +1,37 @@
+fr:
+  notification:
+    3d_text:
+      text_added: "Vous avez ajouté un texte 3D."
+      text_removed: "Vous avez supprimé un texte 3D."
+    3d_picture:
+      placed: "Image placée."
+      removed: "Image supprimée."
+  tool:
+    texts:
+      name: "Outil de texte"
+      desc: "Ajoute des textes 3D sur les surfaces."
+      "0": "Clic gauche : ajouter un texte, clic droit : supprimer un texte."
+      text: "Texte"
+      style: "Style"
+      color: "Couleur"
+      extra_color: "Couleur secondaire"
+      scale: "Taille du texte"
+      fade: "Décalage de la distance de fondu"
+      opt1: "Texte normal"
+      opt2: "Texte avec ombre lointaine seule"
+      opt3: "Texte avec ombre noire seule"
+      opt4: "Texte avec les deux ombres"
+      opt5: "Texte dans un cadre"
+      opt6: "Texte dans un cadre clignotant"
+      opt7: "Texte dans un cadre (style 2)"
+      opt8: "Texte dans un cadre (style 3)"
+      opt9: "Texte dans un cadre (style 4)"
+      opt91: "Texte dans un cadre (flou)"
+    pictures:
+      name: "Outil de placement d'images"
+      desc: "Ajoute des images sur les surfaces 3D."
+      "0": "Clic gauche : ajouter une image, clic droit : supprimer une image."
+      url: "URL"
+      width: "Largeur"
+      height: "Hauteur"
+      fade: "Décalage de la distance de fondu"

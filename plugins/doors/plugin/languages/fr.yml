@@ -1,0 +1,133 @@
+fr:
+  config:
+    doors:
+      title: "Portes"
+      desc: "Paramètres de propriété et de verrouillage des portes."
+      price:
+        name: "Prix des portes"
+        desc: "Le prix d'une porte achetable, sauf si l'équipe lui a donné un prix propre. Mettez 0 pour rendre les portes gratuites."
+      sell_share:
+        name: "Part de revente des portes"
+        desc: "Le pourcentage du prix payé pour une porte que son propriétaire récupère en la revendant."
+      limit:
+        name: "Limite de portes"
+        desc: "Combien de portes un personnage peut posséder, les portes liées comptant pour une seule. Mettez 0 pour supprimer la limite."
+      lock_time:
+        name: "Durée de verrouillage"
+        desc: "Combien de secondes il faut pour verrouiller une porte. Mettez 0 pour verrouiller les portes immédiatement."
+      unlock_time:
+        name: "Durée de déverrouillage"
+        desc: "Combien de secondes il faut pour déverrouiller une porte. Mettez 0 pour déverrouiller les portes immédiatement."
+      text_length:
+        name: "Longueur du texte des portes"
+        desc: "La longueur maximale, en caractères, du texte que le propriétaire d'une porte peut y afficher."
+      access_entries:
+        name: "Accès par porte"
+        desc: "À combien de personnages on peut donner accès à une même porte, les portes liées comptant pour une seule."
+  door:
+    categories:
+      general: "Général"
+      ownership: "Propriété"
+    properties:
+      name: "Nom"
+      title_type:
+        name: "Type de titre"
+        select: "Sélectionner..."
+      locked: "Verrouillée"
+      ownable: "Peut être possédée"
+      price: "Prix (vide pour le prix par défaut)"
+    title_type:
+      none: "Désactivé"
+      center: "Centré"
+  error:
+    door:
+      not_a_door: "Ce n'est pas une porte !"
+      too_far: "Vous êtes trop loin de la porte !"
+      not_ownable: "Cette porte ne peut pas être possédée !"
+      already_owned: "Cette porte a déjà un propriétaire !"
+      not_owned: "Personne ne possède cette porte !"
+      not_owner: "Vous ne possédez pas cette porte !"
+      no_access: "Vous n'êtes pas autorisé à gérer cette porte !"
+      owner_only: "Seul le propriétaire de la porte peut faire cela !"
+      limit: "Vous ne pouvez pas posséder plus de portes, la limite est de {limit} !"
+      cant_afford: "Vous n'avez pas les moyens d'acheter cette porte, elle coûte {value} {currency} !"
+      cannot_buy: "Vous ne pouvez pas acheter cette porte !"
+      cannot_sell: "Vous ne pouvez pas vendre cette porte !"
+      cannot_change_access: "Vous ne pouvez pas modifier l'accès à cette porte !"
+      invalid_character: "Ce personnage ne peut pas recevoir ou perdre l'accès !"
+      invalid_text: "Ce texte ne peut pas être affiché sur une porte !"
+      access_full: "Trop de personnages ont déjà accès à cette porte !"
+      already_linked: "Ces portes sont déjà liées !"
+      not_linked: "Cette porte n'est liée à aucune autre !"
+      link_owned: "Une porte qui a un propriétaire ne peut pas être liée. Déliez-la ou expulsez d'abord le propriétaire !"
+  notification:
+    door:
+      bought: "Vous avez acheté la porte pour {value} {currency}."
+      taken: "La porte est désormais à vous."
+      sold: "Vous avez vendu la porte pour {value} {currency}."
+      abandoned: "Vous ne possédez plus la porte."
+      evicted: "Vous avez perdu la propriété d'une porte."
+      evict_done: "Le propriétaire de la porte a été expulsé."
+      text_set: "Le texte de la porte a été modifié."
+      access:
+        use: "{name} peut désormais verrouiller et déverrouiller la porte."
+        manage: "{name} peut désormais gérer la porte."
+        none: "{name} n'a plus accès à la porte."
+      access_received:
+        use: "Vous avez été autorisé à verrouiller et déverrouiller une porte."
+        manage: "Vous avez été autorisé à gérer une porte."
+        none: "Votre accès à une porte vous a été retiré."
+      link_picked: "Porte principale choisie. Faites un clic gauche sur les portes à y lier."
+      linked: "La porte a été liée. Portes du groupe : {count}."
+      unlinked: "La porte a été déliée."
+      link_cleared: "La porte choisie a été oubliée."
+  tool:
+    door_link:
+      name: "Liaison de portes"
+      desc: "Liez des portes en groupes qui sont possédés ensemble."
+      "0": "Clic gauche : choisir la porte principale, puis y lier des portes. Clic droit : délier. Recharger : oublier la porte choisie."
+  ui:
+    door:
+      title: "Portes"
+      unlock: "Déverrouiller"
+      lock: "Verrouiller"
+      settings: "Paramètres"
+      price: "{value} {currency}"
+      buy: "Acheter ({price})"
+      buy_message: "Voulez-vous acheter cette porte pour {price} ?"
+      take: "Prendre possession"
+      take_message: "Voulez-vous devenir le propriétaire de cette porte ?"
+      manage: "Gérer"
+      evict: "Expulser le propriétaire ({name})"
+      evict_message: "Voulez-vous retirer cette porte à son propriétaire ? Rien ne sera remboursé."
+      status:
+        for_sale: "À vendre : {price}"
+        free: "Disponible"
+        owned: "Possédée"
+      access:
+        none: "Aucun accès"
+        use: "Verrouiller et déverrouiller"
+        manage: "Verrouiller, déverrouiller et gérer"
+        give_use: "Autoriser à verrouiller et déverrouiller"
+        give_manage: "Autoriser à gérer"
+        take: "Retirer l'accès"
+      management:
+        title: "Gestion de la porte"
+        you_own: "Vous possédez cette porte."
+        owner: "Propriétaire : {name}"
+        group: "Cette porte est liée à d'autres. Tout ce qui est ici s'applique à toutes."
+        text: "Texte sur la porte"
+        save: "Définir le texte"
+        character: "Personnage"
+        access: "Accès"
+        away: "{name} (absent)"
+        hint: "Faites un clic droit ou un double-clic sur un personnage pour modifier son accès."
+        sell: "Vendre ({price})"
+        abandon: "Abandonner la porte"
+        sell_title: "Vendre la porte"
+        sell_message: "Voulez-vous vendre cette porte pour {price} ?"
+        abandon_message: "Voulez-vous abandonner cette porte ? Vous ne recevrez rien en échange."
+    hud:
+      bar_text:
+        lock_door: "VERROUILLAGE DE LA PORTE..."
+        unlock_door: "DÉVERROUILLAGE DE LA PORTE..."

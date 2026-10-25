@@ -1,0 +1,29 @@
+fr:
+  config:
+    area_display:
+      title: "Affichage des zones"
+      desc: "Configuration du plugin d'affichage des zones"
+      cooldown:
+        name: "Délai entre les annonces de zone"
+        desc: "Le nombre de secondes qui doivent s'écouler avant que l'annonce d'une même zone soit de nouveau montrée à un joueur. 0 l'affiche chaque fois que le joueur entre dans la zone."
+  notification:
+    area_display:
+      updated: "Vous avez mis à jour l'affichage de la zone « {text} »."
+  settings:
+    area_display:
+      name: "Afficher les annonces de zone"
+      desc: "Affiche le nom d'une zone à l'écran lorsque vous y entrez."
+  tool:
+    area_display:
+      title: "Zone de texte"
+      desc: "Crée une zone qui annonce son texte aux joueurs qui y entrent. Clic droit sans zone en cours de création : appliquer le style et le réglage d'affichage unique à la zone de texte que vous regardez."
+      text: "Texte"
+      height: "Hauteur"
+      style: "Style d'affichage"
+      once: "N'afficher qu'une fois à chaque joueur"
+  ui:
+    area_display:
+      styles:
+        fade: "Titre en fondu"
+        typewriter: "Machine à écrire"
+        cinematic: "Cinématique"

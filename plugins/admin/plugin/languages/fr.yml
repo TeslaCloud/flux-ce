@@ -1,0 +1,311 @@
+fr:
+  command:
+    announce:
+      description: "Affiche une annonce à tout le serveur."
+      syntax: "<texte>"
+    ban:
+      description: "Bannit des joueurs et lève des bannissements."
+      add:
+        description: "Bannissez-moi ce vaurien ! Un Steam ID permet de bannir quelqu'un qui n'est pas sur le serveur."
+        syntax: "<cible ou Steam ID> <durée> [raison]"
+        message: "{player} a banni {target} pendant {time}. ({reason})."
+        message_permanent: "{player} a banni {target} définitivement. ({reason})."
+      remove:
+        description: "Lève le bannissement d'un Steam ID."
+        syntax: "<Steam ID>"
+        message: "{player} a débanni {target}."
+    bots:
+      description: "Ajoute, expulse, gèle et dégèle des bots."
+      add:
+        description: "Ajoute le nombre de bots indiqué au serveur."
+        syntax: "[quantité]"
+        message:
+          "1": "{player} a ajouté {amount} bot au serveur."
+          "2": "{player} a ajouté {amount} bots au serveur."
+      kick:
+        description: "Expulse tous les bots."
+        message: "{player} a expulsé tous les bots."
+      freeze:
+        description: "Gèle tous les bots."
+        message: "{player} a gelé tous les bots."
+      unfreeze:
+        description: "Dégèle tous les bots."
+        message: "{player} a dégelé tous les bots."
+    changelevel:
+      description: "Change de niveau pour la carte indiquée."
+      syntax: "<carte> [délai]"
+      message: "{player} change de niveau pour {map} dans {delay} seconde(s) !"
+    freeze:
+      description: "Gèle des joueurs sur place ou les dégèle."
+      "on":
+        description: "Gèle un joueur."
+        syntax: "<cible>"
+        message: "{player} a gelé {target}."
+      "off":
+        description: "Dégèle un joueur."
+        syntax: "<cible>"
+        message: "{player} a dégelé {target}."
+    fullbright:
+      description: "Active ou désactive pour un joueur le mode pleine lumière, qui ignore l'éclairage de la carte."
+      "on":
+        description: "Active le mode pleine lumière pour un joueur."
+        syntax: "<cible>"
+        message: "{player} a activé le mode pleine lumière pour {target}."
+      "off":
+        description: "Désactive le mode pleine lumière pour un joueur."
+        syntax: "<cible>"
+        message: "{player} a désactivé le mode pleine lumière pour {target}."
+    godmode:
+      description: "Active ou désactive le mode dieu pour un joueur."
+      "on":
+        description: "Active le mode dieu pour un joueur."
+        syntax: "<cible>"
+        message: "{player} a activé le mode dieu pour {target}."
+      "off":
+        description: "Désactive le mode dieu pour un joueur."
+        syntax: "<cible>"
+        message: "{player} a désactivé le mode dieu pour {target}."
+    kick:
+      description: "Expulse un joueur du serveur."
+      syntax: "<cible> [raison]"
+      message: "{player} a expulsé {target} ({reason})."
+    permission:
+      description: "Gère les permissions définies individuellement pour des joueurs."
+      grant:
+        description: "Accorde une permission à un joueur, définitivement ou pour la durée indiquée."
+        syntax: "<cible> <permission> [durée]"
+        message: "{player} a accordé la permission {permission} à {target}."
+        message_temporary: "{player} a accordé la permission {permission} à {target} pendant {time}."
+      revoke:
+        description: "Refuse une permission à un joueur, définitivement ou pour la durée indiquée."
+        syntax: "<cible> <permission> [durée]"
+        message: "{player} a refusé la permission {permission} à {target}."
+        message_temporary: "{player} a refusé la permission {permission} à {target} pendant {time}."
+      reset:
+        description: "Retire ce qui a été défini pour une permission d'un joueur, afin que son rôle en décide à nouveau."
+        syntax: "<cible> <permission>"
+        message: "{player} a réinitialisé la permission {permission} de {target}."
+      list:
+        description: "Liste les permissions définies individuellement pour un joueur."
+        syntax: "<cible>"
+        role: "{target} a le rôle {role}."
+        allowed: "Accordées à {target} : {permissions}."
+        denied: "Refusées à {target} : {permissions}."
+        temporary_allowed: "Accordée temporairement à {target} : {permission} ({time} restant)."
+        temporary_denied: "Refusée temporairement à {target} : {permission} ({time} restant)."
+        none: "{target} n'a aucune permission qui lui soit propre."
+    respawn:
+      description: "Fait réapparaître un joueur là où il se trouve, ou là où vous regardez."
+      syntax: "<cible> [stay / tp]"
+      message: "{player} a fait réapparaître {target}."
+    restart:
+      description: "Redémarre la carte actuelle."
+      syntax: "[délai]"
+      message: "{player} redémarre la carte dans {delay} seconde(s) !"
+    return:
+      description: "Ramène un joueur à la position où il se trouvait avant d'être téléporté."
+      syntax: "<cible>"
+      message: "{player} a ramené {target} à sa position précédente."
+    role:
+      description: "Attribue et retire les rôles des joueurs."
+      set:
+        description: "Attribue un rôle à un joueur. Rôles : {groups}"
+        syntax: "<cible> <rôle>"
+        message: "{player} a attribué le rôle {group} à {target}."
+      remove:
+        description: "Remet le rôle d'un joueur à utilisateur. Un Steam ID permet de rétrograder quelqu'un qui n'est pas sur le serveur."
+        syntax: "<cible ou Steam ID>"
+        message: "{player} a rétrogradé {target} au rang d'utilisateur."
+    send:
+      description: "Téléporte un joueur auprès d'un autre joueur."
+      syntax: "<cible> <joueur de destination>"
+      message: "{player} a téléporté {target} auprès de {destination}."
+    slay:
+      description: "Tue un joueur."
+      syntax: "<cible>"
+      message: "{player} a tué {target}."
+    staff:
+      description: "Parler aux autres membres de l'équipe."
+      syntax: "<message>"
+    tp:
+      description: "Téléporte le joueur à l'endroit que vous regardez."
+      syntax: "<cible>"
+      message: "{player} a téléporté {target}."
+    tpto:
+      description: "Vous téléporte à la position de la cible."
+      syntax: "<cible>"
+      message: "{player} s'est téléporté auprès de {target}."
+    vanish:
+      description: "Rend un joueur complètement invisible pour tous les autres joueurs du serveur, ou le rend de nouveau visible."
+      "on":
+        description: "Rend un joueur invisible pour tous, sauf pour l'équipe."
+        syntax: "<cible>"
+        message: "{target} a été rendu invisible par {player}."
+      "off":
+        description: "Rend un joueur invisible de nouveau visible pour tous."
+        syntax: "<cible>"
+        message: "{target} a été rendu visible par {player}."
+    warn:
+      description: "Avertit un joueur."
+      syntax: "<cible> [raison]"
+      message: "{player} a averti {target} pour {reason}."
+  condition:
+    role:
+      name: "Joueur ayant un rôle précis"
+      text: "Rôle {operator} {role}"
+      message: "Sélectionnez un rôle"
+    roles: "Rôles"
+  config:
+    admin:
+      title: "Administration"
+      desc: "Paramètres du mod d'administration."
+      ban_message_language:
+        name: "Langue du message de bannissement"
+        desc: "Code de la langue (comme en, fr ou ru) du message que lisent les joueurs bannis lorsqu'ils essaient de se connecter."
+  error:
+    already_user: "{target} est déjà utilisateur."
+    banned:
+      temporary: "Vous êtes banni de ce serveur. Raison : {reason}. Le bannissement prend fin dans {time}."
+      permanent: "Vous êtes banni définitivement de ce serveur. Raison : {reason}."
+    group_not_valid: "« {group} » n'est pas un groupe d'utilisateurs valide !"
+    map_not_valid: "Le serveur n'a aucune carte nommée « {map} » !"
+    not_banned: "Le Steam ID « {steam_id} » n'est pas banni !"
+    no_permission: "Vous n'avez pas la permission de faire cela."
+    permission_not_set: "Rien n'est défini pour la permission {permission} de ces joueurs."
+    permission_not_valid: "« {permission} » n'est pas une permission valide !"
+    permission_not_yours: "Vous ne pouvez pas accorder ni refuser la permission {permission}, car vous ne l'avez pas vous-même."
+    plugin:
+      admin: "Le plugin d'administration ne peut pas être désactivé depuis son propre menu."
+    send_same: "Un joueur ne peut pas être envoyé auprès de lui-même."
+    slay: "Aucun de ces joueurs n'est en vie."
+    user_not_found: "Personne avec le Steam ID « {steam_id} » ne s'est jamais connecté à ce serveur."
+  notification:
+    announcement: "[Annonce] {text}"
+    demote: "Vous avez été rétrogradé de {group} au rang d'utilisateur."
+    fullbright:
+      enabled: "Mode pleine lumière activé."
+      disabled: "Mode pleine lumière désactivé."
+    permission:
+      granted: "La permission {permission} vous a été accordée."
+      revoked: "La permission {permission} vous a été refusée."
+      reset: "Votre permission {permission} a été réinitialisée selon ce que permet votre rôle."
+    plugin_disabled: "{player} a désactivé le plugin {plugin}. Il reste chargé jusqu'au redémarrage du serveur."
+    plugin_enabled: "{player} a activé le plugin {plugin}. Il sera chargé après le redémarrage du serveur."
+    return: "Vous avez été ramené à votre position précédente."
+    setgroup: "Votre groupe d'utilisateurs est désormais {group}."
+    slay: "Vous avez été tué par {player}."
+    tp: "Vous avez été téléporté."
+    vanish:
+      enabled: "Vous êtes maintenant invisible."
+      disabled: "Vous êtes de nouveau visible."
+    freeze: "Vous avez été gelé par {player}."
+    unfreeze: "Vous avez été dégelé par {player}."
+    warn: "Vous avez reçu un avertissement pour {reason}."
+    godmode:
+      enabled: "Mode dieu activé."
+      disabled: "Mode dieu désactivé."
+    respawn: "{player} vous a fait réapparaître."
+    config_changed: "{player} a changé la valeur du paramètre {config} en {value}."
+    config_changed_restart: "{player} a changé la valeur du paramètre {config} en {value}. La modification prendra effet après le redémarrage du serveur."
+  permission:
+    categories:
+      administration: "Administration"
+      tools: "Outils"
+      spawn: "Apparition"
+      general: "Général"
+      misc: "Divers"
+      level_design: "Level design"
+      server_management: "Gestion du serveur"
+      player_management: "Gestion des joueurs"
+      configuration: "Configuration"
+      compatibility: "Compatibilité"
+    manage_plugins:
+      name: "Gestionnaire de plugins"
+      description: "Permet d'activer et de désactiver des plugins."
+  role:
+    user: "Le rang de base, attribué automatiquement au joueur."
+    assistant: "Un rang de l'équipe disposant des outils de modération de base, comme l'expulsion, le bannissement, l'invisibilité et le noclip."
+    gamemaster: "Un rang de confiance de l'équipe qui anime le monde du jeu, avec les outils d'apparition, d'objets, d'argent et de level design."
+    admin: "Le rang le plus élevé de l'équipe, avec accès à tout, y compris la configuration, les permissions et les plugins."
+  ui:
+    hud:
+      vanish: "Vous êtes invisible"
+    admin:
+      player_management: "Gestion des joueurs"
+      players: "Joueurs"
+      role: "Rôle"
+      allow_all: "Tout accorder"
+      no_all: "« Non » pour tout"
+      never_all: "Tout interdire"
+      expires: "Expire dans"
+      loading: "Chargement..."
+      temp_permission:
+        title: "Accorder une permission temporaire"
+        message: "Indiquez la durée de la permission. Si la permission est déjà accordée, cette durée s'y ajoute. Laissez vide pour retirer la permission temporaire."
+      selector:
+        title: "Changement du rôle du joueur"
+        message: "Sélectionnez un nouveau rôle."
+        roles: "Rôles"
+      config_editor: "Éditeur de configuration"
+      new_config: "Ajouter une valeur au tableau"
+      new_config_text: "Saisissez une nouvelle valeur."
+      delete_config: "Supprimer une valeur du tableau"
+      delete_config_text: "Voulez-vous vraiment supprimer cette valeur ?"
+      config:
+        reset: "Rétablir la valeur par défaut"
+        static: "Ce paramètre est défini dans les fichiers du serveur et ne peut pas être modifié en jeu."
+        reveal: "Afficher ou masquer la valeur"
+        needs_restart: "Les modifications de ce paramètre prennent effet après le redémarrage du serveur."
+        pending: "D'ici là, sa valeur est : {value}"
+        select: "Sélectionnez une valeur"
+      bans:
+        title: "Bannissements"
+        search: "Rechercher par nom, Steam ID ou raison"
+        page:
+          "1": "Page {page} sur {pages} ({count} bannissement)"
+          "2": "Page {page} sur {pages} ({count} bannissements)"
+        empty: "Aucun bannissement à afficher."
+        permanent: "Définitif"
+        expired: "Expiré"
+        banned_by: "banni par {admin}"
+        unban: "Débannir"
+        unban_message: "Voulez-vous vraiment débannir {name} ?"
+      staff:
+        title: "Équipe"
+        empty: "Personne n'a d'autre rôle qu'utilisateur."
+        online: "En ligne"
+        offline: "Hors ligne"
+        demote: "Rétrograder"
+        demote_message: "Voulez-vous vraiment rétrograder {name} de {role} au rang d'utilisateur ?"
+      plugins:
+        title: "Plugins"
+        notice: "L'activation ou la désactivation d'un plugin ne prend effet qu'après le redémarrage du serveur ou un changement de carte. D'ici là, un plugin désactivé reste chargé et un plugin activé reste inactif."
+        enabled: "Activé. Cliquez pour le désactiver."
+        disabled: "Désactivé. Cliquez pour l'activer."
+        author: "Auteur : {author}"
+        depends: "Dépend de : {plugins}"
+        required_by: "Requis par : {plugins}"
+        state:
+          loaded: "Chargé"
+          disabled: "Non chargé : désactivé"
+          dependency: "Non chargé : un plugin dont il dépend n'est pas disponible"
+          environment: "Non chargé : non prévu pour cet environnement"
+          unknown: "Non chargé"
+        restart:
+          disabled: "désactivé après le redémarrage"
+          enabled: "activé après le redémarrage"
+        force:
+          title: "Désactiver un plugin requis"
+          message: "{plugin} est requis par : {plugins}. Tout ce qui en dépend ne sera pas chargé non plus, et le schéma risque de ne plus fonctionner sans lui. Le désactiver quand même ?"
+          confirm: "Désactiver quand même"
+    cmd_desc:
+      usage: "Syntaxe :"
+      aliases: "Alias :"
+    permission:
+      not_set: "Non (hérité)"
+      allow: "Accorder"
+      never: "Révoquer"
+      error: "Permission invalide"
+    tab_menu:
+      admin: "Administration"
+    no_reason: "Raison non précisée"

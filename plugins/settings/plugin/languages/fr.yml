@@ -1,0 +1,18 @@
+fr:
+  settings:
+    categories:
+      general: "Général"
+      interface: "Interface"
+      gameplay: "Jouabilité"
+      chat: "Chat"
+      sound: "Son"
+      admin: "Administration"
+  ui:
+    tab_menu:
+      settings: "Options"
+    settings:
+      title: "Options"
+      empty: "Il n'y a encore aucune option à modifier."
+      reset: "Rétablir la valeur par défaut"
+      reset_all: "Tout rétablir"
+      reset_all_message: "Voulez-vous vraiment rétablir toutes ces options à leurs valeurs par défaut ?"

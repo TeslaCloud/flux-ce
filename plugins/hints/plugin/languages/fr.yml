@@ -1,0 +1,10 @@
+fr:
+  hint:
+    forums: "Vous pouvez visiter les forums de TeslaCloud pour obtenir de l'aide, télécharger des schémas et discuter avec d'autres utilisateurs de Flux !"
+    hints: "Ces astuces peuvent être désactivées dans l'onglet Options du menu."
+    tab: "Appuyez sur la touche « Afficher le tableau des scores » (par défaut : TAB) pour ouvrir le menu de Flux."
+    commands: "Commencez à taper une commande dans le chat pour voir la liste de toutes les commandes disponibles et l'aide sur leur syntaxe."
+    bugs: "Vous avez trouvé un bug ? Vous avez une idée que nous devrions absolument ajouter à Flux ? Rendez-vous sur nos forums à l'adresse https://teslacloud.net et parlez-nous-en !"
+    setting:
+      name: "Afficher les astuces"
+      desc: "Affiche de temps en temps une astuce de jeu aléatoire à l'écran."

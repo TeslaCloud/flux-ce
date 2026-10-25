@@ -1,0 +1,62 @@
+fr:
+  config:
+    damage:
+      title: "Dégâts"
+      desc: "Multiplicateurs de dégâts, régénération de la santé, noyade et journaux des dégâts."
+      scale_head:
+        name: "Multiplicateur des dégâts à la tête"
+        desc: "Facteur par lequel les dégâts d'un coup à la tête sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+      scale_chest:
+        name: "Multiplicateur des dégâts au torse"
+        desc: "Facteur par lequel les dégâts d'un coup au torse sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+      scale_stomach:
+        name: "Multiplicateur des dégâts au ventre"
+        desc: "Facteur par lequel les dégâts d'un coup au ventre sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+      scale_arms:
+        name: "Multiplicateur des dégâts aux bras"
+        desc: "Facteur par lequel les dégâts d'un coup à un bras sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+      scale_legs:
+        name: "Multiplicateur des dégâts aux jambes"
+        desc: "Facteur par lequel les dégâts d'un coup à une jambe sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+      scale_fall:
+        name: "Multiplicateur des dégâts de chute"
+        desc: "Facteur par lequel les dégâts de chute sont multipliés. 1 ne change rien, 0 désactive les dégâts de chute."
+      health_regen:
+        name: "Régénération de la santé"
+        desc: "Indique si les joueurs blessés regagnent lentement de la santé au fil du temps."
+      health_regen_amount:
+        name: "Quantité de santé régénérée"
+        desc: "Quantité de santé qu'un joueur regagne en une fois."
+      health_regen_interval:
+        name: "Intervalle de régénération de la santé"
+        desc: "Nombre de secondes entre deux gains de santé. L'attente recommence quand le joueur subit des dégâts."
+      health_regen_fast_interval:
+        name: "Intervalle de régénération rapide de la santé"
+        desc: "Nombre de secondes entre deux gains de santé tant que la santé du joueur atteint ou dépasse le seuil de régénération rapide."
+      health_regen_fast_share:
+        name: "Seuil de régénération rapide de la santé"
+        desc: "Pourcentage de la santé maximale à partir duquel l'intervalle rapide est utilisé."
+      drowning:
+        name: "Noyade"
+        desc: "Indique si les joueurs qui restent trop longtemps sous l'eau subissent des dégâts jusqu'à ce qu'ils remontent à la surface."
+      drowning_time:
+        name: "Durée d'apnée"
+        desc: "Nombre de secondes qu'un joueur peut passer entièrement sous l'eau avant de commencer à se noyer."
+      drowning_damage:
+        name: "Dégâts de noyade"
+        desc: "Formule de dés des dégâts qu'un joueur qui se noie subit en une fois, comme 1d4 ou un simple nombre. Une formule qui ne peut pas être lancée inflige 1 point de dégâts."
+      drowning_interval:
+        name: "Intervalle des dégâts de noyade"
+        desc: "Nombre de secondes entre deux coups de dégâts de noyade."
+      view_punch:
+        name: "Secousse de la vue aux dégâts"
+        desc: "Indique si la vue d'un joueur est secouée quand il subit des dégâts."
+      view_punch_scale:
+        name: "Ampleur de la secousse de la vue"
+        desc: "Nombre maximal de degrés de secousse de la vue par point de dégâts. Un seul coup ne la secoue jamais de plus de 30 degrés."
+      log_damage:
+        name: "Journaliser les dégâts"
+        desc: "Indique si les dégâts subis par les joueurs sont inscrits dans le journal."
+      log_kills:
+        name: "Journaliser les morts"
+        desc: "Indique si les morts des joueurs sont inscrites dans le journal."

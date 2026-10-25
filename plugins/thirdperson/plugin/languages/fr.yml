@@ -1,0 +1,15 @@
+fr:
+  settings:
+    thirdperson:
+      shoulder:
+        name: "Épaule de visée en troisième personne"
+        desc: "Épaule au-dessus de laquelle la caméra à la troisième personne se place quand vous visez. La touche B la fait passer à l'autre épaule."
+        right: "Droite"
+        left: "Gauche"
+      distance:
+        name: "Distance de la caméra à la troisième personne"
+        desc: "Distance entre votre personnage et la caméra à la troisième personne quand vous ne visez pas."
+  ui:
+    thirdperson:
+      weapon_raised: "Arme levée"
+      weapon_lowered: "Arme baissée"
