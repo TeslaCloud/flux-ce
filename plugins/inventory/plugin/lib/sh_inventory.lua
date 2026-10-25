@@ -2,11 +2,12 @@
 -- inventories and the items in them.
 -- A player has one inventory per type (`'main_inventory'`, `'hotbar'`, `'pockets'` and
 -- so on), built by the `CreatePlayerInventories` hook when their character becomes
--- active. The functions that look items up work on both the server and the client;
--- those that take an optional `inv_type` go through all inventories of the player when
--- it is omitted. On the server a player can also be given items, have them taken or
--- moved to another of their inventories, and be shown an inventory. These functions
--- synchronize the inventories they change right away.
+-- active. The inventories belong to the character, and the items of the character are
+-- loaded from the database into them right afterward. The functions that look items up
+-- work on both the server and the client; those that take an optional `inv_type` go
+-- through all inventories of the player when it is omitted. On the server a player can
+-- also be given items, have them taken or moved to another of their inventories, and be
+-- shown an inventory. These functions synchronize the inventories they change right away.
 --
 -- The file also holds the registry of all inventories, `Inventories.all` and
 -- `Inventories.find`.
@@ -37,6 +38,61 @@ end
 
 if SERVER then
   local reach = 128
+
+  --- Puts items that have been loaded from the database where they belong: items inside
+  -- of a container item into the inventory of the container item, which is created if
+  -- needed, and items of a character into the inventory of the player of the type they
+  -- were saved in, or into the default inventory if the player has no such inventory.
+  -- Items that already are in an inventory and items that belong elsewhere are skipped.
+  -- Server-side only.
+  -- @param items [List<Item>]
+  -- @param owner=nil [Player the player whose character the items belong to]
+  -- @return [List<Item> the items that did not fit anywhere]
+  function Inventories.place_items(items, owner)
+    local unplaced = {}
+
+    for _, item_obj in ipairs(items) do
+      if !item_obj.inventory_id then
+        if item_obj.parent_id then
+          local container = Item.find_instance_by_id(item_obj.parent_id)
+
+          if container and container.create_inventory then
+            if !container.inventory then
+              container:create_inventory()
+            end
+
+            if !container.inventory:add_item(item_obj, item_obj.x, item_obj.y) then
+              unplaced[#unplaced + 1] = item_obj
+            end
+          else
+            unplaced[#unplaced + 1] = item_obj
+          end
+        elseif item_obj.character_id and IsValid(owner) then
+          local x, y = item_obj.x, item_obj.y
+          local inventory = owner:get_inventories()[item_obj.inventory_type]
+
+          if inventory and x and y then
+            if inventory:is_width_infinite() and x > inventory:get_width() then
+              inventory:set_width(x + 1)
+            end
+
+            if inventory:is_height_infinite() and y > inventory:get_height() then
+              inventory:set_height(y + 1)
+            end
+          else
+            inventory = owner:get_inventories()[owner.default_inventory or 'main_inventory']
+            x, y = nil, nil
+          end
+
+          if !inventory or !inventory:add_item(item_obj, x, y) then
+            unplaced[#unplaced + 1] = item_obj
+          end
+        end
+      end
+    end
+
+    return unplaced
+  end
 
   --- Checks whether a player is close enough to an entity to use an inventory that belongs
   -- to it: the player has to be alive, and the nearest point of the entity's bounds has to
@@ -299,8 +355,8 @@ do
       -- and put them into `inventories` under the type of each one; the Inventory plugin
       -- adds the main inventory, the hotbar, the pockets and the equipment slots this
       -- way. Afterward every inventory in the table gets the player as its owner and
-      -- receiver, the items of the character are loaded into them and they are
-      -- synchronized.
+      -- receiver and the character as the holder of its items, the inventories are
+      -- synchronized, and the items of the character are loaded into them.
       -- ```
       -- function PLUGIN:CreatePlayerInventories(owner, inventories)
       --   local wallet = Inventory.new()
@@ -315,6 +371,9 @@ do
       --   to be filled in place]
       hook.Run('CreatePlayerInventories', self, inventories)
 
+      local character = self:get_character()
+      local character_id = istable(character) and tonumber(character.id) or nil
+
       for _, inventory in pairs(inventories) do
         if !self.default_inventory and inventory:is_default() then
           self.default_inventory = inventory.type
@@ -322,38 +381,116 @@ do
 
         inventory:add_receiver(self)
         inventory.owner = self
+        inventory.character_id = character_id
       end
 
       self.inventories = inventories
-      self:load_inventories()
       self:sync_inventories()
+      self:load_inventories()
     end
 
     --- @warning [Internal]
-    -- Loads the player's inventories with the items they had.
+    -- Loads the items of the player's active character from the database into the
+    -- inventories of the player, which may take a moment. Until the items are there,
+    -- `loading_items` is true on the player. Once they are, the inventories are
+    -- synchronized and the 'OnCharacterItemsLoaded' hook is run. Items that turn up after
+    -- the player has switched to another character are dropped without being used.
     function player_meta:load_inventories()
-      local item_ids = (self:get_character().item_ids or ''):split(',')
+      local character = self:get_character()
+      local character_id = istable(character) and tonumber(character.id) or nil
+      local inventories = self.inventories
 
-      for _, instance_id in pairs(item_ids) do
-        instance_id = tonumber(instance_id)
+      if !character_id then return end
 
-        local item_obj = Item.find_instance_by_id(instance_id)
+      self.loading_items = true
 
-        if item_obj and item_obj.inventory_type then
-          local x, y = item_obj.x, item_obj.y
-          local inventory_type = item_obj.inventory_type
-          local inventory = self:get_inventory(inventory_type)
+      Item.load_character(character_id, function(items)
+        if !IsValid(self) or self.inventories != inventories then return end
 
-          if inventory:is_width_infinite() and x > inventory:get_width() then
-            inventory:set_width(x + 1)
+        items = Item.register_loaded(items)
+
+        self.loading_items = nil
+        self.unplaced_items = Inventories.place_items(items, self)
+        self:sync_inventories()
+        self:give_default_items()
+
+        --- Called on the server once the items of a player's active character have been
+        -- loaded from the database and put into the inventories of the player, which have
+        -- been synchronized. The Items plugin calls the `on_loadout` callbacks of the items
+        -- here if the player is alive.
+        -- @param owner [Player]
+        -- @param character [Character the active character of the player]
+        -- @param items [List<Item> the items of the character, along with the contents of
+        --   its container items]
+        hook.Run('OnCharacterItemsLoaded', self, character, items)
+      end)
+    end
+
+    --- @warning [Internal]
+    -- Gives the player's active character its starting items through the
+    -- 'AddDefaultItems' hook, if it has not had them yet. Called the first time a new
+    -- character is loaded, once its inventories exist and its items are there. The
+    -- character is saved right afterward, so that it gets them only once.
+    function player_meta:give_default_items()
+      local character = self:get_character()
+
+      if !Characters.get_custom_data(character, 'default_items_pending') then return end
+
+      Characters.set_custom_data(character, 'default_items_pending', nil)
+
+      --- Called on the server the first time a character is loaded after it has been
+      -- created, so that plugins can give it its starting items. The inventories of the
+      -- player exist and the items of the character are in them by then, so handlers give
+      -- items with `Player:give_item`. It is run with `Plugin.call`, so gamemode functions
+      -- do not receive it.
+      -- ```
+      -- function PLUGIN:AddDefaultItems(owner, char)
+      --   owner:give_item('bandage', 2)
+      -- end
+      -- ```
+      -- @param owner [Player The player who has loaded the character]
+      -- @param char [Character The new character]
+      Plugin.call('AddDefaultItems', self, character)
+
+      self:save_character()
+    end
+
+    --- @warning [Internal]
+    -- Writes the changes of the items in the player's inventories, and of the items of the
+    -- character that could not be put into them, and makes the server forget them. Called
+    -- when the character is no longer in use. The inventories of the container items among
+    -- them are closed and deleted from the server cache; the player's own inventories are
+    -- left alone.
+    -- @param defer=false [Boolean do it on the next tick, so that what is saved along with
+    --   the character in the meantime is not lost]
+    function player_meta:unload_items(defer)
+      local items = self:get_items()
+
+      table_add(items, self.unplaced_items or {})
+
+      self.unplaced_items = nil
+      self.loading_items = nil
+
+      for _, item_obj in ipairs(items) do
+        local inventory = item_obj.inventory
+
+        if inventory and inventory.instance_id == item_obj.instance_id then
+          for _, receiver in ipairs(table.Copy(inventory.receivers)) do
+            if IsValid(receiver) then
+              receiver:close_inventory(inventory)
+            end
           end
 
-          if inventory:is_height_infinite() and y > inventory:get_height() then
-            inventory:set_height(y + 1)
-          end
-
-          inventory:add_item(item_obj, x, y)
+          stored[inventory.id] = nil
         end
+      end
+
+      if defer then
+        timer.Simple(0, function()
+          Item.unload(items)
+        end)
+      else
+        Item.unload(items)
       end
     end
 

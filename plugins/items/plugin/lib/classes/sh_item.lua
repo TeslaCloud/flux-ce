@@ -360,7 +360,8 @@ function ItemBase:on_save(_owner) end
 
 if SERVER then
   --- Sets a custom data value of the item. Server-side only.
-  -- The data is then sent to the player that has the item, or to everyone if nobody has it.
+  -- The data is sent to the clients that know the item and saved with the next save. The
+  -- value has to be serializable, so no functions or entities.
   -- @param id [String data key]
   -- @param value [Any]
   function ItemBase:set_data(id, value)
@@ -368,14 +369,22 @@ if SERVER then
 
     self.data[id] = value
 
-    Item.network_item_data(self:get_player(), self)
+    Item.mark_dirty(self)
+    Item.network_item_data(nil, self)
   end
 
-  --- Finds the player that has the item in one of their inventories. Server-side only.
+  --- Finds the player that has the item in one of their inventories, also inside of a
+  -- container item there. Server-side only.
   -- @return [Player the player, or nil if no player has the item]
   function ItemBase:get_player()
+    local item_obj = Item.get_outermost(self)
+    local character_id = item_obj.character_id
+
+    if !character_id then return end
+
     for _, client in player.Iterator() do
-      if client:has_item_by_id(self.instance_id) then
+      if client:get_character_id() == character_id
+      and client:has_item_by_id(item_obj.instance_id) then
         return client
       end
     end

@@ -127,10 +127,11 @@ end
 -- @param query_type=nil [String unused]
 -- @param bindings=nil [List values of $1, $2 and so on in the query. A query that is
 --   given bindings has to be a single statement]
+-- @param error_callback=nil [Function called with the error text if the query fails]
 -- @return [Any whatever the callback returns in sync mode, nothing otherwise]
-function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, bindings)
+function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, bindings, error_callback)
   if !self.connection then
-    return self:queue(query, callback, query_type, bindings)
+    return self:queue(query, callback, query_type, bindings, error_callback)
   end
 
   bindings = bindings or {}
@@ -158,7 +159,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
 
   query_obj:on('success', success_func)
   query_obj:on('error', function(error_text)
-    self:query_failed(query, error_text, false)
+    self:report_failure(query, error_text, error_callback, false)
   end)
 
   if self._sync then
@@ -169,12 +170,42 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
     if success then
       return success_func(res, size)
     else
-      return self:query_failed(query, res)
+      return self:report_failure(query, res, error_callback)
     end
   else
     query_obj:set_sync(false)
     query_obj:run(unpack(bindings))
   end
+end
+
+--- Waits until a condition is met, delivering the results of the asynchronous queries in
+-- the meantime. A synchronous query of the pg module does not wait for the asynchronous
+-- queries that are queued before it, and the module delivers their results on the Think
+-- hook, which does not run while the server waits. Gives up after the timeout.
+-- @param condition [Function returns true once there is nothing more to wait for]
+-- @param timeout=10 [Number seconds after which to give up]
+-- @return [Boolean whether the condition is met]
+function ActiveRecord.Adapters.Pg:wait_until(condition, timeout)
+  local deadline = SysTime() + (timeout or 10)
+  local deliver = {}
+
+  for name, callback in pairs(hook.GetTable().Think or {}) do
+    if isstring(name) and name:find('^LuaEventEmitterManager_') then
+      deliver[#deliver + 1] = callback
+    end
+  end
+
+  while condition() != true do
+    if SysTime() > deadline then
+      return false
+    end
+
+    for _, callback in ipairs(deliver) do
+      callback()
+    end
+  end
+
+  return true
 end
 
 --- Makes the column the primary key of the table when a 'primary_key' column is created.
@@ -191,13 +222,14 @@ function ActiveRecord.Adapters.Pg:create_column(query, column, _args, _obj, type
 end
 
 --- Appends 'RETURNING id' to insert queries, so that the id of the new row is passed
--- to the query callback.
--- @param _query [ActiveRecord::Query unused]
+-- to the query callback. Queries into tables without an id column set `without_id` on
+-- the query to go without it.
+-- @param query [ActiveRecord::Query]
 -- @param query_string [String generated SQL]
 -- @param query_type [String lowercase query type]
 -- @return [String the extended SQL for 'insert' queries, nil for other query types]
-function ActiveRecord.Adapters.Pg:append_query_string(_query, query_string, query_type)
-  if query_type == 'insert' then
+function ActiveRecord.Adapters.Pg:append_query_string(query, query_string, query_type)
+  if query_type == 'insert' and !query.without_id then
     return query_string..' RETURNING id'
   end
 end

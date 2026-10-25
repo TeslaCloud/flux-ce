@@ -244,7 +244,125 @@ function Statements.add_column(table_name, name, type, options)
   end)
 end
 
---- Removes a column from an existing table.
+--- Checks whether the SQL of an index names one of the given columns.
+-- @param index_sql [String the CREATE INDEX statement]
+-- @param columns [Map column names, as keys]
+-- @return [Boolean]
+local function index_covers(index_sql, columns)
+  local column_list = index_sql:match('%((.*)%)%s*$') or index_sql
+
+  for column in pairs(columns) do
+    local escaped = column:gsub('%p', '%%%0')
+
+    for _, part in ipairs(string.Explode(',', column_list)) do
+      local name = string.Trim(part):match('^[%["`]?([^%]"`%s]+)')
+
+      if name and name:find('^'..escaped..'$') then
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
+--- Rebuilds an SQLite table without some of its columns, which is how a column is removed
+-- from a table on the SQLite of Garry's Mod, since it has no DROP COLUMN. The table is
+-- created anew with the remaining columns, each with its declared type, NOT NULL, DEFAULT
+-- and a single-column primary key; the rows are copied over, and the indexes that do not
+-- name a removed column are created again. Tables that have anything else in their
+-- definition, such as a composite primary key or a UNIQUE, CHECK, COLLATE or REFERENCES
+-- clause, are refused with an error rather than rebuilt without it.
+-- @param table_name [String]
+-- @param removed [Map names of the columns to remove, as keys]
+local function rebuild_sqlite_table(table_name, removed)
+  local adapter = ActiveRecord.adapter
+  local quoted_table = sql_quote_name(table_name)
+  local function rows(result) return result end
+  local columns = adapter:raw_query('PRAGMA table_info('..quoted_table..');', rows)
+
+  if !istable(columns) then
+    error('remove_column - the table '..tostring(table_name)..' does not exist!', 0)
+  end
+
+  local definition_sql = adapter:raw_query(
+    "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?;", rows, 'select', { table_name }
+  )
+
+  definition_sql = istable(definition_sql) and definition_sql[1] and definition_sql[1].sql or ''
+
+  local upper = definition_sql:upper()
+  local primary_keys = 0
+
+  for _, column in ipairs(columns) do
+    if tonumber(column.pk) and tonumber(column.pk) > 0 then
+      primary_keys = primary_keys + 1
+    end
+  end
+
+  for _, keyword in ipairs({ 'UNIQUE', 'CHECK', 'COLLATE', 'REFERENCES', 'GENERATED' }) do
+    if upper:find('%f[%w_]'..keyword..'%f[^%w_]') then
+      error('remove_column - cannot rebuild the SQLite table '..table_name..', it has a '
+        ..keyword..' clause!', 0)
+    end
+  end
+
+  if primary_keys > 1 then
+    error('remove_column - cannot rebuild the SQLite table '..table_name
+      ..', it has a composite primary key!', 0)
+  end
+
+  local indexes = adapter:raw_query(
+    "SELECT name, sql FROM sqlite_master WHERE type = 'index' AND tbl_name = ? AND sql IS NOT NULL;",
+    rows, 'select', { table_name }
+  ) or {}
+
+  local definitions = {}
+  local kept = {}
+
+  for _, column in ipairs(columns) do
+    if !removed[column.name] then
+      local quoted = sql_quote_name(column.name)
+      local definition = quoted..' '..(column.type or '')
+
+      if tonumber(column.pk) == 1 then
+        definition = definition..' PRIMARY KEY'
+      end
+
+      if tonumber(column.notnull) == 1 then
+        definition = definition..' NOT NULL'
+      end
+
+      if column.dflt_value != nil and column.dflt_value != 'NULL' then
+        definition = definition..' DEFAULT '..column.dflt_value
+      end
+
+      definitions[#definitions + 1] = definition
+      kept[#kept + 1] = quoted
+    end
+  end
+
+  local temporary = sql_quote_name(table_name..'_rebuilt')
+  local column_list = table.concat(kept, ', ')
+
+  raw('Rebuild Table', 'CREATE TABLE '..temporary..' ('..table.concat(definitions, ', ')..');')
+  raw('Rebuild Table',
+    'INSERT INTO '..temporary..' ('..column_list..') SELECT '..column_list..' FROM '..quoted_table..';')
+  raw('Rebuild Table', 'DROP TABLE '..quoted_table..';')
+  raw('Rebuild Table', 'ALTER TABLE '..temporary..' RENAME TO '..quoted_table..';')
+
+  for _, index in ipairs(indexes) do
+    if index_covers(index.sql, removed) then
+      ActiveRecord.forget_metadata('index', index.name)
+    else
+      raw('Rebuild Table', index.sql..';')
+    end
+  end
+end
+
+--- Removes a column from an existing table. On SQLite the table is rebuilt without the
+-- column, which only works for tables whose definition the rebuild can carry over; see
+-- rebuild_sqlite_table.
 -- @param table_name [String table name]
 -- @param name [String/Map column name, or the same table add_column takes]
 -- @param type=nil [String abstract column type; only needed to make the removal
@@ -253,9 +371,13 @@ end
 function Statements.remove_column(table_name, name, type, options)
   name = Statements.column_definition(name, type, options)
 
-  Statements.change_table(table_name, function(t)
-    t:remove(name)
-  end)
+  if ActiveRecord.adapter:is_sqlite() then
+    rebuild_sqlite_table(table_name, { [name] = true })
+  else
+    Statements.change_table(table_name, function(t)
+      t:remove(name)
+    end)
+  end
 
   ActiveRecord.remove_from_schema(table_name, name)
 end

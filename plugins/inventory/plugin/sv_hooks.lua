@@ -1,8 +1,8 @@
---- Server side of the Inventory plugin: creates the default inventories of players, saves
--- where items are, does what the take, use and drop actions of items are supposed to do,
--- enforces the rules of moving items between inventories, closes the inventories that
--- players are no longer entitled to, and handles the move, drop and close requests of the
--- clients.
+--- Server side of the Inventory plugin: creates the default inventories of players, loads
+-- and unloads the items of characters, does what the take, use and drop actions of items
+-- are supposed to do, enforces the rules of moving items between inventories, closes the
+-- inventories that players are no longer entitled to, and handles the move, drop and close
+-- requests of the clients.
 
 local pairs = pairs
 local IsValid = IsValid
@@ -41,39 +41,41 @@ local function find_requested_stack(actor, instance_ids)
   return inventory, stack
 end
 
---- Calls the 'AddDefaultItems' plugin hook for a character that has just been created.
--- @param owner [Player]
+--- Marks a character that has just been created as one that still has to get its
+-- starting items, which happens the first time it is loaded.
+-- @param _owner [Player]
 -- @param char [Character]
 -- @param _char_data [Map data the character was created from]
-function Inventories:PostCreateCharacter(owner, char, _char_data)
-  --- Called on the server when a character has just been created, before it is saved
-  -- for the first time, so that plugins can give it its starting items. It is run with
-  -- `Plugin.call`, so gamemode functions do not receive it.
-  -- @param owner [Player The player who created the character]
-  -- @param char [Character The new character]
-  Plugin.call('AddDefaultItems', owner, char)
+function Inventories:PostCreateCharacter(_owner, char, _char_data)
+  Characters.set_custom_data(char, 'default_items_pending', true)
 end
 
---- Deletes inventories of the disconnected player from the server cache.
+--- Unloads the items of the disconnected player's character and deletes their inventories
+-- from the server cache. The items are unloaded on the next tick, once the character has
+-- been saved.
 -- @param actor [Player]
 function Inventories:PlayerDisconnected(actor)
+  actor:unload_items(true)
   actor:delete_inventories()
 end
 
---- Recreates inventories of the player when their active character changes.
+--- Unloads the items of the player's previous character, if they had one, and recreates
+-- their inventories for the new character, which loads its items.
 -- @param owner [Player]
 -- @param _character [Character]
 function Inventories:OnActiveCharacterSet(owner, _character)
+  owner:unload_items()
   owner:delete_inventories()
   owner:create_inventories()
 end
 
---- Takes the inventories of a character away from the player who drops it, leaving them
--- without inventories as they were before they loaded a character, and tells their client
--- to forget its copies of them.
+--- Unloads the items of the character that the player drops, takes its inventories away
+-- from the player, leaving them without inventories as they were before they loaded a
+-- character, and tells their client to forget its copies of them.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
 function Inventories:OnActiveCharacterCleared(owner, _character)
+  owner:unload_items()
   owner:delete_inventories()
   owner.inventories = nil
   owner.default_inventory = nil
@@ -167,32 +169,32 @@ function Inventories:CreatePlayerInventories(_owner, inventories)
   inventories[pockets.type] = pockets
 end
 
---- Stores the instance ids of the player's items in the character, as a comma-separated
--- string. Only the active character of the player carries their items: any other character
--- that is saved through the player, such as one that has just been created, keeps the item
--- ids it has.
--- @param owner [Player]
--- @param char [Character]
-function Inventories:SaveCharacterData(owner, char)
-  if owner:get_character() == char then
-    char.item_ids = table.concat(owner:get_items_ids(), ',')
-  end
+--- Deletes the items of a character that is about to be deleted.
+-- @param _actor [Player]
+-- @param id [Number ID of the character]
+-- @param _character [Character]
+function Inventories:OnCharacterDelete(_actor, id, _character)
+  Item.delete_character_items(id)
 end
 
---- Adds the position of the item in its inventory, its rotation and,
--- for containers, the instance ids of the contained items to the saved fields.
--- @param item_obj [Item]
--- @param save_table [Map fields of the item that are going to be saved]
-function Inventories:PreItemSave(item_obj, save_table)
-  save_table.x = item_obj.x
-  save_table.y = item_obj.y
-  save_table.inventory_type = item_obj.inventory_type
-  save_table.inventory_id = item_obj.inventory_id
-  save_table.rotated = item_obj.rotated
+--- Puts the contents of the container items of the map into the inventories of their
+-- container items once the items of the map have been loaded. Contents that do not fit
+-- are unloaded again.
+-- @param items [List<Item>]
+function Inventories:OnMapItemsLoaded(items)
+  Item.unload(Inventories.place_items(items))
+end
 
-  if item_obj.inventory then
-    save_table.items = item_obj.inventory:get_items_ids()
-  end
+--- Adds the position of the item in its inventory and its rotation to what a client is sent
+-- about the item.
+-- @param item_obj [Item]
+-- @param fields [Map fields of the item that are going to be sent]
+function Inventories:PreItemNetwork(item_obj, fields)
+  fields.x = item_obj.x
+  fields.y = item_obj.y
+  fields.inventory_type = item_obj.inventory_type
+  fields.inventory_id = item_obj.inventory_id
+  fields.rotated = item_obj.rotated
 end
 
 --- Puts an item lying in the world into one of the player's inventories
@@ -247,7 +249,6 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
     if success then
       actor:sync_inventories()
       item_obj.entity:Remove()
-      Item.async_save_entities()
 
       hook.Run('ItemTransferred', item_obj, player_inventory)
     else
@@ -304,7 +305,6 @@ function Inventories:PlayerDropItem(actor, instance_ids)
   end
 
   inventory:sync()
-  Item.async_save_entities()
 end
 
 --- Synchronizes the inventory of an item after a menu action has been performed on it.
@@ -469,8 +469,9 @@ function Inventories:PlayerThrewGrenade(actor, _entity)
   end
 end
 
---- Calls the on_use callback of the item, then takes the item out of its inventory (or removes
--- its entity) unless the callback returned true to keep it or false to cancel the use.
+--- Calls the on_use callback of the item, then takes the item out of its inventory and
+-- removes it, along with its entity if it lies in the world, unless the callback returned
+-- true to keep it or false to cancel the use.
 -- @param actor [Player]
 -- @param item_obj [Item]
 -- @param ... [Vararg extra arguments of the action]
@@ -486,9 +487,7 @@ function Inventories:PlayerUseItem(actor, item_obj, ...)
     end
   end
 
-  if IsValid(item_obj.entity) then
-    item_obj.entity:Remove()
-  else
+  if !IsValid(item_obj.entity) then
     local inventory = Inventories.find(item_obj.inventory_id)
 
     hook.Run('PreItemTransfer', item_obj, nil, inventory)
@@ -498,6 +497,8 @@ function Inventories:PlayerUseItem(actor, item_obj, ...)
 
     hook.Run('ItemTransferred', item_obj, nil, inventory)
   end
+
+  Item.remove(item_obj)
 end
 
 --- Tells the client to rebuild the player model preview when a wearable item is equipped.

@@ -71,8 +71,9 @@ end
 -- @param query_type=nil [String lowercase query type, e.g. 'insert']
 -- @param bindings=nil [List values of the ? placeholders in the query. A query that is
 --   given bindings has to be a single statement]
+-- @param error_callback=nil [Function called with the error text if the query fails]
 -- @return [Any whatever the callback returns; nothing without a callback or on error]
-function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bindings)
+function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bindings, error_callback)
   local query_start = os.clock()
   local result = nil
 
@@ -83,7 +84,7 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bin
   end
 
   if result == false then
-    return self:query_failed(query, sql.LastError())
+    return self:report_failure(query, sql.LastError(), error_callback)
   else
     if query_type == 'insert' then
       result = { { id = tonumber(sql.QueryValue('SELECT last_insert_rowid()')) } }

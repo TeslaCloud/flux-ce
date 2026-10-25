@@ -3,6 +3,8 @@
 -- and the password of a container and networks what clients may know of them; fills a
 -- container with random items; and destroys or spills the items of a removed container.
 
+Container.pending = Container.pending or {}
+
 local name_length = 64
 local message_length = 256
 local password_length = 64
@@ -65,8 +67,7 @@ local function close_for_receivers(inventory)
 end
 
 --- Checks whether an item is somewhere else than in the inventory that is being emptied:
--- lying in the world, or in the slots of another inventory. The list of items that a
--- container is saved with can be out of date after a crash, and such items are left alone.
+-- lying in the world, or in the slots of another inventory. Such items are left alone.
 -- @param item_obj [Item]
 -- @param inventory [Inventory the inventory that is being emptied, nil if it was never
 --   created]
@@ -101,8 +102,6 @@ local function destroy_items(item_ids, inventory, seen)
         destroy_items(inner_inventory:get_items_ids(), inner_inventory, seen)
 
         Inventories.stored[inner_inventory.id] = nil
-      elseif istable(item_obj.items) then
-        destroy_items(item_obj.items, nil, seen)
       end
 
       Item.remove(item_obj)
@@ -143,8 +142,59 @@ function Container:update_netvars(entity)
   entity:set_nv('fl_container_locked', entity.container_password != nil or nil)
 end
 
---- Returns the inventory of a container, creating it and loading the saved items into it
--- if the container has not been opened since the server started.
+--- Returns the number that the items of a container are saved under, giving the container
+-- one if it has none yet. The number is kept in the `container_id` field of the prop and
+-- comes from the item instance ids, so no two containers ever share one. A prop that gets
+-- a number has the persistent entities saved a second later, so that the prop is saved
+-- with its number before its items can be.
+-- @param entity [Entity the container prop]
+-- @return [Number]
+function Container:get_container_id(entity)
+  if !entity.container_id then
+    entity.container_id = Item.generate_id()
+
+    timer.Create('fl_containers_persist', 1, 1, function()
+      hook.Run('PersistenceSave')
+    end)
+  end
+
+  return entity.container_id
+end
+
+--- Remembers loaded items of a container whose inventory does not exist, until the
+-- container claims them with `Container:get_inventory`.
+-- @param container_id [Number]
+-- @param items [List<Item>]
+function Container:add_pending_items(container_id, items)
+  local pending = self.pending[container_id] or {}
+
+  for _, item_obj in ipairs(items) do
+    pending[#pending + 1] = item_obj
+  end
+
+  self.pending[container_id] = pending
+end
+
+--- Returns the loaded items of a container that wait for its inventory.
+-- @param entity [Entity the container prop]
+-- @return [List<Item> the items that are still loaded and saved in the container]
+function Container:get_pending_items(entity)
+  local container_id = entity.container_id
+  local items = {}
+
+  for _, item_obj in ipairs(container_id and self.pending[container_id] or {}) do
+    local loaded = Item.find_instance_by_id(item_obj.instance_id) == item_obj
+
+    if loaded and item_obj.container_id == container_id and !item_obj.inventory_id then
+      items[#items + 1] = item_obj
+    end
+  end
+
+  return items
+end
+
+--- Returns the inventory of a container, creating it if it does not exist yet. The
+-- inventory takes in the items that have been loaded for the container in the meantime.
 -- @param entity [Entity the container prop]
 -- @return [Inventory the inventory, or nil if the entity is not a container]
 function Container:get_inventory(entity)
@@ -152,24 +202,71 @@ function Container:get_inventory(entity)
 
   if !container_data then return end
 
-  if !entity.inventory then
-    local inventory = Inventory.new()
+  local inventory = entity.inventory
+
+  if !inventory then
+    inventory = Inventory.new()
     inventory:set_size(container_data.w, container_data.h)
     inventory.title = self:get_container_name(entity)
     inventory.type = 'container'
     inventory.multislot = true
     inventory.owner = entity
-
-    if entity.items then
-      inventory:load_items(entity.items)
-
-      entity.items = nil
-    end
+    inventory.container_id = self:get_container_id(entity)
 
     entity.inventory = inventory
   end
 
-  return entity.inventory
+  local pending = self:get_pending_items(entity)
+
+  if #pending > 0 then
+    for _, item_obj in ipairs(pending) do
+      inventory:add_item(item_obj, item_obj.x, item_obj.y)
+    end
+
+    inventory:sync()
+  end
+
+  self.pending[inventory.container_id] = nil
+
+  return inventory
+end
+
+--- Unloads the loaded items whose container prop is not on the map, ten seconds from now,
+-- once the persistent entities have had the time to be spawned. Their rows stay as they
+-- are, so they come back if the prop does; each of them is reported in the console.
+function Container:release_unclaimed_items_later()
+  timer.Create('fl_containers_release', 10, 1, function()
+    local present = {}
+
+    for _, entity in ents.Iterator() do
+      if entity.container_id and self:is_container(entity) then
+        present[entity.container_id] = true
+      end
+    end
+
+    for container_id, items in pairs(self.pending) do
+      if !present[container_id] then
+        local loaded = {}
+
+        for _, item_obj in ipairs(items) do
+          local still_loaded = Item.find_instance_by_id(item_obj.instance_id) == item_obj
+
+          if still_loaded and !item_obj.inventory_id then
+            loaded[#loaded + 1] = item_obj
+          end
+        end
+
+        if #loaded > 0 then
+          ErrorNoHalt('Container #'..container_id..' is not on the map; its '..#loaded
+            ..' item(s) stay saved for it.\n')
+
+          Item.unload(loaded)
+        end
+
+        self.pending[container_id] = nil
+      end
+    end
+  end)
 end
 
 --- Gives a container a name of its own, which replaces the name of its model in its target
@@ -505,12 +602,11 @@ end
 -- ground if the `container_spill_items` config is on and destroys them otherwise, and
 -- runs the `OnContainerRemoved` hook. Does nothing while the server is shutting down or
 -- changing the map, or while the map is being cleaned up: the containers are saved then,
--- with the IDs of their items, to come back with them. Items that turn out to be in the
--- world or in another inventory are left alone.
+-- and their items stay saved as being in them, to come back with them. Items that turn out
+-- to be in the world or in another inventory are left alone.
 --
 -- The items are dropped or destroyed on the next tick. A map that is unloading never gets
--- there, so the saved items of the containers are safe even if the shutdown was not
--- noticed, because the save that comes before it has failed, for example.
+-- there, so the items of the containers are safe even if the shutdown was not noticed.
 -- @param entity [Entity the container prop]
 -- @param inventory [Inventory the inventory of the container, nil if it was never created]
 -- @param item_ids [List<Number> instance ids of the items of the container]

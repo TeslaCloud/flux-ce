@@ -8,9 +8,12 @@
 -- When a character becomes active, the `CreatePlayerInventories` hook builds the
 -- inventories of the player. This plugin creates the main inventory, the hotbar, the
 -- pockets and the equipment slots there, sized by the `inventory_`, `hotbar_` and
--- `pockets_` config keys, and other plugins can add their own. Further inventories can be
--- created with `Inventory.new` for anything else that holds items, such as the bags based
--- on `ItemContainer`, and shown to a player with `Player:open_inventory`.
+-- `pockets_` config keys, and other plugins can add their own. The items of the character
+-- are then loaded from the database into them, and they are written back and unloaded
+-- once the character is no longer in use, so a character keeps its items from map to map.
+-- Further inventories can be created with `Inventory.new` for anything else that holds
+-- items, such as the bags based on `ItemContainer`, and shown to a player with
+-- `Player:open_inventory`.
 --
 -- Inventories are managed by the server. Each one has a list of receivers: the players
 -- who are sent its contents whenever `Inventory:sync` is called, and the only ones whose

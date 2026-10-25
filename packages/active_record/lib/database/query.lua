@@ -230,6 +230,12 @@ function ActiveRecord.Query:callback(callback)
   self._callback = callback
 end
 
+--- Sets the function that is called if the query fails. The error is reported as well.
+-- @param callback [Function receives the error text]
+function ActiveRecord.Query:on_error(callback)
+  self._error_callback = callback
+end
+
 --- Adds a column to the list of columns to select. All columns are selected if none
 -- are added.
 -- @param field_name [String column name]
@@ -647,9 +653,9 @@ function ActiveRecord.Query:execute(queue_query)
     local bindings = queries_with_bindings[query_type] and self.bindings or nil
 
     if !queue_query then
-      return adapter:raw_query(query_string, self._callback, query_type, bindings)
+      return adapter:raw_query(query_string, self._callback, query_type, bindings, self._error_callback)
     else
-      return adapter:queue(query_string, self._callback, query_type, bindings)
+      return adapter:queue(query_string, self._callback, query_type, bindings, self._error_callback)
     end
   end
 end

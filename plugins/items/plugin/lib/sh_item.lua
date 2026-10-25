@@ -5,11 +5,24 @@
 -- out of a template, with an instance id of its own, and `Item.spawn` puts an instance
 -- into the world as an `fl_item` entity.
 --
--- On the server the library also saves the instances and the positions of the item
--- entities (`Item.save_all`, `Item.load`) and sends instances to the clients
--- (`Item.network_item`, `Item.network_item_data`), which keep their own copies of them.
--- Plugins can add fields to what is saved and sent through the `PreItemSave` hook.
--- `Item.remove` deletes an instance for good, on the server and on every client.
+-- An instance only holds what is its own: its instance id, its custom data (`data`), the
+-- fields that `Item.create` was told to override, and where it is. Everything else it
+-- reads from its template through its metatable, so it costs little memory. When an item
+-- file is registered again, after a Lua refresh for instance, the loaded instances of the
+-- item read from the new template.
+--
+-- Instances live in the `items` table of the database, one row each, and the server keeps
+-- in memory only those that are in use: the items of the characters that players have
+-- loaded, and the items of the current map, in containers or lying in the world. How they
+-- are loaded and written back is described in the Items plugin's `sv_storage.lua`.
+-- `Item.remove` deletes an instance for good.
+--
+-- Clients only get the instances they need: those in the inventories they receive, and
+-- those lying in the world near them, which a client asks for once the entity of the item
+-- reaches it. The server remembers which players know an instance, so that changes and
+-- the removal of the instance reach exactly them (`Item.network_item`,
+-- `Item.network_item_data`). Plugins can add fields to what is sent through the
+-- `PreItemNetwork` hook.
 --
 -- An item entity remembers the character that dropped it: `Item.spawn` takes the dropper
 -- as its last argument, which the Inventory plugin passes whenever a player drops an item
@@ -22,14 +35,10 @@ mod 'Item'
 
 local stored = Item.stored or {}
 local instances = Item.instances or {}
-local sorted = Item.sorted or {}
-local entities = Item.entities or {}
-local instance_cache = setmetatable({}, { __mode = 'v' })
+local instance_metas = setmetatable({}, { __mode = 'k' })
 
 Item.stored = stored
 Item.instances = instances
-Item.sorted = sorted
-Item.entities = entities
 
 --- Returns all the registered item templates.
 -- @return [Map item templates, keyed by item id]
@@ -37,26 +46,11 @@ function Item.all()
   return stored
 end
 
---- Returns the storage of all item instances.
--- It is keyed by item id; each value is a hash of instance id to item instance.
--- The storage also holds a numeric 'count' field with the last generated instance id.
--- @return [Map instances]
+--- Returns the item instances that are loaded. On the server those are the instances that
+-- are in use, see the top of this file; on a client those that the server has sent.
+-- @return [Map item instances, keyed by instance id]
 function Item.get_instances()
   return instances
-end
-
---- Returns the lookup cache of item instances that is filled by Item.find_by_instance_id.
--- @return [Map item instances, keyed by instance id]
-function Item.get_sorted()
-  return sorted
-end
-
---- Returns saved data about the items that are lying on the ground.
--- It is keyed by item id, then by instance id; each entry has 'position' and 'angles' fields,
--- and a 'dropped_by' field if a character has dropped the item.
--- @return [Map entity data]
-function Item.get_entities()
-  return entities
 end
 
 --- Registers an item template, filling in defaults for every field that is not set.
@@ -117,63 +111,109 @@ function Item.register(id, data)
   data.icon_data = data.icon_data or nil
   data.icon_material = data.icon_material or nil
 
+  local previous = stored[id]
+  local meta = previous and previous != data and instance_metas[previous]
+
+  if meta then
+    meta.__index = data
+    meta.__tostring = data.__tostring
+    instance_metas[previous] = nil
+    instance_metas[data] = meta
+  end
+
   stored[id] = data
-  instances[id] = instances[id] or {}
 end
 
---- Builds a plain table out of the item fields that are saved to disk and networked.
--- Runs the 'PreItemSave' hook so that plugins can add fields of their own.
+--- Returns the metatable that the instances of a template get, which makes them read
+-- every field they do not have themselves from the template.
+-- @param template [Item]
+-- @return [Map]
+local function get_instance_meta(template)
+  local meta = instance_metas[template]
+
+  if !meta then
+    meta = {
+      __index = template,
+      __tostring = template.__tostring
+    }
+
+    instance_metas[template] = meta
+  end
+
+  return meta
+end
+
+--- Builds an instance of a template without registering it anywhere. The instance gets
+-- its own copy of the default custom data of the template, with `data` merged on top.
+-- Fields of `overrides` are set on the instance and kept in its `overrides` field, so that
+-- they are saved with it; a `data` field among them is merged into the custom data instead.
+-- `Item.create` and the database loader build instances with it.
+-- @param template [Item the item template]
+-- @param instance_id [Number]
+-- @param overrides=nil [Map fields to override on the instance]
+-- @param data=nil [Map custom data of the instance]
+-- @return [Item the new instance]
+function Item.instantiate(template, instance_id, overrides, data)
+  local item_obj = setmetatable({}, get_instance_meta(template))
+  local custom_data = istable(template.data) and table.Copy(template.data) or {}
+
+  if istable(overrides) then
+    local own = {}
+
+    for key, value in pairs(overrides) do
+      if key == 'data' and istable(value) then
+        table.Merge(custom_data, value)
+      elseif key != 'instance_id' and key != 'id' then
+        own[key] = value
+        item_obj[key] = value
+      end
+    end
+
+    if next(own) != nil then
+      item_obj.overrides = own
+    end
+  end
+
+  if istable(data) then
+    table.Merge(custom_data, data)
+  end
+
+  item_obj.data = custom_data
+  item_obj.instance_id = instance_id
+
+  return item_obj
+end
+
+--- Builds a plain table with what a client needs to know about an item instance: its
+-- template, its instance id, its custom data and its overridden fields.
+-- Runs the 'PreItemNetwork' hook so that plugins can add fields of their own.
 -- @param item_obj [Item]
--- @return [Map saveable fields, or nil if no item was given]
-function Item.to_saveable(item_obj)
+-- @return [Map networkable fields, or nil if no item was given]
+function Item.to_networkable(item_obj)
   if !item_obj then return end
 
-  local save_table = {
-    id = item_obj.id,
-    name = item_obj.name,
-    print_name = item_obj.print_name,
-    description = item_obj.description,
-    weight = item_obj.weight,
-    width = item_obj.width,
-    height = item_obj.height,
-    stackable = item_obj.stackable,
-    pocket_size = item_obj.pocket_size,
-    max_stack = item_obj.max_stack,
-    model = item_obj.model,
-    skin = item_obj.skin,
-    color = item_obj.color,
-    model_bodygroups = item_obj.model_bodygroups,
-    cost = item_obj.cost,
-    special_color = item_obj.special_color,
-    is_base = item_obj.is_base,
-    instance_id = item_obj.instance_id,
-    data = item_obj.data,
-    action_sounds = item_obj.action_sounds,
-    use_text = item_obj.use_text,
-    take_text = item_obj.take_text,
-    drop_text = item_obj.drop_text,
-    cancel_text = item_obj.cancel_text,
-    use_icon = item_obj.use_icon,
-    take_icon = item_obj.take_icon,
-    drop_icon = item_obj.drop_icon,
-    cancel_icon = item_obj.cancel_icon,
-    destroy_text = item_obj.destroy_text,
-    destroy_icon = item_obj.destroy_icon,
-    max_uses = item_obj.max_uses,
-    uses = item_obj.uses,
-    icon_data = item_obj.icon_data,
-    icon_material = item_obj.icon_material
-  }
+  local fields = {}
 
-  --- Lets plugins add fields to the data of an item that is saved and sent to clients.
-  -- Called by `Item.to_saveable`, which the server uses both when it saves the item
-  -- instances and when it sends an instance to clients. Handlers write their fields into
-  -- `save_table`; the Inventory plugin adds the position of the item in its inventory.
-  -- @param item_obj [Item The item that is being saved]
-  -- @param save_table [Map The fields that are going to be saved, to be modified in place]
-  hook.Run('PreItemSave', item_obj, save_table)
+  if istable(item_obj.overrides) then
+    for key, value in pairs(item_obj.overrides) do
+      fields[key] = value
+    end
+  end
 
-  return save_table
+  fields.id = item_obj.id
+  fields.instance_id = item_obj.instance_id
+  fields.data = item_obj.data
+
+  --- Lets plugins add fields to what a client is sent about an item instance. Called by
+  -- `Item.to_networkable` on the server whenever an instance is sent to a client. The
+  -- client builds its copy of the instance out of the template and these fields.
+  -- Handlers write their fields into `fields`; the Inventory plugin adds the position of
+  -- the item in its inventory.
+  -- @param item_obj [Item The item that is being sent]
+  -- @param fields [Map The fields that are going to be sent, to be modified in place]
+  hook.Run('PreItemNetwork', item_obj, fields)
+
+  return fields
 end
 
 --- Finds an item template by its id.
@@ -193,55 +233,37 @@ function Item.find_by_id(id)
   end
 end
 
---- Finds all instances of a certain item template.
+--- Finds all the loaded instances of a certain item template.
 -- @param id [String item id]
 -- @return [Map item instances keyed by instance id, or nil if there is no such template]
 function Item.find_all_instances(id)
-  if instances[id] then
-    return instances[id]
+  if !stored[id] then return end
+
+  local found = {}
+
+  for instance_id, item_obj in pairs(instances) do
+    if item_obj.id == id then
+      found[instance_id] = item_obj
+    end
   end
+
+  return found
 end
 
---- Finds an item instance by its instance id.
+--- Finds a loaded item instance by its instance id.
 -- @param instance_id [Number]
 -- @return [Item the instance, or nil if not found]
 function Item.find_instance_by_id(instance_id)
   if instance_id == nil then return end
 
-  local cached = instance_cache[instance_id]
-
-  if cached and cached.instance_id == instance_id then
-    local item_instances = instances[cached.id]
-
-    if istable(item_instances) and item_instances[instance_id] == cached then
-      return cached
-    end
-  end
-
-  for _item_id, item_instances in pairs(instances) do
-    if istable(item_instances) then
-      for _, item_obj in pairs(item_instances) do
-        if item_obj.instance_id == instance_id then
-          instance_cache[instance_id] = item_obj
-
-          return item_obj
-        end
-      end
-    end
-  end
+  return instances[instance_id]
 end
 
---- Finds an item instance by its instance id, caching the result for quicker lookups later.
+--- Finds a loaded item instance by its instance id. The same as Item.find_instance_by_id.
 -- @param instance_id [Number]
 -- @return [Item the instance, or nil if not found]
 function Item.find_by_instance_id(instance_id)
-  if !instance_id then return end
-
-  if !sorted[instance_id] then
-    sorted[instance_id] = Item.find_instance_by_id(instance_id)
-  end
-
-  return sorted[instance_id]
+  return Item.find_instance_by_id(instance_id)
 end
 
 --- Finds an item by a loose query.
@@ -273,88 +295,38 @@ function Item.find(name)
   end
 end
 
---- Generates the next unused item instance id.
--- @return [Number]
-function Item.generate_id()
-  instances.count = instances.count or 0
-  instances.count = instances.count + 1
-
-  return instances.count
-end
-
---- Creates a new instance of an item template.
--- On the server it also runs the 'OnItemCreated' hook, saves the items
--- and sends the new instance to all clients.
--- ```
--- local item_obj = Item.create('test_item', { name = 'Some Item' })
---
--- if item_obj then
---   Item.spawn(actor:GetEyeTraceNoCursor().HitPos, nil, item_obj)
--- end
--- ```
--- @param id [String item id of the template]
--- @param data=nil [Map fields to override on the new instance]
--- @param forced_id=nil [Number instance id to use instead of generating a new one]
--- @return [Item the new instance, or nil if there is no such template]
-function Item.create(id, data, forced_id)
-  local item_obj = Item.find_by_id(id)
-
-  if item_obj then
-    local item_id = forced_id or Item.generate_id()
-    local new_item = table.Copy(item_obj)
-
-    instances[id] = instances[id] or {}
-    instances[id][item_id] = new_item
-
-    if istable(data) then
-      table.safe_merge(new_item, data)
-    end
-
-    new_item.instance_id = item_id
-
-    if SERVER then
-      --- Called on the server when `Item.create` has created a new item instance.
-      -- At this point the instance has its instance id and the overridden fields, but it
-      -- has not been saved or sent to the clients yet and it is not in any inventory.
-      -- The Items plugin uses the hook to call the `on_created` callback of the item.
-      -- It is not run for the instances that `Item.load` restores.
-      -- @param item_obj [Item The new item instance]
-      hook.Run('OnItemCreated', new_item)
-
-      Item.async_save()
-      Cable.send(nil, 'fl_items_new_instance', id, (data or 1), item_id)
-    end
-
-    return new_item
-  end
-end
-
---- Removes an item instance along with its entity in the world, if it has one.
--- Does not take the item out of the inventory that holds it. On the server it also saves
--- the items and tells every client to remove its copy of the instance; the client only
+--- Removes an item instance along with its entity in the world, if it has one, and along
+-- with everything inside of it, if it is a container item. Does not take the item out of
+-- the inventory that holds it. On the server it also deletes the instance from the
+-- database and tells the clients that know the instance to forget it; the client only
 -- forgets the instance, since the entity is removed by the server.
 -- @param instance_id [Number/Item instance id, or the item instance itself]
 function Item.remove(instance_id)
   local item_obj = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
 
-  if item_obj and Item.is_instance(item_obj) then
-    if SERVER and IsValid(item_obj.entity) then
+  if !item_obj or !Item.is_instance(item_obj) then return end
+
+  if SERVER then
+    if IsValid(item_obj.entity) then
       item_obj.entity:Remove()
     end
 
-    if instances[item_obj.id] then
-      instances[item_obj.id][item_obj.instance_id] = nil
+    local inventory = item_obj.inventory
+
+    if inventory and inventory.get_items_ids then
+      for _, content_id in ipairs(inventory:get_items_ids()) do
+        if content_id != item_obj.instance_id then
+          Item.remove(content_id)
+        end
+      end
     end
 
-    sorted[item_obj.instance_id] = nil
-
-    if SERVER then
-      Item.async_save()
-      Cable.send(nil, 'fl_items_remove', item_obj.instance_id)
-    end
-
-    Flux.dev_print('Removed item instance ID: '..item_obj.instance_id)
+    Item.forget(item_obj, true)
+  elseif instances[item_obj.instance_id] == item_obj then
+    instances[item_obj.instance_id] = nil
   end
+
+  Flux.dev_print('Removed item instance ID: '..item_obj.instance_id)
 end
 
 --- Checks whether the table is an item instance rather than an item template.
@@ -418,176 +390,194 @@ Item.set_category_icon('item.category.other', 'icon16/bricks.png')
 Item.set_category_icon('item.category.equipment', 'icon16/package.png')
 
 if SERVER then
-  --- Loads the item instances and the item entities saved for the current map,
-  -- and spawns the entities back into the world. Server-side only.
-  function Item.load()
-    local loaded = Data.load_schema('items/instances', {})
+  local request_limit = 64
+  local request_cooldown = 1
 
-    if loaded and !table.IsEmpty(loaded) then
-      for id, instance_table in pairs(loaded) do
-        local item_obj = Item.find_by_id(id)
+  --- Creates a new instance of an item template, with a new instance id. Server-side only.
+  -- Runs the 'OnItemCreated' hook. The instance is written to the database once it is
+  -- somewhere: in an inventory that is saved, or in the world. An instance that is still
+  -- nowhere when the changes are written is removed, so put it where it belongs right away.
+  -- ```
+  -- local item_obj = Item.create('test_item', { name = 'Some Item' })
+  --
+  -- if item_obj then
+  --   Item.spawn(actor:GetEyeTraceNoCursor().HitPos, nil, item_obj)
+  -- end
+  -- ```
+  -- @param id [String item id of the template]
+  -- @param data=nil [Map fields to override on the new instance; a data field is merged
+  --   into its custom data. The overridden fields are saved with the instance]
+  -- @return [Item the new instance, or nil if there is no such template or no instance id
+  --   could be reserved]
+  function Item.create(id, data)
+    local template = Item.find_by_id(id)
 
-        if item_obj then
-          for instance_id, instance_data in pairs(instance_table) do
-            local new_item = table.Copy(item_obj)
+    if !template then return end
 
-            table.safe_merge(new_item, instance_data)
+    local instance_id = Item.generate_id()
 
-            loaded[id][instance_id] = new_item
-          end
+    if !instance_id then return end
+
+    local new_item = Item.instantiate(template, instance_id, istable(data) and data or nil)
+
+    instances[instance_id] = new_item
+
+    --- Called on the server when `Item.create` has created a new item instance.
+    -- At this point the instance has its instance id and the overridden fields, but it
+    -- has not been saved or sent to any client yet and it is not in any inventory.
+    -- The Items plugin uses the hook to call the `on_created` callback of the item.
+    -- It is not run for the instances that are loaded from the database.
+    -- @param item_obj [Item The new item instance]
+    hook.Run('OnItemCreated', new_item)
+
+    Item.mark_dirty(new_item)
+
+    return new_item
+  end
+
+  --- Returns the players that have been sent an item instance and have not been told to
+  -- forget it yet. Server-side only.
+  -- @param item_obj [Item]
+  -- @return [List<Player> connected players]
+  function Item.get_receivers(item_obj)
+    local list = {}
+    local receivers = istable(item_obj) and item_obj.receivers
+
+    if receivers then
+      for receiver in pairs(receivers) do
+        if IsValid(receiver) then
+          list[#list + 1] = receiver
+        else
+          receivers[receiver] = nil
         end
       end
-
-      instances = loaded
-      Item.instances = loaded
     end
 
-    local loaded = Data.load_schema('items/entities', {})
+    return list
+  end
 
-    if loaded and !table.IsEmpty(loaded) then
-      for id, instance_table in pairs(loaded) do
-        for instance_id, entry in pairs(instance_table) do
-          if instances[id] and instances[id][instance_id] then
-            Item.spawn(entry.position, entry.angles, instances[id][instance_id], entry.dropped_by or false)
-          else
-            loaded[id][instance_id] = nil
-          end
-        end
+  --- Remembers that players have been sent an item instance.
+  -- @param target [Player/List<Player>]
+  -- @param item_obj [Item]
+  local function add_receivers(target, item_obj)
+    local receivers = item_obj.receivers
+
+    if !receivers then
+      receivers = {}
+      item_obj.receivers = receivers
+    end
+
+    local targets = istable(target) and target or { target }
+
+    for _, receiver in ipairs(targets) do
+      if IsValid(receiver) and receiver:IsPlayer() then
+        receivers[receiver] = true
+
+        local known = receiver.known_items or {}
+
+        known[item_obj.instance_id] = true
+        receiver.known_items = known
       end
-
-      entities = loaded
-      Item.entities = loaded
     end
   end
 
-  --- Saves all the item instances to the schema data of the current map. Server-side only.
-  function Item.save_instances()
-    local to_save = {}
+  --- Tells the clients that know an item instance to forget it, and forgets that they
+  -- know it. Server-side only.
+  -- @param item_obj [Item]
+  function Item.network_forget(item_obj)
+    local receivers = Item.get_receivers(item_obj)
 
-    for item_id, item_instances in pairs(instances) do
-      if item_id == 'count' then
-        to_save[item_id] = item_instances
-      else
-        to_save[item_id] = {}
-      end
-
-      if istable(item_instances) then
-        for instance_id, item_obj in pairs(item_instances) do
-          if istable(item_obj) then
-            to_save[item_id][instance_id] = Item.to_saveable(item_obj)
-          end
-        end
-      end
+    if #receivers > 0 then
+      Cable.send(receivers, 'fl_items_remove', item_obj.instance_id)
     end
 
-    Data.save_schema('items/instances', to_save)
-  end
-
-  --- Saves positions and angles of all the item entities in the world, along with the
-  -- characters that dropped them. Entities that are being removed are left out.
-  -- Server-side only.
-  function Item.save_entities()
-    local item_ents = ents.FindByClass('fl_item')
-
-    entities = {}
-
-    for _, entity in ipairs(item_ents) do
-      if IsValid(entity) and !entity:IsMarkedForDeletion() and entity.item then
-        entities[entity.item.id] = entities[entity.item.id] or {}
-
-        entities[entity.item.id][entity.item.instance_id] = {
-          position = entity:GetPos(),
-          angles = entity:GetAngles(),
-          dropped_by = entity.dropped_by
-        }
+    for _, receiver in ipairs(receivers) do
+      if receiver.known_items then
+        receiver.known_items[item_obj.instance_id] = nil
       end
     end
 
-    Data.save_schema('items/entities', entities)
+    item_obj.receivers = nil
   end
 
-  --- Saves both the item instances and the item entities. Server-side only.
-  function Item.save_all()
-    Item.save_instances()
-    Item.save_entities()
-  end
-
-  --- Runs Item.save_all inside of a coroutine. Server-side only.
-  function Item.async_save()
-    local handle = coroutine.create(Item.save_all)
-    coroutine.resume(handle)
-  end
-
-  --- Runs Item.save_instances inside of a coroutine. Server-side only.
-  function Item.async_save_instances()
-    local handle = coroutine.create(Item.save_instances)
-    coroutine.resume(handle)
-  end
-
-  --- Runs Item.save_entities inside of a coroutine. Server-side only.
-  function Item.async_save_entities()
-    local handle = coroutine.create(Item.save_entities)
-    coroutine.resume(handle)
-  end
-
-  --- Sends the custom data of an item instance to the client. Server-side only.
+  --- Sends the custom data of an item instance to clients. Server-side only.
   -- Does nothing if the item is a template.
-  -- @param target [Player/List<Player>/Nil who to send to; nil sends to everyone]
+  -- @param target [Player/List<Player>/Nil who to send to; nil sends to the players that
+  --   know the instance]
   -- @param item_obj [Item]
   function Item.network_item_data(target, item_obj)
-    if Item.is_instance(item_obj) then
-      Cable.send(target, 'fl_items_data', item_obj.id, item_obj.instance_id, item_obj.data)
-    end
+    if !Item.is_instance(item_obj) then return end
+
+    target = target or Item.get_receivers(item_obj)
+
+    if istable(target) and #target == 0 then return end
+
+    Cable.send(target, 'fl_items_data', item_obj.instance_id, item_obj.data)
   end
 
-  --- Sends the saveable fields of an item instance to the client,
-  -- which builds its own copy of the instance out of them. Server-side only.
-  -- @param target [Player/List<Player>/Nil who to send to; nil sends to everyone]
+  --- Sends what a client needs to know about an item instance to clients, which build
+  -- their own copies of the instance out of it, and remembers that they know the instance.
+  -- Server-side only.
+  -- @param target [Player/List<Player>/Nil who to send to; nil sends to the players that
+  --   know the instance]
   -- @param instance_id [Number]
   function Item.network_item(target, instance_id)
-    Cable.send(target, 'fl_items_network', instance_id, Item.to_saveable(Item.find_instance_by_id(instance_id)))
+    local item_obj = Item.find_instance_by_id(instance_id)
+
+    if !item_obj then return end
+
+    target = target or Item.get_receivers(item_obj)
+
+    if istable(target) and #target == 0 then return end
+
+    add_receivers(target, item_obj)
+
+    Cable.send(target, 'fl_items_network', instance_id, Item.to_networkable(item_obj))
   end
 
-  --- Tells the client which item instance an item entity represents. Server-side only.
-  -- @param target [Player/List<Player>/Nil who to send to; nil sends to everyone]
+  --- Tells clients which item instance an item entity represents. Server-side only.
+  -- @param target [Player/List<Player>/Nil who to send to; nil sends to the players that
+  --   know the instance of the entity]
   -- @param ent [Entity the fl_item entity]
   function Item.network_entity_data(target, ent)
-    if IsValid(ent) then
-      Cable.send(target, 'fl_items_ent_data', ent:EntIndex(), ent.item.id, ent.item.instance_id)
-    end
+    if !IsValid(ent) or !ent.item then return end
+
+    target = target or Item.get_receivers(ent.item)
+
+    if istable(target) and #target == 0 then return end
+
+    Cable.send(target, 'fl_items_ent_data', ent:EntIndex(), ent.item.instance_id)
   end
 
-  --- Sends info about items in the world to the player,
-  -- then runs the 'OnItemDataReceived' hook on their client. Server-side only.
+  --- Sends an item entity and its item instance to a player. Server-side only.
   -- @param target [Player]
-  function Item.send_to_player(target)
-    local item_ents = ents.FindByClass('fl_item')
+  -- @param ent [Entity the fl_item entity]
+  function Item.send_entity(target, ent)
+    if !IsValid(ent) or !ent.item then return end
 
-    for _, entity in ipairs(item_ents) do
-      if entity.item then
-        Item.network_item(target, entity.item.instance_id)
-      end
-    end
-
-    hook.run_client(target, 'OnItemDataReceived')
+    Item.network_item(target, ent.item.instance_id)
+    Item.network_entity_data(target, ent)
   end
 
   --- Spawns an item instance in the world as an fl_item entity. Server-side only.
-  -- The item is sent to all clients and the item entities are saved afterward. The entity
-  -- remembers the character of the dropper, and the on_entity_spawned callback of the item
-  -- is called once the entity is in the world.
+  -- The item stops being held by the inventory it was saved in, so take it out of its
+  -- inventory first. The entity remembers the character of the dropper, and the
+  -- on_entity_spawned callback of the item is called once the entity is in the world.
+  -- Clients ask for the item once the entity reaches them.
   -- ```
   -- local item_obj = Item.create('test_item')
   -- local trace = actor:GetEyeTraceNoCursor()
   -- local ent = Item.spawn(trace.HitPos, Angle(0, 0, 0), item_obj)
   -- ```
-  -- @param position [Vector where to put the item; it is raised by the height of its bounds]
+  -- @param position [Vector where to put the item; it is raised by the height of its bounds
+  --   unless `exact` is set]
   -- @param angles=nil [Angle]
   -- @param item_obj [Item item instance; templates cannot be spawned]
   -- @param dropper=nil [Player/Map/Boolean the player who drops the item, or a table with
   --   the character_id and steam_id fields of an earlier drop; nil or false if nobody does]
+  -- @param exact=false [Boolean put the entity exactly at the position, without raising it]
   -- @return [Entity the item entity, Item the spawned item; nothing if the arguments are invalid]
-  function Item.spawn(position, angles, item_obj, dropper)
+  function Item.spawn(position, angles, item_obj, dropper, exact)
     if !position or !istable(item_obj) then
       error_with_traceback('No position or item table is not a table!')
       return
@@ -602,9 +592,13 @@ if SERVER then
 
     ent:set_item(item_obj)
 
-    local _mins, maxs = ent:GetCollisionBounds()
+    if exact then
+      ent:SetPos(position)
+    else
+      local _mins, maxs = ent:GetCollisionBounds()
 
-    ent:SetPos(position + Vector(0, 0, maxs.z))
+      ent:SetPos(position + Vector(0, 0, maxs.z))
+    end
 
     if angles then
       ent:SetAngles(angles)
@@ -614,17 +608,7 @@ if SERVER then
     ent:set_dropper(dropper)
 
     item_obj:set_entity(ent)
-    Item.network_item(nil, item_obj.instance_id)
-
-    entities[item_obj.id] = entities[item_obj.id] or {}
-    entities[item_obj.id][item_obj.instance_id] = entities[item_obj.id][item_obj.instance_id] or {}
-    entities[item_obj.id][item_obj.instance_id] = {
-      position = position,
-      angles = angles,
-      dropped_by = ent.dropped_by
-    }
-
-    Item.async_save_entities()
+    Item.set_holder(item_obj)
 
     if item_obj.on_entity_spawned then
       item_obj:on_entity_spawned(ent)
@@ -634,54 +618,95 @@ if SERVER then
   end
 
   Cable.receive('fl_items_data_request', function(actor, ent_index)
+    if !isnumber(ent_index) then return end
+
+    local cur_time = CurTime()
+
+    if (actor.item_requests_reset or 0) <= cur_time then
+      actor.item_requests_reset = cur_time + 1
+      actor.item_requests = 0
+    end
+
+    actor.item_requests = actor.item_requests + 1
+
+    if actor.item_requests > request_limit then return end
+
+    local requested = actor.requested_item_entities or {}
+
+    actor.requested_item_entities = requested
+
+    if (requested[ent_index] or 0) > cur_time then return end
+
+    requested[ent_index] = cur_time + request_cooldown
+
     local ent = Entity(ent_index)
 
-    if IsValid(ent) then
+    if !IsValid(ent) or ent:GetClass() != 'fl_item' or !ent.item then return end
+    if !actor:TestPVS(ent) then return end
+
+    local receivers = ent.item.receivers
+
+    if receivers and receivers[actor] then
       Item.network_entity_data(actor, ent)
+    else
+      Item.send_entity(actor, ent)
     end
   end)
 else
-  Cable.receive('fl_items_data', function(id, instance_id, data)
-    if istable(instances[id][instance_id]) then
-      instances[id][instance_id].data = data
+  Cable.receive('fl_items_data', function(instance_id, data)
+    local item_obj = instances[instance_id]
+
+    if istable(item_obj) then
+      item_obj.data = data
     end
   end)
 
-  Cable.receive('fl_items_network', function(instance_id, item_obj)
-    if item_obj and stored[item_obj.id] then
-      local new_table = table.Copy(stored[item_obj.id])
-      table.safe_merge(new_table, item_obj)
+  Cable.receive('fl_items_network', function(instance_id, fields)
+    local template = istable(fields) and stored[fields.id]
 
-      instances[new_table.id][instance_id] = new_table
-    else
+    if !template then
       print('Failed to receive item instance #'..(instance_id or '')..', please report that.')
+
+      return
+    end
+
+    local item_obj = Item.instantiate(template, instance_id, nil, nil)
+
+    for key, value in pairs(fields) do
+      item_obj[key] = value
+    end
+
+    local old_item = instances[instance_id]
+
+    instances[instance_id] = item_obj
+
+    if old_item and IsValid(old_item.entity) and old_item.entity.item == old_item then
+      old_item.entity.item = item_obj
+      item_obj.entity = old_item.entity
     end
   end)
 
-  Cable.receive('fl_items_ent_data', function(ent_index, id, instance_id)
+  Cable.receive('fl_items_ent_data', function(ent_index, instance_id)
     local ent = Entity(ent_index)
 
-    if IsValid(ent) then
-      local item_obj = instances[id][instance_id]
+    if !IsValid(ent) then return end
 
-      if item_obj == nil then
-        return Cable.send('fl_items_data_request', ent_index)
-      end
+    local item_obj = instances[instance_id]
 
-      ent:SetModel(item_obj:get_model())
-      ent:SetSkin(item_obj.skin)
-      ent:SetColor(item_obj:get_color())
-
-      Item.apply_bodygroups(ent, item_obj)
-
-      table.safe_merge(ent, scripted_ents.Get('fl_item'))
-
-      ent.item = item_obj
+    if item_obj == nil then
+      return Cable.send('fl_items_data_request', ent_index)
     end
-  end)
 
-  Cable.receive('fl_items_new_instance', function(id, data, item_id)
-    Item.create(id, data, item_id)
+    ent:SetModel(item_obj:get_model())
+    ent:SetSkin(item_obj.skin)
+    ent:SetColor(item_obj:get_color())
+
+    Item.apply_bodygroups(ent, item_obj)
+
+    table.safe_merge(ent, scripted_ents.Get('fl_item'))
+
+    ent.item = item_obj
+    item_obj.entity = ent
   end)
 
   Cable.receive('fl_items_remove', function(instance_id)

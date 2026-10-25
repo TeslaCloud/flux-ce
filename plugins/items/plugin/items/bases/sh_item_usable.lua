@@ -2,8 +2,9 @@
 -- A derived item overrides `use(actor)` with its effect and, to forbid the use in some
 -- cases, `can_use(actor)`. The `max_uses` field sets how many times the item can be used
 -- before it is removed from the inventory, 1 by default. The uses that are left are kept
--- in the `uses` field of the instance; when `max_uses` is above 1 they are shown in the
--- name of the item and on its inventory slot, and the weight of the item shrinks with them.
+-- in the `uses` custom data of the instance; when `max_uses` is above 1 they are shown in
+-- the name of the item and on its inventory slot, and the weight of the item shrinks with
+-- them.
 
 local uses_text_color = Color(225, 225, 225)
 
@@ -44,7 +45,7 @@ end
 --- Returns the amount of uses the item has left.
 -- @return [Number]
 function ItemUsable:get_uses()
-  return self.uses or self.max_uses
+  return self:get_data('uses', self.max_uses)
 end
 
 --- Called on the server by the 'PlayerUseItem' hook when a player uses the item.
@@ -58,9 +59,11 @@ function ItemUsable:on_use(actor)
   if self:can_use(actor) != false then
     self:use(actor)
 
-    self.uses = (self.uses or self.max_uses) - 1
+    local uses = self:get_uses() - 1
 
-    if self.uses > 0 then
+    self:set_data('uses', uses)
+
+    if uses > 0 then
       return true
     end
   else

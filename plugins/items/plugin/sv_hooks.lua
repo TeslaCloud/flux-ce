@@ -1,7 +1,7 @@
---- Server side of the Items plugin: loads and saves the items, sends the items lying in the
--- world to players, checks whether a player may perform a menu action on an item, and
--- calls the `on_drop`, `on_destroy`, `on_loadout`, `on_save` and `on_created` callbacks of
--- items. It also destroys items on request of their owners, keeps players away from the
+--- Server side of the Items plugin: loads the items of the map, has the changes of the items
+-- written to the database, checks whether a player may perform a menu action on an item,
+-- and calls the `on_drop`, `on_destroy`, `on_loadout`, `on_save` and `on_created` callbacks
+-- of items. It also destroys items on request of their owners, keeps players away from the
 -- items that another of their characters has dropped, and drops the weapons of players
 -- who die, each of which a config key turns on.
 
@@ -11,21 +11,38 @@ local IsValid = IsValid
 local use_distance_sqr = 100 * 100
 local min_aim_dot = math.pi * 0.125
 
---- Checks whether an item holds other items, the way the container items of the Inventory
--- plugin do: in its inventory, or in the list of contents that was saved with it.
+--- Checks whether an item holds other items in its inventory, the way the container items
+-- of the Inventory plugin do.
 -- @param item_obj [Item]
 -- @return [Boolean]
 local function has_contents(item_obj)
-  if item_obj.inventory then
-    return !item_obj.inventory:is_empty()
-  end
-
-  return istable(item_obj.items) and !table.IsEmpty(item_obj.items)
+  return item_obj.inventory != nil and !item_obj.inventory:is_empty()
 end
 
---- Loads the saved items once the map entities have been created.
+--- Loads the items of the current map once both the map entities and the database are
+-- there, which can happen in either order.
+function Items:load_map_items()
+  if self.map_items_loaded or !self.entities_ready or !Item.is_storage_ready() then return end
+
+  self.map_items_loaded = true
+
+  Item.load_map()
+end
+
+--- Reserves the first block of item instance ids and loads the items of the map, if the
+-- map entities are there already.
+function Items:ActiveRecordReady()
+  Item.reserve_ids()
+
+  self:load_map_items()
+end
+
+--- Loads the items of the map once the map entities have been created, if the database is
+-- ready already.
 function Items:InitPostEntity()
-  Item.load()
+  self.entities_ready = true
+
+  self:load_map_items()
 end
 
 --- Runs the 'PlayerThrewGrenade' hook on the next tick after a frag grenade is created.
@@ -49,22 +66,43 @@ function Items:OnEntityCreated(entity)
   end
 end
 
---- Saves the item instances and the item entities.
+--- Marks the items lying in the world that have moved, so that they are written with the
+-- next save.
 function Items:SaveData()
-  Item.save_all()
+  Item.mark_world_dirty()
 end
 
---- Sends the items lying in the world to the player that has finished loading.
--- @param actor [Player]
-function Items:ClientIncludedSchema(actor)
-  Item.send_to_player(actor)
+--- Writes the changes of the items to the database once everything else has been saved.
+-- While the server shuts down or changes the map, it waits until the database has run
+-- the queries, and reports the items that could not be written.
+function Items:PostSaveData()
+  if !Flux.shutting_down then
+    Item.save()
+
+    return
+  end
+
+  local failures = Item.save(nil, true)
+
+  if #failures > 0 then
+    local ids = {}
+
+    for index, item_obj in ipairs(failures) do
+      ids[index] = item_obj.instance_id
+    end
+
+    ErrorNoHalt('These items could not be saved before the shutdown: '..table.concat(ids, ', ')..'\n')
+  end
 end
 
---- Tells the client of the player to open the menu of the item entity they have used.
+--- Sends the item entity the player has used to them, along with its item, and tells their
+-- client to open the menu of the item.
 -- @param activator [Player]
 -- @param entity [Entity the fl_item entity]
 -- @param _item_obj [Item]
 function Items:PlayerUseItemEntity(activator, entity, _item_obj)
+  Item.send_entity(activator, entity)
+
   Cable.send(activator, 'fl_player_use_item_entity', entity)
 end
 
@@ -110,8 +148,8 @@ function Items:PlayerCanUseItem(actor, item_obj, _action, ...)
   end
 end
 
---- Sends an item that is lying in the world to all clients again
--- after a menu action has been performed on it.
+--- Sends an item that is lying in the world again to the clients that know it, after a
+-- menu action has been performed on it.
 -- @param _actor [Player]
 -- @param item_obj [Item]
 -- @param _act [String name of the menu action]
@@ -326,30 +364,63 @@ function Items:DoPlayerDeath(victim, _attacker, _damage_info)
   end
 end
 
---- Calls the on_loadout callback of every item that the player has,
--- on the next tick after they spawn with their character loaded.
+--- Calls the on_loadout callback of every item that the player has.
 -- @param actor [Player]
-function Items:PostPlayerSpawn(actor)
-  if actor:is_character_loaded() then
-    timer.Simple(0, function()
-      for _, item_obj in pairs(actor:get_items()) do
-        if item_obj.on_loadout then
-          item_obj:on_loadout(actor)
-        end
-      end
-    end)
+local function give_loadout(actor)
+  for _, item_obj in pairs(actor:get_items()) do
+    if item_obj.on_loadout then
+      item_obj:on_loadout(actor)
+    end
   end
 end
 
---- Calls the on_save callback of every item that the player has before their character is saved.
+--- Calls the on_loadout callback of every item that the player has, once per spawn: on
+-- the next tick after they spawn with their character loaded, or once the items of the
+-- character have been loaded if that takes longer.
+-- @param actor [Player]
+function Items:PostPlayerSpawn(actor)
+  if !actor:is_character_loaded() then return end
+
+  actor.loadout_pending = true
+
+  timer.Simple(0, function()
+    if IsValid(actor) and actor.loadout_pending and !actor.loading_items then
+      actor.loadout_pending = nil
+
+      give_loadout(actor)
+    end
+  end)
+end
+
+--- Calls the on_loadout callback of the items of a character that have just been loaded,
+-- if the player has spawned and has not had them yet.
+-- @param owner [Player]
+-- @param _character [Character]
+-- @param _items [List<Item>]
+function Items:OnCharacterItemsLoaded(owner, _character, _items)
+  if owner.loadout_pending and owner:Alive() then
+    owner.loadout_pending = nil
+
+    give_loadout(owner)
+  end
+end
+
+--- Calls the on_save callback of every item that the player has before their character is
+-- saved, and writes the changes of the items along with the character.
 -- @param owner [Player]
 -- @param _index [Character the character that is being saved]
 function Items:PreSaveCharacter(owner, _index)
-  for _, item_obj in pairs(owner:get_items()) do
+  local items = owner:get_items()
+
+  for _, item_obj in ipairs(items) do
     if item_obj.on_save then
       item_obj:on_save(owner)
     end
+
+    Item.mark_dirty(item_obj)
   end
+
+  Item.save(items, Flux.shutting_down == true)
 end
 
 --- Calls the on_created callback of an item instance that has just been created.

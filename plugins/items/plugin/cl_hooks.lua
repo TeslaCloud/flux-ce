@@ -158,15 +158,6 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
   end
 end
 
---- Requests the item data of every item entity from the server.
-function Items:OnItemDataReceived()
-  for _, entity in ents.Iterator() do
-    if IsValid(entity) and entity:GetClass() == 'fl_item' then
-      Cable.send('fl_items_data_request', entity:EntIndex())
-    end
-  end
-end
-
 Cable.receive('fl_player_use_item_entity', function(entity)
   if IsValid(entity) and entity.item then
     --- Called on the client to open the menu of an item.

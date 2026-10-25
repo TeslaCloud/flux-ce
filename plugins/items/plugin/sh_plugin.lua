@@ -7,15 +7,16 @@
 -- with `ItemBase:base_off`; this plugin comes with `ItemUsable`, `ItemConsumable`,
 -- `ItemAmmo`, `ItemEquipable`, `ItemWeapon`, `ItemThrowable` and `ItemWearable`.
 --
--- What players actually own are item instances: copies of a template made by
--- `Item.create`, each with its own numeric instance id and custom data. The server saves
--- the instances and sends them to the clients. An instance either sits in an inventory
--- (see the Inventory plugin) or lies in the world as an `fl_item` entity spawned by
--- `Item.spawn`. Players act on an instance through its menu: the use, take, drop and
--- destroy options and the custom buttons of the item all end up in
--- `ItemBase:do_menu_action` on the server, which runs the `PlayerCanUseItem`,
--- `PlayerUseItem`, `PlayerTakeItem`, `PlayerDropItem`, `PlayerDestroyItem` and
--- `PlayerUsedItem` hooks.
+-- What players actually own are item instances, made out of a template by `Item.create`,
+-- each with its own numeric instance id and custom data. An instance either sits in an
+-- inventory (see the Inventory plugin) or lies in the world as an `fl_item` entity spawned
+-- by `Item.spawn`. Every instance is a row of the `items` table of the database; the
+-- server loads the instances when they are needed and writes back what changes (see
+-- `sv_storage.lua`), and sends each client the instances it needs. Players act on an
+-- instance through its menu: the use, take, drop and destroy options and the custom
+-- buttons of the item all end up in `ItemBase:do_menu_action` on the server, which runs
+-- the `PlayerCanUseItem`, `PlayerUseItem`, `PlayerTakeItem`, `PlayerDropItem`,
+-- `PlayerDestroyItem` and `PlayerUsedItem` hooks.
 --
 -- The config keys of the plugin, all off by default, let players destroy the items in
 -- their inventories (`item_destroy`), give the items that lie in the world health so that
@@ -42,6 +43,7 @@
 PLUGIN:set_global('Items')
 
 require_relative 'cl_hooks'
+require_relative 'sv_storage'
 require_relative 'sv_hooks'
 require_relative 'sh_enums'
 

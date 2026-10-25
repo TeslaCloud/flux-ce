@@ -64,6 +64,9 @@ Cable.receive('fl_key_add', function(actor, instance_id, entity)
   actor:notify('notification.key.add')
 end)
 
+-- Lists the keys of a door among the loaded items: those of the characters that are in use
+-- and those of the current map. Keys of characters that nobody plays at the moment are
+-- not loaded, so they are not listed and cannot be changed from the list.
 Cable.receive('fl_key_show_list', function(actor, entity)
   local door_id = entity:MapCreationID()
   local keys = {}

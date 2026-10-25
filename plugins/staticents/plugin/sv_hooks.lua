@@ -40,8 +40,8 @@ end
 function StaticEnts:PersistenceSave()
   --- Called on the server right before the static entities are copied and saved, so that
   -- plugins can prepare their entities for it.
-  -- The Containers plugin stores the item IDs of every container on its entity here and
-  -- takes the inventory off the entity.
+  -- The Containers plugin takes the inventory off every container here, so that it is not
+  -- saved with the container.
   hook.Run('PrePersistenceSave')
 
   local entities = {}

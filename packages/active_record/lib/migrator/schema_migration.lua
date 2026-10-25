@@ -67,6 +67,7 @@ end
 -- @param version [Number/String]
 function ActiveRecord.SchemaMigration:create_version(version)
   local query = ActiveRecord.Database:insert(self.table_name)
+    query.without_id = true
     query:insert('version', self:normalize_migration_number(version))
     query:callback(function(_result, query_str, time, bindings)
       print_query('Schema Migration Create ('..time..'s)', query_str, bindings)

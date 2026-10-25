@@ -2,8 +2,8 @@
 -- `Item.spawn` creates it and ties the instance to it with `set_item`, which gives the
 -- entity the model, skin, color and bodygroups of the item. Pressing the use key on it
 -- briefly opens the menu of the item for the player; holding the key for half a second
--- takes the item. On the client it draws the name and the description of the item as its
--- target ID.
+-- takes the item. A client asks the server for the item of the entity once the entity
+-- reaches it, and draws the name and the description of the item as its target ID.
 --
 -- The entity remembers the character that dropped it (`set_dropper`, `get_dropper`). It
 -- has the health that `ItemBase:get_entity_health` returns for its item: with health
@@ -272,7 +272,7 @@ if SERVER then
   end
 
   --- Ties an item instance to the entity, applying its model, skin, color, bodygroups and
-  -- health, and tells all clients about it.
+  -- health, and tells the clients that know the item about it.
   -- @param item_obj [Item]
   -- @return [Boolean false if no item was given, nothing otherwise]
   function ENT:set_item(item_obj)
@@ -300,9 +300,9 @@ if SERVER then
     Item.network_entity_data(nil, self)
 
     --- Called on the server after an item instance has been tied to an item entity.
-    -- The entity has the model, skin and color of the item by now, and the clients have
-    -- been told which item it represents. When the item is being spawned by `Item.spawn`,
-    -- the entity itself has not been positioned or spawned yet.
+    -- The entity has the model, skin and color of the item by now, and the clients that
+    -- know the item have been told which item it represents. When the item is being
+    -- spawned by `Item.spawn`, the entity itself has not been positioned or spawned yet.
     -- @param entity [Entity The `fl_item` entity]
     -- @param item_obj [Item The item instance that has been set]
     hook.Run('OnEntityItemSet', self, item_obj)
@@ -311,6 +311,43 @@ else
   local target_text_color = Color(255, 255, 255)
   local target_outline_color = Color(0, 0, 0)
   local loading_cog_color = Color(255, 255, 255)
+  local request_delay = 2
+  local requests_per_second = 32
+  local request_queue = {}
+  local queued = {}
+
+  --- Queues a request to the server for the item of the entity, at most once every two
+  -- seconds. The queue is sent at a rate the server accepts, so that every entity gets
+  -- its item even when many reach the client at once.
+  function ENT:request_item()
+    local cur_time = CurTime()
+    local ent_index = self:EntIndex()
+
+    if (self.next_item_request or 0) > cur_time or queued[ent_index] then return end
+
+    self.next_item_request = cur_time + request_delay
+    queued[ent_index] = true
+    request_queue[#request_queue + 1] = ent_index
+  end
+
+  timer.Create('fl_item_requests', 1 / requests_per_second, 0, function()
+    local ent_index = table.remove(request_queue, 1)
+
+    if !ent_index then return end
+
+    queued[ent_index] = nil
+
+    local ent = Entity(ent_index)
+
+    if IsValid(ent) and !ent.item then
+      Cable.send('fl_items_data_request', ent_index)
+    end
+  end)
+
+  --- Asks the server for the item of the entity as soon as the entity reaches the client.
+  function ENT:Initialize()
+    self:request_item()
+  end
 
   --- Lets the item think.
   function ENT:Think()
@@ -367,10 +404,7 @@ else
       text = t(item_obj:get_name())
       desc = t(item_obj:get_description())
     else
-      if !self.data_requested then
-        Cable.send('fl_items_data_request', self:EntIndex())
-        self.data_requested = true
-      end
+      self:request_item()
 
       local cog_size = math.scale(48)
 

@@ -31,6 +31,13 @@ function ActiveRecord.Adapters.Mysqloo:init()
   require('mysqloo')
 end
 
+--- Converts a unix timestamp to the date-time form that MySQL takes in date-time columns.
+-- @param unix_time [Number]
+-- @return [String e.g. '2019-03-09 12:00:00', in UTC]
+function ActiveRecord.Adapters.Mysqloo:format_datetime(unix_time)
+  return os.date('!%Y-%m-%d %H:%M:%S', unix_time)
+end
+
 --- Checks whether the adapter talks to a MySQL database.
 -- @return [Boolean always true]
 function ActiveRecord.Adapters.Mysqloo:is_mysql()
@@ -124,10 +131,11 @@ end
 -- @param query_type=nil [String lowercase query type, e.g. 'insert']
 -- @param bindings=nil [List values of the ? placeholders in the query. A query that is
 --   given bindings has to be a single statement]
+-- @param error_callback=nil [Function called with the error text if the query fails]
 -- @return [Any whatever the callback returns in sync mode, nothing otherwise]
-function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bindings)
+function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bindings, error_callback)
   if !self.connection then
-    return self:queue(query, callback, query_type, bindings)
+    return self:queue(query, callback, query_type, bindings, error_callback)
   end
 
   local query_obj = nil
@@ -175,24 +183,25 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
 
   query_obj.onSuccess = success_func
   query_obj.onError = function(_query_obj, error_text)
-    self:query_failed(query, error_text, false)
+    self:report_failure(query, error_text, error_callback, false)
   end
 
   if self._sync then
     local error_text = nil
 
     -- The callbacks run inside of wait(), so the success callback is called by hand
-    -- below instead and the error is reported once the query is done.
+    -- below instead and the error is reported once the query is done. The query waits
+    -- for the queries that were started before it, so they keep their order.
     query_obj.onSuccess = nil
     query_obj.onError = function(_query_obj, text)
       error_text = text
     end
 
     query_obj:start()
-    query_obj:wait(true)
+    query_obj:wait(false)
 
     if error_text then
-      return self:query_failed(query, error_text)
+      return self:report_failure(query, error_text, error_callback)
     end
 
     local data = query_obj:getData()

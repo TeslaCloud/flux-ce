@@ -68,9 +68,10 @@ function Vendors:get_buy_price(vendor, item_obj, actor)
 
   local price = entry.price or (tonumber(item_obj.cost) or 0) * data.buy_rate / 100
   local max_uses = tonumber(item_obj.max_uses)
+  local uses = item_obj.get_uses and tonumber(item_obj:get_uses())
 
-  if max_uses and max_uses > 1 and isnumber(item_obj.uses) then
-    price = price * math.Clamp(item_obj.uses / max_uses, 0, 1)
+  if max_uses and max_uses > 1 and uses then
+    price = price * math.Clamp(uses / max_uses, 0, 1)
   end
 
   return adjust_price(actor, vendor, item_obj, price, false)
@@ -90,11 +91,7 @@ function Vendors:can_buy_item(vendor, item_obj)
     return false, 'error.vendor.equipped'
   end
 
-  if item_obj.inventory then
-    if !item_obj.inventory:is_empty() then
-      return false, 'error.vendor.not_empty'
-    end
-  elseif istable(item_obj.items) and !table.IsEmpty(item_obj.items) then
+  if item_obj.inventory and !item_obj.inventory:is_empty() then
     return false, 'error.vendor.not_empty'
   end
 

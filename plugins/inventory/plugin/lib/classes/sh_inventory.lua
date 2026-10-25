@@ -19,6 +19,13 @@
 -- server, `default` marks the inventory of a player that items go to when none is named,
 -- and `infinite_width` and `infinite_height` make the inventory resize itself to keep
 -- an empty column or row past its last item.
+--
+-- What an inventory holds is saved to the database as held by the holder of the
+-- inventory: the character in its `character_id` field, the container item in its
+-- `instance_id` field or the container prop in its `container_id` field. Putting an item
+-- into an inventory makes the inventory its holder (`Item.set_holder`), and taking it out
+-- leaves it without one. An inventory that has none of these fields holds items without
+-- saving them, and they keep the place they were last saved in.
 
 local pairs = pairs
 local next = next
@@ -617,6 +624,8 @@ if SERVER then
         item_obj.rotated = !item_obj.rotated
       end
 
+      Item.set_holder(item_obj, self)
+
       local slots = self.slots
       local instance_id = item_obj.instance_id
 
@@ -711,6 +720,8 @@ if SERVER then
     item_obj.x = nil
     item_obj.y = nil
     item_obj.rotated = false
+
+    Item.set_holder(item_obj)
 
     local slots = self.slots
     local instance_id = item_obj.instance_id
@@ -840,6 +851,8 @@ if SERVER then
       item_obj.rotated = !item_obj.rotated
     end
 
+    Item.mark_dirty(item_obj)
+
     local slots = self.slots
 
     for i = old_y, old_y + old_h - 1 do
@@ -952,6 +965,8 @@ if SERVER then
     if was_rotated != need_rotation then
       item_obj.rotated = !item_obj.rotated
     end
+
+    Item.set_holder(item_obj, inventory)
 
     local old_slots = self.slots
     local new_slots = inventory.slots
@@ -1159,21 +1174,6 @@ if SERVER then
 
     self:rebuild()
     self:sync()
-  end
-
-  --- @warning [Internal]
-  -- Fill the inventory with certain items by their ids.
-  -- @param items_ids [List<Number> instance ids]
-  function Inventory:load_items(items_ids)
-    local find_instance_by_id = Item.find_instance_by_id
-
-    for _, instance_id in pairs(items_ids) do
-      local item_obj = find_instance_by_id(instance_id)
-
-      if item_obj then
-        self:add_item(item_obj, item_obj.x, item_obj.y)
-      end
-    end
   end
 
   --- Disables the inventory, preventing the manipulation of items inside it.

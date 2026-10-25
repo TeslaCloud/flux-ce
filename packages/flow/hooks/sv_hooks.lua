@@ -700,16 +700,17 @@ function GM:FLSaveData()
 end
 
 --- Saves everything when the server shuts down or changes the map: runs the FLSaveData
--- hook and saves the data of every player. Afterwards Flux.shutting_down is true, so that
--- code which runs while the map unloads (an entity's OnRemove, for example) can tell.
+-- hook and saves the data of every player. Flux.shutting_down is true from the start, so
+-- that the save handlers and the code which runs while the map unloads (an entity's
+-- OnRemove, for example) can tell.
 function GM:ShutDown()
+  Flux.shutting_down = true
+
   hook.Run('FLSaveData')
 
   for _, client in player_iterator() do
     client:save_player()
   end
-
-  Flux.shutting_down = true
 end
 
 --- Runs the PlayerPositionChanged hook if the player has moved since the previous check.

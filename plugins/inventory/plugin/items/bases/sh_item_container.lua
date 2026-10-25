@@ -6,10 +6,12 @@
 -- filled with.
 --
 -- The base class adds the open button to the menu of the item. The inventory is created
--- when the container is opened for the first time, or filled on creation, and belongs to
--- the item through its `instance_id` field; the instance ids of the contents are saved
--- with the item. A derived item can override `can_contain(item_obj)` and return false to
--- refuse an item, calling the base method to keep the container out of itself.
+-- when the container is opened for the first time, filled on creation, or when its
+-- contents are loaded from the database, and belongs to the item through its
+-- `instance_id` field. The contents are saved as being inside of the item, and are loaded
+-- and unloaded along with it. A derived item can override `can_contain(item_obj)` and
+-- return false to refuse an item, calling the base method to keep the container out of
+-- itself.
 -- @module [ItemContainer]
 
 class 'ItemContainer' extends 'ItemBase'
@@ -50,18 +52,12 @@ function ItemContainer:get_inventory_data()
 end
 
 --- Called on the server when a player presses the open button in the item's menu.
--- Creates the inventory of the container if it does not exist yet,
--- fills it with the items that were saved, and opens it for the player.
+-- Creates the inventory of the container if it does not exist yet and opens it for the
+-- player.
 -- @param actor [Player]
 function ItemContainer:on_open(actor)
   if !self.inventory then
     self:create_inventory()
-
-    if self.items then
-      self.inventory:load_items(self.items)
-
-      self.items = nil
-    end
   end
 
   actor:open_inventory(self.inventory)
@@ -108,13 +104,5 @@ function ItemContainer:on_created()
         return
       end
     end
-  end
-end
-
---- Called on the server before the character of the player that has the item is saved.
--- Stores the instance ids of the contained items in the 'items' field of the item.
-function ItemContainer:on_save()
-  if self.inventory then
-    self.items = self.inventory:get_items_ids()
   end
 end

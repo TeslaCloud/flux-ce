@@ -294,11 +294,18 @@ function revert(callback)
   return running_migration('revert'):revert(callback)
 end
 
---- Converts a unix timestamp to an ISO 8601 date-time string in UTC,
--- e.g. '2019-03-09T12:00:00Z'.
+--- Converts a unix timestamp to a date-time string in UTC, in the form that the current
+-- database adapter writes into date-time columns: ISO 8601 ('2019-03-09T12:00:00Z') unless
+-- the adapter needs another one, as MySQL does ('2019-03-09 12:00:00').
 -- @param unix_time [Number]
 -- @return [String]
 function to_datetime(unix_time)
+  local adapter = ActiveRecord.adapter
+
+  if adapter then
+    return adapter:format_datetime(unix_time)
+  end
+
   return DateTime:iso(unix_time)
 end
 
@@ -394,8 +401,9 @@ do
 end
 
 --- Converts a date-time string to a unix timestamp. It understands both the ISO 8601 form
--- that to_datetime writes ('YYYY-MM-DDTHH:MM:SSZ') and the 'YYYY-MM-DD HH:MM:SS' form in
--- which databases return date-time columns, and reads either as UTC. A number is taken for
+-- ('YYYY-MM-DDTHH:MM:SSZ') and the 'YYYY-MM-DD HH:MM:SS' form, which to_datetime writes
+-- depending on the database and in which databases return date-time columns, and reads
+-- either as UTC. A number is taken for
 -- a unix timestamp and returned as is.
 -- ```
 -- time_from_timestamp('2019-03-09T12:00:00Z') -- 1552132800

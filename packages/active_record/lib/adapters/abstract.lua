@@ -92,6 +92,31 @@ function ActiveRecord.Adapters.Abstract:sync(sync)
   return self
 end
 
+--- Converts a unix timestamp to the date-time string that the adapter writes into
+-- date-time columns.
+-- @param unix_time [Number]
+-- @return [String ISO 8601 in UTC, e.g. '2019-03-09T12:00:00Z', unless overridden]
+function ActiveRecord.Adapters.Abstract:format_datetime(unix_time)
+  return DateTime:iso(unix_time)
+end
+
+--- Waits until a condition is met, running what the asynchronous queries have to do once
+-- they are done in the meantime. Adapters whose synchronous queries wait for the
+-- asynchronous ones started before them, as those of SQLite and MySQL do, do not need to
+-- wait, and the abstract adapter only checks the condition.
+-- @param condition [Function returns true once there is nothing more to wait for]
+-- @param _timeout=10 [Number seconds after which to give up]
+-- @return [Boolean whether the condition is met]
+function ActiveRecord.Adapters.Abstract:wait_until(condition, _timeout)
+  return condition() == true
+end
+
+--- Checks whether the adapter is in synchronous (blocking) query mode.
+-- @return [Boolean]
+function ActiveRecord.Adapters.Abstract:is_sync()
+  return self._sync == true
+end
+
 --- Returns the SQL dialect the adapter speaks.
 -- @return [String 'abstract', 'mysql', 'postgresql' or 'sqlite']
 function ActiveRecord.Adapters.Abstract:get_sql_std()
@@ -179,7 +204,27 @@ end
 -- @param _bindings=nil [List values of the bind parameters of the query, in the order of
 --   their placeholders; strings, numbers and booleans are supported. A query that is
 --   given bindings has to be a single statement]
-function ActiveRecord.Adapters.Abstract:raw_query(_query, _callback, _query_type, _bindings)
+-- @param _error_callback=nil [Function called with the error text if the query fails]
+function ActiveRecord.Adapters.Abstract:raw_query(_query, _callback, _query_type, _bindings, _error_callback)
+end
+
+--- Calls the error callback of a failed query, if it has one, and reports the failure
+-- through #query_failed.
+-- @param query [String SQL that failed]
+-- @param error_text [String error reported by the database]
+-- @param error_callback=nil [Function called with the error text]
+-- @param raise=true [Boolean passed on to #query_failed]
+-- @return [Any whatever #query_failed returns]
+function ActiveRecord.Adapters.Abstract:report_failure(query, error_text, error_callback, raise)
+  if isfunction(error_callback) then
+    local status, exception = pcall(error_callback, tostring(error_text))
+
+    if !status then
+      error_with_traceback(exception)
+    end
+  end
+
+  return self:query_failed(query, error_text, raise)
 end
 
 --- Puts a raw SQL string into the queue. Queued queries are run one at a time by #think.
@@ -187,9 +232,10 @@ end
 -- @param callback=nil [Function passed on to #raw_query]
 -- @param query_type=nil [String passed on to #raw_query]
 -- @param bindings=nil [List passed on to #raw_query]
-function ActiveRecord.Adapters.Abstract:queue(query, callback, query_type, bindings)
+-- @param error_callback=nil [Function passed on to #raw_query]
+function ActiveRecord.Adapters.Abstract:queue(query, callback, query_type, bindings, error_callback)
   if isstring(query) then
-    table.insert(self._queue, { query, callback, query_type, bindings })
+    table.insert(self._queue, { query, callback, query_type, bindings, error_callback })
   end
 end
 
@@ -228,7 +274,7 @@ function ActiveRecord.Adapters.Abstract:think()
       local query_string = queue_obj[1]
 
       if isstring(query_string) then
-        self:raw_query(query_string, queue_obj[2], queue_obj[3], queue_obj[4])
+        self:raw_query(query_string, queue_obj[2], queue_obj[3], queue_obj[4], queue_obj[5])
       end
 
       table.remove(self._queue, 1)
