@@ -19,6 +19,7 @@ class 'ActiveRecord::Adapters::Abstract'
 ActiveRecord.Adapters.Abstract._queue = {}
 ActiveRecord.Adapters.Abstract._connected = false
 ActiveRecord.Adapters.Abstract._sync = false
+ActiveRecord.Adapters.Abstract._in_transaction = false
 ActiveRecord.Adapters.Abstract._sql_syntax = 'abstract'
 ActiveRecord.Adapters.Abstract._raise_errors = false
 ActiveRecord.Adapters.Abstract.last_error = nil
@@ -28,6 +29,7 @@ function ActiveRecord.Adapters.Abstract:init()
   self._connected = false
   self._sync = false
   self._raise_errors = false
+  self._in_transaction = false
   self._queue = {}
 end
 
@@ -71,16 +73,62 @@ end
 --- Starts a transaction.
 function ActiveRecord.Adapters.Abstract:begin_transaction()
   self:raw_query('BEGIN;')
+  self._in_transaction = true
 end
 
 --- Commits the current transaction.
 function ActiveRecord.Adapters.Abstract:commit_transaction()
   self:raw_query('COMMIT;')
+  self._in_transaction = false
 end
 
 --- Rolls the current transaction back.
 function ActiveRecord.Adapters.Abstract:rollback_transaction()
   self:raw_query('ROLLBACK;')
+  self._in_transaction = false
+end
+
+--- Checks whether a transaction started with #begin_transaction is open.
+-- @return [Boolean]
+function ActiveRecord.Adapters.Abstract:in_transaction()
+  return self._in_transaction == true
+end
+
+--- Checks whether the database enforces foreign keys on this connection right now.
+-- @return [Boolean true, unless overridden by the adapter]
+function ActiveRecord.Adapters.Abstract:foreign_keys_enabled()
+  return true
+end
+
+--- Stops enforcing foreign keys until #enable_foreign_keys is called. The migrator does so
+-- while a migration runs on a database whose schema changes rebuild tables, as those of
+-- SQLite do, since dropping a table that is referenced would otherwise delete the rows that
+-- refer to it. It has to be called outside of a transaction. The abstract adapter leaves
+-- the enforcement on.
+-- @return [Boolean whether the enforcement was on and has been turned off]
+function ActiveRecord.Adapters.Abstract:disable_foreign_keys()
+  return false
+end
+
+--- Enforces foreign keys again after #disable_foreign_keys. Does nothing in the abstract
+-- adapter.
+function ActiveRecord.Adapters.Abstract:enable_foreign_keys()
+end
+
+--- Counts the rows that refer to rows that do not exist through a foreign key, which can
+-- only be written while #disable_foreign_keys is in effect.
+-- @param _table_name=nil [String only count the rows of this table]
+-- @return [Map numbers of such rows, keyed by the foreign key; empty in the abstract adapter]
+function ActiveRecord.Adapters.Abstract:foreign_key_violations(_table_name)
+  return {}
+end
+
+--- Raises an error if more rows refer to rows that do not exist through a foreign key than
+-- before, see #foreign_key_violations. Does nothing in the abstract adapter.
+-- @param _table_name=nil [String only check the rows of this table]
+-- @param _before=nil [Map what #foreign_key_violations returned before; these rows are not
+--   reported]
+function ActiveRecord.Adapters.Abstract:check_foreign_keys(_table_name, _before)
 end
 
 --- Switches the adapter between synchronous (blocking) and asynchronous query mode.

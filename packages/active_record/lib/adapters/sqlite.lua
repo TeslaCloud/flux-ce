@@ -2,6 +2,8 @@
 -- default: it is used when the database settings name the 'sqlite' or 'sqlite3' adapter,
 -- or none at all. It needs no connection and no binary module, every query blocks until
 -- it is done, and schema changes can be rolled back, so migrations run in a transaction.
+-- Foreign keys are enforced: the adapter turns their enforcement on when it connects, and it
+-- lasts as long as the connection, which Garry's Mod keeps open while the server runs.
 
 class 'ActiveRecord::Adapters::Sqlite' extends 'ActiveRecord::Adapters::Abstract'
 
@@ -23,12 +25,122 @@ ActiveRecord.Adapters.Sqlite.types = {
 
 ActiveRecord.Adapters.Sqlite._sql_syntax = 'sqlite'
 
---- Calls the callback right away, since the SQLite database built into Garry's Mod
--- needs no connection.
+--- Turns on the enforcement of foreign keys and calls the callback right away, since the
+-- SQLite database built into Garry's Mod needs no connection. Rows that broke a foreign key
+-- before stay as they are; only the rows written from then on are checked.
 -- @param _settings [Map database settings; unused]
 -- @param on_connected=nil [Function called with the adapter]
 function ActiveRecord.Adapters.Sqlite:connect(_settings, on_connected)
+  self:enable_foreign_keys()
+
   if isfunction(on_connected) then on_connected(self) end
+end
+
+--- @ignore
+local function rows(result)
+  return result
+end
+
+--- Checks whether foreign keys are enforced right now.
+-- @return [Boolean]
+function ActiveRecord.Adapters.Sqlite:foreign_keys_enabled()
+  local result = self:raw_query('PRAGMA foreign_keys;', rows)
+
+  return istable(result) and istable(result[1]) and tonumber(result[1].foreign_keys) == 1
+end
+
+--- Stops enforcing foreign keys. SQLite ignores this inside of a transaction, so it has to
+-- be called before one is started.
+-- @return [Boolean whether the enforcement was on and has been turned off]
+function ActiveRecord.Adapters.Sqlite:disable_foreign_keys()
+  if !self:foreign_keys_enabled() then return false end
+
+  self:raw_query('PRAGMA foreign_keys = OFF;')
+
+  return !self:foreign_keys_enabled()
+end
+
+--- Enforces foreign keys. SQLite ignores this inside of a transaction.
+function ActiveRecord.Adapters.Sqlite:enable_foreign_keys()
+  self:raw_query('PRAGMA foreign_keys = ON;')
+end
+
+--- Lists the rows that refer to rows that do not exist through a foreign key.
+-- @param adapter [ActiveRecord::Adapters::Sqlite]
+-- @param table_name=nil [String only list the rows of this table]
+-- @return [List<Map> the rows, as PRAGMA foreign_key_check returns them]
+local function list_violations(adapter, table_name)
+  local query = 'PRAGMA foreign_key_check'
+
+  if isstring(table_name) then
+    query = query..'('..adapter:quote_name(table_name)..')'
+  end
+
+  local result = adapter:raw_query(query..';', rows)
+
+  return istable(result) and result or {}
+end
+
+--- @ignore
+local function violation_key(violation)
+  return tostring(violation.table)..' -> '..tostring(violation.parent)..' #'..tostring(violation.fkid)
+end
+
+--- @ignore
+local function count_violations(violations)
+  local counts = {}
+
+  for _, violation in ipairs(violations) do
+    local key = violation_key(violation)
+
+    counts[key] = (counts[key] or 0) + 1
+  end
+
+  return counts
+end
+
+--- Counts the rows that refer to rows that do not exist through a foreign key.
+-- @param table_name=nil [String only count the rows of this table]
+-- @return [Map numbers of such rows, keyed by the table, the referenced table and the
+--   foreign key]
+function ActiveRecord.Adapters.Sqlite:foreign_key_violations(table_name)
+  return count_violations(list_violations(self, table_name))
+end
+
+--- Raises an error listing the rows that refer to rows that do not exist through a foreign
+-- key, if there are more of them than before.
+-- @param table_name=nil [String only check the rows of this table]
+-- @param before=nil [Map what #foreign_key_violations returned before; these rows are not
+--   reported]
+function ActiveRecord.Adapters.Sqlite:check_foreign_keys(table_name, before)
+  local violations = list_violations(self, table_name)
+  local counts = count_violations(violations)
+  local new_keys = {}
+  local total = 0
+
+  for key, amount in pairs(counts) do
+    local added = amount - (istable(before) and before[key] or 0)
+
+    if added > 0 then
+      new_keys[key] = true
+      total = total + added
+    end
+  end
+
+  if total == 0 then return end
+
+  local lines = {}
+
+  for _, violation in ipairs(violations) do
+    if #lines >= 10 then break end
+
+    if new_keys[violation_key(violation)] then
+      lines[#lines + 1] = tostring(violation.table)..' (row '..tostring(violation.rowid)
+        ..') refers to a row of '..tostring(violation.parent)..' that does not exist'
+    end
+  end
+
+  error('ActiveRecord - '..total..' row(s) break a foreign key:\n'..table.concat(lines, '\n'), 0)
 end
 
 --- Checks whether the adapter talks to an SQLite database.

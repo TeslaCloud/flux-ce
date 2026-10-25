@@ -443,8 +443,20 @@ end
 -- @param meta_only=false [Boolean only drop the internal tables]
 function ActiveRecord.drop_schema(meta_only)
   if !meta_only then
-    for _, table_name in ipairs(table.GetKeys(ActiveRecord.schema)) do
-      ActiveRecord.SchemaStatements.drop_table(table_name, { if_exists = true })
+    -- Tables are dropped in no particular order, so foreign keys are not enforced meanwhile.
+    local foreign_keys = ActiveRecord.adapter:disable_foreign_keys()
+    local success, exception = pcall(function()
+      for _, table_name in ipairs(table.GetKeys(ActiveRecord.schema)) do
+        ActiveRecord.SchemaStatements.drop_table(table_name, { if_exists = true })
+      end
+    end)
+
+    if foreign_keys then
+      ActiveRecord.adapter:enable_foreign_keys()
+    end
+
+    if !success then
+      error(exception, 0)
     end
   end
 

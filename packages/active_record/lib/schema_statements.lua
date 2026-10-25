@@ -266,23 +266,116 @@ local function index_covers(index_sql, columns)
   return false
 end
 
---- Rebuilds an SQLite table without some of its columns, which is how a column is removed
--- from a table on the SQLite of Garry's Mod, since it has no DROP COLUMN. The table is
--- created anew with the remaining columns, each with its declared type, NOT NULL, DEFAULT
--- and a single-column primary key; the rows are copied over, and the indexes that do not
--- name a removed column are created again. Tables that have anything else in their
--- definition, such as a composite primary key or a UNIQUE, CHECK, COLLATE or REFERENCES
--- clause, are refused with an error rather than rebuilt without it.
+--- Reads the foreign keys of an SQLite table.
 -- @param table_name [String]
--- @param removed [Map names of the columns to remove, as keys]
-local function rebuild_sqlite_table(table_name, removed)
+-- @return [List<Map> the foreign keys, each with the List<String> of its columns (from),
+--   the table it refers to (table), the List<String> of the referenced columns (to, empty
+--   for the primary key) and its on_update and on_delete actions]
+local function sqlite_foreign_keys(table_name)
+  local result = ActiveRecord.adapter:raw_query(
+    'PRAGMA foreign_key_list('..sql_quote_name(table_name)..');', function(rows) return rows end
+  )
+  local by_id = {}
+  local list = {}
+
+  for _, row in ipairs(istable(result) and result or {}) do
+    local id = tonumber(row.id) or 0
+    local fk = by_id[id]
+
+    if !fk then
+      fk = { id = id, from = {}, to = {}, table = row.table, on_update = row.on_update, on_delete = row.on_delete }
+      by_id[id] = fk
+      list[#list + 1] = fk
+    end
+
+    local seq = (tonumber(row.seq) or 0) + 1
+
+    fk.from[seq] = row.from
+
+    if isstring(row.to) and row.to != '' and row.to != 'NULL' then
+      fk.to[seq] = row.to
+    end
+  end
+
+  table.sort(list, function(a, b) return a.id > b.id end)
+
+  return list
+end
+
+--- Checks whether an SQLite table has a foreign key from a single column to a table.
+-- @param table_name [String]
+-- @param column [String]
+-- @param to_table [String]
+-- @return [Map the foreign key, as returned by sqlite_foreign_keys, or nil]
+local function find_sqlite_foreign_key(table_name, column, to_table)
+  for _, fk in ipairs(sqlite_foreign_keys(table_name)) do
+    if #fk.from == 1 and fk.from[1] == column and fk.table == to_table then
+      return fk
+    end
+  end
+end
+
+--- Builds the FOREIGN KEY clause of a table definition.
+-- @param fk [Map a foreign key, as returned by sqlite_foreign_keys]
+-- @return [String]
+local function foreign_key_clause(fk)
+  local function quote_all(names)
+    local quoted = {}
+
+    for index, name in ipairs(names) do
+      quoted[index] = sql_quote_name(name)
+    end
+
+    return table.concat(quoted, ', ')
+  end
+
+  local clause = 'FOREIGN KEY ('..quote_all(fk.from)..') REFERENCES '..sql_quote_name(fk.table)
+
+  if #fk.to > 0 then
+    clause = clause..' ('..quote_all(fk.to)..')'
+  end
+
+  for _, action in ipairs({ 'on_update', 'on_delete' }) do
+    local value = isstring(fk[action]) and fk[action]:upper() or 'NO ACTION'
+
+    if value != 'NO ACTION' then
+      clause = clause..' '..action:upper():gsub('_', ' ')..' '..value
+    end
+  end
+
+  return clause
+end
+
+--- Rebuilds an SQLite table, which is how columns are removed from a table and foreign keys
+-- are added to or removed from it on the SQLite of Garry's Mod, since its ALTER TABLE can do
+-- none of these. The table is created anew with the remaining columns, each with its
+-- declared type, NOT NULL, DEFAULT and a single-column primary key, and with its foreign
+-- keys; the rows are copied over, and the indexes that do not name a removed column are
+-- created again. Tables that have anything else in their definition, such as a composite
+-- primary key or a UNIQUE, CHECK or COLLATE clause, are refused with an error rather than
+-- rebuilt without it.
+--
+-- Dropping the old table would delete the rows that refer to it through a foreign key with
+-- ON DELETE CASCADE, so the table is only rebuilt while foreign keys are not enforced.
+-- Outside of a transaction, the enforcement is turned off for the rebuild, which runs in a
+-- transaction of its own and is rolled back if it leaves more rows of the table breaking one
+-- of its foreign keys than before, as adding a foreign key that rows already break does. Inside of a transaction, the enforcement cannot be changed: the migrator
+-- turns it off before it starts the transaction of a migration and checks the foreign keys
+-- before it commits, and a rebuild inside of a transaction that enforces them is refused.
+-- @param statement [String name of the schema statement, used in error messages]
+-- @param table_name [String]
+-- @param changes [Map removed (names of the columns to remove, as keys), foreign_key (a
+--   foreign key to add, as returned by sqlite_foreign_keys) and drop_foreign_key (Function
+--   that receives a foreign key of the table and returns true to remove it)]
+local function rebuild_sqlite_table(statement, table_name, changes)
   local adapter = ActiveRecord.adapter
   local quoted_table = sql_quote_name(table_name)
+  local removed = changes.removed or {}
   local function rows(result) return result end
   local columns = adapter:raw_query('PRAGMA table_info('..quoted_table..');', rows)
 
   if !istable(columns) then
-    error('remove_column - the table '..tostring(table_name)..' does not exist!', 0)
+    error(statement..' - the table '..tostring(table_name)..' does not exist!', 0)
   end
 
   local definition_sql = adapter:raw_query(
@@ -300,16 +393,23 @@ local function rebuild_sqlite_table(table_name, removed)
     end
   end
 
-  for _, keyword in ipairs({ 'UNIQUE', 'CHECK', 'COLLATE', 'REFERENCES', 'GENERATED' }) do
+  for _, keyword in ipairs({ 'UNIQUE', 'CHECK', 'COLLATE', 'GENERATED' }) do
     if upper:find('%f[%w_]'..keyword..'%f[^%w_]') then
-      error('remove_column - cannot rebuild the SQLite table '..table_name..', it has a '
+      error(statement..' - cannot rebuild the SQLite table '..table_name..', it has a '
         ..keyword..' clause!', 0)
     end
   end
 
   if primary_keys > 1 then
-    error('remove_column - cannot rebuild the SQLite table '..table_name
+    error(statement..' - cannot rebuild the SQLite table '..table_name
       ..', it has a composite primary key!', 0)
+  end
+
+  local in_transaction = adapter:in_transaction()
+
+  if in_transaction and adapter:foreign_keys_enabled() then
+    error(statement..' - cannot rebuild the SQLite table '..table_name
+      ..' inside of a transaction while foreign keys are enforced!', 0)
   end
 
   local indexes = adapter:raw_query(
@@ -342,21 +442,87 @@ local function rebuild_sqlite_table(table_name, removed)
     end
   end
 
+  for _, fk in ipairs(sqlite_foreign_keys(table_name)) do
+    local keep = !(changes.drop_foreign_key and changes.drop_foreign_key(fk))
+
+    for _, column in ipairs(fk.from) do
+      if removed[column] then keep = false end
+    end
+
+    if keep then
+      definitions[#definitions + 1] = foreign_key_clause(fk)
+    end
+  end
+
+  if changes.foreign_key then
+    definitions[#definitions + 1] = foreign_key_clause(changes.foreign_key)
+  end
+
   local temporary = sql_quote_name(table_name..'_rebuilt')
   local column_list = table.concat(kept, ', ')
 
-  raw('Rebuild Table', 'CREATE TABLE '..temporary..' ('..table.concat(definitions, ', ')..');')
-  raw('Rebuild Table',
-    'INSERT INTO '..temporary..' ('..column_list..') SELECT '..column_list..' FROM '..quoted_table..';')
-  raw('Rebuild Table', 'DROP TABLE '..quoted_table..';')
-  raw('Rebuild Table', 'ALTER TABLE '..temporary..' RENAME TO '..quoted_table..';')
+  local function rebuild()
+    raw('Rebuild Table', 'CREATE TABLE '..temporary..' ('..table.concat(definitions, ', ')..');')
+    raw('Rebuild Table',
+      'INSERT INTO '..temporary..' ('..column_list..') SELECT '..column_list..' FROM '..quoted_table..';')
+    raw('Rebuild Table', 'DROP TABLE '..quoted_table..';')
+    raw('Rebuild Table', 'ALTER TABLE '..temporary..' RENAME TO '..quoted_table..';')
 
-  for _, index in ipairs(indexes) do
-    if index_covers(index.sql, removed) then
-      ActiveRecord.forget_metadata('index', index.name)
-    else
-      raw('Rebuild Table', index.sql..';')
+    for _, index in ipairs(indexes) do
+      if !index_covers(index.sql, removed) then
+        raw('Rebuild Table', index.sql..';')
+      end
     end
+  end
+
+  -- The indexes that named a removed column are gone with the old table.
+  local function forget_indexes()
+    for _, index in ipairs(indexes) do
+      if index_covers(index.sql, removed) then
+        ActiveRecord.forget_metadata('index', index.name)
+      end
+    end
+  end
+
+  if in_transaction then
+    rebuild()
+
+    return forget_indexes()
+  end
+
+  local enforced = adapter:disable_foreign_keys()
+
+  if adapter:foreign_keys_enabled() then
+    error(statement..' - cannot rebuild the SQLite table '..table_name
+      ..', the enforcement of foreign keys could not be turned off!', 0)
+  end
+
+  local raise_errors = adapter._raise_errors
+  local violations = adapter:foreign_key_violations(table_name)
+
+  adapter:raise_errors(true)
+  adapter:begin_transaction()
+
+  local success, exception = pcall(function()
+    rebuild()
+    adapter:check_foreign_keys(table_name, violations)
+  end)
+
+  if success then
+    adapter:commit_transaction()
+    forget_indexes()
+  else
+    adapter:rollback_transaction()
+  end
+
+  adapter:raise_errors(raise_errors)
+
+  if enforced then
+    adapter:enable_foreign_keys()
+  end
+
+  if !success then
+    error(exception, 0)
   end
 end
 
@@ -372,7 +538,7 @@ function Statements.remove_column(table_name, name, type, options)
   name = Statements.column_definition(name, type, options)
 
   if ActiveRecord.adapter:is_sqlite() then
-    rebuild_sqlite_table(table_name, { [name] = true })
+    rebuild_sqlite_table('remove_column', table_name, { removed = { [name] = true } })
   else
     Statements.change_table(table_name, function(t)
       t:remove(name)
@@ -597,8 +763,9 @@ local on_delete_clauses = {
 }
 
 --- Adds a foreign key constraint. Does nothing if a constraint with the same name is
--- already recorded in the metadata. SQLite cannot add constraints to existing tables, so
--- the constraint is only recorded there.
+-- already recorded in the metadata. On SQLite, which cannot add constraints to existing
+-- tables, the table is rebuilt with the foreign key (see rebuild_sqlite_table), unless it
+-- has one from the same column to the same table already.
 -- ```
 -- add_foreign_key('characters', 'users')
 -- add_foreign_key('characters', 'users', { column = 'owner_id', on_delete = 'cascade' })
@@ -620,12 +787,21 @@ function Statements.add_foreign_key(from_table, to_table, options)
 
   if ActiveRecord.metadata.references[name] then return end
 
-  if !ActiveRecord.adapter:is_sqlite() then
+  local on_delete = options.on_delete
+    and (on_delete_clauses[options.on_delete] or tostring(options.on_delete):upper())
+
+  if ActiveRecord.adapter:is_sqlite() then
+    if !find_sqlite_foreign_key(from_table, column, to_table) then
+      rebuild_sqlite_table('add_foreign_key', from_table, {
+        foreign_key = { from = { column }, table = to_table, to = { primary_key }, on_delete = on_delete }
+      })
+    end
+  else
     local query = 'ALTER TABLE '..from_table..' ADD CONSTRAINT '..name
       ..' FOREIGN KEY ('..column..') REFERENCES '..to_table..'('..primary_key..')'
 
-    if options.on_delete then
-      query = query..' ON DELETE '..(on_delete_clauses[options.on_delete] or tostring(options.on_delete):upper())
+    if on_delete then
+      query = query..' ON DELETE '..on_delete
     end
 
     raw('Add Foreign Key', query..';')
@@ -640,7 +816,8 @@ function Statements.add_foreign_key(from_table, to_table, options)
   })
 end
 
---- Drops a foreign key constraint and removes it from the metadata.
+--- Drops a foreign key constraint and removes it from the metadata. On SQLite, the table is
+-- rebuilt without the foreign key (see rebuild_sqlite_table) if it has it.
 -- ```
 -- remove_foreign_key('characters', 'users')
 -- remove_foreign_key('characters', { column = 'owner_id' })
@@ -674,7 +851,17 @@ function Statements.remove_foreign_key(from_table, to_table, options)
 
   if ActiveRecord.adapter:is_mysql() then
     raw('Remove Foreign Key', 'ALTER TABLE '..from_table..' DROP FOREIGN KEY '..name..';')
-  elseif !ActiveRecord.adapter:is_sqlite() then
+  elseif ActiveRecord.adapter:is_sqlite() then
+    local fk = ActiveRecord.metadata.references[name]
+
+    if fk and find_sqlite_foreign_key(from_table, fk.column, fk.to_table) then
+      rebuild_sqlite_table('remove_foreign_key', from_table, {
+        drop_foreign_key = function(existing)
+          return #existing.from == 1 and existing.from[1] == fk.column and existing.table == fk.to_table
+        end
+      })
+    end
+  else
     raw('Remove Foreign Key', 'ALTER TABLE '..from_table..' DROP CONSTRAINT '..name..';')
   end
 

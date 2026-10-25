@@ -207,6 +207,9 @@ end
 --- Runs a migration in the direction of the migrator, inside of a transaction if the
 -- database supports it. Records the version as run (or forgets it) afterward. A failed
 -- migration is rolled back and raises an error, so that no later migration runs.
+-- Foreign keys are not enforced while the migration runs on a database that rebuilds
+-- tables to change them, as SQLite does; they are checked before the migration is
+-- committed, and a row that the migration has made break one fails it.
 -- @param migration [ActiveRecord::MigrationProxy]
 -- @return [Boolean whether the migration was run; false if it had been run (or
 --   reverted) already]
@@ -226,6 +229,9 @@ function ActiveRecord.Migrator:execute_migration_in_transaction(migration)
   adapter.last_error = nil
   adapter:raise_errors(true)
 
+  local foreign_keys = adapter:disable_foreign_keys()
+  local violations = foreign_keys and adapter:foreign_key_violations()
+
   if use_transaction then
     adapter:begin_transaction()
   end
@@ -235,6 +241,10 @@ function ActiveRecord.Migrator:execute_migration_in_transaction(migration)
 
     if adapter.last_error then
       error(adapter.last_error, 0)
+    end
+
+    if foreign_keys then
+      adapter:check_foreign_keys(nil, violations)
     end
 
     self:record_version_state_after_migrating(migration.version)
@@ -247,11 +257,19 @@ function ActiveRecord.Migrator:execute_migration_in_transaction(migration)
       adapter:commit_transaction()
     end
 
+    if foreign_keys then
+      adapter:enable_foreign_keys()
+    end
+
     return true
   end
 
   if use_transaction then
     adapter:rollback_transaction()
+  end
+
+  if foreign_keys then
+    adapter:enable_foreign_keys()
   end
 
   ActiveRecord.schema = snapshot.schema

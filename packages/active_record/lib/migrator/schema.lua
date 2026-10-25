@@ -65,7 +65,21 @@ function ActiveRecord.Schema.load(info, callback)
   adapter.last_error = nil
   adapter:raise_errors(true)
 
-  local success, exception = pcall(callback)
+  -- The foreign keys are added once every table exists, which rebuilds the tables on SQLite.
+  -- They are not enforced meanwhile and are checked once the schema is complete.
+  local foreign_keys = adapter:disable_foreign_keys()
+  local violations = foreign_keys and adapter:foreign_key_violations()
+  local success, exception = pcall(function()
+    callback()
+
+    if foreign_keys then
+      adapter:check_foreign_keys(nil, violations)
+    end
+  end)
+
+  if foreign_keys then
+    adapter:enable_foreign_keys()
+  end
 
   adapter:raise_errors(false)
 
