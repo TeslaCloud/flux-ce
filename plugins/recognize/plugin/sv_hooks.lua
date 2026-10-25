@@ -50,7 +50,8 @@ function Recognizes:PlayerDeath(victim, _inflictor, _attacker)
 end
 
 --- Deletes the recognitions of a character that is about to be deleted, and makes every
--- other character forget it.
+-- other character forget it. The foreign keys of the `recognizes` table delete its rows with
+-- the character as well; this also takes them off the characters that are loaded.
 -- @param _actor [Player player who deletes the character]
 -- @param id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
