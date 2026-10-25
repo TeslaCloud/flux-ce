@@ -5,10 +5,15 @@
 -- Objects are loaded by chaining query methods (`where`, `order`, `limit` and so on) on
 -- the class, naming a callback with `expect` (a single object) or `get` (a list) and then
 -- launching the query with `fetch`, or with `rescue`, which also names the callback for
--- when nothing is found. `save` validates an object and inserts or updates its row, and
--- `destroy` deletes it. Models are related to each other with `has_many`, `has_one` and
--- `belongs_to`, validated with `validates`, and may define the `before_save`,
--- `before_create`, `after_create`, `after_save` and `restored` callbacks.
+-- when nothing is found. Every chain builds a query of its own: the first query method
+-- called on a class or an object starts a new query object, which inherits everything else
+-- from the class or object, and the methods after it add to that query object. Queries
+-- built at the same time, or one that is never launched, do not affect each other.
+--
+-- `save` validates an object and inserts or updates its row, and `destroy` deletes it.
+-- Models are related to each other with `has_many`, `has_one` and `belongs_to`, validated
+-- with `validates`, and may define the `before_save`, `before_create`, `after_create`,
+-- `after_save` and `restored` callbacks.
 --
 -- The file is also sent to the client, where the methods that need the database are
 -- replaced by stubs.
@@ -20,11 +25,6 @@ local isfunction = isfunction
 --- Base class for ActiveRecord database-tied objects.
 -- These objects are also referred to as "models".
 class 'ActiveRecord::Base'
-
---- @warning [Internal]
--- Provides backend data storage for the querying engine.
--- @return [MetaArray]
-ActiveRecord.Base.query_map   = a{}
 
 --- Database table the object is tied to.
 -- @return [String]
@@ -98,6 +98,19 @@ end
 -- Provides utility functions for abstracted database querying.
 
 --- @ignore
+-- Returns the query object that a query method works on. A model class or object starts a
+-- new query object, which holds the state of the query (the conditions in its query_map and
+-- the callbacks) and inherits everything else from the class or object through __index. A
+-- query object is returned as it is, so that every method of a chain adds to the same query.
+local function query_of(self)
+  if rawget(self, 'is_query') then
+    return self
+  end
+
+  return setmetatable({ is_query = true, query_map = a{} }, { __index = self })
+end
+
+--- @ignore
 local function bind_list(values, list)
   local placeholders = {}
 
@@ -120,7 +133,7 @@ end
 --   or a hash of column-value pairs in which a List value stands for IN (...)]
 -- @param ... [Vararg value to compare the column with, or the values that replace the
 --   ? placeholders]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:where(condition, ...)
   local args = { ... }
   local query_str = ''
@@ -153,9 +166,11 @@ function ActiveRecord.Base:where(condition, ...)
     query_str = condition
   end
 
-  self.query_map:insert { 'where', query_str, values }
+  local query = query_of(self)
 
-  return self
+  query.query_map:insert { 'where', query_str, values }
+
+  return query
 end
 
 --- Specifies a WHERE NOT condition in the query.
@@ -168,7 +183,7 @@ end
 -- @param condition [String/Map SQL condition (which may use ? placeholders), or a hash
 --   of column-value pairs in which a List value stands for NOT IN (...)]
 -- @param ... [Vararg values that replace the ? placeholders]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:where_not(condition, ...)
   local args = { ... }
   local query_str = ''
@@ -194,25 +209,27 @@ function ActiveRecord.Base:where_not(condition, ...)
     query_str = concat(parts, ' AND ')
   end
 
-  self.query_map:insert { 'where', query_str, values }
+  local query = query_of(self)
 
-  return self
+  query.query_map:insert { 'where', query_str, values }
+
+  return query
 end
 
 --- Returns the first object stored in the database.
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:first()
   return self:order('id'):limit(1)
 end
 
 --- Returns the last object stored in the database.
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:last()
   return self:order('id', 'desc'):limit(1)
 end
 
 --- Returns all of the objects stored in the database.
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:all()
   return self:order('id')
 end
@@ -224,10 +241,13 @@ end
 -- @param column [String column to sort by]
 -- @param direction=nil [String lowercase 'asc' or 'desc'; sorts in ascending order
 --   if omitted]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:order(column, direction)
-  self.query_map:insert { 'order', column, direction }
-  return self
+  local query = query_of(self)
+
+  query.query_map:insert { 'order', column, direction }
+
+  return query
 end
 
 --- Finds an object in the database by its ID.
@@ -238,7 +258,7 @@ end
 -- ```
 -- @param id [Number]
 -- @param callback=nil [Function passed to #expect, receives the object that was found]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:find(id, callback)
   if !callback then
     return self:where('id', id):limit(1)
@@ -256,7 +276,7 @@ end
 -- @param column [String]
 -- @param value [Any value to look for, converted to a string]
 -- @param callback=nil [Function passed to #expect, receives the object that was found]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:find_by(column, value, callback)
   if !callback then
     return self:where(column, value):limit(1)
@@ -272,10 +292,13 @@ end
 -- Object:where('money > 100'):limit(10)
 -- ```
 -- @param amt [Number maximum amount of objects to load]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:limit(amt)
-  self.query_map:insert { 'limit', amt }
-  return self
+  local query = query_of(self)
+
+  query.query_map:insert { 'limit', amt }
+
+  return query
 end
 
 --- Inserts an OFFSET condition into the query.
@@ -284,10 +307,13 @@ end
 -- Object:where('money > 100'):skip(1):limit(1)
 -- ```
 -- @param amt [Number amount of objects to skip]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:skip(amt)
-  self.query_map:insert { 'offset', amt }
-  return self
+  local query = query_of(self)
+
+  query.query_map:insert { 'offset', amt }
+
+  return query
 end
 
 --- @warning [Internal]
@@ -381,15 +407,20 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
 end
 
 --- @warning [Internal]
--- Runs the current query based on the query map and flushes the query map.
+-- Runs the query based on the query map of the query object and flushes the query map.
+-- The callback, the #rescue callback and the conditions are taken from the query object
+-- when the query is sent.
 -- @param callback [Function called with a List of the loaded objects; not called if
 --   nothing was found]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:run_query(callback)
-  if self.query_map and #self.query_map > 0 then
-    local query = ActiveRecord.Database:select(self.table_name)
+  local query_map = self.query_map
 
-    for _, entry in ipairs(self.query_map) do
+  if istable(query_map) and #query_map > 0 then
+    local query = ActiveRecord.Database:select(self.table_name)
+    local rescue = self._rescue
+
+    for _, entry in ipairs(query_map) do
       local t, a, b = entry[1], entry[2], entry[3]
 
       if t == 'where' then
@@ -408,10 +439,14 @@ function ActiveRecord.Base:run_query(callback)
     end
 
     self.query_map = a{}
-    query:callback(function(results, query, time, bindings)
-      print_query(self.class_name..' Load ('..time..'s)', query, bindings)
+    self._rescue = nil
+
+    query:callback(function(results, query_str, time, bindings)
+      print_query(self.class_name..' Load ('..time..'s)', query_str, bindings)
 
       if istable(results) and #results > 0 then
+        if !isfunction(callback) then return end
+
         local objects = {}
 
         for i = 1, #results do
@@ -426,11 +461,7 @@ function ActiveRecord.Base:run_query(callback)
           ar_sub_indent()
           return ret
         end
-      elseif isfunction(self._rescue) then
-        local rescue = self._rescue
-
-        -- Cleared before the call, which may queue another query with a rescue of its own.
-        self._rescue = nil
+      elseif isfunction(rescue) then
         rescue(self.class.new())
 
         if isfunction(self.created) then
@@ -478,14 +509,16 @@ end
 -- Object:first():expect(function(obj) ... end)
 -- ```
 -- @param callback [Function receives the loaded object]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:expect(callback)
-  self._get = nil
-  self._expect = function(results)
+  local query = query_of(self)
+
+  query._get = nil
+  query._expect = function(results)
     callback(results[1])
   end
 
-  return self
+  return query
 end
 
 --- Used when multiple return values are expected.
@@ -495,10 +528,12 @@ end
 -- Object:all():get(function(results) ... end)
 -- ```
 -- @param callback [Function receives a List of the loaded objects]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:get(callback)
-  self._expect = nil
-  self._get = function(results)
+  local query = query_of(self)
+
+  query._expect = nil
+  query._get = function(results)
     local all_objects = {}
 
     for index, object in ipairs(results) do
@@ -508,7 +543,7 @@ function ActiveRecord.Base:get(callback)
     callback(all_objects)
   end
 
-  return self
+  return query
 end
 
 --- Runs the query.
@@ -516,20 +551,21 @@ end
 -- ```
 -- Object:all():get(function(results) ... end):fetch()
 -- ```
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:fetch()
+  local query = query_of(self)
   local callback = nil
 
-  if self._expect then
-    self:limit(1)
-    callback = self._expect
-    self._expect = nil
-  elseif self._get then
-    callback = self._get
-    self._get = nil
+  if query._expect then
+    query:limit(1)
+    callback = query._expect
+    query._expect = nil
+  elseif query._get then
+    callback = query._get
+    query._get = nil
   end
 
-  return self:run_query(callback)
+  return query:run_query(callback)
 end
 
 --- Used to catch errors during queries.
@@ -543,10 +579,13 @@ end
 -- end)
 -- ```
 -- @param callback [Function receives a new, unsaved object of the same class]
--- @return [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:rescue(callback)
-  self._rescue = callback
-  return self:fetch()
+  local query = query_of(self)
+
+  query._rescue = callback
+
+  return query:fetch()
 end
 
 --- @ignore
