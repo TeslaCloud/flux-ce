@@ -427,8 +427,11 @@ function ActiveRecord.Base:run_query(callback)
           return ret
         end
       elseif isfunction(self._rescue) then
-        self._rescue(self.class.new())
+        local rescue = self._rescue
+
+        -- Cleared before the call, which may queue another query with a rescue of its own.
         self._rescue = nil
+        rescue(self.class.new())
 
         if isfunction(self.created) then
           self:created()
