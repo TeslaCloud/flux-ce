@@ -43,7 +43,7 @@ function CMD:on_run(actor, target, server, reason)
 
   local moved = {}
 
-  if srcdsproxy.IsProxied(actor) then
+  if Proxy.is_proxied(actor) then
     local verbs = {}
 
     for _, entry in ipairs(entries) do
@@ -56,7 +56,7 @@ function CMD:on_run(actor, target, server, reason)
   else
     for _, entry in ipairs(entries) do
       if IsValid(entry.player) then
-        if srcdsproxy.Transfer(entry.player, name, reason != '' and reason or nil) then
+        if Proxy.transfer(entry.player, name, reason != '' and reason or nil) then
           moved[#moved + 1] = entry
         end
       else

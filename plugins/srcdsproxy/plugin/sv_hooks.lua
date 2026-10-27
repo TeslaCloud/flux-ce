@@ -1,7 +1,7 @@
 --- Server side of the SrcdsProxy plugin: hands the commands of the srcdsproxy backend addon
--- over to Flux once the gamemode has initialized, and again after a Lua refresh. The addon's
--- autorun file has run by then, so what the plugin sets here replaces what the addon has set
--- up.
+-- over to Flux once the gamemode has initialized, and again after a Lua refresh. The addon,
+-- or the copy of it that srcds-rs has built in, has set up its `Proxy` table and its commands
+-- by then, so what the plugin sets here replaces them.
 
 --- The console commands of the srcdsproxy addon, keyed by their names, with the Flux
 -- command, and the subcommand word if it has one, that each one runs and the usage shown in
@@ -46,7 +46,7 @@ local function is_admin(target)
 end
 
 --- Hands the srcdsproxy addon's commands over to Flux: turns off the addon's chat commands
--- through its `srcdsproxy.ChatCommands` setting, so that the chat forms such as `!server`
+-- through its `Proxy.chat_commands` setting, so that the chat forms such as `!server`
 -- reach the Flux commands, replaces its `srcdsproxy_*` console commands with ones that run
 -- the Flux commands, and answers its admin check with the `moderate` permission. Without
 -- the addon nothing is changed, and a warning is printed the first time.
@@ -61,8 +61,8 @@ function SrcdsProxy:take_over()
     return
   end
 
-  srcdsproxy.ChatCommands = false
-  srcdsproxy.IsAdmin = is_admin
+  Proxy.chat_commands = false
+  Proxy.is_admin = is_admin
 
   for cmd_name, cmd_data in pairs(console_commands) do
     local name = cmd_name:gsub('^srcdsproxy_', '')

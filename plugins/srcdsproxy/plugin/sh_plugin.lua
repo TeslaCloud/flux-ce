@@ -1,21 +1,21 @@
 --- SrcdsProxy connects Flux to srcdsproxy, the proxy that lets players move between the
 -- servers of a network without reconnecting. Every server of the network runs the proxy's
--- backend addon, whose `srcdsproxy` Lua table talks to the proxy; this plugin turns that
+-- backend addon, whose `Proxy` Lua table talks to the proxy; this plugin turns that
 -- addon's player and admin commands into Flux commands, so that Bolt's role files decide who
 -- may run them, and they are logged, find their targets and check immunity like every other
 -- command.
 --
--- Players see how the proxy knows them with Proxy and move themselves with Server, while
--- the server allows it (`srcdsproxy_allow_player_transfer`). Staff list the players of the
--- whole network with GList, look one up with PInfo and move players with Transfer. The proxy
--- itself restricts the rest to its own admins (listed in its admins.toml and verified by
--- Steam): `proxywhitelist add`, `remove` and `list` edit and show the whitelists of
--- whitelist-only servers, and `netban add`, `addip`, `remove` and `list` manage the bans of
--- the whole network. A player argument is the exact name, a target selector or a SteamID of
--- players on this server, while the proxy's `#id` session IDs, IP addresses and subnets, and
--- the names and SteamIDs of players on other servers go to the proxy as typed. Commands that
--- check immunity do not take a `#id` from players. Only the proxy knows the names of the
--- servers, so they are not completed.
+-- Players see how the proxy knows them with the Proxy command and move themselves with
+-- Server, while the server allows it (`srcdsproxy_allow_player_transfer`). Staff list the
+-- players of the whole network with GList, look one up with PInfo and move players with
+-- Transfer. The proxy itself restricts the rest to its own admins (listed in its admins.toml
+-- and verified by Steam): `proxywhitelist add`, `remove` and `list` edit and show the
+-- whitelists of whitelist-only servers, and `netban add`, `addip`, `remove` and `list` manage
+-- the bans of the whole network. A player argument is the exact name, a target selector or a
+-- SteamID of players on this server, while the proxy's `#id` session IDs, IP addresses and
+-- subnets, and the names and SteamIDs of players on other servers go to the proxy as typed.
+-- Commands that check immunity do not take a `#id` from players. Only the proxy knows the
+-- names of the servers, so they are not completed.
 -- The proxy answers most commands in the console of the player who has run them.
 --
 -- Once the gamemode has initialized, the plugin turns off the chat commands of the addon and

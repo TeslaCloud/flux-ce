@@ -1,12 +1,11 @@
 --- Server side of the server transfer areas. A player who is connected through the proxy and
 -- enters a transfer area for another server than the one they are on gets a countdown of the
 -- area's delay, which their client shows on the HUD. When it ends and they are still alive
--- and in the area, they are moved to the area's server with `srcdsproxy.Transfer`; if they
+-- and in the area, they are moved to the area's server with `Proxy.transfer`; if they
 -- are dead or outside of it by then, nothing happens.
 --
 -- A player who may not enter that server, because it is whitelist-only and they are neither
--- on its whitelist nor a proxy admin, is told so once and not moved. With an addon that has
--- no `srcdsproxy.MayEnter`, every player is sent and the proxy decides.
+-- on its whitelist nor a proxy admin, is told so once and not moved.
 --
 -- Eight times a second the server checks the positions of the players against the transfer
 -- areas itself: a player is in an area while their position is inside of one of its
@@ -68,23 +67,17 @@ end
 -- @param backend [String server name]
 -- @return [Boolean]
 function SrcdsProxy:is_current_backend(actor, backend)
-  return string.lower(srcdsproxy.BackendName(actor) or '') == string.lower(backend)
+  return string.lower(Proxy.backend_name(actor) or '') == string.lower(backend)
 end
 
 --- Checks whether a player may enter a server of the network on their own request: it is not
 -- whitelist-only, or they are on its whitelist or a proxy admin. The proxy still decides when
--- the player is sent, and it does not know here whether the server exists or is up. With an
--- addon that has no `srcdsproxy.MayEnter`, every player who is connected through the proxy
--- may try.
+-- the player is sent, and it does not know here whether the server exists or is up.
 -- @param actor [Player]
 -- @param backend [String server name]
 -- @return [Boolean]
 function SrcdsProxy:may_enter(actor, backend)
-  if isfunction(srcdsproxy.MayEnter) then
-    return srcdsproxy.MayEnter(actor, backend) == true
-  end
-
-  return srcdsproxy.IsProxied(actor)
+  return Proxy.may_enter(actor, backend)
 end
 
 --- Takes the countdown or the pending move off the HUD of a player, if it is shown there.
@@ -120,7 +113,7 @@ end
 -- @param actor [Player the player who has entered the area]
 -- @param area [Map the transfer area]
 function SrcdsProxy:enter_transfer_area(actor, area)
-  if !self:available() or !IsValid(actor) or !srcdsproxy.IsProxied(actor) or !actor:Alive() then return end
+  if !self:available() or !IsValid(actor) or !Proxy.is_proxied(actor) or !actor:Alive() then return end
 
   local backend = self:server_name(area.backend)
 
@@ -163,7 +156,7 @@ end
 function SrcdsProxy:transfer_from_area(actor, area)
   local backend = self:server_name(area.backend)
 
-  if !backend or !srcdsproxy.IsProxied(actor) or self:is_current_backend(actor, backend) then
+  if !backend or !Proxy.is_proxied(actor) or self:is_current_backend(actor, backend) then
     return false
   end
 
@@ -187,7 +180,7 @@ function SrcdsProxy:transfer_from_area(actor, area)
 
   actor:notify('notification.proxy.area_moving', { server = backend })
 
-  return srcdsproxy.Transfer(actor, backend, 'area '..tostring(area.id))
+  return Proxy.transfer(actor, backend, 'area '..tostring(area.id))
 end
 
 --- Ends the countdown of a player: moves them if they are alive, which the caller has
@@ -252,7 +245,7 @@ end
 -- @param actor [Player]
 -- @param areas [List<Map> the transfer areas]
 function SrcdsProxy:enter_transfer_areas_at(actor, areas)
-  if !srcdsproxy.IsProxied(actor) or !actor:Alive() then return end
+  if !Proxy.is_proxied(actor) or !actor:Alive() then return end
 
   local state = states[actor]
 

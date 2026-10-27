@@ -1,14 +1,14 @@
 --- Server side of the SrcdsProxy plugin: the helpers its commands use to talk to the proxy
--- through the `srcdsproxy` table of the backend addon. They check that the addon is there and
+-- through the `Proxy` table of the backend addon. They check that the addon is there and
 -- that the caller is connected through the proxy, build the proxy's commands (verbs) with
 -- safely quoted arguments, send them, and turn a player argument into the IDs the proxy
 -- knows. Every check notifies the caller when it fails.
 
 --- Checks whether the srcdsproxy backend addon is installed, that is whether its
--- `srcdsproxy` table exists.
+-- `Proxy` table exists.
 -- @return [Boolean]
 function SrcdsProxy:available()
-  return istable(srcdsproxy)
+  return istable(Proxy)
 end
 
 --- Checks whether the srcdsproxy backend addon is installed and tells the caller that it is
@@ -35,7 +35,7 @@ function SrcdsProxy:check_proxied(actor)
     return false
   end
 
-  if !srcdsproxy.IsProxied(actor) then
+  if !Proxy.is_proxied(actor) then
     Flux.Player:notify(actor, 'error.proxy.not_proxied')
 
     return false
@@ -54,7 +54,7 @@ function SrcdsProxy:require_proxy_admin(actor)
     return false
   end
 
-  if !srcdsproxy.IsProxyAdmin(actor) then
+  if !Proxy.is_proxy_admin(actor) then
     Flux.Player:notify(actor, 'error.proxy.not_proxy_admin')
 
     return false
@@ -165,9 +165,9 @@ function SrcdsProxy:find_local_steam_id(argument)
   end
 
   for _, client in player.Iterator() do
-    if srcdsproxy.IsProxied(client) then
+    if Proxy.is_proxied(client) then
       if account_id and client:AccountID() == tonumber(account_id) or
-         !account_id and srcdsproxy.ClaimedSteamID64(client) == argument then
+         !account_id and Proxy.claimed_steamid64(client) == argument then
         return client
       end
     end
@@ -193,7 +193,7 @@ function SrcdsProxy:run(actor, verbs)
   end
 
   for _, verb in ipairs(verbs) do
-    srcdsproxy.Command(actor, verb)
+    Proxy.command(actor, verb)
   end
 
   Flux.Player:notify(actor, 'notification.proxy.console')
@@ -295,7 +295,7 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
   local entries = {}
 
   for _, target in ipairs(locals) do
-    local id = srcdsproxy.IsProxied(target) and srcdsproxy.ClaimedSteamID64(target) or ''
+    local id = Proxy.is_proxied(target) and Proxy.claimed_steamid64(target) or ''
 
     if id != '' and id != '0' then
       entries[#entries + 1] = { id = id, player = target }

@@ -15,30 +15,30 @@ CMD.no_console = true
 function CMD:on_run(actor)
   if !SrcdsProxy:check_available(actor) then return end
 
-  if !srcdsproxy.IsProxied(actor) then
+  if !Proxy.is_proxied(actor) then
     actor:notify('command.proxy.not_proxied')
 
     return
   end
 
-  local steam_id = srcdsproxy.ClaimedSteamID64(actor)
+  local steam_id = Proxy.claimed_steamid64(actor)
 
   actor:notify('command.proxy.backend', {
-    backend = srcdsproxy.BackendName(actor),
+    backend = Proxy.backend_name(actor),
     version = actor:GetInfo('srcdsproxy_version')
   })
 
   if steam_id == '' or steam_id == '0' then
     actor:notify('command.proxy.no_steamid')
-  elseif srcdsproxy.SteamVerified(actor) then
+  elseif Proxy.steam_verified(actor) then
     actor:notify('command.proxy.steamid_verified', { steamid = steam_id })
   else
     actor:notify('command.proxy.steamid_claimed', { steamid = steam_id })
   end
 
-  actor:notify('command.proxy.address', { address = srcdsproxy.RealIP(actor) })
+  actor:notify('command.proxy.address', { address = Proxy.real_ip(actor) })
 
-  if srcdsproxy.IsProxyAdmin(actor) then
+  if Proxy.is_proxy_admin(actor) then
     actor:notify('command.proxy.proxy_admin')
   end
 end

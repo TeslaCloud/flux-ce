@@ -17,7 +17,7 @@ CMD.no_console = true
 function CMD:on_run(actor, server)
   if !SrcdsProxy:check_available(actor) then return end
 
-  if !srcdsproxy.PlayerTransferAllowed() then
+  if !Proxy.player_transfer_allowed() then
     actor:notify('error.proxy.transfer_disabled')
 
     return
@@ -41,5 +41,5 @@ function CMD:on_run(actor, server)
 
   actor:notify('command.server.message', { server = name })
 
-  srcdsproxy.Transfer(actor, name, 'player request')
+  Proxy.transfer(actor, name, 'player request')
 end

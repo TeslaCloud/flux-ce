@@ -9,9 +9,8 @@ SrcdsProxy.transfer_area_type = 'proxy_transfer'
 SrcdsProxy.default_transfer_delay = 5
 SrcdsProxy.max_transfer_delay = 300
 
---- Turns what a player typed as the name of a server of the network into a name that is
--- safe to pass to `srcdsproxy.Transfer`, which sends it to the proxy unquoted: whitespace,
--- semicolons and double quotes are removed.
+--- Turns what a player typed as the name of a server of the network into one word that is
+-- safe to pass to `Proxy.transfer`: whitespace, semicolons and double quotes are removed.
 -- @param text [String server name as typed]
 -- @return [String the server name, or nil if nothing is left of it]
 function SrcdsProxy:server_name(text)
