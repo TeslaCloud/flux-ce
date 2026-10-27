@@ -220,7 +220,7 @@ function PANEL:rebuild()
   local listed = {}
   local rows = {}
 
-  for _, client in ipairs(player.GetAll()) do
+  for _, client in player.Iterator() do
     local character_id = Doors:get_character_id(client)
 
     if character_id then

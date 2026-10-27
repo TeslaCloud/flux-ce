@@ -137,7 +137,7 @@ end
 function Doors:find_character_player(character_id)
   if !character_id then return end
 
-  for _, client in ipairs(player.GetAll()) do
+  for _, client in player.Iterator() do
     if self:get_character_id(client) == character_id then
       return client
     end
