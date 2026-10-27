@@ -955,7 +955,10 @@ do
     end
 
     --- Removes the player's whitelist for a faction, destroying its Whitelist record and
-    -- networking the updated list. Server only.
+    -- networking the updated list. A player who is playing a character of that faction and
+    -- may no longer load it (see `Factions:PlayerCanUseCharacter`) loses it at once: it is
+    -- saved and dropped, the player is spawned again and gets the main menu with the reason.
+    -- Server only.
     -- @param faction_id [String]
     function player_meta:take_whitelist(faction_id)
       if self:has_whitelist(faction_id) then
@@ -971,6 +974,19 @@ do
         local whitelist_table = self:get_nv('whitelists', {})
           table.RemoveByValue(whitelist_table, faction_id)
         self:set_nv('whitelists', whitelist_table)
+
+        local character = self.current_character
+
+        if character and character.faction == faction_id then
+          local allowed, reason, arguments = Factions:PlayerCanUseCharacter(self, character)
+
+          if allowed == false then
+            self:clear_active_character()
+            self:Spawn()
+
+            Characters.open_menu(self, reason, arguments)
+          end
+        end
       end
     end
   end
