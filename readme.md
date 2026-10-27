@@ -142,6 +142,14 @@ flc role set YOUR_NAME_OR_STEAMID admin
 
 `admin` is the highest-possible user role in Flux. Replace `YOUR_NAME_OR_STEAMID` with your full Steam name or character name (in double quotes if it has spaces in it), or your full SteamID (`STEAM_X:X:X`).
 
+The built-in roles are `user`, `assistant`, `gamemaster` and `admin`, each one based on the one before it. `group` and `usergroup` work in place of `role`, so `flc group set YOUR_NAME_OR_STEAMID admin` does the same thing. To take a role away again and put the player back to `user`, run:
+
+```
+flc role remove YOUR_NAME_OR_STEAMID
+```
+
+There is no `setgroup` command: `flc setgroup` and `flc SetGroup` are now `flc role set`.
+
 _The `admin` role will have every single permission by default._ Similarly to the `superadmin` user role in other administration solutions, with one important difference: there are no limitations at all, and the role cannot be in any way limited. Any permission is automatically granted to all users with the `admin` role. _Please be careful with who you give this role to._
 
 ### Database setup
