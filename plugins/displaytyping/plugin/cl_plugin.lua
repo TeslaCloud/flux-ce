@@ -102,7 +102,7 @@ function DisplayTyping:get_kind(target, text)
   --   `DisplayTyping:outline`) if the viewer may not see the text itself]
   -- @return [Number multiplier of the squared distance at which the bubble has faded out,
   --   so 4 doubles the range; 1 when nothing is returned]
-  local multiplier = tonumber(hook.Run('DisplayTypingAdjustFadeoffMultiplier', target, text)) or 1
+  local multiplier = tonumber((hook.Run('DisplayTypingAdjustFadeoffMultiplier', target, text))) or 1
   local name = isstring(label) and label or t(fallback.name)
 
   return {
