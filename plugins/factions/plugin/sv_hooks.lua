@@ -1,27 +1,31 @@
 --- Server side of the Factions plugin: keeps the team, the networked faction and the rank of
 -- a player in line with their character, stores the faction on new characters, checks the
 -- faction, the whitelist, the gender and the model of a character that is being created
--- against the faction's definition, and networks whitelists. It also enforces the limits of
--- factions and ranks when a character is loaded and the amount of characters a player may
--- have in a faction, and gives the members of a faction their weapons, maximum health and
--- armor, rank model and the feelings of NPCs whenever they spawn or their membership changes.
+-- against the faction's definition, and networks whitelists. It also enforces the whitelist
+-- and the limits of factions and ranks when a character is loaded and the amount of
+-- characters a player may have in a faction, and gives the members of a faction their
+-- weapons, maximum health and armor, rank model and the feelings of NPCs whenever they spawn
+-- or their membership changes.
 
 Cable.check_networked_string('fl_faction_creation_refused')
 
 --- Asks the PlayerCanBypassFactionLimit hook whether a player may load a character of a
--- faction or rank that is full.
+-- faction or rank that is full, or of a whitelisted faction they are not on the whitelist of.
 -- @param actor [Player]
 -- @param faction_table [Faction the faction of the character]
--- @param rank_table [Map the rank that is full, nil when it is the faction that is full]
+-- @param rank_table [Map the rank that is full, nil when it is the faction that is full or
+--   the whitelist that is missing]
 -- @param character [Character the character the player wants to load]
 -- @return [Boolean]
 local function can_bypass_limit(actor, faction_table, rank_table, character)
   --- Decides whether a player may load a character although its faction, or its rank in
-  -- that faction, already has as many members online as the limit allows. Called on the
-  -- server when a player asks to load such a character.
+  -- that faction, already has as many members online as the limit allows, or although the
+  -- faction is whitelisted and the player is not on its whitelist. Called on the server when
+  -- a player asks to load such a character.
   -- @param actor [Player the player who wants to load the character]
   -- @param faction_table [Faction the faction of the character]
-  -- @param rank_table [Map the rank that is full, nil when it is the faction that is full]
+  -- @param rank_table [Map the rank that is full, nil when it is the faction that is full or
+  --   the whitelist that is missing]
   -- @param character [Character the character they want to load]
   -- @return [Boolean return true to let the player in regardless of the limit]
   return hook.Run('PlayerCanBypassFactionLimit', actor, faction_table, rank_table, character) == true
@@ -243,8 +247,11 @@ function Factions:CharacterModelChanged(owner, _char, _model, _old_model)
   self.apply_model(owner)
 end
 
---- Refuses to load a character when its faction or its rank already has as many members
--- online as the limit allows, unless a PlayerCanBypassFactionLimit hook lets the player in.
+--- Refuses to load a character of a whitelisted faction when the player is not on its
+-- whitelist, unless they may create characters past the whitelist
+-- (`Factions.can_bypass_creation_limits`) or a PlayerCanBypassFactionLimit hook lets them in.
+-- Also refuses it when its faction or its rank already has as many members online as the
+-- limit allows, unless a PlayerCanBypassFactionLimit hook lets the player in.
 -- The player themselves is not counted, so switching between two characters of a full
 -- faction is possible. A character whose rank does not exist in its faction is checked
 -- against the default rank, which it is given when it is loaded.
@@ -266,6 +273,11 @@ function Factions:PlayerCanUseCharacter(actor, character)
 
   local rank_table = faction_table:get_rank(rank)
   local lang = Flux.Lang:get_player_lang(actor)
+
+  if faction_table.whitelisted and !actor:has_whitelist(faction_id) and
+     !Factions.can_bypass_creation_limits(actor) and !can_bypass_limit(actor, faction_table, nil, character) then
+    return false, 'error.faction.no_whitelist', { faction = t(faction_table.name, nil, lang) }
+  end
 
   if Factions.is_full(faction_id, nil, actor) and !can_bypass_limit(actor, faction_table, nil, character) then
     local faction_name = t(faction_table.name, nil, lang)

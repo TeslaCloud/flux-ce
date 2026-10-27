@@ -45,6 +45,7 @@ en:
       not_selected: You have not selected a faction.
       full: The {faction} faction has no room for another member right now.
       rank_full: The rank {rank} of this character's faction has no room for another member right now.
+      no_whitelist: You are not on the {faction} whitelist, so you cannot play this character.
       creation_refused: This faction does not accept this character.
       transfer_refused: "{target} cannot be transferred to the {faction} faction."
       no_character: "{target} has no character."
