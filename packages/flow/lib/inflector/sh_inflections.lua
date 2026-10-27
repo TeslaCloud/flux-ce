@@ -1,6 +1,8 @@
 --- The English rules of `Flow.Inflector`: its plural and singular patterns, irregular words
 -- and uncountable words.
 
+if !Flow.Inflector then require_relative 'sh_inflector' end
+
 -- Most of the regular expressions are taken from here:
 -- https://github.com/rails/rails/blob/master/activesupport/lib/active_support/inflections.rb
 Flow.Inflector:inflections('en', function(inflect)

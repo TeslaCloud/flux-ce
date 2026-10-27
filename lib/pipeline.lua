@@ -90,7 +90,7 @@ do
   end
 end
 
---- Include all files in a folder using a specific pipeline.
+--- Include all files in a folder using a specific pipeline, in alphabetical order.
 -- See documentation for `Pipeline.include`.
 -- @param id [String pipeline ID]
 -- @param directory [String folder relative to the LUA search path]
@@ -103,7 +103,7 @@ function Pipeline.include_folder(id, directory)
     directory = directory..'/'
   end
 
-  local files, _dirs = file.Find(directory..'*', 'LUA', 'namedesc')
+  local files, _dirs = file.Find(directory..'*', 'LUA', 'nameasc')
 
   for _, file_name in ipairs(files) do
     Pipeline.include(pipe, directory..file_name)

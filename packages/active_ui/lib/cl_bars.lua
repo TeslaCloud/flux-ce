@@ -20,6 +20,7 @@
 
 if !font then require_relative 'cl_font' end
 if !Flux.Lang then require_relative 'sh_lang' end
+if !Theme then require_relative 'cl_theme' end
 
 mod 'Flux::Bars'
 

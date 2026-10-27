@@ -65,7 +65,8 @@ function require_relative(file_name)
 end
 
 --- Require all files in a folder using require_relative.
--- Relative to gamemodes/flux/ by default, unless `base` is specified.
+-- Relative to gamemodes/flux/ by default, unless `base` is specified. Files are included in
+-- alphabetical order; when recursive, the subfolders follow them, also alphabetically.
 -- ```
 -- require_relative 'my_folder'
 -- ```
@@ -89,7 +90,7 @@ function require_relative_folder(dir, base, recursive)
   end
 
   if recursive then
-    local files, folders = file.Find(dir..'*', 'LUA', 'namedesc')
+    local files, folders = file.Find(dir..'*', 'LUA', 'nameasc')
 
     -- First include the files.
     for _, file_name in ipairs(files) do
@@ -103,7 +104,7 @@ function require_relative_folder(dir, base, recursive)
       require_relative_folder(dir..folder_name, nil, recursive)
     end
   else
-    local files, _ = file.Find(dir..'*.lua', 'LUA', 'namedesc')
+    local files, _ = file.Find(dir..'*.lua', 'LUA', 'nameasc')
 
     for _, file_name in ipairs(files) do
       require_relative(dir..file_name)
