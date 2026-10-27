@@ -6,6 +6,7 @@ local card_style = { padding = { 8, 12 }, gap = 2, background = 'surface_raised'
 --- One subcommand, inside the card of its command.
 -- @param props [Map command (Map a subcommand as `Flux.Help:get_commands` lists them),
 --   prefix (String)]
+-- @return [Map the element]
 local function Subcommand(props)
   local command = props.command
   local dim = Lumen.Style.color('text_muted') or color_white
@@ -21,6 +22,7 @@ end
 
 --- One command.
 -- @param props [Map command (Map as `Flux.Help:get_commands` lists them), prefix (String)]
+-- @return [Map the element]
 local function Command(props)
   local command = props.command
   local dim = Lumen.Style.color('text_muted') or color_white

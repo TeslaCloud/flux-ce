@@ -1566,7 +1566,7 @@ end)
 -- @param text [String message]
 -- @param default_text [String initial text of the entry]
 -- @param on_enter [function(text) called with the entered text when it is confirmed]
--- @param on_cancel=nil [function(text) called when the request is cancelled]
+-- @param on_cancel=nil [function(text) called when the request is canceled]
 -- @param button_text=#dialog.ok [String text of the confirm button]
 -- @param button_cancel_text=#dialog.cancel [String text of the cancel button]
 -- @return [Panel the DFrame]

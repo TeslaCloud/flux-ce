@@ -44,7 +44,7 @@ function Communications:AdjustMessageData(_listener, message_data)
 end
 
 --- Notes who has received the radio message that `Communications.speak_radio` is sending,
--- which also tells it that the message has not been cancelled.
+-- which also tells it that the message has not been canceled.
 -- @param message_data [Map message data, radio messages have a frequency field]
 -- @param receivers [List<Player> the players the message has been sent to]
 function Communications:ChatboxMessageSent(message_data, receivers)

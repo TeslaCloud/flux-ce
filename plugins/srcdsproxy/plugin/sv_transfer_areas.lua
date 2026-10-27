@@ -16,7 +16,7 @@
 -- Each entry gets one attempt: while the player stays in the area nothing is tried again,
 -- also when the proxy has refused the move, for example because the server is down; leaving
 -- and entering again starts anew. A player has one countdown at a time. A transfer area they
--- are in while another countdown runs waits for it: once that countdown has been cancelled or
+-- are in while another countdown runs waits for it: once that countdown has been canceled or
 -- has ended, the next transfer area the player is in and has not been dealt with in starts.
 
 --- The transfer state of each player who has entered a transfer area, keyed by player:

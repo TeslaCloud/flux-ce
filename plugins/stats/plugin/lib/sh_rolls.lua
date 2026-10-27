@@ -102,7 +102,7 @@ function Stats:format_roll(result)
 end
 
 --- Finds the definition whose title or short name, in any of the given languages, matches
--- a normalised name.
+-- a normalized name.
 -- @param definitions [Map definitions keyed by ID, each with a name phrase]
 -- @param prefix [String start of the short phrase, 'attribute.' or 'skill.'; the phrase is
 --   `<prefix><id>.short`]

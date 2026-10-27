@@ -5,6 +5,7 @@ local card_style = { padding = { 8, 12 }, gap = 2, background = 'surface_raised'
 
 --- The card of the schema or of a plugin.
 -- @param props [Map name (String), author (String), description (String)]
+-- @return [Map the element]
 local function PluginCard(props)
   local dim = Lumen.Style.color('text_muted') or color_white
   local author = props.author

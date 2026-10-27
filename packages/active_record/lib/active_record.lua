@@ -1,4 +1,4 @@
---- ActiveRecord is Flux's object-relational mapper, modelled on the Rails library of the
+--- ActiveRecord is Flux's object-relational mapper, modeled on the Rails library of the
 -- same name. It ties classes to database tables: a model is a class that extends
 -- `ActiveRecord::Base`, its table is named after the lowercase plural of the class name,
 -- and every row of that table is loaded as an object of the class and written back with

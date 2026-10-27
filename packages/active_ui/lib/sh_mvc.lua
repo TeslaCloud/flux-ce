@@ -1,4 +1,4 @@
---- A small request and response layer between the client and the server, loosely modelled on
+--- A small request and response layer between the client and the server, loosely modeled on
 -- model-view-controller. Panels (the views) send named requests, and handlers on the server
 -- (the controllers) act on them and can answer. On the server `MVC.handler` registers a
 -- handler for a request name. Inside of a handler `respond_to` sends a response back to the

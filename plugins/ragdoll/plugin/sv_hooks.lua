@@ -64,7 +64,7 @@ function Ragdoll:PlayerThink(actor)
 end
 
 --- Makes sure that a get up timer does what it promised even if its timed action was
--- cancelled or could not start: the action is started again, and the player gets up once
+-- canceled or could not start: the action is started again, and the player gets up once
 -- the time is up. Nothing is done while the player does any timed action, so that none is
 -- cut short; a timer that runs while another action starts is paused for it instead.
 -- @param actor [Player]
@@ -86,7 +86,7 @@ function Ragdoll:PlayerOneSecond(actor, cur_time)
   end
 end
 
---- Pauses the get up timer of a player who starts another timed action, which has cancelled
+--- Pauses the get up timer of a player who starts another timed action, which has canceled
 -- the get up action; the timer goes on once that action has ended.
 -- @param actor [Player]
 -- @param action [Map the timed action that has started]

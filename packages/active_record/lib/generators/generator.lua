@@ -70,6 +70,7 @@ function ActiveRecord.generate_create_funcs(obj)
   end
 
   --- Adds the 'created_at' and 'updated_at' datetime columns, NOT NULL unless told otherwise.
+  -- @param s [ActiveRecord::Query the query the method is called on]
   -- @param args=nil [Map column options, e.g. { null = true }]
   obj.timestamps = function(s, args)
     args = args or {}
@@ -91,6 +92,7 @@ function ActiveRecord.generate_create_funcs(obj)
   -- t:references { 'character', foreign_key = { on_delete = 'cascade' } }
   -- t:belongs_to('user', { foreign_key = true, to_table = 'players' })
   -- ```
+  -- @param s [ActiveRecord::Query the query the method is called on]
   -- @param name [String/Map name of the referenced model, singular; or a table holding
   --   it at index 1 and the options as keys]
   -- @param ... [Vararg options table: column (defaults to '<name>_id'), to_table

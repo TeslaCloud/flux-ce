@@ -1,7 +1,7 @@
 --- Client side of the RolePlay Commands plugin: draws the static texts, hides what players say
 -- through the engine instead of the chatbox, and tells the Display Typing plugin what kind of
 -- speech a player is typing (talking, whispering, yelling or performing), so that the typing
--- bubble is labelled, colored like the chat line the text will become, and seen as far as
+-- bubble is labeled, colored like the chat line the text will become, and seen as far as
 -- that line will be heard.
 
 local IsValid = IsValid

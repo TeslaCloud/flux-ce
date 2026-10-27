@@ -33,6 +33,7 @@ local sections = {
 
 --- The card of one person.
 -- @param props [Map entry (Map name (String) and roles (List<String>))]
+-- @return [Map the element]
 local function Entry(props)
   return <view style={card_style}>
     <text style={{ font = 'menu_normal' }}>{props.entry.name}</text>

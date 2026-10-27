@@ -304,53 +304,53 @@ function SKIN:apply_theme(theme)
   self.colButtonTextDisabled    = text_dim
   self.colButtonBorder          = border
 
-  local colours = self.Colours
+  local colors = self.Colours
 
-  colours.Window.TitleActive          = text
-  colours.Window.TitleInactive        = text_muted
+  colors.Window.TitleActive          = text
+  colors.Window.TitleInactive        = text_muted
 
-  colours.Button.Normal               = text
-  colours.Button.Hover                = bright
-  colours.Button.Down                 = bright
-  colours.Button.Disabled             = text_dim
+  colors.Button.Normal               = text
+  colors.Button.Hover                = bright
+  colors.Button.Down                 = bright
+  colors.Button.Disabled             = text_dim
 
-  colours.Tab.Active.Normal           = text
-  colours.Tab.Active.Hover            = bright
-  colours.Tab.Active.Down             = bright
-  colours.Tab.Active.Disabled         = text_dim
-  colours.Tab.Inactive.Normal         = text_muted
-  colours.Tab.Inactive.Hover          = text
-  colours.Tab.Inactive.Down           = bright
-  colours.Tab.Inactive.Disabled       = text_dim
+  colors.Tab.Active.Normal           = text
+  colors.Tab.Active.Hover            = bright
+  colors.Tab.Active.Down             = bright
+  colors.Tab.Active.Disabled         = text_dim
+  colors.Tab.Inactive.Normal         = text_muted
+  colors.Tab.Inactive.Hover          = text
+  colors.Tab.Inactive.Down           = bright
+  colors.Tab.Inactive.Disabled       = text_dim
 
-  colours.Label.Default               = text
-  colours.Label.Bright                = bright
-  colours.Label.Dark                  = text
-  colours.Label.Highlight             = accent_light
+  colors.Label.Default               = text
+  colors.Label.Bright                = bright
+  colors.Label.Dark                  = text
+  colors.Label.Highlight             = accent_light
 
-  colours.Tree.Lines                  = border
-  colours.Tree.Normal                 = text
-  colours.Tree.Hover                  = bright
-  colours.Tree.Selected               = bright
+  colors.Tree.Lines                  = border
+  colors.Tree.Normal                 = text
+  colors.Tree.Hover                  = bright
+  colors.Tree.Selected               = bright
 
-  colours.Properties.Line_Normal      = surface_color
-  colours.Properties.Line_Selected    = selection
-  colours.Properties.Line_Hover       = main_light
-  colours.Properties.Title            = bright
-  colours.Properties.Column_Normal    = raised
-  colours.Properties.Column_Selected  = selection
-  colours.Properties.Column_Hover     = main_light
-  colours.Properties.Column_Disabled  = main_dark
-  colours.Properties.Border           = border
-  colours.Properties.Label_Normal     = text
-  colours.Properties.Label_Selected   = bright
-  colours.Properties.Label_Hover      = bright
-  colours.Properties.Label_Disabled   = text_dim
+  colors.Properties.Line_Normal      = surface_color
+  colors.Properties.Line_Selected    = selection
+  colors.Properties.Line_Hover       = main_light
+  colors.Properties.Title            = bright
+  colors.Properties.Column_Normal    = raised
+  colors.Properties.Column_Selected  = selection
+  colors.Properties.Column_Hover     = main_light
+  colors.Properties.Column_Disabled  = main_dark
+  colors.Properties.Border           = border
+  colors.Properties.Label_Normal     = text
+  colors.Properties.Label_Selected   = bright
+  colors.Properties.Label_Hover      = bright
+  colors.Properties.Label_Disabled   = text_dim
 
-  colours.Category.Header             = text
-  colours.Category.Header_Closed      = text_muted
+  colors.Category.Header             = text
+  colors.Category.Header_Closed      = text_muted
 
-  for index, line in ipairs({ colours.Category.Line, colours.Category.LineAlt }) do
+  for index, line in ipairs({ colors.Category.Line, colors.Category.LineAlt }) do
     line.Text             = text
     line.Text_Hover       = bright
     line.Text_Selected    = bright
@@ -360,7 +360,7 @@ function SKIN:apply_theme(theme)
     line.Button_Selected  = selection
   end
 
-  colours.TooltipText = text
+  colors.TooltipText = text
 end
 
 --- Paints the background of a panel, if it has one: a rounded box in its background color.
@@ -622,6 +622,7 @@ function SKIN:PaintActiveTab(_panel, w, h)
 end
 
 --- Paints one of the buttons of a window title bar as a glyph that lights up while hovered.
+-- @param skin [Map the skin]
 -- @param panel [Panel the button]
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
@@ -974,14 +975,14 @@ end
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintCategoryButton(panel, w, h)
-  local colours = panel.AltLine and self.Colours.Category.LineAlt or self.Colours.Category.Line
+  local colors = panel.AltLine and self.Colours.Category.LineAlt or self.Colours.Category.Line
 
   if panel.Depressed or panel.m_bSelected then
-    set_draw_color(colours.Button_Selected)
+    set_draw_color(colors.Button_Selected)
   elseif panel.Hovered then
-    set_draw_color(colours.Button_Hover)
+    set_draw_color(colors.Button_Hover)
   else
-    set_draw_color(colours.Button)
+    set_draw_color(colors.Button)
   end
 
   draw_rect(0, 0, w, h)

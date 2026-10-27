@@ -146,7 +146,7 @@ PANEL.player = false
 
 --- Opens the menu of the card's player when the card is clicked with the left or the right
 -- mouse button. Children of the card that take clicks themselves, such as the avatar, keep
--- their own behaviour.
+-- their own behavior.
 -- @param code [Number mouse button code, one of the MOUSE_ enums]
 function PANEL:OnMousePressed(code)
   if code == MOUSE_LEFT or code == MOUSE_RIGHT then

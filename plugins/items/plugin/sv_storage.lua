@@ -651,6 +651,7 @@ end
 -- dropped. Instances that are loaded already are passed as they are. Server-side only.
 -- @param character_id [Number]
 -- @param callback [Function receives the List<Item> of the instances]
+-- @return [Any what the callback returns if it runs right away, nil otherwise]
 function Item.load_character(character_id, callback)
   character_id = tonumber(character_id)
 

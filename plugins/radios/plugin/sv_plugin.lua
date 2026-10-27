@@ -125,7 +125,7 @@ end
 -- @param frequency [Number frequency to talk on]
 -- @param item_obj=nil [Item the radio the player speaks into, passed on to the hooks]
 -- @return [Boolean true if the message has been sent, false if there was nothing to say,
---   the frequency is not a number or a plugin has cancelled the message]
+--   the frequency is not a number or a plugin has canceled the message]
 function Communications.speak_radio(speaker, text, frequency, item_obj)
   if !IsValid(speaker) or !speaker:IsPlayer() then return false end
   if !isstring(text) or !isnumber(frequency) then return false end
@@ -227,7 +227,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   Log:print(Chatbox.message_to_string(message), 'player_ic')
 
   --- Called on the server after a radio message has been sent. Not called for a message
-  -- that the ChatboxShouldSendMessage hook has cancelled.
+  -- that the ChatboxShouldSendMessage hook has canceled.
   -- @param speaker [Player the player who talked on the radio]
   -- @param info [Map the transmission as it was sent: text (String), frequency (Number)
   --   and item (Item the radio spoken into, or nil)]

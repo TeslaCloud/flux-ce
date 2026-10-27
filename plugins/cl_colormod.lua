@@ -53,7 +53,7 @@ do
   end
 
   --- Sets one value of the local player's color modification table.
-  -- The '$pp_colour_' prefix may be left out and 'color' is accepted in place of 'colour'.
+  -- The '$pp_colour_' prefix may be left out and 'color' is accepted in place of 'color'.
   -- ```
   -- Flux.set_color_mod('contrast', 1.2)
   -- Flux.set_color_mod('$pp_colour_addr', 0.1)

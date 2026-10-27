@@ -312,6 +312,7 @@ end
 
 --- Runs a raw SQL statement. Not reversible.
 -- @param sql [String]
+-- @return [Any whatever the adapter returns]
 function execute(sql)
   return ActiveRecord.ddl('execute', sql)
 end

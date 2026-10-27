@@ -165,7 +165,7 @@ function PANEL:show_page(id)
   self.body:InvalidateLayout()
 end
 
---- Adds a labelled control to a page.
+--- Adds a labeled control to a page.
 -- @param page [Panel the panel of the page]
 -- @param title [String translated label]
 -- @param class [String class of the control, such as 'DTextEntry' or 'DComboBox']
@@ -454,7 +454,7 @@ function PANEL:open_item_menu(item_id)
 end
 
 --- Builds the page with a checkbox for every faction. A faction that the vendor is limited
--- to but that is not registered anymore gets a checkbox labelled with its ID, so that it can
+-- to but that is not registered anymore gets a checkbox labeled with its ID, so that it can
 -- be unchecked.
 function PANEL:build_access()
   local data = self.data

@@ -375,6 +375,7 @@ if SERVER then
   -- callback run later. Server only.
   -- @param name [String]
   -- @param callback [Function receives a List<Character>, empty when nothing was found]
+  -- @return [Any what the callback returns if a loaded character matches, nil otherwise]
   function Characters.find_by_name(name, callback)
     local key = normalize_name(name)
     local found = {}

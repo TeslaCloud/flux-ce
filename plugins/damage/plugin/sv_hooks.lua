@@ -3,7 +3,7 @@
 -- and drive the health regeneration, the drowning and the logs.
 -- The handlers of GMod's damage hooks change the damage in place and return nothing, so the
 -- handlers of the schema, of other plugins and of the gamemode still run after them. The
--- exceptions are damage blocked through `ResolvePlayerDamage` and damage cancelled through
+-- exceptions are damage blocked through `ResolvePlayerDamage` and damage canceled through
 -- `PrePlayerTakeDamage`, which are blocked for everyone.
 
 local config_get = Config.get

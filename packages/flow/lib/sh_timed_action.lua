@@ -7,7 +7,7 @@
 -- resetting or replacing the action cancels the timed one.
 --
 -- The action ends in one of two ways. It succeeds when its duration has passed. It fails
--- when it is cancelled with `Flux.TimedAction:cancel`, when its condition stops holding,
+-- when it is canceled with `Flux.TimedAction:cancel`, when its condition stops holding,
 -- when the player dies or leaves, or when their current action is changed by something
 -- else. Either way the callback is called with the outcome and the
 -- `PlayerTimedActionFinished` hook is run. `PlayerCanStartTimedAction` lets plugins veto
@@ -138,7 +138,7 @@ if SERVER then
     --   server if they have already left]
     -- @param action [Map The action, see `Flux.TimedAction:get`]
     -- @param success [Boolean true if the action ran for its whole duration, false if it
-    --   was cancelled]
+    --   was canceled]
     hook.Run('PlayerTimedActionFinished', actor, action, success)
 
     return true
@@ -182,7 +182,7 @@ if SERVER then
   -- @param options=nil [Map optional settings: text (String text or language phrase shown
   --   on the progress bar), arguments (Map values to substitute into the text), condition
   --   (Function called with the player and the action on every tick; the action is
-  --   cancelled as soon as it returns false or nil), callback (Function called with the
+  --   canceled as soon as it returns false or nil), callback (Function called with the
   --   player, a success Boolean and the action when the action ends) and force (Boolean
   --   start even if the player is doing something else)]
   -- @return [Boolean true if the action has started]
@@ -256,7 +256,7 @@ if SERVER then
   -- failure. Serverside only.
   -- @param actor [Player]
   -- @param id=nil [String only cancel the action if it has this ID]
-  -- @return [Boolean true if an action was cancelled]
+  -- @return [Boolean true if an action was canceled]
   function Flux.TimedAction:cancel(actor, id)
     local action = active[actor]
 
@@ -443,7 +443,7 @@ if SERVER then
   --- Cancels the timed action of the player. The callback of the action is called with a
   -- failure. Serverside only.
   -- @param id=nil [String only cancel the action if it has this ID]
-  -- @return [Boolean true if an action was cancelled]
+  -- @return [Boolean true if an action was canceled]
   function player_meta:cancel_timed_action(id)
     return Flux.TimedAction:cancel(self, id)
   end

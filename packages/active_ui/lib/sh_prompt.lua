@@ -95,7 +95,7 @@ if SERVER then
   end
 
   --- Asks a player to type a text. The callback is called with the player and the text
-  -- they submitted (which may be empty), or with false if they cancelled, did not answer
+  -- they submitted (which may be empty), or with false if they canceled, did not answer
   -- in time or left. Serverside only.
   -- @param target [Player the player to ask; bots cannot be asked]
   -- @param title [String title of the dialog, text or language phrase]
@@ -217,7 +217,7 @@ else
 
   --- Sends the answer of the local player to the server and forgets the dialog.
   -- @param id [Number request ID]
-  -- @param answer [String/Boolean the entered text, the choice, or false if cancelled]
+  -- @param answer [String/Boolean the entered text, the choice, or false if canceled]
   local function send_answer(id, answer)
     windows[id] = nil
 

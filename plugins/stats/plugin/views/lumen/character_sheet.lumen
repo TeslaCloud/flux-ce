@@ -133,6 +133,7 @@ end
 -- otherwise an image, or an empty space of the same size if it has none.
 -- @param props [Map icon (String), size (Number), font (String font whose height is the
 --   size of a FontAwesome icon)]
+-- @return [Map the element]
 local function Icon(props)
   local icon = props.icon
   local size = props.size
@@ -153,6 +154,7 @@ end
 
 --- A bar that is filled to a fraction.
 -- @param props [Map fraction (Number from 0 to 1), color (String/Color of the filled part)]
+-- @return [Map the element]
 local function Bar(props)
   local fraction = math.Clamp(tonumber(props.fraction) or 0, 0, 1)
 
@@ -165,6 +167,7 @@ end
 
 --- A label with a value at its right end.
 -- @param props [Map label (String), value (String), color (String/Color of the value)]
+-- @return [Map the element]
 local function LabeledValue(props)
   return <view style={{ direction = 'row', align = 'end', gap = 8 }}>
     <text style={{ flex = 1, font = 'text_small', color = 'text_muted', wrap_text = false }}>{props.label}</text>
@@ -176,6 +179,7 @@ end
 -- the character. A character at the level cap of the server level sees the time until the
 -- cap rises in place of its experience.
 -- @param props [Map actor (Player)]
+-- @return [Map the element]
 local function Header(props)
   local actor = props.actor
   local faction = Factions and isfunction(actor.get_faction) and actor:get_faction()
@@ -230,6 +234,7 @@ end
 --- The button that asks the server to roll a stat or a skill and shows the result once it is
 -- back. It is wide enough for a total, so that it keeps its size while it shows one.
 -- @param props [Map id (String ID of the stat or the skill)]
+-- @return [Map the element]
 local function RollButton(props)
   return <roll_button roll_id={props.id} icon="fa-dice-d20"
     style={{ font = 'text_small', padding = { 4, 10 }, min_width = 88 }}
@@ -241,6 +246,7 @@ end
 --- The button that spends an unspent point on a stat or a skill.
 -- @param props [Map message (String Cable message to send), id (String ID of the stat or
 --   the skill), tooltip (String)]
+-- @return [Map the element]
 local function SpendButton(props)
   return <button icon="fa-plus" tooltip={props.tooltip}
     style={{ font = 'text_small', padding = { 4, 8 }, background = 'accent_dark' }}
@@ -250,6 +256,7 @@ end
 --- The line of a stat.
 -- @param props [Map actor (Player), stat (AttributeBase), can_spend (Boolean whether the
 --   character has attribute points left)]
+-- @return [Map the element]
 local function StatRow(props)
   local actor, stat = props.actor, props.stat
   local id = stat.attribute_id
@@ -277,6 +284,7 @@ end
 --- The line of a skill.
 -- @param props [Map actor (Player), skill (SkillBase), can_spend (Boolean whether the
 --   character has skill points left)]
+-- @return [Map the element]
 local function SkillRow(props)
   local actor, skill = props.actor, props.skill
   local id = skill.skill_id
@@ -316,6 +324,7 @@ end
 
 --- A notice in place of a list that is empty.
 -- @param props [Map text (String)]
+-- @return [Map the element]
 local function Notice(props)
   return <view style={{ padding = { 8, 12 }, background = 'surface_raised', radius = 6 }}>
     <text style={{ font = 'text_small', color = 'text_muted' }}>{props.text}</text>

@@ -9,7 +9,7 @@ CMD.arg_types = { 'text' }
 
 local announcement_color = Color(255, 210, 100)
 
---- Shows the text to every player as a notification, labelled as an announcement. Percent
+--- Shows the text to every player as a notification, labeled as an announcement. Percent
 -- signs in the text are doubled before it is sent: the text is a phrase argument, and `t`
 -- would read a single one as the start of a capture reference.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]

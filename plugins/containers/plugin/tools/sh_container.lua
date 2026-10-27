@@ -152,7 +152,7 @@ function TOOL:RightClick(trace)
 end
 
 if CLIENT then
-  --- Adds a labelled drop-down to the control panel that sets a console variable to the
+  --- Adds a labeled drop-down to the control panel that sets a console variable to the
   -- value of the picked option and shows the option the variable is set to.
   -- @param panel [Panel the tool's control panel]
   -- @param label [String text shown next to the drop-down]

@@ -216,7 +216,7 @@ function Chatbox.add_text(listeners, ...)
 
   if !client_mode then
     --- Called on the server after a chat message has been sent to everyone who can hear it.
-    -- Not called for a message that ChatboxShouldSendMessage has cancelled, nor for the text
+    -- Not called for a message that ChatboxShouldSendMessage has canceled, nor for the text
     -- that a client adds with `chat.AddText`.
     -- @param message_data [Map message data as it was before the AdjustMessageData hook
     --   changed the copies of the listeners: data (the pieces), sender, position, radius,
