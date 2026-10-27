@@ -150,7 +150,8 @@ end
 -- end
 -- ```
 -- The new character belongs to the user record of the player unless a GetCharacterOwner hook
--- hands it to another `User` record; only a character of the player's own is sent to them.
+-- hands it to another `User` record; only for a character of the player's own is their
+-- character list sent to them again.
 -- @param target [Player the player the character is created for, its owner unless a
 --   GetCharacterOwner hook names another record]
 -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin. Set
@@ -212,7 +213,7 @@ function Characters.create(target, data)
     Characters.save(target, char)
 
     if record == target.record then
-      cable_send(target, 'fl_create_character', Characters.to_networkable(target, char))
+      Characters.send_to_client(target)
     end
   end
 
@@ -934,8 +935,6 @@ if SERVER then
     if status == CHAR_SUCCESS then
       actor.next_character_creation = cur_time + request_delay
 
-      Characters.send_to_client(actor)
-
       respond_to { success = true, status = status }
 
       Flux.dev_print('Success')
@@ -1027,11 +1026,6 @@ else
     if !store_characters() then
       timer.Create('fl_characters_defer', 0.1, 0, store_characters)
     end
-  end)
-
-  Cable.receive('fl_create_character', function(data)
-    PLAYER.characters = PLAYER.characters or {}
-    table.insert(PLAYER.characters, data)
   end)
 
   Cable.receive('fl_character_borrowed', function(data)
