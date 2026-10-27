@@ -434,8 +434,15 @@ do
   function Flux.draw_rotating_cog(x, y, w, h, color)
     color = color or default_color
 
-    surface.draw_rotated(x, y, ang, function(x, y, _ang)
-      draw.textured_rect(util.get_material('materials/flux/cog.png'), x - w * 0.5, y - h * 0.5, w, h, color)
+    surface.draw_rotated(x, y, ang, function(center_x, center_y, _ang)
+      draw.textured_rect(
+        util.get_material('materials/flux/cog.png'),
+        center_x - w * 0.5,
+        center_y - h * 0.5,
+        w,
+        h,
+        color
+      )
     end)
 
     ang = ang + FrameTime() * 32

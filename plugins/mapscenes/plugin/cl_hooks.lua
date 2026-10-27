@@ -68,7 +68,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
         self.next_scene = self.next_scene or cur_time + config_get('mapscenes_speed')
 
         if self.next_scene <= cur_time then
-          PLAYER:ScreenFade(SCREENFADE.IN, Color(0, 0, 0), 2, 0)
+          PLAYER:ScreenFade(SCREENFADE.IN, color_black, 2, 0)
           self.scene = self.scene + 1
           self.next_scene = cur_time + config_get('mapscenes_speed')
 
@@ -113,7 +113,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
           local rotate_speed = config_get('mapscenes_rotate_speed')
 
           if rotate_speed > 0 then
-            self.angle_offset = self.angle_offset or Angle(0, 0, 0)
+            self.angle_offset = self.angle_offset or Angle()
             self.angle_offset.y = self.angle_offset.y + rotate_speed
             self.ang = self.ang + self.angle_offset
           end

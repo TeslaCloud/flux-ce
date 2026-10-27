@@ -269,6 +269,7 @@ local function reserve_block(callback)
 
       done()
     end)
+
     query:on_error(done)
   query:execute()
 end
@@ -553,6 +554,7 @@ local function select_rows(condition, values, callback)
 
       callback(istable(result) and result or {})
     end)
+
     query:on_error(function()
       callback({})
     end)
@@ -807,6 +809,7 @@ local function write_entry(entry, now, on_success, on_error)
 
     if on_success then on_success() end
   end)
+
   query:on_error(on_error)
   query:execute()
 end

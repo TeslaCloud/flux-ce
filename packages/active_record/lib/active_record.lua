@@ -242,8 +242,8 @@ function ActiveRecord.restore_schema()
   ActiveRecord.schema = {}
 
   local query = ActiveRecord.Database:select('ar_schema')
-    query:callback(function(result, query, time, bindings)
-      print_query('Schema Restore ('..time..'s)', query, bindings)
+    query:callback(function(result, query_str, time, bindings)
+      print_query('Schema Restore ('..time..'s)', query_str, bindings)
 
       if istable(result) then
         for _, row in ipairs(result) do

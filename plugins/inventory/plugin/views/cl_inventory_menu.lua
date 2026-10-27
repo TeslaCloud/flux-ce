@@ -89,8 +89,8 @@ function PANEL:rebuild()
 
   self.player_model:rebuild()
 
-  self.player_model:Receiver('fl_item', function(_receiver, dropped, is_dropped, _menu_index, _mouse_x, _mouse_y)
-    local dropped = dropped[1]
+  self.player_model:Receiver('fl_item', function(_receiver, dropped_panels, is_dropped, _menu_index, _mouse_x, _mouse_y)
+    local dropped = dropped_panels[1]
 
     if is_dropped then
       if dropped.item_data then
@@ -132,7 +132,7 @@ function PANEL:rebuild()
   -- A field like any other text entry of the theme, outlined in the accent color while it is
   -- being edited and in the success or warning color otherwise, to tell a saved description
   -- from one that has not been saved yet.
-  self.desc.Paint = function(pnl, w, h)
+  self.desc.Paint = function(pnl, desc_w, desc_h)
     local radius = Theme.get_option('corner_radius_small', math_scale(4))
     local text_color = Theme.get_color('text')
     local border
@@ -143,7 +143,7 @@ function PANEL:rebuild()
       border = Theme.get_color(pnl.saved and 'success' or 'warning')
     end
 
-    Theme.hook('DrawCard', 0, 0, w, h, radius, Theme.get_color('field'), border)
+    Theme.hook('DrawCard', 0, 0, desc_w, desc_h, radius, Theme.get_color('field'), border)
 
     pnl:DrawTextEntryText(text_color, ColorAlpha(Theme.get_color('accent'), 120), text_color)
   end

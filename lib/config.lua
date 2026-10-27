@@ -718,17 +718,17 @@ else
   --   'config.general.walk_speed.desc', { min_value = 0, max_value = 1024 })
   -- ```
   -- @param id='other' [String category ID]
-  -- @param name='Other' [String display name or language phrase]
-  -- @param description='' [String description or language phrase]
+  -- @param category_name='Other' [String display name or language phrase]
+  -- @param category_description='' [String description or language phrase]
   -- @return [Map category table]
   -- @see [Config.add_to_menu]
-  function Config.create_category(id, name, description)
+  function Config.create_category(id, category_name, category_description)
     id = id or 'other'
 
     if menu_items[id] then return menu_items[id] end
 
     menu_items[id] = {
-      category = { name = name or 'Other', description = description or '' },
+      category = { name = category_name or 'Other', description = category_description or '' },
       add_key = function(key, name, description, data_type, data)
         Config.add_to_menu(id, key, name, description, data_type, data)
       end,

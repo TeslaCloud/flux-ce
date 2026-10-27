@@ -116,8 +116,8 @@ end
 -- @param right [Time]
 -- @return [Date or DateTime]
 function Date:__add(right)
-  return run_if_valid_time(right, function(right)
-    return self.class:at(self.time + right.time)
+  return run_if_valid_time(right, function(duration)
+    return self.class:at(self.time + duration.time)
   end)
 end
 
@@ -125,8 +125,8 @@ end
 -- @param right [Time]
 -- @return [Date or DateTime]
 function Date:__sub(right)
-  return run_if_valid_time(right, function(right)
-    return self.class:at(self.time - right.time)
+  return run_if_valid_time(right, function(duration)
+    return self.class:at(self.time - duration.time)
   end)
 end
 
@@ -135,8 +135,8 @@ end
 -- @return [Date or DateTime]
 -- @see [Date#__add]
 function Date:__concat(right)
-  return run_if_valid_time(right, function(right)
-    return self.class:at(self.time + right.time)
+  return run_if_valid_time(right, function(duration)
+    return self.class:at(self.time + duration.time)
   end)
 end
 

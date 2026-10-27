@@ -100,11 +100,11 @@ function VisibleLegs:RenderScreenspaceEffects()
     angs.r = 0
 
     local rad_angle = math.rad(angs.y)
-    local offset = -20
+    local back_offset = -20
     local origin = client:GetPos()
 
-    origin.x = origin.x + math.cos(rad_angle) * offset
-    origin.y = origin.y + math.sin(rad_angle) * offset
+    origin.x = origin.x + math.cos(rad_angle) * back_offset
+    origin.y = origin.y + math.sin(rad_angle) * back_offset
 
     legs:SetPoseParameter('move_yaw', 360 * client:GetPoseParameter('move_yaw') - 180)
     legs:SetPoseParameter('move_x', client:GetPoseParameter('move_x') * 2 - 1)

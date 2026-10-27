@@ -234,10 +234,10 @@ Cable.receive('fl_inventory_open', function(inventory_id)
     frame.inventory = inventory
 
     frame.OnRemove = function()
-      local inventory_id = frame.inventory.id
-      Cable.send('fl_inventory_close', { inventory_id })
+      local closed_inventory_id = frame.inventory.id
+      Cable.send('fl_inventory_close', { closed_inventory_id })
 
-      PLAYER.opened_containers[inventory_id] = nil
+      PLAYER.opened_containers[closed_inventory_id] = nil
     end
 
     PLAYER.opened_containers = PLAYER.opened_containers or {}

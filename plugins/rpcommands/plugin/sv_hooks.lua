@@ -9,10 +9,10 @@
 
 local config_get = Config.get
 
-local ic_color = Color('khaki')
-Config.set('chat_ic_color', ic_color)
-Config.set('chat_whisper_color', ic_color:desaturate(40):darken(20))
-Config.set('chat_yell_color', ic_color:saturate(30):lighten(15))
+local base_ic_color = Color('khaki')
+Config.set('chat_ic_color', base_ic_color)
+Config.set('chat_whisper_color', base_ic_color:desaturate(40):darken(20))
+Config.set('chat_yell_color', base_ic_color:saturate(30):lighten(15))
 Config.set('chat_it_color', Color('lightblue'))
 Config.set('chat_me_color', Color('lightgreen'))
 
@@ -207,8 +207,8 @@ end
 -- @param text [String phrase]
 -- @return [Table chat message parts ending with the message data]
 function RPCommands:format_message(speaker, text)
-  local text, volume = self:get_phrase_volume(text)
-  local is_emote = text:start_with('*')
+  local phrase, volume = self:get_phrase_volume(text)
+  local is_emote = phrase:start_with('*')
   local color = config_get(is_emote and 'chat_me_color' or 'chat_ic_color')
 
   local msg_table = {
@@ -222,15 +222,15 @@ function RPCommands:format_message(speaker, text)
     msg_table[6] = ': '
 
     if volume == 3 then
-      text = text:utf8upper()
+      phrase = phrase:utf8upper()
     end
   else
     if volume > 0 then
-      text = text:sub(1, -text:match('([!]+)$'):len() - 1)
+      phrase = phrase:sub(1, -phrase:match('([!]+)$'):len() - 1)
     end
   end
 
-  table.Add(msg_table, self:get_phrase_table(text))
+  table.Add(msg_table, self:get_phrase_table(phrase))
 
   table.insert(msg_table, {
     sender = speaker,

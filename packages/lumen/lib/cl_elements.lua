@@ -89,7 +89,6 @@ end
 Lumen.call_handler = call
 
 --- Hands a panel to the `ref` prop of its element.
--- @param panel [Panel]
 -- @param ref [Function/Map the ref: a function that receives the panel, or a table whose
 --   `current` is set]
 -- @param value [Panel the panel, or nil when it goes away]

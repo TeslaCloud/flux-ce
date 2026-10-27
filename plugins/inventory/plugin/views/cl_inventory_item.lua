@@ -45,7 +45,6 @@ PANEL.item_count = 0
 PANEL.instance_ids = {}
 PANEL.slot_number = nil
 PANEL.icon = nil
-PANEL.icon_material = nil
 PANEL.rotated = false
 
 --- Draws the slot: its rounded background, the drag and drop highlight, the outline of a
@@ -139,9 +138,7 @@ function PANEL:Paint(w, h)
 
       FontAwesome:draw(icon, w * 0.5 - icon_w * 0.5, h * 0.5 - icon_h * 0.5, icon_size, slot_icon_color)
     else
-      local icon_material = self.icon_material or Material(icon, 'smooth')
-
-      self.icon_material = icon_material
+      local icon_material = util.get_material(icon, 'smooth')
 
       surface_set_draw_color(slot_icon_color)
       surface.SetMaterial(icon_material)
@@ -340,7 +337,7 @@ function PANEL:rebuild()
     self.icon_panel:Dock(FILL)
     self.icon_panel:SetMouseInputEnabled(false)
     self.icon_panel.Paint = function(_pnl, w, h)
-      surface.SetDrawColor(255, 255, 255, 255)
+      surface_set_draw_color(255, 255, 255, 255)
       surface.SetMaterial(icon)
       surface.DrawTexturedRectRotated(w * 0.5, h * 0.5, rotated and h or w, rotated and w or h, rotated and 90 or 0)
     end

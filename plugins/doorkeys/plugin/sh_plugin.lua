@@ -1,6 +1,6 @@
 require_relative 'sv_hooks'
 
-local function KeySelect(entity)
+local function key_select(entity)
   local keys = PLAYER:find_items('key')
 
   local selector = vgui.Create('fl_selector')
@@ -41,7 +41,7 @@ function PLUGIN:RegisterDoorProperties()
       end)
 
       keys_list:AddChoice(t'door.properties.keys_list.add', function()
-        KeySelect(entity)
+        key_select(entity)
       end)
 
       keys_list.DataChanged = function(_pnl, callback)
@@ -119,7 +119,7 @@ if CLIENT then
       add_button:SetText(t'door.properties.keys_list.add')
       add_button:Dock(TOP)
       add_button.DoClick = function(_btn)
-        KeySelect(entity)
+        key_select(entity)
       end
 
       list:Add(add_button)

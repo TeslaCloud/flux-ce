@@ -140,12 +140,12 @@ if CLIENT then
   end
 
   --- Stores new profiler data and refreshes the hook list.
-  -- @param metrics [Map clientside run time in seconds by hook name]
-  -- @param counts [Map clientside call counts by hook name]
-  -- @param metrics_sv [Map serverside run time in seconds by hook name]
-  -- @param counts_sv [Map serverside call counts by hook name]
-  function PANEL:update_metrics(metrics, counts, metrics_sv, counts_sv)
-    self.metrics, self.counts, self.metrics_sv, self.counts_sv = metrics, counts, metrics_sv, counts_sv
+  -- @param cl_metrics [Map clientside run time in seconds by hook name]
+  -- @param cl_counts [Map clientside call counts by hook name]
+  -- @param sv_metrics [Map serverside run time in seconds by hook name]
+  -- @param sv_counts [Map serverside call counts by hook name]
+  function PANEL:update_metrics(cl_metrics, cl_counts, sv_metrics, sv_counts)
+    self.metrics, self.counts, self.metrics_sv, self.counts_sv = cl_metrics, cl_counts, sv_metrics, sv_counts
     self:rebuild()
   end
 
@@ -165,18 +165,18 @@ if CLIENT then
     end
 
     local lines = PANEL.lines
-    local counts_sv = self.counts_sv
+    local sv_counts = self.counts_sv
 
     for hook_name, load_time in pairs(self.metrics_sv) do
       local line = lines[hook_name]
       local load_text = tostring(round(load_time * 1000, 2))..'ms'
 
       if !line then
-        lines[hook_name] = sv_list:AddLine(hook_name, load_text, counts_sv[hook_name])
+        lines[hook_name] = sv_list:AddLine(hook_name, load_text, sv_counts[hook_name])
       else
         line:SetValue(1, hook_name)
         line:SetValue(2, load_text)
-        line:SetValue(3, counts_sv[hook_name])
+        line:SetValue(3, sv_counts[hook_name])
       end
     end
   end

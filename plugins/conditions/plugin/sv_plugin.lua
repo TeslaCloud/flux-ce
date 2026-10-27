@@ -1,13 +1,13 @@
 --- Server side of the Conditions plugin: checks a player against a tree of conditions.
 
-local function CheckConditions(target, conditions)
+local function check_conditions(target, conditions)
   local stored = Conditions:get_all()
 
   for _, condition in pairs(conditions) do
     local condition_table = stored[condition.id]
 
     if condition_table.check and condition_table.check(target, condition.data) == false or
-    #condition.childs != 0 and CheckConditions(target, condition.childs) == false then
+    #condition.childs != 0 and check_conditions(target, condition.childs) == false then
       continue
     end
 
@@ -36,5 +36,5 @@ end
 --   returned by the get_conditions method of the fl_conditions panel]
 -- @return [Boolean]
 function Conditions:check(target, conditions)
-  return CheckConditions(target, conditions)
+  return check_conditions(target, conditions)
 end

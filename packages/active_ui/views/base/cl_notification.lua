@@ -6,6 +6,9 @@
 -- and positions them. A theme can take over the drawing with its `PaintNotificationContainer`
 -- and `PaintNotificationText` hooks.
 
+local default_surface_color = Color(30, 33, 44)
+local default_border_color = Color(74, 80, 104)
+
 local PANEL = {}
 PANEL.lifetime = 6
 PANEL.background_color = nil
@@ -82,8 +85,8 @@ function PANEL:Paint(width, height)
   local accent = self:get_accent_color()
 
   if !Theme.hook('PaintNotificationContainer', self, width, height) then
-    local surface_color = Theme.get_color('surface', Color(30, 33, 44))
-    local border = Theme.get_color('border', Color(74, 80, 104))
+    local surface_color = Theme.get_color('surface', default_surface_color)
+    local border = Theme.get_color('border', default_border_color)
 
     draw.blur_panel(self, cur_alpha)
     draw.RoundedBox(radius, 0, 0, width, height, ColorAlpha(border, border.a * fraction))

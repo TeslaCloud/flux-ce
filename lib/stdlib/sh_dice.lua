@@ -23,7 +23,6 @@
 -- Dice.roll('3dF + 4d10rr1 min 2')
 -- ```
 
-local type = type
 local ipairs = ipairs
 local pcall = pcall
 local error = error
@@ -678,7 +677,7 @@ end
 -- @param err [Table/String the caught error]
 -- @return [String error message]
 local function error_message(err)
-  if type(err) == 'table' and err.message then
+  if istable(err) and err.message then
     return err.message
   end
 
@@ -693,9 +692,9 @@ local function resolve_variable(variables, node)
   local name = node.name
   local value = nil
 
-  if type(variables) == 'table' then
+  if istable(variables) then
     value = variables[name]
-  elseif type(variables) == 'function' then
+  elseif isfunction(variables) then
     local success, result = pcall(variables, name)
 
     if !success then
@@ -705,7 +704,7 @@ local function resolve_variable(variables, node)
     value = result
   end
 
-  if type(value) == 'string' then
+  if isstring(value) then
     value = tonumber(value)
 
     if value == nil then
@@ -717,7 +716,7 @@ local function resolve_variable(variables, node)
     fail("Unknown variable '"..name.."'", node.pos)
   end
 
-  if type(value) != 'number' or !is_finite(value) then
+  if !isnumber(value) or !is_finite(value) then
     fail("Variable '"..name.."' is not a number", node.pos)
   end
 
@@ -1121,7 +1120,7 @@ end
 -- @param formula [String dice formula]
 -- @return [Table syntax tree, or nil and String error message naming the position]
 function Dice.parse(formula)
-  if type(formula) != 'string' then
+  if !isstring(formula) then
     return nil, 'Dice formula must be a string'
   end
 
@@ -1145,7 +1144,7 @@ end
 --   returning a number]
 -- @return [Table result, or nil and String error message naming the position]
 function Dice.evaluate(ast, variables)
-  if type(ast) != 'table' or ast.kind != 'formula' then
+  if !istable(ast) or ast.kind != 'formula' then
     return nil, 'Invalid dice formula syntax tree'
   end
 
@@ -1184,7 +1183,7 @@ end
 -- @param result [Table result from Dice.roll or Dice.evaluate]
 -- @return [String formatted roll]
 function Dice.format(result)
-  if type(result) != 'table' or type(result.total) != 'number' then
+  if !istable(result) or !isnumber(result.total) then
     return ''
   end
 

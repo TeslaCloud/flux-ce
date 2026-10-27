@@ -225,10 +225,10 @@ function list_cmd:on_run(actor, targets)
     end
 
     for perm_id in SortedPairs(character_ids) do
-      local allowed, layer = Bolt:get_permission_layer(target, perm_id)
+      local is_allowed, layer = Bolt:get_permission_layer(target, perm_id)
 
       if layer == 'character' or layer == 'character_temporary' then
-        table.insert(allowed and char_allowed or char_denied, perm_id)
+        table.insert(is_allowed and char_allowed or char_denied, perm_id)
       end
     end
 

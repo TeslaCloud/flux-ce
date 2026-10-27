@@ -440,11 +440,11 @@ else
     Flux.register_animation(anim_id, box_x - max_width, nil, FrameTime() * 8)
 
     render.SetScissorRect(box_x, box_y, box_x + box_width, box_y + box_height, true)
-      Flux.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, function(x, y)
+      Flux.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, function(gradient_x, gradient_y)
         draw.textured_rect(
           Theme.get_material('gradient'),
-          alpha > 240 and box_x or x,
-          y,
+          alpha > 240 and box_x or gradient_x,
+          gradient_y,
           box_width,
           box_height,
           accent_color

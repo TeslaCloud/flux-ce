@@ -81,7 +81,7 @@ do
       local timer_name = 'fl_ent_wait_'..wait_count
 
       timer.Create(timer_name, delay or 0, wait_time or 100, function()
-        local entity = Entity(ent_index)
+        entity = Entity(ent_index)
 
         if IsValid(entity) then
           callback(entity)

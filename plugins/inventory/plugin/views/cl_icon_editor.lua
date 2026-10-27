@@ -195,22 +195,22 @@ function PANEL:Init()
   self.item.LayoutEntity = function()
   end
 
-  self.item.PaintOver = function(_pnl, w, h)
+  self.item.PaintOver = function(_pnl, item_w, item_h)
     surface.SetDrawColor(Theme.get_color('accent_light'))
-    surface.DrawOutlinedRect(0, 0, w, h)
+    surface.DrawOutlinedRect(0, 0, item_w, item_h)
   end
 
   self.item.rebuild = function(pnl)
     local slot_size = math_scale(self.slot_size:GetValue())
     local padding = math_scale(2)
     local slot_w, slot_h = math_round(self.width:GetValue()), math_round(self.height:GetValue())
-    local w, h = slot_w * (slot_size + padding) - padding, slot_h * (slot_size + padding) - padding
+    local preview_w, preview_h = slot_w * (slot_size + padding) - padding, slot_h * (slot_size + padding) - padding
 
     pnl:SetModel(self.model:GetModel())
     pnl:SetCamPos(self.model:GetCamPos())
     pnl:SetFOV(self.model:GetFOV())
     pnl:SetLookAng(self.model:GetLookAng())
-    pnl:SetSize(w, h)
+    pnl:SetSize(preview_w, preview_h)
     pnl:Center()
   end
 

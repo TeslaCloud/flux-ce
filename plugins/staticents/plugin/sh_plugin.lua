@@ -68,8 +68,8 @@ else
 
     local to_save = {}
 
-    for ent_class, entities in pairs(entities) do
-      to_save[ent_class] = duplicator.CopyEnts(entities)
+    for ent_class, class_entities in pairs(entities) do
+      to_save[ent_class] = duplicator.CopyEnts(class_entities)
     end
 
     local ts = to_timestamp(os.time())

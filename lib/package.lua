@@ -198,10 +198,10 @@ function Package:find(name)
   if !istable(files) or #files == 0 then
     for path in pairs(search_paths) do
       local full_path = path..folder_path:ensure_end('/')
-      local files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
+      local spec_files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
 
-      if istable(files) and #files > 0 then
-        return full_path..files[1], name, full_path
+      if istable(spec_files) and #spec_files > 0 then
+        return full_path..spec_files[1], name, full_path
       end
     end
   elseif istable(files) then
@@ -407,10 +407,10 @@ do
       if !istable(files) or #files == 0 then
         for path in pairs(search_paths) do
           local full_path = path..folder_path:ensure_end('/')
-          local files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
+          local spec_files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
 
-          if istable(files) and #files > 0 then
-            return do_include(full_path..files[1], name, full_path)
+          if istable(spec_files) and #spec_files > 0 then
+            return do_include(full_path..spec_files[1], name, full_path)
           end
         end
 

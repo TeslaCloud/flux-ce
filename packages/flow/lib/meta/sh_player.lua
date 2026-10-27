@@ -84,7 +84,7 @@ function player_meta:SetModel(path)
     Cable.send(nil, 'fl_player_model_changed', self:EntIndex(), path, old_model)
   end
 
-  return self:flSetModel(path)
+  return self:fl_set_model(path)
 end
 
 --- Returns the weapons the player has: their classes alone, or together with what is

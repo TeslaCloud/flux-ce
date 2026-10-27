@@ -185,15 +185,18 @@ end
 do
   local mat_cache = {}
 
-  --- Gets a material by its path. It caches the material automatically.
+  --- Gets a material by its path. It caches the material automatically, once per path and
+  -- set of PNG parameters.
   -- @param mat [String material path]
+  -- @param png_parameters [String PNG parameters such as 'smooth mips', default: none]
   -- @return [Material]
-  function util.get_material(mat)
-    local material = mat_cache[mat]
+  function util.get_material(mat, png_parameters)
+    local key = png_parameters and mat..'\0'..png_parameters or mat
+    local material = mat_cache[key]
 
     if !material then
-      material = Material(mat)
-      mat_cache[mat] = material
+      material = Material(mat, png_parameters)
+      mat_cache[key] = material
     end
 
     return material

@@ -79,15 +79,15 @@ end
 -- @return [Log the Log class, for chaining]
 -- @see [Log:write]
 function Log:print(message, action, object, subject)
-  return self:write(message, action, object, subject, function(message, action, _object, _subject)
-    local prefix = (isstring(action) and action:capitalize()..' - ' or '')
+  return self:write(message, action, object, subject, function(logged_message, logged_action, _object, _subject)
+    local prefix = (isstring(logged_action) and logged_action:capitalize()..' - ' or '')
 
     replication_data = { type = 'print' }
 
     if SERVER then
-      ServerLog(prefix..message)
+      ServerLog(prefix..logged_message)
     else
-      print(prefix..message)
+      print(prefix..logged_message)
     end
   end)
 end
@@ -112,12 +112,12 @@ end
 -- @return [Log the Log class, for chaining]
 -- @see [Log:write]
 function Log:colored(color, message, action, object, subject)
-  return self:write(message, action, object, subject, function(message, action, _object, _subject)
-    MsgC(color, (isstring(action) and action:capitalize()..' - ' or '')..message)
+  return self:write(message, action, object, subject, function(logged_message, logged_action, _object, _subject)
+    MsgC(color, (isstring(logged_action) and logged_action:capitalize()..' - ' or '')..logged_message)
 
     replication_data = { type = 'colored', color = color }
 
-    if !message:end_with('\n') then
+    if !logged_message:end_with('\n') then
       Msg('\n')
     end
   end)

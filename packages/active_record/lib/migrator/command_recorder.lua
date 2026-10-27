@@ -136,10 +136,10 @@ function inverters.add_index(args)
   local table_name, columns, options = args[1], args[2], args[3]
 
   if istable(table_name) and columns == nil then
-    local args = table.Copy(table_name)
-    table_name, columns = args[1], args[2]
-    args[1], args[2] = nil, nil
-    options = args
+    local index_args = table.Copy(table_name)
+    table_name, columns = index_args[1], index_args[2]
+    index_args[1], index_args[2] = nil, nil
+    options = index_args
   end
 
   local inverse = table.Copy(options or {})

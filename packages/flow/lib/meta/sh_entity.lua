@@ -2,7 +2,7 @@
 -- They add checks (`Entity:stuck`, `Entity:is_door`, `Entity:facing`), bodygroup, hitbox
 -- and idle animation helpers, display names that plugins can provide through hooks
 -- (`Entity:get_name`) and freezing (`Entity:freeze`).
--- The engine's `SetModel` is kept as `flSetModel`, so that the `Player` metatable can
+-- The engine's `SetModel` is kept as `fl_set_model`, so that the `Player` metatable can
 -- override it and still call the original.
 
 local ent_meta = FindMetaTable('Entity')
@@ -12,7 +12,7 @@ local ent_meta = FindMetaTable('Entity')
   which derives from the entity metaTable. This way we don't have to check if the entity is
   a player every time the function is called.
 --]]
-ent_meta.flSetModel = ent_meta.flSetModel or ent_meta.SetModel
+ent_meta.fl_set_model = ent_meta.fl_set_model or ent_meta.SetModel
 
 --- Checks whether the bounding box of the entity intersects the world or another entity.
 -- @return [Boolean]

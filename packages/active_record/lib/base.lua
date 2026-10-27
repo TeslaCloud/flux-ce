@@ -714,8 +714,8 @@ function ActiveRecord.Base:destroy()
   local class_name = self.class_name
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('id', self.id)
-    query:callback(function(_result, query, time, bindings)
-      print_query(class_name..' Delete ('..time..'s)', query, bindings)
+    query:callback(function(_result, query_str, time, bindings)
+      print_query(class_name..' Delete ('..time..'s)', query_str, bindings)
     end)
   query:execute()
   self = nil

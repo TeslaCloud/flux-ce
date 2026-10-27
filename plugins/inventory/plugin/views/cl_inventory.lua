@@ -88,8 +88,8 @@ function PANEL:Init()
   local parent = self:GetParent()
 
   if IsValid(parent) then
-    parent:Receiver('fl_item', function(_receiver, dropped, is_dropped, _menu_index, _mouse_x, _mouse_y)
-      local dropped = dropped[1]
+    parent:Receiver('fl_item', function(_receiver, dropped_panels, is_dropped, _menu_index, _mouse_x, _mouse_y)
+      local dropped = dropped_panels[1]
 
       if is_dropped then
         Cable.send('fl_item_drop', dropped.instance_ids)

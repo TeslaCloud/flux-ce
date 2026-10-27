@@ -25,7 +25,7 @@ do
 
     if IsValid(weapon) and weapon:GetClass() == 'gmod_tool' and weapon:GetMode() == 'area' then
       local tool = PLAYER:GetTool()
-      local mode = tool:GetAreaMode()
+      local mode = tool:get_area_mode()
       local verts = (tool and tool.area and tool.area.verts)
       local area_table = Areas.get_by_type(mode.area_type)
       local areas_count = #area_table

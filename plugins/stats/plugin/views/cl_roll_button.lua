@@ -76,9 +76,10 @@ function PANEL:Think()
 
     -- A result that landed while the sheet was closed stays quiet when the sheet opens again.
     if now - roll.landed < 1 then
-      local sound = roll.result.critical == 'failure' and 'button_click_danger_sound' or 'button_click_success_sound'
+      local failed = roll.result.critical == 'failure'
+      local sound_name = failed and 'button_click_danger_sound' or 'button_click_success_sound'
 
-      surface.PlaySound(Theme.get_sound(sound))
+      surface.PlaySound(Theme.get_sound(sound_name))
     end
   end
 end

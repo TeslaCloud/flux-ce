@@ -103,9 +103,6 @@ function PLUGIN:FLInitPostEntity()
     end
 
     local h2 = 0
-    local icons = self.Icons or {}
-
-    self.Icons = icons
 
     for _, entry in pairs(tool_object.Information) do
       if isstring(entry) then entry = { name = entry } end
@@ -137,19 +134,8 @@ function PLUGIN:FLInitPostEntity()
       if !entry.icon2 and !name:start_with('use') and name:end_with('use') then entry.icon2 = 'gui/e.png' end
 
       local icon, icon2 = entry.icon, entry.icon2
-      local icon_material = icon and icons[icon]
-
-      if icon and !icon_material then
-        icon_material = Material(icon)
-        icons[icon] = icon_material
-      end
-
-      local icon2_material = icon2 and icons[icon2]
-
-      if icon2 and !icon2_material then
-        icon2_material = Material(icon2)
-        icons[icon2] = icon2_material
-      end
+      local icon_material = icon and util.get_material(icon)
+      local icon2_material = icon2 and util.get_material(icon2)
 
       if icon_material and !icon_material:IsError() then
         set_draw_color(255, 255, 255, 255)

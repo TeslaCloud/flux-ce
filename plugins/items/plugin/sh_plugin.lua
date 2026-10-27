@@ -136,8 +136,8 @@ function Items:RegisterConditions()
         t(data.name),
         t'condition.has_item_data.message1',
         '',
-        function(text)
-          panel.data.item_id = text:lower()
+        function(item_id)
+          panel.data.item_id = item_id:lower()
 
           panel.update()
 
@@ -145,8 +145,8 @@ function Items:RegisterConditions()
             t(data.name),
             t'condition.has_item_data.message2',
             '',
-            function(text)
-              panel.data.key = text
+            function(key)
+              panel.data.key = key
 
               panel.update()
 
@@ -154,8 +154,8 @@ function Items:RegisterConditions()
                 t(data.name),
                 t'condition.has_item_data.message3',
                 '',
-                function(text)
-                  panel.data.value = text
+                function(value)
+                  panel.data.value = value
 
                   panel.update()
                 end)

@@ -70,7 +70,7 @@ end
 
 --- Returns the area tool mode selected with the 'mode' convar.
 -- @return [Map the mode table, or nil if there is no mode with that index]
-function TOOL:GetAreaMode()
+function TOOL:get_area_mode()
   local mode = self:GetClientNumber('mode')
 
   return Area.tool_modes[mode]
@@ -78,7 +78,7 @@ end
 
 if CLIENT then
   -- A function to add the controls for the tool in the tool menu.
-  local function BuildCPanel(panel)
+  local function build_cpanel(panel)
     local mode_list = Area.tool_modes
 
     panel:ClearControls()
@@ -122,7 +122,7 @@ if CLIENT then
   -- selected mode.
   -- @param panel [Panel the tool's control panel]
   function TOOL.BuildCPanel(panel)
-    BuildCPanel(panel)
+    build_cpanel(panel)
   end
 
   concommand.Add('area_setmode', function(_client, _command, args)
@@ -133,7 +133,7 @@ if CLIENT then
 
       if !panel then return end
 
-      BuildCPanel(panel)
+      build_cpanel(panel)
     end)
   end)
 end

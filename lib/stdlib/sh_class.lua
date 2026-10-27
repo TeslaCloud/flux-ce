@@ -109,11 +109,11 @@ function class(name, parent_class)
     setmetatable(new_obj, real_class)
     table.safe_merge(new_obj, real_class)
 
-    local parent_class = real_class.parent
+    local base_class = real_class.parent
 
-    if parent_class and isfunction(parent_class.init) then
+    if base_class and isfunction(base_class.init) then
       super = function(...)
-        return parent_class.init(new_obj, ...)
+        return base_class.init(new_obj, ...)
       end
 
       real_class.init = isfunction(real_class.init) and real_class.init or function(_obj, ...) super(...) end

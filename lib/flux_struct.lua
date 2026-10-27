@@ -11,8 +11,6 @@ if engine.ActiveGamemode() == 'flux' then
     Set it to your schema's folder name instead!
     ============================================
   ]])
-
-  return
 end
 
 if !Flux then

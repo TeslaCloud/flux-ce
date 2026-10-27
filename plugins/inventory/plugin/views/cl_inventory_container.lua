@@ -8,6 +8,7 @@
 
 local math_scale = math.scale
 local math_scale_x = math.scale_x
+local default_scrim_color = Color(10, 12, 18, 150)
 
 local PANEL = {}
 PANEL.title = 'ui.inventory.container'
@@ -88,7 +89,7 @@ end
 function PANEL:Paint(w, h)
   draw.blur_panel(self)
 
-  surface.SetDrawColor(Theme.get_color('scrim', Color(10, 12, 18, 150)))
+  surface.SetDrawColor(Theme.get_color('scrim', default_scrim_color))
   surface.DrawRect(0, 0, w, h)
 
   Theme.hook('PaintInventoryContainerBackground', self, w, h)

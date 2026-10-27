@@ -20,7 +20,7 @@ local String = {
     return (string.utf8upper or string.upper)(...)
   end,
   sub = function(...)
-    return (string.utf8sub or string.sub)(...)
+    return (string.utf8sub or string_sub)(...)
   end
 }
 

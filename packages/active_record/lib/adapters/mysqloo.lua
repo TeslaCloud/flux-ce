@@ -70,8 +70,8 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
       self.connection = mysqloo.connect(host, user, password, database, port, socket, client_flag)
     end
 
-    self.connection.onConnected = function(database)
-      local success, error_message = database:setCharacterSet(ActiveRecord.db_settings.encoding or 'utf8')
+    self.connection.onConnected = function(connection)
+      local success, error_message = connection:setCharacterSet(ActiveRecord.db_settings.encoding or 'utf8')
 
       if !success then
         ErrorNoHalt('ActiveRecord - Failed to set MySQL encoding to UTF-8!\n')
@@ -158,10 +158,10 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
   end
 
   local query_start = os.clock()
-  local success_func = function(query_obj, result)
+  local success_func = function(completed_query, result)
     if callback then
       if query_type == 'insert' then
-        result = { { id = query_obj:lastInsert() } }
+        result = { { id = completed_query:lastInsert() } }
       end
 
       for key, value in pairs(result) do

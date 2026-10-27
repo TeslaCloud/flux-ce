@@ -255,10 +255,10 @@ function GM:FLHUDPaint(_cur_time, _scrw, _scrh)
     local alpha = PLAYER.circle_action_alpha
     local x, y = ScrC()
 
-    surface.SetDrawColor(0, 0, 0, 180 * alpha / 255)
+    surface_set_draw_color(0, 0, 0, 180 * alpha / 255)
     surface.draw_circle_outline(x, y, 65, 5, 64)
 
-    surface.SetDrawColor(Theme.get_color('text'):alpha(alpha))
+    surface_set_draw_color(Theme.get_color('text'):alpha(alpha))
     surface.draw_circle_outline_partial(math_clamp(percentage, 0, 100), x, y, 64, 3, 64)
 
     PLAYER.circle_action_percentage = nil

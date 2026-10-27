@@ -56,8 +56,8 @@ function StaticEnts:PersistenceSave()
 
   local to_save = {}
 
-  for ent_class, entities in pairs(entities) do
-    to_save[ent_class] = duplicator.CopyEnts(entities)
+  for ent_class, class_entities in pairs(entities) do
+    to_save[ent_class] = duplicator.CopyEnts(class_entities)
   end
 
   for ent_class, save_data in pairs(to_save) do

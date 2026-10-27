@@ -103,8 +103,8 @@ local min_move_speed = 20
 -- in a frame does not turn twice as fast.
 -- @param actor [Player]
 -- @param velocity [Vector velocity of the player]
--- @param max_seq_ground_speed [Number ground speed of the current sequence]
-function ThirdPerson:UpdateAnimation(actor, velocity, max_seq_ground_speed)
+-- @param _max_seq_ground_speed [Number ground speed of the current sequence]
+function ThirdPerson:UpdateAnimation(actor, velocity, _max_seq_ground_speed)
   if !self:is_controlling(actor) then
     actor.fl_tp_body_yaw = nil
     actor.fl_tp_anim_time = nil

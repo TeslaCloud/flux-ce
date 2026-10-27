@@ -273,7 +273,7 @@ function PANEL:Init()
     end
   end
 
-  self.text_entry.Paint = function(entry, w, h)
+  self.text_entry.Paint = function(entry, entry_w, entry_h)
     local text_color = get_color('text')
     local border = entry:HasFocus() and get_color('accent') or get_color('border')
 
@@ -281,8 +281,8 @@ function PANEL:Init()
       'DrawCard',
       0,
       0,
-      w,
-      h,
+      entry_w,
+      entry_h,
       get_option('corner_radius', math.scale(6)),
       get_color('chat_text_entry_background'),
       border

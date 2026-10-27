@@ -46,7 +46,7 @@ end
 
 --- Turns and moves the view model into the lowered pose while the local player's weapon is
 -- not raised, then lets the weapon's GetViewModelPosition and CalcViewModelView adjust it.
--- The pose eases in and out over `PLAYER.curRaisedFrac`, from 0 (raised) to 100 (lowered),
+-- The pose eases in and out over `PLAYER.fl_raised_fraction`, from 0 (raised) to 100 (lowered),
 -- and snaps to either end once it is close; while the weapon is fully raised the view model
 -- is left as it is, apart from what the weapon itself adjusts.
 -- @param weapon [Weapon]
@@ -64,7 +64,7 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
 
   local client = PLAYER
   local target_val = client:is_weapon_raised() and 0 or 100
-  local current = client.curRaisedFrac or 0
+  local current = client.fl_raised_fraction or 0
   local fraction = current * 0.01
 
   current = Lerp(FrameTime() * 2, current, target_val)
@@ -73,7 +73,7 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
     current = target_val
   end
 
-  client.curRaisedFrac = current
+  client.fl_raised_fraction = current
 
   local offset
 
