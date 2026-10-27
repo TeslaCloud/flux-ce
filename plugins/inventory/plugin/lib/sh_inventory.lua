@@ -116,9 +116,10 @@ do
 
   --- Get one of the player's inventories by type.
   -- @param inv_type [String]
-  -- @return [Inventory]
+  -- @return [Inventory, or nil if the player has no such inventory, as a player without a
+  --   character has none]
   function player_meta:get_inventory(inv_type)
-    return self.inventories[inv_type]
+    return self:get_inventories()[inv_type]
   end
 
   --- Get all the player's inventories.

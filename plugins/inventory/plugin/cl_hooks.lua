@@ -62,12 +62,16 @@ function Inventories:AddTabMenuItems(menu)
   })
 end
 
---- Keeps the pockets panel no wider than the main inventory panel.
+--- Keeps the pockets panel no wider than the main inventory panel of the local player shown
+-- in the same view, if there is one.
 -- @param panel [Panel the fl_inventory panel that has been rebuilt]
 function Inventories:OnInventoryRebuild(panel)
   if panel:get_inventory_type() == 'pockets' then
     local parent = panel:GetParent()
     panel:SizeToContents()
+
+    if !IsValid(parent.main_inventory) then return end
+
     panel:SetWide(math.min(panel:GetWide(), parent.main_inventory:GetWide()))
   end
 end
