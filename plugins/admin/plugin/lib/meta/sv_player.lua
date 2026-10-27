@@ -114,8 +114,8 @@ end
 --- Gives the player a temporary permission value that takes precedence over their regular
 -- permissions until it expires. Updates the TempPermission records and the networked table.
 -- Giving the value the player already has temporarily adds the duration to the time that is
--- left; any other value starts counting from now. The config is sent to the player again if
--- that has changed their right to edit configs.
+-- left, up to `Bolt.max_temp_duration` from now; any other value starts counting from now.
+-- The config is sent to the player again if that has changed their right to edit configs.
 -- @param perm_id [String permission ID]
 -- @param value [Number PERM_ value, normally PERM_ALLOW or PERM_NEVER]
 -- @param duration [Number seconds until the permission expires]
@@ -129,7 +129,8 @@ function player_meta:set_temp_permission(perm_id, value, duration)
         create = false
 
         if perm_row.object == value then
-          expires = math.max(time_from_timestamp(perm_row.expires) or 0, os.time()) + duration
+          expires = math.min(math.max(time_from_timestamp(perm_row.expires) or 0, os.time()) + duration,
+            os.time() + Bolt.max_temp_duration)
         else
           perm_row.object = value
         end

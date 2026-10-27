@@ -374,12 +374,17 @@ function ent_meta:set_nv_recipients(key, send)
 end
 
 --- Flushes all of this entity's networked variables, along with their recipients, and tells
--- clients to do the same.
+-- clients to do the same. Nothing is sent for an entity that has never had a variable set.
 -- @param recv=nil [Player/List<Player> who to notify; everyone if nil]
 function ent_meta:clear_net_vars(recv)
+  local had_vars = stored[self] != nil
+
   stored[self] = nil
   recipients[self] = nil
-  cable_send(recv, 'fl_netvar_delete', self:EntIndex())
+
+  if had_vars then
+    cable_send(recv, 'fl_netvar_delete', self:EntIndex())
+  end
 end
 
 --- Sets this entity's networked variable and sends it to clients.
@@ -397,10 +402,9 @@ end
 -- @param value [Any new value, anything but a function or a table that contains one]
 -- @param send=nil [Player/List<Player> makes the variable private: these players become
 --   its only recipients, and everyone else is told to forget it. If nil, the value goes to
---   the current recipients of the variable, which is everyone unless it is private. This
---   is a change from earlier versions, where the argument only chose who was sent this one
---   update: a variable that is given recipients stays private until
---   `Entity:set_nv_recipients` makes it public again]
+--   the current recipients of the variable, which is everyone unless it is private. A
+--   variable that is given recipients stays private until `Entity:set_nv_recipients` makes
+--   it public again]
 function ent_meta:set_nv(key, value, send)
   if is_bad_type(key, value) then return end
 

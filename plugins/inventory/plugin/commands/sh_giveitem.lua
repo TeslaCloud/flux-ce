@@ -50,7 +50,11 @@ function CMD:on_run(actor, targets, item_name, amount)
     return
   end
 
-  amount = tonumber(amount) or 1
+  amount = math.floor(tonumber(amount) or 1)
+
+  if amount != amount or amount < 1 then
+    amount = 1
+  end
 
   for _, target in ipairs(targets) do
     local success, error_text = target:give_item(item_obj.id, amount)

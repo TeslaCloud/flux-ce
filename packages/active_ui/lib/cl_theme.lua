@@ -234,7 +234,7 @@ end
 -- @param id [String theme ID]
 function Theme.remove_theme(id)
   if Theme.find_theme(id) then
-    stored[id] = nil
+    stored[id:to_id()] = nil
   end
 end
 

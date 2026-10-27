@@ -87,12 +87,14 @@ function Plugin.clear_cache()
     hooks_cache = {}
     load_cache = {}
   else
-    for hook_name, hook_table in pairs(hooks_cache) do
-      for index, handler in ipairs(hook_table) do
+    for _, hook_table in pairs(hooks_cache) do
+      for index = #hook_table, 1, -1 do
+        local handler = hook_table[index]
+
         if istable(handler) and istable(handler[2]) and isstring(handler[2].path)
           and !handler[2].path:include('flux') then
           load_cache[handler[2].id] = nil
-          hooks_cache[hook_name][index] = nil
+          table.remove(hook_table, index)
         end
       end
     end

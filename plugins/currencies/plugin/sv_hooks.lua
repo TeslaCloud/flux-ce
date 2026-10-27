@@ -151,7 +151,8 @@ function Currencies:CanPlayerTransferMoney(actor, amount, currency)
 end
 
 --- Checks that the player may transfer the money, that the drop position is within 120
--- units of their eyes and that they are not on pickup cooldown.
+-- units of their eyes and that they are neither on pickup cooldown nor have dropped money
+-- less than half a second ago.
 -- @param actor [Player]
 -- @param amount [Number]
 -- @param currency [String currency ID]
@@ -180,13 +181,19 @@ function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, _trace)
     return false, 'error.too_far'
   end
 
-  if actor.next_money_pickup and actor.next_money_pickup > CurTime() then
+  local cur_time = CurTime()
+
+  if actor.next_money_pickup and actor.next_money_pickup > cur_time then
     return false
+  end
+
+  if actor.next_money_drop and actor.next_money_drop > cur_time then
+    return false, 'error.wait'
   end
 end
 
---- Checks that the giver may transfer the money and that the target is valid, able to
--- contain money and within 120 units of the giver's eyes.
+--- Checks that the giver may transfer the money and that the target is valid, is not the
+-- giver, is able to contain money and is within 120 units of the giver's eyes.
 -- @param actor [Entity the entity giving the money, normally a player]
 -- @param target [Entity the receiver]
 -- @param amount [Number]
@@ -199,7 +206,7 @@ function Currencies:CanGiveMoney(actor, target, amount, currency)
     return false, err
   end
 
-  if !IsValid(target) then
+  if !IsValid(target) or target == actor then
     return false, 'error.invalid_entity'
   end
 

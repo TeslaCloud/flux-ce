@@ -32,9 +32,15 @@ MVC.handler('SpawnMenu::GiveItem', function(actor, target, item_id, amount)
     return
   end
 
-  local item_obj = Item.find(item_id)
+  if !IsValid(target) or !target:IsPlayer() then return end
 
-  local success, error_text = target:give_item(item_id, amount)
+  local item_obj = isstring(item_id) and Item.find_by_id(item_id)
+
+  if !item_obj then return end
+
+  amount = math.Clamp(math.floor(tonumber(amount) or 1), 1, item_obj.max_stack or 1)
+
+  local success, error_text = target:give_item(item_obj.id, amount)
 
   if success then
     target:notify('notification.item_given', {

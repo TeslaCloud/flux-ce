@@ -17,7 +17,7 @@ CMD.arguments = 0
 CMD.arg_types = { 'text' }
 CMD.no_console = true
 
-local max_range = 1000000
+local max_range = 10000
 local default_formula = '1d20'
 
 --- Returns the level of a player's character for the `level` variable of a formula.
@@ -150,7 +150,7 @@ local function find_opponent(actor)
 end
 
 --- Works out what the argument of the command asks to roll: a d20 without one, a die with
--- that many sides for a number (from 1 to 1000000), a stat or a skill for its name, and a
+-- that many sides for a number (from 1 to 10000), a stat or a skill for its name, and a
 -- formula for anything else.
 -- @param text [String the argument]
 -- @return [String formula, Map id and kind of the stat or skill to roll, or nil]
@@ -183,6 +183,8 @@ end
 -- @param text=nil [String what to roll, as it was typed; a pair of double quotes around all of
 --   it is left out]
 function CMD:on_run(actor, text)
+  if !Chatbox.is_submitting() and !Chatbox.check_interval(actor) then return end
+
   text = (text or ''):strip()
 
   local formula, rollable = resolve((text:match('^"([^"]*)"$') or text):strip())

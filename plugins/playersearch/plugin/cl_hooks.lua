@@ -10,6 +10,8 @@ function PlayerSearch:CreatePlayerInteractions(menu, target)
 end
 
 Cable.receive('fl_request_player_search', function(actor)
+  if !IsValid(actor) then return end
+
   if PLAYER:IsBot() then
     Cable.send('fl_start_player_search', actor)
 

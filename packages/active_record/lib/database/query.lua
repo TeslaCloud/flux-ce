@@ -101,7 +101,7 @@ end
 
 --- Adds a value to the bind parameters of the query. The value is sent to the database
 -- apart from the SQL, so nothing in it has to be escaped.
--- @param value [Any value to bind, converted to a string]
+-- @param value [Any value to bind, converted to a string; booleans become '1' and '0']
 -- @return [String placeholder that stands for the value in the SQL; NULL if the value
 --   is nil]
 function ActiveRecord.Query:bind(value)
@@ -111,6 +111,10 @@ function ActiveRecord.Query:bind(value)
 
   local bindings = self.bindings
   local index = #bindings + 1
+
+  if isbool(value) then
+    value = value and 1 or 0
+  end
 
   bindings[index] = tostring(value)
 

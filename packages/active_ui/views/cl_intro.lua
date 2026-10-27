@@ -9,23 +9,6 @@ local math_clamp = math.Clamp
 
 local PANEL = {}
 
---- Covers the whole screen, starts the intro animation, schedules the panel to close after
--- 4 seconds and runs the OnIntroPanelCreated hook.
-function PANEL:Init()
-  self:SetSize(ScrW(), ScrH())
-  self:SetPos(0, 0)
-
-  self:start_animation()
-
-  timer.Simple(4, function()
-    self:close_menu()
-  end)
-
-  --- Called on the client when the intro panel has been created and has started its animation.
-  -- @param panel [Panel The `fl_intro` panel]
-  hook.Run('OnIntroPanelCreated', self)
-end
-
 local logo_w, logo_h = math.scale(800), math.scale(150)
 local logo_data = {
   width = logo_w,
@@ -38,8 +21,32 @@ local cur_radius, cur_alpha = 0, 0
 local exx, exy = 0, 0
 local color = Color(140, 0, 220)
 local remove_alpha = 255
+local logo_color = Color(255, 255, 255, 255)
 local _delta_modifier = 80
 local logo_tween = Tween.new(1.5, logo_data, { width = logo_w * 0.6, height = logo_h * 0.6 }, 'inOutCubic')
+
+--- Covers the whole screen, starts the intro animation, schedules the panel to close after
+-- 4 seconds and runs the OnIntroPanelCreated hook.
+function PANEL:Init()
+  self:SetSize(ScrW(), ScrH())
+  self:SetPos(0, 0)
+
+  remove_alpha = 255
+  cur_radius, cur_alpha = 0, 0
+  logo_tween:reset()
+
+  self:start_animation()
+
+  timer.Simple(4, function()
+    if !IsValid(self) then return end
+
+    self:close_menu()
+  end)
+
+  --- Called on the client when the intro panel has been created and has started its animation.
+  -- @param panel [Panel The `fl_intro` panel]
+  hook.Run('OnIntroPanelCreated', self)
+end
 
 --- Draws the shrinking logo on a black background and the expanding circle effect, and
 -- fades everything out once the panel is closing.
@@ -50,6 +57,8 @@ function PANEL:Paint(w, h)
 
   logo_tween:update(frame_time)
 
+  logo_color.a = remove_alpha
+
   surface.SetDrawColor(0, 0, 0, remove_alpha)
   surface.DrawRect(0, 0, w, h)
 
@@ -59,7 +68,7 @@ function PANEL:Paint(w, h)
     h * 0.5 - logo_data.height * 0.5,
     logo_data.width,
     logo_data.height,
-    Color(255, 255, 255, remove_alpha)
+    logo_color
   )
 
   if self.started then
@@ -100,6 +109,8 @@ function PANEL:close_menu()
   self.should_remove = true
 
   timer.Simple(1, function()
+    if !IsValid(self) then return end
+
     self:Remove()
   end)
 
@@ -112,6 +123,8 @@ end
 --- Starts the circle animation after a short delay.
 function PANEL:start_animation()
   timer.Simple(0.6, function()
+    if !IsValid(self) then return end
+
     self.started = true
   end)
 end

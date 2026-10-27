@@ -143,7 +143,9 @@ if SERVER then
   end
 
   Cable.receive('fl_surface_text_remove', function(actor, idx)
-    if actor:can('texts') then
+    idx = tonumber(idx)
+
+    if idx and SurfaceText.texts[idx] and actor:can('texts') then
       remove(SurfaceText.texts, idx)
 
       SurfaceText:save()
@@ -155,7 +157,9 @@ if SERVER then
   end)
 
   Cable.receive('fl_surface_picture_remove', function(actor, idx)
-    if actor:can('pictures') then
+    idx = tonumber(idx)
+
+    if idx and SurfaceText.pictures[idx] and actor:can('pictures') then
       remove(SurfaceText.pictures, idx)
 
       SurfaceText:save()

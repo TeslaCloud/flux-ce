@@ -34,7 +34,9 @@ function PANEL:Think()
 
   self.should_paint = false
 
-  if Chatbox.panel:typing_command() then
+  local parent = Chatbox.panel
+
+  if IsValid(parent) and parent.is_open and parent:typing_command() then
     self.force_alpha = 50
   else
     self.force_alpha = false

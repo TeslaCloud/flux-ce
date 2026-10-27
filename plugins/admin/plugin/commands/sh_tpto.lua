@@ -6,10 +6,11 @@ CMD.syntax = 'command.tpto.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.arg_types = { 'player' }
+CMD.no_console = true
 CMD.alias = 'goto'
 
 --- Teleports the caller to the targeted player and notifies staff.
--- @param actor [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller]
 -- @param targets [List<Player> matched players; only the first one is used]
 function CMD:on_run(actor, targets)
   local target = targets[1]

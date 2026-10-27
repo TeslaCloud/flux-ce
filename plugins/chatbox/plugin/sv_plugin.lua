@@ -1,8 +1,9 @@
 --- Server side of the Chatbox plugin: builds chat messages, decides who can hear them, sends
 -- them to the clients, and turns what players type into messages. Every text a player submits,
--- from the chatbox, the `say` console command or `chat.AddText` on their client, goes through
--- the same guard: it is cut to the 'max_message_length' config and dropped while the
--- 'chat_interval' config has not passed since their last submission.
+-- from the chatbox or the `say` console command, goes through the same guard: it is cut to the
+-- 'max_message_length' config and dropped while the 'chat_interval' config has not passed since
+-- their last submission. What a client adds with `chat.AddText`, which only that client
+-- receives, is cut to the same length and relayed `Chatbox.relay_limit` times a second at most.
 
 local IsValid = IsValid
 local config_get = Config.get
@@ -23,6 +24,8 @@ local _default_msg_data = {
 local filters = {}
 local client_mode = false
 local submitting = false
+
+Chatbox.relay_limit = 20
 
 --- Stores a message filter under the specified id. Serverside only.
 -- Filters are only stored at the moment, nothing reads them yet.
@@ -103,7 +106,8 @@ end
 -- -- Message for certain players only.
 -- Chatbox.add_text(Bolt:get_staff(), Color(234, 255, 208), '@staff ', actor, ': ', text)
 -- ```
--- @param listeners [List<Player>/Player the receivers, nil to send to all players]
+-- @param listeners [List<Player>/Player the receivers, nil to send to all players; a player
+--   who is not valid receives nothing]
 -- @param ... [Vararg pieces of the message and option tables]
 -- @see [Chatbox.can_hear]
 -- @see [Chatbox.avatar]
@@ -123,10 +127,12 @@ function Chatbox.add_text(listeners, ...)
   }
 
   if !istable(listeners) then
-    if IsValid(listeners) then
+    if !listeners then
+      listeners = player.GetAll()
+    elseif IsValid(listeners) then
       listeners = { listeners }
     else
-      listeners = player.GetAll()
+      listeners = {}
     end
   end
 
@@ -432,7 +438,18 @@ function Chatbox.submit(actor, text, team_chat)
 end
 
 Cable.receive('fl_chat_text_add', function(actor, ...)
-  if !IsValid(actor) or !Chatbox.check_interval(actor) then return end
+  if !IsValid(actor) then return end
+
+  local cur_time = CurTime()
+
+  if cur_time >= (actor.fl_chat_relay_window or 0) then
+    actor.fl_chat_relay_window = cur_time + 1
+    actor.fl_chat_relay_count = 0
+  end
+
+  actor.fl_chat_relay_count = actor.fl_chat_relay_count + 1
+
+  if actor.fl_chat_relay_count > Chatbox.relay_limit then return end
 
   local pieces = { ... }
 

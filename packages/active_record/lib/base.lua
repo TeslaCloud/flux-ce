@@ -131,20 +131,23 @@ end
 -- ```
 -- @param condition [String/Map column name, SQL condition (which may use ? placeholders),
 --   or a hash of column-value pairs in which a List value stands for IN (...)]
--- @param ... [Vararg value to compare the column with, or the values that replace the
---   ? placeholders]
+-- @param ... [Vararg value to compare the column with (nil stands for IS NULL), or the
+--   values that replace the ? placeholders]
 -- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:where(condition, ...)
+  local arg_count = select('#', ...)
   local args = { ... }
   local query_str = ''
   local values = nil
 
-  if #args > 0 then
-    values = args
-
+  if arg_count > 0 then
     if condition:find('[=<>?]') then
+      values = args
       query_str = condition
+    elseif arg_count == 1 and args[1] == nil then
+      query_str = condition..' IS NULL'
     else
+      values = args
       query_str = condition..' = ?'
     end
   elseif istable(condition) then
@@ -180,18 +183,27 @@ end
 -- Object:where_not('column > ?', 100)
 -- Object:where_not({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
 -- ```
--- @param condition [String/Map SQL condition (which may use ? placeholders), or a hash
---   of column-value pairs in which a List value stands for NOT IN (...)]
--- @param ... [Vararg values that replace the ? placeholders]
+-- @param condition [String/Map column name, SQL condition (which may use ? placeholders),
+--   or a hash of column-value pairs in which a List value stands for NOT IN (...)]
+-- @param ... [Vararg value to compare the column with (nil stands for IS NOT NULL), or
+--   the values that replace the ? placeholders]
 -- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:where_not(condition, ...)
+  local arg_count = select('#', ...)
   local args = { ... }
   local query_str = ''
   local values = nil
 
-  if #args > 0 then
-    values = args
-    query_str = 'NOT ('..condition..')'
+  if arg_count > 0 then
+    if condition:find('[=<>?]') then
+      values = args
+      query_str = 'NOT ('..condition..')'
+    elseif arg_count == 1 and args[1] == nil then
+      query_str = condition..' IS NOT NULL'
+    else
+      values = args
+      query_str = 'NOT ('..condition..' = ?)'
+    end
   elseif istable(condition) then
     local parts = {}
 
@@ -344,64 +356,90 @@ function ActiveRecord.Base:_process_child(obj, target_class)
   return self
 end
 
+local relation_batch_size = 500
+
 --- @warning [Internal]
--- Internal function to fetch all relations when the object is fetched from the database.
+-- Internal function to fetch all relations when the objects are fetched from the database.
+-- Each relation is loaded with one query for up to 500 of the objects at a time.
 -- @param callback [Function called with the objects once all of their relations are loaded]
 -- @param objects [List<ActiveRecord::Base> objects to fetch the relations of]
 -- @param n=1 [Number index of the relation to fetch]
--- @param obj_id=1 [Number index of the object to fetch the relation of]
+-- @param offset=0 [Number amount of objects whose relation n has been fetched already]
 -- @return [ActiveRecord::Base(self)]
-function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
+function ActiveRecord.Base:_fetch_relation(callback, objects, n, offset)
   n = n or 1
-  obj_id = obj_id or 1
+  offset = offset or 0
 
-  local current_object = objects[obj_id]
   local relation = self.relations[n]
 
-  if relation then
-    if !relation.child then
-      if !relation.model then
-        error_with_traceback('Relation has no model! ('..tostring(relation.table_name)..')')
-        return
-      end
+  if !relation then
+    callback(objects)
 
-      local obj = relation.model:where(relation.column_name, current_object.id)
+    return self
+  end
 
-      if relation.many then
-        obj:get(function(res)
-          local children = {}
+  if relation.child then
+    return self:_fetch_relation(callback, objects, n + 1)
+  end
 
-          current_object[relation.as] = children
+  if !relation.model then
+    error_with_traceback('Relation has no model! ('..tostring(relation.table_name)..')')
+    return
+  end
 
-          for _, child in ipairs(res) do
-            child:_process_child(current_object, current_object.class)
-            children[#children + 1] = child
-          end
+  local last = math.min(offset + relation_batch_size, #objects)
+  local by_id = {}
+  local ids = {}
 
-          return self:_fetch_relation(callback, objects, n + 1, obj_id)
-        end):rescue(function()
-          current_object[relation.as] = {}
-          return self:_fetch_relation(callback, objects, n + 1, obj_id)
-        end)
-      else
-        obj:first():expect(function(res)
-          res:_process_child(current_object, current_object.class)
-          current_object[relation.as] = res
-          return self:_fetch_relation(callback, objects, n + 1, obj_id)
-        end):rescue(function()
-          return self:_fetch_relation(callback, objects, n + 1, obj_id)
-        end)
-      end
-    else
-      return self:_fetch_relation(callback, objects, n + 1, obj_id)
+  for i = offset + 1, last do
+    local object = objects[i]
+
+    if relation.many then
+      object[relation.as] = {}
     end
-  else
-    if #objects > obj_id then
-      self:_fetch_relation(callback, objects, 1, obj_id + 1) -- reset relation counter
-    else
-      callback(objects) -- finally able to callback
+
+    if object.id != nil then
+      by_id[tostring(object.id)] = object
+      ids[#ids + 1] = object.id
     end
   end
+
+  local function proceed()
+    if last < #objects then
+      return self:_fetch_relation(callback, objects, n, last)
+    end
+
+    return self:_fetch_relation(callback, objects, n + 1)
+  end
+
+  if #ids == 0 then
+    return proceed()
+  end
+
+  relation.model:where({ [relation.column_name] = ids }):order('id'):get(function(children)
+    local found = {}
+
+    for _, child in ipairs(children) do
+      local parent = by_id[tostring(child[relation.column_name])]
+
+      if parent and (relation.many or !found[parent]) then
+        found[parent] = true
+        child:_process_child(parent, parent.class)
+
+        if relation.many then
+          local list = parent[relation.as]
+
+          list[#list + 1] = child
+        else
+          parent[relation.as] = child
+        end
+      end
+    end
+
+    return proceed()
+  end):rescue(function()
+    return proceed()
+  end)
 
   return self
 end
@@ -486,7 +524,7 @@ function ActiveRecord.Base:_create_restored(data)
   object.id = data.id
   object.fetched = true
 
-  local schema = ActiveRecord.schema[self.table_name]
+  local schema = ActiveRecord.schema[self.table_name] or {}
   local str_to_type = ActiveRecord.str_to_type
 
   for column_name, value in pairs(data) do
@@ -600,7 +638,7 @@ local function gen_callback(self, insert)
     self.saving = false
 
     -- Set #id to the last insert id.
-    if insert and istable(result) then
+    if insert and istable(result) and istable(result[1]) then
       self.id = result[1]['id']
     end
 
@@ -636,6 +674,11 @@ local function gen_callback(self, insert)
 
       ar_sub_indent()
     end
+
+    if self._save_pending then
+      self._save_pending = nil
+      self:save()
+    end
   end
 end
 
@@ -654,6 +697,7 @@ function ActiveRecord.Base:save()
 
   ActiveRecord.Validator:validate_model(self, function()
     local schema = self:get_schema()
+    local in_flight = self.saving
 
     self.saving = true
 
@@ -676,6 +720,11 @@ function ActiveRecord.Base:save()
         query:insert('created_at', now)
         query:insert('updated_at', now)
         query:callback(gen_callback(self, true))
+        query:on_error(function()
+          self.fetched = false
+          self.saving = false
+          self._save_pending = nil
+        end)
       query:execute()
     elseif self.id then
       local type_to_db = ActiveRecord.type_to_db
@@ -690,8 +739,15 @@ function ActiveRecord.Base:save()
 
         query:update('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, false))
+        query:on_error(function()
+          self.saving = false
+        end)
       query:execute()
-    elseif !self.saving then
+    elseif in_flight then
+      self._save_pending = true
+    else
+      self.saving = false
+
       ErrorNoHalt(self.class_name..' does not have a valid ID after saving. This should never happen!\n')
       ErrorNoHalt('Please report this issue to TeslaCloud along with your logs.\n')
     end
@@ -775,7 +831,9 @@ function ActiveRecord.Base:has(what, many)
     relation.column_name = self.class_name:underscore()..'_id'
 
     if should_add then
-      local index = table.insert(self.relations, relation)
+      local index = #self.relations + 1
+
+      self.relations[index] = relation
       self.relations[table_name] = index
     end
   return self

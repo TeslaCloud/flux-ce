@@ -117,7 +117,7 @@ function Bolt:read_permission_duration(actor, text)
 
   local duration = self:interpret_ban_time(text)
 
-  if !isnumber(duration) or duration != duration or duration <= 0 or duration == math.huge then
+  if !self:is_temp_duration(duration) then
     Flux.Player:notify(actor, 'error.invalid_time', { time = text })
 
     return false
@@ -126,9 +126,30 @@ function Bolt:read_permission_duration(actor, text)
   return true, duration
 end
 
+--- Checks that the sender of a request may set a value of a permission of a player or of a
+-- character: as with the `permission` and `charpermission` commands, only a permission that
+-- the sender has can be allowed or denied. Unsetting it is always possible. A sender who fails the check is notified.
+-- @param actor [Player the player who sent the request]
+-- @param perm_id [String permission ID]
+-- @param value [Number PERM_ value]
+-- @return [Boolean]
+local function can_set_value(actor, perm_id, value)
+  if value == PERM_NO or actor:can(perm_id) then return true end
+
+  actor:notify('error.permission_not_yours', { permission = perm_id })
+
+  return false
+end
+
 Cable.receive('fl_bolt_set_role', function(actor, target, role_id)
   if !can_manage_player(actor, target) then return end
   if !isstring(role_id) or !Bolt:group_exists(role_id) then return end
+
+  if !Bolt:check_role_immunity(actor, role_id, true) then
+    actor:notify('error.no_permission')
+
+    return
+  end
 
   target:SetUserGroup(role_id)
 
@@ -142,6 +163,7 @@ end)
 Cable.receive('fl_bolt_set_permission', function(actor, target, perm_id, value)
   if !can_manage_player(actor, target) then return end
   if !is_permission_id(perm_id) or !is_permission_value(value) then return end
+  if !can_set_value(actor, perm_id, value) then return end
 
   target:set_permission(perm_id, value)
 end)
@@ -149,7 +171,7 @@ end)
 Cable.receive('fl_temp_permission', function(actor, target, perm_id, value, duration)
   if !can_manage_player(actor, target) then return end
   if !is_permission_id(perm_id) or !is_permission_value(value) then return end
-  if !isnumber(duration) or duration != duration or duration <= 0 or duration == math.huge then return end
+  if !Bolt:is_temp_duration(duration) or !can_set_value(actor, perm_id, value) then return end
 
   target:set_temp_permission(perm_id, value, duration)
 end)
@@ -173,21 +195,6 @@ local function managed_character(actor, target)
   return Bolt:get_active_character(target)
 end
 
---- Checks that the sender of a request may set a value of a character permission: as with the
--- `charpermission` command, only a permission that the sender has can be allowed or denied.
--- Unsetting it is always possible. A sender who fails the check is notified.
--- @param actor [Player the player who sent the request]
--- @param perm_id [String permission ID]
--- @param value [Number PERM_ value]
--- @return [Boolean]
-local function can_set_character_value(actor, perm_id, value)
-  if value == PERM_NO or actor:can(perm_id) then return true end
-
-  actor:notify('error.permission_not_yours', { permission = perm_id })
-
-  return false
-end
-
 --- Tells staff that a player has changed a permission of a character from the admin panel,
 -- with the same messages as the `charpermission` command.
 -- @param actor [Player the player who made the change]
@@ -209,7 +216,7 @@ Cable.receive('fl_bolt_set_character_permission', function(actor, target, perm_i
   local character = managed_character(actor, target)
 
   if !character or !is_permission_id(perm_id) or !is_permission_value(value) then return end
-  if !can_set_character_value(actor, perm_id, value) then return end
+  if !can_set_value(actor, perm_id, value) then return end
   if Bolt:get_character_permissions(character)[perm_id] == (value != PERM_NO and value or nil) then return end
   if !Bolt:set_character_permission(character, perm_id, value) then return end
 
@@ -223,7 +230,7 @@ Cable.receive('fl_bolt_character_temp_permission', function(actor, target, perm_
 
   if !character or !is_permission_id(perm_id) then return end
   if value != PERM_ALLOW and value != PERM_NEVER then return end
-  if !Bolt:is_temp_duration(duration) or !can_set_character_value(actor, perm_id, value) then return end
+  if !Bolt:is_temp_duration(duration) or !can_set_value(actor, perm_id, value) then return end
   if !Bolt:set_character_temp_permission(character, perm_id, value, duration) then return end
 
   local phrase = value == PERM_ALLOW and 'grant' or 'revoke'

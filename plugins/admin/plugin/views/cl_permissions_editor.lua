@@ -81,10 +81,7 @@ function PANEL:rebuild()
           return
         end
 
-        local valid = isnumber(duration) and duration > 0 and
-          (self.layer != 'character' or Bolt:is_temp_duration(duration))
-
-        if !valid then
+        if !Bolt:is_temp_duration(duration) then
           PLAYER:notify('error.invalid_time', { time = text })
 
           return

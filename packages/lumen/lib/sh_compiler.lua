@@ -470,7 +470,7 @@ function parse_element(state)
 
     pos = pos + #tag
 
-    if string_match(tag, '^[%l_]') then
+    if string_match(tag, '^[%l_]') and !string_find(tag, '.', 1, true) then
       type_code = lua_string(tag)
     elseif string_find(tag, '-', 1, true) then
       fail(state, start, "the name of the '"..tag.."' component must be a Lua expression and can not have '-' in it")

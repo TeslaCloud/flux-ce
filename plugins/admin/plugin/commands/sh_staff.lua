@@ -7,9 +7,10 @@ CMD.syntax = 'command.staff.syntax'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.arg_types = { 'text' }
+CMD.no_console = true
 
 --- Sends a chat message to every online player with the 'staff' permission.
--- @param actor [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller]
 -- @param text [String the message, as it was typed]
 function CMD:on_run(actor, text)
   local msg_table = {

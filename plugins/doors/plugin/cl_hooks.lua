@@ -91,7 +91,7 @@ function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
 
         w = size.x
         h = size.z
-      elseif size.z < size.y then
+      else
         ang_offset = offset_flat
         pos_offset = v:GetUp() * size.z * 0.5
 

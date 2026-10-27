@@ -97,16 +97,6 @@ function Item.register(id, data)
   data.data = data.data or {}
   data.custom_buttons = data.custom_buttons or {}
   data.action_sounds = data.action_sounds or {}
-  data.use_text = data.use_text
-  data.take_text = data.take_text
-  data.drop_text = data.drop_text
-  data.cancel_text = data.cancel_text
-  data.use_icon = data.use_icon
-  data.take_icon = data.take_icon
-  data.drop_icon = data.drop_icon
-  data.cancel_icon = data.cancel_icon
-  data.destroy_text = data.destroy_text
-  data.destroy_icon = data.destroy_icon
   data.model_bodygroups = data.model_bodygroups or nil
   data.icon_data = data.icon_data or nil
   data.icon_material = data.icon_material or nil

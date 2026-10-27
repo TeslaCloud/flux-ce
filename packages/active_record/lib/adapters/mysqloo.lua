@@ -89,7 +89,9 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
 
     -- ping it every 30 seconds to make sure we're not losing connection
     timer.Create('Mysqloo#keep_alive', 30, 0, function()
-      self.connection:ping()
+      if self.connection then
+        self.connection:ping()
+      end
     end)
   else
     ErrorNoHalt(
@@ -114,11 +116,12 @@ function ActiveRecord.Adapters.Mysqloo:escape(str)
   return self.connection:escape(str)
 end
 
---- Quotes an identifier such as a table or column name with backticks.
+--- Quotes an identifier such as a table or column name with backticks, doubling the
+-- backticks in it.
 -- @param str [String]
 -- @return [String]
 function ActiveRecord.Adapters.Mysqloo:quote_name(str)
-  return '`'..str..'`'
+  return '`'..string.gsub(str, '`', '``')..'`'
 end
 
 --- Runs a raw SQL query on the MySQL server. In sync mode this blocks until the query

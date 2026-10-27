@@ -185,7 +185,7 @@ function GM:HUDPaint()
   -- @return [Boolean Return false to hide the Flux HUD and the HUD of the base gamemode]
   local client = PLAYER
 
-  if client:has_initialized() and hook.Run('ShouldHUDPaint') != false then
+  if IsValid(client) and client:has_initialized() and hook.Run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
     local last_damage = client.last_damage
@@ -376,6 +376,8 @@ end
 -- @param y [Number screen y of the first line]
 -- @param distance [Number distance to the player in units]
 function GM:DrawPlayerTargetID(target, x, y, distance)
+  if distance >= 640 then return end
+
   local lines = {}
 
   --- Collects the lines of text shown in the target ID of a player. Called on the client
@@ -401,8 +403,6 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   -- @param lines [Map Lines about to be drawn by ID, see `GetDrawPlayerInfo`]
   -- @return [Boolean Return false to draw nothing for this player]
   if hook.Run('PreDrawPlayerInfo', target, x, y, distance, lines) == false then return end
-
-  if distance >= 640 then return end
 
   local alpha = 255
 

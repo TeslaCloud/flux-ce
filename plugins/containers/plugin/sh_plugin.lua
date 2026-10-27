@@ -73,6 +73,8 @@ do
   -- @param model [String path to the model; case-insensitive]
   -- @return [Map container data, or nil if the model is not a container]
   function Container:find(model)
+    if !isstring(model) then return end
+
     local lowercase = lowercase_models[model]
 
     if !lowercase then

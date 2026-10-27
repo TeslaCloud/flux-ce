@@ -70,9 +70,9 @@ function Flux.Undo:remove(owner, id)
   local queue_table = queue[owner]
 
   if queue_table then
-    for index, entry in ipairs(queue_table) do
-      if entry.id == id then
-        queue[owner][index] = nil
+    for index = #queue_table, 1, -1 do
+      if queue_table[index].id == id then
+        table.remove(queue_table, index)
       end
     end
   end
@@ -109,4 +109,10 @@ end
 -- @return [List<Map> undo entries, oldest first]
 function Flux.Undo:get_player(owner)
   return queue[owner] or {}
+end
+
+if SERVER then
+  hook.Add('PlayerDisconnected', 'FLUndo', function(actor)
+    queue[actor] = nil
+  end)
 end

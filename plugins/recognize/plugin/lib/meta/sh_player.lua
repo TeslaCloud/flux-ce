@@ -1,7 +1,8 @@
 --- Player methods of the Recognize plugin: checking who a player recognizes and under
 -- which name, and, on the server, making their character remember and forget others.
--- What the active character of a player has stored is networked as the 'fl_recognizes'
--- variable of the player, a Map of character IDs to the names they are known by.
+-- What the active character of a player has stored is networked to that player alone as
+-- the private 'fl_recognizes' variable, a Map of character IDs to the names they are known
+-- by, so a client only knows the recognitions of the local player.
 
 do
   local player_meta = FindMetaTable('Player')

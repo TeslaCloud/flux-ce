@@ -225,7 +225,8 @@ Cable.receive('fl_send_door_data', function(actor, entity, id, data)
 end)
 
 Cable.receive('fl_lock_door', function(actor, entity, lock)
-  if IsValid(entity) and entity:is_door() and hook.Run('PlayerCanLockDoor', actor, entity) then
+  if IsValid(entity) and entity:is_door() and Doors:is_in_reach(actor, entity)
+  and hook.Run('PlayerCanLockDoor', actor, entity) then
     if !Doors:player_lock_door(actor, entity, tobool(lock)) then
       actor:notify('error.cant_now')
     end

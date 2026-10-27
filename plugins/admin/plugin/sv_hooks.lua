@@ -5,16 +5,16 @@
 -- and everything attached to them hidden as players join, respawn and change permissions.
 
 --- Checks connecting players against the ban cache. A timed ban that has expired is lifted
--- and the player let in; any other ban rejects the connection with the message of
--- Bolt:get_ban_message, which names its reason and the time it has left, including a ban
--- whose end time cannot be read.
+-- and the connection left to the other checks, such as the server password; any other ban
+-- rejects the connection with the message of Bolt:get_ban_message, which names its reason
+-- and the time it has left, including a ban whose end time cannot be read.
 -- @param steam_id64 [String 64-bit SteamID of the connecting player]
 -- @param ip [String]
 -- @param _sv_pass [String server password]
 -- @param _cl_pass [String password entered by the client]
 -- @param name [String player name]
--- @return [Boolean true to allow or false to reject (nothing if there is no ban), String
---   rejection message (only when rejecting)]
+-- @return [Boolean false to reject (nothing otherwise), String rejection message (only when
+--   rejecting)]
 function Bolt:CheckPassword(steam_id64, ip, _sv_pass, _cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
   local entry = self:get_bans()[steam_id]
@@ -31,7 +31,7 @@ function Bolt:CheckPassword(steam_id64, ip, _sv_pass, _cl_pass, name)
 
     if tonumber(entry.duration) != 0 and unban_time and unban_time <= os.time() and
        --- Called on the server when the temporary ban of a connecting player has expired
-       -- and the admin plugin is about to lift it and let them in.
+       -- and the admin plugin is about to lift it and leave the connection to the other checks.
        -- @param steam_id [String SteamID of the connecting player]
        -- @param ip [String Address the player connects from]
        -- @param name [String Name of the connecting player]
@@ -39,8 +39,6 @@ function Bolt:CheckPassword(steam_id64, ip, _sv_pass, _cl_pass, name)
        --   the reason of the ban]
        Plugin.call('ShouldExpireBan', steam_id, ip, name) != false then
       self:remove_ban(steam_id)
-
-      return true
     else
       return false, self:get_ban_message(entry)
     end

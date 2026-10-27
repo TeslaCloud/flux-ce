@@ -20,6 +20,7 @@ PANEL.online_count = 0
 
 --- Creates the scroll panel that holds the player cards.
 function PANEL:Init()
+  self.player_cards = {}
   self.scroll_panel = vgui.Create('DScrollPanel', self)
   self.scroll_panel:SetPos(0, 0)
   self.scroll_panel:SetSize(self:get_menu_size())
@@ -216,7 +217,14 @@ function PANEL:rebuild()
 
   if IsValid(self.avatar_panel) then
     self.avatar_panel:safe_remove()
+  end
+
+  if IsValid(self.name_label) then
     self.name_label:safe_remove()
+  end
+
+  if IsValid(self.ping) then
+    self.ping:safe_remove()
   end
 
   local target = self.player

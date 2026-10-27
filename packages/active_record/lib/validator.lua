@@ -173,7 +173,7 @@ ActiveRecord.Validator:add('uniqueness', function(model, column, _val, opts, suc
     m:where('id != ?', model.id)
   end
 
-  m:get(function()
+  m:limit(1):get(function()
     error_callback(model, column, 'uniqueness')
   end):rescue(function()
     success_callback(model)

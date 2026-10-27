@@ -15,10 +15,12 @@ local fade_scale = 255 / 256
 
 --- Draws every placed 3D text and picture within fade range of the local player,
 -- plus a placement preview while the texts or pictures tool is equipped.
-function SurfaceText:PostDrawOpaqueRenderables()
+-- @param depth [Boolean whether the depth pass is being drawn]
+-- @param skybox [Boolean whether the skybox is being drawn]
+function SurfaceText:PostDrawOpaqueRenderables(depth, skybox)
   local client = PLAYER
 
-  if !IsValid(client) then return end
+  if depth or skybox or !IsValid(client) then return end
 
   local weapon = client:GetActiveWeapon()
   local client_pos = client:GetPos()

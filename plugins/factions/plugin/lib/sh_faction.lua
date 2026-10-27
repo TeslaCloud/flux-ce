@@ -790,9 +790,14 @@ do
   end
 
   --- Returns the faction whitelists of the player.
-  -- @return [List Whitelist records on the server, whitelisted faction IDs on the client]
+  -- @return [List Whitelist records on the server, empty for a player without a user record;
+  --   whitelisted faction IDs on the client]
   function player_meta:get_whitelists()
-    return SERVER and self.record.whitelists or self:get_nv('whitelists', {})
+    if SERVER then
+      return istable(self.record) and self.record.whitelists or {}
+    end
+
+    return self:get_nv('whitelists', {})
   end
 
   --- Checks whether the player is whitelisted for a faction.
@@ -877,12 +882,13 @@ do
 
     --- Sets the player's rank in their current faction, networks it, regenerates their name
     -- from the faction's name template and gives them the model, the weapons and the maximum
-    -- health and armor of the rank. The limit of the rank is not checked. Server only.
+    -- health and armor of the rank. The limit of the rank is not checked, and nothing happens
+    -- to a player who is not a member of a registered faction. Server only.
     -- @param rank [Number rank index, 1 being the lowest; ignored if the faction has no such rank]
     function player_meta:set_rank(rank)
-      local faction_table = self:get_faction()
+      local faction_table = get_membership(self)
 
-      if !rank or !faction_table:get_rank(rank) then return end
+      if !faction_table or !rank or !faction_table:get_rank(rank) then return end
 
       local old_rank = self:get_rank()
 
@@ -931,9 +937,12 @@ do
     end
 
     --- Whitelists the player for a faction by adding a Whitelist record to their user record
-    -- and networking the updated list. Does nothing if they already have it. Server only.
+    -- and networking the updated list. Does nothing if they already have it or have no user
+    -- record, as is the case for bots. Server only.
     -- @param faction_id [String]
     function player_meta:give_whitelist(faction_id)
+      if !istable(self.record) or !istable(self.record.whitelists) then return end
+
       if !self:has_whitelist(faction_id) then
         local whitelist = Whitelist.new()
           whitelist.faction_id = faction_id

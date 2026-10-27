@@ -64,8 +64,8 @@ function Recognizes:get_talk_radius()
   return tonumber(Config.get('talk_radius')) or 350
 end
 
---- Networks the recognitions that the active character of a player has stored to the
--- clients, as the 'fl_recognizes' variable of the player.
+--- Networks the recognitions that the active character of a player has stored to that
+-- player alone, as the private 'fl_recognizes' variable of the player.
 -- @param owner [Player]
 function Recognizes:sync(owner)
   local character = owner:get_character()
@@ -77,7 +77,7 @@ function Recognizes:sync(owner)
     end
   end
 
-  owner:set_nv('fl_recognizes', names)
+  owner:set_private_nv('fl_recognizes', names)
 end
 
 --- Removes stored recognitions from a character that is loaded. The networked variable of

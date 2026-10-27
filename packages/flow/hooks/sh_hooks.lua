@@ -453,7 +453,8 @@ do
 end
 
 --- Decides whether a player may toggle noclip by asking the plugins through the
--- PlayerEnterNoclip and PlayerExitNoclip hooks. Allowed if no plugin returns a value.
+-- PlayerEnterNoclip and PlayerExitNoclip hooks. If no plugin returns a value, leaving
+-- noclip is allowed and entering it requires the 'noclip' permission.
 -- @param actor [Player]
 -- @param state [Boolean true when entering noclip, false when leaving it]
 -- @return [Boolean whether the change is allowed]
@@ -474,13 +475,15 @@ function GM:PlayerNoClip(actor, state)
     -- are not called. A handler that returns false may put the player into a noclip mode
     -- of its own, which is how the observer plugin works.
     -- @param actor [Player The player entering noclip]
-    -- @return [Boolean Return false to prevent it or true to allow it; it is allowed when
-    --   nothing is returned]
+    -- @return [Boolean Return false to prevent it or true to allow it; when nothing is
+    --   returned, it is allowed to players with the 'noclip' permission]
     local should_enter = Plugin.call('PlayerEnterNoclip', actor)
 
     if should_enter != nil then
       return should_enter
     end
+
+    return actor:can('noclip') == true
   end
 
   return true

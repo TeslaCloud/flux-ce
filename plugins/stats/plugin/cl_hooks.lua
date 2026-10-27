@@ -26,7 +26,6 @@ function Stats:request_roll(id)
     return false
   end
 
-  -- A little longer than the server waits, so that lag cannot make it refuse the roll.
   self.next_roll = now + self.roll_interval + 0.1
   self.rolls[id] = { started = now, pending = true }
 

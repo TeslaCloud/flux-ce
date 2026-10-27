@@ -18,12 +18,8 @@ function File.write(file_name, file_contents)
   local pieces = string.split(file_name, '/')
   local current_path = ''
 
-  for _, piece in ipairs(pieces) do
-    if File.ext(piece) != nil then
-      break
-    end
-
-    current_path = current_path..piece..'/'
+  for i = 1, #pieces - 1 do
+    current_path = current_path..pieces[i]..'/'
 
     if !file.Exists(current_path, 'GAME') then
       File.mkdir(current_path)

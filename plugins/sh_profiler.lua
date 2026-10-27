@@ -136,6 +136,7 @@ if CLIENT then
 
   --- Builds the hook list.
   function PANEL:Init()
+    self.lines = {}
     self:rebuild()
   end
 
@@ -164,7 +165,7 @@ if CLIENT then
       self.sv_list = sv_list
     end
 
-    local lines = PANEL.lines
+    local lines = self.lines
     local sv_counts = self.counts_sv
 
     for hook_name, load_time in pairs(self.metrics_sv) do

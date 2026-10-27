@@ -24,7 +24,7 @@ function CMD:on_run(actor, text)
 
   local pos = actor:GetPos()
 
-  text = text:chomp(' '):spelling()
+  text = Chatbox.limit_text(text:chomp(' ')):spelling()
 
   for _, text_data in pairs(RPCommands.texts) do
     if text_data.pos:DistToSqr(pos) <= 2500 then

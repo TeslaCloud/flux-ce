@@ -12,8 +12,8 @@ function player.random()
 end
 
 --- Finds a player based on their name or SteamID.
--- A SteamID has to match exactly. A name is searched for as a Lua pattern in both the
--- name and the Steam name of every player; Steam names are always matched case-insensitively.
+-- A SteamID has to match exactly. A name is searched for as plain text in both the name and
+-- the Steam name of every player; Steam names are always matched case-insensitively.
 -- @param name [String/Player part of a name, or a SteamID; a valid player is returned as-is]
 -- @param case_sensitive=false [Boolean match player names case-sensitively]
 -- @param return_first=false [Boolean return the first match instead of all of them]
@@ -37,14 +37,14 @@ function player.find(name, case_sensitive, return_first)
 
     local char_name = client:name(true)
 
-    if char_name:find(name) then
+    if char_name:find(name, 1, true) then
       hits[#hits + 1] = client
     else
       lower_name = lower_name or name:utf8lower()
 
-      if !case_sensitive and char_name:utf8lower():find(lower_name) then
+      if !case_sensitive and char_name:utf8lower():find(lower_name, 1, true) then
         hits[#hits + 1] = client
-      elseif client:steam_name():utf8lower():find(lower_name) then
+      elseif client:steam_name():utf8lower():find(lower_name, 1, true) then
         hits[#hits + 1] = client
       end
     end

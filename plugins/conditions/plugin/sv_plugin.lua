@@ -4,10 +4,15 @@ local function check_conditions(target, conditions)
   local stored = Conditions:get_all()
 
   for _, condition in pairs(conditions) do
-    local condition_table = stored[condition.id]
+    local condition_table = istable(condition) and stored[condition.id]
 
-    if condition_table.check and condition_table.check(target, condition.data) == false or
-    #condition.childs != 0 and check_conditions(target, condition.childs) == false then
+    if !condition_table then continue end
+
+    local data = istable(condition.data) and condition.data or {}
+    local childs = istable(condition.childs) and condition.childs or {}
+
+    if condition_table.check and condition_table.check(target, data) == false or
+    #childs != 0 and check_conditions(target, childs) == false then
       continue
     end
 
@@ -20,7 +25,8 @@ end
 --- Checks whether the player satisfies a condition tree. Serverside only.
 -- A list of nodes passes if at least one of its nodes does (OR). A node passes if its
 -- own check passes and its list of child nodes, unless empty, passes as well (AND).
--- An empty top-level list never passes.
+-- An empty top-level list never passes, and neither does a node whose condition type is not
+-- registered, such as one saved by a plugin that is no longer loaded.
 -- ```
 -- -- A specific player, or anyone with more than 50 health who holds a crowbar.
 -- local allowed = Conditions:check(target, {

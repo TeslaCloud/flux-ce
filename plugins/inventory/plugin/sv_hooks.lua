@@ -11,19 +11,29 @@ local drop_near_distance_sqr = 80 * 80
 
 Cable.check_networked_string('fl_inventories_clear')
 
+local function can_handle_items(actor)
+  if !actor:Alive() then
+    return false
+  end
+
+  return !isfunction(actor.is_ragdolled) or !actor:is_ragdolled()
+end
+
 --- Checks the item list of a move or drop request. The list has to name distinct items
--- that all are in one inventory, and that inventory has to be open for the player.
+-- that all are in one inventory, and that inventory has to be open for the player and one
+-- they are still entitled to.
 -- @param actor [Player the player who sent the request]
 -- @param instance_ids [Any the list of instance ids as received from the client]
 -- @return [Inventory the inventory the items are in, List<Number> the instance ids as a
 --   clean list; nothing if the request is not valid]
+-- @see [Inventory#can_be_viewed_by]
 local function find_requested_stack(actor, instance_ids)
   if !istable(instance_ids) then return end
 
   local first_item = Item.find_instance_by_id(instance_ids[1])
   local inventory = first_item and Inventories.find(first_item.inventory_id)
 
-  if !inventory or !inventory:has_receiver(actor) then return end
+  if !inventory or !inventory:has_receiver(actor) or !inventory:can_be_viewed_by(actor) then return end
 
   local stack = {}
   local listed = {}
@@ -32,7 +42,10 @@ local function find_requested_stack(actor, instance_ids)
   for index, instance_id in ipairs(instance_ids) do
     local stack_item = find_instance_by_id(instance_id)
 
-    if !stack_item or stack_item.inventory_id != inventory.id or listed[instance_id] then return end
+    if !stack_item or stack_item.inventory_id != inventory.id or listed[instance_id]
+    or !inventory:has_item_by_id(instance_id) then
+      return
+    end
 
     listed[instance_id] = true
     stack[index] = instance_id
@@ -205,7 +218,9 @@ end
 -- @param item_obj [Item]
 -- @param ... [Vararg optional hashes; an inv_type field in one of them sets the inventory type]
 function Inventories:PlayerTakeItem(actor, item_obj, ...)
-  if IsValid(item_obj.entity) then
+  local item_entity = item_obj.entity
+
+  if IsValid(item_entity) and !item_entity:IsMarkedForDeletion() then
     local inv_type
 
     for _, argument in pairs({ ... }) do
@@ -248,7 +263,7 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
 
     if success then
       actor:sync_inventories()
-      item_obj.entity:Remove()
+      item_entity:Remove()
 
       hook.Run('ItemTransferred', item_obj, player_inventory)
     else
@@ -258,7 +273,9 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
 end
 
 --- Takes the items out of their inventory and spawns them in front of the player. Does
--- nothing if the first item does not exist or is not in an inventory.
+-- nothing if the first item does not exist, is not in an inventory or its inventory is
+-- disabled; stops at the first item that is not in that inventory. An item that a
+-- 'PreItemTransfer' handler takes out of the inventory by itself is not spawned.
 -- @param actor [Player]
 -- @param instance_ids [Number/List<Number> instance id(s) of items from the same inventory]
 function Inventories:PlayerDropItem(actor, instance_ids)
@@ -270,12 +287,14 @@ function Inventories:PlayerDropItem(actor, instance_ids)
   local first_item = Item.find_instance_by_id(table.first(instance_ids))
   local inventory = first_item and Inventories.find(first_item.inventory_id)
 
-  if !inventory then return end
+  if !inventory or inventory:is_disabled() then return end
 
   local drop_near = trace.HitPos:DistToSqr(actor:GetPos()) < drop_near_distance_sqr
 
-  for index, instance_id in pairs(instance_ids) do
+  for index, instance_id in ipairs(instance_ids) do
     local item_obj = Item.find_instance_by_id(instance_id)
+
+    if !item_obj or item_obj.inventory_id != inventory.id then break end
 
     --- Called on the server before a player drops an item from an inventory into the
     -- world, once for every item of a dropped stack. The Items plugin uses it to ask the
@@ -287,6 +306,8 @@ function Inventories:PlayerDropItem(actor, instance_ids)
     if hook.Run('CanPlayerDropItem', actor, item_obj) == false then break end
 
     hook.Run('PreItemTransfer', item_obj, nil, inventory)
+
+    if item_obj.inventory_id != inventory.id then continue end
 
     inventory:take_item_by_id(instance_id)
 
@@ -440,6 +461,11 @@ function Inventories:CanItemTransfer(item_obj, inventory, x, y)
 
   if inventory.instance_id then
     local item_container = Item.find_instance_by_id(inventory.instance_id)
+
+    if !item_container then
+      return false, 'error.inventory.invalid_item'
+    end
+
     local success, error_text = item_container:can_contain(item_obj)
 
     if success == false then
@@ -487,9 +513,9 @@ function Inventories:PlayerUseItem(actor, item_obj, ...)
     end
   end
 
-  if !IsValid(item_obj.entity) then
-    local inventory = Inventories.find(item_obj.inventory_id)
+  local inventory = !IsValid(item_obj.entity) and Inventories.find(item_obj.inventory_id)
 
+  if inventory then
     hook.Run('PreItemTransfer', item_obj, nil, inventory)
 
     inventory:take_item_by_id(item_obj.instance_id)
@@ -529,11 +555,20 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
   local old_inventory, stack = find_requested_stack(actor, instance_ids)
   local inventory = Inventories.find(inventory_id)
 
-  if !old_inventory or !inventory or !inventory:has_receiver(actor) then return end
+  if !old_inventory or !inventory then return end
+  if !inventory:has_receiver(actor) or !inventory:can_be_viewed_by(actor) then return end
   if !isnumber(x) or !isnumber(y) or x != x or y != y then return end
+
+  if !can_handle_items(actor) then
+    old_inventory:sync()
+    inventory:sync()
+
+    return
+  end
 
   instance_ids = stack
   x, y = math.floor(x), math.floor(y)
+  was_rotated = was_rotated == true
 
   local instance_id = instance_ids[1]
   local item_obj = Item.find_instance_by_id(instance_id)
@@ -542,7 +577,9 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
   -- dragging them, before anything is moved. The target can be the inventory the items
   -- are in or another one. Requests that name items or inventories that do not exist,
   -- the same item twice, items from more than one inventory, an inventory that is not
-  -- open for the player or a slot that is not a number are dropped before the hook is run.
+  -- open for the player or that they are no longer entitled to, or a slot that is not a
+  -- number are dropped before the hook is run, and so are the requests of a player who
+  -- is dead or lies on the ground as a ragdoll.
   -- @param actor [Player The player moving the items]
   -- @param item_obj [Item The first of the items that are being moved]
   -- @param instance_ids [List<Number> Instance ids of the items: one item, or several
@@ -590,14 +627,21 @@ Cable.receive('fl_item_drop', function(actor, instance_ids)
 
   if !inventory then return end
 
+  if !can_handle_items(actor) then
+    inventory:sync()
+
+    return
+  end
+
   --- Called on the server when a player drops items by dragging them out of an
   -- inventory panel. The hook is what performs the drop: the Inventory plugin handles it
   -- by taking the items out of their inventory and spawning them in front of the player.
   -- Requests that name items that do not exist, the same item twice, items from more
-  -- than one inventory, or an inventory that is not open for the player are dropped
-  -- before the hook is run. The Items plugin runs the same hook with a single instance id
-  -- instead of a list when a player uses the drop option of an item's menu, so a handler
-  -- has to accept both.
+  -- than one inventory, or an inventory that is not open for the player or that they are
+  -- no longer entitled to are dropped before the hook is run, and so are the requests of
+  -- a player who is dead or lies on the ground as a ragdoll. The Items plugin runs the
+  -- same hook with a single instance id instead of a list when a player uses the drop
+  -- option of an item's menu, so a handler has to accept both.
   -- @param actor [Player The player dropping the items]
   -- @param instance_ids [List<Number> Instance ids of the items, all from one inventory]
   hook.Run('PlayerDropItem', actor, stack)
@@ -635,6 +679,8 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
 end)
 
 Cable.receive('fl_character_desc_change', function(actor, text)
+  if !isstring(text) then return end
+
   if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len') then
     Characters.set_desc(actor, text)
     actor:notify('notification.char_desc_changed')

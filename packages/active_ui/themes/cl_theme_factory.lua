@@ -47,6 +47,8 @@ local _color_white_faded = Color(255, 255, 255, 150)
 local color_model_background = Color(0, 0, 0, 90)
 local color_slot_gradient = Color(255, 255, 255, 10)
 local color_perm_not_set = Color(150, 158, 178)
+local color_frame_shadow = Color(0, 0, 0, 60)
+local color_bar_text_shadow = Color(0, 0, 0, 160)
 
 THEME.author        = 'TeslaCloud Studios'
 THEME.id            = 'factory'
@@ -286,7 +288,7 @@ function THEME:PaintFrame(panel, w, h)
   local _text_w, text_h = text_size(text, font)
 
   DisableClipping(true)
-    draw_rounded_box(radius + 2, -2, -1, w + 4, h + 4, Color(0, 0, 0, 60))
+    draw_rounded_box(radius + 2, -2, -1, w + 4, h + 4, color_frame_shadow)
   DisableClipping(false)
 
   self:DrawCard(0, 0, w, h, radius, self:get_color('surface'))
@@ -586,7 +588,7 @@ function THEME:DrawBarTexts(bar_info)
   local text            = bar_info.text
   local text_x, text_y  = x + math.scale(8), y + bar_info.text_offset
   local text_color      = self:get_color('text')
-  local shadow          = Color(0, 0, 0, 160)
+  local shadow          = color_bar_text_shadow
 
   draw.SimpleTextOutlined(text, font, text_x, text_y, text_color, nil, nil, 1, shadow)
 

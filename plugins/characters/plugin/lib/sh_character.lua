@@ -632,10 +632,11 @@ if SERVER then
   end
 
   --- Changes the physical description of a player's active character on their own request.
-  -- The text is trimmed, its line breaks are replaced with ' | ', and it is refused when its
-  -- length is outside of the `character_min_desc_len` and `character_max_desc_len` configs,
-  -- when the player has no character or when they changed it less than a second ago. The
-  -- player is notified of the outcome. Server only.
+  -- Control characters other than line breaks become spaces, the text is trimmed, its line
+  -- breaks are replaced with ' | ', and it is refused when its length is outside of the
+  -- `character_min_desc_len` and `character_max_desc_len` configs, when the player has no
+  -- character or when they changed it less than a second ago. The player is notified of the
+  -- outcome. Server only.
   -- @param actor [Player]
   -- @param text [String the new description]
   -- @return [Boolean true when the description was changed]
@@ -654,7 +655,8 @@ if SERVER then
       return false
     end
 
-    local new_desc = string_trim(text):gsub('\n', ' | ')
+    local cleaned = text:gsub('\r', ''):gsub('[%z\1-\9\11-\31\127]', ' ')
+    local new_desc = string_trim(cleaned):gsub('\n', ' | ')
     local length = utf8.len(new_desc)
     local min_length = config_get('character_min_desc_len')
     local max_length = config_get('character_max_desc_len')
@@ -889,6 +891,22 @@ if SERVER then
       return
     end
 
+    local cur_time = CurTime()
+
+    if actor.next_character_creation and actor.next_character_creation > cur_time then
+      respond_to { success = false, status = CHAR_ERR_UNKNOWN }
+
+      return
+    end
+
+    if isstring(data.name) then
+      data.name = string_trim((data.name:gsub('%c', ' '):gsub('%s+', ' ')))
+    end
+
+    if isstring(data.description) then
+      data.description = string_trim((data.description:gsub('\r', ''):gsub('[%z\1-\9\11-\31\127]', ' ')))
+    end
+
     local requested_name = data.name
     local requested_description = data.description
 
@@ -913,6 +931,8 @@ if SERVER then
     Flux.dev_print('Creating character. Status: '..status)
 
     if status == CHAR_SUCCESS then
+      actor.next_character_creation = cur_time + request_delay
+
       Characters.send_to_client(actor)
 
       respond_to { success = true, status = status }

@@ -24,6 +24,10 @@ function PANEL:set_scrollbar_visible(visible)
   if !IsValid(bar) then return end
 
   if self.scrollbar_visible then
+    if self.bar_width and bar:GetWide() == 0 then
+      bar:SetWide(self.bar_width)
+    end
+
     bar.Paint = nil
     bar.btnUp.Paint = nil
     bar.btnDown.Paint = nil
@@ -57,7 +61,8 @@ function PANEL:PerformLayout(w, h)
   canvas:SetSize(canvas_w, math_max(content_h, h))
   bar:SetUp(h, content_h)
 
-  if !self.scrollbar_visible then
+  if !self.scrollbar_visible and bar:GetWide() > 0 then
+    self.bar_width = bar:GetWide()
     bar:SetWide(0)
   end
 

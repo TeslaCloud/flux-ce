@@ -57,7 +57,10 @@ do
   function add_client_env(key, value)
     if SERVER and !client_vars[key] then
       client_vars[key] = true
-      File.append('lua/_flux/environment.lua', 'setenv("'..tostring(key)..'", "'..tostring(value)..'")\n')
+      File.append(
+        'lua/_flux/environment.lua',
+        'setenv('..string.format('%q', tostring(key))..', '..string.format('%q', tostring(value))..')\n'
+      )
     end
   end
 end

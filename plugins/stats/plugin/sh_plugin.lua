@@ -206,18 +206,21 @@ function Stats:RegisterConditions()
       local attribute_name = ''
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local attribute_value = panel.data.attribute_value or ''
+      local attribute_table = panel.data.attribute and Attributes.find(panel.data.attribute)
 
-      if panel.data.attribute then
-        attribute_name = Attributes.find(panel.data.attribute).name
+      if attribute_table then
+        attribute_name = attribute_table.name
       end
 
       return { operator = operator, attribute = attribute_name, value = attribute_value }
     end,
     icon = 'icon16/chart_bar.png',
     check = function(target, data)
-      if !data.operator or !data.attribute or !data.attribute_value then return false end
+      local value = tonumber(data.attribute_value)
 
-      return util.process_operator(data.operator, target:get_attribute(data.attribute), tonumber(data.attribute_value))
+      if !data.operator or !data.attribute or !value then return false end
+
+      return util.process_operator(data.operator, target:get_attribute(data.attribute), value)
     end,
     set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.attribute.message1', 'condition.attributes', Attributes.get_stored(),
@@ -259,9 +262,11 @@ function Stats:RegisterConditions()
     end,
     icon = 'icon16/chart_bar.png',
     check = function(target, data)
-      if !data.operator or !data.skill or !data.skill_value then return false end
+      local value = tonumber(data.skill_value)
 
-      return util.process_operator(data.operator, target:get_skill(data.skill), tonumber(data.skill_value))
+      if !data.operator or !data.skill or !value then return false end
+
+      return util.process_operator(data.operator, target:get_skill(data.skill), value)
     end,
     set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.skill.message1', 'condition.skills', Skills.get_stored(),

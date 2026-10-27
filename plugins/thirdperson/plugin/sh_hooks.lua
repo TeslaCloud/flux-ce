@@ -89,6 +89,8 @@ local aim_turn_rate = 900
 -- and keeps the way their model faces.
 local min_move_speed = 20
 
+local render_angles = Angle(0, 0, 0)
+
 --- Turns the model of a player in third person control on its own, apart from their view
 -- angles, which follow the camera: towards where they aim while their weapon is raised (see
 -- `ThirdPerson:faces_aim`), towards the way they move otherwise, and not at all while they
@@ -133,7 +135,9 @@ function ThirdPerson:UpdateAnimation(actor, velocity, _max_seq_ground_speed)
   actor.fl_tp_body_yaw = body_yaw
 
   if actor.SetRenderAngles then
-    actor:SetRenderAngles(Angle(0, body_yaw, 0))
+    render_angles.y = body_yaw
+
+    actor:SetRenderAngles(render_angles)
   end
 
   local relative_move = math.rad(math.NormalizeAngle(move_yaw - body_yaw))

@@ -106,19 +106,28 @@ function Items:PlayerUseItemEntity(activator, entity, _item_obj)
   Cable.send(activator, 'fl_player_use_item_entity', entity)
 end
 
---- Prevents menu actions on items that the player does not have, and on items in the world
--- that are too far away from the player, obstructed or not being looked at. With the
--- 'item_drop_ownership' config on, it also keeps players away from the items in the world
--- that another of their own characters has dropped.
+--- Prevents menu actions of players who are dead or lie on the ground as a ragdoll, on
+-- items that the player does not have, and on items in the world that are too far away from
+-- the player, obstructed, not being looked at or already on their way out of the world.
+-- With the 'item_drop_ownership' config on, it also keeps players away from the items in
+-- the world that another of their own characters has dropped.
 -- @param actor [Player]
 -- @param item_obj [Item]
 -- @param _action [String name of the menu action]
 -- @param ... [Vararg extra arguments of the action]
 -- @return [Boolean false to prevent the action, nil otherwise]
 function Items:PlayerCanUseItem(actor, item_obj, _action, ...)
+  if !actor:Alive() or (isfunction(actor.is_ragdolled) and actor:is_ragdolled()) then
+    return false
+  end
+
   local item_entity = item_obj.entity
 
   if IsValid(item_entity) then
+    if item_entity:IsMarkedForDeletion() then
+      return false
+    end
+
     local player_pos = actor:EyePos()
     local entity_pos = item_entity:GetPos()
 

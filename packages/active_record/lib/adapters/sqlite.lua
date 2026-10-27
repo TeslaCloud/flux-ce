@@ -156,18 +156,26 @@ function ActiveRecord.Adapters.Sqlite:supports_ddl_transactions()
   return true
 end
 
---- Escapes a string with sql.SQLStr. Single quotes are replaced with backticks first.
+--- Escapes a string with sql.SQLStr, which doubles its single quotes.
 -- @param str [String]
 -- @return [String escaped string without surrounding quotes]
 function ActiveRecord.Adapters.Sqlite:escape(str)
-  return sql.SQLStr(string.gsub(str, "'", '`'), true)
+  return sql.SQLStr(str, true)
+end
+
+--- Quotes an identifier such as a table or column name with double quotes, doubling the
+-- double quotes in it.
+-- @param str [String]
+-- @return [String]
+function ActiveRecord.Adapters.Sqlite:quote_name(str)
+  return '"'..string.gsub(str, '"', '""')..'"'
 end
 
 --- Turns doubled single quotes in a string read from the database back into single ones.
 -- @param str [String]
 -- @return [String]
 function ActiveRecord.Adapters.Sqlite:unescape(str)
-  return str:gsub("''", "'")
+  return (str:gsub("''", "'"))
 end
 
 --- Runs a raw SQL query on the built-in SQLite database. Always blocks until the query

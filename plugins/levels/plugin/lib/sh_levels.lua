@@ -795,7 +795,7 @@ do
 
       local definition = isstring(id) and handlers.find(id)
 
-      if !definition then
+      if !definition or definition.hidden then
         return false, errors.invalid
       end
 
@@ -838,8 +838,9 @@ do
     }
 
     --- Spends one unspent skill point of the player's character on a skill of the Stats
-    -- plugin, raising it by one rank. Refused when the skill is not registered, the
-    -- character has no skill points left or the skill is at its highest rank. Server only.
+    -- plugin, raising it by one rank. Refused when the skill is not registered or is hidden,
+    -- the character has no skill points left or the skill is at its highest rank. Server
+    -- only.
     -- @param skill_id [String ID of the skill]
     -- @return [Boolean true if the point was spent, String phrase of the reason otherwise:
     --   'error.levels.no_active_character', 'error.levels.invalid_skill',
@@ -854,8 +855,8 @@ do
     end
 
     --- Spends one unspent attribute point of the player's character on a stat of the Stats
-    -- plugin, raising it by one level. Refused when the stat is not registered, the
-    -- character has no attribute points left or the stat is at its highest level. Server
+    -- plugin, raising it by one level. Refused when the stat is not registered or is hidden,
+    -- the character has no attribute points left or the stat is at its highest level. Server
     -- only.
     -- @param stat_id [String attribute ID of the stat]
     -- @return [Boolean true if the point was spent, String phrase of the reason otherwise:

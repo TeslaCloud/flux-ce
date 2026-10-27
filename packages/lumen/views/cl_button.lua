@@ -101,14 +101,30 @@ function PANEL:get_background()
   if !background then return nil end
 
   if self.hover_amount > 0 then
-    local hover = style.hover_background or background:lighten(20)
+    local hover = style.hover_background
 
-    return Color(
-      background.r + (hover.r - background.r) * self.hover_amount,
-      background.g + (hover.g - background.g) * self.hover_amount,
-      background.b + (hover.b - background.b) * self.hover_amount,
-      background.a + (hover.a - background.a) * self.hover_amount
-    )
+    if !hover then
+      if self.lighten_source != background then
+        self.lighten_source = background
+        self.lightened = background:lighten(20)
+      end
+
+      hover = self.lightened
+    end
+
+    local blended = self.blended_background
+
+    if !blended then
+      blended = Color(0, 0, 0, 0)
+      self.blended_background = blended
+    end
+
+    blended.r = background.r + (hover.r - background.r) * self.hover_amount
+    blended.g = background.g + (hover.g - background.g) * self.hover_amount
+    blended.b = background.b + (hover.b - background.b) * self.hover_amount
+    blended.a = background.a + (hover.a - background.a) * self.hover_amount
+
+    return blended
   end
 
   return background

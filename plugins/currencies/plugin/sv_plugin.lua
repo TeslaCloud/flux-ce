@@ -2,7 +2,8 @@
 -- the players who pick it up, and saves and loads the money that lies in it. The money is
 -- stored in the plugin data of the current schema and map under the 'money' key, one entry
 -- for every fl_money entity. A pickup marks the saved money as out of date
--- (`Currencies.money_dirty`), and the next data save writes what is left.
+-- (`Currencies.money_dirty`), and the money is saved again a second after every pickup and
+-- every drop, so that a crash cannot bring back money that a character has already taken.
 
 local IsValid = IsValid
 local isstring = isstring
@@ -32,6 +33,7 @@ function Currencies:pickup_money(actor, entity)
   end
 
   self.money_dirty = true
+  self:queue_money_save()
 
   actor:notify('notification.currency.pickup', { value = received, currency = currency_data.name }, Color('lightgreen'))
   entity:EmitSound('physics/cardboard/cardboard_box_impact_bullet'..math.random(1, 5)..'.wav', 55)
@@ -78,6 +80,18 @@ function Currencies:spawn_money(currency, amount, position, angles)
   money_ent:Spawn()
 
   return money_ent
+end
+
+--- Saves the money that lies in the world a second from now, if the save_dropped_money
+-- config is on. Calls that come within that second are saved together. Server only.
+function Currencies:queue_money_save()
+  if !Config.get('save_dropped_money') then return end
+
+  timer.Create('fl_save_dropped_money', 1, 1, function()
+    if Config.get('save_dropped_money') then
+      Currencies:save_money()
+    end
+  end)
 end
 
 --- Saves the currency, amount, position and angles of every fl_money entity in the world,

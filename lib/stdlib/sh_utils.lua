@@ -13,13 +13,16 @@ local isstring = isstring
 local tostring = tostring
 
 --- Returns the names of all ammo types that are registered in the game.
--- @return [List<String> ammo type names]
+-- @return [List<String> ammo type names, indexed by ammo type ID]
 function game.get_ammo_list()
-  local last_ammo_name = game.GetAmmoName(1)
-  local ammo_table = { last_ammo_name }
+  local ammo_table = {}
+  local ammo_id = 1
+  local ammo_name = game.GetAmmoName(ammo_id)
 
-  while last_ammo_name != nil do
-    last_ammo_name = game.GetAmmoName(table.insert(ammo_table, last_ammo_name))
+  while ammo_name != nil do
+    ammo_table[ammo_id] = ammo_name
+    ammo_id = ammo_id + 1
+    ammo_name = game.GetAmmoName(ammo_id)
   end
 
   return ammo_table

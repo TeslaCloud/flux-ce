@@ -27,7 +27,7 @@ function CMD:on_run(actor, targets, skill_id, value)
   value = tonumber(value)
 
   if !value then
-    actor:notify('error.invalid_value')
+    Flux.Player:notify(actor, 'error.invalid_value')
 
     return
   end
@@ -48,6 +48,6 @@ function CMD:on_run(actor, targets, skill_id, value)
       value = value
     })
   else
-    actor:notify('error.skill_not_valid', { skill = skill_id })
+    Flux.Player:notify(actor, 'error.skill_not_valid', { skill = skill_id })
   end
 end

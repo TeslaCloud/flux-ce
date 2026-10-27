@@ -446,19 +446,19 @@ function Inventory:find_stack(item_obj, _w, _h)
   end
 end
 
---- Check if two items may be stacked.
+--- Check if an item may be put onto the stack of another item of the inventory.
 -- @param item_obj [Item]
--- @param stack_item [Item]
+-- @param stack_item [Item an item in this inventory; items elsewhere never take a stack]
 -- @return [Boolean]
 function Inventory:can_stack(item_obj, stack_item)
-  local slot = self:get_slot(stack_item.x, stack_item.y)
-
-  if stack_item and stack_item.id == item_obj.id
-  and item_obj.stackable and #slot < item_obj.max_stack then
-    return true
+  if !stack_item or stack_item.inventory_id != self.id
+  or stack_item.id != item_obj.id or !item_obj.stackable then
+    return false
   end
 
-  return false
+  local slot = self:get_slot(stack_item.x, stack_item.y)
+
+  return istable(slot) and #slot < item_obj.max_stack
 end
 
 --- Find free space in the inventory.
@@ -706,11 +706,28 @@ if SERVER then
     return true
   end
 
-  --- Take an item object from the inventory.
+  --- Take an item object from the inventory. An item that another inventory holds, such
+  -- as one inside of a container item in this inventory, is taken from that inventory,
+  -- which is synchronized then.
   -- @param item_obj [Item]
-  -- @return [Boolean was the item taken successfully, String text of the error that occurred]
+  -- @return [Boolean was the item taken successfully, String text of the error that occurred;
+  --   false also if the item is in no inventory]
   function Inventory:take_item_table(item_obj)
     if !item_obj then return false, 'error.inventory.invalid_item' end
+
+    if item_obj.inventory_id != self.id then
+      local inventory = Inventories.find(item_obj.inventory_id)
+
+      if inventory and inventory:has_item_by_id(item_obj.instance_id) then
+        local success, error_text = inventory:take_item_table(item_obj)
+
+        inventory:sync()
+
+        return success, error_text
+      end
+    end
+
+    if !item_obj.x or !item_obj.y then return false, 'error.inventory.invalid_item' end
 
     local x, y = item_obj.x, item_obj.y
     local w, h = self:get_item_size(item_obj)
@@ -952,6 +969,10 @@ if SERVER then
     -- @param old_inventory [Inventory The inventory the item is in, or nil if it comes from
     --   the world]
     hook.Run('PreItemTransfer', item_obj, inventory, self)
+
+    if item_obj.inventory_id != self.id then
+      return false, 'error.inventory.invalid_item'
+    end
 
     item_obj.inventory_id = inventory.id
     item_obj.inventory_type = inventory.type

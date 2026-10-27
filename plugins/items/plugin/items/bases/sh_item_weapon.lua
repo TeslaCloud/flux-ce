@@ -71,10 +71,16 @@ function ItemWeapon:post_unequipped(owner)
 end
 
 --- Called on the server when a player presses the unload button in the item's menu.
--- Empties the clips of the weapon and gives the ammo back to the player.
+-- Empties the clips of the weapon and gives the ammo back to the player. Does nothing if the
+-- item is not equipped or the player does not have its weapon.
 -- @param owner [Player]
 function ItemWeapon:on_unload(owner)
+  if !self:is_equipped() then return end
+
   local weapon = owner:GetWeapon(self.weapon_class)
+
+  if !IsValid(weapon) then return end
+
   local clip1, clip2 = weapon:Clip1(), weapon:Clip2()
 
   weapon:SetClip1(0)
@@ -87,9 +93,11 @@ function ItemWeapon:on_unload(owner)
 end
 
 --- Called on the server before the character of the player that has the item is saved.
--- Stores the contents of the weapon's clips in the item's data.
+-- Stores the contents of the weapon's clips in the item's data if the item is equipped.
 -- @param owner [Player]
 function ItemWeapon:on_save(owner)
+  if !self:is_equipped() then return end
+
   local weapon = owner:GetWeapon(self.weapon_class)
 
   if IsValid(weapon) then

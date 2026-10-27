@@ -13,6 +13,8 @@
 -- lowered, so that turning the view on does not lower it at once.
 
 concommand.Add('fl_third_person', function(actor)
+  if !IsValid(actor) then return end
+
   actor:set_nv('fl_third_person', !actor:get_nv('fl_third_person', false))
 end)
 

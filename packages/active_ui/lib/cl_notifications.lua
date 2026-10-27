@@ -9,7 +9,6 @@
 mod 'Flux::Notification'
 
 local display = {}
-local top = 1
 local queue = {}
 local queue_locked = false
 
@@ -27,9 +26,9 @@ function Flux.Notification:process_queue()
     text = t(text) or ''
 
     local entry = { text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, is_last = true }
-    local previous = display[top - 1]
+    local previous = display[#display]
 
-    display[top] = entry
+    display[#display + 1] = entry
 
     if previous then
       previous.is_last = false
@@ -50,12 +49,6 @@ function Flux.Notification:process_queue()
     entry.panel = panel
     entry.width = w
     entry.height = h
-
-    timer.Simple(lifetime, function()
-      display[top] = nil
-    end)
-
-    top = top + 1
 
     self:reposition(h)
 
@@ -107,13 +100,15 @@ function Flux.Notification:reposition(offset)
 
   local shift = offset + math.scale(6)
 
-  for _, notification in ipairs(display) do
-    local panel = notification.panel
+  for index = #display, 1, -1 do
+    local panel = display[index].panel
 
     if IsValid(panel) then
       local x, y = panel:GetPos()
 
       panel:MoveTo(x, y + shift, 0.1)
+    else
+      table.remove(display, index)
     end
   end
 end

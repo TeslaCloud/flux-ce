@@ -326,6 +326,12 @@ function reconcile_children(parent, old_children, children)
   local result = {}
 
   for _, instance in ipairs(old_children or {}) do
+    local duplicate = by_key[instance.list_key]
+
+    if duplicate then
+      unmount(duplicate)
+    end
+
     by_key[instance.list_key] = instance
   end
 

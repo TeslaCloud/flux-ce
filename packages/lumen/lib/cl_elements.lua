@@ -367,7 +367,7 @@ Lumen.register_element('combo', {
       end
     end
 
-    if props.placeholder then
+    if props.placeholder and !panel:GetSelectedID() then
       panel:SetValue(props.placeholder)
     end
 

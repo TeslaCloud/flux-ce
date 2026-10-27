@@ -44,7 +44,9 @@ Cable.receive('fl_notification', function(message, arguments, color)
 end)
 
 Cable.receive('fl_player_take_damage', function()
-  PLAYER.last_damage = CurTime()
+  if IsValid(PLAYER) then
+    PLAYER.last_damage = CurTime()
+  end
 end)
 
 Cable.receive('fl_sound_play', function(path)

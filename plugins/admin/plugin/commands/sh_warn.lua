@@ -16,7 +16,7 @@ CMD.aliases = { 'plywarn', 'warn' }
 -- @param reason=nil [String the warning reason, as it was typed]
 function CMD:on_run(actor, targets, reason)
   if !reason or reason == '' then
-    actor:notify('This is not a valid reason!')
+    Flux.Player:notify(actor, 'This is not a valid reason!')
   else
     self:notify_staff('command.warn.message', {
       player = get_player_name(actor),

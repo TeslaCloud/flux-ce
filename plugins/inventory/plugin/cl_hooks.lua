@@ -213,6 +213,9 @@ Cable.receive('fl_inventory_open', function(inventory_id)
     Flux.container_panel = inventory
   else
     local inventory = Inventories.find(inventory_id)
+
+    if !inventory then return end
+
     local item_obj = Item.find_instance_by_id(inventory.instance_id)
     local parent =
       IsValid(Flux.tab_menu) and Flux.tab_menu or IsValid(Flux.container_panel) and Flux.container_panel or nil
@@ -226,7 +229,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
 
     local left, top, right, bottom = frame:GetDockPadding()
 
-    frame:set_title(t(item_obj:get_name()))
+    frame:set_title(t(item_obj and item_obj:get_name() or inventory.title or inventory.type))
     frame:set_draggable(true)
     frame:SetSize(inventory_panel:GetWide() + left + right, inventory_panel:GetTall() + top + bottom)
     frame:SetPos(input.GetCursorPos())
@@ -394,7 +397,7 @@ search.AddProvider(function(query)
   local results = {}
 
   for _, item_obj in pairs(Item.all()) do
-    if t(item_obj:get_name()):utf8lower():find(query) then
+    if t(item_obj:get_name()):utf8lower():find(query, 1, true) then
       results[#results + 1] = {
         text = item_obj.id,
         func = function() MVC.push('SpawnMenu::SpawnItem', item_obj.id) end,

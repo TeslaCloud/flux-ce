@@ -105,10 +105,10 @@ end
 -- @return [Number width, Number height]
 function PANEL:lumen_measure(max_w, _max_h)
   local pad = Lumen.Layout.style_of(self).padding
-  local inner_w = max_w and math_max(max_w - pad.left - pad.right, 0)
+  local icon_w = self.get_icon_size and self:get_icon_size() or 0
+  local inner_w = max_w and math_max(max_w - pad.left - pad.right - icon_w, 1)
   local lines = self:wrap(inner_w)
   local w, h = self:measure_lines(lines)
-  local icon_w = self.get_icon_size and self:get_icon_size() or 0
 
   return w + icon_w + pad.left + pad.right, h + pad.top + pad.bottom
 end

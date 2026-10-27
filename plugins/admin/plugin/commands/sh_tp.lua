@@ -7,11 +7,12 @@ CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.arg_types = { 'player' }
 CMD.immunity = true
+CMD.no_console = true
 CMD.aliases = { 'teleport', 'plytp', 'bring' }
 
 --- Teleports the targeted players to the spot the caller is looking at and notifies them and
 -- staff.
--- @param actor [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller]
 -- @param targets [List<Player> players to teleport]
 function CMD:on_run(actor, targets)
   local pos = actor:GetEyeTraceNoCursor().HitPos

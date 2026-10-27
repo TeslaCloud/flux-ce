@@ -177,8 +177,8 @@ end
 
 --- Validates character creation data: the presence of the player's database record, the
 -- character limit, the length of the name, the length of the description unless it was
--- generated, gender, model and, unless the name was generated, that no other character has
--- the name.
+-- generated, gender, model and skin and, unless the name was generated, that no other
+-- character has the name. Text that is not valid UTF-8 is rejected.
 -- @param actor [Player]
 -- @param data [Map character creation data]
 -- @return [Number CHAR_ERR_* code when the data is rejected, otherwise nil]
@@ -191,17 +191,21 @@ function Characters:PlayerCreateCharacter(actor, data)
     return CHAR_ERR_LIMIT
   end
 
-  if !isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
-    utf8.len(data.name) > Config.get('character_max_name_len')) then
+  local name_length = isstring(data.name) and utf8.len(data.name)
+
+  if !isnumber(name_length) or name_length < Config.get('character_min_name_len') or
+    name_length > Config.get('character_max_name_len') then
     return CHAR_ERR_NAME
   end
 
-  if !isstring(data.phys_desc) then
+  local desc_length = isstring(data.phys_desc) and utf8.len(data.phys_desc)
+
+  if !isnumber(desc_length) then
     return CHAR_ERR_DESC
   end
 
-  if !data.description_generated and (utf8.len(data.phys_desc) < Config.get('character_min_desc_len') or
-    utf8.len(data.phys_desc) > Config.get('character_max_desc_len')) then
+  if !data.description_generated and (desc_length < Config.get('character_min_desc_len') or
+    desc_length > Config.get('character_max_desc_len')) then
     return CHAR_ERR_DESC
   end
 
@@ -210,6 +214,12 @@ function Characters:PlayerCreateCharacter(actor, data)
   end
 
   if !isstring(data.model) or data.model == '' then
+    return CHAR_ERR_MODEL
+  end
+
+  local skin = data.skin
+
+  if skin != nil and (!isnumber(skin) or skin < 0 or skin > 255 or skin != math.floor(skin)) then
     return CHAR_ERR_MODEL
   end
 

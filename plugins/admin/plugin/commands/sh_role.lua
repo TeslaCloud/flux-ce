@@ -34,7 +34,8 @@ function set:get_description()
 end
 
 --- Sets the role of the targeted players and notifies them and staff, or tells the caller that
--- the role does not exist.
+-- the role does not exist. A caller can only give a role whose immunity is not higher than
+-- that of their own role, see `Bolt:check_role_immunity`.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players whose role is set]
 -- @param role_name [String role ID or role name]
@@ -43,6 +44,12 @@ function set:on_run(actor, targets, role_name)
 
   if !role then
     Flux.Player:notify(actor, 'error.group_not_valid', { group = tostring(role_name) })
+
+    return
+  end
+
+  if !Bolt:check_role_immunity(actor, role.id, true) then
+    Flux.Player:notify(actor, 'error.no_permission')
 
     return
   end

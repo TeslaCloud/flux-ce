@@ -75,7 +75,7 @@ local function days_from_date(year, month, day)
   local era = floor(year / 400)
   local year_of_era = year - era * 400
   local day_of_year = floor((153 * (month > 2 and month - 3 or month + 9) + 2) / 5) + day - 1
-  local day_of_era = year_of_era * 365 + floor(year_of_era / 4) - floor(year_of_era / 100) + day_of_year
+  local day_of_era = year_of_era * 365 + floor(year_of_era * 0.25) - floor(year_of_era / 100) + day_of_year
 
   return era * 146097 + day_of_era - 719468
 end
@@ -91,7 +91,7 @@ local function date_from_days(days)
   local year_of_era = floor(
     (day_of_era - floor(day_of_era / 1460) + floor(day_of_era / 36524) - floor(day_of_era / 146096)) / 365
   )
-  local day_of_year = day_of_era - (365 * year_of_era + floor(year_of_era / 4) - floor(year_of_era / 100))
+  local day_of_year = day_of_era - (365 * year_of_era + floor(year_of_era * 0.25) - floor(year_of_era / 100))
   local month_index = floor((5 * day_of_year + 2) / 153)
   local day = day_of_year - floor((153 * month_index + 2) / 5) + 1
   local month = month_index < 10 and month_index + 3 or month_index - 9

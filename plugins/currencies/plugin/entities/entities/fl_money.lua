@@ -57,7 +57,8 @@ if SERVER then
 
   --- Lets the activator pick the money up: asks the CanPlayerPickupMoney and the
   -- PlayerPickupMoney hooks, gives the money to the activator with
-  -- `Currencies:pickup_money` and removes the entity. The entity stays if either hook
+  -- `Currencies:pickup_money` and removes the entity. Only players pick money up, and money
+  -- that is being removed cannot be picked up again. The entity stays if either hook
   -- returns false or if the money is refused, as it is when the AdjustReceivedMoney hook
   -- refuses it.
   -- @param activator [Entity]
@@ -65,7 +66,7 @@ if SERVER then
   -- @param _use_type [Number USE_* enum]
   -- @param _value [Number]
   function ENT:Use(activator, _caller, _use_type, _value)
-    if !IsValid(activator) then return end
+    if !IsValid(activator) or !activator:IsPlayer() or self:IsMarkedForDeletion() then return end
 
     --- Decides whether money lying in the world may be picked up. Called on the server when
     -- a valid entity uses an fl_money entity.

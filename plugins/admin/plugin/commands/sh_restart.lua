@@ -13,7 +13,11 @@ CMD.alias = 'maprestart'
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param delay=0 [String delay in seconds]
 function CMD:on_run(actor, delay)
-  delay = tonumber(delay) or 0
+  delay = tonumber(delay)
+
+  if !delay or delay != delay or delay < 0 or delay == math.huge then
+    delay = 0
+  end
 
   self:notify_staff('command.restart.message', {
     player = get_player_name(actor),

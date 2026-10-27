@@ -105,15 +105,19 @@ function Container:PostCleanupMap()
   self:release_unclaimed_items_later()
 end
 
---- Networks the custom names and the password marks of the containers that have been
--- loaded with the persistent entities, and gives the containers the items that have been
--- loaded for them. This is done on the next tick, once every handler of the hook has
--- spawned its entities and given them their saved fields back.
+--- Networks the custom names, the password marks and the money of the containers that
+-- have been loaded with the persistent entities, and gives the containers the items that
+-- have been loaded for them. This is done on the next tick, once every handler of the hook
+-- has spawned its entities and given them their saved fields back.
 function Container:PersistenceLoad()
   timer.Simple(0, function()
     for _, entity in ents.Iterator() do
       if (entity.container_name or entity.container_password) and self:is_container(entity) then
         self:update_netvars(entity)
+      end
+
+      if istable(entity.currencies) and self:is_container(entity) then
+        entity:set_nv('fl_currencies', entity.currencies)
       end
     end
 
@@ -174,11 +178,11 @@ function Container:PostPersistenceSave()
   detached_inventories = {}
 end
 
---- Allows the container props to contain money.
+--- Allows the containers, physics props with a container model, to contain money.
 -- @param object [Entity]
 -- @return [Boolean true if the entity is a container, nil otherwise]
 function Container:CanContainMoney(object)
-  if IsValid(object) and isentity(object) and self:find(object:GetModel()) then
+  if self:is_container(object) then
     return true
   end
 end

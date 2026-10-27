@@ -142,6 +142,7 @@ do
             end
           end
         else
+          self.currencies = self.currencies or {}
           self.currencies[currency] = value
         end
 
@@ -284,6 +285,9 @@ do
       self:notify('notification.currency.drop', { value = value, currency = currency_data.name }, Color('salmon'))
 
       money_ent.next_pickup = CurTime() + 0.5
+      self.next_money_drop = CurTime() + 0.5
+
+      Currencies:queue_money_save()
     end
 
     --- Moves money from this entity to another one if the CanGiveMoney hook allows it, and

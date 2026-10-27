@@ -72,10 +72,10 @@ end
 -- @param fov [Number]
 -- @return [Map view table, or nil if the view is left alone]
 function Ragdoll:CalcView(client, origin, angles, fov)
-  local view = GAMEMODE.BaseClass:CalcView(client, origin, angles, fov) or {}
   local entity = client:GetDTEntity(ENT_RAGDOLL)
 
-  if !client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll() then
+  if IsValid(entity) and entity:IsRagdoll() and !client:ShouldDrawLocalPlayer() then
+    local view = GAMEMODE.BaseClass:CalcView(client, origin, angles, fov) or {}
     local pos, ang = find_eyes(entity)
 
     if pos then

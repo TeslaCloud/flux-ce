@@ -30,6 +30,7 @@ local math_round          = math.Round
 
 local stored              = Flux.Bars.stored or {}
 local sorted              = Flux.Bars.sorted or {}
+local priority_order      = {}
 Flux.Bars.stored          = stored
 Flux.Bars.sorted          = sorted
 Flux.Bars.default_x       = math.scale_x(8)
@@ -135,13 +136,16 @@ function Flux.Bars:set_value(id, new_value)
   if bar then
     theme_call('PreBarValueSet', bar, bar.value, new_value)
 
-    if bar.value != new_value then
+    local clamped = math_clamp(new_value, 0, bar.max_value)
+
+    if bar.value != clamped then
       if bar.hinder_display and bar.hinder_value then
         bar.value = math_clamp(new_value, 0, bar.max_value - bar.hinder_value + 2)
       end
 
-      bar.interpolated = util.cubic_ease_in_out_t(150, bar.value, new_value)
-      bar.value = math_clamp(new_value, 0, bar.max_value)
+      bar.interpolated = util.cubic_ease_in_out_t(150, bar.value, clamped)
+      bar.cur_i = 1
+      bar.value = clamped
     end
   end
 end
@@ -167,6 +171,7 @@ end
 -- @return [Map priority mapped to a List<String> of bar IDs]
 function Flux.Bars:prioritize()
   sorted = {}
+  Flux.Bars.sorted = sorted
 
   for _, bar in pairs(stored) do
     if hook.Run('ShouldDrawBar', bar) == false then
@@ -192,6 +197,9 @@ function Flux.Bars:prioritize()
     end
   end
 
+  priority_order = table.GetKeys(sorted)
+  table.sort(priority_order)
+
   return sorted
 end
 
@@ -202,7 +210,9 @@ function Flux.Bars:position()
 
   local last_y = self.default_y
 
-  for _priority, ids in pairs(sorted) do
+  for _, priority in ipairs(priority_order) do
+    local ids = sorted[priority]
+
     for i = 1, #ids do
       local bar = self:get(ids[i])
 
@@ -282,7 +292,9 @@ end
 --- Draws every bar from the prioritized list of top bars. The gamemode calls it every frame
 -- while it paints the HUD of a living player, along with the info displays.
 function Flux.Bars:DrawTopBars()
-  for _priority, ids in pairs(sorted) do
+  for _, priority in ipairs(priority_order) do
+    local ids = sorted[priority]
+
     for i = 1, #ids do
       self:draw(ids[i])
     end

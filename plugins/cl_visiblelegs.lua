@@ -56,17 +56,17 @@ local hidden_bones = {
 }
 
 -- For refresh.
-if IsValid(PLAYER) and PLAYER.legs then
+if IsValid(PLAYER) and IsValid(PLAYER.legs) then
   PLAYER.legs:Remove()
 end
 
---- Removes the local player's legs model whenever any player's model changes.
+--- Removes the local player's legs model when the local player's model changes.
 -- It is recreated with the current model the next time the legs are rendered.
--- @param _target [Player the player whose model has changed]
+-- @param target [Player the player whose model has changed]
 -- @param _new_model [String new model path]
 -- @param _old_model [String previous model path]
-function VisibleLegs:PlayerModelChanged(_target, _new_model, _old_model)
-  if PLAYER.legs then
+function VisibleLegs:PlayerModelChanged(target, _new_model, _old_model)
+  if target == PLAYER and IsValid(PLAYER.legs) then
     PLAYER.legs:Remove()
   end
 end

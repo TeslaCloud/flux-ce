@@ -6,6 +6,8 @@ local IsValid = IsValid
 local ScrW = ScrW
 local ScrH = ScrH
 
+local aborted_hold_start
+
 --- Fills the circular progress indicator while the local player holds the use key on an item.
 function Items:HUDPaint()
   local client = PLAYER
@@ -36,10 +38,15 @@ function Items:PreDrawHalos()
 end
 
 --- Aborts taking an item once it gets too far from the center of the local player's screen.
+-- The server is asked once per hold.
 function Items:Think()
   local client = PLAYER
 
-  if !IsValid(client) or !client:get_nv('hold_start') then return end
+  if !IsValid(client) then return end
+
+  local hold_start = client:get_nv('hold_start')
+
+  if !hold_start or hold_start == aborted_hold_start then return end
 
   local ent = client:get_nv('hold_entity')
 
@@ -50,6 +57,8 @@ function Items:Think()
     local max_offset = math.scale(350)
 
     if !scr_pos.visible or math.abs(w - x) > max_offset or math.abs(h - y) > max_offset then
+      aborted_hold_start = hold_start
+
       Cable.send('fl_items_abort_hold_start', true)
     end
   end

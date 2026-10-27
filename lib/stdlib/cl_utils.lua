@@ -7,9 +7,12 @@ local get_text_size = surface.GetTextSize
 
 do
   local cache = {}
+  local cache_size = 0
+  local max_cache_size = 8192
 
   --- Measures the size a text takes up when drawn with the given font.
-  -- Results are cached, so this is cheap to call every frame.
+  -- Results are cached, so this is cheap to call every frame. The cache is emptied once it
+  -- holds results for more than 8192 different texts.
   -- @param text [String text to measure]
   -- @param font='default' [String font name]
   -- @return [Number width in pixels, Number height in pixels]
@@ -27,8 +30,14 @@ do
       local width, height = get_text_size(text)
 
       if !text_cache then
+        if cache_size >= max_cache_size then
+          cache = {}
+          cache_size = 0
+        end
+
         text_cache = {}
         cache[text] = text_cache
+        cache_size = cache_size + 1
       end
 
       text_cache[font] = { width, height }
@@ -87,7 +96,7 @@ function util.fit_to_aspect(x, y, x2, y2)
 
   if x > x2 then
     x = x2
-    y = x * aspect
+    y = x / aspect
   end
 
   if y > y2 then
@@ -223,7 +232,7 @@ do
         if extension then
           extension = '.'..extension
 
-          local path = 'flux/materials/'..url_crc..extension
+          local path = ('flux/materials/'..url_crc..extension):gsub('%.jpeg$', '.jpg')
 
           if file.Exists(path, 'DATA') then
             cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
@@ -241,8 +250,9 @@ do
             end
           end
 
-          http.Fetch(url, function(body, _length, _headers, _code)
-            path = path:gsub('.jpeg', '.jpg')
+          http.Fetch(url, function(body, _length, _headers, code)
+            if code < 200 or code >= 300 then return end
+
             file.Write(path, body)
             cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
 

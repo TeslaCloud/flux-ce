@@ -71,10 +71,6 @@ function Attributes.register(id, data)
   data.min = data.min or 0
   data.default = math_clamp(tonumber(data.default) or data.min, data.min, data.max)
   data.category = data.category or 'attribute.category.other'
-  data.icon = data.icon
-  data.hidden = data.hidden
-  data.boostable = data.boostable
-  data.boost_limited = data.boost_limited
 
   --- Called on both realms when an attribute definition is registered, after its missing
   -- fields have been given their defaults and before it is stored. A handler may change the
@@ -295,6 +291,42 @@ if SERVER then
     local data = record_to_networkable(record, attribute_table, os_time(), CurTime())
 
     return data
+  end
+
+  --- Returns the level of one attribute of a player's character and the sum of its boosts
+  -- that have not expired, read from the record without building the networked form.
+  -- @param target [Player]
+  -- @param attribute_id [String]
+  -- @return [Number level and Number sum of the boosts, cut down for an attribute that has
+  --   boost_limited set; nil if the attribute is not registered or the player's character has
+  --   no record for it]
+  function Attributes.get_level(target, attribute_id)
+    local attribute_table = stored[attribute_id]
+    local record = attribute_table and Attributes.get_record(get_character(target), attribute_id)
+
+    if !record then return end
+
+    local level = tonumber(record.level) or attribute_table.default
+    local boosts = record.attribute_boosts
+    local boost = 0
+
+    if boosts and boosts[1] then
+      local unix_time = os_time()
+
+      for _, modifier in ipairs(boosts) do
+        local expiry = get_expiry(modifier)
+
+        if !expiry or expiry > unix_time then
+          boost = boost + (tonumber(modifier.value) or 0)
+        end
+      end
+    end
+
+    if attribute_table.boost_limited then
+      boost = math_clamp(level + boost, attribute_table.min, attribute_table.max) - level
+    end
+
+    return level, boost
   end
 
   --- Gives a character a record for every registered attribute it has none for. A new
@@ -559,6 +591,20 @@ do
     local attribute_table = stored[attribute_id]
 
     if !attribute_table then return 0 end
+
+    if SERVER then
+      local level, boost = Attributes.get_level(self, attribute_id)
+
+      if !level then
+        return attribute_table.default
+      end
+
+      if no_boost or attribute_table.boostable == false then
+        return level
+      end
+
+      return level + boost
+    end
 
     local attribute = self:get_attribute_data(attribute_id)
 

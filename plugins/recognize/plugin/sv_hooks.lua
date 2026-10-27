@@ -13,7 +13,7 @@ end
 -- @param owner [Player player the character belongs to]
 -- @param _character [Character the character that is being dropped]
 function Recognizes:OnActiveCharacterCleared(owner, _character)
-  owner:set_nv('fl_recognizes', {})
+  owner:set_private_nv('fl_recognizes', {})
 end
 
 --- Prevents players from recognizing themselves or, if recog_must_see is set, players they cannot see.

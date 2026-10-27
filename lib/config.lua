@@ -972,7 +972,7 @@ function Config.read(path, from_config)
       definitions[name] = data
 
       if SERVER then
-        Config.set(name, copy_value(data.default_value))
+        Config.set(name, copy_value(data.default_value), data.hidden)
         table.safe_merge(stored[name], data)
       else
         Config.add_to_menu(data.category or 'general', name, data.name, data.description, data.type, data)

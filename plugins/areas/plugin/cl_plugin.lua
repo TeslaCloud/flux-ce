@@ -10,6 +10,7 @@ do
   local _render_color = Color(50, 255, 50)
   local render_color_red = Color(255, 50, 50)
   local last_amt = nil
+  local last_type = nil
   local render = render
   local draw_line = render.DrawLine
   local area_colors = {}
@@ -25,8 +26,11 @@ do
 
     if IsValid(weapon) and weapon:GetClass() == 'gmod_tool' and weapon:GetMode() == 'area' then
       local tool = PLAYER:GetTool()
-      local mode = tool:get_area_mode()
-      local verts = (tool and tool.area and tool.area.verts)
+      local mode = tool and tool:get_area_mode()
+
+      if !istable(mode) then return end
+
+      local verts = tool.area and tool.area.verts
       local area_table = Areas.get_by_type(mode.area_type)
       local areas_count = #area_table
 
@@ -52,8 +56,10 @@ do
 
       if !last_amt then last_amt = areas_count end
 
-      if !cache or last_amt != areas_count then
+      if !cache or last_amt != areas_count or last_type != mode.area_type then
         cache = {}
+        last_amt = areas_count
+        last_type = mode.area_type
 
         area_colors[mode.area_type] = Areas.get_color(mode.area_type)
 
@@ -132,11 +138,15 @@ end
 Cable.receive('fl_player_entered_area', function(area_idx, pos)
   local area = Areas.all()[area_idx]
 
+  if !istable(area) then return end
+
   try(Areas.get_callback(area.type), PLAYER, area, true, pos, CurTime())
 end)
 
 Cable.receive('fl_player_left_area', function(area_idx, pos)
   local area = Areas.all()[area_idx]
+
+  if !istable(area) then return end
 
   try(Areas.get_callback(area.type), PLAYER, area, false, pos, CurTime())
 end)

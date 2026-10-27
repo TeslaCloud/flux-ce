@@ -147,10 +147,10 @@ function PANEL:get_text_offset()
 end
 
 --- Sets the FontAwesome icon displayed next to the title.
--- @param icon [String FontAwesome icon ID, e.g. 'fa-times']
+-- @param icon [String FontAwesome icon ID, e.g. 'fa-times', or nil/false for no icon]
 -- @param right=false [Boolean place the icon to the right of the title instead of the left]
 function PANEL:set_icon(icon, right)
-  self.icon = tostring(icon) or false
+  self.icon = icon and tostring(icon) or false
 
   if right then
     self.icon_left = false

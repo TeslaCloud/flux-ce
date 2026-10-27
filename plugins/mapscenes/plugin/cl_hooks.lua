@@ -64,6 +64,10 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
 
       self.scene = self.scene or 1
 
+      if self.scene > count then
+        self.scene = 1
+      end
+
       if !animated and count > 1 then
         self.next_scene = self.next_scene or cur_time + config_get('mapscenes_speed')
 

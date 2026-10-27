@@ -19,58 +19,52 @@ function Area:SaveData()
   Data.save_plugin('areas', Areas.all())
 end
 
---- Checks every player who has moved against every area polygon. Runs the area type's
--- callback and notifies the player's client whenever a player enters or leaves an area.
+--- Checks every player who has moved since the previous check against every area polygon.
+-- Runs the area type's callback and notifies the player's client whenever a player enters or
+-- leaves an area.
 function Area:OneSecond()
   local cur_time = CurTime()
+  local all_areas = Areas.all()
 
-  for id, area in pairs(Areas.all()) do
-    if istable(area.polys) and isstring(area.type) then
-      local area_id = area.id
-      local max_height = area.maxh
+  for _, actor in player.Iterator() do
+    local pos = actor:GetPos()
 
-      for poly_index, poly in ipairs(area.polys) do
-        local min_height = poly[1].z
+    if pos == actor.last_area_pos then continue end
 
-        for _, actor in player.Iterator() do
-          local pos = actor:GetPos()
-          local last_area = actor.last_area or {}
-          local visited = last_area[area_id] or {}
+    actor.last_area_pos = pos
 
-          actor.last_area = last_area
-          last_area[area_id] = visited
+    local last_area = actor.last_area or {}
+    local z = pos.z + 16
 
-          -- The player hasn't moved since our previous check, no need to check again.
-          if pos == actor.last_pos then continue end
+    actor.last_area = last_area
 
-          local z = pos.z + 16 -- Raise the player's position by 16 units to compensate for the player's height
-          local entered_area = false
+    for id, area in pairs(all_areas) do
+      if istable(area.polys) and isstring(area.type) then
+        local area_id = area.id
+        local max_height = area.maxh
+        local visited = last_area[area_id] or {}
 
-          -- First do height checks
-          if z > min_height and z < max_height then
-            if util.vector_in_poly(pos, poly) then
-              -- The player entered the area
-              if !table.HasValue(visited, poly_index) then
-                try(Areas.get_callback(area.type), actor, area, true, pos, cur_time)
+        last_area[area_id] = visited
 
-                Cable.send(actor, 'fl_player_entered_area', id, pos)
+        for poly_index, poly in ipairs(area.polys) do
+          local first_vertex = poly[1]
+          local entered_area = first_vertex != nil and z > first_vertex.z and z < max_height
+            and util.vector_in_poly(pos, poly)
 
-                visited[#visited + 1] = poly_index
-              end
+          if entered_area then
+            if !table.HasValue(visited, poly_index) then
+              try(Areas.get_callback(area.type), actor, area, true, pos, cur_time)
 
-              entered_area = true
+              Cable.send(actor, 'fl_player_entered_area', id, pos)
+
+              visited[#visited + 1] = poly_index
             end
-          end
+          elseif table.HasValue(visited, poly_index) then
+            try(Areas.get_callback(area.type), actor, area, false, pos, cur_time)
 
-          if !entered_area then
-            -- The player left the area
-            if table.HasValue(visited, poly_index) then
-              try(Areas.get_callback(area.type), actor, area, false, pos, cur_time)
+            Cable.send(actor, 'fl_player_left_area', id, pos)
 
-              Cable.send(actor, 'fl_player_left_area', id, pos)
-
-              table.RemoveByValue(visited, poly_index)
-            end
+            table.RemoveByValue(visited, poly_index)
           end
         end
       end

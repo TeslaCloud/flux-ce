@@ -116,7 +116,7 @@ function string.trim_end(str, needle, all_occurrences)
       return str
     end
 
-    return String.sub(str, 1, utf8.len(str) - utf8.len(needle))
+    return string_sub(str, 1, #str - #needle)
   else
     return str
   end
@@ -141,7 +141,7 @@ function string.trim_start(str, needle, all_occurrences)
       return str
     end
 
-    return String.sub(str, utf8.len(needle) + 1, utf8.len(str))
+    return string_sub(str, #needle + 1)
   else
     return str
   end
@@ -180,7 +180,7 @@ function string.find_all(str, pattern)
   local hits = {}
   local last_pos = 1
 
-  while true do
+  while last_pos <= #str + 1 do
     local find_data = { string_find(str, pattern, last_pos) }
     local start_pos, end_pos = find_data[1], find_data[2]
 
@@ -189,13 +189,13 @@ function string.find_all(str, pattern)
     end
 
     hits[#hits + 1] = {
-      text      = String.sub(str, start_pos, end_pos),
+      text      = string_sub(str, start_pos, end_pos),
       start_pos = start_pos,
       end_pos   = end_pos,
       matches   = table.map(find_data, capture_only)
     }
 
-    last_pos = end_pos + 1
+    last_pos = math.max(end_pos, start_pos) + 1
   end
 
   return hits
@@ -390,7 +390,7 @@ end
 -- @return [String]
 function string.capitalize(str)
   local len = utf8.len(str)
-  return String.upper(string_sub(str, 1, 1))..(len > 1 and String.sub(str, 2, len) or '')
+  return String.upper(String.sub(str, 1, 1))..(len > 1 and String.sub(str, 2, len) or '')
 end
 
 --- Finds the table that a `::`-separated path such as 'ActiveRecord::Base' points to.

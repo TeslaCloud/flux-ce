@@ -23,6 +23,27 @@ local function scale(size)
   return DermaScale and DermaScale.scale(size) or size
 end
 
+local alpha_cache = setmetatable({}, { __mode = 'k' })
+local close_hover_color = Color(228, 92, 104)
+
+local function with_alpha(color, alpha)
+  local by_alpha = alpha_cache[color]
+
+  if !by_alpha then
+    by_alpha = {}
+    alpha_cache[color] = by_alpha
+  end
+
+  local result = by_alpha[alpha]
+
+  if !result then
+    result = ColorAlpha(color, alpha)
+    by_alpha[alpha] = result
+  end
+
+  return result
+end
+
 --- Draws a rounded box with a 1 pixel border: the border color first, the fill inset by one
 -- pixel on top of it.
 -- @param radius [Number corner radius]
@@ -361,7 +382,7 @@ function SKIN:PaintShadow(_panel, w, h)
   local shadow = self.frame_shadow
 
   for i = 1, 3 do
-    rounded_box(radius + i, -i, -i + 1, w + i * 2, h + i * 2, ColorAlpha(shadow, shadow.a / (i * 2)))
+    rounded_box(radius + i, -i, -i + 1, w + i * 2, h + i * 2, with_alpha(shadow, shadow.a / (i * 2)))
   end
 end
 
@@ -402,7 +423,7 @@ function SKIN:PaintButton(panel, w, h)
 
   if panel:GetDisabled() then
     fill = self.control_color_dark
-    border = ColorAlpha(border, 120)
+    border = with_alpha(border, 120)
   elseif panel.Depressed or panel:IsSelected() or panel:GetToggle() then
     fill = self.control_color_active
     border = self.control_color_active
@@ -436,8 +457,8 @@ function SKIN:PaintCheckBox(panel, w, h)
   local border = checked and self.control_color_active or self.frame_border
 
   if disabled then
-    fill = ColorAlpha(fill, 120)
-    border = ColorAlpha(border, 120)
+    fill = with_alpha(fill, 120)
+    border = with_alpha(border, 120)
   elseif panel.Hovered and !checked then
     border = self.control_color_bright
   end
@@ -492,8 +513,8 @@ function SKIN:PaintTextEntry(panel, w, h)
     local fill = self.colTextEntryBG
 
     if panel:GetDisabled() then
-      fill = ColorAlpha(fill, 150)
-      border = ColorAlpha(border, 120)
+      fill = with_alpha(fill, 150)
+      border = with_alpha(border, 120)
     elseif panel:HasFocus() then
       border = self.colTextEntryFocus
     end
@@ -612,7 +633,7 @@ local function paint_window_button(skin, panel, w, h, icon, hover)
   local color = skin.text_muted
 
   if panel:GetDisabled() then
-    color = ColorAlpha(skin.text_dark, 120)
+    color = with_alpha(skin.text_dark, 120)
   elseif panel.Depressed or panel:IsSelected() then
     color = skin.text_bright
   elseif panel.Hovered then
@@ -627,7 +648,7 @@ end
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintWindowCloseButton(panel, w, h)
-  paint_window_button(self, panel, w, h, 'fa-times', Color(228, 92, 104))
+  paint_window_button(self, panel, w, h, 'fa-times', close_hover_color)
 end
 
 --- Paints the minimize button of a window.
@@ -653,7 +674,7 @@ end
 function SKIN:PaintVScrollBar(_panel, w, h)
   local inset = math_floor(w * 0.3)
 
-  rounded_box(math_floor((w - inset * 2) * 0.5), inset, 0, w - inset * 2, h, ColorAlpha(self.bg_color_dark, 120))
+  rounded_box(math_floor((w - inset * 2) * 0.5), inset, 0, w - inset * 2, h, with_alpha(self.bg_color_dark, 120))
 end
 
 --- Paints the track of a horizontal scroll bar.
@@ -663,7 +684,7 @@ end
 function SKIN:PaintHScrollBar(_panel, w, h)
   local inset = math_floor(h * 0.3)
 
-  rounded_box(math_floor((h - inset * 2) * 0.5), 0, inset, w, h - inset * 2, ColorAlpha(self.bg_color_dark, 120))
+  rounded_box(math_floor((h - inset * 2) * 0.5), 0, inset, w, h - inset * 2, with_alpha(self.bg_color_dark, 120))
 end
 
 --- Paints the grip of a scroll bar as a rounded pill that lights up while hovered.
@@ -674,7 +695,7 @@ function SKIN:PaintScrollBarGrip(panel, w, h)
   local color = self.text_dark
 
   if panel:GetDisabled() then
-    color = ColorAlpha(color, 60)
+    color = with_alpha(color, 60)
   elseif panel.Depressed then
     color = self.control_color_bright
   elseif panel.Hovered then
@@ -703,7 +724,7 @@ local function paint_arrow_button(skin, panel, w, h, icon)
   local color = skin.text_dark
 
   if panel:GetDisabled() then
-    color = ColorAlpha(color, 60)
+    color = with_alpha(color, 60)
   elseif panel.Depressed or panel:IsSelected() then
     color = skin.control_color_bright
   elseif panel.Hovered then
@@ -754,7 +775,7 @@ function SKIN:PaintComboDownArrow(panel, w, h)
   local color = self.text_muted
 
   if combo_box:GetDisabled() then
-    color = ColorAlpha(self.text_dark, 120)
+    color = with_alpha(self.text_dark, 120)
   elseif combo_box.Depressed or combo_box:IsMenuOpen() then
     color = self.control_color_bright
   elseif combo_box.Hovered then
@@ -774,8 +795,8 @@ function SKIN:PaintComboBox(panel, w, h)
   local border = self.frame_border
 
   if panel:GetDisabled() then
-    fill = ColorAlpha(fill, 150)
-    border = ColorAlpha(border, 120)
+    fill = with_alpha(fill, 150)
+    border = with_alpha(border, 120)
   elseif panel.Depressed or panel:IsMenuOpen() then
     border = self.control_color_active
   elseif panel.Hovered then
@@ -878,7 +899,7 @@ function SKIN:PaintNumSlider(panel, w, h)
   local track_w = w - scale(15)
   local radius = math_floor(thickness * 0.5)
 
-  rounded_box(radius, x, y, track_w, thickness, ColorAlpha(self.bg_color_dark, 200))
+  rounded_box(radius, x, y, track_w, thickness, with_alpha(self.bg_color_dark, 200))
 
   local knob = panel.Slider and panel.Slider.Knob
 

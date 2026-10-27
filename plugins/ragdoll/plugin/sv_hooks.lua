@@ -141,6 +141,71 @@ function Ragdoll:PlayerCanSwitchCharacter(actor, _character, _current)
   end
 end
 
+local function fallen_data(owner)
+  if !IsValid(owner) or !owner:IsPlayer() or !owner:Alive() then return end
+
+  local data = owner.ragdoll_data
+
+  if data and data.fallen and istable(data.weapons) then
+    return data
+  end
+end
+
+--- Moves the weapon that a weapon item gives a player who is lying on the ground, and has
+-- been stripped of their weapons, into the weapons they get back when they get up.
+-- @param owner [Player]
+-- @param item_obj [Item the equipped item]
+function Ragdoll:OnItemEquipped(owner, item_obj)
+  local weapon_class = item_obj.weapon_class
+  local data = isstring(weapon_class) and fallen_data(owner)
+
+  if !data then return end
+
+  local weapon = owner:GetWeapon(weapon_class)
+
+  if !IsValid(weapon) then return end
+
+  local stored = false
+
+  for _, entry in ipairs(data.weapons) do
+    if entry.class == weapon_class then
+      stored = true
+
+      break
+    end
+  end
+
+  if !stored then
+    table.insert(data.weapons, { class = weapon_class, clip1 = weapon:Clip1(), clip2 = weapon:Clip2() })
+  end
+
+  owner:StripWeapon(weapon_class)
+end
+
+--- Takes the weapon of a weapon item that a player who is lying on the ground unequips out
+-- of the weapons they get back when they get up, and stores its clips in the item, so that
+-- the weapon does not come back without its item.
+-- @param owner [Player]
+-- @param item_obj [Item the unequipped item]
+function Ragdoll:OnItemUnequipped(owner, item_obj)
+  local weapon_class = item_obj.weapon_class
+  local data = isstring(weapon_class) and fallen_data(owner)
+
+  if !data then return end
+
+  for index, entry in ipairs(data.weapons) do
+    if entry.class == weapon_class then
+      table.remove(data.weapons, index)
+
+      if isfunction(item_obj.set_data) then
+        item_obj:set_data('ammo', { entry.clip1 or 0, entry.clip2 or 0 })
+      end
+
+      break
+    end
+  end
+end
+
 --- Keeps the ragdoll of the player in what is networked to them, however far it ends up
 -- from where they fell.
 -- @param actor [Player]

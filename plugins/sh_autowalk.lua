@@ -29,6 +29,8 @@ if SERVER then
 
   -- So clients can bind this as they want.
   concommand.Add('toggleautowalk', function(actor)
+    if !IsValid(actor) then return end
+
     --- Asks whether a player may toggle auto walk.
     -- Called on the server when the player runs the `toggleautowalk` command, for turning it
     -- off as well as on.

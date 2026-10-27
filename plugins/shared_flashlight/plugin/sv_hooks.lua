@@ -3,15 +3,27 @@
 
 --- Toggles the player's shared flashlight and keeps the engine flashlight from toggling.
 -- The engine always asks to turn its flashlight on, since it never gets to turn on, so the
--- player's current state decides which way the toggle goes. Does nothing while the
--- `shared_flashlight_enabled` config is off, which leaves the decision to the base gamemode.
+-- player's current state decides which way the toggle goes. The light is only turned on for
+-- a living player whom `Player:CanUseFlashlight` allows it, the way the base gamemode decides
+-- for the engine flashlight, and a player toggles it at most five times a second. Does
+-- nothing while the `shared_flashlight_enabled` config is off, which leaves the decision to
+-- the base gamemode.
 -- @param actor [Player]
 -- @param _on [Boolean whether the engine flashlight is being turned on]
 -- @return [Boolean false while the plugin is enabled, nil otherwise]
 function SharedFlashlight:PlayerSwitchedFlashlight(actor, _on)
   if !self:is_enabled() then return end
 
-  actor:set_flashlight(!actor:is_flashlight_on())
+  local turn_on = !actor:is_flashlight_on()
+
+  if turn_on and (!actor:Alive() or !actor:CanUseFlashlight()) then return false end
+
+  local cur_time = CurTime()
+
+  if (actor.fl_next_flashlight or 0) > cur_time then return false end
+
+  actor.fl_next_flashlight = cur_time + 0.2
+  actor:set_flashlight(turn_on)
 
   return false
 end

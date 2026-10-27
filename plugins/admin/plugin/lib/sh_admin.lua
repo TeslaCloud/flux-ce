@@ -537,6 +537,21 @@ function Bolt:is_steam_id(text)
   return isstring(text) and text:match('^STEAM_%d:[01]:%d+$') != nil
 end
 
+--- Brings a SteamID into the form the engine gives it, upper case and with the universe digit
+-- 0, so that 'steam_1:1:12345' becomes 'STEAM_0:1:12345'. Anything that is not a SteamID in
+-- any case is returned as it is.
+-- @param text [Any]
+-- @return [Any the SteamID in the engine's form, or text]
+function Bolt:normalize_steam_id(text)
+  if !isstring(text) then return text end
+
+  local upper = text:upper()
+
+  if !self:is_steam_id(upper) then return text end
+
+  return (upper:gsub('^STEAM_%d:', 'STEAM_0:', 1))
+end
+
 --- Checks whether a SteamID is listed in the root_steamid config, which makes its owner a
 -- root player when they join.
 -- @param steam_id [String]

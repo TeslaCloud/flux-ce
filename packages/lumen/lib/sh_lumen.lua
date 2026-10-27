@@ -283,13 +283,13 @@ if SERVER then
   -- @param text [String]
   -- @return [String the equals signs of the level, from none upwards]
   local function bracket_level(text)
-    local level = ''
+    local depth = 0
 
-    while text:find(']'..level..']', 1, true) do
-      level = level..'='
+    while text:find(']'..string.rep('=', depth)..']', 1, true) do
+      depth = depth + 1
     end
 
-    return level
+    return string.rep('=', depth)
   end
 
   --- Generates the Lua code that gives a template to the clients. The clients include the
@@ -307,7 +307,7 @@ if SERVER then
     if template.code then
       local level = bracket_level(template.code)
 
-      lines[#lines + 1] = '  code = ['..level..'[\n'..template.code..']'..level..']'
+      lines[#lines + 1] = '  code = ['..level..'[\n'..template.code..'\n]'..level..']'
     else
       lines[#lines + 1] = '  error = '..string.format('%q', tostring(template.error))
     end

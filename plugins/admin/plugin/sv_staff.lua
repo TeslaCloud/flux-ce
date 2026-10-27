@@ -110,9 +110,10 @@ end
 -- not on the server as well. Players are found and checked for immunity the way the command
 -- interpreter does it for a command with `immunity` set: by their exact name or SteamID, or
 -- by one of the selectors of `Flux.Command:str_to_player`; a name that several players have
--- targets nobody. An argument that matches nobody but has the form of a SteamID, in any case,
--- is handed back as such, in upper case; the caller then checks immunity with
--- `Bolt:with_offline_target`. The caller of the command is notified when nothing comes of it.
+-- targets nobody. A SteamID, in any case and with any universe digit, is read as
+-- `Bolt:normalize_steam_id` writes it; if it matches nobody it is handed back as such, and the
+-- caller then checks immunity with `Bolt:with_offline_target`. The caller of the command is
+-- notified when nothing comes of it.
 -- @param actor [Player the player who runs the command, an invalid entity for the server
 --   console]
 -- @param argument [String exact player name, target selector or SteamID]
@@ -120,7 +121,7 @@ end
 -- @return [List<Player> the targets, or nil if there are none or one of them is immune,
 --   String the SteamID if the argument is the SteamID of somebody who is not on the server]
 function Bolt:find_command_targets(actor, argument, can_equal)
-  argument = tostring(argument)
+  argument = self:normalize_steam_id(tostring(argument))
 
   local found, kind = Flux.Command:str_to_player(actor, argument)
   local targets, listed = {}, {}
@@ -136,10 +137,8 @@ function Bolt:find_command_targets(actor, argument, can_equal)
   end
 
   if #targets == 0 then
-    local steam_id = argument:upper()
-
-    if self:is_steam_id(steam_id) then
-      return nil, steam_id
+    if self:is_steam_id(argument) then
+      return nil, argument
     end
 
     local phrase = kind == 'ambiguous' and 'error.command.player_ambiguous' or 'error.command.player_invalid'
@@ -316,6 +315,8 @@ end)
 Cable.receive('fl_bolt_demote', function(actor, steam_id)
   if !actor:can('manage_permissions') then return end
   if !Bolt:is_steam_id(steam_id) then return end
+
+  steam_id = Bolt:normalize_steam_id(steam_id)
 
   Bolt:demote_steam_id(actor, steam_id, function(name)
     Command:notify_staff('command.role.remove.message', {

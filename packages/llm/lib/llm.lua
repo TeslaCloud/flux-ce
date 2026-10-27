@@ -358,6 +358,7 @@ end
 --- @ignore
 local function anthropic_messages(messages)
   local result = {}
+  local system_texts = {}
 
   for _, message in ipairs(messages) do
     local role = message.role
@@ -394,7 +395,9 @@ local function anthropic_messages(messages)
         is_error = message.is_error or nil
       })
     elseif role == 'system' then
-      result[#result + 1] = { role = 'system', content = message.content }
+      if isstring(message.content) and message.content != '' then
+        system_texts[#system_texts + 1] = message.content
+      end
     elseif istable(message.content) then
       for _, block in ipairs(message.content) do
         push_user_block(result, block)
@@ -404,11 +407,12 @@ local function anthropic_messages(messages)
     end
   end
 
-  return result
+  return result, system_texts
 end
 
 --- The Anthropic Messages API. Assistant messages that came from it are sent back with their
--- original content blocks, thinking blocks included.
+-- original content blocks, thinking blocks included. System messages of the conversation are
+-- appended to the system prompt, since the API has no system role in its messages.
 llm.providers.anthropic = {
   base_url = 'https://api.anthropic.com/v1',
   model = 'claude-opus-5-5'
@@ -423,13 +427,22 @@ llm.providers.anthropic = {
 function llm.providers.anthropic.build(client, request)
   local headers = { ['anthropic-version'] = '2023-06-01' }
   local betas = {}
+  local messages, system_texts = anthropic_messages(request.messages or {})
   local body = {
     model = request.model or client.model,
     max_tokens = request.max_tokens or client.max_tokens,
     system = request.system,
-    messages = anthropic_messages(request.messages or {}),
+    messages = messages,
     stop_sequences = request.stop
   }
+
+  if #system_texts > 0 and (request.system == nil or isstring(request.system)) then
+    if isstring(request.system) and request.system != '' then
+      table.insert(system_texts, 1, request.system)
+    end
+
+    body.system = table.concat(system_texts, '\n\n')
+  end
 
   if client.api_key then
     headers['x-api-key'] = client.api_key

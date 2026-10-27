@@ -78,8 +78,9 @@ function Communications.can_radio(actor, text, item_obj)
 end
 
 --- Makes a player say a text over the radio in their hotbar. The player is notified if
--- they have no enabled radio there, or if the PlayerCanRadio hook forbids them to speak
--- and says why. Nothing happens if there is nothing in the text but spaces.
+-- they have no enabled radio there, if they may not speak in character (see
+-- `RPCommands:can_say_ic`), or if the PlayerCanRadio hook forbids them to speak and says why.
+-- Nothing happens if there is nothing in the text but spaces.
 -- @param actor [Player player who speaks]
 -- @param text [String message, without the radio prefix]
 -- @return [Boolean true if the message has been sent]
@@ -98,6 +99,8 @@ function Communications.say_radio(actor, text)
 
     return false
   end
+
+  if !RPCommands:can_say_ic(actor, text) then return false end
 
   local allowed, reason = Communications.can_radio(actor, text, item_obj)
 

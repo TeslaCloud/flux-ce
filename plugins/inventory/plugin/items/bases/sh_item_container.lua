@@ -11,7 +11,7 @@
 -- `instance_id` field. The contents are saved as being inside of the item, and are loaded
 -- and unloaded along with it. A derived item can override `can_contain(item_obj)` and
 -- return false to refuse an item, calling the base method to keep the container out of
--- itself.
+-- itself and out of the containers inside of it.
 -- @module [ItemContainer]
 
 class 'ItemContainer' extends 'ItemBase'
@@ -64,12 +64,27 @@ function ItemContainer:on_open(actor)
 end
 
 --- Called on the server by the 'CanItemTransfer' hook before an item is put
--- into the container. Prevents the container from being put inside of itself.
+-- into the container. Prevents the container from being put inside of itself, and a
+-- container item from being put inside of a container that it holds itself.
 -- @param item_obj [Item the item that is being put into the container]
 -- @return [Boolean false to prevent the transfer, nil otherwise]
 function ItemContainer:can_contain(item_obj)
   if item_obj == self then
     return false
+  end
+
+  local parent_id = self.parent_id
+  local depth = 0
+
+  while parent_id and depth < 32 do
+    if parent_id == item_obj.instance_id then
+      return false
+    end
+
+    local parent = Item.find_instance_by_id(parent_id)
+
+    parent_id = parent and parent.parent_id
+    depth = depth + 1
   end
 end
 

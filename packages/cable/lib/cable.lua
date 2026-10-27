@@ -58,10 +58,11 @@ cable.chunk_size = 60000
 cable.chunk_interval = 0.1
 cable.max_transfer_size = 4 * 1024 * 1024
 cable.max_transfers_per_player = 4
+cable.max_decompressed_size = 32 * 1024 * 1024
 cable.transfer_timeout = 60
 
 --- Runs the handler of a message with the values that have arrived. On the server the
--- handler gets the sender first.
+-- handler gets the sender first, and a message whose sender is no longer valid is dropped.
 -- @param id [String message name]
 -- @param sender [Player the sending player on the server; nil or NULL on the client]
 -- @param args [List<Any> the values, which may have holes]
@@ -71,7 +72,9 @@ local function dispatch(id, sender, args, count)
 
   if !callback then return end
 
-  if IsValid(sender) then
+  if SERVER then
+    if !IsValid(sender) then return end
+
     callback(sender, unpack(args, 1, count))
   else
     callback(unpack(args, 1, count))
@@ -198,14 +201,19 @@ local function encode_transfer(...)
   return data, false
 end
 
---- Turns the block of a completed chunked transfer back into the argument list.
+--- Turns the block of a completed chunked transfer back into the argument list. On the
+-- server a compressed block is not decompressed beyond `Cable.max_decompressed_size` bytes.
 -- @param data [String the block]
 -- @param compressed [Boolean whether the block is compressed]
 -- @return [List<Any> the values with their amount in the n field, or nil and an error
 --   message]
 local function decode_transfer(data, compressed)
   if compressed then
-    data = util.Decompress(data)
+    if SERVER then
+      data = util.Decompress(data, cable.max_decompressed_size)
+    else
+      data = util.Decompress(data)
+    end
 
     if !isstring(data) or data == '' then
       return nil, 'decompression failed'
@@ -218,7 +226,13 @@ local function decode_transfer(data, compressed)
     return nil, err
   end
 
-  if !istable(packet) or !isnumber(packet.n) then
+  if !istable(packet) then
+    return nil, 'malformed block'
+  end
+
+  local count = packet.n
+
+  if !isnumber(count) or count < 0 or count > 255 or count != math.floor(count) then
     return nil, 'malformed block'
   end
 

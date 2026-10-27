@@ -264,12 +264,12 @@ function PANEL:set_item(instance_id)
 end
 
 --- Sets the stack of items that the slot displays.
--- Does nothing if the items are not stackable.
+-- Does nothing if the first item is unknown or the items are not stackable.
 -- @param ids [List<Number> instance ids of the items in the stack]
 function PANEL:set_item_multi(ids)
   local item_data = Item.find_instance_by_id(ids[1])
 
-  if item_data and !item_data.stackable then return end
+  if !item_data or !item_data.stackable then return end
 
   self.item_data = item_data
   self.item_count = #ids

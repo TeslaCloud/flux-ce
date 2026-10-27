@@ -30,6 +30,7 @@ local isstring          = isstring
 local isfunction        = isfunction
 
 local command_log_color = Color('orange')
+local max_commands_per_second = 10
 local stored            = Flux.Command.stored     or {}
 local aliases           = Flux.Command.aliases    or {}
 local completers        = Flux.Command.completers or {}
@@ -45,6 +46,19 @@ local function char_count(str)
   local _, count = str:gsub('[^\128-\191]', '')
 
   return count
+end
+
+local function command_throttled(actor)
+  local cur_time = CurTime()
+
+  if (actor.fl_command_window or 0) <= cur_time then
+    actor.fl_command_window = cur_time + 1
+    actor.fl_command_count = 0
+  end
+
+  actor.fl_command_count = actor.fl_command_count + 1
+
+  return actor.fl_command_count > max_commands_per_second
 end
 
 --- Fills in the defaults for the missing fields of a command and of its subcommands: name,
@@ -1047,9 +1061,11 @@ if SERVER then
 
     local full_name = cmd_table:get_full_name()
     local message
+    local object = 'console'
 
     if actor_valid then
       message = actor:name()..' has used /'..full_name..(raw_args != '' and ' '..raw_args or '')
+      object = actor.record and actor.record.id
     else
       message = 'Console ran '..full_name..(raw_args != '' and ' '..raw_args or '.')
     end
@@ -1058,10 +1074,10 @@ if SERVER then
       command_log_color,
       message,
       'PlayerRunCommand',
-      actor_valid and actor.record.id or 'console',
+      object,
       table.concat(
         table.map(targets, function(v)
-          return IsValid(v) and v.record and v.record.id
+          return IsValid(v) and v.record and v.record.id or nil
         end),
         ','
       )
@@ -1096,6 +1112,8 @@ if SERVER then
   end
 
   Cable.receive('fl_command_run', function(actor, command)
+    if command_throttled(actor) then return end
+
     Flux.Command:interpret(actor, command, true)
   end)
 else
@@ -1118,6 +1136,8 @@ end
 -- @param args_text [String arguments as a single string, the Flux command to run]
 function Flux.Command.con_command(actor, _cmd, _args, args_text)
   if SERVER then
+    if IsValid(actor) and command_throttled(actor) then return end
+
     Flux.Command:interpret(actor, args_text, true)
   else
     Flux.Command:send(args_text)

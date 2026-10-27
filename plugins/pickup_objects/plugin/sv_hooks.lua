@@ -80,7 +80,7 @@ end
 
 --- Denies pickups during the player's one second cooldown. Objects that are to be carried
 -- are also denied if they are vehicles, are not moved by physics, cannot move or weigh more
--- than the mass limit of the player.
+-- than the mass limit of the player, counting the mass of all of their physics objects.
 -- @param actor [Player]
 -- @param ent [Entity the object being picked up]
 -- @param drag [Boolean whether the object is a ragdoll that is going to be dragged]
@@ -94,7 +94,17 @@ function PickupObjects:PlayerPickupObject(actor, ent, drag)
 
   if !IsValid(phys_obj) or !phys_obj:IsMoveable() then return false end
 
-  if phys_obj:GetMass() > self:get_mass_limit(actor, ent) then
+  local mass = 0
+
+  for i = 0, ent:GetPhysicsObjectCount() - 1 do
+    local part = ent:GetPhysicsObjectNum(i)
+
+    if IsValid(part) then
+      mass = mass + part:GetMass()
+    end
+  end
+
+  if math.max(mass, phys_obj:GetMass()) > self:get_mass_limit(actor, ent) then
     return false
   end
 end

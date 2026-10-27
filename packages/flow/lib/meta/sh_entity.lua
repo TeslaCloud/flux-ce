@@ -74,7 +74,7 @@ end
 function ent_meta:bodygroups()
   local bodygroups = {}
 
-  for i = 0, self:GetNumBodyGroups() do
+  for i = 0, self:GetNumBodyGroups() - 1 do
     bodygroups[i] = self:GetBodygroup(i)
   end
 

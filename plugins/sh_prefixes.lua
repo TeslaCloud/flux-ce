@@ -28,12 +28,17 @@ end
 
 if SERVER then
   --- Hands chat messages that start with a registered prefix (or pass its check function)
-  -- over to that prefix instead of regular chat. Commands are left alone.
+  -- over to that prefix instead of regular chat. Commands are left alone. While the Chatbox
+  -- plugin is loaded, only the text that `Chatbox.submit` passes on is handled here; anything
+  -- else is left to the chatbox, which submits it, so that its flood guard and length limit
+  -- apply to the prefixes as well.
   -- @param actor [Player the speaker]
   -- @param text [String the message]
   -- @param team_chat [Boolean whether the message was sent to team chat]
   -- @return [String empty string to suppress the message if a prefix matched, nil otherwise]
   function Prefixes:PlayerSay(actor, text, team_chat)
+    if Chatbox and isfunction(Chatbox.is_submitting) and !Chatbox.is_submitting() then return end
+
     local lower_text = text:utf8lower()
 
     if !string.is_command(lower_text) then

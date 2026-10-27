@@ -212,11 +212,19 @@ function PANEL:get_conditions(panel)
   return conditions
 end
 
---- Recreates the nodes of a condition tree under the parent node.
+--- Recreates the nodes of a condition tree under the parent node. Nodes whose condition type
+-- is not registered are left out, together with their child nodes.
 -- @param parent [Panel tree node to add the conditions to, e.g. the root node]
--- @param conditions [List condition nodes as returned by get_conditions]
+-- @param conditions [List condition nodes as returned by get_conditions; nothing is added
+--   when it is not a table]
 function PANEL:set_conditions(parent, conditions)
+  if !istable(conditions) then return end
+
+  local stored = Conditions:get_all()
+
   for _, condition in pairs(conditions) do
+    if !istable(condition) or !stored[condition.id] then continue end
+
     local node = self:add_condition(parent, condition.id, condition.data)
 
     if condition.childs then

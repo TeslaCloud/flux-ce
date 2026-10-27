@@ -103,7 +103,9 @@ function PANEL:Init()
         Cable.send('fl_bolt_set_role', self.player, role.role_id)
 
         timer.Simple(0.05, function()
-          self:rebuild()
+          if IsValid(self) then
+            self:rebuild()
+          end
         end)
       end)
     end

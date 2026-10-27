@@ -8,6 +8,8 @@
 -- `ban add` finds its targets itself instead of setting `immunity`, because the command
 -- interpreter only knows the players who are on the server.
 
+local max_unban_time = 253402300799
+
 CMD.name = 'Ban'
 CMD.description = 'command.ban.description'
 CMD.category = 'permission.categories.administration'
@@ -22,9 +24,10 @@ add.player_arg = false
 
 --- Bans the targeted players, or the SteamID of somebody who is not on the server, for the
 -- given duration and notifies staff. A duration of 0 is a permanent ban and is announced as
--- one. The caller needs a higher immunity than every target: for a SteamID that goes by the
--- role stored for it, and a SteamID from the root_steamid config can only be banned by a
--- root player or from the server console.
+-- one; a negative duration, or one that would end the ban after the year 9999, is refused.
+-- The caller needs a higher immunity than every target: for a SteamID that goes by the role
+-- stored for it, and a SteamID from the root_steamid config can only be banned by a root
+-- player or from the server console.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param target [String exact player name, target selector or SteamID]
 -- @param duration [String ban length as read by Bolt:interpret_ban_time, e.g. '30' or 'perma']
@@ -36,7 +39,7 @@ function add:on_run(actor, target, duration, reason)
     reason = 'ui.no_reason'
   end
 
-  if !isnumber(ban_time) then
+  if !isnumber(ban_time) or ban_time != ban_time or ban_time < 0 or os.time() + ban_time > max_unban_time then
     Flux.Player:notify(actor, 'error.invalid_time', {
       time = tostring(duration)
     })
@@ -80,12 +83,12 @@ remove.syntax = 'command.ban.remove.syntax'
 remove.arguments = 1
 remove.arg_types = { 'steamid' }
 
---- Lifts the ban on a SteamID, typed in any case, and notifies staff, or tells the caller
--- that it is not banned.
+--- Lifts the ban on a SteamID, typed in any case and with any universe digit, and notifies
+-- staff, or tells the caller that it is not banned.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param steam_id [String SteamID to unban]
 function remove:on_run(actor, steam_id)
-  steam_id = tostring(steam_id):upper()
+  steam_id = Bolt:normalize_steam_id(tostring(steam_id):upper())
 
   local success, copy = Bolt:remove_ban(steam_id)
 

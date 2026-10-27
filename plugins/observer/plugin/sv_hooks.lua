@@ -91,3 +91,18 @@ function Observer:ShouldObserverReset(_actor)
     return false
   end
 end
+
+--- Takes a player who dies in observer mode out of it, so that they do not respawn invisible
+-- and invulnerable. They are not moved back to where they entered it.
+-- @param victim [Player]
+-- @param _inflictor [Entity]
+-- @param _attacker [Entity]
+function Observer:PlayerDeath(victim, _inflictor, _attacker)
+  if !victim:get_nv('observer') then return end
+
+  if victim.observer_data then
+    victim.observer_data.should_reset = false
+  end
+
+  self:PlayerExitNoclip(victim)
+end

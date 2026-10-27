@@ -14,6 +14,8 @@ PLUGIN:set_description('Adds a custom weapon selector for use with Flux.')
 
 if SERVER then
   concommand.Add('selectweapon', function(actor, _command, arguments)
+    if !IsValid(actor) then return end
+
     local weapon = actor:GetWeapons()[tonumber(arguments[1]) or 1]
 
     if IsValid(weapon) then
@@ -32,13 +34,11 @@ PLUGIN.display = PLUGIN.display or {}
 PLUGIN.index_offset = PLUGIN.index_offset or nil
 
 local function relative_clamp(n, min, max)
-  if n > max then
-    return relative_clamp(n - max, min, max)
-  elseif n < min then
-    return relative_clamp(max - n, min, max)
+  if max < min then
+    return min
   end
 
-  return n
+  return (n - min) % (max - min + 1) + min
 end
 
 local function safe_index(tab, idx)

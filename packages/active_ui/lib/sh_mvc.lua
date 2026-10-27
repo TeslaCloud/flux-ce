@@ -73,7 +73,11 @@ if CLIENT then
     local hooks = mvc_hooks[name]
 
     if hooks then
-      for index, mvc_hook in ipairs(hooks) do
+      local count = #hooks
+      local kept = {}
+
+      for index = 1, count do
+        local mvc_hook = hooks[index]
         local success, value = pcall(mvc_hook.handler, ...)
 
         if !success then
@@ -81,10 +85,16 @@ if CLIENT then
           error_with_traceback(tostring(value))
         end
 
-        if !mvc_hook.prevent_remove then
-          table.remove(mvc_hooks[name], index)
+        if mvc_hook.prevent_remove then
+          kept[#kept + 1] = mvc_hook
         end
       end
+
+      for index = count + 1, #hooks do
+        kept[#kept + 1] = hooks[index]
+      end
+
+      mvc_hooks[name] = kept
     end
   end)
 else

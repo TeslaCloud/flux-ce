@@ -6,7 +6,8 @@ local cur_alpha = 0
 local full_color = Color(0, 225, 0)
 local empty_color = Color(200, 0, 0)
 
---- Draws the stamina bar, which fades in while stamina is below 98 and out otherwise.
+--- Draws the stamina bar, which fades in while stamina is below 98% of the 'stam_max'
+-- config and out otherwise.
 -- The theme can take over the drawing through its DrawStaminaBar hook.
 function Stamina:HUDPaint()
   local client = PLAYER
@@ -14,9 +15,9 @@ function Stamina:HUDPaint()
   if IsValid(client) and client:Alive() then
     local stamina = client:get_nv('stamina', 100)
     local frame_time = FrameTime() * 8
-    local percentage = (stamina / Config.get('stam_max', 100))
+    local percentage = stamina / math.max(Config.get('stam_max', 100), 1)
 
-    if stamina < 98 then
+    if percentage < 0.98 then
       cur_alpha = Lerp(frame_time, cur_alpha, 1)
     else
       cur_alpha = Lerp(frame_time, cur_alpha, 0)

@@ -63,8 +63,9 @@ set.arguments = 2
 set.arg_types = { 'player', 'rank' }
 
 --- Puts every target into the rank of their faction that the second argument names, and
--- notifies the targets and staff. Targets whose faction has no such rank are left as they
--- are; the actor is told when that is the case for every target.
+-- notifies the targets and staff. Targets without a character and targets whose faction has
+-- no such rank are left as they are; the actor is told when that is the case for every
+-- target.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param rank [String rank index, ID or name]
@@ -72,7 +73,7 @@ function set:on_run(actor, targets, rank)
   local changed = {}
 
   for _, target in ipairs(targets) do
-    local faction_table = target:get_faction()
+    local faction_table = (target:IsBot() or target:is_character_loaded()) and target:get_faction()
     local index, rank_table
 
     if faction_table then

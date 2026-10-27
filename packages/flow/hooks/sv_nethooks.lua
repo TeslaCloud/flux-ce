@@ -14,6 +14,8 @@ Cable.receive('fl_undo_soft', function(actor)
 end)
 
 Cable.receive('fl_player_created', function(actor)
+  if actor:has_initialized() then return end
+
   actor:send_config()
   actor:sync_nv()
   Plugin.send_disabled(actor)

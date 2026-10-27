@@ -164,9 +164,21 @@ end
 
 do
   local cache = {}
+  local cache_size = 0
+  local max_cache_size = 512
+
+  local function store_vertices(id, info)
+    if cache_size >= max_cache_size then
+      cache = {}
+      cache_size = 0
+    end
+
+    cache[id] = info
+    cache_size = cache_size + 1
+  end
 
   --- Draws a filled circle in the current surface draw color. Raises an error if x, y or
-  -- radius is missing. The vertices are cached for every distinct set of arguments.
+  -- radius is missing. The vertices are cached by the arguments, up to 512 sets of them.
   -- @param x [Number screen x of the center]
   -- @param y [Number screen y of the center]
   -- @param radius [Number]
@@ -194,7 +206,7 @@ do
         }
       end
 
-      cache[id] = info
+      store_vertices(id, info)
     end
 
     draw.NoTexture() -- Otherwise we draw a transparent circle.
@@ -239,7 +251,7 @@ do
         }
       end
 
-      cache[id] = info
+      store_vertices(id, info)
     end
 
     surface.DrawPoly(info)

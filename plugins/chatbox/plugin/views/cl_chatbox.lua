@@ -150,6 +150,8 @@ PANEL.padding = get_option('chatbox_padding', math.scale(8))
 function PANEL:Init()
   local w, h = self:GetWide(), self:GetTall()
 
+  self.history = {}
+
   self.scroll_panel = vgui.Create('DScrollPanel', self)
 
   self.scroll_panel.Paint = function() return true end
@@ -792,6 +794,8 @@ function PANEL:add_message(message_data)
       self:add_panel(panel)
 
       timer.Simple(0.05, function()
+        if !IsValid(self) or !IsValid(panel) then return end
+
         local scroll = self.scroll_panel
         local value = panel:GetTall() + self.padding
 
@@ -810,7 +814,9 @@ function PANEL:rebuild_history_indexes()
 
   for _, message in ipairs(self.history) do
     if IsValid(message) then
-      local idx = table.insert(new_history, message)
+      local idx = #new_history + 1
+
+      new_history[idx] = message
       message.msg_index = idx
     end
   end
@@ -833,7 +839,9 @@ function PANEL:add_panel(panel)
     end
   end
 
-  local idx = table.insert(self.history, panel)
+  local idx = #self.history + 1
+
+  self.history[idx] = panel
 
   panel:SetPos(self.padding, self.last_pos)
   panel.msg_index = idx

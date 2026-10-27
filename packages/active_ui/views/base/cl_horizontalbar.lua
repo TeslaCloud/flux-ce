@@ -45,11 +45,16 @@ function PANEL:PerformLayout()
 
   if self.centered then
     local wide = 0
-    local panel_count = #panels
+    local panel_count = 0
 
-    for index, panel in pairs(panels) do
-      wide = wide + panel:GetWide() + (index != panel_count and overlap or 0)
+    for _, panel in pairs(panels) do
+      if IsValid(panel) then
+        wide = wide + panel:GetWide()
+        panel_count = panel_count + 1
+      end
     end
+
+    wide = wide + overlap * math.max(panel_count - 1, 0)
 
     -- Panels that do not fit start at the left edge instead, as whatever ends up left of
     -- the canvas can never be scrolled into view.
