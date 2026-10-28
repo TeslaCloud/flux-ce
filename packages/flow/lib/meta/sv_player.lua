@@ -267,9 +267,7 @@ function player_meta:find_best_position(margin, filter)
     end
   end
 
-  table.sort(positions, function(a, b)
-    return a:DistToSqr(pos) < b:DistToSqr(pos)
-  end)
+  table.sort(positions, |a, b| -> a:DistToSqr(pos) < b:DistToSqr(pos))
 
   return positions
 end

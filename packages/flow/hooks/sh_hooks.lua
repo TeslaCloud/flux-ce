@@ -547,7 +547,7 @@ timer.Create('fl_one_minute', 60, 0, function()
   local i = 0
 
   for _, client in player.Iterator() do
-    i = i + 1
+    i += 1
 
     timer.Simple(0.25 * i, function()
       if IsValid(client) then

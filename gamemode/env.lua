@@ -58,7 +58,7 @@ end
 
 if Flux and Flux.initialized then return end
 
-FLUX_ENV_PATH = file.Exists('flux/config/environment.local.lua', 'LUA') and 'flux/config/environment.local.lua' or
+FLUX_ENV_PATH = file.Exists('flux/config/environment.local.lua', 'LUA') ? 'flux/config/environment.local.lua' :
   'flux/config/environment.lua'
 setenv('FLUX_ENV', string.lower(include(FLUX_ENV_PATH) or 'development'))
 

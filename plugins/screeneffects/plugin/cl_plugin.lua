@@ -608,7 +608,7 @@ function ScreenEffects:start_fall_shake(speed)
 
   local intensity = clamp((speed - min_speed) / max(defaults.fall_max_speed - min_speed, 1), 0, 1)
   local strength = strengths.headbob
-  local side = math.random(2) == 1 and 1 or -1
+  local side = math.random(2) == 1 ? 1 : -1
   local info = {
     pitch = lerp(intensity, defaults.fall_pitch_min, defaults.fall_pitch_max) * strength,
     roll = defaults.fall_roll * intensity * strength * side,
@@ -717,8 +717,8 @@ function ScreenEffects:update_view(frame_time)
     local progress = elapsed / shake.duration
 
     if progress < 1 then
-      pitch = pitch + shake.pitch * sin(pi * sqrt(progress))
-      roll = roll + shake.roll * sin(four_pi * progress) * (1 - progress)
+      pitch += shake.pitch * sin(pi * sqrt(progress))
+      roll += shake.roll * sin(four_pi * progress) * (1 - progress)
     else
       shake.duration = 0
     end

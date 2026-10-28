@@ -96,7 +96,7 @@ local function get_drain_amount(target)
   if health_drain_scale > 0 and max_health > 0 then
     local missing_health = 1 - math.Clamp(target:Health() / max_health, 0, 1)
 
-    adjust_scale = adjust_scale * (1 + missing_health * health_drain_scale)
+    adjust_scale *= 1 + missing_health * health_drain_scale
   end
 
   return drain_scale * adjust_scale
@@ -115,7 +115,7 @@ local function get_regen_amount(target)
   local adjust_scale = Plugin.call('StaminaAdjustRegenScale', target) or 1
 
   if target:Crouching() then
-    adjust_scale = adjust_scale * crouch_regen_scale
+    adjust_scale *= crouch_regen_scale
   end
 
   return regen_scale * adjust_scale
@@ -427,7 +427,7 @@ function Stamina:stop_running(target, prevent_regen)
         local stamina = self:get_stamina(target)
 
         if stamina < max_stamina and self:can_regenerate(target) then
-          stamina = stamina + get_regen_amount(target)
+          stamina += get_regen_amount(target)
 
           self:set_stamina(target, stamina)
         end

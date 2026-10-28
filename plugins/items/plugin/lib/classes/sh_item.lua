@@ -121,7 +121,7 @@ function ItemBase:base_off(what)
     self.bases[what] = module_table
   end
 
-  self.base_count = self.base_count + 1
+  self.base_count += 1
 end
 
 --- Checks whether the item was based off the specified item base with ItemBase:base_off.

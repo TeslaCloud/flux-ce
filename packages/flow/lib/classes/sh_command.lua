@@ -249,7 +249,7 @@ end
 -- @return [Boolean]
 function Command:is_allowed(actor)
   if IsValid(actor) then
-    return actor:can(self:get_permission()) and true or false
+    return actor:can(self:get_permission()) ? true : false
   end
 
   local cmd = self

@@ -84,7 +84,7 @@ function PlayerSearch:CanSearch(actor, target)
     return false, 'error.must_not_look'
   end
 
-  if actor:GetPos():DistToSqr(target:GetPos()) > 10000 then
+  if actor:GetPos():DistToSqr(target:GetPos()) > 10_000 then
     return false, 'error.too_far'
   end
 end

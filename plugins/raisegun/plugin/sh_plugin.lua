@@ -53,7 +53,7 @@ local blocked_weapons = {
 
 --- How far ahead, in seconds, the next fire of a lowered weapon is put to keep it from
 -- firing.
-local fire_block_time = 86400
+local fire_block_time = 86_400
 
 --- The next fire of a lowered weapon that is closer than this many seconds has been moved
 -- by the weapon itself since it was blocked, and has to be blocked again.

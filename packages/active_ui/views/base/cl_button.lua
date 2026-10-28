@@ -67,10 +67,10 @@ function PANEL:SizeToContentsX()
   local offset = self.text_offset or 0
 
   if self.icon then
-    w = w + FontAwesome:get_icon_size(self.icon, self.icon_size) * 1.5
+    w += FontAwesome:get_icon_size(self.icon, self.icon_size) * 1.5
   end
 
-  w = w + offset * 2
+  w += offset * 2
 
   self:SetWide(w)
 end

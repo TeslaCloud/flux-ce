@@ -100,7 +100,7 @@ function PickupObjects:PlayerPickupObject(actor, ent, drag)
     local part = ent:GetPhysicsObjectNum(i)
 
     if IsValid(part) then
-      mass = mass + part:GetMass()
+      mass += part:GetMass()
     end
   end
 

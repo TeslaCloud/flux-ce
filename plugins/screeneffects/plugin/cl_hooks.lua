@@ -58,9 +58,9 @@ function ScreenEffects:CalcView(client, _origin, angles, _fov)
 
   local view = self.view
 
-  angles.p = angles.p + (tonumber(view.pitch) or 0)
-  angles.y = angles.y + (tonumber(view.yaw) or 0)
-  angles.r = angles.r + (tonumber(view.roll) or 0)
+  angles.p += tonumber(view.pitch) or 0
+  angles.y += tonumber(view.yaw) or 0
+  angles.r += tonumber(view.roll) or 0
 end
 
 --- Registers a switch and a strength slider for every effect with the Settings plugin. The

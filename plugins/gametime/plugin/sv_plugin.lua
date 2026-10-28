@@ -65,14 +65,14 @@ function GameTime:set_clock(timestamp, rate, real_time, is_jump)
   local serial = clock and clock.serial or 0
 
   if is_jump and clock then
-    serial = serial + 1
+    serial += 1
   end
 
   ActiveNetwork.set_nv(self.clock_key, {
     base = timestamp,
     anchor = CurTime(),
     rate = rate,
-    real = real_time and true or false,
+    real = real_time ? true : false,
     serial = serial
   })
 

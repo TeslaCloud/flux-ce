@@ -174,13 +174,13 @@ end
 
 do
   local ops = {
-    ['+']  = function(a, b) return a + b end,
-    ['-']  = function(a, b) return a - b end,
-    ['*']  = function(a, b) return a * b end,
-    ['/']  = function(a, b) return a / b end,
-    ['**'] = function(a, b) return a ^ b end,
-    ['^']  = function(a, b) return a ^ b end,
-    ['%']  = function(a, b) return a % b end
+    ['+']  = |a, b| -> a + b,
+    ['-']  = |a, b| -> a - b,
+    ['*']  = |a, b| -> a * b,
+    ['/']  = |a, b| -> a / b,
+    ['**'] = |a, b| -> a ^ b,
+    ['^']  = |a, b| -> a ^ b,
+    ['%']  = |a, b| -> a % b
   }
 
   --- Combines all elements of an array into a single value, by applying an operator to the
@@ -281,7 +281,7 @@ do
     local t1, t2 = 0, 0
 
     for key, value in pairs(tab1) do
-      t1 = t1 + 1
+      t1 += 1
 
       if !run_comp(key, value, tab2) then
         return false
@@ -289,7 +289,7 @@ do
     end
 
     for key, value in pairs(tab2) do
-      t2 = t2 + 1
+      t2 += 1
 
       if !run_comp(key, value, tab1) then
         return false
@@ -590,9 +590,7 @@ end
 -- @param what [String/Number key of the field]
 -- @return [Function accessor(tab), returns tab[what]]
 function s(what)
-  return function(tab)
-    return tab[what]
-  end
+  return tab -> tab[what]
 end
 
 --- Splits a string of words into an array. Words are separated by spaces or newlines.
@@ -656,7 +654,7 @@ function print_table(t, indent, done, indent_length)
     end
   end
 
-  indent_length = indent_length + 1
+  indent_length += 1
 
   table.sort(keys, function(a, b)
     if isnumber(a) and isnumber(b) then return a < b end

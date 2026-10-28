@@ -9,7 +9,7 @@ PLUGIN:set_author('NightAngel')
 PLUGIN:set_description('Allows users to press a button to automatically walk forward.')
 
 if SERVER then
-  local movement_keys = bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)
+  local movement_keys = IN_FORWARD | IN_BACK | IN_MOVELEFT | IN_MOVERIGHT
 
   --- Moves auto walking players forward at full speed.
   -- Turns auto walk off as soon as the player presses a movement key.
@@ -22,7 +22,7 @@ if SERVER then
     move_data:SetForwardSpeed(move_data:GetMaxSpeed())
 
     -- If they try to move, break the autowalk.
-    if bit.band(cmd_data:GetButtons(), movement_keys) != 0 then
+    if (cmd_data:GetButtons() & movement_keys) != 0 then
       actor:set_nv('auto_walk', false)
     end
   end

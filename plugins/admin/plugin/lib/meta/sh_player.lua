@@ -50,15 +50,15 @@ end
 --- Overrides the engine method to return the player's Flux role ID.
 -- @param self [Player]
 -- @return [String role ID]
-player_meta.GetUserGroup  = function(self) return self:get_role() end
+player_meta.GetUserGroup  = self -> self:get_role()
 --- Overrides the engine method so that other addons recognize Flux super admins.
 -- @param self [Player]
 -- @return [Boolean]
-player_meta.IsSuperAdmin  = function(self) return self:is_super_admin() end
+player_meta.IsSuperAdmin  = self -> self:is_super_admin()
 --- Overrides the engine method so that other addons recognize Flux admins.
 -- @param self [Player]
 -- @return [Boolean]
-player_meta.IsAdmin       = function(self) return self:is_admin() end
+player_meta.IsAdmin       = self -> self:is_admin()
 
 --- Returns the permissions set on the player individually, not counting those of their role.
 -- @return [Map PERM_ values keyed by permission ID]

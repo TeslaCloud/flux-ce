@@ -81,7 +81,7 @@ function Doors:sync(entity)
   local state = self:get_state(root)
   local owner_id = state.owner and state.owner.id or nil
 
-  local ownable = state.ownable and true or nil
+  local ownable = state.ownable ? true : nil
   local price, text = state.price, state.text
 
   for _, door in ipairs(self:get_group(root)) do
@@ -103,7 +103,7 @@ function Doors:set_ownable(entity, ownable)
     self:evict(entity)
   end
 
-  state.ownable = ownable and true or false
+  state.ownable = ownable ? true : false
 
   self:sync(entity)
 end
@@ -250,7 +250,7 @@ function Doors:count_owned(character_id)
     local state = door.door_state
 
     if state and state.owner and state.owner.id == character_id and !IsValid(door.door_parent) then
-      count = count + 1
+      count += 1
     end
   end
 
@@ -276,7 +276,7 @@ function Doors:release_character(character_id)
       if state.owner and state.owner.id == character_id then
         self:clear_owner(door)
 
-        released = released + 1
+        released += 1
         changed = true
       elseif state.access and state.access[character_id] then
         self:set_access(door, character_id, DOOR_ACCESS_NONE)

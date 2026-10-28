@@ -337,7 +337,7 @@ if SERVER then
     local count = Characters.taken_names[key] or 0
 
     if istable(except) and isstring(except.name) and normalize_name(except.name) == key then
-      count = count - 1
+      count -= 1
     end
 
     return count > 0

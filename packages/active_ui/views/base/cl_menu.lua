@@ -131,7 +131,7 @@ function PANEL:PerformLayout()
     option:InvalidateLayout(true)
     option:MoveToFront()
 
-    y = y + option:GetTall()
+    y += option:GetTall()
   end
 
   self:SetTall(math.min(y, ScrH() * 0.75))
@@ -202,8 +202,8 @@ function PANEL:add_option(name, callback)
     panel.DoClick = callback
   end
 
-  self.last = self.last + self.option_height
-  self.count = self.count + 1
+  self.last += self.option_height
+  self.count += 1
 
   self:AddItem(panel)
   self:SetSize(w, self.last + self.padding)
@@ -232,7 +232,7 @@ function PANEL:add_spacer(px)
 
   self:AddItem(panel)
 
-  self.last = self.last + px
+  self.last += px
 
   return panel
 end

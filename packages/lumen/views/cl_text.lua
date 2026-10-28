@@ -161,7 +161,7 @@ function PANEL:draw_text(w, h, color, offset_x)
   for _, line in ipairs(lines) do
     draw_simple_text(line, font, x, math_floor(y), color, align, TEXT_ALIGN_TOP)
 
-    y = y + line_height
+    y += line_height
   end
 end
 

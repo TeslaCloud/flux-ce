@@ -123,7 +123,7 @@ function PANEL:rebuild()
             )
           end)
 
-          w = w + (button_size + math.scale(4)) * 2
+          w += (button_size + math.scale(4)) * 2
         else
           create_line_button(line, button_size, 'angle-double-left', t'ui.currency.take.title', function()
             request_amount(
@@ -147,7 +147,7 @@ function PANEL:rebuild()
         self.max_w = line:GetWide()
       end
 
-      self.max_h = self.max_h + line:GetTall()
+      self.max_h += line:GetTall()
     end
   end
 

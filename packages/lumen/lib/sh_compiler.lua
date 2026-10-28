@@ -101,7 +101,7 @@ local function decode_entities(text)
       return named_entities[body] or ('&'..body..';')
     end
 
-    local code = tonumber(body, hex == 'x' and 16 or 10)
+    local code = tonumber(body, hex == 'x' ? 16 : 10)
 
     if !code then
       return '&'..hash..hex..body..';'
@@ -112,9 +112,7 @@ local function decode_entities(text)
 end
 
 local function lua_string(text)
-  return '"'..text:gsub('[%c"\\]', function(char)
-    return string_escapes[char] or string_format('\\%03d', string_byte(char))
-  end)..'"'
+  return '"'..text:gsub('[%c"\\]', char -> string_escapes[char] or string_format('\\%03d', string_byte(char)))..'"'
 end
 
 --- Cleans up the text between tags: text on a single line is kept as it is, text
@@ -168,11 +166,11 @@ local function quoted_string_end(state, pos)
     if char == '' or char == '\n' then
       fail(state, pos, 'unfinished string')
     elseif char == '\\' then
-      i = i + 2
+      i += 2
     elseif char == quote then
       return i + 1
     else
-      i = i + 1
+      i += 1
     end
   end
 end
@@ -213,9 +211,9 @@ local function number_end(src, pos)
     if char == '' then return i end
 
     if string_match(char, '[%w_%.]') then
-      i = i + 1
-    elseif (char == '+' or char == '-') and string_match(string_sub(src, i - 1, i - 1), hex and '[pP]' or '[eE]') then
-      i = i + 1
+      i += 1
+    elseif (char == '+' or char == '-') and string_match(string_sub(src, i - 1, i - 1), hex ? '[pP]' : '[eE]') then
+      i += 1
     else
       return i
     end
@@ -276,7 +274,7 @@ function transform(state, stop_at_brace)
       buf[#buf + 1] = string_sub(src, pos, stop - 1)
       pos = stop
       last = 'operand'
-      tokens = tokens + 1
+      tokens += 1
     elseif char == '[' then
       local stop = long_bracket_end(src, pos)
 
@@ -288,28 +286,28 @@ function transform(state, stop_at_brace)
         last = 'operand'
       else
         buf[#buf + 1] = char
-        pos = pos + 1
+        pos += 1
         last = 'operator'
       end
 
-      tokens = tokens + 1
+      tokens += 1
     elseif string_match(char, '%d') or (char == '.' and string_match(string_sub(src, pos + 1, pos + 1), '%d')) then
       local stop = number_end(src, pos)
 
       buf[#buf + 1] = string_sub(src, pos, stop - 1)
       pos = stop
       last = 'operand'
-      tokens = tokens + 1
+      tokens += 1
     elseif string_match(char, '[%a_]') then
       local stop = string_match(src, '^[%w_]+()', pos)
       local word = string_sub(src, pos, stop - 1)
 
       buf[#buf + 1] = word
       pos = stop
-      tokens = tokens + 1
+      tokens += 1
 
       if keywords[word] then
-        last = operand_keywords[word] and 'operand' or 'operator'
+        last = operand_keywords[word] ? 'operand' : 'operator'
       else
         last = 'operand'
       end
@@ -318,13 +316,13 @@ function transform(state, stop_at_brace)
       buf[#buf + 1] = parse_element(state)
       pos = state.pos
       last = 'operand'
-      tokens = tokens + 1
+      tokens += 1
     elseif char == '{' then
-      depth = depth + 1
+      depth += 1
       buf[#buf + 1] = char
-      pos = pos + 1
+      pos += 1
       last = 'operator'
-      tokens = tokens + 1
+      tokens += 1
     elseif char == '}' then
       if stop_at_brace and depth == 0 then
         state.pos = pos
@@ -332,26 +330,26 @@ function transform(state, stop_at_brace)
         return table_concat(buf), tokens
       end
 
-      depth = depth - 1
+      depth -= 1
       buf[#buf + 1] = char
-      pos = pos + 1
+      pos += 1
       last = 'operand'
-      tokens = tokens + 1
+      tokens += 1
     elseif char == ')' or char == ']' then
       buf[#buf + 1] = char
-      pos = pos + 1
+      pos += 1
       last = 'operand'
-      tokens = tokens + 1
+      tokens += 1
     elseif string_sub(src, pos, pos + 2) == '...' then
       buf[#buf + 1] = '...'
-      pos = pos + 3
+      pos += 3
       last = 'operand'
-      tokens = tokens + 1
+      tokens += 1
     else
       buf[#buf + 1] = char
-      pos = pos + 1
+      pos += 1
       last = 'operator'
-      tokens = tokens + 1
+      tokens += 1
     end
   end
 
@@ -409,7 +407,7 @@ function parse_element(state)
 
   if string_sub(src, pos, pos) == '>' then
     type_code = 'Lumen.Fragment'
-    pos = pos + 1
+    pos += 1
   else
     tag = string_match(src, '^[%a_][%w_%.%-]*', pos)
 
@@ -417,7 +415,7 @@ function parse_element(state)
       fail(state, start, 'tag name expected')
     end
 
-    pos = pos + #tag
+    pos += #tag
 
     if string_match(tag, '^[%l_]') and !string_find(tag, '.', 1, true) then
       type_code = lua_string(tag)
@@ -437,7 +435,7 @@ function parse_element(state)
       local skipped
 
       pos, skipped = skip_spaces(src, pos)
-      pending = pending + skipped
+      pending += skipped
 
       local char = string_sub(src, pos, pos)
 
@@ -448,12 +446,12 @@ function parse_element(state)
           fail(state, pos, "'>' expected after '/'")
         end
 
-        pos = pos + 2
+        pos += 2
         self_closing = true
 
         break
       elseif char == '>' then
-        pos = pos + 1
+        pos += 1
 
         break
       elseif string_sub(src, pos, pos + 3) == '{...' then
@@ -475,15 +473,15 @@ function parse_element(state)
           fail(state, pos, "attribute name expected in '<"..tag.."'")
         end
 
-        pos = pos + #name
+        pos += #name
         pos, skipped = skip_spaces(src, pos)
 
         local value = 'true'
 
         if string_sub(src, pos, pos) == '=' then
-          pending = pending + skipped
+          pending += skipped
           pos, skipped = skip_spaces(src, pos + 1)
-          pending = pending + skipped
+          pending += skipped
 
           local opener = string_sub(src, pos, pos)
 
@@ -498,7 +496,7 @@ function parse_element(state)
 
             value = lua_string(decode_entities(text))
             pos = close + 1
-            pending = pending + count_newlines(text)
+            pending += count_newlines(text)
           elseif opener == '{' then
             state.pos = pos + 1
 
@@ -514,7 +512,7 @@ function parse_element(state)
             fail(state, pos, "the value of the '"..name.."' attribute must be quoted or in { }")
           end
         else
-          pending = pending + skipped
+          pending += skipped
         end
 
         if !attributes then
@@ -544,13 +542,13 @@ function parse_element(state)
           fail(state, pos, 'unfinished comment')
         end
 
-        pending = pending + count_newlines(string_sub(src, pos, close))
+        pending += count_newlines(string_sub(src, pos, close))
         pos = close + 1
       elseif string_sub(src, pos, pos + 1) == '</' then
         local skipped
 
         pos, skipped = skip_spaces(src, pos + 2)
-        pending = pending + skipped
+        pending += skipped
 
         if tag then
           local name = string_match(src, '^[%a_][%w_%.%-]*', pos)
@@ -559,16 +557,16 @@ function parse_element(state)
             fail(state, pos, "'</"..tag..">' expected, got '</"..(name or string_sub(src, pos, pos)).."'")
           end
 
-          pos = pos + #name
+          pos += #name
           pos, skipped = skip_spaces(src, pos)
-          pending = pending + skipped
+          pending += skipped
         end
 
         if string_sub(src, pos, pos) != '>' then
           fail(state, pos, "'>' expected in the closing tag of '"..(tag or 'the fragment').."'")
         end
 
-        pos = pos + 1
+        pos += 1
 
         break
       elseif char == '<' then
@@ -583,7 +581,7 @@ function parse_element(state)
         pos = state.pos + 1
 
         if tokens == 0 then
-          pending = pending + count_newlines(code)
+          pending += count_newlines(code)
         else
           children[#children + 1] = flush()..'('..code..')'
         end
@@ -596,7 +594,7 @@ function parse_element(state)
           children[#children + 1] = flush()..lua_string(decode_entities(text))
         end
 
-        pending = pending + count_newlines(raw)
+        pending += count_newlines(raw)
         pos = stop
       end
     end
@@ -625,7 +623,7 @@ function parse_element(state)
   local code = 'Lumen.element('..type_code..', '..props_code
 
   if #children > 0 then
-    code = code..', { '..table_concat(children, ', ')..' }'
+    code ..= ', { '..table_concat(children, ', ')..' }'
   end
 
   return code..')'..flush()

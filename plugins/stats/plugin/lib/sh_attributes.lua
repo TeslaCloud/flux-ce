@@ -104,7 +104,7 @@ function Attributes.sum_boosts(attribute_table, attribute)
 
   if boosts then
     for _, boost_data in pairs(boosts) do
-      boost = boost + (tonumber(boost_data.value) or 0)
+      boost += tonumber(boost_data.value) or 0
     end
   end
 
@@ -202,7 +202,7 @@ if SERVER then
         table.remove(modifiers, i)
         destroy_record(modifier)
 
-        removed = removed + 1
+        removed += 1
       end
     end
 
@@ -311,7 +311,7 @@ if SERVER then
         local expiry = get_expiry(modifier)
 
         if !expiry or expiry > unix_time then
-          boost = boost + (tonumber(modifier.value) or 0)
+          boost += tonumber(modifier.value) or 0
         end
       end
     end
@@ -349,7 +349,7 @@ if SERVER then
           attribute.level = math_clamp(math.floor(level), attribute_table.min, attribute_table.max)
         table.insert(character.attributes, attribute)
 
-        added = added + 1
+        added += 1
       end
     end
 
@@ -405,7 +405,7 @@ if SERVER then
     local removed = 0
 
     for _, record in ipairs(get_records(target)) do
-      removed = removed + remove_modifiers(record.attribute_boosts or {}, nil, unix_time)
+      removed += remove_modifiers(record.attribute_boosts or {}, nil, unix_time)
     end
 
     return removed
@@ -513,7 +513,7 @@ if SERVER then
 
     for _, record in ipairs(get_records(target)) do
       if attribute_id == nil or record.attribute_id == attribute_id then
-        removed = removed + remove_modifiers(record[list_key] or {}, identifier)
+        removed += remove_modifiers(record[list_key] or {}, identifier)
       end
     end
 

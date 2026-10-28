@@ -212,9 +212,7 @@ SKIN.Colours.TooltipText                      = SKIN.text_normal
 -- before it calls this.
 -- @param theme [ThemeBase the theme that has been loaded]
 function SKIN:apply_theme(theme)
-  local get = function(id, fallback)
-    return theme:get_color(id, fallback)
-  end
+  local get = |id, fallback| -> theme:get_color(id, fallback)
 
   local surface_color = get('surface', self.bg_color)
   local raised        = get('surface_raised', self.bg_color_bright)
@@ -481,7 +479,7 @@ end
 -- @param w [Number width of the panel]
 -- @param h [Number height of the panel]
 function SKIN:PaintExpandButton(panel, w, h)
-  glyph(panel:GetExpanded() and 'fa-chevron-down' or 'fa-chevron-right', 0, 0, w, h, h * 0.6, self.text_muted)
+  glyph(panel:GetExpanded() ? 'fa-chevron-down' : 'fa-chevron-right', 0, 0, w, h, h * 0.6, self.text_muted)
 end
 
 --- Paints a text entry: a sunken field with a border that takes the accent color while the
@@ -754,7 +752,7 @@ function SKIN:PaintComboDownArrow(panel, w, h)
     color = self.text_normal
   end
 
-  glyph(combo_box:IsMenuOpen() and 'fa-chevron-up' or 'fa-chevron-down', 0, 0, w, h, h * 0.55, color)
+  glyph(combo_box:IsMenuOpen() ? 'fa-chevron-up' : 'fa-chevron-down', 0, 0, w, h, h * 0.55, color)
 end
 
 --- Paints the background of a combo box like a text field, with the accent border while its

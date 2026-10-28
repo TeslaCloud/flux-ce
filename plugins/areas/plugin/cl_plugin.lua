@@ -123,7 +123,7 @@ function Area:HUDPaint()
 
         draw.SimpleText(text_area.text, font, math.scale_x(32), last_y, text_area_color)
 
-        last_y = last_y + math.scale(50)
+        last_y += math.scale(50)
       end
     end
   end

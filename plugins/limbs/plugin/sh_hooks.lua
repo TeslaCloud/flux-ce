@@ -53,7 +53,7 @@ function Limbs:FinishMove(actor, move_data)
 
   if fraction <= 0 then return end
 
-  velocity.z = velocity.z / (1 + fraction)
+  velocity.z /= 1 + fraction
 
   move_data:SetVelocity(velocity)
 end

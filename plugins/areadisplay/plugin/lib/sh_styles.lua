@@ -129,7 +129,7 @@ if CLIENT then
     for i = 1, line_count do
       draw.SimpleTextOutlined(lines[i], font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
 
-      y = y + line_height
+      y += line_height
     end
 
     return line_count * line_height
@@ -182,7 +182,7 @@ if CLIENT then
       end
 
       line_chars[index] = chars
-      char_count = char_count + #chars
+      char_count += #chars
     end
 
     display.line_chars = line_chars
@@ -202,7 +202,7 @@ if CLIENT then
     self:layout(display, ScrW())
 
     display.fade_in = 0
-    display.hold = display.hold + display.char_count * display.type_interval
+    display.hold += display.char_count * display.type_interval
   end
 
   --- Updates the part of the text that has been typed out so far and plays the typing sound
@@ -221,7 +221,7 @@ if CLIENT then
 
       lines[index] = table.concat(chars, '', 1, amount)
       last_char = chars[amount]
-      remaining = remaining - amount
+      remaining -= amount
     end
 
     if typed < display.char_count then

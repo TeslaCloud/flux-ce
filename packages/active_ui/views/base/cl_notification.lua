@@ -116,7 +116,7 @@ function PANEL:Paint(width, height)
     for i = 1, #lines do
       draw.SimpleText(lines[i], font, x, cur_y, color)
 
-      cur_y = cur_y + line_height
+      cur_y += line_height
     end
   end
 end

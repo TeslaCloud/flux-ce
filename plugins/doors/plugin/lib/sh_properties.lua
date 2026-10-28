@@ -9,9 +9,7 @@ Doors:register_property('name', {
   --- Returns the name of the door.
   -- @param entity [Entity the door]
   -- @return [String the name, or an empty string if the door has no name]
-  get_save_data = function(entity)
-    return entity:get_nv('fl_name', '')
-  end,
+  get_save_data = entity -> entity:get_nv('fl_name', ''),
   --- Sets the networked name of the door.
   -- @param entity [Entity the door]
   -- @param data [String the name]
@@ -34,9 +32,7 @@ Doors:register_property('title_type', {
   --- Returns the id of the title type of the door.
   -- @param entity [Entity the door]
   -- @return [String the title type id, or nil if it has never been set]
-  get_save_data = function(entity)
-    return entity:get_nv('fl_title_type')
-  end,
+  get_save_data = entity -> entity:get_nv('fl_title_type'),
   --- Sets the networked title type of the door.
   -- @param entity [Entity the door]
   -- @param data [String title type id, an empty string to disable the title]
@@ -65,9 +61,7 @@ Doors:register_property('skin', {
   --- Returns the skin of the door.
   -- @param entity [Entity the door]
   -- @return [Number the skin index]
-  get_save_data = function(entity)
-    return entity:GetSkin()
-  end,
+  get_save_data = entity -> entity:GetSkin(),
   --- Sets the skin of the door.
   -- @param entity [Entity the door]
   -- @param data [Number the skin index]
@@ -123,7 +117,7 @@ Doors:register_property('locked', {
   on_load = function(entity, data)
     data = tobool(data)
 
-    entity:Fire(data and 'Lock' or 'Unlock')
+    entity:Fire(data ? 'Lock' : 'Unlock')
 
     entity:set_nv('fl_locked', data)
   end,
@@ -143,9 +137,7 @@ Doors:register_property('ownable', {
   --- Returns whether the door can be owned.
   -- @param entity [Entity the door]
   -- @return [Boolean]
-  get_save_data = function(entity)
-    return entity:get_nv('fl_door_ownable', false)
-  end,
+  get_save_data = entity -> entity:get_nv('fl_door_ownable', false),
   --- Makes the door, and the doors linked with it, ownable or not. The owner of a door that
   -- stops being ownable loses it. Serverside only.
   -- @param entity [Entity the door]

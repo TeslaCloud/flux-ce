@@ -101,7 +101,7 @@ function Recognizes:remove_records(character, target_id, name)
 
       table.remove(records, i)
 
-      count = count + 1
+      count += 1
     end
   end
 
@@ -163,7 +163,7 @@ function Recognizes:forget_character(character_id, name)
         end
 
         if removed > 0 then
-          count = count + removed
+          count += removed
 
           if character == active then
             self:sync(client)

@@ -42,7 +42,7 @@ function add:on_run(actor, targets, amount)
   for _, target in ipairs(targets) do
     if target:is_character_loaded() then
       target:give_experience(amount, 'command', true)
-      target:notify(taken and 'notification.levels.experience_taken' or 'notification.levels.experience_given', {
+      target:notify(taken ? 'notification.levels.experience_taken' : 'notification.levels.experience_given', {
         amount = shown_amount
       })
 
@@ -58,7 +58,7 @@ function add:on_run(actor, targets, amount)
     return
   end
 
-  self:notify_staff('command.experience.add.'..(taken and 'message_taken' or 'message'), {
+  self:notify_staff('command.experience.add.'..(taken ? 'message_taken' : 'message'), {
     player = get_player_name(actor),
     target = util.player_list_to_string(changed),
     amount = shown_amount

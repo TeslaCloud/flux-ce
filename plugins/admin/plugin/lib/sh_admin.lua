@@ -373,8 +373,8 @@ function Bolt:get_permission_layer(actor, action, object)
     actor:get_character_permission(action), now)
   local user_value, user_temporary = self:get_layer_value(actor:get_temp_permission(action),
     actor:get_permission(action), now)
-  local char_layer = char_temporary and 'character_temporary' or 'character'
-  local user_layer = user_temporary and 'user_temporary' or 'user'
+  local char_layer = char_temporary ? 'character_temporary' : 'character'
+  local user_layer = user_temporary ? 'user_temporary' : 'user'
 
   if char_value == PERM_NEVER then
     return false, char_layer
@@ -834,7 +834,7 @@ do
     few = 5,
     couple = 2,
     bunch = 120,
-    lot = 1000000,
+    lot = 1_000_000,
     dozen = 12,
     noscope = 420
   }
@@ -900,7 +900,7 @@ do
           return 0
         end
 
-        result = result + tok * num
+        result += tok * num
         num = 0
       end
     end

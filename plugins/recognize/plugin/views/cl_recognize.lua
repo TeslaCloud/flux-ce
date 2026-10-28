@@ -29,7 +29,7 @@ function PANEL:Init()
   self.label:SetWrap(true)
   self.label:SetAutoStretchVertical(true)
 
-  total_height = total_height + self.label:GetTall()
+  total_height += self.label:GetTall()
 
   local icon_size = scale(32)
   local range_buttons = {
@@ -150,7 +150,7 @@ function PANEL:Init()
     self:safe_remove()
   end
 
-  total_height = total_height + self.fake_name:GetTall()
+  total_height += self.fake_name:GetTall()
 
   if history and #history > 0 then
     self.name_history = vgui.Create('DListView', self.list)

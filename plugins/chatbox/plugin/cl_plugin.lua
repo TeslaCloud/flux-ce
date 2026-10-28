@@ -104,12 +104,12 @@ function Chatbox.compile(msg_table)
         compiled[#compiled + 1] = { text = stamp, w = w, h = h, x = cur_x, y = cur_y }
       else
         compiled[#compiled + 1] = { text = stamp, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
-        h = h - (h * fix_const)
+        h -= h * fix_const
       end
 
       compiled[#compiled + 1] = Color(255, 255, 255)
 
-      cur_x = cur_x + w
+      cur_x += w
       total_height = h + message_margin
     end
 
@@ -141,10 +141,10 @@ function Chatbox.compile(msg_table)
             compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y }
           else
             compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
-            h = h - (h * fix_const)
+            h -= h * fix_const
           end
 
-          cur_x = cur_x + w
+          cur_x += w
 
           if total_height < h then
             total_height = h + message_margin
@@ -196,7 +196,7 @@ function Chatbox.compile(msg_table)
           local _, line_height = text_size('W', font)
 
           if fix then
-            line_height = line_height - line_height * fix_const
+            line_height -= line_height * fix_const
           end
 
           local size = math.floor(isnumber(piece.size) and scale(piece.size) or line_height)
@@ -243,10 +243,10 @@ function Chatbox.compile(msg_table)
           compiled[#compiled + 1] = { text = to_insert, w = w, h = h, x = cur_x, y = cur_y }
         else
           compiled[#compiled + 1] = { text = to_insert, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
-          h = h - (h * fix_const)
+          h -= h * fix_const
         end
 
-        cur_x = cur_x + w
+        cur_x += w
 
         if total_height < h then
           total_height = h + message_margin

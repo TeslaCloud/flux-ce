@@ -54,9 +54,7 @@ local mappings      = {
 local converters = {}
 
 for unit, factor in pairs(mappings) do
-  converters[unit] = function(this)
-    return this.time * factor
-  end
+  converters[unit] = this -> this.time * factor
 end
 
 --- Initializes a new Time object that represents a time interval.
@@ -140,9 +138,7 @@ Time.month        = Time.months
 Time.year         = Time.years
 
 local function installable(func)
-  return function(n)
-    return func(Time, n)
-  end
+  return n -> func(Time, n)
 end
 
 math.milliseconds = installable(Time.milliseconds)
@@ -198,7 +194,7 @@ function Time:nice(time)
                       { 'years', years }
 
   return 'time.'..time_data[1], time_data[1] != 'just_now'
-         and (time >= 0 and 'time.from_now' or 'time.ago')
+         and (time >= 0 ? 'time.from_now' : 'time.ago')
          or '', time_data[2]
 end
 
@@ -249,7 +245,7 @@ function Time:format_nice(suffix, from_now, amt, lang)
   local dec_prefix
 
   if dec > 0 then
-    dec_prefix = t(dec > 0.6 and 'time.over' or 'time.about', nil, lang)
+    dec_prefix = t(dec > 0.6 ? 'time.over' : 'time.about', nil, lang)
   end
 
   local text = (dec_prefix and dec_prefix..' ' or '')..

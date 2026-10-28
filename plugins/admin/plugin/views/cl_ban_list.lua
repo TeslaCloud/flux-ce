@@ -124,7 +124,7 @@ end
 -- @param immediately=false [Boolean send the request on the next frame]
 function PANEL:request_bans(page, immediately)
   self.page = math.max(tonumber(page) or self.page, 1)
-  self.request_at = CurTime() + (immediately and 0 or request_delay)
+  self.request_at = CurTime() + (immediately ? 0 : request_delay)
 end
 
 --- Replaces the list with a single line of text, such as the notice that there are no bans.
@@ -280,7 +280,7 @@ function PANEL:set_ban(ban)
   self.ban = ban
 
   if ban.admin then
-    details = details..' / '..t('ui.admin.bans.banned_by', { admin = tostring(ban.admin) })
+    details ..= ' / '..t('ui.admin.bans.banned_by', { admin = tostring(ban.admin) })
   end
 
   if ban.permanent then

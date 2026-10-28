@@ -141,7 +141,7 @@ function PANEL:create_avatars()
     if istable(piece) and piece.avatar and isnumber(piece.w) and isnumber(piece.h) then
       local source = piece.avatar
       local target = isstring(source) and player.GetBySteamID64(source) or source
-      local resolution = piece.h > 32 and 64 or 32
+      local resolution = piece.h > 32 ? 64 : 32
       local avatar = vgui.Create('AvatarImage', self)
 
       avatar:SetPos(piece.x, piece.y)

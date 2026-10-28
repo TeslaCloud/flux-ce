@@ -361,7 +361,7 @@ local function sqlite_foreign_keys(table_name)
     end
   end
 
-  table.sort(list, function(a, b) return a.id > b.id end)
+  table.sort(list, |a, b| -> a.id > b.id)
 
   return list
 end
@@ -418,7 +418,7 @@ local function sqlite_rebuild_refusal(table_name)
 
   for _, column in ipairs(columns) do
     if tonumber(column.pk) and tonumber(column.pk) > 0 then
-      primary_keys = primary_keys + 1
+      primary_keys += 1
     end
   end
 
@@ -557,17 +557,17 @@ local function rebuild_sqlite_table(statement, table_name, changes)
       local definition = quoted..' '..(column.type or '')
 
       if column.name == primary_key then
-        definition = definition..' PRIMARY KEY AUTOINCREMENT'
+        definition ..= ' PRIMARY KEY AUTOINCREMENT'
       elseif tonumber(column.pk) == 1 then
-        definition = definition..' PRIMARY KEY'
+        definition ..= ' PRIMARY KEY'
       end
 
       if tonumber(column.notnull) == 1 then
-        definition = definition..' NOT NULL'
+        definition ..= ' NOT NULL'
       end
 
       if column.dflt_value != nil and column.dflt_value != 'NULL' then
-        definition = definition..' DEFAULT '..column.dflt_value
+        definition ..= ' DEFAULT '..column.dflt_value
       end
 
       definitions[#definitions + 1] = definition
@@ -795,13 +795,13 @@ function Statements.add_index(table_name, columns, options)
 
   if ActiveRecord.metadata.indexes[index_name] then return end
 
-  local query = 'CREATE '..(options.unique == true and 'UNIQUE ' or '')..'INDEX '
+  local query = 'CREATE '..(options.unique == true ? 'UNIQUE ' : '')..'INDEX '
 
   if options.if_not_exists then
-    query = query..'IF NOT EXISTS '
+    query ..= 'IF NOT EXISTS '
   end
 
-  query = query..index_name..' ON '..table_name
+  query ..= index_name..' ON '..table_name
 
   local column_parts = {}
 
@@ -816,19 +816,19 @@ function Statements.add_index(table_name, columns, options)
   local column_list = ' ('..table.concat(column_parts, ', ')..')'
 
   if !postgres then
-    query = query..column_list
+    query ..= column_list
   end
 
   if !sqlite then
-    query = query..' USING '..(options.using or (postgres and 'btree' or 'BTREE'))
+    query ..= ' USING '..(options.using or (postgres ? 'btree' : 'BTREE'))
   end
 
   if postgres then
-    query = query..column_list
+    query ..= column_list
   end
 
   if options.where then
-    query = query..' WHERE '..options.where
+    query ..= ' WHERE '..options.where
   end
 
   raw('Add Index', query..';')
@@ -875,10 +875,10 @@ function Statements.remove_index(table_name, options)
     error('remove_index - no index name or columns given for table '..tostring(table_name)..'!', 0)
   end
 
-  local query = 'DROP INDEX '..(if_exists and 'IF EXISTS ' or '')..index_name
+  local query = 'DROP INDEX '..(if_exists ? 'IF EXISTS ' : '')..index_name
 
   if ActiveRecord.adapter:is_mysql() then
-    query = query..' ON '..table_name
+    query ..= ' ON '..table_name
   end
 
   raw('Remove Index', query..';')
@@ -943,7 +943,7 @@ function Statements.add_foreign_key(from_table, to_table, options)
       ..' FOREIGN KEY ('..column..') REFERENCES '..to_table..'('..primary_key..')'
 
     if on_delete then
-      query = query..' ON DELETE '..on_delete
+      query ..= ' ON DELETE '..on_delete
     end
 
     raw('Add Foreign Key', query..';')
@@ -1197,7 +1197,7 @@ function Statements.add_missing_foreign_keys()
           local count, result = Statements.clean_orphans(fk.from_table, fk.to_table, fk)
 
           if result != 'kept' then
-            summary[result] = summary[result] + count
+            summary[result] += count
             changed = true
           end
         end
@@ -1211,7 +1211,7 @@ function Statements.add_missing_foreign_keys()
       local count = count_orphans(fk.from_table, fk.column, fk.to_table, fk.primary_key)
 
       if count > 0 then
-        summary.skipped = summary.skipped + 1
+        summary.skipped += 1
 
         ErrorNoHalt('ActiveRecord - Not creating the foreign key from '..fk.from_table..'.'..fk.column
           ..' to '..fk.to_table..': '..count..' row(s) of '..fk.from_table..' refer to a row of '
@@ -1233,7 +1233,7 @@ function Statements.add_missing_foreign_keys()
       local refusal = sqlite_rebuild_refusal(table_name)
 
       if refusal then
-        summary.skipped = summary.skipped + #list
+        summary.skipped += #list
 
         ErrorNoHalt('ActiveRecord - Not creating the foreign keys of '..table_name..': the table cannot be '
           ..'rebuilt, '..refusal..'.\n')
@@ -1258,7 +1258,7 @@ function Statements.add_missing_foreign_keys()
             ..' to '..fk.to_table..'.')
         end
 
-        summary.created = summary.created + #list
+        summary.created += #list
       end
     end
   end)
@@ -1320,7 +1320,7 @@ function Statements.create_reference(args)
   Statements.add_foreign_key(args.table_name, args.foreign_table, {
     column = args.key,
     primary_key = args.foreign_key,
-    on_delete = tobool(args.cascade) and 'cascade' or nil,
+    on_delete = tobool(args.cascade) ? 'cascade' : nil,
     name = args.name
   })
 end

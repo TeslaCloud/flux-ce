@@ -58,9 +58,7 @@ local function complete_gm_character()
     end
   end
 
-  table.sort(names, function(a, b)
-    return a:utf8lower() < b:utf8lower()
-  end)
+  table.sort(names, |a, b| -> a:utf8lower() < b:utf8lower())
 
   return names
 end

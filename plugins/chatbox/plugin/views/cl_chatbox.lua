@@ -79,12 +79,12 @@ local function split_syntax(syntax)
         start = i
       end
 
-      depth = depth + 1
+      depth += 1
     elseif (char == '>' or char == ']') and depth > 0 then
-      depth = depth - 1
+      depth -= 1
 
       if depth == 0 then
-        arg = arg + 1
+        arg += 1
         segments[#segments + 1] = { text = syntax:sub(start, i), arg = arg }
         start = i + 1
       end
@@ -135,11 +135,11 @@ function PANEL:Init()
 
   self.scroll_panel = vgui.Create('DScrollPanel', self)
 
-  self.scroll_panel.Paint = function() return true end
-  self.scroll_panel:GetVBar().Paint = function() return true end
-  self.scroll_panel:GetVBar().btnUp.Paint = function() return true end
-  self.scroll_panel:GetVBar().btnDown.Paint = function() return true end
-  self.scroll_panel:GetVBar().btnGrip.Paint = function() return true end
+  self.scroll_panel.Paint = || -> true
+  self.scroll_panel:GetVBar().Paint = || -> true
+  self.scroll_panel:GetVBar().btnUp.Paint = || -> true
+  self.scroll_panel:GetVBar().btnDown.Paint = || -> true
+  self.scroll_panel:GetVBar().btnGrip.Paint = || -> true
 
   self.scroll_panel:GetVBar():SetWide(0)
 
@@ -218,11 +218,11 @@ function PANEL:Init()
 
       return true
     elseif code == KEY_TAB then
-      self:insert_completion(input.IsShiftDown() and -1 or 1)
+      self:insert_completion(input.IsShiftDown() ? -1 : 1)
 
       return true
     elseif (code == KEY_UP or code == KEY_DOWN) and entry:GetValue() != entry.history_value and
-           self:move_completion(code == KEY_UP and -1 or 1) then
+           self:move_completion(code == KEY_UP ? -1 : 1) then
       return true
     elseif code == KEY_DOWN then
       if entry.last_index == 1 then
@@ -374,7 +374,7 @@ function PANEL:update_completion()
 
   if list != self.completion_list then
     self.completion_list = list
-    self.completion_index = #result.candidates > 0 and 1 or nil
+    self.completion_index = #result.candidates > 0 ? 1 : nil
     self.completion_offset = 0
   end
 
@@ -547,7 +547,7 @@ function PANEL:draw_command_info(info, y, width, padding)
 
   if !info.inline then
     x = padding
-    cur_y = cur_y + font_h
+    cur_y += font_h
   end
 
   for _, segment in ipairs(info.segments) do
@@ -568,7 +568,7 @@ function PANEL:draw_command_info(info, y, width, padding)
       )
     end
 
-    x = x + draw_text(segment.text, font, x, cur_y, is_emphasized and text_color or muted_color)
+    x += draw_text(segment.text, font, x, cur_y, is_emphasized and text_color or muted_color)
   end
 
   cur_y = cur_y + font_h + math.scale(4)
@@ -651,7 +651,7 @@ function PANEL:draw_completion(width, bottom)
         draw_text(t('ui.chat.more_above', { count = offset }), small_font, padding, y, muted_color)
       end
 
-      y = y + more_h
+      y += more_h
     end
 
     for i = offset + 1, offset + rows do
@@ -679,7 +679,7 @@ function PANEL:draw_completion(width, bottom)
         end
       end
 
-      y = y + row_h
+      y += row_h
     end
 
     if overflow and offset + rows < count then

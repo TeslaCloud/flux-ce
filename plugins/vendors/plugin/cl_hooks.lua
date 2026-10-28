@@ -50,7 +50,7 @@ function Vendors:HUDDrawTargetID()
 
   local head_pos = entity:GetPos()
 
-  head_pos.z = head_pos.z + (entity:OBBMaxs().z + 10)
+  head_pos.z += entity:OBBMaxs().z + 10
 
   local screen_pos = head_pos:ToScreen()
 
@@ -68,7 +68,7 @@ function Vendors:HUDDrawTargetID()
   for i = 1, line_count do
     local _line_w, line_h = text_size(lines[i], desc_font)
 
-    height = height + line_h
+    height += line_h
   end
 
   local x, y = screen_pos.x, screen_pos.y - height
@@ -87,7 +87,7 @@ function Vendors:HUDDrawTargetID()
     outline_color
   )
 
-  y = y + name_h
+  y += name_h
 
   for i = 1, line_count do
     local line = lines[i]
@@ -95,7 +95,7 @@ function Vendors:HUDDrawTargetID()
 
     draw.SimpleTextOutlined(line, desc_font, x - line_w * 0.5, y, text_color, nil, nil, 1, outline_color)
 
-    y = y + line_h
+    y += line_h
   end
 end
 

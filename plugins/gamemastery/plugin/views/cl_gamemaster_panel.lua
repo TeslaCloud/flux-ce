@@ -20,7 +20,7 @@ local function cursor_direction()
 
   local hit_pos = util.TraceLine({
     start = view_origin,
-    endpos = view_origin + direction * 32768,
+    endpos = view_origin + direction * 32_768,
     filter = client
   }).HitPos
   local to_hit = hit_pos - eye_pos

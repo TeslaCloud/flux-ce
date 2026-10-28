@@ -204,7 +204,7 @@ do
       local count = 0
 
       for _, inventory in pairs(self:get_inventories()) do
-        count = count + inventory:get_items_count(id)
+        count += inventory:get_items_count(id)
       end
 
       return count
@@ -624,7 +624,7 @@ do
               inventory:take_items(id, count)
               inventory:sync()
 
-              amount = amount - count
+              amount -= count
             end
           end
 

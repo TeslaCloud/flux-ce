@@ -144,7 +144,7 @@ function Bolt:find_command_targets(actor, argument, can_equal)
       return nil, argument
     end
 
-    local phrase = kind == 'ambiguous' and 'error.command.player_ambiguous' or 'error.command.player_invalid'
+    local phrase = kind == 'ambiguous' ? 'error.command.player_ambiguous' : 'error.command.player_invalid'
 
     Flux.Player:notify(actor, phrase, { player = argument })
 

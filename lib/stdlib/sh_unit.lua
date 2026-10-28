@@ -149,27 +149,27 @@ function Unit:format(n, system)
     local cm = Unit:to_cm(n):floor()
     local mm = Unit:to_mm(n):floor()
 
-    mm = mm - cm * 10
-    cm = cm - m  * 100
-    m  = m  - km * 1000
+    mm -= cm * 10
+    cm -= m  * 100
+    m  -= km * 1000
 
     if km > 0 then
       result = km..t'ui.unit.km'
 
       if m > 0 then
-        result = result..' '..m..t'ui.unit.m'
+        result ..= ' '..m..t'ui.unit.m'
       end
     elseif m > 0 then
       result = m..t'ui.unit.m'
 
       if cm > 0 then
-        result = result..' '..cm..t'ui.unit.cm'
+        result ..= ' '..cm..t'ui.unit.cm'
       end
     elseif cm > 0 then
       result = cm..t'ui.unit.cm'
 
       if mm > 0 then
-        result = result..' '..mm..t'ui.unit.mm'
+        result ..= ' '..mm..t'ui.unit.mm'
       end
     else
       result = mm..t'ui.unit.mm'
@@ -228,9 +228,7 @@ Unit.to_kilometer   = Unit.to_kilometers
 Unit.to_km          = Unit.to_kilometers
 
 local function installable(func)
-  return function(n)
-    return func(Unit, n)
-  end
+  return n -> func(Unit, n)
 end
 
 math.inch           = installable(Unit.inch)

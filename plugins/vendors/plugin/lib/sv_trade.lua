@@ -131,7 +131,7 @@ function Vendors:buy(actor, vendor, item_id)
   end
 
   if entry.stock then
-    entry.stock = entry.stock - 1
+    entry.stock -= 1
   end
 
   session.traded = true

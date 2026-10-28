@@ -278,7 +278,7 @@ function Ragdoll:PostEntityTakeDamage(entity, damage_info, took)
   if entity:InVehicle() or entity:is_ragdolled() then return end
 
   local fell = damage_info:IsFallDamage()
-  local threshold = config_get(fell and 'ragdoll_fall_damage' or 'ragdoll_hit_damage', 0)
+  local threshold = config_get(fell ? 'ragdoll_fall_damage' : 'ragdoll_hit_damage', 0)
 
   if threshold <= 0 or damage_info:GetDamage() < threshold then return end
 

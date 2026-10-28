@@ -73,7 +73,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
 
         if self.next_scene <= cur_time then
           PLAYER:ScreenFade(SCREENFADE.IN, color_black, 2, 0)
-          self.scene = self.scene + 1
+          self.scene += 1
           self.next_scene = cur_time + config_get('mapscenes_speed')
 
           if self.scene > count then
@@ -100,7 +100,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
           self.ang = LerpAngle(fraction, point.ang, next_point.ang)
 
           if self.pos:DistToSqr(next_point.pos) < 1 then
-            self.scene = self.scene + 1
+            self.scene += 1
             self.start_time = nil
             self.end_time = nil
 
@@ -119,7 +119,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
           if rotate_speed > 0 then
             self.angle_offset = self.angle_offset or Angle()
             self.angle_offset.y = self.angle_offset.y + rotate_speed
-            self.ang = self.ang + self.angle_offset
+            self.ang += self.angle_offset
           end
         end
 

@@ -39,7 +39,7 @@ local function get_roll_state(roll, now)
   if !roll then return end
 
   if roll.pending then
-    return now - roll.started < Stats.roll_timeout and 'tumbling' or nil
+    return now - roll.started < Stats.roll_timeout ? 'tumbling' : nil
   end
 
   if !roll.result then return end
@@ -72,7 +72,7 @@ function PANEL:Think()
 
     if now - roll.landed < 1 then
       local failed = roll.result.critical == 'failure'
-      local sound_name = failed and 'button_click_danger_sound' or 'button_click_success_sound'
+      local sound_name = failed ? 'button_click_danger_sound' : 'button_click_success_sound'
 
       surface.PlaySound(Theme.get_sound(sound_name))
     end
@@ -134,7 +134,7 @@ function PANEL:Paint(w, h)
 
   local flash = 1 - math_clamp((now - roll.landed) / flash_time, 0, 1)
 
-  flash = flash * flash
+  flash *= flash
 
   Lumen.paint_box(self, w, h, mix(background, color, 0.25 + 0.75 * flash))
 

@@ -63,7 +63,7 @@ function PropProtection:give_ownership(actor, entity, permanent)
 
   if old_key == key then
     if permanent != nil then
-      entity.prop_owner_permanent = permanent and true or nil
+      entity.prop_owner_permanent = permanent ? true : nil
     end
 
     return true
@@ -85,7 +85,7 @@ function PropProtection:give_ownership(actor, entity, permanent)
   owned[key] = owned[key] or {}
   owned[key][entity] = true
 
-  entity.prop_owner_permanent = permanent and true or nil
+  entity.prop_owner_permanent = permanent ? true : nil
   entity:set_nv('fl_prop_owner', key)
 
   --- Called on the server after an entity has become the property of a player's active

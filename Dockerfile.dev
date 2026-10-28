@@ -2,11 +2,20 @@
 # and without a schema. Both are mounted from your checkouts by
 # docker-compose.yml, which is also where the usage is described.
 #
-# Everything up to and including the binary modules is the same as in the
-# Dockerfile, so the two images share those layers and the server is only
-# downloaded once.
+# Everything up to and including the binary modules and the Lua library is the
+# same as in the Dockerfile, so the two images share those layers and the server
+# is only downloaded once.
 FROM alpine/git AS deps
 RUN git clone --depth 1 https://github.com/TeslaCloud/flux-dependencies.git /deps
+
+# Flux's build of the Lua library of the server, which replaces the stock
+# bin/linux64/lua_shared.so. An empty LUA_SHARED_URL keeps the stock library.
+# Build with "--no-cache-filter lua_shared" to download its newest version.
+FROM alpine AS lua_shared
+ARG LUA_SHARED_URL=https://data.nighty.cloud/gmod/lua_shared.so
+RUN mkdir /lua_shared && if [ -n "$LUA_SHARED_URL" ]; then \
+      wget -q -O /lua_shared/lua_shared.so "$LUA_SHARED_URL"; \
+    fi
 
 FROM steamcmd/steamcmd:debian-trixie
 
@@ -30,6 +39,9 @@ RUN attempt=0; until steamcmd +force_install_dir /home/steam/flux_server +login 
 
 # Put the binary modules from the dependencies repo on top of the server files.
 COPY --from=deps --chown=steam:steam /deps/garrysmod garrysmod
+
+# Replace the Lua library of the server, unless the build left it out.
+COPY --from=lua_shared --chown=steam:steam --chmod=755 /lua_shared/ bin/linux64/
 
 # Create the mount points of docker-compose.yml as the "steam" user, since named
 # volumes take over the owner of the folder they are first mounted on. "_flux" is

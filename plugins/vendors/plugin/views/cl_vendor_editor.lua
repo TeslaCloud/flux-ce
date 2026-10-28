@@ -353,7 +353,7 @@ function PANEL:refresh_items()
       stock = sells.stock and tostring(sells.stock) or t'ui.vendor.editor.unlimited'
 
       if !sells.price then
-        sell_price = sell_price..' '..t'ui.vendor.editor.by_default'
+        sell_price ..= ' '..t'ui.vendor.editor.by_default'
       end
     end
 
@@ -361,7 +361,7 @@ function PANEL:refresh_items()
       buy_price = Vendors:format_money(buys.price or math.Round(row.cost * buy_rate / 100, 2), data.currency)
 
       if !buys.price then
-        buy_price = buy_price..' '..t'ui.vendor.editor.by_default'
+        buy_price ..= ' '..t'ui.vendor.editor.by_default'
       end
     end
 
@@ -464,14 +464,14 @@ function PANEL:build_access()
 
     for id, faction_table in SortedPairs(factions) do
       self:add_check_box(page, t(faction_table:get_name()), data.factions[id] == true, function(value)
-        data.factions[id] = value and true or nil
+        data.factions[id] = value ? true : nil
       end)
     end
 
     for id, _listed in SortedPairs(table.Copy(data.factions)) do
       if !factions[id] then
         self:add_check_box(page, tostring(id), true, function(value)
-          data.factions[id] = value and true or nil
+          data.factions[id] = value ? true : nil
         end)
       end
     end

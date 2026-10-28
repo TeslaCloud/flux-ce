@@ -23,9 +23,9 @@ function Tool:DrawToolScreen(_w, _h)
   local text = t('tool.'..self.id..'.name')
   local y = 104
   local w, h = surface.GetTextSize(text)
-  w = w + 64
+  w += 64
 
-  y = y - h * 0.5
+  y -= h * 0.5
 
   local x = RealTime() * 250 % w * -1
 
@@ -38,7 +38,7 @@ function Tool:DrawToolScreen(_w, _h)
     surface.SetTextPos(x, y)
     surface.DrawText(text)
 
-    x = x + w
+    x += w
   end
 end
 
@@ -289,7 +289,7 @@ function Tool:SetObject(i, ent, pos, phys, bone, norm)
     object.Phys = nil
     object.Pos = pos
   else
-    norm = norm + pos
+    norm += pos
 
     if IsValid(phys) then
       object.Normal = phys:WorldToLocal(norm)

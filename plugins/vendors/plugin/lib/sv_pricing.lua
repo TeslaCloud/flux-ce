@@ -75,7 +75,7 @@ function Vendors:get_buy_price(vendor, item_obj, actor)
   local uses = item_obj.get_uses and tonumber(item_obj:get_uses())
 
   if max_uses and max_uses > 1 and uses then
-    price = price * math.Clamp(uses / max_uses, 0, 1)
+    price *= math.Clamp(uses / max_uses, 0, 1)
   end
 
   return adjust_price(actor, vendor, item_obj, price, false)

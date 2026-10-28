@@ -58,7 +58,7 @@ function PANEL:count_players()
 
   for _, client in player.Iterator() do
     if !client:has_initialized() or self:should_show_player(client) then
-      count = count + 1
+      count += 1
     end
   end
 

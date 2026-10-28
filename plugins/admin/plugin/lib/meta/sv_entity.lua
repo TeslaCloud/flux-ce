@@ -2,7 +2,7 @@
 -- its transmission to them, which the Vanish command is built on.
 
 local ent_meta = FindMetaTable 'Entity'
-local always_true = function() return true end
+local always_true = || -> true
 
 --- Stops or resumes networking this entity and all of its children to a player. Does nothing
 -- if the target is invalid.

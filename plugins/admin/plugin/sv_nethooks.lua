@@ -161,7 +161,7 @@ Cable.receive('fl_bolt_character_temp_permission', function(actor, target, perm_
   if !Bolt:is_temp_duration(duration) or !can_set_value(actor, perm_id, value) then return end
   if !Bolt:set_character_temp_permission(character, perm_id, value, duration) then return end
 
-  local phrase = value == PERM_ALLOW and 'grant' or 'revoke'
+  local phrase = value == PERM_ALLOW ? 'grant' : 'revoke'
 
   announce_character_change(actor, target, character, 'command.charpermission.'..phrase..'.message_temporary',
     perm_id, duration)
@@ -207,7 +207,7 @@ end
 local function announce_config_change(actor, key, value, pending)
   local definition = Config.get_definition(key)
 
-  Command:notify_staff(pending and 'notification.config_changed_restart' or 'notification.config_changed', {
+  Command:notify_staff(pending ? 'notification.config_changed_restart' : 'notification.config_changed', {
     player = get_player_name(actor),
     config = definition and definition.name or key,
     value = Config.display_value(key, value)
@@ -275,7 +275,7 @@ Cable.receive('fl_bolt_plugin_set_disabled', function(actor, id, disabled, force
     return
   end
 
-  Command:notify_staff(disabled and 'notification.plugin_disabled' or 'notification.plugin_enabled', {
+  Command:notify_staff(disabled ? 'notification.plugin_disabled' : 'notification.plugin_enabled', {
     player = get_player_name(actor),
     plugin = name
   })

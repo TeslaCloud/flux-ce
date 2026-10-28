@@ -290,7 +290,7 @@ function PANEL:open_access_menu(line)
       self:set_access(character_id, DOOR_ACCESS_USE)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if level != DOOR_ACCESS_MANAGE and is_owner then
@@ -298,7 +298,7 @@ function PANEL:open_access_menu(line)
       self:set_access(character_id, DOOR_ACCESS_MANAGE)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if level != DOOR_ACCESS_NONE and (is_owner or level != DOOR_ACCESS_MANAGE) then
@@ -306,7 +306,7 @@ function PANEL:open_access_menu(line)
       self:set_access(character_id, DOOR_ACCESS_NONE)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if options < 1 then

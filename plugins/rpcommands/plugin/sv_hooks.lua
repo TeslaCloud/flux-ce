@@ -147,7 +147,7 @@ function RPCommands:get_phrase_table(text)
     local piece = pieces[i]
 
     if piece != '' and piece:match('%S') then
-      count = count + 1
+      count += 1
       text_parts[count] = piece
     end
   end
@@ -164,18 +164,18 @@ function RPCommands:get_phrase_table(text)
   for k = 1, count do
     if k != 1 then
       if !is_emote then
-        length = length + 1
+        length += 1
         msg_table[length] = ic_color
       end
 
-      length = length + 1
-      msg_table[length] = is_emote and '" ' or ' "'
+      length += 1
+      msg_table[length] = is_emote ? '" ' : ' "'
     end
 
     local part = text_parts[k]:strip()
 
     if is_emote then
-      length = length + 1
+      length += 1
       msg_table[length] = me_color
 
       if part:is_upper() then
@@ -187,7 +187,7 @@ function RPCommands:get_phrase_table(text)
       part = part:spelling(is_emote, k == 1 and count != 1)
     end
 
-    length = length + 1
+    length += 1
     msg_table[length] = part
 
     is_emote = !is_emote
@@ -207,7 +207,7 @@ end
 function RPCommands:format_message(speaker, text)
   local phrase, volume = self:get_phrase_volume(text)
   local is_emote = phrase:start_with('*')
-  local color = config_get(is_emote and 'chat_me_color' or 'chat_ic_color')
+  local color = config_get(is_emote ? 'chat_me_color' : 'chat_ic_color')
 
   local msg_table = {
     color,

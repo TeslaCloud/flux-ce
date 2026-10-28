@@ -267,9 +267,7 @@ function Flux.Help:get_commands()
     end)
   end
 
-  sort(categories, function(a, b)
-    return a.name < b.name
-  end)
+  sort(categories, |a, b| -> a.name < b.name)
 
   return categories
 end

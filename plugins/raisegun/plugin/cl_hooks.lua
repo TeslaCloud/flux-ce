@@ -63,7 +63,7 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
   end
 
   local client = PLAYER
-  local target_val = client:is_weapon_raised() and 0 or 100
+  local target_val = client:is_weapon_raised() ? 0 : 100
   local current = client.fl_raised_fraction or 0
   local fraction = current * 0.01
 

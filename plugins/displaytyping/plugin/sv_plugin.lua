@@ -72,7 +72,7 @@ function DisplayTyping:accept_report(actor, now)
     actor.fl_typing_reports = 0
   end
 
-  actor.fl_typing_reports = actor.fl_typing_reports + 1
+  actor.fl_typing_reports += 1
 
   return actor.fl_typing_reports <= self.report_limit
 end
@@ -158,7 +158,7 @@ function DisplayTyping:stop_typing(actor)
 
   for viewer in pairs(state.recipients) do
     if IsValid(viewer) then
-      count = count + 1
+      count += 1
       receivers[count] = viewer
     end
   end
@@ -201,11 +201,11 @@ function DisplayTyping:relay(actor, state, now)
       and origin:DistToSqr(target:EyePos()) <= (was_recipient and leave or enter) then
         current[target] = true
 
-        everyone_count = everyone_count + 1
+        everyone_count += 1
         everyone[everyone_count] = target
 
         if !was_recipient then
-          added_count = added_count + 1
+          added_count += 1
           added[added_count] = target
         end
       end
@@ -214,7 +214,7 @@ function DisplayTyping:relay(actor, state, now)
 
   for viewer in pairs(previous) do
     if !current[viewer] and IsValid(viewer) then
-      removed_count = removed_count + 1
+      removed_count += 1
       removed[removed_count] = viewer
     end
   end

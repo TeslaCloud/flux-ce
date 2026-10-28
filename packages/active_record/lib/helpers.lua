@@ -26,7 +26,7 @@ function ActiveRecord.format_command(command, ...)
 
       for key, value in pairs(arg) do
         if !isfunction(value) then
-          inner[#inner + 1] = (isnumber(key) and '' or key..' = ')
+          inner[#inner + 1] = (isnumber(key) ? '' : key..' = ')
             ..(isstring(value) and '"'..value..'"' or tostring(value))
         end
       end
@@ -66,9 +66,7 @@ function ActiveRecord.ddl(command, ...)
   if migration and command != 'execute_block' then
     local args = { n = select('#', ...), ... }
 
-    return migration:say_with_time(ActiveRecord.format_command(command, ...), function()
-      return statement(unpack(args, 1, args.n))
-    end)
+    return migration:say_with_time(ActiveRecord.format_command(command, ...), || -> statement(unpack(args, 1, args.n)))
   end
 
   return statement(...)
@@ -411,14 +409,14 @@ do
   --- Increases the indentation level used when printing queries by one.
   -- @return [Number new indentation level]
   function ar_add_indent()
-    indent_level = indent_level + 1
+    indent_level += 1
     return indent_level
   end
 
   --- Decreases the indentation level used when printing queries by one.
   -- @return [Number new indentation level]
   function ar_sub_indent()
-    indent_level = indent_level - 1
+    indent_level -= 1
     return indent_level
   end
 
@@ -476,11 +474,11 @@ function time_from_timestamp(timestamp)
   local shift = floor((14 - month) / 12)
   local era_year = year + 4800 - shift
   local era_month = month + 12 * shift - 3
-  local unix_epoch_day = 2472633
+  local unix_epoch_day = 2_472_633
   local day_number = tonumber(dd) + floor((153 * era_month + 2) / 5) + 365 * era_year
     + floor(era_year * 0.25) - floor(era_year / 100) + floor(era_year / 400)
 
-  return (day_number - unix_epoch_day) * 86400 + tonumber(hh) * 3600 + tonumber(m) * 60 + tonumber(ss)
+  return (day_number - unix_epoch_day) * 86_400 + tonumber(hh) * 3600 + tonumber(m) * 60 + tonumber(ss)
 end
 
 --- Escapes a string for use inside an SQL string literal, using the current adapter.

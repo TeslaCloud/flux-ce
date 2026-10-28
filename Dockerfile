@@ -4,6 +4,15 @@
 FROM alpine/git AS deps
 RUN git clone --depth 1 https://github.com/TeslaCloud/flux-dependencies.git /deps
 
+# Flux's build of the Lua library of the server, which replaces the stock
+# bin/linux64/lua_shared.so. An empty LUA_SHARED_URL keeps the stock library.
+# Build with "--no-cache-filter lua_shared" to download its newest version.
+FROM alpine AS lua_shared
+ARG LUA_SHARED_URL=https://data.nighty.cloud/gmod/lua_shared.so
+RUN mkdir /lua_shared && if [ -n "$LUA_SHARED_URL" ]; then \
+      wget -q -O /lua_shared/lua_shared.so "$LUA_SHARED_URL"; \
+    fi
+
 FROM alpine/git AS schema
 ARG SCHEMA_REPO=https://github.com/TeslaCloud/hl2rp.git
 WORKDIR /schema
@@ -29,6 +38,9 @@ RUN attempt=0; until steamcmd +force_install_dir /home/steam/flux_server +login 
 
 # Put the binary modules from the dependencies repo on top of the server files.
 COPY --from=deps --chown=steam:steam /deps/garrysmod garrysmod
+
+# Replace the Lua library of the server, unless the build left it out.
+COPY --from=lua_shared --chown=steam:steam --chmod=755 /lua_shared/ bin/linux64/
 
 # The schema folder is named after its repository, "hl2rp" by default.
 COPY --from=schema --chown=steam:steam /schema garrysmod/gamemodes

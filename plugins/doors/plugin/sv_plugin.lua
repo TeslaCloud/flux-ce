@@ -96,7 +96,7 @@ end
 -- @return [Number seconds from the door_lock_time or the door_unlock_time config; 0 means
 --   that it happens at once]
 function Doors:get_lock_time(lock)
-  return math.max(tonumber(Config.get(lock and 'door_lock_time' or 'door_unlock_time')) or 0, 0)
+  return math.max(tonumber(Config.get(lock ? 'door_lock_time' : 'door_unlock_time')) or 0, 0)
 end
 
 --- Makes a player lock or unlock a door. It happens at once unless the door_lock_time or the
@@ -118,14 +118,14 @@ function Doors:player_lock_door(actor, entity, lock, move)
     self:lock_door(entity, lock)
 
     if move then
-      entity:Fire(lock and 'Close' or 'Open')
+      entity:Fire(lock ? 'Close' : 'Open')
     end
 
     return true
   end
 
-  return actor:start_timed_action(lock and 'lock_door' or 'unlock_door', duration, {
-    text = lock and 'ui.hud.bar_text.lock_door' or 'ui.hud.bar_text.unlock_door',
+  return actor:start_timed_action(lock ? 'lock_door' : 'unlock_door', duration, {
+    text = lock ? 'ui.hud.bar_text.lock_door' : 'ui.hud.bar_text.unlock_door',
     condition = Flux.TimedAction:looking_at(entity, self.use_distance),
     callback = function(target, success)
       if !success or !IsValid(entity) or !hook.Run('PlayerCanLockDoor', target, entity) then return end
@@ -133,7 +133,7 @@ function Doors:player_lock_door(actor, entity, lock, move)
       Doors:lock_door(entity, lock)
 
       if move then
-        entity:Fire(lock and 'Close' or 'Open')
+        entity:Fire(lock ? 'Close' : 'Open')
       end
     end
   })

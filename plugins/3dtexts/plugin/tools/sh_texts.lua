@@ -146,6 +146,6 @@ function TOOL.BuildCPanel(CPanel)
     Command = 'texts_fade',
     Type = 'Integer',
     Min = -1024,
-    Max = 10000
+    Max = 10_000
   })
 end

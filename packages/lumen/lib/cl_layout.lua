@@ -165,7 +165,7 @@ function Lumen.Layout.flex(style, children, avail_w, avail_h, apply)
 
     for _, item in ipairs(current) do
       used = used + item.base + item.main_margin
-      total_flex = total_flex + item.flex
+      total_flex += item.flex
     end
 
     local free = math_max((main_avail or used) - used, 0)

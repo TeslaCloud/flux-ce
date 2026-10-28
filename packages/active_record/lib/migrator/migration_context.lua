@@ -219,7 +219,7 @@ function ActiveRecord.MigrationContext:migrations()
     end
   end
 
-  table.sort(migrations, function(a, b) return a.version < b.version end)
+  table.sort(migrations, |a, b| -> a.version < b.version)
 
   return migrations
 end
@@ -406,11 +406,11 @@ function ActiveRecord.MigrationContext:migrations_status()
     local name = migration.name:gsub('_', ' '):capitalize()
 
     if migration.scope and migration.scope != '' then
-      name = name..' ('..migration.scope..')'
+      name ..= ' ('..migration.scope..')'
     end
 
     table.insert(status, {
-      status = ran[migration.version] and 'up' or 'down',
+      status = ran[migration.version] ? 'up' : 'down',
       version = ActiveRecord.SchemaMigration:normalize_migration_number(migration.version),
       name = name
     })
@@ -426,7 +426,7 @@ function ActiveRecord.MigrationContext:migrations_status()
     })
   end
 
-  table.sort(status, function(a, b) return tonumber(a.version) < tonumber(b.version) end)
+  table.sort(status, |a, b| -> tonumber(a.version) < tonumber(b.version))
 
   return status
 end
@@ -573,7 +573,7 @@ function ActiveRecord.MigrationContext:install_migrations()
           or tonumber(ActiveRecord.Migration.next_migration_number(last_version))
 
         while used_versions[new_version] do
-          new_version = new_version + 1
+          new_version += 1
         end
 
         if unversioned then

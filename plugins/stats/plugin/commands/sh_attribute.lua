@@ -126,7 +126,7 @@ function boost:on_run(actor, targets, attribute_text, value, duration)
   local permanent = duration <= 0
 
   for _, target in ipairs(targets) do
-    target:notify(permanent and 'notification.attribute.boost_permanent' or 'notification.attribute.boost', {
+    target:notify(permanent ? 'notification.attribute.boost_permanent' : 'notification.attribute.boost', {
       attribute = attribute.name,
       value = value,
       time = Flux.Lang:duration(duration)
@@ -134,7 +134,7 @@ function boost:on_run(actor, targets, attribute_text, value, duration)
     target:boost_attribute(attribute_id, value, duration)
   end
 
-  self:notify_staff('command.attribute.boost.'..(permanent and 'message_permanent' or 'message'), {
+  self:notify_staff('command.attribute.boost.'..(permanent ? 'message_permanent' : 'message'), {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     attribute = attribute.name,
@@ -177,14 +177,14 @@ function clearboosts:on_run(actor, targets, attribute_text)
     local removed = target:remove_attribute_boosts(attribute_id)
 
     if removed > 0 then
-      target:notify(attribute and 'notification.attribute.boosts_cleared'
-        or 'notification.attribute.boosts_cleared_all', {
+      target:notify(attribute ? 'notification.attribute.boosts_cleared'
+        : 'notification.attribute.boosts_cleared_all', {
         attribute = attribute and attribute.name
       })
     end
   end
 
-  self:notify_staff('command.attribute.clearboosts.'..(attribute and 'message' or 'message_all'), {
+  self:notify_staff('command.attribute.clearboosts.'..(attribute ? 'message' : 'message_all'), {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     attribute = attribute and attribute.name

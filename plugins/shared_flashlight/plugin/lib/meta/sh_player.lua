@@ -63,7 +63,7 @@ function player_meta:set_flashlight(on)
     self.fl_flashlight = nil
   end
 
-  self:set_nv('fl_flashlight_on', on and true or false)
+  self:set_nv('fl_flashlight_on', on ? true : false)
 
   --- Called on the server after a player's flashlight has been turned on or off through
   -- `Player:set_flashlight`, whether the shared or the engine flashlight is in use.

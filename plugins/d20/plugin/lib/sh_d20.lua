@@ -63,11 +63,11 @@ do
     local value = 10
 
     if isfunction(self.get_attribute_modifier) then
-      value = value + (tonumber(self:get_attribute_modifier('reflexes')) or 0)
+      value += tonumber(self:get_attribute_modifier('reflexes')) or 0
     end
 
     if self:Armor() > 0 then
-      value = value + 2
+      value += 2
     end
 
     return adjust_armor_class(self, value)
@@ -115,7 +115,7 @@ function D20:get_attack_modifier(attacker)
       return 0
     end
 
-    local skill_id = self:is_ranged_attack(attacker) and 'marksmanship' or 'close_combat'
+    local skill_id = self:is_ranged_attack(attacker) ? 'marksmanship' : 'close_combat'
 
     return tonumber(attacker:get_skill_modifier(skill_id)) or 0
   elseif attacker:IsNPC() then

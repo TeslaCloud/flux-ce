@@ -189,7 +189,7 @@ function ClientSettings:is_visible(id)
   end
 
   if isfunction(setting.visible) then
-    return setting.visible(setting) and true or false
+    return setting.visible(setting) ? true : false
   end
 
   return true
@@ -220,9 +220,7 @@ function ClientSettings:get_categories()
   end
 
   for _, category in ipairs(categories) do
-    table.sort(category.settings, function(a, b)
-      return a.order < b.order
-    end)
+    table.sort(category.settings, |a, b| -> a.order < b.order)
   end
 
   table.sort(categories, function(a, b)
@@ -257,7 +255,7 @@ function ClientSettings:sync()
 
     if setting and setting.networked then
       data[id] = self:get(id)
-      count = count + 1
+      count += 1
     end
 
     pending[id] = nil

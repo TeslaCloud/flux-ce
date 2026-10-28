@@ -41,7 +41,7 @@ local function count_used_slots(inventory)
       local slot = inventory:get_slot(x, y)
 
       if istable(slot) and !table.IsEmpty(slot) then
-        used = used + 1
+        used += 1
       end
     end
   end
@@ -570,7 +570,7 @@ function Container:fill(entity, share, category)
     local w, h = inventory:get_item_size(item_table)
     local x, y = inventory:find_position(item_table, w, h)
 
-    attempts = attempts + 1
+    attempts += 1
 
     if x and y then
       local stacked = !table.IsEmpty(inventory:get_slot(x, y))
@@ -578,7 +578,7 @@ function Container:fill(entity, share, category)
       if stacked or used + w * h <= target then
         if !inventory:give_item(item_table.id) then break end
 
-        added = added + 1
+        added += 1
         used = count_used_slots(inventory)
       end
     end

@@ -140,7 +140,7 @@ function Stats:default_attribute_points()
   local highest = 0
 
   for _, attribute_table in pairs(Attributes.get_stored()) do
-    highest = highest + self:get_creation_max(attribute_table)
+    highest += self:get_creation_max(attribute_table)
   end
 
   return math.min(math.floor(points), highest)

@@ -69,7 +69,7 @@ function PANEL:rebuild()
     if pnl.pressed then
       local mx, my = gui.MousePos()
 
-      pnl.angles = pnl.angles - Angle(0, (pnl.press_x or mx) - mx, 0)
+      pnl.angles -= Angle(0, (pnl.press_x or mx) - mx, 0)
       pnl.press_x, pnl.press_y = mx, my
     end
 
@@ -137,7 +137,7 @@ function PANEL:rebuild()
     if pnl:HasFocus() then
       border = Theme.get_color('accent')
     else
-      border = Theme.get_color(pnl.saved and 'success' or 'warning')
+      border = Theme.get_color(pnl.saved ? 'success' : 'warning')
     end
 
     Theme.hook('DrawCard', 0, 0, desc_w, desc_h, radius, Theme.get_color('field'), border)
@@ -154,7 +154,7 @@ function PANEL:rebuild()
   self.desc.OnEnter = function(pnl)
     local err = !pnl:save()
 
-    surface.PlaySound(err and 'buttons/button10.wav' or 'buttons/button14.wav')
+    surface.PlaySound(err ? 'buttons/button10.wav' : 'buttons/button14.wav')
   end
 
   self.player_model:SetSize(w * 0.3, h)

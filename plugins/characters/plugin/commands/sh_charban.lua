@@ -76,7 +76,7 @@ function remove:on_run(actor, text)
     if #names == 0 then
       Flux.Player:notify(
         actor,
-        #characters == 0 and 'error.character.not_found' or 'error.character.not_banned',
+        #characters == 0 ? 'error.character.not_found' : 'error.character.not_banned',
         { name = name }
       )
 

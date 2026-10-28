@@ -31,9 +31,7 @@ end
 -- @param column [String column name]
 -- @param _type [String abstract column type; unused]
 function ActiveRecord.Model:generate_helpers(model, column, _type)
-  model['find_by_'..column] = function(obj, value, callback)
-    return obj:find_by(column, value, callback)
-  end
+  model['find_by_'..column] = |obj, value, callback| -> obj:find_by(column, value, callback)
 end
 
 --- Hands the restored schema to every registered model and generates the

@@ -37,7 +37,7 @@ require_relative 'sv_hooks'
 -- @param target_arg [String the typed player argument]
 -- @return [List<Faction> the factions, empty if the argument names nobody with a faction]
 local function factions_of(actor, target_arg)
-  local targets = target_arg == '^' and IsValid(actor) and { actor } or player.find_exact(target_arg)
+  local targets = target_arg == '^' and IsValid(actor) ? { actor } : player.find_exact(target_arg)
   local found, seen = {}, {}
 
   for _, target in ipairs(targets) do

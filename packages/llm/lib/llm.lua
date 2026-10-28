@@ -182,7 +182,7 @@ function llm.new(options)
     api_key = options.api_key,
     model = model,
     base_url = (options.base_url or provider.base_url):gsub('/+$', ''),
-    max_tokens = options.max_tokens or 16000,
+    max_tokens = options.max_tokens or 16_000,
     max_tokens_key = options.max_tokens_key or 'max_tokens',
     effort = options.effort,
     fallbacks = fallbacks or nil,
@@ -460,8 +460,8 @@ function llm.providers.anthropic.build(client, request)
 
   if client.fallbacks then
     body.fallbacks = client.fallbacks
-    betas[#betas + 1] = isstring(client.fallbacks) and 'server-side-fallback-2026-07-01'
-      or 'server-side-fallback-2026-06-01'
+    betas[#betas + 1] = isstring(client.fallbacks) ? 'server-side-fallback-2026-07-01'
+      : 'server-side-fallback-2026-06-01'
   end
 
   for _, beta in ipairs(client.betas or {}) do

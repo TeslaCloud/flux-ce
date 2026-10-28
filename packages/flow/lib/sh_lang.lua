@@ -54,17 +54,13 @@ local form_fallbacks    = { '5', '2', '1' }
 -- Languages without a rule of their own use it too.
 -- @param count [Number amount of things]
 -- @return [String '1' or '2']
-plural_rules['en'] = function(count)
-  return count == 1 and '1' or '2'
-end
+plural_rules['en'] = count -> count == 1 ? '1' : '2'
 
 --- Plural rule of French: amounts below 2 take the '1' form, so 0, 1 and 1.5 are singular,
 -- and any other amount the '2' form.
 -- @param count [Number amount of things]
 -- @return [String '1' or '2']
-plural_rules['fr'] = function(count)
-  return math.abs(count) < 2 and '1' or '2'
-end
+plural_rules['fr'] = count -> math.abs(count) < 2 ? '1' : '2'
 
 --- Plural rule of Russian: '1' for amounts that end in 1 but not in 11 (1, 21, 101), '2' for
 -- those that end in 2 to 4 but not in 12 to 14 (2, 23, 104) and for fractions, and '5' for
@@ -333,7 +329,7 @@ function Flux.Lang:nice_time(time, lang)
   local suffix, _from_now, amount = Time:seconds(time):nice()
 
   if suffix == 'time.just_now' then
-    suffix = amount < 2 and 'time.second' or 'time.seconds'
+    suffix = amount < 2 ? 'time.second' : 'time.seconds'
   end
 
   return Time:format_nice(suffix, '', amount, lang)

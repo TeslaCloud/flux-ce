@@ -164,7 +164,7 @@ local function draw_badge(text, x, y, color, align_right)
   local w, h = text_w + padding * 2, text_h + padding
 
   if align_right then
-    x = x - w
+    x -= w
   end
 
   draw_rounded_box(math.floor(h * 0.5), x, y, w, h, slot_badge_color)
@@ -335,7 +335,7 @@ function PANEL:rebuild()
     self.icon_panel.Paint = function(_pnl, w, h)
       surface_set_draw_color(255, 255, 255, 255)
       surface.SetMaterial(icon)
-      surface.DrawTexturedRectRotated(w * 0.5, h * 0.5, rotated and h or w, rotated and w or h, rotated and 90 or 0)
+      surface.DrawTexturedRectRotated(w * 0.5, h * 0.5, rotated and h or w, rotated and w or h, rotated ? 90 : 0)
     end
 
     if self.item_data.adjust_icon_panel then
@@ -363,7 +363,7 @@ function PANEL:rebuild()
 
     if !cam_data then
       cam_data = PositionSpawnIcon(entity, entity:GetPos(), true)
-      cam_data.fov = cam_data.fov * 1.1
+      cam_data.fov *= 1.1
     end
 
     local pos, ang, fov = cam_data.origin, cam_data.angles, cam_data.fov
@@ -371,7 +371,7 @@ function PANEL:rebuild()
     local w, h = self:get_item_size()
 
     if !self:is_multislot() and rotated and w != h then
-      fov = fov * (w > h and w / h or h / w)
+      fov *= w > h and w / h or h / w
     end
 
     self.model_panel:SetCamPos(pos)

@@ -403,7 +403,7 @@ function Damage:get_log_viewers()
 
   for _, client in player.Iterator() do
     if client:can('view_damage_logs') then
-      count = count + 1
+      count += 1
       log_viewers[count] = client
     end
   end
@@ -484,27 +484,27 @@ function Damage:log_damage(victim, damage_info, hitgroup)
   local location = hitgroup_names[hitgroup]
 
   if location then
-    message = message..' to the '..location
+    message ..= ' to the '..location
   end
 
   if attacker == victim then
-    message = message..' from themselves'
+    message ..= ' from themselves'
   elseif IsValid(attacker) then
-    message = message..' from '..self:get_log_name(attacker)
+    message ..= ' from '..self:get_log_name(attacker)
   end
 
   local weapon = self:get_weapon_class(attacker, inflictor, victim)
 
   if weapon then
-    message = message..' with '..weapon
+    message ..= ' with '..weapon
   end
 
-  message = message..', leaving them at '..math_max(victim:Health(), 0)..' health'
+  message ..= ', leaving them at '..math_max(victim:Health(), 0)..' health'
 
   local armor = victim:Armor()
 
   if armor > 0 then
-    message = message..' and '..armor..' armor'
+    message ..= ' and '..armor..' armor'
   end
 
   self:write_log(damage_log_color, message..'.', 'player_damage', get_log_id(attacker), get_log_id(victim))
@@ -532,7 +532,7 @@ function Damage:log_kill(victim, inflictor, attacker)
   local weapon = self:get_weapon_class(attacker, inflictor, victim)
 
   if weapon then
-    message = message..' with '..weapon
+    message ..= ' with '..weapon
   end
 
   self:write_log(kill_log_color, message..'.', 'player_death', get_log_id(attacker), get_log_id(victim))

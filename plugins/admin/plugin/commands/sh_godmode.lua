@@ -14,10 +14,10 @@ local function set_godmode(cmd, actor, targets, enabled)
       client:GodDisable()
     end
 
-    client:notify('notification.godmode.'..(enabled and 'enabled' or 'disabled'))
+    client:notify('notification.godmode.'..(enabled ? 'enabled' : 'disabled'))
   end
 
-  cmd:notify_staff('command.godmode.'..(enabled and 'on' or 'off')..'.message', {
+  cmd:notify_staff('command.godmode.'..(enabled ? 'on' : 'off')..'.message', {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets)
   })

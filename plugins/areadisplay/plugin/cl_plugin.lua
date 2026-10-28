@@ -259,7 +259,7 @@ function AreaDisplay:draw(cur_time, scrw, scrh)
       local offset = offsets[display.style] or 0
 
       offsets[display.style] = offset + (style:draw(display, alpha, scrw, scrh, offset) or 0)
-      index = index + 1
+      index += 1
     end
   end
 end

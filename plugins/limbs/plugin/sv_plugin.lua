@@ -163,7 +163,7 @@ function Limbs:heal_all(target, amount)
   local total = 0
 
   for _limb, healed in pairs(change_limbs(target, changes)) do
-    total = total - healed
+    total -= healed
   end
 
   return total

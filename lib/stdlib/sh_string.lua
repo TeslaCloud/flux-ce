@@ -308,7 +308,7 @@ function string.count(str, char)
 
   for i = 1, str:len() do
     if string_sub(str, i, i) == char then
-      hits = hits + 1
+      hits += 1
     end
   end
 
@@ -332,7 +332,7 @@ function string.spelling(str, first_lower, no_period)
 
   if !no_period then
     if end_text != '.' and end_text != '!' and end_text != '?' and end_text != '"' then
-      str = str..'.'
+      str ..= '.'
     end
   end
 
@@ -487,9 +487,7 @@ end
 function string.fmt(format, data)
   data = istable(data) and data or {}
 
-  return string.gsub(format, '{([%w_]+)}', function(hit)
-    return data[hit] or ''
-  end)
+  return string.gsub(format, '{([%w_]+)}', hit -> data[hit] or '')
 end
 
 --- Escapes the control characters (\a, \b, \f, \n, \r, \t and \v) in a string, so that they

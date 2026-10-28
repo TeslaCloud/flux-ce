@@ -28,9 +28,7 @@ ItemEquipable.disabled_inventories = {}
 ItemEquipable:set_action_sound('on_equip', 'items/battery_pickup.wav')
 
 ItemEquipable:add_button('equip', {
-  get_name = function(item_obj)
-    return item_obj:is_equipped() and 'item.option.unequip' or 'item.option.equip'
-  end,
+  get_name = item_obj -> item_obj:is_equipped() ? 'item.option.unequip' : 'item.option.equip',
   icon = 'icon16/user_suit.png',
   callback = 'on_equip'
 })

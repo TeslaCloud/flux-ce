@@ -62,7 +62,7 @@ function Doors:PlayerUse(activator, entity)
         end
 
         self:lock_door(entity, !locked)
-        entity:Fire(locked and 'Open' or 'Close')
+        entity:Fire(locked ? 'Open' : 'Close')
 
         if !locked then
           entity.next_use = cur_time + 2

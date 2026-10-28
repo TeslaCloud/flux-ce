@@ -123,7 +123,7 @@ local function find_wall(actor, data, facing)
   local yaw = trace.HitNormal:Angle().y
 
   if data.wall == 'front' then
-    yaw = yaw + 180
+    yaw += 180
   end
 
   return Angle(0, math.NormalizeAngle(yaw), 0)

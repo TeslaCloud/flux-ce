@@ -23,7 +23,5 @@ ATTRIBUTE.levels = {
 }
 
 ATTRIBUTE.effects = {
-  Stats:percent_effect('ui.effect.fall_damage', 'stats_reflexes_fall', true, function()
-    return Damage != nil
-  end)
+  Stats:percent_effect('ui.effect.fall_damage', 'stats_reflexes_fall', true, || -> Damage != nil)
 }

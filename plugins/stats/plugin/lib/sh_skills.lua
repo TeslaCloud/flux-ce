@@ -161,7 +161,7 @@ if SERVER then
           skill.rank = math_clamp(math.floor(rank), 0, skill_table.max)
         table.insert(character.skills, skill)
 
-        added = added + 1
+        added += 1
       end
     end
 

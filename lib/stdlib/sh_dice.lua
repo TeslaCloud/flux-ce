@@ -46,8 +46,8 @@ local string_format = string.format
 mod 'Dice'
 
 local max_term_dice = 1000
-local max_formula_dice = 10000
-local max_sides = 10000
+local max_formula_dice = 10_000
+local max_sides = 10_000
 local max_explosions = 100
 local max_rerolls = 100
 local max_nesting = 64
@@ -188,7 +188,7 @@ local function tokenize(source)
     local char = string_sub(text, index, index)
 
     if string_find(char, '%s') then
-      index = index + 1
+      index += 1
     else
       local expecting_sides = sides_pending
 
@@ -197,11 +197,11 @@ local function tokenize(source)
       if expecting_sides and char == 'f' then
         push('fudge', 'f', index, index)
         after_dice = true
-        index = index + 1
+        index += 1
       elseif expecting_sides and char == '%' then
         push('percent', 100, index, index)
         after_dice = true
-        index = index + 1
+        index += 1
       elseif is_digit(char) or (char == '.' and is_digit(string_sub(text, index + 1, index + 1))) then
         local number_text = string_match(text, '^%d*%.%d+', index) or string_match(text, '^%d+', index)
         local finish = index + #number_text - 1
@@ -215,7 +215,7 @@ local function tokenize(source)
         index = finish + 1
       elseif after_dice and char == '!' then
         push('explode', '!', index, index)
-        index = index + 1
+        index += 1
       elseif after_dice and is_name_start(char) then
         local name = match_modifier(text, index)
 
@@ -226,13 +226,13 @@ local function tokenize(source)
         end
 
         push('modifier', name, index, index + #name - 1)
-        index = index + #name
+        index += #name
       elseif is_name_start(char) then
         if char == 'd' and starts_dice(tokens[#tokens], text, index) then
           push('dice', 'd', index, index)
           sides_pending = true
           after_dice = false
-          index = index + 1
+          index += 1
         else
           local name = string_match(text, '^[%w_]+', index)
           local finish = index + #name - 1
@@ -261,7 +261,7 @@ local function tokenize(source)
 
         index = close + 1
       elseif char == '(' then
-        depth = depth + 1
+        depth += 1
 
         if expecting_sides then
           sides_parens[#sides_parens + 1] = depth
@@ -269,7 +269,7 @@ local function tokenize(source)
 
         push('op', '(', index, index)
         after_dice = false
-        index = index + 1
+        index += 1
       elseif char == ')' then
         if sides_parens[#sides_parens] == depth then
           sides_parens[#sides_parens] = nil
@@ -278,13 +278,13 @@ local function tokenize(source)
           after_dice = false
         end
 
-        depth = depth - 1
+        depth -= 1
         push('op', ')', index, index)
-        index = index + 1
+        index += 1
       elseif single_characters[char] then
         push('op', char, index, index)
         after_dice = false
-        index = index + 1
+        index += 1
       else
         fail("Unexpected character '"..string_sub(source, index, index).."'", index)
       end
@@ -304,7 +304,7 @@ local function advance(state)
   local token = state.tokens[state.index]
 
   if token.kind != 'eof' then
-    state.index = state.index + 1
+    state.index += 1
   end
 
   return token
@@ -355,7 +355,7 @@ local function parse_call(state, name_token)
   if arity == 0 and #args == 0 then
     fail("Function '"..name_token.text.."' needs at least one argument", name_token.pos)
   elseif arity > 0 and #args != arity then
-    fail("Function '"..name_token.text.."' takes exactly "..arity..' argument'..(arity == 1 and '' or 's'),
+    fail("Function '"..name_token.text.."' takes exactly "..arity..' argument'..(arity == 1 ? '' : 's'),
       name_token.pos)
   end
 
@@ -432,7 +432,7 @@ local function parse_dice(state, count, start)
   elseif token.kind == 'variable' then
     node.sides = { kind = 'variable', name = token.value, pos = token.pos, finish = token.finish }
   elseif is_op(token, '(') then
-    state.index = state.index - 1
+    state.index -= 1
     node.sides = parse_atom(state)
   else
     fail("Expected die sides after '"..operator.text.."', found "..describe(token), token.pos)
@@ -487,7 +487,7 @@ local function parse_dice(state, count, start)
     end
   end
 
-  state.dice = state.dice + ((count and count.kind == 'number') and count.value or 1)
+  state.dice += (count and count.kind == 'number') and count.value or 1
 
   if state.dice > max_formula_dice then
     fail('Too many dice in formula (at most '..max_formula_dice..')', start)
@@ -550,7 +550,7 @@ parse_unary = function(state)
   local token = peek(state)
 
   if is_op(token, '-') then
-    state.depth = state.depth + 1
+    state.depth += 1
 
     if state.depth > max_nesting then
       fail('Formula is nested too deeply', token.pos)
@@ -560,7 +560,7 @@ parse_unary = function(state)
 
     local operand = parse_unary(state)
 
-    state.depth = state.depth - 1
+    state.depth -= 1
 
     return { kind = 'negate', operand = operand, pos = token.pos, finish = operand.finish }
   end
@@ -573,7 +573,7 @@ end
 -- @param min_precedence [Number lowest operator precedence this call may consume]
 -- @return [Table syntax tree node]
 parse_expression = function(state, min_precedence)
-  state.depth = state.depth + 1
+  state.depth += 1
 
   if state.depth > max_nesting then
     fail('Formula is nested too deeply', peek(state).pos)
@@ -604,7 +604,7 @@ parse_expression = function(state, min_precedence)
     }
   end
 
-  state.depth = state.depth - 1
+  state.depth -= 1
 
   return left
 end
@@ -703,7 +703,7 @@ local function roll_die(node, low, high)
 
       while value <= threshold and attempts < max_rerolls do
         value = math_random(low, high)
-        attempts = attempts + 1
+        attempts += 1
       end
     elseif value <= threshold then
       value = math_random(low, high)
@@ -787,7 +787,7 @@ local function roll_term(node, context)
     end
   end
 
-  context.dice = context.dice + count
+  context.dice += count
 
   if context.dice > max_formula_dice then
     fail('Too many dice in formula (at most '..max_formula_dice..')', node.pos)
@@ -816,7 +816,7 @@ local function roll_term(node, context)
     results[#results + 1] = clamp_die(node, value)
 
     while threshold and value >= threshold and explosions < max_explosions do
-      explosions = explosions + 1
+      explosions += 1
       value = roll_die(node, low, high)
       results[#results + 1] = clamp_die(node, value)
     end
@@ -831,7 +831,7 @@ local function roll_term(node, context)
       dropped[#dropped + 1] = value
     else
       kept[#kept + 1] = value
-      total = total + value
+      total += value
     end
   end
 
@@ -952,7 +952,7 @@ local function evaluate_formula(ast, variables)
     natural = 0
 
     for _, roll in ipairs(rolls) do
-      natural = natural + roll.total
+      natural += roll.total
     end
   end
 
@@ -1034,7 +1034,7 @@ local function format_roll(roll)
 
   for _, value in ipairs(roll.results) do
     if (unused_drops[value] or 0) > 0 then
-      unused_drops[value] = unused_drops[value] - 1
+      unused_drops[value] -= 1
       parts[#parts + 1] = '['..format_number(value)..']'
     else
       parts[#parts + 1] = format_number(value)
@@ -1226,7 +1226,7 @@ function Dice.d(sides, count)
   local total = 0
 
   for _ = 1, math_min(count, max_term_dice) do
-    total = total + math_random(1, sides)
+    total += math_random(1, sides)
   end
 
   return total

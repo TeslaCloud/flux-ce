@@ -73,7 +73,7 @@ function SurfaceText:PostDrawOpaqueRenderables(depth, skybox)
           local box_w = w + 64
 
           if style == 6 then
-            box_alpha = box_alpha * math.abs(math.sin(CurTime() * 3))
+            box_alpha *= math.abs(math.sin(CurTime() * 3))
           end
 
           if style == 10 then

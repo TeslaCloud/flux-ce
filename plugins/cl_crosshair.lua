@@ -58,7 +58,7 @@ function PLUGIN:HUDPaint()
       cur_gap = real_gap
     end
 
-    local secondary_draw_color = draw_color:alpha(draw_color != color_white and 255 or 25)
+    local secondary_draw_color = draw_color:alpha(draw_color != color_white ? 255 : 25)
     local gox, goy = Flux.global_ui_offset()
     local center_x, center_y = gox + ScrW() * 0.5, goy + ScrH() * 0.5
     local bar_x, bar_y = center_x - size, center_y - size

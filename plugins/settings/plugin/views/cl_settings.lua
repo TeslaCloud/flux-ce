@@ -126,7 +126,7 @@ function PANEL:rebuild()
     header:SetTextColor(Theme.get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
-    header:DockMargin(margin, index == 1 and 0 or margin * 4, 0, margin)
+    header:DockMargin(margin, index == 1 ? 0 : margin * 4, 0, margin)
 
     for setting_index, setting in ipairs(category.settings) do
       local row = self.scroll_panel:Add('fl_setting_row')

@@ -163,7 +163,7 @@ function Areas.register(id, data)
 
   stored[id] = data
 
-  top = top + 1
+  top += 1
   Areas.top = top
 
   if SERVER then

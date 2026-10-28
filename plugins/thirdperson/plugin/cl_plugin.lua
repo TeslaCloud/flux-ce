@@ -37,7 +37,7 @@ local collision_return_speed = 3
 local min_distance = 10
 
 --- How far the aim trace reaches from the camera.
-local aim_range = 32768
+local aim_range = 32_768
 
 --- How far the camera can look up (negative) and down (positive), in degrees. It stops short
 -- of the vertical so that the direction from the eyes to what the camera looks at keeps a
@@ -55,7 +55,7 @@ local hull_maxs = Vector(4, 4, 4)
 
 --- What stops the camera: solid things except players and NPCs, so that the camera is not
 -- pushed in by people walking behind the character.
-local camera_mask = bit.band(MASK_SOLID, bit.bnot(CONTENTS_MONSTER))
+local camera_mask = MASK_SOLID & ~CONTENTS_MONSTER
 
 --- A next fire further away than this many seconds is the Raise Weapon plugin keeping a
 -- lowered weapon from firing.
@@ -297,7 +297,7 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
   if GetViewEntity() != client then return end
 
   local frame_time = FrameTime()
-  local blend = math.Approach(self.blend, enabled and 1 or 0, frame_time / blend_duration)
+  local blend = math.Approach(self.blend, enabled ? 1 : 0, frame_time / blend_duration)
 
   self.blend = blend
 
@@ -332,7 +332,7 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
   camera_trace.mask = camera_mask
 
   local trace = util.TraceHull(camera_trace)
-  local fraction = trace.StartSolid and 0 or trace.Fraction
+  local fraction = trace.StartSolid ? 0 : trace.Fraction
   local collision = self.collision_fraction
 
   if fraction < collision then
@@ -495,7 +495,7 @@ function ThirdPerson:HUDPaint()
       local alpha = 255 * math.Clamp((label_duration - age) / label_fade, 0, 1)
 
       draw.SimpleTextOutlined(
-        t(label == 'raised' and 'ui.thirdperson.weapon_raised' or 'ui.thirdperson.weapon_lowered'),
+        t(label == 'raised' ? 'ui.thirdperson.weapon_raised' : 'ui.thirdperson.weapon_lowered'),
         Theme.get_font('text_small'),
         center_x,
         center_y + math.scale(24),
@@ -510,7 +510,7 @@ function ThirdPerson:HUDPaint()
 end
 
 local function apply_shoulder(value)
-  ThirdPerson.shoulder = value == 'left' and -1 or 1
+  ThirdPerson.shoulder = value == 'left' ? -1 : 1
 end
 
 --- Registers the client settings of the camera with the Settings plugin:

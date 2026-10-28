@@ -18,9 +18,9 @@ ItemRadio:set_action_sound('on_toggle', 'buttons/button17.wav')
 ItemRadio:set_action_sound('set_frequency', 'buttons/button18.wav')
 
 ItemRadio:add_button('toggle', {
-  get_name = function(item_obj) return item_obj:is_enabled() and 'item.option.disable' or 'item.option.enable' end,
+  get_name = item_obj -> item_obj:is_enabled() ? 'item.option.disable' : 'item.option.enable',
   get_icon =
-    function(item_obj) return item_obj:is_enabled() and 'icon16/lightning_delete.png' or 'icon16/lightning_add.png' end,
+    item_obj -> item_obj:is_enabled() ? 'icon16/lightning_delete.png' : 'icon16/lightning_add.png',
   callback = 'on_toggle'
 })
 
@@ -28,9 +28,7 @@ ItemRadio:add_button('frequency', {
   name = 'item.option.frequency',
   icon = 'icon16/control_equalizer_blue.png',
   callback = 'change_frequency',
-  on_show = function(item_obj)
-    return item_obj:is_enabled()
-  end
+  on_show = item_obj -> item_obj:is_enabled()
 })
 
 --- Checks whether the radio is turned on.

@@ -23,10 +23,10 @@
 
 PLUGIN:set_global('Animations')
 
-local leave_keys = bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT, IN_JUMP)
-local blocked_keys = bit.bor(IN_JUMP, IN_DUCK, IN_ATTACK, IN_ATTACK2)
-local client_blocked_keys = bit.bor(IN_DUCK, IN_ATTACK, IN_ATTACK2)
-local keep_jump_out = bit.bnot(IN_JUMP)
+local leave_keys = IN_FORWARD | IN_BACK | IN_MOVELEFT | IN_MOVERIGHT | IN_JUMP
+local blocked_keys = IN_JUMP | IN_DUCK | IN_ATTACK | IN_ATTACK2
+local client_blocked_keys = IN_DUCK | IN_ATTACK | IN_ATTACK2
+local keep_jump_out = ~IN_JUMP
 local band = bit.band
 
 require_relative 'cl_hooks'

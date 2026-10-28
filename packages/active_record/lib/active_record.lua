@@ -95,7 +95,7 @@ function ActiveRecord.add_to_schema(table_name, column_name, type, definition, o
     query:execute()
   else
     column.id = next_column_id
-    next_column_id = next_column_id + 1
+    next_column_id += 1
 
     local query = ActiveRecord.Database:insert('ar_schema')
       query:insert('table_name', table_name)

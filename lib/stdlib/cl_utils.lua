@@ -37,7 +37,7 @@ do
 
         text_cache = {}
         cache[text] = text_cache
-        cache_size = cache_size + 1
+        cache_size += 1
       end
 
       text_cache[font] = { width, height }
@@ -318,7 +318,7 @@ function util.wrap_text(text, font, width, initial_width)
         line[#line + 1] = ' '
         cur_width = cur_width + word_width + space_width
       else
-        cur_width = cur_width + word_width
+        cur_width += word_width
       end
     elseif word_width > width then
       for i = 1, utf8.len(word) do
@@ -329,7 +329,7 @@ function util.wrap_text(text, font, width, initial_width)
         line[#line + 1] = char
 
         if (char_width + dash_width + space_width) < remain then
-          cur_width = cur_width + char_width
+          cur_width += char_width
         else
           line[#line + 1] = '-'
           output[#output + 1] = table.concat(line)

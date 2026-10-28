@@ -60,7 +60,6 @@ services:
       - settings:/home/steam/flux_server/garrysmod/settings/flux
       # Workshop downloads. They fail when garrysmod/cache is a mount instead.
       - workshop:/home/steam/flux_server/steam_cache
-      - /home/luna/code/gmod-lua-shared/build-docker/lua_shared.so:/home/steam/flux_server/bin/linux64/lua_shared.so
       - /home/luna/code/srcds-rs/target/trixie/release/srcds:/home/steam/flux_server/bin/linux64/srcds
 #      - /home/luna/Downloads/vphysics_jolt_gmod_dedicated_linux64/bin/vphysics.so:/home/steam/flux_server/bin/linux64/vphysics.so
 #      - /home/luna/Downloads/vphysics_jolt_gmod_dedicated_linux64/bin/vphysics_jolt_sse42.so:/home/steam/flux_server/bin/linux64/vphysics_jolt_sse42.so

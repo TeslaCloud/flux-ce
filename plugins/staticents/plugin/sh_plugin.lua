@@ -89,7 +89,7 @@ else
       file.Write(target_dir..'/'..ent_class..'.txt', util.TableToJSON(save_data))
     end
 
-    print('  -> '..(status and 'done!' or 'error!'))
+    print('  -> '..(status ? 'done!' : 'error!'))
 
     if is_player then
       Cable.send(actor, 'flux_persistence_backup', status)

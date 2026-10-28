@@ -90,6 +90,6 @@ function TOOL.BuildCPanel(CPanel)
     Command = 'pictures_fade',
     Type = 'Integer',
     Min = -1024,
-    Max = 10000
+    Max = 10_000
   })
 end

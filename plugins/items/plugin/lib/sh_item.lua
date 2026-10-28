@@ -610,7 +610,7 @@ if SERVER then
       actor.item_requests = 0
     end
 
-    actor.item_requests = actor.item_requests + 1
+    actor.item_requests += 1
 
     if actor.item_requests > request_limit then return end
 

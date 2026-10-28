@@ -541,7 +541,7 @@ DermaScale.replace('DPanelList', 'PerformLayout', function(self)
     self.VBar:SetUp(self:GetTall(), self.pnlCanvas:GetTall())
     y_pos = self.VBar:GetOffset()
 
-    if self.VBar.Enabled then wide = wide - bar_w end
+    if self.VBar.Enabled then wide -= bar_w end
   end
 
   self.pnlCanvas:SetPos(0, y_pos)
@@ -575,7 +575,7 @@ DermaScale.replace('DListView', 'PerformLayout', function(self)
     self.VBar:SetUp(self.VBar:GetTall() - self:GetHeaderHeight(), self.pnlCanvas:GetTall())
     y_pos = self.VBar:GetOffset()
 
-    if self.VBar.Enabled then wide = wide - bar_w end
+    if self.VBar.Enabled then wide -= bar_w end
   end
 
   if self.m_bHideHeaders then
@@ -789,7 +789,7 @@ DermaScale.replace('DTab', 'ApplySchemeSettings', function(self)
   local extra_inset = s(10)
 
   if self.Image then
-    extra_inset = extra_inset + self.Image:GetWide()
+    extra_inset += self.Image:GetWide()
   end
 
   self:SetTextInset(extra_inset, s(4))
@@ -970,7 +970,7 @@ DermaScale.after('SpawnMenu', 'Init', function(panel)
   local divider = panel.HorizontalDivider
 
   divider:SetDividerWidth(s(6))
-  divider:SetRightMin(s(ScrW() >= 1024 and 460 or 300))
+  divider:SetRightMin(s(ScrW() >= 1024 ? 460 : 300))
 
   panel.ToolToggle:SetSize(s(16), s(16))
 end)
@@ -987,7 +987,7 @@ DermaScale.after('ToolPanel', 'Init', function(panel)
 
   divider:SetLeftWidth(s(130))
   divider:SetLeftMin(s(130))
-  divider:SetRightMin(s(ScrW() >= 1024 and 256 or 200))
+  divider:SetRightMin(s(ScrW() >= 1024 ? 256 : 200))
   divider:SetDividerWidth(s(6))
 
   if IsValid(panel.SearchBar) then
@@ -1013,8 +1013,8 @@ DermaScale.after('SpawnmenuContentPanel', 'Init', function(panel)
   local large = ScrW() >= 1024
 
   divider:SetLeftWidth(s(192))
-  divider:SetLeftMin(s(large and 192 or 100))
-  divider:SetRightMin(s(large and 400 or 100))
+  divider:SetLeftMin(s(large ? 192 : 100))
+  divider:SetRightMin(s(large ? 400 : 100))
   divider:SetDividerWidth(s(6))
 end)
 
@@ -1294,8 +1294,8 @@ DermaScale.replace('ContextBase', 'PerformLayout', function(self)
   self.Label:SetPos(s(5), y)
   self.Label:SetWide(self:GetWide())
 
-  y = y + self.Label:GetTall()
-  y = y + s(5)
+  y += self.Label:GetTall()
+  y += s(5)
 
   return y
 end)
@@ -1325,7 +1325,7 @@ DermaScale.replace('MatSelect', 'PerformLayout', function(self)
 
   local max_w = self:GetWide()
 
-  if self.List.VBar and self.List.VBar.Enabled then max_w = max_w - self.List.VBar:GetWide() end
+  if self.List.VBar and self.List.VBar.Enabled then max_w -= self.List.VBar:GetWide() end
 
   local h = self.ItemHeight
 
@@ -1356,7 +1356,7 @@ DermaScale.replace('PropSelect', 'PerformLayout', function(self, w, h)
     self.List:SetPos(0, y)
     self.List:SetSize(self:GetWide(), height)
 
-    y = y + height
+    y += height
 
     self:SetTall(y + s(5))
   else
@@ -1467,7 +1467,7 @@ DermaScale.replace_global('Derma_Query', function(text, title, ...)
 
     button_panel:SetWide(x)
 
-    num_options = num_options + 1
+    num_options += 1
   end
 
   local w, h = label:GetSize()

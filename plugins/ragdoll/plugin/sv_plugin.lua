@@ -116,7 +116,7 @@ local function stand_up(target, data, ragdoll, reset)
     target:SetPos(target:GetPos() + Vector(0, 0, 16))
 
     if target:stuck() then
-      target:unstuck(IsValid(ragdoll) and { ragdoll, target } or target)
+      target:unstuck(IsValid(ragdoll) ? { ragdoll, target } : target)
     end
   end
 end
@@ -185,7 +185,7 @@ end
 -- @return [Boolean true if the action has started]
 local function start_getup_action(target, data, duration)
   return Flux.TimedAction:start(target, 'getup', duration, {
-    text = data.state == RAGDOLL_KNOCKEDOUT and 'ui.hud.bar_text.wakeup' or 'ui.hud.bar_text.getup',
+    text = data.state == RAGDOLL_KNOCKEDOUT ? 'ui.hud.bar_text.wakeup' : 'ui.hud.bar_text.getup',
     force = true,
     callback = function(actor, success)
       if success and IsValid(actor) and actor.ragdoll_data == data and data.getup_end then
@@ -256,7 +256,7 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
 
   if IsValid(existing) then return existing end
 
-  fallen = fallen and true or false
+  fallen = fallen ? true : false
 
   local in_vehicle = fallen and self:InVehicle()
 
@@ -290,7 +290,7 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
   local velocity = self:GetVelocity()
 
   if force and force:LengthSqr() > max_force_sqr then
-    force = force * (max_force / force:Length())
+    force *= max_force / force:Length()
   end
 
   for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do

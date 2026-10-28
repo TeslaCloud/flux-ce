@@ -153,7 +153,7 @@ function DisplayTyping:outline(text)
     return head..tail
   end
 
-  return head..(body:find('^%s') and ' ' or '')..self.placeholder..tail
+  return head..(body:find('^%s') ? ' ' : '')..self.placeholder..tail
 end
 
 DisplayTyping:register_kind('typing', {

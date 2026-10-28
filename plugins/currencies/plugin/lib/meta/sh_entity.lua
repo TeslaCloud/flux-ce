@@ -250,7 +250,7 @@ do
       local pos = trace.HitPos
       local eye_pos = self:EyePos()
 
-      if eye_pos:DistToSqr(pos) > 14400 then
+      if eye_pos:DistToSqr(pos) > 14_400 then
         pos = eye_pos + trace.Normal * 119
       end
 

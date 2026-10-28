@@ -34,7 +34,7 @@ local math_min = math.min
 local math_round = math.Round
 local os_time = os.time
 
-local seconds_per_day = 86400
+local seconds_per_day = 86_400
 
 if !Levels then
   PLUGIN:set_global('Levels')
@@ -150,7 +150,7 @@ function Levels.get_seconds_for_server_level(level)
   local ramp_level = get_whole_config('levels_server_ramp_level', 4, 1)
 
   if level >= ramp_level then
-    days = days + (level - ramp_level + 1) * get_number_config('levels_server_ramp_days', 1, 0)
+    days += (level - ramp_level + 1) * get_number_config('levels_server_ramp_days', 1, 0)
   end
 
   return days * seconds_per_day
@@ -166,7 +166,7 @@ function Levels.get_seconds_to_server_level(level)
   local total = 0
 
   for i = 0, level do
-    total = total + Levels.get_seconds_for_server_level(i)
+    total += Levels.get_seconds_for_server_level(i)
   end
 
   return total
@@ -195,8 +195,8 @@ function Levels.get_server_level_at(elapsed_seconds)
 
     if elapsed < step then break end
 
-    elapsed = elapsed - step
-    level = level + 1
+    elapsed -= step
+    level += 1
   end
 
   return level
@@ -306,8 +306,8 @@ local function advance(level, experience, cap)
 
     if needed <= 0 or experience < needed then break end
 
-    experience = experience - needed
-    level = level + 1
+    experience -= needed
+    level += 1
   end
 
   return level, experience
@@ -399,7 +399,7 @@ if SERVER then
     if level != level or experience != experience then return false end
 
     level = math_clamp(math_round(level), 1, max_level)
-    experience = level >= max_level and 0 or math_max(math_floor(experience), 0)
+    experience = level >= max_level ? 0 : math_max(math_floor(experience), 0)
 
     local old_level = get_stored_level(character)
     local old_experience = get_stored_experience(character)
@@ -730,8 +730,8 @@ do
       local level, experience = advance(old_level, self:get_experience() + amount, cap)
 
       while experience < 0 and level > 1 do
-        level = level - 1
-        experience = experience + Levels.get_experience_for_level(level)
+        level -= 1
+        experience += Levels.get_experience_for_level(level)
       end
 
       if !Levels.update(self, level, experience, reason) then return false end
@@ -809,14 +809,14 @@ do
     end
 
     local skill_handlers = {
-      find = function(id) return Skills.find(id) end,
-      get = function(target, id) return target:get_skill(id) end,
+      find = id -> Skills.find(id),
+      get = |target, id| -> target:get_skill(id),
       raise = function(target, id) target:increase_skill(id, 1) end
     }
 
     local attribute_handlers = {
-      find = function(id) return Attributes.find(id) end,
-      get = function(target, id) return target:get_attribute(id, true) end,
+      find = id -> Attributes.find(id),
+      get = |target, id| -> target:get_attribute(id, true),
       raise = function(target, id) target:increase_attribute(id, 1) end
     }
 

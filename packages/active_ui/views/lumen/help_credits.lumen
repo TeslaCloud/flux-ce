@@ -47,12 +47,10 @@ return function(_props)
   return <view style={{ gap = 8 }}>
     {Lumen.map(sections, function(section, index)
       return <view key={index} style={{ gap = 4 }}>
-        <text style={{ font = 'menu_large', margin_top = index > 1 and 8 or 0 }}>
+        <text style={{ font = 'menu_large', margin_top = index > 1 ? 8 : 0 }}>
           {section.title or t'ui.help.credits.title'}
         </text>
-        {Lumen.map(section.entries, function(entry)
-          return <Entry key={entry.name} entry={entry} />
-        end)}
+        {Lumen.map(section.entries, entry -> <Entry key={entry.name} entry={entry} />)}
       </view>
     end)}
   </view>

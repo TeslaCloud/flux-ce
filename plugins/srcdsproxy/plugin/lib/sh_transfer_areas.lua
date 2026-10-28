@@ -44,7 +44,7 @@ function SrcdsProxy:new_transfer_area_id(backend)
   local count = 1
 
   while stored[base..'_'..count] != nil do
-    count = count + 1
+    count += 1
   end
 
   return base..'_'..count

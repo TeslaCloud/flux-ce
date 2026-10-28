@@ -650,7 +650,7 @@ if SERVER then
 
     local pending = pending_set()
 
-    disabled = disabled and true or false
+    disabled = disabled ? true : false
 
     if (pending[id] == true) == disabled then
       return true
@@ -713,9 +713,9 @@ else
   Cable.receive('fl_plugin_set_disabled', function(id, disabled)
     if !isstring(id) then return end
 
-    pending_set()[id] = disabled and true or nil
+    pending_set()[id] = disabled ? true : nil
 
-    hook.Run('OnPluginStateChanged', id, disabled and true or false)
+    hook.Run('OnPluginStateChanged', id, disabled ? true : false)
   end)
 
   Cable.receive('fl_plugin_disabled_list', function(list)

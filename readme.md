@@ -55,6 +55,7 @@ Things to keep in mind:
 * Flux is copied into the image from your checkout, including any `*.local.yml` and `*.local.lua` files. Run `docker build` again after changing the code or the configuration, then create a new container.
 * The dependencies and the schema are cloned during the build and then cached. Add `--no-cache-filter deps,schema` to `docker build` to pull in their latest versions without downloading the server again.
 * To use a schema other than HL2RP, build with `--build-arg SCHEMA_REPO=https://github.com/you/your_schema.git` and pass the matching `+gamemode`.
+* The image replaces the server's Lua library, `bin/linux64/lua_shared.so`, with Flux's build of it from https://data.nighty.cloud/gmod/lua_shared.so, and so does the development image below. Build with `--build-arg LUA_SHARED_URL=` to keep the stock library, or with `--no-cache-filter lua_shared` to download its newest version.
 * SQLite, the default database, needs no setup. To use MySQL or PostgreSQL, point `config/database.local.yml` at a database server reachable from the container, see [Database setup](#database-setup).
 
 ## Docker (development)

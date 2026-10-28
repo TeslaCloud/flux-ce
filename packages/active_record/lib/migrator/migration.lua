@@ -102,7 +102,7 @@ function ActiveRecord.Migration:migrate(direction)
   local reverting = direction == 'down'
 
   self._reverting = reverting
-  self:announce(reverting and 'reverting' or 'migrating')
+  self:announce(reverting ? 'reverting' : 'migrating')
 
   local start = os.clock()
 
@@ -117,7 +117,7 @@ function ActiveRecord.Migration:migrate(direction)
     error(exception, 0)
   end
 
-  self:announce((reverting and 'reverted' or 'migrated')..' ('..math.Round(os.clock() - start, 4)..'s)')
+  self:announce((reverting ? 'reverted' : 'migrated')..' ('..math.Round(os.clock() - start, 4)..'s)')
 
   return self
 end
@@ -227,7 +227,7 @@ end
 function ActiveRecord.Migration:say(message, subitem)
   if !self:is_verbose() then return end
 
-  print((subitem and '   -> ' or '-- ')..message)
+  print((subitem ? '   -> ' : '-- ')..message)
 end
 
 --- Prints a message, runs a function and prints the time it took.

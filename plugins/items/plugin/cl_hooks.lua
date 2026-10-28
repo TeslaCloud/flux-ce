@@ -156,11 +156,11 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
     local x, y = gui.MouseX(), gui.MouseY()
 
     if x + item_menu:GetWide() > ScrW() then
-      x = x - item_menu:GetWide()
+      x -= item_menu:GetWide()
     end
 
     if y + item_menu:GetTall() > ScrH() then
-      y = y - item_menu:GetTall()
+      y -= item_menu:GetTall()
     end
 
     item_menu:SetPos(x, y)

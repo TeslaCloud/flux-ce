@@ -14,3 +14,18 @@ Lint/UncheckedEntityInCallback:
   EntityNames: ['actor', 'ply', 'player', 'pl', 'client', 'ent', 'entity', 'target', 'victim',
                 'attacker', 'inflictor', 'owner', 'weapon', 'wep', 'npc', 'vehicle', 'ragdoll',
                 'prop', 'panel']
+
+Style/BitOperators:
+  Enabled: true
+
+Style/CompoundAssignment:
+  Enabled: true
+
+Style/NumericSeparators:
+  Enabled: true
+
+Style/ShortFunction:
+  Enabled: true
+
+Style/TernaryOperator:
+  Enabled: true

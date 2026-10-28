@@ -153,13 +153,9 @@ function Stats:percent_effect(text, key, inverse, is_available)
     return math_round((self:get_effect_scale(level, key, effect.inverse) - 1) * 100, 1)
   end
 
-  effect.get_value = function(level)
-    return self:format_change(effect.get_change(level), '%')
-  end
+  effect.get_value = level -> self:format_change(effect.get_change(level), '%')
 
-  effect.get_color = function(level)
-    return self:get_change_color(effect.get_change(level), effect.inverse)
-  end
+  effect.get_color = level -> self:get_change_color(effect.get_change(level), effect.inverse)
 
   return effect
 end
@@ -178,13 +174,9 @@ function Stats:distance_effect(text, key)
     inverse = false
   }
 
-  effect.is_active = function()
-    return (tonumber(config_get(key)) or 0) != 0
-  end
+  effect.is_active = || -> (tonumber(config_get(key)) or 0) != 0
 
-  effect.get_change = function(level)
-    return math_round((tonumber(level) or 0) * (tonumber(config_get(key)) or 0), 1)
-  end
+  effect.get_change = level -> math_round((tonumber(level) or 0) * (tonumber(config_get(key)) or 0), 1)
 
   effect.get_value = function(level)
     local unit = t'ui.unit.m'
@@ -192,9 +184,7 @@ function Stats:distance_effect(text, key)
     return self:format_change(effect.get_change(level), unit)
   end
 
-  effect.get_color = function(level)
-    return self:get_change_color(effect.get_change(level))
-  end
+  effect.get_color = level -> self:get_change_color(effect.get_change(level))
 
   return effect
 end

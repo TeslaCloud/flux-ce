@@ -85,5 +85,5 @@ require_relative 'sv_hooks'
 --- Checks whether dice damage is turned on, through the 'd20_enabled' config.
 -- @return [Boolean]
 function D20:is_enabled()
-  return Config.get('d20_enabled', true) and true or false
+  return Config.get('d20_enabled', true) ? true : false
 end

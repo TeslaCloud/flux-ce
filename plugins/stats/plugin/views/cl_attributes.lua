@@ -33,7 +33,7 @@ end
 local function format_number(value, signed)
   value = math.round(tonumber(value) or 0, 2)
 
-  return (signed and value > 0 and '+' or '')..tostring(value)
+  return (signed and value > 0 ? '+' : '')..tostring(value)
 end
 
 local function active_boosts(boosts)
@@ -126,7 +126,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
-  local padding = math_scale(self.snapshot and 0 or 12)
+  local padding = math_scale(self.snapshot ? 0 : 12)
 
   self.scroll_panel:SetPos(padding, padding)
   self.scroll_panel:SetSize(w - padding * 2, h - padding * 2)
@@ -211,7 +211,7 @@ function PANEL:get_sections()
         local name = translate('ui.attributes.attributes')
 
         if category != default_category then
-          name = name..' - '..translate(category)
+          name ..= ' - '..translate(category)
         end
 
         section = { name = name, attributes = {}, skills = {} }
@@ -257,9 +257,7 @@ function PANEL:get_sections()
     end
   end
 
-  table.sort(attribute_sections, function(a, b)
-    return a.name < b.name
-  end)
+  table.sort(attribute_sections, |a, b| -> a.name < b.name)
 
   table.sort(skill_sections, function(a, b)
     if a.stat_name != b.stat_name then
@@ -301,7 +299,7 @@ function PANEL:get_listed(sections)
     for _, attribute_table in ipairs(section.attributes) do
       local detailed = has_details(self:get_data(attribute_table.attribute_id))
 
-      ids[#ids + 1] = tostring(attribute_table.attribute_id)..(detailed and '+' or '')
+      ids[#ids + 1] = tostring(attribute_table.attribute_id)..(detailed ? '+' : '')
     end
 
     for _, skill_table in ipairs(section.skills) do
@@ -342,7 +340,7 @@ function PANEL:rebuild()
     header:SetTextColor(get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
-    header:DockMargin(margin, index == 1 and 0 or margin * 4, 0, margin)
+    header:DockMargin(margin, index == 1 ? 0 : margin * 4, 0, margin)
 
     for _, attribute_table in ipairs(section.attributes) do
       local row = self.scroll_panel:Add('fl_attribute_row')
@@ -596,7 +594,7 @@ end
 --- Returns the height the row needs: taller if it has a line of details.
 -- @return [Number]
 function PANEL:get_row_height()
-  return math_scale(self.detailed and 82 or 58)
+  return math_scale(self.detailed ? 82 : 58)
 end
 
 --- Builds the tooltip of the row: the description of the attribute or the skill, the
@@ -668,7 +666,7 @@ function PANEL:update_skill()
   self.name_text = translate(skill_table.name)
 
   if skill_table.hidden then
-    self.name_text = self.name_text..' '..translate('ui.attributes.hidden')
+    self.name_text ..= ' '..translate('ui.attributes.hidden')
   end
 
   if rank_name then
@@ -718,7 +716,7 @@ function PANEL:update_attribute()
   self.name_text = translate(attribute_table.name)
 
   if attribute_table.hidden then
-    self.name_text = self.name_text..' '..translate('ui.attributes.hidden')
+    self.name_text ..= ' '..translate('ui.attributes.hidden')
   end
 
   if level_name then

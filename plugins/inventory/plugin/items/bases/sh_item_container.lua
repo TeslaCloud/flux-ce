@@ -84,7 +84,7 @@ function ItemContainer:can_contain(item_obj)
     local parent = Item.find_instance_by_id(parent_id)
 
     parent_id = parent and parent.parent_id
-    depth = depth + 1
+    depth += 1
   end
 end
 

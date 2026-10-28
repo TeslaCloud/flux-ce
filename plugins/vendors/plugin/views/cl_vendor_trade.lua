@@ -74,7 +74,7 @@ function PANEL:Paint(w, h)
     0,
     w,
     h,
-    get_color(hovered and 'main_light' or 'surface_raised')
+    get_color(hovered ? 'main_light' : 'surface_raised')
   )
   simple_text(self.price, name_font, price_x, h * 0.5 - price_h * 0.5, get_color('accent_light'))
 

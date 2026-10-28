@@ -66,7 +66,7 @@ end
 -- @return [Number multiplier of the talk radius: 1 for regular speech, 0.6 to 0.2 for
 --   whispers and 1.6 to 2.4 for yells]
 function RPCommands:get_volume_range(volume)
-  return volume == 0 and 1 or (volume < 0 and (0.8 + volume * 0.2) or (1.2 + volume * 0.4))
+  return volume == 0 ? 1 : (volume < 0 and (0.8 + volume * 0.2) or (1.2 + volume * 0.4))
 end
 
 --- Determines how loud a phrase is from its leading parentheses or trailing exclamation marks.
@@ -79,7 +79,7 @@ function RPCommands:get_phrase_volume(text)
     local count = text:match('^([(]+)'):len()
     local end_count = (text:match('([)]+)$') or ''):len()
 
-    volume = volume - count
+    volume -= count
 
     text = text:sub(count + 1, -end_count - 1)
   elseif text:end_with('!!') then

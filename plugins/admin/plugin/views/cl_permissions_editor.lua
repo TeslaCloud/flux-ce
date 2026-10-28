@@ -169,10 +169,10 @@ function PANEL:update_decision()
     local layer
 
     allowed, layer = Bolt:get_permission_layer(target, self:get_permission().id)
-    text = t(allowed and 'ui.admin.decided.allowed' or 'ui.admin.decided.denied')
+    text = t(allowed ? 'ui.admin.decided.allowed' : 'ui.admin.decided.denied')
 
     if layer then
-      text = text..' · '..t('ui.admin.decided.'..layer)
+      text ..= ' · '..t('ui.admin.decided.'..layer)
     end
   end
 
@@ -180,7 +180,7 @@ function PANEL:update_decision()
 
   self.decision_text = text
   self.decision:SetText(text)
-  self.decision:SetTextColor(Theme.get_color(allowed and 'success' or 'danger'))
+  self.decision:SetTextColor(Theme.get_color(allowed ? 'success' : 'danger'))
 end
 
 --- Lays the row out for its current size: the title, a column for each button and the
@@ -304,7 +304,7 @@ end
 -- @param expires [Number unix timestamp at which it expires, 0 to clear the mark]
 function PANEL:set_temporary(perm, expires)
   local button = self:get_button(perm)
-  button.is_temp = expires != 0 and true or nil
+  button.is_temp = expires != 0 ? true : nil
 
   button:SetTooltip(expires != 0 and t'ui.admin.expires'..' '..Flux.Lang:nice_time(expires - os.time()) or false)
 

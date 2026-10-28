@@ -6,9 +6,7 @@ ClientSettings:register_type('boolean', {
   --- Returns the default of a boolean setting that does not define one.
   -- @param _setting [Map setting definition]
   -- @return [Boolean false]
-  get_default = function(_setting)
-    return false
-  end,
+  get_default = _setting -> false,
   --- Accepts booleans only.
   -- @param _setting [Map setting definition]
   -- @param value [Any value to check]
@@ -28,14 +26,14 @@ ClientSettings:register_type('boolean', {
     local button = vgui.Create('fl_button', parent)
     button.value = value
     button:SetDrawBackground(false)
-    button:set_icon(value and 'fa-toggle-on' or 'fa-toggle-off')
+    button:set_icon(value ? 'fa-toggle-on' : 'fa-toggle-off')
     button:set_icon_size(math.scale(24))
     button:set_text_color(value and Theme.get_color('accent_light') or nil)
     button:set_centered(true)
     button.DoClick = function(btn)
       btn.value = !btn.value
 
-      btn:set_icon(btn.value and 'fa-toggle-on' or 'fa-toggle-off')
+      btn:set_icon(btn.value ? 'fa-toggle-on' : 'fa-toggle-off')
       btn:set_text_color(btn.value and Theme.get_color('accent_light') or nil)
 
       on_change(btn.value)
@@ -62,9 +60,7 @@ ClientSettings:register_type('number', {
   --- Returns the default of a number setting that does not define one: its minimum.
   -- @param setting [Map setting definition]
   -- @return [Number]
-  get_default = function(setting)
-    return setting.min
-  end,
+  get_default = setting -> setting.min,
   --- Accepts numbers, clamped to the range of the setting and rounded to its decimals.
   -- @param setting [Map setting definition]
   -- @param value [Any value to check]
@@ -135,9 +131,7 @@ ClientSettings:register_type('choice', {
   --- Returns the default of a choice setting that does not define one: its first choice.
   -- @param setting [Map setting definition]
   -- @return [Any value of the first choice]
-  get_default = function(setting)
-    return setting.choices[1].value
-  end,
+  get_default = setting -> setting.choices[1].value,
   --- Accepts the values of the choices of the setting only.
   -- @param setting [Map setting definition]
   -- @param value [Any value to check]
@@ -187,9 +181,7 @@ ClientSettings:register_type('string', {
   --- Returns the default of a string setting that does not define one.
   -- @param _setting [Map setting definition]
   -- @return [String an empty string]
-  get_default = function(_setting)
-    return ''
-  end,
+  get_default = _setting -> '',
   --- Accepts strings of valid UTF-8 that are not longer than the setting allows.
   -- @param setting [Map setting definition]
   -- @param value [Any value to check]

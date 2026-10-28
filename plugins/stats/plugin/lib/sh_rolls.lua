@@ -238,7 +238,7 @@ do
     local modifier = Stats:get_proficiency(self, skill_id)
 
     if isstring(skill.attribute) then
-      modifier = modifier + self:get_attribute_modifier(skill.attribute)
+      modifier += self:get_attribute_modifier(skill.attribute)
     end
 
     return modifier

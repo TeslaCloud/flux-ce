@@ -254,7 +254,7 @@ function GM:GetFallDamage(actor, speed)
   if fall_damage then return fall_damage end
 
   if speed < 660 then
-    speed = speed - 250
+    speed -= 250
   end
 
   return 100 * speed / 850 * 0.75
@@ -627,7 +627,7 @@ do
 
   local write_client_file = Flux.write_client_file
 
-  local chunk_size = 100000
+  local chunk_size = 100_000
 
   --- Writes a table for the client, split over as many files as it takes. The pieces are put
   -- back together by Flux.receive_chunk, 'assign' is the code that runs once 'data' is whole.

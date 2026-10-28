@@ -133,7 +133,7 @@ function Chatbox.add_text(listeners, ...)
       else
         local last = #pieces
 
-        pieces[last] = pieces[last]..piece
+        pieces[last] ..= piece
       end
 
       if index == 1 then
@@ -196,7 +196,7 @@ function Chatbox.add_text(listeners, ...)
     if Chatbox.can_hear(listener, data) then
       Cable.send(listener, 'fl_chat_message_add', data)
 
-      receiver_count = receiver_count + 1
+      receiver_count += 1
       receivers[receiver_count] = listener
     end
   end
@@ -434,7 +434,7 @@ Cable.receive('fl_chat_text_add', function(actor, ...)
     actor.fl_chat_relay_count = 0
   end
 
-  actor.fl_chat_relay_count = actor.fl_chat_relay_count + 1
+  actor.fl_chat_relay_count += 1
 
   if actor.fl_chat_relay_count > Chatbox.relay_limit then return end
 

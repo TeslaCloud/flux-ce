@@ -28,7 +28,7 @@ function CMD:on_run(actor, targets, destination)
   local goal = istable(found) and found[1]
 
   if !IsValid(goal) then
-    local phrase = kind == 'ambiguous' and 'error.command.player_ambiguous' or 'error.command.player_invalid'
+    local phrase = kind == 'ambiguous' ? 'error.command.player_ambiguous' : 'error.command.player_invalid'
 
     Flux.Player:notify(actor, phrase, { player = destination })
 

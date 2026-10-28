@@ -23,7 +23,7 @@ function PANEL:Init()
   self.horizontal_scroll.OnMouseWheeled = function(pnl, dlta)
     if !input.IsKeyDown(KEY_LSHIFT) then return false end
 
-    pnl.OffsetX = pnl.OffsetX + dlta * -30
+    pnl.OffsetX += dlta * -30
     pnl:InvalidateLayout(true)
 
     return true

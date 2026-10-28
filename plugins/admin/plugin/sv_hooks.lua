@@ -341,7 +341,7 @@ function Bolt:PlayerPermissionChanged(target, perm_id, _value)
   if perm_id != 'toolgun' and perm_id != 'physgun' then return end
   if !target:Alive() then return end
 
-  local weapon_class = perm_id == 'toolgun' and 'gmod_tool' or 'weapon_physgun'
+  local weapon_class = perm_id == 'toolgun' ? 'gmod_tool' : 'weapon_physgun'
 
   if target:can(perm_id) then
     target:Give(weapon_class)

@@ -247,7 +247,7 @@ function PANEL:on_open(parent)
       else
         surface.PlaySound('buttons/blip1.wav')
 
-        self.points = self.points - diff
+        self.points -= diff
       end
     end
 
@@ -289,7 +289,7 @@ function PANEL:on_open(parent)
         local number = stat_line.counter:get_value()
 
         if number > stat_line.attribute_table.min then
-          self.points = self.points + (number - stat_line.attribute_table.min)
+          self.points += number - stat_line.attribute_table.min
           stat_line.counter:set_value(stat_line.attribute_table.min)
         end
       end
@@ -299,10 +299,10 @@ function PANEL:on_open(parent)
         local number = stat.counter:get_value()
 
         if number < Stats:get_creation_max(stat.attribute_table) then
-          number = number + 1
+          number += 1
           stat.counter:set_value(number)
 
-          self.points = self.points - 1
+          self.points -= 1
         end
       end
 
@@ -325,7 +325,7 @@ function PANEL:on_open(parent)
       stat_line.counter:set_value(level)
     end
 
-    spent = spent + stat_line.counter:get_value()
+    spent += stat_line.counter:get_value()
   end
 
   self.points = self.start_points - spent
@@ -352,7 +352,7 @@ function PANEL:on_validate()
   local sum = 0
 
   for _, stat_line in pairs(self.stats) do
-    sum = sum + stat_line.counter:get_value()
+    sum += stat_line.counter:get_value()
   end
 
   if self.points < 0 or sum > self.start_points then

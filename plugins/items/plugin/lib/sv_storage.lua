@@ -65,7 +65,7 @@ local tonumber = tonumber
 local block_size = 1000
 local save_interval = 5
 local chunk_size = 200
-local max_serialized_length = 65535
+local max_serialized_length = 65_535
 local max_retries = 3
 local removed_marker = { removed_default = true }
 
@@ -364,7 +364,7 @@ function Item.get_outermost(item_obj)
     if !parent then break end
 
     item_obj = parent
-    depth = depth + 1
+    depth += 1
   end
 
   return item_obj, depth
@@ -429,7 +429,7 @@ local function snapshot(record)
   for index, column in ipairs(columns) do
     local value = record[column]
 
-    parts[index] = value == nil and '\0' or tostring(value)
+    parts[index] = value == nil ? '\0' : tostring(value)
   end
 
   return table.concat(parts, '\1')
@@ -554,7 +554,7 @@ local function walk_tree(condition, values, take, done)
       select_rows('parent_id IN ('..placeholders(#part)..')', part, function(rows)
         table.Add(next_ids, take(rows))
 
-        pending = pending - 1
+        pending -= 1
 
         if pending == 0 then
           load_level(next_ids)
@@ -769,7 +769,7 @@ local function write_entry(entry, now, on_success, on_error)
 
   query.without_id = true
   query:callback(function(...)
-    log_query(entry.insert and 'Create' or 'Update')(...)
+    log_query(entry.insert ? 'Create' : 'Update')(...)
 
     if on_success then on_success() end
   end)
@@ -791,7 +791,7 @@ end
 local function written(entry)
   local item_obj = entry.item
 
-  item_obj.writes_in_flight = item_obj.writes_in_flight - 1
+  item_obj.writes_in_flight -= 1
   item_obj.stored = entry.state
   item_obj.solo_save = nil
 
@@ -811,7 +811,7 @@ end
 local function not_written(entry, culprit, failures)
   local item_obj = entry.item
 
-  item_obj.writes_in_flight = item_obj.writes_in_flight - 1
+  item_obj.writes_in_flight -= 1
   item_obj.queued = item_obj.stored
   item_obj.insert_queued = item_obj.persisted
 
@@ -847,10 +847,10 @@ local function write_batch(entries, deleted_ids, failures)
     entry.item.writes_in_flight = (entry.item.writes_in_flight or 0) + 1
   end
 
-  writes_pending = writes_pending + 1
+  writes_pending += 1
 
   local function finish(committed)
-    writes_pending = writes_pending - 1
+    writes_pending -= 1
 
     local aborted = adapter:is_postgres() and (first_failed != nil or deletes_failed)
 
@@ -904,13 +904,13 @@ end
 -- @param failures [List<Item> collects the instances that could not be written]
 local function write_solo(entry, failures)
   entry.item.writes_in_flight = (entry.item.writes_in_flight or 0) + 1
-  writes_pending = writes_pending + 1
+  writes_pending += 1
 
   write_entry(entry, to_datetime(os.time()), function()
-    writes_pending = writes_pending - 1
+    writes_pending -= 1
     written(entry)
   end, function()
-    writes_pending = writes_pending - 1
+    writes_pending -= 1
     not_written(entry, true, failures)
   end)
 end
@@ -928,13 +928,13 @@ function Item.save(items, sync)
   if !storage_ready() then return {} end
 
   if sync then
-    local drained = ActiveRecord.adapter:wait_until(function() return writes_pending == 0 end)
+    local drained = ActiveRecord.adapter:wait_until(|| -> writes_pending == 0)
 
     if !drained then
       ErrorNoHalt('Earlier item writes are still running, the items are written anyway.\n')
     end
 
-    return with_sync(function() return Item.save(items) end) or {}
+    return with_sync(|| -> Item.save(items)) or {}
   end
 
   local candidates = {}

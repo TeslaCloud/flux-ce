@@ -59,8 +59,8 @@ local month_ids = {
 local weekday_ids = { 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' }
 
 GameTime.clock_key = 'gametime'
-GameTime.min_timestamp = -62135596800
-GameTime.max_timestamp = 253402300799
+GameTime.min_timestamp = -62_135_596_800
+GameTime.max_timestamp = 253_402_300_799
 
 --- Converts a date of the game calendar to the number of days between it and 1 January 1970.
 -- @param year [Number year]
@@ -69,7 +69,7 @@ GameTime.max_timestamp = 253402300799
 -- @return [Number amount of days, negative for the dates before 1970]
 local function days_from_date(year, month, day)
   if month <= 2 then
-    year = year - 1
+    year -= 1
   end
 
   local era = floor(year / 400)
@@ -77,19 +77,19 @@ local function days_from_date(year, month, day)
   local day_of_year = floor((153 * (month > 2 and month - 3 or month + 9) + 2) / 5) + day - 1
   local day_of_era = year_of_era * 365 + floor(year_of_era * 0.25) - floor(year_of_era / 100) + day_of_year
 
-  return era * 146097 + day_of_era - 719468
+  return era * 146_097 + day_of_era - 719_468
 end
 
 --- Converts a number of days since 1 January 1970 to a date of the game calendar.
 -- @param days [Number whole amount of days, negative for the dates before 1970]
 -- @return [Number year, Number month from 1 to 12, Number day of the month]
 local function date_from_days(days)
-  days = days + 719468
+  days += 719_468
 
-  local era = floor(days / 146097)
-  local day_of_era = days - era * 146097
+  local era = floor(days / 146_097)
+  local day_of_era = days - era * 146_097
   local year_of_era = floor(
-    (day_of_era - floor(day_of_era / 1460) + floor(day_of_era / 36524) - floor(day_of_era / 146096)) / 365
+    (day_of_era - floor(day_of_era / 1460) + floor(day_of_era / 36_524) - floor(day_of_era / 146_096)) / 365
   )
   local day_of_year = day_of_era - (365 * year_of_era + floor(year_of_era * 0.25) - floor(year_of_era / 100))
   local month_index = floor((5 * day_of_year + 2) / 153)
@@ -98,7 +98,7 @@ local function date_from_days(days)
   local year = year_of_era + era * 400
 
   if month <= 2 then
-    year = year + 1
+    year += 1
   end
 
   return year, month, day
@@ -366,7 +366,7 @@ function GameTime:format_time(timestamp, twelve_hour, lang)
   end
 
   local hour = date.hour % 12
-  local period = t(date.hour < 12 and 'gametime.am' or 'gametime.pm', nil, lang)
+  local period = t(date.hour < 12 ? 'gametime.am' : 'gametime.pm', nil, lang)
 
   if hour == 0 then
     hour = 12

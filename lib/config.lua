@@ -203,7 +203,7 @@ function Config.can_manage(actor)
     return SERVER
   end
 
-  return actor:can(Config.permission) and true or false
+  return actor:can(Config.permission) ? true : false
 end
 
 --- Checks a value against the definition of a config and converts it to the type the config
@@ -832,7 +832,7 @@ else
     -- @param value [Any value the config takes on the next start of the server, nil if
     --   nothing is pending]
     -- @see [Config.get_pending]
-    hook.Run('OnConfigPendingReceived', key, is_pending and true or false, value)
+    hook.Run('OnConfigPendingReceived', key, is_pending ? true : false, value)
   end)
 end
 

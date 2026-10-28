@@ -24,7 +24,5 @@ ATTRIBUTE.levels = {
 }
 
 ATTRIBUTE.effects = {
-  Stats:percent_effect('ui.effect.vendor_prices', 'stats_charisma_prices', true, function()
-    return Vendors != nil
-  end)
+  Stats:percent_effect('ui.effect.vendor_prices', 'stats_charisma_prices', true, || -> Vendors != nil)
 }

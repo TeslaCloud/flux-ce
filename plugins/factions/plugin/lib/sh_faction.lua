@@ -88,7 +88,7 @@ function Factions.add_faction(id, data)
   data.team_id = count + 1
 
   stored[data.faction_id] = data
-  count = count + 1
+  count += 1
 
   for gender, model_class in pairs(data.model_classes) do
     local gender_models = data:get_gender_models(gender)
@@ -241,7 +241,7 @@ function Factions.is_full(id, rank, except)
       local faction_table, member_rank = get_membership(client)
 
       if faction_table and faction_table.faction_id == id and (rank == nil or member_rank == rank) then
-        members = members + 1
+        members += 1
       end
     end
   end
@@ -267,7 +267,7 @@ function Factions.count_characters(target, faction_id)
   if istable(target.record) and istable(target.record.characters) then
     for _, char in ipairs(target.record.characters) do
       if char.faction == faction_id then
-        amount = amount + 1
+        amount += 1
       end
     end
   end

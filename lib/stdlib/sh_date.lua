@@ -115,18 +115,14 @@ end
 -- @param right [Time]
 -- @return [Date or DateTime]
 function Date:__add(right)
-  return run_if_valid_time(right, function(duration)
-    return self.class:at(self.time + duration.time)
-  end)
+  return run_if_valid_time(right, duration -> self.class:at(self.time + duration.time))
 end
 
 --- Subtracts the specified amount of Time from the Date.
 -- @param right [Time]
 -- @return [Date or DateTime]
 function Date:__sub(right)
-  return run_if_valid_time(right, function(duration)
-    return self.class:at(self.time - duration.time)
-  end)
+  return run_if_valid_time(right, duration -> self.class:at(self.time - duration.time))
 end
 
 --- Add the specified amount of Time to the Date.
@@ -134,9 +130,7 @@ end
 -- @return [Date or DateTime]
 -- @see [Date#__add]
 function Date:__concat(right)
-  return run_if_valid_time(right, function(duration)
-    return self.class:at(self.time + duration.time)
-  end)
+  return run_if_valid_time(right, duration -> self.class:at(self.time + duration.time))
 end
 
 --- Converts this Date object to an ISO-8601 string.

@@ -420,7 +420,7 @@ else
     for _, line in pairs(wrapped) do
       local w, h = util.text_size(line, desc_font)
 
-      desc_height = desc_height + h
+      desc_height += h
 
       if w > max_width then
         max_width = w
@@ -461,14 +461,14 @@ else
 
     draw.SimpleTextOutlined(text, name_font, x - width * 0.5, y, col, nil, nil, 1, col2)
 
-    y = y + height
+    y += height
 
     for _, line in pairs(wrapped) do
       local w, h = util.text_size(line, desc_font)
 
       draw.SimpleTextOutlined(line, desc_font, x - w * 0.5, y, col, nil, nil, 1, col2)
 
-      y = y + h
+      y += h
     end
 
     --- Called on the client every frame after the name and the description of an item

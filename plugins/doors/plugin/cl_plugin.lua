@@ -12,7 +12,7 @@ Doors.status_generation = Doors.status_generation or 0
 --- Makes every door work its status text out again, for when something that every status
 -- depends on has changed: the language or the door_price config.
 function Doors:invalidate_status_texts()
-  self.status_generation = self.status_generation + 1
+  self.status_generation += 1
 end
 
 --- Makes a door work its status text out again, for when one of its ownership variables
@@ -111,7 +111,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
       cable_send('fl_lock_door', entity, !locked)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if info.ownable and !info.owned then
@@ -125,7 +125,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
       end, no)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if (info.level or DOOR_ACCESS_NONE) >= DOOR_ACCESS_MANAGE then
@@ -134,7 +134,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
       management:set_door(entity, info)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if staff and info.owned then
@@ -147,7 +147,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
       end, no)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if staff then
@@ -156,7 +156,7 @@ function Doors:open_menu(entity, can_lock, conditions, info)
       door_menu:set_door(entity, conditions)
     end)
 
-    options = options + 1
+    options += 1
   end
 
   if options < 1 then

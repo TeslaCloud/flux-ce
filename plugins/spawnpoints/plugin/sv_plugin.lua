@@ -169,7 +169,7 @@ function SpawnPoints:pick_point(points, ignore)
 
   for _, point in ipairs(points) do
     if self:is_point_free(point, ignore) then
-      free_count = free_count + 1
+      free_count += 1
       free[free_count] = point
     end
   end

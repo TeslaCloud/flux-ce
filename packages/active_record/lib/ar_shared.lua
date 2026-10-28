@@ -25,7 +25,7 @@ if !ActiveRecord.Base then
     --- Clientside stub that replaces a serverside-only method. Does nothing.
     -- @param self [ActiveRecord::Base]
     -- @return [ActiveRecord::Base(self)]
-    ActiveRecord.Base[method_name] = function(self) return self end
+    ActiveRecord.Base[method_name] = self -> self
   end
 
   --- Clientside stand-in for model definition. Only declares a class that extends

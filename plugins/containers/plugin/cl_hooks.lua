@@ -99,6 +99,6 @@ function Container:CreateEntityInteractions(menu, entity)
   if container_data and entity:GetClass() == 'prop_physics' then
     menu:AddOption(t'ui.container.open', function()
       Cable.send('fl_container_open', entity)
-    end):SetIcon(self:has_container_password(entity) and 'icon16/lock.png' or 'icon16/box.png')
+    end):SetIcon(self:has_container_password(entity) ? 'icon16/lock.png' : 'icon16/box.png')
   end
 end

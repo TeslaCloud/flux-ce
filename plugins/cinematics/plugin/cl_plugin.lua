@@ -89,7 +89,7 @@ function Cinematics.draw_lines(lines, font, x, y, color, align)
   for i = 1, #lines do
     draw_text_outlined(lines[i], font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
 
-    y = y + line_height
+    y += line_height
   end
 
   return y
@@ -167,7 +167,7 @@ function Cinematics:clear()
   self.current = nil
   state.alpha = 0
 
-  self:set_stage(state.bars > 0 and 'close' or nil)
+  self:set_stage(state.bars > 0 ? 'close' : nil)
 end
 
 --- Checks whether the letterbox bars are on screen, which is when the plugin hides the top
@@ -252,7 +252,7 @@ function Cinematics:set_stage(stage)
   elseif stage == 'fade_in' or stage == 'fade_out' then
     local fade_time = math_max(get_option('cinematic_fade_time', defaults.fade_time), 0.01)
 
-    self.tween = Tween.new(fade_time, state, { alpha = stage == 'fade_in' and 255 or 0 })
+    self.tween = Tween.new(fade_time, state, { alpha = stage == 'fade_in' ? 255 : 0 })
   end
 end
 
@@ -266,9 +266,9 @@ function Cinematics:start_next()
   self.current = following
 
   if following then
-    self:set_stage(following.delay > 0 and 'delay' or 'open')
+    self:set_stage(following.delay > 0 ? 'delay' : 'open')
   else
-    self:set_stage(state.bars > 0 and 'close' or nil)
+    self:set_stage(state.bars > 0 ? 'close' : nil)
   end
 
   return following
@@ -294,7 +294,7 @@ function Cinematics:advance(frame_time)
   if self.tween then
     finished = self.tween:update(frame_time)
   else
-    self.time_left = self.time_left - frame_time
+    self.time_left -= frame_time
     finished = self.time_left <= 0
   end
 

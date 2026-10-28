@@ -82,10 +82,10 @@ function PLUGIN:HUDPaint()
           -- Make the first and last weapons look nicer when scrolling.
           if dir and k == 1 then
             v.y = targets[5].y + 50
-            v.scale = v.scale * 0.5
+            v.scale *= 0.5
           elseif !dir and k == 5 then
             v.y = targets[1].y - 50
-            v.scale = v.scale * 0.5
+            v.scale *= 0.5
           end
 
           v.target = next.y
@@ -229,9 +229,9 @@ do
 
             if index == prev_index or (index == 2 and prev_index == 1) or (index == 1 and prev_index == 2) then
               if index == 1 then
-                self.weapon_index = self.weapon_index - 1
+                self.weapon_index -= 1
               else
-                self.weapon_index = self.weapon_index + 1
+                self.weapon_index += 1
               end
 
               self.weapon_index = relative_clamp(self.weapon_index, 1, weapon_count)
@@ -322,7 +322,7 @@ function PLUGIN:make_display(index, tab)
       highlight = (i == 0)
     }
 
-    offsety = offsety + 32
+    offsety += 32
   end
 
   if tab then

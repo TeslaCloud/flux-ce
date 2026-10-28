@@ -6,9 +6,11 @@
 
 local is_development = ENV['FLUX_ENV'] == 'development'
 local metrics = {}
+local registered = {}
 
 if is_development then
-  --- Registers an object under a debug metric.
+  --- Registers an object under a debug metric. An object that is already registered under
+  -- the metric, such as an item that is registered again when its plugin reloads, is counted once.
   -- Metrics are only collected when FLUX_ENV is set to 'development'.
   -- @environment [development]
   -- @param id [String metric name]
@@ -16,9 +18,15 @@ if is_development then
   -- @return [Number amount of objects registered under this metric so far]
   function add_debug_metric(id, obj)
     local list = metrics[id] or {}
+    local known = registered[id] or {}
 
     metrics[id] = list
-    list[#list + 1] = obj
+    registered[id] = known
+
+    if !known[obj] then
+      known[obj] = true
+      list[#list + 1] = obj
+    end
 
     return #list
   end

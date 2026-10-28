@@ -237,7 +237,7 @@ function PANEL:add_menu_item(id, data, _index)
   data.icon = data.icon or false
 
   table.insert(self.menu_items, data)
-  table.sort(self.menu_items, function(a, b) return a.priority < b.priority end)
+  table.sort(self.menu_items, |a, b| -> a.priority < b.priority)
 end
 
 --- Fades the whole menu out, its blur and tint included, so that the world behind it can be
@@ -251,10 +251,10 @@ function PANEL:set_faded(faded)
   if self.closing or self:is_faded() == faded then return end
 
   self.faded = faded
-  self.blur_target = faded and 0 or blur_strength
+  self.blur_target = faded ? 0 : blur_strength
 
   self:Stop()
-  self:AlphaTo(faded and 0 or 255, Theme.get_option('menu_anim_duration') * 0.5, 0)
+  self:AlphaTo(faded ? 0 : 255, Theme.get_option('menu_anim_duration') * 0.5, 0)
 end
 
 --- Checks whether the menu has been faded out with set_faded.

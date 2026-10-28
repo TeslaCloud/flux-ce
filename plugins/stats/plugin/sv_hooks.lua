@@ -70,11 +70,11 @@ function Stats:apply_faction_bonuses(target, enabled)
 
     if wanted and wanted != current then
       if target:boost_attribute(stat_id, wanted, nil, self.faction_boost_id) then
-        changed = changed + 1
+        changed += 1
       end
     elseif !wanted and current then
       if target:remove_attribute_boost(stat_id, self.faction_boost_id) then
-        changed = changed + 1
+        changed += 1
       end
     end
   end
@@ -216,7 +216,7 @@ function Stats:PlayerCreateCharacter(_actor, data)
       return CHAR_ERR_ATTRIBUTE_SUM
     end
 
-    sum = sum + level
+    sum += level
   end
 
   if sum != self:default_attribute_points() then
@@ -259,7 +259,7 @@ end
 function Stats:AdjustPickupMassLimit(actor, _ent, info)
   if !IsValid(actor) or !actor:IsPlayer() or !isnumber(info.limit) then return end
 
-  info.limit = info.limit * self:get_player_effect_scale(actor, 'strength', 'stats_strength_lifting')
+  info.limit *= self:get_player_effect_scale(actor, 'strength', 'stats_strength_lifting')
 end
 
 --- Makes a player throw the object they hold harder by the `stats_strength_lifting` config
@@ -270,7 +270,7 @@ end
 function Stats:PlayerThrowObject(actor, _ent, info)
   if !IsValid(actor) or !actor:IsPlayer() or !isnumber(info.force) then return end
 
-  info.force = info.force * self:get_player_effect_scale(actor, 'strength', 'stats_strength_lifting')
+  info.force *= self:get_player_effect_scale(actor, 'strength', 'stats_strength_lifting')
 end
 
 --- Lowers the fall damage a player takes by the `stats_reflexes_fall` config for every

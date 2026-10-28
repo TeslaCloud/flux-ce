@@ -438,7 +438,7 @@ function THEME:PaintButton(panel, w, h)
     icon_w, icon_h = FontAwesome:get_icon_size(icon, icon_size)
 
     if has_title then
-      text_x = text_x + (left and icon_w * 0.5 or -icon_w * 0.5)
+      text_x += left and icon_w * 0.5 or -icon_w * 0.5
       icon_x = (left and text_x - icon_w - math.scale_x(4) or text_x + text_w + math.scale_x(4))
     else
       icon_x = w * 0.5 - icon_w * 0.5
@@ -668,11 +668,11 @@ function THEME:PaintPermissionButton(_perm_panel, btn, w, h)
     fill = color
     text_color = self:get_color('background')
   else
-    fill = ColorAlpha(color, btn:IsHovered() and 50 or 18)
+    fill = ColorAlpha(color, btn:IsHovered() ? 50 : 18)
     text_color = color
   end
 
-  self:DrawCard(0, 0, w, h, radius, fill, ColorAlpha(color, selected and 255 or 140))
+  self:DrawCard(0, 0, w, h, radius, fill, ColorAlpha(color, selected ? 255 : 140))
 
   local tw, th = text_size(title, font)
 

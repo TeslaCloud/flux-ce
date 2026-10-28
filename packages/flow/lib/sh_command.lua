@@ -56,7 +56,7 @@ local function command_throttled(actor)
     actor.fl_command_count = 0
   end
 
-  actor.fl_command_count = actor.fl_command_count + 1
+  actor.fl_command_count += 1
 
   return actor.fl_command_count > max_commands_per_second
 end
@@ -114,7 +114,7 @@ local function descend(cmd, tokens, last)
     if !sub then break end
 
     cmd = sub
-    index = index + 1
+    index += 1
   end
 
   return cmd, index
@@ -539,7 +539,7 @@ function Flux.Command:complete(text, actor)
 
   if !current or (!open_quote and text:find('%s$')) then
     current = { value = '', start = #text + 1 }
-    count = count + 1
+    count += 1
     tokens[count] = current
   end
 
@@ -655,9 +655,7 @@ local function complete_player(_actor, partial)
     end
   end
 
-  table.sort(values, function(a, b)
-    return a:utf8lower() < b:utf8lower()
-  end)
+  table.sort(values, |a, b| -> a:utf8lower() < b:utf8lower())
 
   return values
 end
@@ -1065,14 +1063,10 @@ if SERVER then
       'PlayerRunCommand',
       object,
       table.concat(
-        table.map(targets, function(v)
-          return IsValid(v) and v.record and v.record.id or nil
-        end),
+        table.map(targets, v -> IsValid(v) and v.record and v.record.id or nil),
         ','
       )
-    ):replicate(function(listener)
-      return listener:is_staff() and listener:can(cmd_table:get_permission())
-    end)
+    ):replicate(listener -> listener:is_staff() and listener:can(cmd_table:get_permission()))
 
     self:run(actor, cmd_table, args, raw_args)
   end

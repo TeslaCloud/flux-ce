@@ -77,7 +77,7 @@ function util.hex_to_dec(hex)
   local sum = 0
 
   for index, char in ipairs(table.Reverse(hex:split())) do
-    sum = sum + util.hex_to_decimal(char) * 16 ^ (index - 1)
+    sum += util.hex_to_decimal(char) * 16 ^ (index - 1)
   end
 
   return sum
@@ -127,13 +127,13 @@ function util.vector_in_poly(point, poly_vertices)
 
   local intersections = 0
   local vertex_count = #poly_vertices
-  local far_point = Vector(99999, 99999, 0)
+  local far_point = Vector(99_999, 99_999, 0)
 
   for index, vertex in ipairs(poly_vertices) do
     local next_vert = poly_vertices[index % vertex_count + 1]
 
     if util.vectors_intersect(point, far_point, vertex, next_vert) then
-      intersections = intersections + 1
+      intersections += 1
     end
   end
 

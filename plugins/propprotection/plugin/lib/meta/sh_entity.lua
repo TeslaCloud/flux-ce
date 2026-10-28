@@ -50,7 +50,7 @@ end
 -- @param actor [Player]
 -- @return [Boolean]
 function ent_meta:CPPICanPhysgun(actor)
-  return PropProtection:can_manipulate(actor, self, 'physgun') and true or false
+  return PropProtection:can_manipulate(actor, self, 'physgun') ? true : false
 end
 
 --- Checks whether a player may use a tool on the entity, as the CPPI asks for it.
@@ -58,7 +58,7 @@ end
 -- @param tool [String tool ID]
 -- @return [Boolean]
 function ent_meta:CPPICanTool(actor, tool)
-  return PropProtection:can_manipulate(actor, self, 'tool', tool) and true or false
+  return PropProtection:can_manipulate(actor, self, 'tool', tool) ? true : false
 end
 
 --- Checks whether a player may use a property of the context menu on the entity, as the
@@ -67,14 +67,14 @@ end
 -- @param property [String property name]
 -- @return [Boolean]
 function ent_meta:CPPICanProperty(actor, property)
-  return PropProtection:can_manipulate(actor, self, 'property', property) and true or false
+  return PropProtection:can_manipulate(actor, self, 'property', property) ? true : false
 end
 
 --- Checks whether a player may drive the entity, as the CPPI asks for it.
 -- @param actor [Player]
 -- @return [Boolean]
 function ent_meta:CPPICanDrive(actor)
-  return PropProtection:can_manipulate(actor, self, 'drive') and true or false
+  return PropProtection:can_manipulate(actor, self, 'drive') ? true : false
 end
 
 --- Returns the friends of the player, as the CPPI asks for it. The plugin has no friends,

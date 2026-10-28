@@ -8,7 +8,7 @@
 -- `ban add` finds its targets itself instead of setting `immunity`, because the command
 -- interpreter only knows the players who are on the server.
 
-local max_unban_time = 253402300799
+local max_unban_time = 253_402_300_799
 
 CMD.name = 'Ban'
 CMD.description = 'command.ban.description'
@@ -47,7 +47,7 @@ function add:on_run(actor, target, duration, reason)
     return
   end
 
-  local message = ban_time == 0 and 'command.ban.add.message_permanent' or 'command.ban.add.message'
+  local message = ban_time == 0 ? 'command.ban.add.message_permanent' : 'command.ban.add.message'
   local targets, steam_id = Bolt:find_command_targets(actor, target)
 
   if targets then

@@ -17,7 +17,7 @@ CMD.arguments = 0
 CMD.arg_types = { 'text' }
 CMD.no_console = true
 
-local max_range = 10000
+local max_range = 10_000
 local default_formula = '1d20'
 
 local function get_character_level(target)

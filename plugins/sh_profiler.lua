@@ -62,7 +62,7 @@ if CLIENT then
     largest_sv_n = 0
 
     for hook_name, load_time in pairs(metrics_sv) do
-      total_sv = total_sv + load_time
+      total_sv += load_time
 
       if load_time > largest_sv_n then
         largest_sv_n = load_time
@@ -71,7 +71,7 @@ if CLIENT then
     end
 
     for hook_name, load_time in pairs(metrics) do
-      total_cl = total_cl + load_time
+      total_cl += load_time
 
       if load_time > largest_cl_n then
         largest_cl_n = load_time

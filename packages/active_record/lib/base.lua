@@ -440,9 +440,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, offset)
     end
 
     return proceed()
-  end):rescue(function()
-    return proceed()
-  end)
+  end):rescue(|| -> proceed())
 
   return self
 end
@@ -636,7 +634,7 @@ local except = {
 
 local function gen_callback(self, insert)
   return function(result, query, time, bindings)
-    print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query, bindings)
+    print_query(self.class_name..' '..(insert ? 'Create' : 'Update')..' ('..time..'s)', query, bindings)
     self.saving = false
 
     if insert and istable(result) and istable(result[1]) then

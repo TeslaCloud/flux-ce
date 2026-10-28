@@ -28,7 +28,7 @@ function ActiveRecord.Migrator:init(direction, migrations, target_version)
   self.target_version = target_version and tonumber(target_version) or nil
   self.migrations = table.Copy(migrations or {})
 
-  table.sort(self.migrations, function(a, b) return a.version < b.version end)
+  table.sort(self.migrations, |a, b| -> a.version < b.version)
 
   if direction == 'down' then
     self.migrations = table.Reverse(self.migrations)
@@ -275,7 +275,7 @@ function ActiveRecord.Migrator:execute_migration_in_transaction(migration)
   ActiveRecord.Model:populate()
 
   error(
-    'An error has occurred, '..(use_transaction and 'this and ' or '')..'all later migrations canceled:\n\n'..
+    'An error has occurred, '..(use_transaction ? 'this and ' : '')..'all later migrations canceled:\n\n'..
     tostring(exception),
     0
   )

@@ -282,7 +282,7 @@ if SERVER then
     local depth = 0
 
     while text:find(']'..string.rep('=', depth)..']', 1, true) do
-      depth = depth + 1
+      depth += 1
     end
 
     return string.rep('=', depth)

@@ -189,7 +189,7 @@ function SpawnPoints:get_points(group)
 
   for _, point in ipairs(self.points) do
     if group == nil or point.group == group then
-      count = count + 1
+      count += 1
       points[count] = point
     end
   end

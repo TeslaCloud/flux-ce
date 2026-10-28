@@ -49,12 +49,12 @@ function PANEL:PerformLayout()
 
     for _, panel in pairs(panels) do
       if IsValid(panel) then
-        wide = wide + panel:GetWide()
-        panel_count = panel_count + 1
+        wide += panel:GetWide()
+        panel_count += 1
       end
     end
 
-    wide = wide + overlap * math.max(panel_count - 1, 0)
+    wide += overlap * math.max(panel_count - 1, 0)
 
     x = math.max(w * 0.5 - wide * 0.5, 0)
   end

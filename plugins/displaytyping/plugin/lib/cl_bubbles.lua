@@ -168,7 +168,7 @@ local function wrap_tail(text, font, width, max_lines)
         local part = current:utf8sub(1, keep)
 
         while keep > 1 and get_text_size(part) > width do
-          keep = keep - 1
+          keep -= 1
           part = current:utf8sub(1, keep)
         end
 
@@ -222,7 +222,7 @@ function DisplayTyping:update_bubble(index, text, exact)
   local bubble = bubbles[index]
 
   if !bubble then
-    bubble_count = bubble_count + 1
+    bubble_count += 1
 
     bubble = {
       index = index,
@@ -336,7 +336,7 @@ function DisplayTyping:watch_bubble(bubble, now)
   bubble.fresh = true
   bubble.head = head
   bubble.distance = distance
-  bubble.lift = ragdoll and 16 or 10 + distance * 0.02
+  bubble.lift = ragdoll ? 16 : 10 + distance * 0.02
 
   local kind = bubble.kind
 
@@ -473,7 +473,7 @@ function DisplayTyping:aim_bubble(bubble)
   if !bubble.fresh then return end
 
   lifted_position:Set(bubble.head)
-  lifted_position.z = lifted_position.z + bubble.lift
+  lifted_position.z += bubble.lift
   view_offset:Set(lifted_position)
   view_offset:Sub(view.origin)
 
@@ -507,7 +507,7 @@ function DisplayTyping:aim_bubble(bubble)
   local direction_x, direction_y = side, -rise
 
   if depth < 0 then
-    direction_y = direction_y - depth * self.behind_bias
+    direction_y -= depth * self.behind_bias
   end
 
   local length = math.sqrt(direction_x * direction_x + direction_y * direction_y)
@@ -545,7 +545,7 @@ function DisplayTyping:arrange_bubbles(count)
     local x, y = bubble.goal_x, bubble.goal_y
     local w, h = bubble.goal_w, bubble.goal_h
 
-    bubble.push = bubble.push or (y < view_h * (bubble.edge and 0.5 or 0.25) and 1 or -1)
+    bubble.push = bubble.push or (y < view_h * (bubble.edge ? 0.5 : 0.25) ? 1 : -1)
 
     for _pass = 1, i do
       local moved = false
@@ -586,7 +586,7 @@ function DisplayTyping:move_bubble(bubble, delta)
     return
   end
 
-  local speed = bubble.edge and 12 or 36
+  local speed = bubble.edge ? 12 : 36
 
   bubble.x = approach(bubble.x, bubble.place_x, delta, speed)
   bubble.y = approach(bubble.y, bubble.place_y, delta, speed)
@@ -779,7 +779,7 @@ function DisplayTyping:draw_bubbles()
         bubbles[index] = nil
       end
     elseif bubble.goal_x or bubble.fresh then
-      count = count + 1
+      count += 1
       listed[count] = bubble
     end
   end

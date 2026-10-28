@@ -86,7 +86,7 @@ local function set_permission(cmd, actor, targets, permission_id, duration_text,
     end
 
     if success then
-      entry.target:notify(granted and 'notification.character_permission.granted' or
+      entry.target:notify(granted ? 'notification.character_permission.granted' :
         'notification.character_permission.revoked', { permission = permission.id })
 
       table.insert(affected, entry.label)
@@ -95,7 +95,7 @@ local function set_permission(cmd, actor, targets, permission_id, duration_text,
 
   if #affected == 0 then return end
 
-  local phrase = 'command.charpermission.'..(granted and 'grant' or 'revoke')..'.message'
+  local phrase = 'command.charpermission.'..(granted ? 'grant' : 'revoke')..'.message'
 
   cmd:notify_staff(duration and phrase..'_temporary' or phrase, {
     player = get_player_name(actor),
@@ -176,7 +176,7 @@ function reset:on_run(actor, targets, permission_id)
   end
 
   if #affected == 0 then
-    Flux.Player:notify(actor, permission and 'error.character_permission.not_set' or 'error.permission_not_valid', {
+    Flux.Player:notify(actor, permission ? 'error.character_permission.not_set' : 'error.permission_not_valid', {
       permission = id
     })
 
@@ -237,9 +237,9 @@ function list_cmd:on_run(actor, targets)
     local time_left = (tonumber(temp_entry.expires) or 0) - os.time()
 
     if time_left > 0 and (temp_entry.value == PERM_ALLOW or temp_entry.value == PERM_NEVER) then
-      temporary = temporary + 1
+      temporary += 1
 
-      local phrase = temp_entry.value == PERM_ALLOW and 'temporary_allowed' or 'temporary_denied'
+      local phrase = temp_entry.value == PERM_ALLOW ? 'temporary_allowed' : 'temporary_denied'
 
       Flux.Player:notify(actor, 'command.charpermission.list.'..phrase, {
         character = name,

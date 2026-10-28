@@ -73,7 +73,7 @@ local function list_violations(adapter, table_name)
   local query = 'PRAGMA foreign_key_check'
 
   if isstring(table_name) then
-    query = query..'('..adapter:quote_name(table_name)..')'
+    query ..= '('..adapter:quote_name(table_name)..')'
   end
 
   local result = adapter:raw_query(query..';', rows)
@@ -121,7 +121,7 @@ function ActiveRecord.Adapters.Sqlite:check_foreign_keys(table_name, before)
 
     if added > 0 then
       new_keys[key] = true
-      total = total + added
+      total += added
     end
   end
 

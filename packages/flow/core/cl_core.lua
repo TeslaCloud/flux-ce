@@ -174,7 +174,7 @@ do
     end
 
     cache[id] = info
-    cache_size = cache_size + 1
+    cache_size += 1
   end
 
   --- Draws a filled circle in the current surface draw color. Raises an error if x, y or
@@ -456,7 +456,7 @@ do
       )
     end)
 
-    ang = ang + FrameTime() * 32
+    ang += FrameTime() * 32
 
     if ang >= 360 then
       ang = 0

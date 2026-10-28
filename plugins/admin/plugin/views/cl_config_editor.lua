@@ -39,9 +39,7 @@ function PANEL:Init()
     end
 
     if #configs > 0 then
-      table.sort(configs, function(first, second)
-        return first.name < second.name
-      end)
+      table.sort(configs, |first, second| -> first.name < second.name)
 
       table.insert(categories, {
         name = t(category.name or id),
@@ -51,9 +49,7 @@ function PANEL:Init()
     end
   end
 
-  table.sort(categories, function(first, second)
-    return first.name < second.name
-  end)
+  table.sort(categories, |first, second| -> first.name < second.name)
 
   for _, category in ipairs(categories) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
@@ -257,7 +253,7 @@ function PANEL:set_config(key, config_table)
     if Config.is_private(key) then
       self.private_flag = self:add_flag('fa-eye-slash', reveal_text, function()
         self.revealed = !self.revealed
-        self.private_flag:set_icon(self.revealed and 'fa-eye' or 'fa-eye-slash')
+        self.private_flag:set_icon(self.revealed ? 'fa-eye' : 'fa-eye-slash')
 
         self:create_control()
       end)
@@ -276,7 +272,7 @@ end
 function PANEL:create_control()
   local key, config_table = self.key, self.config
   local data = config_table.data
-  local data_type = config_table.type == 'bool' and 'boolean' or config_table.type
+  local data_type = config_table.type == 'bool' ? 'boolean' : config_table.type
   local small_font = Theme.get_font('text_small')
 
   if IsValid(self.control) then
@@ -341,7 +337,7 @@ function PANEL:create_control()
     self.check = check
     self.update_control = function(value)
       check.value = value == true
-      check:set_icon(check.value and 'fa-toggle-on' or 'fa-toggle-off')
+      check:set_icon(check.value ? 'fa-toggle-on' : 'fa-toggle-off')
       check:set_text_color(check.value and Theme.get_color('success') or Theme.get_color('text_dim'))
     end
   elseif data_type == 'string' then
@@ -448,7 +444,7 @@ function PANEL:update()
     local has_pending = Config.get_pending(self.key)
 
     if has_pending then
-      tooltip = tooltip..' '..t('ui.admin.config.pending', { value = Config.display_value(self.key) })
+      tooltip ..= ' '..t('ui.admin.config.pending', { value = Config.display_value(self.key) })
     end
 
     self.restart_flag:SetTooltip(tooltip)

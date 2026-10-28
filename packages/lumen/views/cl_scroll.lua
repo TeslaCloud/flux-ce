@@ -33,10 +33,10 @@ function PANEL:set_scrollbar_visible(visible)
     bar.btnDown.Paint = nil
     bar.btnGrip.Paint = nil
   else
-    bar.Paint = function() return true end
-    bar.btnUp.Paint = function() return true end
-    bar.btnDown.Paint = function() return true end
-    bar.btnGrip.Paint = function() return true end
+    bar.Paint = || -> true
+    bar.btnUp.Paint = || -> true
+    bar.btnDown.Paint = || -> true
+    bar.btnGrip.Paint = || -> true
   end
 
   self:InvalidateLayout()

@@ -11,10 +11,10 @@ PANEL.margin = 0
 
 --- Hides the scrollbar graphics and performs the initial layout.
 function PANEL:Init()
-  self.VBar.Paint = function() return true end
-  self.VBar.btnUp.Paint = function() return true end
-  self.VBar.btnDown.Paint = function() return true end
-  self.VBar.btnGrip.Paint = function() return true end
+  self.VBar.Paint = || -> true
+  self.VBar.btnUp.Paint = || -> true
+  self.VBar.btnDown.Paint = || -> true
+  self.VBar.btnGrip.Paint = || -> true
 
   self:PerformLayout()
 
@@ -109,7 +109,7 @@ end
 --- Adds empty vertical space before the next item.
 -- @param px [Number height of the gap in pixels]
 function PANEL:add_space(px)
-  self.last_pos = self.last_pos + px
+  self.last_pos += px
 end
 
 --- Sets the vertical gap left after each item that is added from now on.

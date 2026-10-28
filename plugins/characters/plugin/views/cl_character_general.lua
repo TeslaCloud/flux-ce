@@ -167,7 +167,7 @@ function PANEL:Init()
     if pnl.pressed then
       local mx, my = gui.MousePos()
 
-      pnl.angles = pnl.angles - Angle(0, (pnl.press_x or mx) - mx, 0)
+      pnl.angles -= Angle(0, (pnl.press_x or mx) - mx, 0)
       pnl.press_x, pnl.press_y = mx, my
     end
 
@@ -231,7 +231,7 @@ function PANEL:rebuild_models()
 
   for _, model_path in ipairs(models) do
     if i >= 7 then
-      offset = offset + step
+      offset += step
       i = 0
     end
 
@@ -282,7 +282,7 @@ function PANEL:rebuild_models()
 
     self.models_list.buttons[#self.models_list.buttons + 1] = button
 
-    i = i + 1
+    i += 1
   end
 end
 

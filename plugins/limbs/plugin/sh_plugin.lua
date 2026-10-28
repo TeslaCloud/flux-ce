@@ -120,7 +120,7 @@ Characters.network_data(Limbs.data_key)
 --- Checks whether limb damage is turned on by the 'limbs_enabled' config.
 -- @return [Boolean]
 function Limbs:is_enabled()
-  return config_get('limbs_enabled', true) and true or false
+  return config_get('limbs_enabled', true) ? true : false
 end
 
 --- Returns the IDs of all limbs, from the head down.

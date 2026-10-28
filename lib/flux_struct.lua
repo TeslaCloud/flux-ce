@@ -57,7 +57,7 @@ if CLIENT then
     end
 
     if !parts[index] then
-      parts.received = parts.received + 1
+      parts.received += 1
     end
 
     parts[index] = data

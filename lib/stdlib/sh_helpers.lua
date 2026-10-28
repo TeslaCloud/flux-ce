@@ -40,7 +40,7 @@ end
 -- @return [Object return value of include()]
 function require_relative(file_name)
   if !file_name:EndsWith('.lua') then
-    file_name = file_name..'.lua'
+    file_name ..= '.lua'
   end
 
   if SERVER then
@@ -79,14 +79,14 @@ function require_relative_folder(dir, base, recursive)
     if isbool(base) then
       base = PACKAGE and PACKAGE.__path__ or 'flux/'
     elseif !base:EndsWith('/') then
-      base = base..'/'
+      base ..= '/'
     end
 
     dir = base..dir
   end
 
   if !dir:EndsWith('/') then
-    dir = dir..'/'
+    dir ..= '/'
   end
 
   if recursive then
@@ -124,7 +124,7 @@ end
 -- @return [Object return value of include()]
 function require_client(file_name)
   if !file_name:EndsWith('.lua') then
-    file_name = file_name..'.lua'
+    file_name ..= '.lua'
   end
 
   if SERVER then
@@ -146,7 +146,7 @@ end
 -- @return [Object return value of include()]
 function require_server(file_name)
   if !file_name:EndsWith('.lua') then
-    file_name = file_name..'.lua'
+    file_name ..= '.lua'
   end
 
   if SERVER then
@@ -169,7 +169,7 @@ end
 -- @return [Object return value of include()]
 function require_shared(file_name)
   if !file_name:EndsWith('.lua') then
-    file_name = file_name..'.lua'
+    file_name ..= '.lua'
   end
 
   if SERVER then

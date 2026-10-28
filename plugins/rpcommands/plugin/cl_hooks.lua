@@ -53,7 +53,7 @@ function RPCommands:HUDPaint()
   for _, text_data in pairs(texts) do
     local text_pos = text_data.pos
 
-    if client_pos:DistToSqr(text_pos) <= 90000 and !util.vector_obstructed(client_pos, text_pos, client) then
+    if client_pos:DistToSqr(text_pos) <= 90_000 and !util.vector_obstructed(client_pos, text_pos, client) then
       local pos = text_pos:ToScreen()
       local cam_mult = (1 - math.Distance(cx, cy, pos.x, pos.y) / scrw * 1.5)
       local distance_mult = (1 - client_pos:Distance(text_pos) / 300)

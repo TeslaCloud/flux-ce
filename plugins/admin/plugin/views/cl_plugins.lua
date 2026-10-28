@@ -131,17 +131,17 @@ end
 function PANEL:set_plugin(entry)
   local enabled_text, disabled_text = t'ui.admin.plugins.enabled', t'ui.admin.plugins.disabled'
   local name = entry.name
-  local state = t('ui.admin.plugins.state.'..(entry.loaded and 'loaded' or (entry.reason or 'unknown')))
+  local state = t('ui.admin.plugins.state.'..(entry.loaded ? 'loaded' : (entry.reason or 'unknown')))
   local tooltip = {}
 
   self.entry = entry
 
   if entry.version then
-    name = name..' '..tostring(entry.version)
+    name ..= ' '..tostring(entry.version)
   end
 
   if entry.restart_required then
-    state = state..' / '..t('ui.admin.plugins.restart.'..(entry.disabled and 'disabled' or 'enabled'))
+    state ..= ' / '..t('ui.admin.plugins.restart.'..(entry.disabled ? 'disabled' : 'enabled'))
 
     self.state_label:SetTextColor(Theme.get_color('warning'))
   end
@@ -149,7 +149,7 @@ function PANEL:set_plugin(entry)
   self.name_label:SetText(name)
   self.state_label:SetText(state)
 
-  self.toggle:set_icon(entry.disabled and 'fa-toggle-off' or 'fa-toggle-on')
+  self.toggle:set_icon(entry.disabled ? 'fa-toggle-off' : 'fa-toggle-on')
   self.toggle:set_text_color(entry.disabled and Theme.get_color('text_dim') or Theme.get_color('success'))
   self.toggle:SetTooltip(entry.disabled and disabled_text or enabled_text)
   self.toggle:set_enabled(entry.id != Plugin.normalize_id(Bolt:get_path()))

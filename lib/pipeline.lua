@@ -101,7 +101,7 @@ function Pipeline.include_folder(id, directory)
   if !pipe then return end
 
   if !directory:end_with('/') then
-    directory = directory..'/'
+    directory ..= '/'
   end
 
   local files, _dirs = file.Find(directory..'*', 'LUA', 'nameasc')

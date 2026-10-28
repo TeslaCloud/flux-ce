@@ -115,7 +115,7 @@ function PANEL:set_members(members)
     header:SetTextColor(Theme.get_color('text_muted'))
     header:SizeToContents()
     header:Dock(TOP)
-    header:DockMargin(margin, i == 1 and 0 or margin * 4, 0, margin)
+    header:DockMargin(margin, i == 1 ? 0 : margin * 4, 0, margin)
 
     for index, member in ipairs(role_members) do
       local row = self.scroll_panel:Add('fl_staff_row')

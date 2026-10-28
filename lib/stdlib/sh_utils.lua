@@ -21,7 +21,7 @@ function game.get_ammo_list()
 
   while ammo_name != nil do
     ammo_table[ammo_id] = ammo_name
-    ammo_id = ammo_id + 1
+    ammo_id += 1
     ammo_name = game.GetAmmoName(ammo_id)
   end
 
@@ -79,7 +79,7 @@ do
     local entity = Entity(ent_index)
 
     if !IsValid(entity) then
-      wait_count = wait_count + 1
+      wait_count += 1
 
       local timer_name = 'fl_ent_wait_'..wait_count
 
@@ -270,33 +270,15 @@ function util.door_is_opened(entity)
 end
 
 local operators = {
-  equal = function(a, b)
-    return a == b
-  end,
-  unequal = function(a, b)
-    return a != b
-  end,
-  less = function(a, b)
-    return a < b
-  end,
-  greater = function(a, b)
-    return a > b
-  end,
-  less_equal = function(a, b)
-    return a <= b
-  end,
-  greater_equal = function(a, b)
-    return a >= b
-  end,
-  ['and'] = function(a, b)
-    return a and b
-  end,
-  ['or'] = function(a, b)
-    return a or b
-  end,
-  ['not'] = function(a, _b)
-    return !a
-  end
+  equal = |a, b| -> a == b,
+  unequal = |a, b| -> a != b,
+  less = |a, b| -> a < b,
+  greater = |a, b| -> a > b,
+  less_equal = |a, b| -> a <= b,
+  greater_equal = |a, b| -> a >= b,
+  ['and'] = |a, b| -> a and b,
+  ['or'] = |a, b| -> a or b,
+  ['not'] = |a, _b| -> !a
 }
 
 local operators_symbol = {
@@ -513,7 +495,7 @@ do
         end
 
         _G[word] = enumerator
-        enumerator = enumerator + 1
+        enumerator += 1
       end
     end
 

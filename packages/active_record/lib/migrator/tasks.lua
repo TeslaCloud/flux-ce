@@ -207,7 +207,7 @@ function Tasks.import_structure_metadata(metadata)
         to_table = args.foreign_table,
         column = args.key,
         primary_key = args.foreign_key or 'id',
-        on_delete = tobool(args.cascade) and 'cascade' or nil
+        on_delete = tobool(args.cascade) ? 'cascade' : nil
       })
     end
   end
@@ -249,18 +249,18 @@ function Tasks.prepare()
 end
 
 local tasks = {
-  ['migrate']         = function(env) return Tasks.migrate(env.VERSION) end,
-  ['migrate:up']      = function(env) return Tasks.migrate_up(env.VERSION) end,
-  ['migrate:down']    = function(env) return Tasks.migrate_down(env.VERSION) end,
-  ['migrate:redo']    = function(env) return Tasks.redo(env.STEP, env.VERSION) end,
-  ['migrate:status']  = function(_env) return Tasks.migrate_status() end,
-  ['rollback']        = function(env) return Tasks.rollback(env.STEP) end,
-  ['forward']         = function(env) return Tasks.forward(env.STEP) end,
-  ['version']         = function(_env) return Tasks.version() end,
-  ['schema:dump']     = function(_env) return Tasks.schema_dump() end,
-  ['schema:load']     = function(_env) return Tasks.schema_load() end,
-  ['create']          = function(_env) return ActiveRecord.Database:setup(ActiveRecord.db_settings) end,
-  ['drop']            = function(_env) return ActiveRecord.Database:drop_database(ActiveRecord.db_settings) end
+  ['migrate']         = env -> Tasks.migrate(env.VERSION),
+  ['migrate:up']      = env -> Tasks.migrate_up(env.VERSION),
+  ['migrate:down']    = env -> Tasks.migrate_down(env.VERSION),
+  ['migrate:redo']    = env -> Tasks.redo(env.STEP, env.VERSION),
+  ['migrate:status']  = _env -> Tasks.migrate_status(),
+  ['rollback']        = env -> Tasks.rollback(env.STEP),
+  ['forward']         = env -> Tasks.forward(env.STEP),
+  ['version']         = _env -> Tasks.version(),
+  ['schema:dump']     = _env -> Tasks.schema_dump(),
+  ['schema:load']     = _env -> Tasks.schema_load(),
+  ['create']          = _env -> ActiveRecord.Database:setup(ActiveRecord.db_settings),
+  ['drop']            = _env -> ActiveRecord.Database:drop_database(ActiveRecord.db_settings)
 }
 
 --- Tasks that run without a connected database.

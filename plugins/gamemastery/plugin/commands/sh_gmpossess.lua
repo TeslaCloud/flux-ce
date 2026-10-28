@@ -24,7 +24,7 @@ function CMD:on_run(actor, ...)
   local character, ambiguous = Gamemastery.find_character_by_name(name)
 
   if !character then
-    actor:notify(ambiguous and 'error.gamemastery.ambiguous' or 'error.gamemastery.not_found', { name = name })
+    actor:notify(ambiguous ? 'error.gamemastery.ambiguous' : 'error.gamemastery.not_found', { name = name })
 
     return
   end

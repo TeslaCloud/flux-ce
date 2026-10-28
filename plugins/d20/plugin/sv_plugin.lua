@@ -430,7 +430,7 @@ function D20:remember_npc_damage(npc, damage_info)
   local cur_time = CurTime()
 
   if npc.d20_scale_time == cur_time then
-    npc.d20_unscaled_damage = npc.d20_unscaled_damage + damage_info:GetDamage()
+    npc.d20_unscaled_damage += damage_info:GetDamage()
   else
     npc.d20_unscaled_damage = damage_info:GetDamage()
     npc.d20_scale_time = cur_time

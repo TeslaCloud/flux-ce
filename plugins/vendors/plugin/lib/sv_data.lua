@@ -21,8 +21,8 @@ local pairs = pairs
 local istable = istable
 local isstring = isstring
 
-Vendors.max_price = 1000000000
-Vendors.max_stock = 1000000
+Vendors.max_price = 1_000_000_000
+Vendors.max_stock = 1_000_000
 
 local text_limits = { name = 64, description = 256, model = 192, animation = 64, phrase = 256 }
 local max_ids = 128
@@ -138,7 +138,7 @@ local function clean_ids(ids)
 
     if isstring(id) and id != '' and #id <= 64 and !result[id] and count < max_ids then
       result[id] = true
-      count = count + 1
+      count += 1
     end
   end
 

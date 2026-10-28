@@ -106,7 +106,7 @@ function DisplayTyping:get_kind(target, text)
   local name = isstring(label) and label or t(fallback.name)
 
   return {
-    id = isstring(label) and 'custom' or fallback.id,
+    id = isstring(label) ? 'custom' : fallback.id,
     label = trim_label(name),
     color = fallback.color,
     range = math.Clamp(math.sqrt(math.max(multiplier, 0)), 0, self.max_range),

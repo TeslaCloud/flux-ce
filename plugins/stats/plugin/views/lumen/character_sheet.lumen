@@ -302,7 +302,7 @@ local function SkillRow(props)
       proficiency = signed(proficiency)
     }
 
-    details = t(proficiency != 0 and 'ui.character_sheet.skill_trained' or 'ui.character_sheet.skill_untrained', args)
+    details = t(proficiency != 0 ? 'ui.character_sheet.skill_trained' : 'ui.character_sheet.skill_untrained', args)
   else
     details = rank_name
   end
@@ -366,7 +366,7 @@ return function(_props)
       <scroll style={{ flex = 1, gap = 4, padding = { 0, 8, 0, 0 } }}>
         {#groups == 0 and <Notice text={t'ui.character_sheet.no_skills'} />}
         {Lumen.map(groups, function(group, index)
-          return <view key={group.id} style={{ gap = 4, margin_top = index > 1 and 8 or 0 }}>
+          return <view key={group.id} style={{ gap = 4, margin_top = index > 1 ? 8 : 0 }}>
             <text style={{ font = 'text_normal', color = 'accent_light' }}>{group.title}</text>
             {Lumen.map(group.skills, function(skill)
               return <SkillRow key={skill.skill_id} actor={actor} skill={skill} can_spend={can_spend_skill} />

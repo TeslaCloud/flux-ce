@@ -55,13 +55,13 @@ end
 -- @param args [Map column options: null (Boolean) and default (inserted into the SQL as is)]
 function ActiveRecord.Query:handle_create_args(args)
   if args.null == false then
-    self.def = self.def..' NOT NULL'
+    self.def ..= ' NOT NULL'
   end
 
   if args.default != nil then
-    self.def = self.def..' DEFAULT '..tostring(args.default)
+    self.def ..= ' DEFAULT '..tostring(args.default)
   elseif args.null == true then
-    self.def = self.def..' DEFAULT NULL'
+    self.def ..= ' DEFAULT NULL'
   end
 end
 
@@ -104,7 +104,7 @@ function ActiveRecord.Query:bind(value)
   local index = #bindings + 1
 
   if isbool(value) then
-    value = value and 1 or 0
+    value = value ? 1 : 0
   end
 
   bindings[index] = tostring(value)
@@ -337,7 +337,7 @@ local function build_where(query_obj)
       local n = 0
 
       condition = gsub(condition, '%?', function()
-        n = n + 1
+        n += 1
         return query_obj:bind(values[n])
       end)
     end
@@ -486,7 +486,7 @@ local function build_drop_query(query_obj)
     return
   end
 
-  local prefix = query_obj._if_exists and 'DROP TABLE IF EXISTS ' or 'DROP TABLE '
+  local prefix = query_obj._if_exists ? 'DROP TABLE IF EXISTS ' : 'DROP TABLE '
 
   return prefix..query_obj:quote_column(query_obj.table_name)
 end
@@ -505,7 +505,7 @@ local function build_create_query(query_obj)
   local query_string = { 'DROP TABLE IF EXISTS ' }
 
   if !query_obj._overwrite then
-    query_string[1] = query_obj._if_not_exists and 'CREATE TABLE IF NOT EXISTS ' or 'CREATE TABLE '
+    query_string[1] = query_obj._if_not_exists ? 'CREATE TABLE IF NOT EXISTS ' : 'CREATE TABLE '
   end
 
   if isstring(query_obj.table_name) then
@@ -571,21 +571,21 @@ local function build_change_query(query)
   local n = 0
 
   for i = 1, #remove_column_list do
-    n = n + 1
+    n += 1
     clauses[n] = 'DROP COLUMN '..remove_column_list[i]
   end
 
   for i = 1, #rename_list do
     local entry = rename_list[i]
 
-    n = n + 1
+    n += 1
     clauses[n] = 'RENAME COLUMN '..entry[1]..' TO '..entry[2]
   end
 
   for i = 1, #create_list do
     local entry = create_list[i]
 
-    n = n + 1
+    n += 1
     clauses[n] = 'ADD '..entry[1]..' '..entry[2]
   end
 

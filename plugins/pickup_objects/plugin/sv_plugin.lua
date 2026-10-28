@@ -396,7 +396,7 @@ function PickupObjects:throw_entity(actor)
     if IsValid(phys_obj) then
       parts[#parts + 1] = phys_obj
 
-      total_mass = total_mass + phys_obj:GetMass()
+      total_mass += phys_obj:GetMass()
     end
   end
 

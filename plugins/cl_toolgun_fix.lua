@@ -68,7 +68,7 @@ function PLUGIN:FLInitPostEntity()
     text_table.pos = { x, y }
     text_table.text = !is_flux and '#tool.'..mode..'.name' or t('tool.'..mode..'.name')
     _w, h = draw_text_shadow(text_table, 2)
-    y = y + h
+    y += h
 
     text_table.font = 'fl_tool_subtitle'
     text_table.pos = { x, y }
@@ -84,7 +84,7 @@ function PLUGIN:FLInitPostEntity()
     quad_table.color = Color(alpha, alpha, alpha, 230)
     draw_textured_quad(quad_table)
 
-    y = y + s(4)
+    y += s(4)
 
     text_table.font = 'fl_tool_help'
 
@@ -151,7 +151,7 @@ function PLUGIN:FLInitPostEntity()
         draw.SimpleText('+', 'Default', x - s(8), y + h2 + s(2), color_white)
       end
 
-      h2 = h2 + h
+      h2 += h
     end
 
     self.InfoBoxHeight = h2 + s(8)

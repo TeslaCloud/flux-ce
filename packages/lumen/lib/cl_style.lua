@@ -241,7 +241,7 @@ function Lumen.Style.resolve(style, defaults)
   resolved.border_width = isnumber(merged.border_width) and scale(merged.border_width, scaled) or scale(1, scaled)
   resolved.font_size = isnumber(merged.font_size) and scale(merged.font_size, scaled) or nil
   resolved.font = Lumen.Style.font(merged.font, resolved.font_size)
-  resolved.direction = merged.direction == 'row' and 'row' or 'column'
+  resolved.direction = merged.direction == 'row' ? 'row' : 'column'
   resolved.justify = merged.justify or 'start'
   resolved.align = merged.align or 'stretch'
   resolved.wrap = merged.wrap == true

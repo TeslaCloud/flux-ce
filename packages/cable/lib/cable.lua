@@ -45,9 +45,9 @@ local transfers = {}
 local next_transfer_id = 0
 
 local CHUNK_MESSAGE = 'fl_cable_chunk'
-local DIRECT_LIMIT = 65535
+local DIRECT_LIMIT = 65_535
 
-cable.chunk_size = 60000
+cable.chunk_size = 60_000
 cable.chunk_interval = 0.1
 cable.max_transfer_size = 4 * 1024 * 1024
 cable.max_transfers_per_player = 4
@@ -268,7 +268,7 @@ local function send_chunked(receivers, id, ...)
   local size = cable.chunk_size
   local count = math.max(1, math.ceil(#data / size))
 
-  next_transfer_id = next_transfer_id % 4294967295 + 1
+  next_transfer_id = next_transfer_id % 4_294_967_295 + 1
 
   local transfer_id = next_transfer_id
 
@@ -364,7 +364,7 @@ function cable.pending_transfers()
   local count = 0
 
   for _owner, pending in pairs(transfers) do
-    count = count + table.Count(pending)
+    count += table.Count(pending)
   end
 
   return count
@@ -413,7 +413,7 @@ net.Receive(CHUNK_MESSAGE, function(_length, sender)
   if transfer.id != id or transfer.count != count or transfer.pieces[index] then return end
 
   transfer.pieces[index] = piece
-  transfer.received = transfer.received + 1
+  transfer.received += 1
 
   if transfer.received < count then return end
 

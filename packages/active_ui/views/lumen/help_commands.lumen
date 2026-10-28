@@ -54,9 +54,7 @@ return function(_props)
     {Lumen.map(categories, function(category)
       return <view key={category.name} style={{ gap = 4 }}>
         <text style={{ font = 'menu_normal', margin_top = 8, color = 'text_muted' }}>{category.name}</text>
-        {Lumen.map(category.commands, function(command)
-          return <Command key={command.id} command={command} prefix={prefix} />
-        end)}
+        {Lumen.map(category.commands, command -> <Command key={command.id} command={command} prefix={prefix} />)}
       </view>
     end)}
   </view>

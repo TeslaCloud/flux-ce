@@ -10,10 +10,10 @@ CMD.aliases = { 'v' }
 local function set_vanished(cmd, actor, targets, should_vanish)
   for _, client in ipairs(targets) do
     client:set_vanished(should_vanish)
-    client:notify('notification.vanish.'..(should_vanish and 'enabled' or 'disabled'))
+    client:notify('notification.vanish.'..(should_vanish ? 'enabled' : 'disabled'))
   end
 
-  cmd:notify_staff('command.vanish.'..(should_vanish and 'on' or 'off')..'.message', {
+  cmd:notify_staff('command.vanish.'..(should_vanish ? 'on' : 'off')..'.message', {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets)
   })

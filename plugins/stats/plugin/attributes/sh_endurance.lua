@@ -24,12 +24,8 @@ ATTRIBUTE.levels = {
 }
 
 ATTRIBUTE.effects = {
-  Stats:percent_effect('ui.effect.stamina_drain', 'stats_endurance_stamina', true, function()
-    return Stamina != nil
-  end),
-  Stats:percent_effect('ui.effect.stamina_regen', 'stats_endurance_stamina', false, function()
-    return Stamina != nil
-  end),
+  Stats:percent_effect('ui.effect.stamina_drain', 'stats_endurance_stamina', true, || -> Stamina != nil),
+  Stats:percent_effect('ui.effect.stamina_regen', 'stats_endurance_stamina', false, || -> Stamina != nil),
   Stats:percent_effect('ui.effect.health_regen', 'stats_endurance_recovery', false, function()
     return Damage != nil and Config.get('health_regen') == true
   end),

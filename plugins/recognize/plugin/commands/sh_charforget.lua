@@ -23,7 +23,7 @@ function CMD:on_run(actor, targets, ...)
   if !istable(forgotten) or #forgotten == 0 then
     Flux.Player:notify(
       actor,
-      kind == 'ambiguous' and 'error.command.player_ambiguous' or 'error.command.player_invalid',
+      kind == 'ambiguous' ? 'error.command.player_ambiguous' : 'error.command.player_invalid',
       { player = tostring(selector) }
     )
 
@@ -37,7 +37,7 @@ function CMD:on_run(actor, targets, ...)
       local known_name = client:get_recognize(forgotten_client)
 
       if known_name and client:remove_recognize(forgotten_client) then
-        count = count + 1
+        count += 1
 
         client:notify('notification.recognize.forgotten', { name = tostring(known_name) }, Color('salmon'))
       end

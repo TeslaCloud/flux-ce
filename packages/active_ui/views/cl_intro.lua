@@ -95,7 +95,7 @@ function PANEL:Paint(w, h)
       surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)
       surface.draw_circle(exx, exy, cur_radius, 180)
 
-      cur_radius = cur_radius + 3
+      cur_radius += 3
       cur_alpha = math_clamp(Lerp(frame_time * 8, cur_alpha, 1), 0, 255)
     end
   end
