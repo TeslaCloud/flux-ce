@@ -1,7 +1,7 @@
 Package:describe(function(s)
   s.name        = 'Flow'
-  s.version     = '0.8.2'
-  s.date        = '2026-10-10'
+  s.version     = '0.9.0'
+  s.date        = '2026-10-28'
   s.summary     = 'Flux Core.'
   s.description = 'Core files that provide most of what Flux actually is.'
   s.author      = 'TeslaCloud Studios'

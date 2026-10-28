@@ -1,7 +1,7 @@
 Package:describe(function(s)
   s.name        = 'Flux'
-  s.version     = '0.8.2'
-  s.date        = '2026-10-10'
+  s.version     = '0.9.0'
+  s.date        = '2026-10-28'
   s.summary     = 'A gamemode framework.'
   s.description = 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
   s.authors     = { 'TeslaCloud Studios', 'Luna Fox', 'AleXXX_007', 'NightAngel', 'Zig' }
