@@ -15,3 +15,4 @@
 .nano
 .vim
 .env
+docker-compose.override.yml

@@ -76,6 +76,7 @@ docker compose --profile mariadb up     # MariaDB
 * The server is hidden from the server list. Join it with `connect localhost` (or the address of the machine) from the game console. `docker compose attach flux` opens the server console.
 * The database is picked by the profile, there is nothing to configure. The SQLite database is the `docker/sqlite/sv.db` file, everything else that the server stores is kept in Docker volumes. `docker compose down -v` deletes those.
 * To use another schema, another map or a Workshop collection, set the variables listed at the top of `docker-compose.yml`, for example `FLUX_SCHEMA=reborn docker compose up`. They can also be put into an `.env` file.
+* The server runs a local build of `lua_shared.so` when `FLUX_LUA_SHARED` points to one, instead of the build in the image. Mounts that only exist on your machine go into `docker-compose.override.yml`, which Compose merges in and Git ignores.
 * Changes to the files in `config` need a restart of the container. `database.local.yml` and `environment.local.lua` are written by the container and never touch your checkout.
 
 ## Installation
