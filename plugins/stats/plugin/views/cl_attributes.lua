@@ -30,20 +30,12 @@ local function translate(phrase, args)
   return text
 end
 
---- Formats a number for display: rounded to two decimals, with a plus in front of a
--- positive one if asked for.
--- @param value [Number]
--- @param signed=false [Boolean put a plus in front of a positive number]
--- @return [String]
 local function format_number(value, signed)
   value = math.round(tonumber(value) or 0, 2)
 
   return (signed and value > 0 and '+' or '')..tostring(value)
 end
 
---- Returns the boosts of a list that have not run out yet.
--- @param boosts [List<Map> networked boosts, can be nil]
--- @return [List<Map>]
 local function active_boosts(boosts)
   local cur_time = CurTime()
   local active = {}
@@ -59,18 +51,10 @@ local function active_boosts(boosts)
   return active
 end
 
---- Checks whether the row of an attribute has a line of details under its bar, which lists
--- the active boosts.
--- @param data [Map networked data of the attribute, can be nil]
--- @return [Boolean]
 local function has_details(data)
   return data != nil and #active_boosts(data.boosts) > 0
 end
 
---- Describes a list of boosts in one line, each with its sign and the time it has left if
--- it expires.
--- @param boosts [List<Map> active boosts]
--- @return [String]
 local function describe_boosts(boosts)
   local cur_time = CurTime()
   local parts = {}

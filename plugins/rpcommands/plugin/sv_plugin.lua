@@ -242,10 +242,6 @@ function RPCommands:say_looc(actor, text, team_chat)
   Log:print(Chatbox.message_to_string(msg_table), 'player_ooc')
 end
 
---- Returns where a player is for the hearing range of a roll: at their ragdoll while they
--- have one, otherwise where they stand.
--- @param target [Player]
--- @return [Vector]
 local function get_roll_position(target)
   if isfunction(target.get_ragdoll_entity) then
     local ragdoll = target:get_ragdoll_entity()

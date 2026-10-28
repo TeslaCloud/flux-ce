@@ -6,8 +6,6 @@
 
 require_relative 'sv_hooks'
 
---- Opens a selector of the local player's keys; the chosen key is added to a door.
--- @param entity [Entity the door]
 local function key_select(entity)
   local keys = PLAYER:find_items('key')
 

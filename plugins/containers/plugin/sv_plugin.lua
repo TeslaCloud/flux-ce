@@ -33,9 +33,6 @@ local function sanitize(text, max_length)
   end
 end
 
---- Counts the slots of an inventory that have items in them.
--- @param inventory [Inventory]
--- @return [Number]
 local function count_used_slots(inventory)
   local used = 0
 
@@ -52,8 +49,6 @@ local function count_used_slots(inventory)
   return used
 end
 
---- Closes an inventory for every player who has it open.
--- @param inventory [Inventory]
 local function close_for_receivers(inventory)
   local receivers = inventory.receivers
 

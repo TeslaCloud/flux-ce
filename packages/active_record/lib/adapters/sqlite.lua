@@ -37,7 +37,6 @@ function ActiveRecord.Adapters.Sqlite:connect(_settings, on_connected)
   if isfunction(on_connected) then on_connected(self) end
 end
 
---- @ignore
 local function rows(result)
   return result
 end
@@ -82,12 +81,10 @@ local function list_violations(adapter, table_name)
   return istable(result) and result or {}
 end
 
---- @ignore
 local function violation_key(violation)
   return tostring(violation.table)..' -> '..tostring(violation.parent)..' #'..tostring(violation.fkid)
 end
 
---- @ignore
 local function count_violations(violations)
   local counts = {}
 

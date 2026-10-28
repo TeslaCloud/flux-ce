@@ -15,9 +15,6 @@ local max_search_length = 256
 Cable.check_networked_string('fl_bolt_bans')
 Cable.check_networked_string('fl_bolt_bans_changed')
 
---- Turns a ban record into the row that the ban list page shows for it.
--- @param ban [Ban]
--- @return [Map row with the steam_id, name, reason, admin, permanent and time_left fields]
 local function ban_row(ban)
   local time_left = Bolt:get_ban_time_left(ban)
   local steam_id = tostring(ban.steam_id)

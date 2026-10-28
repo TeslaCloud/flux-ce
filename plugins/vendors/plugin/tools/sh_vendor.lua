@@ -14,10 +14,6 @@ TOOL.permission = 'manage_vendors'
 
 TOOL.ClientConVar['model'] = 'models/humans/group01/male_02.mdl'
 
---- Returns the angles of a vendor that stands at a position and faces a player.
--- @param position [Vector where the vendor stands]
--- @param owner [Player who the vendor faces]
--- @return [Angle]
 local function facing_angles(position, owner)
   return Angle(0, (owner:GetPos() - position):Angle().yaw, 0)
 end

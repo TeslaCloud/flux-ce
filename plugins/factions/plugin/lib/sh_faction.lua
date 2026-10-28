@@ -399,7 +399,7 @@ end
 -- ```
 -- @param directory [String folder to include files from]
 function Factions.include_factions(directory)
-  return Pipeline.include_folder('faction', directory)
+  Pipeline.include_folder('faction', directory)
 end
 
 if SERVER then
@@ -407,9 +407,6 @@ if SERVER then
   local default_max_health = 100
   local default_max_armor = 100
 
-  --- Sets the model of a player unless they have that model already.
-  -- @param target [Player]
-  -- @param model [String model path; ignored when it is not a string or is empty]
   local function set_model(target, model)
     if !isstring(model) or model == '' then return end
 

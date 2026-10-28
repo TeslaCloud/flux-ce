@@ -93,8 +93,6 @@ ThirdPerson.orbiting = ThirdPerson.orbiting or false
 ThirdPerson.aiming = ThirdPerson.aiming or false
 ThirdPerson.firing = ThirdPerson.firing or false
 
---- Reads the shoulder the camera aims over from the `thirdperson_shoulder` client setting.
--- @return [Number 1 for the right shoulder, -1 for the left one]
 local function shoulder_setting()
   if ClientSettings and ClientSettings:get('thirdperson_shoulder', 'right') == 'left' then
     return -1
@@ -103,9 +101,6 @@ local function shoulder_setting()
   return 1
 end
 
---- Reads how far behind the character the camera is while not aiming from the
--- `thirdperson_distance` client setting.
--- @return [Number distance in units, from 50 to 150]
 local function distance_setting()
   if ClientSettings then
     return math.Clamp(
@@ -514,9 +509,6 @@ function ThirdPerson:HUDPaint()
   end
 end
 
---- Moves the camera to the shoulder a new value of the `thirdperson_shoulder` client setting
--- names.
--- @param value [String 'right' or 'left']
 local function apply_shoulder(value)
   ThirdPerson.shoulder = value == 'left' and -1 or 1
 end
@@ -551,8 +543,6 @@ function ThirdPerson:RegisterClientSettings()
   })
 end
 
---- Moves the aiming camera over the other shoulder. Run by the `fl_switch_shoulder` console
--- command.
 local function switch_shoulder()
   ThirdPerson.shoulder = -(ThirdPerson.shoulder or 1)
 end

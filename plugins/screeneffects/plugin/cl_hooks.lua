@@ -5,18 +5,10 @@
 local tonumber = tonumber
 local category = 'settings.categories.screen_effects'
 
---- Decides whether the switch of an effect is listed in the settings menu: only while the
--- server allows the effect.
--- @param setting [Map setting definition, with the effect ID in its effect field]
--- @return [Boolean]
 local function is_switch_visible(setting)
   return ScreenEffects:is_effect_allowed(setting.effect)
 end
 
---- Decides whether the strength slider of an effect is listed in the settings menu: only while
--- the server allows the effect and the player has it turned on.
--- @param setting [Map setting definition, with the effect ID in its effect field]
--- @return [Boolean]
 local function is_strength_visible(setting)
   local effect = ScreenEffects.effects[setting.effect]
 

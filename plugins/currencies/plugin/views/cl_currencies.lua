@@ -42,13 +42,6 @@ function PANEL:set_entity(entity)
   self.entity = entity
 end
 
---- Creates one of the icon buttons of a currency line.
--- @param line [Panel the line the button goes into]
--- @param size [Number width and height of the button]
--- @param icon [String FontAwesome icon ID]
--- @param tooltip [String]
--- @param callback [Function called when the button is clicked]
--- @return [Panel the created fl_button]
 local function create_line_button(line, size, icon, tooltip, callback)
   local button = vgui.Create('fl_button', line)
   button:SetSize(size, size)
@@ -64,12 +57,6 @@ local function create_line_button(line, size, icon, tooltip, callback)
   return button
 end
 
---- Asks the local player for an amount of money and passes it on, or tells them that the
--- amount is not valid.
--- @param title [String translated title of the request]
--- @param message [String translated message of the request]
--- @param default [String/Number text the request starts with]
--- @param callback [Function called with the amount]
 local function request_amount(title, message, default, callback)
   Derma_StringRequest(title, message, tostring(default or ''), function(text)
     local value = tonumber(text)

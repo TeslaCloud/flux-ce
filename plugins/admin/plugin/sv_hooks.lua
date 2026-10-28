@@ -220,10 +220,6 @@ end
 do
   local created = {}
 
-  --- Returns the player an entity is attached to, directly or through other entities, or
-  -- the owner of a weapon.
-  -- @param entity [Entity]
-  -- @return [Player the player, nil if there is none]
   local function get_holder(entity)
     local parent = entity:GetParent()
 

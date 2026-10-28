@@ -128,7 +128,7 @@ end
 -- @param value [Map data to save]
 -- @see [Data.save]
 function Data.save_schema(key, value)
-  return Data.save('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, value)
+  Data.save('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, value)
 end
 
 --- Loads a table from the data folder of the current schema and map.
@@ -143,7 +143,7 @@ end
 --- Deletes a file from the data folder of the current schema and map.
 -- @param key [String]
 function Data.delete_schema(key)
-  return Data.delete('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key)
+  Data.delete('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key)
 end
 
 --- Saves plugin data. It is stored separately for every schema and map.
@@ -151,7 +151,7 @@ end
 -- @param value [Map data to save]
 -- @see [Data.save]
 function Data.save_plugin(key, value)
-  return Data.save_schema('plugins/'..key, value)
+  Data.save_schema('plugins/'..key, value)
 end
 
 --- Loads plugin data saved with Data.save_plugin for the current schema and map.
@@ -169,5 +169,5 @@ end
 --- Deletes plugin data saved with Data.save_plugin for the current schema and map.
 -- @param key [String]
 function Data.delete_plugin(key)
-  return Data.delete_schema('plugins/'..key)
+  Data.delete_schema('plugins/'..key)
 end

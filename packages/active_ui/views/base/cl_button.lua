@@ -131,7 +131,7 @@ end
 --- Sets the title displayed on the button.
 -- @param new_text [String]
 function PANEL:set_text(new_text)
-  return self:SetTitle(new_text)
+  self:SetTitle(new_text)
 end
 
 --- Sets the horizontal offset of the title from the left edge of the button.

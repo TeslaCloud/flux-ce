@@ -14,9 +14,6 @@ local get_color = Theme.get_color
 
 local PANEL = {}
 
---- Turns the text of an entry into a number.
--- @param text [String]
--- @return [Number the number, or false if the text is empty or not a number of 0 or more]
 local function to_amount(text)
   local value = tonumber(text)
 

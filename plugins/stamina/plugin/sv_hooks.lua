@@ -280,7 +280,7 @@ end
 -- @param target [Player]
 -- @param stamina [Number]
 function Stamina:set_stamina(target, stamina)
-  return target:set_nv('stamina', math.Clamp(stamina, 0, max_stamina))
+  target:set_nv('stamina', math.Clamp(stamina, 0, max_stamina))
 end
 
 --- Returns the player's current stamina. Serverside only.

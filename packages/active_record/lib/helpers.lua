@@ -91,7 +91,7 @@ end
 -- @param callback=nil [Function receives the 'create' ActiveRecord::Query to define the
 --   columns on]
 function create_table(name, options, callback)
-  return ActiveRecord.ddl('create_table', name, options, callback)
+  ActiveRecord.ddl('create_table', name, options, callback)
 end
 
 --- Drops a database table. In a migration's #change this is only reversible when the
@@ -100,14 +100,14 @@ end
 -- @param options=nil [Map if_exists (ignore a missing table)]
 -- @param callback=nil [Function the column definition, for reverting the statement]
 function drop_table(name, options, callback)
-  return ActiveRecord.ddl('drop_table', name, options, callback)
+  ActiveRecord.ddl('drop_table', name, options, callback)
 end
 
 --- Renames a database table.
 -- @param name [String current table name]
 -- @param new_name [String]
 function rename_table(name, new_name)
-  return ActiveRecord.ddl('rename_table', name, new_name)
+  ActiveRecord.ddl('rename_table', name, new_name)
 end
 
 --- Alters an existing database table.
@@ -122,7 +122,7 @@ end
 -- @param callback [Function receives the 'change' ActiveRecord::Query to describe the
 --   changes on]
 function change_table(name, callback)
-  return ActiveRecord.ddl('change_table', name, callback)
+  ActiveRecord.ddl('change_table', name, callback)
 end
 
 --- Adds a column to an existing table.
@@ -136,7 +136,7 @@ end
 -- @param type=nil [String abstract column type, e.g. 'string', 'integer' or 'datetime']
 -- @param options=nil [Map null (Boolean) and default (inserted into the SQL as is)]
 function add_column(table_name, name, type, options)
-  return ActiveRecord.ddl('add_column', table_name, name, type, options)
+  ActiveRecord.ddl('add_column', table_name, name, type, options)
 end
 
 --- Removes a column from an existing table. Give the type to make it reversible.
@@ -145,7 +145,7 @@ end
 -- @param type=nil [String abstract column type]
 -- @param options=nil [Map column options]
 function remove_column(table_name, name, type, options)
-  return ActiveRecord.ddl('remove_column', table_name, name, type, options)
+  ActiveRecord.ddl('remove_column', table_name, name, type, options)
 end
 
 --- Renames a column of an existing table.
@@ -153,21 +153,21 @@ end
 -- @param name [String current column name]
 -- @param new_name [String]
 function rename_column(table_name, name, new_name)
-  return ActiveRecord.ddl('rename_column', table_name, name, new_name)
+  ActiveRecord.ddl('rename_column', table_name, name, new_name)
 end
 
 --- Adds the 'created_at' and 'updated_at' columns to an existing table.
 -- @param table_name [String]
 -- @param options=nil [Map column options, e.g. { null = true }]
 function add_timestamps(table_name, options)
-  return ActiveRecord.ddl('add_timestamps', table_name, options)
+  ActiveRecord.ddl('add_timestamps', table_name, options)
 end
 
 --- Removes the 'created_at' and 'updated_at' columns from a table.
 -- @param table_name [String]
 -- @param options=nil [Map unused]
 function remove_timestamps(table_name, options)
-  return ActiveRecord.ddl('remove_timestamps', table_name, options)
+  ActiveRecord.ddl('remove_timestamps', table_name, options)
 end
 
 --- Adds a reference column ('<name>_id'), its index and optionally a foreign key to an
@@ -179,7 +179,7 @@ end
 -- @param name [String name of the referenced model, singular]
 -- @param options=nil [Map the options of t:references]
 function add_reference(table_name, name, options)
-  return ActiveRecord.ddl('add_reference', table_name, name, options)
+  ActiveRecord.ddl('add_reference', table_name, name, options)
 end
 
 --- Removes a reference column along with its index and foreign key.
@@ -187,7 +187,7 @@ end
 -- @param name [String name of the referenced model, singular]
 -- @param options=nil [Map column (defaults to '<name>_id')]
 function remove_reference(table_name, name, options)
-  return ActiveRecord.ddl('remove_reference', table_name, name, options)
+  ActiveRecord.ddl('remove_reference', table_name, name, options)
 end
 
 --- Creates an index. The index is named '<table>_<columns>_index' if no name is given.
@@ -201,7 +201,7 @@ end
 -- @param columns=nil [String/List<String> column name or a list of column names]
 -- @param options=nil [Map name, unique, length, using, where and if_not_exists]
 function add_index(table_name, columns, options)
-  return ActiveRecord.ddl('add_index', table_name, columns, options)
+  ActiveRecord.ddl('add_index', table_name, columns, options)
 end
 
 --- Drops an index.
@@ -213,14 +213,14 @@ end
 -- @param options [String/List<String>/Map column name, list of column names, or a table
 --   with name or column(s) and optionally if_exists]
 function remove_index(table_name, options)
-  return ActiveRecord.ddl('remove_index', table_name, options)
+  ActiveRecord.ddl('remove_index', table_name, options)
 end
 
 --- Drops an index by name.
 -- @param index_name [String]
 -- @param table_name [String table the index belongs to]
 function drop_index(index_name, table_name)
-  return ActiveRecord.ddl('remove_index', table_name, { name = index_name })
+  ActiveRecord.ddl('remove_index', table_name, { name = index_name })
 end
 
 --- Adds a foreign key constraint.
@@ -233,7 +233,7 @@ end
 -- @param options=nil [Map column (defaults to '<singular of to_table>_id'), primary_key
 --   ('id' by default), on_delete ('cascade', 'nullify' or 'restrict') and name]
 function add_foreign_key(from_table, to_table, options)
-  return ActiveRecord.ddl('add_foreign_key', from_table, to_table, options)
+  ActiveRecord.ddl('add_foreign_key', from_table, to_table, options)
 end
 
 --- Drops a foreign key constraint.
@@ -241,7 +241,7 @@ end
 -- @param to_table [String/Map table the key refers to, or the options]
 -- @param options=nil [Map column or name of the constraint]
 function remove_foreign_key(from_table, to_table, options)
-  return ActiveRecord.ddl('remove_foreign_key', from_table, to_table, options)
+  ActiveRecord.ddl('remove_foreign_key', from_table, to_table, options)
 end
 
 --- Checks whether a foreign key is recorded in the metadata. Runs no statement, so it can
@@ -300,14 +300,14 @@ end
 -- @param args [Map table_name, key, foreign_table and foreign_key, optionally cascade
 --   (Boolean, adds ON DELETE CASCADE) and name (name of the constraint)]
 function create_reference(args)
-  return ActiveRecord.ddl('create_reference', args)
+  ActiveRecord.ddl('create_reference', args)
 end
 
 --- Adds a PRIMARY KEY constraint named '<table_name>_pkey' to a table.
 -- @param table_name [String]
 -- @param key [String column name]
 function create_primary_key(table_name, key)
-  return ActiveRecord.ddl('create_primary_key', table_name, key)
+  ActiveRecord.ddl('create_primary_key', table_name, key)
 end
 
 --- Runs a raw SQL statement. Not reversible.
@@ -337,14 +337,14 @@ end
 -- ```
 -- @param callback [Function receives the direction helper]
 function reversible(callback)
-  return running_migration('reversible'):reversible(callback)
+  running_migration('reversible'):reversible(callback)
 end
 
 --- Runs the inverse of the statements made inside of the function. Shorthand for
 -- ActiveRecord::Migration#revert on the running migration.
 -- @param callback [Function/ActiveRecord::Migration]
 function revert(callback)
-  return running_migration('revert'):revert(callback)
+  running_migration('revert'):revert(callback)
 end
 
 --- Converts a unix timestamp to a date-time string in UTC, in the form that the current

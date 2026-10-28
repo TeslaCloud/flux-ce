@@ -13,9 +13,6 @@ local player_meta = FindMetaTable('Player')
 local IsValid = IsValid
 local istable = istable
 
---- Reads the persistent data table out of the database record of a player.
--- @param record [User the database record]
--- @return [Map the stored data, an empty table if there is none or it cannot be read]
 local function read_record_data(record)
   local raw = record.data
 

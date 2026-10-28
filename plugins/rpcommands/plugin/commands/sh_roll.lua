@@ -20,9 +20,6 @@ CMD.no_console = true
 local max_range = 10000
 local default_formula = '1d20'
 
---- Returns the level of a player's character for the `level` variable of a formula.
--- @param target [Player]
--- @return [Number the level from the Stats or the Levels plugin, 1 without either]
 local function get_character_level(target)
   if Stats and isfunction(Stats.get_character_level) then
     return Stats:get_character_level(target)

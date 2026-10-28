@@ -227,7 +227,6 @@ Unit.to_cm          = Unit.to_centimeters
 Unit.to_kilometer   = Unit.to_kilometers
 Unit.to_km          = Unit.to_kilometers
 
---- Install Unit shortcuts into the math library.
 local function installable(func)
   return function(n)
     return func(Unit, n)

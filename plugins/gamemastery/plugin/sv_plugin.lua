@@ -625,14 +625,6 @@ function Gamemastery.refresh(target)
   Gamemastery.send_pool(target)
 end
 
---- Answers a network request with the outcome of an action: the success phrase, or the
--- reason the action was refused.
--- @param actor [Player]
--- @param success [Boolean]
--- @param phrase [String language phrase of the success]
--- @param arguments [Map arguments of the success phrase]
--- @param reason=nil [String language phrase of the refusal]
--- @param reason_arguments=nil [Map arguments of the refusal phrase]
 local function answer(actor, success, phrase, arguments, reason, reason_arguments)
   if success then
     actor:notify(phrase, arguments)
@@ -641,10 +633,6 @@ local function answer(actor, success, phrase, arguments, reason, reason_argument
   end
 end
 
---- Checks the sender of an action request: they must be a gamemaster and not have sent one
--- less than a second ago, which they are told about.
--- @param actor [Player]
--- @return [Boolean true when the request may go on]
 local function accept_action(actor)
   if !Gamemastery.is_gamemaster(actor) then return false end
 

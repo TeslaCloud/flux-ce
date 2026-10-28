@@ -317,8 +317,6 @@ if SERVER then
 else
   local current
 
-  --- Returns the timed action bar, registering it the first time it is needed.
-  -- @return [Map the bar]
   local function get_bar()
     return Flux.Bars:get('timed_action') or Flux.Bars:register('timed_action', {
       text = '',
@@ -332,8 +330,6 @@ else
     })
   end
 
-  --- Forgets the timed action of the local player and runs the finish hook for it.
-  -- @param success [Boolean whether the action ran for its whole duration]
   local function clear(success)
     local action = current
 

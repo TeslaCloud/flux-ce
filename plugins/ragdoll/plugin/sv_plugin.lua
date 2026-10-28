@@ -197,12 +197,6 @@ local function start_getup_action(target, data, duration)
   })
 end
 
---- Runs the PlayerCanRagdoll hook.
--- @param target [Player]
--- @param state [Number RAGDOLL_ state the player is about to enter]
--- @param delay=nil [Number seconds after which they would get up by themselves]
--- @param data=nil [Map their ragdoll data if they are already lying on the ground]
--- @return [Boolean false if a handler has refused]
 local function can_ragdoll(target, state, delay, data)
   --- Asks whether a player may be put into a ragdoll state. Called on the server before a
   -- living player falls over or is knocked out, before the state of a player who is already
@@ -218,10 +212,6 @@ local function can_ragdoll(target, state, delay, data)
   return hook.Run('PlayerCanRagdoll', target, state, delay, data) != false
 end
 
---- Stores the state a ragdoll was given and runs the PlayerRagdolled hook.
--- @param target [Player]
--- @param state [Number RAGDOLL_ state the player has entered]
--- @param data [Map their ragdoll data]
 local function ragdolled(target, state, data)
   data.state = state
 

@@ -9,8 +9,6 @@ local default_start = '2020-01-01 08:00'
 local default_minute_length = 60
 local real_time_tolerance = 2
 
---- Returns the key of the data file that the game time of the current schema is saved in.
--- @return [String key for `Data.save` and `Data.load`]
 local function data_key()
   return 'schemas/'..Flux.get_schema_folder()..'/gametime'
 end

@@ -124,9 +124,6 @@ local function resolve_box(style, name, scaled)
   return box
 end
 
---- Parses a hex color string.
--- @param text [String '#rgb', '#rrggbb' or '#rrggbbaa']
--- @return [Color, or nil if the string is not a hex color]
 local function parse_hex_color(text)
   local hex = text:match('^#(%x+)$')
 

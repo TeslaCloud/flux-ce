@@ -11,7 +11,6 @@
 -- reversible.
 class 'ActiveRecord::CommandRecorder'
 
---- Error message of statements that cannot be reverted automatically.
 local function irreversible(command, reason)
   error(
     'ActiveRecord::IrreversibleMigration - this migration uses '..command..', which is not automatically '..
@@ -225,7 +224,9 @@ end
 -- @param ... [Vararg arguments of the statement]
 function ActiveRecord.CommandRecorder:record(name, ...)
   if name == 'change_table' then
-    return self:record_change_table(...)
+    self:record_change_table(...)
+
+    return
   end
 
   local args = pack(...)

@@ -157,12 +157,6 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Draws a small label on a dark pill in a corner of the slot.
--- @param text [String/Number]
--- @param x [Number left edge of the pill]
--- @param y [Number top edge of the pill]
--- @param color [Color text color]
--- @param align_right=false [Boolean grow the pill to the left from x instead of to the right]
 local function draw_badge(text, x, y, color, align_right)
   local font = Theme.get_font('text_smallest')
   local text_w, text_h = util.text_size(text, font)
@@ -246,7 +240,9 @@ function PANEL:set_item(instance_id)
 
       return
     else
-      return self:set_item(instance_id[1])
+      self:set_item(instance_id[1])
+
+      return
     end
   end
 

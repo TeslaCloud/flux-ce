@@ -68,7 +68,6 @@ function TOOL:get_area_mode()
 end
 
 if CLIENT then
-  --- Adds the controls for the tool in the tool menu.
   local function build_cpanel(panel)
     local mode_list = Area.tool_modes
 

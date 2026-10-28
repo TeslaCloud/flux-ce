@@ -33,10 +33,6 @@ local server_configs = {
   levels_server_floor_offset = true
 }
 
---- Checks whether a player may gain combat experience: the `levels_combat_experience`
--- config is on and the entity is a player with an active character.
--- @param actor [Entity]
--- @return [Boolean]
 local function can_gain_combat_experience(actor)
   return config_get('levels_combat_experience', false) == true and IsValid(actor) and
     actor:IsPlayer() and actor:is_character_loaded()

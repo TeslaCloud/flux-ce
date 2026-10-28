@@ -22,11 +22,6 @@ local function is_throttled(actor)
   return false
 end
 
---- Tells a player that their request to load or delete a character was refused.
--- @param actor [Player]
--- @param action [String 'select' or 'delete']
--- @param reason [String text or language phrase]
--- @param arguments=nil [Map values to substitute into the phrase]
 local function refuse_request(actor, action, reason, arguments)
   Cable.send(actor, 'fl_character_request_failed', action, reason, arguments)
 end

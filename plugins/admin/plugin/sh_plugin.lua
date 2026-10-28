@@ -61,8 +61,6 @@ local function complete_duration()
   return duration_examples
 end
 
---- Lists the IDs of every registered permission for the arguments of the 'permission' type.
--- @return [List<String> permission IDs, sorted]
 local function complete_permission()
   local ids = {}
 
@@ -75,8 +73,6 @@ local function complete_permission()
   return ids
 end
 
---- Lists the IDs of every registered role for the arguments of the 'role' type.
--- @return [List<String> role IDs, sorted]
 local function complete_role()
   local ids = {}
 
@@ -89,8 +85,6 @@ local function complete_role()
   return ids
 end
 
---- Lists the maps for the arguments of the 'map' type, see `Bolt:get_maps`.
--- @return [List<String> map names]
 local function complete_map()
   return Bolt:get_maps()
 end

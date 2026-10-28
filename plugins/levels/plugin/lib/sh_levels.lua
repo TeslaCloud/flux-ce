@@ -43,11 +43,6 @@ end
 Characters.network_data('skill_points')
 Characters.network_data('attribute_points')
 
---- Reads a config as a whole number that is not lower than a minimum.
--- @param key [String config key]
--- @param default [Number value to use while the config has no valid value]
--- @param min [Number lowest value to return]
--- @return [Number]
 local function get_whole_config(key, default, min)
   local value = tonumber(config_get(key, default))
 
@@ -58,11 +53,6 @@ local function get_whole_config(key, default, min)
   return math_max(math_floor(value), min)
 end
 
---- Reads a config as a number that is not lower than a minimum, keeping its decimals.
--- @param key [String config key]
--- @param default [Number value to use while the config has no valid value]
--- @param min [Number lowest value to return]
--- @return [Number]
 local function get_number_config(key, default, min)
   local value = tonumber(config_get(key, default))
 
@@ -336,18 +326,12 @@ if SERVER then
     return istable(character) and character or nil
   end
 
-  --- Returns the level stored on a character, kept between 1 and the highest level.
-  -- @param character [Character]
-  -- @return [Number]
   local function get_stored_level(character)
     local level = tonumber(character.level) or 1
 
     return math_clamp(math_floor(level), 1, Levels.get_max_level())
   end
 
-  --- Returns the experience stored on a character.
-  -- @param character [Character]
-  -- @return [Number never lower than 0]
   local function get_stored_experience(character)
     return math_max(math_floor(tonumber(character.experience) or 0), 0)
   end
@@ -549,7 +533,6 @@ if SERVER then
     return istable(data) and data or {}
   end
 
-  --- Saves the time of the first run and the last server level seen for the schema.
   local function save_server_data()
     Data.save(get_data_key(), {
       first_boot = Levels.first_boot,

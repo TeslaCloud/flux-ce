@@ -176,8 +176,6 @@ local function to_number(value, default)
   return tonumber(value) or default
 end
 
---- Distorts the picture through the lens material.
--- @param amount [Number how far the picture is distorted]
 local function draw_refraction(amount)
   if refract_material:IsError() then return end
 

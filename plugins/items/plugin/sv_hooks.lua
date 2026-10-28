@@ -11,10 +11,6 @@ local IsValid = IsValid
 local use_distance_sqr = 100 * 100
 local min_aim_dot = math.pi * 0.125
 
---- Checks whether an item holds other items in its inventory, the way the container items
--- of the Inventory plugin do.
--- @param item_obj [Item]
--- @return [Boolean]
 local function has_contents(item_obj)
   return item_obj.inventory != nil and !item_obj.inventory:is_empty()
 end
@@ -373,8 +369,6 @@ function Items:DoPlayerDeath(victim, _attacker, _damage_info)
   end
 end
 
---- Calls the on_loadout callback of every item that the player has.
--- @param actor [Player]
 local function give_loadout(actor)
   for _, item_obj in pairs(actor:get_items()) do
     if item_obj.on_loadout then

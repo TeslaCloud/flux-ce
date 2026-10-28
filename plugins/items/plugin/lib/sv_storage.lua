@@ -128,10 +128,6 @@ local function to_bool(value)
   return value == true or value == 1 or value == '1' or value == 't' or value == 'true'
 end
 
---- Checks whether two values are equal, comparing tables by their contents.
--- @param a [Any]
--- @param b [Any]
--- @return [Boolean]
 local function deep_equal(a, b)
   if a == b then return true end
   if !istable(a) or !istable(b) then return false end
@@ -147,9 +143,6 @@ local function deep_equal(a, b)
   return true
 end
 
---- Serializes a table for a text column.
--- @param tab [Map]
--- @return [String the serialized table, or nil if there is nothing in it]
 local function encode(tab)
   if !istable(tab) or next(tab) == nil then return end
 
@@ -160,9 +153,6 @@ local function encode(tab)
   end
 end
 
---- Turns the value of a serialized column back into a table.
--- @param value [Any]
--- @return [Map the table, or nil if there is nothing to decode]
 local function decode(value)
   if !isstring(value) or value == '' then return end
 
@@ -173,9 +163,6 @@ local function decode(value)
   end
 end
 
---- Returns the template of an instance.
--- @param item_obj [Item]
--- @return [Item]
 local function get_template(item_obj)
   local meta = getmetatable(item_obj)
 
@@ -234,9 +221,6 @@ local function round(value)
   return math.Round(value, 1)
 end
 
---- Builds a string out of the rounded position and angles of an entity.
--- @param entity [Entity]
--- @return [String]
 local function place_of(entity)
   local pos, ang = entity:GetPos(), entity:GetAngles()
 
@@ -274,8 +258,6 @@ local function reserve_block(callback)
   query:execute()
 end
 
---- Counts the instance ids that are reserved and not handed out yet.
--- @return [Number]
 local function ids_left()
   local count = 0
 
@@ -522,9 +504,6 @@ local function restore(row)
   return item_obj, true
 end
 
---- Splits a list into lists of at most chunk_size elements.
--- @param list [List]
--- @return [List<List>]
 local function chunks(list)
   local result = {}
 
@@ -535,17 +514,10 @@ local function chunks(list)
   return result
 end
 
---- Builds a list of placeholders for an IN (...) condition.
--- @param count [Number]
--- @return [String]
 local function placeholders(count)
   return string.rep('?, ', count - 1)..'?'
 end
 
---- Runs a SELECT on the items table.
--- @param condition [String WHERE condition with ? placeholders]
--- @param values [List values of the placeholders]
--- @param callback [Function receives the list of rows]
 local function select_rows(condition, values, callback)
   local query = ActiveRecord.Database:select('items')
     query:where_raw(condition, values)
@@ -723,8 +695,6 @@ function Item.forget(item_obj, delete)
   Item.network_forget(item_obj)
 end
 
---- Forgets an unloaded instance once nothing about it is waiting to be written.
--- @param item_obj [Item]
 local function forget_if_written(item_obj)
   if item_obj.unloading and (item_obj.writes_in_flight or 0) == 0 and !dirty[item_obj] then
     Item.forget(item_obj)
@@ -755,10 +725,6 @@ function Item.unload(items)
   end
 end
 
---- Collects the values of a row for an insert or update query.
--- @param query [ActiveRecord::Query]
--- @param record [Map]
--- @param method [String 'insert' or 'update']
 local function add_values(query, record, method)
   local type_to_db = ActiveRecord.type_to_db
 
@@ -773,9 +739,6 @@ local function add_values(query, record, method)
   end
 end
 
---- Logs a query that changes the items table.
--- @param label [String]
--- @return [Function query callback]
 local function log_query(label)
   return function(_result, query_str, time, bindings)
     print_query('Item '..label..' ('..time..'s)', query_str, bindings)
@@ -815,9 +778,6 @@ local function write_entry(entry, now, on_success, on_error)
   query:execute()
 end
 
---- Starts the delete queries of rows.
--- @param ids [List<Number>]
--- @param on_error [Function]
 local function delete_rows(ids, on_error)
   for _, part in ipairs(chunks(ids)) do
     local query = ActiveRecord.Database:delete('items')
@@ -828,8 +788,6 @@ local function delete_rows(ids, on_error)
   end
 end
 
---- Takes note that the row of an entry has been written.
--- @param entry [Map]
 local function written(entry)
   local item_obj = entry.item
 

@@ -19,18 +19,10 @@ function PLUGIN:PlayerCanLockDoor(actor, entity)
   end
 end
 
---- Checks whether a player may manage the keys of an entity: they need the 'manage_doors'
--- permission and the entity has to be a door.
--- @param actor [Player]
--- @param entity [Entity]
--- @return [Boolean]
 local function can_manage_keys(actor, entity)
   return actor:can('manage_doors') and isentity(entity) and IsValid(entity) and entity:is_door()
 end
 
---- Finds a key by its instance ID.
--- @param instance_id [Number]
--- @return [Item the key, nil if no key has that ID]
 local function find_key(instance_id)
   local item_obj = isnumber(instance_id) and Item.find_instance_by_id(instance_id)
 
@@ -39,11 +31,6 @@ local function find_key(instance_id)
   end
 end
 
---- Gives a newly created item to a player, or removes it again and tells them why when it
--- does not fit into their inventory.
--- @param actor [Player]
--- @param item_obj [Item]
--- @return [Boolean whether the player received the item]
 local function give_new_item(actor, item_obj)
   local success, error_text = actor:add_item(item_obj)
 

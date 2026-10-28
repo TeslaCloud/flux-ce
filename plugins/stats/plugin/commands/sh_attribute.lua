@@ -14,9 +14,6 @@ CMD.description = 'command.attribute.description'
 CMD.category = 'permission.categories.character_management'
 CMD.aliases = { 'attributes', 'att' }
 
---- Translates the description of a subcommand with every registered attribute ID listed.
--- @param phrase [String language phrase of the description]
--- @return [String]
 local function describe_with_attributes(phrase)
   return t(phrase, { attributes = table.concat(table.GetKeys(Attributes.get_stored()), ', ') })
 end

@@ -2,8 +2,6 @@
 -- Staff draw a transfer area with it: left click adds points, right click creates the area,
 -- reload removes the transfer area that is aimed at.
 
---- Builds the Server Transfer Area mode of the Area Tool.
--- @return [Map the mode definition, ready for mode_list:Add]
 local function build_tool_mode()
   local mode = {}
   mode.title = t'tool.proxy_area.title'

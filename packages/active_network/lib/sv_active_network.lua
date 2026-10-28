@@ -61,10 +61,6 @@ local function contains_function(value, seen)
   return false
 end
 
---- Checks whether a value cannot be networked and prints an error with a traceback if so.
--- @param key [String name of the variable the value is meant for]
--- @param value [Any value to check]
--- @return [Boolean true if the value is a function or a table that contains one]
 local function is_bad_type(key, value)
   if isfunction(value) then
     error_with_traceback('Cannot network functions! ('..tostring(key)..')')

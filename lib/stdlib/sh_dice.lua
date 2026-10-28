@@ -97,37 +97,22 @@ local function fail(message, position)
   error({ message = message..' at position '..position }, 0)
 end
 
---- Checks whether a character is a decimal digit.
--- @param char [String single character, may be empty]
--- @return [Boolean whether it is a digit]
 local function is_digit(char)
   return char != '' and string_find('0123456789', char, 1, true) != nil
 end
 
---- Checks whether a character may start an identifier.
--- @param char [String single lower case character, may be empty]
--- @return [Boolean whether it is a letter or an underscore]
 local function is_name_start(char)
   return char != '' and string_find('abcdefghijklmnopqrstuvwxyz_', char, 1, true) != nil
 end
 
---- Checks whether a character may continue an identifier.
--- @param char [String single lower case character, may be empty]
--- @return [Boolean whether it is a letter, a digit or an underscore]
 local function is_name_char(char)
   return is_name_start(char) or is_digit(char)
 end
 
---- Checks whether a number has no fractional part.
--- @param value [Number]
--- @return [Boolean whether the number is whole]
 local function is_whole(value)
   return value == math_floor(value)
 end
 
---- Checks whether a number is neither infinite nor NaN.
--- @param value [Number]
--- @return [Boolean whether the number is finite]
 local function is_finite(value)
   return value == value and value != math_huge and value != -math_huge
 end
@@ -161,10 +146,6 @@ local function starts_dice(previous, text, index)
   return next_char == 'f' and !is_name_char(string_sub(text, index + 2, index + 2))
 end
 
---- Finds the dice modifier that starts at a position of the formula.
--- @param text [String lower case formula]
--- @param index [Number position to look at]
--- @return [String modifier name, or nil if none starts there]
 local function match_modifier(text, index)
   for _, name in ipairs(modifier_names) do
     if string_sub(text, index, index + #name - 1) == name then
@@ -189,12 +170,6 @@ local function tokenize(source)
   local sides_pending = false
   local sides_parens = {}
 
-  --- Appends a token to the list.
-  -- @param kind [String token kind]
-  -- @param value [Any token value]
-  -- @param start [Number position of the first character]
-  -- @param finish [Number position of the last character]
-  -- @return [Table the token]
   local function push(kind, value, start, finish)
     local token = {
       kind = kind,
@@ -321,16 +296,10 @@ local function tokenize(source)
   return tokens
 end
 
---- Returns the current token without consuming it.
--- @param state [Table parser state]
--- @return [Table token]
 local function peek(state)
   return state.tokens[state.index]
 end
 
---- Consumes and returns the current token.
--- @param state [Table parser state]
--- @return [Table token]
 local function advance(state)
   local token = state.tokens[state.index]
 
@@ -341,17 +310,10 @@ local function advance(state)
   return token
 end
 
---- Checks whether a token is a given operator.
--- @param token [Table token]
--- @param value [String operator character]
--- @return [Boolean whether the token is that operator]
 local function is_op(token, value)
   return token.kind == 'op' and token.value == value
 end
 
---- Describes a token for error messages.
--- @param token [Table token]
--- @return [String quoted token text, or 'end of formula']
 local function describe(token)
   if token.kind == 'eof' then
     return 'end of formula'
@@ -437,11 +399,6 @@ local function parse_atom(state)
   fail('Unexpected '..describe(token), token.pos)
 end
 
---- Parses the number that follows a dice modifier.
--- @param state [Table parser state]
--- @param modifier [Table the modifier token]
--- @param optional [Boolean whether the number may be left out]
--- @return [Number the number, or nil when it is left out]
 local function parse_modifier_number(state, modifier, optional)
   local token = peek(state)
 
@@ -652,9 +609,6 @@ parse_expression = function(state, min_precedence)
   return left
 end
 
---- Parses a whole formula into a syntax tree.
--- @param source [String formula]
--- @return [Table formula node]
 local function parse_formula(source)
   local tokens = tokenize(source)
   local state = { tokens = tokens, index = 1, depth = 0, dice = 0 }
@@ -673,9 +627,6 @@ local function parse_formula(source)
   return { kind = 'formula', formula = source, expression = expression }
 end
 
---- Turns an error caught by pcall into a message.
--- @param err [Table/String the caught error]
--- @return [String error message]
 local function error_message(err)
   if istable(err) and err.message then
     return err.message
@@ -762,10 +713,6 @@ local function roll_die(node, low, high)
   return value
 end
 
---- Clamps a die to the `min` and `max` modifiers of its term.
--- @param node [Table dice node]
--- @param value [Number rolled face]
--- @return [Number clamped value]
 local function clamp_die(node, value)
   if node.min and value < node.min then
     value = node.min
@@ -899,11 +846,6 @@ local function roll_term(node, context)
   return total
 end
 
---- Applies a binary operator.
--- @param node [Table binary node]
--- @param left [Number left operand]
--- @param right [Number right operand]
--- @return [Number the result]
 local function apply_binary(node, left, right)
   local op = node.op
 
@@ -930,10 +872,6 @@ local function apply_binary(node, left, right)
   return left ^ right
 end
 
---- Calls one of the formula functions.
--- @param node [Table call node]
--- @param args [Table list of evaluated arguments]
--- @return [Number the result]
 local function apply_call(node, args)
   local name = node.name
   local value = args[1]
@@ -999,10 +937,6 @@ evaluate_node = function(node, context)
   return value
 end
 
---- Evaluates a parsed formula and builds the result table.
--- @param ast [Table formula node]
--- @param variables [Table/Function variable values]
--- @return [Table result]
 local function evaluate_formula(ast, variables)
   local context = { variables = variables, rolls = {}, dice = 0 }
   local total = evaluate_node(ast.expression, context)
@@ -1074,9 +1008,6 @@ local function collect_dice(node, list)
   return list
 end
 
---- Formats a number for display: whole numbers without decimals, others with up to two.
--- @param value [Number]
--- @return [String formatted number]
 local function format_number(value)
   if is_whole(value) and math_abs(value) < 1e15 then
     return string_format('%d', value)

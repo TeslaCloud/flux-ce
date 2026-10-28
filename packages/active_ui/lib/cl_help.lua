@@ -204,12 +204,6 @@ local function describe_command(command)
   }
 end
 
---- Adds the entries of the subcommands of a command that a player may run to a list, along
--- with the subcommands of those, in the order they were added.
--- @param list [List<Map> entries to add to]
--- @param command [Command]
--- @param client [Player]
--- @return [List<Map> the list]
 local function describe_subcommands(list, command, client)
   for _, subcommand in ipairs(command:get_subcommands()) do
     if subcommand:is_allowed(client) then

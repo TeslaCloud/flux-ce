@@ -3,8 +3,6 @@
 -- showing refused requests, opening the main menu and asking for a new physical description.
 
 Cable.receive('fl_characters_load', function(data)
-  --- Stores the list on the local player, once that player exists.
-  -- @return [Boolean true when the list has been stored]
   local function store_characters()
     if !IsValid(PLAYER) then return false end
 

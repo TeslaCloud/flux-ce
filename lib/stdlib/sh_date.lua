@@ -105,7 +105,6 @@ function Date:strftime(fmt, time)
   return os_date(fmt, time or self.time)
 end
 
---- @ignore
 local function run_if_valid_time(right, callback)
   if istable(right) and right.class_name == 'Time' then
     return callback(right)

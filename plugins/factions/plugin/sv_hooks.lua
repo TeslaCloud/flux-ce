@@ -9,14 +9,6 @@
 
 Cable.check_networked_string('fl_faction_creation_refused')
 
---- Asks the PlayerCanBypassFactionLimit hook whether a player may load a character of a
--- faction or rank that is full, or of a whitelisted faction they are not on the whitelist of.
--- @param actor [Player]
--- @param faction_table [Faction the faction of the character]
--- @param rank_table [Map the rank that is full, nil when it is the faction that is full or
---   the whitelist that is missing]
--- @param character [Character the character the player wants to load]
--- @return [Boolean]
 local function can_bypass_limit(actor, faction_table, rank_table, character)
   --- Decides whether a player may load a character although its faction, or its rank in
   -- that faction, already has as many members online as the limit allows, or although the

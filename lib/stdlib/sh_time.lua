@@ -139,7 +139,6 @@ Time.week         = Time.weeks
 Time.month        = Time.months
 Time.year         = Time.years
 
---- Install Time shortcuts into the math library.
 local function installable(func)
   return function(n)
     return func(Time, n)

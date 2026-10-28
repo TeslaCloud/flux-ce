@@ -11,11 +11,6 @@ local own_color = Color('lightgreen')
 local text_color = Color(255, 255, 255)
 local outline_color = Color(0, 0, 0)
 
---- Copies a color into one of the reusable colors with another alpha.
--- @param target [Color the color that is written to]
--- @param source [Color the color to copy]
--- @param alpha [Number alpha from 0 to 255]
--- @return [Color the target]
 local function fade(target, source, alpha)
   target.r = source.r
   target.g = source.g

@@ -112,7 +112,6 @@ local function query_of(self)
   return setmetatable({ is_query = true, query_map = a{} }, { __index = self })
 end
 
---- @ignore
 local function bind_list(values, list)
   local placeholders = {}
 
@@ -635,7 +634,6 @@ local except = {
   id = true, created_at = true, updated_at = true
 }
 
---- @ignore
 local function gen_callback(self, insert)
   return function(result, query, time, bindings)
     print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query, bindings)

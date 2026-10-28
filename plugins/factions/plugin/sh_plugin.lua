@@ -52,11 +52,6 @@ local function factions_of(actor, target_arg)
   return found
 end
 
---- Returns the factions whose ranks or models are suggested for a command: those of the
--- players named by the first argument, or every faction if it names nobody.
--- @param actor [Player the player who is typing, nil for the server console]
--- @param args [List<String> the arguments typed before the completed one]
--- @return [List<Faction>]
 local function suggested_factions(actor, args)
   local found = isstring(args[1]) and factions_of(actor, args[1]) or {}
 
@@ -69,8 +64,6 @@ local function suggested_factions(actor, args)
   return found
 end
 
---- Completes arguments of the 'faction' type with the ID of every faction.
--- @return [List<String> faction IDs, sorted]
 local function complete_faction()
   local ids = {}
 

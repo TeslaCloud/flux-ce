@@ -43,15 +43,6 @@ local function with_alpha(color, alpha)
   return result
 end
 
---- Draws a rounded box with a 1 pixel border: the border color first, the fill inset by one
--- pixel on top of it.
--- @param radius [Number corner radius]
--- @param x [Number]
--- @param y [Number]
--- @param w [Number]
--- @param h [Number]
--- @param fill [Color]
--- @param border [Color border, nil for none]
 local function card(radius, x, y, w, h, fill, border)
   if border then
     rounded_box(radius, x, y, w, h, border)
@@ -61,14 +52,6 @@ local function card(radius, x, y, w, h, fill, border)
   end
 end
 
---- Draws a FontAwesome glyph centered in a box, if the FontAwesome package is there.
--- @param icon [String icon ID]
--- @param x [Number left of the box]
--- @param y [Number top of the box]
--- @param w [Number width of the box]
--- @param h [Number height of the box]
--- @param size [Number font size of the glyph]
--- @param color [Color]
 local function glyph(icon, x, y, w, h, size, color)
   if !FontAwesome then return end
 
@@ -588,7 +571,9 @@ end
 -- @param h [Number height of the panel]
 function SKIN:PaintTab(panel, w, h)
   if panel:GetPropertySheet():GetActiveTab() == panel then
-    return self:PaintActiveTab(panel, w, h)
+    self:PaintActiveTab(panel, w, h)
+
+    return
   end
 
   local radius = scale(self.radius_small)
@@ -620,13 +605,6 @@ function SKIN:PaintActiveTab(_panel, w, h)
   rounded_box_ex(math_max(radius - 1, 0), 1, 1, w - 2, scale(2), self.control_color_active, true, true, false, false)
 end
 
---- Paints one of the buttons of a window title bar as a glyph that lights up while hovered.
--- @param skin [Map the skin]
--- @param panel [Panel the button]
--- @param w [Number width of the panel]
--- @param h [Number height of the panel]
--- @param icon [String FontAwesome icon ID]
--- @param hover [Color color of the glyph while the button is hovered]
 local function paint_window_button(skin, panel, w, h, icon, hover)
   if !panel.m_bBackground then return end
 
@@ -712,12 +690,6 @@ function SKIN:PaintScrollBarGrip(panel, w, h)
   end
 end
 
---- Paints one of the arrow buttons of a scroll bar or a number entry.
--- @param skin [Map the skin]
--- @param panel [Panel the button]
--- @param w [Number width of the panel]
--- @param h [Number height of the panel]
--- @param icon [String FontAwesome icon ID of the chevron]
 local function paint_arrow_button(skin, panel, w, h, icon)
   if panel.m_bBackground == false then return end
 

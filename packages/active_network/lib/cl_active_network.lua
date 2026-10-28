@@ -28,11 +28,6 @@ local function has_changed(old_value, new_value)
   return istable(new_value) or old_value != new_value
 end
 
---- Runs the `NetVarChanged` hook for a variable of an entity.
--- @param ent_idx [Number index of the entity the variable belongs to]
--- @param key [String variable name]
--- @param old_value [Any previous value, nil if the variable was not set]
--- @param new_value [Any new value, nil if the variable has been unset]
 local function run_changed_hook(ent_idx, key, old_value, new_value)
   --- Called on the client when the server has changed a networked variable of an entity,
   -- after the new value has been stored, so `Entity:get_nv` already returns it. Runs when

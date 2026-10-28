@@ -87,10 +87,6 @@ local function parse_id(id)
   return id, style
 end
 
---- Determines if the specified icon exists in the font of the specified style.
--- @param id [String icon ID with the 'fa-' prefix]
--- @param style [String 'solid', 'regular' or 'brands']
--- @return [Boolean]
 local function has_style(id, style)
   if style == 'regular' then
     return tobool(regular[id])

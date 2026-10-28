@@ -88,10 +88,6 @@ end
 
 Lumen.call_handler = call
 
---- Hands a panel to the `ref` prop of its element.
--- @param ref [Function/Map the ref: a function that receives the panel, or a table whose
---   `current` is set]
--- @param value [Panel the panel, or nil when it goes away]
 local function assign_ref(ref, value)
   if isfunction(ref) then
     call(ref, value)
@@ -315,10 +311,6 @@ Lumen.register_element('checkbox', {
   end
 })
 
---- Checks whether the options of a combo box have changed.
--- @param options [List]
--- @param old_options [List]
--- @return [Boolean]
 local function options_changed(options, old_options)
   if options == old_options then return false end
   if !istable(options) or !istable(old_options) or #options != #old_options then return true end

@@ -7,11 +7,6 @@ CMD.description = 'command.vanish.description'
 CMD.category = 'permission.categories.player_management'
 CMD.aliases = { 'v' }
 
---- Hides or shows the targeted players and notifies them and staff.
--- @param cmd [Command the subcommand that runs]
--- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param targets [List<Player> players to affect]
--- @param should_vanish [Boolean true to hide them, false to show them again]
 local function set_vanished(cmd, actor, targets, should_vanish)
   for _, client in ipairs(targets) do
     client:set_vanished(should_vanish)

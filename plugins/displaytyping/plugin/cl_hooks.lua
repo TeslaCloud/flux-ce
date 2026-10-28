@@ -2,10 +2,6 @@
 -- the chatbox of the local player, receives the typing of the players nearby from the server
 -- and draws their bubbles.
 
---- Decides whether the live text setting is listed in the settings menu: only while the
--- player has typing bubbles turned on and the server allows live text.
--- @param _setting [Map definition of the setting]
--- @return [Boolean]
 local function live_text_setting_visible(_setting)
   return ClientSettings:get('display_typing_bubbles') and DisplayTyping:live_text_allowed()
 end

@@ -26,9 +26,6 @@ Character:validates('gender', { presence = true })
 Character:validates('phys_desc', { presence = true })
 Character:validates('model', { presence = true })
 
---- Turns a serialized column value back into a table.
--- @param serialized [String value of the column; anything else counts as empty]
--- @return [Map the decoded table, empty when there is nothing to decode]
 local function decode(serialized)
   if isstring(serialized) and serialized != '' then
     local decoded = table.deserialize(serialized)

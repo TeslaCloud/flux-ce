@@ -68,9 +68,6 @@ local boolean_words = {
 
 Config.permission = Config.permission or 'manage_configuration'
 
---- Copies a config value, so that changing the copy leaves the original alone.
--- @param value [Any]
--- @return [Any a copy if the value is a table, the value itself otherwise]
 local function copy_value(value)
   if istable(value) then
     return table.Copy(value)
@@ -79,10 +76,6 @@ local function copy_value(value)
   return value
 end
 
---- Checks whether two config values are the same. Tables are compared by their contents.
--- @param first [Any]
--- @param second [Any]
--- @return [Boolean]
 local function values_equal(first, second)
   return first == second or (istable(first) and istable(second) and table.equal(first, second))
 end
@@ -324,9 +317,6 @@ function Config.display_value(key, value)
 end
 
 if SERVER then
-  --- Lists the players who may edit configs.
-  -- @param target=nil [Player only consider this player; every player if nil]
-  -- @return [List<Player>]
   local function managers(target)
     local list = {}
 

@@ -278,9 +278,6 @@ if SERVER then
     return Lumen.define(id, file_name, code, err)
   end
 
-  --- Picks a level of long brackets that does not occur in a text.
-  -- @param text [String]
-  -- @return [String the equals signs of the level, from none upwards]
   local function bracket_level(text)
     local depth = 0
 
@@ -316,7 +313,6 @@ if SERVER then
     return table.concat(lines)
   end
 
-  --- Writes one file per template for the clients, named after the template.
   local function write_client_files()
     for id, template in pairs(templates) do
       Flux.write_client_file('3_lumen_'..id..'.lua', Lumen.generate_client_code(template))

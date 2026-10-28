@@ -45,7 +45,7 @@ function file.Write(file_name, contents)
     end
   end
 
-  return file.old_write(file_name, contents)
+  file.old_write(file_name, contents)
 end
 
 do
@@ -117,7 +117,7 @@ end
 -- handle plugins nested inside of other plugins.
 -- @param folder [String folder relative to the Lua search paths (lua/, gamemodes/)]
 function Flux.include_plugins(folder)
-  return Plugin.include_plugins(folder)
+  Plugin.include_plugins(folder)
 end
 
 --- Gets the table containing the information about the currently loaded schema. The server

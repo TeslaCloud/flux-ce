@@ -266,13 +266,10 @@ local function index_covers(index_sql, columns)
   return false
 end
 
---- @ignore
 local function rows(result)
   return result
 end
 
---- Lists the tables of an SQLite database, leaving out the internal ones of SQLite.
--- @return [List<String> sorted by name]
 local function sqlite_table_names()
   local result = ActiveRecord.adapter:raw_query(
     "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name;", rows
@@ -286,9 +283,6 @@ local function sqlite_table_names()
   return names
 end
 
---- Reads the CREATE TABLE statement of an SQLite table.
--- @param table_name [String]
--- @return [String, or nil if the table does not exist]
 local function sqlite_table_sql(table_name)
   local result = ActiveRecord.adapter:raw_query(
     "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?;", rows, 'select', { table_name }
@@ -297,9 +291,6 @@ local function sqlite_table_sql(table_name)
   return istable(result) and result[1] and result[1].sql or nil
 end
 
---- Checks whether the primary key of an SQLite table is AUTOINCREMENT.
--- @param table_name [String]
--- @return [Boolean]
 local function sqlite_autoincrement(table_name)
   local definition = sqlite_table_sql(table_name)
 
@@ -375,11 +366,6 @@ local function sqlite_foreign_keys(table_name)
   return list
 end
 
---- Checks whether an SQLite table has a foreign key from a single column to a table.
--- @param table_name [String]
--- @param column [String]
--- @param to_table [String]
--- @return [Map the foreign key, as returned by sqlite_foreign_keys, or nil]
 local function find_sqlite_foreign_key(table_name, column, to_table)
   for _, fk in ipairs(sqlite_foreign_keys(table_name)) do
     if #fk.from == 1 and fk.from[1] == column and fk.table == to_table then
@@ -388,9 +374,6 @@ local function find_sqlite_foreign_key(table_name, column, to_table)
   end
 end
 
---- Builds the FOREIGN KEY clause of a table definition.
--- @param fk [Map a foreign key, as returned by sqlite_foreign_keys]
--- @return [String]
 local function foreign_key_clause(fk)
   local function quote_all(names)
     local quoted = {}
@@ -641,10 +624,6 @@ local function rebuild_sqlite_table(statement, table_name, changes)
   end
 end
 
---- Turns an on_delete action, as the foreign key statements take it or as SQLite reports it,
--- into 'cascade', 'nullify' or the action in lower case.
--- @param on_delete [String/nil]
--- @return [String 'no action' if none is given]
 local function normalize_on_delete(on_delete)
   local action = isstring(on_delete) and on_delete:lower() or 'no action'
 

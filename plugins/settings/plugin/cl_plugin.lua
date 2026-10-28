@@ -41,10 +41,6 @@ local function queue_sync(id)
   end)
 end
 
---- Saves, networks and announces a change of the value of a setting.
--- @param setting [Map setting definition]
--- @param value [Any new value]
--- @param old_value [Any previous value]
 local function value_changed(setting, value, old_value)
   if setting.networked then
     queue_sync(setting.id)

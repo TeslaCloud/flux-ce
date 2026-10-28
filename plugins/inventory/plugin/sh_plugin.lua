@@ -36,8 +36,6 @@
 
 PLUGIN:set_global('Inventories')
 
---- Completes arguments of the 'item' type with the ID of every registered item.
--- @return [List<String> item IDs, sorted]
 local function complete_item()
   local ids = {}
 

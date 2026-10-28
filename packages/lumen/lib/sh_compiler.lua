@@ -69,36 +69,22 @@ local string_escapes = {
   ['\n'] = '\\n', ['\r'] = '\\r', ['\t'] = '\\t', ['"'] = '\\"', ['\\'] = '\\\\'
 }
 
---- Returns the line a position of the source is on.
--- @param state [Map compiler state]
--- @param pos [Number position in the source]
--- @return [Number line number, starting at 1]
 local function line_of(state, pos)
   local _, count = string_sub(state.src, 1, pos - 1):gsub('\n', '')
 
   return count + 1
 end
 
---- Raises a compile error that names the template and the line.
--- @param state [Map compiler state]
--- @param pos [Number position in the source the error is at]
--- @param message [String what is wrong]
 local function fail(state, pos, message)
   error(state.name..':'..line_of(state, pos)..': '..message, 0)
 end
 
---- Counts the newlines in a piece of text.
--- @param text [String]
--- @return [Number]
 local function count_newlines(text)
   local _, count = text:gsub('\n', '')
 
   return count
 end
 
---- Encodes a code point as UTF-8.
--- @param code [Number code point]
--- @return [String the encoded character, or an empty string for an invalid code point]
 local function utf8_char(code)
   if code > 0x10FFFF then
     return ''
@@ -107,9 +93,6 @@ local function utf8_char(code)
   return utf8.char(code)
 end
 
---- Replaces the character entities in a text with the characters they stand for.
--- @param text [String]
--- @return [String]
 local function decode_entities(text)
   if !string_find(text, '&', 1, true) then return text end
 
@@ -128,9 +111,6 @@ local function decode_entities(text)
   end))
 end
 
---- Turns a text into a Lua string literal.
--- @param text [String]
--- @return [String double quoted literal]
 local function lua_string(text)
   return '"'..text:gsub('[%c"\\]', function(char)
     return string_escapes[char] or string_format('\\%03d', string_byte(char))
@@ -177,10 +157,6 @@ local function long_bracket_end(src, pos)
   return close + 1
 end
 
---- Finds the end of a quoted Lua string that starts at a position.
--- @param state [Map compiler state]
--- @param pos [Number position of the opening quote]
--- @return [Number position right after the closing quote]
 local function quoted_string_end(state, pos)
   local src = state.src
   local quote = string_sub(src, pos, pos)
@@ -227,10 +203,6 @@ local function comment_end(state, pos)
   return (string_find(src, '\n', pos, true) or #src + 1)
 end
 
---- Finds the end of a number that starts at a position.
--- @param src [String source]
--- @param pos [Number position of the first character of the number]
--- @return [Number position right after the number]
 local function number_end(src, pos)
   local i = pos
   local hex = string_match(src, '^0[xX]', pos) != nil
@@ -403,9 +375,6 @@ local function skip_spaces(src, pos)
   return stop, count_newlines(string_sub(src, pos, stop - 1))
 end
 
---- Turns an attribute name into the key of a table constructor.
--- @param name [String]
--- @return [String `name = ` for plain identifiers, `['name'] = ` otherwise]
 local function table_key(name)
   if string_match(name, '^[%a_][%w_]*$') and !keywords[name] then
     return name..' = '

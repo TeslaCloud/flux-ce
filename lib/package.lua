@@ -225,7 +225,7 @@ end
 function Package:reload(name)
   if istable(self.installed[name]) and self.installed[name].metadata.reload then
     self.installed[name] = nil
-    return self:include(name)
+    self:include(name)
   end
 end
 
@@ -352,7 +352,6 @@ function Package:is_version(version1, version2)
 end
 
 do
-  --- @ignore
   local function do_include(file_path, lib_path, full_path)
     if istable(Package.installed[lib_path]) and !Package.installed[lib_path].metadata.reload then
       return

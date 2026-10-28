@@ -252,16 +252,10 @@ function Hints:RegisterClientSettings()
   })
 end
 
---- Tells whether the Settings plugin is loaded. The hint about turning the hints off is
--- only shown when it is.
--- @return [Boolean true if the settings menu is available]
 local function has_settings()
   return ClientSettings != nil
 end
 
---- Tells whether the inventory plugin is loaded. The hint about dropping items is only
--- shown when it is.
--- @return [Boolean true if the inventory plugin is loaded]
 local function has_inventory()
   return Inventories != nil
 end

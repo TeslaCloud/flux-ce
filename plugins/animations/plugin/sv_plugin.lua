@@ -60,18 +60,10 @@ local function start_phase(target, state, phase, sequence, duration)
   end)
 end
 
---- Makes a player play the main sequence of their animation.
--- @param target [Player]
--- @param state [Map animation state of the player]
--- @return [Boolean false if the model of the player has no such sequence]
 local function start_main(target, state)
   return start_phase(target, state, 'main', state.anim, state.duration)
 end
 
---- Makes a player play the exit sequence of their animation.
--- @param target [Player]
--- @param state [Map animation state of the player]
--- @return [Boolean false if the animation has no exit sequence or the model lacks it]
 local function start_exit(target, state)
   if !state.exit then return false end
 

@@ -147,9 +147,6 @@ if SERVER then
     return target:get_character()
   end
 
-  --- Returns the Attribute records of a player's active character.
-  -- @param target [Player]
-  -- @return [List<Attribute> records; empty if the player has no character that keeps them]
   local function get_records(target)
     local character = get_character(target)
 

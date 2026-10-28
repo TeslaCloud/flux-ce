@@ -104,9 +104,6 @@ local function date_from_days(days)
   return year, month, day
 end
 
---- Checks whether a value is a whole number.
--- @param value [Any]
--- @return [Boolean]
 local function is_whole(value)
   return isnumber(value) and value == floor(value)
 end

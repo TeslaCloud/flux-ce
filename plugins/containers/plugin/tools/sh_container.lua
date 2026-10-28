@@ -152,12 +152,6 @@ function TOOL:RightClick(trace)
 end
 
 if CLIENT then
-  --- Adds a labeled drop-down to the control panel that sets a console variable to the
-  -- value of the picked option and shows the option the variable is set to.
-  -- @param panel [Panel the tool's control panel]
-  -- @param label [String text shown next to the drop-down]
-  -- @param convar [String full name of the console variable]
-  -- @param choices [List<Map> the options, each with a title and a value]
   local function add_dropdown(panel, label, convar, choices)
     local combo_box = panel:ComboBox(label, convar)
 

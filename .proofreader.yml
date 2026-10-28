@@ -6,3 +6,11 @@ AllReaders:
     - 'packages/sfs/lib/sfs.lua'
     - 'packages/tween/**/*'
     - 'packages/utf8/**/*'
+
+Style/IncompleteDocumentation:
+  Enabled: true
+
+Lint/UncheckedEntityInCallback:
+  EntityNames: ['actor', 'ply', 'player', 'pl', 'client', 'ent', 'entity', 'target', 'victim',
+                'attacker', 'inflictor', 'owner', 'weapon', 'wep', 'npc', 'vehicle', 'ragdoll',
+                'prop', 'panel']

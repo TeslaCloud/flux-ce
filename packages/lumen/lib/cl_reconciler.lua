@@ -28,10 +28,6 @@ local scheduled = false
 
 local instantiate, update, reconcile, reconcile_children, unmount
 
---- Turns what a component returned or what a child is into an element: strings and numbers
--- become `text` elements, lists become fragments, nil and booleans become nil.
--- @param value [Any]
--- @return [Map an element, or nil]
 local function normalize(value)
   if Lumen.is_element(value) then
     return value
@@ -78,9 +74,6 @@ local function resolve(element)
   return nil
 end
 
---- Finds the closest host above an instance.
--- @param instance [Map]
--- @return [Map the host instance, or nil at the root]
 local function nearest_host(instance)
   local parent = instance.parent
 
@@ -95,11 +88,6 @@ local function nearest_host(instance)
   return nil
 end
 
---- Collects the panels an instance consists of at the top level: the panel of a host, or the
--- panels of the children of a fragment or of a component.
--- @param instance [Map]
--- @param into [List<Panel>]
--- @return [List<Panel>]
 local function collect_panels(instance, into)
   if !instance then return into end
 
@@ -394,8 +382,6 @@ function unmount(instance)
   end
 end
 
---- Runs the effects that renders have queued, in order, skipping those of instances that
--- have been unmounted since.
 local function run_effects()
   local queue = effects
 

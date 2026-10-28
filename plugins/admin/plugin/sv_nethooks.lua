@@ -9,10 +9,6 @@
 local ban_list_interval = 0.25
 local staff_list_interval = 0.5
 
---- Returns the name of a plugin the loader knows of, loaded or not, for the notifications
--- of the plugin manager.
--- @param id [String normalized plugin ID]
--- @return [String the name from `Plugin.known`, or the ID when no plugin has it]
 local function known_plugin_name(id)
   for _, plugin_info in ipairs(Plugin.known()) do
     if plugin_info.id == id then
@@ -44,9 +40,6 @@ local function can_manage_player(actor, target)
   return true
 end
 
---- Checks that a value received from a client is one of the three permission values.
--- @param value [Any]
--- @return [Boolean true for PERM_ALLOW, PERM_NO and PERM_NEVER]
 local function is_permission_value(value)
   return value == PERM_ALLOW or value == PERM_NO or value == PERM_NEVER
 end
@@ -184,10 +177,6 @@ Cable.receive('fl_bolt_delete_character_temp_permission', function(actor, target
   end
 end)
 
---- Checks whether two config values are the same. Lists are compared by their contents.
--- @param first [Any]
--- @param second [Any]
--- @return [Boolean]
 local function config_values_equal(first, second)
   return first == second or (istable(first) and istable(second) and table.equal(first, second))
 end

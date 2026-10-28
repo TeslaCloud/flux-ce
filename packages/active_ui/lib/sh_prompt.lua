@@ -215,9 +215,6 @@ if SERVER then
 else
   local windows = {}
 
-  --- Sends the answer of the local player to the server and forgets the dialog.
-  -- @param id [Number request ID]
-  -- @param answer [String/Boolean the entered text, the choice, or false if canceled]
   local function send_answer(id, answer)
     windows[id] = nil
 

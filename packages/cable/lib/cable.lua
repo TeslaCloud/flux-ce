@@ -232,13 +232,6 @@ local function decode_transfer(data, compressed)
   return packet
 end
 
---- Writes one piece of a chunked transfer into a started net message.
--- @param transfer_id [Number ID of the transfer on the sending side]
--- @param id [String name of the message being transferred]
--- @param index [Number index of the piece, from 1]
--- @param count [Number how many pieces the transfer has]
--- @param compressed [Boolean whether the block is compressed]
--- @param piece [String the piece]
 local function write_chunk(transfer_id, id, index, count, compressed, piece)
   local size = #piece
 
@@ -252,9 +245,6 @@ local function write_chunk(transfer_id, id, index, count, compressed, piece)
   write_data(piece, size)
 end
 
---- Lists the players of a receiver list who are still on the server.
--- @param receivers [List<Player>]
--- @return [List<Player>]
 local function live_receivers(receivers)
   local alive = {}
 
@@ -354,7 +344,7 @@ function cable.receive(id, callback)
 
   handlers[id] = callback
 
-  return net.Receive(id, function(_length, sender)
+  net.Receive(id, function(_length, sender)
     local args, count = read_args(id)
 
     dispatch(id, sender, args, count)

@@ -20,10 +20,6 @@ local simple_text_outlined = draw.SimpleTextOutlined
 local outline_color = Color(0, 0, 0, 120)
 local max_rows = 8
 
---- Cuts a text after a number of characters.
--- @param text [String]
--- @param count [Number how many characters to keep]
--- @return [String the first characters of the text, or all of it if it is shorter]
 local function cut_chars(text, count)
   if count <= 0 then return '' end
 
@@ -34,18 +30,10 @@ local function cut_chars(text, count)
   return text:sub(1, byte - 1)
 end
 
---- Counts the characters of a text, or its bytes if it is not valid UTF-8.
--- @param text [String]
--- @return [Number]
 local function char_len(text)
   return utf8.len(text) or #text
 end
 
---- Moves a position in a list by a step, wrapping around at both ends.
--- @param index [Number current position]
--- @param count [Number length of the list]
--- @param step [Number how far to move, negative to move back]
--- @return [Number the new position]
 local function wrap_index(index, count, step)
   return (index - 1 + step) % count + 1
 end
@@ -128,13 +116,6 @@ local function emphasized_arg(arg_index, arg_type, arg_count)
   end
 end
 
---- Draws an outlined text in the style of the chatbox.
--- @param text [String]
--- @param font [String]
--- @param x [Number]
--- @param y [Number]
--- @param color [Color]
--- @return [Number width of the text, Number height of the text]
 local function draw_text(text, font, x, y, color)
   return simple_text_outlined(text, font, x, y, color, nil, nil, 0.5, outline_color)
 end

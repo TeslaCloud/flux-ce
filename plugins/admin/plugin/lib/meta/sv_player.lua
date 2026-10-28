@@ -189,7 +189,7 @@ end
 --- Runs a command as this player, with the usual permission checks.
 -- @param cmd [String command name and arguments without the leading slash, e.g. 'getup 5']
 function player_meta:run_command(cmd)
-  return Flux.Command:interpret(self, cmd)
+  Flux.Command:interpret(self, cmd)
 end
 
 --- Moves the player to a position and unsticks them. The previous position is kept in

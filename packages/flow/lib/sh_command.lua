@@ -85,10 +85,6 @@ local function prepare(cmd)
   end
 end
 
---- Checks whether someone may run a command or at least one of its subcommands.
--- @param cmd [Command]
--- @param actor [Player the player, or nil or an invalid entity for the server console]
--- @return [Boolean]
 local function is_reachable(cmd, actor)
   if cmd:is_allowed(actor) then
     return true
@@ -372,10 +368,6 @@ local function fill_candidates(result, entries, partial)
   end
 end
 
---- Checks whether a name starts with the typed text, ignoring the case.
--- @param name [String]
--- @param lower [String the typed text in lower case]
--- @return [Boolean]
 local function starts_with(name, lower)
   return name:utf8lower():sub(1, #lower) == lower
 end
@@ -803,9 +795,6 @@ if SERVER then
     ErrorNoHalt('[Flux:Command] '..t(phrase, translated)..'\n')
   end
 
-  --- Tells the player who runs a command how to use it.
-  -- @param actor [Player the player, an invalid entity for the server console]
-  -- @param cmd [Command the command or subcommand]
   local function syntax_error(actor, cmd)
     command_error(actor, 'error.command.syntax', {
       command = cmd:get_full_name(),
@@ -813,8 +802,6 @@ if SERVER then
     })
   end
 
-  --- Tells the player who runs a command that they may not use it.
-  -- @param actor [Player the player, an invalid entity for the server console]
   local function access_error(actor)
     if IsValid(actor) then
       actor:notify('error.command.no_access')

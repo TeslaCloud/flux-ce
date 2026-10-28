@@ -47,8 +47,6 @@ local function drop_on_world(_receiver, panels, is_dropped)
   Gamemastery.request_spawn(char_data.id, cursor_direction())
 end
 
---- Checks whether a card of a pool character is being dragged.
--- @return [Boolean]
 local function is_dragging_card()
   local dragged = dragndrop.GetDroppable(drop_name)
 

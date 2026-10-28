@@ -85,12 +85,6 @@ do
   local ACT_MP_STAND_IDLE = ACT_MP_STAND_IDLE
   local walk_speed_sqr = 0.5 * 0.5
 
-  --- Returns the compiled animations for the hold type of a weapon. Hold types that the
-  -- animation table does not define use the 'normal' hold type.
-  -- @param actor [Player]
-  -- @param animations [Map compiled animation table of the player's model]
-  -- @param weapon=nil [Weapon weapon to take the hold type from, the active weapon if nil]
-  -- @return [Map animations by key]
   local function hold_type_animations(actor, animations, weapon)
     local hold_type = get_weapon_hold_type(actor, weapon or actor:GetActiveWeapon())
 

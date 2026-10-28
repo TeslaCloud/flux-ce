@@ -194,7 +194,6 @@ function llm.new(options)
   }, Client)
 end
 
---- @ignore
 local function header_value(headers, name)
   if !istable(headers) then return end
 
@@ -205,7 +204,6 @@ local function header_value(headers, name)
   end
 end
 
---- @ignore
 local function retry_delay(attempt, retry_after)
   local delay = tonumber(retry_after)
 
@@ -216,7 +214,6 @@ local function retry_delay(attempt, retry_after)
   return math.Clamp(delay, 0, 60)
 end
 
---- @ignore
 local function api_error(code, body, data)
   local info = istable(data) and data.error
 
@@ -234,7 +231,6 @@ local function api_error(code, body, data)
   return { status = code, message = 'HTTP '..code, body = body }
 end
 
---- @ignore
 local function send(client, provider, url, headers, payload, attempt, callback)
   local function retry(retry_after)
     timer.Simple(retry_delay(attempt, retry_after), function()
@@ -333,7 +329,6 @@ function Client:chat(request, callback)
   send(self, provider, self.base_url..path, headers, llm.to_json(body), 1, callback)
 end
 
---- @ignore
 local function tool_input(arguments)
   if !istable(arguments) or table.IsEmpty(arguments) then
     return llm.empty_object
@@ -342,7 +337,6 @@ local function tool_input(arguments)
   return arguments
 end
 
---- @ignore
 local function push_user_block(result, block)
   local last = result[#result]
 
@@ -354,7 +348,6 @@ local function push_user_block(result, block)
   table.insert(last.content, block)
 end
 
---- @ignore
 local function anthropic_messages(messages)
   local result = {}
   local system_texts = {}
@@ -527,7 +520,6 @@ function llm.providers.anthropic.parse(data)
   return response
 end
 
---- @ignore
 local function openai_messages(system, messages)
   local result = {}
 

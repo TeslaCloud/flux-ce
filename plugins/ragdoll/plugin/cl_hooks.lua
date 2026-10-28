@@ -9,8 +9,6 @@ local next_getup_request = 0
 local knocked_out_color = Color(0, 0, 0, 255)
 local fallen_color = Color(0, 0, 0, 100)
 
---- Checks whether the get up timer of the local player is running.
--- @return [Boolean]
 local function is_getting_up()
   local action = Flux.TimedAction:get(PLAYER)
 

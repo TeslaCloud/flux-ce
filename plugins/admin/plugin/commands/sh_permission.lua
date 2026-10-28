@@ -115,10 +115,6 @@ reset.arguments = 2
 reset.arg_types = { 'player', 'permission' }
 reset.immunity = true
 
---- Checks whether a player has a value of their own for a permission, lasting or temporary.
--- @param target [Player]
--- @param permission_id [String permission ID]
--- @return [Boolean]
 local function has_own_value(target, permission_id)
   return target:get_permission(permission_id) != PERM_NO or target:get_temp_permission(permission_id) != nil
 end

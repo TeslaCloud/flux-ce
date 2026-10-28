@@ -29,18 +29,10 @@ local isstring = isstring
 local tonumber = tonumber
 local os_time = os.time
 
---- Checks whether a value is a saved character record.
--- @param character [Any]
--- @return [Boolean true for a table with an ID]
 local function is_character(character)
   return istable(character) and tonumber(character.id) != nil
 end
 
---- Returns a list of permission records of a character, creating it when the character has
--- none yet.
--- @param character [Character]
--- @param field [String 'character_permissions' or 'character_temp_permissions']
--- @return [List<ActiveRecord::Base>]
 local function get_records(character, field)
   local records = character[field]
 

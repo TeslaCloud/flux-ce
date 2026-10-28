@@ -16,10 +16,6 @@ if !D20 then
   PLUGIN:set_global('D20')
 end
 
---- Runs the AdjustArmorClass hook for an armor class that has been worked out.
--- @param target [Entity player or NPC whose armor class it is]
--- @param value [Number armor class before the hook]
--- @return [Number armor class after the hook]
 local function adjust_armor_class(target, value)
   local info = { value = value }
 

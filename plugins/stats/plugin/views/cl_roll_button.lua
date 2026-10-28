@@ -14,11 +14,6 @@ local face_time = 0.06
 local flash_time = 0.9
 local show_time = 6
 
---- Mixes two colors.
--- @param from [Color]
--- @param to [Color]
--- @param fraction [Number from 0 (from) to 1 (to)]
--- @return [Color]
 local function mix(from, to, fraction)
   return Color(
     from.r + (to.r - from.r) * fraction,
@@ -113,7 +108,9 @@ function PANEL:Paint(w, h)
   local state = get_roll_state(roll, now)
 
   if !state then
-    return self.BaseClass.Paint(self, w, h)
+    self.BaseClass.Paint(self, w, h)
+
+    return
   end
 
   local background = self:get_background() or Theme.get_color('surface_raised')
@@ -148,11 +145,6 @@ vgui.Register('fl_stats_roll_button', PANEL, 'lumen_button')
 
 local button_element = Lumen.find_element('button')
 
---- The update of the `roll_button` element: everything the update of `button` does, and the
--- stat or the skill whose rolls the button shows.
--- @param panel [Panel the `fl_stats_roll_button`]
--- @param props [Map the props of the element]
--- @param old_props [Map the props of the last update, nil on the first]
 local function update_roll_button(panel, props, old_props)
   button_element.update(panel, props, old_props)
   panel:set_roll_id(props.roll_id)

@@ -196,9 +196,6 @@ function Bolt:merge_permissions(role, perms, as_own)
   end
 end
 
---- Allows a command to the role named in its `permission` field, if the command has a
--- permission of its own, then does the same for its subcommands.
--- @param cmd [Command]
 local function allow_command_role(cmd)
   local role_id = cmd.permission
 
@@ -278,10 +275,6 @@ function Bolt:register_permission(id, name, description, category)
   self:add_permission(id, category, data, true)
 end
 
---- Registers the permission named in the `permission_id` of a command or subcommand, unless
--- it is registered already, and does the same for its subcommands.
--- @param cmd [Command]
--- @param category=nil [String category of the command it belongs to, used if it has none]
 local function register_permission_ids(cmd, category)
   local perm_id = cmd.permission_id
 
@@ -568,9 +561,6 @@ function Bolt:is_root_steam_id(steam_id)
   return false
 end
 
---- Looks a permission up by its ID in every category, matched exactly but in any case.
--- @param id [String permission ID]
--- @return [Map permission data, or nil if there is no such permission]
 local function lookup_permission(id)
   for _, category in pairs(permissions) do
     local found = category[id]

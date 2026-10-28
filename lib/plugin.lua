@@ -603,8 +603,6 @@ if SERVER then
     return disabled
   end
 
-  --- Lists the plugins that are saved as disabled.
-  -- @return [List<String> normalized plugin IDs in alphabetical order]
   local function pending_list()
     local list = {}
 

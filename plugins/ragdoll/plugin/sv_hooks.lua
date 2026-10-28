@@ -7,12 +7,6 @@
 local IsValid = IsValid
 local config_get = Config.get
 
---- Checks whether a hit knocks a player out: the ragdoll_knockout_on_damage config is on,
--- the damage is of the DMG_CLUB type (a stunstick, a crowbar) and the player is left alive
--- at or below the ragdoll_knockout_health config, while they are not knocked out already.
--- @param victim [Player]
--- @param damage_info [CTakeDamageInfo]
--- @return [Boolean]
 local function knocks_out(victim, damage_info)
   if !config_get('ragdoll_knockout_on_damage') or victim:is_knocked_out() then return false end
   if !damage_info:IsDamageType(DMG_CLUB) then return false end

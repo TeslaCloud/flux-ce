@@ -32,9 +32,6 @@ local states = SrcdsProxy.transfer_states or {}
 
 SrcdsProxy.transfer_states = states
 
---- Returns the transfer state of a player, creating it if needed.
--- @param actor [Player]
--- @return [Map]
 local function get_state(actor)
   local state = states[actor]
 
@@ -84,9 +81,6 @@ function SrcdsProxy:may_enter(actor, backend)
   return Proxy.may_enter(actor, backend)
 end
 
---- Takes the countdown or the pending move off the HUD of a player, if it is shown there.
--- @param actor [Player]
--- @param state [Map the transfer state of the player]
 local function clear_hud(actor, state)
   local countdown = state.countdown
 

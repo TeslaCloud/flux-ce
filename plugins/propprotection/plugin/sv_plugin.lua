@@ -21,17 +21,10 @@ local held = PropProtection.held or {}
 PropProtection.owned = owned
 PropProtection.held = held
 
---- Returns the name of the timer that removes the entities owned under a key.
--- @param key [String ownership key]
--- @return [String]
 local function removal_timer(key)
   return 'fl_prop_removal_'..key
 end
 
---- Takes an entity out of the index of owned entities, and stops the removal countdown of
--- its owner when it was the last entity they had.
--- @param key [String ownership key the entity is owned under]
--- @param entity [Entity]
 local function unlist(key, entity)
   local entities = owned[key]
 

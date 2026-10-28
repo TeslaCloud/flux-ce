@@ -114,10 +114,6 @@ function Item.register(id, data)
   stored[id] = data
 end
 
---- Returns the metatable that the instances of a template get, which makes them read
--- every field they do not have themselves from the template.
--- @param template [Item]
--- @return [Map]
 local function get_instance_meta(template)
   local meta = instance_metas[template]
 
@@ -446,9 +442,6 @@ if SERVER then
     return list
   end
 
-  --- Remembers that players have been sent an item instance.
-  -- @param target [Player/List<Player>]
-  -- @param item_obj [Item]
   local function add_receivers(target, item_obj)
     local receivers = item_obj.receivers
 
