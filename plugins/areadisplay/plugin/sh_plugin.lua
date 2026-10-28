@@ -32,75 +32,7 @@
 
 PLUGIN:set_global('AreaDisplay')
 
-local styles = AreaDisplay.styles or {}
-
-AreaDisplay.styles = styles
-AreaDisplay.default_style = 'fade'
 AreaDisplay.area_type = 'textarea'
-
---- Registers a display style: a way of putting an area notice on the screen. Register it
--- from shared code, so that the server accepts it from the Area Tool. Registering an ID again
--- replaces the style.
--- ```
--- local style = { name = 'my_schema.area_styles.corner' }
---
--- if CLIENT then
---   function style:draw(display, alpha, scrw, scrh, offset)
---     local font = Theme.get_font('text_normal')
---     local color = Theme.get_color('text'):alpha(alpha)
---
---     draw.SimpleText(display.text, font, 32, scrh - 64 - offset, color)
---
---     return util.font_size(font)
---   end
--- end
---
--- AreaDisplay:register_style('corner', style)
--- ```
--- @param id [String unique style ID, stored in the `style` field of an area]
--- @param data [Map style definition: name (String phrase or text shown in the Area Tool, the
---   ID by default) and the optional clientside functions is_available(style) (return false
---   to have the default style used instead), start(style, display) (called when a notice is
---   about to be shown, may change its `fade_in`, `hold` and `fade_out` times; return false if
---   the style shows the notice by other means and nothing is to be drawn) and
---   draw(style, display, alpha, scrw, scrh, offset) (draws the notice at the given opacity
---   from 0 to 255 and returns the height it took, which is the offset of the next notice of
---   the same style)]
--- @return [Map the registered style, or nil if the arguments are not valid]
-function AreaDisplay:register_style(id, data)
-  if !isstring(id) or !istable(data) then return end
-
-  data.id = id
-  data.name = data.name or id
-
-  styles[id] = data
-
-  return data
-end
-
---- Returns a display style.
--- @param id [String style ID]
--- @return [Map the style, or nil if it is not registered]
-function AreaDisplay:find_style(id)
-  return styles[id]
-end
-
---- Returns every registered display style.
--- @return [Map styles keyed by style ID]
-function AreaDisplay:get_styles()
-  return styles
-end
-
---- Turns a value into the ID of a registered display style.
--- @param id [Any style ID to check]
--- @return [String the ID if such a style is registered, otherwise the ID of the default style]
-function AreaDisplay:get_style_id(id)
-  if isstring(id) and styles[id] then
-    return id
-  end
-
-  return self.default_style
-end
 
 --- Finds a text area by its ID.
 -- @param id [String area ID]
@@ -328,7 +260,6 @@ Areas.set_callback(AreaDisplay.area_type, function(actor, area, has_entered, _po
   end
 end)
 
-require_relative 'sh_styles'
 require_relative 'cl_plugin'
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'

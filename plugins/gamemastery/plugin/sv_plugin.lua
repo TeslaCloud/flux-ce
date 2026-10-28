@@ -211,9 +211,9 @@ end
 function Gamemastery.get_receivers()
   local receivers = {}
 
-  for _, client in player.Iterator() do
-    if client:has_initialized() and Gamemastery.is_gamemaster(client) then
-      receivers[#receivers + 1] = client
+  for _, candidate in player.Iterator() do
+    if candidate:has_initialized() and Gamemastery.is_gamemaster(candidate) then
+      receivers[#receivers + 1] = candidate
     end
   end
 

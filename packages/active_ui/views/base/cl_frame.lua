@@ -87,19 +87,18 @@ function PANEL:OnMousePressed()
   end
 end
 
---- Stops dragging the frame if it is draggable.
+--- Stops dragging the frame if it is being dragged.
 function PANEL:OnMouseReleased()
-  if self:is_draggable() then
+  if self.dragging then
     self.dragging = nil
     self:MouseCapture(false)
   end
 end
 
---- Makes the frame draggable with the mouse. The argument is currently ignored: dragging
--- is always turned on and cannot be turned off again through this method.
--- @param _bool [Boolean ignored]
-function PANEL:set_draggable(_bool)
-  self.draggable = true
+--- Sets whether the frame can be dragged with the mouse.
+-- @param draggable=true [Boolean false to keep the frame in place]
+function PANEL:set_draggable(draggable)
+  self.draggable = draggable != false
 end
 
 --- Checks whether the frame can be dragged with the mouse.

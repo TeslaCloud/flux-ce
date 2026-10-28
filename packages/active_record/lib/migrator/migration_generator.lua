@@ -73,7 +73,7 @@ function ActiveRecord.MigrationGenerator:body()
     return lines
   end
 
-  local _columns, add_table = self.name:match('^Add(.+)To(.+)$')
+  local add_table = self.name:match('^Add.+To(.+)$')
 
   if add_table then
     add_table = table_name_from(add_table)
@@ -89,7 +89,7 @@ function ActiveRecord.MigrationGenerator:body()
     return lines
   end
 
-  local _columns, remove_table = self.name:match('^Remove(.+)From(.+)$')
+  local remove_table = self.name:match('^Remove.+From(.+)$')
 
   if remove_table then
     remove_table = table_name_from(remove_table)

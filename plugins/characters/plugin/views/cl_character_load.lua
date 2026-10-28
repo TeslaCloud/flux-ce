@@ -5,7 +5,6 @@
 -- `fl_character_panel` for every character of the local player. It is rebuilt whenever the
 -- server sends the character list again or refuses a request to load or delete a character.
 local PANEL = {}
-PANEL.chars = {}
 
 --- Creates the fullscreen character list and the button that leads back to the main menu.
 function PANEL:Init()
@@ -71,18 +70,15 @@ function PANEL:rebuild()
 
   self.list:SetOverlap(math.scale(12))
 
-  for index, char_data in pairs(characters) do
+  for _, char_data in pairs(characters) do
     local char_panel = vgui.Create('fl_character_panel', self)
     char_panel:SetSize(panel_w, panel_h)
     char_panel:set_character(char_data)
-    char_panel:SetParent(self)
-
-    self.chars[index] = char_panel
 
     self.list:AddPanel(char_panel)
   end
 
-  if #characters == 0 then
+  if #characters == 0 and IsValid(self.back) then
     self.back:DoClick()
   end
 end
@@ -145,16 +141,20 @@ function PANEL:Init()
   self.delete:set_centered(true)
   self.delete:SetTooltip(t'ui.char_create.delete')
   self.delete.DoClick = function(_btn)
+    local char_data = self.char_data
+
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
     Derma_StringRequest(
       t'ui.char_create.delete_confirm',
-      t('ui.char_create.delete_confirm_msg', { name = self.char_data.name }),
+      t('ui.char_create.delete_confirm_msg', { name = char_data.name }),
       '',
       function(text)
-        if text == self.char_data.name then
-          Cable.send('fl_player_delete_character', self.char_data.id)
+        if text != char_data.name then return end
 
+        Cable.send('fl_player_delete_character', char_data.id)
+
+        if IsValid(self) then
           self:SetDisabled(true)
           self.model:SetVisible(false)
           self:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)

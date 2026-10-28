@@ -10,7 +10,7 @@ class 'DateTime' extends 'Date'
 
 --- Initializes a new DateTime object.
 -- ```
--- local my_birthday = DateTime.new(1999, 12, 04, 15, 30, 00) -- 3:30PM, April 12, 1999
+-- local my_birthday = DateTime.new(1999, 12, 4, 15, 30, 0) -- 3:30 PM, December 4, 1999
 -- ```
 -- @param year [Number]
 -- @param month [Number]
@@ -75,7 +75,7 @@ function DateTime:now()
 end
 
 --- Get the UTC time, or alternatively a UTC time at a specified UNIX timestamp.
--- @param time=DateTime [Number UNIX time]
+-- @param time=self.time [Number UNIX time]
 -- @return [DateTime]
 function DateTime:utc(time)
   local date = os_date('!*t', time or self.time)
@@ -100,7 +100,7 @@ end
 -- print(date_time_obj:iso()) -- current date and time in UTC, such as "2019-09-24T18:09:00Z"
 -- print(DateTime:iso(1569283200)) -- 2019-09-24T00:00:00Z
 -- ```
--- @param time=Date object [Number UNIX time]
+-- @param time=self.time [Number UNIX time]
 -- @return [String ISO date format]
 function DateTime:iso(time)
   return os_date('!%Y-%m-%dT%H:%M:%SZ', time or self.time)

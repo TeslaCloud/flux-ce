@@ -7,8 +7,8 @@
 
 mod 'Flux::Undo'
 
-local queue   = {}
-local buffer  = {}
+local queue = {}
+local buffer = {}
 
 --- Starts a new undo entry. Add callbacks to it with Flux.Undo#add, assign it to a player
 -- and finish it to put it into the undo queue of that player.
@@ -95,12 +95,10 @@ end
 --- Undoes the most recent entry in the undo queue of a player and removes it from the queue.
 -- @param owner [Player]
 function Flux.Undo:do_player(owner)
-  local count = (queue[owner] and #queue[owner]) or 0
+  local owner_queue = queue[owner]
 
-  if count > 0 then
-    -- do the top of the queue
-    self:execute(queue[owner][count])
-    table.remove(queue[owner], count)
+  if owner_queue and #owner_queue > 0 then
+    self:execute(table.remove(owner_queue))
   end
 end
 

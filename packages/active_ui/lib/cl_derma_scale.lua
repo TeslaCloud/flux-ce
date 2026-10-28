@@ -36,7 +36,6 @@ local math_ceil  = math.ceil
 local math_min   = math.min
 local math_max   = math.max
 
--- Originals and wrappers survive code reloads so that a method is never wrapped twice.
 local store = Flux.derma_scale or {
   originals = {},
   wrappers = setmetatable({}, { __mode = 'k' })
@@ -118,8 +117,6 @@ end
 
 hook.Add('CreateFonts', 'DermaScale', DermaScale.create_fonts)
 
--- Patching of the stock classes.
-
 local function original_of(class_table, class_name, method)
   local key = class_name..':'..method
   local current = rawget(class_table, method)
@@ -128,8 +125,6 @@ local function original_of(class_table, class_name, method)
     current = class_table[method]
   end
 
-  -- A method that is not one of our wrappers is the real one, which may be new if the
-  -- class has been registered again.
   if current != nil and !store.wrappers[current] then
     store.originals[key] = current
   end
@@ -144,7 +139,6 @@ local function apply_patch(class_name, patch)
 
   local original = original_of(class_table, class_name, patch.method)
 
-  -- An unknown method means a different version of the panel, leave it alone.
   if !original then return end
 
   local wrapper
@@ -249,8 +243,6 @@ local function control_table(class_name)
   return vgui.GetControlTable(class_name)
 end
 
--- Labels, buttons and text entries.
-
 DermaScale.after('DLabel', 'Init', function(panel)
   panel:SetTall(s(20))
 end)
@@ -275,7 +267,6 @@ DermaScale.replace('DButton', 'PerformLayoutImage', function(self)
   local target_size = math_min(self:GetWide() - s(4), self:GetTall() - s(4))
   local image_w, image_h = self.m_Image.ActualWidth, self.m_Image.ActualHeight
 
-  -- Icons may grow with the screen, but not beyond the scale factor.
   local zoom = math_min(target_size / image_w, target_size / image_h, DermaScale.factor())
 
   self.m_Image:SetWide(math_ceil(image_w * zoom))
@@ -290,7 +281,6 @@ DermaScale.replace('DButton', 'PerformLayoutImage', function(self)
     )
   end
 
-  -- For center alignments, reduce the inset of the image, so the text appears more centered visually.
   local alignment = self:GetContentAlignment()
 
   if alignment == 8 or alignment == 5 or alignment == 2 then
@@ -337,7 +327,6 @@ DermaScale.replace('DNumberWang', 'PerformLayout', function(self)
 end)
 
 DermaScale.replace('DNumberWang', 'SizeToContents', function(self)
-  -- Size based on the max number and max amount of decimals.
   local decimals = self:GetDecimals()
   local min = math.Round(self:GetMin(), decimals)
   local max = math.Round(self:GetMax(), decimals)
@@ -360,8 +349,6 @@ DermaScale.after('DBinder', 'Init', function(panel)
   panel:SetSize(s(60), s(30))
 end)
 
--- Check boxes.
-
 DermaScale.after('DCheckBox', 'Init', function(panel)
   panel:SetSize(s(15), s(15))
 end)
@@ -380,8 +367,6 @@ DermaScale.replace('DCheckBoxLabel', 'PerformLayout', function(self)
   self.Label:SetPos(x + self.Button:GetWide() + s(9), math_floor((self:GetTall() - self.Label:GetTall()) * 0.5))
 end)
 
--- Combo boxes and menus.
-
 DermaScale.after('DComboBox', 'Init', function(panel)
   panel:SetTall(s(22))
   panel:SetTextInset(s(8), 0)
@@ -392,7 +377,6 @@ DermaScale.replace('DComboBox', 'PerformLayout', function(self, w, h)
   self.DropButton:AlignRight(s(4))
   self.DropButton:CenterVertical()
 
-  -- Make sure the text color is updated.
   control_table('DButton').PerformLayout(self, w, h)
 end)
 
@@ -407,7 +391,6 @@ DermaScale.after('DMenu', 'AddSpacer', function(_panel, spacer)
 end)
 
 DermaScale.after('DMenuOption', 'Init', function(panel)
-  -- Room for the icon on the left.
   panel:SetTextInset(s(32), 0)
 end)
 
@@ -433,7 +416,6 @@ end)
 local function layout_menu_bar_button(button)
   if !IsValid(button) or button.ClassName != 'DButton' then return end
 
-  -- Apply the font again, in case the bar outlived a rebuild of the fonts, then fit the text.
   button:SetFont(button.m_FontName or 'DermaDefault')
   button:SizeToContentsX(s(20))
 end
@@ -473,8 +455,6 @@ if menubar then
     end
   end
 end
-
--- Windows and tooltips.
 
 DermaScale.after('DFrame', 'Init', function(panel)
   panel:SetMinWidth(s(50))
@@ -529,8 +509,6 @@ DermaScale.after('DNotify', 'Init', function(panel)
   panel:SetSpacing(s(4))
 end)
 
--- Scroll bars, lists and layouts.
-
 DermaScale.after('DVScrollBar', 'Init', function(panel)
   panel:SetSize(s(15), s(15))
 end)
@@ -577,7 +555,6 @@ DermaScale.replace('DPanelList', 'PerformLayout', function(self)
   end
 
   if self.VBar and !self:GetAutoSize() and tall != self.pnlCanvas:GetTall() then
-    -- Make sure we are not too far down!
     self.VBar:SetScroll(self.VBar:GetScroll())
   end
 end)
@@ -611,7 +588,6 @@ DermaScale.replace('DListView', 'PerformLayout', function(self)
 
   self:FixColumnsLayout()
 
-  -- If the data is dirty, re-layout.
   if self:GetDirty() then
     self:SetDirty(false)
 
@@ -619,7 +595,6 @@ DermaScale.replace('DListView', 'PerformLayout', function(self)
 
     self.pnlCanvas:SetTall(y)
 
-    -- Layout again, since stuff has changed.
     self:InvalidateLayout(true)
   end
 end)
@@ -651,8 +626,6 @@ DermaScale.after('DPanelSelect', 'Init', function(panel)
   panel:SetSpacing(s(2))
   panel:SetPadding(s(2))
 end)
-
--- Trees.
 
 DermaScale.after('DTree', 'Init', function(panel)
   panel:SetIndentSize(s(14))
@@ -688,8 +661,6 @@ DermaScale.replace('DTree_Node', 'PerformLayout', function(self)
   self.Label:SetTall(line_height)
 
   if self:ShowIcons() then
-    -- Icons are 16 pixel images, grow them with the screen (from the size of the image, so
-    -- that the size does not compound from one layout to the next).
     if self.Icon.ActualWidth and self.Icon.ActualHeight then
       self.Icon:SetSize(s(self.Icon.ActualWidth), s(self.Icon.ActualHeight))
     end
@@ -715,8 +686,6 @@ DermaScale.replace('DTree_Node', 'PerformLayout', function(self)
 
   self:DoChildrenOrder()
 end)
-
--- Categories and forms.
 
 DermaScale.after('DCategoryHeader', 'Init', function(panel)
   panel:SetTextInset(s(5), 0)
@@ -759,9 +728,6 @@ DermaScale.after('DForm', 'AddItem', function(_panel, _result, left, right)
   end
 end)
 
--- The combo box of a form row fills the row, which sizes itself to its children, so the row
--- never grows past the height it had at 1080p and clips the scaled combo box and label. Docked
--- to the top like the text entry of a row, it keeps its own height, which the row then fits.
 DermaScale.after('DForm', 'ComboBox', function(_panel, combo_box)
   if DermaScale.factor() > 1 and IsValid(combo_box) then
     combo_box:Dock(TOP)
@@ -779,8 +745,6 @@ DermaScale.after('DForm', 'ControlHelp', function(_panel, label)
     label:DockMargin(s(32), 0, s(32), s(8))
   end
 end)
-
--- Property sheets and tabs.
 
 DermaScale.after('DPropertySheet', 'Init', function(panel)
   panel.tabScroller:SetOverlap(s(5))
@@ -805,7 +769,6 @@ DermaScale.after('DTab', 'Init', function(panel)
   panel:SetTextInset(0, s(4))
 end)
 
--- The icon of a tab is sized to its image, normally a 16 pixel silkicon.
 DermaScale.after('DTab', 'Setup', function(panel)
   local image = panel.Image
 
@@ -856,8 +819,6 @@ DermaScale.after('DColumnSheet', 'AddSheet', function(_panel, sheet)
   end
 end)
 
--- Sliders.
-
 DermaScale.after('DNumSlider', 'Init', function(panel)
   panel.TextArea:SetWide(s(45))
   panel.Slider:SetTall(s(16))
@@ -873,8 +834,6 @@ DermaScale.after('DNumPad', 'Init', function(panel)
   panel:SetButtonSize(s(17))
   panel:SetPadding(s(4))
 end)
-
--- Dividers and browsers.
 
 DermaScale.after('DHorizontalDivider', 'Init', function(panel)
   panel:SetDividerWidth(s(8))
@@ -917,8 +876,6 @@ DermaScale.after('DHTMLControls', 'Init', function(panel)
   panel:SetTall(button_size + margin * 2)
 end)
 
--- Model selection.
-
 DermaScale.replace('DModelSelect', 'SetHeight', function(self, rows)
   self:SetTall(s(66) * (rows or 2) + s(2))
 end)
@@ -946,8 +903,6 @@ DermaScale.replace('SpawnIcon', 'PerformLayout', function(self)
     self.Icon:StretchToParent(0, 0, 0, 0)
   end
 end)
-
--- Color controls.
 
 DermaScale.after('DColorMixer', 'Init', function(panel)
   panel.Palette:SetTall(s(75))
@@ -1005,10 +960,6 @@ DermaScale.after('DColorCombo', 'Init', function(panel)
   end
 end)
 
--- Sandbox spawn menu.
-
--- The sidebar of the creation menu gives its spawn list tree a light grey background, which the
--- near-white text of the dark skin is invisible on: let the skin paint the tree instead.
 DermaScale.after('ContentSidebar', 'Init', function(panel)
   if IsValid(panel.Tree) then
     panel.Tree:SetBackgroundColor(nil)
@@ -1042,7 +993,6 @@ DermaScale.after('ToolPanel', 'Init', function(panel)
   if IsValid(panel.SearchBar) then
     local search_container = panel.SearchBar:GetParent()
 
-    -- For the checkbox to fit neatly.
     search_container:SetTall(s(21))
     search_container:DockMargin(0, 0, 0, s(5))
   end
@@ -1076,7 +1026,7 @@ DermaScale.after('ContentContainer', 'PerformLayout', function(panel)
   panel.IconList:SetMinHeight(panel:GetTall() - s(16))
 end)
 
--- Content icons are two tiles of the icon list, so that they always fill whole tiles.
+--- Content icons are two tiles of the icon list, so that they always fill whole tiles.
 local function content_icon_size()
   return s(64) * 2
 end
@@ -1139,13 +1089,11 @@ do
 
     local overlay_pos, overlay_size = border + margin, s(16)
 
-    -- Admin only icon.
     if self:GetAdminOnly() then
       set_material(overlay_admin_only)
       draw_textured_rect(overlay_pos, overlay_pos, overlay_size, overlay_size)
     end
 
-    -- NPC weapon support icon.
     if self:GetIsNPCWeapon() then
       set_material(overlay_npc_weapon)
 
@@ -1161,7 +1109,6 @@ do
     if draw_text then
       local buffer = border + s(10)
 
-      -- Set up smaller clipping so cut text looks nicer.
       local px, py = self:LocalToScreen(buffer, 0)
       local pw, ph = self:LocalToScreen(w - buffer, h)
 
@@ -1209,12 +1156,10 @@ end)
 DermaScale.replace('ContentHeader', 'SizeToContents', function(self)
   local w = self:GetContentSize()
 
-  -- Don't let the text overflow the parent's width.
   if IsValid(self:GetParent()) then
     w = math_min(w, self:GetParent():GetWide() - s(32))
   end
 
-  -- Add a bit more room so it looks nice as a textbox, and make sure it has at least some width.
   self:SetSize(math_max(w, s(64)) + s(16), s(64))
 end)
 
@@ -1235,8 +1180,6 @@ DermaScale.replace('ContextMenu', 'PerformLayout', function(self)
   self.Canvas:InvalidateLayout(true)
 end)
 
--- The desktop icons of the context menu (the `DesktopWindows` list) are plain buttons that the
--- sandbox's CreateContextMenu builds with fixed sizes, so they are resized once it has run.
 DermaScale.replace_global('CreateContextMenu', function(...)
   local original = DermaScale.original('_G.CreateContextMenu')
 
@@ -1268,8 +1211,6 @@ DermaScale.replace_global('CreateContextMenu', function(...)
   layout:InvalidateLayout()
 end)
 
--- Sandbox tool controls.
-
 DermaScale.after('ControlPanel', 'ComboBoxMulti', function(_panel, combo_box)
   if IsValid(combo_box) then
     combo_box:SetTall(s(25))
@@ -1294,7 +1235,6 @@ DermaScale.after('CtrlColor', 'Init', function(panel)
 end)
 
 DermaScale.after('CtrlColor', 'PerformLayout', function(panel)
-  -- Keep the mixer at its target width, which fills the palette rows exactly.
   local margin = math_max((panel:GetWide() - s(272)) * 0.5, 0)
 
   panel.Mixer:DockMargin(margin, s(8), margin, 0)
@@ -1381,7 +1321,6 @@ DermaScale.replace('MatSelect', 'PerformLayout', function(self)
     return
   end
 
-  -- Rebuild.
   self.List:InvalidateLayout(true)
 
   local max_w = self:GetWide()
@@ -1421,14 +1360,11 @@ DermaScale.replace('PropSelect', 'PerformLayout', function(self, w, h)
 
     self:SetTall(y + s(5))
   else
-    -- Height is set to 0 or less, auto stretch.
     self.List:SetWide(self:GetWide())
     self.List:SizeToChildren(false, true)
     self:SetTall(self.List:GetTall() + s(5))
   end
 end)
-
--- Modal dialogs.
 
 --- Displays a simple message box, scaled with the screen. Replaces Garry's Mod's Derma_Message.
 -- @param text [String message]
@@ -1509,7 +1445,6 @@ DermaScale.replace_global('Derma_Query', function(text, title, ...)
   button_panel:SetTall(s(30))
   button_panel:SetPaintBackground(false)
 
-  -- Loop through all the options and create buttons for them.
   local num_options = 0
   local x = s(5)
 
@@ -1646,8 +1581,6 @@ DermaScale.replace_global(
     return window
   end
 )
-
--- Resolution changes.
 
 --- Rebuilds the spawn menu once the fonts have been recreated for the new resolution, since
 -- its panels were sized for the previous one. Panels that are open at that moment keep their

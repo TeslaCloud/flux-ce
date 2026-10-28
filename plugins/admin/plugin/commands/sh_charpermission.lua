@@ -73,12 +73,6 @@ local function set_permission(cmd, actor, targets, permission_id, duration_text,
 
   if !valid then return end
 
-  if duration and !Bolt:is_temp_duration(duration) then
-    Flux.Player:notify(actor, 'error.invalid_time', { time = duration_text })
-
-    return
-  end
-
   local granted = value == PERM_ALLOW
   local affected = {}
 

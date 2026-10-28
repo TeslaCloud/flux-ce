@@ -144,9 +144,8 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
   for id, members in pairs(players_table) do
     local faction = (id == 'players_online' and t'ui.scoreboard.players_online') or Factions.find_by_id(id)
-    local players = members
 
-    if table.Count(players) == 0 then continue end
+    if table.Count(members) == 0 then continue end
 
     local category = vgui.Create('DCollapsibleCategory', panel)
     category:SetSize(w - padding * 2, 32)
@@ -157,14 +156,14 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
     category_list:Add(category)
 
-    local list = vgui.Create('DPanelList', panel)
-    list:SetSpacing(margin)
-    list:SetPadding(margin)
-    list:EnableHorizontal(false)
+    local card_list = vgui.Create('DPanelList', panel)
+    card_list:SetSpacing(margin)
+    card_list:SetPadding(margin)
+    card_list:EnableHorizontal(false)
 
-    category:SetContents(list)
+    category:SetContents(card_list)
 
-    for _, client in pairs(players) do
+    for _, client in pairs(members) do
       if !IsValid(client) then continue end
 
       local player_card = vgui.Create('fl_scoreboard_player', category)
@@ -182,7 +181,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
         end
       end)
 
-      list:AddItem(player_card)
+      card_list:AddItem(player_card)
 
       panel.player_cards[#panel.player_cards + 1] = player_card
     end
@@ -212,9 +211,3 @@ function Factions:GetCharCreationErrorText(_success, status)
     return refusal or t'error.faction.creation_refused'
   end
 end
-
-Cable.receive('fl_faction_creation_refused', function(reason, arguments)
-  if isstring(reason) then
-    Factions.creation_refusal = t(reason, arguments)
-  end
-end)

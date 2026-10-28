@@ -1,5 +1,5 @@
 name: Doors
-description: Door management plugin.
+description: Lets staff configure the doors of the map and decide who may lock them, and lets characters buy, share and sell ownable doors.
 author: TeslaCloud Studios
 depends:
   - conditions

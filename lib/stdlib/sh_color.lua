@@ -22,33 +22,21 @@ function util.hex_to_color(hex)
     return Color(255, 255, 255)
   end
 
-  local hex_colors = {}
+  local channels = {}
 
   if len == 3 then
     for i = 1, 3 do
-      local v = hex[i]
+      local digit = hex[i]
 
-      table.insert(hex_colors, v..v) -- Duplicate the number.
+      channels[i] = util.hex_to_dec(digit..digit)
     end
   else
-    local initial_length = len * 0.5
-
-    for i = 1, len * 0.5 do
-      table.insert(hex_colors, hex:sub(1, 2))
-
-      if i != initial_length then
-        hex = hex:sub(3, hex:len())
-      end
+    for i = 1, len, 2 do
+      channels[#channels + 1] = util.hex_to_dec(hex:sub(i, i + 1))
     end
   end
 
-  local color = {}
-
-  for _, hex_pair in ipairs(hex_colors) do
-    table.insert(color, util.hex_to_dec(hex_pair))
-  end
-
-  return Color(color[1], color[2], color[3], (color[4] or 255))
+  return Color(channels[1], channels[2], channels[3], channels[4] or 255)
 end
 
 do
@@ -246,8 +234,6 @@ do
   local _b = 0.114
 
   --- Returns a copy of the color with its saturation multiplied by a factor.
-  -- Ripped directly from C equivalent code that can be found
-  -- here: http://alienryderflex.com/saturation.html
   -- @param amt [Number saturation factor: 1 changes nothing, 0 removes all color, more than 1
   --   saturates]
   -- @return [Color]

@@ -127,7 +127,8 @@ if SERVER then
       local ok, result = pcall(action.callback, actor, success, action)
 
       if !ok then
-        error_with_traceback("Callback of the timed action '"..tostring(action.id).."' has failed to run!\n"..result)
+        error_with_traceback("Callback of the timed action '"..tostring(action.id).."' has failed to run!\n"..
+          tostring(result))
       end
     end
 
@@ -158,7 +159,8 @@ if SERVER then
       local ok, result = pcall(action.condition, actor, action)
 
       if !ok then
-        error_with_traceback("Condition of the timed action '"..tostring(action.id).."' has failed to run!\n"..result)
+        error_with_traceback("Condition of the timed action '"..tostring(action.id).."' has failed to run!\n"..
+          tostring(result))
 
         return false
       end
@@ -283,7 +285,7 @@ if SERVER then
     if next(active) == nil then return end
 
     local cur_time = CurTime()
-    local ended = nil
+    local ended
 
     for actor, action in pairs(active) do
       local success = evaluate(actor, action, cur_time)
@@ -313,7 +315,7 @@ if SERVER then
 
   Plugin.add_hooks('FLTimedActions', hooks)
 else
-  local current = nil
+  local current
 
   --- Returns the timed action bar, registering it the first time it is needed.
   -- @return [Map the bar]

@@ -456,8 +456,7 @@ end
 --- Converts a date-time string to a unix timestamp. It understands both the ISO 8601 form
 -- ('YYYY-MM-DDTHH:MM:SSZ') and the 'YYYY-MM-DD HH:MM:SS' form, which to_datetime writes
 -- depending on the database and in which databases return date-time columns, and reads
--- either as UTC. A number is taken for
--- a unix timestamp and returned as is.
+-- either as UTC. A number is taken for a unix timestamp and returned as is.
 -- ```
 -- time_from_timestamp('2019-03-09T12:00:00Z') -- 1552132800
 -- time_from_timestamp('2019-03-09 12:00:00')  -- 1552132800
@@ -479,7 +478,7 @@ function time_from_timestamp(timestamp)
   local era_month = month + 12 * shift - 3
   local unix_epoch_day = 2472633
   local day_number = tonumber(dd) + floor((153 * era_month + 2) / 5) + 365 * era_year
-    + floor(era_year / 4) - floor(era_year / 100) + floor(era_year / 400)
+    + floor(era_year * 0.25) - floor(era_year / 100) + floor(era_year / 400)
 
   return (day_number - unix_epoch_day) * 86400 + tonumber(hh) * 3600 + tonumber(m) * 60 + tonumber(ss)
 end

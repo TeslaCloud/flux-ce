@@ -25,8 +25,9 @@ end
 
 if PACKAGE then
   --- Called by the Package manager once the Flux package has been included.
-  -- Reloads the dependencies when this is a code refresh, includes the schema and runs the
-  -- FluxPackageLoaded hook.
+  -- Reloads the dependencies when this is a code refresh (on a lite refresh only the flow and
+  -- active_ui packages, whose shared files are needed either way), includes the schema and
+  -- runs the FluxPackageLoaded hook.
   function PACKAGE:__installed__()
     if Flux.initialized then
       if !LITE_REFRESH then
@@ -34,7 +35,6 @@ if PACKAGE then
           Package:reload(dep_name)
         end
       else
-        -- Reload flow and active_ui either way since we actually need their shared files.
         Package:reload 'flow'
         Package:reload 'active_ui'
       end
@@ -51,7 +51,6 @@ if PACKAGE then
   end
 end
 
--- The rest of the file is serverside-only.
 if !SERVER then return end
 
 Settings          = Settings or YAML.read('gamemodes/flux/config/settings.yml')

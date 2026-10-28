@@ -36,8 +36,6 @@ function PANEL:Clear()
   self.last_pos = 0
 end
 
--- 'borrowed' from lua/vgui/dscrollpanel.lua
-
 --- Rebuilds the canvas and updates the scrollbar while keeping the canvas as wide as the
 -- sidebar itself.
 function PANEL:PerformLayout()

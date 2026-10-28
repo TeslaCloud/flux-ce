@@ -63,7 +63,7 @@ end
 -- @param obj [ActiveRecord::Query query to add the methods to]
 -- @see [ActiveRecord.generate_create_func]
 function ActiveRecord.generate_create_funcs(obj)
-  local tab = ActiveRecord.Adapters[ActiveRecord.adapter_name:capitalize()].types or {}
+  local tab = ActiveRecord.adapter.types or {}
 
   for type_name, definition in pairs(tab) do
     ActiveRecord.generate_create_func(obj, type_name, definition)

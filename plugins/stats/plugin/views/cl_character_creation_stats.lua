@@ -315,19 +315,17 @@ function PANEL:on_open(parent)
   local saved_levels = parent.char_data.attributes
   local spent = 0
 
-  if istable(saved_levels) then
-    for attribute_id, stat_line in pairs(self.stats) do
-      local attribute_table = stat_line.attribute_table
-      local level = tonumber(saved_levels[attribute_id])
+  for attribute_id, stat_line in pairs(self.stats) do
+    local attribute_table = stat_line.attribute_table
+    local level = istable(saved_levels) and tonumber(saved_levels[attribute_id])
 
-      if level then
-        level = math.Clamp(math.floor(level), attribute_table.min, Stats:get_creation_max(attribute_table))
+    if level then
+      level = math.Clamp(math.floor(level), attribute_table.min, Stats:get_creation_max(attribute_table))
 
-        stat_line.counter:set_value(level)
-
-        spent = spent + level - attribute_table.default
-      end
+      stat_line.counter:set_value(level)
     end
+
+    spent = spent + stat_line.counter:get_value()
   end
 
   self.points = self.start_points - spent

@@ -16,13 +16,11 @@ local logo_data = {
   x = 0,
   y = 0
 }
-local _w_mod, _h_mod = 6, 1.1
 local cur_radius, cur_alpha = 0, 0
 local exx, exy = 0, 0
 local color = Color(140, 0, 220)
 local remove_alpha = 255
 local logo_color = Color(255, 255, 255, 255)
-local _delta_modifier = 80
 local logo_tween = Tween.new(1.5, logo_data, { width = logo_w * 0.6, height = logo_h * 0.6 }, 'inOutCubic')
 
 --- Covers the whole screen, starts the intro animation, schedules the panel to close after

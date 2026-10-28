@@ -239,7 +239,6 @@ function PANEL:rebuild()
 
   local text = target:name()
   local font = Theme.get_font('text_normal')
-  local text_w, text_h = util.text_size(text, font)
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(text)
@@ -249,7 +248,8 @@ function PANEL:rebuild()
   self.name_label:SizeToContents()
 
   text = target:Ping()
-  text_w, text_h = util.text_size(text, font)
+
+  local text_w, text_h = util.text_size(text, font)
 
   self.ping = vgui.Create('DLabel', self)
   self.ping:SetText(text)

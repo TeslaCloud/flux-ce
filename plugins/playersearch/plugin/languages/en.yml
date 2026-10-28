@@ -3,7 +3,7 @@ en:
     must_not_look: Target must not look in your direction!
     search:
       already: Target is already being searched!
-      too_often: You requesting search too often! Cooldown time was increased!
+      too_often: You are requesting searches too often! The cooldown has been increased!
       request: Target already received search request!
   notification:
     search:

@@ -387,8 +387,8 @@ if SERVER then
   -- effect. A saved value is skipped if the config is static, if it does not pass
   -- `Config.validate`, or if the config has no definition and was not changed with
   -- `Config.change`, so that a value set in code is not replaced with a stale copy of
-  -- itself. A saved config that is not stored at all, such as one of a plugin that is no
-  -- longer loaded, is added the way it was saved.
+  -- itself. A saved config that is not stored at all, such as one of a plugin that is not
+  -- loaded, is added the way it was saved.
   -- @return [Map all stored configs]
   function Config.load()
     local loaded = Data.load('config', {})
@@ -777,8 +777,6 @@ else
     menu_items[category] = menu_items[category] or {}
     menu_items[category].configs = menu_items[category].configs or {}
 
-    if menu_items[category][key] then return end
-
     menu_items[category].configs[key] = {
       name = name or key,
       description = description or 'This config has no description set.',
@@ -816,7 +814,7 @@ else
     --- Called on the client when the value of a config has arrived from the server and has
     -- been stored: when the player joins, whenever the config is changed on the server and
     -- after `Config.request`. The value of a private config only arrives if the player may
-    -- edit configs, and nil arrives for it once they no longer may.
+    -- edit configs, and nil arrives for it once they have lost that right.
     -- @param key [String config key]
     -- @param old_value [Any value the client had before]
     -- @param new_value [Any value that has been received]
@@ -837,7 +835,7 @@ else
     end
 
     --- Called on the client when the server reports that a config has got a pending value,
-    -- or that it no longer has one. Pending values belong to the configs that need a
+    -- or that its pending value is gone. Pending values belong to the configs that need a
     -- restart and are only sent to the players who may edit configs.
     -- @param key [String config key]
     -- @param is_pending [Boolean whether the config has a pending value now]
@@ -895,14 +893,12 @@ if SERVER then
 
       if contents then
         config_table = YAML.eval(contents)
-      else
-        return
       end
     elseif istable(path) then
       config_table = path
-    else
-      return
     end
+
+    if !istable(config_table) then return end
 
     for key, value in pairs(config_table) do
       --- Called on the server for every key that `Config.import` is about to set.
@@ -946,20 +942,23 @@ end
 -- })
 -- ```
 -- @param path [String/Map path to a YAML file, or the already parsed definitions]
--- @param from_config=CONFIG_FLUX [Number currently unused]
--- @return [Map the definitions table, or nil if path is neither a string nor a table]
-function Config.read(path, from_config)
-  from_config = from_config or CONFIG_FLUX
-
+-- @param _from_config=nil [Number ignored]
+-- @return [Map the definitions table, or nil if path is neither a string nor a table or the
+--   file could not be read]
+function Config.read(path, _from_config)
   local config_table
 
   if isstring(path) then
-    config_table = YAML.eval(File.read(path))
+    local contents = File.read(path)
+
+    if contents then
+      config_table = YAML.eval(contents)
+    end
   elseif istable(path) then
     config_table = path
-  else
-    return
   end
+
+  if !istable(config_table) then return end
 
   if CLIENT and istable(config_table.categories) then
     for category, data in pairs(config_table.categories) do

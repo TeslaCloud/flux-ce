@@ -7,17 +7,8 @@
 --
 -- It also creates and drops the database itself for the `flux db:create` and
 -- `flux db:drop` tasks, and makes the adapter work off its queue of deferred queries.
-
---[[
-  mysql - 2.0.0
-  A simple Database wrapper for Garry's Mod.
-
-  Alexander Grist-Hucker
-  http://www.alexgrist.com
-
-  Luna Fox
-  https://teslacloud.net
---]]
+--
+-- Based off mysql from Alex Grist.
 
 class 'ActiveRecord::Database'
 
@@ -120,17 +111,20 @@ function ActiveRecord.Database:setup(settings)
       password = settings.password,
       database = 'postgres'
     }
-    local _query = ActiveRecord.adapter:raw_query(txt([[
+
+    local database = ActiveRecord.adapter:quote(settings.database)
+
+    ActiveRecord.adapter:raw_query(txt([[
       DO
       $do$
       DECLARE
-        _db TEXT := ']]..settings.database..[[';
+        _db TEXT := ]]..database..[[;
       BEGIN
         CREATE EXTENSION IF NOT EXISTS dblink;
-        IF EXISTS (SELECT 1 FROM pg_database WHERE datname = ']]..settings.database..[[') THEN
+        IF EXISTS (SELECT 1 FROM pg_database WHERE datname = _db) THEN
           RAISE NOTICE 'Database already exists';
         ELSE
-          PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE ' || _db);
+          PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE ' || quote_ident(_db));
         END IF;
       END
       $do$;
@@ -162,8 +156,8 @@ function ActiveRecord.Database:drop_database(settings)
     password = settings.password,
     database = 'template1'
   }
-  local _query = ActiveRecord.adapter:raw_query(
-    'DROP DATABASE '..settings.database..';',
+  ActiveRecord.adapter:raw_query(
+    'DROP DATABASE '..ActiveRecord.adapter:quote_name(settings.database)..';',
     function(_result, query_str, time)
       print_query('Drop Database ('..time..'s)', query_str)
     end

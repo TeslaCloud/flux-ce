@@ -7,11 +7,6 @@
 
 local ent_meta = FindMetaTable('Entity')
 
---[[
-  We store the original function here so we can override it from the player metaTable,
-  which derives from the entity metaTable. This way we don't have to check if the entity is
-  a player every time the function is called.
---]]
 ent_meta.fl_set_model = ent_meta.fl_set_model or ent_meta.SetModel
 
 --- Checks whether the bounding box of the entity intersects the world or another entity.
@@ -36,7 +31,7 @@ function ent_meta:is_door()
   if IsValid(self) then
     local class = self:GetClass():lower()
 
-    if class and class:find('door') or
+    if class:find('door') or
     class == 'prop_dynamic' and self:GetModel():lower():find('door') or
     class == 'func_movelinear' then
       return true
@@ -97,31 +92,38 @@ function ent_meta:facing(entity)
   local aim_vector = self:GetAimVector():Angle()
   local target_aim_vector = entity:GetAimVector():Angle()
 
-  return math.abs(aim_vector.y - target_aim_vector.y) > 50
+  return math.abs(math.AngleDifference(aim_vector.y, target_aim_vector.y)) > 50
 end
 
 --- Returns the display name of the entity. Players use the 'GetPlayerName' hook and their
 -- name, everything else uses the 'GetEntityName' hook and its string representation.
 -- @return [String]
 function ent_meta:get_name()
-  return self:IsPlayer() and (hook.Run('GetPlayerName', self) or self:name())
-  or hook.Run('GetEntityName', self) or tostring(self)
+  if self:IsPlayer() then
+    return self:name()
+  end
+
+  --- Lets plugins give a display name to an entity that is not a player. Called on
+  -- both realms by `Entity:get_name`, and on the client for entities passed as
+  -- arguments of a notification.
+  -- @param entity [Entity The entity whose name is requested]
+  -- @return [String Name to show; when nothing is returned, the string
+  --   representation of the entity is used]
+  return hook.Run('GetEntityName', self) or tostring(self)
 end
 
---- Finds the hitbox of the entity that contains the specified position.
+--- Finds the hit group of the hitbox of the entity that contains the specified position.
 -- @param pos [Vector world position]
--- @return [Number index of the hitbox, HITGROUP_GENERIC if the position is outside of them]
+-- @return [Number HITGROUP_ of the hitbox, HITGROUP_GENERIC if the position is outside of them]
 function ent_meta:get_hitgroup_from_pos(pos)
-  for i = 0, self:GetHitBoxGroupCount() - 1 do
-    for k = 0, self:GetHitBoxCount(i) - 1 do
-      local mins, maxs = self:GetHitBoxBounds(k, i)
-      local bone_pos = self:GetBonePosition(self:GetHitBoxBone(k, i))
+  for set = 0, self:GetHitBoxGroupCount() - 1 do
+    for hitbox = 0, self:GetHitBoxCount(set) - 1 do
+      local mins, maxs = self:GetHitBoxBounds(hitbox, set)
+      local bone_pos, bone_ang = self:GetBonePosition(self:GetHitBoxBone(hitbox, set))
+      local local_pos = WorldToLocal(pos, angle_zero, bone_pos, bone_ang)
 
-      mins = bone_pos + mins
-      maxs = bone_pos + maxs
-
-      if pos:WithinAABox(mins, maxs) then
-        return k
+      if local_pos:WithinAABox(mins, maxs) then
+        return self:GetHitBoxHitGroup(hitbox, set)
       end
     end
   end

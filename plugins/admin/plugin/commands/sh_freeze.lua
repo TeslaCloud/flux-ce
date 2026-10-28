@@ -20,7 +20,7 @@ function on:on_run(actor, targets)
   for _, client in ipairs(targets) do
     client:Freeze(true)
     client:notify('notification.freeze', {
-      player = actor
+      player = IsValid(actor) and actor or get_player_name(actor)
     })
   end
 
@@ -44,7 +44,7 @@ function off:on_run(actor, targets)
   for _, client in ipairs(targets) do
     client:Freeze(false)
     client:notify('notification.unfreeze', {
-      player = actor
+      player = IsValid(actor) and actor or get_player_name(actor)
     })
   end
 

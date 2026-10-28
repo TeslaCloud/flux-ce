@@ -401,7 +401,7 @@ do
 
   --- Returns the hold type of a weapon translated to one of the hold types used by
   -- the animation tables. The result is cached on the weapon until its HoldType changes.
-  -- @param _owner [Player the player who holds the weapon, currently unused]
+  -- @param _owner [Player the player who holds the weapon, unused]
   -- @param weapon [Weapon]
   -- @return [String lower case hold type, 'normal' if the weapon is not valid]
   function Flux.Anim.get_weapon_hold_type(_owner, weapon)
@@ -459,7 +459,7 @@ local function run_callback(callback, target, completed)
   local ok, result = pcall(callback, target, completed)
 
   if !ok then
-    error_with_traceback('Finish callback of a player animation has failed to run!\n'..result)
+    error_with_traceback('Finish callback of a player animation has failed to run!\n'..tostring(result))
   end
 end
 

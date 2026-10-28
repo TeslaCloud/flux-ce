@@ -88,7 +88,7 @@ plural_rules['ru'] = function(count)
 end
 
 do
-  local function _get_phrase(tabs, ref)
+  local function get_phrase(tabs, ref)
     if !ref then
       ref = stored['en']
 
@@ -108,7 +108,7 @@ do
     return ref
   end
 
-  local function _get_count(args)
+  local function get_count(args)
     local count = tonumber(args.count or args.amount)
 
     if count then return count end
@@ -124,7 +124,7 @@ do
     return count
   end
 
-  local function _get_form(forms, lang, count)
+  local function get_form(forms, lang, count)
     local key = count and Flux.Lang:get_plural_form(lang, count)
     local form = key and (forms[key] or forms[tonumber(key)])
 
@@ -144,11 +144,11 @@ do
   -- @param lang [String language code]
   -- @param args [Map arguments of the phrase]
   -- @return [String the text of the phrase, nil or false if the language does not have it]
-  local function _translate(tabs, lang, args)
-    local translated = _get_phrase(tabs, stored[lang])
+  local function translate(tabs, lang, args)
+    local translated = get_phrase(tabs, stored[lang])
 
     if istable(translated) then
-      translated = _get_form(translated, lang, _get_count(args))
+      translated = get_form(translated, lang, get_count(args))
     end
 
     return translated
@@ -197,10 +197,10 @@ do
     end
 
     local tabs = phrase_parts[phrase] or phrase:split('.')
-    local translated = _translate(tabs, lang, args)
+    local translated = translate(tabs, lang, args)
 
     if !translated and lang != 'en' then
-      translated = _translate(tabs, 'en', args)
+      translated = translate(tabs, 'en', args)
     end
 
     if translated then
@@ -346,14 +346,10 @@ end
 -- @param case [String grammatical case]
 -- @return [String]
 function Flux.Lang:get_case(language, phrase, case)
-  if language == 'en' then return t(phrase) end
-
+  local translated = t(phrase, nil, language)
   local lang_table = stored[language]
-  local translated = t(phrase)
 
-  if !lang_table then return translated end
-
-  if lang_table.get_case then
+  if istable(lang_table) and isfunction(lang_table.get_case) then
     return lang_table:get_case(phrase, case, translated)
   end
 

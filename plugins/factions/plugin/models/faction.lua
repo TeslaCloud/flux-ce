@@ -431,11 +431,7 @@ end
 -- @param key [Any]
 -- @param value [Any]
 function Faction:set_data(key, value)
-  key = tostring(key)
-
-  if !key then return end
-
-  self.data[key] = tostring(value)
+  self.data[tostring(key)] = tostring(value)
 end
 
 --- Called on the server when a player is moved into this faction. Does nothing by default;

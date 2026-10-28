@@ -374,36 +374,9 @@ else
   function ENT:DrawTargetID(x, y, distance)
     if distance > 150 then return end
 
-    local text = 'ERROR'
-    local desc = 'Luna probably broke it again'
-    local alpha = self.alpha or 255
-
-    if distance > 100 then
-      local d = distance - 100
-      alpha = math.Clamp(255 * (50 - d) * 0.02, 0, 255)
-    end
-
     local item_obj = self.item
 
-    if item_obj then
-      --- Called on the client every frame before the target ID of an item entity is drawn,
-      -- while the local player looks at the entity from at most 150 units away.
-      -- @param entity [Entity The `fl_item` entity]
-      -- @param item_obj [Item The item instance tied to the entity]
-      -- @param x [Number Screen x of the center of the target ID]
-      -- @param y [Number Screen y of the top of the target ID]
-      -- @param alpha [Number Opacity of the target ID from 0 to 255; it fades out past
-      --   100 units]
-      -- @param distance [Number Distance between the local player and the entity]
-      -- @return [Boolean Return false to prevent the name and the description from being
-      --   drawn; `PostDrawItemTargetID` is not run then]
-      if hook.Run('PreDrawItemTargetID', self, item_obj, x, y, alpha, distance) == false then
-        return
-      end
-
-      text = t(item_obj:get_name())
-      desc = t(item_obj:get_description())
-    else
+    if !item_obj then
       self:request_item()
 
       local cog_size = math.scale(48)
@@ -413,6 +386,30 @@ else
       return
     end
 
+    local alpha = self.alpha or 255
+
+    if distance > 100 then
+      local d = distance - 100
+      alpha = math.Clamp(255 * (50 - d) * 0.02, 0, 255)
+    end
+
+    --- Called on the client every frame before the target ID of an item entity is drawn,
+    -- while the local player looks at the entity from at most 150 units away.
+    -- @param entity [Entity The `fl_item` entity]
+    -- @param item_obj [Item The item instance tied to the entity]
+    -- @param x [Number Screen x of the center of the target ID]
+    -- @param y [Number Screen y of the top of the target ID]
+    -- @param alpha [Number Opacity of the target ID from 0 to 255; it fades out past
+    --   100 units]
+    -- @param distance [Number Distance between the local player and the entity]
+    -- @return [Boolean Return false to prevent the name and the description from being
+    --   drawn; `PostDrawItemTargetID` is not run then]
+    if hook.Run('PreDrawItemTargetID', self, item_obj, x, y, alpha, distance) == false then
+      return
+    end
+
+    local text = t(item_obj:get_name())
+    local desc = t(item_obj:get_description())
     local name_font = Theme.get_font('tooltip_large')
     local desc_font = Theme.get_font('tooltip_small')
     local width, height = util.text_size(text, name_font)
@@ -464,7 +461,6 @@ else
 
     draw.SimpleTextOutlined(text, name_font, x - width * 0.5, y, col, nil, nil, 1, col2)
 
-    -- Move down by the height of the name, which depends on the scaled font size.
     y = y + height
 
     for _, line in pairs(wrapped) do

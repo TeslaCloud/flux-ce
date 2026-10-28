@@ -22,15 +22,6 @@ ItemWearable.equip_inv = 'equipment_torso'
 ItemWearable.equip_slot = 'item.slot.chest'
 ItemWearable.background_color = Color(50, 150, 50)
 
--- Bodygroups example:
--- ItemWearable.equip_bodygroups = {
---   [0] = 0, -- Sets bodygroup #0 to 0
---   [1] = 1, -- Sets bodygroup #1 to 1
---            -- (valid for every model)
---   ['mask'] = 1 -- Sets the bodygroup named 'mask' to 1
---                -- (only if the model actually has this bodygroup)
--- }
-
 if CLIENT then
   --- Returns the model that is shown in inventory slots: the one the item would put
   -- on the local player, or the item's own model if there is none. Client-side only.
@@ -159,7 +150,7 @@ function ItemWearable:post_unequipped(owner)
   if self:get_bodygroups(owner) then
     local native_bodygroups = self:get_data('native_bodygroups')
 
-    if native_bodygroups and #native_bodygroups > 0 then
+    if istable(native_bodygroups) and next(native_bodygroups) != nil then
       owner:set_bodygroups(native_bodygroups)
     end
   end

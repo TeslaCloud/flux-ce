@@ -152,7 +152,7 @@ if SERVER then
 
       cable_send(nil, 'fl_surface_text_remove', idx)
 
-      actor:notify(t'notification.3d_text.text_removed')
+      actor:notify('notification.3d_text.text_removed')
     end
   end)
 
@@ -166,7 +166,7 @@ if SERVER then
 
       cable_send(nil, 'fl_surface_picture_remove', idx)
 
-      actor:notify(t'notification.3d_picture.removed')
+      actor:notify('notification.3d_picture.removed')
     end
   end)
 else

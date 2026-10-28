@@ -1,4 +1,4 @@
---- Third Person gives players a GTA V style camera behind their character.
+--- Third Person gives players a camera behind their character that orbits it on its own.
 -- The view is toggled with the `fl_third_person` console command, which the plugin binds to
 -- the P key by default, and the state is networked as the `fl_third_person` variable of the
 -- player.

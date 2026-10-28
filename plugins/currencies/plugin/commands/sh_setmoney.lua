@@ -46,9 +46,9 @@ function CMD:on_run(actor, targets, amount, currency)
 
   local currency_data = Currencies:find_currency(currency)
 
-  for _, client in ipairs(targets) do
-    client:set_money(currency, amount)
-    client:notify('notification.currency.set', { value = amount, currency = currency_data.name })
+  for _, target in ipairs(targets) do
+    target:set_money(currency, amount)
+    target:notify('notification.currency.set', { value = amount, currency = currency_data.name })
   end
 
   self:notify_staff('command.setmoney.message', {

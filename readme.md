@@ -18,7 +18,7 @@ The current version of Flux is currently in active development. This means that 
 
 ## Docker (easy mode)
 
-If you have Docker and simply want a running server, you can skip the installation guide below. The `Dockerfile` in this repository performs the steps from [General installation](#general-installation) for you: it installs the x86-64 Garry's Mod dedicated server, the dependencies, Flux and the Reborn schema.
+If you have Docker and simply want a running server, you can skip the installation guide below. The `Dockerfile` in this repository performs the steps from [General installation](#general-installation) for you: it installs the x86-64 Garry's Mod dedicated server, the dependencies, Flux and the HL2RP schema.
 
 ```sh
 # Clone the Flux repository and build the image.
@@ -47,14 +47,14 @@ Anything you put after the image name replaces the default startup options (see 
 
 ```sh
 docker run -it --name flux -p 27015:27015/udp -p 27015:27015/tcp flux \
-  +gamemode "reborn" +map "gm_flatgrass" +maxplayers 32 -tickrate 30
+  +gamemode "hl2rp" +map "gm_flatgrass" +maxplayers 32 -tickrate 30
 ```
 
 Things to keep in mind:
 
 * Flux is copied into the image from your checkout, including any `*.local.yml` and `*.local.lua` files. Run `docker build` again after changing the code or the configuration, then create a new container.
 * The dependencies and the schema are cloned during the build and then cached. Add `--no-cache-filter deps,schema` to `docker build` to pull in their latest versions without downloading the server again.
-* To use a schema other than Reborn, build with `--build-arg SCHEMA_REPO=https://github.com/you/your_schema.git` and pass the matching `+gamemode`.
+* To use a schema other than HL2RP, build with `--build-arg SCHEMA_REPO=https://github.com/you/your_schema.git` and pass the matching `+gamemode`.
 * SQLite, the default database, needs no setup. To use MySQL or PostgreSQL, point `config/database.local.yml` at a database server reachable from the container, see [Database setup](#database-setup).
 
 ## Docker (development)
@@ -64,7 +64,7 @@ If you are working on Flux or on a schema, use `docker-compose.yml` instead. It 
 ```sh
 # Flux and the schema are expected to be next to each other.
 git clone https://github.com/TeslaCloud/flux-ce.git
-git clone https://github.com/TeslaCloud/reborn.git
+git clone https://github.com/TeslaCloud/hl2rp.git
 cd flux-ce
 
 docker compose up                       # SQLite
@@ -72,9 +72,9 @@ docker compose --profile postgres up    # PostgreSQL
 docker compose --profile mariadb up     # MariaDB
 ```
 
-* The server only listens on `127.0.0.1` and is hidden from the server list. Join it with `connect localhost` from the game console. `docker compose attach flux` opens the server console.
+* The server is hidden from the server list. Join it with `connect localhost` (or the address of the machine) from the game console. `docker compose attach flux` opens the server console.
 * The database is picked by the profile, there is nothing to configure. The SQLite database is the `docker/sqlite/sv.db` file, everything else that the server stores is kept in Docker volumes. `docker compose down -v` deletes those.
-* To use another schema, another map or a Workshop collection, set the variables listed at the top of `docker-compose.yml`, for example `FLUX_SCHEMA=hl2rp docker compose up`. They can also be put into an `.env` file.
+* To use another schema, another map or a Workshop collection, set the variables listed at the top of `docker-compose.yml`, for example `FLUX_SCHEMA=reborn docker compose up`. They can also be put into an `.env` file.
 * Changes to the files in `config` need a restart of the container. `database.local.yml` and `environment.local.lua` are written by the container and never touch your checkout.
 
 ## Installation
@@ -148,7 +148,7 @@ The built-in roles are `user`, `assistant`, `gamemaster` and `admin`, each one b
 flc role remove YOUR_NAME_OR_STEAMID
 ```
 
-There is no `setgroup` command: `flc setgroup` and `flc SetGroup` are now `flc role set`.
+Flux has no `setgroup` command, `flc role set` is the command that sets a role.
 
 _The `admin` role will have every single permission by default._ Similarly to the `superadmin` user role in other administration solutions, with one important difference: there are no limitations at all, and the role cannot be in any way limited. Any permission is automatically granted to all users with the `admin` role. _Please be careful with who you give this role to._
 
@@ -192,7 +192,7 @@ flux generate migration AddRoleToUsers role:string
 
 ### Environment
 
-By default, Flux comes with the `production` environment pre-chosen. It is good if you don't want to write code. If you plan on writing plugins, schemas or modifying the framework, you should set your environment to `development`. **No other environments are supported yet!** If you wish to change your environment, copy the `gamemodes/flux/config/environment.lua` file as `environment.local.lua` and change `production` to `development` inside that file.
+By default, Flux comes with the `production` environment pre-chosen. It is good if you don't want to write code. If you plan on writing plugins, schemas or modifying the framework, you should set your environment to `development`. A third environment, `test`, runs like `development` and sets `IS_TEST`. If you wish to change your environment, copy the `gamemodes/flux/config/environment.lua` file as `environment.local.lua` and change `production` to `development` inside that file.
 
 **What is the difference between production and development?**
 
@@ -205,9 +205,36 @@ _tl;dr:_
 * **production**: fast code, no refresh, _use this if you are running a server_
 * **development**: slow code, yes refresh, _use this if you are developing_
 
+## Plugins
+
+A plugin is a folder (or a single `.lua` file, whose `sv_`, `sh_` or `cl_` prefix sets its realm) in `flux/plugins` or in the `plugins` folder of a schema. All plugins of the schema are loaded, the ones that come with Flux only when the schema or another plugin lists them under `depends`. A plugin folder looks like this:
+
+```
+plugins/doors/
+  plugin.yml          name, description, author, version, depends
+  plugin/
+    sh_plugin.lua     main file
+    cl_plugin.lua
+    sv_plugin.lua
+    cl_hooks.lua      hook handlers
+    sh_hooks.lua
+    sv_hooks.lua
+    cl_nethooks.lua   network message handlers
+    sh_nethooks.lua
+    sv_nethooks.lua
+    lib/              libraries and modules
+    config/  languages/  views/  tools/  entities/  migrations/  ...
+```
+
+The root of the `plugin` folder only holds these Lua files, and a plugin only has the ones it needs. The main file may also be named `sh_<name>.lua` after the `name` in `plugin.yml`, or after the folder when `plugin.yml` has no name. Flux includes the main file, which includes the other root files with `require_relative`. Everything else goes into `lib/`, written as a library or module, or into one of the folders that Flux includes by convention: `lib/meta`, `lib/classes`, `models`, `classes`, `meta`, `config`, `languages`, `controllers`, `views`, `tools`, `themes`, `entities` and `migrations`, as well as the folders that plugins add, such as `commands`, `items`, `factions`, `roles`, `attributes` and `skills`.
+
+These folders are included before the main file, `lib` first. The files of a folder are included in alphabetical order, each in the realm that its `cl_`, `sh_` or `sv_` prefix names. A library therefore sets up the global it extends itself and does not rely on anything that the main file sets up while it loads.
+
+A schema follows the same layout in its `schema` folder, with `sh_schema.lua`, `cl_schema.lua` and `sv_schema.lua` in place of the `*_plugin.lua` files. Unlike a plugin's main file, `sh_schema.lua` is included before the folders of the schema.
+
 ## Upgrading
 
-During Alpha, the database may break between versions. This will be different in beta and beyond, but until then, if you are upgrading Flux you need to recreate the database manually every time.
+Pending migrations are run when the server starts (see [Migrations](#migrations)). Flux is in alpha, however, and an upgrade may change the database in ways that migrations do not cover. In that case the database has to be recreated manually.
 
 To do that, simply follow the steps below:
 

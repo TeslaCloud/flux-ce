@@ -18,6 +18,14 @@ mod 'Data'
 
 local isstring = isstring
 
+local function with_extension(key, extension)
+  if !File.ext(key) then
+    return key..extension
+  end
+
+  return key
+end
+
 if SERVER then
   --- Saves a table to 'settings/flux/' in the game folder as JSON. The '.json' extension
   -- is added if the key does not have one. Does nothing unless the value is a table.
@@ -26,11 +34,7 @@ if SERVER then
   function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
-    if !File.ext(key) then
-      key = key..'.json'
-    end
-
-    File.write('settings/flux/'..key, util.TableToJSON(value))
+    File.write('settings/flux/'..with_extension(key, '.json'), util.TableToJSON(value))
   end
 
   --- Loads a table saved with Data.save from 'settings/flux/'. Throws an error in development
@@ -41,9 +45,7 @@ if SERVER then
   function Data.load(key, default)
     if !isstring(key) then return end
 
-    if !File.ext(key) then
-      key = key..'.json'
-    end
+    key = with_extension(key, '.json')
 
     local path = 'settings/flux/'..key
 
@@ -51,10 +53,8 @@ if SERVER then
       return util.JSONToTable(File.read(path))
     elseif default != nil then
       return default
-    else
-      if Flux.development then
-        error_with_traceback("Attempt to load a data key that doesn't exist! ("..key..')')
-      end
+    elseif Flux.development then
+      error_with_traceback("Attempt to load a data key that doesn't exist! ("..key..')')
     end
   end
 
@@ -63,11 +63,7 @@ if SERVER then
   function Data.delete(key)
     if !isstring(key) then return end
 
-    if !File.ext(key) then
-      key = key..'.json'
-    end
-
-    local path = 'settings/flux/'..key
+    local path = 'settings/flux/'..with_extension(key, '.json')
 
     if file.Exists(path, 'GAME') then
       File.delete(path)
@@ -81,11 +77,7 @@ else
   function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
-    if !File.ext(key) then
-      key = key..'.dat'
-    end
-
-    file.Write('flux/'..key, util.TableToJSON(value))
+    file.Write('flux/'..with_extension(key, '.dat'), util.TableToJSON(value))
   end
 
   --- Loads a table saved with Data.save from the 'flux' data folder. Throws an error
@@ -96,9 +88,7 @@ else
   function Data.load(key, default)
     if !isstring(key) then return end
 
-    if !File.ext(key) then
-      key = key..'.dat'
-    end
+    key = with_extension(key, '.dat')
 
     local path = 'flux/'..key
 
@@ -106,23 +96,18 @@ else
       return util.JSONToTable(file.Read(path, 'DATA'))
     elseif default != nil then
       return default
-    else
-      if Flux.development then
-        error_with_traceback("Attempt to load a data key that doesn't exist! ("..key..')')
-      end
+    elseif Flux.development then
+      error_with_traceback("Attempt to load a data key that doesn't exist! ("..key..')')
     end
   end
 
   --- Lists the files inside a folder of the 'flux' data folder. Clientside only.
   -- @param folder [String]
-  -- @param _default=nil [Any unused]
   -- @return [List<String> file names, nil if the folder is not a string]
-  function Data.get_files(folder, _default)
+  function Data.get_files(folder)
     if !isstring(folder) then return end
 
-    local files, _dirs = file.Find('flux/'..folder..'/*', 'DATA')
-
-    return files
+    return (file.Find('flux/'..folder..'/*', 'DATA'))
   end
 
   --- Deletes a file saved with Data.save from the 'flux' data folder, if it exists.
@@ -130,11 +115,7 @@ else
   function Data.delete(key)
     if !isstring(key) then return end
 
-    if !File.ext(key) then
-      key = key..'.dat'
-    end
-
-    local path = 'flux/'..key
+    local path = 'flux/'..with_extension(key, '.dat')
 
     if file.Exists(path, 'DATA') then
       file.Delete(path)

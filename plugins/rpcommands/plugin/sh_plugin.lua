@@ -20,8 +20,6 @@
 PLUGIN:set_global('RPCommands')
 
 RPCommands.texts = RPCommands.texts or {}
-RPCommands.ooc_prefixes = { '//', '/ooc ' }
-RPCommands.looc_prefixes = { './/', '[[', '/looc ' }
 RPCommands.speech_commands = {
   me = { '*', '*' },
   whisper = { '(', ')' },
@@ -130,6 +128,5 @@ function RPCommands:OnPluginsLoaded()
 end
 
 require_relative 'sv_plugin'
-require_relative 'sv_prefixes'
 require_relative 'sv_hooks'
 require_relative 'cl_hooks'

@@ -52,11 +52,11 @@ function PANEL:PerformLayout(w, h)
   local canvas = self:GetCanvas()
   local bar = self.VBar
   local children = Lumen.Layout.children_of(self)
-  local _content_w, content_h = Lumen.Layout.flex(style, children, w, nil, false)
+  local _, content_h = Lumen.Layout.flex(style, children, w, nil, false)
   local bar_w = (self.scrollbar_visible and content_h > h) and bar:GetWide() or 0
   local canvas_w = math_max(w - bar_w, 1)
 
-  _content_w, content_h = Lumen.Layout.flex(style, children, canvas_w, nil, true)
+  _, content_h = Lumen.Layout.flex(style, children, canvas_w, nil, true)
 
   canvas:SetSize(canvas_w, math_max(content_h, h))
   bar:SetUp(h, content_h)

@@ -251,7 +251,7 @@ do
       local eye_pos = self:EyePos()
 
       if eye_pos:DistToSqr(pos) > 14400 then
-        pos = eye_pos + trace.Normal * 120
+        pos = eye_pos + trace.Normal * 119
       end
 
       if IsValid(trace.Entity) and trace.Entity:IsPlayer() then

@@ -11,7 +11,7 @@ local PANEL = {}
 --- Creates the player list, the player info header and the permissions editor. The last two
 -- stay hidden until a player is selected.
 function PANEL:Init()
-  local scrw, _scrh = ScrW(), ScrH()
+  local scrw = ScrW()
 
   self.player_list = vgui.Create('DListView', self)
   self.player_list:DockMargin(0, 0, math.scale(8), 0)
@@ -24,7 +24,7 @@ function PANEL:Init()
   end
 
   self.player_list.OnRowSelected = function(_list, _index, panel)
-    if self:get_player() != panel.player then
+    if IsValid(panel.player) and self:get_player() != panel.player then
       self:set_player(panel.player)
     end
   end
@@ -39,7 +39,7 @@ end
 --- Docks and sizes the info header and the permissions editor once the admin panel has opened
 -- this page.
 function PANEL:on_opened()
-  local _scrw, scrh = ScrW(), ScrH()
+  local scrh = ScrH()
 
   self.player_info:DockMargin(0, 0, 0, math.scale(8))
   self.player_info:Dock(TOP)
@@ -151,6 +151,8 @@ end
 --- Refreshes the avatar, name and role label from the current player.
 function PANEL:rebuild()
   local target = self.player
+
+  if !IsValid(target) then return end
 
   self.avatar:set_player(target, 128)
 

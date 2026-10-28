@@ -118,7 +118,6 @@ function PANEL:Init()
     self.drop_target = menu
   end
 
-  --- Rebuilds the cards every time the pool arrives from the server.
   hook.Add('OnGamemasterPoolReceived', self, self.rebuild)
 
   Gamemastery.request_pool()

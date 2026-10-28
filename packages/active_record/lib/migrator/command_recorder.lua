@@ -307,7 +307,7 @@ function ActiveRecord.TableRecorder:init(recorder, table_name)
   self.recorder = recorder
   self.table_name = table_name
 
-  local types = ActiveRecord.Adapters[ActiveRecord.adapter_name:capitalize()].types or {}
+  local types = ActiveRecord.adapter.types or {}
 
   for type, _def in pairs(types) do
     self[type] = function(s, name, ...)

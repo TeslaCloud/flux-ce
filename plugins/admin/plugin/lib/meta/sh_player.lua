@@ -5,11 +5,9 @@
 
 local player_meta = FindMetaTable('Player')
 
--- Returned while a player has no character permissions, so that the permission checks do not
+--- Returned while a player has no character permissions, so that the permission checks do not
 -- create a table every time. It is never written to.
 local no_permissions = {}
-
--- Implement common admin interfaces.
 
 --- Checks whether the player is a super admin: a root player or anyone with the
 -- 'administrate' permission.

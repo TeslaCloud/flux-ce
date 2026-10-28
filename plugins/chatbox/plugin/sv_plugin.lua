@@ -8,19 +8,6 @@
 local IsValid = IsValid
 local config_get = Config.get
 
-local _default_msg_data = {
-  sender = nil,
-  listeners = {},
-  data = {},
-  position = nil,
-  radius = 0,
-  filter = nil,
-  rich = false,
-  size = config_get('default_font_size', 20),
-  text = nil,
-  team_chat = false
-}
-
 local filters = {}
 local client_mode = false
 local submitting = false
@@ -28,7 +15,7 @@ local submitting = false
 Chatbox.relay_limit = 20
 
 --- Stores a message filter under the specified id. Serverside only.
--- Filters are only stored at the moment, nothing reads them yet.
+-- The chatbox itself does not read the stored filters.
 -- @param id [String unique filter id]
 -- @param data [Map filter data]
 function Chatbox.add_filter(id, data)

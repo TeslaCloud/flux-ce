@@ -6,9 +6,8 @@
 -- methods select the active character, set its fields and save it.
 --
 -- This file also holds the `Characters` functions that create, save, delete, ban and edit
--- characters, and the network handlers behind the character menus. A request of a player to
--- load or delete a character is checked first: `Characters.can_use` and
--- `Characters.can_delete` apply the rules of the plugin and run the `PlayerCanUseCharacter`,
+-- characters. A request of a player to load or delete a character is checked first:
+-- `Characters.can_use` and `Characters.can_delete` apply the rules of the plugin and run the `PlayerCanUseCharacter`,
 -- `PlayerCanSwitchCharacter` and `PlayerCanDeleteCharacter` hooks, and a refused request is
 -- answered with a reason that the menu shows.
 --
@@ -231,31 +230,6 @@ if SERVER then
   -- @return [String]
   local function normalize_name(name)
     return (string_trim(name):gsub('%s+', ' ')):utf8lower()
-  end
-
-  --- Checks whether the player has sent a character request less than a second ago, and
-  -- starts the wait for the next one when they have not.
-  -- @param actor [Player]
-  -- @return [Boolean true when the request has to be refused]
-  local function is_throttled(actor)
-    local cur_time = CurTime()
-
-    if actor.next_character_request and actor.next_character_request > cur_time then
-      return true
-    end
-
-    actor.next_character_request = cur_time + request_delay
-
-    return false
-  end
-
-  --- Tells a player that their request to load or delete a character was refused.
-  -- @param actor [Player]
-  -- @param action [String 'select' or 'delete']
-  -- @param reason [String text or language phrase]
-  -- @param arguments=nil [Map values to substitute into the phrase]
-  local function refuse_request(actor, action, reason, arguments)
-    cable_send(actor, 'fl_character_request_failed', action, reason, arguments)
   end
 
   --- Returns the part of the generic data of a character that its owner receives: the keys
@@ -779,7 +753,7 @@ if SERVER then
   -- @param target [Player]
   -- @param new_name [String ignored when it is not a string]
   function Characters.set_name(target, new_name)
-    if !new_name or !isstring(new_name) then return end
+    if !isstring(new_name) then return end
 
     local char = target:get_character()
     local old_name = target:get_nv('name')
@@ -790,7 +764,7 @@ if SERVER then
         Characters.remember_name(new_name)
       end
 
-      char.name = new_name or char.name
+      char.name = new_name
     end
 
     target:set_nv('name', new_name)
@@ -810,13 +784,13 @@ if SERVER then
   -- @param target [Player]
   -- @param new_desc [String ignored when it is not a string]
   function Characters.set_desc(target, new_desc)
-    if !new_desc or !isstring(new_desc) then return end
+    if !isstring(new_desc) then return end
 
     local char = target:get_character()
     local old_desc = target:get_nv('phys_desc')
 
     if char then
-      char.phys_desc = new_desc or char.phys_desc
+      char.phys_desc = new_desc
     end
 
     target:set_nv('phys_desc', new_desc)
@@ -836,13 +810,13 @@ if SERVER then
   -- @param target [Player]
   -- @param model [String model path; ignored when it is not a string]
   function Characters.set_model(target, model)
-    if !model or !isstring(model) then return end
+    if !isstring(model) then return end
 
     local char = target:get_character()
     local old_model = target:get_nv('model')
 
     if char then
-      char.model = model or char.model
+      char.model = model
     end
 
     target:set_nv('model', model)
@@ -863,7 +837,9 @@ if SERVER then
   -- @param target [Player]
   -- @param new_gender [Number/String CHAR_GENDER_* value, or 'male', 'female' or 'no_gender']
   function Characters.set_gender(target, new_gender)
-    new_gender = isstring(new_gender) and table.KeyFromValue(translate_gender, new_gender) or new_gender
+    if isstring(new_gender) then
+      new_gender = table.KeyFromValue(translate_gender, new_gender)
+    end
 
     if !new_gender then return end
 
@@ -871,7 +847,7 @@ if SERVER then
     local old_gender = target:get_nv('gender')
 
     if char then
-      char.gender = new_gender or char.gender
+      char.gender = new_gender
     end
 
     target:set_nv('gender', new_gender)
@@ -885,215 +861,6 @@ if SERVER then
 
     Characters.send_to_client(target)
   end
-
-  MVC.handler('fl_create_character', function(actor, data)
-    if !istable(data) then
-      respond_to { success = false, status = CHAR_ERR_UNKNOWN }
-
-      return
-    end
-
-    local cur_time = CurTime()
-
-    if actor.next_character_creation and actor.next_character_creation > cur_time then
-      respond_to { success = false, status = CHAR_ERR_UNKNOWN }
-
-      return
-    end
-
-    if isstring(data.name) then
-      data.name = string_trim((data.name:gsub('%c', ' '):gsub('%s+', ' ')))
-    end
-
-    if isstring(data.description) then
-      data.description = string_trim((data.description:gsub('\r', ''):gsub('[%z\1-\9\11-\31\127]', ' ')))
-    end
-
-    local requested_name = data.name
-    local requested_description = data.description
-
-    --- Called on the server when the request of a client to create a character arrives, before
-    -- the data is converted and passed to `Characters.create`. Handlers can fill in or change
-    -- the data in place. A name that a handler has replaced counts as generated and may
-    -- repeat the name of another character; a description that a handler has replaced
-    -- counts as generated and may be of any length.
-    -- @param actor [Player the player who sent the request]
-    -- @param data [Map data collected by the creation menu: name, description, gender ('male',
-    --   'female' or 'universal'), model, skin and the fields that other stages add]
-    hook.Run('PreCreateCharacter', actor, data)
-
-    data.name_generated = data.name != requested_name
-    data.description_generated = data.description != requested_description
-    data.gender = (data.gender == 'female' and CHAR_GENDER_FEMALE) or
-      (data.gender == 'universal' and CHAR_GENDER_NONE) or CHAR_GENDER_MALE
-    data.phys_desc = data.description
-
-    local status = Characters.create(actor, data)
-
-    Flux.dev_print('Creating character. Status: '..status)
-
-    if status == CHAR_SUCCESS then
-      actor.next_character_creation = cur_time + request_delay
-
-      respond_to { success = true, status = status }
-
-      Flux.dev_print('Success')
-    else
-      respond_to { success = false, status = status }
-
-      Flux.dev_print('Error')
-    end
-  end)
-
-  Cable.receive('fl_player_delete_character', function(actor, id)
-    if !isnumber(id) or !istable(actor.record) then return end
-
-    if is_throttled(actor) then
-      refuse_request(actor, 'delete', 'error.wait')
-
-      return
-    end
-
-    local character = actor:get_character_by_id(id)
-    local allowed, reason, arguments = Characters.can_delete(actor, character)
-
-    if !allowed then
-      refuse_request(actor, 'delete', reason, arguments)
-
-      return
-    end
-
-    Flux.dev_print(actor:name()..' has deleted character #'..id)
-
-    --- Called on the server when a player has asked to delete one of their characters, right
-    -- before it is deleted. The request has passed `Characters.can_delete` by then.
-    -- @param actor [Player]
-    -- @param id [Number ID of the character]
-    -- @param character [Character the character that is about to be deleted]
-    hook.Run('OnCharacterDelete', actor, id, character)
-
-    Characters.delete(actor, id)
-  end)
-
-  Cable.receive('fl_player_select_character', function(actor, id)
-    if !isnumber(id) or !istable(actor.record) then return end
-
-    if is_throttled(actor) then
-      refuse_request(actor, 'select', 'error.wait')
-
-      return
-    end
-
-    local allowed, reason, arguments = Characters.can_use(actor, actor:get_character_by_id(id))
-
-    if !allowed then
-      refuse_request(actor, 'select', reason, arguments)
-
-      return
-    end
-
-    Flux.dev_print(actor:name()..' has loaded character #'..id)
-
-    actor:set_active_character(id)
-  end)
-
-  Cable.receive('fl_character_physdesc', function(actor, text)
-    Characters.change_desc(actor, text)
-  end)
-else
-  Cable.receive('fl_characters_load', function(data)
-    --- Stores the list on the local player, once that player exists.
-    -- @return [Boolean true when the list has been stored]
-    local function store_characters()
-      if !IsValid(PLAYER) then return false end
-
-      PLAYER.characters = data
-
-      timer.Remove('fl_characters_defer')
-
-      --- Called on the client when the list of the local player's characters has arrived
-      -- from the server and has been stored in PLAYER.characters. The server sends it when
-      -- the player joins and again whenever one of their characters is created, deleted or
-      -- changed. The list is stored as soon as it arrives, so the messages that the server
-      -- sends after it are handled with the new list in place; only while the local player
-      -- does not exist yet is it held back.
-      -- @param characters [List<Map> networked data of every character of the local player]
-      hook.Run('OnCharactersReceived', data)
-
-      return true
-    end
-
-    if !store_characters() then
-      timer.Create('fl_characters_defer', 0.1, 0, store_characters)
-    end
-  end)
-
-  Cable.receive('fl_character_borrowed', function(data)
-    if IsValid(PLAYER) then
-      PLAYER.borrowed_character = istable(data) and data or nil
-    end
-  end)
-
-  Cable.receive('fl_character_data', function(character_id, key, value)
-    local character = IsValid(PLAYER) and PLAYER:get_character_by_id(character_id)
-
-    if character then
-      character.custom_data = character.custom_data or {}
-      character.custom_data[key] = value
-    end
-  end)
-
-  Cable.receive('fl_character_request_failed', function(action, reason, arguments)
-    local text = t(reason, arguments)
-
-    if IsValid(Flux.intro_panel) and isfunction(Flux.intro_panel.notify) then
-      Flux.intro_panel:notify(text)
-    elseif IsValid(PLAYER) then
-      PLAYER:notify(text)
-    end
-
-    --- Called on the client when the server has refused a request of the local player to
-    -- load or delete one of their characters, after the reason has been shown to them. The
-    -- character loading screen uses it to bring back the card of a character that was not
-    -- deleted.
-    -- @param action [String 'select' or 'delete']
-    -- @param text [String the translated reason]
-    hook.Run('CharacterRequestFailed', action, text)
-  end)
-
-  Cable.receive('fl_character_menu', function(message, arguments)
-    local menu = Flux.intro_panel
-
-    if !IsValid(menu) then
-      menu = Theme.create_panel('main_menu')
-
-      Flux.intro_panel = menu
-    elseif isfunction(menu.RecreateSidebar) and !IsValid(menu.menu) then
-      menu:RecreateSidebar(true)
-    end
-
-    if message and IsValid(menu) and isfunction(menu.notify) then
-      menu:notify(t(message, arguments))
-    end
-  end)
-
-  Cable.receive('fl_character_desc_prompt', function()
-    local confirm_text = t'ui.char_desc.confirm'
-
-    Derma_StringRequest(
-      t'ui.char_desc.title',
-      t('ui.char_desc.message', {
-        min = config_get('character_min_desc_len'),
-        max = config_get('character_max_desc_len')
-      }),
-      PLAYER:get_phys_desc(),
-      function(text)
-        cable_send('fl_character_physdesc', text)
-      end,
-      nil,
-      confirm_text
-    )
-  end)
 end
 
 do

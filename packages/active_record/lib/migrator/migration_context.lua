@@ -89,7 +89,7 @@ end
 
 class 'ActiveRecord::MigrationContext'
 
--- Migration files of packages and plugins, registered through the 'migrations' pipeline.
+--- Migration files of packages and plugins, registered through the 'migrations' pipeline.
 local sources = {}
 local source_list = {}
 
@@ -137,7 +137,6 @@ end
 function ActiveRecord.MigrationContext.scope_of(path)
   local parts = path:split('/')
 
-  -- Drop the file name and the 'migrations' folder.
   table.remove(parts)
   table.remove(parts)
 
@@ -542,9 +541,6 @@ function ActiveRecord.MigrationContext:install_migrations()
 
   local installed = {}
 
-  -- Install in the order of the original versions, so a migration that alters a table
-  -- always gets a later version than the one creating it, whatever order the files were
-  -- registered in. Unversioned files go last, in registration order.
   local ordered = {}
 
   for index, source in ipairs(source_list) do

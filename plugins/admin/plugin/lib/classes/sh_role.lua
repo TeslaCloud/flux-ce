@@ -190,7 +190,7 @@ end
 --- Returns the ID of the role this role is based on.
 -- @return [String base role ID, or nil if there is none]
 function Role:get_base()
-  return self.base or nil
+  return self.base
 end
 
 --- Registers the role with Bolt. If the role has a define_permissions method, it is run first
@@ -213,43 +213,41 @@ end
 function Role:register()
   if self.define_permissions then
     local old_can, old_cannot, old_anything = can, cannot, allow_anything
-      --- Allows an action for the role being registered. Replaces the global can only while
-      -- define_permissions runs.
-      -- @param action [String permission ID]
-      -- @param object='anything' [String/Map object name or class table]
-      -- @param callback=nil [Function called as callback(actor, object) on every check]
-      -- @see [Role#allow]
-      function can(action, object, callback)
-        self:allow(action, object, callback)
-      end
 
-      --- Denies an action for the role being registered. Only defined while define_permissions
-      -- runs.
-      -- @param action [String permission ID]
-      -- @param object='anything' [String/Map object name or class table]
-      -- @see [Role#disallow]
-      function cannot(action, object)
-        self:disallow(action, object)
-      end
+    --- Allows an action for the role being registered. Replaces the global can only while
+    -- define_permissions runs.
+    -- @param action [String permission ID]
+    -- @param object='anything' [String/Map object name or class table]
+    -- @param callback=nil [Function called as callback(actor, object) on every check]
+    -- @see [Role#allow]
+    function can(action, object, callback)
+      self:allow(action, object, callback)
+    end
 
-      --- Lets the role being registered pass every permission check. Only defined while
-      -- define_permissions runs; the arguments are ignored.
-      -- @param action=nil [Any ignored]
-      -- @param object=nil [Any ignored]
-      -- @param _callback=nil [Any ignored]
-      -- @see [Role#allow_anything]
-      function allow_anything(action, object, _callback)
-        self:allow_anything(action, object)
-      end
+    --- Denies an action for the role being registered. Only defined while define_permissions
+    -- runs.
+    -- @param action [String permission ID]
+    -- @param object='anything' [String/Map object name or class table]
+    -- @see [Role#disallow]
+    function cannot(action, object)
+      self:disallow(action, object)
+    end
 
-      self:define_permissions()
+    --- Lets the role being registered pass every permission check. Only defined while
+    -- define_permissions runs; any arguments are ignored.
+    -- @see [Role#allow_anything]
+    function allow_anything()
+      self:allow_anything()
+    end
 
-      --- Called on both realms while a role is being registered, right after its
-      -- `define_permissions` method has run. The `can`, `cannot` and `allow_anything` globals
-      -- are still bound to the role, so a handler can adjust its permissions. Roles without
-      -- a `define_permissions` method do not run this hook.
-      -- @param role [Role The role being registered]
-      hook.Run('OnDefinePermissions', self)
+    self:define_permissions()
+
+    --- Called on both realms while a role is being registered, right after its
+    -- `define_permissions` method has run. The `can`, `cannot` and `allow_anything` globals
+    -- are still bound to the role, so a handler can adjust its permissions. Roles without
+    -- a `define_permissions` method do not run this hook.
+    -- @param role [Role The role being registered]
+    hook.Run('OnDefinePermissions', self)
 
     can, cannot, allow_anything = old_can, old_cannot, old_anything
   end

@@ -3,7 +3,7 @@
 -- scoreboard until a character is loaded. It also shows the physical description of characters
 -- on scoreboard cards and above players. The handlers of the messages that the server sends
 -- about characters, such as a refused request or the order to open the main menu, are in
--- `lib/sh_character.lua`.
+-- `cl_nethooks.lua`.
 
 local color_info_text = Color('white')
 
@@ -170,7 +170,6 @@ end
 -- @param card [Panel the scoreboard player card]
 -- @param target [Player]
 function Characters:RebuildScoreboardPlayerCard(card, target)
-  local _x, _y = card.name_label:GetPos()
   local text = target:steam_name()
   local font = Theme.get_font('text_normal')
   local text_height = util.text_height(text, font)
@@ -190,8 +189,6 @@ function Characters:RebuildScoreboardPlayerCard(card, target)
   if hook.Run('IsCharacterCardVisible', card, target) != false then
     card.avatar_panel:SetPos(card:GetWide() - card.avatar_panel:GetWide() - math.scale(48), math.scale(4))
 
-    card.steam_name:SetText(card.steam_name:GetText())
-    card.steam_name:SizeToContents()
     card.steam_name:SetPos(
       card.avatar_panel.x - card.steam_name:GetWide() - math.scale(4),
       card:GetTall() * 0.5 - text_height * 0.5

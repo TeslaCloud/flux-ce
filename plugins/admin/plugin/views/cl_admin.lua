@@ -4,8 +4,6 @@
 -- permission, and are created through the theme when their button is clicked.
 
 local PANEL = {}
-PANEL.cur_panel = nil
-PANEL.panels = {}
 
 --- Sizes and centers the admin panel, creates its sidebar and lets plugins add their pages
 -- through the AddAdminMenuItems hook.
@@ -19,6 +17,7 @@ function PANEL:Init()
   self:SetPos(scrw * 0.5 - width * 0.5, scrh * 0.5 - height * 0.5)
 
   self.sidebar_width = math.floor(width * 0.2)
+  self.panels = {}
   self.buttons = {}
 
   self.sidebar = vgui.Create('fl_sidebar', self)
@@ -82,7 +81,7 @@ function PANEL:add_panel(id, title, permission, ...)
   button:set_text_autoposition(true)
   button:set_centered(false)
   button.DoClick = function(_btn)
-    if !self.cur_panel or self.cur_panel.id != id then
+    if !IsValid(self.cur_panel) or self.cur_panel.id != id then
       self:open_panel(id)
     end
   end
@@ -104,35 +103,37 @@ end
 function PANEL:open_panel(id)
   local panel = self.panels[id]
 
+  if !istable(panel) then return end
+  if panel.permission and !PLAYER:can(panel.permission) then return end
+
   if IsValid(self.cur_panel) then
     self.cur_panel:safe_remove()
   end
 
-  if istable(panel) then
-    if panel.permission and !PLAYER:can(panel.permission) then return end
+  local padding = math.scale(8)
+  local x = self.sidebar_width + padding
 
-    local padding = math.scale(8)
-    local x = self.sidebar_width + padding
-
-    for button_id, button in pairs(self.buttons) do
-      if IsValid(button) then
-        button:set_active(button_id == id)
-      end
+  for button_id, button in pairs(self.buttons) do
+    if IsValid(button) then
+      button:set_active(button_id == id)
     end
+  end
 
-    self.cur_panel = Theme.create_panel(panel.id, self, unpack(panel.arguments))
-    self.cur_panel:SetPos(x, padding)
-    self.cur_panel:SetSize(self:GetWide() - x - padding, self:GetTall() - padding * 2)
-    self.cur_panel:SetParent(self)
-    self.cur_panel.id = id
+  self.cur_panel = Theme.create_panel(panel.id, self, unpack(panel.arguments))
 
-    if self.cur_panel.on_opened then
-      self.cur_panel:on_opened(self, panel)
-    end
+  if !IsValid(self.cur_panel) then return end
+
+  self.cur_panel:SetPos(x, padding)
+  self.cur_panel:SetSize(self:GetWide() - x - padding, self:GetTall() - padding * 2)
+  self.cur_panel:SetParent(self)
+  self.cur_panel.id = id
+
+  if self.cur_panel.on_opened then
+    self.cur_panel:on_opened(self, panel)
   end
 end
 
---- Slides the sidebar out of view and shows a 'Go Back' button, or restores the normal layout.
+--- Slides the sidebar out of view and shows a back button, or restores the normal layout.
 -- @param fullscreen [Boolean]
 function PANEL:set_fullscreen(fullscreen)
   if fullscreen then

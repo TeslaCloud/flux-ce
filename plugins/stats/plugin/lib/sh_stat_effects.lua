@@ -2,14 +2,14 @@
 -- An effect of a stat changes some value by a fixed share for every level of the stat: a
 -- percentage of the value, read from one of the `stats_` config keys, or a distance in
 -- meters. Levels above zero help the character, levels below zero hinder it, and a config
--- of 0 turns the effect off. The server side hook handlers of the plugin ask
+-- of 0 turns the effect off. The hook handlers of the plugin ask
 -- `Stats:get_player_effect_scale` for the multiplier to apply, and the files of the
 -- attributes folder build the entries of their `effects` list with `Stats:percent_effect`
 -- and `Stats:distance_effect`, so that what the creation stage and the staff attribute
 -- viewer show is worked out the same way as what the server applies.
 --
 -- This file is included before the attributes folder and before sh_plugin.lua, which is why
--- it is the one that makes the plugin available as the `Stats` global.
+-- it makes the plugin available as the `Stats` global if no other file has done so yet.
 
 local tonumber = tonumber
 local config_get = Config.get

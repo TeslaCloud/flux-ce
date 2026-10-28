@@ -6,11 +6,6 @@
 -- exchanging data with the server. Register your own panels with `fl_base_panel` as their base
 -- rather than using it on its own.
 
---[[
-  Simplistic base panel that has basic colors, fields and methods commonly used throughout Flux Framework.
-  Do not use it directly, base your own panels off of it instead.
---]]
-
 local theme_hook = Theme.hook
 
 local PANEL = {}
@@ -47,10 +42,9 @@ function PANEL:Paint(width, height)
 end
 
 --- Runs the active theme's PanelThink hook for this panel.
-function PANEL:Think() theme_hook('PanelThink', self)
+function PANEL:Think()
+  theme_hook('PanelThink', self)
 end
-
--- MVC Functionality for all FL panels.
 
 --- Sends an MVC request to the server-side handlers registered under the name.
 -- @param name [String name of the MVC handler]

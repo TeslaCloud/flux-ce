@@ -41,7 +41,6 @@ mod 'Lumen::Compiler'
 
 local isstring      = isstring
 local string_byte   = string.byte
-local string_char   = string.char
 local string_find   = string.find
 local string_format = string.format
 local string_match  = string.match
@@ -101,30 +100,11 @@ end
 -- @param code [Number code point]
 -- @return [String the encoded character, or an empty string for an invalid code point]
 local function utf8_char(code)
-  if utf8 and utf8.char then
-    return utf8.char(code)
+  if code > 0x10FFFF then
+    return ''
   end
 
-  if code < 0x80 then
-    return string_char(code)
-  elseif code < 0x800 then
-    return string_char(0xC0 + math.floor(code / 0x40), 0x80 + code % 0x40)
-  elseif code < 0x10000 then
-    return string_char(
-      0xE0 + math.floor(code / 0x1000),
-      0x80 + math.floor(code / 0x40) % 0x40,
-      0x80 + code % 0x40
-    )
-  elseif code < 0x110000 then
-    return string_char(
-      0xF0 + math.floor(code / 0x40000),
-      0x80 + math.floor(code / 0x1000) % 0x40,
-      0x80 + math.floor(code / 0x40) % 0x40,
-      0x80 + code % 0x40
-    )
-  end
-
-  return ''
+  return utf8.char(code)
 end
 
 --- Replaces the character entities in a text with the characters they stand for.
@@ -700,7 +680,5 @@ function Lumen.Compiler.compile(source, name)
     pos = 1
   }
 
-  local code = transform(state, false)
-
-  return code
+  return (transform(state, false))
 end

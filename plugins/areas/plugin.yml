@@ -1,3 +1,3 @@
 name: Areas API
-description: Provides an API for the areas system.
+description: Lets staff mark out areas of the map with the Area Tool and lets plugins react when players enter or leave them.
 author: TeslaCloud Studios

@@ -59,7 +59,7 @@ en:
     invalid_amount: You specified an invalid amount!
     invalid_entity: This is not a valid entity!
     too_far: The target is too far!
-    wait: You can not do it right now, please wait!
+    wait: You cannot do it right now, please wait!
   language:
     name: English
   notification:

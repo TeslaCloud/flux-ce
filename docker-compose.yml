@@ -6,10 +6,11 @@
 #   docker compose --profile postgres up    PostgreSQL
 #   docker compose --profile mariadb up     MariaDB
 #
-# The server is published on 127.0.0.1 only. It is also kept off the master
-# server list and does not answer server browser queries, so connect to it with
-# "connect localhost" from the game console. It still has outgoing access to
-# Steam, which Workshop downloads need.
+# The server is published on FLUX_PORT of every address of the host. It is kept
+# off the master server list and does not answer server browser queries, so
+# connect to it with "connect localhost" (or the address of the host) from the
+# game console. It still has outgoing access to Steam, which Workshop downloads
+# need.
 #
 # "docker compose attach flux" opens the server console; Ctrl+P, Ctrl+Q leaves it
 # again. Stopping the container kills the server right away, enter "quit" in the
@@ -19,7 +20,7 @@
 #
 # Settings, taken from the environment or from an .env file next to this one:
 #
-#   FLUX_SCHEMA                 folder name of the schema (reborn)
+#   FLUX_SCHEMA                 folder name of the schema (hl2rp)
 #   FLUX_SCHEMA_PATH            checkout of the schema (../<FLUX_SCHEMA>)
 #   FLUX_ENV                    Flux environment (development)
 #   FLUX_MAP                    map to start on (gm_construct)
@@ -39,7 +40,7 @@ services:
     tty: true
     stdin_open: true
     environment:
-      FLUX_SCHEMA: ${FLUX_SCHEMA:-reborn}
+      FLUX_SCHEMA: ${FLUX_SCHEMA:-hl2rp}
       FLUX_ENV: ${FLUX_ENV:-development}
       FLUX_WORKSHOP_COLLECTION: ${FLUX_WORKSHOP_COLLECTION:-}
     command: ["+map", "${FLUX_MAP:-gm_construct}", "+maxplayers", "128", "-tickrate", "30", "+host_workshop_collection", "1683881254"]
@@ -50,8 +51,8 @@ services:
       - .:/home/steam/flux_server/garrysmod/gamemodes/flux
       - ./config:/home/steam/flux_config:ro
       - type: bind
-        source: ${FLUX_SCHEMA_PATH:-../${FLUX_SCHEMA:-reborn}}
-        target: /home/steam/flux_server/garrysmod/gamemodes/${FLUX_SCHEMA:-reborn}
+        source: ${FLUX_SCHEMA_PATH:-../${FLUX_SCHEMA:-hl2rp}}
+        target: /home/steam/flux_server/garrysmod/gamemodes/${FLUX_SCHEMA:-hl2rp}
         bind:
           create_host_path: false
       - ./docker/sqlite:/home/steam/sqlite

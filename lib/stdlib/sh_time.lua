@@ -62,9 +62,9 @@ end
 --- Initializes a new Time object that represents a time interval.
 -- ```
 -- local two_days = Time:days(2)
--- local a_day_after_tomorrow = Date:now() + two_days
+-- local a_day_after_tomorrow = Date:today() + two_days
 -- ```
--- @param seconds=current time [Number UNIX time]
+-- @param seconds=os.time() [Number length of the interval in seconds]
 function Time:init(seconds)
   self.time = seconds or os.time()
 
@@ -173,7 +173,8 @@ math.year         = installable(Time.years)
 -- @see [Time#format_nice]
 function Time:nice(time)
   time = time or self.time or 0
-  local seconds = math.abs(time or self.time)
+
+  local seconds = math.abs(time)
   local minutes = seconds * m_const_d
   local hours   = seconds * h_const_d
   local days    = seconds * d_const_d
@@ -242,7 +243,9 @@ function Time:format_nice(suffix, from_now, amt, lang)
     return t(suffix, nil, lang)
   end
 
-  local floored = math.max(math.floor(amt or 1), 1)
+  amt = amt or 1
+
+  local floored = math.max(math.floor(amt), 1)
   local dec = amt - floored
   local dec_prefix
 
@@ -268,7 +271,7 @@ function Time:format_nice(suffix, from_now, amt, lang)
 end
 
 --- Formats date-time using a format string.
--- @param fmt [String DateTime format]
+-- @param fmt [String os.date format]
 -- @param time=self.time [Number UNIX time]
 -- @return [String formatted string]
 -- @see [Date#strftime]

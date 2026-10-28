@@ -48,12 +48,11 @@ end
 -- that its status shows; choosing the disabled title type for it turns that off.
 -- @param depth [Boolean whether the depth pass is being drawn]
 -- @param skybox [Boolean whether the skybox is being drawn]
-function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
+function Doors:PostDrawTranslucentRenderables(depth, skybox)
   if depth or skybox then return end
 
   local eye_pos = EyePos()
-  local doors = Doors
-  local title_types = doors.title_types
+  local title_types = self.title_types
   local found = find_in_sphere(eye_pos, title_distance)
 
   for i = 1, #found do
@@ -62,8 +61,8 @@ function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
     if IsValid(v) and v:is_door() then
       local title = v:get_nv('fl_title_type')
 
-      if title == nil and (doors:is_ownable(v) or doors:is_owned(v)) then
-        title = doors.default_title_type
+      if title == nil and (self:is_ownable(v) or self:is_owned(v)) then
+        title = self.default_title_type
       end
 
       local title_data = title_types[title]

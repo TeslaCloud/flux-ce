@@ -2,11 +2,6 @@
 -- player as initialized (`BOOL_INITIALIZED`), the bar types (`BAR_TOP`, `BAR_MANUAL`,
 -- `BAR_HIDDEN`) and the config sources (`CONFIG_PLUGIN`, `CONFIG_SCHEMA`, `CONFIG_FLUX`).
 
--- DTVars
-enumerate 'BOOL_INITIALIZED' -- Whether the player has passed all initialization steps.
-
--- Bars
+enumerate 'BOOL_INITIALIZED'
 enumerate 'BAR_TOP BAR_MANUAL BAR_HIDDEN'
-
--- Configs
 enumerate 'CONFIG_PLUGIN CONFIG_SCHEMA CONFIG_FLUX'

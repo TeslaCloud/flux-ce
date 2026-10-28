@@ -220,9 +220,7 @@ do
       return 0
     end
 
-    local level = self:get_attribute(stat_id)
-
-    return level
+    return self:get_attribute(stat_id)
   end
 
   --- Returns the modifier that a skill adds to the player's rolls: the modifier of the key

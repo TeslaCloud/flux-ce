@@ -355,7 +355,7 @@ function reconcile_children(parent, old_children, children)
     end
   end
 
-  for _list_key, instance in pairs(by_key) do
+  for _, instance in pairs(by_key) do
     unmount(instance)
   end
 

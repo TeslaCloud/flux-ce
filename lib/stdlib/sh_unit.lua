@@ -6,7 +6,6 @@
 --- A class to convert conventional metrics to Source Engine units.
 class 'Unit'
 
--- Constants for faster conversion.
 local inches_in_cm = 1 / 2.54
 local inches_in_mm = inches_in_cm * 0.1
 local inches_in_ft = 1 / 12
@@ -181,8 +180,7 @@ function Unit:format(n, system)
     local mi = Unit:to_mi(n):round(2)
     local ft = Unit:to_ft(n):floor()
 
-    n  = n:floor() - ft * 12
-    ft = ft - mi * 5280
+    n = n:floor() - ft * 12
 
     if mi > 0.3 then
       result = mi..t'ui.unit.mi'
@@ -194,7 +192,6 @@ function Unit:format(n, system)
   return result
 end
 
--- Aliases for convenience.
 Unit.inches         = Unit.inch
 Unit.unit           = Unit.inch
 Unit.units          = Unit.inch

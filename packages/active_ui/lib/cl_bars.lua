@@ -18,8 +18,6 @@
 -- on).
 -- @module [Flux.Bars]
 
-if !font then require_relative 'cl_font' end
-if !Flux.Lang then require_relative 'sh_lang' end
 if !Theme then require_relative 'cl_theme' end
 
 mod 'Flux::Bars'
@@ -41,7 +39,7 @@ Flux.Bars.default_spacing = math.scale(6)
 
 --- Scales a size given for a 1080p screen, leaving a missing one alone.
 -- @param size [Number size at 1080p, or nil]
--- @param scale [function the scaling function, math.scale by default]
+-- @param scale=math.scale [Function the scaling function]
 -- @return [Number the scaled size, or nil]
 local function scaled(size, scale)
   if !isnumber(size) then return size end
@@ -326,7 +324,7 @@ do
 
       for id, bar in pairs(stored) do
         if bar.callback then
-          Flux.Bars:set_value(bar.id, bar.callback(bar))
+          Flux.Bars:set_value(id, bar.callback(bar))
         end
 
         --- Called on the client for every registered bar each `LazyTick`, after the callback
@@ -334,7 +332,7 @@ do
         -- place.
         -- @param id [String bar ID]
         -- @param bar [Map bar data]
-        hook.Run('AdjustBarInfo', id, stored[id])
+        hook.Run('AdjustBarInfo', id, bar)
       end
     end
   end

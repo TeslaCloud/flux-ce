@@ -1,33 +1,5 @@
---- Opens the target's inventory for the searching player.
--- @param actor [Player player doing the search]
--- @param target [Player player being searched]
-function PlayerSearch:start(actor, target)
-  target.requested_search = nil
-
-  actor:open_player_inventory(target)
-
-  target.searcher = actor
-  actor.search_target = target
-end
-
---- Ends a search, closing the searched player's inventories and their window for the searcher.
--- @param actor [Player player doing the search, may be nil]
--- @param target [Player player being searched]
-function PlayerSearch:stop(actor, target)
-  if IsValid(actor) then
-    actor.search_target = nil
-
-    Cable.send(actor, 'fl_inventory_close')
-
-    if IsValid(target) then
-      actor:close_player_inventory(target)
-    end
-  end
-
-  if IsValid(target) then
-    target.searcher = nil
-  end
-end
+--- Server-side hooks of the Player Search plugin: the checks of whether a search may be asked
+-- for, start and go on, and the end of a search when its inventory is closed.
 
 --- Ends the search when the searcher closes the searched player's inventory.
 -- @param actor [Player player that closed the inventory]
@@ -83,6 +55,11 @@ function PlayerSearch:CanStartSearch(actor, target)
     return false, 'error.search.already'
   end
 
+  --- Called when a player asks to search another player, when the searched player allows the
+  -- search and every second while it lasts.
+  -- @param actor [Player player doing the search]
+  -- @param target [Player player being searched]
+  -- @return [Boolean false to refuse or end the search, String error phrase shown to the searcher]
   local success, error_text = hook.Run('CanSearch', actor, target)
 
   if success == false then
@@ -111,54 +88,3 @@ function PlayerSearch:CanSearch(actor, target)
     return false, 'error.too_far'
   end
 end
-
-Cable.receive('fl_request_player_search', function(actor, target)
-  if !isentity(target) or !IsValid(target) or !target:IsPlayer() or target == actor then return end
-
-  local success, error_text = hook.Run('CanStartSearch', actor, target)
-
-  if success != false then
-    target.requested_search = actor
-
-    Cable.send(target, 'fl_request_player_search', actor)
-  else
-    actor:notify(error_text)
-  end
-
-  local cur_time = CurTime()
-
-  actor.next_search = (!actor.next_search or actor.next_search < cur_time) and cur_time + 1 or actor.next_search + 10
-  target.next_search = cur_time + 1
-end)
-
-Cable.receive('fl_resist_player_search', function(target, actor)
-  local requester = target.requested_search
-
-  if !IsValid(requester) or requester != actor then return end
-
-  actor:notify('notification.search.resist', { player = target })
-
-  target.requested_search = nil
-
-  local cur_time = CurTime()
-
-  actor.next_search = actor.next_search and actor.next_search + 5 or cur_time + 5
-end)
-
-Cable.receive('fl_start_player_search', function(target, actor)
-  local requester = target.requested_search
-
-  if !IsValid(requester) or requester != actor then return end
-
-  target.requested_search = nil
-
-  local success, error_text = hook.Run('CanSearch', actor, target)
-
-  if success == false then
-    actor:notify(error_text)
-
-    return
-  end
-
-  PlayerSearch:start(actor, target)
-end)

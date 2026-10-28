@@ -143,9 +143,7 @@ function Cinematics:add(cinematic)
     local value = cinematic[field]
 
     if isstring(value) and value != '' then
-      local translated = t(value, cinematic.arguments)
-
-      entry[field] = translated
+      entry[field] = t(value, cinematic.arguments)
       has_text = true
     end
   end

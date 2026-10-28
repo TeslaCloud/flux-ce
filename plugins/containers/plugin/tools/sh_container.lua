@@ -189,18 +189,15 @@ if CLIENT then
 
     panel:AddControl('TextBox', {
       Label = t'tool.container.custom_name',
-      Command = 'container_name',
-      MaxLenth = '64'
+      Command = 'container_name'
     })
     panel:AddControl('TextBox', {
       Label = t'tool.container.message',
-      Command = 'container_message',
-      MaxLenth = '256'
+      Command = 'container_message'
     })
     panel:AddControl('TextBox', {
       Label = t'tool.container.password',
-      Command = 'container_password',
-      MaxLenth = '64'
+      Command = 'container_password'
     })
     panel:AddControl('Slider', {
       Label = t'tool.container.share',

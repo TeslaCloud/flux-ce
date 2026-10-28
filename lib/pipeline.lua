@@ -2,6 +2,7 @@
 -- It automatically does the boring stuff like converting filenames for you,
 -- requiring you to write the real thing only.
 -- Check out the sh_item and sh_admin libraries for examples.
+
 mod 'Pipeline'
 
 local stored = Pipeline.stored or {}

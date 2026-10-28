@@ -1,8 +1,7 @@
---- ActiveRecord is Flux's object-relational mapper, modeled on the Rails library of the
--- same name. It ties classes to database tables: a model is a class that extends
--- `ActiveRecord::Base`, its table is named after the lowercase plural of the class name,
--- and every row of that table is loaded as an object of the class and written back with
--- `ActiveRecord::Base#save`.
+--- ActiveRecord is Flux's object-relational mapper. It ties classes to database tables: a
+-- model is a class that extends `ActiveRecord::Base`, its table is named after the
+-- lowercase plural of the class name, and every row of that table is loaded as an object
+-- of the class and written back with `ActiveRecord::Base#save`.
 --
 -- The tables are described by migrations (`ActiveRecord::Migration`): files in the
 -- schema's `db/migrate/` folder that change the database through the schema statements
@@ -21,7 +20,6 @@
 -- the server; the client gets a stub of `ActiveRecord::Base`.
 -- @module [ActiveRecord]
 
--- Store for later use.
 local PACKAGE = PACKAGE
 
 ActiveRecord.schema       = ActiveRecord.schema               or {}
@@ -47,7 +45,7 @@ include 'helpers.lua'
 include 'commandline.lua'
 include 'dumper.lua'
 
--- Order in which the columns of a table were added; continues from the ids stored in
+--- Order in which the columns of a table were added; continues from the ids stored in
 -- the 'ar_schema' table.
 local next_column_id = 1
 
@@ -356,7 +354,7 @@ function ActiveRecord.define_model(name, callback)
   end
 end
 
--- Setup aliases for common adapters.
+--- Aliases for common adapter names.
 local adapter_aliases = {
   ['postgresql']  = 'pg',
   ['sqlite3']     = 'sqlite',
@@ -408,7 +406,6 @@ function ActiveRecord.on_connected()
   local class_name = ActiveRecord.adapter.class_name:lower()
   local adapter = ActiveRecord.get_meta_key('adapter', class_name)
 
-  -- The internal tables were written by another database adapter: start over.
   if adapter != class_name then
     ActiveRecord.drop_schema(true)
     ActiveRecord.generate_tables()
@@ -443,7 +440,6 @@ end
 -- @param meta_only=false [Boolean only drop the internal tables]
 function ActiveRecord.drop_schema(meta_only)
   if !meta_only then
-    -- Tables are dropped in no particular order, so foreign keys are not enforced meanwhile.
     local foreign_keys = ActiveRecord.adapter:disable_foreign_keys()
     local success, exception = pcall(function()
       for _, table_name in ipairs(table.GetKeys(ActiveRecord.schema)) do

@@ -5,13 +5,15 @@
 -- Flux creates the webhooks listed in the settings of the server and posts log messages to
 -- them with `Log:to_discord`.
 
+local registered_hooks = Webhook and Webhook.hooks or {}
+
 class 'Webhook'
 
-Webhook.base_url  = 'https://discordapp.com/api/webhooks/{id}/{key}'
+Webhook.base_url  = 'https://discord.com/api/webhooks/{id}/{key}'
 Webhook.url       = nil
 Webhook.id        = nil
 Webhook.key       = nil
-Webhook.hooks     = {}
+Webhook.hooks     = registered_hooks
 
 --- Creates a new Discord webhook.
 -- @param id='' [String ID of the Discord webhook]
@@ -35,7 +37,7 @@ function Webhook:push(message, data)
       content = message,
       username = data.username,
       avatar_url = data.avatar_url,
-      tts = data.tts
+      tts = data.tts != nil and tostring(data.tts) or nil
     })
   end
 end
@@ -75,13 +77,13 @@ function Webhook:all()
 end
 
 --- Returns the registered webhooks that accept messages of the specified type.
--- @param type [String message type]
+-- @param message_type [String message type]
 -- @return [List<Webhook>]
-function Webhook:get_type(type)
+function Webhook:get_type(message_type)
   local ret = {}
 
   for _, webhook in pairs(self.hooks) do
-    if webhook:is_type(type) then
+    if webhook:is_type(message_type) then
       ret[#ret + 1] = webhook
     end
   end
@@ -98,15 +100,15 @@ function Webhook:present(id)
 end
 
 --- Checks whether this webhook accepts messages of the specified type.
--- @param type [String message type]
+-- @param message_type [String message type]
 -- @return [Boolean]
-function Webhook:is_type(type)
+function Webhook:is_type(message_type)
   local types = self.types
 
   for i = 1, #types do
     local v = types[i]
 
-    if v == type or v == 'all' then
+    if v == message_type or v == 'all' then
       return true
     end
   end

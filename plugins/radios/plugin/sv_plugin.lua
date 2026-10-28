@@ -145,9 +145,9 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   local tuned_in = info.listeners
   local is_tuned_to = Communications.is_tuned_to
 
-  for _, client in player.Iterator() do
-    if client == speaker or is_tuned_to(client, frequency) then
-      tuned_in[#tuned_in + 1] = client
+  for _, target in player.Iterator() do
+    if target == speaker or is_tuned_to(target, frequency) then
+      tuned_in[#tuned_in + 1] = target
     end
   end
 

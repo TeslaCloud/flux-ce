@@ -87,7 +87,6 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
 
     self.connection:connect()
 
-    -- ping it every 30 seconds to make sure we're not losing connection
     timer.Create('Mysqloo#keep_alive', 30, 0, function()
       if self.connection then
         self.connection:ping()
@@ -144,7 +143,6 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
   local query_obj = nil
 
   if bindings and #bindings > 0 then
-    -- Prepared statements take a single statement, without the semicolon that ends it.
     query_obj = self.connection:prepare((query:gsub(';%s*$', '')))
 
     for index, value in ipairs(bindings) do
@@ -167,12 +165,6 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
         result = { { id = completed_query:lastInsert() } }
       end
 
-      for key, value in pairs(result) do
-        if isstring(value) then
-          result[key] = self:unescape(value)
-        end
-      end
-
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
 
       if !status then
@@ -192,9 +184,6 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
   if self._sync then
     local error_text = nil
 
-    -- The callbacks run inside of wait(), so the success callback is called by hand
-    -- below instead and the error is reported once the query is done. The query waits
-    -- for the queries that were started before it, so they keep their order.
     query_obj.onSuccess = nil
     query_obj.onError = function(_query_obj, text)
       error_text = text

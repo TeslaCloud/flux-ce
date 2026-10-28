@@ -53,7 +53,7 @@ end
 -- @return [Number width in pixels]
 -- @see [util.text_size]
 function util.text_width(text, font)
-  return select(1, util.text_size(text, font))
+  return (util.text_size(text, font))
 end
 
 --- Returns the height a text takes up when drawn with the given font.
@@ -241,13 +241,9 @@ do
           end
 
           local directories = path:split('/')
-          local current_path = ''
 
-          for index, dir_name in pairs(directories) do
-            if index < #directories then
-              current_path = current_path..dir_name..'/'
-              file.CreateDir(current_path)
-            end
+          for index = 1, #directories - 1 do
+            file.CreateDir(table.concat(directories, '/', 1, index))
           end
 
           http.Fetch(url, function(body, _length, _headers, code)
@@ -309,56 +305,51 @@ function util.wrap_text(text, font, width, initial_width)
   local dash_width = util.text_size('-', font)
   local pieces = text:split(' ')
   local cur_width = initial_width or 0
-  local current_word = ''
+  local line = {}
 
   for index, word in ipairs(pieces) do
-    local w, _h = util.text_size(word, font)
+    local word_width = util.text_size(word, font)
     local remain = width - cur_width
 
-    -- The width of the word is LESS OR EQUAL than what we have remaining.
-    if w <= remain then
+    if word_width <= remain then
+      line[#line + 1] = word
+
       if index != #pieces then
-        current_word = current_word..word..' '
-        cur_width = cur_width + w + space_width
+        line[#line + 1] = ' '
+        cur_width = cur_width + word_width + space_width
       else
-        current_word = current_word..word
-        cur_width = cur_width + w
+        cur_width = cur_width + word_width
       end
-    else -- The width of the word is MORE than what we have remaining.
-      if w > width then -- The width is more than the total width we have available.
-        for i = 1, utf8.len(word) do
-          local char = word:utf8sub(i, i)
-          local char_width, _ = util.text_size(char, font)
+    elseif word_width > width then
+      for i = 1, utf8.len(word) do
+        local char = word:utf8sub(i, i)
+        local char_width = util.text_size(char, font)
 
-          remain = width - cur_width
+        remain = width - cur_width
+        line[#line + 1] = char
 
-          if (char_width + dash_width + space_width) < remain then
-            current_word = current_word..char
-            cur_width = cur_width + char_width
-          else
-            current_word = current_word..char..'-'
+        if (char_width + dash_width + space_width) < remain then
+          cur_width = cur_width + char_width
+        else
+          line[#line + 1] = '-'
+          output[#output + 1] = table.concat(line)
 
-            output[#output + 1] = current_word
-
-            current_word = ''
-            cur_width = 0
-          end
+          line = {}
+          cur_width = 0
         end
-      else -- The width is LESS than the total width
-        output[#output + 1] = current_word
-
-        current_word = word..' '
-
-        local wide = util.text_size(current_word, font)
-
-        cur_width = wide
       end
+    else
+      output[#output + 1] = table.concat(line)
+
+      line = { word, ' ' }
+      cur_width = util.text_size(word..' ', font)
     end
   end
 
-  -- If we have some characters remaining, drop them into the lines table.
-  if current_word != '' then
-    output[#output + 1] = current_word
+  local rest = table.concat(line)
+
+  if rest != '' then
+    output[#output + 1] = rest
   end
 
   return output

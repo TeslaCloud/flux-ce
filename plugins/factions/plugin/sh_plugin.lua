@@ -27,8 +27,8 @@ PLUGIN:set_global('Factions')
 
 Plugin.add_extra('factions')
 
-require_relative 'sh_enums'
 require_relative 'cl_hooks'
+require_relative 'cl_nethooks'
 require_relative 'sv_hooks'
 
 --- Returns the factions of the players that a command argument names, the way the server

@@ -12,7 +12,7 @@
 -- inventory (see the Inventory plugin) or lies in the world as an `fl_item` entity spawned
 -- by `Item.spawn`. Every instance is a row of the `items` table of the database; the
 -- server loads the instances when they are needed and writes back what changes (see
--- `sv_storage.lua`), and sends each client the instances it needs. Players act on an
+-- `lib/sv_storage.lua`), and sends each client the instances it needs. Players act on an
 -- instance through its menu: the use, take, drop and destroy options and the custom
 -- buttons of the item all end up in `ItemBase:do_menu_action` on the server, which runs
 -- the `PlayerCanUseItem`, `PlayerUseItem`, `PlayerTakeItem`, `PlayerDropItem`,
@@ -43,9 +43,7 @@
 PLUGIN:set_global('Items')
 
 require_relative 'cl_hooks'
-require_relative 'sv_storage'
 require_relative 'sv_hooks'
-require_relative 'sh_enums'
 
 --- Registers the 'items/bases' and 'items' plugin folders
 -- and includes the item bases and the items that come with this plugin.

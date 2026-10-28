@@ -50,7 +50,7 @@ if SERVER then
       local ok, result = pcall(entry.callback, entry.target, answer)
 
       if !ok then
-        error_with_traceback('Callback of a prompt has failed to run!\n'..result)
+        error_with_traceback('Callback of a prompt has failed to run!\n'..tostring(result))
       end
     end
 

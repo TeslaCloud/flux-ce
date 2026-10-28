@@ -165,7 +165,7 @@ function PANEL:set_icon_size(size)
 end
 
 --- Sets the text autoposition flag. The flag is only stored; nothing in the framework
--- currently reads it.
+-- reads it.
 -- @param autopos [Boolean]
 function PANEL:set_text_autoposition(autopos)
   self.autopos = autopos

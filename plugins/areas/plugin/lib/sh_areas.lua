@@ -51,13 +51,13 @@ function Areas.get_count()
 end
 
 --- Returns all registered areas of the specified type.
--- @param type [String area type id]
+-- @param type_id [String area type id]
 -- @return [List list of area tables]
-function Areas.get_by_type(type)
+function Areas.get_by_type(type_id)
   local to_ret = {}
 
   for _, area in pairs(stored) do
-    if area.type == type then
+    if area.type == type_id then
       to_ret[#to_ret + 1] = area
     end
   end
@@ -107,9 +107,7 @@ function Areas.create(id, height, data)
     area.polys = {}
     area.type = data.type or 'area'
 
-    if data then
-      table.Merge(area, data)
-    end
+    table.Merge(area, data)
   else
     area = stored[id]
   end
@@ -166,6 +164,7 @@ function Areas.register(id, data)
   stored[id] = data
 
   top = top + 1
+  Areas.top = top
 
   if SERVER then
     Cable.send(nil, 'fl_area_register', id, data)

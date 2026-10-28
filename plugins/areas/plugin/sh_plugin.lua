@@ -15,10 +15,6 @@ PLUGIN:set_global('Area')
 require_relative 'cl_plugin'
 require_relative 'sv_plugin'
 
-if !areas then
-  require_relative 'lib/sh_areas'
-end
-
 --- Registers the 'areas' level design permission.
 function Area:RegisterPermissions()
   Bolt:register_permission(
@@ -56,26 +52,24 @@ Area.tool_modes = {
   --   removes the area of that type under the trace]
   Add = function(list, data)
     local vars = data.ClientConVar or data.ConVars or data.ClientConVars or data.ConVar
+    local area_type = data.area_type or 'area'
 
     table.insert(list, {
       title = data.title or 'Unknown Mode',
-      area_type = data.area_type or 'area',
+      area_type = area_type,
       OnLeftClick = data.OnLeftClick,
       OnRightClick = data.OnRightClick,
       OnReload = data.OnReload or function(_mode, _tool, trace)
-        local _cur_time = CurTime()
         local pos = trace.HitPos
         local z = pos.z + 16
 
         for _, area in pairs(Areas.all()) do
-          if istable(area.polys) and isstring(area.type) and area.type == data.area_type then
+          if istable(area.polys) and area.type == area_type then
             for _, poly in ipairs(area.polys) do
-              if z > poly[1].z and z < area.maxh then
-                if util.vector_in_poly(pos, poly) then
-                  Areas.remove(area.id)
+              if z > poly[1].z and z < area.maxh and util.vector_in_poly(pos, poly) then
+                Areas.remove(area.id)
 
-                  return true
-                end
+                return true
               end
             end
           end
@@ -110,9 +104,10 @@ function Area:AddAreaToolModes(mode_list)
   local mode = {}
   mode.title = 'Text Area'
   mode.area_type = 'textarea'
-  mode.ClientConVar = mode.ClientConVar or {}
-  mode.ClientConVar['height'] = '512'
-  mode.ClientConVar['text'] = 'Sample Text'
+  mode.ClientConVar = {
+    height = '512',
+    text = 'Sample Text'
+  }
 
   --- Starts a new text area if needed and adds the aimed position as a vertex.
   -- @param tool [Tool the area tool]
@@ -152,7 +147,7 @@ function Area:AddAreaToolModes(mode_list)
   -- @param panel [Panel the tool's control panel]
   function mode:BuildCPanel(panel)
     panel:AddControl('Header', { Description = t'tool.area.desc' })
-    panel:AddControl('TextBox', { Label = t'tool.area.text', Command = 'area_text', MaxLenth = '256' })
+    panel:AddControl('TextBox', { Label = t'tool.area.text', Command = 'area_text' })
     panel:AddControl('Slider', {
       Label = t'tool.area.height',
       Command = 'area_height',

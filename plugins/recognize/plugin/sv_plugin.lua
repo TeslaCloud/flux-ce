@@ -350,15 +350,3 @@ function Recognizes:player_forget(actor, target)
 
   return true
 end
-
-Cable.receive('fl_recognize', function(actor, kind, name, target)
-  if Recognizes:accept_request(actor) then
-    Recognizes:introduce(actor, kind, name, target)
-  end
-end)
-
-Cable.receive('fl_recognize_forget', function(actor, target)
-  if Recognizes:accept_request(actor) then
-    Recognizes:player_forget(actor, target)
-  end
-end)

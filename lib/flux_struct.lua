@@ -30,7 +30,6 @@ end
 if CLIENT then
   local sfs_path, utf8_path = getenv('SFS_PATH'), getenv('UTF8_PATH')
 
-  -- Include the required UTF-8 library.
   if !string.utf8upper then
     include(utf8_path..'lib/utf8.min.lua')
   end
@@ -42,12 +41,13 @@ if CLIENT then
   local chunks = {}
 
   --- Takes one piece of a table that the server has split over several of the generated
-  -- files, because a single file would be too large to be sent to clients.
+  -- files, because a single file would be too large to be sent to clients. The pieces are
+  -- kept, since a Lua refresh may only send the ones that have changed.
   -- @param name [String name of the table the piece belongs to]
   -- @param index [Number position of the piece]
   -- @param count [Number amount of pieces the table consists of]
   -- @param data [String the piece of the serialized table]
-  -- @return [Hash the table once all of its pieces are there, nil before that]
+  -- @return [Map the table once all of its pieces are there, nil before that]
   function Flux.receive_chunk(name, index, count, data)
     local parts = chunks[name]
 
@@ -62,7 +62,6 @@ if CLIENT then
 
     parts[index] = data
 
-    -- The pieces are kept, a Lua refresh may only send the ones that have changed.
     if parts.received == count then
       return table.deserialize(table.concat(parts))
     end

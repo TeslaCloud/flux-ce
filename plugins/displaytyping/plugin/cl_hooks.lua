@@ -1,5 +1,37 @@
---- Client-side hooks of the Display Typing plugin: follows the chatbox of the local player,
--- receives the typing of the players nearby from the server and draws their bubbles.
+--- Client-side hooks of the Display Typing plugin: registers the client settings, follows
+-- the chatbox of the local player, receives the typing of the players nearby from the server
+-- and draws their bubbles.
+
+--- Decides whether the live text setting is listed in the settings menu: only while the
+-- player has typing bubbles turned on and the server allows live text.
+-- @param _setting [Map definition of the setting]
+-- @return [Boolean]
+local function live_text_setting_visible(_setting)
+  return ClientSettings:get('display_typing_bubbles') and DisplayTyping:live_text_allowed()
+end
+
+--- Registers the client settings of the plugin: whether the player sees typing bubbles at
+-- all, which the server is told so that it does not send them anything, and whether the
+-- bubbles show the text as it is typed. Only called if the Settings plugin is loaded.
+function DisplayTyping:RegisterClientSettings()
+  ClientSettings:register_setting('display_typing_bubbles', {
+    type = 'boolean',
+    default = true,
+    category = 'settings.categories.chat',
+    name = 'settings.display_typing.bubbles.name',
+    description = 'settings.display_typing.bubbles.desc',
+    networked = true
+  })
+
+  ClientSettings:register_setting('display_typing_live_text', {
+    type = 'boolean',
+    default = true,
+    category = 'settings.categories.chat',
+    name = 'settings.display_typing.live_text.name',
+    description = 'settings.display_typing.live_text.desc',
+    visible = live_text_setting_visible
+  })
+end
 
 --- Reports the text the local player is typing in the chatbox. The chatbox runs this with
 -- an empty string when it closes, which is also what happens after a message is sent, and

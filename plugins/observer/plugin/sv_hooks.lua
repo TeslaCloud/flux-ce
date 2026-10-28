@@ -10,7 +10,7 @@ local invisible_color = Color(0, 0, 0, 0)
 -- @return [Boolean always false, which blocks the default noclip]
 function Observer:PlayerEnterNoclip(actor)
   if !actor:can('noclip') then
-    actor:notify('You do not have permission to do this.')
+    actor:notify('error.no_permission')
 
     return false
   end

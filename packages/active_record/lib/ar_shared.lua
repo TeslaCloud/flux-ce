@@ -4,15 +4,12 @@
 -- returns the object, and an `ActiveRecord.define_model` that merely declares a class, so
 -- that model files can be loaded on the client, where there is no database.
 
--- We only need to include ActiveRecord once.
 if !ActiveRecord.Base then
   if SERVER then
     AddCSLuaFile()
     AddCSLuaFile 'base.lua'
     return include 'active_record.lua'
   end
-
-  -- Client hacks
 
   include 'base.lua'
 

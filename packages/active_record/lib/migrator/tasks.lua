@@ -263,7 +263,7 @@ local tasks = {
   ['drop']            = function(_env) return ActiveRecord.Database:drop_database(ActiveRecord.db_settings) end
 }
 
--- Tasks that need a connected database.
+--- Tasks that run without a connected database.
 local needs_connection = {
   ['create'] = false,
   ['drop'] = false

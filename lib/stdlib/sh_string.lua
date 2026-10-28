@@ -26,7 +26,6 @@ local String = {
 
 local string_meta = getmetatable('')
 
--- Ruby-style names for the built-in string functions.
 string.basename                        = string.GetFileFromFilename
 string.chars                           = string.ToTable
 string.comma                           = string.Comma
@@ -242,7 +241,6 @@ function string.is_command(str)
 end
 
 do
-  -- IDs should not have any of those characters.
   local blocked_chars = '[\'"\\/%^:%.;&,%%]'
 
   --- Converts a string to an ID: lowercases it, replaces spaces with underscores and removes
@@ -461,8 +459,6 @@ local function real_gsub(pat)
   return pat:gsub('(%%?)(.)', case_insensitive_letter)
 end
 
--- https://stackoverflow.com/questions/11401890/case-insensitive-lua-pattern-matching
-
 --- Makes a Lua pattern case-insensitive.
 -- ```
 -- inflect:plural(i'(octop)us$', '%1i') -- the pattern becomes '([oO][cC][tT][oO][pP])[uU][sS]$'
@@ -471,15 +467,12 @@ end
 -- @return [String pattern that matches both lowercase and uppercase letters]
 function i(pattern)
   if pattern:include('[') then
-    local p = pattern:gsub('([.]*)%[([%w]*)%]([.]*)', function(before, letters, after)
+    return (pattern:gsub('([.]*)%[([%w]*)%]([.]*)', function(before, letters, after)
       return real_gsub(before)..'['..letters:lower()..letters:upper()..']'..real_gsub(after)
-    end)
-
-    return p
-  else
-    local p = real_gsub(pattern)
-    return p
+    end))
   end
+
+  return (real_gsub(pattern))
 end
 
 --- Replaces the `{name}` placeholders in a string with the values from a hash.

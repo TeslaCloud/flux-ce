@@ -3,19 +3,19 @@
 
 local pairs = pairs
 
--- Disable default Sandbox persistence.
 hook.Remove('ShutDown', 'SavePersistenceOnShutdown')
 hook.Remove('PersistenceSave', 'PersistenceSave')
 hook.Remove('PersistenceLoad', 'PersistenceLoad')
 hook.Remove('InitPostEntity', 'PersistenceInit')
 
-local whitelisted_ents = {
+local whitelisted_ents = StaticEnts.whitelisted_ents or {
   gmod_light                = true,
   gmod_lamp                 = true,
   prop_physics              = true,
   prop_physics_multiplayer  = true,
   prop_ragdoll              = true
 }
+StaticEnts.whitelisted_ents = whitelisted_ents
 
 --- Runs the PersistenceLoad hook once the map's entities have been created.
 function StaticEnts:InitPostEntity()
@@ -135,7 +135,6 @@ function StaticEnts:load_class(ent_class)
 
   local entities, _constraints = duplicator.Paste(nil, loaded.Entities, loaded.Constraints)
 
-  -- Restore any custom data the static entities might have had.
   for index, ent in pairs(entities) do
     local ent_data = loaded.Entities[index]
 

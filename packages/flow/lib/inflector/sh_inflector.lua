@@ -1,10 +1,9 @@
---- Converts words between their singular and plural forms, in the manner of the inflector of
--- Ruby on Rails. The rules of a language are declared inside of a `Flow.Inflector:inflections`
--- block as pattern replacements, irregular words and uncountable words; the English rules ship
--- with Flux. `Flow.Inflector:pluralize` and `Flow.Inflector:singularize` apply the rules of
--- the current language to a word. ActiveRecord uses them to derive the names of database
--- tables from the names of models, turning 'user' into 'users', and the names of foreign keys
--- from the names of tables.
+--- Converts words between their singular and plural forms. The rules of a language are declared
+-- inside of a `Flow.Inflector:inflections` block as pattern replacements, irregular words and
+-- uncountable words; the English rules ship with Flux. `Flow.Inflector:pluralize` and
+-- `Flow.Inflector:singularize` apply the rules of the current language to the last part of a
+-- snake_case word. ActiveRecord uses them to derive the names of database tables from the names
+-- of models, turning 'user' into 'users', and the names of foreign keys from the names of tables.
 
 class 'Flow::Inflector'
 
@@ -29,7 +28,9 @@ Flow.Inflector.current_language = 'en'
 -- @param func [Function receives the inflector]
 -- @return [Flow::Inflector self, for chaining]
 function Flow.Inflector:inflections(lang, func)
-  self.current_language      = lang or 'en'
+  lang = lang or 'en'
+
+  self.current_language      = lang
   self._plurals[lang]        = self._plurals[lang] or {}
   self._singulars[lang]      = self._singulars[lang] or {}
   self._irregulars[lang]     = self._irregulars[lang] or {}
@@ -116,9 +117,7 @@ end
 -- @param words [String/List<String> a word or a list of words]
 -- @return [Flow::Inflector self, for chaining]
 function Flow.Inflector:uncountable(words)
-  local lang = self.current_language
-
-  local uncountables = self._uncountables[lang]
+  local uncountables = self._uncountables[self.current_language]
 
   if isstring(words) then
     uncountables[words] = true
@@ -131,66 +130,38 @@ function Flow.Inflector:uncountable(words)
   return self
 end
 
---- Converts a word to its plural form using the rules of the current language.
--- Only the last part of a snake_case word is converted.
--- @param word [String]
--- @return [String plural form, Number amount of replacements (irregular words only)]
-function Flow.Inflector:pluralize(word)
-  local original_word = word
+local function inflect_last_part(word, irregulars, uncountables, rules)
+  local last_part = word:match('_(%w+)$') or word
+  local prefix = word:sub(1, #word - #last_part)
+  local irregular = irregulars[last_part]
 
-  if word:find('_') then
-    word = word:match('_([%w]+)$')
-  end
-
-  local irregular = self:irregulars()[word]
-
-  if irregular then return original_word:gsub(word, irregular) end
-  if self:uncountables()[word] then return original_word end
-
-  local rules = self:plurals()
+  if irregular then return prefix..irregular end
+  if uncountables[last_part] then return word end
 
   for i = 1, #rules do
-    local v = rules[i]
-    local original_text = word
-    local text, replacements = word:gsub(v.expression, v.replacement)
+    local rule = rules[i]
+    local text, replacements = last_part:gsub(rule.expression, rule.replacement)
 
-    if (replacements or 0) > 0 then
-      local ret = original_word:gsub(original_text, text)
-      return ret
+    if replacements > 0 then
+      return prefix..text
     end
   end
 
   return word
 end
 
+--- Converts a word to its plural form using the rules of the current language.
+-- Only the last part of a snake_case word is converted.
+-- @param word [String]
+-- @return [String plural form]
+function Flow.Inflector:pluralize(word)
+  return inflect_last_part(word, self:irregulars(), self:uncountables(), self:plurals())
+end
+
 --- Converts a word to its singular form using the rules of the current language.
 -- Only the last part of a snake_case word is converted.
 -- @param word [String]
--- @return [String singular form, Number amount of replacements (irregular words only)]
+-- @return [String singular form]
 function Flow.Inflector:singularize(word)
-  local original_word = word
-
-  if word:find('_') then
-    word = word:match('_([%w]+)$')
-  end
-
-  local irregular = self:irregulars_reverse()[word]
-
-  if irregular then return original_word:gsub(word, irregular) end
-  if self:uncountables()[word] then return original_word end
-
-  local rules = self:singulars()
-
-  for i = 1, #rules do
-    local v = rules[i]
-    local original_text = word
-    local text, replacements = word:gsub(v.expression, v.replacement)
-
-    if (replacements or 0) > 0 then
-      local ret = original_word:gsub(original_text, text)
-      return ret
-    end
-  end
-
-  return word
+  return inflect_last_part(word, self:irregulars_reverse(), self:uncountables(), self:singulars())
 end

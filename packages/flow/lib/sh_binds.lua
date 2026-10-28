@@ -15,11 +15,9 @@ if CLIENT then
   Flux.Binds.stored     = stored
   Flux.Binds.key_enums  = key_enums
 
-  if #key_enums == 0 then
+  if !next(key_enums) then
     for global_name, enum_value in pairs(_G) do
-      if string.sub(global_name, 1, 6) == 'MOUSE_' then
-        key_enums[enum_value] = global_name
-      elseif string.sub(global_name, 1, 4) == 'KEY_' then
+      if isstring(global_name) and (global_name:sub(1, 6) == 'MOUSE_' or global_name:sub(1, 4) == 'KEY_') then
         key_enums[enum_value] = global_name
       end
     end
@@ -94,7 +92,7 @@ if CLIENT then
   -- ```
   -- Flux.Binds:add_bind('ToggleThirdPerson', 'fl_third_person', KEY_P)
   -- ```
-  -- @param _id [String name of the bind, currently unused]
+  -- @param _id [String name of the bind, unused]
   -- @param command [String console command to run when the button is pressed]
   -- @param key [Number button code, see the KEY and MOUSE enumerations]
   function Flux.Binds:add_bind(_id, command, key)

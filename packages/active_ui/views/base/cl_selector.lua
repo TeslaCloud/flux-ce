@@ -41,7 +41,6 @@ end
 function PANEL:SizeToContents()
   local width, height = math.max(self.text:GetWide(), ScrW() / 6), self.text:GetTall()
 
-  -- The frame's title bar and paddings scale with the stock Derma (cl_derma_scale.lua).
   self:SetSize(width + DermaScale.scale(50), height + DermaScale.scale(42) + self.list:GetTall())
 end
 

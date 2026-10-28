@@ -75,14 +75,13 @@ local damage_bands = {
 
 local highest_band_dice = '1d12'
 
---- Reads one of the override configs, 'd20_weapon_dice' or 'd20_npc_dice', into a map.
--- Entries of the list are strings like 'weapon_pistol = 1d8'; a map of formulas by class is
--- taken as well. Classes are matched in lower case.
--- @param key [String config key]
+--- Reads the value of one of the override configs, 'd20_weapon_dice' or 'd20_npc_dice',
+-- into a map. Entries of the list are strings like 'weapon_pistol = 1d8'; a map of formulas
+-- by class is taken as well. Classes are matched in lower case.
+-- @param value [Any value of the config]
 -- @return [Map dice formula by class]
-local function read_overrides(key)
+local function read_overrides(value)
   local overrides = {}
-  local value = config_get(key)
 
   if !istable(value) then
     return overrides
@@ -157,7 +156,7 @@ function D20:get_weapon_dice(class)
 
   class = class:lower()
 
-  return read_overrides('d20_weapon_dice')[class] or weapon_dice[class]
+  return read_overrides(config_get('d20_weapon_dice'))[class] or weapon_dice[class]
 end
 
 --- Sets the dice formula of the attacks of an NPC class, which its hits roll when they do
@@ -198,7 +197,7 @@ function D20:get_npc_dice(class)
 
   class = class:lower()
 
-  return read_overrides('d20_npc_dice')[class] or npc_dice[class]
+  return read_overrides(config_get('d20_npc_dice'))[class] or npc_dice[class]
 end
 
 --- Returns the weapon item that a hit was dealt with: the item of the weapon a player
@@ -531,7 +530,7 @@ function D20:check_config(key, value)
       Flux.dev_print('Invalid d20_fall_dice formula \''..tostring(value)..'\': '..tostring(err))
     end
   elseif key == 'd20_weapon_dice' or key == 'd20_npc_dice' then
-    for class, formula in pairs(read_overrides(key)) do
+    for class, formula in pairs(read_overrides(value)) do
       local valid, err = Dice.is_valid(formula, self:get_variables())
 
       if !valid then

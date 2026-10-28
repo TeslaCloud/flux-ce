@@ -118,5 +118,5 @@ end
 -- @param panel [Panel the tool's control panel]
 function TOOL.BuildCPanel(panel)
   panel:AddControl('Header', { Description = t'tool.vendor.desc' })
-  panel:AddControl('TextBox', { Label = t'tool.vendor.model', Command = 'vendor_model', MaxLenth = '192' })
+  panel:AddControl('TextBox', { Label = t'tool.vendor.model', Command = 'vendor_model' })
 end

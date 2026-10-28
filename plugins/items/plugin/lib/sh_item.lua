@@ -14,7 +14,7 @@
 -- Instances live in the `items` table of the database, one row each, and the server keeps
 -- in memory only those that are in use: the items of the characters that players have
 -- loaded, and the items of the current map, in containers or lying in the world. How they
--- are loaded and written back is described in the Items plugin's `sv_storage.lua`.
+-- are loaded and written back is described in the Items plugin's `lib/sv_storage.lua`.
 -- `Item.remove` deletes an instance for good.
 --
 -- Clients only get the instances they need: those in the inventories they receive, and
@@ -608,7 +608,7 @@ if SERVER then
   end
 
   Cable.receive('fl_items_data_request', function(actor, ent_index)
-    if !isnumber(ent_index) then return end
+    if !isnumber(ent_index) or ent_index < 1 or ent_index >= 8192 or ent_index % 1 != 0 then return end
 
     local cur_time = CurTime()
 

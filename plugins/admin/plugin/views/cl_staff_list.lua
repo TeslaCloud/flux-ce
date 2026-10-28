@@ -57,7 +57,6 @@ end
 function PANEL:set_members(members)
   if !istable(members) then return end
 
-  local _text_color = Theme.get_color('text')
   local margin = math.scale(4)
   local row_height = math.scale(40)
   local by_role, role_ids, sort_names = {}, {}, {}

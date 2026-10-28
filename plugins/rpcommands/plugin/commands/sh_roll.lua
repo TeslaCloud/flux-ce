@@ -22,7 +22,7 @@ local default_formula = '1d20'
 
 --- Returns the level of a player's character for the `level` variable of a formula.
 -- @param target [Player]
--- @return [Number the level from the Levels plugin, 1 without it]
+-- @return [Number the level from the Stats or the Levels plugin, 1 without either]
 local function get_character_level(target)
   if Stats and isfunction(Stats.get_character_level) then
     return Stats:get_character_level(target)
@@ -64,9 +64,7 @@ local function get_variables(target)
     end
 
     if Attributes and Attributes.find(name) then
-      local level = target:get_attribute(name)
-
-      return level
+      return target:get_attribute(name)
     end
   end
 end

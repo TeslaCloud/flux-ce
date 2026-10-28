@@ -23,10 +23,6 @@ debug_output_in_production: false
 # Flux itself, set this to false to make Flux refresh.
 lite_refresh: false
 
-# Set this to true to enable experimental features.
-# These features are unstable and may (and probably will) cause your server to crash.
-experimental: false
-
 # Any settings under the "server" category will not be sent to clients.
 # Use this to store sensitive details, such as passwords.
 server:

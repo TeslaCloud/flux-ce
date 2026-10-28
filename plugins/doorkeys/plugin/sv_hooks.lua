@@ -1,3 +1,6 @@
+--- Server side of the Door Keys plugin: lets the holders of a key lock its doors and handles
+-- what the door menu and the key molding kit ask for.
+
 --- Lets players lock and unlock doors that one of their keys belongs to.
 -- @param actor [Player player trying to lock the door]
 -- @param entity [Entity door]
@@ -16,10 +19,18 @@ function PLUGIN:PlayerCanLockDoor(actor, entity)
   end
 end
 
+--- Checks whether a player may manage the keys of an entity: they need the 'manage_doors'
+-- permission and the entity has to be a door.
+-- @param actor [Player]
+-- @param entity [Entity]
+-- @return [Boolean]
 local function can_manage_keys(actor, entity)
   return actor:can('manage_doors') and isentity(entity) and IsValid(entity) and entity:is_door()
 end
 
+--- Finds a key by its instance ID.
+-- @param instance_id [Number]
+-- @return [Item the key, nil if no key has that ID]
 local function find_key(instance_id)
   local item_obj = isnumber(instance_id) and Item.find_instance_by_id(instance_id)
 
@@ -28,6 +39,11 @@ local function find_key(instance_id)
   end
 end
 
+--- Gives a newly created item to a player, or removes it again and tells them why when it
+-- does not fit into their inventory.
+-- @param actor [Player]
+-- @param item_obj [Item]
+-- @return [Boolean whether the player received the item]
 local function give_new_item(actor, item_obj)
   local success, error_text = actor:add_item(item_obj)
 
@@ -72,6 +88,11 @@ Cable.receive('fl_key_copy', function(actor, instance_id)
 
   item_obj:set_data('doors', table.Copy(source_item:get_data('doors', {})))
 
+  --- Called when a player copies a key with a key molding kit, before the copy is given to
+  -- them. Lets plugins change the copy.
+  -- @param actor [Player player copying the key]
+  -- @param item_obj [Item the copy]
+  -- @param source_item [Item the key that is copied]
   hook.Run('OnKeyCopy', actor, item_obj, source_item)
 
   if !give_new_item(actor, item_obj) then return end
@@ -121,9 +142,6 @@ Cable.receive('fl_key_add', function(actor, instance_id, entity)
   actor:notify('notification.key.add')
 end)
 
--- Lists the keys of a door among the loaded items: those of the characters that are in use
--- and those of the current map. Keys of characters that nobody plays at the moment are
--- not loaded, so they are not listed and cannot be changed from the list.
 Cable.receive('fl_key_show_list', function(actor, entity)
   if !can_manage_keys(actor, entity) then return end
 

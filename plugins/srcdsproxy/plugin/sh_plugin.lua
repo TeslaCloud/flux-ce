@@ -44,8 +44,8 @@ end
 
 Flux.Command:add_completer('proxy_duration', complete_proxy_duration)
 
-require_relative 'sh_transfer_areas'
-require_relative 'cl_transfer_areas'
+require_relative 'sh_hooks'
+require_relative 'cl_hooks'
+require_relative 'cl_nethooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
-require_relative 'sv_transfer_areas'

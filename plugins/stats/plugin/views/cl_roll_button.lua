@@ -56,7 +56,8 @@ local function get_roll_state(roll, now)
   end
 end
 
---- Puts the last result in the tooltip and plays a sound as the button lands on it.
+--- Puts the last result in the tooltip and plays a sound as the button lands on it, unless
+-- it landed while the sheet was closed.
 function PANEL:Think()
   self.BaseClass.Think(self)
 
@@ -74,7 +75,6 @@ function PANEL:Think()
   if !roll.sounded and now >= roll.landed then
     roll.sounded = true
 
-    -- A result that landed while the sheet was closed stays quiet when the sheet opens again.
     if now - roll.landed < 1 then
       local failed = roll.result.critical == 'failure'
       local sound_name = failed and 'button_click_danger_sound' or 'button_click_success_sound'
@@ -121,7 +121,6 @@ function PANEL:Paint(w, h)
   if state == 'tumbling' then
     Lumen.paint_box(self, w, h, background)
 
-    -- Steps of 7 go through all twenty faces in a jumbled order.
     self:draw_roll_text(tostring(math_floor(now / face_time) * 7 % 20 + 1), Theme.get_color('text_muted'), w, h)
 
     return

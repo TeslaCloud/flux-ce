@@ -16,8 +16,8 @@
 -- * `scroll` (`lumen_scroll`): a flex container that scrolls vertically. Children,
 --   `scrollbar` (false hides the bar).
 -- * `image` (`DImage`): `src` (material path), `color`, `keep_aspect`.
--- * `input` (`DTextEntry`): `value`, `placeholder`, `multiline`, `numeric`, `on_change`
---   (receives the text), `on_enter` (receives the text).
+-- * `input` (`DTextEntry`): `value`, `placeholder`, `multiline`, `numeric`, `disabled`,
+--   `on_change` (receives the text), `on_enter` (receives the text).
 -- * `checkbox` (`DCheckBoxLabel`): `checked`, `text`, `on_change` (receives the state).
 -- * `combo` (`DComboBox`): `options` (a list of strings, or of `{ text = , value = }` tables),
 --   `value` (the selected value or text), `placeholder`, `on_change` (receives the value, the

@@ -6,8 +6,8 @@
 
 class 'Log' extends 'ActiveRecord::Base'
 
-local last_log = nil
-local replication_data = nil
+local last_log
+local replication_data
 
 --- Records a log entry. On the server the entry is saved to the logs table. The entry is
 -- also remembered so that it can be passed on with Log:replicate.
@@ -52,17 +52,17 @@ end
 
 --- Pushes a message to every Discord webhook registered for the given type. Does nothing
 -- on the client.
--- @param type='all' [String webhook type]
+-- @param webhook_type='all' [String webhook type]
 -- @param message=nil [String text to push; defaults to the last message given to Log:write]
 -- @return [Log the Log class, for chaining]
-function Log:to_discord(type, message)
+function Log:to_discord(webhook_type, message)
   if SERVER then
     message = message or self.last_message
-    type = type or 'all'
+    webhook_type = webhook_type or 'all'
 
-    local hooks = Webhook:get_type(string.lower(type))
+    local webhooks = Webhook:get_type(string.lower(webhook_type))
 
-    for _, webhook in ipairs(hooks) do
+    for _, webhook in ipairs(webhooks) do
       webhook:push(message)
     end
   end
@@ -80,7 +80,7 @@ end
 -- @see [Log:write]
 function Log:print(message, action, object, subject)
   return self:write(message, action, object, subject, function(logged_message, logged_action, _object, _subject)
-    local prefix = (isstring(logged_action) and logged_action:capitalize()..' - ' or '')
+    local prefix = isstring(logged_action) and logged_action:capitalize()..' - ' or ''
 
     replication_data = { type = 'print' }
 

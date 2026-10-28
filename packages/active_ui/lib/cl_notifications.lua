@@ -25,15 +25,6 @@ function Flux.Notification:process_queue()
     lifetime = lifetime or 8
     text = t(text) or ''
 
-    local entry = { text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, is_last = true }
-    local previous = display[#display]
-
-    display[#display + 1] = entry
-
-    if previous then
-      previous.is_last = false
-    end
-
     local panel = vgui.Create('fl_notification')
     panel:set_text(text)
     panel:set_lifetime(lifetime)
@@ -46,11 +37,9 @@ function Flux.Notification:process_queue()
     panel:SetPos(x, -h)
     panel:MoveTo(x, margin, 0.15)
 
-    entry.panel = panel
-    entry.width = w
-    entry.height = h
-
     self:reposition(h)
+
+    display[#display + 1] = panel
 
     table.remove(queue, 1)
 
@@ -101,7 +90,7 @@ function Flux.Notification:reposition(offset)
   local shift = offset + math.scale(6)
 
   for index = #display, 1, -1 do
-    local panel = display[index].panel
+    local panel = display[index]
 
     if IsValid(panel) then
       local x, y = panel:GetPos()

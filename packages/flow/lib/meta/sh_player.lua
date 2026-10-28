@@ -147,17 +147,7 @@ if CLIENT then
         if isstring(value) then
           arguments[key] = t(value)
         elseif isentity(value) and IsValid(value) then
-          if value:IsPlayer() then
-            arguments[key] = hook.Run('GetPlayerName', value) or value:name()
-          else
-            --- Lets plugins give a display name to an entity that is not a player. Called on
-            -- both realms by `Entity:get_name`, and on the client for entities passed as
-            -- arguments of a notification.
-            -- @param entity [Entity The entity whose name is requested]
-            -- @return [String Name to show; when nothing is returned, the string
-            --   representation of the entity is used]
-            arguments[key] = hook.Run('GetEntityName', value) or tostring(value)
-          end
+          arguments[key] = value:get_name()
         end
       end
     end
@@ -279,10 +269,6 @@ function player_meta:unfreeze_gun()
   end
 end
 
---[[
-  Actions system
---]]
-
 --- Sets the action the player is currently doing. Does nothing if the player is already
 -- doing something, unless forced.
 -- @param id [String action ID]
@@ -306,7 +292,7 @@ end
 -- @param id [String action ID]
 -- @return [Boolean]
 function player_meta:is_doing_action(id)
-  return (self:get_action() == id)
+  return self:get_action() == id
 end
 
 --- Resets the action of the player to 'none'.
@@ -317,13 +303,9 @@ end
 --- Runs the callback of an action registered with Flux.register_action.
 -- @param id=nil [String action ID, the current action of the player if omitted]
 function player_meta:do_action(id)
-  local act = self:get_action()
+  local act = isstring(id) and id or self:get_action()
 
-  if isstring(id) then
-    act = id
-  end
-
-  if act and act != 'none' then
+  if act != 'none' then
     local action_table = Flux.get_action(act)
 
     if istable(action_table) and isfunction(action_table.callback) then
@@ -347,13 +329,6 @@ function player_meta:running()
 
   return self:GetVelocity():Length2DSqr() > min_speed * min_speed
 end
-
---[[
-  Admin system
-
-  Hook your admin mods to these functions, they're universally used
-  throughout the Flux framework.
---]]
 
 --- Checks whether the player has a permission. The decision is made by the
 -- 'PlayerHasPermission' hook, which admin plugins implement.

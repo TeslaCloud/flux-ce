@@ -32,8 +32,8 @@ Flux.blur_mat = CreateMaterial('fl_mat_'..os.time(), 'UnlitGeneric', {
   ['$basetexture'] = Flux.rt_texture
 })
 Flux.blur_size = 12
-Flux.blur_passes = 8 -- anything below 8 looks chunky
-Flux.blur_update_fps = 24 -- how many frames per second should we render the lazy blurs. 0 for unlimited.
+Flux.blur_passes = 8
+Flux.blur_update_fps = 24
 
 do
   local center_x, center_y = ScrW() * 0.5, ScrH() * 0.5
@@ -159,7 +159,7 @@ end
 -- @return [Boolean]
 function surface.mouse_in_rect(x, y, w, h)
   local mx, my = gui.MousePos()
-  return (mx >= x and mx <= x + w and my >= y and my <= y + h)
+  return mx >= x and mx <= x + w and my >= y and my <= y + h
 end
 
 do
@@ -188,7 +188,6 @@ do
       error('surface.draw_circle - Too few arguments to function call (3 expected)')
     end
 
-    -- In case no passes variable was passed, in which case we give a normal smooth circle.
     passes = passes or 100
 
     local id = x..'|'..y..'|'..radius..'|'..passes
@@ -209,7 +208,7 @@ do
       store_vertices(id, info)
     end
 
-    draw.NoTexture() -- Otherwise we draw a transparent circle.
+    draw.NoTexture()
     surface.DrawPoly(info)
   end
 
@@ -225,7 +224,6 @@ do
       error('surface.draw_circle_partial - Too few arguments to function call (4 expected)')
     end
 
-    -- In case no passes variable was passed, in which case we give a normal smooth circle.
     passes = passes or 360
 
     local id = percentage..'|'..x..'|'..y..'|'..radius..'|'..passes
@@ -254,6 +252,7 @@ do
       store_vertices(id, info)
     end
 
+    draw.NoTexture()
     surface.DrawPoly(info)
   end
 
@@ -446,7 +445,7 @@ do
   function Flux.draw_rotating_cog(x, y, w, h, color)
     color = color or default_color
 
-    surface.draw_rotated(x, y, ang, function(center_x, center_y, _ang)
+    surface.draw_rotated(x, y, ang, function(center_x, center_y)
       draw.textured_rect(
         util.get_material('materials/flux/cog.png'),
         center_x - w * 0.5,

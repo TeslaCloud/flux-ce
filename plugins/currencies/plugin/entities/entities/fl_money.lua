@@ -102,31 +102,26 @@ else
   -- @param distance [Number distance between the local player and the entity]
   function ENT:DrawTargetID(x, y, distance)
     local currency = self:get_currency()
+    local amount = self:get_currency_amount()
+    local currency_data = isstring(currency) and Currencies:find_currency(currency)
 
-    if currency then
-      local amount = self:get_currency_amount()
-      local currency_data = Currencies:find_currency(currency)
-      local title = t(currency_data.name)..' x '..amount
-      local alpha = 255 - 255 * (distance / 300)
+    if !currency_data or !amount then return end
 
-      if title then
-        local font = Theme.get_font('tooltip_large')
-        local text_w, text_h = util.text_size(title, font)
+    local title = t(currency_data.name)..' x '..amount
+    local alpha = 255 - 255 * (distance / 300)
+    local font = Theme.get_font('tooltip_large')
+    local text_w = util.text_size(title, font)
 
-        draw.SimpleTextOutlined(
-          title,
-          font,
-          x - text_w * 0.5,
-          y,
-          Theme.get_color('accent_light'):alpha(alpha),
-          nil,
-          nil,
-          1,
-          color_black:alpha(alpha)
-        )
-
-        y = y + text_h + 4
-      end
-    end
+    draw.SimpleTextOutlined(
+      title,
+      font,
+      x - text_w * 0.5,
+      y,
+      Theme.get_color('accent_light'):alpha(alpha),
+      nil,
+      nil,
+      1,
+      color_black:alpha(alpha)
+    )
   end
 end

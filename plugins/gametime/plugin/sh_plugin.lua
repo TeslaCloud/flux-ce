@@ -323,9 +323,7 @@ function GameTime:get_month_name(month, lang)
     return ''
   end
 
-  local name = t('gametime.months.'..id, nil, lang)
-
-  return name
+  return t('gametime.months.'..id, nil, lang)
 end
 
 --- Returns the name of a day of the week.
@@ -339,9 +337,7 @@ function GameTime:get_weekday_name(weekday, lang)
     return ''
   end
 
-  local name = t('gametime.weekdays.'..id, nil, lang)
-
-  return name
+  return t('gametime.weekdays.'..id, nil, lang)
 end
 
 --- Checks whether times are shown with a 12-hour clock by default. On the client that is the
@@ -421,12 +417,10 @@ end
 function GameTime:format(timestamp, twelve_hour, lang)
   timestamp = timestamp or self:now()
 
-  local text = t('gametime.format.date_time', {
+  return t('gametime.format.date_time', {
     date = self:format_date(timestamp, false, lang),
     time = self:format_time(timestamp, twelve_hour, lang)
   }, lang)
-
-  return text
 end
 
 --- Writes a timestamp as 'YYYY-MM-DD HH:MM', which reads the same in every language and is

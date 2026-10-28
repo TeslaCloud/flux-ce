@@ -12,8 +12,6 @@ function PACKAGE:__installed__()
 
   local encoder = sfs.Encoder
 
-  -- SFS skips functions by writing nothing at all, which silently corrupts the table
-  -- they are in. Fail like it does for every other unsupported type instead.
   encoder.encoders['function'] = function(buf)
     encoder.write_str(buf, 'unsupported type: ')
     encoder.write_str(buf, 'function')

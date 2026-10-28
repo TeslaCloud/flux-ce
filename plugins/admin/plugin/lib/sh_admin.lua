@@ -53,7 +53,7 @@ function Bolt:get_roles()
   return roles
 end
 
---- Returns the admin system's player table. Nothing in this plugin currently writes to it.
+--- Returns the admin system's player table. Nothing in this plugin writes to it.
 -- @return [Map]
 function Bolt:get_players()
   return players
@@ -810,7 +810,6 @@ else
 end
 
 do
-  -- Translations of words into seconds.
   local tokens = {
     second = 1,
     sec = 1,
@@ -886,52 +885,33 @@ do
 
     local number = tonumber(str)
 
-    -- A regular number was entered?
     if number then
       return number * 60
     end
 
     str = str:Replace('-', '')
 
-    local pieces = str:split(' ')
     local result = 0
-    local _token, num = '', 0
+    local num = 0
 
-    for _, piece in ipairs(pieces) do
+    for _, piece in ipairs(str:split(' ')) do
       local n = tonumber(piece)
 
-      if isstring(piece) then
-        piece = piece:trim_end('s')
-      end
-
-      if !n and !tokens[piece] and !num_tokens[piece] then continue end
+      piece = piece:trim_end('s')
 
       if n then
         num = n
-      elseif isstring(piece) then
-        piece = piece:trim_end('s')
-
-        local ntok = num_tokens[piece]
-
-        if ntok then
-          num = ntok
-
-          continue
-        end
-
+      elseif num_tokens[piece] then
+        num = num_tokens[piece]
+      elseif tokens[piece] then
         local tok = tokens[piece]
 
-        if tok then
-          if tok == 0 then
-            return 0
-          else
-            result = result + (tok * num)
-          end
+        if tok == 0 then
+          return 0
         end
 
-        _token, num = '', 0
-      else
-        _token, num = '', 0
+        result = result + tok * num
+        num = 0
       end
     end
 

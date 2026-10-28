@@ -32,21 +32,21 @@ end
 function TOOL.BuildCPanel(CPanel)
   if !can('mapscenes') then return end
 
-  local list = vgui.Create('DListView')
-  list:SetSize(30, DermaScale.scale(90))
-  list:AddColumn(t'ui.mapscene.title')
-  list.Think = function(_panel)
-    if #Mapscenes.points != #list:GetLines() then
-      list:Clear()
+  local point_list = vgui.Create('DListView')
+  point_list:SetSize(30, DermaScale.scale(90))
+  point_list:AddColumn(t'ui.mapscene.title')
+  point_list.Think = function(_panel)
+    if #Mapscenes.points != #point_list:GetLines() then
+      point_list:Clear()
 
       for point_id in pairs(Mapscenes.points) do
-        local line = list:AddLine(t'ui.mapscene.title'..' #'..point_id)
+        local line = point_list:AddLine(t'ui.mapscene.title'..' #'..point_id)
         line.id = point_id
       end
     end
   end
 
-  list.OnRowRightClick = function(_panel, line)
+  point_list.OnRowRightClick = function(_panel, line)
     if !can('mapscenes') then return end
 
     local menu = DermaMenu()
@@ -58,5 +58,5 @@ function TOOL.BuildCPanel(CPanel)
     RegisterDermaMenuForClose(menu)
   end
 
-  CPanel:AddItem(list)
+  CPanel:AddItem(point_list)
 end

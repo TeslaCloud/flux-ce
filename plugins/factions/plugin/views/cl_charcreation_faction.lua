@@ -85,14 +85,16 @@ function PANEL:on_close(parent)
   })
 end
 
---- Checks that a faction is selected, that the local player is whitelisted for it when the
--- faction requires a whitelist, and that they do not have as many characters of the faction
--- as it allows. The last two do not apply to a player whom
+--- Checks that a registered faction is selected, that the local player is whitelisted for it
+-- when the faction requires a whitelist, and that they do not have as many characters of the
+-- faction as it allows. The last two do not apply to a player whom
 -- `Factions.can_bypass_creation_limits` lets past them for the extra data of the creation
 -- screen.
 -- @return [Boolean false when invalid, String translated error; nothing when valid]
 function PANEL:on_validate()
-  if self.faction_id == '' then
+  local faction = Factions.find_by_id(self.faction_id)
+
+  if !faction then
     return false, t'ui.char_create.no_faction'
   end
 
@@ -101,8 +103,6 @@ function PANEL:on_validate()
   if Factions.can_bypass_creation_limits(PLAYER, IsValid(parent) and parent.extra_data or nil) then
     return
   end
-
-  local faction = Factions.find_by_id(self.faction_id)
 
   if faction.whitelisted and !PLAYER:has_whitelist(self.faction_id) then
     return false, t'ui.char_create.no_whitelist'

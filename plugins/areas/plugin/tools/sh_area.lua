@@ -16,12 +16,9 @@ TOOL.ClientConVar['mode'] = '1'
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'areas' permission]
 function TOOL:LeftClick(trace)
-  local owner = self:GetOwner()
+  if !self:GetOwner():can('areas') then return end
 
-  if !owner:can('areas') then return end
-
-  local mode = self:GetClientNumber('mode')
-  local mode_table = Area.tool_modes[mode]
+  local mode_table = self:get_area_mode()
 
   if istable(mode_table) and isfunction(mode_table.OnLeftClick) then
     return mode_table:OnLeftClick(self, trace)
@@ -35,12 +32,9 @@ end
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'areas' permission]
 function TOOL:RightClick(trace)
-  local owner = self:GetOwner()
+  if !self:GetOwner():can('areas') then return end
 
-  if !owner:can('areas') then return end
-
-  local mode = self:GetClientNumber('mode')
-  local mode_table = Area.tool_modes[mode]
+  local mode_table = self:get_area_mode()
 
   if istable(mode_table) and isfunction(mode_table.OnRightClick) then
     return mode_table:OnRightClick(self, trace)
@@ -54,12 +48,9 @@ end
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'areas' permission]
 function TOOL:Reload(trace)
-  local owner = self:GetOwner()
+  if !self:GetOwner():can('areas') then return end
 
-  if !owner:can('areas') then return end
-
-  local mode = self:GetClientNumber('mode')
-  local mode_table = Area.tool_modes[mode]
+  local mode_table = self:get_area_mode()
 
   if istable(mode_table) and isfunction(mode_table.OnReload) then
     return mode_table:OnReload(self, trace)
@@ -77,23 +68,23 @@ function TOOL:get_area_mode()
 end
 
 if CLIENT then
-  -- A function to add the controls for the tool in the tool menu.
+  --- Adds the controls for the tool in the tool menu.
   local function build_cpanel(panel)
     local mode_list = Area.tool_modes
 
     panel:ClearControls()
 
     local mode = PLAYER:GetInfoNum('area_mode', 0)
-    local list = vgui.Create('DListView')
+    local mode_view = vgui.Create('DListView')
 
-    list:SetSize(30, DermaScale.scale(90))
-    list:AddColumn('Tool Mode')
-    list:SetMultiSelect(false)
+    mode_view:SetSize(30, DermaScale.scale(90))
+    mode_view:AddColumn('Tool Mode')
+    mode_view:SetMultiSelect(false)
 
     --- Switches the area tool to the selected mode.
     -- @param id [Number index of the selected row]
     -- @param _line [Panel the selected row]
-    function list:OnRowSelected(id, _line)
+    function mode_view:OnRowSelected(id, _line)
       if mode != id then
         RunConsoleCommand('area_setmode', id)
       end
@@ -101,15 +92,15 @@ if CLIENT then
 
     for mode_id, mode_data in ipairs(mode_list) do
       if mode == mode_id then
-        list:AddLine(' '..mode_id..' >> '..mode_data.title)
+        mode_view:AddLine(' '..mode_id..' >> '..mode_data.title)
       else
-        list:AddLine(' '..mode_id..'  '..mode_data.title)
+        mode_view:AddLine(' '..mode_id..'  '..mode_data.title)
       end
     end
 
-    list:SortByColumn(1)
+    mode_view:SortByColumn(1)
 
-    panel:AddItem(list)
+    panel:AddItem(mode_view)
 
     local mode_table = mode_list[mode]
 

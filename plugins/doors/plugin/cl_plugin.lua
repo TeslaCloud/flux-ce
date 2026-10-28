@@ -1,5 +1,5 @@
---- Client side of the Doors plugin: when the server sends it, opens the context menu of a door
--- with the options to lock or unlock it, to buy it, to manage it and to open its settings.
+--- Client side of the Doors plugin: opens the context menu of a door with the options to lock
+-- or unlock it, to buy it, to manage it and to open its settings.
 -- Also works out the status text that is drawn on ownable doors, which is kept on the door
 -- until its ownership variables, the language or the door_price config change.
 
@@ -34,9 +34,7 @@ function Doors:format_price(price, currency)
 
   if !currency_data or !isnumber(price) or price <= 0 then return end
 
-  local text = t('ui.door.price', { value = price, currency = t(currency_data.name) })
-
-  return text
+  return t('ui.door.price', { value = price, currency = t(currency_data.name) })
 end
 
 --- Returns the status line of a door, which title types draw below its name: the text of
@@ -173,15 +171,3 @@ function Doors:open_menu(entity, can_lock, conditions, info)
   menu:MakePopup()
   menu:DoModal()
 end
-
-Cable.receive('fl_door_menu', function(entity, can_lock, conditions, info)
-  Doors:open_menu(entity, can_lock, conditions, info)
-end)
-
-Cable.receive('fl_door_info', function(entity, info)
-  local management = Doors.management
-
-  if IsValid(management) and management:get_door() == entity and istable(info) then
-    management:set_info(info)
-  end
-end)

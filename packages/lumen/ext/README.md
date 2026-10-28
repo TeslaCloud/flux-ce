@@ -28,10 +28,11 @@ end
   `{...spread}` attributes, `<!-- comments -->` and character entities.
 - The Lumen API: `use_state` and the other hooks, `Lumen.element`, `Lumen.map` and friends.
 
-A `<` only starts markup where an operand may start (after `return`, `and`, `or`, `(`, `{`,
-`,`, `=` or at the start of a line) and when a tag name follows it at once, so comparisons
-such as `a < b` keep their operator color. The language configuration adds `--` comments,
-bracket matching for tags, auto-closing pairs and indentation for Lua blocks and tags.
+A `<` only starts markup where an operand may start (after `return`, `and`, `or`, `not`,
+`then`, `do`, `else`, `(`, `[`, `{`, `,`, `=` or at the start of a line) and when a tag name or
+`>` follows it at once, so comparisons such as `a < b` keep their operator color. The language
+configuration adds `--` and `--[[ ]]` comments, bracket matching for tags, auto-closing pairs
+and indentation for Lua blocks and tags.
 
 ## Installing
 

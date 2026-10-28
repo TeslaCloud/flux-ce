@@ -30,7 +30,7 @@ RUN attempt=0; until steamcmd +force_install_dir /home/steam/flux_server +login 
 # Put the binary modules from the dependencies repo on top of the server files.
 COPY --from=deps --chown=steam:steam /deps/garrysmod garrysmod
 
-# The schema folder is named after its repository, "reborn" by default.
+# The schema folder is named after its repository, "hl2rp" by default.
 COPY --from=schema --chown=steam:steam /schema garrysmod/gamemodes
 
 # Install this checkout of Flux as a gamemode. It has to be in the "flux" folder.
@@ -42,4 +42,4 @@ RUN mkdir -p garrysmod/lua/_flux
 EXPOSE 27015/udp 27015/tcp
 
 ENTRYPOINT ["./srcds_run_x64"]
-CMD ["+gamemode", "reborn", "+map", "gm_construct", "+maxplayers", "64", "-tickrate", "30"]
+CMD ["+gamemode", "hl2rp", "+map", "gm_construct", "+maxplayers", "64", "-tickrate", "30"]

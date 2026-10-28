@@ -85,7 +85,7 @@ function SurfaceText:PostDrawOpaqueRenderables(depth, skybox)
             render.SetStencilZFailOperation(STENCIL_KEEP)
             render.SetStencilWriteMask(254)
             render.SetStencilTestMask(254)
-            render.SetStencilReferenceValue(ref or 75)
+            render.SetStencilReferenceValue(75)
 
             surface.SetDrawColor(255, 255, 255, 10)
             surface.DrawRect(box_x, box_y, box_w, h + 32)
@@ -120,15 +120,12 @@ function SurfaceText:PostDrawOpaqueRenderables(depth, skybox)
             local middle_x = -middle_width * 0.5
             local bar_color = Color(255, 255, 255, clamp(fade_alpha, 0, box_alpha))
 
-            -- Draw left thick rectangles
             rounded_box(0, box_x, box_y - 6, rect_width, 10, bar_color)
             rounded_box(0, box_x, box_y + h + 22, rect_width, 10, bar_color)
 
-            -- ...and the right ones
             rounded_box(0, box_x + box_w - rect_width, box_y - 6, rect_width, 10, bar_color)
             rounded_box(0, box_x + box_w - rect_width, box_y + h + 22, rect_width, 10, bar_color)
 
-            -- And the middle thingies
             rounded_box(0, middle_x, box_y, middle_width, 4, bar_color)
             rounded_box(0, middle_x, box_y + h + 22, middle_width, 4, bar_color)
           end
@@ -221,15 +218,12 @@ function SurfaceText:draw_text_preview()
         local middle_width = wide / 1.75
         local middle_x = -middle_width * 0.5
 
-        -- Draw left thick rectangles
         rounded_box(0, bar_x, bar_y - 6, rect_width, 10, bar_color)
         rounded_box(0, bar_x, bar_y + h + 22, rect_width, 10, bar_color)
 
-        -- ...and the right ones
         rounded_box(0, bar_x + wide - rect_width, bar_y - 6, rect_width, 10, bar_color)
         rounded_box(0, bar_x + wide - rect_width, bar_y + h + 22, rect_width, 10, bar_color)
 
-        -- And the middle thingies
         rounded_box(0, middle_x, bar_y, middle_width, 4, bar_color)
         rounded_box(0, middle_x, bar_y + h + 22, middle_width, 4, bar_color)
       end

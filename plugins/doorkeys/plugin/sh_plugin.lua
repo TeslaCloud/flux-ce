@@ -1,5 +1,13 @@
+--- Door Keys adds keys that belong to doors. Staff with the 'manage_doors' permission create
+-- a key for a door, add existing keys to it, list its keys and take them off it from the keys
+-- property of the door menu. A player with a key molding kit uses up a key blank to copy one of
+-- their keys. Holding a key lets a player lock and unlock every door it belongs to.
+-- `OnKeyCopy` lets plugins change the copy of a key before the player receives it.
+
 require_relative 'sv_hooks'
 
+--- Opens a selector of the local player's keys; the chosen key is added to a door.
+-- @param entity [Entity the door]
 local function key_select(entity)
   local keys = PLAYER:find_items('key')
 

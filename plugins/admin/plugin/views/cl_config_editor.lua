@@ -23,7 +23,6 @@ function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
   self.scroll_panel:Dock(FILL)
 
-  -- Docked into the canvas of the scroll panel, so the lines keep clear of the scroll bar.
   self.list_layout = vgui.Create('DListLayout', self.scroll_panel)
   self.list_layout:Dock(TOP)
 
@@ -309,7 +308,6 @@ function PANEL:create_control()
     slider.TextArea:SetPaintBackground(true)
     slider.TextArea:SetFont(small_font)
     slider.TextArea:SetWide(math.scale(64))
-    -- Room for the knob at the end of the track, so it does not run into the number field.
     slider.TextArea:DockMargin(math.scale(10), 0, 0, 0)
     slider.PerformLayout = function(pnl)
       pnl.Label:SetWide(0)

@@ -21,15 +21,13 @@
 -- only the active theme answers, with the methods it defines or inherits from its parents.
 -- @module [Theme]
 
--- This library really hates being refreshed :/
 if Theme then return end
 
 mod 'Theme'
 
-local stored          = Theme.stored        or {}
-local current_theme   = Theme.current_theme or nil
-Theme.stored          = stored
-Theme.current_theme   = current_theme
+local stored = {}
+local current_theme = nil
+Theme.stored = stored
 
 local function hook_result(id, success, ...)
   if !success then
@@ -57,8 +55,6 @@ function Theme.register_theme(obj)
 
     if parent_theme then
       local new_obj = table.Copy(parent_theme)
-
-      obj.Theme = nil
 
       table.safe_merge(new_obj, obj)
 

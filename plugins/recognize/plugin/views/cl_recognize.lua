@@ -9,7 +9,7 @@ local PANEL = {}
 
 --- Builds the recognize menu with range buttons, a real name button, a fake name entry and the name history.
 function PANEL:Init()
-  local scr_w, _scr_h = ScrW(), ScrH()
+  local scr_w = ScrW()
   local margin = scale(4)
   local total_height = 0
 
@@ -52,7 +52,7 @@ function PANEL:Init()
   }
 
   self.range_buttons = vgui.Create('fl_base_panel', self.list)
-  self.range_buttons:SetSize((icon_size + margin) * #range_buttons, icon_size)
+  self.range_buttons:SetTall(icon_size)
   self.range_buttons:DockMargin(0, margin, 0, 0)
   self.range_buttons:Dock(TOP)
 

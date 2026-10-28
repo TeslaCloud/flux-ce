@@ -311,10 +311,11 @@ end
 
 --- Concatenates all values of a table into a single string, including those of nested tables.
 -- @param tab [Map/List]
--- @param sep='' [String separator; it is not put between the values by the current code]
+-- @param sep='' [String separator to put between the values]
 -- @return [String the concatenated values]
 function table.join(tab, sep)
   local pieces = {}
+
   sep = sep or ''
 
   for _, value in pairs(tab) do
@@ -325,7 +326,7 @@ function table.join(tab, sep)
     end
   end
 
-  return table.concat(pieces)
+  return table.concat(pieces, sep)
 end
 
 --- Returns a copy of the table without the entries for which the callback returns true.
@@ -472,13 +473,13 @@ end
 -- @return [List<List> key-value pairs]
 -- @see [table.to_hash]
 function table.to_array(tab)
-  local a = a{}
+  local entries = a{}
 
   for key, value in pairs(tab) do
-    a[#a + 1] = { key, value }
+    entries[#entries + 1] = { key, value }
   end
 
-  return a
+  return entries
 end
 
 --- Converts an array of { key, value } pairs into a hash.
@@ -681,10 +682,11 @@ function print_table(t, indent, done, indent_length)
           tostring(value):gsub('table: ', '')..'>\n'
         )
       elseif IsColor(value) then
-        Msg(str_key..':'..
-        string.rep(' ', indent_length - str_key:len())..
-        ' #<Color: '..value.r..' '..value.g..' '..value.b..' '..value.a..'>\n'
-      )
+        Msg(
+          str_key..':'..
+          string.rep(' ', indent_length - str_key:len())..
+          ' #<Color: '..value.r..' '..value.g..' '..value.b..' '..value.a..'>\n'
+        )
       elseif table.IsEmpty(value) then
         Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' []\n')
       else

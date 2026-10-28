@@ -342,7 +342,6 @@ local layer_vars = {
 -- editor known to the plugin as `Bolt.permissions_editor`, so that it hears of the changes to
 -- the edited player's permissions.
 function PANEL:Init()
-  self.permissions = {}
   self.layer = 'user'
 
   Bolt.permissions_editor = self
@@ -597,6 +596,7 @@ function PANEL:rebuild()
 
   local permissions = Bolt:get_permissions()
 
+  self.permissions = {}
   self.scroll_panel = vgui.Create('DScrollPanel', self)
   self.scroll_panel:Dock(FILL)
 
@@ -611,9 +611,9 @@ function PANEL:rebuild()
     collapsible_category:DockMargin(0, 0, 0, math.scale(6))
     collapsible_category:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
 
-    local list = vgui.Create('DListLayout', self.list_layout)
+    local category_list = vgui.Create('DListLayout', self.list_layout)
 
-    collapsible_category:SetContents(list)
+    collapsible_category:SetContents(category_list)
 
     if table.Count(perms) > 1 then
       local panel = vgui.Create('fl_base_panel')
@@ -627,7 +627,6 @@ function PANEL:rebuild()
 
       local buttons = {}
 
-      -- The buttons sit over the columns of the rows below, whatever width the list ends up with.
       panel.PerformLayout = function(_pnl, w, h)
         local title_w, column_w = get_columns(w)
 
@@ -667,7 +666,7 @@ function PANEL:rebuild()
         end
       end
 
-      list:Add(panel)
+      category_list:Add(panel)
     end
 
     for _, perm in SortedPairs(perms) do
@@ -678,7 +677,7 @@ function PANEL:rebuild()
       button:set_value(PERM_NO)
       button:set_player(self:get_player())
 
-      list:Add(button)
+      category_list:Add(button)
 
       self.permissions[perm.id] = button
     end

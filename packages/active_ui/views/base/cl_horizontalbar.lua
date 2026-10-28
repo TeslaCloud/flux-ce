@@ -56,8 +56,6 @@ function PANEL:PerformLayout()
 
     wide = wide + overlap * math.max(panel_count - 1, 0)
 
-    -- Panels that do not fit start at the left edge instead, as whatever ends up left of
-    -- the canvas can never be scrolled into view.
     x = math.max(w * 0.5 - wide * 0.5, 0)
   end
 

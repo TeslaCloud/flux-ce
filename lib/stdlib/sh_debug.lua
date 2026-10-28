@@ -15,15 +15,12 @@ if is_development then
   -- @param obj [Any object to register]
   -- @return [Number amount of objects registered under this metric so far]
   function add_debug_metric(id, obj)
-    local count = 1
+    local list = metrics[id] or {}
 
-    if !metrics[id] then
-      metrics[id] = { obj }
-    else
-      count = table.insert(metrics[id], obj)
-    end
+    metrics[id] = list
+    list[#list + 1] = obj
 
-    return count
+    return #list
   end
 
   --- Returns all objects that were registered under a debug metric.

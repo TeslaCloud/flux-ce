@@ -55,8 +55,6 @@ function class(name, parent_class)
     parent_class = parent_class:parse_table()
   end
 
-  -- Not string.parse_parent: once the class exists, as it does on a code refresh, that returns
-  -- the class itself rather than the table that holds it.
   local path = name:split('::')
 
   name = table.remove(path)
@@ -82,7 +80,6 @@ function class(name, parent_class)
   obj.class = obj
   obj.included_modules = {}
 
-  -- If this class is based off some other class - copy its parent's data.
   if istable(parent_class) then
     local copy = table.Copy(parent_class)
     table.safe_merge(copy, obj)
@@ -96,6 +93,7 @@ function class(name, parent_class)
     end
 
     obj = copy
+    parent[name] = obj
   end
 
   last_class = { name = name, parent = parent }
@@ -105,7 +103,6 @@ function class(name, parent_class)
     local real_class = parent[name]
     local old_super = super
 
-    -- Set the new object's meta table and copy the data from the original class to the new object.
     setmetatable(new_obj, real_class)
     table.safe_merge(new_obj, real_class)
 
@@ -119,7 +116,6 @@ function class(name, parent_class)
       real_class.init = isfunction(real_class.init) and real_class.init or function(_obj, ...) super(...) end
     end
 
-    -- If there is a constructor - call it.
     if real_class.init then
       local success, value = pcall(real_class.init, new_obj, ...)
 
@@ -135,7 +131,6 @@ function class(name, parent_class)
 
     super = old_super
 
-    -- Return our newly generated object.
     return new_obj
   end
 
@@ -160,7 +155,7 @@ end
 
 --- Copies the listed methods of a class onto another object.
 -- ```
--- -- MyLibrary.now and MyLibrary.tomorrow now point to the DateTime functions.
+-- -- Makes MyLibrary.now and MyLibrary.tomorrow point to the DateTime functions.
 -- delegate(MyLibrary, { 'now', 'tomorrow', to = 'DateTime' })
 -- ```
 -- @param obj [Map object or class that receives the methods]
@@ -190,7 +185,7 @@ end
 -- class 'Dog' extends(Animal)
 -- ```
 -- @param parent_class [String/Map base class or its name]
--- @return [Boolean whether or not did the extension succeed]
+-- @return [Boolean whether the extension succeeded]
 -- @see [class]
 function extends(parent_class)
   if isstring(parent_class) then
@@ -232,8 +227,3 @@ function extends(parent_class)
 
   return false
 end
-
---
--- class 'SomeClass' extends SomeOtherClass
--- class 'SomeClass' extends 'SomeOtherClass'
---

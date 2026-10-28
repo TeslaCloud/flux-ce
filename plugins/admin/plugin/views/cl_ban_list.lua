@@ -17,7 +17,6 @@ local PANEL = {}
 --- Creates the search field, the page buttons and the scroll panel that holds the list,
 -- asks the server for the first page and makes the panel known to the plugin.
 function PANEL:Init()
-  local _text_color = Theme.get_color('text')
   local hint_color = Theme.get_color('text_dim')
   local small_font = Theme.get_font('text_small')
   local search_hint = t'ui.admin.bans.search'
@@ -144,12 +143,13 @@ function PANEL:show_notice(text)
 end
 
 --- Shows a page of bans that the server has sent: recreates the rows and updates the page
--- number and the page buttons.
+-- number and the page buttons. A page that arrives while a new request is waiting to be sent
+-- is ignored.
 -- @param data [Map the page: page (its number), pages (how many there are), total (how many
 --   bans match the search) and bans (a List of rows with the steam_id, name, reason, admin,
 --   permanent and time_left fields)]
 function PANEL:set_bans(data)
-  if !istable(data) or !istable(data.bans) then return end
+  if self.request_at or !istable(data) or !istable(data.bans) then return end
 
   local row_height = math.scale(56)
 

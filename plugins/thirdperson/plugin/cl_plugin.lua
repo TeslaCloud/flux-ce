@@ -1,6 +1,6 @@
---- Client side of the Third Person plugin: the GTA V style camera, which orbits the character
--- with angles of its own, the view angles of the local player, which follow what the middle of
--- the screen shows, the crosshair and the weapon state indicator, the client settings of the
+--- Client side of the Third Person plugin: the camera, which orbits the character with
+-- angles of its own, the view angles of the local player, which follow what the middle of the
+-- screen shows, the crosshair and the weapon state indicator, the client settings of the
 -- camera and the key binds.
 --
 -- The camera is turned by the mouse in CreateMove, which keeps the camera angles itself and
@@ -81,7 +81,6 @@ local camera_trace = {}
 local aim_trace = {}
 local zero_offset = Vector(0, 0, 0)
 
--- State of the camera, kept on the plugin table so that it survives a reload of this file.
 ThirdPerson.camera_angles = ThirdPerson.camera_angles or Angle(0, 0, 0)
 ThirdPerson.camera_offset = ThirdPerson.camera_offset or Vector(0, 0, 0)
 ThirdPerson.shoulder = ThirdPerson.shoulder or 1
@@ -180,7 +179,6 @@ function ThirdPerson:get_aim_angles(client)
   aim.y = math.NormalizeAngle(aim.y)
   aim.r = 0
 
-  -- Nearly vertical: the yaw of the direction means nothing, so the camera's is used.
   if math.abs(aim.p) > steep_aim_pitch then
     aim.y = angles.y
   end
@@ -237,7 +235,6 @@ function ThirdPerson:CreateMove(user_cmd)
   local last_angles = self.last_view_angles
 
   if !self.was_orbiting or !last_angles then
-    -- The view angles of this command already hold its mouse movement.
     camera_angles = Angle(
       math.Clamp(math.NormalizeAngle(angles.p), min_pitch, max_pitch),
       math.NormalizeAngle(angles.y),
@@ -254,7 +251,6 @@ function ThirdPerson:CreateMove(user_cmd)
 
   self.orbiting = true
 
-  -- A command built to sample the mouse between the sent ones: only the camera turns.
   if user_cmd:CommandNumber() == 0 then
     self.last_view_angles = Angle(angles.p, angles.y, 0)
 
@@ -310,7 +306,6 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
 
   self.blend = blend
 
-  -- This also keeps the view from glitching on autorefresh.
   if blend <= 0 then
     self.camera_offset = zero_offset
 
@@ -431,9 +426,10 @@ end
 
 --- Draws the weapon state feedback of third person control: a faint dot in the middle of the
 -- screen while the crosshair is hidden, so that the player sees what they would use or spawn
--- something at; a ring around the crosshair that runs down while the weapon stays raised
--- after the player has stopped aiming and firing; and a label under it for a moment after
--- the weapon has been raised or lowered.
+-- something at, unless another plugin hides the crosshair as well, during a cinematic or
+-- while running for example; a ring around the crosshair that runs down while the weapon
+-- stays raised after the player has stopped aiming and firing; and a label under it for a
+-- moment after the weapon has been raised or lowered.
 function ThirdPerson:HUDPaint()
   local client = PLAYER
 
@@ -465,8 +461,6 @@ function ThirdPerson:HUDPaint()
   local center_x, center_y = gox + ScrW() * 0.5, goy + ScrH() * 0.5
 
   if !self:faces_aim(client) then
-    -- The dot stands in for the crosshair, so it is hidden whenever another plugin hides the
-    -- crosshair, during a cinematic or while running for example.
     self.asking_crosshair = true
 
     local crosshair_hidden = hook.Run('ShouldHUDPaintCrosshair') == false

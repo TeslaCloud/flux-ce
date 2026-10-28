@@ -8,7 +8,6 @@ local timer_exists = timer.Exists
 local timer_pause = timer.Pause
 local timer_remove = timer.Remove
 
-Stamina.running = Stamina.running or {}
 Stamina.timer_ids = Stamina.timer_ids or {}
 
 local drain_scale = 4 * config_get('stam_drain_scale', 1)
@@ -78,7 +77,7 @@ local function delay_regen(target)
   target.stamina_regenerating = false
   target.standing_since = CurTime()
 
-  timer_pause('stam_regen_'..target:SteamID())
+  timer_pause('stam_regen_'..target:SteamID64())
 end
 
 --- Returns how much stamina a running player loses on a drain tick: the 'stam_drain_scale'
@@ -251,14 +250,12 @@ end
 --- Removes the stamina timers of a player who leaves the server.
 -- @param actor [Player]
 function Stamina:PlayerDisconnected(actor)
-  local steam_id = actor:SteamID()
+  local steam_id = actor:SteamID64()
 
   for _, timer_id in ipairs({ 'stam_run_'..steam_id, 'stam_regen_'..steam_id }) do
     timer_remove(timer_id)
     table.RemoveByValue(self.timer_ids, timer_id)
   end
-
-  self.running[steam_id] = nil
 end
 
 --- Removes every stamina timer when the code is reloaded, and forgets what the players
@@ -366,38 +363,33 @@ function Stamina:start_running(target, prevent_drain)
 
   target.stamina_regenerating = false
 
-  local steam_id = target:SteamID()
+  local steam_id = target:SteamID64()
   local id = 'stam_run_'..steam_id
 
   timer_pause('stam_regen_'..steam_id)
 
-  if !prevent_drain then
-    --- Called when a player starts running and their stamina begins to drain.
-    -- The hook is run on the server and then on the client of the player.
-    -- @param target [Player The player who started running]
-    hook.Run('PlayerStartRunning', target)
-    hook.run_client(target, 'PlayerStartRunning', target)
-  end
+  if prevent_drain then return end
 
-  if !prevent_drain then
-    self.running[steam_id] = true
+  --- Called when a player starts running and their stamina begins to drain.
+  -- The hook is run on the server and then on the client of the player.
+  -- @param target [Player The player who started running]
+  hook.Run('PlayerStartRunning', target)
+  hook.run_client(target, 'PlayerStartRunning', target)
 
-    if !timer_exists(id) then
-      table.insert(self.timer_ids, id)
+  if !timer_exists(id) then
+    table.insert(self.timer_ids, id)
 
-      timer.Create(id, 0.2, 0, function()
-        if IsValid(target) then
-          if self:can_drain(target) then
-            self:set_stamina(target, self:get_stamina(target) - get_drain_amount(target))
-          end
-        else
-          timer_remove(id)
-          self.running[steam_id] = false
+    timer.Create(id, 0.2, 0, function()
+      if IsValid(target) then
+        if self:can_drain(target) then
+          self:set_stamina(target, self:get_stamina(target) - get_drain_amount(target))
         end
-      end)
-    else
-      timer.UnPause(id)
-    end
+      else
+        timer_remove(id)
+      end
+    end)
+  else
+    timer.UnPause(id)
   end
 end
 
@@ -409,12 +401,10 @@ end
 function Stamina:stop_running(target, prevent_regen)
   if !IsValid(target) then return end
 
-  local steam_id = target:SteamID()
+  local steam_id = target:SteamID64()
   local id = 'stam_regen_'..steam_id
 
   timer_pause('stam_run_'..steam_id)
-
-  self.running[steam_id] = false
 
   if prevent_regen then
     --- Called when a player stops running and their stamina stops draining.
@@ -423,35 +413,35 @@ function Stamina:stop_running(target, prevent_regen)
     -- @param target [Player The player who stopped running]
     hook.Run('PlayerStopRunning', target)
     hook.run_client(target, 'PlayerStopRunning', target)
+
+    return
   end
 
-  if !prevent_regen then
-    target.stamina_regenerating = true
+  target.stamina_regenerating = true
 
-    if !timer_exists(id) then
-      table.insert(self.timer_ids, id)
+  if !timer_exists(id) then
+    table.insert(self.timer_ids, id)
 
-      timer.Create(id, 0.2, 0, function()
-        if IsValid(target) then
-          local stamina = self:get_stamina(target)
+    timer.Create(id, 0.2, 0, function()
+      if IsValid(target) then
+        local stamina = self:get_stamina(target)
 
-          if stamina < max_stamina and self:can_regenerate(target) then
-            stamina = stamina + get_regen_amount(target)
+        if stamina < max_stamina and self:can_regenerate(target) then
+          stamina = stamina + get_regen_amount(target)
 
-            self:set_stamina(target, stamina)
-          end
-
-          if stamina >= max_stamina then
-            target.stamina_regenerating = false
-
-            timer_pause(id)
-          end
-        else
-          timer_remove(id)
+          self:set_stamina(target, stamina)
         end
-      end)
-    else
-      timer.UnPause(id)
-    end
+
+        if stamina >= max_stamina then
+          target.stamina_regenerating = false
+
+          timer_pause(id)
+        end
+      else
+        timer_remove(id)
+      end
+    end)
+  else
+    timer.UnPause(id)
   end
 end

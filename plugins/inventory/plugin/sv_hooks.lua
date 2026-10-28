@@ -679,7 +679,7 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
 end)
 
 Cable.receive('fl_character_desc_change', function(actor, text)
-  if !isstring(text) then return end
+  if !isstring(text) or !actor:is_character_loaded() then return end
 
   if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len') then
     Characters.set_desc(actor, text)

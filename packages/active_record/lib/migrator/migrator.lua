@@ -30,7 +30,6 @@ function ActiveRecord.Migrator:init(direction, migrations, target_version)
 
   table.sort(self.migrations, function(a, b) return a.version < b.version end)
 
-  -- Going down, the migrations are visited newest first.
   if direction == 'down' then
     self.migrations = table.Reverse(self.migrations)
   end
@@ -154,7 +153,6 @@ function ActiveRecord.Migrator:runnable()
     table.insert(runnable, self.migrations[i])
   end
 
-  -- Skip the target when going down, so that the database is left at that version.
   if self:down() and target then
     table.remove(runnable)
   end

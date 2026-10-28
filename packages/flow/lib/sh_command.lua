@@ -129,7 +129,8 @@ end
 -- the 'commands' folder of a plugin are registered automatically, see Command#on_run for an
 -- example. When `player_arg` is not set, the position of the first 'player' entry of
 -- `arg_types` is used.
--- @param id [String unique command ID, also the main name it is called by]
+-- @param id [String unique command ID, also the main name it is called by; it is stored
+--   converted with `string.to_id`]
 -- @param data [Command/Map command object or a table with the same fields: name, description,
 --   syntax, permission (ID of the role it is allowed to), permission_id, arguments (minimum
 --   amount), arg_types, immunity, player_arg, alias or aliases, no_console and the on_run
@@ -149,12 +150,13 @@ function Flux.Command:create(id, data)
     data = cmd
   end
 
-  data.id = id:to_id()
+  id = id:to_id()
+  data.id = id
 
   prepare(data)
 
   stored[id] = data
-  aliases[id] = data.id
+  aliases[id] = id
 
   for _, alias in ipairs(data.aliases or {}) do
     aliases[alias:utf8lower()] = id
@@ -922,8 +924,8 @@ if SERVER then
   -- subcommand, that enough arguments were given and that the arguments with a list of words
   -- in `arg_types` are one of them, resolves the targets and their immunity, logs the command
   -- and runs it. A trailing 'text' argument is passed on exactly as it was typed, see
-  -- `Command:get_text_index`. The player is notified of any failure (it is printed to the console for the
-  -- server console). Serverside only.
+  -- `Command:get_text_index`. The player is notified of any failure (it is printed to the
+  -- console for the server console). Serverside only.
   -- @param actor [Player the player who runs the command, an invalid entity for server console]
   -- @param text [String command ID followed by its subcommand word, if any, and its arguments]
   -- @param from_console=nil [Boolean whether it was run as a console command, passed to the

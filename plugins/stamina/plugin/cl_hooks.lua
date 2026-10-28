@@ -13,9 +13,10 @@ function Stamina:HUDPaint()
   local client = PLAYER
 
   if IsValid(client) and client:Alive() then
-    local stamina = client:get_nv('stamina', 100)
+    local max_stamina = Config.get('stam_max', 100)
+    local stamina = client:get_nv('stamina', max_stamina)
     local frame_time = FrameTime() * 8
-    local percentage = stamina / math.max(Config.get('stam_max', 100), 1)
+    local percentage = stamina / math.max(max_stamina, 1)
 
     if percentage < 0.98 then
       cur_alpha = Lerp(frame_time, cur_alpha, 1)

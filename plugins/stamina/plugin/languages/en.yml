@@ -5,10 +5,10 @@ en:
       desc: Stamina plugin settings.
       stam_drain_scale:
         name: Drain Scale
-        desc: How fast should the stamina drain. Depends on the server tickrate.
+        desc: How fast should the stamina drain.
       stam_regen_scale:
         name: Regeneration Scale
-        desc: How fast should the stamina regenerate. Depends on the server tickrate.
+        desc: How fast should the stamina regenerate.
       stam_jump_penalty:
         name: Jump Penalty
         desc: How many stamina points to take when the player jumps.

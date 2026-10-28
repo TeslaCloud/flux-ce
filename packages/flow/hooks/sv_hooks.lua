@@ -37,11 +37,7 @@ end
 
 --- Registers the Flux tools with the tool gun and runs the LoadData and FLInitPostEntity hooks.
 function GM:InitPostEntity()
-  local toolgun = weapons.GetStored('gmod_tool')
-
-  for _, tool in pairs(Flux.Tool.stored) do
-    toolgun.Tool[tool.Mode] = tool
-  end
+  self:SynchronizeTools()
 
   --- Called once the map's entities have been created, for plugins to load their saved
   -- data. Runs on both realms, from the server-side and from the client-side
@@ -177,7 +173,7 @@ function GM:PlayerSetModel(actor)
 
   if isstring(override) then
     actor:SetModel(override)
-  elseif isbool(override) and override == false and self.BaseClass.PlayerSetModel then
+  elseif override == false and self.BaseClass.PlayerSetModel then
     self.BaseClass:PlayerSetModel(actor)
   elseif actor:IsBot() then
     actor:SetModel(actor:get_nv('model', 'models/humans/group01/male_0'..math.random(1, 9)..'.mdl'))
@@ -255,15 +251,13 @@ function GM:GetFallDamage(actor, speed)
   --   calculated from the speed]
   local fall_damage = hook.Run('FLGetFallDamage', actor, speed)
 
+  if fall_damage then return fall_damage end
+
   if speed < 660 then
     speed = speed - 250
   end
 
-  if !fall_damage then
-    fall_damage = 100 * ((speed) / 850) * 0.75
-  end
-
-  return fall_damage
+  return 100 * speed / 850 * 0.75
 end
 
 --- Asks the FLPlayerShouldTakeDamage hook whether a player can be damaged. The damage is
@@ -608,7 +602,7 @@ end
 do
   local function purge_client_files()
     if file.Exists('lua/_flux/client', 'GAME') then
-      local files, _dirs = file.Find('lua/_flux/client/*', 'GAME')
+      local files = file.Find('lua/_flux/client/*', 'GAME')
 
       for _, file_name in ipairs(files) do
         File.delete('lua/_flux/client/'..file_name)
@@ -633,13 +627,14 @@ do
 
   local write_client_file = Flux.write_client_file
 
-  -- Garry's Mod does not send a Lua file to clients if it is larger than 64 KB once it is
-  -- compressed, clients get an empty file instead. Serialized tables are hex digits, which
-  -- compress to half their size at worst, so pieces of this length always stay below that.
   local chunk_size = 100000
 
-  -- Writes a table for the client, split over as many files as it takes. The pieces are put
+  --- Writes a table for the client, split over as many files as it takes. The pieces are put
   -- back together by Flux.receive_chunk, 'assign' is the code that runs once 'data' is whole.
+  -- Garry's Mod does not send a Lua file to clients if it is larger than 64 KB once it is
+  -- compressed, clients get an empty file instead. Serialized tables are hex digits, which
+  -- compress to half their size at worst, so pieces of 100000 characters always stay below
+  -- that.
   local function write_client_table(name, tab, assign)
     local contents = table.serialize(tab)
     local count = math.max(math.ceil(#contents / chunk_size), 1)
@@ -655,10 +650,8 @@ do
   end
 
   local function write_client_files()
-    -- Get rid of the old files (if any)
     purge_client_files()
 
-    -- Do not send server-only settings to the client!
     local settings_copy = table.Copy(Settings)
     settings_copy.server = nil
 
@@ -681,9 +674,7 @@ do
   end
 
   --- Writes the files that get sent to clients again after a Lua refresh.
-  function GM:OnReloaded()
-    write_client_files()
-  end
+  hook.Add('OnReloaded', 'FLWriteClientFiles', write_client_files)
 end
 
 --- Saves the config and runs the SaveData hook, then the PostSaveData hook.
@@ -874,10 +865,8 @@ function GM:PlayerUse(activator, target)
   end
 end
 
--- Awful awful awful code, but it's kinda necessary in some rare cases.
--- Avoid using PlayerThink whenever possible though.
 do
-  local think_delay = 1 * 0.125
+  local think_delay = 0.125
   local next_think = 0
   local next_second = 0
 

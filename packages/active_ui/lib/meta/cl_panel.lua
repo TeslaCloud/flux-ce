@@ -10,8 +10,6 @@ local suppress_engine_lighting = render.SuppressEngineLighting
 local set_model_lighting = render.SetModelLighting
 local color_scale = 1 / 255
 
--- Seriously, Newman? I have to write this myself?
-
 --- Makes the panel no longer draggable.
 function panel_meta:undraggable()
   self.m_DragSlot = nil
@@ -64,7 +62,6 @@ function model_panel:Paint(w, h)
   local ambient, color = self.colAmbientLight, self.colColor
   local directional_light = self.DirectionalLight
 
-  -- Fix for models being behind the blur texture in the Z-buffer.
   if ignore_z then cam.IgnoreZ(true) end
 
   suppress_engine_lighting(true)
@@ -85,7 +82,6 @@ function model_panel:Paint(w, h)
 
   suppress_engine_lighting(false)
 
-  -- End fix
   if ignore_z then cam.IgnoreZ(false) end
 
   cam.End3D()

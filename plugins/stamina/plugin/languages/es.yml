@@ -5,10 +5,10 @@ es:
       desc: Ajustes del plugin de aguante.
       stam_drain_scale:
         name: Escala de consumo
-        desc: Lo rápido que se consume el aguante. Depende del tickrate del servidor.
+        desc: Lo rápido que se consume el aguante.
       stam_regen_scale:
         name: Escala de regeneración
-        desc: Lo rápido que se regenera el aguante. Depende del tickrate del servidor.
+        desc: Lo rápido que se regenera el aguante.
       stam_jump_penalty:
         name: Penalización por salto
         desc: Cuántos puntos de aguante se quitan cuando el jugador salta.

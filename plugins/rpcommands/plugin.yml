@@ -1,5 +1,5 @@
 name: RolePlay Commands
-description: Adds commands designed for roleplay gamemodes.
+description: Turns the chat into roleplay chat with in character speech, actions, whispers and yells, OOC and LOOC chat, static texts and roleplay commands.
 author: TeslaCloud Studios
 depends:
   - chatbox

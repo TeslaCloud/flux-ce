@@ -1,5 +1,6 @@
---- Server side of the SrcdsProxy plugin: hands the commands of the srcdsproxy backend addon
--- over to Flux once the gamemode has initialized, and again after a Lua refresh. The addon,
+--- Server hooks of the SrcdsProxy plugin: hand the commands of the srcdsproxy backend addon
+-- over to Flux once the gamemode has initialized, and again after a Lua refresh, and keep the
+-- transfer states of the players in the server transfer areas up to date. The addon,
 -- or the copy of it that srcds-rs has built in, has set up its `Proxy` table and its commands
 -- by then, so what the plugin sets here replaces them.
 
@@ -79,4 +80,37 @@ end
 --- Hands the addon's commands over to Flux again after a Lua refresh.
 function SrcdsProxy:OnReloaded()
   self:take_over()
+end
+
+--- Updates the transfer states of the players eight times a second: cancels the countdowns
+-- of the players who have left their area, ends those whose time has come, and starts the
+-- transfer areas that players are in and have not been dealt with in.
+function SrcdsProxy:LazyTick()
+  if !self:available() then return end
+
+  local states = self.transfer_states
+  local stored = Areas.all()
+  local cur_time = CurTime()
+
+  for actor, state in pairs(states) do
+    if IsValid(actor) then
+      self:update_transfer_state(actor, state, stored, cur_time)
+    else
+      states[actor] = nil
+    end
+  end
+
+  local areas = Areas.get_by_type(self.transfer_area_type)
+
+  if #areas == 0 then return end
+
+  for _, actor in player.Iterator() do
+    self:enter_transfer_areas_at(actor, areas)
+  end
+end
+
+--- Forgets the transfer state of a player who leaves the server.
+-- @param actor [Player]
+function SrcdsProxy:PlayerDisconnected(actor)
+  self.transfer_states[actor] = nil
 end

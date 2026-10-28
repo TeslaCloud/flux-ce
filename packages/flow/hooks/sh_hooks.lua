@@ -70,8 +70,6 @@ function GM:GetGameDescription()
   return isstring(name_override) and name_override or 'FL - '..Flux.get_schema_name()
 end
 
--- Disable default hooks for mouth move and grab ear.
-
 --- Does nothing, which disables the default ear grab animation while chatting.
 function GM:GrabEarAnimation()
 end
@@ -521,28 +519,33 @@ concommand.Add('fl_save_pers', function()
   end
 end)
 
---- After a Lua refresh, registers the Flux tools with the tool gun again and, in
--- development, reapplies the animation table of every player.
-function GM:OnReloaded()
-  -- Reload the tools.
+--- Copies every registered Flux tool into the tool table of the tool gun.
+function GM:SynchronizeTools()
   local toolgun = weapons.GetStored('gmod_tool')
 
   for _, tool in pairs(Flux.Tool.stored) do
     toolgun.Tool[tool.Mode] = tool
   end
+end
+
+--- After a Lua refresh, registers the Flux tools with the tool gun again and, in
+-- development, reapplies the animation table of every player.
+function GM:OnReloaded()
+  self:SynchronizeTools()
 
   if Flux.development then
     Flux.Anim:invalidate()
 
     for _, client in player.Iterator() do
-      self:PlayerModelChanged(client, client:GetModel(), client:GetModel())
+      local model = client:GetModel()
+
+      self:PlayerModelChanged(client, model, model)
     end
   end
 
   print('Auto-Reloaded')
 end
 
--- Utility timers to call hooks that should be executed every once in a while.
 timer.Create('fl_one_minute', 60, 0, function()
   --- Called once a minute on both realms.
   hook.Run('OneMinute')

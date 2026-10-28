@@ -9,7 +9,7 @@ CMD.arg_types = { 'player', 'text' }
 CMD.alias = 'setname'
 
 --- Sets the name of the first target's character and notifies staff. The name is refused
--- when another character already has it.
+-- when it is empty or another character already has it.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param name [String the new name as it was typed; a pair of double quotes around all of
@@ -17,6 +17,12 @@ CMD.alias = 'setname'
 function CMD:on_run(actor, targets, name)
   local new_name = (name:match('^"([^"]*)"$') or name):gsub('%s+', ' '):strip()
   local target = targets[1]
+
+  if new_name == '' then
+    Flux.Player:notify(actor, 'ui.char_create.name_invalid')
+
+    return
+  end
 
   if Characters.is_name_taken(new_name, target:get_character()) then
     Flux.Player:notify(actor, 'error.character.name_taken', { name = new_name })

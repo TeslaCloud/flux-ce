@@ -410,7 +410,7 @@ function print_traceback(suppress, ...)
                  :gsub('^\n', '')
 
   local pieces = trace_text:split('\n')
-  pieces[1] = '' -- remove the actual call to debug.traceback
+  pieces[1] = ''
 
   if !suppress then
     local trace_color = Color(0, 255, 255)
@@ -461,7 +461,7 @@ function error_with_traceback(msg)
 end
 
 local env = table.Copy(_G)
-local unsafe = w[[debug require setfenv getfenv File _G _R RunString 
+local unsafe = w[[debug require setfenv getfenv File _G _R RunString
                  CompileString rawget rawset rawequal setmetatable
                  coroutine module package newproxy]]
 

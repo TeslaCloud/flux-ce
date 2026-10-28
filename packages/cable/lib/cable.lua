@@ -24,13 +24,6 @@
 -- ```
 -- Both realms run this file; the package installer sends it to clients.
 
---[[
-  Cable - A simple Garry's Mod net wrapper.
-  2018 TeslaCloud Studios
-
-  Flux edition. Won't work outside of Flux due to dependencies.
---]]
-
 local IsValid = IsValid
 local isstring = isstring
 local istable = istable
@@ -123,7 +116,7 @@ end
 local function encode_args(...)
   local args = { ... }
   local length = select('#', ...)
-  local table_header = ''
+  local header_parts = {}
   local send = {}
   local tables = {}
   local size = 0
@@ -140,7 +133,7 @@ local function encode_args(...)
 
       send[i] = data
       tables[i] = true
-      table_header = table_header..tostring(i)..';'
+      header_parts[#header_parts + 1] = i
       size = size + #data + 2
     else
       send[i] = v
@@ -148,7 +141,7 @@ local function encode_args(...)
     end
   end
 
-  return send, tables, table_header, length, size
+  return send, tables, table.concat(header_parts, ';'), length, size
 end
 
 --- Writes the values of a message that fits into one piece.
@@ -493,8 +486,6 @@ if SERVER then
     local queue = delayed[id]
 
     if queue or !cable.check_networked_string(id) then
-      -- Everything sent before the name has reached the clients has to wait, not only the
-      -- first message, or the clients drop the rest and get the first one out of order.
       if !queue then
         queue = {}
         delayed[id] = queue

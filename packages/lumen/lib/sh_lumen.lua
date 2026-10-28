@@ -39,7 +39,6 @@ Lumen.file_paths = file_paths
 -- compiler uses it for `<>...</>`.
 Lumen.Fragment = { lumen_fragment = true }
 
-local _isstring = isstring
 local istable    = istable
 local isfunction = isfunction
 local tostring   = tostring

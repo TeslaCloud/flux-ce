@@ -57,15 +57,15 @@ function PANEL:Init()
     frame:Center()
     frame:MakePopup()
 
-    local list = create_panel('DListView', frame)
-    list:Dock(FILL)
-    list:AddColumn(t'ui.condition.load.column')
+    local list_view = create_panel('DListView', frame)
+    list_view:Dock(FILL)
+    list_view:AddColumn(t'ui.condition.load.column')
 
     for _, file_name in pairs(Data.get_files('conditions')) do
-      list:AddLine(file_name)
+      list_view:AddLine(file_name)
     end
 
-    list.OnRowSelected = function(_lst, _index, line)
+    list_view.OnRowSelected = function(_lst, _index, line)
       play_sound('garrysmod/ui_click.wav')
 
       self:clear()
@@ -89,8 +89,8 @@ end
 --- Opens the context menu of a node: adding a child condition and, for condition nodes,
 -- setting the parameter and the operator or deleting the condition.
 -- @param panel [Panel the tree node that was right-clicked]
--- @param _root=nil [Boolean whether the node is the root node, currently unused]
--- @param _first=nil [Boolean whether the node has no child conditions, currently unused]
+-- @param _root=nil [Boolean whether the node is the root node, unused]
+-- @param _first=nil [Boolean whether the node has no child conditions, unused]
 function PANEL:node_options(panel, _root, _first)
   local menu = DermaMenu()
 
@@ -165,13 +165,11 @@ function PANEL:add_condition(parent, id, data)
 
     for index, arg_text in pairs(condition_data.get_args(node, condition_data)) do
       if arg_text != '' then
-        args[index] = t(arg_text)
+        args[index] = t(tostring(arg_text))
+      elseif index == 'operator' then
+        args[index] = t'ui.condition.select_operator'
       else
-        if index == 1 then
-          args[index] = t'ui.condition.select_operator'
-        else
-          args[index] = t'ui.condition.select_parameter'
-        end
+        args[index] = t'ui.condition.select_parameter'
       end
     end
 

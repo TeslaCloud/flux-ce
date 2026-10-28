@@ -285,7 +285,7 @@ function PANEL:close_menu()
   self.button_panel:MoveTo(0, -self.button_panel:GetTall(), Theme.get_option('menu_anim_duration'), 0, 0.5, function()
     self:safe_remove()
 
-    if !IsValid(Flux.tab_menu) then
+    if Flux.tab_menu == self or !IsValid(Flux.tab_menu) then
       Flux.blur_update_fps = 8
     end
   end)

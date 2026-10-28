@@ -7,19 +7,6 @@
 -- phrases. Tool files are loaded from the `tools` folders by the `Flux.Tool` library, which
 -- creates the object and passes it to the file as `TOOL`.
 
---[[
-  Sandbox's tools copy-pasta.
-  Because sandbox only lets you create tools
-  from the entities folder, which isn't exactly
-  acceptable for us.
---]]
-
---[[
-  For tool object documentation, as well as tutorials on
-  creating gmod tools, go to the gmod wiki. Our wiki only covers
-  extras added by Flux.
---]]
-
 class 'Tool'
 Tool.is_flux_tool = true
 
@@ -73,10 +60,8 @@ function Tool:MakeGhostEntity(model, pos, angle)
   if CLIENT and game.SinglePlayer() then return end
   if self.GhostEntityLastDelete and self.GhostEntityLastDelete + 0.1 > CurTime() then return end
 
-  -- Release the old ghost entity
   self:ReleaseGhostEntity()
 
-  -- Don't allow ragdolls/effects to be ghosts
   if !util.IsValidProp(model) then return end
 
   local ghost
@@ -87,7 +72,6 @@ function Tool:MakeGhostEntity(model, pos, angle)
     ghost = ents.Create('prop_physics')
   end
 
-  -- If there's too many entities we might not spawn..
   if !IsValid(ghost) then
     self.GhostEntity = nil
     return
@@ -125,7 +109,6 @@ function Tool:ReleaseGhostEntity()
     self.GhostEntityLastDelete = CurTime()
   end
 
-  -- This is unused!
   if self.GhostEntities then
     for index, ghost in pairs(self.GhostEntities) do
       if IsValid(ghost) then ghost:Remove() end
@@ -136,7 +119,6 @@ function Tool:ReleaseGhostEntity()
     self.GhostEntityLastDelete = CurTime()
   end
 
-  -- This is unused!
   if self.GhostOffset then
     for index in pairs(self.GhostOffset) do
       self.GhostOffset[index] = nil
@@ -303,14 +285,12 @@ function Tool:SetObject(i, ent, pos, phys, bone, norm)
 
   self.Objects[i] = object
 
-  -- Worldspawn is a special case
   if ent:EntIndex() == 0 then
     object.Phys = nil
     object.Pos = pos
   else
     norm = norm + pos
 
-    -- Convert the position to a local position - so it's still valid when the object moves
     if IsValid(phys) then
       object.Normal = phys:WorldToLocal(norm)
       object.Pos = phys:WorldToLocal(pos)
@@ -318,10 +298,6 @@ function Tool:SetObject(i, ent, pos, phys, bone, norm)
       object.Normal = ent:WorldToLocal(norm)
       object.Pos = ent:WorldToLocal(pos)
     end
-  end
-
-  if SERVER then
-    -- Todo: Make sure the client got the same info
   end
 end
 
@@ -375,9 +351,7 @@ function Tool:CreateConVars()
     return
   end
 
-  if SERVER then
-    self.AllowedCVar = CreateConVar('toolmode_allow_'..mode, 1, FCVAR_NOTIFY)
-  end
+  self.AllowedCVar = CreateConVar('toolmode_allow_'..mode, 1, FCVAR_NOTIFY)
 end
 
 --- Returns the value of a console variable of the tool.
@@ -422,8 +396,6 @@ function Tool:Allowed()
   return self.AllowedCVar:GetBool()
 end
 
--- Now for all the Tool redirects
-
 --- Called when the tool gun initializes the tool. Does nothing by default.
 function Tool:Init()
 end
@@ -456,18 +428,13 @@ function Tool:RightClick()  return false end
 function Tool:Reload()      self:ClearObjects() end
 
 --- Called when the tool gun is deployed. Removes the ghost entity by default.
-function Tool:Deploy()      self:ReleaseGhostEntity() return end
+function Tool:Deploy()      self:ReleaseGhostEntity() end
 
 --- Called when the tool gun is holstered. Removes the ghost entity by default.
-function Tool:Holster()     self:ReleaseGhostEntity() return end
+function Tool:Holster()     self:ReleaseGhostEntity() end
 
 --- Called every tick while the tool is active. Removes the ghost entity by default.
 function Tool:Think()       self:ReleaseGhostEntity() end
-
---[[---------------------------------------------------------
-  Checks the objects before any action is taken
-  This is to make sure that the entities haven't been removed
------------------------------------------------------------]]
 
 --- Clears the selected objects if any of their entities has been removed.
 function Tool:CheckObjects()

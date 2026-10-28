@@ -45,7 +45,6 @@ function InfoDisplay:add(id, data)
   id                  = id:to_id()
 
   data.id             = id
-  data.min_percentage = data.min_percentage or nil
   data.max_percentage = data.max_percentage or 100
   data.size           = data.size           or 80
   data.icon           = data.icon           or 'fa-plus'
@@ -53,7 +52,6 @@ function InfoDisplay:add(id, data)
   data.percentage     = data.percentage     or 100
   data.offset_x       = data.offset_x       or 0
   data.offset_y       = data.offset_y       or 0
-  data.callback       = data.callback       or 0
 
   stored[id]          = data
 
@@ -85,7 +83,7 @@ end
 --- Draws a single info display icon after running its callback. Can be prevented
 -- with the 'PreDrawInfoDisplayItem' hook.
 -- @param info [Map icon data, as stored by InfoDisplay#add]
--- @return [Number horizontal offset for the next icon, 0 if nothing was drawn]
+-- @return [Number width the icon takes up along with its margin, 0 if nothing was drawn]
 function InfoDisplay:draw(info)
   --- Called on the client before an icon of the info display is drawn, before the callback of
   -- the icon runs.
@@ -132,7 +130,7 @@ function InfoDisplay:draw(info)
       end
     end
 
-    return last_x + margin + size
+    return margin + size
   end
 
   return 0

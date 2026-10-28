@@ -6,15 +6,6 @@
 -- The server shares variables with clients through `add_client_env`, which appends `setenv`
 -- calls to the generated `lua/_flux/environment.lua` file that clients include here.
 
---
--- Pointers for a C implementation of getenv:
---
--- * All functions must set the ENV global.
--- * The local environment should be copied to the ENV global on fork.
--- * The ENV global should have a __newindex metamethod to set C environment
--- variables if they are changed in the ENV global.
---
-
 AddCSLuaFile()
 
 ENV = ENV or {}
@@ -23,7 +14,7 @@ if !getenv then
   --- Gets an environment variable matching the "key" name.
   -- @param key [String variable name]
   -- @param default=nil [Any value to return if the variable is not set]
-  -- @return [String environment variable, or default if it is not set]
+  -- @return [Any environment variable, or default if it is not set]
   function getenv(key, default)
     local res = ENV[key]
 
@@ -37,10 +28,9 @@ end
 
 if !setenv then
   --- Sets an environment variable "key" to "value".
-  -- Will be automatically converted to a string by the C backend.
   -- @param key [String variable name]
   -- @param value [Any new value]
-  -- @return [String environment variable reference]
+  -- @return [Any the new value]
   function setenv(key, value)
     ENV[key] = value
     return ENV[key]
@@ -51,7 +41,8 @@ do
   local client_vars = {}
 
   --- Adds an environment variable to the clientside environment variables list.
-  -- Can only be used once. Forces key and value to be strings.
+  -- Only the first call for a key has an effect. Key and value are converted to strings.
+  -- Serverside only, does nothing on the client.
   -- @param key [String variable name]
   -- @param value [String variable value]
   function add_client_env(key, value)
@@ -67,7 +58,6 @@ end
 
 if Flux and Flux.initialized then return end
 
--- Environment stuff
 FLUX_ENV_PATH = file.Exists('flux/config/environment.local.lua', 'LUA') and 'flux/config/environment.local.lua' or
   'flux/config/environment.lua'
 setenv('FLUX_ENV', string.lower(include(FLUX_ENV_PATH) or 'development'))

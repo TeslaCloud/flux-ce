@@ -6,8 +6,7 @@
 -- through the PluginIncludeFolder hook. It is part of the lib folder of the Stats plugin,
 -- which Flux includes before the other folders of the plugin and before its sh_plugin.lua, so
 -- the attributes folder of the Stats plugin is loaded this way too, as are those of the
--- plugins and the schema that load after it. For the same reason it includes the sh_enums.lua
--- of the plugin, which defines `CHAR_ERR_ATTRIBUTE_SUM`.
+-- plugins and the schema that load after it.
 --
 -- What a character has of an attribute is kept in an `Attribute` record: a level and any
 -- number of boosts. A level changes only when it is set, by staff or by the code of a
@@ -28,8 +27,6 @@ local os_time = os.time
 
 local stored = Attributes.stored or {}
 Attributes.stored = stored
-
-require_relative(PLUGIN:get_folder()..'/sh_enums')
 
 --- Returns every registered attribute definition.
 -- @return [Map attribute definitions keyed by attribute ID]

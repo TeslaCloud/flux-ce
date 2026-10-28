@@ -1,8 +1,7 @@
 --- Core helpers of the Flux gamemode package on the global `Flux` table.
 -- They cover console output (`Flux.print`, `Flux.dev_print`), the registry of player
 -- actions (`Flux.register_action`), the loaded schema (its folder, name, information and
--- inclusion) and, on the client, HUD helpers: the circular action indicator, the spinning
--- cog, position animations and the global UI offset.
+-- inclusion) and the global UI offset that HUD elements follow on the client.
 -- The same file replaces `file.Write` with a version that creates missing folders.
 -- @module [Flux]
 
@@ -38,18 +37,11 @@ file.old_write = file.old_write or file.Write
 -- @param file_name [String path of the file, relative to data/]
 -- @param contents [String]
 function file.Write(file_name, contents)
-  local pieces = file_name:split('/')
-  local current_path = ''
+  for slash in file_name:gmatch('()/') do
+    local folder = file_name:sub(1, slash)
 
-  for _, piece in ipairs(pieces) do
-    if File.ext(piece) != nil then
-      break
-    end
-
-    current_path = current_path..piece..'/'
-
-    if !file.Exists(current_path, 'DATA') then
-      file.CreateDir(current_path)
+    if !file.Exists(folder, 'DATA') then
+      file.CreateDir(folder)
     end
   end
 
@@ -111,7 +103,6 @@ function Flux.include_schema()
   else
     Plugin.include_schema()
 
-    -- Wait just a tiny bit for stuff to catch up
     timer.Simple(0.2, function()
       Cable.send('fl_client_included_schema', true)
       --- Called on the client shortly after the schema files have been included, right after
@@ -146,12 +137,14 @@ function Flux.get_schema_info()
       schema_data = schema_data['Gamemode']
     end
 
-    Flux.schema_info = {}
-      Flux.schema_info['name']        = schema_data['title'] or 'Undefined'
-      Flux.schema_info['author']      = schema_data['author'] or 'Undefined'
-      Flux.schema_info['description'] = schema_data['description'] or 'Undefined'
-      Flux.schema_info['version']     = schema_data['version'] or 'Undefined'
-      Flux.schema_info['folder']      = string.gsub(schema_folder, '/schema', '')
+    Flux.schema_info = {
+      name        = schema_data['title'] or 'Undefined',
+      author      = schema_data['author'] or 'Undefined',
+      description = schema_data['description'] or 'Undefined',
+      version     = schema_data['version'] or 'Undefined',
+      folder      = string.gsub(schema_folder, '/schema', '')
+    }
+
     return Flux.schema_info
   else
     return Flux.shared.schema_info

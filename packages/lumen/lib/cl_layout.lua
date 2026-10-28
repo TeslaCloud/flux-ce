@@ -1,11 +1,11 @@
---- The layout engine of Lumen: a flexbox without shrinking. A
--- container (`view`, `scroll`) lays its children out along its `direction`: each child takes
--- the size its style asks for or the size of its content, children with `flex` share the space
--- that is left, `justify` distributes any remaining space, `align` places the children across
--- the direction and `wrap` starts new lines when they do not fit. The sizes come from the
--- resolved styles (`Lumen.Style`) that the reconciler stores on the panels as `lumen_style`;
--- a panel that defines `lumen_measure(max_w, max_h)` reports the size of its content, any
--- other panel is taken at its current size.
+--- The layout engine of Lumen: a flexbox without shrinking. A container (`view`, `scroll`)
+-- lays its children out along its `direction`: each child takes the size its style asks for or
+-- the size of its content, children with `flex` share the space that is left, `justify`
+-- distributes any remaining space, `align` places the children across the direction and `wrap`
+-- starts new lines when they do not fit. The sizes come from the resolved styles
+-- (`Lumen.Style`) that the reconciler stores on the panels as `lumen_style`; a panel that
+-- defines `lumen_measure(max_w, max_h)` reports the size of its content, any other panel is
+-- taken at its current size.
 -- @module [Lumen.Layout]
 
 mod 'Lumen::Layout'
@@ -126,7 +126,7 @@ function Lumen.Layout.flex(style, children, avail_w, avail_h, apply)
       main_margin = main_margin,
       cross_margin = cross_margin,
       cross = row and h or w,
-      fixed_cross = (row and child_style.height or child_style.width) != nil,
+      fixed_cross = (row and child_style.height != nil) or (!row and child_style.width != nil),
       align = child_style.align_self or style.align
     }
   end
@@ -157,7 +157,7 @@ function Lumen.Layout.flex(style, children, avail_w, avail_h, apply)
   local content_main = 0
   local cross_pos = 0
 
-  for _line_index, current in ipairs(lines) do
+  for _, current in ipairs(lines) do
     local count = #current
     local used = gap * math_max(count - 1, 0)
     local total_flex = 0

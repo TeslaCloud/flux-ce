@@ -2,7 +2,7 @@
 -- table and drops the `ammunitions` table.
 -- `data` holds the generic data of a character and `ammo` its reserve ammo, both as serialized
 -- tables; `armor` is saved next to the existing `health`, and `banned` marks a character that
--- may not be loaded. The `ammunitions` table was never written to and is replaced by `ammo`.
+-- may not be loaded. The `ammunitions` table is replaced by `ammo`.
 
 local AddPersistenceToCharacters = ActiveRecord.Migration.new()
 

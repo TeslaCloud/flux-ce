@@ -15,8 +15,7 @@ local rounded_box_ex = draw.RoundedBoxEx
 local math_max       = math.max
 local math_floor     = math.floor
 
---- Scales a size designed for 1080p like the stock Derma panels do (see cl_derma_scale.lua,
--- which loads after this file).
+--- Scales a size designed for 1080p like the stock Derma panels do, with `DermaScale.scale`.
 -- @param size [Number]
 -- @return [Number]
 local function scale(size)

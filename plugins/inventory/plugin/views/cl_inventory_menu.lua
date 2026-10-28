@@ -129,9 +129,6 @@ function PANEL:rebuild()
 
   self.desc:SetFont(Theme.get_font('main_menu_small'))
   self.desc:SetTall(math_scale(36))
-  -- A field like any other text entry of the theme, outlined in the accent color while it is
-  -- being edited and in the success or warning color otherwise, to tell a saved description
-  -- from one that has not been saved yet.
   self.desc.Paint = function(pnl, desc_w, desc_h)
     local radius = Theme.get_option('corner_radius_small', math_scale(4))
     local text_color = Theme.get_color('text')

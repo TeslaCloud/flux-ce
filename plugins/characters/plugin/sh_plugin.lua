@@ -29,9 +29,10 @@
 PLUGIN:set_global('Characters')
 
 require_relative 'cl_hooks'
+require_relative 'cl_nethooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
-require_relative 'sh_enums'
+require_relative 'sv_nethooks'
 
 --- Registers the 'character' condition, which compares a player's active character ID.
 function Characters:RegisterConditions()

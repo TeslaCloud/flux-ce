@@ -11,7 +11,6 @@
 
 mod 'Font'
 
--- We want the fonts to recreate on refresh.
 local stored = {}
 local sized_names = {}
 
@@ -31,7 +30,6 @@ function Font.create(name, font_data)
   if name == nil or !istable(font_data) then return end
   if stored[name] then return end
 
-  -- Force UTF-8 range by default.
   font_data.extended = true
 
   surface.CreateFont(name, font_data)

@@ -9,12 +9,19 @@ CMD.arguments = 2
 CMD.arg_types = { 'player', 'text' }
 CMD.aliases = { 'setdesc', 'setdescription' }
 
---- Sets the physical description of the first target's character and notifies staff.
+--- Sets the physical description of the first target's character and notifies staff. A
+-- description that is empty or only whitespace is refused.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param new_desc [String the new description, as it was typed]
 function CMD:on_run(actor, targets, new_desc)
   local target = targets[1]
+
+  if new_desc:strip() == '' then
+    Flux.Player:notify(actor, 'ui.char_create.desc_invalid')
+
+    return
+  end
 
   Characters.set_desc(target, new_desc)
   target:notify('notification.desc_changed', { desc = new_desc })

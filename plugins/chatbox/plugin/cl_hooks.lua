@@ -17,10 +17,11 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
   local entry_height = Theme.set_option('chatbox_text_entry_height', scale(36)) or scale(36)
   Theme.set_option('chatbox_text_entry_text_size', entry_height * 0.6)
 
-  if Chatbox.panel then
+  if IsValid(Chatbox.panel) then
     Chatbox.panel:Remove()
-    Chatbox.panel = nil
   end
+
+  Chatbox.panel = nil
 end
 
 --- Opens the chatbox instead of the default chat when a chat bind is pressed,
@@ -30,13 +31,8 @@ end
 -- @param pressed [Boolean whether the bind was pressed rather than released]
 -- @return [Boolean true to block the bind if the chatbox was opened, nil otherwise]
 function Chatbox:PlayerBindPress(_client, bind, pressed)
-  if IsValid(PLAYER) and PLAYER:has_initialized() and
-     (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
-    if string.find(bind, 'messagemode2') then
-      PLAYER.typing_team_chat = true
-    else
-      PLAYER.typing_team_chat = false
-    end
+  if pressed and IsValid(PLAYER) and PLAYER:has_initialized() and string.find(bind, 'messagemode', 1, true) then
+    PLAYER.typing_team_chat = string.find(bind, 'messagemode2', 1, true) != nil
 
     Chatbox.show()
 
@@ -65,25 +61,25 @@ end
 --- Creates the normal, bold, italic and bold italic fonts of the chatbox.
 function Chatbox:CreateFonts()
   Font.create('chat_font', {
-    font    = 'Montserrat Medium',
-    size    = 16
+    font = 'Montserrat Medium',
+    size = 16
   })
 
   Font.create('chat_font_bold', {
-    font    = 'Montserrat ExtraBold',
-    size    = 16
+    font = 'Montserrat ExtraBold',
+    size = 16
   })
 
   Font.create('chat_font_italic', {
-    font    = 'Montserrat Medium',
-    size    = 16,
+    font = 'Montserrat Medium',
+    size = 16,
     italic = true
   })
 
   Font.create('chat_font_italic_bold', {
-    font    = 'Montserrat ExtraBold',
-    size    = 16,
-    italic  = true
+    font = 'Montserrat ExtraBold',
+    size = 16,
+    italic = true
   })
 end
 
@@ -131,7 +127,6 @@ end
 -- @param compiled [Map compiled message, as returned by Chatbox.compile]
 function Chatbox:ChatboxMessageCompiled(compiled)
   local to_print = {}
-
   local count = 0
 
   for _, piece in pairs(compiled) do

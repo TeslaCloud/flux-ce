@@ -124,9 +124,7 @@ end
 
 --- Loads the static texts from the plugin data.
 function RPCommands:load()
-  local texts = Data.load_plugin('rptexts', {})
-
-  self.texts = texts
+  self.texts = Data.load_plugin('rptexts', {})
 end
 
 --- Sends all static texts to a player once they have loaded in.
@@ -250,5 +248,5 @@ end
 function RPCommands:NotifySelf(receiver, notification_color, message)
   if !IsValid(receiver) then return end
 
-  Cable.send(receiver, 'fl_notify_self', receiver, notification_color, message)
+  Cable.send(receiver, 'fl_notify_self', notification_color, message)
 end

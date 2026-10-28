@@ -134,9 +134,7 @@ function PickupObjects:update_hold(actor, data, cur_time)
   if !actor:Alive() or actor:InVehicle() or actor:GetMoveType() != MOVETYPE_WALK then return false end
   if actor.is_ragdolled and actor:is_ragdolled() then return false end
 
-  local weapon = actor:GetActiveWeapon()
-
-  if !IsValid(weapon) or !weapon:GetClass():include('fists') then return false end
+  if !self:has_fists(actor) then return false end
 
   local phys_obj = ent:GetPhysicsObjectNum(data.bone)
 
@@ -167,6 +165,8 @@ function PickupObjects:update_hold(actor, data, cur_time)
     data.target:set_nv('dragged', false)
     data.target = nil
   end
+
+  local weapon = actor:GetActiveWeapon()
 
   weapon:SetNextPrimaryFire(cur_time + pickup_cooldown)
   weapon:SetNextSecondaryFire(cur_time + pickup_cooldown)

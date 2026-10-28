@@ -54,9 +54,9 @@ function SpawnPoints:sync(target)
       receivers[1] = target
     end
   else
-    for _, client in player.Iterator() do
-      if !client:IsBot() and client:can('spawnpoints') then
-        receivers[#receivers + 1] = client
+    for _, receiver in player.Iterator() do
+      if !receiver:IsBot() and receiver:can('spawnpoints') then
+        receivers[#receivers + 1] = receiver
       end
     end
   end

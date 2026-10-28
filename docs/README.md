@@ -1,5 +1,3 @@
 # Flux Documentation
 
-The FDOC documentation has moved!
-
-[Go here to check out its own repo!](https://github.com/Meow/fdoc)
+The API reference of Flux is generated from the doc comments in the code by [FDoc](https://github.com/Meow/fdoc), which also describes the format of the comments. `fdoc_demo.lua` shows the tags it understands.

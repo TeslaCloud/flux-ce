@@ -7,11 +7,10 @@ local text_area_color = Color(255, 255, 255)
 do
   local cache = nil
   local temp_cache = nil
-  local _render_color = Color(50, 255, 50)
   local render_color_red = Color(255, 50, 50)
   local last_amt = nil
+  local last_registered = nil
   local last_type = nil
-  local render = render
   local draw_line = render.DrawLine
   local area_colors = {}
 
@@ -33,6 +32,7 @@ do
       local verts = tool.area and tool.area.verts
       local area_table = Areas.get_by_type(mode.area_type)
       local areas_count = #area_table
+      local registered = Areas.get_count()
 
       if istable(verts) and (!temp_cache or #temp_cache != #verts) then
         temp_cache = {}
@@ -54,11 +54,10 @@ do
         temp_cache = nil
       end
 
-      if !last_amt then last_amt = areas_count end
-
-      if !cache or last_amt != areas_count or last_type != mode.area_type then
+      if !cache or last_amt != areas_count or last_registered != registered or last_type != mode.area_type then
         cache = {}
         last_amt = areas_count
+        last_registered = registered
         last_type = mode.area_type
 
         area_colors[mode.area_type] = Areas.get_color(mode.area_type)
@@ -119,15 +118,10 @@ function Area:HUDPaint()
 
     for _, text_area in pairs(PLAYER.text_areas) do
       if istable(text_area) and text_area.end_time > cur_time then
-        text_area.alpha = text_area.alpha or 255
         font = font or Theme.get_font('text_large')
-        text_area_color.a = text_area.alpha
+        text_area_color.a = math.Clamp((text_area.end_time - cur_time) * 127.5, 0, 255)
 
         draw.SimpleText(text_area.text, font, math.scale_x(32), last_y, text_area_color)
-
-        if cur_time + 2 >= text_area.end_time then
-          text_area.alpha = math.Clamp(text_area.alpha - 1, 0, 255)
-        end
 
         last_y = last_y + math.scale(50)
       end

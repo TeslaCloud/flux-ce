@@ -141,6 +141,10 @@ function Ragdoll:PlayerCanSwitchCharacter(actor, _character, _current)
   end
 end
 
+--- Returns the ragdoll data of a living player who is lying on the ground after a fall and
+-- has been stripped of their weapons, which they get back when they get up.
+-- @param owner [Player]
+-- @return [Map the ragdoll data, nil if the player is not in that state]
 local function fallen_data(owner)
   if !IsValid(owner) or !owner:IsPlayer() or !owner:Alive() then return end
 

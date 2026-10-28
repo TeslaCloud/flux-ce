@@ -19,10 +19,6 @@ PANEL.alpha = 255
 
 --- Records when the message was added and when it should start to fade out.
 function PANEL:Init()
-  -- if PLAYER:can('chat_mod') then
-  -- self.moderation = vgui.Create('fl_chat_moderation', self)
-  -- end
-
   self.added_at = CurTime()
   self.fade_at = self.added_at + Config.get('message_fade_delay')
 end
@@ -165,8 +161,6 @@ function PANEL:create_avatars()
     end
   end
 end
-
--- Those people want us gone :(
 
 --- Removes the message from the chatbox history and deletes its panel,
 -- unless the ShouldMessageeject hook returns false.

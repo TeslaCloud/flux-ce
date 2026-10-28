@@ -100,7 +100,7 @@ async function installFonts(source, wawoff2, Font) {
   return fonts;
 }
 
-/* Returns a TrueType-flavoured copy of a font, converting CFF outlines to quadratic ones. */
+/* Returns a TrueType-flavored copy of a font, converting CFF outlines to quadratic ones. */
 function toTrueType(sfnt, Font) {
   if (sfnt.toString('ascii', 0, 4) !== 'OTTO') return sfnt;
 

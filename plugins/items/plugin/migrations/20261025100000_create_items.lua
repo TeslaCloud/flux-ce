@@ -3,7 +3,7 @@
 -- A row of `items` names the item template of the instance, its serialized custom data
 -- and overridden fields, and where the instance is: in an inventory of a character, inside
 -- of a container item, in a container prop of a map or lying in the world of a map. Every
--- row of `item_id_blocks` stands for a block of 1000 instance ids. See the `sv_storage.lua`
+-- row of `item_id_blocks` stands for a block of 1000 instance ids. See the `lib/sv_storage.lua`
 -- file of the Items plugin.
 
 local CreateItems = ActiveRecord.Migration.new()

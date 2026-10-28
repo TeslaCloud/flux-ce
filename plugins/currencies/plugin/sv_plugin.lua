@@ -124,7 +124,7 @@ end
 
 --- Spawns the money that `Currencies:save_money` has saved for the current map, each
 -- entity exactly where it was, and freezes what was frozen. Entries of currencies that are
--- no longer registered are skipped. Server only.
+-- not registered are skipped. Server only.
 function Currencies:load_money()
   local saved = Data.load_plugin('money', {})
 

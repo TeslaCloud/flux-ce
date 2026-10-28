@@ -219,11 +219,11 @@ function Currencies:CanGiveMoney(actor, target, amount, currency)
   end
 end
 
---- Allows players that are not bots to hold money.
+--- Allows players that are not bots and have a character loaded to hold money.
 -- @param object [Entity]
--- @return [Boolean true for valid non-bot players, otherwise nil]
+-- @return [Boolean true for valid non-bot players with a loaded character, otherwise nil]
 function Currencies:CanContainMoney(object)
-  if IsValid(object) and object:IsPlayer() and !object:IsBot() then
+  if IsValid(object) and object:IsPlayer() and !object:IsBot() and object:is_character_loaded() then
     return true
   end
 end

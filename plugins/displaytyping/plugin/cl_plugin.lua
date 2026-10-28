@@ -43,8 +43,8 @@ function DisplayTyping:get_preference(id)
   return true
 end
 
---- Tells what kind of speech a text is, by asking the DisplayTypingGetKind hook and then the
--- older DisplayTypingTextType and DisplayTypingAdjustFadeoffMultiplier hooks.
+--- Tells what kind of speech a text is, by asking the DisplayTypingGetKind hook and, if it
+-- decides nothing, the DisplayTypingTextType and DisplayTypingAdjustFadeoffMultiplier hooks.
 -- @param target [Player the player who is typing]
 -- @param text [String the text being typed, or its outline]
 -- @return [Map the kind: id (String), label (String translated label), color (Color, or nil

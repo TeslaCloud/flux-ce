@@ -382,10 +382,10 @@ if SERVER then
 
     if !character_id then return end
 
-    for _, client in player.Iterator() do
-      if client:get_character_id() == character_id
-      and client:has_item_by_id(item_obj.instance_id) then
-        return client
+    for _, target in player.Iterator() do
+      if target:get_character_id() == character_id
+      and target:has_item_by_id(item_obj.instance_id) then
+        return target
       end
     end
   end

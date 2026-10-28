@@ -4,8 +4,6 @@
 -- recursive listing, wrappers around the built-in `file` functions that always work in the
 -- game folder, and aliases such as `File.rm`, `File.dir` and `File.is_folder`.
 
-include 'sh_table.lua'
-
 File = File or {}
 
 File.old_write = File.old_write or File.write
@@ -16,10 +14,9 @@ File.old_write = File.old_write or File.write
 -- @param file_contents [String contents to write]
 function File.write(file_name, file_contents)
   local pieces = string.split(file_name, '/')
-  local current_path = ''
 
   for i = 1, #pieces - 1 do
-    current_path = current_path..pieces[i]..'/'
+    local current_path = table.concat(pieces, '/', 1, i)..'/'
 
     if !file.Exists(current_path, 'GAME') then
       File.mkdir(current_path)
@@ -51,9 +48,15 @@ function File.get_list(folder)
     end
   end
 
-  local b = {}
+  local seen = {}
 
-  return table.map(files, function(v) if !b[v] then b[v] = true return v end end)
+  return table.map(files, function(file_path)
+    if !seen[file_path] then
+      seen[file_path] = true
+
+      return file_path
+    end
+  end)
 end
 
 --- Creates a file if it does not exist yet, by appending an empty string to it.

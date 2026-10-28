@@ -88,9 +88,11 @@ end
 -- @return [Map schema, ActiveRecord::Base(self)]
 function ActiveRecord.Base:dump()
   local ret = {}
-    for column in pairs(self:get_schema()) do
-      ret[column] = self[column]
-    end
+
+  for column in pairs(self:get_schema()) do
+    ret[column] = self[column]
+  end
+
   return ret, self
 end
 
@@ -219,6 +221,8 @@ function ActiveRecord.Base:where_not(condition, ...)
     end
 
     query_str = concat(parts, ' AND ')
+  elseif isstring(condition) then
+    query_str = 'NOT ('..condition..')'
   end
 
   local query = query_of(self)
@@ -637,7 +641,6 @@ local function gen_callback(self, insert)
     print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query, bindings)
     self.saving = false
 
-    -- Set #id to the last insert id.
     if insert and istable(result) and istable(result[1]) then
       self.id = result[1]['id']
     end
@@ -650,7 +653,6 @@ local function gen_callback(self, insert)
       self:after_save()
     end
 
-    -- save relations once we're done saving the thing
     if self.id and #self.relations > 0 then
       ar_add_indent()
 
@@ -774,7 +776,6 @@ function ActiveRecord.Base:destroy()
       print_query(class_name..' Delete ('..time..'s)', query_str, bindings)
     end)
   query:execute()
-  self = nil
 end
 
 --- @category [Database Relations]
@@ -795,47 +796,47 @@ end
 -- @param many [Boolean true if the object has many of them, false if it has only one]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has(what, many)
-  local relation = {}
-    local table_name = ''
-    local should_add = true
-    relation.child = false
+  local relation = { child = false }
+  local table_name = ''
+  local should_add = true
 
-    if istable(what) then
-      table_name = what[1]:underscore()
-      relation.as = what.as or table_name
-    elseif isstring(what) then
-      table_name = what
-      relation.as = table_name
+  if istable(what) then
+    table_name = what[1]:underscore()
+    relation.as = what.as or table_name
+  elseif isstring(what) then
+    table_name = what
+    relation.as = table_name
+  end
+
+  if self.relations[table_name] then
+    relation = self.relations[self.relations[table_name]]
+
+    if !many then
+      relation.many = false
     end
 
-    if self.relations[table_name] then
-      relation = self.relations[self.relations[table_name]]
-      -- has_one has higher priority over has_many
-      if !many then
-        relation.many = false
-      end
+    should_add = false
+  else
+    relation.many = many
+  end
 
-      should_add = false
-    else
-      relation.many = many
+  for _, model in pairs(ActiveRecord.Model:all()) do
+    if model.table_name == table_name then
+      relation.model = model
+      break
     end
+  end
 
-    for _, model in pairs(ActiveRecord.Model:all()) do
-      if model.table_name == table_name then
-        relation.model = model
-        break
-      end
-    end
+  relation.table_name = table_name
+  relation.column_name = self.class_name:underscore()..'_id'
 
-    relation.table_name = table_name
-    relation.column_name = self.class_name:underscore()..'_id'
+  if should_add then
+    local index = #self.relations + 1
 
-    if should_add then
-      local index = #self.relations + 1
+    self.relations[index] = relation
+    self.relations[table_name] = index
+  end
 
-      self.relations[index] = relation
-      self.relations[table_name] = index
-    end
   return self
 end
 

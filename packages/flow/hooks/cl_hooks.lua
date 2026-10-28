@@ -106,8 +106,6 @@ do
   end
 end
 
--- Remove default death notices.
-
 --- Does nothing, which removes the default death notices from the HUD.
 function GM:DrawDeathNotice()
 end
@@ -155,7 +153,7 @@ function GM:HUDDrawScoreBoard()
 
     local font = Font.size('flRobotoCondensed', math.scale(24))
     local scrw, scrh = ScrW(), ScrH()
-    local w, _h = util.text_size(text, font)
+    local w = util.text_size(text, font)
 
     draw.RoundedBox(0, 0, 0, scrw, scrh, color_loading_background)
     draw.SimpleText(text, font, scrw * 0.5 - w * 0.5, scrh - math.scale(128), color_loading_text)
@@ -179,12 +177,12 @@ end
 -- returns a truthy value), and the white respawn fade. Skipped when the ShouldHUDPaint hook
 -- returns false.
 function GM:HUDPaint()
+  local client = PLAYER
+
   --- Asks whether the HUD should be drawn. Called on the client every frame once the local
   -- player has been initialized, from the gamemode's `HUDPaint` handler. HUD elements
   -- that plugins draw on their own, such as the crosshair, can run it too.
   -- @return [Boolean Return false to hide the Flux HUD and the HUD of the base gamemode]
-  local client = PLAYER
-
   if IsValid(client) and client:has_initialized() and hook.Run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
@@ -205,7 +203,7 @@ function GM:HUDPaint()
       -- @param scrw [Number Screen width]
       -- @param scrh [Number Screen height]
       hook.Run('HUDPaintDeathBackground', cur_time, scrw, scrh)
-        Theme.call('PaintDeathScreen', cur_time, scrw, scrh)
+      Theme.call('PaintDeathScreen', cur_time, scrw, scrh)
       --- Called on the client every frame while the local player is dead, after the theme has
       -- painted the death screen, for drawing on top of it.
       -- @param cur_time [Number CurTime() of the frame]
@@ -290,14 +288,13 @@ function GM:HUDDrawTargetID()
       ent = trace_ent
       pos = trace_ent:EyePos()
     else
-      local entities = ents.FindInCone(client_pos, trace.Normal, 512, 0.98) -- 0.98 gives approximately 10 degrees
+      local entities = ents.FindInCone(client_pos, trace.Normal, 512, 0.98)
       local center_x, center_y = ScrC()
       local center_distance
 
       for i = 1, #entities do
         local v = entities[i]
 
-        -- The local player is in front of the camera in the third person view.
         if !IsValid(v) or v == client then continue end
 
         local eye_pos = v:EyePos()
@@ -479,17 +476,7 @@ function GM:PopulateToolMenu()
   hook.Run('SynchronizeTools')
 end
 
---- Copies every registered Flux tool into the tool table of the tool gun.
-function GM:SynchronizeTools()
-  local toolgun = weapons.GetStored('gmod_tool')
-
-  for _, tool in pairs(Flux.Tool.stored) do
-    toolgun.Tool[tool.Mode] = tool
-  end
-end
-
 local last_render = 0
-local blur_render_time = 1 / Flux.blur_update_fps
 
 --- Updates the blurred copy of the screen used by draw.blur_box and draw.blur_panel. Only
 -- does so while something has requested the blur, and no more often than the blur update
@@ -498,8 +485,9 @@ function GM:RenderScreenspaceEffects()
   if Flux.should_render_blur then
     local cur_time = CurTime()
     local rt_texture = Flux.rt_texture
+    local update_fps = Flux.blur_update_fps
 
-    if Flux.blur_update_fps == 0 or (cur_time - last_render > blur_render_time) then
+    if update_fps == 0 or cur_time - last_render > 1 / update_fps then
       local blur_size = Flux.blur_size or 12
 
       render.PushRenderTarget(rt_texture)
@@ -629,10 +617,8 @@ function GM:ContextMenuOpen()
     if !IsValid(g_ContextMenu) then
       CreateContextMenu()
     end
-  else
-    if IsValid(g_ContextMenu) then
-      g_ContextMenu:safe_remove()
-    end
+  elseif IsValid(g_ContextMenu) then
+    g_ContextMenu:safe_remove()
   end
 
   return true
@@ -662,7 +648,7 @@ function GM:SoftUndo(_client)
 end
 
 do
-  local prev_angles = nil
+  local prev_angles
 
   --- Updates the global UI offset from the rotation of the local player's view, so that HUD
   -- elements using it sway and settle back. Skipped while the player is frozen.
@@ -676,7 +662,8 @@ do
       if !prev_angles then prev_angles = angles end
 
       local x, y = Flux.global_ui_offset()
-      local pitch, yaw = (prev_angles.pitch - angles.pitch), (prev_angles.yaw - angles.yaw)
+      local pitch, yaw = prev_angles.pitch - angles.pitch, prev_angles.yaw - angles.yaw
+
       pitch = (pitch + 180) % 360 - 180
       yaw = (yaw + 180) % 360 - 180
 
@@ -691,7 +678,7 @@ do
 end
 
 do
-  local hidden_elements = { -- Hide default HUD elements.
+  local hidden_elements = {
     CHudAmmo = true,
     CHudBattery = true,
     CHudHealth = true,
@@ -707,10 +694,6 @@ do
   -- @param element [String name of the HUD element]
   -- @return [Boolean false for the hidden elements, true for everything else]
   function GM:HUDShouldDraw(element)
-    if hidden_elements[element] then
-      return false
-    end
-
-    return true
+    return !hidden_elements[element]
   end
 end

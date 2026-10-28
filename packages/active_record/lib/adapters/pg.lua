@@ -140,12 +140,6 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
   local query_start = os.clock()
   local success_func = function(result, _size)
     if callback then
-      for key, value in pairs(result) do
-        if isstring(value) then
-          result[key] = self.connection:unescape(value)
-        end
-      end
-
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
 
       if !status then

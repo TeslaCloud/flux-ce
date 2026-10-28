@@ -1,5 +1,5 @@
 --- Migration that gives the `gamemaster` role to every user whose stored role is
--- `moderator`, a role that is no longer registered. Rolling back gives them `moderator` again.
+-- `moderator`, which is not a registered role. Rolling back gives them `moderator` again.
 
 local RenameModeratorRoleToGamemaster = ActiveRecord.Migration.new()
 

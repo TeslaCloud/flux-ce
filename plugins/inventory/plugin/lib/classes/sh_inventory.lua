@@ -1145,8 +1145,11 @@ if SERVER then
   --- Send inventory data to its receivers.
   function Inventory:sync()
     local ids, networkable
+    local receivers = self.receivers
 
-    for _, receiver in pairs(self.receivers) do
+    for index = #receivers, 1, -1 do
+      local receiver = receivers[index]
+
       if IsValid(receiver) then
         if !ids then
           ids = self:get_items_ids()
@@ -1159,7 +1162,7 @@ if SERVER then
 
         Cable.send(receiver, 'fl_inventory_sync', networkable)
       else
-        self:remove_receiver(receiver)
+        table.remove(receivers, index)
       end
     end
   end

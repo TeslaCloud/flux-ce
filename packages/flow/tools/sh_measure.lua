@@ -4,7 +4,6 @@
 
 TOOL.Category               = 'Flux'
 TOOL.Name                   = 'Measure Tool'
-TOOL.Command                = nil
 TOOL.ConfigName             = ''
 TOOL.ClientConVar['system'] = 'imperial'
 
@@ -78,6 +77,5 @@ function TOOL.BuildCPanel(CPanel)
 
   CPanel:AddControl('Header', { Description = t'tool.measure.system_header' })
 
-  local _units =
-    CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'measure_system' } })
+  CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'measure_system' } })
 end

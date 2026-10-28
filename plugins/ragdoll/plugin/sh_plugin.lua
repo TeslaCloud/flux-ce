@@ -24,8 +24,9 @@
 -- `Player:get_knockout_remaining` tells HUDs how long the player stays out.
 --
 -- Plugins can step in with the server hooks `PlayerCanRagdoll`, `PlayerRagdolled`,
--- `PlayerCanUnragdoll`, `PlayerUnragdolled`, `PlayerCanGetUp`, `PlayerCanRagdollDecay` and
--- `PlayerRagdollCanTakeDamage`, and with the client hook `ShouldFallenHUDPaint`.
+-- `PlayerCanUnragdoll`, `PlayerUnragdolled`, `PlayerCanGetUp`, `PlayerCanRagdollDecay`,
+-- `PlayerRagdollDecayed` and `PlayerRagdollCanTakeDamage`, and with the client hook
+-- `ShouldFallenHUDPaint`.
 -- `Player:is_ragdolled`, `Player:get_ragdoll_state`, `Player:get_ragdoll_entity`,
 -- `Player:is_knocked_out`, `Player:get_knockout_remaining` and `Entity:get_ragdoll_owner`
 -- work on both realms.
@@ -33,7 +34,6 @@
 
 PLUGIN:set_global('Ragdoll')
 
-require_relative 'sh_enums'
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'

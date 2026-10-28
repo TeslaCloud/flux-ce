@@ -43,7 +43,6 @@ local surface_set_draw_color = surface.SetDrawColor
 local surface_draw_rect = surface.DrawRect
 local lerp_color = LerpColor
 
-local _color_white_faded = Color(255, 255, 255, 150)
 local color_model_background = Color(0, 0, 0, 90)
 local color_slot_gradient = Color(255, 255, 255, 10)
 local color_perm_not_set = Color(150, 158, 178)
@@ -58,7 +57,7 @@ THEME.should_reload = true
 --- Defines the defaults of the factory theme: options, sounds, assets, colors, fonts,
 -- materials and the tab menu panel.
 function THEME:on_loaded()
-  local _scrw, scrh = ScrW(), ScrH()
+  local scrh = ScrH()
 
   self:set_option('corner_radius_base',           6)
   self:set_option('corner_radius_small_base',     4)
@@ -90,9 +89,10 @@ function THEME:on_loaded()
   self:register_asset('gradient',       'materials/flux/gradient.png',    { sizes = { 1, 2, 4 } })
   self:register_asset('gradient_full',  'materials/flux/gradient_fs.png', { sizes = { 1, 2, 4 } })
 
-  local _accent_color      = self:set_color('accent',          Color(120, 132, 232))
-  local _background_color  = self:set_color('background',      Color(17, 19, 26))
-  local _surface_color     = self:set_color('surface',         Color(30, 33, 44, 244))
+  self:set_color('accent',            Color(120, 132, 232))
+  self:set_color('background',        Color(17, 19, 26))
+  self:set_color('surface',           Color(30, 33, 44, 244))
+
   local text_color = self:set_color('text', Color(240, 242, 248))
 
   self:set_color('background_dark',   Color(10, 12, 17))

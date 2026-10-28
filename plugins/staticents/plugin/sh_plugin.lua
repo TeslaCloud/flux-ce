@@ -5,8 +5,8 @@
 -- whitelisted classes can be made static: props, ragdolls, lights and lamps by default, and
 -- whatever plugins add with `StaticEnts:whitelist_ent`. The plugin turns Sandbox's own
 -- persistence off and saves and loads through the `PersistenceSave` and `PersistenceLoad`
--- hooks instead. The deprecated `fl_persistence_backup` console command writes a copy of all
--- persistent entities to the data folder.
+-- hooks instead. The `fl_persistence_backup` console command writes a copy of all persistent
+-- entities to the data folder.
 
 PLUGIN:set_global('StaticEnts')
 
@@ -22,7 +22,6 @@ function StaticEnts:RegisterPermissions()
   )
 end
 
---- @deprecation [Remove in 1.0_b]
 if CLIENT then
   concommand.Add('fl_persistence_backup', function(actor)
     if actor:IsSuperAdmin() then
@@ -39,8 +38,6 @@ if CLIENT then
       print('  -> error!')
     end
   end)
-
---- @deprecation [Remove in 1.0_b]
 else
   local function _run_backup(actor)
     local is_player = IsValid(actor)

@@ -33,7 +33,7 @@ ThemeBase.should_reload = true
 -- @param parent=nil [String ID of the theme to inherit from]
 function ThemeBase:init(name, parent)
   self.name   = name or 'Unknown'
-  self.id     = self.name:to_id() -- temporary unique ID
+  self.id     = self.name:to_id()
   self.parent = parent
 
   if !self.id then
@@ -174,7 +174,7 @@ end
 -- @param val [String path to the sound]
 -- @return [String the path that has been set]
 function ThemeBase:set_sound(id, val)
-  self.sounds[id] = val or Sound()
+  self.sounds[id] = val
   return self.sounds[id]
 end
 
@@ -232,7 +232,7 @@ function ThemeBase:get_sound(id, failsafe)
   if sound_path then
     return sound_path
   else
-    return failsafe or Sound()
+    return failsafe
   end
 end
 

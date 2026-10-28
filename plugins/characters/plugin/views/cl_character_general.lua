@@ -152,7 +152,6 @@ function PANEL:Init()
   self.model:SetCamPos(Vector(80, 0, 50))
   self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
-  self.model.LayoutEntity = function(_entity) end
   self.model.angles = Angle(0, 0, 0)
 
   self.model.DragMousePress = function(pnl)
@@ -308,14 +307,11 @@ function PANEL:on_open(parent)
 
   local skin = parent.char_data.skin
 
-  if IsValid(self.model.Entity) then
+  if IsValid(self.model.Entity) and skin then
     self.model.Entity:SetSkin(skin)
-
-    if skin then
-      self.skin:SetVisible(true)
-      self.skin:set_max(self.model.Entity:SkinCount())
-      self.skin:set_value(skin + 1)
-    end
+    self.skin:SetVisible(true)
+    self.skin:set_max(self.model.Entity:SkinCount())
+    self.skin:set_value(skin + 1)
   end
 end
 

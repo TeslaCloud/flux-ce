@@ -155,8 +155,6 @@ function ActiveRecord.Migration:revert(callback)
   end
 
   if current_recorder then
-    -- Already recording (nested revert): flip the direction of the recorder for the
-    -- duration of the callback.
     current_recorder:revert(callback)
     return
   end

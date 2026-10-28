@@ -8,8 +8,6 @@
 -- Plugins usually keep their handlers in their `controllers` folder.
 -- @module [MVC]
 
--- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
-
 mod 'MVC'
 
 if CLIENT then
@@ -132,8 +130,6 @@ else
 
     Cable.send(target, 'fl_mvc_pull', name, ...)
   end
-
-  -- utility
 
   --- Sends a response to the player whose request is currently being handled. Can only
   -- be called from inside of an MVC.handler callback.

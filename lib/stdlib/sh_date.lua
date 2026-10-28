@@ -6,7 +6,7 @@
 
 local os_date = os.date
 
---- The Date class is the base class for most time-related classes in Flux.
+--- The Date class is the base class of DateTime.
 -- The Date class represents a point in time, not a time interval.
 -- For time intervals, please use Time.
 -- @see [Time]
@@ -16,7 +16,7 @@ local d_const = 60 * 60 * 24
 
 --- Initializes a new Date object.
 -- ```
--- local my_birthday = Date.new(1999, 12, 04) -- April 12, 1999
+-- local my_birthday = Date.new(1999, 12, 4) -- December 4, 1999
 -- ```
 -- @param year [Number]
 -- @param month [Number]
@@ -91,15 +91,15 @@ end
 -- print(date_obj:iso()) -- current date, such as "2019-09-24"
 -- print(Date:iso(1569283200)) -- 2019-09-24
 -- ```
--- @param time=Date object [Number UNIX time]
+-- @param time=self.time [Number UNIX time]
 -- @return [String ISO date format]
 function Date:iso(time)
   return os_date('%Y-%m-%d', time or self.time)
 end
 
 --- Formats the date-time using a format string.
--- @param fmt [String DateTime format]
--- @param time=DateTime [Number UNIX time]
+-- @param fmt [String os.date format]
+-- @param time=self.time [Number UNIX time]
 -- @return [String formatted string]
 function Date:strftime(fmt, time)
   return os_date(fmt, time or self.time)

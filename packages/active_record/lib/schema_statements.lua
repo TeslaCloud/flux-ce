@@ -3,6 +3,7 @@
 -- statement right away and keep the in-memory schema and metadata up to date; the
 -- global functions of the same name (see helpers.lua) go through ActiveRecord.ddl,
 -- which can also record the statements, so that a migration's #change can be reverted.
+
 ActiveRecord.SchemaStatements = ActiveRecord.SchemaStatements or {}
 
 local Statements = ActiveRecord.SchemaStatements
@@ -111,7 +112,6 @@ function Statements.create_table(name, options, callback)
     if !defined then
       query:primary_key(primary_key)
 
-      -- Keep the primary key as the first column of the table.
       table.insert(query.create_list, 1, table.remove(query.create_list))
     end
   end
@@ -402,21 +402,21 @@ local function foreign_key_clause(fk)
     return table.concat(quoted, ', ')
   end
 
-  local clause = 'FOREIGN KEY ('..quote_all(fk.from)..') REFERENCES '..sql_quote_name(fk.table)
+  local parts = { 'FOREIGN KEY ('..quote_all(fk.from)..') REFERENCES '..sql_quote_name(fk.table) }
 
   if #fk.to > 0 then
-    clause = clause..' ('..quote_all(fk.to)..')'
+    parts[#parts + 1] = '('..quote_all(fk.to)..')'
   end
 
   for _, action in ipairs({ 'on_update', 'on_delete' }) do
     local value = isstring(fk[action]) and fk[action]:upper() or 'NO ACTION'
 
     if value != 'NO ACTION' then
-      clause = clause..' '..action:upper():gsub('_', ' ')..' '..value
+      parts[#parts + 1] = action:upper():gsub('_', ' ')..' '..value
     end
   end
 
-  return clause
+  return table.concat(parts, ' ')
 end
 
 --- Explains why an SQLite table cannot be rebuilt by rebuild_sqlite_table: its definition
@@ -626,8 +626,6 @@ local function rebuild_sqlite_table(statement, table_name, changes)
       end
     end
 
-    -- The copied rows have set the sequence to their highest id, which is lower than the last
-    -- id given out if the rows with the highest ids have been deleted.
     if last_id > sqlite_sequence(table_name) then
       raw('Rebuild Table', 'DELETE FROM sqlite_sequence WHERE name = ?;', { table_name })
       raw('Rebuild Table', 'INSERT INTO sqlite_sequence (name, seq) VALUES (?, ?);', { table_name, last_id })
@@ -636,7 +634,6 @@ local function rebuild_sqlite_table(statement, table_name, changes)
 
   without_sqlite_foreign_keys(statement, 'the SQLite table '..table_name, table_name, rebuild)
 
-  -- The indexes that named a removed column are gone with the old table.
   for _, index in ipairs(indexes) do
     if index_covers(index.sql, removed) then
       ActiveRecord.forget_metadata('index', index.name)

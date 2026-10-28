@@ -147,7 +147,7 @@ end)
 ActiveRecord.Validator:add('format', function(model, column, val, _opts, success_callback, error_callback)
   local c = model[column]
 
-  if c and c:match(val) then
+  if c != nil and tostring(c):match(val) then
     success_callback(model)
   else
     error_callback(model, column, 'format')

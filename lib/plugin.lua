@@ -1,14 +1,29 @@
 --- Plugin loads plugins and the schema and dispatches hooks to them.
 -- A plugin is a folder with a `plugin.yml` and a `plugin` subfolder, or a single .lua file;
 -- the schema is loaded in much the same way and takes part in hooks like one more plugin.
--- While a plugin is being included the `PLUGIN` global holds its `PluginInstance`, and
--- besides the main file a set of extra folders (`lib`, `config`, `entities`, `themes` and so
--- on, see `Plugin.add_extra`) is included automatically. Every function of a registered
--- plugin is put into the hook cache under its name, and `hook.Call` is overridden to run
--- those functions before the regular hooks, so defining `function PLUGIN:PlayerSpawn(target)`
--- is all it takes to handle a hook. `Plugin.call` runs a hook without the gamemode's own
--- handlers, and `Plugin.add_hooks` registers a table of handlers that does not belong to a
--- plugin.
+-- While a plugin is being included the `PLUGIN` global holds its `PluginInstance`.
+--
+-- The root of a plugin's `plugin` folder holds only Lua files of three kinds: its main file
+-- `sh_plugin.lua` (or `sh_<name>.lua`, named after the plugin) with `cl_plugin.lua` and
+-- `sv_plugin.lua`, the hook handlers in `cl_hooks.lua`, `sh_hooks.lua` and `sv_hooks.lua`,
+-- and the network message handlers in `cl_nethooks.lua`, `sh_nethooks.lua` and
+-- `sv_nethooks.lua`. The loader includes the main file, which includes the others with
+-- `require_relative`. Everything else lives in extra folders that are included
+-- automatically before the main file, in this order: the libraries in `lib`, `lib/meta` and
+-- `lib/classes`, then `models`, `classes`, `meta`, `config`, `languages`, `controllers`,
+-- `views`, `views/lumen`, `tools`, `themes`, `entities`, `migrations` and the folders added with
+-- `Plugin.add_extra`, such as `commands`, `items` or `factions`. The files of a folder are
+-- included in alphabetical order, each in the realm its `cl_`, `sh_` or `sv_` prefix names,
+-- so a library cannot rely on anything the main file sets up while it loads. The schema has
+-- the same layout in its `schema` folder, with `sh_schema.lua`, `cl_schema.lua` and
+-- `sv_schema.lua` in place of the plugin files; its main file is included before its extra
+-- folders.
+--
+-- Every function of a registered plugin is put into the hook cache under its name, and
+-- `hook.Call` is overridden to run those functions before the regular hooks, so defining
+-- `function PLUGIN:PlayerSpawn(target)` is all it takes to handle a hook. `Plugin.call` runs
+-- a hook without the gamemode's own handlers, and `Plugin.add_hooks` registers a table of
+-- handlers that does not belong to a plugin.
 --
 -- Plugins can be disabled. A disabled plugin is not included at all, neither on the server
 -- nor on the clients, and a plugin that depends on it is not loaded either, while the schema
@@ -751,7 +766,6 @@ function Plugin.register(obj)
       end
     end
 
-    -- Single-file plugins must be made known here.
     if obj.single_file then
       Flux.shared.plugin_info[obj.folder] = {
         name = obj.name,
@@ -820,13 +834,15 @@ function Plugin.include(path)
 
   if !data.single_file and SERVER then
     if file.Exists(path..'/plugin.yml', 'LUA') then
-      local data_table = YAML.eval(file.Read(path..'/plugin.yml', 'LUA'))
-        data_table.folder = path..'/plugin'
-        data_table.plugin_main = 'sh_plugin.lua'
+      local data_table = YAML.eval(file.Read(path..'/plugin.yml', 'LUA')) or {}
 
-        if file.Exists(data_table.folder..'/sh_'..(data_table.name or id)..'.lua', 'LUA') then
-          data_table.plugin_main = 'sh_'..(data_table.name or id)..'.lua'
-        end
+      data_table.folder = path..'/plugin'
+      data_table.plugin_main = 'sh_plugin.lua'
+
+      if file.Exists(data_table.folder..'/sh_'..(data_table.name or id)..'.lua', 'LUA') then
+        data_table.plugin_main = 'sh_'..(data_table.name or id)..'.lua'
+      end
+
       table.safe_merge(data, data_table)
 
       Flux.shared.plugin_info[path] = data
@@ -995,8 +1011,8 @@ do
   }
 
   --- Makes sure that a plugin (or a package) is loaded, including it if it has not been yet.
-  -- Plugins are looked up in the Flux, cloud and schema plugin folders.
-  -- Please specify the full file name if requiring a single-file Plugin.
+  -- Plugins are looked up in the Flux, cloud and schema plugin folders, single-file plugins
+  -- by their file name with or without the realm prefix and the extension.
   -- @param name [String plugin or package name]
   -- @return [Boolean true if the dependency is loaded or could be found; false if it could
   --   not, if the plugin is disabled, or if it was left out because one of its own
@@ -1247,7 +1263,6 @@ do
   local old_hook_call = Plugin.old_hook_call or hook.Call
   Plugin.old_hook_call = old_hook_call
 
-  -- If we're running in development, we should be using pcall'ed hook.Call rather than the unsafe one.
   if Flux.development then
     --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
     -- before the regular hooks. Development variant: handlers are run with pcall, failures
@@ -1289,9 +1304,6 @@ do
       return old_hook_call(name, gm, ...)
     end
   else
-    -- While generally a bad idea, the pcall-less method is faster and if you're not developing
-    -- chances are low that you'll ever run into an error anyway.
-
     --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
     -- before the regular hooks. Production variant: handlers are called without pcall.
     -- @param name [String hook name]

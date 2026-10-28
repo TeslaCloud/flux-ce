@@ -46,13 +46,10 @@
 PLUGIN:set_global('Bolt')
 
 require_relative 'cl_hooks'
-require_relative 'cl_plugin'
-require_relative 'sh_enums'
+require_relative 'cl_nethooks'
 require_relative 'sv_hooks'
+require_relative 'sv_nethooks'
 require_relative 'sv_plugin'
-require_relative 'sv_bans'
-require_relative 'sv_staff'
-require_relative 'sv_character_permissions'
 
 local duration_examples = { '30', '1 hour', '1 day', '1 week', '1 month', 'perma' }
 

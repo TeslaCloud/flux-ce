@@ -5,10 +5,10 @@ fr:
       desc: "Paramètres du plugin d'endurance."
       stam_drain_scale:
         name: "Vitesse d'épuisement"
-        desc: "Vitesse à laquelle l'endurance diminue. Dépend du tickrate du serveur."
+        desc: "Vitesse à laquelle l'endurance diminue."
       stam_regen_scale:
         name: "Vitesse de régénération"
-        desc: "Vitesse à laquelle l'endurance se régénère. Dépend du tickrate du serveur."
+        desc: "Vitesse à laquelle l'endurance se régénère."
       stam_jump_penalty:
         name: "Coût d'un saut"
         desc: "Nombre de points d'endurance retirés quand le joueur saute."

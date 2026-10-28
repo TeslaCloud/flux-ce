@@ -1,8 +1,10 @@
 --- Server-side hooks of the admin plugin: the ban check on connect, loading of the bans and
--- of each player's role and permissions from the database, the permission checks for tools,
--- chairs and voice chat, expiry of temporary permissions, giving or stripping the tool gun
--- and the physgun as permissions change, and keeping hidden players (vanished or observing)
--- and everything attached to them hidden as players join, respawn and change permissions.
+-- of each player's role and permissions from the database, telling open ban list pages that
+-- the bans have changed, the permission checks for tools, chairs and voice chat, expiry of
+-- temporary permissions, applying and deleting the permissions of characters, giving or
+-- stripping the tool gun and the physgun as permissions change, and keeping hidden players
+-- (vanished or observing) and everything attached to them hidden as players join, respawn
+-- and change permissions.
 
 --- Checks connecting players against the ban cache. A timed ban that has expired is lifted
 -- and the connection left to the other checks, such as the server password; any other ban
@@ -391,8 +393,56 @@ function Bolt:ChatboxGetPlayerIcon(speaker, _text, _team_chat)
   end
 end
 
---- Get a list of all currently online staff members.
--- @return [Map - currently online staff members]
-function Bolt:get_staff()
-  return table.keep_if(player.GetAll(), function(_k, v) return v:can('staff') end)
+--- Lets open ban list pages know that a ban has been added.
+-- @param _steam_id [String SteamID that has been banned]
+-- @param _ban [Ban the ban record]
+function Bolt:OnBanAdded(_steam_id, _ban)
+  self:send_ban_list_changed()
+end
+
+--- Lets open ban list pages know that a ban has been lifted.
+-- @param _steam_id [String SteamID that is no longer banned]
+-- @param _data [Map column values of the deleted ban record]
+function Bolt:OnBanRemoved(_steam_id, _data)
+  self:send_ban_list_changed()
+end
+
+--- Applies the permissions of a character that has become the active character of a player.
+-- Expired temporary permissions of the character are deleted first.
+-- @param owner [Player]
+-- @param character [Character]
+function Bolt:OnActiveCharacterSet(owner, character)
+  self:remove_expired_character_permissions(character)
+  self:apply_character_permissions(owner, character)
+end
+
+--- Deletes the permissions of a character that a player is about to delete, from the
+-- character and from the database. The foreign keys of the tables delete the rows with the
+-- character as well, but they only exist where the Characters plugin was present when the
+-- migrations ran.
+-- @param _actor [Player the player who deletes the character]
+-- @param id [Number ID of the character]
+-- @param character [Character the character that is about to be deleted]
+function Bolt:OnCharacterDelete(_actor, id, character)
+  if istable(character) then
+    character.character_permissions = {}
+    character.character_temp_permissions = {}
+  end
+
+  id = tonumber(id)
+
+  if !id then return end
+
+  for _, table_name in ipairs({ 'character_permissions', 'character_temp_permissions' }) do
+    local query = ActiveRecord.Database:delete(table_name)
+      query:where('character_id', id)
+    query:execute()
+  end
+end
+
+--- Takes the permissions of a character away from the player who is dropping it.
+-- @param owner [Player]
+-- @param _character [Character the character that is being dropped]
+function Bolt:OnActiveCharacterCleared(owner, _character)
+  self:apply_character_permissions(owner, nil)
 end

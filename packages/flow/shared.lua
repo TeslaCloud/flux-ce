@@ -8,7 +8,6 @@
 
 local metadata = Flux.__package__
 
--- Define basic GM info fields.
 GM.Name          = metadata.name
 GM.Author        = metadata.author[1]
 GM.Website       = metadata.website
@@ -16,7 +15,6 @@ GM.Email         = metadata.email
 
 local version    = metadata.version
 
--- Define Flux-Specific fields.
 GM.version       = version
 GM.date          = metadata.date
 GM.build         = string.gsub(metadata.date or '', '%-', '')
@@ -25,9 +23,7 @@ GM.code_name     = 'Root Beer'
 
 print('Flux core version '..version..' ('..GM.code_name..')')
 
--- It would be very nice of you to leave the below values as they are if you're using official schemas.
--- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
-GM.name_override = false -- Set to any string to override the schema's browser name. This overrides the prefix too.
+GM.name_override = false
 
 AddCSLuaFile(FLUX_ENV_PATH)
 
@@ -37,7 +33,6 @@ function Flux.get_version()
   return version
 end
 
--- So that we don't get duplicates on refresh.
 Plugin.clear_cache()
 
 if !LITE_REFRESH then
@@ -55,7 +50,6 @@ if !LITE_REFRESH then
   require_relative 'core/cl_core'
   require_relative 'core/sv_core'
 
-  -- Read configs.
   Config.read(Settings.configs)
 
   require_relative_folder('lib', true)

@@ -164,11 +164,11 @@ function SrcdsProxy:find_local_steam_id(argument)
     return
   end
 
-  for _, client in player.Iterator() do
-    if Proxy.is_proxied(client) then
-      if account_id and client:AccountID() == tonumber(account_id) or
-         !account_id and Proxy.claimed_steamid64(client) == argument then
-        return client
+  for _, candidate in player.Iterator() do
+    if Proxy.is_proxied(candidate) then
+      if account_id and candidate:AccountID() == tonumber(account_id) or
+         !account_id and Proxy.claimed_steamid64(candidate) == argument then
+        return candidate
       end
     end
   end

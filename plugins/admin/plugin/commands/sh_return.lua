@@ -8,7 +8,7 @@ CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 CMD.arg_types = { 'player' }
 CMD.immunity = true
-CMD.aliases = { 'return', 'back' }
+CMD.aliases = { 'back' }
 
 --- Teleports the targeted players back to where they were before their last teleport and
 -- notifies them and staff.

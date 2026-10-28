@@ -232,10 +232,10 @@ function PANEL:next_stage()
   if self.request_sent then return false end
 
   if self.panel and self.panel.on_validate then
-    local success, error = self.panel:on_validate()
+    local success, error_text = self.panel:on_validate()
 
     if success == false then
-      self:GetParent():notify(error or t'ui.char_create.unknown_error')
+      self:GetParent():notify(error_text or t'ui.char_create.unknown_error')
 
       return false
     end
@@ -248,10 +248,10 @@ function PANEL:next_stage()
   -- @param panel [Panel the panel of that stage]
   -- @return [Boolean return false to stay on the stage, String error text to show; a generic
   --   error is shown when it is omitted]
-  local success, error = hook.Run('PreStageChange', self.stages[self.stage], self.panel)
+  local success, error_text = hook.Run('PreStageChange', self.stages[self.stage], self.panel)
 
   if success == false then
-    self:GetParent():notify(error or t'ui.char_create.unknown_error')
+    self:GetParent():notify(error_text or t'ui.char_create.unknown_error')
 
     return false
   end

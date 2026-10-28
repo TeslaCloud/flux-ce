@@ -8,7 +8,7 @@ CMD.category = 'permission.categories.player_management'
 CMD.arguments = 1
 CMD.arg_types = { 'player', { 'stay', 'tp' } }
 CMD.immunity = true
-CMD.aliases = { 'respawn', 'plyrespawn' }
+CMD.aliases = { 'plyrespawn' }
 
 --- Respawns the targeted players and notifies them and staff. A living target is respawned
 -- in place: they keep their position and the direction they look in. A dead target comes

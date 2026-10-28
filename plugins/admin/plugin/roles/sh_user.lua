@@ -28,13 +28,3 @@ function ROLE:define_permissions()
 
   can 'rank'
 end
-
---- Called when the player's primary group is being set to this group.
--- @param _target [Player]
--- @param _previous_group [Role the player's previous role]
-function ROLE:on_role_set(_target, _previous_group) end
-
---- Called when the player's primary group is taken or modified.
--- @param _target [Player]
--- @param _new_group [Role the role the player is being given]
-function ROLE:on_role_taken(_target, _new_group) end

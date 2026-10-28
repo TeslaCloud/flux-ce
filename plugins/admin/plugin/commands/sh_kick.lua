@@ -9,7 +9,8 @@ CMD.arg_types = { 'player', 'text' }
 CMD.immunity = true
 CMD.alias = 'plykick'
 
---- Kicks the targeted players with an optional reason and notifies staff.
+--- Kicks the targeted players with an optional reason, translated to the language of each
+-- player, and notifies staff.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to kick]
 -- @param reason=nil [String the kick reason, as it was typed]
@@ -19,7 +20,7 @@ function CMD:on_run(actor, targets, reason)
   end
 
   for _, client in ipairs(targets) do
-    client:Kick(reason)
+    client:Kick(t(reason, nil, Flux.Lang:get_player_lang(client)))
   end
 
   self:notify_staff('command.kick.message', {

@@ -68,7 +68,7 @@ end
 -- Relative to gamemodes/flux/ by default, unless `base` is specified. Files are included in
 -- alphabetical order; when recursive, the subfolders follow them, also alphabetically.
 -- ```
--- require_relative 'my_folder'
+-- require_relative_folder 'my_folder'
 -- ```
 -- @param dir [String folder to include]
 -- @param base=flux/ [String base folder for relativity]
@@ -92,14 +92,12 @@ function require_relative_folder(dir, base, recursive)
   if recursive then
     local files, folders = file.Find(dir..'*', 'LUA', 'nameasc')
 
-    -- First include the files.
     for _, file_name in ipairs(files) do
       if File.ext(file_name) == 'lua' then
         require_relative(dir..file_name)
       end
     end
 
-    -- Then include all directories.
     for _, folder_name in ipairs(folders) do
       require_relative_folder(dir..folder_name, nil, recursive)
     end

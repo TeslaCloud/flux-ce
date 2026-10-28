@@ -8,17 +8,8 @@
 -- 'create' and 'change' queries also get a method for every column type of the adapter
 -- (`query:string`, `query:integer` and so on) along with `timestamps` and `references`:
 -- they are the `t` that `create_table` and `change_table` hand to their callback.
-
---[[
-  mysql - 2.0.0
-  A simple Database wrapper for Garry's Mod.
-
-  Alexander Grist-Hucker
-  http://www.alexgrist.com
-
-  Luna Fox
-  https://teslacloud.net
---]]
+--
+-- Based off mysql from Alex Grist.
 
 local concat = table.concat
 local gsub = string.gsub
@@ -63,14 +54,14 @@ end
 -- being created.
 -- @param args [Map column options: null (Boolean) and default (inserted into the SQL as is)]
 function ActiveRecord.Query:handle_create_args(args)
-  if args['null'] == false then
+  if args.null == false then
     self.def = self.def..' NOT NULL'
-  elseif args['null'] == true then
-    self.def = self.def..' DEFAULT NULL'
   end
 
-  if args['default'] != nil and args['null'] != true then
-    self.def = self.def..' DEFAULT '..tostring(args['default'])
+  if args.default != nil then
+    self.def = self.def..' DEFAULT '..tostring(args.default)
+  elseif args.null == true then
+    self.def = self.def..' DEFAULT NULL'
   end
 end
 
@@ -365,13 +356,13 @@ local function build_select_query(query_obj)
   local query_string = { 'SELECT ' }
 
   if !istable(select_list) or #select_list == 0 then
-    query_string[2] = ' *'
+    query_string[2] = '*'
   else
-    query_string[2] = ' '..concat(select_list, ', ')
+    query_string[2] = concat(select_list, ', ')
   end
 
   if isstring(query_obj.table_name) then
-    query_string[3] = ' FROM '..query_obj:quote_column(query_obj.table_name)..' '
+    query_string[3] = ' FROM '..query_obj:quote_column(query_obj.table_name)
   else
     error_with_traceback('ActiveRecord - No table name specified!')
     return
@@ -506,7 +497,7 @@ local function build_truncate_query(query_obj)
     return
   end
 
-  return 'TRUNCATE TABLE  '..query_obj:quote_column(query_obj.table_name)
+  return 'TRUNCATE TABLE '..query_obj:quote_column(query_obj.table_name)
 end
 
 local function build_create_query(query_obj)
@@ -531,7 +522,7 @@ local function build_create_query(query_obj)
   query_string[#query_string + 1] = ' ('
 
   if istable(create_list) and #create_list > 0 then
-    local is_sqlite = ActiveRecord.adapter.class_name:lower() == 'sqlite'
+    local is_sqlite = ActiveRecord.adapter:is_sqlite()
     local columns = {}
 
     for i = 1, #create_list do
@@ -541,7 +532,6 @@ local function build_create_query(query_obj)
       if is_sqlite then
         definition = gsub(definition, 'AUTO_INCREMENT', ''):gsub('INT ', 'INTEGER ')
 
-        -- SQLite only takes AUTOINCREMENT on an INTEGER PRIMARY KEY column.
         if !definition:upper():find('INTEGER PRIMARY KEY', 1, true) then
           definition = gsub(definition, 'AUTOINCREMENT', '')
         end
@@ -553,7 +543,7 @@ local function build_create_query(query_obj)
     query_string[#query_string + 1] = ' '..concat(columns, ', ')
   end
 
-  if isstring(query_obj.prim_key) and ActiveRecord.adapter_name != 'pg' then
+  if isstring(query_obj.prim_key) and !ActiveRecord.adapter:is_postgres() then
     query_string[#query_string + 1] = ', PRIMARY KEY'
     query_string[#query_string + 1] = ' ('..query_obj.prim_key..')'
   end
@@ -601,7 +591,6 @@ local function build_change_query(query)
 
   if n == 0 then return end
 
-  -- SQLite takes a single change per ALTER TABLE statement.
   if ActiveRecord.adapter:is_sqlite() then
     local prefix = 'ALTER TABLE '..table_name..' '
     local statements = {}
@@ -657,7 +646,6 @@ function ActiveRecord.Query:execute(queue_query)
 
   if isstring(query_string) then
     query_string = query_string:ensure_end(';')
-    query_string = query_string:gsub(' ;', ';'):gsub('  ', ' ')
 
     local bindings = queries_with_bindings[query_type] and self.bindings or nil
 

@@ -132,12 +132,12 @@ function PANEL:draw_text(w, h, color, offset_x)
   local style = Lumen.Layout.style_of(self)
   local pad = style.padding
   local font = self:get_font()
-  local lines = self.lines or self:wrap(math_max(w - pad.left - pad.right, 1))
+  local inner_left = pad.left + (offset_x or 0)
+  local inner_w = w - inner_left - pad.right
+  local lines = self.lines or self:wrap(math_max(inner_w, 1))
   local line_height = util.font_size(font)
   local total_height = line_height * #lines
   local align = alignments[style.text_align] or TEXT_ALIGN_LEFT
-  local inner_left = pad.left + (offset_x or 0)
-  local inner_w = w - inner_left - pad.right
   local y = pad.top
 
   color = color or self:get_text_color()

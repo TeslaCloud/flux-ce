@@ -44,7 +44,8 @@ function Package:add_path(path)
 end
 
 --- Describes the current package's specification.
--- For every singular function there is a plural alias and vice versa.
+-- A field may be given in its plural form, such as `authors` or `files`, and is stored under
+-- the singular one. Once the globals are set up, the dependencies are included.
 -- ```
 -- Package:describe(function(s)
 --   s.name        = 'Example Package'
@@ -115,7 +116,6 @@ function Package:describe(callback)
     end
   end
 
-  -- Once globals are set-up, include dependencies!
   if istable(meta.deps) then
     for _, name in ipairs(meta.deps) do
       if name:end_with('.lua') then
@@ -394,32 +394,20 @@ do
   -- This function will look for the package in the search paths that have previously been added.
   -- If no package with the matching name can be found, throws an error.
   -- @param name [String package name, or path to the package's folder]
-  -- @param _version=nil [String currently unused]
+  -- @param _version=nil [String ignored]
   -- @return [Boolean true if name is a .lua file, which is skipped; nothing otherwise]
+  -- @see [Package:find]
   function Package:include(name, _version)
-    -- Skip Lua files.
     if name:EndsWith('.lua') then return true end
 
     if SERVER then
-      local folder_path = name:ensure_end('/')
-      local files, _ = file.Find(folder_path..'packagespec.lua', 'LUA')
+      local spec_path, _, full_path = self:find(name)
 
-      if !istable(files) or #files == 0 then
-        for path in pairs(search_paths) do
-          local full_path = path..folder_path:ensure_end('/')
-          local spec_files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
-
-          if istable(spec_files) and #spec_files > 0 then
-            return do_include(full_path..spec_files[1], name, full_path)
-          end
-        end
-
+      if !spec_path then
         error('could not load "'..name..'" (no package spec file found)')
-      elseif istable(files) and #files > 0 then
-        return do_include(folder_path..files[1], name, folder_path)
-      else
-        error('could not load "'..name..'" (library not found)')
       end
+
+      return do_include(spec_path, name, full_path)
     else
       local meta = package_metadata[name]
 

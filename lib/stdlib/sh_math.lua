@@ -10,7 +10,6 @@ local floor = math.floor
 local ScrW = ScrW
 local ScrH = ScrH
 
--- Ruby-style names for the built-in math functions.
 math.angle_difference = math.AngleDifference
 math.approach         = math.Approach
 math.approach_angle   = math.ApproachAngle
@@ -63,7 +62,7 @@ do
       end
     end
 
-    ErrorNoHalt("hex_to_dec - '"..hex.."' is not a hexadecimal number!")
+    ErrorNoHalt("hex_to_decimal - '"..hex.."' is not a hexadecimal digit!\n")
 
     return 0
   end
@@ -76,12 +75,9 @@ function util.hex_to_dec(hex)
   if isnumber(hex) then return hex end
 
   local sum = 0
-  local chars = table.Reverse(hex:split())
-  local idx = 1
 
-  for i = 0, hex:len() - 1 do
-    sum = sum + util.hex_to_decimal(chars[idx]) * math.pow(16, i)
-    idx = idx + 1
+  for index, char in ipairs(table.Reverse(hex:split())) do
+    sum = sum + util.hex_to_decimal(char) * 16 ^ (index - 1)
   end
 
   return sum
@@ -117,8 +113,6 @@ function util.vectors_intersect(from, to, from2, to2)
   if d1 > 0 and d2 > 0 then return false end
   if d1 < 0 and d2 < 0 then return false end
 
-  -- Vectors are collinear or intersect.
-  -- No need for further checks.
   return true
 end
 
@@ -136,26 +130,14 @@ function util.vector_in_poly(point, poly_vertices)
   local far_point = Vector(99999, 99999, 0)
 
   for index, vertex in ipairs(poly_vertices) do
-    local next_vert
+    local next_vert = poly_vertices[index % vertex_count + 1]
 
-    if index < vertex_count then
-      next_vert = poly_vertices[index + 1]
-    elseif index == vertex_count then
-      next_vert = poly_vertices[1]
-    end
-
-    if next_vert and util.vectors_intersect(point, far_point, vertex, next_vert) then
+    if util.vectors_intersect(point, far_point, vertex, next_vert) then
       intersections = intersections + 1
     end
   end
 
-  -- Check whether the number of intersections is even or odd.
-  -- If it's odd then the point is inside the polygon.
-  if intersections % 2 == 0 then
-    return false
-  else
-    return true
-  end
+  return intersections % 2 == 1
 end
 
 do

@@ -3,9 +3,8 @@
 -- function whose schema statements create every table, index and foreign key. Loading
 -- the file, with `flux db:schema:load` or when the server starts with an empty database,
 -- builds the whole database at once and records the migrations up to that version as run.
---
--- Schema files of the older form, which define a 'Structure' object with a
--- `create_tables` method, are still recognized, but they cannot be loaded.
+-- Schema files that define a 'Structure' object with a `create_tables` method are
+-- recognized, but they cannot be loaded.
 
 class 'ActiveRecord::Schema'
 
@@ -65,8 +64,6 @@ function ActiveRecord.Schema.load(info, callback)
   adapter.last_error = nil
   adapter:raise_errors(true)
 
-  -- The foreign keys are added once every table exists, which rebuilds the tables on SQLite.
-  -- They are not enforced meanwhile and are checked once the schema is complete.
   local foreign_keys = adapter:disable_foreign_keys()
   local violations = foreign_keys and adapter:foreign_key_violations()
   local success, exception = pcall(function()

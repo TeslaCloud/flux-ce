@@ -1,6 +1,17 @@
---- Server-side hooks of the Doors plugin: opens the door menu, toggles the lock of a door that
--- is used while sprinting, checks the conditions and the access lists of doors and releases
--- the doors of deleted characters.
+--- Server-side hooks of the Doors plugin: loads and saves the doors with the data of the
+-- framework, opens the door menu, toggles the lock of a door that is used while sprinting,
+-- checks the conditions and the access lists of doors and releases the doors of deleted
+-- characters.
+
+--- Loads the saved doors when the framework loads its data.
+function Doors:LoadData()
+  self:load()
+end
+
+--- Saves the doors when the framework saves its data.
+function Doors:SaveData()
+  self:save()
+end
 
 --- Opens the door menu for the player if they are looking at a door within
 -- `Doors.use_distance`. Along with the conditions of the door the client is sent what the
@@ -53,9 +64,9 @@ function Doors:PlayerUse(activator, entity)
         self:lock_door(entity, !locked)
         entity:Fire(locked and 'Open' or 'Close')
 
-        entity.next_use = cur_time + 2
-
         if !locked then
+          entity.next_use = cur_time + 2
+
           return false
         end
       end

@@ -293,8 +293,7 @@ end
 -- `input`, empty if there are none), `stop_reason` ('end', 'tool_use', 'max_tokens',
 -- 'refusal' or the provider's own reason), `refusal` (details of a refusal, if the provider
 -- gives any), `usage` (Map with `input_tokens` and `output_tokens`), `model`, `message` (the
--- assistant message to append to the conversation, unless the reply is a refusal) and `raw`
--- (the decoded reply).
+-- assistant message to append to the conversation) and `raw` (the decoded reply).
 --
 -- The error is a Map with `status` (HTTP status, 0 if there was no reply), `message`,
 -- `type` (the provider's error type, if any) and `body` (the raw reply, if any).

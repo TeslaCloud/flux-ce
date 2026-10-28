@@ -498,9 +498,7 @@ if SERVER then
   -- @param target=nil [Player the player whose language is used; English without one]
   -- @return [String]
   function Factions.get_default_description(faction_table, target)
-    local description = t(faction_table.phys_desc or '', nil, Flux.Lang:get_player_lang(target))
-
-    return description
+    return t(faction_table.phys_desc or '', nil, Flux.Lang:get_player_lang(target))
   end
 
   --- Networks to a player how many characters they have in each faction, which lets their
@@ -754,7 +752,7 @@ do
 
   --- Checks whether the player holds the given rank of their faction or any rank above it.
   -- @param str_rank [String rank ID, letter case is ignored]
-  -- @param strict=false [Boolean meant to require exactly that rank; currently has no effect]
+  -- @param strict=false [Boolean require exactly that rank, not one above it]
   -- @return [Boolean false as well when the player has no rank or the rank does not exist]
   function player_meta:is_rank(str_rank, strict)
     local faction_table = self:get_faction()
@@ -765,7 +763,11 @@ do
 
       for index, rank_table in ipairs(faction_table.rank) do
         if string.utf8lower(rank_table.id) == lowered then
-          return (strict and index == rank) or index <= rank
+          if strict then
+            return index == rank
+          end
+
+          return index <= rank
         end
       end
     end
@@ -997,5 +999,6 @@ Pipeline.register('faction', function(id, file_name, _pipe)
 
   require_relative(file_name)
 
-  FACTION:register() FACTION = nil
+  FACTION:register()
+  FACTION = nil
 end)

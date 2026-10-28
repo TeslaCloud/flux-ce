@@ -110,13 +110,13 @@ local function split_syntax(syntax)
   return segments, arg
 end
 
---- Picks the argument of the syntax to emphasise: the one that is typed, or the last one
+--- Picks the argument of the syntax to emphasize: the one that is typed, or the last one
 -- while further words are typed for a 'text' argument that takes the rest of the text.
 -- @param arg_index [Number position of the argument that is typed, nil if none is]
 -- @param arg_type [String/List<String> its type]
 -- @param arg_count [Number how many arguments the syntax lists]
 -- @return [Number position of the argument in the syntax, nil if none fits]
-local function emphasised_arg(arg_index, arg_type, arg_count)
+local function emphasized_arg(arg_index, arg_type, arg_count)
   if !arg_index or arg_count < 1 then return end
 
   if arg_index <= arg_count then
@@ -162,8 +162,6 @@ function PANEL:Init()
 
   self.scroll_panel:GetVBar():SetWide(0)
 
-  -- Keep the messages at the bottom of the history, next to the text entry, while there are
-  -- too few of them to fill it. Both layout paths of the scroll panel go through this method.
   local layout = self.scroll_panel.PerformLayoutInternal
 
   self.scroll_panel.PerformLayoutInternal = function(scroll)
@@ -199,7 +197,7 @@ function PANEL:Init()
   end
 
   self.text_entry.OnValueChange = function(entry, value)
-    local value_w, _value_h = util.text_size(value, entry:GetFont())
+    local value_w = util.text_size(value, entry:GetFont())
     local div = math.round(entry:GetWide() / value_w * 2, 1)
     local offset = div > 2 and 0 or div > 1 and math.scale(25) or math.scale(50)
 
@@ -485,10 +483,10 @@ end
 --- Lays out the card about a command for `PANEL:draw_completion`: its full name, its syntax
 -- after the name or on a line of its own if it does not fit there, its description wrapped
 -- to the width and its aliases. The layout is kept until the command, its syntax, the
--- emphasised argument or the width change.
+-- emphasized argument or the width change.
 -- @param cmd [Command the command or subcommand]
--- @param result [Map the completion result whose typed argument is emphasised in the syntax,
---   nil to emphasise none]
+-- @param result [Map the completion result whose typed argument is emphasized in the syntax,
+--   nil to emphasize none]
 -- @param width [Number width the text may take]
 -- @return [Map the layout: name, segments, emphasis, inline, lines, aliases and height]
 function PANEL:layout_command_info(cmd, result, width)
@@ -497,7 +495,7 @@ function PANEL:layout_command_info(cmd, result, width)
   local emphasis
 
   if result and syntax != '[-]' then
-    emphasis = emphasised_arg(result.arg_index, result.arg_type, arg_count)
+    emphasis = emphasized_arg(result.arg_index, result.arg_type, arg_count)
   end
 
   local cached = self.completion_info
@@ -572,9 +570,9 @@ function PANEL:draw_command_info(info, y, width, padding)
   end
 
   for _, segment in ipairs(info.segments) do
-    local is_emphasised = segment.arg != nil and segment.arg == info.emphasis
+    local is_emphasized = segment.arg != nil and segment.arg == info.emphasis
 
-    if is_emphasised then
+    if is_emphasized then
       local segment_w = util.text_size(segment.text, font)
 
       Theme.hook(
@@ -589,7 +587,7 @@ function PANEL:draw_command_info(info, y, width, padding)
       )
     end
 
-    x = x + draw_text(segment.text, font, x, cur_y, is_emphasised and text_color or muted_color)
+    x = x + draw_text(segment.text, font, x, cur_y, is_emphasized and text_color or muted_color)
   end
 
   cur_y = cur_y + font_h + math.scale(4)
@@ -609,7 +607,7 @@ end
 -- the selected one highlighted and scrolled into view and the command a suggested alias
 -- stands for noted after it, and a card about a command above the list. The card is about
 -- the selected suggestion if that is a command or subcommand, else about the command that
--- has been typed, with the argument that is being typed emphasised in its syntax. Shows that
+-- has been typed, with the argument that is being typed emphasized in its syntax. Shows that
 -- no commands were found if nothing fits.
 -- @param width [Number width of the area to draw in]
 -- @param bottom [Number bottom edge of the area to draw in; its top edge is 0]
@@ -767,7 +765,6 @@ function PANEL:create_message(message_data)
   if !parsed then return end
 
   local panel = vgui.Create('fl_chat_message', self)
-  local _half_padding = self.padding * 0.5
 
   panel:SetSize(self:GetWide() - self.padding * 2, self:GetWide() - self.padding * 2)
   panel:set_message(parsed)

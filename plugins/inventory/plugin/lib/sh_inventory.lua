@@ -618,11 +618,13 @@ do
           return false, 'error.inventory.not_enough_items'
         else
           for _, inventory in pairs(self:get_inventories()) do
-            if amount > 0 and inventory:has_item(id) then
-              inventory:take_item(id)
+            local count = math.min(amount, inventory:get_items_count(id))
+
+            if count > 0 then
+              inventory:take_items(id, count)
               inventory:sync()
 
-              amount = amount - 1
+              amount = amount - count
             end
           end
 
