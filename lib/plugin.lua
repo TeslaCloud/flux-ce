@@ -3,21 +3,21 @@
 -- the schema is loaded in much the same way and takes part in hooks like one more plugin.
 -- While a plugin is being included the `PLUGIN` global holds its `PluginInstance`.
 --
--- The root of a plugin's `plugin` folder holds only Lua files of three kinds: its main file
+-- The root of a plugin's `plugin` folder holds only Lua files of two kinds: its main file
 -- `sh_plugin.lua` (or `sh_<name>.lua`, named after the plugin) with `cl_plugin.lua` and
--- `sv_plugin.lua`, the hook handlers in `cl_hooks.lua`, `sh_hooks.lua` and `sv_hooks.lua`,
--- and the network message handlers in `cl_nethooks.lua`, `sh_nethooks.lua` and
--- `sv_nethooks.lua`. The loader includes the main file, which includes the others with
+-- `sv_plugin.lua`, and the hook handlers in `cl_hooks.lua`, `sh_hooks.lua` and
+-- `sv_hooks.lua`. The loader includes the main file, which includes the others with
 -- `require_relative`. Everything else lives in extra folders that are included
 -- automatically before the main file, in this order: the libraries in `lib`, `lib/meta` and
 -- `lib/classes`, then `models`, `classes`, `meta`, `config`, `languages`, `controllers`,
--- `views`, `views/lumen`, `tools`, `themes`, `entities`, `migrations` and the folders added with
--- `Plugin.add_extra`, such as `commands`, `items` or `factions`. The files of a folder are
--- included in alphabetical order, each in the realm its `cl_`, `sh_` or `sv_` prefix names,
--- so a library cannot rely on anything the main file sets up while it loads. The schema has
--- the same layout in its `schema` folder, with `sh_schema.lua`, `cl_schema.lua` and
--- `sv_schema.lua` in place of the plugin files; its main file is included before its extra
--- folders.
+-- `views`, `views/lumen`, `tools`, `themes`, `entities`, `migrations`, the network message
+-- handlers in `nethooks` and the folders added with `Plugin.add_extra`, such as `commands`,
+-- `items` or `factions`. The files of a folder are included in alphabetical order, each in
+-- the realm its `cl_`, `sh_` or `sv_` prefix names, so a library cannot rely on anything the
+-- main file sets up while it loads, and a network message handler uses the plugin's global
+-- only inside its callback. The schema has the same layout in its `schema` folder, with
+-- `sh_schema.lua`, `cl_schema.lua` and `sv_schema.lua` in place of the plugin files; its
+-- main file is included before its extra folders.
 --
 -- Every function of a registered plugin is put into the hook cache under its name, and
 -- `hook.Call` is overridden to run those functions before the regular hooks, so defining
@@ -83,7 +83,8 @@ local default_extras = {
   'tools',
   'themes',
   'entities',
-  'migrations'
+  'migrations',
+  'nethooks'
 }
 
 local extras = table.Copy(default_extras)

@@ -221,14 +221,12 @@ plugins/doors/
     cl_hooks.lua      hook handlers
     sh_hooks.lua
     sv_hooks.lua
-    cl_nethooks.lua   network message handlers
-    sh_nethooks.lua
-    sv_nethooks.lua
     lib/              libraries and modules
+    nethooks/         network message handlers, such as sv_doors.lua
     config/  languages/  views/  tools/  entities/  migrations/  ...
 ```
 
-The root of the `plugin` folder only holds these Lua files, and a plugin only has the ones it needs. The main file may also be named `sh_<name>.lua` after the `name` in `plugin.yml`, or after the folder when `plugin.yml` has no name. Flux includes the main file, which includes the other root files with `require_relative`. Everything else goes into `lib/`, written as a library or module, or into one of the folders that Flux includes by convention: `lib/meta`, `lib/classes`, `models`, `classes`, `meta`, `config`, `languages`, `controllers`, `views`, `tools`, `themes`, `entities` and `migrations`, as well as the folders that plugins add, such as `commands`, `items`, `factions`, `roles`, `attributes` and `skills`.
+The root of the `plugin` folder only holds these Lua files, and a plugin only has the ones it needs. The main file may also be named `sh_<name>.lua` after the `name` in `plugin.yml`, or after the folder when `plugin.yml` has no name. Flux includes the main file, which includes the other root files with `require_relative`. Everything else goes into `lib/`, written as a library or module, or into one of the folders that Flux includes by convention: `lib/meta`, `lib/classes`, `models`, `classes`, `meta`, `config`, `languages`, `controllers`, `views`, `tools`, `themes`, `entities`, `migrations` and `nethooks`, which holds the `Cable.receive` and `MVC.handler` registrations in files named after their topic, as well as the folders that plugins add, such as `commands`, `items`, `factions`, `roles`, `attributes` and `skills`.
 
 These folders are included before the main file, `lib` first. The files of a folder are included in alphabetical order, each in the realm that its `cl_`, `sh_` or `sv_` prefix names. A library therefore sets up the global it extends itself and does not rely on anything that the main file sets up while it loads.
 
