@@ -1,4 +1,4 @@
---- Registers the condition types that come with the Conditions plugin: 'steamid', 'model',
+--- Registers the condition types that come with the Conditions package: 'steamid', 'model',
 -- 'health', 'armor' and 'active_weapon'.
 
 local process_operator = util.process_operator

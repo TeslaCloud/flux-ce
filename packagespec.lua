@@ -23,4 +23,5 @@ Package:describe(function(s)
   s.depends     'lumen'
   s.depends     'active_ui'
   s.depends     'client_settings'
+  s.depends     'conditions'
 end)

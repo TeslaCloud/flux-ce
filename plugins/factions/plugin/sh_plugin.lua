@@ -21,7 +21,7 @@
 -- generated, `GetFactionLimit` and `PlayerCanBypassFactionLimit` adjust the limits, and
 -- `PlayerCanTransferFaction` can refuse a transfer by the SetFaction command. The plugin
 -- answers `GetRandomCharacterName` from the random_names lists of a faction. The 'faction'
--- and 'rank' conditions are registered for the Conditions plugin, and the 'faction', 'rank'
+-- and 'rank' conditions are registered for the Conditions package, and the 'faction', 'rank'
 -- and 'model' argument types for the completion of commands.
 
 PLUGIN:set_global('Factions')

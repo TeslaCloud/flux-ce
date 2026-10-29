@@ -1,7 +1,7 @@
 --- Doors makes the doors of a map configurable, lockable and ownable.
 -- A door has properties, such as its name, title type, skin and lock state, that are edited in
 -- the door menu by staff with the 'manage_doors' permission and saved for the map, and a tree
--- of conditions of the Conditions plugin that decides which players may lock and unlock it. A
+-- of conditions of the Conditions package that decides which players may lock and unlock it. A
 -- player opens the menu of the door they look at with the ShowSpare1 key (F3 by default);
 -- those who may lock the door toggle its lock from that menu or by using the door while
 -- sprinting. The title of a door is drawn on the door by its title type.

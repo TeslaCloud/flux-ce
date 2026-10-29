@@ -1,10 +1,7 @@
---- A condition type, such as 'health' or 'steamid', is registered with
--- `Conditions:register_condition` and defines how its parameters are chosen in the editor and
--- how it is checked against a player.
-
-if !Conditions then
-  PLUGIN:set_global('Conditions')
-end
+--- Registry of the condition types. A condition type, such as 'health' or 'steamid', is
+-- registered with `Conditions:register_condition` and defines how its parameters are chosen
+-- in the editor and how it is checked against a player. The registry is kept across code
+-- refreshes, and registering an ID again replaces the type.
 
 local stored = Conditions.stored or {}
 Conditions.stored = stored

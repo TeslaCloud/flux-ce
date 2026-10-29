@@ -12,8 +12,8 @@
 # Opt-in plugins, in no profile, for a schema to add with `depends`:
 #   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcdsproxy
 # Development tools, for `depends_development`: devhud, profiler
-# Libraries that load as dependencies of other plugins: conditions (doors), areas (areadisplay,
-# srcdsproxy; listed in sandbox)
+# Libraries that load as dependencies of other plugins: areas (areadisplay, srcdsproxy; listed
+# in sandbox)
 
 base:
   plugins:

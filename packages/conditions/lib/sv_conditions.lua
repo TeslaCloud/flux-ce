@@ -1,4 +1,4 @@
---- Server side of the Conditions plugin: checks a player against a tree of conditions.
+--- Server side of the Conditions package: checks a player against a tree of conditions.
 
 local function check_conditions(target, conditions)
   local stored = Conditions:get_all()
@@ -26,7 +26,7 @@ end
 -- A list of nodes passes if at least one of its nodes does (OR). A node passes if its
 -- own check passes and its list of child nodes, unless empty, passes as well (AND).
 -- An empty top-level list never passes, and neither does a node whose condition type is not
--- registered, such as one saved by a plugin that is no longer loaded.
+-- registered, such as one saved by a plugin that is not loaded.
 -- ```
 -- -- A specific player, or anyone with more than 50 health who holds a crowbar.
 -- local allowed = Conditions:check(target, {
