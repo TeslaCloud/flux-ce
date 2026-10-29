@@ -25,9 +25,9 @@ ATTRIBUTE.levels = {
 
 ATTRIBUTE.effects = {
   Stats:percent_effect('ui.effect.carry_mass', 'stats_strength_lifting', false, function()
-    return Config.find('pickup_max_mass') != nil
+    return Config.find('pickup_objects_max_mass') != nil
   end),
   Stats:percent_effect('ui.effect.throw_force', 'stats_strength_lifting', false, function()
-    return (tonumber(Config.get('pickup_throw_force')) or 0) > 0
+    return (tonumber(Config.get('pickup_objects_throw_force')) or 0) > 0
   end)
 }

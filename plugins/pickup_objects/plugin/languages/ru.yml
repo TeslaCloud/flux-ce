@@ -1,6 +1,6 @@
 ru:
   config:
-    pickup:
+    pickup_objects:
       title: Поднятие предметов
       desc: Перенос, бросание и перетаскивание предметов руками.
       max_mass:

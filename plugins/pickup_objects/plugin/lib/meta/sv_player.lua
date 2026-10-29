@@ -17,7 +17,7 @@ end
 
 --- Returns the player who is dragging the ragdoll of this player.
 -- Serverside only. A ragdoll that is carried like any other object, with the
--- pickup_drag_ragdolls config turned off, does not count.
+-- pickup_objects_drag_ragdolls config turned off, does not count.
 -- @return [Player the dragging player; nil if the player has no ragdoll, nobody drags it or
 --   the Ragdoll plugin is not loaded]
 function player_meta:get_dragger()

@@ -1,6 +1,6 @@
 fr:
   config:
-    pickup:
+    pickup_objects:
       title: "Ramassage d'objets"
       desc: "Porter, lancer et traîner des objets à la main."
       max_mass:

@@ -23,11 +23,11 @@ local drop_protection = 1
 local holds = PickupObjects.holds
 
 --- Checks whether an entity is dragged rather than carried when it is picked up: a ragdoll,
--- with the pickup_drag_ragdolls config turned on.
+-- with the pickup_objects_drag_ragdolls config turned on.
 -- @param ent [Entity]
 -- @return [Boolean]
 function PickupObjects:should_drag(ent)
-  if ent:IsRagdoll() and config_get('pickup_drag_ragdolls') then
+  if ent:IsRagdoll() and config_get('pickup_objects_drag_ragdolls') then
     return true
   end
 
@@ -177,13 +177,13 @@ function PickupObjects:update_hold(actor, data, cur_time)
   return true
 end
 
---- Returns the heaviest object a player can carry: the pickup_max_mass config, after the
+--- Returns the heaviest object a player can carry: the pickup_objects_max_mass config, after the
 -- AdjustPickupMassLimit hook.
 -- @param actor [Player]
 -- @param ent=nil [Entity the object the player is trying to pick up]
 -- @return [Number mass limit]
 function PickupObjects:get_mass_limit(actor, ent)
-  local info = { limit = tonumber(config_get('pickup_max_mass')) or 25 }
+  local info = { limit = tonumber(config_get('pickup_objects_max_mass')) or 25 }
 
   --- Lets plugins change the heaviest object a player can carry, for example with the
   -- strength of their character. Called on the server when the plugin's own
@@ -192,7 +192,7 @@ function PickupObjects:get_mass_limit(actor, ent)
   -- return nothing to let the others run. Dragged ragdolls have no mass limit.
   -- @param actor [Player the player picking the object up]
   -- @param ent [Entity the object, nil if the limit is asked for no object in particular]
-  -- @param info [Map modified in place: limit (Number the mass limit, the pickup_max_mass
+  -- @param info [Map modified in place: limit (Number the mass limit, the pickup_objects_max_mass
   --   config to begin with)]
   hook.Run('AdjustPickupMassLimit', actor, ent, info)
 
@@ -275,7 +275,7 @@ end
 
 --- Makes a player pick up an entity if they are able to and the hooks allow it.
 -- The player must be alive, on foot, not ragdolled and hold nothing, and nobody may hold
--- the entity. A ragdoll is dragged if the pickup_drag_ragdolls config is on, which the
+-- the entity. A ragdoll is dragged if the pickup_objects_drag_ragdolls config is on, which the
 -- PlayerCanDragRagdoll hook can veto; everything else is carried. The PlayerCanPickupObject
 -- hook can veto both. The distance to the entity is not checked.
 -- @param actor [Player]
@@ -296,7 +296,7 @@ function PickupObjects:pickup_entity(actor, ent, bone)
 
     --- Asks whether a player may start dragging a ragdoll.
     -- Called on the server when the player tries to pick up a ragdoll within reach while the
-    -- pickup_drag_ragdolls config is on, before PlayerCanPickupObject. The plugin's own handler
+    -- pickup_objects_drag_ragdolls config is on, before PlayerCanPickupObject. The plugin's own handler
     -- denies it while the player the ragdoll belongs to is getting up.
     -- @param actor [Player The player who is about to drag the ragdoll]
     -- @param ragdoll [Entity The ragdoll]
@@ -366,7 +366,7 @@ function PickupObjects:throw_entity(actor)
 
   local ent = data.entity
   local info = {
-    force = tonumber(config_get('pickup_throw_force')) or 1000,
+    force = tonumber(config_get('pickup_objects_throw_force')) or 1000,
     direction = actor:GetAimVector()
   }
 
@@ -383,7 +383,7 @@ function PickupObjects:throw_entity(actor)
   -- the throw: the player keeps holding the object.
   -- @param actor [Player The player throwing the object]
   -- @param ent [Entity The object being thrown]
-  -- @param info [Map Modified in place: force (Number the pickup_throw_force config to
+  -- @param info [Map Modified in place: force (Number the pickup_objects_throw_force config to
   --   begin with, before it is scaled with the mass of the object) and direction (Vector the
   --   aim vector of the player)]
   hook.Run('AdjustThrow', actor, ent, info)

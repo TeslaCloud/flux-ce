@@ -1,6 +1,6 @@
 es:
   config:
-    pickup:
+    pickup_objects:
       title: Recoger objetos
       desc: Llevar, lanzar y arrastrar objetos con las manos.
       max_mass:

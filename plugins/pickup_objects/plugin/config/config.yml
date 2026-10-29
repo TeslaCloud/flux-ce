@@ -1,27 +1,30 @@
 categories:
-  pickup:
-    name: config.pickup.title
-    description: config.pickup.desc
+  pickup_objects:
+    name: config.pickup_objects.title
+    description: config.pickup_objects.desc
 configs:
-  pickup_max_mass:
-    name: config.pickup.max_mass.name
-    description: config.pickup.max_mass.desc
-    category: pickup
+  pickup_objects_max_mass:
+    renamed_from: pickup_max_mass
+    name: config.pickup_objects.max_mass.name
+    description: config.pickup_objects.max_mass.desc
+    category: pickup_objects
     type: number
     min_value: 0
     max_value: 1000
     default_value: 25
-  pickup_throw_force:
-    name: config.pickup.throw_force.name
-    description: config.pickup.throw_force.desc
-    category: pickup
+  pickup_objects_throw_force:
+    renamed_from: pickup_throw_force
+    name: config.pickup_objects.throw_force.name
+    description: config.pickup_objects.throw_force.desc
+    category: pickup_objects
     type: number
     min_value: 0
     max_value: 10000
     default_value: 1000
-  pickup_drag_ragdolls:
-    name: config.pickup.drag_ragdolls.name
-    description: config.pickup.drag_ragdolls.desc
-    category: pickup
+  pickup_objects_drag_ragdolls:
+    renamed_from: pickup_drag_ragdolls
+    name: config.pickup_objects.drag_ragdolls.name
+    description: config.pickup_objects.drag_ragdolls.desc
+    category: pickup_objects
     type: boolean
     default_value: false
