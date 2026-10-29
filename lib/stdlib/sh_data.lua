@@ -18,6 +18,10 @@ mod 'Data'
 
 local isstring = isstring
 
+local function schema_key(key)
+  return 'schemas/'..Flux.schema..'/'..game.GetMap()..'/'..key
+end
+
 local function with_extension(key, extension)
   if !File.ext(key) then
     return key..extension
@@ -128,7 +132,7 @@ end
 -- @param value [Map data to save]
 -- @see [Data.save]
 function Data.save_schema(key, value)
-  Data.save('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, value)
+  Data.save(schema_key(key), value)
 end
 
 --- Loads a table from the data folder of the current schema and map.
@@ -137,13 +141,13 @@ end
 -- @return [Map the loaded data, or the default]
 -- @see [Data.load]
 function Data.load_schema(key, default)
-  return Data.load('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, default)
+  return Data.load(schema_key(key), default)
 end
 
 --- Deletes a file from the data folder of the current schema and map.
 -- @param key [String]
 function Data.delete_schema(key)
-  Data.delete('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key)
+  Data.delete(schema_key(key))
 end
 
 --- Saves plugin data. It is stored separately for every schema and map.
