@@ -131,3 +131,7 @@ es:
       bar_text:
         lock_door: CERRANDO LA PUERTA...
         unlock_door: ABRIENDO LA PUERTA...
+  permission:
+    manage_doors:
+      name: Acceso a los ajustes de puertas
+      description: Da acceso para personalizar las puertas.

@@ -131,3 +131,7 @@ fr:
       bar_text:
         lock_door: "VERROUILLAGE DE LA PORTE..."
         unlock_door: "DÉVERROUILLAGE DE LA PORTE..."
+  permission:
+    manage_doors:
+      name: "Accès aux réglages des portes"
+      description: "Permet de personnaliser les portes."

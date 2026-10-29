@@ -131,3 +131,7 @@ en:
       bar_text:
         lock_door: LOCKING THE DOOR...
         unlock_door: UNLOCKING THE DOOR...
+  permission:
+    manage_doors:
+      name: Doors settings access
+      description: Grants access to customize doors.

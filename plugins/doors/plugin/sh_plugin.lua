@@ -27,20 +27,13 @@
 PLUGIN:set_global('Doors')
 
 require_relative 'cl_hooks'
-require_relative 'cl_nethooks'
 require_relative 'cl_plugin'
 require_relative 'sv_hooks'
-require_relative 'sv_nethooks'
 require_relative 'sv_plugin'
 
 --- Registers the 'manage_doors' level design permission.
 function Doors:RegisterPermissions()
-  Bolt:register_permission(
-    'manage_doors',
-    'Doors settings access',
-    'Grants access to customize doors.',
-    'permission.categories.level_design'
-  )
+  Bolt:register_permission('manage_doors', nil, nil, 'permission.categories.level_design')
 end
 
 --- Runs the RegisterDoorProperties and RegisterDoorTitleTypes hooks so that plugins can

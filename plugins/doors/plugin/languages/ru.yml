@@ -131,3 +131,7 @@ ru:
       bar_text:
         lock_door: ВЫ ЗАПИРАЕТЕ ДВЕРЬ...
         unlock_door: ВЫ ОТПИРАЕТЕ ДВЕРЬ...
+  permission:
+    manage_doors:
+      name: Доступ к настройкам дверей
+      description: Дает доступ к настройке дверей.
