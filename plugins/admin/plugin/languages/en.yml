@@ -190,6 +190,9 @@ en:
       ban_message_language:
         name: Ban message language
         desc: Code of the language (such as en or ru) of the message that banned players read when they try to join.
+      root_steamid:
+        name: Root access SteamID
+        desc: Gives root access to the player with this SteamID.
   error:
     already_user: "{target} is a user already."
     banned:

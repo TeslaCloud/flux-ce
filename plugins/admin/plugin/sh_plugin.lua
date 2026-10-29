@@ -17,7 +17,7 @@
 -- characters are not, but no character undoes what the player is denied. The permissions of
 -- a character belong to the character and apply to whoever has it loaded, such as a
 -- gamemaster who plays a character that several players share. The SteamIDs listed in the
--- `root_steamid` config are root players, who may do anything.
+-- `admin_root_steamid` config are root players, who may do anything.
 --
 -- Each role is based on the one below it and has every permission that role allows. Assistants
 -- have the basic staff tools: kicking, banning, vanishing, observer mode, the physics and tool
@@ -119,7 +119,7 @@ function Bolt:PlayerHasPermission(actor, action, object)
 end
 
 --- Reports whether the player was flagged as root, which happens when their SteamID is listed
--- in the root_steamid config.
+-- in the admin_root_steamid config.
 -- @param target [Player]
 -- @return [Boolean true for root players, nil otherwise]
 function Bolt:PlayerIsRoot(target)

@@ -21,9 +21,6 @@ es:
       respawn_time:
         name: Tiempo de reaparición
         desc: Cuánto tarda un jugador en reaparecer tras su muerte (en segundos).
-      root_steamid:
-        name: SteamID con acceso root
-        desc: Otorga acceso root al jugador con este SteamID.
       data_save_interval:
         name: Intervalo de guardado del servidor
         desc: Tiempo entre cada guardado de los datos del servidor.

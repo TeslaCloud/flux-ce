@@ -190,6 +190,9 @@ fr:
       ban_message_language:
         name: "Langue du message de bannissement"
         desc: "Code de la langue (comme en, fr ou ru) du message que lisent les joueurs bannis lorsqu'ils essaient de se connecter."
+      root_steamid:
+        name: "SteamID avec accès root"
+        desc: "Donne l'accès root au joueur qui a ce SteamID."
   error:
     already_user: "{target} est déjà utilisateur."
     banned:

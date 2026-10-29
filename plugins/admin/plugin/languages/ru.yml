@@ -191,6 +191,9 @@ ru:
       ban_message_language:
         name: Язык сообщения о бане
         desc: Код языка (например, en или ru) сообщения, которое видят забаненные игроки при попытке зайти.
+      root_steamid:
+        name: SteamID владельца
+        desc: Дает полный доступ игроку с данным SteamID.
   error:
     already_user: "{target} уже является пользователем."
     banned:

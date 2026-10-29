@@ -26,7 +26,7 @@ add.player_arg = false
 -- given duration and notifies staff. A duration of 0 is a permanent ban and is announced as
 -- one; a negative duration, or one that would end the ban after the year 9999, is refused.
 -- The caller needs a higher immunity than every target: for a SteamID that goes by the role
--- stored for it, and a SteamID from the root_steamid config can only be banned by a root
+-- stored for it, and a SteamID from the admin_root_steamid config can only be banned by a root
 -- player or from the server console.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param target [String exact player name, target selector or SteamID]

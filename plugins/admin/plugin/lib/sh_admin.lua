@@ -523,12 +523,12 @@ function Bolt:check_role_immunity(actor, role_id, can_equal)
   return compare_immunity(roles[actor:GetUserGroup()], roles[role_id], can_equal)
 end
 
---- Checks whether a SteamID is listed in the root_steamid config, which makes its owner a
+--- Checks whether a SteamID is listed in the admin_root_steamid config, which makes its owner a
 -- root player when they join.
 -- @param steam_id [String]
 -- @return [Boolean]
 function Bolt:is_root_steam_id(steam_id)
-  local root_steamid = Config.get('root_steamid')
+  local root_steamid = Config.get('admin_root_steamid')
 
   if isstring(root_steamid) then
     return root_steamid == steam_id

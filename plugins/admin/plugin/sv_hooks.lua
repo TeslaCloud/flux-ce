@@ -123,12 +123,12 @@ function Bolt:ActiveRecordReady()
 end
 
 --- Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
--- root_steamid config root admins, networks stored permissions, sends the config again if
+-- admin_root_steamid config root admins, networks stored permissions, sends the config again if
 -- the player turns out to be allowed to edit it and logs the connection.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function Bolt:PlayerRestored(actor, record)
-  local root_steamid = Config.get('root_steamid')
+  local root_steamid = Config.get('admin_root_steamid')
 
   if record.role then
     actor:SetUserGroup(record.role)

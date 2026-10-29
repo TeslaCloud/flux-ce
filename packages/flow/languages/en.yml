@@ -21,9 +21,6 @@ en:
       respawn_time:
         name: Respawn time
         desc: How long does it take for a player to respawn after their death (in seconds).
-      root_steamid:
-        name: Root access SteamID
-        desc: Gives root access to the player with this SteamID.
       data_save_interval:
         name: Server data save interval
         desc: Amount of time between server data saves.

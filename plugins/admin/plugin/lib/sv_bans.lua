@@ -58,12 +58,12 @@ end
 -- 'error.banned.temporary' and 'error.banned.permanent' phrases.
 -- @param ban [Ban ban record, or a table with its reason, duration and unban_time fields]
 -- @param lang=nil [String language code to write the message in; the language set by the
---   ban_message_language config by default, since the language of a player who is still
+--   admin_ban_message_language config by default, since the language of a player who is still
 --   connecting is not known]
 -- @return [String]
 function Bolt:get_ban_message(ban, lang)
   if !isstring(lang) then
-    lang = Config.get('ban_message_language')
+    lang = Config.get('admin_ban_message_language')
   end
 
   if !isstring(lang) or lang == '' then

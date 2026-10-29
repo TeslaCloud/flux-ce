@@ -90,10 +90,3 @@ configs:
     min_value: 0
     max_value: 3600
     default_value: 360
-  root_steamid:
-    name: config.general.root_steamid.name
-    description: config.general.root_steamid.desc
-    category: general
-    type: table
-    static: true
-    default_value: ["STEAM_0:0:000000000"]

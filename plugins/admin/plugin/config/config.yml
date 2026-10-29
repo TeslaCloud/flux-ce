@@ -3,9 +3,18 @@ categories:
     name: config.admin.title
     description: config.admin.desc
 configs:
-  ban_message_language:
+  admin_ban_message_language:
+    renamed_from: ban_message_language
     name: config.admin.ban_message_language.name
     description: config.admin.ban_message_language.desc
     category: admin
     type: string
     default_value: "en"
+  admin_root_steamid:
+    renamed_from: root_steamid
+    name: config.admin.root_steamid.name
+    description: config.admin.root_steamid.desc
+    category: admin
+    type: table
+    static: true
+    default_value: ["STEAM_0:0:000000000"]

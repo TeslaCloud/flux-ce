@@ -21,9 +21,6 @@ fr:
       respawn_time:
         name: "Délai de réapparition"
         desc: "Le temps qu'il faut à un joueur pour réapparaître après sa mort (en secondes)."
-      root_steamid:
-        name: "SteamID avec accès root"
-        desc: "Donne l'accès root au joueur qui a ce SteamID."
       data_save_interval:
         name: "Intervalle de sauvegarde du serveur"
         desc: "Le temps entre deux sauvegardes des données du serveur."

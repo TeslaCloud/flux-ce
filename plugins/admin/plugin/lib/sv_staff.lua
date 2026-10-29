@@ -66,7 +66,7 @@ end
 
 --- Checks whether a player may act on somebody who is not on the server. The server console
 -- and root players may act on anyone; nobody else may act on a SteamID from the
--- root_steamid config, or on a holder of a role whose immunity is not lower than their own.
+-- admin_root_steamid config, or on a holder of a role whose immunity is not lower than their own.
 -- @param actor [Player the player performing the action, an invalid entity for the server
 --   console]
 -- @param steam_id [String SteamID of whoever is acted on]
