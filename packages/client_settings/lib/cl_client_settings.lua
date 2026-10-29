@@ -61,7 +61,8 @@ end
 
 --- Returns the value saved for a setting. While nothing is saved under its id, the value
 -- saved under the newest of the ids in its `renamed_from` is moved to the current id and
--- returned, and `Flux.dev_print` names the old id.
+-- returned, and `Flux.dev_print` names the old id. An old id that is a registered setting of
+-- its own keeps its value.
 -- @param setting [Map registered setting]
 -- @return [Any saved value, nil if there is none]
 local function saved_value(setting)
@@ -75,7 +76,7 @@ local function saved_value(setting)
   for i = #renamed_from, 1, -1 do
     local old_id = renamed_from[i]
 
-    if values[old_id] != nil then
+    if values[old_id] != nil and !stored[old_id] then
       Flux.dev_print("The '"..old_id.."' setting is called '"..id.."'.")
 
       values[id] = values[old_id]
