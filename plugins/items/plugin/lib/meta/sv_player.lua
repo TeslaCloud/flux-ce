@@ -142,7 +142,7 @@ function player_meta:unload_items(defer)
         end
       end
 
-      stored[inventory.id] = nil
+      Inventories.stored[inventory.id] = nil
     end
   end
 
@@ -160,7 +160,7 @@ end
 function player_meta:delete_inventories()
   for _, inventory in pairs(self:get_inventories()) do
     if inventory.owner == self then
-      stored[inventory.id] = nil
+      Inventories.stored[inventory.id] = nil
     end
   end
 end
