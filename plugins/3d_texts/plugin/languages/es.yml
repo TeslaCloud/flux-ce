@@ -35,3 +35,10 @@ es:
       width: Ancho
       height: Alto
       fade: Ajuste de distancia de desvanecimiento
+  permission:
+    manage_texts:
+      name: Colocar / borrar textos
+      description: Da acceso para colocar y borrar textos.
+    manage_pictures:
+      name: Colocar / borrar imágenes
+      description: Da acceso para colocar y borrar imágenes.

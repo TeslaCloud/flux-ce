@@ -35,3 +35,10 @@ fr:
       width: "Largeur"
       height: "Hauteur"
       fade: "Décalage de la distance de fondu"
+  permission:
+    manage_texts:
+      name: "Placer / supprimer des textes"
+      description: "Permet de placer et de supprimer des textes."
+    manage_pictures:
+      name: "Placer / supprimer des images"
+      description: "Permet de placer et de supprimer des images."

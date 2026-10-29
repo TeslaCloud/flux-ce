@@ -35,3 +35,10 @@ en:
       width: Width
       height: Height
       fade: Fade Distance Offset
+  permission:
+    manage_texts:
+      name: Place / delete texts
+      description: Grants access to place and delete texts.
+    manage_pictures:
+      name: Place / delete pictures
+      description: Grants access to place and delete pictures.
