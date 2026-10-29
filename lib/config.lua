@@ -34,9 +34,11 @@
 -- value back when the config needs a restart, and through `Config.reset`, which puts the
 -- default value back.
 --
--- A definition can name the key or keys a config had before with `renamed_from`. `Config.load`
--- and `Config.import` read a value saved or written under such a key as the value of the
--- config, and in development warn once about every old key they meet (see `Config.renamed`).
+-- A definition can name the key or keys a config had before with `renamed_from`, a list
+-- ordered oldest first. `Config.load` and `Config.import` read a value saved or written under
+-- such a key as the value of the config unless the current key or an old key listed after it
+-- is present too, and in development warn once about every old key they meet (see
+-- `Config.renamed`). A key that has a definition of its own is never read as an old key.
 --
 -- ```
 -- configs:
@@ -152,15 +154,16 @@ end
 
 local warned_renames = {}
 
---- Returns the current key of a config. The first time an old key of a renamed config is met,
--- `Flux.dev_print` names it and its current key.
+--- Returns the current key of a config: the key itself when it has a definition or was never
+-- renamed. The first time an old key of a renamed config is met, `Flux.dev_print` names it and
+-- its current key.
 -- @param key [String config key, current or old]
 -- @param source [String where the key was found, for the warning]
 -- @return [String the current key]
 local function current_key(key, source)
   local new_key = renamed[key]
 
-  if !new_key then
+  if !new_key or definitions[key] then
     return key
   end
 
@@ -171,6 +174,52 @@ local function current_key(key, source)
   end
 
   return new_key
+end
+
+--- Checks whether the value under the old key of a renamed config gives way to another key of
+-- the same config in one table: the current key, or an old key listed after it in
+-- `renamed_from`.
+-- @param values [Map config key to value]
+-- @param old_key [String the old key]
+-- @param key [String the current key]
+-- @return [Boolean]
+local function superseded(values, old_key, key)
+  if values[key] != nil then
+    return true
+  end
+
+  local renamed_from = definitions[key]?.renamed_from
+
+  if !istable(renamed_from) then
+    return false
+  end
+
+  local later = false
+
+  for _, other_key in ipairs(renamed_from) do
+    if later and values[other_key] != nil then
+      return true
+    end
+
+    if other_key == old_key then
+      later = true
+    end
+  end
+
+  return false
+end
+
+--- Maps an old key of a config onto its current key, refusing a key renamed onto itself.
+-- @param old_key [String]
+-- @param key [String the current key]
+local function add_rename(old_key, key)
+  if old_key == key then
+    ErrorNoHalt("The '"..key.."' config names its own key in renamed_from!\n")
+
+    return
+  end
+
+  renamed[old_key] = key
 end
 
 --- Returns the table of all stored configs.
@@ -283,10 +332,10 @@ end
 -- config without a definition expects the type of its current value, and a config whose type
 -- is not one of these takes any string, number, boolean or table.
 -- ```
--- local valid, value = Config.validate('walk_speed', '5000')
+-- local valid, value = Config.validate('flow_walk_speed', '5000')
 -- -- true, 1024
 --
--- local valid, phrase = Config.validate('walk_speed', 'fast')
+-- local valid, phrase = Config.validate('flow_walk_speed', 'fast')
 -- -- false, 'error.config.not_a_number'
 -- ```
 -- @param key [String config key]
@@ -475,7 +524,8 @@ if SERVER then
   -- `Config.change`, so that a value set in code is not replaced with a stale copy of
   -- itself. A saved config that is not stored at all, such as one of a plugin that is not
   -- loaded, is added the way it was saved. A value saved under the old key of a renamed
-  -- config is loaded into the config unless the file also holds the current key.
+  -- config is loaded into the config unless the file also holds the current key or an old key
+  -- listed after it in `renamed_from`.
   -- @return [Map all stored configs]
   function Config.load()
     local loaded = Data.load('config', {})
@@ -487,10 +537,12 @@ if SERVER then
     for key, saved in pairs(loaded) do
       if !istable(saved) then continue end
 
-      if renamed[key] then
-        key = current_key(key, 'the config data file')
+      local new_key = current_key(key, 'the config data file')
 
-        if loaded[key] != nil then continue end
+      if new_key != key then
+        if superseded(loaded, key, new_key) then continue end
+
+        key = new_key
       end
 
       local entry = stored[key]
@@ -810,11 +862,10 @@ else
   -- with a dot and take the same arguments as Config.add_to_menu without the category
   -- (and, except for add_key, without the data type).
   -- ```
-  -- local category = Config.create_category('general', 'config.general.title',
-  --   'config.general.desc')
+  -- local category = Config.create_category('flow', 'config.flow.title', 'config.flow.desc')
   --
-  -- category.add_slider('walk_speed', 'config.general.walk_speed.name',
-  --   'config.general.walk_speed.desc', { min_value = 0, max_value = 1024 })
+  -- category.add_slider('flow_walk_speed', 'config.flow.walk_speed.name',
+  --   'config.flow.walk_speed.desc', { min_value = 0, max_value = 1024 })
   -- ```
   -- @param id='other' [String category ID]
   -- @param category_name='Other' [String display name or language phrase]
@@ -981,7 +1032,8 @@ if SERVER then
   -- Serverside only. The keys that choose plugins ('profile', 'depends', 'depends_development'
   -- and 'exclude') are skipped, and so is every key for which the ShouldConfigImport hook
   -- returns a non-nil value. The old key of a renamed config sets the config under its
-  -- current key. The value of a config of the color type goes through `Config.validate`, and
+  -- current key, unless the table also holds the current key or an old key listed after it in
+  -- `renamed_from`. The value of a config of the color type goes through `Config.validate`, and
   -- is skipped with an error if it is not a color.
   -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
@@ -1007,7 +1059,13 @@ if SERVER then
     local source = isstring(path) ? path : 'an imported table'
 
     for key, value in pairs(config_table) do
-      key = current_key(key, source)
+      local new_key = current_key(key, source)
+
+      if new_key != key then
+        if superseded(config_table, key, new_key) then continue end
+
+        key = new_key
+      end
 
       --- Called on the server for every key that `Config.import` is about to set.
       -- @param key [String config key]
@@ -1042,19 +1100,20 @@ end
 -- be marked with `hidden`, `static`, `private` and `needs_restart`, which are described at
 -- the top of this file. A config of the `color` type holds a Color and writes its default
 -- value as a map of r, g, b and, optionally, a. `renamed_from` holds the old key of the config,
--- or a list of its old keys, and fills `Config.renamed`.
+-- or a list of its old keys ordered oldest first, and fills `Config.renamed`; an old key equal
+-- to the key of the config is refused with an error.
 -- ```
 -- Config.read('gamemodes/flux/config/config.yml')
 --
 -- Config.read({
 --   categories = {
---     general = { name = 'config.general.title', description = 'config.general.desc' }
+--     flow = { name = 'config.flow.title', description = 'config.flow.desc' }
 --   },
 --   configs = {
---     walk_speed = {
---       name = 'config.general.walk_speed.name',
---       description = 'config.general.walk_speed.desc',
---       category = 'general',
+--     flow_walk_speed = {
+--       name = 'config.flow.walk_speed.name',
+--       description = 'config.flow.walk_speed.desc',
+--       category = 'flow',
 --       type = 'number',
 --       min_value = 0,
 --       max_value = 1024,
@@ -1095,10 +1154,10 @@ function Config.read(path, _from_config)
       local renamed_from = data.renamed_from
 
       if isstring(renamed_from) then
-        renamed[renamed_from] = name
+        add_rename(renamed_from, name)
       elseif istable(renamed_from) then
         for _, old_key in ipairs(renamed_from) do
-          renamed[old_key] = name
+          add_rename(old_key, name)
         end
       end
 

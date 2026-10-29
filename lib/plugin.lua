@@ -917,7 +917,8 @@ end
 --- Works out the plugins a schema depends on from the keys of its .yml file: the plugins of
 -- its `profile`, defined in `config/profiles.yml` and preceded by those of the profiles it
 -- extends, then its `depends` and, in development, its `depends_development`, without the
--- plugins named in `exclude`. Each plugin is listed once, where it is first named. A schema
+-- plugins named in the `exclude` list. An `exclude` that is not a list is ignored with a
+-- development notice. Each plugin is listed once, where it is first named. A schema
 -- without a profile depends on its `depends` alone. The plugins load in the order of the list,
 -- each after the plugins of its own `depends`, so an excluded plugin still loads when a plugin
 -- that loads depends on it.
@@ -935,7 +936,15 @@ function Plugin.resolve_schema_depends(schema_yml, profiles, development)
 
   profiles = profiles or {}
 
-  for _, name in ipairs(istable(schema_yml.exclude) and schema_yml.exclude or {}) do
+  local exclude = schema_yml.exclude
+
+  if exclude != nil and !istable(exclude) then
+    Flux.dev_print("Ignoring the schema's exclude, which is not a list: "..tostring(exclude))
+
+    exclude = nil
+  end
+
+  for _, name in ipairs(exclude or {}) do
     excluded[name] = true
   end
 
