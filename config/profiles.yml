@@ -6,36 +6,36 @@
 # loads its `depends` alone. A `profiles.local.yml` next to this file is read in its place.
 #
 # Opt-in plugins, in no profile, for a schema to add with `depends`:
-#   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcdsproxy
-# Development tools, for `depends_development`: devhud, profiler
-# Libraries that load as dependencies of other plugins: areas (areadisplay, srcdsproxy; listed
+#   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcds_proxy
+# Development tools, for `depends_development`: dev_hud, profiler
+# Libraries that load as dependencies of other plugins: areas (area_display, srcds_proxy; listed
 # in sandbox)
 
 base:
   plugins:
-    - 3dtexts
+    - 3d_texts
     - chatbox
     - crosshair
     - hints
     - observer
     - stamina
-    - staticents
-    - thirdperson
-    - weaponselect
+    - static_ents
+    - third_person
+    - weapon_select
 
 sandbox:
   extends: base
   plugins:
     - areas
-    - propprotection
+    - prop_protection
 
 roleplay:
   extends: base
   plugins:
     - characters
     - factions
-    - autowalk
-    - raisegun
+    - auto_walk
+    - raise_gun
 
 roleplay_full:
   extends: roleplay
@@ -45,24 +45,24 @@ roleplay_full:
     - currencies
     - vendors
     - doors
-    - doorkeys
-    - areadisplay
-    - mapscenes
+    - door_keys
+    - area_display
+    - map_scenes
     - ragdoll
-    - visiblelegs
+    - visible_legs
     - shared_flashlight
     - pickup_objects
-    - displaytyping
-    - spawnpoints
-    - spawnsaver
+    - display_typing
+    - spawn_points
+    - spawn_saver
     - stats
     - damage
-    - propprotection
-    - mapcleaner
-    - gametime
-    - screeneffects
-    - rpcommands
+    - prop_protection
+    - map_cleaner
+    - game_time
+    - screen_effects
+    - rp_commands
     - recognize
-    - voicelines
-    - playersearch
+    - voice_lines
+    - player_search
     - animations
