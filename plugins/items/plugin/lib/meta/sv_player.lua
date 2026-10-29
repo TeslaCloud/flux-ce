@@ -198,7 +198,8 @@ end
 --- Give the player a certain item by its instance id.
 -- @param instance_id [Number]
 -- @param inv_type=self.default_inventory or 'main_inventory' [String]
--- @return [Boolean was the item added successfully, String text of the error that occurred]
+-- @return [Boolean was the item added successfully, String text of the error that occurred,
+--   'error.inventory.missing' for a player without the inventory]
 function player_meta:add_item_by_id(instance_id, inv_type)
   return self:add_item(Item.find_instance_by_id(instance_id), inv_type)
 end
@@ -361,24 +362,31 @@ end
 -- ```
 -- @param instance_id [Number]
 -- @param inv_type [String]
--- @return [Boolean was the item transferred successfully, String text of the error that occurred]
+-- @return [Boolean was the item transferred successfully, String text of the error that occurred,
+--   'error.inventory.invalid_item' when the item does not exist or the player lacks the inventory
+--   it is in, 'error.inventory.missing' when the player lacks the target inventory]
 function player_meta:transfer_item(instance_id, inv_type)
   local item_obj = Item.find_instance_by_id(instance_id)
+
+  if !item_obj then return false, 'error.inventory.invalid_item' end
+  if item_obj.inventory_type == inv_type then return end
+
   local old_inventory = self:get_inventory(item_obj.inventory_type)
+
+  if !old_inventory then return false, 'error.inventory.invalid_item' end
+
   local new_inventory = self:get_inventory(inv_type)
 
-  if item_obj.inventory_type != inv_type then
-    local success, error_text = old_inventory:transfer_item(instance_id, new_inventory)
+  if !new_inventory then return false, 'error.inventory.missing' end
 
-    if success then
-      old_inventory:sync()
-      new_inventory:sync()
+  local success, error_text = old_inventory:transfer_item(instance_id, new_inventory)
 
-      return true
-    else
-      return false, error_text
-    end
-  end
+  if !success then return false, error_text end
+
+  old_inventory:sync()
+  new_inventory:sync()
+
+  return true
 end
 
 --- Opens an inventory window for the player and makes them a receiver of the inventory.
