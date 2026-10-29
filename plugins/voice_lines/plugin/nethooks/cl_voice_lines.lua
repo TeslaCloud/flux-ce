@@ -1,4 +1,4 @@
---- Client side of the Voice Lines plugin: the sound of the lines heard over the radio.
+--- Client-side receiver of the Voice Lines plugin: the sound of the lines heard over the radio.
 
 Cable.receive('fl_voice_line_radio', function(sound_path, volume)
   if !isstring(sound_path) then return end
