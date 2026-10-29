@@ -2,7 +2,7 @@
 -- `Color` also accepts hexadecimal strings and CSS color names here, and colors gain methods
 -- that return adjusted copies: `Color:darken`, `Color:lighten`, `Color:saturate`,
 -- `Color:desaturate` and `Color:alpha`. `LerpColor` interpolates between two colors, and the
--- `util` library gets `util.hex_to_color` and `util.text_color_from_base`.
+-- `util` library gets `util.hex_to_color`, `util.to_color` and `util.text_color_from_base`.
 -- @module [Color]
 
 local color_meta = FindMetaTable('Color')
@@ -37,6 +37,19 @@ function util.hex_to_color(hex)
   end
 
   return Color(channels[1], channels[2], channels[3], channels[4] or 255)
+end
+
+--- Turns a value that holds a color into a Color: a Color is returned as it is, and any other
+-- table with the r, g and b fields, such as a color that has come over the network or out of a
+-- config, becomes a Color with its alpha, or opaque without one.
+-- @param value [Any the value to convert]
+-- @return [Color the color, or nil if the value does not hold one]
+function util.to_color(value)
+  if IsColor(value) then return value end
+
+  if istable(value) and isnumber(value.r) and isnumber(value.g) and isnumber(value.b) then
+    return Color(value.r, value.g, value.b, isnumber(value.a) ? value.a : 255)
+  end
 end
 
 do

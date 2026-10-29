@@ -84,7 +84,7 @@ function RPCommands:OnConfigReceived(key, _old_value, _new_value)
     local kind = data.color == key and DisplayTyping:find_kind(id)
 
     if kind then
-      kind.color = self:get_chat_color(key)
+      kind.color = util.to_color(Config.get(key))
     end
   end
 end
@@ -154,7 +154,7 @@ function RPCommands:DisplayTypingGetKind(target, text)
   return {
     id = id,
     name = 'ui.hud.display_typing.'..id,
-    color = self:get_chat_color(self.typing_kinds[id].color),
+    color = util.to_color(Config.get(self.typing_kinds[id].color)),
     range = self:get_volume_range(volume),
     live = true
   }

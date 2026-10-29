@@ -10,7 +10,6 @@ local font_size = util.font_size
 local get_font = Theme.get_font
 local get_color = Theme.get_color
 local get_option = Theme.get_option
-local draw_text_outlined = draw.SimpleTextOutlined
 
 local queue = Cinematics.queue or {}
 local state = Cinematics.state or { bars = 0, alpha = 0 }
@@ -40,7 +39,6 @@ local wrap_widths = {
   subtitle = 0.6
 }
 local fallback_font = 'DermaLarge'
-local outline_color = Color(0, 0, 0)
 local caption_color = Color(255, 255, 255)
 local title_draw_color = Color(255, 255, 255)
 
@@ -58,41 +56,6 @@ local function tint(target, source, alpha)
   target.r, target.g, target.b, target.a = source.r, source.g, source.b, alpha
 
   return target
-end
-
---- Converts a color that may have come over the network to an opaque Color. Other plugins
--- that show text sent by the server, such as Area Display, use it as well.
--- @param value [Color/Map color, or any table with the r, g and b fields]
--- @return [Color the color without its alpha, or nil if the value is not a color]
-function Cinematics.to_color(value)
-  if istable(value) and isnumber(value.r) and isnumber(value.g) and isnumber(value.b) then
-    return Color(value.r, value.g, value.b)
-  end
-end
-
---- Draws lines of text one below another, aligned to a horizontal position and outlined in
--- black so that they stay readable on any background. Other plugins that draw text over the
--- screen, such as Area Display, use it as well.
--- @param lines [List<String> lines to draw]
--- @param font [String font name]
--- @param x [Number screen x the lines are aligned to]
--- @param y [Number screen y of the top of the first line]
--- @param color [Color text color, with the alpha to draw the text at]
--- @param align=TEXT_ALIGN_CENTER [Number horizontal alignment, one of the TEXT_ALIGN enums]
--- @return [Number screen y below the last line]
-function Cinematics.draw_lines(lines, font, x, y, color, align)
-  local line_height = font_size(font)
-
-  align = align or TEXT_ALIGN_CENTER
-  outline_color.a = color.a
-
-  for i = 1, #lines do
-    draw_text_outlined(lines[i], font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
-
-    y += line_height
-  end
-
-  return y
 end
 
 --- Queues a cinematic for the local player. It is played once the cinematics queued before it
@@ -127,8 +90,8 @@ function Cinematics:add(cinematic)
   if !istable(cinematic) then return end
 
   local entry = {
-    color = Cinematics.to_color(cinematic.color),
-    title_color = Cinematics.to_color(cinematic.title_color),
+    color = util.to_color(cinematic.color),
+    title_color = util.to_color(cinematic.title_color),
     duration = math_max(tonumber(cinematic.duration) or get_option('cinematic_duration', defaults.duration), 0),
     delay = math_max(tonumber(cinematic.delay) or 0, 0),
     bar_size = math.Clamp(
@@ -367,7 +330,7 @@ function Cinematics:draw(scrw, scrh)
     local text_height = #lines.text * font_size(font)
     local band_height = math_max(current.bar_size * scrh, text_height + math.scale(32))
 
-    Cinematics.draw_lines(
+    draw.lines_outlined(
       lines.text,
       font,
       center_x,
@@ -387,13 +350,13 @@ function Cinematics:draw(scrw, scrh)
     if lines.title then
       local title_color = current.title_color or current.color or get_color('cinematic_title', color_white)
 
-      y = Cinematics.draw_lines(
+      y = draw.lines_outlined(
         lines.title, title_font, center_x, y, tint(title_draw_color, title_color, alpha)
       ) + gap
     end
 
     if lines.subtitle then
-      Cinematics.draw_lines(lines.subtitle, subtitle_font, center_x, y, tint(caption_color, text_color, alpha))
+      draw.lines_outlined(lines.subtitle, subtitle_font, center_x, y, tint(caption_color, text_color, alpha))
     end
   end
 end

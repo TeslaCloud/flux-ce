@@ -1,9 +1,9 @@
 --- Client-side drawing helpers of the Flux core.
 -- `surface` gains scaled and rotated text and drawing blocks, circles, sectors and rings.
--- `draw` gains stencil cutouts, outlined, textured and plain boxes, lines and blurred
--- backgrounds. `Flux` gains the circular action indicator, the spinning cog and simple
--- position animations. The file also derives the gamemode from sandbox on the client and
--- sets up the materials and the settings of the blur effect.
+-- `draw` gains stencil cutouts, outlined, textured and plain boxes, lines, outlined lines of
+-- text and blurred backgrounds. `Flux` gains the circular action indicator, the spinning cog
+-- and simple position animations. The file also derives the gamemode from sandbox on the
+-- client and sets up the materials and the settings of the blur effect.
 -- @module [draw]
 
 DeriveGamemode('sandbox')
@@ -430,6 +430,34 @@ end
 function draw.line(x, y, x2, y2, color)
   surface_set_draw_color(color)
   surface.DrawLine(x, y, x2, y2)
+end
+
+do
+  local outline_color = Color(0, 0, 0)
+
+  --- Draws lines of text one below another, aligned to a horizontal position and outlined in
+  -- black, at the alpha of the text color, so that they stay readable on any background.
+  -- @param lines [List<String> lines to draw]
+  -- @param font [String font name]
+  -- @param x [Number screen x the lines are aligned to]
+  -- @param y [Number screen y of the top of the first line]
+  -- @param color [Color text color, with the alpha to draw the text at]
+  -- @param align=TEXT_ALIGN_CENTER [Number horizontal alignment, one of the TEXT_ALIGN enums]
+  -- @return [Number screen y below the last line]
+  function draw.lines_outlined(lines, font, x, y, color, align)
+    local line_height = util.font_size(font)
+
+    align = align or TEXT_ALIGN_CENTER
+    outline_color.a = color.a
+
+    for i = 1, #lines do
+      draw.SimpleTextOutlined(lines[i], font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
+
+      y += line_height
+    end
+
+    return y
+  end
 end
 
 do

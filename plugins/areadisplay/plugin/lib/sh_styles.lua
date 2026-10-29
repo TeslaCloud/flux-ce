@@ -84,7 +84,6 @@ if CLIENT then
   local get_font, get_color, get_option = Theme.get_font, Theme.get_color, Theme.get_option
   local max, clamp, scale = math.max, math.Clamp, math.scale
   local fallback_font = 'DermaLarge'
-  local outline_color = Color(0, 0, 0)
   local text_color = Color(255, 255, 255)
 
   --- Wraps the text of a notice to a part of the screen width and stores the lines in it.
@@ -106,35 +105,6 @@ if CLIENT then
     return lines
   end
 
-  --- Draws lines of text one below another, outlined in black so that they stay readable on
-  -- any background. The Cinematics plugin draws them with `Cinematics.draw_lines` whenever it
-  -- is loaded; the code here is only the fallback for a server without it.
-  -- @param lines [List<String> lines to draw]
-  -- @param font [String font name]
-  -- @param x [Number screen x the lines are aligned to]
-  -- @param y [Number screen y of the top of the first line]
-  -- @param color [Color text color, with the alpha to draw the text at]
-  -- @param align [Number horizontal alignment, one of the TEXT_ALIGN enums]
-  -- @return [Number height the lines took]
-  local function draw_lines(lines, font, x, y, color, align)
-    if Cinematics and isfunction(Cinematics.draw_lines) then
-      return Cinematics.draw_lines(lines, font, x, y, color, align) - y
-    end
-
-    local line_height = util.font_size(font)
-    local line_count = #lines
-
-    outline_color.a = color.a
-
-    for i = 1, line_count do
-      draw.SimpleTextOutlined(lines[i], font, x, y, color, align, TEXT_ALIGN_TOP, 1, outline_color)
-
-      y += line_height
-    end
-
-    return line_count * line_height
-  end
-
   --- Draws the notice as a title in the upper part of the screen, centered horizontally.
   -- @param display [Map the notice]
   -- @param alpha [Number opacity of the notice, from 0 to 255]
@@ -153,16 +123,10 @@ if CLIENT then
 
     text_color.r, text_color.g, text_color.b, text_color.a = color.r, color.g, color.b, alpha
 
-    local height = draw_lines(
-      display.lines,
-      font,
-      scrw * 0.5,
-      scrh * 0.2 + offset,
-      text_color,
-      TEXT_ALIGN_CENTER
-    )
+    local y = scrh * 0.2 + offset
+    local bottom = draw.lines_outlined(display.lines, font, scrw * 0.5, y, text_color, TEXT_ALIGN_CENTER)
 
-    return height + scale(12)
+    return bottom - y + scale(12)
   end
 
   --- Wraps the text of the notice and splits its lines into the characters to type out.
@@ -275,7 +239,7 @@ if CLIENT then
 
     text_color.r, text_color.g, text_color.b, text_color.a = color.r, color.g, color.b, alpha
 
-    draw_lines(
+    draw.lines_outlined(
       display.typed_lines,
       font,
       scrw * 0.08,
