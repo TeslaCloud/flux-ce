@@ -44,10 +44,10 @@
 -- end
 -- ```
 --
--- The color pass of the plugin is folded into the color modification of the Color Modify
--- plugin, on top of the look a schema sets through that plugin, so the screen is only color
--- corrected once; without that plugin the low health effect does not drain the colors. The
--- numbers the effects are built from are in `ScreenEffects.defaults`, which a schema may change.
+-- The plugin also owns the color modification of the screen, with which a schema gives the
+-- game its own look (`Flux.enable_color_mod`, `Flux.set_color_mod`); the color pass of the
+-- effects is folded into that look, so the screen is only color corrected once. The numbers
+-- the effects are built from are in `ScreenEffects.defaults`, which a schema may change.
 --
 -- A schema turns the plugin on by adding `screeneffects` to its `depends`.
 -- @module [ScreenEffects]

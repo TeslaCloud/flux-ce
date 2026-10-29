@@ -39,8 +39,8 @@ function ScreenEffects:Think()
   self:update_view(frame_time)
 end
 
---- Draws the distortion, the blur and the motion blur of the effects. The color pass is
--- folded into the color modification of the Color Modify plugin, which draws it.
+--- Draws the color modification of the schema with the color pass of the effects folded in,
+-- and the distortion, the blur and the motion blur of the effects.
 function ScreenEffects:RenderScreenspaceEffects()
   self:draw_screen()
 end

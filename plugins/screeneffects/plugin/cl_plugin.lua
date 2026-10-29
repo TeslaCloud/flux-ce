@@ -5,10 +5,9 @@
 -- Whether an effect is applied, how strong the player wants it and what the `Adjust*` hooks
 -- make of it is looked up eight times a second by `ScreenEffects:update_settings`; every
 -- frame only moves the effects towards those values. The saturation, brightness and
--- contrast of the low health effect are folded into the color modification table of the
--- Color Modify plugin through `Flux.set_color_mod`, on top of whatever the schema has set
--- there, so that the screen is only color corrected once; without that plugin they are not
--- drawn. The distortion, the blur and the motion blur are passes of their own.
+-- contrast of the low health effect are folded into the color modification that the schema
+-- sets with `Flux.set_color_mod`, so that the screen is only color corrected once. The
+-- distortion, the blur and the motion blur are passes of their own.
 --
 -- `ScreenEffects.effects` maps the ID of an effect to its `config` key, the IDs of its
 -- `setting` and `strength` settings and the `max_strength` of the latter in percent.
@@ -143,20 +142,6 @@ local adjusted_view = {}
 local screen_fields = { 'saturation', 'brightness', 'contrast', 'motion_blur', 'refraction', 'blur' }
 local view_fields = { 'pitch', 'yaw', 'roll' }
 
---- The color modification keys that the color pass writes, by field of
--- `ScreenEffects.screen`, with the value that leaves the picture alone; what the pass has
--- last written to each key and what it found there before, so that the values of the schema
--- are multiplied rather than replaced and put back once the effect is neutral; and whether
--- the pass has turned the color modification on itself, so that it turns it off again.
-local color_keys = {
-  saturation = { key = '$pp_colour_colour', neutral = 1 },
-  brightness = { key = '$pp_colour_brightness', neutral = 0 },
-  contrast = { key = '$pp_colour_contrast', neutral = 1 }
-}
-local color_written = {}
-local color_base = {}
-local color_mod_enabled_here = false
-
 local heartbeat_path = 'player/heartbeat1.wav'
 local refract_material = Material('models/props_c17/fisheyelens')
 local blur_material = Material('pp/blurscreen')
@@ -263,61 +248,6 @@ function ScreenEffects:get_effect_strength(id)
   return to_number(ClientSettings:get(effect.strength, 100), 100) * 0.01
 end
 
---- Folds one value of the color pass into the color modification table of the Color Modify
--- plugin: the saturation and the contrast multiply what the schema has set there, the
--- brightness is added to it, and a neutral value puts the value of the schema back.
--- @param field [String 'saturation', 'brightness' or 'contrast']
--- @param value [Number value of the pass]
-local function apply_color(field, value)
-  local info = color_keys[field]
-  local current = PLAYER.color_mod_table and PLAYER.color_mod_table[info.key]
-
-  if current == nil then
-    current = info.neutral
-  end
-
-  if color_written[field] == nil or current != color_written[field] then
-    color_base[field] = current
-  end
-
-  local base = color_base[field]
-  local result = base
-
-  if value != info.neutral then
-    result = field == 'brightness' and base + value or base * value
-  end
-
-  Flux.set_color_mod(info.key, result)
-
-  color_written[field] = result
-end
-
---- Writes the color pass to the Color Modify plugin and turns the color modification on
--- while the pass changes the picture, or off again once it does not, unless something
--- else has turned it on. Does nothing without the Color Modify plugin.
--- @param saturation [Number 1 leaves the colors alone]
--- @param brightness [Number 0 leaves it alone]
--- @param contrast [Number 1 leaves it alone]
-local function apply_color_pass(saturation, brightness, contrast)
-  if !isfunction(Flux.set_color_mod) or !IsValid(PLAYER) then return end
-
-  apply_color('saturation', saturation)
-  apply_color('brightness', brightness)
-  apply_color('contrast', contrast)
-
-  local active = saturation != 1 or brightness != 0 or contrast != 1
-
-  if active and !PLAYER.color_mod then
-    enable_color_mod()
-
-    color_mod_enabled_here = true
-  elseif !active and color_mod_enabled_here then
-    Flux.disable_color_mod()
-
-    color_mod_enabled_here = false
-  end
-end
-
 --- Works out what the screen passes would draw from the levels of the effects alone.
 -- @param target [Map table that the values are written to]
 local function compute_screen(target)
@@ -362,8 +292,8 @@ function ScreenEffects:get_health_fraction()
 end
 
 --- Puts everything back to where nothing is drawn, nothing is added to the view and no
--- heartbeat is heard, and gives the color modification table back to the schema. Called
--- every frame while the effects are not active.
+-- heartbeat is heard, which leaves the color modification of the schema alone. Called every
+-- frame while the effects are not active.
 function ScreenEffects:reset_effects()
   levels.damage = 0
   levels.submerged = 0
@@ -401,8 +331,6 @@ function ScreenEffects:reset_effects()
   for i = 1, #view_fields do
     view_offsets[view_fields[i]] = 0
   end
-
-  apply_color_pass(1, 0, 1)
 
   self:stop_heartbeat()
 end
@@ -468,9 +396,8 @@ function ScreenEffects:update_settings()
 end
 
 --- Works out what the screen passes draw this frame: fades the low health and the underwater
--- effect towards where they should be, writes their values to `ScreenEffects.screen` with
--- what the AdjustScreenEffects hook has last replaced, and hands the color pass to the
--- Color Modify plugin.
+-- effect towards where they should be and writes their values to `ScreenEffects.screen` with
+-- what the AdjustScreenEffects hook has last replaced.
 -- @param frame_time [Number seconds since the last frame]
 function ScreenEffects:update_screen(frame_time)
   local client = PLAYER
@@ -493,14 +420,14 @@ function ScreenEffects:update_screen(frame_time)
   for field, value in pairs(screen_overrides) do
     screen[field] = value
   end
-
-  apply_color_pass(to_number(screen.saturation, 1), to_number(screen.brightness, 0), to_number(screen.contrast, 1))
 end
 
---- Draws the screen passes from the values in `ScreenEffects.screen`: the distortion, the
--- blur and the motion blur, each of them only if it would change the picture. The color
--- pass is drawn by the Color Modify plugin.
+--- Draws the screen passes from the values in `ScreenEffects.screen`: the color modification
+-- with the color pass folded in, the distortion, the blur and the motion blur, each of them
+-- only if it would change the picture.
 function ScreenEffects:draw_screen()
+  self:draw_color_mod(to_number(screen.saturation, 1), to_number(screen.brightness, 0), to_number(screen.contrast, 1))
+
   local refraction = to_number(screen.refraction, 0)
   local blur = to_number(screen.blur, 0)
   local motion_blur = clamp(to_number(screen.motion_blur, 0), 0, 1)
