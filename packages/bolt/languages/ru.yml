@@ -258,6 +258,7 @@ ru:
       player_management: Управление игроками
       configuration: Конфигурация
       compatibility: Совместимость
+      cami: Другие аддоны
     manage_plugins:
       name: Управление плагинами
       description: Дает доступ к отключению и включению плагинов.

@@ -44,6 +44,18 @@
 -- plugin or schema with several commands gives the existing roles their permissions. A
 -- plugin with a single command sets the command's `permission` field instead.
 --
+-- Bolt speaks CAMI, the interface through which admin mods and addons share usergroups and
+-- privileges, in one of two modes that the static `bolt_external_admin` config picks. By
+-- default Bolt is the admin mod of the server: its roles are CAMI usergroups, the usergroups
+-- and privileges that other addons register become Bolt roles and permissions (a privilege
+-- is allowed to `user`, `assistant` or `gamemaster` as its minimum access is 'user', 'admin'
+-- or 'superadmin'), and Bolt answers CAMI's access checks for the permissions it knows. With
+-- `bolt_external_admin` on, another admin mod owns the usergroups: Bolt registers its
+-- permissions as privileges, asks CAMI before it decides a permission itself and leaves the
+-- engine's usergroup methods to that admin mod. Either way, Bolt signals the role changes
+-- it makes to CAMI, and bans, commands and the admin panel work as before. See
+-- `lib/sh_cami.lua`.
+--
 -- The package loads its libraries, classes and player extensions, its configs, the models and
 -- the admin panel, then the hooks and the network handlers, so that its own commands, which
 -- follow, get their permissions from the `OnCommandCreated` handler. Then it adds 'roles' to

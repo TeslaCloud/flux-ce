@@ -43,6 +43,29 @@ function Bolt:get_all_permissions()
   return perm_table
 end
 
+--- Returns a registered permission by its exact ID.
+-- @param id [String permission ID]
+-- @return [Map permission data (id, name, description, category), or nil if there is no such
+--   permission]
+function Bolt:get_permission(id)
+  for _, category in pairs(permissions) do
+    local found = category[id]
+
+    if found then
+      return found
+    end
+  end
+end
+
+--- Removes a permission from every category it is registered under. The roles keep what
+-- they allow or deny for it.
+-- @param id [String permission ID]
+function Bolt:remove_permission(id)
+  for _, category in pairs(permissions) do
+    category[id] = nil
+  end
+end
+
 --- Returns every registered role.
 -- @return [Map Role objects keyed by role ID]
 function Bolt:get_roles()
@@ -145,6 +168,10 @@ function Bolt:create_role(id, data)
       self:merge_permissions(child_role, data.permissions)
     end
   end
+
+  if self:is_cami_provider() then
+    self:register_cami_usergroup(data)
+  end
 end
 
 --- Copies permission entries (allowed or denied actions, with their callbacks) into a role
@@ -239,6 +266,10 @@ function Bolt:add_permission(id, category, data, force)
 
   if !permissions[category][id] or force then
     permissions[category][id] = data
+
+    if self:uses_external_admin() then
+      self:register_cami_privilege(data)
+    end
   end
 end
 
@@ -340,7 +371,9 @@ end
 --    named first. A character cannot undo what the player is denied.
 -- 3. Otherwise, if either layer says `PERM_ALLOW`, the action is allowed, the character's
 --    permission being named first. A character can be allowed what the role does not allow.
--- 4. `'role'`: the player's role, together with the roles it is based on.
+-- 4. `'role'`: the player's role, together with the roles it is based on; when another admin
+--    mod gives the usergroups, the role that stands for the usergroup, see
+--    `Bolt:get_group_role`.
 --
 -- The character layer only applies while the character is loaded. Invalid players (such as
 -- the server console) and an empty action are always allowed, with no layer. Immunity is not
@@ -382,7 +415,7 @@ function Bolt:get_permission_layer(actor, action, object)
     return true, user_layer
   end
 
-  local role = roles[actor:GetUserGroup()]
+  local role = self:get_group_role(actor:GetUserGroup())
 
   if istable(role) and isfunction(role.can) then
     return role:can(actor, action, object), 'role'
@@ -392,13 +425,24 @@ function Bolt:get_permission_layer(actor, action, object)
 end
 
 --- Checks whether a player may perform an action. This is what `Player:can` answers with, on
--- both realms; see `Bolt:get_permission_layer` for how it is decided.
+-- both realms; see `Bolt:get_permission_layer` for how it is decided. When Bolt defers to
+-- another admin mod (`bolt_external_admin`), CAMI is asked first about every permission that
+-- is registered as a privilege, see `Bolt:ask_cami`, and Bolt decides only what CAMI does not
+-- answer right away.
 -- @param actor [Player]
 -- @param action [String permission ID; an empty string is always allowed]
 -- @param object=nil [String object name the permission was allowed for, passed on to Role#can]
 -- @return [Boolean whether the action is allowed (a role permission callback's return value is
 --   passed through as is)]
 function Bolt:can(actor, action, object)
+  if self:uses_external_admin() then
+    local answer = self:ask_cami(actor, action, object)
+
+    if answer != nil then
+      return answer
+    end
+  end
+
   return (self:get_permission_layer(actor, action, object))
 end
 
@@ -484,7 +528,10 @@ end
 --- Checks whether a player's role has enough immunity to act on another player. A player may
 -- always act on themselves, and a root player on anyone. Also passes when either player is
 -- invalid or a registered role has no numeric immunity. A role ID that is not registered
--- counts as lower than every registered role.
+-- counts as lower than every registered role. When another admin mod gives the usergroups
+-- (`bolt_external_admin`), the roles that stand for the usergroups are compared, see
+-- `Bolt:get_group_role`: two usergroups that are no Bolt roles rank by the usergroup of CAMI
+-- they inherit from at the root, 'user' below 'admin' below 'superadmin'.
 -- @param actor [Player the player performing the action]
 -- @param target [Player the player being acted on]
 -- @param can_equal=false [Boolean also pass when both roles have the same immunity]
@@ -498,7 +545,8 @@ function Bolt:check_immunity(actor, target, can_equal)
     return true
   end
 
-  return compare_immunity(roles[actor:GetUserGroup()], roles[target:GetUserGroup()], can_equal)
+  return compare_immunity(self:get_group_role(actor:GetUserGroup()), self:get_group_role(target:GetUserGroup()),
+    can_equal)
 end
 
 --- Checks whether a player's role has enough immunity to act on the holder of a role. This
@@ -516,7 +564,7 @@ function Bolt:check_role_immunity(actor, role_id, can_equal)
     return true
   end
 
-  return compare_immunity(roles[actor:GetUserGroup()], roles[role_id], can_equal)
+  return compare_immunity(self:get_group_role(actor:GetUserGroup()), roles[role_id], can_equal)
 end
 
 --- Checks whether a SteamID is listed in the bolt_root_steamid config, which makes its owner a

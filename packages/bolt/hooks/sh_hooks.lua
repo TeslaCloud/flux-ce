@@ -80,7 +80,8 @@ end
 
 --- Runs the RegisterPermissions hook, then allows the commands that name a role in their
 -- `permission` field to that role. Also ties the character permission models to the
--- `Character` model.
+-- `Character` model. After a code refresh, once the mode of CAMI is known, it is applied
+-- again with `Bolt:setup_cami` for what the refresh has registered.
 function hooks:OnPluginsLoaded()
   relate_character_permissions()
 
@@ -90,6 +91,10 @@ function hooks:OnPluginsLoaded()
   hook.Run('RegisterPermissions')
 
   Bolt:allow_command_roles()
+
+  if Bolt.cami_mode then
+    Bolt:setup_cami()
+  end
 end
 
 --- Registers the 'bolt_role' condition, which compares a player's role with a chosen one.

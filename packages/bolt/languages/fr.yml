@@ -257,6 +257,7 @@ fr:
       player_management: "Gestion des joueurs"
       configuration: "Configuration"
       compatibility: "Compatibilité"
+      cami: "Autres addons"
     manage_plugins:
       name: "Gestionnaire de plugins"
       description: "Permet d'activer et de désactiver des plugins."

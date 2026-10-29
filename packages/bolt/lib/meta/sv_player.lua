@@ -4,17 +4,25 @@
 
 local player_meta = FindMetaTable('Player')
 
---- Sets the player's role, overriding the engine method. Networks the role, calls
--- on_role_taken / on_role_set on the roles involved, saves the role to the database unless
--- one of them returns a value, and runs the PlayerUserGroupChanged hook.
+player_meta.engine_set_user_group = player_meta.engine_set_user_group or player_meta.SetUserGroup
+
+--- Sets the player's role, overriding the engine method. Networks the role, sets the
+-- engine's usergroup to it as well, calls on_role_taken / on_role_set on the roles involved,
+-- saves the role to the database unless one of them returns a value, and runs the
+-- PlayerUserGroupChanged hook. A change of the role is signaled to CAMI as coming from
+-- 'Bolt', unless it is silent: the role a player has when they join, and a role that another
+-- admin mod has given them through CAMI.
 -- @param group='user' [String role ID]
-function player_meta:SetUserGroup(group)
+-- @param silent=false [Boolean keep CAMI from hearing of the change]
+function player_meta:SetUserGroup(group, silent)
   group = group or 'user'
 
+  local old_id = self:GetUserGroup()
   local group_obj = Bolt:find_group(group)
-  local old_group_obj = Bolt:find_group(self:GetUserGroup())
+  local old_group_obj = Bolt:find_group(old_id)
 
   self:set_nv('role', group)
+  self:engine_set_user_group(group)
 
   if old_group_obj and group_obj and old_group_obj:on_role_taken(self, group_obj) == nil then
     if group_obj:on_role_set(self, old_group_obj) == nil then

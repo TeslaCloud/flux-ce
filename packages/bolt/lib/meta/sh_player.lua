@@ -1,9 +1,14 @@
 --- Player extensions of Bolt: the player's role, their individual and temporary permissions,
 -- those of their active character, and the staff level checks. The engine's
 -- `GetUserGroup`, `IsAdmin` and `IsSuperAdmin` are overridden so that other addons see Flux
--- roles and permissions.
+-- roles and permissions. When Bolt defers to another admin mod (`bolt_external_admin`), the
+-- overrides call the engine's own methods, and the role of a player is their usergroup.
 
 local player_meta = FindMetaTable('Player')
+
+player_meta.engine_get_user_group = player_meta.engine_get_user_group or player_meta.GetUserGroup
+player_meta.engine_is_admin = player_meta.engine_is_admin or player_meta.IsAdmin
+player_meta.engine_is_super_admin = player_meta.engine_is_super_admin or player_meta.IsSuperAdmin
 
 --- Returned while a player has no character permissions, so that the permission checks do not
 -- create a table every time. It is never written to.
@@ -29,16 +34,21 @@ function player_meta:is_admin()
   return self:can 'moderate'
 end
 
---- Returns the ID of the player's role.
+--- Returns the ID of the player's role, which is the usergroup the engine has for them when
+-- Bolt defers to another admin mod.
 -- @return [String role ID, 'user' if none has been set]
 function player_meta:get_role()
+  if Bolt:uses_external_admin() then
+    return self:engine_get_user_group()
+  end
+
   return self:get_nv('role', 'user')
 end
 
---- Returns the player's role object.
+--- Returns the player's role object, see `Bolt:get_group_role`.
 -- @return [Role the role, or an empty table if it is not registered]
 function player_meta:get_role_table()
-  return Bolt:find_group(self:get_role()) or {}
+  return Bolt:get_group_role(self:get_role()) or {}
 end
 
 --- Checks whether the player has the 'staff' permission.
@@ -50,15 +60,29 @@ end
 --- Overrides the engine method to return the player's Flux role ID.
 -- @param self [Player]
 -- @return [String role ID]
-player_meta.GetUserGroup  = self -> self:get_role()
---- Overrides the engine method so that other addons recognize Flux super admins.
--- @param self [Player]
+player_meta.GetUserGroup = self -> self:get_role()
+
+--- Overrides the engine method so that other addons recognize Flux super admins. Calls the
+-- engine's method when Bolt defers to another admin mod.
 -- @return [Boolean]
-player_meta.IsSuperAdmin  = self -> self:is_super_admin()
---- Overrides the engine method so that other addons recognize Flux admins.
--- @param self [Player]
+function player_meta:IsSuperAdmin()
+  if Bolt:uses_external_admin() then
+    return self:engine_is_super_admin()
+  end
+
+  return self:is_super_admin()
+end
+
+--- Overrides the engine method so that other addons recognize Flux admins. Calls the
+-- engine's method when Bolt defers to another admin mod.
 -- @return [Boolean]
-player_meta.IsAdmin       = self -> self:is_admin()
+function player_meta:IsAdmin()
+  if Bolt:uses_external_admin() then
+    return self:engine_is_admin()
+  end
+
+  return self:is_admin()
+end
 
 --- Returns the permissions set on the player individually, not counting those of their role.
 -- @return [Map PERM_ values keyed by permission ID]

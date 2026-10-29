@@ -124,32 +124,26 @@ function hooks:ActiveRecordReady()
   end):fetch()
 end
 
---- Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
--- bolt_root_steamid config root admins, networks stored permissions, sends the config again if
--- the player turns out to be allowed to edit it and logs the connection.
+--- Applies a loaded user record to the player: sets their role without signaling CAMI, makes
+-- the SteamIDs from the bolt_root_steamid config root admins, networks stored permissions,
+-- sends the config again if the player turns out to be allowed to edit it and logs the
+-- connection. When Bolt defers to another admin mod, the usergroup is left to that admin mod
+-- and only the root flag is set.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function hooks:PlayerRestored(actor, record)
-  local root_steamid = Config.get('bolt_root_steamid')
+  local sets_role = !Bolt:uses_external_admin()
 
-  if record.role then
-    actor:SetUserGroup(record.role)
+  if sets_role and record.role then
+    actor:SetUserGroup(record.role, true)
   end
 
-  if isstring(root_steamid) then
-    if actor:SteamID() == root_steamid then
-      actor:SetUserGroup('admin')
-      actor.can_anything = true
+  if Bolt:is_root_steam_id(actor:SteamID()) then
+    if sets_role then
+      actor:SetUserGroup('admin', true)
     end
-  elseif istable(root_steamid) then
-    local steam_id = actor:SteamID()
 
-    for _, root_id in ipairs(root_steamid) do
-      if root_id == steam_id then
-        actor:SetUserGroup('admin')
-        actor.can_anything = true
-      end
-    end
+    actor.can_anything = true
   end
 
   if record.permissions then

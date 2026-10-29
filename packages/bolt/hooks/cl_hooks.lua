@@ -65,11 +65,16 @@ function hooks:OnThemeLoaded(current_theme)
 end
 
 --- Updates the line of a config in the config editor, if it is open, when the value of
--- the config has arrived from the server.
+-- the config has arrived from the server. The arrival of `bolt_external_admin` applies its
+-- mode on the client with `Bolt:setup_cami`.
 -- @param key [String config key]
 -- @param _old_value [Any value the client had before]
 -- @param _new_value [Any value that has been received]
 function hooks:OnConfigReceived(key, _old_value, _new_value)
+  if key == 'bolt_external_admin' then
+    Bolt:setup_cami()
+  end
+
   if IsValid(Bolt.config_editor) then
     Bolt.config_editor:update_config(key)
   end

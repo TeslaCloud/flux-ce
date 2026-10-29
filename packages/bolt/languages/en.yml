@@ -257,6 +257,7 @@ en:
       player_management: Player management
       configuration: Configuration
       compatibility: Compatibility
+      cami: Other addons
     manage_plugins:
       name: Plugin manager
       description: Grants access to disable and enable plugins.

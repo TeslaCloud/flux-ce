@@ -43,16 +43,23 @@ end
 
 --- Changes the role that is stored for a SteamID, which its owner gets the next time they
 -- join. Use `Player:SetUserGroup` for a player who is on the server. Does not check
--- permissions or immunity.
+-- permissions or immunity. Once the role is stored, the change is signaled to CAMI as coming
+-- from 'Bolt', unless it is silent, as it is for a role that another admin mod has given.
 -- @param steam_id [String]
 -- @param role_id [String role ID]
 -- @param callback=nil [Function called without arguments once the role has been stored]
-function Bolt:set_stored_role(steam_id, role_id, callback)
+-- @param old_role=nil [String ID of the role that was stored before, for CAMI]
+-- @param silent=false [Boolean keep CAMI from hearing of the change]
+function Bolt:set_stored_role(steam_id, role_id, callback, old_role, silent)
   local query = ActiveRecord.Database:update('users')
     query:where('steam_id', steam_id)
     query:update('role', role_id)
     query:update('updated_at', to_datetime(os.time()))
     query:callback(function()
+      if !silent and old_role != role_id then
+        CAMI.SignalSteamIDUserGroupChanged(steam_id, old_role, role_id, 'Bolt')
+      end
+
       if callback then
         callback()
       end
@@ -228,7 +235,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
       if callback then
         callback(user.name, user.role)
       end
-    end)
+    end, user.role)
   end)
 end
 
