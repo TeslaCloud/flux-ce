@@ -106,13 +106,6 @@ function Limbs:is_enabled()
   return config_get('limbs_enabled', true) ? true : false
 end
 
---- Returns the IDs of all limbs, from the head down.
--- @return [List<String> 'head', 'chest', 'stomach', 'left_arm', 'right_arm', 'left_leg' and
---   'right_leg'; do not modify the list]
-function Limbs:all()
-  return limb_ids
-end
-
 --- Checks whether a value is the ID of a limb.
 -- @param limb [Any]
 -- @return [Boolean]

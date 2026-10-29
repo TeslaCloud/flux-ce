@@ -59,7 +59,7 @@ function Limbs:PostPlayerTakeDamage(victim, damage_info, took, hitgroup)
   -- -- Explosions hurt every limb a little.
   -- function MyPlugin:AdjustLimbHits(victim, damage_info, hits, amount)
   --   if damage_info:IsExplosionDamage() then
-  --     for _, limb_id in ipairs(Limbs:all()) do
+  --     for _, limb_id in ipairs(Damage:get_limbs()) do
   --       hits[limb_id] = (hits[limb_id] or 0) + amount * 0.25
   --     end
   --   end
