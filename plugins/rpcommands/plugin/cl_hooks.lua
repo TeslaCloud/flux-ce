@@ -7,7 +7,11 @@
 local IsValid = IsValid
 local isfunction = isfunction
 local text_size = util.text_size
+const draw_text_outlined = draw.SimpleTextOutlined
+const wrap_text = util.wrap_text
 
+const text_color = Color(255, 255, 255)
+const text_outline_color = Color(0, 0, 0)
 const hidden_ooc_kind = { id = 'typing', name = 'ui.hud.display_typing.typing', live = false }
 
 --- Checks whether a text is out of character chat behind a prefix that starts like a command,
@@ -30,6 +34,41 @@ local function is_command_like_ooc(text)
   return false
 end
 
+--- Returns the lines a static text is drawn in and the height of its text, wrapped again only
+-- when the font or the screen width differ from the ones it was last wrapped for.
+-- @param text_data [Map the static text]
+-- @param font [String font the text is drawn with]
+-- @param scrw [Number screen width]
+-- @param cx [Number horizontal center of the screen]
+-- @return [List<String> lines, Number height of the text]
+local function get_wrapped_lines(text_data, font, scrw, cx)
+  if text_data.wrapped_font != font or text_data.wrapped_scrw != scrw then
+    local full_w, full_h = text_size(text_data.text, font)
+
+    text_data.wrapped_lines = wrap_text(text_data.text, font, scrw * 0.25, cx - full_w * 0.5)
+    text_data.wrapped_height = full_h
+    text_data.wrapped_font = font
+    text_data.wrapped_scrw = scrw
+  end
+
+  return text_data.wrapped_lines, text_data.wrapped_height
+end
+
+--- Draws one line of a static text centered on a point.
+-- @param line [String]
+-- @param font [String]
+-- @param x [Number horizontal center of the line]
+-- @param y [Number top of the line]
+-- @param offset [Number space below the line]
+-- @return [Number top of the next line]
+local function draw_line(line, font, x, y, offset)
+  local w, h = text_size(line, font)
+
+  draw_text_outlined(line, font, x - w * 0.5, y, text_color, nil, nil, 1, text_outline_color)
+
+  return y + h + offset
+end
+
 --- Draws nearby visible static texts, fading with distance and screen position. Staff holding Alt also see
 -- who placed each text and when.
 function RPCommands:HUDPaint()
@@ -50,27 +89,26 @@ function RPCommands:HUDPaint()
 
     if client_pos:DistToSqr(text_pos) <= 90_000 and !util.vector_obstructed(client_pos, text_pos, client) then
       local pos = text_pos:ToScreen()
-      local cam_mult = (1 - math.Distance(cx, cy, pos.x, pos.y) / scrw * 1.5)
+      local x = pos.x
+      local cam_mult = (1 - math.Distance(cx, cy, x, pos.y) / scrw * 1.5)
       local distance_mult = (1 - client_pos:Distance(text_pos) / 300)
       local alpha = 255 * cam_mult * distance_mult
-      local col1, col2 = Color(255, 255, 255, alpha), Color(0, 0, 0, alpha)
-      local full_w, full_h = text_size(text_data.text, font)
-      local lines = util.wrap_text(text_data.text, font, scrw * 0.25, cx - full_w * 0.5)
+      local lines, full_h = get_wrapped_lines(text_data, font, scrw, cx)
+      local line_count = show_author ? #lines + 2 : #lines
+      local cur_y = pos.y - ((full_h + offset) * line_count) * 0.5
 
-      if show_author then
-        lines[#lines + 1] = text_data.name..' ('..text_data.steamid..')'
-        lines[#lines + 1] = text_data.time
-      end
-
-      local cur_y = pos.y - ((full_h + offset) * #lines) * 0.5
+      text_color.a = alpha
+      text_outline_color.a = alpha
 
       for i = 1, #lines do
-        local line = lines[i]
-        local w, h = text_size(line, font)
+        cur_y = draw_line(lines[i], font, x, cur_y, offset)
+      end
 
-        draw.SimpleTextOutlined(line, font, pos.x - w * 0.5, cur_y, col1, nil, nil, 1, col2)
+      if show_author then
+        text_data.author_line = text_data.author_line or text_data.name..' ('..text_data.steamid..')'
 
-        cur_y = cur_y + h + offset
+        cur_y = draw_line(text_data.author_line, font, x, cur_y, offset)
+        draw_line(text_data.time, font, x, cur_y, offset)
       end
     end
   end
