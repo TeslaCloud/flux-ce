@@ -3,7 +3,7 @@
 -- scoreboard until a character is loaded. It also shows the physical description of characters
 -- on scoreboard cards and above players. The handlers of the messages that the server sends
 -- about characters, such as a refused request or the order to open the main menu, are in
--- `cl_nethooks.lua`.
+-- `nethooks/cl_characters.lua`.
 
 local color_info_text = Color('white')
 

@@ -139,7 +139,7 @@ end
 -- @param character [Character]
 function Characters:OnActiveCharacterSet(owner, character)
   owner:Spawn()
-  owner:SetModel(character.model or 'models/humans/group01/male_02.mdl')
+  owner:SetModel(character.model or Characters.default_model)
   owner:SetSkin(character.skin or 1)
   owner:ScreenFade(SCREENFADE.IN, Color('white'), 2, 1)
 
