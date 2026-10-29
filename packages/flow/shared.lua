@@ -27,12 +27,6 @@ GM.name_override = false
 
 AddCSLuaFile(FLUX_ENV_PATH)
 
---- Returns the version of the Flux core, as declared in its package metadata.
--- @return [String]
-function Flux.get_version()
-  return version
-end
-
 Plugin.clear_cache()
 
 if !LITE_REFRESH then

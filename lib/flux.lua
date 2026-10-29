@@ -1,8 +1,9 @@
 --- Core of the Flux package, included as a dependency by its package specification.
 -- Sets the environment constants (`IS_PRODUCTION`, `IS_DEVELOPMENT` and `IS_TEST`), loads the
--- `Pipeline`, `Plugin` and `Config` libraries, provides the loaded schema (its folder, name,
--- information and inclusion) and defines what happens once the package and all of its
--- dependencies have been included: the schema is loaded and the FluxPackageLoaded hook runs.
+-- `Pipeline`, `Plugin` and `Config` libraries, provides the version of Flux, debug output and
+-- the loaded schema (its folder, name, information and inclusion) and defines what happens
+-- once the package and all of its dependencies have been included: the schema is loaded and
+-- the FluxPackageLoaded hook runs.
 -- On the server it also reads `settings.yml`, `config.yml` and `database.yml` from the
 -- gamemode's `config` folder into the `Settings` and `DatabaseSettings` globals and shares the
 -- schema information with clients.
@@ -18,6 +19,25 @@ IS_DEVELOPMENT   = !IS_PRODUCTION
 IS_TEST          = ENV['FLUX_ENV'] == 'test'
 
 Flux.development = !IS_PRODUCTION
+
+local debug_color = Color(200, 200, 200)
+
+--- Returns the version of Flux, as declared in the package specification of the Flux package.
+-- @return [String]
+function Flux.get_version()
+  return Flux.__package__.version
+end
+
+--- Prints a debug message to the console, but only in development or when the
+-- debug_output_in_production setting is enabled.
+-- @param message [String]
+function Flux.dev_print(message)
+  if Flux.development or Settings.debug_output_in_production then
+    Msg('Debug: ')
+    MsgC(debug_color, message)
+    Msg('\n')
+  end
+end
 
 if !Pipeline or !Plugin or !Config then
   require_relative 'pipeline'

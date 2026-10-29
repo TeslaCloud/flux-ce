@@ -1,13 +1,10 @@
 --- Core helpers of the Flux gamemode package on the global `Flux` table.
--- They cover console output (`Flux.print`, `Flux.dev_print`), the registry of player
--- actions (`Flux.register_action`) and the global UI offset that HUD elements follow on the
--- client.
+-- They cover console output (`Flux.print`), the registry of player actions
+-- (`Flux.register_action`) and the global UI offset that HUD elements follow on the client.
 -- The same file replaces `file.Write` with a version that creates missing folders.
 -- @module [Flux]
 
 AddCSLuaFile()
-
-local debug_color = Color(200, 200, 200)
 
 --- Prints a message to the console. Tables are printed with PrintTable.
 -- @param message [Any]
@@ -16,17 +13,6 @@ function Flux.print(message)
     print(message)
   else
     PrintTable(message)
-  end
-end
-
---- Prints a debug message to the console, but only in development or when the
--- debug_output_in_production setting is enabled.
--- @param message [String]
-function Flux.dev_print(message)
-  if Flux.development or Settings.debug_output_in_production then
-    Msg('Debug: ')
-    MsgC(debug_color, message)
-    Msg('\n')
   end
 end
 
