@@ -3,7 +3,7 @@
 -- language phrases), `arguments` (the minimum amount of arguments), `arg_types` (what each
 -- argument is, for completion and checking), `aliases` (the names it can be called by) and
 -- `no_console` (the command cannot be run from the server console).
--- The admin plugin registers a permission named after the command's ID, which the role files
+-- Bolt registers a permission named after the command's ID, which the role files
 -- allow to roles with `can`. `permission` names the role the command is allowed to, along
 -- with the roles based on it, unless a role file decides the command itself; this is the way
 -- for a plugin that adds a single command, while a plugin with several commands allows them
@@ -11,7 +11,7 @@
 -- Setting `immunity` or `player_arg` turns one argument into a list of target players: the
 -- first argument, or the one at the position that `player_arg` gives. With `immunity` the
 -- caller must also pass the immunity check (the `CommandCheckImmunity` hook) against every
--- target; with the admin plugin that means a role with a higher immunity than the target's,
+-- target; with Bolt that means a role with a higher immunity than the target's,
 -- or the same one if `can_equal` is set, while callers always pass against themselves and
 -- root players against anyone. When `player_arg` is not set, the first 'player' entry of
 -- `arg_types` decides the position; `player_arg = false` keeps every argument a string, for
@@ -65,7 +65,7 @@ end
 -- `arguments`, `arg_types`, `immunity`, `player_arg`, `can_equal`, `no_console` and
 -- `aliases`) and its own `on_run`, which receives the arguments after the subcommand word.
 -- Its `parent` field is the command it belongs to. It uses the permission of that command,
--- unless it names its own permission ID in `permission_id`; the admin plugin registers that
+-- unless it names its own permission ID in `permission_id`; Bolt registers that
 -- permission, and `permission` may then name the role it is allowed to.
 --
 -- The subcommand word has to match the ID or one of the aliases exactly, in any case. Without

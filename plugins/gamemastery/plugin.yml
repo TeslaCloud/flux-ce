@@ -2,6 +2,5 @@ name: Gamemastery
 description: Lets gamemasters run the world without a character and play a shared pool of characters.
 author: TeslaCloud Studios
 depends:
-  - admin
   - characters
   - observer

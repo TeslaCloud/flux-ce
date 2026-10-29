@@ -1,8 +1,8 @@
 --- Extensions of the `Player` metatable that the gamemode package adds to every player.
 -- Names go through the `GetPlayerName` hook so that plugins can replace them,
 -- `Player:SetModel` announces model changes with the `PlayerModelChanged` hook, and the
--- permission checks (`Player:can`, `Player:is_root`) are answered by hooks that an admin
--- plugin implements. The rest covers the initialization state, the data table of a player,
+-- permission checks (`Player:can`, `Player:is_root`) are answered by hooks that Bolt
+-- implements. The rest covers the initialization state, the data table of a player,
 -- client-side notifications and sounds, freezing, and actions: every player has one current
 -- action, registered with `Flux.register_action`, which the gamemode runs on each
 -- `PlayerThink`; `Flux.TimedAction` builds actions that take time on top of it.
@@ -353,7 +353,7 @@ function player_meta:is_in_reach(entity, distance)
 end
 
 --- Checks whether the player has a permission. The decision is made by the
--- 'PlayerHasPermission' hook, which admin plugins implement.
+-- 'PlayerHasPermission' hook, which Bolt implements.
 -- ```
 -- if !actor:can('spawn_props') then
 --   return false
@@ -364,8 +364,8 @@ end
 -- @return [Boolean nil if nothing handles the hook]
 function player_meta:can(action, object)
   --- Decides whether a player has a permission. Called on both realms by `Player:can`,
-  -- which returns whatever the hook returns. Flux has no handler of its own: an admin
-  -- plugin is expected to implement it.
+  -- which returns whatever the hook returns. Bolt answers it from the player's
+  -- permissions and role.
   -- @param actor [Player The player being checked]
   -- @param action [String Permission ID, such as 'spawn_props']
   -- @param object [Any Object the permission is checked against; nil if none was given]
@@ -378,8 +378,8 @@ end
 -- @return [Boolean nil if nothing handles the hook]
 function player_meta:is_root()
   --- Decides whether a player has root access, that is can do anything. Called on both
-  -- realms by `Player:is_root`, which returns whatever the hook returns. Flux has no
-  -- handler of its own: an admin plugin is expected to implement it.
+  -- realms by `Player:is_root`, which returns whatever the hook returns. Bolt answers it
+  -- from the `bolt_root_steamid` config.
   -- @param target [Player The player being checked]
   -- @return [Boolean Whether the player is root]
   return hook.Run('PlayerIsRoot', self)

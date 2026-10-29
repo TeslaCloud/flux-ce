@@ -28,9 +28,7 @@
 -- Framework plugins load only when the schema or another plugin depends on them. The .yml
 -- file of the schema names a `profile` from `config/profiles.yml`, a named set of plugins
 -- such as `roleplay` or `sandbox`, adds plugins with `depends` and `depends_development` and
--- leaves profile plugins out with `exclude` (see `Plugin.resolve_schema_depends`). Every
--- schema requires the admin plugin, the only provider of permissions; every profile includes
--- it.
+-- leaves profile plugins out with `exclude` (see `Plugin.resolve_schema_depends`).
 --
 -- Plugins can be disabled. A disabled plugin is not included at all, neither on the server
 -- nor on the clients, and a plugin that depends on it is not loaded either, while the schema
@@ -924,7 +922,7 @@ end
 -- that loads depends on it.
 -- ```
 -- Plugin.resolve_schema_depends({ profile = 'roleplay', depends = { 'radios' } }, profiles)
--- -- { 'admin', '3dtexts', ..., 'raisegun', 'radios' }
+-- -- { '3dtexts', 'chatbox', ..., 'raisegun', 'radios' }
 -- ```
 -- @param schema_yml [Map the parsed .yml file of the schema]
 -- @param profiles=nil [Map the parsed profiles, by profile ID]
@@ -989,9 +987,7 @@ end
 -- plugins, then registers it. Sets the SCHEMA global.
 -- On the server the list of disabled plugins is loaded first; a dependency of the schema
 -- that is disabled is left out without stopping the schema from loading. The dependencies
--- come from `Plugin.resolve_schema_depends`, and in development the resolved list is printed
--- and a schema that ends up without the admin plugin, which every schema requires, is warned
--- about.
+-- come from `Plugin.resolve_schema_depends`, and in development the resolved list is printed.
 -- Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.
 function Plugin.include_schema()
   local schema_info = Flux.get_schema_info()
@@ -1055,10 +1051,6 @@ function Plugin.include_schema()
         return
       end
     end
-  end
-
-  if SERVER and IS_DEVELOPMENT and !Plugin.find('admin') then
-    ErrorNoHalt("[Flux] The schema loads without the 'admin' plugin, which every schema requires!\n")
   end
 
   if SERVER then AddCSLuaFile(schema_path..'/gamemode/cl_init.lua') end

@@ -25,4 +25,5 @@ Package:describe(function(s)
   s.depends     'client_settings'
   s.depends     'conditions'
   s.depends     'cami'
+  s.depends     'bolt'
 end)

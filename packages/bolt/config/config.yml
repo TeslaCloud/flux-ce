@@ -1,0 +1,31 @@
+categories:
+  bolt:
+    name: config.bolt.title
+    description: config.bolt.desc
+configs:
+  bolt_ban_message_language:
+    renamed_from:
+      - ban_message_language
+      - admin_ban_message_language
+    name: config.bolt.ban_message_language.name
+    description: config.bolt.ban_message_language.desc
+    category: bolt
+    type: string
+    default_value: "en"
+  bolt_root_steamid:
+    renamed_from:
+      - root_steamid
+      - admin_root_steamid
+    name: config.bolt.root_steamid.name
+    description: config.bolt.root_steamid.desc
+    category: bolt
+    type: table
+    static: true
+    default_value: ["STEAM_0:0:000000000"]
+  bolt_external_admin:
+    name: config.bolt.external_admin.name
+    description: config.bolt.external_admin.desc
+    category: bolt
+    type: boolean
+    static: true
+    default_value: false

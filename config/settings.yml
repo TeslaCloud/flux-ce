@@ -39,4 +39,4 @@ server:
     # Root user's SteamID. They have access to everything.
     # Make this a table if you want multiple root users
     # like ['STEAM_0:0:1', 'STEAM_0:0:2']
-    admin_root_steamid: ["STEAM_0:1:14196407", "STEAM_0:0:16697568"]
+    bolt_root_steamid: ["STEAM_0:1:14196407", "STEAM_0:0:16697568"]

@@ -912,7 +912,7 @@ if SERVER then
       for _, target in ipairs(targets) do
         --- Called for every player a command with `immunity` set is about to be run on, when
         -- the command was not run from the server console. The actor themselves can be among
-        -- the targets; the admin plugin's handler always lets that pass, and lets root players
+        -- the targets; Bolt's handler always lets that pass, and lets root players
         -- target anyone.
         -- @param actor [Player Player who runs the command]
         -- @param target [Player Player the command targets]

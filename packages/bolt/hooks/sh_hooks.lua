@@ -1,0 +1,257 @@
+--- Shared hooks of Bolt, registered as `Bolt`: loading the role files of plugins and of the
+-- schema, answering the permission and root checks of Flux, keeping players without the
+-- 'context_menu' permission from using the properties of entities and from driving them,
+-- registering the permissions of commands and Bolt's own permissions, the character
+-- permission relation and the 'bolt_role' condition.
+
+local hooks = {}
+
+--- Loads the role files of a plugin when its 'roles' folder is being included.
+-- @param extra [String name of the extra folder being included]
+-- @param folder [String path of the plugin folder]
+-- @return [Boolean true if the folder was handled here, nothing otherwise]
+function hooks:PluginIncludeFolder(extra, folder)
+  if extra == 'roles' then
+    Bolt:include_roles(folder..'/roles/')
+
+    return true
+  end
+end
+
+--- Answers the permission checks made through actor:can by delegating to Bolt:can.
+-- @param actor [Player]
+-- @param action [String permission ID]
+-- @param object=nil [String object name the permission was allowed for]
+-- @return [Boolean]
+function hooks:PlayerHasPermission(actor, action, object)
+  return Bolt:can(actor, action, object)
+end
+
+--- Reports whether the player was flagged as root, which happens when their SteamID is listed
+-- in the bolt_root_steamid config.
+-- @param target [Player]
+-- @return [Boolean true for root players, nil otherwise]
+function hooks:PlayerIsRoot(target)
+  return target.can_anything
+end
+
+--- Keeps players without the 'context_menu' permission from using the properties of
+-- entities. The gamemode only keeps them from opening the context menu, which is done on
+-- the client; this is the same check where it counts, since the server asks this hook
+-- before it runs a property. The decision is left to the gamemode for everybody else.
+-- @param actor [Player the player using the property]
+-- @param _property [String ID of the property, e.g. 'remover']
+-- @param _entity [Entity the entity the property is used on]
+-- @return [Boolean false if the player lacks the permission, nothing otherwise]
+function hooks:CanProperty(actor, _property, _entity)
+  if IsValid(actor) and !actor:can('context_menu') then
+    return false
+  end
+end
+
+--- Keeps players without the 'context_menu' permission from driving entities, which is
+-- started from the context menu. The decision is left to the gamemode for everybody else.
+-- @param actor [Player the player trying to drive]
+-- @param _entity [Entity the entity to be driven]
+-- @return [Boolean false if the player lacks the permission, nothing otherwise]
+function hooks:CanDrive(actor, _entity)
+  if IsValid(actor) and !actor:can('context_menu') then
+    return false
+  end
+end
+
+--- Registers a permission for every newly created command.
+-- @param _id [String command ID]
+-- @param data [Command command table]
+function hooks:OnCommandCreated(_id, data)
+  Bolt:permission_from_command(data)
+end
+
+--- Ties the character permission models to the `Character` model of the Characters plugin,
+-- which loads after Bolt, so that the permissions of a character are loaded together
+-- with it. Does nothing without the Characters plugin, or when it has been done already.
+local function relate_character_permissions()
+  if !istable(Character) or !isfunction(Character.has_many) then return end
+  if Character.relations['character_permissions'] then return end
+
+  CharacterPermission:belongs_to 'Character'
+  CharacterTempPermission:belongs_to 'Character'
+end
+
+--- Runs the RegisterPermissions hook, then allows the commands that name a role in their
+-- `permission` field to that role. Also ties the character permission models to the
+-- `Character` model.
+function hooks:OnPluginsLoaded()
+  relate_character_permissions()
+
+  --- Called on both realms once all plugins have loaded. Register permissions here with
+  -- `Bolt:register_permission`. Registering a permission does not allow it for anybody: the
+  -- role files allow permissions to roles with `can`.
+  hook.Run('RegisterPermissions')
+
+  Bolt:allow_command_roles()
+end
+
+--- Registers the 'bolt_role' condition, which compares a player's role with a chosen one.
+function hooks:RegisterConditions()
+  Conditions:register_condition('bolt_role', {
+    name = 'condition.role.name',
+    text = 'condition.role.text',
+    get_args = function(panel, _data)
+      local operator = util.operator_to_symbol(panel.data.operator) or ''
+      local parameter = panel.data.role or ''
+
+      return { operator = operator, role = parameter }
+    end,
+    icon = 'icon16/group.png',
+    check = function(target, data)
+      if !data.operator or !data.role then return false end
+
+      return util.process_operator(data.operator, target:get_role(), data.role)
+    end,
+    set_parameters = function(_id, data, panel, _menu, parent)
+      parent:create_selector(data.name, 'condition.role.message', 'condition.roles', Bolt:get_roles(),
+      function(selector, group)
+        selector:add_choice(t(group.name), function()
+          panel.data.role = group.id
+
+          panel.update()
+        end)
+      end)
+    end,
+    set_operator = 'equal'
+  })
+end
+
+--- Registers the built-in permissions: tools, spawning, voice, context menu, noclip,
+-- management of permissions, configs and plugins, and the staff / admin / super admin
+-- compatibility levels.
+function hooks:RegisterPermissions()
+  Bolt:register_permission(
+    'physgun',
+    'Physgun',
+    'Grants access to the physics gun.',
+    'permission.categories.tools'
+  )
+  Bolt:register_permission(
+    'toolgun',
+    'Tool Gun',
+    'Grants access to the tool gun.',
+    'permission.categories.tools'
+  )
+  Bolt:register_permission(
+    'physgun_freeze',
+    'Freeze Protected Entities',
+    'Grants access to freeze protected entities.',
+    'permission.categories.tools'
+  )
+  Bolt:register_permission(
+    'physgun_pickup',
+    'Unlimited Physgun',
+    'Grants access to pick up any entity with the physics gun.',
+    'permission.categories.tools'
+  )
+
+  Bolt:register_permission(
+    'spawn_props',
+    'Spawn Props',
+    'Grants access to spawn props.',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'spawn_chairs',
+    'Spawn Chairs',
+    'Grants access to spawn chairs.',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'spawn_entities',
+    'Spawn All Entities',
+    'Grants access to spawn any entity.',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'spawn_vehicles',
+    'Spawn Vehicles',
+    'Grants access to spawn vehicles.',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'spawn_npcs',
+    'Spawn NPCs',
+    'Grants access to spawn NPCs.',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'spawn_ragdolls',
+    'Spawn Ragdolls',
+    'Grants access to spawn ragdolls.',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'spawn_sweps',
+    'Spawn SWEPs',
+    'Grants access to spawn scripted weapons.',
+    'permission.categories.spawn'
+  )
+
+  Bolt:register_permission(
+    'voice',
+    'Voice chat access',
+    'Grants access to voice chat.',
+    'permission.categories.general'
+  )
+  Bolt:register_permission(
+    'context_menu',
+    'Context Menu',
+    'Grants access to the context menu, to the properties of entities and to driving them.',
+    'permission.categories.general'
+  )
+  Bolt:register_permission(
+    'noclip',
+    'Noclip',
+    'Lets the player use observer mode / noclip.',
+    'permission.categories.general'
+  )
+
+  Bolt:register_permission(
+    'manage_permissions',
+    'Permission editor',
+    'Grants access to the permission editor.',
+    'permission.categories.player_management'
+  )
+  Bolt:register_permission(
+    'manage_configuration',
+    'Configuration',
+    'Grants access to configuration.',
+    'permission.categories.configuration'
+  )
+
+  Bolt:register_permission(
+    'manage_plugins',
+    'permission.manage_plugins.name',
+    'permission.manage_plugins.description',
+    'permission.categories.server_management'
+  )
+
+  Bolt:register_permission(
+    'staff',
+    'Assistant access',
+    'Marks the player as a member of the staff.',
+    'permission.categories.compatibility'
+  )
+  Bolt:register_permission(
+    'moderate',
+    'Admin access',
+    'General staff access. Other addons identify the player as an admin.',
+    'permission.categories.compatibility'
+  )
+  Bolt:register_permission(
+    'administrate',
+    'Super Admin access',
+    'Advanced staff access. Other addons identify the player as a superadmin.',
+    'permission.categories.compatibility'
+  )
+end
+
+Plugin.add_hooks('Bolt', hooks)

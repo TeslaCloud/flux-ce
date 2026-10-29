@@ -1,5 +1,3 @@
 name: Observer
 description: Keeps staff out of sight of the other players with observer mode, vanish and an admin ESP.
 author: TeslaCloud Studios
-depends:
-  - admin

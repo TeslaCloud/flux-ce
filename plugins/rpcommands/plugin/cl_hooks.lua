@@ -81,7 +81,7 @@ function RPCommands:HUDPaint()
   local scrw = ScrW()
   local cx, cy = ScrC()
   local font = Theme.get_font('menu_small')
-  local show_author = input.IsKeyDown(KEY_LALT) and Bolt and client:is_assistant()
+  local show_author = input.IsKeyDown(KEY_LALT) and client:is_assistant()
   local offset = 4
 
   for _, text_data in pairs(texts) do

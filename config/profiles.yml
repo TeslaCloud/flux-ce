@@ -5,10 +5,6 @@
 # that another loaded plugin depends on is loaded all the same. A schema without `profile`
 # loads its `depends` alone. A `profiles.local.yml` next to this file is read in its place.
 #
-# The admin plugin is required: it is the only provider of permissions, so `can` answers
-# nothing without it. Every profile includes it, and a development server warns at boot when
-# a schema ends up without it.
-#
 # Opt-in plugins, in no profile, for a schema to add with `depends`:
 #   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcdsproxy
 # Development tools, for `depends_development`: devhud, profiler
@@ -17,7 +13,6 @@
 
 base:
   plugins:
-    - admin
     - 3dtexts
     - chatbox
     - crosshair

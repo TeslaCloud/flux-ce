@@ -1,5 +1,3 @@
 name: Ragdoll
 description: Lets players fall over, be knocked out and get back up. Also makes their corpses persist after death.
 author: TeslaCloud Studios
-depends:
-  - admin
