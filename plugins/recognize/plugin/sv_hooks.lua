@@ -16,7 +16,8 @@ function Recognition:OnActiveCharacterCleared(owner, _character)
   owner:set_private_nv('fl_recognizes', {})
 end
 
---- Prevents players from recognizing themselves or, if recog_must_see is set, players they cannot see.
+--- Prevents players from recognizing themselves or, if the 'recognize_must_see' config is on,
+-- players they cannot see.
 -- @param actor [Player player introducing themselves]
 -- @param target [Player player that would recognize them]
 -- @return [Boolean false to prevent recognizing, nil otherwise]
@@ -25,14 +26,15 @@ function Recognition:PlayerCanRecognize(actor, target)
     return false
   end
 
-  if Config.get('recog_must_see') and util.vector_obstructed(actor:EyePos(), target:EyePos(), { actor, target }) then
+  if Config.get('recognize_must_see')
+    and util.vector_obstructed(actor:EyePos(), target:EyePos(), { actor, target }) then
     return false
   end
 end
 
 --- Erases recognitions when a character dies, as the configs ask for: the character
--- forgets everyone (`recog_forget_on_death`), and everyone who knew the character by its
--- real name forgets it (`recog_forgotten_on_death`). Nothing happens while the
+-- forgets everyone (`recognize_forget_on_death`), and everyone who knew the character by its
+-- real name forgets it (`recognize_forgotten_on_death`). Nothing happens while the
 -- recognition system is off.
 -- @param victim [Player]
 -- @param _inflictor [Entity]
@@ -40,11 +42,11 @@ end
 function Recognition:PlayerDeath(victim, _inflictor, _attacker)
   if !self:is_enabled() or victim:IsBot() or !victim:is_character_loaded() then return end
 
-  if Config.get('recog_forget_on_death') and victim:clear_recognizes() > 0 then
+  if Config.get('recognize_forget_on_death') and victim:clear_recognizes() > 0 then
     victim:notify('notification.recognize.forgot_everyone', nil, Color('salmon'))
   end
 
-  if Config.get('recog_forgotten_on_death') then
+  if Config.get('recognize_forgotten_on_death') then
     self:forget_character(victim:get_character_id(), victim:name(true))
   end
 end

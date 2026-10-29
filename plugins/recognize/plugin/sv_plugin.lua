@@ -293,7 +293,7 @@ function Recognition:introduce(actor, kind, name, target)
     --- Asks whether a player may learn the name that another player introduces
     -- themselves under. Called on the server for every player an introduction reaches,
     -- the one who introduces themselves included. The Recognize plugin refuses it for
-    -- that player and, if the `recog_must_see` config is on, for players who have no
+    -- that player and, if the `recognize_must_see` config is on, for players who have no
     -- clear line of sight to them.
     -- @param actor [Player the player who introduces themselves]
     -- @param target [Player the player who would learn the name]

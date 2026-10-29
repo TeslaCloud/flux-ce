@@ -10,9 +10,9 @@
 -- from the menu of their scoreboard card, and staff make characters forget with the
 -- CharForget and CharClearRecognition commands.
 --
--- The `recog_enabled` config turns the whole system off, which makes everyone recognize
--- everyone. `recog_must_see` makes introductions need a clear line of sight, and
--- `recog_forget_on_death` and `recog_forgotten_on_death` decide what a death erases.
+-- The `recognize_enabled` config turns the whole system off, which makes everyone recognize
+-- everyone. `recognize_must_see` makes introductions need a clear line of sight, and
+-- `recognize_forget_on_death` and `recognize_forgotten_on_death` decide what a death erases.
 --
 -- `Player:recognizes`, `Player:knows_real_name` and `Player:get_recognize` read the
 -- recognitions on both realms; `Player:add_recognize`, `Player:remove_recognize` and
@@ -30,12 +30,12 @@ PLUGIN:set_global('Recognition')
 -- may change it.
 Recognition.max_name_length = Recognition.max_name_length or 64
 
---- Checks whether the recognition system is on (the `recog_enabled` config). While it is
+--- Checks whether the recognition system is on (the `recognize_enabled` config). While it is
 -- off everyone recognizes everyone and nobody can introduce themselves or forget anyone;
 -- the stored recognitions are kept.
 -- @return [Boolean]
 function Recognition:is_enabled()
-  return Config.get('recog_enabled') != false
+  return Config.get('recognize_enabled') != false
 end
 
 --- Returns what a player is called by those who do not recognize them: the start of
