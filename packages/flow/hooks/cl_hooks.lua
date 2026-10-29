@@ -25,8 +25,9 @@ timer.Remove('HintSystem_Annoy1')
 timer.Remove('HintSystem_Annoy2')
 
 --- Stores the local player in the PLAYER global, sends the client's language to the server,
--- reports to the server that the player has been created and runs the client-side loading
--- hooks (PlayerModelChanged for every player, SynchronizeTools, LoadData, PostInitPostEntity).
+-- reports to the server that the player has been created, installs the help box of the tool
+-- gun for Flux tools and runs the client-side loading hooks (PlayerModelChanged for every
+-- player, SynchronizeTools, LoadData, PostInitPostEntity).
 function GM:InitPostEntity()
   PLAYER = LocalPlayer()
 
@@ -50,6 +51,8 @@ function GM:InitPostEntity()
   hook.Run('SynchronizeTools')
   hook.Run('LoadData')
 
+  Flux.Tool:install_hud()
+
   Plugin.call('PostInitPostEntity')
 
   timer.Create('flux_please_dont_screw_up', 0.1, 0, function()
@@ -59,6 +62,11 @@ function GM:InitPostEntity()
       timer.Remove('flux_please_dont_screw_up')
     end
   end)
+end
+
+--- Creates the scaled fonts of the help box of the tool gun.
+function GM:CreateFonts()
+  Flux.Tool:create_hud_fonts()
 end
 
 --- Rebuilds the spawn menu and the tool menu once the server has initialized the local player.
