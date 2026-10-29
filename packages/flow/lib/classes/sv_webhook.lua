@@ -38,10 +38,15 @@ function Webhook:init(id, key, types)
 end
 
 --- Puts a batch that Discord refused for the moment back at the front of the queue of a
--- webhook. The batch is dropped and reported when the queue is full.
+-- webhook, behind the batches of the same flush that come before it and are back in the queue
+-- already, so that the batches keep their order whatever order the replies arrive in. The
+-- batch is dropped and reported when the queue is full.
 -- @param webhook [Webhook]
 -- @param text [String]
-local function requeue(webhook, text)
+-- @param requeued [Map positions in the flush of the batches of that flush that are back in the
+--   queue, set to true]
+-- @param index [Number position of the batch in its flush]
+local function requeue(webhook, text, requeued, index)
   local pending = webhook.pending
 
   if #pending >= max_pending then
@@ -50,17 +55,29 @@ local function requeue(webhook, text)
     return
   end
 
-  table.insert(pending, 1, text)
+  local position = 1
+
+  for i = 1, index - 1 do
+    if requeued[i] then
+      position += 1
+    end
+  end
+
+  requeued[index] = true
+
+  table.insert(pending, position, text)
 end
 
 --- Posts a message to a Discord webhook as JSON with every mention disabled. A failed request
--- and a reply other than 2xx are reported; with `retry`, a reply of 429 or 5xx puts the
--- message back at the front of the queue instead.
+-- and a reply other than 2xx are reported; with `requeued`, a reply of 429 or 5xx puts the
+-- message back at the front of the queue instead (see `requeue`).
 -- @param webhook [Webhook]
 -- @param message [String]
 -- @param data [Map optional username, avatar_url and tts fields of the message]
--- @param retry [Boolean whether to queue the message again when Discord asks to retry]
-local function post(webhook, message, data, retry)
+-- @param requeued=nil [Map the batches of the flush that are back in the queue, nil to never
+--   queue the message again]
+-- @param index=nil [Number position of the message in its flush]
+local function post(webhook, message, data, requeued, index)
   HTTP({
     url = webhook.url,
     method = 'POST',
@@ -75,8 +92,8 @@ local function post(webhook, message, data, retry)
     success = |code| -> do
       if code >= 200 and code < 300 then return end
 
-      if retry and (code == 429 or code >= 500) then
-        requeue(webhook, message)
+      if requeued and (code == 429 or code >= 500) then
+        requeue(webhook, message, requeued, index)
       else
         ErrorNoHalt('[Flux:Webhook] Discord webhook '..webhook.id..' replied with HTTP '..code..'\n')
       end
@@ -92,7 +109,7 @@ end
 function Webhook:push(message, data)
   if !self.url or !isstring(message) then return end
 
-  post(self, message, data or empty_data, false)
+  post(self, message, data or empty_data)
 end
 
 --- Queues a message for the next `Webhook:flush`. Once 200 messages are waiting, the oldest
@@ -159,14 +176,19 @@ end
 
 --- Posts the queued messages, joined into Discord messages of at most 2000 bytes, at most two
 -- of them per call; what does not fit stays queued for the next call. A message that Discord
--- answers with 429 or 5xx goes back to the front of the queue, as long as the queue is not full.
+-- answers with 429 or 5xx goes back to the front of the queue, in the order the messages of
+-- the call were posted in, as long as the queue is not full.
 function Webhook:flush()
   local pending = self.pending
 
-  for _ = 1, max_posts_per_flush do
+  if #pending == 0 then return end
+
+  local requeued = {}
+
+  for index = 1, max_posts_per_flush do
     if #pending == 0 then return end
 
-    post(self, take_message(pending), empty_data, true)
+    post(self, take_message(pending), empty_data, requeued, index)
   end
 end
 
