@@ -40,7 +40,7 @@ en:
       description: Toggles on/off your mask as part of the CCA.
       syntax: <none>
   config:
-    rpcommands:
+    rp_commands:
       title: Roleplay Chat
       desc: In-character and out-of-character chat settings.
       talk_radius:

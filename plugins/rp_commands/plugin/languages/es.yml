@@ -40,7 +40,7 @@ es:
       description: Activa o desactiva tu máscara como miembro de Protección Civil.
       syntax: <ninguno>
   config:
-    rpcommands:
+    rp_commands:
       title: Chat de rol
       desc: Ajustes del chat dentro del personaje (IC) y fuera del personaje (OOC).
       talk_radius:

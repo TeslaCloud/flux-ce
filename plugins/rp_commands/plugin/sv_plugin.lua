@@ -7,12 +7,12 @@ local config_get = Config.get
 
 local cooldowns = {
   ooc = {
-    config = 'rpcommands_ooc_interval',
+    config = 'rp_commands_ooc_interval',
     field = 'last_ooc_at',
     phrase = 'notification.cooldown.ooc'
   },
   looc = {
-    config = 'rpcommands_looc_interval',
+    config = 'rp_commands_looc_interval',
     field = 'last_looc_at',
     phrase = 'notification.cooldown.looc'
   }
@@ -42,7 +42,7 @@ function RPCommands:set_ooc_mute(target, duration)
 end
 
 --- Checks the cooldown of the OOC or LOOC chat for a player and starts the next one if they
--- may write. The cooldown is the 'rpcommands_ooc_interval' or the 'rpcommands_looc_interval' config; players with
+-- may write. The cooldown is the 'rp_commands_ooc_interval' or the 'rp_commands_looc_interval' config; players with
 -- the 'bypass_chat_cooldown' permission have none. A player who has to wait is told for how
 -- long.
 -- @param actor [Player]
@@ -153,7 +153,7 @@ function RPCommands:has_phrase_content(text)
 end
 
 --- Sends a message to the OOC chat, which every player reads. The line shows the Steam name
--- of the player, with their Steam avatar if the 'rpcommands_ooc_avatars' config is enabled. An invalid
+-- of the player, with their Steam avatar if the 'rp_commands_ooc_avatars' config is enabled. An invalid
 -- player stands for the server console, whose messages are neither muted nor held back.
 -- @param actor [Player the player who writes, an invalid entity for the server console]
 -- @param text [String the message]
@@ -172,7 +172,7 @@ function RPCommands:say_ooc(actor, text, team_chat)
 
     msg_table = {
       hook.Run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
-      config_get('rpcommands_ooc_avatars') and Chatbox.avatar(actor) or {},
+      config_get('rp_commands_ooc_avatars') and Chatbox.avatar(actor) or {},
       Color('red'), '[OOC] ',
       hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
       actor:steam_name(),
@@ -221,7 +221,7 @@ function RPCommands:say_looc(actor, text, team_chat)
     {
       sender = actor,
       position = actor:GetPos(),
-      radius = config_get('rpcommands_talk_radius'),
+      radius = config_get('rp_commands_talk_radius'),
       ic = true
     }
   }
@@ -313,7 +313,7 @@ function RPCommands:announce_roll(actor, result, opponent, opponent_result, labe
   table.insert(msg_table, {
     sender = actor,
     position = position,
-    radius = config_get('rpcommands_talk_radius'),
+    radius = config_get('rp_commands_talk_radius'),
     hear_when_look = true,
     ic = true
   })

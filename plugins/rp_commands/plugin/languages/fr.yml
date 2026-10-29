@@ -40,7 +40,7 @@ fr:
       description: "Met ou retire votre masque de membre de la Protection civile."
       syntax: "<aucun>"
   config:
-    rpcommands:
+    rp_commands:
       title: "Chat roleplay"
       desc: "Paramètres du chat RP et du chat HRP."
       talk_radius:

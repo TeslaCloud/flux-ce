@@ -40,7 +40,7 @@ ru:
       description: Надеть или снять маску сотрудника Гражданской Обороны.
       syntax: <нет>
   config:
-    rpcommands:
+    rp_commands:
       title: Ролевой чат
       desc: Настройки игрового (IC) и неигрового (OOC) чата.
       talk_radius:

@@ -4,7 +4,7 @@
 -- `RPCommands:format_message` puts the chat line together. The file also keeps the static
 -- texts.
 --
--- The talk radius is the 'rpcommands_talk_radius' config and the chat colors are the 'rpcommands_*_color'
+-- The talk radius is the 'rp_commands_talk_radius' config and the chat colors are the 'rp_commands_*_color'
 -- configs, all of them defined in config/config.yml.
 
 local config_get = Config.get
@@ -34,7 +34,7 @@ end
 -- @param talker [Player player talking]
 -- @return [Boolean false if the talker is out of range, nil otherwise]
 function RPCommands:PlayerCanHearPlayersVoice(listener, talker)
-  local radius = config_get('rpcommands_talk_radius')
+  local radius = config_get('rp_commands_talk_radius')
 
   if listener:EyePos():DistToSqr(talker:EyePos()) > radius * radius then
     return false
@@ -145,8 +145,8 @@ function RPCommands:get_phrase_table(text)
     end
   end
 
-  local ic_color = config_get('rpcommands_ic_color')
-  local me_color = config_get('rpcommands_me_color')
+  local ic_color = config_get('rp_commands_ic_color')
+  local me_color = config_get('rp_commands_me_color')
   local length = 0
 
   if !is_emote then
@@ -200,7 +200,7 @@ end
 function RPCommands:format_message(speaker, text)
   local phrase, volume = self:get_phrase_volume(text)
   local is_emote = phrase:start_with('*')
-  local color = config_get(is_emote ? 'rpcommands_me_color' : 'rpcommands_ic_color')
+  local color = config_get(is_emote ? 'rp_commands_me_color' : 'rp_commands_ic_color')
 
   local msg_table = {
     color,
@@ -226,7 +226,7 @@ function RPCommands:format_message(speaker, text)
   table.insert(msg_table, {
     sender = speaker,
     position = speaker:EyePos(),
-    radius = config_get('rpcommands_talk_radius') * self:get_volume_range(volume),
+    radius = config_get('rp_commands_talk_radius') * self:get_volume_range(volume),
     ic = true
   })
 

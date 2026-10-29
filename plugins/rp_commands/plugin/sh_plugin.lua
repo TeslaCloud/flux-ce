@@ -1,5 +1,5 @@
 --- RolePlay Commands turns the chat into roleplay chat.
--- Plain text is in character speech heard within the 'rpcommands_talk_radius' config. The text is written
+-- Plain text is in character speech heard within the 'rp_commands_talk_radius' config. The text is written
 -- in a small markup: `*text*` segments are actions and can be mixed with speech in one message,
 -- `(text)` is a whisper and `text!!` a yell, and the amount of parentheses or exclamation marks
 -- is the volume, which scales both the hearing radius and the font size. The `me`, `whisper`
@@ -26,10 +26,10 @@ RPCommands.speech_commands = {
   yell = { '', '!!' }
 }
 RPCommands.typing_kinds = {
-  talking = { color = 'rpcommands_ic_color', volume = 0 },
-  whispering = { color = 'rpcommands_whisper_color', volume = -1 },
-  yelling = { color = 'rpcommands_yell_color', volume = 1 },
-  performing = { color = 'rpcommands_me_color', volume = 0 }
+  talking = { color = 'rp_commands_ic_color', volume = 0 },
+  whispering = { color = 'rp_commands_whisper_color', volume = -1 },
+  yelling = { color = 'rp_commands_yell_color', volume = 1 },
+  performing = { color = 'rp_commands_me_color', volume = 0 }
 }
 
 --- Registers the permission that exempts a player from the OOC and LOOC cooldowns.

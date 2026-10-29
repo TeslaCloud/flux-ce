@@ -3,5 +3,5 @@ description: Talk to your friends and colleagues.
 author: TeslaCloud Studios
 depends:
   - chatbox
-  - rpcommands
+  - rp_commands
   - items

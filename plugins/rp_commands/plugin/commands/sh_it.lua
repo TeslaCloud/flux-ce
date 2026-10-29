@@ -21,7 +21,7 @@ function CMD:on_run(actor, text)
   phrase = phrase:spelling()
 
   local msg_table = {
-    Config.get('rpcommands_it_color'):saturate(volume * 10):lighten(volume * 10),
+    Config.get('rp_commands_it_color'):saturate(volume * 10):lighten(volume * 10),
     Config.get('chatbox_default_font_size'),
     '(', actor, ') ', phrase
   }
@@ -29,7 +29,7 @@ function CMD:on_run(actor, text)
   table.insert(msg_table, {
     sender = actor,
     position = actor:EyePos(),
-    radius = Config.get('rpcommands_talk_radius') * RPCommands:get_volume_range(volume),
+    radius = Config.get('rp_commands_talk_radius') * RPCommands:get_volume_range(volume),
     hear_when_look = true,
     ic = true
   })

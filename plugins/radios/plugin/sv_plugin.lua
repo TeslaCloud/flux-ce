@@ -128,7 +128,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   if !IsValid(speaker) or !speaker:IsPlayer() then return false end
   if !isstring(text) or !isnumber(frequency) then return false end
 
-  local default_radius = Config.get('rpcommands_talk_radius') * 0.5
+  local default_radius = Config.get('rp_commands_talk_radius') * 0.5
   local info = {
     text = text:strip(),
     frequency = frequency,
