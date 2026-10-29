@@ -16,7 +16,12 @@ if !D20 then
   PLUGIN:set_global('D20')
 end
 
-local function adjust_armor_class(target, value)
+--- Returns the armor class of a player or an NPC after the AdjustArmorClass hook has changed
+-- it.
+-- @param target [Entity the player or NPC whose armor class is asked for]
+-- @param value [Number the armor class before the hook]
+-- @return [Number armor class]
+function D20:adjust_armor_class(target, value)
   local info = { value = value }
 
   --- Lets plugins change the armor class of a player or an NPC, which an attack roll against
@@ -38,40 +43,6 @@ local function adjust_armor_class(target, value)
   hook.Run('AdjustArmorClass', target, info)
 
   return tonumber(info.value) or value
-end
-
-do
-  local entity_meta = FindMetaTable('Entity')
-  local player_meta = FindMetaTable('Player')
-
-  --- Returns the armor class of the entity, which an attack roll against it has to reach to
-  -- hit: the 'd20_npc_armor_class' config, after the AdjustArmorClass hook. Players have
-  -- their own, see `Player:get_armor_class`.
-  -- @return [Number armor class]
-  function entity_meta:get_armor_class()
-    return adjust_armor_class(self, config_get('d20_npc_armor_class', 12))
-  end
-
-  --- Returns the armor class of the player, which an attack roll against them has to reach
-  -- to hit: 10, plus the modifier of their reflexes when the Stats plugin is loaded, plus 2
-  -- while they have any armor, after the AdjustArmorClass hook.
-  -- ```
-  -- target:get_armor_class() -- 10 + 2 reflexes + 2 armor = 14
-  -- ```
-  -- @return [Number armor class]
-  function player_meta:get_armor_class()
-    local value = 10
-
-    if isfunction(self.get_attribute_modifier) then
-      value += tonumber(self:get_attribute_modifier('reflexes')) or 0
-    end
-
-    if self:Armor() > 0 then
-      value += 2
-    end
-
-    return adjust_armor_class(self, value)
-  end
 end
 
 --- Checks whether a player attacks from a distance with the weapon they hold. The weapon
