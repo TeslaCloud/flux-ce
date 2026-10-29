@@ -53,14 +53,14 @@ if SERVER then
 
   --- Writes all 3D texts and pictures to the plugin data storage. Serverside only.
   function SurfaceText:save()
-    Data.save_plugin('3dtexts', SurfaceText.texts)
+    Data.save_plugin('3d_texts', SurfaceText.texts)
     Data.save_plugin('3dpictures', SurfaceText.pictures)
   end
 
   --- Reads the 3D texts and pictures from the plugin data storage,
   -- replacing the currently stored ones. Serverside only.
   function SurfaceText:load()
-    local loaded = Data.load_plugin('3dtexts', {})
+    local loaded = Data.load_plugin('3d_texts', {})
     local loaded_pics = Data.load_plugin('3dpictures', {})
 
     self.texts = loaded
