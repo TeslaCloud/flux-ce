@@ -63,8 +63,17 @@ ru:
     inventory:
       main_inventory: Инвентарь
       hotbar: Быстрый доступ
-      equipment: Экипировка
+      equipment:
+        title: Экипировка
+        helmet: Шлем
+        mask: Маска
+        torso: Торс
+        hands: Руки
+        legs: Ноги
+        accessories: Аксессуары
       pockets: Карманы
+      title: Инвентарь
+      container: Контейнер
     tab_menu:
       inventory: Инвентарь
     spawnmenu:

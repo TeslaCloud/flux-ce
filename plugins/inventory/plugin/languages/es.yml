@@ -63,8 +63,17 @@ es:
     inventory:
       main_inventory: Inventario
       hotbar: Barra rápida
-      equipment: Equipo
+      equipment:
+        title: Equipo
+        helmet: Casco
+        mask: Máscara
+        torso: Torso
+        hands: Manos
+        legs: Piernas
+        accessories: Accesorios
       pockets: Bolsillos
+      title: Inventario
+      container: Contenedor
     tab_menu:
       inventory: Inventario
     spawnmenu:

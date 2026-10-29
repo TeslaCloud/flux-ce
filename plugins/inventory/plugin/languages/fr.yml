@@ -63,8 +63,17 @@ fr:
     inventory:
       main_inventory: "Inventaire"
       hotbar: "Barre d'accès rapide"
-      equipment: "Équipement"
+      equipment:
+        title: "Équipement"
+        helmet: "Casque"
+        mask: "Masque"
+        torso: "Torse"
+        hands: "Mains"
+        legs: "Jambes"
+        accessories: "Accessoires"
       pockets: "Poches"
+      title: "Inventaire"
+      container: "Conteneur"
     tab_menu:
       inventory: "Inventaire"
     spawnmenu:

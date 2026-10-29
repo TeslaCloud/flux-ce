@@ -63,8 +63,17 @@ en:
     inventory:
       main_inventory: Inventory
       hotbar: Hotbar
-      equipment: Equipment
+      equipment:
+        title: Equipment
+        helmet: Helmet
+        mask: Mask
+        torso: Torso
+        hands: Hands
+        legs: Legs
+        accessories: Accessories
       pockets: Pockets
+      title: Inventory
+      container: Container
     tab_menu:
       inventory: Inventory
     spawnmenu:
