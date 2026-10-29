@@ -102,7 +102,7 @@ end
 --- Multiplies the damage of a bullet or melee hit by the 'damage_scale_' config of its
 -- location, for an NPC only while the 'damage_scale_npcs' config is on, and runs the
 -- `AdjustEntityDamageScale` hook. What the handlers of the hook have multiplied the damage by
--- is kept for `Damage:get_player_damage_scale`. Serverside only.
+-- is kept on a player for `Damage:get_player_damage_scale`. Serverside only.
 -- @param victim [Entity player or NPC that was hit]
 -- @param hitgroup [Number HITGROUP_ enum of the hit location]
 -- @param damage_info [CTakeDamageInfo the damage, changed in place]
@@ -136,6 +136,8 @@ function Damage:scale_hit(victim, hitgroup, damage_info)
   local before = damage_info:GetDamage()
 
   hook.Run('AdjustEntityDamageScale', victim, hitgroup, damage_info)
+
+  if !victim:IsPlayer() then return end
 
   local after = damage_info:GetDamage()
 
