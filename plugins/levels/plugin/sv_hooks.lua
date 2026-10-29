@@ -1,11 +1,9 @@
 --- Server side of the Levels plugin: networks the level of a character when it becomes
 -- active, keeps the maximum health of players in line with their level and endurance, gives
 -- combat experience while the `levels_combat_experience` config is on, keeps the server level
--- up to date and brings characters in line with its level cap and level floor, and handles
--- the `fl_levels_spend_skill` and `fl_levels_spend_attribute` requests of clients.
+-- up to date and brings characters in line with its level cap and level floor.
 
 local IsValid = IsValid
-local isstring = isstring
 local tonumber = tonumber
 local config_get = Config.get
 local math_floor = math.floor
@@ -276,23 +274,3 @@ function Levels:OnNPCKilled(npc, attacker, _inflictor)
 
   give_combat_experience(attacker, math_round(per_kill * scale), 'kill', npc)
 end
-
-Cable.receive('fl_levels_spend_skill', function(actor, skill_id)
-  if !IsValid(actor) or !isstring(skill_id) then return end
-
-  local success, phrase = actor:spend_skill_point(skill_id)
-
-  if !success then
-    actor:notify(phrase)
-  end
-end)
-
-Cable.receive('fl_levels_spend_attribute', function(actor, stat_id)
-  if !IsValid(actor) or !isstring(stat_id) then return end
-
-  local success, phrase = actor:spend_attribute_point(stat_id)
-
-  if !success then
-    actor:notify(phrase)
-  end
-end)
