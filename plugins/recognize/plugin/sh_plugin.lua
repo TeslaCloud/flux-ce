@@ -136,4 +136,3 @@ Flux.Command:add_completer('player', Recognition.complete_player)
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
-require_relative 'sv_nethooks'
