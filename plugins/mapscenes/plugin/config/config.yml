@@ -4,22 +4,22 @@ categories:
     description: config.mapscenes.desc
 configs:
   mapscenes_speed:
-    name: config.mapscenes.mapscenes_speed.name
-    description: config.mapscenes.mapscenes_speed.desc
+    name: config.mapscenes.speed.name
+    description: config.mapscenes.speed.desc
     category: mapscenes
     type: number
     min_value: 1
     max_value: 300
     default_value: 15
   mapscenes_animated:
-    name: config.mapscenes.mapscenes_animated.name
-    description: config.mapscenes.mapscenes_animated.desc
+    name: config.mapscenes.animated.name
+    description: config.mapscenes.animated.desc
     category: mapscenes
     type: boolean
     default_value: false
   mapscenes_rotate_speed:
-    name: config.mapscenes.mapscenes_rotate_speed.name
-    description: config.mapscenes.mapscenes_rotate_speed.desc
+    name: config.mapscenes.rotate_speed.name
+    description: config.mapscenes.rotate_speed.desc
     category: mapscenes
     type: number
     min_value: 0
