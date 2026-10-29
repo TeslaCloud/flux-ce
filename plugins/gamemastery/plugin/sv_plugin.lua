@@ -298,8 +298,8 @@ end
 
 --- Puts a player into gamemaster mode: in noclip, invulnerable and vanished, with the
 -- `gamemastering` networked variable set. Observer mode is dropped first, giving the player
--- back the color it saved, as the player is hidden in their own way now. A kept position is
--- applied.
+-- back the color it saved, since gamemaster mode hides the player in its own way. A kept
+-- position is applied.
 -- @param actor [Player]
 function Gamemastery.enter_mode(actor)
   if actor.observer_data or actor:get_nv('observer') then
