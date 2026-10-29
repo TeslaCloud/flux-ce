@@ -27,7 +27,7 @@ end
 function D20:EntityTakeDamage(entity, damage_info)
   if !IsValid(entity) or !entity:IsNPC() then return end
 
-  return self:roll_damage(entity, damage_info, Damage:get_npc_damage_scale(entity, damage_info))
+  return self:roll_damage(entity, damage_info, Damage:get_npc_damage_scale(entity))
 end
 
 --- Rolls the fall damage of a player, see `D20:roll_fall_damage`.

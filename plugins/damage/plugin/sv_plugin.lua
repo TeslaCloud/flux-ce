@@ -142,7 +142,7 @@ end
 function Damage:add_unscaled_damage(npc, amount)
   local cur_time = CurTime()
 
-  if npc.damage_unscaled_time == cur_time then
+  if npc.damage_unscaled and npc.damage_unscaled_time == cur_time then
     npc.damage_unscaled += amount
   else
     npc.damage_unscaled = amount
@@ -150,21 +150,42 @@ function Damage:add_unscaled_damage(npc, amount)
   end
 end
 
---- Returns the hit location multiplier of the damage that an NPC is taking: every
--- multiplier that the `ScaleNPCDamage` handlers of the plugin, of the plugins loaded after
--- it, of the schema and of the gamemode have applied to its hits in this tick. Only
--- meaningful inside of `EntityTakeDamage` handlers. Serverside only.
+--- Works out the hit location multiplier of the damage event an NPC is taking from the
+-- damage that `Damage:add_unscaled_damage` has added up for it, keeps it for
+-- `Damage:get_npc_damage_scale` and forgets the added up damage, so that the next event in
+-- the same tick starts from nothing. Runs from the plugin's `EntityTakeDamage` handler, before
+-- the handlers of the plugins loaded after it, for every event, blocked ones included.
+-- Serverside only.
 -- @param npc [NPC]
 -- @param damage_info [CTakeDamageInfo the damage after the multipliers]
--- @return [Number multiplier; 1 for damage that was not a bullet or melee hit]
-function Damage:get_npc_damage_scale(npc, damage_info)
-  local unscaled = npc.damage_unscaled_time == CurTime() and npc.damage_unscaled
+function Damage:measure_npc_damage_scale(npc, damage_info)
+  local cur_time = CurTime()
+  local unscaled = npc.damage_unscaled_time == cur_time and npc.damage_unscaled
+  local scale = 1
 
-  if !unscaled or unscaled <= 0 then
-    return 1
+  if unscaled and unscaled > 0 then
+    scale = damage_info:GetDamage() / unscaled
   end
 
-  return damage_info:GetDamage() / unscaled
+  npc.damage_unscaled = nil
+  npc.damage_unscaled_time = nil
+  npc.damage_scale = scale
+  npc.damage_scale_time = cur_time
+end
+
+--- Returns the hit location multiplier of the damage event that an NPC is taking: every
+-- multiplier that the `ScaleNPCDamage` handlers of the plugin, of the plugins loaded after
+-- it, of the schema and of the gamemode have applied to the hits of the event. Only
+-- meaningful inside of `EntityTakeDamage` handlers that run after the plugin's. Serverside
+-- only.
+-- @param npc [NPC]
+-- @return [Number multiplier; 1 for damage that was not a bullet or melee hit]
+function Damage:get_npc_damage_scale(npc)
+  if npc.damage_scale_time == CurTime() then
+    return npc.damage_scale
+  end
+
+  return 1
 end
 
 --- Forgets what the plugin tracks about a player over time: the time of their next health
