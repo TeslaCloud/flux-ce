@@ -1,7 +1,9 @@
 es:
   config:
-    general:
-      observer_reset:
+    observer:
+      title: Observador
+      desc: Ajustes del plugin de observador.
+      reset:
         name: Restablecer al salir de observador
         desc: "¿Debe restaurarse la posición del jugador cuando sale del modo observador?"
   command:
