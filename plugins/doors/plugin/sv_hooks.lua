@@ -39,7 +39,7 @@ end
 
 --- Throttles the use of doors and toggles the lock of a door when a player who is
 -- allowed to lock it uses it while sprinting. If locking or unlocking takes time (the
--- door_lock_time and door_unlock_time configs), the use starts the timed action instead and
+-- doors_lock_time and doors_unlock_time configs), the use starts the timed action instead and
 -- is blocked. Runs the PlayerUseDoor hook for every use of a door that is not blocked.
 -- @param activator [Player]
 -- @param entity [Entity the entity that is being used]

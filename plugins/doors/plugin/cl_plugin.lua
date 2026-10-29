@@ -1,7 +1,7 @@
 --- Client side of the Doors plugin: opens the context menu of a door with the options to lock
 -- or unlock it, to buy it, to manage it and to open its settings.
 -- Also works out the status text that is drawn on ownable doors, which is kept on the door
--- until its ownership variables, the language or the door_price config change.
+-- until its ownership variables, the language or the doors_price config change.
 
 local IsValid = IsValid
 local t = t
@@ -10,7 +10,7 @@ local cable_send = Cable.send
 Doors.status_generation = Doors.status_generation or 0
 
 --- Makes every door work its status text out again, for when something that every status
--- depends on has changed: the language or the door_price config.
+-- depends on has changed: the language or the doors_price config.
 function Doors:invalidate_status_texts()
   self.status_generation += 1
 end
@@ -40,7 +40,7 @@ end
 --- Returns the status line of a door, which title types draw below its name: the text of
 -- the owner or a note that the door is owned, or for an ownable door without an owner that
 -- it is for sale and for how much. The line is kept on the door and only worked out again
--- once one of its 'fl_door_*' variables, the language or the door_price config changes.
+-- once one of its 'fl_door_*' variables, the language or the doors_price config changes.
 -- ```
 -- Doors:register_title_type('plain', {
 --   name = 'door.title_type.plain',

@@ -82,14 +82,14 @@ end
 
 --- Returns how long it takes a player to lock or to unlock a door.
 -- @param lock [Boolean true for locking, false for unlocking]
--- @return [Number seconds from the door_lock_time or the door_unlock_time config; 0 means
+-- @return [Number seconds from the doors_lock_time or the doors_unlock_time config; 0 means
 --   that it happens at once]
 function Doors:get_lock_time(lock)
-  return math.max(tonumber(Config.get(lock ? 'door_lock_time' : 'door_unlock_time')) or 0, 0)
+  return math.max(tonumber(Config.get(lock ? 'doors_lock_time' : 'doors_unlock_time')) or 0, 0)
 end
 
---- Makes a player lock or unlock a door. It happens at once unless the door_lock_time or the
--- door_unlock_time config is above 0: then the player starts a timed action ('lock_door' or
+--- Makes a player lock or unlock a door. It happens at once unless the doors_lock_time or the
+-- doors_unlock_time config is above 0: then the player starts a timed action ('lock_door' or
 -- 'unlock_door') that lasts as long as they keep looking at the door from nearby, and the
 -- door is locked or unlocked when it completes, provided that the player still passes
 -- PlayerCanLockDoor. Whether the player may lock the door at all is up to the caller.

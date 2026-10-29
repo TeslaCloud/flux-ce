@@ -2,7 +2,7 @@
 -- `Doors:buy` and `Doors:sell` are what the door menu of a player asks for: they check the
 -- rules, ask the PlayerCanBuyDoor and PlayerCanSellDoor hooks, move the money through the
 -- Currencies plugin and save the doors. `Doors:get_refund` is what the owner gets back for a
--- sale, the door_sell_share percent of what was paid.
+-- sale, the doors_sell_share percent of what was paid.
 
 if !Doors then
   PLUGIN:set_global('Doors')
@@ -10,7 +10,7 @@ end
 
 local Color = Color
 
---- Returns what the owner of a door gets back for selling it: the door_sell_share percent
+--- Returns what the owner of a door gets back for selling it: the doors_sell_share percent
 -- of what the door was bought for.
 -- @param entity [Entity the door]
 -- @return [Number the refund, 0 if there is none, String ID of the currency of the refund,
@@ -24,7 +24,7 @@ function Doors:get_refund(entity)
 
   if !currency_data then return 0 end
 
-  local share = math.Clamp(tonumber(Config.get('door_sell_share')) or 0, 0, 100)
+  local share = math.Clamp(tonumber(Config.get('doors_sell_share')) or 0, 0, 100)
   local refund = math.round((tonumber(owner.paid) or 0) * share / 100, currency_data.decimals or 0)
 
   if refund <= 0 then return 0 end
@@ -58,7 +58,7 @@ function Doors:buy(actor, entity)
 
   if !character_id then return false, 'error.cant_now' end
 
-  local limit = tonumber(Config.get('door_limit')) or 0
+  local limit = tonumber(Config.get('doors_limit')) or 0
 
   if limit > 0 and self:count_owned(character_id) >= limit then
     return false, 'error.door.limit', { limit = limit }

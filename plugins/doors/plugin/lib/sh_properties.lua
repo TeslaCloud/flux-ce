@@ -173,7 +173,7 @@ Doors:register_property('price', {
   --- Sets the price of the door and of the doors linked with it. Serverside only.
   -- @param entity [Entity the door]
   -- @param data [Number/String the price; anything that is not a number makes the door
-  --   cost what the door_price config says]
+  --   cost what the doors_price config says]
   on_load = function(entity, data)
     Doors:set_price(entity, tonumber(data))
   end,

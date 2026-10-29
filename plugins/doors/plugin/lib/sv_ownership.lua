@@ -111,7 +111,7 @@ end
 --- Sets the price of a door and of the doors linked with it.
 -- @param entity [Entity the door]
 -- @param price=nil [Number the price, 0 makes the door free; nil, or a number that is not
---   finite, makes it cost what the door_price config says]
+--   finite, makes it cost what the doors_price config says]
 function Doors:set_price(entity, price)
   price = tonumber(price)
 

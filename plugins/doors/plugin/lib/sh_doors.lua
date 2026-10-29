@@ -27,7 +27,7 @@ Doors.title_types = title_types
 -- door, see `Player:is_in_reach`) a player can open its menu, lock or unlock it, buy, sell
 -- and manage it and, for staff, edit its settings. A schema may change it. The longest
 -- text an owner can put on a door and how many characters can have access to one door are
--- the door_text_length and door_access_entries configs.
+-- the doors_text_length and doors_access_entries configs.
 Doors.use_distance = Doors.use_distance or 160
 
 --- The title type that draws the status of ownable doors that have never been given a
@@ -134,7 +134,7 @@ function Doors:is_owner(actor, entity)
   return character_id != nil and character_id == self:get_owner_id(entity)
 end
 
---- Returns what a door costs: its own price if staff have set one, the door_price config
+--- Returns what a door costs: its own price if staff have set one, the doors_price config
 -- otherwise, rounded to the decimals of the default currency of the Currencies plugin. A
 -- group of linked doors has one price for all of its doors. Doors are free while the
 -- Currencies plugin is not loaded or has no default currency.
@@ -147,7 +147,7 @@ function Doors:get_price(entity)
   if !currency then return 0 end
 
   local currency_data = Currencies:find_currency(currency)
-  local price = tonumber(entity:get_nv('fl_door_price')) or tonumber(Config.get('door_price')) or 0
+  local price = tonumber(entity:get_nv('fl_door_price')) or tonumber(Config.get('doors_price')) or 0
 
   return math.round(math.max(price, 0), currency_data.decimals or 0), currency
 end
