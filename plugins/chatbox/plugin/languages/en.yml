@@ -40,6 +40,8 @@ en:
   error:
     chat:
       too_fast: You are sending messages too fast!
+    message:
+      self: You cannot send a private message to yourself.
   ui:
     chat:
       aliases: Aliases

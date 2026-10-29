@@ -14,12 +14,19 @@ CMD.no_console = true
 local message_color = Color(0, 173, 181)
 
 --- Sends a private message to a player and echoes it back to the sender, each of them seeing
--- the name of the other.
+-- the name of the other. A caller who targets themselves is told that they cannot.
 -- @param actor [Player the caller]
 -- @param targets [List<Player> recipients, only the first one is used]
 -- @param text [String the message, as it was typed]
 function CMD:on_run(actor, targets, text)
   local target = targets[1]
+
+  if target == actor then
+    actor:notify('error.message.self')
+
+    return
+  end
+
   local pieces = {
     message_color,
     { icon = 'fa-paper-plane', size = 16, margin = 12, is_data = true },

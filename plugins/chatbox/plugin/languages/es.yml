@@ -40,6 +40,8 @@ es:
   error:
     chat:
       too_fast: ¡Estás enviando mensajes demasiado rápido!
+    message:
+      self: No puedes enviarte un mensaje privado a ti mismo.
   ui:
     chat:
       aliases: Alias
