@@ -1,6 +1,5 @@
 --- Client-side hooks of the Display Typing plugin: registers the client settings, follows
--- the chatbox of the local player, receives the typing of the players nearby from the server
--- and draws their bubbles.
+-- the chatbox of the local player and draws the bubbles of the players nearby.
 
 local function live_text_setting_visible(_setting)
   return ClientSettings:get('display_typing_bubbles') and DisplayTyping:live_text_allowed()
@@ -85,11 +84,3 @@ function DisplayTyping:HUDPaint()
 
   self:draw_bubbles()
 end
-
-Cable.receive('fl_typing_update', function(index, text, exact)
-  DisplayTyping:update_bubble(index, text, exact)
-end)
-
-Cable.receive('fl_typing_stop', function(index)
-  DisplayTyping:stop_bubble(index)
-end)

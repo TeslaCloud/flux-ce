@@ -1,6 +1,5 @@
---- Server-side hooks of the Display Typing plugin: registers the networked client setting,
--- receives the typing reports of the clients and keeps the players near every typing player
--- up to date.
+--- Server-side hooks of the Display Typing plugin: registers the networked client setting and
+-- keeps the players near every typing player up to date.
 
 --- Registers the networked client setting of the plugin on the server, so that it knows
 -- which players have turned typing bubbles off.
@@ -37,18 +36,3 @@ end
 function DisplayTyping:PlayerDisconnected(actor)
   self:stop_typing(actor)
 end
-
-Cable.receive('fl_typing_report', function(actor, text, exact, kind_id)
-  if !IsValid(actor) or !isstring(text) then return end
-
-  if text == '' then
-    DisplayTyping:stop_typing(actor)
-
-    return
-  end
-
-  if #text > Config.get('chatbox_max_message_length', 512) * 4 then return end
-  if !DisplayTyping:accept_report(actor, CurTime()) then return end
-
-  DisplayTyping:set_typing(actor, text, exact, kind_id)
-end)
