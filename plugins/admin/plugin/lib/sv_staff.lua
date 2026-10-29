@@ -320,12 +320,19 @@ end
 
 --- Sends a chat message of a player to every online player with the 'staff' permission and
 -- to the sender: a colored tag, the name of the sender in the color of their name and the
--- text in the color of their messages.
+-- text in the color of their messages. The sender is told that they cannot do it right now
+-- when the Chatbox plugin is not loaded.
 -- @param actor [Player sender of the message]
 -- @param text [String the message, as it was typed]
 -- @param tag [String text before the name of the sender, such as '@staff ']
 -- @param tag_color [Color color of the tag]
 function Bolt:send_staff_message(actor, text, tag, tag_color)
+  if !Chatbox then
+    actor:notify('error.cant_now')
+
+    return
+  end
+
   local recipients = self:get_staff()
 
   if !table.HasValue(recipients, actor) then
