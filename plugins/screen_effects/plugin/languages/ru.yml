@@ -1,6 +1,6 @@
 ru:
   config:
-    screeneffects:
+    screen_effects:
       title: Экранные эффекты
       desc: Настройка плагина экранных эффектов
       low_health:

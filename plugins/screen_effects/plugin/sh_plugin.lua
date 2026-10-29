@@ -9,8 +9,8 @@
 --   a fall.
 --
 -- An effect is applied when the server allows it, the player has it turned on and no plugin
--- suppresses it. The server allows the effects with the 'screeneffects_low_health',
--- 'screeneffects_heartbeat', 'screeneffects_underwater' and 'screeneffects_headbob' configs, all
+-- suppresses it. The server allows the effects with the 'screen_effects_low_health',
+-- 'screen_effects_heartbeat', 'screen_effects_underwater' and 'screen_effects_headbob' configs, all
 -- on by default. Every player gets a switch and a strength slider for each effect in the
 -- Settings tab: the 'low_health_effect', 'heartbeat_effect', 'underwater_effect' and
 -- 'headbob_effect' settings and the settings of the same names ending in '_strength'. A
@@ -49,7 +49,7 @@
 -- effects is folded into that look, so the screen is only color corrected once. The numbers
 -- the effects are built from are in `ScreenEffects.defaults`, which a schema may change.
 --
--- A schema turns the plugin on by adding `screeneffects` to its `depends`.
+-- A schema turns the plugin on by adding `screen_effects` to its `depends`.
 -- @module [ScreenEffects]
 
 PLUGIN:set_global('ScreenEffects')

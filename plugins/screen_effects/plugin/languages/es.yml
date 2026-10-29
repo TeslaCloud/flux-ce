@@ -1,6 +1,6 @@
 es:
   config:
-    screeneffects:
+    screen_effects:
       title: Efectos de pantalla
       desc: Configuración del plugin de efectos de pantalla
       low_health:

@@ -55,25 +55,25 @@ local two_pi, four_pi = pi * 2, pi * 4
 
 local stored = {
   low_health = {
-    config = 'screeneffects_low_health',
+    config = 'screen_effects_low_health',
     setting = 'low_health_effect',
     strength = 'low_health_effect_strength',
     max_strength = 100
   },
   heartbeat = {
-    config = 'screeneffects_heartbeat',
+    config = 'screen_effects_heartbeat',
     setting = 'heartbeat_effect',
     strength = 'heartbeat_effect_strength',
     max_strength = 100
   },
   underwater = {
-    config = 'screeneffects_underwater',
+    config = 'screen_effects_underwater',
     setting = 'underwater_effect',
     strength = 'underwater_effect_strength',
     max_strength = 200
   },
   headbob = {
-    config = 'screeneffects_headbob',
+    config = 'screen_effects_headbob',
     setting = 'headbob_effect',
     strength = 'headbob_effect_strength',
     max_strength = 300
