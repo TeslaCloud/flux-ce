@@ -109,7 +109,7 @@ end
 -- @param damage_info [CTakeDamageInfo the damage, changed in place]
 function Damage:scale_hit(victim, hitgroup, damage_info)
   self:set_hitgroup(victim, hitgroup)
-  self:add_unscaled_damage(victim, damage_info:GetDamage())
+  self:add_unscaled_damage(victim, damage_info)
 
   if victim:IsPlayer() or config_get('damage_scale_npcs') then
     local scale = self:get_hitgroup_scale(hitgroup)
@@ -142,33 +142,47 @@ function Damage:scale_hit(victim, hitgroup, damage_info)
   hook.Run('AdjustEntityDamageScale', victim, hitgroup, damage_info)
 end
 
---- Adds the damage of a bullet or melee hit on a player or an NPC, before any hit location
--- multiplier, to what the victim takes in this tick: the pellets of a shotgun are separate
--- hits that the engine deals as one damage event. Serverside only.
--- @param victim [Entity player or NPC]
--- @param amount [Number damage of the hit before the multipliers]
-function Damage:add_unscaled_damage(victim, amount)
-  local cur_time = CurTime()
+--- Tells whether the damage that `Damage:add_unscaled_damage` has added up for a victim
+-- belongs to the attack of an attacker and an inflictor in this tick.
+local function is_unscaled_attack(victim, attacker, inflictor, cur_time)
+  return victim.damage_unscaled_time == cur_time and victim.damage_unscaled_attacker == attacker
+    and victim.damage_unscaled_inflictor == inflictor
+end
 
-  if victim.damage_unscaled and victim.damage_unscaled_time == cur_time then
-    victim.damage_unscaled += amount
+--- Adds the damage of a bullet or melee hit on a player or an NPC, before any hit location
+-- multiplier, to what the victim takes from the same attacker and inflictor in this tick:
+-- the pellets of a shotgun are separate hits that the engine deals as one damage event. A
+-- hit from another attacker or inflictor, or in a later tick, starts the sum anew, so the
+-- hits of an event that is blocked before the plugin's `EntityTakeDamage` handler never
+-- count toward another attack. Serverside only.
+-- @param victim [Entity player or NPC]
+-- @param damage_info [CTakeDamageInfo the hit before the multipliers]
+function Damage:add_unscaled_damage(victim, damage_info)
+  local cur_time = CurTime()
+  local attacker, inflictor = damage_info:GetAttacker(), damage_info:GetInflictor()
+
+  if victim.damage_unscaled and is_unscaled_attack(victim, attacker, inflictor, cur_time) then
+    victim.damage_unscaled += damage_info:GetDamage()
   else
-    victim.damage_unscaled = amount
+    victim.damage_unscaled = damage_info:GetDamage()
     victim.damage_unscaled_time = cur_time
+    victim.damage_unscaled_attacker = attacker
+    victim.damage_unscaled_inflictor = inflictor
   end
 end
 
 --- Works out the hit location multiplier of the damage event a player or an NPC is taking
--- from the damage that `Damage:add_unscaled_damage` has added up for it, keeps it for
--- `Damage:get_damage_scale` and forgets the added up damage, so that the next event in the
--- same tick starts from nothing. Runs from the plugin's `EntityTakeDamage` handler, before
--- `ResolvePlayerDamage` and the handlers of the plugins loaded after it, for every event,
--- blocked ones included. Serverside only.
+-- from the damage that `Damage:add_unscaled_damage` has added up for it from the same
+-- attacker and inflictor, keeps it for `Damage:get_damage_scale` and forgets the added up
+-- damage, so that the next event in the same tick starts from nothing. Runs from the
+-- plugin's `EntityTakeDamage` handler, before `ResolvePlayerDamage` and the handlers of the
+-- plugins loaded after it, for every event, blocked ones included. Serverside only.
 -- @param victim [Entity player or NPC]
 -- @param damage_info [CTakeDamageInfo the damage after the multipliers]
 function Damage:measure_damage_scale(victim, damage_info)
   local cur_time = CurTime()
-  local unscaled = victim.damage_unscaled_time == cur_time and victim.damage_unscaled
+  local attacker, inflictor = damage_info:GetAttacker(), damage_info:GetInflictor()
+  local unscaled = is_unscaled_attack(victim, attacker, inflictor, cur_time) and victim.damage_unscaled
   local scale = 1
 
   if unscaled and unscaled > 0 then
@@ -177,6 +191,8 @@ function Damage:measure_damage_scale(victim, damage_info)
 
   victim.damage_unscaled = nil
   victim.damage_unscaled_time = nil
+  victim.damage_unscaled_attacker = nil
+  victim.damage_unscaled_inflictor = nil
   victim.damage_scale = scale
   victim.damage_scale_time = cur_time
 end
