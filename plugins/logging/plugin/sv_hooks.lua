@@ -3,6 +3,8 @@
 local log_damage = { '[DAMAGE]', Color(255, 0, 0) }
 
 hook.Add('PlayerHurt', 'Damage_Log', function(target, attacker, _health, damage)
+  local attacker_name = attacker == NULL ? 'world' : attacker:GetName()
+
   Logging:print_admin_log(log_damage, target:GetName()..' has taken '..math.Round(damage)..' damage from '..
-    attacker:GetName())
+    attacker_name)
 end)
