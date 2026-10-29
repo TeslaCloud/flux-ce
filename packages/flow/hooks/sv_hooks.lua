@@ -572,10 +572,10 @@ function GM:OneSecond()
     -- @return [Boolean Return false to skip this save]
     if hook.Run('FLShouldSaveData') != false then
       --- Called on the server when all persistent data has to be saved: every
-      -- `data_save_interval` seconds unless `FLShouldSaveData` returns false, when the
-      -- server shuts down or changes the map, and by the restart command of the admin
-      -- plugin. The gamemode's handler saves the config and runs `SaveData`, which is the
-      -- hook that plugins normally implement, followed by `PostSaveData`.
+      -- `data_save_interval` seconds unless `FLShouldSaveData` returns false, and when the
+      -- server shuts down or changes the map. The gamemode's handler saves the config and
+      -- runs `SaveData`, which is the hook that plugins normally implement, followed by
+      -- `PostSaveData`.
       hook.Run('FLSaveData')
     end
 
