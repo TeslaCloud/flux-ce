@@ -8,33 +8,6 @@ local IsValid = IsValid
 local isfunction = isfunction
 local text_size = util.text_size
 
---- Checks whether a text starts with one of the given chat prefixes.
--- @param text [String lowercase text]
--- @param prefixes [List<String> lowercase prefixes]
--- @return [Boolean]
-local function has_prefix(text, prefixes)
-  for i = 1, #prefixes do
-    if text:start_with(prefixes[i]) then
-      return true
-    end
-  end
-
-  return false
-end
-
---- Checks whether a text is a radio message. The Radios plugin gives such a text a kind of
--- speech of its own, but it is loaded after this plugin, so its answer to the
--- DisplayTypingGetKind hook would never be asked for if this plugin claimed the text first.
--- @param text [String the text being typed, or its outline]
--- @return [Boolean false if the Radios plugin is not loaded]
-local function is_radio_text(text)
-  if !Communications or !isfunction(Communications.is_radio_text) then
-    return false
-  end
-
-  return Communications.is_radio_text(text) == true
-end
-
 --- Draws nearby visible static texts, fading with distance and screen position. Staff holding Alt also see
 -- who placed each text and when.
 function RPCommands:HUDPaint()
@@ -124,17 +97,14 @@ end
 -- keep the command and the punctuation at both ends.
 -- @param text [String the text being typed, or its outline]
 -- @return [String 'talking', 'whispering', 'yelling' or 'performing', Number volume of the
---   phrase from -3 to 3; nothing for out of character chat, for radio messages, for other
---   commands and for a text without a phrase]
+--   phrase from -3 to 3; nothing for a text that starts with a chat prefix (out of
+--   character chat, radio messages), for other commands and for a text without a phrase]
 function RPCommands:get_typing_kind(text)
   if !isstring(text) or !utf8.len(text) then return end
 
-  local lower = text:lower()
+  if Chatbox.find_prefix(text) then return end
 
-  if has_prefix(lower, self.ooc_prefixes) or has_prefix(lower, self.looc_prefixes) then return end
-  if is_radio_text(text) then return end
-
-  local is_command, prefix_length = text:is_command()
+  local is_command, prefix_length = Flux.Command:is_command(text)
 
   if is_command then
     local prefix = text:utf8sub(1, prefix_length)

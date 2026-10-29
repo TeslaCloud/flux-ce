@@ -1,6 +1,5 @@
 --- Server-side hooks of the Radios plugin: lets radio messages reach the players who are
--- tuned in, follows a transmission through the chatbox and registers the chat prefixes
--- that players speak on the radio with.
+-- tuned in and follows a transmission through the chatbox.
 
 --- Makes radio messages reach their listeners wherever they are: the speaker and, while
 -- `Communications.speak_radio` is sending the message, the listeners of that transmission;
@@ -54,12 +53,3 @@ function Communications:ChatboxMessageSent(message_data, receivers)
     transmission.receivers = receivers
   end
 end
-
-Prefixes:add('radio', {
-  prefix = Communications.prefixes,
-  callback = function(actor, text, _team_chat)
-    if !IsValid(actor) then return end
-
-    Communications.say_radio(actor, text)
-  end
-})

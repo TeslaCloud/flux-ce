@@ -3,4 +3,3 @@ description: Turns the chat into roleplay chat with in character speech, actions
 author: TeslaCloud Studios
 depends:
   - chatbox
-  - "sh_prefixes.lua"

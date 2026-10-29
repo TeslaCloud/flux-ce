@@ -5,12 +5,15 @@
 -- message is compiled into pieces that can be drawn (`Chatbox.compile`) and added to the
 -- chatbox panel, which also lists the matching commands while one is being typed.
 -- `chat.AddText` is redirected to the chatbox too, and what is typed with `say` in the server
--- console is shown as a line of the console.
+-- console is shown as a line of the console. Plugins register chat prefixes with
+-- `Chatbox.add_prefix`: a message that starts with one, such as `//` for out of character
+-- chat, is handed to the callback of the prefix instead of being said, and is never a command.
 --
 -- Plugins shape the chat through hooks: `PlayerSay` and `AdjustPlayerSay` change what a
 -- player says, `ChatboxGetPlayerIcon`, `ChatboxGetPlayerColor` and `ChatboxGetMessageColor`
 -- style it, `ShouldSendChatMessage` can cancel a message, `AdjustMessageData` and
--- `PlayerCanHear` decide who receives it, `ChatboxMessageSent` tells who has received it, and
+-- `PlayerCanHear` decide who receives it, `ChatboxMessageSent` tells who has received it,
+-- `PlayerUsedPrefix` tells that a chat prefix has handled a message, and
 -- `ChatboxCompileMessage`, `ShouldAddChatMessage` and `ChatboxPrePaintMessage` take over
 -- how it is displayed. Font sizes, the message limit, the fade delay, the length of a message,
 -- the interval between two messages of a player, avatars and timestamps are set through the
@@ -51,4 +54,5 @@ end
 require_relative 'cl_plugin'
 require_relative 'sv_plugin'
 require_relative 'cl_hooks'
+require_relative 'sh_hooks'
 require_relative 'sv_hooks'

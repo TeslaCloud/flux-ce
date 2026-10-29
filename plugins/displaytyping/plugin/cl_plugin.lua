@@ -105,7 +105,7 @@ function DisplayTyping:get_kind(target, text)
     label = trim_label(name),
     color = fallback.color,
     range = math.Clamp(math.sqrt(math.max(multiplier, 0)), 0, self.max_range),
-    live = isstring(label) or !text:is_command()
+    live = isstring(label) or !Flux.Command:is_command(text)
   }
 end
 

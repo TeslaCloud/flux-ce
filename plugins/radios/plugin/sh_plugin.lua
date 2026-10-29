@@ -1,9 +1,10 @@
 --- Radios lets characters talk to each other over any distance.
 -- A radio is an item with a frequency. A character who keeps an enabled radio in their
 -- hotbar speaks on its frequency by starting a chat message with one of
--- `Communications.prefixes`, and everyone with an enabled radio tuned to that frequency in
--- their own hotbar receives the message wherever they are. The players standing near the
--- speaker overhear it, like anything else that is said out loud.
+-- `Communications.prefixes`, which make up the `radio` chat prefix of the chatbox, and
+-- everyone with an enabled radio tuned to that frequency in their own hotbar receives the
+-- message wherever they are. The players standing near the speaker overhear it, like
+-- anything else that is said out loud.
 --
 -- The frequency of a radio is changed through its item menu: the server asks the player
 -- for the new frequency with a prompt and checks the answer before the radio is retuned.
@@ -20,24 +21,14 @@ Communications.prefixes = { '/r ', '/radio', ';' }
 Communications.typing_color = Color(100, 228, 100)
 Communications.typing_range = 0.5
 
---- Checks whether a chat text is a radio message, that is whether it starts with one of
--- `Communications.prefixes`. Letter case is ignored, as it is when the message is sent.
--- @param text [String chat text, or its outline made by the Display Typing plugin]
--- @return [Boolean]
-function Communications.is_radio_text(text)
-  if !isstring(text) then return false end
+Chatbox.add_prefix('radio', {
+  prefix = Communications.prefixes,
+  callback = function(actor, text, _team_chat)
+    if !IsValid(actor) then return end
 
-  local lower_text = text:utf8lower()
-  local prefixes = Communications.prefixes
-
-  for i = 1, #prefixes do
-    if lower_text:start_with(prefixes[i]) then
-      return true
-    end
+    Communications.say_radio(actor, text)
   end
-
-  return false
-end
+})
 
 --- Turns what a player has typed into a radio frequency. A frequency is written as three
 -- digits, a decimal point and one more digit, such as '100.1'; a comma is accepted in place

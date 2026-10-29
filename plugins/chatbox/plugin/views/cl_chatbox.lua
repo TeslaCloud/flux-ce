@@ -357,7 +357,7 @@ function PANEL:update_completion()
 
   self.completion_cycle = nil
 
-  local is_command, prefix_len = string.is_command(value)
+  local is_command, prefix_len = Flux.Command:is_command(value)
   local prefix = is_command and cut_chars(value, prefix_len) or ''
   local before = cut_chars(value, caret)
 
@@ -706,7 +706,7 @@ function PANEL:set_open(is_open)
     self.text_entry.last_index = 0
     self.text_entry.history_value = nil
   else
-    if self.text_entry:GetValue():is_command() then
+    if Flux.Command:is_command(self.text_entry:GetValue()) then
       self.text_entry:SetText('')
     end
 
@@ -731,7 +731,7 @@ function PANEL:typing_command()
     local cmd = self.text_entry:GetValue()
 
     if cmd != '/' then
-      return cmd:is_command()
+      return Flux.Command:is_command(cmd)
     end
   end
 end

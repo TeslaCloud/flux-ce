@@ -210,36 +210,6 @@ function string.include(str, substring, start_pos)
   return string_find(str, substring, start_pos, true)
 end
 
---- Checks if the string is a command or not, i.e. whether it starts with one of the configured
--- command prefixes. If several prefixes match, the longest one is used, so that prefixes
--- can contain each other (e.g. '/' and '//'). The StringIsCommand hook can return false
--- to prevent that.
--- @param str [String]
--- @return [Boolean whether the string is a command, Number length of the prefix if it is one]
-function string.is_command(str)
-  local prefixes = Config.get('command_prefixes') or {}
-  local longest
-
-  for _, prefix in ipairs(prefixes) do
-    if str:start_with(prefix) then
-      longest = math.max(longest or 0, utf8.len(prefix))
-    end
-  end
-
-  --- Called when `string.is_command` checks a text that starts with one of the command
-  -- prefixes.
-  -- Lets plugins keep such a text from being treated as a command, as the Prefixes plugin
-  -- does for its chat prefixes. Runs on both the server and the client.
-  -- @param text [String the text being checked]
-  -- @return [Boolean Return false to have the text treated as regular text instead of a
-  --   command]
-  if longest and hook.Run('StringIsCommand', str) != false then
-    return true, longest
-  end
-
-  return false
-end
-
 do
   local blocked_chars = '[\'"\\/%^:%.;&,%%]'
 

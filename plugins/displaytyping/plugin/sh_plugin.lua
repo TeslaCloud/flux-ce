@@ -121,7 +121,7 @@ function DisplayTyping:outline(text)
 
   local head = ''
   local consumed = 0
-  local is_command, prefix_length = text:is_command()
+  local is_command, prefix_length = Flux.Command:is_command(text)
 
   if is_command then
     local prefix = text:utf8sub(1, prefix_length)

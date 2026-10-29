@@ -1,7 +1,7 @@
 --- Default handlers of the server-side hooks of the Chatbox plugin: the icon and the colors of
 -- what players say, the rule that the sender of a message always receives it, and the handler
 -- that takes the `say` console command over so that it goes through the same guard as the
--- chatbox.
+-- chatbox and hands the messages that start with a chat prefix to that prefix.
 
 --- Provides the default icon that is displayed before the name of the player
 -- in their chat messages.
@@ -35,16 +35,23 @@ end
 -- the engine runs this hook for and would otherwise broadcast itself: the text goes through
 -- `Chatbox.submit`, so that the flood guard and the length limit apply to it as they do to
 -- the chatbox, and the engine is told to say nothing. A command is left to the gamemode
--- handler, and the text that `Chatbox.submit` itself passes to `Chatbox.player_say`, which
--- runs this hook again, is left alone as well.
+-- handler. The text that `Chatbox.submit` itself passes to `Chatbox.player_say`, which runs
+-- this hook again, goes to the chat prefix it starts with, if any (see `Chatbox.use_prefix`).
 -- @param actor [Player the speaker]
 -- @param text [String the text as it was typed]
 -- @param team_chat [Boolean whether the text is meant for the team chat]
--- @return [String an empty string once the text has been taken over, nil otherwise]
+-- @return [String an empty string once the text has been taken over or handed to a chat
+--   prefix, nil otherwise]
 function Chatbox:PlayerSay(actor, text, team_chat)
-  if Chatbox.is_submitting() or string.is_command(tostring(text)) then return end
+  text = tostring(text)
 
-  Chatbox.submit(actor, tostring(text), team_chat)
+  if Chatbox.is_submitting() then
+    return Chatbox.use_prefix(actor, text, team_chat) ? '' : nil
+  end
+
+  if Flux.Command:is_command(text) then return end
+
+  Chatbox.submit(actor, text, team_chat)
 
   return ''
 end

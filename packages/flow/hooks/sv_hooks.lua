@@ -649,7 +649,7 @@ end
 -- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [String an empty string if the message was a command, nil otherwise]
 function GM:PlayerSay(actor, text, _team_chat)
-  local is_command, length = string.is_command(tostring(text))
+  local is_command, length = Flux.Command:is_command(tostring(text))
 
   if is_command then
     Flux.Command:interpret(actor, text:utf8sub(1 + length, utf8.len(text)))

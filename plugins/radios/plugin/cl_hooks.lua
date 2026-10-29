@@ -7,7 +7,7 @@
 -- @param text [String text being typed, or its outline]
 -- @return [String 'radioing' for a radio message, nil for anything else]
 function Communications:DisplayTypingGetKind(_target, text)
-  if Communications.is_radio_text(text) then
+  if Chatbox.find_prefix(text) == 'radio' then
     return 'radioing'
   end
 end

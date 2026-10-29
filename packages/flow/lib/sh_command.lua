@@ -197,6 +197,36 @@ function Flux.Command:find_all(id)
   return hits
 end
 
+--- Checks whether a text is a command, that is whether it starts with one of the prefixes of
+-- the 'command_prefixes' config. If several prefixes match, the longest one is used, so that
+-- prefixes can contain each other (e.g. '/' and '//'). The StringIsCommand hook can return
+-- false to prevent that.
+-- @param text [String]
+-- @return [Boolean whether the text is a command, Number length of the prefix if it is one]
+function Flux.Command:is_command(text)
+  local prefixes = Config.get('command_prefixes') or {}
+  local longest
+
+  for _, prefix in ipairs(prefixes) do
+    if text:start_with(prefix) then
+      longest = math.max(longest or 0, utf8.len(prefix))
+    end
+  end
+
+  --- Called when `Flux.Command:is_command` checks a text that starts with one of the command
+  -- prefixes.
+  -- Lets plugins keep such a text from being treated as a command, as the Chatbox plugin does
+  -- for the texts that start with a chat prefix. Runs on both the server and the client.
+  -- @param text [String the text being checked]
+  -- @return [Boolean Return false to have the text treated as regular text instead of a
+  --   command]
+  if longest and hook.Run('StringIsCommand', text) != false then
+    return true, longest
+  end
+
+  return false
+end
+
 --- Splits a command string into tokens. Tokens are separated by whitespace; text in double
 -- quotes that start a token is one token, and the quotes are not part of its value. A double
 -- quote that is never closed is an ordinary character, unless `open_end` is set: the rest of

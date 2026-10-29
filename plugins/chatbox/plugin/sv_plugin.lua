@@ -386,6 +386,35 @@ function Chatbox.is_submitting()
   return submitting
 end
 
+--- Hands a text that a player has submitted to the callback of the chat prefix it starts with
+-- (see `Chatbox.add_prefix`), without the prefix, then runs the PlayerUsedPrefix hook. Neither
+-- is run if nothing is left of the text once the prefix is cut off. Serverside only.
+-- @param actor [Player the speaker]
+-- @param text [String the text as it was typed]
+-- @param team_chat [Boolean whether the text is meant for the team chat]
+-- @return [Boolean true if the text starts with a chat prefix, false otherwise]
+function Chatbox.use_prefix(actor, text, team_chat)
+  local prefix_id, prefix = Chatbox.find_prefix(text)
+
+  if !prefix_id then return false end
+
+  local message = text:utf8sub(utf8.len(prefix) + 1)
+
+  if message != '' then
+    Chatbox.prefixes[prefix_id].callback(actor, message, team_chat)
+
+    --- Called on the server after a chat message has been handled by the callback of a
+    -- registered chat prefix.
+    -- @param actor [Player The player who sent the message]
+    -- @param prefix_id [String ID the prefix was registered with]
+    -- @param message [String The message without the prefix]
+    -- @param team_chat [Boolean Whether the message was sent to the team chat]
+    hook.Run('PlayerUsedPrefix', actor, prefix_id, message, team_chat)
+  end
+
+  return true
+end
+
 --- Makes a player say a text they have submitted, from the chatbox or the `say` console
 -- command: the text is dropped, and the player told so once a second at most, while the
 -- 'chat_interval' config has not passed since their last submission (see
