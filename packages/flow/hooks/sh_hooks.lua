@@ -504,11 +504,13 @@ function GM:PhysgunPickup(actor, entity)
   end
 end
 
-concommand.Add('fl_save_pers', function()
+concommand.Add('fl_save_pers', function(actor)
+  if IsValid(actor) and !actor:is_root() then return end
+
   if Flux.development and SERVER then
     --- Sandbox's `PersistenceSave` hook, which saves the persistent entities. Flux runs it
     -- on demand from the `fl_save_pers` console command, on the server and in development
-    -- only.
+    -- only, when the server console or a root player runs it.
     hook.Run('PersistenceSave')
   end
 end)
