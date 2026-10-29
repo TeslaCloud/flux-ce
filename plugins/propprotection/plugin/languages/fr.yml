@@ -1,6 +1,6 @@
 fr:
   config:
-    prop_protection:
+    propprotection:
       title: "Protection des props"
       desc: "La propriété des entités et les règles de bac à sable qui en découlent."
       owned:

@@ -1,6 +1,6 @@
 es:
   config:
-    prop_protection:
+    propprotection:
       title: Protección de props
       desc: La propiedad de las entidades y las reglas de sandbox que se basan en ella.
       owned:

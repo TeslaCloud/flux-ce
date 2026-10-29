@@ -1,74 +1,85 @@
 categories:
-  prop_protection:
-    name: config.prop_protection.title
-    description: config.prop_protection.desc
+  propprotection:
+    name: config.propprotection.title
+    description: config.propprotection.desc
 configs:
-  prop_protection:
-    name: config.prop_protection.owned.name
-    description: config.prop_protection.owned.desc
-    category: prop_protection
+  propprotection_owned:
+    renamed_from: prop_protection
+    name: config.propprotection.owned.name
+    description: config.propprotection.owned.desc
+    category: propprotection
     type: boolean
     default_value: true
-  protect_map_entities:
-    name: config.prop_protection.map.name
-    description: config.prop_protection.map.desc
-    category: prop_protection
+  propprotection_map:
+    renamed_from: protect_map_entities
+    name: config.propprotection.map.name
+    description: config.propprotection.map.desc
+    category: propprotection
     type: boolean
     default_value: true
-  protect_world_entities:
-    name: config.prop_protection.world.name
-    description: config.prop_protection.world.desc
-    category: prop_protection
+  propprotection_world:
+    renamed_from: protect_world_entities
+    name: config.propprotection.world.name
+    description: config.propprotection.world.desc
+    category: propprotection
     type: boolean
     default_value: true
-  physgun_protect_players:
-    name: config.prop_protection.players.name
-    description: config.prop_protection.players.desc
-    category: prop_protection
+  propprotection_players:
+    renamed_from: physgun_protect_players
+    name: config.propprotection.players.name
+    description: config.propprotection.players.desc
+    category: propprotection
     type: boolean
     default_value: true
-  physgun_protect_vehicles:
-    name: config.prop_protection.vehicles.name
-    description: config.prop_protection.vehicles.desc
-    category: prop_protection
+  propprotection_vehicles:
+    renamed_from: physgun_protect_vehicles
+    name: config.propprotection.vehicles.name
+    description: config.propprotection.vehicles.desc
+    category: propprotection
     type: boolean
     default_value: true
-  physgun_protect_ragdolls:
-    name: config.prop_protection.ragdolls.name
-    description: config.prop_protection.ragdolls.desc
-    category: prop_protection
+  propprotection_ragdolls:
+    renamed_from: physgun_protect_ragdolls
+    name: config.propprotection.ragdolls.name
+    description: config.propprotection.ragdolls.desc
+    category: propprotection
     type: boolean
     default_value: true
-  prop_owner_display:
-    name: config.prop_protection.owner_display.name
-    description: config.prop_protection.owner_display.desc
-    category: prop_protection
+  propprotection_owner_display:
+    renamed_from: prop_owner_display
+    name: config.propprotection.owner_display.name
+    description: config.propprotection.owner_display.desc
+    category: propprotection
     type: boolean
     default_value: true
-  prop_removal_delay:
-    name: config.prop_protection.removal_delay.name
-    description: config.prop_protection.removal_delay.desc
-    category: prop_protection
+  propprotection_removal_delay:
+    renamed_from: prop_removal_delay
+    name: config.propprotection.removal_delay.name
+    description: config.propprotection.removal_delay.desc
+    category: propprotection
     type: number
     min_value: 0
     max_value: 86400
     default_value: 300
-  remove_staff_entities:
-    name: config.prop_protection.remove_staff.name
-    description: config.prop_protection.remove_staff.desc
-    category: prop_protection
+  propprotection_remove_staff:
+    renamed_from: remove_staff_entities
+    name: config.propprotection.remove_staff.name
+    description: config.propprotection.remove_staff.desc
+    category: propprotection
     type: boolean
     default_value: false
-  prop_kill_protection:
-    name: config.prop_protection.prop_kill.name
-    description: config.prop_protection.prop_kill.desc
-    category: prop_protection
+  propprotection_prop_kill:
+    renamed_from: prop_kill_protection
+    name: config.propprotection.prop_kill.name
+    description: config.propprotection.prop_kill.desc
+    category: propprotection
     type: boolean
     default_value: true
-  prop_kill_protection_time:
-    name: config.prop_protection.prop_kill_time.name
-    description: config.prop_protection.prop_kill_time.desc
-    category: prop_protection
+  propprotection_prop_kill_time:
+    renamed_from: prop_kill_protection_time
+    name: config.propprotection.prop_kill_time.name
+    description: config.propprotection.prop_kill_time.desc
+    category: propprotection
     type: number
     min_value: 0
     max_value: 600
