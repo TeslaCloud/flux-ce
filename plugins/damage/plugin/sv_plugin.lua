@@ -1,8 +1,9 @@
 --- Server side of the Damage plugin: the rules it applies to players.
--- Looks up the multiplier of a hit location, remembers where a player has just been hit,
--- regenerates health, hurts players who stay under water with damage rolled from the
--- 'damage_drowning_damage' dice formula, punches the view of a player who is hurt and writes the
--- damage and kill log entries. The hooks that call these functions are in `sv_hooks.lua`.
+-- Looks up the multiplier of a hit location, remembers where a player or an NPC has just
+-- been hit and measures what every handler has multiplied the hit by, regenerates health,
+-- hurts players who stay under water with damage rolled from the 'damage_drowning_damage'
+-- dice formula, punches the view of a player who is hurt and writes the damage and kill log
+-- entries. The hooks that call these functions are in `sv_hooks.lua`.
 --
 -- The log entries are printed and replicated the moment they are written, but they are
 -- saved to the database in one go by `Damage:flush_logs`, which runs once a second and
@@ -99,14 +100,17 @@ function Damage:get_hitgroup(victim)
   return HITGROUP_GENERIC
 end
 
---- Multiplies the damage of a bullet or melee hit by the 'damage_scale_' config of its
+--- Handles a bullet or melee hit on a player or an NPC: remembers its location and its
+-- damage before any multiplier, multiplies the damage by the 'damage_scale_' config of the
 -- location, for an NPC only while the 'damage_scale_npcs' config is on, and runs the
--- `AdjustEntityDamageScale` hook. What the handlers of the hook have multiplied the damage by
--- is kept on a player for `Damage:get_player_damage_scale`. Serverside only.
+-- `AdjustEntityDamageScale` hook. Serverside only.
 -- @param victim [Entity player or NPC that was hit]
 -- @param hitgroup [Number HITGROUP_ enum of the hit location]
 -- @param damage_info [CTakeDamageInfo the damage, changed in place]
 function Damage:scale_hit(victim, hitgroup, damage_info)
+  self:set_hitgroup(victim, hitgroup)
+  self:add_unscaled_damage(victim, damage_info:GetDamage())
+
   if victim:IsPlayer() or config_get('damage_scale_npcs') then
     local scale = self:get_hitgroup_scale(hitgroup)
 
@@ -118,8 +122,10 @@ function Damage:scale_hit(victim, hitgroup, damage_info)
   --- Lets plugins and the schema multiply the damage of a bullet or melee hit on a player
   -- or an NPC by its location. Called on the server from the Damage plugin's
   -- `ScalePlayerDamage` and `ScaleNPCDamage` handlers, after the 'damage_scale_' configs
-  -- have been applied. Scale the damage in place. The multiplier also applies to damage
-  -- that is rolled anew through `ResolvePlayerDamage`, such as by the D20 plugin.
+  -- have been applied. Scale the damage in place. Like every multiplier of the
+  -- `ScalePlayerDamage` and `ScaleNPCDamage` handlers, it is part of what
+  -- `Damage:get_damage_scale` reports, and so it also applies to damage that is rolled anew,
+  -- such as by the D20 plugin.
   -- ```
   -- -- Helmets halve hits to the head.
   -- function MyPlugin:AdjustEntityDamageScale(victim, hitgroup, damage_info)
@@ -133,81 +139,60 @@ function Damage:scale_hit(victim, hitgroup, damage_info)
   -- @param damage_info [CTakeDamageInfo The damage being dealt, changed in place]
   -- @return [Any The return value is ignored; a handler that returns a value keeps the
   --   handlers of the hook after it from being called, so return nothing]
-  local before = damage_info:GetDamage()
-
   hook.Run('AdjustEntityDamageScale', victim, hitgroup, damage_info)
-
-  if !victim:IsPlayer() then return end
-
-  local after = damage_info:GetDamage()
-
-  victim.damage_hit_adjust = before > 0 ? after / before : 1
 end
 
---- Returns the hit location multiplier of the damage that a player is taking: the
--- 'damage_scale_' config of the location of the hit times what the
--- `AdjustEntityDamageScale` handlers have multiplied it by. A `ResolvePlayerDamage` handler
--- that replaces the amount of the damage applies it to the new amount. Only meaningful while
--- that damage is being processed. Serverside only.
--- @param victim [Player]
--- @return [Number multiplier; 1 for damage that was not a bullet or melee hit]
-function Damage:get_player_damage_scale(victim)
-  if !victim.damage_hitgroup or victim.damage_hitgroup_time != CurTime() then
-    return 1
-  end
-
-  return self:get_hitgroup_scale(victim.damage_hitgroup) * (victim.damage_hit_adjust or 1)
-end
-
---- Adds the damage of a bullet or melee hit on an NPC, before any hit location multiplier,
--- to what the NPC takes in this tick: the pellets of a shotgun are separate hits that the
--- engine deals as one damage event. Serverside only.
--- @param npc [NPC]
+--- Adds the damage of a bullet or melee hit on a player or an NPC, before any hit location
+-- multiplier, to what the victim takes in this tick: the pellets of a shotgun are separate
+-- hits that the engine deals as one damage event. Serverside only.
+-- @param victim [Entity player or NPC]
 -- @param amount [Number damage of the hit before the multipliers]
-function Damage:add_unscaled_damage(npc, amount)
+function Damage:add_unscaled_damage(victim, amount)
   local cur_time = CurTime()
 
-  if npc.damage_unscaled and npc.damage_unscaled_time == cur_time then
-    npc.damage_unscaled += amount
+  if victim.damage_unscaled and victim.damage_unscaled_time == cur_time then
+    victim.damage_unscaled += amount
   else
-    npc.damage_unscaled = amount
-    npc.damage_unscaled_time = cur_time
+    victim.damage_unscaled = amount
+    victim.damage_unscaled_time = cur_time
   end
 end
 
---- Works out the hit location multiplier of the damage event an NPC is taking from the
--- damage that `Damage:add_unscaled_damage` has added up for it, keeps it for
--- `Damage:get_npc_damage_scale` and forgets the added up damage, so that the next event in
--- the same tick starts from nothing. Runs from the plugin's `EntityTakeDamage` handler, before
--- the handlers of the plugins loaded after it, for every event, blocked ones included.
--- Serverside only.
--- @param npc [NPC]
+--- Works out the hit location multiplier of the damage event a player or an NPC is taking
+-- from the damage that `Damage:add_unscaled_damage` has added up for it, keeps it for
+-- `Damage:get_damage_scale` and forgets the added up damage, so that the next event in the
+-- same tick starts from nothing. Runs from the plugin's `EntityTakeDamage` handler, before
+-- `ResolvePlayerDamage` and the handlers of the plugins loaded after it, for every event,
+-- blocked ones included. Serverside only.
+-- @param victim [Entity player or NPC]
 -- @param damage_info [CTakeDamageInfo the damage after the multipliers]
-function Damage:measure_npc_damage_scale(npc, damage_info)
+function Damage:measure_damage_scale(victim, damage_info)
   local cur_time = CurTime()
-  local unscaled = npc.damage_unscaled_time == cur_time and npc.damage_unscaled
+  local unscaled = victim.damage_unscaled_time == cur_time and victim.damage_unscaled
   local scale = 1
 
   if unscaled and unscaled > 0 then
     scale = damage_info:GetDamage() / unscaled
   end
 
-  npc.damage_unscaled = nil
-  npc.damage_unscaled_time = nil
-  npc.damage_scale = scale
-  npc.damage_scale_time = cur_time
+  victim.damage_unscaled = nil
+  victim.damage_unscaled_time = nil
+  victim.damage_scale = scale
+  victim.damage_scale_time = cur_time
 end
 
---- Returns the hit location multiplier of the damage event that an NPC is taking: every
--- multiplier that the `ScaleNPCDamage` handlers of the plugin, of the plugins loaded after
--- it, of the schema and of the gamemode have applied to the hits of the event. Only
--- meaningful inside of `EntityTakeDamage` handlers that run after the plugin's. Serverside
--- only.
--- @param npc [NPC]
+--- Returns the hit location multiplier of the damage event that a player or an NPC is
+-- taking: every multiplier that the `ScalePlayerDamage` or `ScaleNPCDamage` handlers of the
+-- plugin, of the plugins loaded after it, of the schema and of the gamemode have applied to
+-- the hits of the event, the 'damage_scale_' configs and the `AdjustEntityDamageScale` hook
+-- included. A handler of `ResolvePlayerDamage` or of `EntityTakeDamage` that replaces the
+-- amount of the damage applies it to the amount it sets. Only meaningful inside of those
+-- handlers, after the plugin's own. Serverside only.
+-- @param victim [Entity player or NPC]
 -- @return [Number multiplier; 1 for damage that was not a bullet or melee hit]
-function Damage:get_npc_damage_scale(npc)
-  if npc.damage_scale_time == CurTime() then
-    return npc.damage_scale
+function Damage:get_damage_scale(victim)
+  if victim.damage_scale_time == CurTime() then
+    return victim.damage_scale
   end
 
   return 1

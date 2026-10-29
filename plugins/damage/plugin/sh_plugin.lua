@@ -18,7 +18,9 @@
 -- The plugin owns the names of the hit locations on both realms: `Damage:get_limbs` lists
 -- the limbs, `Damage:get_limb` tells the limb that a HITGROUP_ enum belongs to and
 -- `Damage:get_limb_name` the phrase of its name. On the server, `Damage:get_hitgroup` tells
--- where a player or an NPC has been hit by the damage being processed.
+-- where a player or an NPC has been hit by the damage being processed and
+-- `Damage:get_damage_scale` what every `ScalePlayerDamage` or `ScaleNPCDamage` handler has
+-- multiplied that hit by.
 --
 -- Other plugins take part through hooks. `AdjustEntityDamageScale` multiplies the hits on
 -- players and NPCs by location after the configs, `ResolvePlayerDamage` lets a plugin replace

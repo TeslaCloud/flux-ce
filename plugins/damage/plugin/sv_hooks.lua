@@ -8,13 +8,13 @@
 
 local config_get = Config.get
 
---- Remembers the location of a bullet or melee hit on a player and multiplies its damage by
--- the 'damage_scale_' config of that location, see `Damage:scale_hit`.
+--- Remembers the location and the unscaled damage of a bullet or melee hit on a player and
+-- multiplies its damage by the 'damage_scale_' config of that location, see
+-- `Damage:scale_hit`.
 -- @param victim [Player]
 -- @param hitgroup [Number HITGROUP_ enum of the hit location]
 -- @param damage_info [CTakeDamageInfo]
 function Damage:ScalePlayerDamage(victim, hitgroup, damage_info)
-  self:set_hitgroup(victim, hitgroup)
   self:scale_hit(victim, hitgroup, damage_info)
 end
 
@@ -25,13 +25,11 @@ end
 -- @param hitgroup [Number HITGROUP_ enum of the hit location]
 -- @param damage_info [CTakeDamageInfo]
 function Damage:ScaleNPCDamage(npc, hitgroup, damage_info)
-  self:set_hitgroup(npc, hitgroup)
-  self:add_unscaled_damage(npc, damage_info:GetDamage())
   self:scale_hit(npc, hitgroup, damage_info)
 end
 
---- Works out the hit location multiplier of a damage event on an NPC, see
--- `Damage:measure_npc_damage_scale`. Lets the ResolvePlayerDamage hook work out the amount
+--- Works out the hit location multiplier of a damage event on a player or an NPC, see
+-- `Damage:measure_damage_scale`. Lets the ResolvePlayerDamage hook work out the amount
 -- of any damage to a player, multiplies the fall damage of a player by the
 -- 'damage_scale_fall' config, whichever way the amount was worked out (the
 -- `GetPlayerFallDamage` hook or the formula of the gamemode), and lets the
@@ -42,13 +40,13 @@ end
 function Damage:EntityTakeDamage(entity, damage_info)
   if !IsValid(entity) then return end
 
-  if !entity:IsPlayer() then
-    if entity:IsNPC() then
-      self:measure_npc_damage_scale(entity, damage_info)
-    end
+  local is_player = entity:IsPlayer()
 
-    return
+  if is_player or entity:IsNPC() then
+    self:measure_damage_scale(entity, damage_info)
   end
+
+  if !is_player then return end
 
   local hitgroup = self:get_hitgroup(entity)
 
@@ -56,15 +54,15 @@ function Damage:EntityTakeDamage(entity, damage_info)
   -- such as by rolling dice for it. Called on the server from the Damage plugin's
   -- `EntityTakeDamage` handler for every damage to a player, before the fall damage
   -- multiplier and before `PrePlayerTakeDamage`, so that both of them, and every
-  -- `EntityTakeDamage` handler after the plugin, see the amount that was set here. The hit
-  -- location multiplier of a bullet or melee hit has already been applied to the damage by
-  -- then; a handler that replaces the amount applies `Damage:get_player_damage_scale` to it
-  -- again.
+  -- `EntityTakeDamage` handler after the plugin, see the amount that was set here. Every
+  -- hit location multiplier of the `ScalePlayerDamage` handlers, the gamemode's included,
+  -- has already been applied to the damage by then; a handler that replaces the amount
+  -- applies `Damage:get_damage_scale` to it again.
   -- ```
   -- -- Every hit deals exactly 10 damage before the multipliers.
   -- function MyPlugin:ResolvePlayerDamage(victim, damage_info, _hitgroup)
   --   if !damage_info:IsFallDamage() then
-  --     damage_info:SetDamage(10 * Damage:get_player_damage_scale(victim))
+  --     damage_info:SetDamage(10 * Damage:get_damage_scale(victim))
   --   end
   -- end
   -- ```

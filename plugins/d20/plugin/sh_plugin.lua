@@ -43,11 +43,11 @@
 -- one attack: the first one rolls and the others are blocked. The rolled total is rounded,
 -- and the hit location multipliers still apply to it. A hit on a player is rolled in the
 -- `ResolvePlayerDamage` hook of the Damage plugin, so that the `PrePlayerTakeDamage` hook
--- and every damage handler after it see the rolled damage, and gets the 'damage_scale_'
--- configs of the Damage plugin and the multipliers of its `AdjustEntityDamageScale` hook, as
--- `Damage:get_player_damage_scale` reports them; a hit on an NPC gets every multiplier that
--- the `ScaleNPCDamage` handlers of the Damage plugin, of the schema and of the gamemode have
--- applied to it, as `Damage:get_npc_damage_scale` reports it.
+-- and every damage handler after it see the rolled damage. Hits on players and on NPCs get
+-- every multiplier that the `ScalePlayerDamage` or `ScaleNPCDamage` handlers of the Damage
+-- plugin, of the schema and of the gamemode have applied to them, the 'damage_scale_'
+-- configs and the `AdjustEntityDamageScale` hook included, as `Damage:get_damage_scale`
+-- reports it.
 --
 -- Fall damage rolls the 'd20_fall_dice' config, `{steps}d6` by default, where `steps` is 1
 -- for the slowest fall that hurts and grows by 1 for every 150 units per second of fall
