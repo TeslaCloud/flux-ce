@@ -7,7 +7,8 @@
 -- persistence off and saves and loads through the `PersistenceSave` and `PersistenceLoad`
 -- hooks instead. The `fl_persistence_backup` console command, open to the console and to the
 -- players with the 'static' permission, writes a copy of all persistent entities to the plugin
--- data of the current schema and map, under 'static_backups/<timestamp>'.
+-- data of the current schema and map, under 'static_backups/<timestamp>'; a player can run it
+-- once every 30 seconds.
 
 PLUGIN:set_global('StaticEnts')
 
@@ -40,10 +41,20 @@ if CLIENT then
     end
   end)
 else
+  const backup_interval = 30
+
   local function _run_backup(actor)
     local is_player = IsValid(actor)
 
-    if is_player and !actor:can('static') then return end
+    if is_player then
+      if !actor:can('static') then return end
+
+      local cur_time = CurTime()
+
+      if (actor.fl_next_backup or 0) > cur_time then return end
+
+      actor.fl_next_backup = cur_time + backup_interval
+    end
 
     local pn = is_player and actor:Name() or 'Console'
     local sid = is_player and actor:SteamID() or 'N/A'
