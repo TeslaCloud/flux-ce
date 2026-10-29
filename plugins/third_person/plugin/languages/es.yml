@@ -1,6 +1,6 @@
 es:
   settings:
-    thirdperson:
+    third_person:
       shoulder:
         name: Hombro de apuntado en tercera persona
         desc: "El hombro sobre el que se coloca la cámara en tercera persona cuando apuntas. La tecla B la cambia al otro hombro."
@@ -10,6 +10,6 @@ es:
         name: Distancia de la cámara en tercera persona
         desc: "A qué distancia detrás de tu personaje está la cámara en tercera persona mientras no apuntas."
   ui:
-    thirdperson:
+    third_person:
       weapon_raised: Arma levantada
       weapon_lowered: Arma bajada

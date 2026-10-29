@@ -14,7 +14,7 @@ local blend_duration = 0.15
 
 --- Offsets of the camera from the eyes of the character, in units, while not aiming: it is
 -- straight behind them and this far above. How far back it is comes from the
--- `thirdperson_distance` client setting.
+-- `third_person_distance` client setting.
 local idle_up = 12
 local default_distance = 90
 
@@ -94,11 +94,13 @@ ThirdPerson.aiming = ThirdPerson.aiming or false
 ThirdPerson.firing = ThirdPerson.firing or false
 
 local function shoulder_setting()
-  return ClientSettings:get('thirdperson_shoulder', 'right') == 'left' ? -1 : 1
+  return ClientSettings:get('third_person_shoulder', 'right') == 'left' ? -1 : 1
 end
 
 local function distance_setting()
-  return math.Clamp(tonumber(ClientSettings:get('thirdperson_distance', default_distance)) or default_distance, 50, 150)
+  local distance = tonumber(ClientSettings:get('third_person_distance', default_distance))
+
+  return math.Clamp(distance or default_distance, 50, 150)
 end
 
 --- Checks whether the camera orbits the character with angles of its own: while the third
@@ -266,7 +268,7 @@ end
 -- target, and the view eases between the first and the third person over 0.15 seconds. A box
 -- is traced from the eyes to the camera so that it stops in front of walls, and the view
 -- becomes first person when the camera ends up too close to the eyes. Picks up the shoulder
--- from the `thirdperson_shoulder` client setting whenever the view is turned on.
+-- from the `third_person_shoulder` client setting whenever the view is turned on.
 -- @param client [Player]
 -- @param pos [Vector]
 -- @param angles [Angle]
@@ -360,10 +362,10 @@ end
 -- @param client [Player the local player]
 -- @return [String 'raised' when the server has raised the weapon and it can fire, 'raising'
 --   while the player aims or fires or the weapon is to stay raised but it cannot fire yet,
---   'lowered' otherwise; nil without the Raise Weapon plugin, while its `raisegun_enabled`
+--   'lowered' otherwise; nil without the Raise Weapon plugin, while its `raise_gun_enabled`
 --   config is off, without a weapon and for a weapon whose state is fixed]
 local function weapon_state(client)
-  if !RaiseGun or !Config.get('raisegun_enabled', true) then return end
+  if !RaiseGun or !Config.get('raise_gun_enabled', true) then return end
 
   local weapon = client:GetActiveWeapon()
 
@@ -483,7 +485,7 @@ function ThirdPerson:HUDPaint()
       local alpha = 255 * math.Clamp((label_duration - age) / label_fade, 0, 1)
 
       draw.SimpleTextOutlined(
-        t(label == 'raised' ? 'ui.thirdperson.weapon_raised' : 'ui.thirdperson.weapon_lowered'),
+        t(label == 'raised' ? 'ui.third_person.weapon_raised' : 'ui.third_person.weapon_lowered'),
         Theme.get_font('text_small'),
         center_x,
         center_y + math.scale(24),
@@ -501,32 +503,34 @@ local function apply_shoulder(value)
   ThirdPerson.shoulder = value == 'left' ? -1 : 1
 end
 
---- Registers the client settings of the camera: 'thirdperson_shoulder', the shoulder the
--- camera aims over when the view is turned on, and 'thirdperson_distance', how far behind the
+--- Registers the client settings of the camera: 'third_person_shoulder', the shoulder the
+-- camera aims over when the view is turned on, and 'third_person_distance', how far behind the
 -- character it is while not aiming.
 function ThirdPerson:RegisterClientSettings()
-  ClientSettings:register_setting('thirdperson_shoulder', {
+  ClientSettings:register_setting('third_person_shoulder', {
+    renamed_from = 'thirdperson_shoulder',
     type = 'choice',
     default = 'right',
     choices = {
-      { value = 'right', name = 'settings.thirdperson.shoulder.right' },
-      { value = 'left', name = 'settings.thirdperson.shoulder.left' }
+      { value = 'right', name = 'settings.third_person.shoulder.right' },
+      { value = 'left', name = 'settings.third_person.shoulder.left' }
     },
     category = 'settings.categories.gameplay',
-    name = 'settings.thirdperson.shoulder.name',
-    description = 'settings.thirdperson.shoulder.desc',
+    name = 'settings.third_person.shoulder.name',
+    description = 'settings.third_person.shoulder.desc',
     on_change = apply_shoulder
   })
 
-  ClientSettings:register_setting('thirdperson_distance', {
+  ClientSettings:register_setting('third_person_distance', {
+    renamed_from = 'thirdperson_distance',
     type = 'number',
     default = default_distance,
     min = 50,
     max = 150,
     decimals = 0,
     category = 'settings.categories.gameplay',
-    name = 'settings.thirdperson.distance.name',
-    description = 'settings.thirdperson.distance.desc'
+    name = 'settings.third_person.distance.name',
+    description = 'settings.third_person.distance.desc'
   })
 end
 
