@@ -112,19 +112,16 @@ function PANEL:rebuild()
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))
   self.desc:set_limit(Config.get('character_max_desc_len'))
-  self.desc.saved = true
   self.desc.save = function(pnl)
     local text = pnl:GetValue()
 
-    if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len')
-    and text != PLAYER:get_phys_desc() then
-      Cable.send('fl_character_physdesc', text)
-      pnl.saved = true
-
-      return true
-    else
+    if text == PLAYER:get_phys_desc() then
       return false
     end
+
+    Cable.send('fl_character_physdesc', text)
+
+    return true
   end
 
   self.desc:SetFont(Theme.get_font('main_menu_small'))
@@ -137,18 +134,12 @@ function PANEL:rebuild()
     if pnl:HasFocus() then
       border = Theme.get_color('accent')
     else
-      border = Theme.get_color(pnl.saved ? 'success' : 'warning')
+      border = Theme.get_color(pnl:GetValue() == PLAYER:get_phys_desc() ? 'success' : 'warning')
     end
 
     Theme.hook('DrawCard', 0, 0, desc_w, desc_h, radius, Theme.get_color('field'), border)
 
     pnl:DrawTextEntryText(text_color, ColorAlpha(Theme.get_color('accent'), 120), text_color)
-  end
-
-  self.desc.OnChange = function(pnl, text)
-    if text != PLAYER:get_phys_desc() then
-      pnl.saved = false
-    end
   end
 
   self.desc.OnEnter = function(pnl)
