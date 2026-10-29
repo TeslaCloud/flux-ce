@@ -15,7 +15,7 @@
 -- Cinematics plugin, which falls back to 'fade' when that plugin is not loaded. More are
 -- added with `AreaDisplay:register_style`.
 --
--- The same area is not announced again until the 'areadisplay_cooldown' config has passed.
+-- The same area is not announced again until the 'area_display_cooldown' config has passed.
 -- A one-time area is shown to a player only once: the server remembers it in the data table
 -- of the player (`Player:set_player_data`, under 'seen_areas'). Players turn the notices off
 -- with the 'area_display' client setting.
@@ -192,7 +192,7 @@ local function build_tool_mode()
 
     local style_control = panel:AddControl('ComboBox', {
       MenuButton = 1,
-      Folder = 'areadisplay',
+      Folder = 'area_display',
       Options = options,
       CVars = { 'area_style' }
     })

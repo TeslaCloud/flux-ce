@@ -1,6 +1,6 @@
 en:
   config:
-    areadisplay:
+    area_display:
       title: Area Display
       desc: Area Display plugin configuration
       cooldown:

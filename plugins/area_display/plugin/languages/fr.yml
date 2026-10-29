@@ -1,6 +1,6 @@
 fr:
   config:
-    areadisplay:
+    area_display:
       title: "Affichage des zones"
       desc: "Configuration du plugin d'affichage des zones"
       cooldown:

@@ -1,6 +1,6 @@
 ru:
   config:
-    areadisplay:
+    area_display:
       title: Названия зон
       desc: Настройка плагина названий зон
       cooldown:
