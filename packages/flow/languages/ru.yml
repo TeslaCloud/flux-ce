@@ -74,11 +74,6 @@ ru:
     and: И
     or: ИЛИ
     not: НЕ
-  settings:
-    language:
-      name: Язык
-      desc: Язык интерфейса Flux. Язык самой игры при этом не меняется.
-      auto: Как в игре
   time:
     just_now: "только что"
     second: "секунду"

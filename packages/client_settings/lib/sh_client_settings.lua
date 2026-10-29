@@ -1,13 +1,7 @@
---- Registry of the Settings plugin. A setting is registered with
--- `ClientSettings:register_setting` from the `RegisterClientSettings` hook. It has a type
--- ('boolean', 'number', 'choice' or 'string' out of the box, more can be added with
--- `ClientSettings:register_type`), a default value, a category, a name and a description, and
--- optionally a function that decides whether the player sees it in the menu and a function
--- that is called when its value changes.
-
-if !ClientSettings then
-  PLUGIN:set_global('ClientSettings')
-end
+--- Registry of the client settings and of their types. A setting is registered with
+-- `ClientSettings:register_setting` and its values are checked against the type it names.
+-- The registry is kept across code refreshes, and registering an ID again replaces the
+-- setting.
 
 local stored = ClientSettings.stored or {}
 local types = ClientSettings.types or {}
@@ -59,48 +53,48 @@ function ClientSettings:find_type(id)
   return types[id]
 end
 
---- Registers a setting. Meant to be called from the `RegisterClientSettings` hook.
--- Registering an ID again replaces the setting but keeps its place in the menu.
+--- Registers a setting. Called at file level by the code that owns the setting, or from the
+-- `RegisterClientSettings` hook when the setting depends on something that is only known
+-- once every plugin and the schema have loaded. Registering an ID again replaces the setting
+-- but keeps its place in the menu.
 -- ```
--- function MyPlugin:RegisterClientSettings()
---   ClientSettings:register_setting('my_plugin_clock', {
---     type = 'boolean',
---     default = true,
---     category = 'settings.categories.interface',
---     name = 'settings.my_plugin_clock.name',
---     description = 'settings.my_plugin_clock.desc'
---   })
+-- ClientSettings:register_setting('my_plugin_clock', {
+--   type = 'boolean',
+--   default = true,
+--   category = 'settings.categories.interface',
+--   name = 'settings.my_plugin_clock.name',
+--   description = 'settings.my_plugin_clock.desc'
+-- })
 --
---   ClientSettings:register_setting('my_plugin_clock_scale', {
---     type = 'number',
---     default = 1,
---     min = 0.5,
---     max = 2,
---     decimals = 1,
---     category = 'settings.categories.interface',
---     name = 'settings.my_plugin_clock_scale.name',
---     -- Only listed in the menu while the clock is turned on.
---     visible = function(setting)
---       return ClientSettings:get('my_plugin_clock')
---     end,
---     on_change = function(value, old_value, setting)
---       MyPlugin:rebuild_clock(value)
---     end
---   })
+-- ClientSettings:register_setting('my_plugin_clock_scale', {
+--   type = 'number',
+--   default = 1,
+--   min = 0.5,
+--   max = 2,
+--   decimals = 1,
+--   category = 'settings.categories.interface',
+--   name = 'settings.my_plugin_clock_scale.name',
+--   -- Only listed in the menu while the clock is turned on.
+--   visible = function(setting)
+--     return ClientSettings:get('my_plugin_clock')
+--   end,
+--   on_change = function(value, old_value, setting)
+--     MyPlugin:rebuild_clock(value)
+--   end
+-- })
 --
---   ClientSettings:register_setting('my_plugin_clock_format', {
---     type = 'choice',
---     default = '24h',
---     choices = {
---       { value = '12h', name = 'settings.my_plugin_clock_format.twelve' },
---       { value = '24h', name = 'settings.my_plugin_clock_format.twenty_four' }
---     },
---     category = 'settings.categories.interface',
---     name = 'settings.my_plugin_clock_format.name',
---     -- The server can read it with target:get_setting('my_plugin_clock_format').
---     networked = true
---   })
--- end
+-- ClientSettings:register_setting('my_plugin_clock_format', {
+--   type = 'choice',
+--   default = '24h',
+--   choices = {
+--     { value = '12h', name = 'settings.my_plugin_clock_format.twelve' },
+--     { value = '24h', name = 'settings.my_plugin_clock_format.twenty_four' }
+--   },
+--   category = 'settings.categories.interface',
+--   name = 'settings.my_plugin_clock_format.name',
+--   -- The server can read it with target:get_setting('my_plugin_clock_format').
+--   networked = true
+-- })
 -- ```
 -- @param id [String unique setting id, also the key its value is saved under]
 -- @param data [Map setting definition. type (String) is required. Optional:
@@ -171,8 +165,8 @@ function ClientSettings:register_setting(id, data)
   return data
 end
 
---- Removes a setting, so that it is no longer listed in the menu, read or networked.
--- The value the player has saved for it is kept in case the setting comes back.
+--- Removes a setting, so that it is not listed in the menu, read or networked until it is
+-- registered again. The value the player has saved for it is kept for that case.
 -- @param id [String setting id]
 function ClientSettings:remove_setting(id)
   stored[id] = nil

@@ -36,15 +36,10 @@ local function to_color(value)
   end
 end
 
---- Checks whether the local player has area notices turned on. They are always on when the
--- Settings plugin is not loaded.
+--- Checks whether the local player has area notices turned on.
 -- @return [Boolean]
 function AreaDisplay:is_enabled()
-  if ClientSettings then
-    return ClientSettings:get('area_display', true) != false
-  end
-
-  return true
+  return ClientSettings:get('area_display', true) != false
 end
 
 --- Checks whether a notice can be seen by the local player right now: they are initialized,

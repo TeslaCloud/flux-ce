@@ -7,6 +7,10 @@ ru:
       chat: Чат
       sound: Звук
       admin: Администрирование
+    language:
+      name: Язык
+      desc: Язык интерфейса Flux. Язык самой игры при этом не меняется.
+      auto: Как в игре
   ui:
     tab_menu:
       settings: Настройки

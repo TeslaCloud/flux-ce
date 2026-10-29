@@ -22,4 +22,5 @@ Package:describe(function(s)
   s.depends     'flow'
   s.depends     'lumen'
   s.depends     'active_ui'
+  s.depends     'client_settings'
 end)

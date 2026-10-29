@@ -7,6 +7,10 @@ es:
       chat: Chat
       sound: Sonido
       admin: Administración
+    language:
+      name: Idioma
+      desc: El idioma de la interfaz de Flux. No cambia el idioma del propio juego.
+      auto: El mismo que el juego
   ui:
     tab_menu:
       settings: Ajustes

@@ -18,7 +18,7 @@
 -- that hook decides nothing, the `GetDisplayTypingTextType` and
 -- `GetDisplayTypingFadeoffMultiplier` hooks give a label and a range, but that range only
 -- scales the distance the bubble fades at on the viewer's client. Each player can turn the
--- bubbles or the live text off in the client settings, if the Settings plugin is loaded.
+-- bubbles or the live text off in the client settings.
 -- @module [DisplayTyping]
 
 PLUGIN:set_global('DisplayTyping')

@@ -55,7 +55,7 @@ end
 function DisplayTyping:can_receive(viewer)
   if !viewer:has_initialized() or viewer:IsBot() then return false end
 
-  if ClientSettings and viewer:get_setting('display_typing_bubbles', true) == false then
+  if viewer:get_setting('display_typing_bubbles', true) == false then
     return false
   end
 

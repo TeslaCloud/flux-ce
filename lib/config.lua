@@ -39,7 +39,7 @@
 -- file) or `CONFIG_FLUX` (the server configuration of Flux).
 --
 -- These are the settings of the server. The options of an individual player are kept on
--- the client of that player by the Settings plugin (`ClientSettings`).
+-- the client of that player by the Client Settings package (`ClientSettings`).
 
 local pairs = pairs
 local istable = istable

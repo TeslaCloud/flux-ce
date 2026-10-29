@@ -1,5 +1,5 @@
---- Client side of the Settings plugin: the values of the settings. They are loaded from the
--- 'settings' file of the client data store when the plugin loads, read with
+--- Client side of the Client Settings package: the values of the settings. They are loaded
+-- from the 'settings' file of the client data store when the package loads, read with
 -- `ClientSettings:get`, changed with `ClientSettings:set` and `ClientSettings:reset`, written
 -- back to the file shortly after a change, and sent to the server if their setting is
 -- networked.

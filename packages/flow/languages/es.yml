@@ -74,11 +74,6 @@ es:
     and: "Y"
     or: "O"
     not: "NO"
-  settings:
-    language:
-      name: Idioma
-      desc: El idioma de la interfaz de Flux. No cambia el idioma del propio juego.
-      auto: El mismo que el juego
   time:
     just_now: "justo ahora"
     second: "segundo"

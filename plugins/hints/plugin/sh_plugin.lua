@@ -16,9 +16,9 @@
 -- the automatic hints off. Because the check runs once a minute, the interval is in effect
 -- rounded up to whole minutes.
 --
--- With the Settings plugin loaded the player can turn the hints off with the 'show_hints'
--- setting. `Hints:display` shows a hint regardless of all of the above. The whole plugin,
--- the `Hints` global included, lives on the client.
+-- The player can turn the hints off with the 'show_hints' client setting. `Hints:display`
+-- shows a hint regardless of all of the above. The whole plugin, the `Hints` global
+-- included, lives on the client.
 -- @module [Hints]
 
 require_relative 'cl_plugin'

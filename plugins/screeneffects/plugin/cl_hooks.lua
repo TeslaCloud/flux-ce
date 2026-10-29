@@ -1,6 +1,6 @@
 --- Client-side hooks of the Screen Effects plugin: they advance the effects every frame, draw
--- the screen passes, add the headbob and the fall shake to the view and register the settings
--- of the effects with the Settings plugin.
+-- the screen passes, add the headbob and the fall shake to the view and register the client
+-- settings of the effects.
 
 local tonumber = tonumber
 local category = 'settings.categories.screen_effects'
@@ -63,7 +63,7 @@ function ScreenEffects:CalcView(client, _origin, angles, _fov)
   angles.r += tonumber(view.roll) or 0
 end
 
---- Registers a switch and a strength slider for every effect with the Settings plugin. The
+--- Registers a switch and a strength slider for every effect as client settings. The
 -- settings stay on the client: the effects are worked out there.
 function ScreenEffects:RegisterClientSettings()
   for _, effect_id in ipairs(self.effect_order) do

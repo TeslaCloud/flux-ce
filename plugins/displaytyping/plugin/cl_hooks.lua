@@ -8,7 +8,7 @@ end
 
 --- Registers the client settings of the plugin: whether the player sees typing bubbles at
 -- all, which the server is told so that it does not send them anything, and whether the
--- bubbles show the text as it is typed. Only called if the Settings plugin is loaded.
+-- bubbles show the text as it is typed.
 function DisplayTyping:RegisterClientSettings()
   ClientSettings:register_setting('display_typing_bubbles', {
     type = 'boolean',

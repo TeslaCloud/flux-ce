@@ -77,14 +77,10 @@ function Limbs:reset_colors()
 end
 
 --- Returns when the local player wants to see the body diagram on the HUD: the value of
--- the 'limbs_hud' client setting, or 'hurt' when the Settings plugin is not loaded.
+-- the 'limbs_hud' client setting.
 -- @return [String 'hurt' (while any limb is hurt), 'always' or 'never']
 function Limbs:get_hud_mode()
-  if ClientSettings then
-    return ClientSettings:get('limbs_hud', 'hurt')
-  end
-
-  return 'hurt'
+  return ClientSettings:get('limbs_hud', 'hurt')
 end
 
 --- Draws the body diagram: a figure seen from behind, so its left limbs are on the left,

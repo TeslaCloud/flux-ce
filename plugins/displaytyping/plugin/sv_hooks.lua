@@ -3,8 +3,7 @@
 -- up to date.
 
 --- Registers the networked client setting of the plugin on the server, so that it knows
--- which players have turned typing bubbles off. Only called if the Settings plugin is
--- loaded.
+-- which players have turned typing bubbles off.
 function DisplayTyping:RegisterClientSettings()
   ClientSettings:register_setting('display_typing_bubbles', {
     type = 'boolean',

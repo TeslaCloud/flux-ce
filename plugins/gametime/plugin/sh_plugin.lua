@@ -35,8 +35,8 @@
 -- `GameYearPassed` hooks run on both realms as the clock rolls over, and `GameTimeSet` runs
 -- when the clock is set to another moment.
 --
--- Players see the time and the date in the top right corner of the tab menu. With the
--- Settings plugin loaded they can hide that clock and switch it to the 12-hour format; the
+-- Players see the time and the date in the top right corner of the tab menu. In their client
+-- settings they can hide that clock and switch it to the 12-hour format; the
 -- `ShouldDrawGameTime` hook lets a schema hide it, and the `PaintGameTimeClock` theme hook
 -- lets a theme draw it.
 -- @module [GameTime]
@@ -338,11 +338,10 @@ function GameTime:get_weekday_name(weekday, lang)
 end
 
 --- Checks whether times are shown with a 12-hour clock by default. On the client that is the
--- 'gametime_twelve_hour' setting of the player, which exists when the Settings plugin is
--- loaded. The server always uses the 24-hour clock.
+-- 'gametime_twelve_hour' setting of the player. The server always uses the 24-hour clock.
 -- @return [Boolean]
 function GameTime:uses_twelve_hour()
-  if CLIENT and ClientSettings then
+  if CLIENT then
     return ClientSettings:get('gametime_twelve_hour', false) == true
   end
 

@@ -1,5 +1,5 @@
---- Server-side network handler of the Settings plugin: receives the networked settings of the
--- players.
+--- Server-side network handler of the Client Settings package: receives the networked
+-- settings of the players.
 -- A client sends all of its networked settings when it joins and the changed ones afterward.
 -- Every value is checked against the definition of its setting before it is stored on the
 -- player, where `Player:get_setting` reads it. A player's messages are taken at most ten times

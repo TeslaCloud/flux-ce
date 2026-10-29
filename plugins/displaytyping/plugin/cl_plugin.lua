@@ -31,16 +31,11 @@ local function trim_label(label)
   return trimmed
 end
 
---- Reads a client setting of the plugin. Settings are on while the Settings plugin is not
--- loaded.
+--- Reads a client setting of the plugin.
 -- @param id [String setting id]
 -- @return [Boolean false if the player has turned the setting off]
 function DisplayTyping:get_preference(id)
-  if ClientSettings then
-    return ClientSettings:get(id, true) != false
-  end
-
-  return true
+  return ClientSettings:get(id, true) != false
 end
 
 --- Tells what kind of speech a text is, by asking the DisplayTypingGetKind hook and, if it

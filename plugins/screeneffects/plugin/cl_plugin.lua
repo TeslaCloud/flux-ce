@@ -236,7 +236,7 @@ function ScreenEffects:is_effect_enabled(id)
     return false
   end
 
-  if ClientSettings and ClientSettings:get(effect.setting, true) == false then
+  if ClientSettings:get(effect.setting, true) == false then
     return false
   end
 
@@ -252,17 +252,12 @@ end
 
 --- Returns the strength the local player has set for an effect.
 -- @param id [String effect ID: 'low_health', 'heartbeat', 'underwater' or 'headbob']
--- @return [Number multiplier of the effect, 1 being the default; always 1 without the
---   Settings plugin, 0 if there is no such effect]
+-- @return [Number multiplier of the effect, 1 being the default; 0 if there is no such effect]
 function ScreenEffects:get_effect_strength(id)
   local effect = stored[id]
 
   if !effect then
     return 0
-  end
-
-  if !ClientSettings then
-    return 1
   end
 
   return to_number(ClientSettings:get(effect.strength, 100), 100) * 0.01

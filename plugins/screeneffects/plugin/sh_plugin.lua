@@ -11,11 +11,10 @@
 -- An effect is applied when the server allows it, the player has it turned on and no plugin
 -- suppresses it. The server allows the effects with the 'allow_low_health_effect',
 -- 'allow_heartbeat_effect', 'allow_underwater_effect' and 'allow_headbob_effect' configs, all
--- on by default. With the Settings plugin loaded, every player gets a switch and a strength
--- slider for each effect in the Settings tab: the 'low_health_effect', 'heartbeat_effect',
--- 'underwater_effect' and 'headbob_effect' settings and the settings of the same names ending
--- in '_strength'; without that plugin the effects are on at full strength. A plugin or the
--- schema suppresses an effect by returning false from the `ShouldApplyScreenEffect` hook.
+-- on by default. Every player gets a switch and a strength slider for each effect in the
+-- Settings tab: the 'low_health_effect', 'heartbeat_effect', 'underwater_effect' and
+-- 'headbob_effect' settings and the settings of the same names ending in '_strength'. A
+-- plugin or the schema suppresses an effect by returning false from the `ShouldApplyScreenEffect` hook.
 -- ```
 -- function MyPlugin:ShouldApplyScreenEffect(id)
 --   if id == 'heartbeat' and PLAYER:get_nv('observer') then

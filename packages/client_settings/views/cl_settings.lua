@@ -6,12 +6,12 @@
 --- The settings page of the tab menu (`fl_settings`): a scrollable list with a header for
 -- every category and an `fl_setting_row` for every setting that is visible to the player,
 -- and a button that sets all of them back to their defaults.
--- `rebuild` recreates the list; the plugin calls `update_setting` when a value changes.
+-- `rebuild` recreates the list; the package calls `update_setting` when a value changes.
 -- Derives from `fl_base_panel`.
 local PANEL = {}
 
 --- Creates the scroll panel that holds the list and the button that resets the listed
--- settings after a confirmation, and makes the panel known to the plugin.
+-- settings after a confirmation, and makes the panel known to the package.
 function PANEL:Init()
   self.rows = {}
   self.listed = ''

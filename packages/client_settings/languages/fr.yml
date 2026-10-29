@@ -7,6 +7,10 @@ fr:
       chat: "Chat"
       sound: "Son"
       admin: "Administration"
+    language:
+      name: "Langue"
+      desc: "La langue de l'interface de Flux. Elle ne change pas la langue du jeu lui-même."
+      auto: "Identique au jeu"
   ui:
     tab_menu:
       settings: "Options"

@@ -1,9 +1,9 @@
 --- Client side of the Game Time plugin: registers the settings of the clock, notices when the
 -- server sets the game clock to another moment and puts the clock into the tab menu.
 
---- Registers the settings of the clock with the Settings plugin: 'gametime_clock', which
--- shows or hides the clock of the tab menu, and 'gametime_twelve_hour', which switches the
--- game time to the 12-hour format. Only called when the Settings plugin is loaded.
+--- Registers the settings of the clock: 'gametime_clock', which shows or hides the clock of
+-- the tab menu, and 'gametime_twelve_hour', which switches the game time to the 12-hour
+-- format.
 function GameTime:RegisterClientSettings()
   ClientSettings:register_setting('gametime_clock', {
     type = 'boolean',
@@ -31,7 +31,7 @@ function GameTime:should_draw_clock()
     return false
   end
 
-  if ClientSettings and ClientSettings:get('gametime_clock', true) == false then
+  if ClientSettings:get('gametime_clock', true) == false then
     return false
   end
 

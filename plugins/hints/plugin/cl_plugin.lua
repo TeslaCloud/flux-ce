@@ -31,16 +31,10 @@ function Hints:set_interval(seconds)
   self.interval = tonumber(seconds)
 end
 
---- Checks whether the player wants to see hints: the 'show_hints' setting of the Settings
--- plugin.
--- @return [Boolean false if the player has turned the hints off, true otherwise and when the
---   Settings plugin is not loaded]
+--- Checks whether the player wants to see hints: the 'show_hints' client setting.
+-- @return [Boolean false if the player has turned the hints off]
 function Hints:is_enabled()
-  if ClientSettings then
-    return ClientSettings:get('show_hints', true) != false
-  end
-
-  return true
+  return ClientSettings:get('show_hints', true) != false
 end
 
 --- Registers a hint that Hints:display_random can pick.
@@ -252,16 +246,12 @@ function Hints:RegisterClientSettings()
   })
 end
 
-local function has_settings()
-  return ClientSettings != nil
-end
-
 local function has_inventory()
   return Inventories != nil
 end
 
 Hints:add('forums', 'hint.forums')
-Hints:add('hints', 'hint.hints', nil, false, has_settings)
+Hints:add('hints', 'hint.hints')
 Hints:add('tab', 'hint.tab')
 Hints:add('inventory', 'hint.inventory', nil, false, has_inventory)
 Hints:add('commands', 'hint.commands')

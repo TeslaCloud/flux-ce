@@ -74,11 +74,6 @@ en:
     and: AND
     or: OR
     not: NOT
-  settings:
-    language:
-      name: Language
-      desc: The language of the Flux interface. It does not change the language of the game itself.
-      auto: Same as the game
   time:
     just_now: "just now"
     second: "second"

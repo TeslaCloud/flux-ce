@@ -1,4 +1,5 @@
---- Player extension of the Settings plugin: reading the settings of a player on either realm.
+--- Player extension of the Client Settings package: reading the settings of a player on
+-- either realm.
 -- @module [Player]
 
 local player_meta = FindMetaTable('Player')

@@ -46,7 +46,7 @@ function PropProtection:DrawEntityTargetID(entity, x, y, dist)
   local key = entity:get_nv('fl_prop_owner')
 
   if !key then return end
-  if ClientSettings and ClientSettings:get('show_prop_owners', true) == false then return end
+  if ClientSettings:get('show_prop_owners', true) == false then return end
 
   local client = PLAYER
   local text

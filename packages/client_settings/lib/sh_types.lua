@@ -1,6 +1,7 @@
---- Registers the types of settings that come with the Settings plugin: 'boolean', 'number',
--- 'choice' and 'string'. Each of them checks the values of its settings on both realms and
--- creates the control that edits such a setting in the settings menu on the client.
+--- Registers the types of settings that come with the Client Settings package: 'boolean',
+-- 'number', 'choice' and 'string'. Each of them checks the values of its settings on both
+-- realms and creates the control that edits such a setting in the settings menu on the
+-- client.
 
 ClientSettings:register_type('boolean', {
   --- Returns the default of a boolean setting that does not define one.

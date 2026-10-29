@@ -94,23 +94,11 @@ ThirdPerson.aiming = ThirdPerson.aiming or false
 ThirdPerson.firing = ThirdPerson.firing or false
 
 local function shoulder_setting()
-  if ClientSettings and ClientSettings:get('thirdperson_shoulder', 'right') == 'left' then
-    return -1
-  end
-
-  return 1
+  return ClientSettings:get('thirdperson_shoulder', 'right') == 'left' ? -1 : 1
 end
 
 local function distance_setting()
-  if ClientSettings then
-    return math.Clamp(
-      tonumber(ClientSettings:get('thirdperson_distance', default_distance)) or default_distance,
-      50,
-      150
-    )
-  end
-
-  return default_distance
+  return math.Clamp(tonumber(ClientSettings:get('thirdperson_distance', default_distance)) or default_distance, 50, 150)
 end
 
 --- Checks whether the camera orbits the character with angles of its own: while the third
@@ -513,10 +501,9 @@ local function apply_shoulder(value)
   ThirdPerson.shoulder = value == 'left' ? -1 : 1
 end
 
---- Registers the client settings of the camera with the Settings plugin:
--- 'thirdperson_shoulder', the shoulder the camera aims over when the view is turned on, and
--- 'thirdperson_distance', how far behind the character it is while not aiming. Only called
--- when the Settings plugin is loaded.
+--- Registers the client settings of the camera: 'thirdperson_shoulder', the shoulder the
+-- camera aims over when the view is turned on, and 'thirdperson_distance', how far behind the
+-- character it is while not aiming.
 function ThirdPerson:RegisterClientSettings()
   ClientSettings:register_setting('thirdperson_shoulder', {
     type = 'choice',
