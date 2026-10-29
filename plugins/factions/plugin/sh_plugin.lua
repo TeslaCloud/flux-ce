@@ -29,7 +29,6 @@ PLUGIN:set_global('Factions')
 Plugin.add_extra('factions')
 
 require_relative 'cl_hooks'
-require_relative 'cl_nethooks'
 require_relative 'sh_hooks'
 require_relative 'sv_hooks'
 
@@ -124,12 +123,7 @@ Flux.Command:add_completer('model', complete_model)
 --- Registers the 'manage_ranks' permission, which lets staff promote and demote any member
 -- of any faction, whatever their own rank.
 function Factions:RegisterPermissions()
-  Bolt:register_permission(
-    'manage_ranks',
-    'Manage faction ranks',
-    'Grants access to promote and demote any character, regardless of the ranks.',
-    'permission.categories.character_management'
-  )
+  Bolt:register_permission('manage_ranks', nil, nil, 'permission.categories.character_management')
 end
 
 --- Includes a plugin's factions folder when the 'factions' extra is being loaded.

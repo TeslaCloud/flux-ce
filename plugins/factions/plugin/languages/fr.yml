@@ -66,3 +66,7 @@ fr:
       no_whitelist: "Vous n'avez pas accès à cette faction."
       no_faction: "Vous n'avez pas choisi de faction."
       faction_limit: "Vous ne pouvez plus avoir de personnages dans cette faction."
+  permission:
+    manage_ranks:
+      name: "Gérer les rangs des factions"
+      description: "Permet de promouvoir et de rétrograder n'importe quel personnage, quels que soient les rangs."

@@ -12,8 +12,7 @@
 -- available as FACTION (see `Factions.include_factions`), and are registered with
 -- `Faction:register`. A definition can override `Faction:on_player_join`,
 -- `Faction:on_player_leave`, `Faction:on_character_create` and `Faction:can_transfer`, and
--- define make_name to build names itself. Unlike the other files of the models folder, this
--- is a plain class that is not stored in the database.
+-- define make_name to build names itself.
 
 class 'Faction'
 

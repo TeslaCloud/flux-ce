@@ -66,3 +66,7 @@ es:
       no_whitelist: No tienes acceso a esta facción.
       no_faction: No has elegido una facción.
       faction_limit: No puedes tener más personajes en esta facción.
+  permission:
+    manage_ranks:
+      name: "Gestionar rangos de facción"
+      description: "Da acceso para ascender y degradar a cualquier personaje, sin importar los rangos."
