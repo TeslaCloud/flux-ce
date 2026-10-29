@@ -101,13 +101,15 @@ end
 
 --- Reduces a text to its outline: what it starts and ends with, without anything it says.
 -- The outline keeps the command at the start of the text (the command prefix and the name
--- made of Latin letters, digits and underscores) or else the punctuation it starts with, and
--- the punctuation it ends with; everything in between is replaced with a single ellipsis
+-- made of Latin letters, digits and underscores), or else the chat prefix it starts with
+-- (see `Chatbox.find_prefix`), or else the punctuation it starts with, and the punctuation it
+-- ends with; everything in between is replaced with a single ellipsis
 -- (`DisplayTyping.placeholder`). It is what other players receive in place of a text they
 -- are not allowed to see, so that the hooks that tell the kind of speech by a prefix or an
 -- ending still work. The outline of an outline is the same outline.
 -- ```
 -- DisplayTyping:outline('/me waves his hand.') -- '/me ….'
+-- DisplayTyping:outline('/radio on my way') -- '/radio …'
 -- DisplayTyping:outline('(over here') -- '(…'
 -- DisplayTyping:outline('Watch out!!') -- '…!!'
 -- DisplayTyping:outline('Hello there') -- '…'
@@ -137,10 +139,17 @@ function DisplayTyping:outline(text)
       consumed = #prefix + #marks
     end
   else
-    local marks = text:match('^%p+') or ''
+    local chat_prefix = Chatbox and select(2, Chatbox.find_prefix(text))
 
-    head = marks:sub(1, punctuation_limit)
-    consumed = #marks
+    if chat_prefix then
+      head = text:sub(1, #chat_prefix)
+      consumed = #chat_prefix
+    else
+      local marks = text:match('^%p+') or ''
+
+      head = marks:sub(1, punctuation_limit)
+      consumed = #marks
+    end
   end
 
   local rest = text:sub(consumed + 1)
