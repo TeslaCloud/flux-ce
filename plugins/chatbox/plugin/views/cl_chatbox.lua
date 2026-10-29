@@ -758,14 +758,14 @@ function PANEL:create_message(message_data)
 end
 
 --- Creates a panel for the message and adds it to the chatbox, unless the
--- ChatboxShouldAddMessage hook returns false.
+-- ShouldAddChatMessage hook returns false.
 -- @param message_data [Map message data received from the server]
 function PANEL:add_message(message_data)
   --- Decides whether a message received from the server is added to the chatbox. Called on the
   -- client before the message is compiled; gamemode hooks are not called.
   -- @param message_data [Map message data received from the server]
   -- @return [Boolean return false to drop the message]
-  if message_data and Plugin.call('ChatboxShouldAddMessage', message_data) != false then
+  if message_data and Plugin.call('ShouldAddChatMessage', message_data) != false then
     local panel = self:create_message(message_data)
 
     if IsValid(panel) then

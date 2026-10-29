@@ -15,8 +15,8 @@
 -- returns the ID of a kind registered with `DisplayTyping:register_kind`. The client of the
 -- typing player reports that ID, and the server takes the range the bubble is sent within
 -- from the kind, so a kind has to be registered on both realms for its range to count. When
--- that hook decides nothing, the `DisplayTypingTextType` and
--- `DisplayTypingAdjustFadeoffMultiplier` hooks give a label and a range, but that range only
+-- that hook decides nothing, the `GetDisplayTypingTextType` and
+-- `GetDisplayTypingFadeoffMultiplier` hooks give a label and a range, but that range only
 -- scales the distance the bubble fades at on the viewer's client. Each player can turn the
 -- bubbles or the live text off in the client settings, if the Settings plugin is loaded.
 -- @module [DisplayTyping]

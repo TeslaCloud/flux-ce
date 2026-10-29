@@ -165,7 +165,7 @@ function Characters:ShouldScoreboardShow()
   return PLAYER:is_character_loaded() or !Characters.needs_character(PLAYER)
 end
 
---- Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook
+--- Adds the Steam name to a scoreboard player card and, unless an ShouldShowCharacterCard hook
 -- returns false, the player's model icon and physical description.
 -- @param card [Panel the scoreboard player card]
 -- @param target [Player]
@@ -186,7 +186,7 @@ function Characters:RebuildScoreboardPlayerCard(card, target)
   -- @param target [Player the player the card belongs to]
   -- @return [Boolean return false to hide the character name, model icon and physical
   --   description, which leaves only the Steam name on the card]
-  if hook.Run('IsCharacterCardVisible', card, target) != false then
+  if hook.Run('ShouldShowCharacterCard', card, target) != false then
     card.avatar_panel:SetPos(card:GetWide() - card.avatar_panel:GetWide() - math.scale(48), math.scale(4))
 
     card.steam_name:SetPos(

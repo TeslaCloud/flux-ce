@@ -21,7 +21,7 @@
 -- removed every second. The server networks the levels and boosts of a character to its
 -- owner alone. The `attribute` condition compares the level of an attribute, boosts
 -- included, with a value. Staff set levels with the `attribute set` command and give and
--- remove boosts with `attribute boost` and `attribute clearboosts`. `IsAttributeVisible`
+-- remove boosts with `attribute boost` and `attribute clearboosts`. `ShouldShowAttribute`
 -- hides an attribute from the character sheet.
 --
 -- Skills are defined as `SkillBase` objects by the files of the plugin's `skills` folder,
@@ -33,7 +33,7 @@
 -- methods built on it, or by a point spent through the Levels plugin; `PlayerSkillChanged`
 -- reports every change. A skill has no boosts. The server networks the ranks of a character
 -- to its owner alone. The `skill` condition compares the rank of a skill with a value, and
--- `IsSkillVisible` hides a skill from the character sheet.
+-- `ShouldShowSkill` hides a skill from the character sheet.
 --
 -- Staff look at the attributes and skills of a character, hidden ones included, with the
 -- `attribute list` command, which opens a window that lists them. The commands complete the

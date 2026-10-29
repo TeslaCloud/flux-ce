@@ -13,7 +13,7 @@ local lowered_offset = Vector()
 -- when the weapon is fully lowered.
 -- The angles come from the `lowered_angles` field of the item that gives the weapon, the
 -- `LoweredAngles` field of the weapon or the defaults of the plugin, the origin from
--- `lowered_origin`, `LoweredOrigin` or no offset. The AdjustWeaponLoweredView hook can
+-- `lowered_origin`, `LoweredOrigin` or no offset. The GetWeaponLoweredView hook can
 -- replace either.
 -- @param weapon [Weapon]
 -- @return [Angle rotation around the up (pitch field), forward (yaw field) and right (roll
@@ -39,7 +39,7 @@ local function lowered_view(weapon)
   -- @return [Angle Angles to use instead, Vector Origin to use instead. The origin can be left
   --   out to keep it; a handler that only changes the origin has to return the angles it
   --   was given in front of it, since a nil first value counts as no answer]
-  local new_angles, new_origin = hook.Run('AdjustWeaponLoweredView', weapon, angles, origin, item_obj)
+  local new_angles, new_origin = hook.Run('GetWeaponLoweredView', weapon, angles, origin, item_obj)
 
   return new_angles or angles, new_origin or origin
 end

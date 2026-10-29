@@ -30,7 +30,7 @@
 -- down and lower jumps ('limbs_legs_slow'), and hurt arms make the aim of a held weapon
 -- drift ('limbs_arms_sway'). Other plugins read the strength of an effect with
 -- `Limbs:get_effect` to slow down whatever they do with arms or legs, and the
--- `AdjustLimbEffect` hook changes it per player. The 'limbs_enabled' config turns the whole
+-- `GetLimbEffectStrength` hook changes it per player. The 'limbs_enabled' config turns the whole
 -- system off: nothing is tracked, every limb reads as healthy and no effect applies.
 --
 -- The local player sees a small body diagram on the HUD while any limb is hurt, colored by
@@ -290,17 +290,18 @@ function Limbs:get_effect(target, effect)
     return 0
   end
 
-  --- Lets plugins change how strongly an effect of limb damage applies to a player, for
-  -- example to make a faction immune to it. Called on both realms whenever the strength of an
-  -- effect is asked for and the limbs behind it are hurt: for 'run' and 'jump' on every
-  -- movement command of the player, for 'aim' on every frame of the local player. On the
-  -- client it is only ever called for the local player. Movement is predicted, so a handler
-  -- for 'run' or 'jump' has to be shared and return the same value on both realms.
+  --- Asks how strongly an effect of limb damage applies to a player, for example to make a
+  -- faction immune to it; the first handler that returns a strength decides. Called on both
+  -- realms whenever the strength of an effect is asked for and the limbs behind it are hurt:
+  -- for 'run' and 'jump' on every movement command of the player, for 'aim' on every frame
+  -- of the local player. On the client it is only ever called for the local player.
+  -- Movement is predicted, so a handler for 'run' or 'jump' has to be shared and return the
+  -- same value on both realms.
   -- @param target [Player The player the effect applies to]
   -- @param effect [String 'run', 'jump' or 'aim']
   -- @param fraction [Number Strength from the damage of the limbs, above 0 and up to 1]
   -- @return [Number Strength to use instead, from 0 (no effect) to 1; nothing to keep it]
-  local override = hook.Run('AdjustLimbEffect', target, effect, fraction)
+  local override = hook.Run('GetLimbEffectStrength', target, effect, fraction)
 
   if isnumber(override) then
     fraction = math.Clamp(override, 0, 1)

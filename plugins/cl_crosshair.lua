@@ -2,7 +2,7 @@
 -- distance to what the player is aiming at.
 -- It is hidden while the player is running or dead, and whenever the `ShouldHUDPaint` or
 -- `ShouldHUDPaintCrosshair` hook returns false. Plugins change its color and gap through the
--- `AdjustCrosshairColor` and `AdjustCrosshairGap` hooks; the plugin itself uses them to tint
+-- `GetCrosshairColor` and `GetCrosshairGap` hooks; the plugin itself uses them to tint
 -- and narrow the crosshair when the player aims at a nearby player or item.
 
 local draw_rounded_box = draw.RoundedBox
@@ -26,7 +26,7 @@ function PLUGIN:ShouldHUDPaintCrosshair()
 end
 
 --- Draws the crosshair: a center dot and four bars around it.
--- Gap and color can be changed through the AdjustCrosshairGap and AdjustCrosshairColor hooks.
+-- Gap and color can be changed through the GetCrosshairGap and GetCrosshairColor hooks.
 function PLUGIN:HUDPaint()
   --- Flux's `ShouldHUDPaint` hook, asked again here before the crosshair is drawn, so that
   -- whatever hides the HUD hides the crosshair as well.
@@ -38,20 +38,21 @@ function PLUGIN:HUDPaint()
     local lerp_step = FrameTime() * 6
     local trace = PLAYER:GetEyeTraceNoCursor()
     local distance = PLAYER:GetPos():Distance(trace.HitPos)
-    --- Lets plugins change the color of the crosshair.
+    --- Asks for the color of the crosshair; the first handler that returns one decides.
     -- Called on the client on every frame the crosshair is drawn.
     -- @param trace [Map Trace result of the local player's aim]
     -- @param distance [Number Distance from the local player to the hit position of the trace]
     -- @return [Color Color to draw the crosshair in; white when nothing is returned]
-    local draw_color = Plugin.call('AdjustCrosshairColor', trace, distance) or color_white
+    local draw_color = Plugin.call('GetCrosshairColor', trace, distance) or color_white
     local real_gap =
-      --- Lets plugins change the gap between the center of the crosshair and its bars.
+      --- Asks for the gap between the center of the crosshair and its bars; the first handler
+      -- that returns one decides.
       -- Called on the client on every frame the crosshair is drawn.
       -- @param trace [Map Trace result of the local player's aim]
       -- @param distance [Number Distance from the local player to the hit position of the trace]
       -- @return [Number Gap in pixels; when nothing is returned the gap grows with the
       --   distance]
-      Plugin.call('AdjustCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
+      Plugin.call('GetCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
     cur_gap = Lerp(lerp_step, cur_gap, real_gap)
 
     if math.abs(cur_gap - real_gap) < 0.5 then
@@ -79,7 +80,7 @@ end
 -- @param trace [Map trace result of the local player's aim]
 -- @param distance [Number distance from the local player to the trace hit position]
 -- @return [Color the accent color, or nil to keep the default color]
-function PLUGIN:AdjustCrosshairColor(trace, distance)
+function PLUGIN:GetCrosshairColor(trace, distance)
   local ent = trace.Entity
 
   if distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == 'fl_item') then
@@ -92,7 +93,7 @@ end
 -- @param trace [Map trace result of the local player's aim]
 -- @param distance [Number distance from the local player to the trace hit position]
 -- @return [Number the default gap scaled to the screen, or nil to keep the distance-based gap]
-function PLUGIN:AdjustCrosshairGap(trace, distance)
+function PLUGIN:GetCrosshairGap(trace, distance)
   local ent = trace.Entity
 
   if distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == 'fl_item') then

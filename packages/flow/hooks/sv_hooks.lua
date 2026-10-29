@@ -77,7 +77,7 @@ function GM:PlayerSpawn(actor)
 
   --- GMod's `PlayerSetModel` hook, run by Flux on the server every time a player spawns,
   -- before the rest of their state is reset. The gamemode's handler applies the model
-  -- (see `PrePlayerSetModel` for changing it). A plugin or schema handler that returns a
+  -- (see `GetPlayerModel` for changing it). A plugin or schema handler that returns a
   -- value replaces the gamemode's handler and has to set the model itself.
   -- @param actor [Player The player who is spawning]
   hook.Run('PlayerSetModel', actor)
@@ -157,7 +157,7 @@ function GM:PostPlayerSpawn(actor)
   hook.run_client(actor, 'PostPlayerSpawn')
 end
 
---- Sets the model of a player. A string returned by the PrePlayerSetModel hook is used as
+--- Sets the model of a player. A string returned by the GetPlayerModel hook is used as
 -- the model, and false defers to the base gamemode. Otherwise bots and initialized players
 -- get the model from their 'model' networked variable (a citizen model if it is not set),
 -- and anyone else is left to the base gamemode.
@@ -169,7 +169,7 @@ function GM:PlayerSetModel(actor)
   -- @return [String/Boolean Path of the model to use, or false to let the base gamemode
   --   pick the model. When nothing is returned, bots and initialized players get the model
   --   from their `model` networked variable and everyone else is left to the base gamemode]
-  local override = hook.Run('PrePlayerSetModel', actor)
+  local override = hook.Run('GetPlayerModel', actor)
 
   if isstring(override) then
     actor:SetModel(override)
@@ -700,7 +700,7 @@ end
 -- @param key [String key of the config that has changed]
 -- @param _old_value [Any]
 -- @param new_value [Any]
-function GM:OnConfigSet(key, _old_value, new_value)
+function GM:ConfigChanged(key, _old_value, new_value)
   if key == 'walk_speed' then
     for _, client in player_iterator() do
       client:SetWalkSpeed(new_value)

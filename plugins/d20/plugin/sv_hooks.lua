@@ -66,6 +66,6 @@ end
 -- @param key [String config key]
 -- @param _old_value [Any]
 -- @param new_value [Any]
-function D20:OnConfigSet(key, _old_value, new_value)
+function D20:ConfigChanged(key, _old_value, new_value)
   self:check_config(key, new_value)
 end

@@ -104,7 +104,7 @@ end
 
 --- Decides whether an entity is to be removed from the map. Entities that the plugin may
 -- not remove (see `MapCleaner:can_remove`) never are; for the others the
--- MapCleanerShouldRemove hook has the last word, and without an answer from it the entity
+-- ShouldRemoveMapEntity hook has the last word, and without an answer from it the entity
 -- is removed if its class matches. Serverside only.
 -- @param entity [Entity]
 -- @param matched=nil [Boolean whether the class of the entity counts as matching; checked
@@ -130,7 +130,7 @@ function MapCleaner:should_remove(entity, matched)
   -- @param matched [Boolean Whether the class matches one of the patterns in effect, that is
   --   whether the entity is removed if nothing is returned]
   -- @return [Boolean Return true to remove the entity, false to keep it]
-  local result = hook.Run('MapCleanerShouldRemove', entity, ent_class, matched)
+  local result = hook.Run('ShouldRemoveMapEntity', entity, ent_class, matched)
 
   if result != nil then
     return result != false

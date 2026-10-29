@@ -172,7 +172,7 @@ function SrcdsProxy:transfer_from_area(actor, area)
   -- @param area [Map The transfer area, with the `backend` and `delay` fields]
   -- @param backend [String Name of the server the player is about to be moved to]
   -- @return [Boolean Return false to keep the player from being moved]
-  if hook.Run('ProxyAreaShouldTransfer', actor, area, backend) == false then
+  if hook.Run('ShouldProxyTransferPlayer', actor, area, backend) == false then
     return false
   end
 

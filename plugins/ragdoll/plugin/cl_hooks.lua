@@ -49,7 +49,7 @@ function Ragdoll:HUDPaint()
   -- Called on the client on every HUD paint while the local player is fallen over or
   -- knocked out. The get up progress bar is a timed action and is not affected.
   -- @return [Boolean Return false to hide the overlay]
-  if Plugin.call('ShouldFallenHUDPaint') == false then return end
+  if Plugin.call('ShouldHUDPaintFallen') == false then return end
 
   local scrw, scrh = ScrW(), ScrH()
   local getting_up = is_getting_up()

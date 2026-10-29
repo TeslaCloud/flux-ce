@@ -51,7 +51,7 @@ end
 --- Replaces regular chat messages with formatted in character speech and logs them. A phrase
 -- that the player may not say (see `RPCommands:can_say_ic`), or that has nothing in it but
 -- markup, is replaced with a message that nobody hears and that
--- `RPCommands:ChatboxShouldSendMessage` cancels.
+-- `RPCommands:ShouldSendChatMessage` cancels.
 -- @param actor [Player player that sent the message]
 -- @param text [String message text]
 -- @param message_data [Table message data, replaced in place]
@@ -74,7 +74,7 @@ end
 -- @param message_data [Table chat message data]
 -- @param _listeners [List<Player> players the message is meant for]
 -- @return [Boolean false for a refused phrase, nil otherwise]
-function RPCommands:ChatboxShouldSendMessage(message_data, _listeners)
+function RPCommands:ShouldSendChatMessage(message_data, _listeners)
   if message_data.refused then
     return false
   end

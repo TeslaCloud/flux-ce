@@ -50,7 +50,7 @@ end
 -- @param _card [Panel character card]
 -- @param target [Player player the card belongs to]
 -- @return [Boolean false if the player is not recognized, nil otherwise]
-function Recognition:IsCharacterCardVisible(_card, target)
+function Recognition:ShouldShowCharacterCard(_card, target)
   if !PLAYER:recognizes(target) then
     return false
   end

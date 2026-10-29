@@ -1,5 +1,5 @@
 --- Config stores the settings of the server under string keys and shares them with clients.
--- The server owns the values: `Config.set` changes one, runs the OnConfigSet hook and sends
+-- The server owns the values: `Config.set` changes one, runs the ConfigChanged hook and sends
 -- the new value to every player who may see it, and `Config.get` reads one on either side.
 -- `Config.save` and `Config.load` keep the values in the 'config' data file, and
 -- `Config.import` sets them from a YAML file. `Config.read` reads config definitions (default
@@ -404,21 +404,21 @@ if SERVER then
       end
 
       if !entry then
-        Plugin.call('OnConfigSet', key, nil, value)
-
         saved.value = value
         saved.pending = nil
         saved.pending_value = nil
 
         stored[key] = saved
         cache[key] = value
+
+        Plugin.call('ConfigChanged', key, nil, value)
       elseif !Config.is_static(key) and (definitions[key] or saved.changed or saved.pending) then
         local valid, converted = Config.validate(key, value)
 
         if valid then
-          value = restore_value(entry.value, converted)
+          local old_value = entry.value
 
-          Plugin.call('OnConfigSet', key, entry.value, value)
+          value = restore_value(old_value, converted)
 
           entry.value = value
           entry.changed = saved.changed
@@ -426,6 +426,8 @@ if SERVER then
           entry.pending_value = nil
 
           cache[key] = value
+
+          Plugin.call('ConfigChanged', key, old_value, value)
         end
       end
     end
@@ -482,7 +484,7 @@ if SERVER then
   end
 
   --- Sets the value of a config, creating the config if it does not exist yet.
-  -- Serverside variant: runs the OnConfigSet hook and sends the new value to all players
+  -- Serverside variant: runs the ConfigChanged hook and sends the new value to all players
   -- who may see it (see `Config.send`). Does nothing if key is nil. This is the low level
   -- setter: it does not check the value and ignores the static and needs_restart flags.
   -- Use `Config.change` for changes that players ask for.
@@ -519,17 +521,7 @@ if SERVER then
         end
       end
 
-      --- Called when the value of a config is about to change, before the new value is stored.
-      -- On the server it runs for every `Config.set`, which includes the defaults set by
-      -- `Config.read` and the values set by `Config.import`. On the client it only runs for
-      -- values set locally with `Config.set`, not for the ones received from the server,
-      -- which run OnConfigReceived instead.
-      -- `Config.load` and the client side `Config.set` call it through `Plugin.call`, which
-      -- skips gamemode handlers.
-      -- @param key [String config key]
-      -- @param old_value [Any current value, nil if the config has just been created]
-      -- @param new_value [Any value that is about to be stored]
-      hook.Run('OnConfigSet', key, entry.value, value)
+      local old_value = entry.value
 
       entry.value = value
 
@@ -540,6 +532,18 @@ if SERVER then
       cache[key] = value
 
       Config.send(nil, key)
+
+      --- Called when the value of a config has been set, once the new value is stored, so
+      -- `Config.get(key)` returns it. On the server it runs for every `Config.set`, which
+      -- includes the defaults set by `Config.read` and the values set by `Config.import`,
+      -- and for every value `Config.load` restores. On the client it only runs for values
+      -- set locally with `Config.set`, not for the ones received from the server, which run
+      -- OnConfigReceived instead. `Config.load` and the client side `Config.set` call it
+      -- through `Plugin.call`, which skips gamemode handlers. The return value is ignored.
+      -- @param key [String config key]
+      -- @param old_value [Any previous value, nil if the config has just been created]
+      -- @param new_value [Any value that has been stored]
+      hook.Run('ConfigChanged', key, old_value, value)
     end
   end
 
@@ -685,18 +689,20 @@ else
   Config.menu_items = menu_items
 
   --- Sets the value of a config, creating the config if it does not exist yet.
-  -- Clientside variant: runs the OnConfigSet hook and changes the local copy only, nothing is
+  -- Clientside variant: runs the ConfigChanged hook and changes the local copy only, nothing is
   -- sent to the server. Does nothing if key is nil.
   -- @param key [String config key]
   -- @param value [Any new value]
   function Config.set(key, value)
     if key != nil then
-      stored[key] = stored[key] or {}
+      local entry = stored[key] or {}
+      local old_value = entry.value
 
-      Plugin.call('OnConfigSet', key, stored[key].value, value)
-
-      stored[key].value = value
+      stored[key] = entry
+      entry.value = value
       cache[key] = value
+
+      Plugin.call('ConfigChanged', key, old_value, value)
     end
   end
 

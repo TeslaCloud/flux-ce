@@ -145,7 +145,7 @@ function PropProtection:EntityTakeDamage(target, damage_info)
   -- @param prop [Entity the entity that has hit them]
   -- @param damage_info [CTakeDamageInfo the damage]
   -- @return [Boolean return true to let the damage through]
-  if hook.Run('PlayerShouldTakePropDamage', target, prop, damage_info) == true then return end
+  if hook.Run('ShouldPlayerTakePropDamage', target, prop, damage_info) == true then return end
 
   target.prop_push_until = cur_time + 1
 

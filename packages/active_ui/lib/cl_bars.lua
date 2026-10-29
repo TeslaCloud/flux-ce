@@ -14,7 +14,7 @@
 -- is only drawn while its value is inside its display range (above `min_display` and not above
 -- `display`). The drawing itself is done by the active theme through the `DrawBarBackground`,
 -- `DrawBarFill`, `DrawBarHindrance` and `DrawBarTexts` theme hooks, and plugins can step in
--- with the bar hooks (`ShouldDrawBar`, `PreDrawBar`, `AdjustBarPos`, `AdjustBarInfo` and so
+-- with the bar hooks (`ShouldDrawBar`, `PreDrawBar`, `GetBarOffset`, `AdjustBarInfo` and so
 -- on).
 -- @module [Flux.Bars]
 
@@ -204,7 +204,7 @@ function Flux.Bars:prioritize()
 end
 
 --- Recalculates the positions of all top bars, stacking them vertically in order of priority.
--- Plugins can offset each bar through the 'AdjustBarPos' hook.
+-- Plugins can offset each bar through the 'GetBarOffset' hook.
 function Flux.Bars:position()
   self:prioritize()
 
@@ -225,7 +225,7 @@ function Flux.Bars:position()
         -- @param bar [Map bar data]
         -- @return [Number horizontal offset in pixels, Number vertical offset in pixels; each
         --   is 0 when nothing is returned]
-        local off_x, off_y = hook.Run('AdjustBarPos', bar)
+        local off_x, off_y = hook.Run('GetBarOffset', bar)
         off_x = off_x or 0
         off_y = off_y or 0
 

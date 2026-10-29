@@ -12,7 +12,7 @@
 -- @param _effect [String 'run', 'jump' or 'aim']
 -- @param fraction [Number strength from the damage of the limbs, above 0 and up to 1]
 -- @return [Number strength to use instead, from 0 to 1; nil to keep it]
-function Stats:AdjustLimbEffect(target, _effect, fraction)
+function Stats:GetLimbEffectStrength(target, _effect, fraction)
   local scale = self:get_player_effect_scale(target, 'determination', 'stats_determination_pain', true)
 
   if scale != 1 then

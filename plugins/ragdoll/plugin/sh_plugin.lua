@@ -26,7 +26,7 @@
 -- Plugins can step in with the server hooks `PlayerCanRagdoll`, `PlayerRagdolled`,
 -- `PlayerCanUnragdoll`, `PlayerUnragdolled`, `PlayerCanGetUp`, `PlayerCanRagdollDecay`,
 -- `PlayerRagdollDecayed` and `CanRagdollTakeDamage`, and with the client hook
--- `ShouldFallenHUDPaint`.
+-- `ShouldHUDPaintFallen`.
 -- `Player:is_ragdolled`, `Player:get_ragdoll_state`, `Player:get_ragdoll_entity`,
 -- `Player:is_knocked_out`, `Player:get_knockout_remaining` and `Entity:get_ragdoll_owner`
 -- work on both realms.

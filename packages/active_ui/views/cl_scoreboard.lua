@@ -2,7 +2,7 @@
 -- `fl_scoreboard_player`, the card of a single player.
 -- Plugins change its contents through the `PreRebuildScoreboard`, `RebuildScoreboard` and
 -- `RebuildScoreboardPlayerCard` hooks, keep players off it with
--- `PlayerShouldShowOnScoreboard` and add to the menu that a click on a player card opens
+-- `ShouldShowPlayerOnScoreboard` and add to the menu that a click on a player card opens
 -- with `CreateScoreboardPlayerMenu`.
 
 local IsValid = IsValid
@@ -13,7 +13,7 @@ local IsValid = IsValid
 -- `rebuild` recreates the cards. A `PreRebuildScoreboard` handler can build the list itself,
 -- which is how the Factions plugin groups the players by faction, and `RebuildScoreboard`
 -- handlers can add to the default list. Either way a player is left out when a
--- `PlayerShouldShowOnScoreboard` handler returns false.
+-- `ShouldShowPlayerOnScoreboard` handler returns false.
 local PANEL = {}
 PANEL.player_cards = {}
 PANEL.online_count = 0
@@ -34,7 +34,7 @@ function PANEL:Paint(w, h)
 end
 
 --- Checks whether a player is listed on the scoreboard: they are once they have been
--- initialized, unless a PlayerShouldShowOnScoreboard handler returns false.
+-- initialized, unless a ShouldShowPlayerOnScoreboard handler returns false.
 -- @param target [Player]
 -- @return [Boolean]
 function PANEL:should_show_player(target)
@@ -47,7 +47,7 @@ function PANEL:should_show_player(target)
   -- @param target [Player The player about to be listed]
   -- @return [Boolean Return false to keep the player off the scoreboard. Return nothing
   --   otherwise, so that the other handlers are asked as well]
-  return hook.Run('PlayerShouldShowOnScoreboard', target) != false
+  return hook.Run('ShouldShowPlayerOnScoreboard', target) != false
 end
 
 --- Counts the players for the line of players online: everyone who is connected, including

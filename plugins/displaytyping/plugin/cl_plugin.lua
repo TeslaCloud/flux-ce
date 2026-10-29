@@ -44,7 +44,7 @@ function DisplayTyping:get_preference(id)
 end
 
 --- Tells what kind of speech a text is, by asking the DisplayTypingGetKind hook and, if it
--- decides nothing, the DisplayTypingTextType and DisplayTypingAdjustFadeoffMultiplier hooks.
+-- decides nothing, the GetDisplayTypingTextType and GetDisplayTypingFadeoffMultiplier hooks.
 -- @param target [Player the player who is typing]
 -- @param text [String the text being typed, or its outline]
 -- @return [Map the kind: id (String), label (String translated label), color (Color, or nil
@@ -62,8 +62,8 @@ function DisplayTyping:get_kind(target, text)
   -- @param text [String the text being typed, or its outline]
   -- @return [String/Map/Boolean ID of a kind registered with
   --   `DisplayTyping:register_kind`; or a kind definition with the same fields; or false to
-  --   show no bubble for this text. When nothing is returned the DisplayTypingTextType and
-  --   DisplayTypingAdjustFadeoffMultiplier hooks are asked instead]
+  --   show no bubble for this text. When nothing is returned the GetDisplayTypingTextType and
+  --   GetDisplayTypingFadeoffMultiplier hooks are asked instead]
   local result = hook.Run('DisplayTypingGetKind', target, text)
 
   if result == false then return end
@@ -93,16 +93,16 @@ function DisplayTyping:get_kind(target, text)
   --   `DisplayTyping:outline`) if the viewer may not see the text itself]
   -- @return [String label to draw; the translated 'typing' label is used when nothing is
   --   returned]
-  local label = hook.Run('DisplayTypingTextType', target, text)
+  local label = hook.Run('GetDisplayTypingTextType', target, text)
   --- Lets plugins scale the distance from which the typing bubble of a player is visible.
-  -- Called on the client right after the DisplayTypingTextType hook, under the same
+  -- Called on the client right after the GetDisplayTypingTextType hook, under the same
   -- conditions.
   -- @param target [Player the player who is typing]
   -- @param text [String the text being typed, or its outline (see
   --   `DisplayTyping:outline`) if the viewer may not see the text itself]
   -- @return [Number multiplier of the squared distance at which the bubble has faded out,
   --   so 4 doubles the range; 1 when nothing is returned]
-  local multiplier = tonumber((hook.Run('DisplayTypingAdjustFadeoffMultiplier', target, text))) or 1
+  local multiplier = tonumber((hook.Run('GetDisplayTypingFadeoffMultiplier', target, text))) or 1
   local name = isstring(label) and label or t(fallback.name)
 
   return {

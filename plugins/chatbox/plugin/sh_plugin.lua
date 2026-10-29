@@ -9,9 +9,9 @@
 --
 -- Plugins shape the chat through hooks: `PlayerSay` and `ChatboxAdjustPlayerSay` change what a
 -- player says, `ChatboxGetPlayerIcon`, `ChatboxGetPlayerColor` and `ChatboxGetMessageColor`
--- style it, `ChatboxShouldSendMessage` can cancel a message, `AdjustMessageData` and
+-- style it, `ShouldSendChatMessage` can cancel a message, `AdjustMessageData` and
 -- `PlayerCanHear` decide who receives it, `ChatboxMessageSent` tells who has received it, and
--- `ChatboxCompileMessage`, `ChatboxShouldAddMessage` and `ChatboxPrePaintMessage` take over
+-- `ChatboxCompileMessage`, `ShouldAddChatMessage` and `ChatboxPrePaintMessage` take over
 -- how it is displayed. Font sizes, the message limit, the fade delay, the length of a message,
 -- the interval between two messages of a player, avatars and timestamps are set through the
 -- config keys of the chatbox category.

@@ -31,12 +31,12 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(scrw, scrh)
 
-  --- Lets plugins move the buttons of the tab menu's button bar.
+  --- Asks where the buttons of the tab menu's button bar start.
   -- Called on the client while the tab menu is being built, before its buttons are created.
   -- @param menu [Panel The `fl_tab_menu` being built]
   -- @return [Number X position of the first button in the bar; 0 when nothing is returned,
   --   Number Y position of the buttons; 0 when nothing is returned]
-  local cur_x, cur_y = hook.Run('AdjustMenuItemPositions', self)
+  local cur_x, cur_y = hook.Run('GetTabMenuButtonPosition', self)
   local offset = math.scale(16)
   local gap = math.scale(6)
   local bar_height = Theme.get_option('tab_menu_bar_height', math.scale(64))

@@ -66,7 +66,7 @@ end
 --- Makes a spawning player use the model of their rank, if the rank has one.
 -- @param actor [Player]
 -- @return [String model path of the rank, nil to leave the choice of the model to others]
-function Factions:PrePlayerSetModel(actor)
+function Factions:GetPlayerModel(actor)
   local model = self.get_rank_model(actor)
 
   if model then

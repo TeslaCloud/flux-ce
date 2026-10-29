@@ -204,8 +204,8 @@ end
 -- code refresh puts the configs back to their defaults without telling the plugin.
 -- @param key [String config key]
 -- @param _old_value [Any value the config had]
--- @param new_value [Any value the config is about to get]
-function GameTime:OnConfigSet(key, _old_value, new_value)
+-- @param new_value [Any value the config has been given]
+function GameTime:ConfigChanged(key, _old_value, new_value)
   local clock = self:get_clock()
 
   if !clock then return end

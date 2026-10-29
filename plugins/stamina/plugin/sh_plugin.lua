@@ -3,9 +3,9 @@
 -- runs low the player can no longer run or jump properly. Stamina regenerates after a
 -- short delay when the player stops running. The rates are set through the `stam_`
 -- config keys, and other plugins can scale them per player through the
--- `StaminaAdjustDrainScale` and `StaminaAdjustRegenScale` hooks, or stop the stamina of a
--- player from changing through the `PlayerShouldStaminaDrain` and
--- `PlayerShouldStaminaRegenerate` hooks. Stamina never drains for players who are
+-- `GetStaminaDrainScale` and `GetStaminaRegenScale` hooks, or stop the stamina of a
+-- player from changing through the `ShouldDrainStamina` and
+-- `ShouldRegenerateStamina` hooks. Stamina never drains for players who are
 -- noclipping or in observer mode.
 --
 -- Further `stam_` config keys, all off by default, make wounded players tire faster, let

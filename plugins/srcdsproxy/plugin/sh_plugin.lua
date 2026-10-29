@@ -30,7 +30,7 @@
 -- area for that many seconds, with a countdown on their HUD, is moved to that server, unless
 -- it is whitelist-only and they may not enter it, which they are told. Leaving the area
 -- cancels the countdown, and a player is moved once per entry. The
--- `ProxyAreaShouldTransfer` hook lets plugins keep a player from being moved.
+-- `ShouldProxyTransferPlayer` hook lets plugins keep a player from being moved.
 -- @module [SrcdsProxy]
 
 PLUGIN:set_global('SrcdsProxy')

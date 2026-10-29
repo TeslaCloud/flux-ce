@@ -12,11 +12,11 @@
 -- other plugins have spawned is left alone, and so is a weapon of the map that a player
 -- has picked up.
 --
--- The `MapCleanerShouldRemove` hook decides about single entities: a schema uses it to keep
+-- The `ShouldRemoveMapEntity` hook decides about single entities: a schema uses it to keep
 -- an entity whose class is on the list, or to remove one that is not, which is how fixes for
 -- a particular map are made. `PostMapClean` runs after every pass.
 -- ```
--- function SCHEMA:MapCleanerShouldRemove(entity, ent_class, matched)
+-- function SCHEMA:ShouldRemoveMapEntity(entity, ent_class, matched)
 --   if ent_class == 'func_button' and entity:GetName() == 'gunstore' then
 --     return true
 --   end

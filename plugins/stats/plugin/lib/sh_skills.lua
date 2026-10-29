@@ -87,7 +87,7 @@ function Skills.include_skills(directory)
 end
 
 --- Checks whether a skill is shown to a player on the character sheet. A skill with its
--- hidden field set is never shown; any other can be hidden with the IsSkillVisible hook.
+-- hidden field set is never shown; any other can be hidden with the ShouldShowSkill hook.
 -- @param skill [SkillBase skill definition]
 -- @param target [Player player whose skills are being shown]
 -- @return [Boolean]
@@ -101,7 +101,7 @@ function Skills.is_visible(skill, target)
   -- @param target [Player The player whose skills are being shown, the local player]
   -- @param skill [SkillBase The skill definition]
   -- @return [Boolean Return false to hide the skill]
-  return hook.Run('IsSkillVisible', target, skill) != false
+  return hook.Run('ShouldShowSkill', target, skill) != false
 end
 
 if SERVER then

@@ -119,7 +119,7 @@ end
 
 --- Checks whether an attribute is shown to a player on the character sheet. An attribute
 -- with its hidden field set is never shown; any other can be hidden with the
--- IsAttributeVisible hook.
+-- ShouldShowAttribute hook.
 -- @param attribute [AttributeBase attribute definition]
 -- @param target [Player player whose attributes are being shown]
 -- @return [Boolean]
@@ -133,7 +133,7 @@ function Attributes.is_visible(attribute, target)
   -- @param target [Player The player whose attributes are being shown, the local player]
   -- @param attribute [AttributeBase The attribute definition]
   -- @return [Boolean Return false to hide the attribute]
-  return hook.Run('IsAttributeVisible', target, attribute) != false
+  return hook.Run('ShouldShowAttribute', target, attribute) != false
 end
 
 if SERVER then

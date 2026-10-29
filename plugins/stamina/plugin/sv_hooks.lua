@@ -81,7 +81,7 @@ local function delay_regen(target)
 end
 
 --- Returns how much stamina a running player loses on a drain tick: the 'stam_drain_scale'
--- config, scaled by the StaminaAdjustDrainScale hook and, if the 'stam_health_drain_scale'
+-- config, scaled by the GetStaminaDrainScale hook and, if the 'stam_health_drain_scale'
 -- config is set, by the health the player is missing.
 -- @param target [Player]
 -- @return [Number stamina points]
@@ -90,7 +90,7 @@ local function get_drain_amount(target)
   -- Called on every drain tick, five times a second.
   -- @param target [Player The player who is running]
   -- @return [Number Multiplier of the drain rate; 1 when nothing is returned]
-  local adjust_scale = Plugin.call('StaminaAdjustDrainScale', target) or 1
+  local adjust_scale = Plugin.call('GetStaminaDrainScale', target) or 1
   local max_health = target:GetMaxHealth()
 
   if health_drain_scale > 0 and max_health > 0 then
@@ -103,7 +103,7 @@ local function get_drain_amount(target)
 end
 
 --- Returns how much stamina a player recovers on a regeneration tick: the 'stam_regen_scale'
--- config, scaled by the StaminaAdjustRegenScale hook and, while the player is crouching, by
+-- config, scaled by the GetStaminaRegenScale hook and, while the player is crouching, by
 -- the 'stam_crouch_regen_scale' config.
 -- @param target [Player]
 -- @return [Number stamina points]
@@ -112,7 +112,7 @@ local function get_regen_amount(target)
   -- Called on every regeneration tick, five times a second.
   -- @param target [Player The player who is recovering]
   -- @return [Number Multiplier of the regeneration rate; 1 when nothing is returned]
-  local adjust_scale = Plugin.call('StaminaAdjustRegenScale', target) or 1
+  local adjust_scale = Plugin.call('GetStaminaRegenScale', target) or 1
 
   if target:Crouching() then
     adjust_scale *= crouch_regen_scale
@@ -125,7 +125,7 @@ end
 -- @param key [String config key]
 -- @param _old_value [Any]
 -- @param new_value [Any]
-function Stamina:OnConfigSet(key, _old_value, new_value)
+function Stamina:ConfigChanged(key, _old_value, new_value)
   if key == 'stam_drain_scale' then
     drain_scale = 4 * new_value
   elseif key == 'stam_regen_scale' then
@@ -291,7 +291,7 @@ function Stamina:get_stamina(target)
 end
 
 --- Checks whether the player's stamina may drain right now. It never drains for players who
--- are dead, noclipping or in observer mode, and the PlayerShouldStaminaDrain hook can keep
+-- are dead, noclipping or in observer mode, and the ShouldDrainStamina hook can keep
 -- it from draining for anyone else. Serverside only.
 -- @param target [Player]
 -- @return [Boolean]
@@ -310,13 +310,13 @@ function Stamina:can_drain(target)
   -- stamina and from `Stamina:drain`.
   -- @param target [Player The player whose stamina is about to drain]
   -- @return [Boolean Return false to keep the stamina as it is]
-  local should_drain = Plugin.call('PlayerShouldStaminaDrain', target)
+  local should_drain = Plugin.call('ShouldDrainStamina', target)
 
   return should_drain != false
 end
 
 --- Checks whether the player's stamina may regenerate right now, which the
--- PlayerShouldStaminaRegenerate hook decides. Serverside only.
+-- ShouldRegenerateStamina hook decides. Serverside only.
 -- @param target [Player]
 -- @return [Boolean]
 function Stamina:can_regenerate(target)
@@ -324,7 +324,7 @@ function Stamina:can_regenerate(target)
   -- regeneration tick of a player whose stamina is not full, five times a second.
   -- @param target [Player The player whose stamina is about to regenerate]
   -- @return [Boolean Return false to keep the stamina as it is]
-  local should_regenerate = Plugin.call('PlayerShouldStaminaRegenerate', target)
+  local should_regenerate = Plugin.call('ShouldRegenerateStamina', target)
 
   return should_regenerate != false
 end

@@ -76,7 +76,7 @@ end
 -- global), size, should_translate, time (when the message was sent, the current
 -- os.time() by default; shown when the 'chat_timestamps' config is enabled).
 --
--- The ChatboxShouldSendMessage hook can cancel the message before anyone receives it, and
+-- The ShouldSendChatMessage hook can cancel the message before anyone receives it, and
 -- the ChatboxMessageSent hook is run with the players who have received it. Neither is run
 -- for the text that a client adds with chat.AddText.
 -- ```
@@ -175,7 +175,7 @@ function Chatbox.add_text(listeners, ...)
   --   who of them can hear it]
   -- @return [Boolean return false to cancel the message, so that nobody receives it and
   --   ChatboxMessageSent is not run]
-  if !client_mode and hook.Run('ChatboxShouldSendMessage', message_data, listeners) == false then
+  if !client_mode and hook.Run('ShouldSendChatMessage', message_data, listeners) == false then
     return
   end
 
@@ -203,7 +203,7 @@ function Chatbox.add_text(listeners, ...)
 
   if !client_mode then
     --- Called on the server after a chat message has been sent to everyone who can hear it.
-    -- Not called for a message that ChatboxShouldSendMessage has canceled, nor for the text
+    -- Not called for a message that ShouldSendChatMessage has canceled, nor for the text
     -- that a client adds with `chat.AddText`.
     -- @param message_data [Map message data as it was before the AdjustMessageData hook
     --   changed the copies of the listeners: data (the pieces), sender, position, radius,

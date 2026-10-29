@@ -200,31 +200,28 @@ end
 --- Applies the maximum health to every player when a health config changes, works out the
 -- unspent points of every player again when a config of the level-up points changes, and
 -- checks the server level and brings every character in line with its level cap and level
--- floor when a config of the server level changes. The hook runs before the new value is
--- stored, so the work waits for the next tick, when `Config.get` returns the new value.
+-- floor when a config of the server level changes.
 -- @param key [String config key]
 -- @param _old_value [Any]
 -- @param _new_value [Any]
-function Levels:OnConfigSet(key, _old_value, _new_value)
+function Levels:ConfigChanged(key, _old_value, _new_value)
   if !server_configs[key] and !health_configs[key] and !point_configs[key] then return end
 
-  timer.Simple(0, function()
-    if server_configs[key] then
-      Levels.check_server_level()
-    end
+  if server_configs[key] then
+    Levels.check_server_level()
+  end
 
-    for _, client in player.Iterator() do
-      if IsValid(client) and client:is_character_loaded() then
-        if server_configs[key] then
-          Levels.apply_server_level(client)
-        elseif health_configs[key] then
-          self:apply_max_health(client)
-        else
-          Levels.update_points(client)
-        end
+  for _, client in player.Iterator() do
+    if client:is_character_loaded() then
+      if server_configs[key] then
+        Levels.apply_server_level(client)
+      elseif health_configs[key] then
+        self:apply_max_health(client)
+      else
+        Levels.update_points(client)
       end
     end
-  end)
+  end
 end
 
 --- Gives a player experience for the damage they have dealt to an NPC or another player,

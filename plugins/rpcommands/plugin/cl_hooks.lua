@@ -195,7 +195,7 @@ end
 -- @param _target [Player player that is typing]
 -- @param text [String text being typed]
 -- @return [String indicator text, nil for other commands]
-function RPCommands:DisplayTypingTextType(_target, text)
+function RPCommands:GetDisplayTypingTextType(_target, text)
   local id = self:get_typing_kind(text)
 
   if id then
@@ -208,7 +208,7 @@ end
 -- @param _target [Player player that is typing]
 -- @param text [String text being typed]
 -- @return [Number multiplier of the squared range, nil for regular talking]
-function RPCommands:DisplayTypingAdjustFadeoffMultiplier(_target, text)
+function RPCommands:GetDisplayTypingFadeoffMultiplier(_target, text)
   local id, volume = self:get_typing_kind(text)
 
   if id and volume != 0 then

@@ -413,7 +413,7 @@ end
 -- @param _trace [Map trace result of the local player's aim]
 -- @param _distance [Number distance from the local player to the trace hit position]
 -- @return [Color the tint, or nil to leave the color alone]
-function ThirdPerson:AdjustCrosshairColor(_trace, _distance)
+function ThirdPerson:GetCrosshairColor(_trace, _distance)
   if self:is_controlling(PLAYER) and weapon_state(PLAYER) == 'raising' then
     return color_raising
   end

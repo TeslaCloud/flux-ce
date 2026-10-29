@@ -227,7 +227,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   Log:print(Chatbox.message_to_string(message), 'player_ic')
 
   --- Called on the server after a radio message has been sent. Not called for a message
-  -- that the ChatboxShouldSendMessage hook has canceled.
+  -- that the ShouldSendChatMessage hook has canceled.
   -- @param speaker [Player the player who talked on the radio]
   -- @param info [Map the transmission as it was sent: text (String), frequency (Number)
   --   and item (Item the radio spoken into, or nil)]

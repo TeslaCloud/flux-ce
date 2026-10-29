@@ -45,17 +45,13 @@ end
 -- loading a character does not rewrite them. Without the Factions plugin, or with the
 -- bonuses turned off, all of them are removed.
 -- @param target [Player]
--- @param enabled=nil [Boolean whether bonuses are given; the `stats_faction_bonuses` config
---   when nil]
 -- @return [Number amount of stats whose bonus was added, replaced or removed]
-function Stats:apply_faction_bonuses(target, enabled)
+function Stats:apply_faction_bonuses(target)
   if !IsValid(target) or !target:is_character_loaded() then
     return 0
   end
 
-  if enabled == nil then
-    enabled = self:faction_bonuses_enabled()
-  end
+  local enabled = self:faction_bonuses_enabled()
 
   local bonuses = {}
 
@@ -148,15 +144,15 @@ function Stats:OnPlayerFactionChanged(target, _faction_table, _old_faction)
 end
 
 --- Gives or takes the faction bonuses of everyone online when the `stats_faction_bonuses`
--- config changes. The hook runs before the new value is stored, so the value is passed on.
+-- config changes.
 -- @param key [String config key]
 -- @param old_value [Any]
 -- @param new_value [Any]
-function Stats:OnConfigSet(key, old_value, new_value)
+function Stats:ConfigChanged(key, old_value, new_value)
   if key != 'stats_faction_bonuses' or old_value == new_value then return end
 
   for _, client in player.Iterator() do
-    self:apply_faction_bonuses(client, new_value != false)
+    self:apply_faction_bonuses(client)
   end
 end
 
@@ -230,7 +226,7 @@ end
 -- for a player whose endurance changes nothing.
 -- @param target [Player player who is running]
 -- @return [Number multiplier of the drain rate, nil to leave it alone]
-function Stats:StaminaAdjustDrainScale(target)
+function Stats:GetStaminaDrainScale(target)
   local scale = self:get_player_effect_scale(target, 'endurance', 'stats_endurance_stamina', true)
 
   if scale != 1 then
@@ -242,7 +238,7 @@ end
 -- for every level of their endurance, and slower for every level below zero.
 -- @param target [Player player who is recovering]
 -- @return [Number multiplier of the regeneration rate, nil to leave it alone]
-function Stats:StaminaAdjustRegenScale(target)
+function Stats:GetStaminaRegenScale(target)
   local scale = self:get_player_effect_scale(target, 'endurance', 'stats_endurance_stamina')
 
   if scale != 1 then
