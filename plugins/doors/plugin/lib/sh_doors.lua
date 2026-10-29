@@ -55,8 +55,9 @@ Doors.default_title_type = Doors.default_title_type or 'center'
 -- })
 -- ```
 -- @param id [String unique property id, also the key the value is saved under]
--- @param data [Map property definition: get_save_data(entity), on_load(entity, data)
---   and the optional create_panel(entity, panel)]
+-- @param data [Map property definition: the optional get_save_data(entity),
+--   on_load(entity, data) and create_panel(entity, panel); a property without
+--   get_save_data is not saved]
 function Doors:register_property(id, data)
   properties[id] = data
 end

@@ -25,13 +25,9 @@ end
 
 Item.set_category_icon('item.category.keys', 'icon16/key.png')
 
---- Registers the keys door property, which saves the door's keys and adds a menu to list, create and add keys.
+--- Registers the keys door property, which adds a menu to list, create and add keys.
 function PLUGIN:RegisterDoorProperties()
   Doors:register_property('keys', {
-    get_save_data = entity -> entity:get_nv('fl_keys', {}),
-    on_load = function(entity, data)
-      entity:set_nv('fl_keys', data)
-    end,
     create_panel = function(entity, panel)
       local keys_list = panel.properties:CreateRow(t'door.categories.general', t'door.properties.keys_list.name')
       keys_list:Setup('Combo', { text = t'door.properties.keys_list.select' })

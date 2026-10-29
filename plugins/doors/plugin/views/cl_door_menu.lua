@@ -52,7 +52,7 @@ function PANEL:set_door(entity, conditions)
 
   for property_id, property in pairs(Doors.properties) do
     if property.create_panel then
-      local value = property.get_save_data(entity)
+      local value = property.get_save_data and property.get_save_data(entity)
 
       local row = property.create_panel(entity, self)
 
