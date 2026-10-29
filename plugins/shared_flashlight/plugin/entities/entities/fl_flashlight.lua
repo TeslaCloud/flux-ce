@@ -1,8 +1,8 @@
 --- The light of a player's flashlight (`fl_flashlight`): an invisible entity parented to
 -- the player that owns it, created and removed by `Player:set_flashlight`. Every client that
 -- receives it draws a projected light from the owner's eyes along their view, shaped by the
--- `flashlight_fov`, `flashlight_distance`, `flashlight_brightness` and `flashlight_shadows`
--- configs, so the owner and everyone around them see the same beam.
+-- `shared_flashlight_fov`, `shared_flashlight_distance`, `shared_flashlight_brightness` and
+-- `shared_flashlight_shadows` configs, so the owner and everyone around them see the same beam.
 
 AddCSLuaFile()
 
@@ -60,10 +60,10 @@ else
 
     light:SetPos(owner:EyePos())
     light:SetAngles(owner:EyeAngles())
-    light:SetFOV(config_get('flashlight_fov', 50))
-    light:SetFarZ(config_get('flashlight_distance', 1024))
-    light:SetBrightness(config_get('flashlight_brightness', 1))
-    light:SetEnableShadows(config_get('flashlight_shadows', true))
+    light:SetFOV(config_get('shared_flashlight_fov', 50))
+    light:SetFarZ(config_get('shared_flashlight_distance', 1024))
+    light:SetBrightness(config_get('shared_flashlight_brightness', 1))
+    light:SetEnableShadows(config_get('shared_flashlight_shadows', true))
     light:Update()
   end
 
