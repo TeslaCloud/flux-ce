@@ -34,6 +34,10 @@
 -- value back when the config needs a restart, and through `Config.reset`, which puts the
 -- default value back.
 --
+-- `Config.set` and `Config.import` label where a config came from with one of the sources
+-- defined here: `CONFIG_PLUGIN` (a plugin's config file), `CONFIG_SCHEMA` (the schema's config
+-- file) or `CONFIG_FLUX` (the server configuration of Flux).
+--
 -- These are the settings of the server. The options of an individual player are kept on
 -- the client of that player by the Settings plugin (`ClientSettings`).
 
@@ -46,6 +50,8 @@ local IsValid = IsValid
 local tostring = tostring
 
 mod 'Config'
+
+enumerate 'CONFIG_PLUGIN CONFIG_SCHEMA CONFIG_FLUX'
 
 local stored = Config.stored or {}
 Config.stored = stored

@@ -1,12 +1,12 @@
 --- HUD bars: horizontal progress bars such as a respawn timer or a "getting up" timer. A bar
 -- is a table of settings registered under an ID with `Flux.Bars:register`: its text, color,
 -- value and maximum, position and size, and optionally a `callback` that returns its current
--- value. The `type` of a bar decides how it is laid out. `BAR_TOP` bars are stacked from the
--- top left corner of the screen in order of their `priority` and are drawn together by
--- `Flux.Bars:draw_top_bars`, which the gamemode calls while it paints the HUD of a living
--- player. Bars of the other types (`BAR_MANUAL`, `BAR_HIDDEN`) keep the position they were
--- registered with and are drawn by their owner with `Flux.Bars:draw`, usually from a HUD
--- paint hook.
+-- value. The `type` of a bar, one of the enumerators defined here, decides how it is laid
+-- out. `BAR_TOP` bars are stacked from the top left corner of the screen in order of their
+-- `priority` and are drawn together by `Flux.Bars:draw_top_bars`, which the gamemode calls
+-- while it paints the HUD of a living player. Bars of the other types (`BAR_MANUAL`,
+-- `BAR_HIDDEN`) keep the position they were registered with and are drawn by their owner with
+-- `Flux.Bars:draw`, usually from a HUD paint hook.
 --
 -- Every `LazyTick` the top bars are repositioned and the bars that have a callback get their
 -- value refreshed; other bars are updated with `Flux.Bars:set_value`, which animates the fill
@@ -21,6 +21,8 @@
 if !Theme then require_relative 'cl_theme' end
 
 mod 'Flux::Bars'
+
+enumerate 'BAR_TOP BAR_MANUAL BAR_HIDDEN'
 
 local theme_hook          = Theme.hook
 local math_clamp          = math.Clamp

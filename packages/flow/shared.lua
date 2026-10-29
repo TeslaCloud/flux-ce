@@ -41,7 +41,6 @@ if !LITE_REFRESH then
   local package_path = PACKAGE.__path__
 
   require_relative 'core/sh_core'
-  require_relative 'core/sh_enums'
 
   if CLIENT then
     include 'lib/sh_lang.lua'

@@ -2,7 +2,10 @@
 -- 'player_default' class of Garry's Mod and passes the callbacks of the player class on to
 -- Flux hooks: setting up the data tables runs `PlayerSetupDataTables`, and the loadout runs
 -- `PostPlayerLoadout` with the default loadout of the class, the fists. It also picks the
--- hands model that matches the model of the player.
+-- hands model that matches the model of the player. `BOOL_INITIALIZED` is the data table slot
+-- of the `Initialized` variable, which marks the player as initialized.
+
+enumerate 'BOOL_INITIALIZED'
 
 local flux_player       = {}
 flux_player.DisplayName = 'Flux Player'
