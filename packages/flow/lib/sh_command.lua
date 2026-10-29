@@ -199,8 +199,8 @@ end
 
 --- Checks whether a text is a command, that is whether it starts with one of the prefixes of
 -- the 'command_prefixes' config. If several prefixes match, the longest one is used, so that
--- prefixes can contain each other (e.g. '/' and '//'). The StringIsCommand hook can return
--- false to prevent that.
+-- prefixes can contain each other (e.g. '/' and '//'). The ShouldTreatAsCommand hook can
+-- return false to prevent that.
 -- @param text [String]
 -- @return [Boolean whether the text is a command, Number length of the prefix if it is one]
 function Flux.Command:is_command(text)
@@ -220,7 +220,7 @@ function Flux.Command:is_command(text)
   -- @param text [String the text being checked]
   -- @return [Boolean Return false to have the text treated as regular text instead of a
   --   command]
-  if longest and hook.Run('StringIsCommand', text) != false then
+  if longest and hook.Run('ShouldTreatAsCommand', text) != false then
     return true, longest
   end
 

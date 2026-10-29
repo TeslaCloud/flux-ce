@@ -5,7 +5,7 @@
 -- treated as a command.
 -- @param text [String the text being checked]
 -- @return [Boolean false if the text starts with a chat prefix, nil otherwise]
-function Chatbox:StringIsCommand(text)
+function Chatbox:ShouldTreatAsCommand(text)
   if Chatbox.find_prefix(text) then
     return false
   end
