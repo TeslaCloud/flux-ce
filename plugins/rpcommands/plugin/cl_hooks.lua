@@ -8,6 +8,28 @@ local IsValid = IsValid
 local isfunction = isfunction
 local text_size = util.text_size
 
+const hidden_ooc_kind = { id = 'typing', name = 'ui.hud.display_typing.typing', live = false }
+
+--- Checks whether a text is out of character chat behind a prefix that starts like a command,
+-- such as `//`, `/ooc` and `/looc`.
+-- @param text [String the text being typed, or its outline]
+-- @return [Boolean]
+local function is_command_like_ooc(text)
+  local prefix_id, prefix = Chatbox.find_prefix(text)
+
+  if prefix_id != 'ooc' and prefix_id != 'looc' then return false end
+
+  local command_prefixes = Config.get('command_prefixes') or {}
+
+  for i = 1, #command_prefixes do
+    if prefix:start_with(command_prefixes[i]) then
+      return true
+    end
+  end
+
+  return false
+end
+
 --- Draws nearby visible static texts, fading with distance and screen position. Staff holding Alt also see
 -- who placed each text and when.
 function RPCommands:HUDPaint()
@@ -137,15 +159,19 @@ end
 --- Gives the typing bubble of a player the kind of speech they are typing: its label, the
 -- color of the chat line it will become and the range that line will be heard from, which
 -- follows the volume of the phrase. A knocked out player gets no bubble for in character
--- speech, which they cannot say.
+-- speech, which they cannot say. Out of character chat typed behind a prefix that starts
+-- like a command (`//`, `/ooc`, `/looc`) gets the plain typing bubble without its text, as
+-- commands do; `.//`, `[[` and the other chat prefixes are left to the other plugins.
 -- @param target [Player player that is typing]
 -- @param text [String text being typed, or its outline]
 -- @return [Map/Boolean kind definition for the Display Typing plugin, false to show no bubble,
---   nil for anything that is not in character speech]
+--   nil for anything else that is not in character speech]
 function RPCommands:DisplayTypingGetKind(target, text)
   local id, volume = self:get_typing_kind(text)
 
-  if !id then return end
+  if !id then
+    return is_command_like_ooc(text) ? hidden_ooc_kind : nil
+  end
 
   if IsValid(target) and isfunction(target.is_knocked_out) and target:is_knocked_out() then
     return false
