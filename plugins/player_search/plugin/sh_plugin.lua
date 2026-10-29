@@ -8,7 +8,5 @@
 PLUGIN:set_global 'PlayerSearch'
 
 require_relative 'cl_hooks'
-require_relative 'cl_nethooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
-require_relative 'sv_nethooks'
