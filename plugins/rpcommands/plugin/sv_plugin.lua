@@ -1,8 +1,7 @@
 --- Server side of the RolePlay Commands plugin: the rules of who may speak in character and
 -- out of character (the OOC mute, the OOC and LOOC cooldowns and the speaking veto), the
--- OOC and LOOC chat lines that the chat prefixes send, the chat line of a roll, which the
--- `roll` command and other plugins show with `RPCommands:announce_roll`, and
--- `RPCommands:notify_self`, which sends a colored chat message to one player.
+-- OOC and LOOC chat lines that the chat prefixes send, and the chat line of a roll, which the
+-- `roll` command and other plugins show with `RPCommands:announce_roll`.
 
 local config_get = Config.get
 
@@ -322,15 +321,4 @@ function RPCommands:announce_roll(actor, result, opponent, opponent_result, labe
   Chatbox.add_text(nil, unpack(msg_table))
 
   Log:print(Chatbox.message_to_string(msg_table), 'player_ic')
-end
-
---- Sends a colored chat message to a single player. Nothing is sent for a player who is not
--- valid, as the message would reach everyone instead.
--- @param receiver [Player player to send the message to]
--- @param notification_color [Color color of the message]
--- @param message [String message]
-function RPCommands:notify_self(receiver, notification_color, message)
-  if !IsValid(receiver) then return end
-
-  Cable.send(receiver, 'fl_notify_self', notification_color, message)
 end

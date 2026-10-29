@@ -229,7 +229,3 @@ end)
 Cable.receive('fl_static_text_remove', function(id)
   table.remove(RPCommands.texts, id)
 end)
-
-Cable.receive('fl_notify_self', function(notification_color, message)
-  chat.AddText(notification_color, message)
-end)
