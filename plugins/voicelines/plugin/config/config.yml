@@ -4,6 +4,7 @@ categories:
     description: config.voicelines.desc
 configs:
   voicelines_interval:
+    renamed_from: voice_line_interval
     name: config.voicelines.interval.name
     description: config.voicelines.interval.desc
     category: voicelines
@@ -13,6 +14,7 @@ configs:
     decimals: 1
     default_value: 2
   voicelines_radio_volume:
+    renamed_from: voice_line_radio_volume
     name: config.voicelines.radio_volume.name
     description: config.voicelines.radio_volume.desc
     category: voicelines
