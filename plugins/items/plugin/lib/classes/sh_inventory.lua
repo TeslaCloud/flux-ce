@@ -804,17 +804,26 @@ if SERVER then
   end
 
   --- Takes an item out of the inventory for good, to be dropped into the world or removed,
-  -- between the `PreItemTransfer` and `ItemTransferred` hooks. An item that a
-  -- `PreItemTransfer` handler takes out of the inventory by itself is left alone. Does not
-  -- synchronize the inventory, so that a caller that releases several items syncs once.
+  -- between the `PreItemTransfer` and `ItemTransferred` hooks. Returns false without
+  -- running either hook when the item is not in this inventory. Otherwise
+  -- `PreItemTransfer` always runs; when a handler of it has taken the item out of the
+  -- inventory by itself, or the item cannot be taken out, `ItemTransferred` is not run and
+  -- the item is left where it is. Does not synchronize the inventory, so that a caller
+  -- that releases several items syncs once.
   -- @param item_obj [Item]
   -- @return [Boolean whether the item has been taken out]
   -- @see [Inventory#destroy_item]
   function Inventory:release_item(item_obj)
-    --- Called on the server right before an item leaves its inventory for good: when it is
-    -- dropped into the world, used up, destroyed, sold or spent. `Inventory:transfer_item`
-    -- runs the same hook for a transfer between two inventories.
-    -- @param item_obj [Item The item that is about to leave]
+    if item_obj.inventory_id != self.id then
+      return false
+    end
+
+    --- Called on the server right before an item is taken out of its inventory for good:
+    -- when it is dropped into the world, used up, destroyed, sold or spent.
+    -- `Inventory:transfer_item` runs the same hook for a transfer between two inventories.
+    -- A handler may take the item out of the inventory by itself; the item is then left
+    -- where the handler has put it, and `ItemTransferred` is not run.
+    -- @param item_obj [Item The item that is about to be taken out]
     -- @param new_inventory [Inventory Always nil here: the item does not go to another
     --   inventory]
     -- @param old_inventory [Inventory The inventory the item is in]
@@ -824,9 +833,10 @@ if SERVER then
       return false
     end
 
-    --- Called on the server right after an item has left its inventory for good, before it
-    -- is spawned in the world or removed. `Inventory:transfer_item` runs the same hook for
-    -- a transfer between two inventories.
+    --- Called on the server right after an item has been taken out of its inventory for
+    -- good, before it is spawned in the world or removed. It is not run when the item could
+    -- not be taken out. `Inventory:transfer_item` runs the same hook for a transfer between
+    -- two inventories.
     -- @param item_obj [Item The item that has left]
     -- @param new_inventory [Inventory Always nil here]
     -- @param old_inventory [Inventory The inventory the item was in]

@@ -11,7 +11,6 @@
 local pairs = pairs
 local IsValid = IsValid
 
-local use_distance_sqr = 100 * 100
 local drop_near_distance_sqr = 80 * 80
 local min_aim_dot = math.pi * 0.125
 
@@ -130,12 +129,12 @@ function Items:PlayerCanUseItem(actor, item_obj, _action, ...)
       return false
     end
 
-    local player_pos = actor:EyePos()
-    local entity_pos = item_entity:GetPos()
-
-    if player_pos:DistToSqr(entity_pos) > use_distance_sqr then
+    if !actor:is_in_reach(item_entity, 100) then
       return false
     end
+
+    local player_pos = actor:EyePos()
+    local entity_pos = item_entity:GetPos()
 
     if util.vector_obstructed(player_pos, entity_pos, { item_entity, actor }) then
       return false
@@ -835,7 +834,9 @@ end
 
 --- Calls the on_use callback of the item, then takes the item out of its inventory and
 -- removes it, along with its entity if it lies in the world, unless the callback returned
--- true to keep it or false to cancel the use.
+-- true to keep it or false to cancel the use. The callback cannot be undone, so an item
+-- that a `PreItemTransfer` handler takes out of its inventory by itself is kept where the
+-- handler has put it.
 -- @param actor [Player]
 -- @param item_obj [Item]
 -- @param ... [Vararg extra arguments of the action]

@@ -84,7 +84,13 @@ Cable.receive('fl_key_copy', function(actor, instance_id)
 
   if !give_new_item(actor, item_obj) then return end
 
-  blank_inventory:destroy_item(blank_item)
+  if !blank_inventory:destroy_item(blank_item) then
+    actor:take_item_by_id(item_obj.instance_id)
+    Item.remove(item_obj)
+    actor:notify('error.cant_now')
+
+    return
+  end
 
   actor:notify('notification.key.create')
 end)
