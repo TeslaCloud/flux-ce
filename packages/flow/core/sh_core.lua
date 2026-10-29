@@ -1,7 +1,7 @@
 --- Core helpers of the Flux gamemode package on the global `Flux` table.
 -- They cover console output (`Flux.print`, `Flux.dev_print`), the registry of player
--- actions (`Flux.register_action`), the loaded schema (its folder, name, information and
--- inclusion) and the global UI offset that HUD elements follow on the client.
+-- actions (`Flux.register_action`) and the global UI offset that HUD elements follow on the
+-- client.
 -- The same file replaces `file.Write` with a version that creates missing folders.
 -- @module [Flux]
 
@@ -79,78 +79,6 @@ do
   Flux.register_action('idle')
 end
 
---- Gets the folder of the currently loaded schema.
--- @return [String the schema folder; the client falls back to 'flux' if it is not known yet]
-function Flux.get_schema_folder()
-  if SERVER then
-    return Flux.schema
-  else
-    return Flux.shared.schema_folder or 'flux'
-  end
-end
-
---- Gets the name of the currently loaded schema.
--- @return [String the schema name, or 'Unknown' if it cannot be determined]
-function Flux.get_schema_name()
-  return SCHEMA and SCHEMA:get_name() or Flux.schema or 'Unknown'
-end
-
---- Includes the files of the currently loaded schema. On the client, shortly afterward
--- notifies the server and runs the FluxClientSchemaLoaded hook.
-function Flux.include_schema()
-  if SERVER then
-    return Plugin.include_schema()
-  else
-    Plugin.include_schema()
-
-    timer.Simple(0.2, function()
-      Cable.send('fl_client_included_schema', true)
-      --- Called on the client shortly after the schema files have been included, right after
-      -- the server has been told about it (which runs `ClientIncludedSchema` there). The
-      -- gamemode's handler creates the fonts.
-      hook.Run('FluxClientSchemaLoaded')
-    end)
-  end
-end
-
---- Includes all of the plugins inside the folder, files first, then folders. Does not
--- handle plugins nested inside of other plugins.
--- @param folder [String folder relative to the Lua search paths (lua/, gamemodes/)]
-function Flux.include_plugins(folder)
-  Plugin.include_plugins(folder)
-end
-
---- Gets the table containing the information about the currently loaded schema. The server
--- reads it from the schema's gamemode .txt file once and caches it; the client uses the
--- copy shared by the server.
--- @return [Map schema info with the name, author, description, version and folder fields]
-function Flux.get_schema_info()
-  if SERVER then
-    if Flux.schema_info then return Flux.schema_info end
-
-    local schema_folder = string.lower(Flux.get_schema_folder())
-    local schema_data = util.KeyValuesToTable(
-      File.read('gamemodes/'..schema_folder..'/'..schema_folder..'.txt')
-    ) or {}
-
-    if schema_data['Gamemode'] then
-      schema_data = schema_data['Gamemode']
-    end
-
-    Flux.schema_info = {
-      name        = schema_data['title'] or 'Undefined',
-      author      = schema_data['author'] or 'Undefined',
-      description = schema_data['description'] or 'Undefined',
-      version     = schema_data['version'] or 'Undefined',
-      folder      = string.gsub(schema_folder, '/schema', '')
-    }
-
-    return Flux.schema_info
-  else
-    return Flux.shared.schema_info
-  end
-end
-
 do
   local offset_x, offset_y = 0, 0
 
@@ -168,8 +96,4 @@ do
   function Flux.global_ui_offset()
     return offset_x, offset_y
   end
-end
-
-if SERVER then
-  Flux.shared.schema_info = Flux.get_schema_info()
 end

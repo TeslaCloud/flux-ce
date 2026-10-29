@@ -760,7 +760,7 @@ function Plugin.register(obj)
       if file.Exists(file_path, 'GAME') then
         Flux.dev_print('Importing config: '..file_path)
 
-        Config.import(file_path, CONFIG_PLUGIN)
+        Config.import(file_path, CONFIG_SCHEMA)
       end
     end
 
