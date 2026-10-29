@@ -1,7 +1,6 @@
 --- Client-side hooks of the Cinematics plugin: they give the theme its cinematic options,
 -- colors and fonts, run the timeline, draw the cinematics above the HUD, hide the HUD elements
--- that would sit on the bars, play the intro when a character is loaded and queue the
--- cinematics that the server sends.
+-- that would sit on the bars and play the intro when a character is loaded.
 
 --- Sets the options, colors and fonts of the cinematics on the theme that was loaded.
 -- @param current_theme [ThemeBase]
@@ -78,16 +77,3 @@ function Cinematics:PostCharacterLoaded(char_id)
     self:play_intro(char_id)
   end
 end
-
-Cable.receive('fl_cinematic_show', function(cinematic)
-  local client = PLAYER
-
-  if !IsValid(client) or !client:has_initialized() then return end
-  if client.is_character_loaded and !client:is_character_loaded() then return end
-
-  Cinematics:add(cinematic)
-end)
-
-Cable.receive('fl_cinematic_clear', function()
-  Cinematics:clear()
-end)
