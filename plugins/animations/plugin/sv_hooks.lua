@@ -1,28 +1,7 @@
---- Server-side hooks and net messages of the Animations plugin: the requests of the context
--- menu panel, and everything that ends the animation of a player other than the player
--- leaving it.
+--- Server-side hooks of the Animations plugin: everything that ends the animation of a player
+-- other than the player leaving it.
 
 local max_drift_sqr = 32 * 32
-
-Cable.receive('fl_animations_play', function(actor, id)
-  if !isstring(id) then return end
-
-  if actor.animation_data then
-    Animations:leave(actor)
-
-    return
-  end
-
-  local started, reason, arguments = Animations:play(actor, id)
-
-  if !started and reason then
-    actor:notify(reason, arguments)
-  end
-end)
-
-Cable.receive('fl_animations_leave', function(actor)
-  Animations:leave(actor)
-end)
 
 --- Ends the animation of a player who can no longer play it: one who has died, entered a
 -- vehicle, been ragdolled or frozen, started noclipping or gone under water, whose sequence
