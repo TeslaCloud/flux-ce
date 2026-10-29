@@ -20,3 +20,7 @@ en:
       group:
         default: Everyone
         faction: "Faction: {name}"
+  permission:
+    manage_spawn_points:
+      name: Manage spawn points
+      description: Grants access to place and remove spawn points.

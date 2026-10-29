@@ -1,4 +1,4 @@
---- Client side of the Spawn Points plugin: receives the spawn points from the server and
+--- Client side of the Spawn Points plugin: stores the spawn points that the server sends and
 -- tells whether the local player is editing them.
 
 --- Replaces the local list of spawn points and prepares the label and the color each point
@@ -28,9 +28,5 @@ function SpawnPoints:is_tool_held()
     return false
   end
 
-  return weapon:GetMode() == 'spawnpoint' and tobool(PLAYER:can('spawn_points'))
+  return weapon:GetMode() == 'spawnpoint' and tobool(PLAYER:can('manage_spawn_points'))
 end
-
-Cable.receive('fl_spawn_points_load', function(points)
-  SpawnPoints:set_points(points)
-end)

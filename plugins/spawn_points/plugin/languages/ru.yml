@@ -20,3 +20,7 @@ ru:
       group:
         default: Все игроки
         faction: "Фракция: {name}"
+  permission:
+    manage_spawn_points:
+      name: Управление точками появления
+      description: Дает доступ к размещению и удалению точек появления.

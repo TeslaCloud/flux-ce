@@ -20,3 +20,7 @@ es:
       group:
         default: Todos
         faction: "Facción: {name}"
+  permission:
+    manage_spawn_points:
+      name: Gestionar puntos de aparición
+      description: Da acceso para colocar y quitar puntos de aparición.

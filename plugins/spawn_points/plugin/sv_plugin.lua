@@ -43,8 +43,8 @@ function SpawnPoints:save()
 end
 
 --- Sends the whole list of spawn points to the clients that draw them. Only players with the
--- 'spawn_points' permission are ever sent the points.
--- @param target=nil [Player who to send the points to; every player with the 'spawn_points'
+-- 'manage_spawn_points' permission are ever sent the points.
+-- @param target=nil [Player who to send the points to; every player with the 'manage_spawn_points'
 --   permission if nil]
 function SpawnPoints:sync(target)
   local receivers = {}
@@ -55,7 +55,7 @@ function SpawnPoints:sync(target)
     end
   else
     for _, receiver in player.Iterator() do
-      if !receiver:IsBot() and receiver:can('spawn_points') then
+      if !receiver:IsBot() and receiver:can('manage_spawn_points') then
         receivers[#receivers + 1] = receiver
       end
     end
@@ -260,15 +260,3 @@ function SpawnPoints:get_anchor()
 
   return self.anchor
 end
-
-Cable.receive('fl_spawn_points_request', function(actor)
-  if !actor:can('spawn_points') then return end
-
-  local cur_time = CurTime()
-
-  if (actor.next_spawn_points_request or 0) > cur_time then return end
-
-  actor.next_spawn_points_request = cur_time + 1
-
-  SpawnPoints:sync(actor)
-end)

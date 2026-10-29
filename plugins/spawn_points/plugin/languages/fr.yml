@@ -20,3 +20,7 @@ fr:
       group:
         default: "Tout le monde"
         faction: "Faction : {name}"
+  permission:
+    manage_spawn_points:
+      name: "Gérer les points d'apparition"
+      description: "Permet de placer et de retirer des points d'apparition."

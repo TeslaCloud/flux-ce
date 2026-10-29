@@ -7,7 +7,7 @@
 -- `SpawnPoints:split_group`, which take any kind, so a plugin can add a kind of its own
 -- and resolve it through the `GetPlayerSpawnPoint` hook.
 --
--- Staff with the 'spawn_points' permission place and remove points with the Spawn Point Tool.
+-- Staff with the 'manage_spawn_points' permission place and remove points with the Spawn Point Tool.
 -- While the tool is held, every point is drawn in the world as a box of the size of a player
 -- with a line that shows its direction and a label that names its group.
 --
@@ -44,14 +44,9 @@ SpawnPoints.color_default = Color(120, 200, 255)
 --- Angle of the box that stands for a point, which is never rotated.
 SpawnPoints.box_angle = Angle(0, 0, 0)
 
---- Registers the 'spawn_points' level design permission.
+--- Registers the 'manage_spawn_points' level design permission.
 function SpawnPoints:RegisterPermissions()
-  Bolt:register_permission(
-    'spawn_points',
-    'Manage spawn points',
-    'Grants access to place and remove spawn points.',
-    'permission.categories.level_design'
-  )
+  Bolt:register_permission('manage_spawn_points', nil, nil, 'permission.categories.level_design')
 end
 
 --- Builds the name of a spawn point group.
@@ -179,7 +174,7 @@ function SpawnPoints:get_group_color(group)
 end
 
 --- Returns the spawn points of a group, or all of them. The server knows every point; a
--- client only knows them while the local player has the 'spawn_points' permission and has
+-- client only knows them while the local player has the 'manage_spawn_points' permission and has
 -- held the Spawn Point Tool.
 -- @param group=nil [String group to return the points of; every point if nil]
 -- @return [List<Map> points, each with pos, ang and group; a new list that is safe to change]
