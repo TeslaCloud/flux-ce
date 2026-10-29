@@ -102,8 +102,6 @@ end
 function RPCommands:get_typing_kind(text)
   if !isstring(text) or !utf8.len(text) then return end
 
-  if Chatbox.find_prefix(text) then return end
-
   local is_command, prefix_length = Flux.Command:is_command(text)
 
   if is_command then
@@ -115,6 +113,8 @@ function RPCommands:get_typing_kind(text)
     if arguments != '' and !arguments:find('^%s') then return end
 
     text = self:wrap_speech(command.id, arguments:strip())
+  elseif Chatbox.find_prefix(text) then
+    return
   else
     text = text:strip()
   end

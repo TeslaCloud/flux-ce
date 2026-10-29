@@ -723,17 +723,26 @@ function PANEL:set_open(is_open)
   end
 end
 
---- Checks whether the text entry contains a command.
+--- Checks whether the text entry contains a command. The answer is kept until the text
+-- changes, since the messages of the chatbox ask for it every frame.
 -- @return [Boolean whether a command is being typed; nil if the entry only contains
 --   '/' or is not valid, Number length of the command prefix if a command is being typed]
 function PANEL:typing_command()
-  if IsValid(self.text_entry) then
-    local cmd = self.text_entry:GetValue()
+  if !IsValid(self.text_entry) then return end
+
+  local cmd = self.text_entry:GetValue()
+
+  if cmd != self.checked_text then
+    self.checked_text = cmd
 
     if cmd != '/' then
-      return Flux.Command:is_command(cmd)
+      self.typed_command, self.typed_prefix_length = Flux.Command:is_command(cmd)
+    else
+      self.typed_command, self.typed_prefix_length = nil, nil
     end
   end
+
+  return self.typed_command, self.typed_prefix_length
 end
 
 --- Compiles the message and creates a message panel for it,

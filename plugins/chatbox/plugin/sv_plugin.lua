@@ -398,7 +398,7 @@ function Chatbox.use_prefix(actor, text, team_chat)
 
   if !prefix_id then return false end
 
-  local message = text:utf8sub(utf8.len(prefix) + 1)
+  local message = text:sub(#prefix + 1)
 
   if message != '' then
     Chatbox.prefixes[prefix_id].callback(actor, message, team_chat)
