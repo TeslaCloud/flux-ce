@@ -3,3 +3,4 @@ description: Adds a monetary system with various currencies.
 author: TeslaCloud Studios
 depends:
   - inventory
+  - characters

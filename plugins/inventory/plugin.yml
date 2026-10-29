@@ -3,3 +3,4 @@ description: Provides player inventories.
 author: TeslaCloud Studios
 depends:
   - items
+  - characters
