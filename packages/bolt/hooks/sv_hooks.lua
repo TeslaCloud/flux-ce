@@ -108,6 +108,16 @@ function hooks:PlayerCanHearPlayersVoice(_listener, talker)
   end
 end
 
+--- Gives a player who has just connected the `user` role until their record has loaded,
+-- without signaling CAMI. While Bolt defers to another admin mod, the usergroup is left to
+-- that admin mod.
+-- @param actor [Player]
+function hooks:PlayerInitialSpawn(actor)
+  if !Bolt:uses_external_admin() then
+    actor:SetUserGroup('user', true)
+  end
+end
+
 --- Defaults the banned flag of a newly created user record to false.
 -- @param _actor [Player]
 -- @param record [User the player's database record]

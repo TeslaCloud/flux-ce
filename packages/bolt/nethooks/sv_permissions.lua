@@ -64,7 +64,7 @@ Cable.receive('fl_bolt_set_role', function(actor, target, role_id)
     return
   end
 
-  target:SetUserGroup(role_id)
+  Bolt:set_role(target, role_id)
 
   Command:notify_staff('command.role.set.message', {
     player = get_player_name(actor),

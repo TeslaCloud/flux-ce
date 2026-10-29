@@ -41,8 +41,23 @@ function Bolt:find_user(steam_id, callback)
   query:execute()
 end
 
+--- Gives a player on the server a role and signals the change to CAMI as coming from 'Bolt',
+-- in both modes, so that another admin mod that Bolt defers to hears of it. This is how
+-- Bolt's commands and the admin panel change roles. Does not check permissions or immunity.
+-- @param target [Player]
+-- @param role_id [String role ID]
+function Bolt:set_role(target, role_id)
+  local old_id = target:GetUserGroup()
+
+  target:SetUserGroup(role_id, true)
+
+  if old_id != role_id then
+    CAMI.SignalUserGroupChanged(target, old_id, role_id, 'Bolt')
+  end
+end
+
 --- Changes the role that is stored for a SteamID, which its owner gets the next time they
--- join. Use `Player:SetUserGroup` for a player who is on the server. Does not check
+-- join. Use `Bolt:set_role` for a player who is on the server. Does not check
 -- permissions or immunity. Once the role is stored, the change is signaled to CAMI as coming
 -- from 'Bolt', unless it is silent, as it is for a role that another admin mod has given.
 -- @param steam_id [String]
@@ -203,7 +218,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
     end
 
     online:notify('notification.demote', { group = old_role })
-    online:SetUserGroup('user')
+    self:set_role(online, 'user')
 
     if callback then
       callback(online:steam_name(), old_role)
@@ -229,7 +244,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
       local joined = player.find(steam_id)
 
       if IsValid(joined) and joined:GetUserGroup() != 'user' then
-        joined:SetUserGroup('user')
+        self:set_role(joined, 'user')
       end
 
       if callback then

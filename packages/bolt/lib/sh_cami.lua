@@ -9,17 +9,21 @@
 -- does not register its own permissions as privileges.
 --
 -- Deferring (`bolt_external_admin` on), another admin mod owns the usergroups and privileges.
--- Bolt registers every permission as a privilege and asks CAMI before it decides a permission
--- itself, and the engine's usergroup methods are left to that admin mod.
+-- Bolt registers every permission as a privilege and asks CAMI in place of the role, after
+-- root access and the permissions set on the player and their character, and the engine's
+-- usergroup methods are left to that admin mod.
 --
--- In both modes Bolt tells CAMI when it changes the role of a player, see
--- `Player:SetUserGroup` and `Bolt:set_stored_role`.
+-- In both modes Bolt tells CAMI when it changes the role of a player, see `Bolt:set_role` and
+-- `Bolt:set_stored_role`.
 
 --- The usergroups that CAMI defines itself, which Bolt never registers.
 local engine_groups = { user = true, admin = true, superadmin = true }
 
 --- The Bolt role that each usergroup of CAMI stands for, by usergroup.
 local engine_roles = { user = 'user', admin = 'assistant', superadmin = 'gamemaster' }
+
+--- The usergroup of CAMI that Bolt's roles for 'admin' and 'superadmin' inherit from, by role.
+local engine_parents = { assistant = 'admin', gamemaster = 'superadmin' }
 
 --- The usergroup of CAMI that each of Bolt's default roles stands for, lowest first.
 local role_access = {
@@ -34,10 +38,17 @@ local registered_privileges = Bolt.cami_registered or {}
 Bolt.cami_privileges = imported_privileges
 Bolt.cami_registered = registered_privileges
 
+local importing = {}
 local cami_answer
 
 local function store_cami_answer(allowed)
   cami_answer = allowed
+end
+
+--- Returns the mode that the `bolt_external_admin` config picks.
+-- @return [String 'external' when it is on, 'provider' otherwise]
+function Bolt:get_cami_mode()
+  return Config.get('bolt_external_admin') == true ? 'external' : 'provider'
 end
 
 --- Checks whether Bolt defers to another admin mod, which `bolt_external_admin` decides once
@@ -93,20 +104,22 @@ function Bolt:role_allows(role, action)
   return entry != nil and entry.allowed == true
 end
 
---- Registers a role as a usergroup of CAMI, based on its base role or on 'user'. Does nothing
--- for the usergroups that CAMI defines itself and for the roles that come from another admin
--- mod's usergroups.
+--- Registers a role as a usergroup of CAMI. `assistant` inherits from 'admin' and
+-- `gamemaster` from 'superadmin', the usergroups they stand for, and every other role from
+-- its base role or from 'user'. Does nothing for the usergroups that CAMI defines itself and
+-- for the roles that come from another admin mod's usergroups.
 -- @param role [Role]
 function Bolt:register_cami_usergroup(role)
   local role_id = role.id or role.role_id
 
   if engine_groups[role_id] or role.cami_source then return end
 
-  CAMI.RegisterUsergroup({ Name = role_id, Inherits = role.base or 'user' }, 'Bolt')
+  CAMI.RegisterUsergroup({ Name = role_id, Inherits = engine_parents[role_id] or role.base or 'user' }, 'Bolt')
 end
 
---- Makes a usergroup of another admin mod a Bolt role, so that it can be given and edited.
--- The role is based on the role its `Inherits` usergroup stands for, see
+--- Makes a usergroup of another admin mod a Bolt role of the same ID, so that it can be given
+-- and edited. A registered usergroup that it inherits from and that is no role yet is made
+-- one first. The role is based on the role its `Inherits` usergroup stands for, see
 -- `Bolt:role_for_cami_group`, or on `user`, and has the immunity of that role. Does nothing
 -- for the usergroups that CAMI defines itself and for a usergroup that already is a role.
 -- @param usergroup [Map CAMI usergroup: Name and Inherits]
@@ -114,10 +127,21 @@ end
 function Bolt:import_cami_usergroup(usergroup, source)
   local name = istable(usergroup) and usergroup.Name
 
-  if !isstring(name) or name == '' or engine_groups[name] or self:find_group(name) then return end
+  if !isstring(name) or name == '' or engine_groups[name] or importing[name] or self:find_group(name) then return end
+
+  local parent = CAMI.GetUsergroup(usergroup.Inherits)
+
+  importing[name] = true
+
+  if parent and parent.CAMI_Source != 'Bolt' then
+    self:import_cami_usergroup(parent, parent.CAMI_Source)
+  end
+
+  importing[name] = nil
 
   local base = self:role_for_cami_group(usergroup.Inherits) or 'user'
   local role = Role.new(name)
+    role.role_id = name
     role.name = name
     role.description = name
     role.base = base
@@ -177,9 +201,9 @@ end
 --- Registers a Bolt permission as a privilege of CAMI, meant for the usergroup that
 -- `Bolt:get_cami_min_access` names. Does nothing when another addon has registered a
 -- privilege of that name.
--- @param permission [Map permission data: id and description]
+-- @param permission [Map permission data: id and description, or nil]
 function Bolt:register_cami_privilege(permission)
-  local perm_id = permission.id
+  local perm_id = istable(permission) and permission.id
 
   if !isstring(perm_id) or (CAMI.GetPrivilege(perm_id) and !registered_privileges[perm_id]) then return end
 
@@ -192,15 +216,15 @@ function Bolt:register_cami_privilege(permission)
   })
 end
 
---- Asks CAMI whether a player has a permission that is registered as a privilege. Root
--- players, invalid players, the empty action, and an action on an object for which the
--- player's role has an entry of its own are left to Bolt.
+--- Asks CAMI whether a player has a permission that is registered as a privilege, for the
+-- layer of `Bolt:get_permission_layer` that comes in place of the role. An action on an
+-- object for which the player's role has an entry of its own is left to the role.
 -- @param actor [Player]
 -- @param action [String permission ID]
 -- @param object=nil [String object name the permission was allowed for]
 -- @return [Boolean the answer, nil when CAMI is not asked or does not answer right away]
 function Bolt:ask_cami(actor, action, object)
-  if !IsValid(actor) or action == '' or !CAMI.GetPrivilege(action) or actor:is_root() then return end
+  if !CAMI.GetPrivilege(action) then return end
 
   if object != nil then
     local role = self:get_group_role(actor:GetUserGroup())
@@ -225,7 +249,7 @@ end
 -- addons have registered so far. Deferring, it registers its permissions as privileges.
 -- Running it again registers what has been added since.
 function Bolt:setup_cami()
-  self.cami_mode = Config.get('bolt_external_admin') == true ? 'external' : 'provider'
+  self.cami_mode = self:get_cami_mode()
 
   if self:uses_external_admin() then
     for _, permission in pairs(self:get_all_permissions()) do

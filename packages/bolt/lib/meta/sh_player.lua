@@ -57,10 +57,12 @@ function player_meta:is_staff()
   return self:can 'staff'
 end
 
---- Overrides the engine method to return the player's Flux role ID.
--- @param self [Player]
--- @return [String role ID]
-player_meta.GetUserGroup = self -> self:get_role()
+--- Overrides the engine method to return the player's role, see `Player:get_role`: the ID
+-- of their Flux role, or the engine's usergroup when Bolt defers to another admin mod.
+-- @return [String role ID or usergroup name]
+function player_meta:GetUserGroup()
+  return self:get_role()
+end
 
 --- Overrides the engine method so that other addons recognize Flux super admins. Calls the
 -- engine's method when Bolt defers to another admin mod.

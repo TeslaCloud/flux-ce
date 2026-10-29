@@ -292,6 +292,7 @@ en:
         user: player
         user_temporary: player, temporary
         role: role
+        cami: admin mod
       temp_permission:
         title: Give temporary permission
         message: Specify the permission duration. If the permission is already given, this time will be added to it. Leave empty to take the temporary permission.

@@ -219,21 +219,32 @@ function Bolt:merge_permissions(role, perms, as_own)
   end
 end
 
-local function allow_command_role(cmd)
+--- Allows a command that names a role in its `permission` field to that role, and does the
+-- same for its subcommands, see `Bolt:allow_command_roles`. When Bolt defers to another admin
+-- mod, the privilege of the command is registered again, so that its minimum access follows
+-- the role.
+-- @param cmd [Command]
+function Bolt:allow_command_role(cmd)
   local role_id = cmd.permission
 
   if isstring(role_id) and cmd:has_own_permission() then
     local role = roles[role_id]
 
     if role then
-      Bolt:merge_permissions(role, { anything = { [cmd:get_permission()] = { allowed = true } } })
+      local perm_id = cmd:get_permission()
+
+      self:merge_permissions(role, { anything = { [perm_id] = { allowed = true } } })
+
+      if self:uses_external_admin() then
+        self:register_cami_privilege(self:get_permission(perm_id))
+      end
     else
       ErrorNoHalt("The '"..cmd:get_full_id().."' command names the '"..role_id.."' role, which does not exist!\n")
     end
   end
 
   for _, subcommand in ipairs(cmd:get_subcommands()) do
-    allow_command_role(subcommand)
+    self:allow_command_role(subcommand)
   end
 end
 
@@ -246,7 +257,7 @@ end
 -- @see [Bolt#merge_permissions]
 function Bolt:allow_command_roles()
   for _, cmd in pairs(Flux.Command.stored) do
-    allow_command_role(cmd)
+    self:allow_command_role(cmd)
   end
 end
 
@@ -307,7 +318,7 @@ local function register_permission_ids(cmd, category)
 
   category = cmd.category or category
 
-  if isstring(perm_id) and perm_id != '' and !Bolt:get_all_permissions()[perm_id] then
+  if isstring(perm_id) and perm_id != '' and !Bolt:get_permission(perm_id) then
     Bolt:add_permission(perm_id, category, {
       name = cmd:get_full_name(),
       description = cmd.description or 'No description provided.',
@@ -371,7 +382,10 @@ end
 --    named first. A character cannot undo what the player is denied.
 -- 3. Otherwise, if either layer says `PERM_ALLOW`, the action is allowed, the character's
 --    permission being named first. A character can be allowed what the role does not allow.
--- 4. `'role'`: the player's role, together with the roles it is based on; when another admin
+-- 4. `'cami'`: when Bolt defers to another admin mod (`bolt_external_admin`), that admin mod
+--    decides a permission that is registered as a privilege, if it answers right away, see
+--    `Bolt:ask_cami`.
+-- 5. `'role'`: the player's role, together with the roles it is based on; when another admin
 --    mod gives the usergroups, the role that stands for the usergroup, see
 --    `Bolt:get_group_role`.
 --
@@ -415,6 +429,14 @@ function Bolt:get_permission_layer(actor, action, object)
     return true, user_layer
   end
 
+  if self:uses_external_admin() then
+    local answer = self:ask_cami(actor, action, object)
+
+    if answer != nil then
+      return answer, 'cami'
+    end
+  end
+
   local role = self:get_group_role(actor:GetUserGroup())
 
   if istable(role) and isfunction(role.can) then
@@ -426,23 +448,14 @@ end
 
 --- Checks whether a player may perform an action. This is what `Player:can` answers with, on
 -- both realms; see `Bolt:get_permission_layer` for how it is decided. When Bolt defers to
--- another admin mod (`bolt_external_admin`), CAMI is asked first about every permission that
--- is registered as a privilege, see `Bolt:ask_cami`, and Bolt decides only what CAMI does not
--- answer right away.
+-- another admin mod (`bolt_external_admin`), root access and the permissions set on the
+-- player and their character still come first, and CAMI is asked in place of the role.
 -- @param actor [Player]
 -- @param action [String permission ID; an empty string is always allowed]
 -- @param object=nil [String object name the permission was allowed for, passed on to Role#can]
 -- @return [Boolean whether the action is allowed (a role permission callback's return value is
 --   passed through as is)]
 function Bolt:can(actor, action, object)
-  if self:uses_external_admin() then
-    local answer = self:ask_cami(actor, action, object)
-
-    if answer != nil then
-      return answer
-    end
-  end
-
   return (self:get_permission_layer(actor, action, object))
 end
 
@@ -564,7 +577,7 @@ function Bolt:check_role_immunity(actor, role_id, can_equal)
     return true
   end
 
-  return compare_immunity(self:get_group_role(actor:GetUserGroup()), roles[role_id], can_equal)
+  return compare_immunity(self:get_group_role(actor:GetUserGroup()), self:get_group_role(role_id), can_equal)
 end
 
 --- Checks whether a SteamID is listed in the bolt_root_steamid config, which makes its owner a
@@ -584,12 +597,10 @@ function Bolt:is_root_steam_id(steam_id)
 end
 
 local function lookup_permission(id)
-  for _, category in pairs(permissions) do
-    local found = category[id]
+  local found = Bolt:get_permission(id)
 
-    if found then
-      return found
-    end
+  if found then
+    return found
   end
 
   local lower = id:utf8lower()

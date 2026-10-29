@@ -12,7 +12,8 @@ function hooks:PostInitialize()
 end
 
 --- Gives a player the role that another admin mod has signaled as their usergroup, if the
--- usergroup is a Bolt role (see `Bolt:role_for_cami_group`), without signaling it back.
+-- usergroup is a Bolt role (see `Bolt:role_for_cami_group`), without signaling it back. A
+-- usergroup that is the player's role already is left as it is, before it is mapped.
 -- @param _self [Map the hook table]
 -- @param target [Player the player whose usergroup has changed]
 -- @param _old [String the usergroup they had]
@@ -20,6 +21,7 @@ end
 -- @param source [Any the admin mod that changed it]
 hooks['CAMI.PlayerUsergroupChanged'] = function(_self, target, _old, new, source)
   if !Bolt:is_cami_provider() or source == 'Bolt' or !IsValid(target) or !target:IsPlayer() then return end
+  if new == target:GetUserGroup() then return end
 
   local role_id = Bolt:role_for_cami_group(new)
 
@@ -37,13 +39,13 @@ end
 -- @param new [String the usergroup it has]
 -- @param source [Any the admin mod that changed it]
 hooks['CAMI.SteamIDUsergroupChanged'] = function(_self, steam_id, old, new, source)
-  if !Bolt:is_cami_provider() or source == 'Bolt' or !player.is_steam_id(steam_id) then return end
-
-  local role_id = Bolt:role_for_cami_group(new)
-
-  if !role_id then return end
+  if !Bolt:is_cami_provider() or source == 'Bolt' or !isstring(steam_id) then return end
 
   steam_id = player.normalize_steam_id(steam_id)
+
+  local role_id = player.is_steam_id(steam_id) and Bolt:role_for_cami_group(new)
+
+  if !role_id then return end
 
   local online = player.find(steam_id)
 
@@ -67,9 +69,11 @@ end
 -- @return [Boolean true when Bolt answers, nothing otherwise]
 hooks['CAMI.SteamIDHasAccess'] = function(_self, steam_id, privilege_name, callback, _target_steam_id, _extra)
   if !Bolt:is_cami_provider() or !isstring(privilege_name) or !Bolt:get_permission(privilege_name) then return end
-  if !player.is_steam_id(steam_id) then return end
+  if !isstring(steam_id) then return end
 
   steam_id = player.normalize_steam_id(steam_id)
+
+  if !player.is_steam_id(steam_id) then return end
 
   if Bolt:is_root_steam_id(steam_id) then
     callback(true, 'Bolt')

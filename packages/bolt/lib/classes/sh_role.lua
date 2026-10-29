@@ -9,7 +9,7 @@
 -- defining a new one, so that a plugin or schema can give the existing roles the permissions
 -- of its own commands. The actions that a role's own files allow or deny stay as they are
 -- when a base role gets new permissions (`own_permissions`, see `Role:set_own`). A player's
--- role is read with `Player:get_role` and set with `Player:SetUserGroup`.
+-- role is read with `Player:get_role` and set with `Bolt:set_role`.
 
 class 'Role'
 

@@ -292,6 +292,7 @@ es:
         user: jugador
         user_temporary: jugador, temporal
         role: rol
+        cami: mod de administración
       temp_permission:
         title: Dar permiso temporal
         message: Indica la duración del permiso. Si el permiso ya está concedido, este tiempo se le sumará. Déjalo vacío para retirar el permiso temporal.

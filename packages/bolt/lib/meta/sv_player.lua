@@ -9,9 +9,9 @@ player_meta.engine_set_user_group = player_meta.engine_set_user_group or player_
 --- Sets the player's role, overriding the engine method. Networks the role, sets the
 -- engine's usergroup to it as well, calls on_role_taken / on_role_set on the roles involved,
 -- saves the role to the database unless one of them returns a value, and runs the
--- PlayerUserGroupChanged hook. A change of the role is signaled to CAMI as coming from
--- 'Bolt', unless it is silent: the role a player has when they join, and a role that another
--- admin mod has given them through CAMI.
+-- PlayerUserGroupChanged hook. While Bolt is the admin mod that CAMI hears from, a change
+-- that another addon makes this way is signaled to CAMI as coming from 'Bolt', unless it is
+-- silent. Bolt's own changes go through `Bolt:set_role`, which signals them in both modes.
 -- @param group='user' [String role ID]
 -- @param silent=false [Boolean keep CAMI from hearing of the change]
 function player_meta:SetUserGroup(group, silent)
@@ -37,7 +37,7 @@ function player_meta:SetUserGroup(group, silent)
   -- @param old_group [Role The role the player had before]
   hook.Run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
 
-  if !silent and old_id != group then
+  if !silent and old_id != group and Bolt:is_cami_provider() then
     CAMI.SignalUserGroupChanged(self, old_id, group, 'Bolt')
   end
 end

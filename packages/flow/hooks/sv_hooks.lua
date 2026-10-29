@@ -50,15 +50,14 @@ function GM:InitPostEntity()
   Plugin.call('PostInitPostEntity')
 end
 
---- Sets up a newly connected player: assigns the flux_player class and the 'user' group,
--- restores their saved data and announces the spawn to all clients. Bots are marked as
--- initialized right away instead.
+--- Sets up a newly connected player: assigns the flux_player class, restores their saved
+-- data and announces the spawn to all clients. Bots are marked as initialized right away
+-- instead.
 -- @param actor [Player]
 function GM:PlayerInitialSpawn(actor)
   player_manager.SetPlayerClass(actor, 'flux_player')
   player_manager.RunClass(actor, 'Spawn')
 
-  actor:SetUserGroup('user')
   actor:restore_player()
 
   if actor:IsBot() then

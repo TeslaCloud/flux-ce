@@ -58,7 +58,7 @@ function set:on_run(actor, targets, role_name)
     client:notify('notification.setgroup', {
       group = role.id
     })
-    client:SetUserGroup(role.id)
+    Bolt:set_role(client, role.id)
   end
 
   self:notify_staff('command.role.set.message', {
@@ -88,7 +88,7 @@ function remove:on_run(actor, target)
       client:notify('notification.demote', {
         group = client:GetUserGroup()
       })
-      client:SetUserGroup('user')
+      Bolt:set_role(client, 'user')
     end
 
     self:notify_staff('command.role.remove.message', {

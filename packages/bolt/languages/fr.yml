@@ -292,6 +292,7 @@ fr:
         user: "joueur"
         user_temporary: "joueur, temporaire"
         role: "rôle"
+        cami: "mod d'administration"
       temp_permission:
         title: "Accorder une permission temporaire"
         message: "Indiquez la durée de la permission. Si la permission est déjà accordée, cette durée s'y ajoute. Laissez vide pour retirer la permission temporaire."

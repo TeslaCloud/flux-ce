@@ -51,9 +51,10 @@
 -- is allowed to `user`, `assistant` or `gamemaster` as its minimum access is 'user', 'admin'
 -- or 'superadmin'), and Bolt answers CAMI's access checks for the permissions it knows. With
 -- `bolt_external_admin` on, another admin mod owns the usergroups: Bolt registers its
--- permissions as privileges, asks CAMI before it decides a permission itself and leaves the
--- engine's usergroup methods to that admin mod. Either way, Bolt signals the role changes
--- it makes to CAMI, and bans, commands and the admin panel work as before. See
+-- permissions as privileges and leaves the engine's usergroup methods to that admin mod.
+-- Root access and the permissions set on the player and their character still decide first,
+-- and CAMI is asked in place of the role. Either way, Bolt signals the role changes it makes
+-- to CAMI, and bans, commands and the admin panel work the same in both modes. See
 -- `lib/sh_cami.lua`.
 --
 -- The package loads its libraries, classes and player extensions, its configs, the models and

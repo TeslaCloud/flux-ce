@@ -60,11 +60,17 @@ function hooks:CanDrive(actor, _entity)
   end
 end
 
---- Registers a permission for every newly created command.
+--- Registers the permissions of every command that is created. A command created once Flux
+-- has loaded is also allowed to the role its `permission` field names, which
+-- `Bolt:allow_command_roles` does for the others.
 -- @param _id [String command ID]
 -- @param data [Command command table]
 function hooks:OnCommandCreated(_id, data)
   Bolt:permission_from_command(data)
+
+  if Flux.initialized then
+    Bolt:allow_command_role(data)
+  end
 end
 
 --- Ties the character permission models to the `Character` model of the Characters plugin,
