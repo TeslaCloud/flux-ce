@@ -1,6 +1,6 @@
 en:
   config:
-    displaytyping:
+    display_typing:
       title: Display Typing
       desc: Display Typing plugin configuration
       exact_message:

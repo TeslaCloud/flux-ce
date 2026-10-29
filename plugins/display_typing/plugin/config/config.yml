@@ -1,0 +1,30 @@
+categories:
+  display_typing:
+    name: config.display_typing.title
+    description: config.display_typing.desc
+configs:
+  display_typing_exact_message:
+    renamed_from:
+      - display_exact_message
+      - displaytyping_exact_message
+    name: config.display_typing.exact_message.name
+    description: config.display_typing.exact_message.desc
+    category: display_typing
+    type: boolean
+    default_value: true
+  display_typing_range:
+    renamed_from: displaytyping_range
+    name: config.display_typing.range.name
+    description: config.display_typing.range.desc
+    category: display_typing
+    type: number
+    min_value: 32
+    max_value: 4096
+    default_value: 350
+  display_typing_through_walls:
+    renamed_from: displaytyping_through_walls
+    name: config.display_typing.through_walls.name
+    description: config.display_typing.through_walls.desc
+    category: display_typing
+    type: boolean
+    default_value: false

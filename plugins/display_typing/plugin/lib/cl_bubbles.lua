@@ -7,7 +7,7 @@
 -- behind the viewer ends up at the bottom. Bubbles fade in and out, ease towards their place
 -- and size, and are moved apart when several of them would overlap. A bubble is hidden
 -- when the player is dead, not drawn or out of range, and when a wall is in the way unless
--- the 'displaytyping_through_walls' config is enabled.
+-- the 'display_typing_through_walls' config is enabled.
 --
 -- Themes restyle the bubbles with the 'typing_bubble_name', 'typing_bubble_kind' and
 -- 'typing_bubble_text' fonts, the 'typing_bubble_background', 'typing_bubble_text' and
@@ -253,7 +253,7 @@ end
 --- Checks whether the local player has a clear line of sight to a typing player. The trace
 -- is repeated every `sight_interval` seconds for each bubble, and a line of sight that has
 -- been lost still counts for `sight_grace` seconds, so that bubbles do not flicker when
--- something passes in between. Always true if the 'displaytyping_through_walls' config is
+-- something passes in between. Always true if the 'display_typing_through_walls' config is
 -- enabled.
 -- @param bubble [Map the bubble of the typing player]
 -- @param target [Player the typing player]
@@ -261,7 +261,7 @@ end
 -- @param now [Number RealTime() of the frame]
 -- @return [Boolean]
 function DisplayTyping:has_sight(bubble, target, position, now)
-  if Config.get('displaytyping_through_walls') then
+  if Config.get('display_typing_through_walls') then
     return true
   end
 

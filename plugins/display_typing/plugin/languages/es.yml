@@ -1,6 +1,6 @@
 es:
   config:
-    displaytyping:
+    display_typing:
       title: Indicador de escritura
       desc: Configuración del plugin de indicador de escritura
       exact_message:

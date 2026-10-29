@@ -63,12 +63,12 @@ function DisplayTyping:ClientSettingChanged(id, _value, _old_value)
 end
 
 --- Has the bubbles show or hide the live text when the server switches the
--- 'displaytyping_exact_message' config.
+-- 'display_typing_exact_message' config.
 -- @param key [String config key]
 -- @param _old_value [Any value the client had before]
 -- @param _new_value [Any value that has been received]
 function DisplayTyping:OnConfigReceived(key, _old_value, _new_value)
-  if key == 'displaytyping_exact_message' then
+  if key == 'display_typing_exact_message' then
     self:invalidate_metrics()
   end
 end
