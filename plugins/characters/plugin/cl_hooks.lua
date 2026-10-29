@@ -165,7 +165,7 @@ function Characters:ShouldScoreboardShow()
   return PLAYER:is_character_loaded() or !Characters.needs_character(PLAYER)
 end
 
---- Adds the Steam name to a scoreboard player card and, unless an ShouldShowCharacterCard hook
+--- Adds the Steam name to a scoreboard player card and, unless a ShouldShowCharacterCard hook
 -- returns false, the player's model icon and physical description.
 -- @param card [Panel the scoreboard player card]
 -- @param target [Player]

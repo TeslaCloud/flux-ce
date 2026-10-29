@@ -40,6 +40,10 @@ function CMD:on_run(actor, map_name, delay)
   })
 
   timer.Simple(delay, function()
+    --- Called on the server right before the Changelevel or the Restart command changes the
+    -- map. The map change that follows saves everything through the gamemode's `ShutDown`
+    -- handler.
+    -- @param map [String name of the map that is about to be loaded]
     hook.Run('PreMapChange', map)
 
     RunConsoleCommand('changelevel', map)

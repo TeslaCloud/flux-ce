@@ -137,15 +137,15 @@ function PropProtection:EntityTakeDamage(target, damage_info)
     return
   end
 
-  --- Asks whether a player should be hurt by an entity that the Prop Protection plugin
-  -- considers harmless: one that is held with the physics gun, or was spawned or dropped by
-  -- it within the prop_kill_protection_time config. Called on the server, while the
-  -- prop_kill_protection config is on, before such impact damage is blocked.
+  --- Asks whether the damage a player takes from an entity that the Prop Protection plugin
+  -- considers harmless is blocked: one that is held with the physics gun, or was spawned or
+  -- dropped by it within the prop_kill_protection_time config. Called on the server, while
+  -- the prop_kill_protection config is on, before such impact damage is blocked.
   -- @param target [Player the player who is about to be protected]
   -- @param prop [Entity the entity that has hit them]
   -- @param damage_info [CTakeDamageInfo the damage]
-  -- @return [Boolean return true to let the damage through]
-  if hook.Run('ShouldPlayerTakePropDamage', target, prop, damage_info) == true then return end
+  -- @return [Boolean return false to let the damage through]
+  if hook.Run('ShouldBlockPropDamage', target, prop, damage_info) == false then return end
 
   target.prop_push_until = cur_time + 1
 

@@ -30,8 +30,7 @@ function player_meta:set_weapon_raised(raised)
 
       --- Called on the server after the raised state of a player's weapon has been set, when
       -- it is raised and when it is lowered. The gamemode plays the raise or lower gesture
-      -- from it, and the plugin runs
-      -- `PlayerApplyWeaponRaiseState`.
+      -- from it, and the plugin runs `PlayerApplyWeaponRaiseState`.
       -- @param actor [Player The player holding the weapon]
       -- @param weapon [Weapon The active weapon of the player, which may not be valid]
       -- @param raised [Boolean Whether the weapon is now raised]
