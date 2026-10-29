@@ -50,6 +50,7 @@ es:
       not_a_boolean: "¡El valor de este ajuste tiene que ser 'true' o 'false'!"
       not_a_string: ¡El valor de este ajuste tiene que ser una línea de texto!
       not_a_table: ¡El valor de este ajuste tiene que ser una lista!
+      not_a_color: ¡El valor de este ajuste tiene que ser un color!
       no_default: ¡Este ajuste no tiene valor por defecto!
     plugin:
       unknown: ¡No existe ese plugin!

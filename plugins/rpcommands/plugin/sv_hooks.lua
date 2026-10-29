@@ -1,20 +1,13 @@
 --- Server hooks of the RolePlay Commands plugin and the pipeline that turns a typed phrase into
 -- a line of in character chat: `RPCommands:get_phrase_volume` (shared, in sh_plugin.lua) reads
 -- how loud the phrase is, `RPCommands:get_phrase_table` splits it into speech and actions, and
--- `RPCommands:format_message` puts the chat line together. The file also sets the chat colors
--- and keeps the static texts.
+-- `RPCommands:format_message` puts the chat line together. The file also keeps the static
+-- texts.
 --
--- The talk radius is the 'talk_radius' config, which is defined in config/config.yml and can
--- be edited in game. The chat colors are set here in code.
+-- The talk radius is the 'talk_radius' config and the chat colors are the 'chat_*_color'
+-- configs, all of them defined in config/config.yml.
 
 local config_get = Config.get
-
-local base_ic_color = Color('khaki')
-Config.set('chat_ic_color', base_ic_color)
-Config.set('chat_whisper_color', base_ic_color:desaturate(40):darken(20))
-Config.set('chat_yell_color', base_ic_color:saturate(30):lighten(15))
-Config.set('chat_it_color', Color('lightblue'))
-Config.set('chat_me_color', Color('lightgreen'))
 
 --- Adds a static text, saves it and sends it to all players.
 -- @param data [Table static text with pos, text, name, steamid and time fields]

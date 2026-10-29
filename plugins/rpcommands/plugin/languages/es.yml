@@ -58,6 +58,21 @@ es:
       roll_versus:
         name: Tiradas enfrentadas
         desc: Si al tirar mientras miras a un jugador cercano también se tira por ese jugador.
+      chat_ic_color:
+        name: Color del chat IC
+        desc: Color del habla dentro del personaje y de la burbuja de escritura de un jugador que está hablando.
+      chat_whisper_color:
+        name: Color de los susurros
+        desc: Color de la burbuja de escritura de un jugador que está susurrando.
+      chat_yell_color:
+        name: Color de los gritos
+        desc: Color de la burbuja de escritura de un jugador que está gritando.
+      chat_it_color:
+        name: Color de it
+        desc: Color de las descripciones hechas con el comando it.
+      chat_me_color:
+        name: Color de las acciones
+        desc: Color de las acciones en el chat dentro del personaje y de la burbuja de escritura de un jugador que está realizando una.
   error:
     roll:
       invalid: "No se puede tirar eso: {message}"

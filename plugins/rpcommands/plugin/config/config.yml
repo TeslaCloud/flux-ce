@@ -39,3 +39,48 @@ configs:
     category: roleplay_chat
     type: boolean
     default_value: true
+  chat_ic_color:
+    name: config.roleplay_chat.chat_ic_color.name
+    description: config.roleplay_chat.chat_ic_color.desc
+    category: roleplay_chat
+    type: color
+    default_value:
+      r: 240
+      g: 230
+      b: 140
+  chat_whisper_color:
+    name: config.roleplay_chat.chat_whisper_color.name
+    description: config.roleplay_chat.chat_whisper_color.desc
+    category: roleplay_chat
+    type: color
+    default_value:
+      r: 214
+      g: 208
+      b: 154
+  chat_yell_color:
+    name: config.roleplay_chat.chat_yell_color.name
+    description: config.roleplay_chat.chat_yell_color.desc
+    category: roleplay_chat
+    type: color
+    default_value:
+      r: 255
+      g: 247
+      b: 130
+  chat_it_color:
+    name: config.roleplay_chat.chat_it_color.name
+    description: config.roleplay_chat.chat_it_color.desc
+    category: roleplay_chat
+    type: color
+    default_value:
+      r: 173
+      g: 216
+      b: 230
+  chat_me_color:
+    name: config.roleplay_chat.chat_me_color.name
+    description: config.roleplay_chat.chat_me_color.desc
+    category: roleplay_chat
+    type: color
+    default_value:
+      r: 144
+      g: 238
+      b: 144

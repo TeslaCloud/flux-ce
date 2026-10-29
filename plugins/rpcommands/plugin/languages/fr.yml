@@ -58,6 +58,21 @@ fr:
       roll_versus:
         name: "Jets en opposition"
         desc: "Indique si lancer les dés en regardant un joueur proche fait aussi un jet pour ce joueur."
+      chat_ic_color:
+        name: "Couleur du chat RP"
+        desc: "Couleur de la parole RP et de la bulle de saisie d'un joueur qui parle."
+      chat_whisper_color:
+        name: "Couleur des chuchotements"
+        desc: "Couleur de la bulle de saisie d'un joueur qui chuchote."
+      chat_yell_color:
+        name: "Couleur des cris"
+        desc: "Couleur de la bulle de saisie d'un joueur qui crie."
+      chat_it_color:
+        name: "Couleur de it"
+        desc: "Couleur des descriptions faites avec la commande it."
+      chat_me_color:
+        name: "Couleur des actions"
+        desc: "Couleur des actions dans le chat RP et de la bulle de saisie d'un joueur qui en fait une."
   error:
     roll:
       invalid: "Impossible de faire ce jet : {message}"

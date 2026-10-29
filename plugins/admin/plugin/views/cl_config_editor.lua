@@ -266,9 +266,9 @@ function PANEL:set_config(key, config_table)
 end
 
 --- Creates the control of the line anew and fills it with the value of the config. A static
--- config and a private one that has not been revealed get a text that cannot be edited;
--- any other config gets the control of its data type: a slider, a checkbox, a text entry,
--- a list editor or a dropdown.
+-- config, a private one that has not been revealed and a color get a text that cannot be
+-- edited; any other config gets the control of its data type: a slider, a checkbox, a text
+-- entry, a list editor or a dropdown.
 function PANEL:create_control()
   local key, config_table = self.key, self.config
   local data = config_table.data
@@ -285,7 +285,7 @@ function PANEL:create_control()
   self.check = nil
   self.send_at = nil
 
-  if Config.is_static(key) or !self.revealed then
+  if Config.is_static(key) or !self.revealed or data_type == 'color' then
     local label = vgui.Create('DLabel', self)
     label:SetFont(small_font)
     label:SetTextColor(Theme.get_color('text'))

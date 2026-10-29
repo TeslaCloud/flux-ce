@@ -58,6 +58,21 @@ en:
       roll_versus:
         name: Versus Rolls
         desc: Whether rolling while looking at a nearby player also rolls for that player.
+      chat_ic_color:
+        name: IC Chat Color
+        desc: Color of in-character speech and of the typing bubble of a player who is talking.
+      chat_whisper_color:
+        name: Whisper Color
+        desc: Color of the typing bubble of a player who is whispering.
+      chat_yell_color:
+        name: Yell Color
+        desc: Color of the typing bubble of a player who is yelling.
+      chat_it_color:
+        name: It Color
+        desc: Color of the descriptions made with the it command.
+      chat_me_color:
+        name: Action Color
+        desc: Color of actions in in-character chat and of the typing bubble of a player who is performing one.
   error:
     roll:
       invalid: "Cannot roll that: {message}"

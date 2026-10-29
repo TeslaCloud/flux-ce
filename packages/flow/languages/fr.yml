@@ -50,6 +50,7 @@ fr:
       not_a_boolean: "La valeur de ce paramètre doit être soit « true », soit « false » !"
       not_a_string: "La valeur de ce paramètre doit être une ligne de texte !"
       not_a_table: "La valeur de ce paramètre doit être une liste !"
+      not_a_color: "La valeur de ce paramètre doit être une couleur !"
       no_default: "Ce paramètre n'a pas de valeur par défaut !"
     plugin:
       unknown: "Ce plugin n'existe pas !"

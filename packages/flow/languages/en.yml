@@ -50,6 +50,7 @@ en:
       not_a_boolean: "The value of this config has to be either 'true' or 'false'!"
       not_a_string: The value of this config has to be a line of text!
       not_a_table: The value of this config has to be a list!
+      not_a_color: The value of this config has to be a color!
       no_default: This config has no default value!
     plugin:
       unknown: There is no such plugin!

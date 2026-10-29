@@ -82,6 +82,18 @@ local function copy_value(value)
   return value
 end
 
+--- Returns a copy of the default value of a definition, as a Color for a config of the color
+-- type, whose default is written as a table with the r, g and b fields.
+-- @param definition [Map config definition]
+-- @return [Any]
+local function default_value(definition)
+  if definition.type == 'color' then
+    return util.to_color(copy_value(definition.default_value))
+  end
+
+  return copy_value(definition.default_value)
+end
+
 local function values_equal(first, second)
   return first == second or (istable(first) and istable(second) and table.equal(first, second))
 end
@@ -179,7 +191,7 @@ function Config.get_default(key)
   local definition = definitions[key]
 
   if definition then
-    return copy_value(definition.default_value)
+    return default_value(definition)
   end
 end
 
@@ -217,9 +229,10 @@ end
 -- Numbers may be given as numeric strings, are rounded to the `decimals` of the definition
 -- if it has any and are clamped between its `min_value` and `max_value`. Booleans may be
 -- given as 1 and 0 or as the strings 'true', 'yes', 'on', '1', 'false', 'no', 'off' and
--- '0'. Strings may be given as numbers. Tables have to be tables. A config without a
--- definition expects the type of its current value, and a config whose type is not one of
--- these takes any string, number, boolean or table.
+-- '0'. Strings may be given as numbers. Tables have to be tables. Colors may be given as
+-- any table with the r, g and b fields and are turned into a Color (see `util.to_color`). A
+-- config without a definition expects the type of its current value, and a config whose type
+-- is not one of these takes any string, number, boolean or table.
 -- ```
 -- local valid, value = Config.validate('walk_speed', '5000')
 -- -- true, 1024
@@ -285,6 +298,14 @@ function Config.validate(key, value)
     end
 
     return true, value
+  elseif data_type == 'color' then
+    local color = util.to_color(value)
+
+    if !color then
+      return false, 'error.config.not_a_color'
+    end
+
+    return true, color
   end
 
   if !isstring(value) and !isnumber(value) and !isbool(value) and !istable(value) then
@@ -295,8 +316,9 @@ function Config.validate(key, value)
 end
 
 --- Converts a config value to a string that can be shown to players, for instance when a
--- change is announced. The value of a private config is replaced with asterisks, and a list
--- is turned into its values separated by commas.
+-- change is announced. The value of a private config is replaced with asterisks, a color is
+-- turned into its red, green, blue and alpha channels and a list into its values, separated by
+-- commas.
 -- @param key [String config key]
 -- @param value=Config.get(key) [Any value to show]
 -- @return [String]
@@ -307,6 +329,16 @@ function Config.display_value(key, value)
 
   if value == nil then
     value = Config.get(key)
+  end
+
+  if expected_type(key) == 'color' then
+    local color = util.to_color(value)
+
+    if color then
+      local round = math.Round
+
+      return string.format('%d, %d, %d, %d', round(color.r), round(color.g), round(color.b), round(color.a))
+    end
   end
 
   if istable(value) and !IsColor(value) and table.IsSequential(value) then
@@ -631,7 +663,7 @@ if SERVER then
       return false, 'error.config.no_default'
     end
 
-    return Config.change(key, copy_value(definition.default_value))
+    return Config.change(key, default_value(definition))
   end
 
   local player_meta = FindMetaTable('Player')
@@ -880,7 +912,8 @@ end
 if SERVER then
   --- Imports config values from a YAML file or from a table and sets every one of them.
   -- Serverside only. The 'depends' and 'depends_development' keys are skipped, and so is
-  -- every key for which the ShouldConfigImport hook returns a non-nil value.
+  -- every key for which the ShouldConfigImport hook returns a non-nil value. The value of a
+  -- config of the color type is turned into a Color (see `util.to_color`).
   -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
   -- @return [Map the imported table, or nil if the file could not be read or path is
@@ -909,6 +942,10 @@ if SERVER then
       -- @return [Boolean Return any value other than nil to skip the key and keep its current
       --   value]
       if key != 'depends' and key != 'depends_development' and Plugin.call('ShouldConfigImport', key, value) == nil then
+        if definitions[key]?.type == 'color' then
+          value = util.to_color(value) ?? value
+        end
+
         Config.set(key, value, nil, from_config)
       end
     end
@@ -922,7 +959,8 @@ end
 -- On the client the categories and configs are added to the config menu. Both sides keep
 -- the definitions for `Config.get_definition`. Besides the fields shown below a config can
 -- be marked with `hidden`, `static`, `private` and `needs_restart`, which are described at
--- the top of this file.
+-- the top of this file. A config of the `color` type holds a Color and writes its default
+-- value as a map of r, g, b and, optionally, a.
 -- ```
 -- Config.read('gamemodes/flux/config/config.yml')
 --
@@ -973,7 +1011,7 @@ function Config.read(path, _from_config)
       definitions[name] = data
 
       if SERVER then
-        Config.set(name, copy_value(data.default_value), data.hidden)
+        Config.set(name, default_value(data), data.hidden)
         table.safe_merge(stored[name], data)
       else
         Config.add_to_menu(data.category or 'general', name, data.name, data.description, data.type, data)
