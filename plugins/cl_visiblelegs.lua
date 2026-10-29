@@ -71,7 +71,7 @@ function VisibleLegs:PlayerModelChanged(target, _new_model, _old_model)
 end
 
 local offset = Vector(-50, -50, 0)
-local scale = Vector(1, 1, 1)
+local scale = Vector(0, 0, 0)
 
 --- Draws the local player's legs model in first person, following their animation.
 -- Skipped while in observer mode, not drawn, in third person, dead or looking above the
@@ -123,7 +123,7 @@ function VisibleLegs:RenderScreenspaceEffects()
 end
 
 --- Creates the clientside legs model of the player, replacing the previous one, and stores
--- it in client.legs. The upper body bones are moved out of view.
+-- it in client.legs. The upper body bones are moved out of view and scaled down to nothing.
 -- @param client [Player normally the local player]
 function VisibleLegs:spawn_legs(client)
   if IsValid(client.legs) then
