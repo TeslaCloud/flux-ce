@@ -103,11 +103,11 @@ stored.player = {
     attack = ACT_GESTURE_RANGE_ATTACK_SHOTGUN
   },
   ar2 = {
-    [ACT_MP_STAND_IDLE] = { ACT_IDLE_AR2_RELAXED, ACT_IDLE_ANGRY_AR2 },
-    [ACT_MP_WALK]       = { ACT_WALK_AR2_RELAXED, ACT_WALK_AIM_AR2_STIMULATED },
-    [ACT_MP_RUN]        = { ACT_RUN_AR2_RELAXED, ACT_RUN_AIM_AR2_STIMULATED },
+    [ACT_MP_STAND_IDLE] = { 'Idle_Relaxed_AR2_1', 'idle_ar2_aim' },
+    [ACT_MP_WALK]       = { 'walk_AR2_Relaxed_all', 'walkAlertAim_AR2_ALL1' },
+    [ACT_MP_RUN]        = { 'run_AR2_Relaxed_all', 'run_alert_aiming_ar2_all' },
     attack = ACT_GESTURE_RANGE_ATTACK_AR2,
-    reload = ACT_GESTURE_RELOAD_AR2
+    reload = 'gesture_reload_ar2'
   },
   rpg = {
     [ACT_MP_STAND_IDLE]  = { ACT_IDLE_RPG_RELAXED, ACT_IDLE_ANGRY_RPG },
@@ -115,7 +115,7 @@ stored.player = {
     [ACT_MP_WALK]        = { ACT_WALK_RPG_RELAXED, ACT_WALK_RPG },
     [ACT_MP_CROUCHWALK]  = ACT_WALK_CROUCH_RPG,
     [ACT_MP_RUN]         = { ACT_RUN_RPG_RELAXED, ACT_RUN_RPG },
-    attack = ACT_GESTURE_RANGE_ATTACK_RPG
+    attack = 'gesture_shoot_rpg'
   },
   grenade = {
     attack = ACT_RANGE_ATTACK_THROW
