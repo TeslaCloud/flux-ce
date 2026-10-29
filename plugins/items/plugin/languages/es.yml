@@ -34,7 +34,11 @@ es:
       other_character: No puedes tocar un objeto que ha soltado otro de tus personajes.
       no_weapon_for_ammo: No llevas ningún arma que use esta munición.
       destroy_not_empty: Vacía este objeto antes de destruirlo.
+      nothing_to_treat: No tienes heridas que esto pueda tratar.
+      already_healing: Ya te estás curando.
   item:
+    action:
+      apply: Aplicar
     category:
       consumables: Consumibles
       equipment: Equipo
@@ -43,6 +47,7 @@ es:
       weapon: Arma
       ammo: Munición
       throwable: Arma arrojadiza
+      medical: Material médico
     slot:
       primary: Principal
       secondary: Secundaria

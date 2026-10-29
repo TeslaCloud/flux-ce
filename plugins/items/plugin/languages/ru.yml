@@ -34,7 +34,11 @@ ru:
       other_character: Вы не можете трогать предмет, выброшенный другим вашим персонажем.
       no_weapon_for_ammo: У вас нет оружия, которое использует эти боеприпасы.
       destroy_not_empty: Опустошите этот предмет, прежде чем уничтожать его.
+      nothing_to_treat: У вас нет ран, которые можно этим вылечить.
+      already_healing: Вы уже лечитесь.
   item:
+    action:
+      apply: Применить
     category:
       consumables: Расходные материалы
       equipment: Экипировка
@@ -43,6 +47,7 @@ ru:
       weapon: Оружие
       ammo: Боеприпасы
       throwable: Метательное
+      medical: Медицина
     slot:
       primary: Основное
       secondary: Второстепенное

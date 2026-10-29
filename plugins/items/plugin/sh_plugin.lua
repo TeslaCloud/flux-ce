@@ -5,7 +5,8 @@
 -- registers it under the id taken from the file name (`sh_test_item.lua` becomes
 -- `test_item`). An item class can build upon a base class from an `items/bases/` folder
 -- with `ItemBase:base_off`; this plugin comes with `ItemUsable`, `ItemConsumable`,
--- `ItemAmmo`, `ItemEquipable`, `ItemWeapon`, `ItemThrowable` and `ItemWearable`.
+-- `ItemMedical`, `ItemAmmo`, `ItemEquipable`, `ItemWeapon`, `ItemThrowable` and
+-- `ItemWearable`.
 --
 -- What players actually own are item instances, made out of a template by `Item.create`,
 -- each with its own numeric instance id and custom data. An instance either sits in an

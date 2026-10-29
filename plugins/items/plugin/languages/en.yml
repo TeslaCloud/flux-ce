@@ -34,7 +34,11 @@ en:
       other_character: You cannot touch an item that another character of yours has dropped.
       no_weapon_for_ammo: You are not carrying a weapon that uses this ammunition.
       destroy_not_empty: Empty this item before you destroy it.
+      nothing_to_treat: You have no wounds that this could treat.
+      already_healing: You are already healing.
   item:
+    action:
+      apply: Apply
     category:
       consumables: Consumables
       equipment: Equipment
@@ -43,6 +47,7 @@ en:
       weapon: Weapon
       ammo: Ammunition
       throwable: Throwable weapon
+      medical: Medical
     slot:
       primary: Primary
       secondary: Secondary

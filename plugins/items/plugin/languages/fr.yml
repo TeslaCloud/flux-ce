@@ -34,7 +34,11 @@ fr:
       other_character: "Vous ne pouvez pas toucher un objet qu'un autre de vos personnages a lâché."
       no_weapon_for_ammo: "Vous ne portez aucune arme qui utilise ces munitions."
       destroy_not_empty: "Videz cet objet avant de le détruire."
+      nothing_to_treat: "Vous n'avez aucune blessure que ceci pourrait soigner."
+      already_healing: "Vous êtes déjà en train de vous soigner."
   item:
+    action:
+      apply: "Appliquer"
     category:
       consumables: "Consommables"
       equipment: "Équipement"
@@ -43,6 +47,7 @@ fr:
       weapon: "Arme"
       ammo: "Munitions"
       throwable: "Arme de jet"
+      medical: "Médical"
     slot:
       primary: "Principale"
       secondary: "Secondaire"
