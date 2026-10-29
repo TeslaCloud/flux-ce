@@ -8,9 +8,9 @@
 -- The entity remembers the character that dropped it (`set_dropper`, `get_dropper`). It
 -- has the health that `ItemBase:get_entity_health` returns for its item: with health
 -- above 0 it takes damage and, once the health is gone, the item is destroyed, which the
--- `CanItemEntityTakeDamage` and `ItemEntityDestroyed` hooks tell about. It also calls the
--- `on_entity_think`, `on_entity_draw`, `on_entity_removed`, `on_entity_take_damage` and
--- `on_entity_destroyed` callbacks of its item.
+-- `CanItemEntityTakeDamage`, `AdjustItemEntityDamage` and `ItemEntityDestroyed` hooks take
+-- part in. It also calls the `on_entity_think`, `on_entity_draw`, `on_entity_removed`,
+-- `on_entity_take_damage` and `on_entity_destroyed` callbacks of its item.
 
 AddCSLuaFile()
 
@@ -188,8 +188,9 @@ if SERVER then
 
   --- Takes health off the item for the damage it receives and destroys the item once no
   -- health is left. The on_entity_take_damage callback of the item and the
-  -- 'CanItemEntityTakeDamage' hook can ignore the damage or change it. Both are asked even if
-  -- the item is not destructible, in which case nothing happens to it afterward.
+  -- 'CanItemEntityTakeDamage' hook can ignore the damage, and the 'AdjustItemEntityDamage'
+  -- hook can change it. All of them are asked even if the item is not destructible, in which
+  -- case nothing happens to it afterward.
   -- @param damage_info [CTakeDamageInfo]
   function ENT:OnTakeDamage(damage_info)
     local item_obj = self.item
@@ -201,16 +202,23 @@ if SERVER then
     end
 
     --- Asks whether an item entity takes damage. Called on the server when it is hit, after
-    -- the `on_entity_take_damage` callback of its item. Handlers can change the damage
-    -- through `damage_info`. It is run for every item entity, but the damage only takes
-    -- health off those that are destructible (`entity:is_destructible()`). The Items
-    -- plugin uses it to keep container items that have something inside from being
-    -- damaged.
+    -- the `on_entity_take_damage` callback of its item and before `AdjustItemEntityDamage`.
+    -- It is run for every item entity, but the damage only takes health off those that are
+    -- destructible (`entity:is_destructible()`). The Items plugin uses it to keep container
+    -- items that have something inside from being damaged.
     -- @param entity [Entity The `fl_item` entity]
     -- @param item_obj [Item The item instance tied to the entity]
     -- @param damage_info [CTakeDamageInfo The damage]
     -- @return [Boolean Return false to ignore the damage]
     if hook.Run('CanItemEntityTakeDamage', self, item_obj, damage_info) == false then return end
+
+    --- Lets plugins change the damage an item entity takes once `CanItemEntityTakeDamage`
+    -- has allowed it. Every handler may change the damage in place, so a handler returns
+    -- nothing. Damage that is not above 0 takes no health off the item.
+    -- @param entity [Entity The `fl_item` entity]
+    -- @param item_obj [Item The item instance tied to the entity]
+    -- @param damage_info [CTakeDamageInfo The damage, changed in place]
+    hook.Run('AdjustItemEntityDamage', self, item_obj, damage_info)
 
     if !self:is_destructible() then return end
 

@@ -351,8 +351,8 @@ function PickupObjects:drop_entity(actor, forced)
 end
 
 --- Makes a player throw the entity they hold in the direction they are looking.
--- The PlayerCanThrowObject hook can veto the throw and change its force, and the
--- PlayerCanDropObject hook can veto it as well. The force is scaled with the mass of the entity
+-- The PlayerCanThrowObject hook can veto the throw, the AdjustThrowForce hook changes its
+-- force, and the PlayerCanDropObject hook can veto it as well. The force is scaled with the mass of the entity
 -- the way the engine does it for objects carried with the use key, by 0.5 for half a
 -- kilogram and less up to 4 for 15 kilograms and more, and is spread over the physics
 -- objects of the entity.
@@ -370,17 +370,23 @@ function PickupObjects:throw_entity(actor)
     direction = actor:GetAimVector()
   }
 
-  --- Asks whether a player may throw the object they hold, and lets plugins change the
-  -- throw. Called on the server when the player presses primary attack while holding an
-  -- object, before PlayerCanDropObject. Nothing happens if the throw is prevented or its force
-  -- is not positive: the player keeps holding the object.
+  --- Asks whether a player may throw the object they hold. Called on the server when the
+  -- player presses primary attack while holding an object, before `AdjustThrowForce` and
+  -- PlayerCanDropObject. If the throw is prevented, the player keeps holding the object.
+  -- @param actor [Player The player throwing the object]
+  -- @param ent [Entity The object being thrown]
+  -- @return [Boolean Return false to prevent the throw]
+  if hook.Run('PlayerCanThrowObject', actor, ent) == false then return false end
+
+  --- Lets plugins change a throw once `PlayerCanThrowObject` has allowed it. Every handler
+  -- may change the table, so a handler returns nothing. A force that is not positive cancels
+  -- the throw: the player keeps holding the object.
   -- @param actor [Player The player throwing the object]
   -- @param ent [Entity The object being thrown]
   -- @param info [Map Modified in place: force (Number the pickup_throw_force config to
   --   begin with, before it is scaled with the mass of the object) and direction (Vector the
   --   aim vector of the player)]
-  -- @return [Boolean Return false to prevent the throw]
-  if hook.Run('PlayerCanThrowObject', actor, ent, info) == false then return false end
+  hook.Run('AdjustThrowForce', actor, ent, info)
 
   local force = tonumber(info.force) or 0
 

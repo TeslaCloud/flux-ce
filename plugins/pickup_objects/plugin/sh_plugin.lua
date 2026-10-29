@@ -16,7 +16,8 @@
 -- and `pickup_drag_ragdolls` (false) turns the dragging of ragdolls on.
 --
 -- Plugins take part through the `PlayerCanPickupObject`, `PlayerCanDropObject`,
--- `PlayerCanThrowObject`, `PlayerCanDragRagdoll` and `AdjustPickupMassLimit` hooks. What is held
+-- `PlayerCanThrowObject`, `PlayerCanDragRagdoll`, `AdjustThrowForce` and
+-- `AdjustPickupMassLimit` hooks. What is held
 -- and by whom is answered by `Player:get_holding_entity`, `Entity:get_holder` and
 -- `Player:get_dragger`, and the functions of the `PickupObjects` global make a player pick
 -- up, drop or throw an entity. All of it is serverside.
