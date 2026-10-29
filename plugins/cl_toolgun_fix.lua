@@ -113,7 +113,7 @@ function PLUGIN:FLInitPostEntity()
       if name == 'info' then
         text_table.text = tool_object:GetHelpText()
       else
-        text_table.text = '#tool.'..mode..'.'..name
+        text_table.text = !is_flux and '#tool.'..mode..'.'..name or t('tool.'..mode..'.'..name)
       end
 
       text_table.pos = { x + s(21), y + h2 }
