@@ -73,3 +73,7 @@ es:
       right_arm: Brazo derecho
       left_leg: Pierna izquierda
       right_leg: Pierna derecha
+  permission:
+    view_damage_logs:
+      name: Ver registros de daño
+      description: Muestra las entradas del registro de daños y muertes en la consola del jugador.

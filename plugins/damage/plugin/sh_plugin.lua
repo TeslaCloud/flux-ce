@@ -39,10 +39,5 @@ require_relative 'sv_hooks'
 --- Registers the 'view_damage_logs' permission, which sends the damage and kill log entries
 -- to the console of the player.
 function Damage:RegisterPermissions()
-  Bolt:register_permission(
-    'view_damage_logs',
-    'View damage logs',
-    'Prints the damage and kill log entries to the console of the player.',
-    'permission.categories.administration'
-  )
+  Bolt:register_permission('view_damage_logs', nil, nil, 'permission.categories.administration')
 end

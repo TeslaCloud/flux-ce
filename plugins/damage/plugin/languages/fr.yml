@@ -73,3 +73,7 @@ fr:
       right_arm: "Bras droit"
       left_leg: "Jambe gauche"
       right_leg: "Jambe droite"
+  permission:
+    view_damage_logs:
+      name: "Voir les journaux de dégâts"
+      description: "Affiche les entrées du journal des dégâts et des morts dans la console du joueur."

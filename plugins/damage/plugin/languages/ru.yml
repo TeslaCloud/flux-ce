@@ -73,3 +73,7 @@ ru:
       right_arm: Правая рука
       left_leg: Левая нога
       right_leg: Правая нога
+  permission:
+    view_damage_logs:
+      name: Просмотр журнала урона
+      description: Выводит записи журнала урона и убийств в консоль игрока.

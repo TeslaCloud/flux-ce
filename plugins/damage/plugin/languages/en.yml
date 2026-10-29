@@ -73,3 +73,7 @@ en:
       right_arm: Right arm
       left_leg: Left leg
       right_leg: Right leg
+  permission:
+    view_damage_logs:
+      name: View damage logs
+      description: Prints the damage and kill log entries to the console of the player.
