@@ -217,9 +217,9 @@ function Bolt:RegisterConditions()
   })
 end
 
---- Registers the built-in permissions: tools, spawning, voice, context menu, management of
--- permissions, configs and plugins, and the staff / admin / super admin compatibility
--- levels.
+--- Registers the built-in permissions: tools, spawning, voice, context menu, noclip,
+-- management of permissions, configs and plugins, and the staff / admin / super admin
+-- compatibility levels.
 function Bolt:RegisterPermissions()
   Bolt:register_permission(
     'physgun',
@@ -299,6 +299,12 @@ function Bolt:RegisterPermissions()
     'context_menu',
     'Context Menu',
     'Grants access to the context menu, to the properties of entities and to driving them.',
+    'permission.categories.general'
+  )
+  Bolt:register_permission(
+    'noclip',
+    'Noclip',
+    'Lets the player use observer mode / noclip.',
     'permission.categories.general'
   )
 
