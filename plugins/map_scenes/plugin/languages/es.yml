@@ -24,3 +24,7 @@ es:
     mapscene:
       title: Escena del mapa
       point: "Escena del mapa n.º {index}"
+  permission:
+    manage_map_scenes:
+      name: "Gestionar escenas del mapa"
+      description: "Da acceso para gestionar las escenas del mapa."

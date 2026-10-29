@@ -24,3 +24,7 @@ fr:
     mapscene:
       title: "Scène de carte"
       point: "Scène de carte n° {index}"
+  permission:
+    manage_map_scenes:
+      name: "Gérer les scènes de la carte"
+      description: "Permet de gérer les scènes de la carte."

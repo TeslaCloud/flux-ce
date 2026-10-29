@@ -24,3 +24,7 @@ ru:
     mapscene:
       title: Точка камеры
       point: "Точка камеры №{index}"
+  permission:
+    manage_map_scenes:
+      name: "Управление сценами карты"
+      description: "Дает доступ к управлению сценами карты."

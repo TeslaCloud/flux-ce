@@ -24,3 +24,7 @@ en:
     mapscene:
       title: Mapscene
       point: "Mapscene #{index}"
+  permission:
+    manage_map_scenes:
+      name: "Manage map scenes"
+      description: "Grants access to manage map scenes."

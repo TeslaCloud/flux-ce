@@ -7,7 +7,7 @@ local marker_color = Color('lightblue')
 local title_args = {}
 
 --- Draws a marker, a direction line and a label for every mapscene point while the local
--- player holds the mapscene tool and has the 'map_scenes' permission.
+-- player holds the mapscene tool and has the 'manage_map_scenes' permission.
 function MapScenes:RenderScreenspaceEffects()
   local client = PLAYER
 
@@ -19,7 +19,7 @@ function MapScenes:RenderScreenspaceEffects()
 
   local tool = client:GetTool()
 
-  if !tool or tool.Name != 'Mapscene tool' or IsValid(Flux.intro_panel) or !can('map_scenes') then return end
+  if !tool or tool.Name != 'Mapscene tool' or IsValid(Flux.intro_panel) or !can('manage_map_scenes') then return end
 
   local points = self.points
   local font = Theme.get_font('text_small')

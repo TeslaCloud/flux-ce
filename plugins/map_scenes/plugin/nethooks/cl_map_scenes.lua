@@ -1,5 +1,5 @@
---- Client side of the MapScenes plugin: keeps the local list of mapscene points in sync with
--- the server.
+--- Client-side receivers of the MapScenes plugin: they keep the local list of mapscene points
+-- in sync with the server.
 
 Cable.receive('fl_mapscene_load', function(points)
   MapScenes.points = points or {}
