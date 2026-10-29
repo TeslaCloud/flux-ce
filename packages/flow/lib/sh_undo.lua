@@ -33,11 +33,14 @@ function Flux.Undo:create(id, name)
   }
 end
 
---- Adds a function to call when the current undo entry is undone.
+--- Adds a function to call when the current undo entry is undone. Does nothing when no entry
+-- has been started with Flux.Undo#create since the last Flux.Undo#finish.
 -- @param callback [Function receives the undo entry (Map), followed by the extra arguments]
 -- @param ... [Vararg extra arguments for the callback]
 function Flux.Undo:add(callback, ...)
   local functions = buffer.functions
+
+  if !functions then return end
 
   functions[#functions + 1] = { func = callback, args = { ... } }
 end
