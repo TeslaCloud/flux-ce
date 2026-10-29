@@ -918,7 +918,9 @@ end
 -- its `profile`, defined in `config/profiles.yml` and preceded by those of the profiles it
 -- extends, then its `depends` and, in development, its `depends_development`, without the
 -- plugins named in `exclude`. Each plugin is listed once, where it is first named. A schema
--- without a profile depends on its `depends` alone.
+-- without a profile depends on its `depends` alone. The plugins load in the order of the list,
+-- each after the plugins of its own `depends`, so an excluded plugin still loads when a plugin
+-- that loads depends on it.
 -- ```
 -- Plugin.resolve_schema_depends({ profile = 'roleplay', depends = { 'radios' } }, profiles)
 -- -- { 'admin', '3dtexts', ..., 'raisegun', 'radios' }
@@ -926,14 +928,14 @@ end
 -- @param schema_yml [Map the parsed .yml file of the schema]
 -- @param profiles=nil [Map the parsed profiles, by profile ID]
 -- @param development=false [Boolean whether to add the depends_development plugins]
--- @return [List<String> the plugin names, nil when a profile is not defined; String the ID
---   of the missing profile]
+-- @return [List<String> the plugin names, nil when a profile is not defined or extends itself
+--   through its chain of `extends`; String the ID of that profile]
 function Plugin.resolve_schema_depends(schema_yml, profiles, development)
   local resolved, seen, excluded = {}, {}, {}
 
   profiles = profiles or {}
 
-  for _, name in ipairs(schema_yml.exclude or {}) do
+  for _, name in ipairs(istable(schema_yml.exclude) and schema_yml.exclude or {}) do
     excluded[name] = true
   end
 
@@ -949,10 +951,10 @@ function Plugin.resolve_schema_depends(schema_yml, profiles, development)
   local profile_id = schema_yml.profile
   local chain, visited = {}, {}
 
-  while profile_id and !visited[profile_id] do
+  while profile_id do
     local profile = profiles[profile_id]
 
-    if !istable(profile) then
+    if !istable(profile) or visited[profile_id] then
       return nil, profile_id
     end
 
@@ -1012,7 +1014,8 @@ function Plugin.include_schema()
     )
 
     if !deps then
-      long_error("Unable to load the schema! Unknown plugin profile: '"..tostring(missing_profile).."'!\n")
+      long_error("Unable to load the schema! The plugin profile '"..tostring(missing_profile)
+        .."' is not defined or extends itself!\n")
 
       return
     end
