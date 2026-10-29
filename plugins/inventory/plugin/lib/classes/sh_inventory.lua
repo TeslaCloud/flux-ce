@@ -9,10 +9,13 @@
 -- Inventories are created and changed on the server. Items are put in with
 -- `Inventory:add_item` or `Inventory:give_item`, taken out with the `take_` functions and
 -- moved with `Inventory:move_item` and `Inventory:transfer_item`, which run the
--- `CanItemMove`, `CanItemTransfer`, `PreItemTransfer` and `ItemTransferred` hooks. The
--- changes reach the clients when `Inventory:sync` is called, which sends the contents of
--- the inventory to the players listed as its receivers. On the client an inventory is
--- a copy of what was last synchronized, and `Inventory:create_panel` displays it.
+-- `CanItemMove`, `CanItemTransfer`, `PreItemTransfer` and `ItemTransferred` hooks.
+-- `Inventory:release_item` takes an item out for good between the last two hooks, to be
+-- dropped into the world, and `Inventory:destroy_item` also synchronizes the inventory and
+-- removes the item. The changes reach the clients when `Inventory:sync` is called, which
+-- sends the contents of the inventory to the players listed as its receivers. On the
+-- client an inventory is a copy of what was last synchronized, and `Inventory:create_panel`
+-- displays it.
 --
 -- Other fields: `owner` is the player or entity the inventory belongs to, and
 -- `instance_id` is the instance id of the container item it is the inside of. On the
@@ -800,6 +803,60 @@ if SERVER then
     return self:take_item_table(Item.find_instance_by_id(instance_id))
   end
 
+  --- Takes an item out of the inventory for good, to be dropped into the world or removed,
+  -- between the `PreItemTransfer` and `ItemTransferred` hooks. An item that a
+  -- `PreItemTransfer` handler takes out of the inventory by itself is left alone. Does not
+  -- synchronize the inventory, so that a caller that releases several items syncs once.
+  -- @param item_obj [Item]
+  -- @return [Boolean whether the item has been taken out]
+  -- @see [Inventory#destroy_item]
+  function Inventory:release_item(item_obj)
+    --- Called on the server right before an item leaves its inventory for good: when it is
+    -- dropped into the world, used up, destroyed, sold or spent. `Inventory:transfer_item`
+    -- runs the same hook for a transfer between two inventories.
+    -- @param item_obj [Item The item that is about to leave]
+    -- @param new_inventory [Inventory Always nil here: the item does not go to another
+    --   inventory]
+    -- @param old_inventory [Inventory The inventory the item is in]
+    hook.Run('PreItemTransfer', item_obj, nil, self)
+
+    if item_obj.inventory_id != self.id or !self:take_item_table(item_obj) then
+      return false
+    end
+
+    --- Called on the server right after an item has left its inventory for good, before it
+    -- is spawned in the world or removed. `Inventory:transfer_item` runs the same hook for
+    -- a transfer between two inventories.
+    -- @param item_obj [Item The item that has left]
+    -- @param new_inventory [Inventory Always nil here]
+    -- @param old_inventory [Inventory The inventory the item was in]
+    hook.Run('ItemTransferred', item_obj, nil, self)
+
+    return true
+  end
+
+  --- Takes an item out of the inventory with `Inventory:release_item`, synchronizes the
+  -- inventory and removes the item instance. Nothing is removed when the item could not be
+  -- taken out.
+  -- ```
+  -- if !inventory:destroy_item(item_obj) then
+  --   return false
+  -- end
+  -- ```
+  -- @param item_obj [Item]
+  -- @return [Boolean whether the item has been removed]
+  function Inventory:destroy_item(item_obj)
+    local released = self:release_item(item_obj)
+
+    self:sync()
+
+    if released then
+      Item.remove(item_obj)
+    end
+
+    return released
+  end
+
   --- @warning [Internal]
   -- Move the item inside the inventory.
   -- @param instance_id [Number]
@@ -959,10 +1016,10 @@ if SERVER then
     --- Called on the server right before an item changes its inventory.
     -- Besides a transfer between two inventories, as here, the Inventory plugin runs it
     -- when a player picks an item up from the world (without `old_inventory`, and only
-    -- if the item fits) and when an item is dropped or removed after
-    -- use (with nil as `new_inventory`). The Inventory plugin uses it to call the
-    -- `on_transfer` callback of the item, which is how equipable items get equipped and
-    -- unequipped.
+    -- if the item fits), and `Inventory:release_item` runs it when an item leaves its
+    -- inventory for good (with nil as `new_inventory`). The Inventory plugin uses it to
+    -- call the `on_transfer` callback of the item, which is how equipable items get
+    -- equipped and unequipped.
     -- @param item_obj [Item The item that is about to be moved]
     -- @param new_inventory [Inventory The inventory the item goes to, or nil if it leaves
     --   for the world or is removed]
@@ -1015,8 +1072,9 @@ if SERVER then
 
     --- Called on the server right after an item has changed its inventory. It is run in
     -- the same cases as `PreItemTransfer`: a transfer between two inventories, as here, a
-    -- pickup from the world (without `old_inventory`, and only if the item did fit) and a
-    -- drop or a removal after use (with nil as `new_inventory`).
+    -- pickup from the world (without `old_inventory`, and only if the item did fit) and an
+    -- item leaving its inventory for good through `Inventory:release_item` (with nil as
+    -- `new_inventory`).
     -- @param item_obj [Item The item that has been moved]
     -- @param new_inventory [Inventory The inventory the item is in now, or nil if it has
     --   left for the world or has been removed]
@@ -1113,7 +1171,7 @@ if SERVER then
   -- The server closes an inventory for the receivers that fail this check.
   -- @param receiver [Player]
   -- @return [Boolean]
-  -- @see [Inventories.is_in_reach]
+  -- @see [Player#is_in_reach]
   function Inventory:can_be_viewed_by(receiver)
     local owner = self.owner
 
@@ -1129,14 +1187,14 @@ if SERVER then
       end
 
       if IsValid(item_obj.entity) then
-        return Inventories.is_in_reach(receiver, item_obj.entity)
+        return receiver:is_in_reach(item_obj.entity)
       end
 
       return receiver:has_item_by_id(self.instance_id)
     end
 
     if owner != nil then
-      return Inventories.is_in_reach(receiver, owner)
+      return receiver:is_in_reach(owner)
     end
 
     return true

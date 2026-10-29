@@ -29,7 +29,7 @@ function Vendors:OneSecond()
       self.sessions[actor] = nil
     elseif !self:is_vendor(session.vendor) then
       self:close(actor, false, true)
-    elseif !actor:Alive() or !Inventories.is_in_reach(actor, session.vendor) then
+    elseif !actor:is_in_reach(session.vendor) then
       self:close(actor)
     end
   end

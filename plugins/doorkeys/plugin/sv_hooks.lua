@@ -84,14 +84,7 @@ Cable.receive('fl_key_copy', function(actor, instance_id)
 
   if !give_new_item(actor, item_obj) then return end
 
-  hook.Run('PreItemTransfer', blank_item, nil, blank_inventory)
-
-  blank_inventory:take_item_by_id(blank_item.instance_id)
-  blank_inventory:sync()
-
-  hook.Run('ItemTransferred', blank_item, nil, blank_inventory)
-
-  Item.remove(blank_item)
+  blank_inventory:destroy_item(blank_item)
 
   actor:notify('notification.key.create')
 end)

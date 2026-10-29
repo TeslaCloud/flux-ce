@@ -126,7 +126,7 @@ end
 function Vendors:open(actor, vendor)
   if !IsValid(actor) or !actor:IsPlayer() or !self:is_vendor(vendor) then return false end
   if !actor:Alive() or !actor:is_character_loaded() or !actor:can_contain_money() then return false end
-  if !Inventories.is_in_reach(actor, vendor) then return false end
+  if !actor:is_in_reach(vendor) then return false end
 
   local cur_time = CurTime()
 
@@ -194,7 +194,7 @@ function Vendors:check_session(actor, vendor)
 
   if !session or !self:is_vendor(vendor) or session.vendor != vendor then return end
 
-  if !actor:Alive() or !Inventories.is_in_reach(actor, vendor) or !self:can_trade(actor, vendor) then
+  if !actor:is_in_reach(vendor) or !self:can_trade(actor, vendor) then
     self:close(actor)
 
     return

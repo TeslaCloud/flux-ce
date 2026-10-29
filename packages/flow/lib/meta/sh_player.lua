@@ -330,6 +330,28 @@ function player_meta:running()
   return self:GetVelocity():Length2DSqr() > min_speed * min_speed
 end
 
+--- Checks whether the player is alive and close enough to an entity to use it: the nearest
+-- point of the bounds of the entity has to be within the distance of the eyes of the player.
+-- ```
+-- if !actor:is_in_reach(entity) then
+--   return false, 'error.too_far'
+-- end
+-- ```
+-- @param entity [Entity]
+-- @param distance=128 [Number how far the player reaches, in units]
+-- @return [Boolean false if the entity is invalid, too far away, or the player is dead]
+function player_meta:is_in_reach(entity, distance)
+  if !IsValid(entity) or !self:Alive() then
+    return false
+  end
+
+  distance = distance or 128
+
+  local eye_pos = self:EyePos()
+
+  return eye_pos:DistToSqr(entity:NearestPoint(eye_pos)) <= distance * distance
+end
+
 --- Checks whether the player has a permission. The decision is made by the
 -- 'PlayerHasPermission' hook, which admin plugins implement.
 -- ```

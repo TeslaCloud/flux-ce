@@ -305,13 +305,7 @@ function Inventories:PlayerDropItem(actor, instance_ids)
     --   come after this one are not dropped either]
     if hook.Run('PlayerCanDropItem', actor, item_obj) == false then break end
 
-    hook.Run('PreItemTransfer', item_obj, nil, inventory)
-
-    if item_obj.inventory_id != inventory.id then continue end
-
-    inventory:take_item_by_id(instance_id)
-
-    hook.Run('ItemTransferred', item_obj, nil, inventory)
+    if !inventory:release_item(item_obj) then continue end
 
     if drop_near then
       Item.spawn(trace.HitPos + Vector(0, 0, 5) * index, Angle(0, 0, 0), item_obj, actor)
@@ -516,15 +510,10 @@ function Inventories:PlayerUseItem(actor, item_obj, ...)
   local inventory = !IsValid(item_obj.entity) and Inventories.find(item_obj.inventory_id)
 
   if inventory then
-    hook.Run('PreItemTransfer', item_obj, nil, inventory)
-
-    inventory:take_item_by_id(item_obj.instance_id)
-    inventory:sync()
-
-    hook.Run('ItemTransferred', item_obj, nil, inventory)
+    inventory:destroy_item(item_obj)
+  else
+    Item.remove(item_obj)
   end
-
-  Item.remove(item_obj)
 end
 
 --- Tells the client to rebuild the player model preview when a wearable item is equipped.

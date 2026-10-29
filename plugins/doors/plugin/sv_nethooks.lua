@@ -24,7 +24,7 @@ local function accept_request(actor, entity)
     return false
   end
 
-  if !Doors:is_in_reach(actor, entity) then
+  if !actor:is_in_reach(entity, Doors.use_distance) then
     actor:notify('error.door.too_far')
 
     return false
@@ -37,7 +37,7 @@ end
 
 Cable.receive('fl_send_door_data', function(actor, entity, id, data)
   if actor:can('manage_doors') and isentity(entity) and IsValid(entity) and entity:is_door()
-  and Doors:is_in_reach(actor, entity) then
+  and actor:is_in_reach(entity, Doors.use_distance) then
     local property = Doors.properties[id]
 
     if property and property.on_load then
@@ -47,7 +47,7 @@ Cable.receive('fl_send_door_data', function(actor, entity, id, data)
 end)
 
 Cable.receive('fl_lock_door', function(actor, entity, lock)
-  if isentity(entity) and IsValid(entity) and entity:is_door() and Doors:is_in_reach(actor, entity)
+  if isentity(entity) and IsValid(entity) and entity:is_door() and actor:is_in_reach(entity, Doors.use_distance)
   and hook.Run('PlayerCanLockDoor', actor, entity) then
     if !Doors:player_lock_door(actor, entity, tobool(lock)) then
       actor:notify('error.cant_now')
@@ -57,7 +57,7 @@ end)
 
 Cable.receive('fl_send_door_conditions', function(actor, entity, conditions)
   if actor:can('manage_doors') and isentity(entity) and IsValid(entity) and entity:is_door()
-  and istable(conditions) and Doors:is_in_reach(actor, entity) then
+  and istable(conditions) and actor:is_in_reach(entity, Doors.use_distance) then
     entity.conditions = conditions
   end
 end)

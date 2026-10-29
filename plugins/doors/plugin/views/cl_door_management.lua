@@ -112,9 +112,8 @@ function PANEL:check_door()
   if door == nil then return end
 
   local client = PLAYER
-  local reach = Doors.use_distance
 
-  if !IsValid(door) or !IsValid(client) or client:GetPos():DistToSqr(door:GetPos()) > reach * reach then
+  if !IsValid(client) or !client:is_in_reach(door, Doors.use_distance) then
     self:safe_remove()
   end
 end

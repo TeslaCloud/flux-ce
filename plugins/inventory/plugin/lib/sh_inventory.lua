@@ -37,8 +37,6 @@ function Inventories.find(id)
 end
 
 if SERVER then
-  local reach = 128
-
   --- Puts items that have been loaded from the database where they belong: items inside
   -- of a container item into the inventory of the container item, which is created if
   -- needed, and items of a character into the inventory of the player of the type they
@@ -92,22 +90,6 @@ if SERVER then
     end
 
     return unplaced
-  end
-
-  --- Checks whether a player is close enough to an entity to use an inventory that belongs
-  -- to it: the player has to be alive, and the nearest point of the entity's bounds has to
-  -- be within 128 units of their eyes. Server-side only.
-  -- @param actor [Player]
-  -- @param entity [Entity]
-  -- @return [Boolean false if the entity is invalid, too far away, or the player is dead]
-  function Inventories.is_in_reach(actor, entity)
-    if !IsValid(entity) or !actor:Alive() then
-      return false
-    end
-
-    local eye_pos = actor:EyePos()
-
-    return eye_pos:DistToSqr(entity:NearestPoint(eye_pos)) <= reach * reach
   end
 end
 
@@ -724,7 +706,7 @@ do
     --- Opens all the inventories the other player has. The server closes them again as soon
     -- as the other player is out of reach; call close_player_inventory to close them earlier.
     -- @param target [Player]
-    -- @see [Inventories.is_in_reach]
+    -- @see [Player#is_in_reach]
     function player_meta:open_player_inventory(target)
       local inventory_ids = {}
 

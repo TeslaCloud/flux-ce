@@ -6,17 +6,6 @@ local pairs = pairs
 
 Cable.check_networked_string('fl_door_info')
 
---- Checks whether a player is close enough to a door to use its menu, lock it, trade it,
--- manage it or edit it: within `Doors.use_distance` of it.
--- @param actor [Player]
--- @param entity [Entity the door]
--- @return [Boolean]
-function Doors:is_in_reach(actor, entity)
-  local reach = self.use_distance
-
-  return actor:GetPos():DistToSqr(entity:GetPos()) <= reach * reach
-end
-
 --- Writes the registered properties, the conditions and the ownership of every door on the
 -- map to the plugin data storage.
 function Doors:save()

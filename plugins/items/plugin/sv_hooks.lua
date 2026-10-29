@@ -223,33 +223,9 @@ function Items:PlayerDestroyItem(actor, item_obj)
     return false
   end
 
-  --- Called on the server right before an item leaves its inventory for good: here when
-  -- a player destroys it, and also when a dying player drops their equipped weapon
-  -- items. The Inventory plugin runs the same hook for every other transfer and handles
-  -- it by calling the `on_transfer` callback of the item, which is how an equipped item
-  -- gets unequipped. A handler may take the item out of the inventory by itself.
-  -- @param item_obj [Item The item that is about to leave]
-  -- @param new_inventory [Inventory Always nil here: the item does not go to another
-  --   inventory]
-  -- @param old_inventory [Inventory The inventory the item is in]
-  hook.Run('PreItemTransfer', item_obj, nil, inventory)
-
-  if item_obj.inventory_id == inventory.id then
-    inventory:take_item_by_id(item_obj.instance_id)
+  if !inventory:destroy_item(item_obj) then
+    return false
   end
-
-  inventory:sync()
-
-  --- Called on the server right after an item has left its inventory for good: here when
-  -- a player has destroyed it, in which case the instance is removed right afterward, and
-  -- also when a dying player has dropped an equipped weapon item, before its entity is
-  -- spawned. The Inventory plugin runs the same hook for every other transfer.
-  -- @param item_obj [Item The item that has left]
-  -- @param new_inventory [Inventory Always nil here]
-  -- @param old_inventory [Inventory The inventory the item was in]
-  hook.Run('ItemTransferred', item_obj, nil, inventory)
-
-  Item.remove(item_obj)
 
   --- Called on the server after a player has destroyed an item through its menu. The
   -- item has been taken out of its inventory and its instance has been removed by now,
@@ -324,13 +300,7 @@ function Items:drop_weapons(victim)
       -- @param item_obj [Item The item that is about to be dropped]
       -- @return [Boolean Return false to prevent the drop]
       if can_drop and hook.Run('PlayerCanDropItem', victim, entry) != false then
-        hook.Run('PreItemTransfer', entry, nil, inventory)
-
-        if entry.inventory_id == inventory.id then
-          inventory:take_item_by_id(entry.instance_id)
-
-          hook.Run('ItemTransferred', entry, nil, inventory)
-
+        if inventory:release_item(entry) then
           local offset = Vector(0, 0, 16 + #dropped * 8)
           local entity = Item.spawn(position + offset, Angle(0, math.random(0, 359), 0), entry, victim)
 

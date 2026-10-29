@@ -67,7 +67,8 @@ function PlayerSearch:PlayerCanStartSearch(actor, target)
   end
 end
 
---- Requires the searched player to be a valid non-bot player within 100 units who is facing away.
+--- Requires the searcher to be alive and the searched player to be a valid non-bot player
+-- within 100 units of the eyes of the searcher who is facing away.
 -- @param actor [Player player doing the search]
 -- @param target [Player player being searched]
 -- @return [Boolean false and String error phrase if the search is not allowed, nil otherwise]
@@ -84,7 +85,7 @@ function PlayerSearch:PlayerCanSearch(actor, target)
     return false, 'error.must_not_look'
   end
 
-  if actor:GetPos():DistToSqr(target:GetPos()) > 10_000 then
+  if !actor:is_in_reach(target, 100) then
     return false, 'error.too_far'
   end
 end

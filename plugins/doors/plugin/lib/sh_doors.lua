@@ -23,7 +23,8 @@ local title_types = Doors.title_types or {}
 Doors.properties = properties
 Doors.title_types = title_types
 
---- How far from a door (in units) a player can open its menu, lock or unlock it, buy, sell
+--- How far from a door (in units, from the eyes of the player to the nearest point of the
+-- door, see `Player:is_in_reach`) a player can open its menu, lock or unlock it, buy, sell
 -- and manage it and, for staff, edit its settings. A schema may change it. The longest
 -- text an owner can put on a door and how many characters can have access to one door are
 -- the door_text_length and door_access_entries configs.

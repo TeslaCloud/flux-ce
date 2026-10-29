@@ -235,23 +235,13 @@ function Vendors:sell(actor, vendor, instance_id)
     end
   end
 
-  hook.Run('PreItemTransfer', item_obj, nil, inventory)
-
-  if !inventory:take_item_by_id(instance_id) then
+  if !inventory:destroy_item(item_obj) then
     if paid > 0 then
       actor:take_money(currency, paid)
     end
 
-    inventory:sync()
-
     return false
   end
-
-  inventory:sync()
-
-  hook.Run('ItemTransferred', item_obj, nil, inventory)
-
-  Item.remove(item_obj)
 
   if data.money then
     data.money = self:round_money(currency, math.max(data.money - paid, 0))

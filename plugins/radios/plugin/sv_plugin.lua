@@ -261,7 +261,7 @@ function Communications.can_tune(actor, item_obj)
   local item_entity = item_obj.entity
 
   if IsValid(item_entity) then
-    return Inventories.is_in_reach(actor, item_entity)
+    return actor:is_in_reach(item_entity)
   end
 
   return actor:has_item_by_id(item_obj.instance_id) == true

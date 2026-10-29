@@ -365,7 +365,7 @@ function Container:can_open(actor, entity)
     return false
   end
 
-  if !Inventories.is_in_reach(actor, entity) then
+  if !actor:is_in_reach(entity) then
     return false, 'error.too_far'
   end
 
