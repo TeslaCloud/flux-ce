@@ -2,14 +2,13 @@
 -- it again.
 
 --- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
--- hidden from players without the 'moderate' permission. The previous position, angles,
--- color and move type are kept in actor.observer_data.
+-- hidden from players without the 'moderate' permission. The previous position, angles and
+-- move type are kept in actor.observer_data, the visible color by `Player:hide_body`.
 -- @param actor [Player]
 function Observer:start_observing(actor)
   actor.observer_data = {
     position = actor:GetPos(),
     angles = actor:EyeAngles(),
-    color = actor:GetColor(),
     move_type = actor:GetMoveType(),
     --- Called on the server when a player enters observer mode, to decide whether they
     -- are put back where they entered it once they leave.
@@ -37,7 +36,7 @@ function Observer:stop_observing(actor, should_reset)
 
   if data then
     actor:SetMoveType(data.move_type or MOVETYPE_WALK)
-    actor:show_body(data.color)
+    actor:show_body()
     actor:GodDisable()
 
     if should_reset != false and data.should_reset then

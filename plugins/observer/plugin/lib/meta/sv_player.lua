@@ -48,8 +48,14 @@ function player_meta:update_hidden_players()
   end
 end
 
---- Makes the player invisible and not solid, without a shadow or a drawn weapon.
+--- Makes the player invisible and not solid, without a shadow or a drawn weapon. The color
+-- the player has while visible is kept for `Player:show_body` the first time they are hidden,
+-- so hiding a player who is hidden already keeps it.
 function player_meta:hide_body()
+  if !self.visible_color then
+    self.visible_color = self:GetColor()
+  end
+
   self:DrawWorldModel(false)
   self:DrawShadow(false)
   self:SetNoDraw(true)
@@ -57,11 +63,11 @@ function player_meta:hide_body()
   self:SetColor(invisible_color)
 end
 
---- Makes the player visible and solid again with the given color. The weapon is only drawn
--- again when the player carries nothing, since the engine drops the carried object as soon as
--- the weapon is drawn and draws the weapon by itself once the object is let go of.
--- @param color=color_white [Color the color to give the player]
-function player_meta:show_body(color)
+--- Makes the player visible and solid again with the color they had before
+-- `Player:hide_body`. The weapon is only drawn again when the player carries nothing, since
+-- the engine drops the carried object as soon as the weapon is drawn and draws the weapon by
+-- itself once the object is let go of.
+function player_meta:show_body()
   if !IsValid(self.holding_object) then
     self:DrawWorldModel(true)
   end
@@ -69,7 +75,11 @@ function player_meta:show_body(color)
   self:DrawShadow(true)
   self:SetNoDraw(false)
   self:SetNotSolid(false)
-  self:SetColor(color or color_white)
+
+  if self.visible_color then
+    self:SetColor(self.visible_color)
+    self.visible_color = nil
+  end
 end
 
 --- Makes a vanished player invisible and not solid again after they have respawned, unless
@@ -82,18 +92,16 @@ end
 
 --- Hides the player from everyone without the 'moderate' permission, or shows them again.
 -- A player in observer mode keeps the look observer mode gave them; anyone else is made
--- invisible and not solid, and gets their previous color back when they reappear. A player
+-- invisible and not solid, and gets their visible color back when they reappear. A player
 -- who leaves vanish while in observer mode stays hidden as an observer. Sets the player's
 -- is_vanished field and notifies nobody.
 -- @param should_vanish [Boolean true to hide the player, false to show them again]
 function player_meta:set_vanished(should_vanish)
   if !self:get_nv('observer') then
     if should_vanish then
-      self.old_color = self:GetColor()
-
       self:hide_body()
     else
-      self:show_body(self.old_color)
+      self:show_body()
     end
   end
 
