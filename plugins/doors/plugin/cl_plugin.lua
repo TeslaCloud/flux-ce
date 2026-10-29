@@ -91,7 +91,8 @@ end
 -- Nothing opens if there is nothing to offer.
 -- @param entity [Entity the door]
 -- @param can_lock [Boolean whether the player may lock and unlock the door]
--- @param conditions=nil [List condition nodes that are set on the door]
+-- @param conditions=nil [List condition nodes that are set on the door; sent only to staff
+--   with the 'manage_doors' permission]
 -- @param info=nil [Map what the server tells the player about the ownership of the door,
 --   see `Doors:get_menu_info`]
 function Doors:open_menu(entity, can_lock, conditions, info)

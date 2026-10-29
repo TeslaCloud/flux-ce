@@ -14,8 +14,9 @@ function Doors:SaveData()
 end
 
 --- Opens the door menu for the player if they are looking at a door within
--- `Doors.use_distance`. Along with the conditions of the door the client is sent what the
--- player may know about its ownership (see `Doors:get_menu_info`).
+-- `Doors.use_distance`. The client is sent what the player may know about the ownership of
+-- the door (see `Doors:get_menu_info`) and, for staff with the 'manage_doors' permission,
+-- the conditions of the door.
 -- @param actor [Player]
 function Doors:ShowSpare1(actor)
   local trace = actor:GetEyeTraceNoCursor()
@@ -32,8 +33,13 @@ function Doors:ShowSpare1(actor)
     -- @return [Boolean return true to allow it; the player may not lock the door when nothing
     --   is returned]
     local can_lock = hook.Run('PlayerCanLockDoor', actor, entity) or false
+    local conditions
 
-    Cable.send(actor, 'fl_door_menu', entity, can_lock, entity.conditions, self:get_menu_info(actor, entity))
+    if actor:can('manage_doors') then
+      conditions = entity.conditions
+    end
+
+    Cable.send(actor, 'fl_door_menu', entity, can_lock, conditions, self:get_menu_info(actor, entity))
   end
 end
 
