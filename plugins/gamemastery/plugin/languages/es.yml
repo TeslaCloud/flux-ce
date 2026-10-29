@@ -44,3 +44,7 @@ es:
       main_menu:
         return: Modo gamemaster
         create: Crear personaje de gamemaster
+  permission:
+    gamemastery:
+      name: "Gamemastery"
+      description: "Permite al jugador estar en el mundo sin personaje y jugar los personajes compartidos de gamemaster."

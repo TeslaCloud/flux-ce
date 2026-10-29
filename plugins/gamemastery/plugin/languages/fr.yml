@@ -44,3 +44,7 @@ fr:
       main_menu:
         return: "Mode maître du jeu"
         create: "Créer un personnage de maître du jeu"
+  permission:
+    gamemastery:
+      name: "Maîtrise du jeu"
+      description: "Permet au joueur d'être dans le monde sans personnage et de jouer les personnages partagés des maîtres du jeu."

@@ -67,12 +67,7 @@ Flux.Command:add_completer('gm_character', complete_gm_character)
 
 --- Registers the 'gamemastery' permission.
 function Gamemastery:RegisterPermissions()
-  Bolt:register_permission(
-    'gamemastery',
-    'Gamemastery',
-    'Lets the player be in the world without a character and play the shared gamemaster characters.',
-    'permission.categories.administration'
-  )
+  Bolt:register_permission('gamemastery', nil, nil, 'permission.categories.administration')
 end
 
 --- Lets gamemasters without an active character stay in the world.
