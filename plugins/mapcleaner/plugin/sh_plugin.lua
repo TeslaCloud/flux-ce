@@ -1,10 +1,10 @@
 --- Map Cleaner strips a map of the entities that get in the way of roleplay.
 -- Once the map has loaded, and again after every map cleanup, the plugin removes the
 -- entities created by the map whose class matches one of the patterns of the
--- 'remove_map_classes' config: health and suit chargers, weapons, ammo, health kits and
+-- 'mapcleaner_classes' config: health and suit chargers, weapons, ammo, health kits and
 -- batteries by default. A pattern is an entity class in which `*` stands for any number of
--- characters, so `weapon_*` covers every weapon. The 'remove_map_physics' config adds the
--- physics props of the map (`prop_physics*`) to that and 'remove_map_vehicles' its vehicles
+-- characters, so `weapon_*` covers every weapon. The 'mapcleaner_physics' config adds the
+-- physics props of the map (`prop_physics*`) to that and 'mapcleaner_vehicles' its vehicles
 -- (`prop_vehicle*`, which includes the seats built into the map); both are off by default.
 -- A change of these configs applies the next time the map is loaded or cleaned up.
 --
