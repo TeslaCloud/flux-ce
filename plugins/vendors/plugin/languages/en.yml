@@ -99,3 +99,7 @@ en:
       no_stock: I am out of those.
       broke: I cannot afford that.
       thanks: Thank you, come again.
+  permission:
+    manage_vendors:
+      name: Manage vendors
+      description: "Grants access to place, edit and remove vendors."

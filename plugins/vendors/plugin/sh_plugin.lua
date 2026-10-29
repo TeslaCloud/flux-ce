@@ -40,12 +40,7 @@ require_relative 'sv_hooks'
 
 --- Registers the 'manage_vendors' level design permission.
 function Vendors:RegisterPermissions()
-  Bolt:register_permission(
-    'manage_vendors',
-    'Manage vendors',
-    'Grants access to place, edit and remove vendors.',
-    'permission.categories.level_design'
-  )
+  Bolt:register_permission('manage_vendors', nil, nil, 'permission.categories.level_design')
 end
 
 --- Checks whether something is a vendor entity.

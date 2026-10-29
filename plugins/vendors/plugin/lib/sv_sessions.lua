@@ -15,7 +15,6 @@ local sessions = Vendors.sessions or {}
 Vendors.sessions = sessions
 
 local use_interval = 1
-local refresh_interval = 0.5
 
 Cable.check_networked_string('fl_vendor_open')
 Cable.check_networked_string('fl_vendor_update')
@@ -202,19 +201,3 @@ function Vendors:check_session(actor, vendor)
 
   return session
 end
-
-Cable.receive('fl_vendor_close', function(actor)
-  Vendors:close(actor, true)
-end)
-
-Cable.receive('fl_vendor_refresh', function(actor, vendor)
-  local cur_time = CurTime()
-
-  if actor.next_vendor_refresh and actor.next_vendor_refresh > cur_time then return end
-
-  actor.next_vendor_refresh = cur_time + refresh_interval
-
-  if Vendors:check_session(actor, vendor) then
-    Vendors:update_customers(vendor, actor)
-  end
-end)

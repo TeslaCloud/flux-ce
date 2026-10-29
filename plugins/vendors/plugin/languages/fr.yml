@@ -99,3 +99,7 @@ fr:
       no_stock: "Je n'en ai plus."
       broke: "Je n'ai pas les moyens de payer cela."
       thanks: "Merci, revenez quand vous voulez."
+  permission:
+    manage_vendors:
+      name: "Gérer les vendeurs"
+      description: "Permet de placer, de modifier et de retirer des vendeurs."

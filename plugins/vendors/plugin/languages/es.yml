@@ -99,3 +99,7 @@ es:
       no_stock: Se me han agotado.
       broke: No puedo permitirme eso.
       thanks: Gracias, vuelve pronto.
+  permission:
+    manage_vendors:
+      name: Gestionar vendedores
+      description: "Da acceso para colocar, editar y quitar vendedores."
