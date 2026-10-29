@@ -4,8 +4,9 @@
 -- table, registered with `Flux.Anim:register`, that maps movement states and weapon hold types
 -- to the activities or sequences of that kind of model. 'player' (the male citizen animations)
 -- and 'female' (the female citizen ones, which lack a few of the male activities) are the
--- built-in classes. A model without a class uses 'female' if its path contains 'female' and
--- 'player' otherwise. The tables are compiled on first use into a flat form,
+-- built-in classes, next to 'metrocop', 'combine_soldier', 'vortigaunt' and 'zombie' for the
+-- skeletons of the stock Half-Life 2 NPCs. A model without a class uses 'female' if its path
+-- contains 'female' and 'player' otherwise. The tables are compiled on first use into a flat form,
 -- returned by `Flux.Anim:get_table`, from which the animation hooks of Flux pick the idle,
 -- walk, run, crouch, jump, attack and reload animations of a player, depending on the weapon
 -- they hold (`Flux.Anim.get_weapon_hold_type`) and on whether it is raised. Models from a
