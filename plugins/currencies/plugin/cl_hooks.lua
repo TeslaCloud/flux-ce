@@ -111,11 +111,3 @@ function Currencies:create_panel(entity, parent)
 
   return money_panel
 end
-
-Cable.receive('fl_rebuild_currency_panel', function()
-  for _, money_panel in pairs(Flux.money_panels) do
-    if IsValid(money_panel) then
-      money_panel:rebuild()
-    end
-  end
-end)
