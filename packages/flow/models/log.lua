@@ -1,16 +1,18 @@
 --- Log entries, stored in the `logs` table of the database.
 -- The class methods record an entry and output it in one go: `Log:print` and
--- `Log:colored` write to the console, `Log:notify` notifies every player, `Log:to_discord`
--- pushes the last message to Discord webhooks and `Log:replicate` repeats the last
--- entry on the clients. They return the class, so the calls can be chained.
+-- `Log:colored` write to the console, `Log:notify` notifies every player and `Log:replicate`
+-- repeats the last entry on the clients. Every entry is also pushed with `Log:to_discord` to
+-- the Discord webhooks that accept its action. They return the class, so the calls can be
+-- chained.
 
 class 'Log' extends 'ActiveRecord::Base'
 
 local last_log
 local replication_data
 
---- Records a log entry. On the server the entry is saved to the logs table. The entry is
--- also remembered so that it can be passed on with Log:replicate.
+--- Records a log entry. On the server the entry is saved to the logs table and pushed to the
+-- Discord webhooks whose types include its action or 'all'. The entry is also remembered so
+-- that it can be passed on with Log:replicate.
 -- @param message [String text of the entry]
 -- @param action=nil [String type of the logged event; stored in snake_case]
 -- @param object=nil [String/Number who or what performed the action, e.g. a user ID]
@@ -30,6 +32,8 @@ function Log:write(message, action, object, subject, io)
       log.object = object
       log.subject = subject
     log:save()
+
+    self:to_discord(action, message)
   end
 
   replication_data = nil
