@@ -3,4 +3,3 @@ description: Advanced recognize system that allows players to introduce themselv
 author: TeslaCloud Studios
 depends:
   - characters
-  - rpcommands

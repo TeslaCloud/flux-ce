@@ -22,19 +22,19 @@
 --
 -- The plugin also keeps the completion of player arguments of commands from giving names
 -- away: players without the 'staff' permission are only offered the real names of the
--- characters they know by that name and of their own (see `Recognizes.complete_player`).
+-- characters they know by that name and of their own (see `Recognition.complete_player`).
 
-PLUGIN:set_global('Recognizes')
+PLUGIN:set_global('Recognition')
 
 --- The longest name a character can introduce themselves under, in characters. A schema
 -- may change it.
-Recognizes.max_name_length = Recognizes.max_name_length or 64
+Recognition.max_name_length = Recognition.max_name_length or 64
 
 --- Checks whether the recognition system is on (the `recog_enabled` config). While it is
 -- off everyone recognizes everyone and nobody can introduce themselves or forget anyone;
 -- the stored recognitions are kept.
 -- @return [Boolean]
-function Recognizes:is_enabled()
+function Recognition:is_enabled()
   return Config.get('recog_enabled') != false
 end
 
@@ -42,7 +42,7 @@ end
 -- their physical description in square brackets.
 -- @param target [Player]
 -- @return [String]
-function Recognizes:get_unrecognized_name(target)
+function Recognition:get_unrecognized_name(target)
   local description = ''
 
   if CLIENT or target:get_character() then
@@ -58,8 +58,8 @@ end
 -- @param viewer [Player player whose knowledge is asked about]
 -- @param target [Player player to name]
 -- @return [String the name, nil if the target is not a valid player]
--- @see [Recognizes#get_unrecognized_name]
-function Recognizes:get_known_name(viewer, target)
+-- @see [Recognition#get_unrecognized_name]
+function Recognition:get_known_name(viewer, target)
   local is_known, known_name = viewer:recognizes(target)
 
   if is_known then
@@ -69,8 +69,8 @@ function Recognizes:get_known_name(viewer, target)
   return self:get_unrecognized_name(target)
 end
 
-if Flux.Command:get_completer('player') != Recognizes.complete_player then
-  Recognizes.base_player_completer = Flux.Command:get_completer('player')
+if Flux.Command:get_completer('player') != Recognition.complete_player then
+  Recognition.base_player_completer = Flux.Command:get_completer('player')
 end
 
 --- Completes arguments of the 'player' type, wrapping the completer that was registered for
@@ -84,8 +84,8 @@ end
 -- @param args [List<String> the arguments typed before it]
 -- @param cmd [Command the command or subcommand the argument belongs to]
 -- @return [List<String> the names to suggest]
-function Recognizes.complete_player(actor, partial, args, cmd)
-  local base = Recognizes.base_player_completer
+function Recognition.complete_player(actor, partial, args, cmd)
+  local base = Recognition.base_player_completer
   local values = isfunction(base) and base(actor, partial, args, cmd) or {}
 
   if !IsValid(actor) or actor:can('staff') then
@@ -131,7 +131,7 @@ function Recognizes.complete_player(actor, partial, args, cmd)
   return allowed
 end
 
-Flux.Command:add_completer('player', Recognizes.complete_player)
+Flux.Command:add_completer('player', Recognition.complete_player)
 
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'

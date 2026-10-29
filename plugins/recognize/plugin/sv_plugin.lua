@@ -58,16 +58,17 @@ local function delete_rows(conditions, except_ids)
 end
 
 --- Returns the distance at which characters hear normal speech: the `talk_radius` config
--- of the RP Commands plugin, which introductions to a range of characters are measured by.
+-- of the RP Commands plugin, or 350 units without it; introductions to a range of characters are
+-- measured by it.
 -- @return [Number distance in units]
-function Recognizes:get_talk_radius()
+function Recognition:get_talk_radius()
   return tonumber(Config.get('talk_radius')) or 350
 end
 
 --- Networks the recognitions that the active character of a player has stored to that
 -- player alone, as the private 'fl_recognizes' variable of the player.
 -- @param owner [Player]
-function Recognizes:sync(owner)
+function Recognition:sync(owner)
   local character = owner:get_character()
   local names = {}
 
@@ -81,12 +82,12 @@ function Recognizes:sync(owner)
 end
 
 --- Removes stored recognitions from a character that is loaded. The networked variable of
--- its player is not updated: call `Recognizes:sync` afterwards if the character is active.
+-- its player is not updated: call `Recognition:sync` afterwards if the character is active.
 -- @param character [Character]
 -- @param target_id=nil [Number ID of the character to forget; nil forgets every character]
 -- @param name=nil [String only forget characters that are known by this name]
 -- @return [Number how many recognitions were removed]
-function Recognizes:remove_records(character, target_id, name)
+function Recognition:remove_records(character, target_id, name)
   local records = character and character.recognizes
 
   if !istable(records) then return 0 end
@@ -109,11 +110,11 @@ function Recognizes:remove_records(character, target_id, name)
 end
 
 --- Removes every stored recognition from a character that is loaded, with a single query.
--- The networked variable of its player is not updated: call `Recognizes:sync` afterwards
+-- The networked variable of its player is not updated: call `Recognition:sync` afterwards
 -- if the character is active.
 -- @param character [Character]
 -- @return [Number how many recognitions were removed]
-function Recognizes:clear_records(character)
+function Recognition:clear_records(character)
   local records = character and character.recognizes
 
   if !istable(records) then return 0 end
@@ -135,12 +136,12 @@ end
 -- or not, and those in the database.
 -- ```
 -- -- Everyone who knows the character by its real name forgets it.
--- Recognizes:forget_character(target:get_character_id(), target:name(true))
+-- Recognition:forget_character(target:get_character_id(), target:name(true))
 -- ```
 -- @param character_id [Number ID of the character to forget]
 -- @param name=nil [String only those who know the character by this name forget it]
 -- @return [Number how many characters of connected players have forgotten it]
-function Recognizes:forget_character(character_id, name)
+function Recognition:forget_character(character_id, name)
   character_id = tonumber(character_id)
 
   if !character_id then return 0 end
@@ -185,11 +186,11 @@ function Recognizes:forget_character(character_id, name)
 end
 
 --- Turns the name a player has asked to be known by into one that can be stored: control
--- characters become spaces, the name is trimmed and cut to `Recognizes.max_name_length`
+-- characters become spaces, the name is trimmed and cut to `Recognition.max_name_length`
 -- characters.
 -- @param name [String]
 -- @return [String the name, or nil if nothing is left of it or it is not valid UTF-8]
-function Recognizes:clean_name(name)
+function Recognition:clean_name(name)
   if !isstring(name) then return end
 
   name = string.Trim((name:gsub('%c', ' ')))
@@ -211,7 +212,7 @@ end
 -- told that they cannot do it now.
 -- @param actor [Player]
 -- @return [Boolean]
-function Recognizes:accept_request(actor)
+function Recognition:accept_request(actor)
   if !self:is_enabled() or !IsValid(actor) then return false end
 
   local cur_time = CurTime()
@@ -244,7 +245,7 @@ end
 --   the actor looks at if it is nil or false. A target that is no longer valid gets no
 --   introduction]
 -- @return [Boolean false if the request was not valid]
-function Recognizes:introduce(actor, kind, name, target)
+function Recognition:introduce(actor, kind, name, target)
   local real_name = actor:name(true)
   local radius = self:get_talk_radius()
   local targets = {}
@@ -329,7 +330,7 @@ end
 -- @param actor [Player player who wants to forget]
 -- @param target [Player player to forget]
 -- @return [Boolean whether the target was forgotten]
-function Recognizes:player_forget(actor, target)
+function Recognition:player_forget(actor, target)
   if !isentity(target) or !IsValid(target) or !target:IsPlayer() or actor == target then return false end
 
   local known_name = actor:get_recognize(target)

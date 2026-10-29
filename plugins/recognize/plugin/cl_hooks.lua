@@ -7,7 +7,7 @@
 -- @param _client [Player local player]
 -- @param bind [String bind that was pressed]
 -- @param _pressed [Boolean whether the key was pressed or released]
-function Recognizes:PlayerBindPress(_client, bind, _pressed)
+function Recognition:PlayerBindPress(_client, bind, _pressed)
   if bind:find('gm_showteam') and self:is_enabled() then
     local recognize_menu = vgui.Create('fl_recognize')
     recognize_menu:MakePopup()
@@ -21,7 +21,7 @@ end
 -- @param _y [Number y position of the info]
 -- @param _distance [Number distance to the player]
 -- @param lines [Table info lines to draw, keyed by line ID]
-function Recognizes:PreDrawPlayerInfo(target, _x, _y, _distance, lines)
+function Recognition:PreDrawPlayerInfo(target, _x, _y, _distance, lines)
   if !PLAYER:recognizes(target) and lines['name'] then
     lines['name'].text = target:get_gender() == 'female' and t'ui.hud.stranger_female' or t'ui.hud.stranger_male'
   end
@@ -30,7 +30,7 @@ end
 --- Returns the name the local player knows a player by, or the start of their physical description.
 -- @param target [Player player to get the name of]
 -- @return [String displayed name]
-function Recognizes:GetPlayerName(target)
+function Recognition:GetPlayerName(target)
   if !IsValid(PLAYER) then return end
 
   return self:get_known_name(PLAYER, target)
@@ -40,7 +40,7 @@ end
 -- @param _target [Player player whose name is processed]
 -- @param message_data [Table chat message data]
 -- @return [Boolean false for non-IC messages, nil otherwise]
-function Recognizes:ShouldProcessPlayerName(_target, message_data)
+function Recognition:ShouldProcessPlayerName(_target, message_data)
   if !message_data.ic then
     return false
   end
@@ -50,7 +50,7 @@ end
 -- @param _card [Panel character card]
 -- @param target [Player player the card belongs to]
 -- @return [Boolean false if the player is not recognized, nil otherwise]
-function Recognizes:IsCharacterCardVisible(_card, target)
+function Recognition:IsCharacterCardVisible(_card, target)
   if !PLAYER:recognizes(target) then
     return false
   end
@@ -61,7 +61,7 @@ end
 -- is added while the recognition system is off.
 -- @param menu [Panel interaction menu]
 -- @param target [Player player the menu was opened for]
-function Recognizes:CreatePlayerInteractions(menu, target)
+function Recognition:CreatePlayerInteractions(menu, target)
   if !self:is_enabled() then return end
 
   local recognize_menu, recognize_menu_option = menu:AddSubMenu(t'ui.recognize.title')
@@ -120,7 +120,7 @@ end
 -- @param menu [Panel the DermaMenu being filled]
 -- @param target [Player the player the card shows]
 -- @param _card [Panel the fl_scoreboard_player card that was clicked]
-function Recognizes:CreateScoreboardPlayerMenu(menu, target, _card)
+function Recognition:CreateScoreboardPlayerMenu(menu, target, _card)
   if !self:is_enabled() or target == PLAYER or !PLAYER:get_recognize(target) then return end
 
   menu:AddOption(t'ui.recognize.forget', function()
@@ -132,7 +132,7 @@ end
 
 --- Moves players the local player does not recognize out of their faction into a players online category.
 -- @param players_table [Table lists of players keyed by faction category]
-function Recognizes:PreRebuildFactionCategories(players_table)
+function Recognition:PreRebuildFactionCategories(players_table)
   local client = PLAYER
   local players_online = {}
 

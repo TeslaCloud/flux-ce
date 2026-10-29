@@ -17,7 +17,7 @@ do
       return true
     end
 
-    if self == target or !Recognizes:is_enabled() or !self:get_character() or target:IsBot() or
+    if self == target or !Recognition:is_enabled() or !self:get_character() or target:IsBot() or
     self:GetMoveType() == MOVETYPE_NOCLIP then
       return true, target:name(true)
     end
@@ -109,7 +109,7 @@ do
         table.insert(character.recognizes, record)
       end
 
-      Recognizes:sync(self)
+      Recognition:sync(self)
     end
 
     --- Makes the player forget a target, deleting the stored recognize.
@@ -122,9 +122,9 @@ do
 
       if !char_id then return false end
 
-      if Recognizes:remove_records(self:get_character(), char_id) == 0 then return false end
+      if Recognition:remove_records(self:get_character(), char_id) == 0 then return false end
 
-      Recognizes:sync(self)
+      Recognition:sync(self)
 
       return true
     end
@@ -134,9 +134,9 @@ do
     function player_meta:clear_recognizes()
       if self:IsBot() or !self:is_character_loaded() then return 0 end
 
-      local count = Recognizes:clear_records(self:get_character())
+      local count = Recognition:clear_records(self:get_character())
 
-      Recognizes:sync(self)
+      Recognition:sync(self)
 
       return count
     end

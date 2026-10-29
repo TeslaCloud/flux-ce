@@ -5,14 +5,14 @@
 --- Networks the names a character recognizes others by once it is loaded.
 -- @param owner [Player player the character belongs to]
 -- @param _character [Character loaded character]
-function Recognizes:PostCharacterLoaded(owner, _character)
+function Recognition:PostCharacterLoaded(owner, _character)
   self:sync(owner)
 end
 
 --- Takes the networked recognitions of a character away from the player who drops it.
 -- @param owner [Player player the character belongs to]
 -- @param _character [Character the character that is being dropped]
-function Recognizes:OnActiveCharacterCleared(owner, _character)
+function Recognition:OnActiveCharacterCleared(owner, _character)
   owner:set_private_nv('fl_recognizes', {})
 end
 
@@ -20,7 +20,7 @@ end
 -- @param actor [Player player introducing themselves]
 -- @param target [Player player that would recognize them]
 -- @return [Boolean false to prevent recognizing, nil otherwise]
-function Recognizes:PlayerCanRecognize(actor, target)
+function Recognition:PlayerCanRecognize(actor, target)
   if actor == target then
     return false
   end
@@ -37,7 +37,7 @@ end
 -- @param victim [Player]
 -- @param _inflictor [Entity]
 -- @param _attacker [Entity]
-function Recognizes:PlayerDeath(victim, _inflictor, _attacker)
+function Recognition:PlayerDeath(victim, _inflictor, _attacker)
   if !self:is_enabled() or victim:IsBot() or !victim:is_character_loaded() then return end
 
   if Config.get('recog_forget_on_death') and victim:clear_recognizes() > 0 then
@@ -55,7 +55,7 @@ end
 -- @param _actor [Player player who deletes the character]
 -- @param id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
-function Recognizes:OnCharacterDelete(_actor, id, character)
+function Recognition:OnCharacterDelete(_actor, id, character)
   self:clear_records(character)
   self:forget_character(id)
 end
@@ -68,7 +68,7 @@ end
 -- @param _entity [Entity the door, or the main door of its group]
 -- @return [String the name to list the character under, nil while the recognition system
 --   is off]
-function Recognizes:GetDoorAccessName(actor, target, _entity)
+function Recognition:GetDoorAccessName(actor, target, _entity)
   if !self:is_enabled() then return end
 
   return self:get_known_name(actor, target)

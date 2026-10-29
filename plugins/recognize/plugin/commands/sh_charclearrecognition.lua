@@ -30,7 +30,7 @@ function CMD:on_run(actor, targets, mode)
       end
 
       if mode != 'own' then
-        Recognizes:forget_character(client:get_character_id())
+        Recognition:forget_character(client:get_character_id())
       end
 
       table.insert(names, tostring(client:name(true)))
