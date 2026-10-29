@@ -10,8 +10,8 @@ local hooks = {}
 function hooks:OnSchemaLoaded()
   --- Lets plugins and the schema register settings with `ClientSettings:register_setting`
   -- once all plugins and the schema have been loaded, for settings that depend on what they
-  -- register; any other setting is registered at file level. Called on the server and the
-  -- client, and again on every code refresh. Register a setting on both realms if it is
+  -- register; any other setting may be registered here or at file level. Called on the server
+  -- and the client, and again on every code refresh. Register a setting on both realms if it is
   -- networked; a setting that is not can be registered on the client only. A type added with
   -- `ClientSettings:register_type` has to be registered before the settings that use it. Do
   -- not return anything from the handler, or the plugins after it are not asked.
