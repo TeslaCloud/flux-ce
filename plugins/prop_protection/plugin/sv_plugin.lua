@@ -172,23 +172,23 @@ end
 
 --- Starts the removal countdown for the entities of a player's active character, as the
 -- plugin does when the player disconnects or switches to another character. The entities
--- of players who are exempt from the rules are left alone unless the propprotection_remove_staff
+-- of players who are exempt from the rules are left alone unless the prop_protection_remove_staff
 -- config is on.
 -- @param actor [Player]
 -- @return [Boolean whether the countdown has been started]
 -- @see [PropProtection#schedule_removal]
 function PropProtection:abandon_entities(actor)
-  if !config_get('propprotection_remove_staff') and self:can_bypass(actor) then return false end
+  if !config_get('prop_protection_remove_staff') and self:can_bypass(actor) then return false end
 
   return self:schedule_removal(self:get_key(actor))
 end
 
 --- Starts the countdown after which the entities owned under a key are removed. Does
--- nothing if nothing is owned under the key or the propprotection_removal_delay config is 0.
+-- nothing if nothing is owned under the key or the prop_protection_removal_delay config is 0.
 -- @param key [String ownership key, see PropProtection:get_key]
 -- @return [Boolean whether the countdown has been started]
 function PropProtection:schedule_removal(key)
-  local delay = tonumber(config_get('propprotection_removal_delay')) or 0
+  local delay = tonumber(config_get('prop_protection_removal_delay')) or 0
 
   if !key or delay <= 0 or !owned[key] then return false end
 
@@ -215,7 +215,7 @@ function PropProtection:remove_abandoned(key)
 
       if !keep then
         --- Asks whether an entity should be removed now that its owner has been gone, or
-        -- has been playing another character, for the time of the propprotection_removal_delay
+        -- has been playing another character, for the time of the prop_protection_removal_delay
         -- config. Called on the server for every entity of that owner that is neither
         -- permanent nor static.
         -- @param entity [Entity]
@@ -301,16 +301,16 @@ function PropProtection:notify_refusal(actor, rule)
   end
 end
 
---- Makes an entity harmless to players for the time of the propprotection_prop_kill_time
+--- Makes an entity harmless to players for the time of the prop_protection_prop_kill_time
 -- config, counted from now.
 -- @param entity [Entity]
 function PropProtection:mark_harmless(entity)
-  entity.prop_harmless_until = CurTime() + (tonumber(config_get('propprotection_prop_kill_time')) or 0)
+  entity.prop_harmless_until = CurTime() + (tonumber(config_get('prop_protection_prop_kill_time')) or 0)
 end
 
 --- Checks whether an entity is one whose impacts players are protected from: it is held
 -- with the physics gun or carried by a player, or it has been spawned or dropped by the
--- physics gun within the propprotection_prop_kill_time config. Players, NPCs and weapons are
+-- physics gun within the prop_protection_prop_kill_time config. Players, NPCs and weapons are
 -- never harmless, and a vehicle is only while it is held.
 -- @param entity [Entity]
 -- @return [Boolean]

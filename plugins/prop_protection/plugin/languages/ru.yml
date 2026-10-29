@@ -1,6 +1,6 @@
 ru:
   config:
-    propprotection:
+    prop_protection:
       title: Защита пропов
       desc: Владение энтити и основанные на нем правила песочницы.
       owned:

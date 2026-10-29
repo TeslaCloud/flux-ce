@@ -1,6 +1,6 @@
 en:
   config:
-    propprotection:
+    prop_protection:
       title: Prop protection
       desc: Entity ownership and the sandbox rules that are built on it.
       owned:

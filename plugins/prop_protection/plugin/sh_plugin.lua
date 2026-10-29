@@ -13,24 +13,24 @@
 -- An entity is owned under a key made of the SteamID64 of the player and the ID of their
 -- active character, which is networked to everyone in the `fl_prop_owner` variable of the
 -- entity. When the owner disconnects or switches characters, their entities stay protected
--- and are removed after the `propprotection_removal_delay` config, unless the owner comes back on
+-- and are removed after the `prop_protection_removal_delay` config, unless the owner comes back on
 -- that character in time. Static entities are never removed that way; they are released
 -- instead. The entities of staff who are exempt from the rules stay where they are, unless
--- the `propprotection_remove_staff` config says otherwise.
+-- the `prop_protection_remove_staff` config says otherwise.
 --
 -- The plugin also keeps players from being hurt by props that are held with the physics
--- gun, have just been dropped by it or have just been spawned (`propprotection_prop_kill`).
+-- gun, have just been dropped by it or have just been spawned (`prop_protection_prop_kill`).
 -- Addons that speak the Common Prop Protection Interface find the `CPPI` table and the
 -- `CPPI` entity and player methods in lib/meta/sh_entity.lua.
 --
 -- Rules and the configs that switch them:
 -- ```
--- players  - propprotection_players  - players cannot be picked up with the physics gun
--- vehicles - propprotection_vehicles - neither can vehicles that have a driver
--- ragdolls - propprotection_ragdolls - nor the ragdolls of players
--- owned    - propprotection_owned    - the entity belongs to another character
--- map      - propprotection_map      - the entity was created by the map
--- world    - propprotection_world    - the entity belongs to nobody (items, players, ...)
+-- players  - prop_protection_players  - players cannot be picked up with the physics gun
+-- vehicles - prop_protection_vehicles - neither can vehicles that have a driver
+-- ragdolls - prop_protection_ragdolls - nor the ragdolls of players
+-- owned    - prop_protection_owned    - the entity belongs to another character
+-- map      - prop_protection_map      - the entity was created by the map
+-- world    - prop_protection_world    - the entity belongs to nobody (items, players, ...)
 -- ```
 -- The first three concern the physics gun only and are checked first. Switching one of them
 -- off does not hand the entity over: the last three, which are about ownership, still apply
@@ -43,12 +43,12 @@ local config_get = Config.get
 PLUGIN:set_global('PropProtection')
 
 local rules = {
-  players = 'propprotection_players',
-  vehicles = 'propprotection_vehicles',
-  ragdolls = 'propprotection_ragdolls',
-  owned = 'propprotection_owned',
-  map = 'propprotection_map',
-  world = 'propprotection_world'
+  players = 'prop_protection_players',
+  vehicles = 'prop_protection_vehicles',
+  ragdolls = 'prop_protection_ragdolls',
+  owned = 'prop_protection_owned',
+  map = 'prop_protection_map',
+  world = 'prop_protection_world'
 }
 
 local action_permissions = {

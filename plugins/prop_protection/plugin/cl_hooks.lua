@@ -34,7 +34,7 @@ end
 --- Draws the owner of the entity that the local player is looking at above its target ID:
 -- a note on their own entities, and the name of the owner on those of others. The line can
 -- be switched off with the 'show_prop_owners' client setting. Other players' entities only
--- show their owner if the propprotection_owner_display config is on or the local player is exempt
+-- show their owner if the prop_protection_owner_display config is on or the local player is exempt
 -- from prop protection.
 -- @param entity [Entity]
 -- @param x [Number screen x of the horizontal center of the target ID]
@@ -55,7 +55,7 @@ function PropProtection:DrawEntityTargetID(entity, x, y, dist)
   if key == self:get_key(client) then
     text = t'ui.prop_protection.owner_you'
     color = own_color
-  elseif Config.get('propprotection_owner_display') or self:can_bypass(client) then
+  elseif Config.get('prop_protection_owner_display') or self:can_bypass(client) then
     local owner = self:find_owner(key)
 
     if owner then

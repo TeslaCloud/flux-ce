@@ -116,12 +116,12 @@ end
 
 --- Blocks the impact damage a player would take from a harmless entity (one that is held
 -- with the physics gun, or was spawned or dropped by it a moment ago) while the
--- propprotection_prop_kill config is on, and from being pushed into the world by one.
+-- prop_protection_prop_kill config is on, and from being pushed into the world by one.
 -- @param target [Entity the entity that is taking damage]
 -- @param damage_info [CTakeDamageInfo]
 -- @return [Boolean true to block the damage, nothing otherwise]
 function PropProtection:EntityTakeDamage(target, damage_info)
-  if !Config.get('propprotection_prop_kill') then return end
+  if !Config.get('prop_protection_prop_kill') then return end
   if !IsValid(target) or !target:IsPlayer() or !damage_info:IsDamageType(DMG_CRUSH) then return end
 
   local cur_time = CurTime()
@@ -139,8 +139,8 @@ function PropProtection:EntityTakeDamage(target, damage_info)
 
   --- Asks whether the damage a player takes from an entity that the Prop Protection plugin
   -- considers harmless is blocked: one that is held with the physics gun, or was spawned or
-  -- dropped by it within the propprotection_prop_kill_time config. Called on the server, while
-  -- the propprotection_prop_kill config is on, before such impact damage is blocked.
+  -- dropped by it within the prop_protection_prop_kill_time config. Called on the server, while
+  -- the prop_protection_prop_kill config is on, before such impact damage is blocked.
   -- @param target [Player the player who is about to be protected]
   -- @param prop [Entity the entity that has hit them]
   -- @param damage_info [CTakeDamageInfo the damage]
