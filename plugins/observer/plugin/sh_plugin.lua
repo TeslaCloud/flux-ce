@@ -27,10 +27,5 @@ require_relative 'sv_hooks'
 
 --- Registers the 'admin_esp' permission.
 function Observer:RegisterPermissions()
-  Bolt:register_permission(
-    'admin_esp',
-    'Admin ESP',
-    'Grants access to see the other players through walls while noclipping.',
-    'permission.categories.administration'
-  )
+  Bolt:register_permission('admin_esp', nil, nil, 'permission.categories.administration')
 end

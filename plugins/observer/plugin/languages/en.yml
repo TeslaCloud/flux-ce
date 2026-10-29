@@ -24,3 +24,7 @@ en:
   ui:
     hud:
       vanish: "You are vanished"
+  permission:
+    admin_esp:
+      name: Admin ESP
+      description: Grants access to see the other players through walls while noclipping.

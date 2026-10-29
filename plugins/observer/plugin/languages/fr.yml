@@ -24,3 +24,7 @@ fr:
   ui:
     hud:
       vanish: "Vous êtes invisible"
+  permission:
+    admin_esp:
+      name: "ESP administrateur"
+      description: "Permet de voir les autres joueurs à travers les murs en noclip."

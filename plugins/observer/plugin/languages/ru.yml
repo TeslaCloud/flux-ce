@@ -24,3 +24,7 @@ ru:
   ui:
     hud:
       vanish: Вы невидимы
+  permission:
+    admin_esp:
+      name: Админский ESP
+      description: Дает доступ к просмотру других игроков сквозь стены в режиме ноуклипа.

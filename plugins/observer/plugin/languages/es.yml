@@ -24,3 +24,7 @@ es:
   ui:
     hud:
       vanish: "Eres invisible"
+  permission:
+    admin_esp:
+      name: ESP de administrador
+      description: Da acceso para ver a los demás jugadores a través de las paredes en noclip.
