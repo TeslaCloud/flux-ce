@@ -1,4 +1,4 @@
---- Client hooks of the Mapscenes plugin: the camera that shows the mapscene points, and the
+--- Client hooks of the MapScenes plugin: the camera that shows the mapscene points, and the
 -- markers drawn for the points while the Mapscene tool is held.
 
 local config_get = Config.get
@@ -7,8 +7,8 @@ local marker_color = Color('lightblue')
 local title_args = {}
 
 --- Draws a marker, a direction line and a label for every mapscene point while the local
--- player holds the mapscene tool and has the 'mapscenes' permission.
-function Mapscenes:RenderScreenspaceEffects()
+-- player holds the mapscene tool and has the 'map_scenes' permission.
+function MapScenes:RenderScreenspaceEffects()
   local client = PLAYER
 
   if !IsValid(client) or !client:Alive() then return end
@@ -19,7 +19,7 @@ function Mapscenes:RenderScreenspaceEffects()
 
   local tool = client:GetTool()
 
-  if !tool or tool.Name != 'Mapscene tool' or IsValid(Flux.intro_panel) or !can('mapscenes') then return end
+  if !tool or tool.Name != 'Mapscene tool' or IsValid(Flux.intro_panel) or !can('map_scenes') then return end
 
   local points = self.points
   local font = Theme.get_font('text_small')
@@ -51,7 +51,7 @@ local view = {}
 -- @param _angles [Angle]
 -- @param _fov [Number]
 -- @return [Map view table with origin and angles, or nil if no mapscene is shown]
-function Mapscenes:CalcView(_client, _origin, _angles, _fov)
+function MapScenes:CalcView(_client, _origin, _angles, _fov)
   --- Asks whether the mapscene camera should replace the local player's view.
   -- Called on the client on every view calculation. The Characters plugin returns true while
   -- the intro panel or the main menu is open.
@@ -62,7 +62,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
 
     if count > 0 then
       local cur_time = CurTime()
-      local animated = config_get('mapscenes_animated')
+      local animated = config_get('map_scenes_animated')
 
       self.scene = self.scene or 1
 
@@ -71,12 +71,12 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
       end
 
       if !animated and count > 1 then
-        self.next_scene = self.next_scene or cur_time + config_get('mapscenes_speed')
+        self.next_scene = self.next_scene or cur_time + config_get('map_scenes_speed')
 
         if self.next_scene <= cur_time then
           PLAYER:ScreenFade(SCREENFADE.IN, color_black, 2, 0)
           self.scene += 1
-          self.next_scene = cur_time + config_get('mapscenes_speed')
+          self.next_scene = cur_time + config_get('map_scenes_speed')
 
           if self.scene > count then
             self.scene = 1
@@ -94,7 +94,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
           local next_point = points[self.scene < count and self.scene + 1 or 1]
 
           self.start_time = self.start_time or cur_time
-          self.end_time = self.end_time or cur_time + config_get('mapscenes_speed')
+          self.end_time = self.end_time or cur_time + config_get('map_scenes_speed')
 
           local fraction = math.min(1, math.TimeFraction(self.start_time, self.end_time, cur_time))
 
@@ -116,7 +116,7 @@ function Mapscenes:CalcView(_client, _origin, _angles, _fov)
             self.ang = point.ang
           end
         else
-          local rotate_speed = config_get('mapscenes_rotate_speed')
+          local rotate_speed = config_get('map_scenes_rotate_speed')
 
           if rotate_speed > 0 then
             self.angle_offset = self.angle_offset or Angle()

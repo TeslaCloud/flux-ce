@@ -1,7 +1,7 @@
 en:
   config:
-    mapscenes:
-      title: "Mapscenes"
+    map_scenes:
+      title: "Map Scenes"
       desc: "The camera that shows the map behind the intro and the main menu."
       speed:
         name: "Time per point"

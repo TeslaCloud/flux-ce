@@ -1,6 +1,6 @@
 ru:
   config:
-    mapscenes:
+    map_scenes:
       title: "Точки камеры"
       desc: "Камера, показывающая карту за вступлением и главным меню."
       speed:

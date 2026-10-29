@@ -1,6 +1,6 @@
 es:
   config:
-    mapscenes:
+    map_scenes:
       title: "Escenas del mapa"
       desc: "La cámara que muestra el mapa detrás de la introducción y del menú principal."
       speed:
