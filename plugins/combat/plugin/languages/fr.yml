@@ -1,0 +1,27 @@
+fr:
+  config:
+    combat:
+      title: "Combat au tour par tour"
+      desc: "Comment les affrontements entre joueurs et PNJ deviennent des combats au tour par tour."
+      auto_start:
+        name: "Démarrer le combat automatiquement"
+        desc: "Si une attaque entre un joueur et un PNJ, ou entre deux joueurs, démarre un combat au tour par tour lorsqu'aucun d'eux n'est en combat. Désactivé, le combat ne démarre que par le code, et les attaques d'un combat en cours sont toujours lancées."
+  notification:
+    combat:
+      finish: "Le combat est terminé"
+      turn: "Tour de {entity}"
+      initiator: "Initiateur"
+      your_turn: "Votre tour"
+      turn_order: "Le combat commence. Ordre des tours :"
+      enter: "{player} entre dans le combat."
+      leave: "{player} quitte le combat."
+      skip: "Vous passez votre tour."
+      leave_try: "Vous essayez de quitter le combat."
+      leave_interrupt: "Vous avez été interrompu en quittant le combat !"
+      success: "{attacker} attaque {target} avec succès (zone : {limb}). ({roll} contre CA {armor_class})"
+      fail: "{attacker} attaque {target} (zone : {limb}), mais le rate. ({roll} contre CA {armor_class})"
+      critical_success: "{attacker} porte un coup critique à {target} (zone : {limb}) ! ({roll} contre CA {armor_class})"
+      critical_failure: "{attacker} attaque {target} (zone : {limb}), mais trébuche et le rate lamentablement. ({roll} contre CA {armor_class})"
+  ui:
+    combat:
+      skip: "Appuyez sur F1 pour passer ou terminer votre tour."

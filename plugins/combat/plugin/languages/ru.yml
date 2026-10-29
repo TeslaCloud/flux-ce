@@ -1,0 +1,27 @@
+ru:
+  config:
+    combat:
+      title: "Пошаговый бой"
+      desc: "Как стычки между игроками и NPC превращаются в пошаговый бой."
+      auto_start:
+        name: "Автоматически начинать бой"
+        desc: "Начинает ли атака игрока на NPC или на другого игрока пошаговый бой, если никто из них ещё не в бою. Если выключено, бой начинается только из кода, а атаки в уже идущем бою по-прежнему бросаются."
+  notification:
+    combat:
+      finish: "Бой окончен"
+      turn: "Ход {entity}"
+      your_turn: "Ваш ход"
+      initiator: "Инициатор"
+      turn_order: "Бой начинается. Порядок ходов:"
+      enter: "{player} вступает в бой."
+      leave: "{player} покидает бой."
+      skip: "Вы пропускаете свой ход."
+      leave_try: "Вы пытаетесь покинуть бой."
+      leave_interrupt: "Вам помешали покинуть бой!"
+      success: "{attacker} успешно атакует {target} в {limb}. ({roll} против КБ {armor_class})"
+      fail: "{attacker} атакует {target} в {limb}, но промахивается. ({roll} против КБ {armor_class})"
+      critical_success: "{attacker} атакует {target} в {limb} и наносит критический удар! ({roll} против КБ {armor_class})"
+      critical_failure: "{attacker} атакует {target} в {limb}, но теряет равновесие и позорно промахивается. ({roll} против КБ {armor_class})"
+  ui:
+    combat:
+      skip: Нажмите F1, чтобы пропустить или окончить свой ход.

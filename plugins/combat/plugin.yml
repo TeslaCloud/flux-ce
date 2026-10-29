@@ -1,0 +1,8 @@
+name: Turn Based Combat
+description: Turns fights between players and NPCs into turn based combat, with D20 attack rolls and initiative.
+author: TeslaCloud Studios
+depends:
+  - d20
+  - stats
+  - damage
+  - items

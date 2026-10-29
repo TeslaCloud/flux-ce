@@ -1,0 +1,11 @@
+categories:
+  combat:
+    name: config.combat.title
+    description: config.combat.desc
+configs:
+  combat_auto_start:
+    name: config.combat.auto_start.name
+    description: config.combat.auto_start.desc
+    category: combat
+    type: boolean
+    default_value: false

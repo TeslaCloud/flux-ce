@@ -1,0 +1,27 @@
+es:
+  config:
+    combat:
+      title: "Combate por turnos"
+      desc: "Cómo las peleas entre jugadores y PNJ se convierten en combate por turnos."
+      auto_start:
+        name: "Iniciar el combate automáticamente"
+        desc: "Si un ataque entre un jugador y un PNJ, o entre dos jugadores, inicia un combate por turnos cuando ninguno de ellos está en uno. Si está desactivado, el combate solo empieza mediante código, y los ataques en un combate en curso se siguen tirando."
+  notification:
+    combat:
+      finish: "El combate ha terminado"
+      turn: "Turno de {entity}"
+      initiator: "Iniciador"
+      your_turn: "Tu turno"
+      turn_order: "Comienza el combate. Orden de turnos:"
+      enter: "{player} entra en el combate."
+      leave: "{player} abandona el combate."
+      skip: "Pasas tu turno."
+      leave_try: "Intentas abandonar el combate."
+      leave_interrupt: "¡Te han interrumpido mientras abandonabas el combate!"
+      success: "{attacker} ataca con éxito a {target} en {limb}. ({roll} contra CA {armor_class})"
+      fail: "{attacker} ataca a {target} en {limb}, pero falla. ({roll} contra CA {armor_class})"
+      critical_success: "¡{attacker} asesta un golpe crítico a {target} en {limb}! ({roll} contra CA {armor_class})"
+      critical_failure: "{attacker} ataca a {target} en {limb}, pero se le escapa el golpe y falla estrepitosamente. ({roll} contra CA {armor_class})"
+  ui:
+    combat:
+      skip: Pulsa F1 para pasar o terminar tu turno.

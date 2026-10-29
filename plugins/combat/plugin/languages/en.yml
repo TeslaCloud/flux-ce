@@ -1,0 +1,27 @@
+en:
+  config:
+    combat:
+      title: "Turn Based Combat"
+      desc: "How fights between players and NPCs turn into turn based combat."
+      auto_start:
+        name: "Start Combat Automatically"
+        desc: "Whether an attack between a player and an NPC, or between two players, starts a turn based combat when neither of them is in one. When off, combat only starts through code, and attacks in a running combat are still rolled."
+  notification:
+    combat:
+      finish: "The combat is over"
+      turn: "{entity}'s turn"
+      initiator: "Initiator"
+      your_turn: "Your turn"
+      turn_order: "The combat begins. Turn order:"
+      enter: "{player} enters the combat."
+      leave: "{player} leaves the combat."
+      skip: "You are skipping your turn."
+      leave_try: "You are trying to leave the combat."
+      leave_interrupt: "You have been interrupted from leaving the combat!"
+      success: "{attacker} successfully attacks {target} in the {limb}. ({roll} against AC {armor_class})"
+      fail: "{attacker} attacks {target} in the {limb}, but misses. ({roll} against AC {armor_class})"
+      critical_success: "{attacker} lands a critical hit on {target} in the {limb}! ({roll} against AC {armor_class})"
+      critical_failure: "{attacker} attacks {target} in the {limb}, but fumbles and misses badly. ({roll} against AC {armor_class})"
+  ui:
+    combat:
+      skip: Press F1 to skip or end your turn.
