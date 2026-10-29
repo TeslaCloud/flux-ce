@@ -5,7 +5,7 @@
 -- player, where `Player:get_setting` reads it.
 
 Cable.receive('fl_settings_sync', function(actor, data)
-  if !istable(data) then return end
+  if !IsValid(actor) or !istable(data) then return end
 
   local values = actor.client_settings or {}
   actor.client_settings = values
