@@ -66,7 +66,9 @@ Area.tool_modes = {
         for _, area in pairs(Areas.all()) do
           if istable(area.polys) and area.type == area_type then
             for _, poly in ipairs(area.polys) do
-              if z > poly[1].z and z < area.maxh and util.vector_in_poly(pos, poly) then
+              local first_vertex = poly[1]
+
+              if first_vertex and z > first_vertex.z and z < area.maxh and util.vector_in_poly(pos, poly) then
                 Areas.remove(area.id)
 
                 return true
