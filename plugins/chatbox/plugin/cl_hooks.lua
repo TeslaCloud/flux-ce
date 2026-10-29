@@ -1,6 +1,6 @@
 --- Client-side hooks of the Chatbox plugin: opens the chatbox on the chat binds in place of
--- the default chat, sets up its fonts and theme options, sends entered text to the server,
--- adds the messages that arrive from it and shows what is said from the server console.
+-- the default chat, sets up its fonts and theme options, sends entered text to the server and
+-- shows what is said from the server console.
 
 local scale = math.scale
 local config_get = Config.get
@@ -164,7 +164,3 @@ function Chatbox:OnPlayerChat(speaker, text, _team_chat, _is_dead)
 
   return true
 end
-
-Cable.receive('fl_chat_message_add', function(message_data)
-  Chatbox.add_message(message_data)
-end)
