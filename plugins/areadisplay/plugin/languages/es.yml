@@ -1,6 +1,6 @@
 es:
   config:
-    area_display:
+    areadisplay:
       title: Visualización de áreas
       desc: Configuración del plugin de visualización de áreas
       cooldown:

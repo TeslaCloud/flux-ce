@@ -127,7 +127,7 @@ function AreaDisplay:add(info, area)
 end
 
 --- Announces an area to the local player. An area that was announced less than
--- 'area_display_cooldown' seconds ago is skipped. A one-time area is not shown right away:
+-- 'areadisplay_cooldown' seconds ago is skipped. A one-time area is not shown right away:
 -- the server is asked first, and shows it if the player has not seen it before. If the local
 -- player cannot see notices at the moment, the area is announced once they can, unless they
 -- leave it first.
@@ -163,7 +163,7 @@ function AreaDisplay:announce(area, force)
 
     local shown_at = last_shown[area.id]
 
-    if shown_at and cur_time - shown_at < Config.get('area_display_cooldown', 20) then
+    if shown_at and cur_time - shown_at < Config.get('areadisplay_cooldown', 20) then
       return false
     end
   end
