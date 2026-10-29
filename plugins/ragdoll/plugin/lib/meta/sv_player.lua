@@ -159,7 +159,7 @@ local function unragdoll(target, reset)
     -- respawned after their death, or were reset while lying on the ground.
     -- @param target [Player The player]
     -- @param state [Number The RAGDOLL_ state they were in]
-    -- @param data [Map The ragdoll data they had, see plugins/ragdoll/plugin/sv_plugin.lua;
+    -- @param data [Map The ragdoll data they had, see plugins/ragdoll/plugin/lib/meta/sv_player.lua;
     --   nil if they had no ragdoll]
     -- @param reset [Boolean True if the state was cleared because the player is respawning
     --   or leaving, false if they got up where their ragdoll was]
@@ -220,13 +220,13 @@ local function ragdolled(target, state, data)
   -- a corpse.
   -- @param target [Player The player]
   -- @param state [Number The RAGDOLL_ state they are in now]
-  -- @param data [Map Their ragdoll data, see plugins/ragdoll/plugin/sv_plugin.lua]
+  -- @param data [Map Their ragdoll data, see plugins/ragdoll/plugin/lib/meta/sv_player.lua]
   hook.Run('PlayerRagdolled', target, state, data)
 end
 
 --- Returns the table that describes the ragdoll of the player: what they get back when they
 -- get up, the damage immunity and the get up timer. Its fields are listed at the top of
--- plugins/ragdoll/plugin/sv_plugin.lua. Serverside only.
+-- plugins/ragdoll/plugin/lib/meta/sv_player.lua. Serverside only.
 -- @return [Map the ragdoll data, or nil if the player has no ragdoll]
 function player_meta:get_ragdoll_data()
   return self.ragdoll_data
@@ -674,7 +674,7 @@ function player_meta:set_ragdoll_state(state, delay, options)
     -- when their ragdoll has been removed.
     -- @param target [Player The player]
     -- @param state [Number The RAGDOLL_ state they are in]
-    -- @param data [Map Their ragdoll data, see plugins/ragdoll/plugin/sv_plugin.lua]
+    -- @param data [Map Their ragdoll data, see plugins/ragdoll/plugin/lib/meta/sv_player.lua]
     -- @return [Boolean Return false to keep the player down]
     if hook.Run('PlayerCanUnragdoll', self, current, self.ragdoll_data) == false then
       return false

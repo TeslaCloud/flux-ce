@@ -35,7 +35,6 @@
 PLUGIN:set_global('Ragdoll')
 
 require_relative 'cl_hooks'
-require_relative 'sv_plugin'
 require_relative 'sv_hooks'
 
 --- Name of the head bone that the view falls back to on models without an 'eyes'
