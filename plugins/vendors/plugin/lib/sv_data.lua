@@ -161,7 +161,7 @@ function Vendors:get_default_data()
     animation = '',
     currency = Currencies:get_default_currency() or '',
     money = false,
-    buy_rate = self:clean_number(Config.get('vendor_buy_rate', 50), 0, 1000) or 50,
+    buy_rate = self:clean_number(Config.get('vendors_buy_rate', 50), 0, 1000) or 50,
     sells = {},
     buys = {},
     factions = {},

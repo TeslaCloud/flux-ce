@@ -3,7 +3,8 @@ categories:
     name: config.vendors.title
     description: config.vendors.desc
 configs:
-  vendor_buy_rate:
+  vendors_buy_rate:
+    renamed_from: vendor_buy_rate
     name: config.vendors.buy_rate.name
     description: config.vendors.buy_rate.desc
     category: vendors
