@@ -28,7 +28,7 @@ do
   -- @return [Boolean true when enabling, nil when disabling]
   function Flux.color_mod_enabled(enable)
     if !PLAYER.color_mod_table then
-      PLAYER.color_mod_table = default_color_mod
+      PLAYER.color_mod_table = table.Copy(default_color_mod)
     end
 
     if enable then
@@ -63,7 +63,7 @@ do
   -- @param value [Number new value; anything that is not a number is stored as 0]
   function Flux.set_color_mod(index, value)
     if !PLAYER.color_mod_table then
-      PLAYER.color_mod_table = default_color_mod
+      PLAYER.color_mod_table = table.Copy(default_color_mod)
     end
 
     if isstring(index) then
