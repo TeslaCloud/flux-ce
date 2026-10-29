@@ -10,6 +10,14 @@ Cable.receive('fl_client_included_schema', function(actor)
 end)
 
 Cable.receive('fl_undo_soft', function(actor)
+  if !IsValid(actor) then return end
+
+  local cur_time = CurTime()
+
+  if (actor.fl_next_undo or 0) > cur_time then return end
+
+  actor.fl_next_undo = cur_time + 0.25
+
   Flux.Undo:do_player(actor)
 end)
 
@@ -30,11 +38,17 @@ Cable.receive('fl_player_created', function(actor)
 end)
 
 Cable.receive('fl_player_set_lang', function(actor, lang)
-  if !isstring(lang) or lang == '' or #lang > 16 then return end
+  if !IsValid(actor) or !isstring(lang) or lang == '' or #lang > 16 then return end
 
   local old_lang = Flux.Lang:get_player_lang(actor)
 
   if old_lang == lang then return end
+
+  local cur_time = CurTime()
+
+  if (actor.fl_next_lang or 0) > cur_time then return end
+
+  actor.fl_next_lang = cur_time + 1
 
   actor:set_nv('language', lang)
 
