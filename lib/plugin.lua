@@ -1317,21 +1317,7 @@ function Plugin.include_folders(folder)
       elseif extra == 'commands' then
         Pipeline.include_folder('commands', folder..'/commands/')
       elseif extra == 'config' then
-        if SERVER then
-          local files, _folders = file.Find('gamemodes/'..folder..'/config/*.yml', 'GAME')
-
-          if files then
-            local configs = {}
-
-            for _, file_name in pairs(files) do
-              table.Merge(configs, Config.read('gamemodes/'..folder..'/config/'..file_name))
-            end
-
-            Flux.shared.configs[folder] = configs
-          end
-        elseif Flux.shared.configs[folder] then
-          Config.read(Flux.shared.configs[folder])
-        end
+        Config.include_folder(folder..'/config')
       elseif SERVER then
         if extra == 'languages' then
           Pipeline.include_folder('language', folder..'/languages/')

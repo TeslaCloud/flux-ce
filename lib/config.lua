@@ -1172,3 +1172,33 @@ function Config.read(path, _from_config)
 
   return config_table
 end
+
+--- Reads the config definitions of every .yml file in a folder of a plugin, of the schema or
+-- of a package. The server reads the files with `Config.read` and keeps what they define in
+-- `Flux.shared.configs`, from where it reaches the clients, which read that copy instead of
+-- the files. Called by the plugin loader for the `config` folder of every plugin and of the
+-- schema, and by the packages that define configs.
+-- ```
+-- Config.include_folder('flux/plugins/doors/plugin/config')
+-- Config.include_folder(PACKAGE.__path__..'config')
+-- ```
+-- @param folder [String folder of the .yml files, relative to the gamemodes folder]
+function Config.include_folder(folder)
+  folder = folder:gsub('/$', '')
+
+  if SERVER then
+    local files, _folders = file.Find('gamemodes/'..folder..'/*.yml', 'GAME')
+
+    if !files then return end
+
+    local configs = {}
+
+    for _, file_name in ipairs(files) do
+      table.Merge(configs, Config.read('gamemodes/'..folder..'/'..file_name))
+    end
+
+    Flux.shared.configs[folder] = configs
+  elseif Flux.shared.configs[folder] then
+    Config.read(Flux.shared.configs[folder])
+  end
+end
