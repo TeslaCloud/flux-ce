@@ -9,7 +9,8 @@ PLUGIN:set_name('Prefixes')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain commands.')
 
-local stored = {}
+local stored = Prefixes.stored or {}
+Prefixes.stored = stored
 
 --- Prevents text that starts with a registered prefix from being treated as a command.
 -- @param text [String the text being checked]
