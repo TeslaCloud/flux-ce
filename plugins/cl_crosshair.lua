@@ -91,11 +91,11 @@ end
 -- 600 units away.
 -- @param trace [Map trace result of the local player's aim]
 -- @param distance [Number distance from the local player to the trace hit position]
--- @return [Number a gap of 8, or nil to keep the distance-based gap]
+-- @return [Number the default gap scaled to the screen, or nil to keep the distance-based gap]
 function PLUGIN:AdjustCrosshairGap(trace, distance)
   local ent = trace.Entity
 
   if distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == 'fl_item') then
-    return 8
+    return gap
   end
 end
