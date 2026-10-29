@@ -15,14 +15,9 @@ PLUGIN:set_global('Area')
 require_relative 'cl_plugin'
 require_relative 'sv_plugin'
 
---- Registers the 'areas' level design permission.
+--- Registers the 'manage_areas' level design permission.
 function Area:RegisterPermissions()
-  Bolt:register_permission(
-    'areas',
-    'Manage areas',
-    'Grants access to manage areas.',
-    'permission.categories.level_design'
-  )
+  Bolt:register_permission('manage_areas', nil, nil, 'permission.categories.level_design')
 end
 
 Area.tool_modes = {

@@ -7,3 +7,7 @@ ru:
       text: ID зоны
       height: Высота
       type: Тип
+  permission:
+    manage_areas:
+      name: Управление зонами
+      description: Дает доступ к управлению зонами.

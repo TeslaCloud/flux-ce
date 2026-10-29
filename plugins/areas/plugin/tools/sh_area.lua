@@ -7,16 +7,16 @@ TOOL.Category = 'Flux'
 TOOL.Name = 'Area Tool'
 TOOL.Command = nil
 TOOL.ConfigName = ''
-TOOL.permission = 'areas'
+TOOL.permission = 'manage_areas'
 
 TOOL.ClientConVar['mode'] = '1'
 
 --- Passes the click to the OnLeftClick handler of the selected area tool mode.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
---   nil if the owner lacks the 'areas' permission]
+--   nil if the owner lacks the 'manage_areas' permission]
 function TOOL:LeftClick(trace)
-  if !self:GetOwner():can('areas') then return end
+  if !self:GetOwner():can('manage_areas') then return end
 
   local mode_table = self:get_area_mode()
 
@@ -30,9 +30,9 @@ end
 --- Passes the click to the OnRightClick handler of the selected area tool mode.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
---   nil if the owner lacks the 'areas' permission]
+--   nil if the owner lacks the 'manage_areas' permission]
 function TOOL:RightClick(trace)
-  if !self:GetOwner():can('areas') then return end
+  if !self:GetOwner():can('manage_areas') then return end
 
   local mode_table = self:get_area_mode()
 
@@ -46,9 +46,9 @@ end
 --- Passes the reload to the OnReload handler of the selected area tool mode.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
---   nil if the owner lacks the 'areas' permission]
+--   nil if the owner lacks the 'manage_areas' permission]
 function TOOL:Reload(trace)
-  if !self:GetOwner():can('areas') then return end
+  if !self:GetOwner():can('manage_areas') then return end
 
   local mode_table = self:get_area_mode()
 

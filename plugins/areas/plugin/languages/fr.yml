@@ -7,3 +7,7 @@ fr:
       text: "ID de la zone"
       height: "Hauteur"
       type: "Type"
+  permission:
+    manage_areas:
+      name: "Gérer les zones"
+      description: "Permet de gérer les zones."
