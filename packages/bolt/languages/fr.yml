@@ -261,6 +261,64 @@ fr:
     manage_plugins:
       name: "Gestionnaire de plugins"
       description: "Permet d'activer et de désactiver des plugins."
+    no_description: "Aucune description."
+    physgun:
+      name: "Physgun"
+      description: "Donne accès au pistolet physique."
+    toolgun:
+      name: "Tool Gun"
+      description: "Donne accès au pistolet à outils."
+    physgun_freeze:
+      name: "Geler les entités protégées"
+      description: "Permet de geler les entités protégées."
+    physgun_pickup:
+      name: "Physgun illimité"
+      description: "Permet de saisir n'importe quelle entité avec le pistolet physique."
+    spawn_props:
+      name: "Faire apparaître des props"
+      description: "Permet de faire apparaître des props."
+    spawn_chairs:
+      name: "Faire apparaître des chaises"
+      description: "Permet de faire apparaître des chaises."
+    spawn_entities:
+      name: "Faire apparaître toutes les entités"
+      description: "Permet de faire apparaître n'importe quelle entité."
+    spawn_vehicles:
+      name: "Faire apparaître des véhicules"
+      description: "Permet de faire apparaître des véhicules."
+    spawn_npcs:
+      name: "Faire apparaître des PNJ"
+      description: "Permet de faire apparaître des PNJ."
+    spawn_ragdolls:
+      name: "Faire apparaître des ragdolls"
+      description: "Permet de faire apparaître des ragdolls."
+    spawn_sweps:
+      name: "Faire apparaître des SWEP"
+      description: "Permet de faire apparaître des armes scriptées."
+    voice:
+      name: "Accès au chat vocal"
+      description: "Donne accès au chat vocal."
+    context_menu:
+      name: "Menu contextuel"
+      description: "Donne accès au menu contextuel, aux propriétés des entités et à leur conduite."
+    noclip:
+      name: "Noclip"
+      description: "Permet au joueur d'utiliser le mode observateur / noclip."
+    manage_permissions:
+      name: "Éditeur de permissions"
+      description: "Donne accès à l'éditeur de permissions."
+    manage_configuration:
+      name: "Configuration"
+      description: "Donne accès à la configuration."
+    staff:
+      name: "Accès assistant"
+      description: "Marque le joueur comme membre du staff."
+    moderate:
+      name: "Accès administrateur"
+      description: "Accès général du staff. Les autres addons voient le joueur comme un administrateur."
+    administrate:
+      name: "Accès super administrateur"
+      description: "Accès avancé du staff. Les autres addons voient le joueur comme un super administrateur."
   role:
     user: "Le rang de base, attribué automatiquement au joueur."
     assistant: "Un rang de l'équipe disposant des outils de modération de base, comme l'expulsion, le bannissement, l'invisibilité et le noclip."

@@ -161,7 +161,9 @@ function Bolt:import_cami_privilege(privilege)
 
   if !isstring(name) or name == '' or self:get_permission(name) then return end
 
-  self:register_permission(name, name, privilege.Description, 'permission.categories.cami')
+  self:register_permission(
+    name, name, privilege.Description or 'permission.no_description', 'permission.categories.cami'
+  )
 
   imported_privileges[name] = true
 

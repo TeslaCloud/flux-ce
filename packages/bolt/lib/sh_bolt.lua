@@ -1,6 +1,7 @@
 --- Core of the Bolt library: the registries of roles and permissions, the permission and
--- immunity checks, bans (server side) and the parsing of human-readable ban durations.
--- Also defines the `can` global and the `role` pipeline that loads role files.
+-- immunity checks and the parsing of human-readable ban durations. Also defines the `role`
+-- pipeline that loads role files; the `can` global is defined for each realm in
+-- `cl_bolt.lua` and `sv_bolt.lua`, and the ban records in `sv_bans.lua`.
 -- Permissions are decided in layers, see `Bolt:get_permission_layer`: the player's and the
 -- active character's own permissions, where a denial wins, then the role.
 -- The immunity checks come in two kinds: `Bolt:check_immunity` compares two players who are on
@@ -287,10 +288,11 @@ end
 --- Registers a permission that can then be checked with actor:can(id), and that the
 -- permission editor lists under its category. Registering a permission does not allow it for
 -- anybody: the role files allow it to roles with `can`, and roles based on those inherit it.
+-- The name and the description are language phrases or text; without them the permission
+-- is shown with the `permission.<id>.name` and `permission.<id>.description` phrases.
 -- ```
 -- function Doors:RegisterPermissions()
---   Bolt:register_permission('manage_doors', 'Doors settings access',
---     'Grants access to customize doors.', 'permission.categories.level_design')
+--   Bolt:register_permission('manage_doors', nil, nil, 'permission.categories.level_design')
 -- end
 --
 -- -- roles/sh_assistant.lua
@@ -299,17 +301,18 @@ end
 -- end
 -- ```
 -- @param id [String permission ID; nothing happens if it is empty or not a string]
--- @param name=id [String display name]
--- @param description='No description provided.' [String]
+-- @param name=nil [String display name or language phrase; `permission.<id>.name` if nil]
+-- @param description=nil [String description or language phrase; `permission.<id>.description`
+--   if nil]
 -- @param category='general' [String category name or language phrase]
 function Bolt:register_permission(id, name, description, category)
   if !isstring(id) or id == '' then return end
 
   local data = {}
     data.id = id:to_id()
-    data.description = description or 'No description provided.'
+    data.description = description or 'permission.'..data.id..'.description'
     data.category = category or 'general'
-    data.name = name or id
+    data.name = name or 'permission.'..data.id..'.name'
   self:add_permission(id, category, data, true)
 end
 
@@ -321,7 +324,7 @@ local function register_permission_ids(cmd, category)
   if isstring(perm_id) and perm_id != '' and !Bolt:get_permission(perm_id) then
     Bolt:add_permission(perm_id, category, {
       name = cmd:get_full_name(),
-      description = cmd.description or 'No description provided.',
+      description = cmd.description or 'permission.no_description',
       category = category or 'general'
     })
   end
@@ -646,147 +649,6 @@ end
 -- @see [Role#register]
 function Bolt:include_roles(directory)
   Pipeline.include_folder('role', directory)
-end
-
-if SERVER then
-  --- Checks whether the player held in the current_player global may perform an action.
-  -- Server-side variant; returns false when that global is not a valid player.
-  -- @param action [String permission ID]
-  -- @param object=nil [String object name the permission was allowed for]
-  -- @return [Boolean]
-  function can(action, object)
-    if IsValid(current_player) then
-      return current_player:can(action, object)
-    end
-
-    return false
-  end
-
-  --- Creates or updates the ban record for a SteamID, saves it to the database and caches it.
-  -- Runs the OnBanAdded hook afterwards.
-  -- @warning [Internal] Use Bolt:ban to ban somebody.
-  -- @param steam_id [String SteamID of the banned player]
-  -- @param name [String name stored with the ban]
-  -- @param unban_time [Number unix timestamp at which the ban ends]
-  -- @param duration [Number ban length in seconds, 0 for a permanent ban]
-  -- @param reason [String]
-  -- @param admin=nil [Player the player who issued the ban; nothing is stored for the server
-  --   console or for a ban made by code]
-  -- @return [Ban the saved ban record]
-  function Bolt:add_ban(steam_id, name, unban_time, duration, reason, admin)
-    local obj = bans[steam_id] or Ban.new()
-      obj.name = name
-      obj.steam_id = steam_id
-      obj.reason = reason
-      obj.duration = duration
-      obj.unban_time = to_datetime(unban_time)
-      obj.admin_name = IsValid(admin) and admin:steam_name() or nil
-      obj.admin_steam_id = IsValid(admin) and admin:SteamID() or nil
-    self:record_ban(steam_id, obj:save())
-
-    --- Called on the server after a ban has been created or an existing ban of the same
-    -- SteamID has been replaced, when the record is in the ban cache and is being saved.
-    -- @param steam_id [String SteamID that has been banned]
-    -- @param ban [Ban The ban record: name, steam_id, reason, duration (seconds, 0 for a
-    --   permanent ban), unban_time, admin_name and admin_steam_id]
-    hook.Run('OnBanAdded', steam_id, obj)
-
-    return obj
-  end
-
-  --- Puts a ban record into the ban cache without touching the database.
-  -- @param id [String SteamID the ban belongs to]
-  -- @param obj [Ban]
-  function Bolt:record_ban(id, obj)
-    bans[id] = obj
-  end
-
-  --- Bans a player or a SteamID and saves the ban to the database. The banned player is
-  -- kicked if they are on the server, whether they were given as a player or as a SteamID,
-  -- unless prevent_kick is set. The owner of the SteamID does not have to be on the server,
-  -- or to have ever joined it.
-  -- ```
-  -- -- Ban an online player for a day.
-  -- Bolt:ban(target, 60 * 60 * 24, 'Prop spam')
-  -- -- Permanently ban somebody by SteamID, on behalf of an admin.
-  -- Bolt:ban('STEAM_0:1:12345', 0, 'Cheating', false, actor)
-  -- ```
-  -- @param target [Player/String the player to ban, or a SteamID]
-  -- @param duration=0 [Number ban length in seconds, 0 for a permanent ban]
-  -- @param reason='N/A' [String text or language phrase]
-  -- @param prevent_kick=false [Boolean do not kick the banned player]
-  -- @param admin=nil [Player the player who issues the ban, stored with it]
-  -- @param name=nil [String name to store with the ban of a SteamID whose owner is not on
-  --   the server; the name of an earlier ban of that SteamID or else the SteamID itself by
-  --   default]
-  -- @return [Ban the ban record, or nil if target is neither a valid player nor a string]
-  function Bolt:ban(target, duration, reason, prevent_kick, admin, name)
-    if !isstring(target) and !IsValid(target) then return end
-
-    duration = duration or 0
-    reason = reason or 'N/A'
-
-    local steam_id = target
-
-    if isstring(target) then
-      local online = player.is_steam_id(target) and player.find(target)
-
-      if IsValid(online) then
-        target = online
-      else
-        name = name or (bans[steam_id] and bans[steam_id].name) or steam_id
-      end
-    end
-
-    if !isstring(target) then
-      name = target:steam_name()
-      steam_id = target:SteamID()
-    end
-
-    local obj = self:add_ban(steam_id, name, os_time() + duration, duration, reason, admin)
-
-    if !isstring(target) and !prevent_kick then
-      target:Kick(self:get_ban_message(obj, Flux.Lang:get_player_lang(target)))
-    end
-
-    return obj
-  end
-
-  --- Deletes the ban record of a SteamID from the database and from the ban cache, so that
-  -- the player can connect again right away and a later ban gets a record of its own. Runs
-  -- the OnBanRemoved hook if there was a ban.
-  -- @param steam_id [String]
-  -- @return [Boolean whether a ban record was found and deleted, Map the deleted record's
-  --   column values (only when found)]
-  function Bolt:remove_ban(steam_id)
-    local obj = bans[steam_id]
-
-    if obj then
-      local dump = obj:dump()
-      obj:destroy()
-
-      bans[steam_id] = nil
-
-      --- Called on the server after a ban has been lifted: by the `ban remove` command, from
-      -- the ban list of the admin panel, or because it has expired by the time its owner
-      -- tried to join.
-      -- @param steam_id [String SteamID that is no longer banned]
-      -- @param data [Map Column values of the deleted ban record]
-      hook.Run('OnBanRemoved', steam_id, dump)
-
-      return true, dump
-    end
-
-    return false
-  end
-else
-  --- Checks whether the local player may perform an action. Client-side variant.
-  -- @param action [String permission ID]
-  -- @param object=nil [String object name the permission was allowed for]
-  -- @return [Boolean]
-  function can(action, object)
-    return PLAYER:can(action, object)
-  end
 end
 
 do

@@ -25,9 +25,9 @@ function ROLE:define_permissions()
   can 'spawn_npcs'
   can 'spawn_sweps'
 
-  can 'areas'
-  can 'map_scenes'
-  can 'spawn_points'
+  can 'manage_areas'
+  can 'manage_map_scenes'
+  can 'manage_spawn_points'
   can 'fill_containers'
 
   can 'bots'

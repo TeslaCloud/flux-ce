@@ -261,6 +261,64 @@ en:
     manage_plugins:
       name: Plugin manager
       description: Grants access to disable and enable plugins.
+    no_description: No description provided.
+    physgun:
+      name: Physgun
+      description: Grants access to the physics gun.
+    toolgun:
+      name: Tool Gun
+      description: Grants access to the tool gun.
+    physgun_freeze:
+      name: Freeze Protected Entities
+      description: Grants access to freeze protected entities.
+    physgun_pickup:
+      name: Unlimited Physgun
+      description: Grants access to pick up any entity with the physics gun.
+    spawn_props:
+      name: Spawn Props
+      description: Grants access to spawn props.
+    spawn_chairs:
+      name: Spawn Chairs
+      description: Grants access to spawn chairs.
+    spawn_entities:
+      name: Spawn All Entities
+      description: Grants access to spawn any entity.
+    spawn_vehicles:
+      name: Spawn Vehicles
+      description: Grants access to spawn vehicles.
+    spawn_npcs:
+      name: Spawn NPCs
+      description: Grants access to spawn NPCs.
+    spawn_ragdolls:
+      name: Spawn Ragdolls
+      description: Grants access to spawn ragdolls.
+    spawn_sweps:
+      name: Spawn SWEPs
+      description: Grants access to spawn scripted weapons.
+    voice:
+      name: Voice chat access
+      description: Grants access to voice chat.
+    context_menu:
+      name: Context Menu
+      description: "Grants access to the context menu, to the properties of entities and to driving them."
+    noclip:
+      name: Noclip
+      description: Lets the player use observer mode / noclip.
+    manage_permissions:
+      name: Permission editor
+      description: Grants access to the permission editor.
+    manage_configuration:
+      name: Configuration
+      description: Grants access to configuration.
+    staff:
+      name: Assistant access
+      description: Marks the player as a member of the staff.
+    moderate:
+      name: Admin access
+      description: General staff access. Other addons identify the player as an admin.
+    administrate:
+      name: Super Admin access
+      description: Advanced staff access. Other addons identify the player as a superadmin.
   role:
     user: The base rank that is automatically given to the player.
     assistant: A staff rank with the basic moderation tools, such as kicking, banning, vanishing and noclip.

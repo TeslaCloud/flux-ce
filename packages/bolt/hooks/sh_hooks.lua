@@ -138,131 +138,31 @@ end
 -- management of permissions, configs and plugins, and the staff / admin / super admin
 -- compatibility levels.
 function hooks:RegisterPermissions()
-  Bolt:register_permission(
-    'physgun',
-    'Physgun',
-    'Grants access to the physics gun.',
-    'permission.categories.tools'
-  )
-  Bolt:register_permission(
-    'toolgun',
-    'Tool Gun',
-    'Grants access to the tool gun.',
-    'permission.categories.tools'
-  )
-  Bolt:register_permission(
-    'physgun_freeze',
-    'Freeze Protected Entities',
-    'Grants access to freeze protected entities.',
-    'permission.categories.tools'
-  )
-  Bolt:register_permission(
-    'physgun_pickup',
-    'Unlimited Physgun',
-    'Grants access to pick up any entity with the physics gun.',
-    'permission.categories.tools'
-  )
+  Bolt:register_permission('physgun', nil, nil, 'permission.categories.tools')
+  Bolt:register_permission('toolgun', nil, nil, 'permission.categories.tools')
+  Bolt:register_permission('physgun_freeze', nil, nil, 'permission.categories.tools')
+  Bolt:register_permission('physgun_pickup', nil, nil, 'permission.categories.tools')
 
-  Bolt:register_permission(
-    'spawn_props',
-    'Spawn Props',
-    'Grants access to spawn props.',
-    'permission.categories.spawn'
-  )
-  Bolt:register_permission(
-    'spawn_chairs',
-    'Spawn Chairs',
-    'Grants access to spawn chairs.',
-    'permission.categories.spawn'
-  )
-  Bolt:register_permission(
-    'spawn_entities',
-    'Spawn All Entities',
-    'Grants access to spawn any entity.',
-    'permission.categories.spawn'
-  )
-  Bolt:register_permission(
-    'spawn_vehicles',
-    'Spawn Vehicles',
-    'Grants access to spawn vehicles.',
-    'permission.categories.spawn'
-  )
-  Bolt:register_permission(
-    'spawn_npcs',
-    'Spawn NPCs',
-    'Grants access to spawn NPCs.',
-    'permission.categories.spawn'
-  )
-  Bolt:register_permission(
-    'spawn_ragdolls',
-    'Spawn Ragdolls',
-    'Grants access to spawn ragdolls.',
-    'permission.categories.spawn'
-  )
-  Bolt:register_permission(
-    'spawn_sweps',
-    'Spawn SWEPs',
-    'Grants access to spawn scripted weapons.',
-    'permission.categories.spawn'
-  )
+  Bolt:register_permission('spawn_props', nil, nil, 'permission.categories.spawn')
+  Bolt:register_permission('spawn_chairs', nil, nil, 'permission.categories.spawn')
+  Bolt:register_permission('spawn_entities', nil, nil, 'permission.categories.spawn')
+  Bolt:register_permission('spawn_vehicles', nil, nil, 'permission.categories.spawn')
+  Bolt:register_permission('spawn_npcs', nil, nil, 'permission.categories.spawn')
+  Bolt:register_permission('spawn_ragdolls', nil, nil, 'permission.categories.spawn')
+  Bolt:register_permission('spawn_sweps', nil, nil, 'permission.categories.spawn')
 
-  Bolt:register_permission(
-    'voice',
-    'Voice chat access',
-    'Grants access to voice chat.',
-    'permission.categories.general'
-  )
-  Bolt:register_permission(
-    'context_menu',
-    'Context Menu',
-    'Grants access to the context menu, to the properties of entities and to driving them.',
-    'permission.categories.general'
-  )
-  Bolt:register_permission(
-    'noclip',
-    'Noclip',
-    'Lets the player use observer mode / noclip.',
-    'permission.categories.general'
-  )
+  Bolt:register_permission('voice', nil, nil, 'permission.categories.general')
+  Bolt:register_permission('context_menu', nil, nil, 'permission.categories.general')
+  Bolt:register_permission('noclip', nil, nil, 'permission.categories.general')
 
-  Bolt:register_permission(
-    'manage_permissions',
-    'Permission editor',
-    'Grants access to the permission editor.',
-    'permission.categories.player_management'
-  )
-  Bolt:register_permission(
-    'manage_configuration',
-    'Configuration',
-    'Grants access to configuration.',
-    'permission.categories.configuration'
-  )
+  Bolt:register_permission('manage_permissions', nil, nil, 'permission.categories.player_management')
+  Bolt:register_permission('manage_configuration', nil, nil, 'permission.categories.configuration')
 
-  Bolt:register_permission(
-    'manage_plugins',
-    'permission.manage_plugins.name',
-    'permission.manage_plugins.description',
-    'permission.categories.server_management'
-  )
+  Bolt:register_permission('manage_plugins', nil, nil, 'permission.categories.server_management')
 
-  Bolt:register_permission(
-    'staff',
-    'Assistant access',
-    'Marks the player as a member of the staff.',
-    'permission.categories.compatibility'
-  )
-  Bolt:register_permission(
-    'moderate',
-    'Admin access',
-    'General staff access. Other addons identify the player as an admin.',
-    'permission.categories.compatibility'
-  )
-  Bolt:register_permission(
-    'administrate',
-    'Super Admin access',
-    'Advanced staff access. Other addons identify the player as a superadmin.',
-    'permission.categories.compatibility'
-  )
+  Bolt:register_permission('staff', nil, nil, 'permission.categories.compatibility')
+  Bolt:register_permission('moderate', nil, nil, 'permission.categories.compatibility')
+  Bolt:register_permission('administrate', nil, nil, 'permission.categories.compatibility')
 end
 
 Plugin.add_hooks('Bolt', hooks)

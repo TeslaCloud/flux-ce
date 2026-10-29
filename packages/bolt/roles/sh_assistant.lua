@@ -32,8 +32,8 @@ function ROLE:define_permissions()
   can 'spawn_entities'
   can 'spawn_ragdolls'
 
-  can 'texts'
-  can 'pictures'
+  can 'manage_texts'
+  can 'manage_pictures'
   can 'manage_containers'
   can 'manage_doors'
   can 'static_tool'

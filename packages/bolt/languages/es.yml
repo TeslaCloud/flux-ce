@@ -261,6 +261,64 @@ es:
     manage_plugins:
       name: Gestor de plugins
       description: Da acceso para desactivar y activar plugins.
+    no_description: Sin descripción.
+    physgun:
+      name: Physgun
+      description: Da acceso a la pistola de física.
+    toolgun:
+      name: Tool Gun
+      description: Da acceso a la pistola de herramientas.
+    physgun_freeze:
+      name: Congelar entidades protegidas
+      description: Da acceso para congelar entidades protegidas.
+    physgun_pickup:
+      name: Physgun ilimitada
+      description: Da acceso para levantar cualquier entidad con la pistola de física.
+    spawn_props:
+      name: Spawnear props
+      description: Da acceso para spawnear props.
+    spawn_chairs:
+      name: Spawnear sillas
+      description: Da acceso para spawnear sillas.
+    spawn_entities:
+      name: Spawnear todas las entidades
+      description: Da acceso para spawnear cualquier entidad.
+    spawn_vehicles:
+      name: Spawnear vehículos
+      description: Da acceso para spawnear vehículos.
+    spawn_npcs:
+      name: Spawnear NPCs
+      description: Da acceso para spawnear NPCs.
+    spawn_ragdolls:
+      name: Spawnear ragdolls
+      description: Da acceso para spawnear ragdolls.
+    spawn_sweps:
+      name: Spawnear SWEPs
+      description: Da acceso para spawnear armas programadas.
+    voice:
+      name: Acceso al chat de voz
+      description: Da acceso al chat de voz.
+    context_menu:
+      name: Menú contextual
+      description: "Da acceso al menú contextual, a las propiedades de las entidades y a conducirlas."
+    noclip:
+      name: Noclip
+      description: Permite al jugador usar el modo observador / noclip.
+    manage_permissions:
+      name: Editor de permisos
+      description: Da acceso al editor de permisos.
+    manage_configuration:
+      name: Configuración
+      description: Da acceso a la configuración.
+    staff:
+      name: Acceso de asistente
+      description: Marca al jugador como miembro del staff.
+    moderate:
+      name: Acceso de administrador
+      description: Acceso general de staff. Otros addons identifican al jugador como administrador.
+    administrate:
+      name: Acceso de superadministrador
+      description: Acceso avanzado de staff. Otros addons identifican al jugador como superadministrador.
   role:
     user: El rango base que se da automáticamente al jugador.
     assistant: Un rango de staff con las herramientas básicas de moderación, como expulsar, banear, volverse invisible y noclip.
