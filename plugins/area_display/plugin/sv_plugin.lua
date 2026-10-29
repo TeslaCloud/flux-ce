@@ -92,14 +92,3 @@ function AreaDisplay:set_seen(actor, area, seen)
 
   actor:set_player_data(data_key, next(all_seen) != nil and all_seen or nil)
 end
-
-Cable.receive('fl_area_display_request', function(actor, area_id)
-  if !actor.record then return end
-
-  local area = AreaDisplay:find_text_area(area_id)
-
-  if !area or !area.once or AreaDisplay:has_seen(actor, area) then return end
-
-  AreaDisplay:set_seen(actor, area)
-  AreaDisplay:show_area(actor, area)
-end)

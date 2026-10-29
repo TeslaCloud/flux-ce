@@ -1,6 +1,6 @@
 --- Client-side hooks of the Area Display plugin: they give the theme its area notice options,
 -- color, sound and fonts, register the client setting, announce the text areas the local
--- player enters, draw the notices on the HUD and show the ones that the server sends.
+-- player enters and draw the notices on the HUD.
 
 --- Sets the options, the color, the sound and the fonts of the area notices on the theme that
 -- was loaded.
@@ -91,13 +91,3 @@ function AreaDisplay:PlayerLeftTextArea(_actor, area, _cur_time)
     self.pending[area.id] = nil
   end
 end
-
-Cable.receive('fl_area_display_show', function(info, area_id)
-  local area = AreaDisplay:find_text_area(area_id)
-
-  if istable(info) or isstring(info) then
-    AreaDisplay:add(info, area)
-  elseif area then
-    AreaDisplay:announce(area, true)
-  end
-end)
