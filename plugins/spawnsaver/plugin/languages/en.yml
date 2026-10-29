@@ -1,6 +1,8 @@
 en:
   config:
-    character:
-      spawn_where_left:
+    spawnsaver:
+      title: Spawn Saver
+      desc: Spawn Saver plugin settings.
+      enabled:
         name: Spawn Where Left
         desc: "Whether characters are put back where they were when their players left, as long as the map is the same."

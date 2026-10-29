@@ -1,7 +1,12 @@
+categories:
+  spawnsaver:
+    name: config.spawnsaver.title
+    description: config.spawnsaver.desc
 configs:
-  spawn_where_left:
-    name: config.character.spawn_where_left.name
-    description: config.character.spawn_where_left.desc
-    category: character
+  spawnsaver_enabled:
+    renamed_from: spawn_where_left
+    name: config.spawnsaver.enabled.name
+    description: config.spawnsaver.enabled.desc
+    category: spawnsaver
     type: boolean
     default_value: true

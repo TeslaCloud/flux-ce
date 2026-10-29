@@ -1,6 +1,8 @@
 fr:
   config:
-    character:
-      spawn_where_left:
+    spawnsaver:
+      title: "Sauvegarde de position"
+      desc: "Paramètres du plugin de sauvegarde de position."
+      enabled:
         name: "Réapparaître à l'endroit quitté"
         desc: "Indique si les personnages sont replacés là où ils se trouvaient lorsque leurs joueurs se sont déconnectés, tant que la carte est la même."

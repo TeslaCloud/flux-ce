@@ -1,6 +1,8 @@
 es:
   config:
-    character:
-      spawn_where_left:
+    spawnsaver:
+      title: Guardado de posición
+      desc: Ajustes del plugin de guardado de posición.
+      enabled:
         name: Aparecer donde se salió
         desc: "Si los personajes vuelven a colocarse donde estaban cuando sus jugadores se desconectaron, siempre que el mapa sea el mismo."
