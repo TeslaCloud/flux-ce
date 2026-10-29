@@ -49,6 +49,8 @@ es:
       heavy: Pesada
       melee: Cuerpo a cuerpo
       throwable: Arrojadiza
+      accessory: Accesorio
+      chest: Pecho
     option:
       use: Usar
       take: Tomar

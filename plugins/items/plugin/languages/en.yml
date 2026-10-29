@@ -49,6 +49,8 @@ en:
       heavy: Heavy
       melee: Melee
       throwable: Throwable
+      accessory: Accessory
+      chest: Chest
     option:
       use: Use
       take: Take

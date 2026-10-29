@@ -49,6 +49,8 @@ fr:
       heavy: "Lourde"
       melee: "Corps à corps"
       throwable: "De jet"
+      accessory: "Accessoire"
+      chest: "Torse"
     option:
       use: "Utiliser"
       take: "Prendre"

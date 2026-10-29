@@ -49,6 +49,8 @@ ru:
       heavy: Тяжелое
       melee: Холодное
       throwable: Метательное
+      accessory: Аксессуар
+      chest: Грудь
     option:
       use: Использовать
       take: Взять
