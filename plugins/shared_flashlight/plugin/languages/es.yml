@@ -18,3 +18,6 @@ es:
       shadows:
         name: Sombras
         desc: Si la linterna proyecta sombras. Las sombras reducen el rendimiento en servidores concurridos.
+      item:
+        name: "Objeto de linterna"
+        desc: "El ID de un objeto que un jugador necesita tener equipado para encender su linterna. Déjalo vacío para que todos los jugadores puedan usar la linterna."

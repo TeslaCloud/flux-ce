@@ -1,22 +1,30 @@
 --- Server side of the Shared Flashlight plugin: toggles the light when the flashlight key is
--- pressed, puts it out on death and on the way back to the engine flashlight.
+-- pressed, puts it out on death, when the flashlight item is unequipped and on the way back
+-- to the engine flashlight.
 
 --- Toggles the player's shared flashlight and keeps the engine flashlight from toggling.
 -- The engine always asks to turn its flashlight on, since it never gets to turn on, so the
 -- player's current state decides which way the toggle goes. The light is only turned on for
 -- a living player whom `Player:CanUseFlashlight` allows it, the way the base gamemode decides
--- for the engine flashlight, and a player toggles it at most five times a second. Does
--- nothing while the `shared_flashlight_enabled` config is off, which leaves the decision to
--- the base gamemode.
+-- for the engine flashlight, and who has the item of `SharedFlashlight:has_flashlight_item`;
+-- a player toggles it at most five times a second. While the `shared_flashlight_enabled`
+-- config is off, only keeps a player without that item from turning the engine flashlight on
+-- and otherwise leaves the decision to the base gamemode.
 -- @param actor [Player]
--- @param _on [Boolean whether the engine flashlight is being turned on]
--- @return [Boolean false while the plugin is enabled, nil otherwise]
-function SharedFlashlight:PlayerCanSwitchFlashlight(actor, _on)
-  if !self:is_enabled() then return end
+-- @param on [Boolean whether the engine flashlight is being turned on]
+-- @return [Boolean false while the plugin is enabled or the item is missing, nil otherwise]
+function SharedFlashlight:PlayerCanSwitchFlashlight(actor, on)
+  if !self:is_enabled() then
+    if on and !self:has_flashlight_item(actor) then return false end
+
+    return
+  end
 
   local turn_on = !actor:is_flashlight_on()
 
-  if turn_on and (!actor:Alive() or !actor:CanUseFlashlight()) then return false end
+  if turn_on and (!actor:Alive() or !actor:CanUseFlashlight() or !self:has_flashlight_item(actor)) then
+    return false
+  end
 
   local cur_time = CurTime()
 
@@ -26,6 +34,16 @@ function SharedFlashlight:PlayerCanSwitchFlashlight(actor, _on)
   actor:set_flashlight(turn_on)
 
   return false
+end
+
+--- Puts the flashlight of a player out when the item of the `shared_flashlight_item` config
+-- is unequipped, whether it is moved, dropped or used up.
+-- @param owner [Player]
+-- @param item_obj [Item the unequipped item]
+function SharedFlashlight:OnItemUnequipped(owner, item_obj)
+  if IsValid(owner) and item_obj.id == Config.get('shared_flashlight_item', '') and owner:is_flashlight_on() then
+    owner:set_flashlight(false)
+  end
 end
 
 --- Puts the flashlight of a player out when they die.

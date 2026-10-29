@@ -18,3 +18,6 @@ en:
       shadows:
         name: Shadows
         desc: Whether the flashlight casts shadows. Shadows cost performance on busy servers.
+      item:
+        name: "Flashlight Item"
+        desc: "The ID of an item that a player needs to have equipped to turn their flashlight on. Leave it empty to let every player use the flashlight."

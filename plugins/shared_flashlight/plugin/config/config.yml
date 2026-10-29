@@ -40,3 +40,9 @@ configs:
     category: shared_flashlight
     type: boolean
     default_value: true
+  shared_flashlight_item:
+    name: config.shared_flashlight.item.name
+    description: config.shared_flashlight.item.desc
+    category: shared_flashlight
+    type: string
+    default_value: ''

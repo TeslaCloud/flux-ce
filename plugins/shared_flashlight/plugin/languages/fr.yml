@@ -18,3 +18,6 @@ fr:
       shadows:
         name: "Ombres"
         desc: "Indique si la lampe torche projette des ombres. Les ombres coûtent des performances sur les serveurs chargés."
+      item:
+        name: "Objet de lampe torche"
+        desc: "L'identifiant d'un objet qu'un joueur doit avoir équipé pour allumer sa lampe torche. Laissez-le vide pour que chaque joueur puisse utiliser la lampe torche."

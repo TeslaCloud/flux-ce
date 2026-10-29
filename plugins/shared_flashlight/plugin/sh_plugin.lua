@@ -13,7 +13,9 @@
 --
 -- The `shared_flashlight_enabled` config switches the plugin off, which leaves the engine
 -- flashlight alone; `flashlight_fov`, `flashlight_distance`, `flashlight_brightness` and
--- `flashlight_shadows` shape the light on every client.
+-- `flashlight_shadows` shape the light on every client. The `shared_flashlight_item` config
+-- names an item that a player needs to have equipped to turn either flashlight on, while the
+-- Items plugin is loaded; the light goes out when that item is unequipped.
 -- @module [SharedFlashlight]
 
 PLUGIN:set_global('SharedFlashlight')
@@ -26,6 +28,19 @@ SharedFlashlight.lights = SharedFlashlight.lights or {}
 -- @return [Boolean value of the `shared_flashlight_enabled` config]
 function SharedFlashlight:is_enabled()
   return Config.get('shared_flashlight_enabled', true)
+end
+
+--- Checks whether a player has the item that the `shared_flashlight_item` config names
+-- equipped, which they need to turn their flashlight on. Every player has it while the config
+-- is empty or the Items plugin is not loaded.
+-- @param target [Player]
+-- @return [Boolean]
+function SharedFlashlight:has_flashlight_item(target)
+  local item_id = Config.get('shared_flashlight_item', '')
+
+  if !Items or !isstring(item_id) or item_id == '' then return true end
+
+  return (target:has_item_equipped(item_id))
 end
 
 require_relative 'sv_hooks'
