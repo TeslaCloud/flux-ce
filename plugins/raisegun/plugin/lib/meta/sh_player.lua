@@ -43,8 +43,8 @@ end
 -- false. The physgun, gravity gun, tool gun, camera and the weapons marked as always raised
 -- are always raised, and the weapons marked as never raised never are. Otherwise the
 -- ShouldWeaponBeRaised hook decides. If it does not, the weapon of a running player is
--- lowered when the `sprint_lowers_weapon` config is on, any other weapon is raised when the
--- `weapon_raise_enabled` config is off, and the networked state is used in the end.
+-- lowered when the `raisegun_sprint_lowers_weapon` config is on, any other weapon is raised when the
+-- `raisegun_enabled` config is off, and the networked state is used in the end.
 -- @return [Boolean]
 function player_meta:is_weapon_raised()
   local weapon = self:GetActiveWeapon()
@@ -73,11 +73,11 @@ function player_meta:is_weapon_raised()
     return should_raise
   end
 
-  if Config.get('sprint_lowers_weapon') and self:running() then
+  if Config.get('raisegun_sprint_lowers_weapon') and self:running() then
     return false
   end
 
-  if !Config.get('weapon_raise_enabled', true) then
+  if !Config.get('raisegun_enabled', true) then
     return true
   end
 

@@ -28,13 +28,13 @@ local retry_delay = 0.5
 -- wanted one, so that the gestures and the fire blocking of the Raise Weapon plugin run once
 -- per change, and a change that the PlayerCanRaiseWeapon hook refuses is not asked for again
 -- for half a second. Does nothing without the Raise Weapon plugin, while its
--- `weapon_raise_enabled` config is off, without a valid weapon and for the weapons whose
+-- `raisegun_enabled` config is off, without a valid weapon and for the weapons whose
 -- state is fixed (the physgun, gravity gun, tool gun, camera and the weapons marked as
 -- always or never raised). The caller checks that the control is in effect.
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the call]
 function ThirdPerson:update_raise(actor, cur_time)
-  if !RaiseGun or !Config.get('weapon_raise_enabled', true) then return end
+  if !RaiseGun or !Config.get('raisegun_enabled', true) then return end
 
   local weapon = actor:GetActiveWeapon()
 

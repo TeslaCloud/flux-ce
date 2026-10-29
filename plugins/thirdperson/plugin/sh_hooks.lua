@@ -27,16 +27,16 @@ if CLIENT then
   -- weapon counts as lowered. Answering true as soon as a key is held keeps the keys in the
   -- command, so that the first shot is not lost.
   -- Nothing is answered for other players, outside of the control, while the
-  -- `weapon_raise_enabled` config is off or while the player is running and the
-  -- `sprint_lowers_weapon` config keeps the weapon lowered, so that the normal state
+  -- `raisegun_enabled` config is off or while the player is running and the
+  -- `raisegun_sprint_lowers_weapon` config keeps the weapon lowered, so that the normal state
   -- applies.
   -- @param actor [Player]
   -- @param _weapon [Weapon active weapon of the player, one that can be raised and lowered]
   -- @return [Boolean true while the weapon is predicted to be raised, nil otherwise]
   function ThirdPerson:ShouldWeaponBeRaised(actor, _weapon)
     if actor != PLAYER or !self:is_controlling(actor) then return end
-    if !Config.get('weapon_raise_enabled', true) then return end
-    if Config.get('sprint_lowers_weapon') and actor:running() then return end
+    if !Config.get('raisegun_enabled', true) then return end
+    if Config.get('raisegun_sprint_lowers_weapon') and actor:running() then return end
 
     if self.aiming or self.firing or CurTime() < self.local_raise_until then
       return true

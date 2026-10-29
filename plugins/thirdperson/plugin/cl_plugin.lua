@@ -360,10 +360,10 @@ end
 -- @param client [Player the local player]
 -- @return [String 'raised' when the server has raised the weapon and it can fire, 'raising'
 --   while the player aims or fires or the weapon is to stay raised but it cannot fire yet,
---   'lowered' otherwise; nil without the Raise Weapon plugin, while its `weapon_raise_enabled`
+--   'lowered' otherwise; nil without the Raise Weapon plugin, while its `raisegun_enabled`
 --   config is off, without a weapon and for a weapon whose state is fixed]
 local function weapon_state(client)
-  if !RaiseGun or !Config.get('weapon_raise_enabled', true) then return end
+  if !RaiseGun or !Config.get('raisegun_enabled', true) then return end
 
   local weapon = client:GetActiveWeapon()
 
