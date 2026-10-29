@@ -151,6 +151,17 @@ es:
       description: Mata a un jugador.
       syntax: <jugador>
       message: "{player} ha matado a {target}."
+    report:
+      description: 'Informa al equipo de staff sobre esos molestos problemas.'
+      syntax: <mensaje>
+    setarmor:
+      description: 'Establece la armadura de un personaje en un valor personalizado.'
+      syntax: <jugador> <valor>
+      message: '{player} ha establecido la armadura de {target} en {armor}.'
+    sethealth:
+      description: 'Establece la salud de un personaje en un valor personalizado.'
+      syntax: <jugador> <valor>
+      message: '{player} ha establecido la salud de {target} en {health}.'
     staff:
       description: 'Habla con los demás miembros del staff.'
       syntax: <mensaje>
@@ -218,6 +229,8 @@ es:
     return: Has vuelto a tu posición anterior.
     setgroup: Tu grupo de usuario se ha cambiado a {group}.
     slay: "{player} te ha matado."
+    setarmor: 'Tu armadura se ha establecido en {armor}.'
+    sethealth: 'Tu salud se ha establecido en {health}.'
     tp: Te han teletransportado.
     freeze: "{player} te ha congelado."
     unfreeze: "{player} te ha descongelado."

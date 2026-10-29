@@ -151,6 +151,17 @@ en:
       description: Kills a player.
       syntax: <target>
       message: "{player} has slain {target}."
+    report:
+      description: 'Report to the staff members on those pesky issues.'
+      syntax: <message>
+    setarmor:
+      description: 'Set the armor of a character to a custom value.'
+      syntax: <target> <value>
+      message: '{player} has set the armor of {target} to {armor}.'
+    sethealth:
+      description: 'Set the health of a character to a custom value.'
+      syntax: <target> <value>
+      message: '{player} has set the health of {target} to {health}.'
     staff:
       description: 'Talk to fellow staff members.'
       syntax: <message>
@@ -218,6 +229,8 @@ en:
     return: You have been returned to your previous position.
     setgroup: Your usergroup was set to {group}.
     slay: "You have been slain by {player}."
+    setarmor: 'Your armor has been set to {armor}.'
+    sethealth: 'Your health has been set to {health}.'
     tp: You have been teleported.
     freeze: "You've been frozen by {player}."
     unfreeze: "You've been unfrozen by {player}."

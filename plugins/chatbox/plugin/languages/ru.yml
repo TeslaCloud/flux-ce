@@ -1,4 +1,8 @@
 ru:
+  command:
+    message:
+      description: 'Отправить личное сообщение другому игроку.'
+      syntax: <цель> <сообщение>
   config:
     chatbox:
       title: Окно чата

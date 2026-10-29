@@ -1,4 +1,8 @@
 en:
+  command:
+    message:
+      description: 'Send a private message to another player.'
+      syntax: <target> <message>
   config:
     chatbox:
       title: Chatbox

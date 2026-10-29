@@ -30,11 +30,12 @@
 -- Bans are stored in the database and checked whenever a player connects. Staff manage
 -- players with the plugin's commands, such as `/ban add|remove`, `/role set|remove`,
 -- `/permission grant|revoke|reset|list`, `/charpermission grant|revoke|reset|list`,
--- `/freeze on|off`, `/kick` and `/tp`, whose 'permission', 'role', 'map' and 'duration'
--- arguments are completed while they are typed. They also have the Admin entry of the tab
--- menu, which holds the player management page (role and permission editor, for players and
--- their active characters), the staff page (everybody with a role above `user`, connected or
--- not), the ban list, the config editor and the plugin manager.
+-- `/freeze on|off`, `/kick`, `/sethealth` and `/tp`, whose 'permission', 'role', 'map' and
+-- 'duration' arguments are completed while they are typed, and every player reaches the staff
+-- online with `/report`. Staff also have the Admin entry of the tab menu, which holds the
+-- player management page (role and permission editor, for players and their active
+-- characters), the staff page (everybody with a role above `user`, connected or not), the ban
+-- list, the config editor and the plugin manager.
 --
 -- Other plugins extend Bolt by registering permissions, by shipping role files in a `roles`
 -- folder, and by adding pages to the admin panel from the `AddAdminMenuItems` hook. A role

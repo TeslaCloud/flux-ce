@@ -152,6 +152,17 @@ ru:
       description: Убивает игрока.
       syntax: <игрок>
       message: "{player} убивает {target}."
+    report:
+      description: 'Сообщить администрации о проблеме.'
+      syntax: <сообщение>
+    setarmor:
+      description: 'Установить броню персонажа на заданное значение.'
+      syntax: <цель> <значение>
+      message: '{player} установил(а) броню {target} на {armor}.'
+    sethealth:
+      description: 'Установить здоровье персонажа на заданное значение.'
+      syntax: <цель> <значение>
+      message: '{player} установил(а) здоровье {target} на {health}.'
     staff:
       description: Написать в чат администрации.
       syntax: <сообщение>
@@ -219,6 +230,8 @@ ru:
     return: Вы были возвращены на предыдущую позицию.
     setgroup: Ваша группа была изменена на {group}.
     slay: "Вы были убиты игроком {player}."
+    setarmor: 'Ваша броня установлена на {armor}.'
+    sethealth: 'Ваше здоровье установлено на {health}.'
     tp: Вы были телепортированы.
     freeze: "Вы были заморожены {player}."
     unfreeze: "Вы были разморожены {player}."

@@ -151,6 +151,17 @@ fr:
       description: "Tue un joueur."
       syntax: "<cible>"
       message: "{player} a tué {target}."
+    report:
+      description: "Signale aux membres de l'équipe ces problèmes agaçants."
+      syntax: "<message>"
+    setarmor:
+      description: "Règle l'armure d'un personnage sur une valeur personnalisée."
+      syntax: "<cible> <valeur>"
+      message: "{player} a réglé l'armure de {target} sur {armor}."
+    sethealth:
+      description: "Règle la santé d'un personnage sur une valeur personnalisée."
+      syntax: "<cible> <valeur>"
+      message: "{player} a réglé la santé de {target} sur {health}."
     staff:
       description: "Parler aux autres membres de l'équipe."
       syntax: "<message>"
@@ -218,6 +229,8 @@ fr:
     return: "Vous avez été ramené à votre position précédente."
     setgroup: "Votre groupe d'utilisateurs est désormais {group}."
     slay: "Vous avez été tué par {player}."
+    setarmor: "Votre armure a été réglée sur {armor}."
+    sethealth: "Votre santé a été réglée sur {health}."
     tp: "Vous avez été téléporté."
     freeze: "Vous avez été gelé par {player}."
     unfreeze: "Vous avez été dégelé par {player}."

@@ -9,31 +9,11 @@ CMD.arguments = 1
 CMD.arg_types = { 'text' }
 CMD.no_console = true
 
+local tag_color = Color(234, 255, 208)
+
 --- Sends a chat message to every online player with the 'staff' permission.
 -- @param actor [Player the caller]
 -- @param text [String the message, as it was typed]
 function CMD:on_run(actor, text)
-  local msg_table = {
-    Color(234, 255, 208),
-    '@staff ',
-    --- Run by the Staff command to get the color of the sender's name, the same hook the
-    -- chatbox runs for a regular chat message.
-    -- @param speaker [Player Player who sent the staff message]
-    -- @param text [String The message]
-    -- @return [Color Color of the name; the color of the sender's team when nothing is
-    --   returned]
-    hook.Run('ChatboxGetPlayerColor', actor, text) or team.GetColor(actor:Team()),
-    get_player_name(actor),
-    --- Run by the Staff command to get the color of the message text, the same hook the
-    -- chatbox runs for a regular chat message.
-    -- @param speaker [Player Player who sent the staff message]
-    -- @param text [String The message]
-    -- @return [Color Color of the text; white when nothing is returned]
-    hook.Run('ChatboxGetMessageColor', actor, text) or Color(255, 255, 255),
-    ': ',
-    text:chomp(' '),
-    { sender = actor }
-  }
-
-  Chatbox.add_text(Bolt:get_staff(), unpack(msg_table))
+  Bolt:send_staff_message(actor, text, '@staff ', tag_color)
 end

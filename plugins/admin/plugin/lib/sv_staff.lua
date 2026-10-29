@@ -2,8 +2,9 @@
 -- up the stored user of a SteamID, checking the immunity of whoever acts on them, changing
 -- their stored role, and finding the targets of the commands that also take a SteamID
 -- (`ban add` and `role remove`).
--- Also lists the staff: the players on the server with the `staff` permission, and for the
--- staff page of the admin panel everybody whose role is not `user`, connected or not.
+-- Also lists the staff: the players on the server with the `staff` permission, who receive
+-- the chat messages of the Staff and Report commands, and for the staff page of the admin
+-- panel everybody whose role is not `user`, connected or not.
 --
 -- The lookups query the `users` table directly instead of loading `User` models, so that
 -- listing the staff does not load the characters and inventories of every staff member.
@@ -315,4 +316,41 @@ function Bolt:get_staff()
   end
 
   return staff
+end
+
+--- Sends a chat message of a player to every online player with the 'staff' permission and
+-- to the sender: a colored tag, the name of the sender in the color of their name and the
+-- text in the color of their messages.
+-- @param actor [Player sender of the message]
+-- @param text [String the message, as it was typed]
+-- @param tag [String text before the name of the sender, such as '@staff ']
+-- @param tag_color [Color color of the tag]
+function Bolt:send_staff_message(actor, text, tag, tag_color)
+  local recipients = self:get_staff()
+
+  if !table.HasValue(recipients, actor) then
+    recipients[#recipients + 1] = actor
+  end
+
+  Chatbox.add_text(recipients,
+    tag_color,
+    tag,
+    --- Run when a staff or report message is sent to get the color of the sender's name, the
+    -- same hook the chatbox runs for a regular chat message.
+    -- @param speaker [Player Player who sent the message]
+    -- @param text [String The message]
+    -- @return [Color Color of the name; the color of the sender's team when nothing is
+    --   returned]
+    hook.Run('ChatboxGetPlayerColor', actor, text) or team.GetColor(actor:Team()),
+    get_player_name(actor),
+    --- Run when a staff or report message is sent to get the color of the message text, the
+    -- same hook the chatbox runs for a regular chat message.
+    -- @param speaker [Player Player who sent the message]
+    -- @param text [String The message]
+    -- @return [Color Color of the text; white when nothing is returned]
+    hook.Run('ChatboxGetMessageColor', actor, text) or Color(255, 255, 255),
+    ': ',
+    text:chomp(' '),
+    { sender = actor }
+  )
 end
