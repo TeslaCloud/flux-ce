@@ -19,7 +19,8 @@
 -- change the faction, rank and whitelists of a player. The `OnPlayerFactionChanged` and
 -- `OnRankChanged` hooks report changes, `ShouldNameGenerate` can stop a name from being
 -- generated, `GetFactionLimit` and `PlayerCanBypassFactionLimit` adjust the limits, and
--- `PlayerCanTransferFaction` can refuse a transfer by the SetFaction command. The 'faction'
+-- `PlayerCanTransferFaction` can refuse a transfer by the SetFaction command. The plugin
+-- answers `GetRandomCharacterName` from the random_names lists of a faction. The 'faction'
 -- and 'rank' conditions are registered for the Conditions plugin, and the 'faction', 'rank'
 -- and 'model' argument types for the completion of commands.
 
@@ -29,6 +30,7 @@ Plugin.add_extra('factions')
 
 require_relative 'cl_hooks'
 require_relative 'cl_nethooks'
+require_relative 'sh_hooks'
 require_relative 'sv_hooks'
 
 --- Returns the factions of the players that a command argument names, the way the server

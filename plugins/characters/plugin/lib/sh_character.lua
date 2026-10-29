@@ -143,6 +143,25 @@ function Characters.normalize_desc(text)
   return (string_trim(cleaned):gsub('\n', ' | '))
 end
 
+--- Returns a random name for a character of a faction, for the random name button of character
+-- creation and for a player whose faction starts giving them a name of their own.
+-- @param actor [Player the player the name is for]
+-- @param faction_id [String ID of the faction of the character, nil without one]
+-- @param gender [Number CHAR_GENDER_* value of the character]
+-- @return [String the name, nil when there is no name to offer]
+function Characters.random_name(actor, faction_id, gender)
+  --- Asks for a random name for a character. Called on both realms by
+  -- `Characters.random_name`: on the client by character creation, on the server when a
+  -- player moves into a faction with names of its own. The Factions plugin answers from the
+  -- random_names lists of the faction.
+  -- @param actor [Player the player the name is for]
+  -- @param faction_id [String ID of the faction of the character, nil without one]
+  -- @param gender [Number CHAR_GENDER_* value of the character]
+  -- @return [String the name; the first non-nil return wins. Character creation shows no
+  --   random name button when no handler returns a name]
+  return hook.Run('GetRandomCharacterName', actor, faction_id, gender)
+end
+
 if SERVER then
   Characters.taken_names = Characters.taken_names or {}
 

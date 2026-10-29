@@ -3,6 +3,14 @@
 local config_get = Config.get
 local math_clamp = math.Clamp
 local color_female = Color(240, 130, 170)
+local creation_genders = { male = CHAR_GENDER_MALE, female = CHAR_GENDER_FEMALE }
+
+--- Returns a random name for the character being created, for its faction and chosen gender.
+-- @param char_data [Map character data collected so far]
+-- @return [String the name, nil when there is no name to offer]
+local function random_name(char_data)
+  return Characters.random_name(PLAYER, char_data.faction, creation_genders[char_data.gender] or CHAR_GENDER_NONE)
+end
 
 --- Base panel of the stages of character creation (`fl_character_creation_base`). It only
 -- draws its background through the theme; stage panels derive from it and may define the
@@ -107,7 +115,7 @@ function PANEL:Init()
   self.name_entry:SetFont(font)
   self.name_entry:SetText('')
 
-  if SCHEMA.get_random_name then
+  if random_name(self:GetParent().char_data) then
     self.name_random = vgui.Create('fl_button', self)
     self.name_random:SetPos(scrw * 0.125 + self.name_entry:GetWide() + 8, math.scale(72.5))
     self.name_random:SetSize(fa_icon_size, fa_icon_size)
@@ -116,11 +124,13 @@ function PANEL:Init()
     self.name_random:SetTooltip(t'ui.char_create.random_name')
     self.name_random:SetDrawBackground(false)
     self.name_random.DoClick = function(_btn)
-      surface.PlaySound('buttons/blip1.wav')
+      local name = random_name(self:GetParent().char_data)
 
-      self.name_entry:SetText(
-        SCHEMA:get_random_name(self:GetParent().char_data.gender or 'no_gender', self:GetParent().char_data)
-      )
+      if name then
+        surface.PlaySound('buttons/blip1.wav')
+
+        self.name_entry:SetText(name)
+      end
     end
   end
 

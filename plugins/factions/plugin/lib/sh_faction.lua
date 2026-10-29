@@ -820,13 +820,16 @@ do
 
   if SERVER then
     --- Moves the player into a faction: resets the rank to the default rank of the faction,
-    -- regenerates the name, sets the team, adjusts gender and model, gives the default
+    -- sets the team, adjusts gender, regenerates the name, adjusts the model, gives the default
     -- description of a faction that does not let players write one, and runs both factions'
-    -- leave and join callbacks. The player then gets the weapons, the maximum health and
-    -- armor and the rank model of the new faction, and NPCs feel about them as that faction
-    -- says. The rank is set here rather than with `Player:set_rank`, so only the
-    -- OnPlayerFactionChanged hook reports the move. Neither the limit of the faction nor its
-    -- can_transfer callback is checked; see `Factions.can_transfer`. Server only.
+    -- leave and join callbacks. A player who comes from a faction without names of its own
+    -- (has_name false) into one with them gets a name from `Characters.random_name` when one
+    -- is offered, so they do not keep the name the old faction generated. The player then
+    -- gets the weapons, the maximum health and armor and the rank model of the new faction,
+    -- and NPCs feel about them as that faction says. The rank is set here rather than with
+    -- `Player:set_rank`, so only the OnPlayerFactionChanged hook reports the move. Neither the
+    -- limit of the faction nor its can_transfer callback is checked; see
+    -- `Factions.can_transfer`. Server only.
     -- @param id [String ID of a registered faction]
     function player_meta:set_faction(id)
       local old_faction = self:get_faction()
@@ -844,13 +847,19 @@ do
 
       self:SetTeam(faction_table.team_id)
 
-      Characters.set_name(self, faction_table:generate_name(self, default_rank))
-
       if !faction_table.has_gender then
         Characters.set_gender(self, CHAR_GENDER_NONE)
       elseif !old_faction or !old_faction.has_gender then
         Characters.set_gender(self, math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
       end
+
+      local char_name
+
+      if old_faction and !old_faction.has_name and faction_table.has_name then
+        char_name = Characters.random_name(self, id, self:get_nv('gender', CHAR_GENDER_NONE))
+      end
+
+      Characters.set_name(self, faction_table:generate_name(self, default_rank, nil, char_name))
 
       Characters.set_model(self, faction_table:get_random_model(self))
 

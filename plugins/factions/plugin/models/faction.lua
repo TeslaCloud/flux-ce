@@ -1,11 +1,12 @@
 --- A faction that characters can belong to.
 -- It holds the name, description, color and image of the faction, its models by gender, its
--- ranks from the lowest to the highest, and the template that character names are generated
--- from. It can also limit how many of its members may be online at once and how many
--- characters one player may have in it, give its members weapons, maximum health and armor
--- when they spawn, and set how the NPCs of the map feel about them. A rank can carry a
--- model, weapons, maximum health and armor of its own, a limit, the right to promote and
--- demote other members, and the mark of the rank that new members start with.
+-- ranks from the lowest to the highest, the template that character names are generated
+-- from and the lists that random names are picked from. It can also limit how many of its
+-- members may be online at once and how many characters one player may have in it, give its
+-- members weapons, maximum health and armor when they spawn, and set how the NPCs of the map
+-- feel about them. A rank can carry a model, weapons, maximum health and armor of its own, a
+-- limit, the right to promote and demote other members, and the mark of the rank that new
+-- members start with.
 --
 -- Factions are normally defined in the files of a factions folder, where the object is
 -- available as FACTION (see `Factions.include_factions`), and are registered with
@@ -26,6 +27,11 @@ local dispositions = {
   fear = disposition_fear,
   like = disposition_like,
   neutral = disposition_neutral
+}
+
+local random_name_keys = {
+  [CHAR_GENDER_MALE] = 'male',
+  [CHAR_GENDER_FEMALE] = 'female'
 }
 
 --- Creates a faction with default settings: no ranks, no models, no limits, no loadout, name,
@@ -57,6 +63,12 @@ local dispositions = {
 -- FACTION.npc_relations = {
 --   npc_metropolice = 'like',
 --   npc_citizen = 'fear'
+-- }
+-- -- Lists that random names are picked from, by 'male', 'female' and 'universal'; see
+-- -- Faction#get_random_name.
+-- FACTION.random_names = {
+--   male = { first = { 'John', 'Paul' }, last = { 'Doe', 'Smith' } },
+--   female = { first = { 'Jane', 'Mary' }, last = { 'Doe', 'Smith' } }
 -- }
 -- ```
 -- @param id [String faction ID, normalized with to_id]
@@ -298,6 +310,30 @@ function Faction:get_gender_models(gender)
   return faction_models[gender]
 end
 
+--- Picks a random name from the random_names lists of the faction: a first name from the
+-- lists of the gender, or the 'universal' ones when the gender has none, followed by a last
+-- name when those lists have last names. A character without a gender falls back to the
+-- 'male' lists after the 'universal' ones.
+-- @param gender [Number CHAR_GENDER_* value]
+-- @return [String the name, nil when the faction has no lists for the gender]
+function Faction:get_random_name(gender)
+  local random_names = self.random_names
+
+  if !random_names then return end
+
+  local lists = random_names[random_name_keys[gender]] or random_names.universal
+    or gender == CHAR_GENDER_NONE and random_names.male
+
+  if !lists or !lists.first then return end
+
+  local first_name = table.Random(lists.first)
+  local last_name = lists.last and table.Random(lists.last)
+
+  if !first_name then return end
+
+  return last_name ? first_name..' '..last_name : first_name
+end
+
 --- Picks a random faction model that matches the player's gender.
 -- @param target [Player]
 -- @return [String model path]
@@ -365,10 +401,11 @@ end
 -- @param target [Player]
 -- @param rank [Number/String rank index or rank ID used for {rank}]
 -- @param default_data=nil [Map values for {data:key} that override the faction's own data]
+-- @param char_name=nil [String name used for {name} in place of the player's current name]
 -- @return [String the generated name; the player's current name if a ShouldNameGenerate
 --   hook returns false]
-function Faction:generate_name(target, rank, default_data)
-  local char_name = target:name()
+function Faction:generate_name(target, rank, default_data, char_name)
+  char_name = char_name or target:name()
 
   default_data = default_data or {}
 
