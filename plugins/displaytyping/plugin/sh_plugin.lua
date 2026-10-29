@@ -7,7 +7,7 @@
 -- The client of a typing player reports the text to the server a few times a second, and the
 -- server passes it on only to the players who are near enough to see the bubble; players who
 -- are dead, hidden or in observer mode are not shown as typing at all. When the
--- 'display_exact_message' config is disabled, or the text is a command that no plugin has
+-- 'displaytyping_exact_message' config is disabled, or the text is a command that no plugin has
 -- claimed as speech, the text itself never leaves the client: only its outline is sent (see
 -- `DisplayTyping:outline`), which is enough for hooks to tell the kind of speech.
 --
@@ -49,7 +49,7 @@ local punctuation_limit = 8
 -- @param data [Map kind definition, all fields optional: name (String phrase or text of the
 --   label, the 'typing' label by default), color (Color of the label and the animated dots,
 --   the accent color of the bubble by default), range (Number multiplier of the
---   'display_typing_range' config for this kind, 1 by default), live (Boolean whether the text
+--   'displaytyping_range' config for this kind, 1 by default), live (Boolean whether the text
 --   may be shown as it is typed, true by default)]
 -- @return [Map the registered kind, or nil if the arguments are not valid]
 function DisplayTyping:register_kind(id, data)
@@ -74,15 +74,15 @@ end
 
 --- Returns the distance within which the bubble of a typing player is visible, before the
 -- kind of speech scales it.
--- @return [Number distance in units, the 'display_typing_range' config]
+-- @return [Number distance in units, the 'displaytyping_range' config]
 function DisplayTyping:get_range()
-  return tonumber(Config.get('display_typing_range')) or 350
+  return tonumber(Config.get('displaytyping_range')) or 350
 end
 
 --- Checks whether the server lets players see the text that others are typing.
--- @return [Boolean false if the 'display_exact_message' config is disabled]
+-- @return [Boolean false if the 'displaytyping_exact_message' config is disabled]
 function DisplayTyping:live_text_allowed()
-  return Config.get('display_exact_message') != false
+  return Config.get('displaytyping_exact_message') != false
 end
 
 --- Returns the ragdoll that stands in for a player who has fallen over, if the Ragdoll plugin

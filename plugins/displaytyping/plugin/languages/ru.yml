@@ -1,6 +1,6 @@
 ru:
   config:
-    display_typing:
+    displaytyping:
       title: Индикатор написания текста
       desc: Настройка индикатора, обозначающего, что игрок в данный момент набирает сообщение в чат.
       exact_message:

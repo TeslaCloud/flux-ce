@@ -1,6 +1,6 @@
 fr:
   config:
-    display_typing:
+    displaytyping:
       title: "Affichage de la saisie"
       desc: "Configuration du plugin d'affichage de la saisie"
       exact_message:

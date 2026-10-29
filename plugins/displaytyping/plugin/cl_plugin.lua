@@ -44,7 +44,7 @@ end
 -- @param text [String the text being typed, or its outline]
 -- @return [Map the kind: id (String), label (String translated label), color (Color, or nil
 --   for the accent color of the bubble), range (Number multiplier of the
---   'display_typing_range' config) and live (Boolean whether the text may be shown); nil if
+--   'displaytyping_range' config) and live (Boolean whether the text may be shown); nil if
 --   no bubble should be shown for this text]
 function DisplayTyping:get_kind(target, text)
   --- Asks what kind of speech a player is typing, which decides the label, the color and

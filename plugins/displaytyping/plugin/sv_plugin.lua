@@ -6,7 +6,7 @@
 -- that the typing is over for them. Nothing is sent about a player who is dead, hidden or in
 -- observer mode, to players who have turned typing bubbles off, or more often than every
 -- `relay_interval` seconds per typing player. The text itself is only passed on if the
--- client has reported it as text that others may see and the 'display_exact_message' config
+-- client has reported it as text that others may see and the 'displaytyping_exact_message' config
 -- is enabled; otherwise the receivers get its outline.
 
 local cable_send = Cable.send
@@ -86,7 +86,7 @@ end
 -- @param exact=false [Boolean true if the text is what the player is typing and others may
 --   see it; otherwise it is reduced to its outline]
 -- @param kind_id=nil [String ID of the kind of speech, as registered with
---   `DisplayTyping:register_kind` on both realms; its range scales the 'display_typing_range'
+--   `DisplayTyping:register_kind` on both realms; its range scales the 'displaytyping_range'
 --   config for this text, limited to `DisplayTyping.max_range`. A kind the server does not
 --   know gets the range 1]
 function DisplayTyping:set_typing(actor, text, exact, kind_id)
