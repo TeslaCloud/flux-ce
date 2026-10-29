@@ -189,8 +189,8 @@ function Bolt:RegisterConditions()
     name = 'condition.role.name',
     text = 'condition.role.text',
     get_args = function(panel, _data)
-      local operator = util.operator_to_symbol(panel.data.operator)
-      local parameter = panel.data.role
+      local operator = util.operator_to_symbol(panel.data.operator) or ''
+      local parameter = panel.data.role or ''
 
       return { operator = operator, role = parameter }
     end,

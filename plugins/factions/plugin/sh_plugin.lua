@@ -160,8 +160,8 @@ function Factions:RegisterConditions()
     name = 'condition.faction.name',
     text = 'condition.faction.text',
     get_args = function(panel, _data)
-      local operator = util.operator_to_symbol(panel.data.operator)
-      local faction_name
+      local operator = util.operator_to_symbol(panel.data.operator) or ''
+      local faction_name = ''
 
       if panel.data.faction_id then
         faction_name = self.find_by_id(panel.data.faction_id):get_name()
