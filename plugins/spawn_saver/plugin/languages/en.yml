@@ -1,6 +1,6 @@
 en:
   config:
-    spawnsaver:
+    spawn_saver:
       title: Spawn Saver
       desc: Spawn Saver plugin settings.
       enabled:

@@ -24,7 +24,7 @@ end
 function SpawnSaver:save_spawn_point(target, character)
   --- Decides whether the place where a player stands is written into their character.
   -- Called on the server every time the active character of a living player is saved,
-  -- while the 'spawnsaver_enabled' config is on. The plugin itself refuses for players who
+  -- while the 'spawn_saver_enabled' config is on. The plugin itself refuses for players who
   -- are ragdolled, in observer mode or in noclip.
   -- @param target [Player the player whose character is being saved]
   -- @param character [Character their active character]
@@ -54,7 +54,7 @@ function SpawnSaver:restore_spawn_point(target, character)
 
   --- Decides whether a player is moved to the spot saved with their character. Called on
   -- the server when a character that has a spot inside the world of the current map is
-  -- loaded, after its player has spawned, while the 'spawnsaver_enabled' config is on. The
+  -- loaded, after its player has spawned, while the 'spawn_saver_enabled' config is on. The
   -- plugin itself refuses for players who are dead, ragdolled, in observer mode or in
   -- noclip.
   -- @param target [Player the player who has loaded the character]

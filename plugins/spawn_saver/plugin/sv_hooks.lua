@@ -20,7 +20,7 @@ end
 
 --- Writes the place where the player stands into their active character before it is
 -- saved. A dead player makes the character forget its spot, and so does turning the
--- 'spawnsaver_enabled' config off: a spot that was saved before is cleared once, and nothing
+-- 'spawn_saver_enabled' config off: a spot that was saved before is cleared once, and nothing
 -- is written as long as there is none. Banned characters, whose players stay dead, and
 -- characters that are being loaded and have not been given their spot yet are left alone.
 -- @param owner [Player]
@@ -29,7 +29,7 @@ function SpawnSaver:SaveCharacterData(owner, character)
   if owner:IsBot() or tobool(character.banned) then return end
   if owner:get_character() != character or owner.spawn_point_character != character then return end
 
-  if !Config.get('spawnsaver_enabled') or !owner:Alive() or owner:Health() <= 0 then
+  if !Config.get('spawn_saver_enabled') or !owner:Alive() or owner:Health() <= 0 then
     if Characters.get_custom_data(character, self.data_key) != nil then
       Characters.set_custom_data(character, self.data_key, nil)
     end
@@ -45,7 +45,7 @@ end
 -- @param owner [Player]
 -- @param character [Character the loaded character]
 function SpawnSaver:PostCharacterLoaded(owner, character)
-  if !owner:IsBot() and Config.get('spawnsaver_enabled') then
+  if !owner:IsBot() and Config.get('spawn_saver_enabled') then
     self:restore_spawn_point(owner, character)
   end
 

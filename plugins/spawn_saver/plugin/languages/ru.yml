@@ -1,6 +1,6 @@
 ru:
   config:
-    spawnsaver:
+    spawn_saver:
       title: Сохранение позиции
       desc: Настройка плагина сохранения позиции.
       enabled:

@@ -1,0 +1,14 @@
+categories:
+  spawn_saver:
+    name: config.spawn_saver.title
+    description: config.spawn_saver.desc
+configs:
+  spawn_saver_enabled:
+    renamed_from:
+      - spawn_where_left
+      - spawnsaver_enabled
+    name: config.spawn_saver.enabled.name
+    description: config.spawn_saver.enabled.desc
+    category: spawn_saver
+    type: boolean
+    default_value: true

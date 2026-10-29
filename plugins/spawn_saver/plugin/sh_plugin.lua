@@ -12,7 +12,7 @@
 -- time. Plugins change these rules with the `ShouldSavePlayerSpawn` and
 -- `ShouldRestorePlayerSpawn` hooks.
 --
--- The 'spawnsaver_enabled' config turns all of this on and off. While it is off, characters
+-- The 'spawn_saver_enabled' config turns all of this on and off. While it is off, characters
 -- forget their spots as they are saved.
 --
 -- The spot is kept in the character data under the 'spawn_point' key, as a table with the

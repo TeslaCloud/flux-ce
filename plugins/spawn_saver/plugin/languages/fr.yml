@@ -1,6 +1,6 @@
 fr:
   config:
-    spawnsaver:
+    spawn_saver:
       title: "Sauvegarde de position"
       desc: "Paramètres du plugin de sauvegarde de position."
       enabled:
