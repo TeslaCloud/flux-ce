@@ -203,7 +203,7 @@ function GM:HUDPaint()
       -- @param scrw [Number Screen width]
       -- @param scrh [Number Screen height]
       hook.Run('HUDPaintDeathBackground', cur_time, scrw, scrh)
-      Theme.call('PaintDeathScreen', cur_time, scrw, scrh)
+      Theme.hook('PaintDeathScreen', cur_time, scrw, scrh)
       --- Called on the client every frame while the local player is dead, after the theme has
       -- painted the death screen, for drawing on top of it.
       -- @param cur_time [Number CurTime() of the frame]
@@ -230,7 +230,7 @@ function GM:HUDPaint()
       --   drawn]
       if !hook.Run('FLHUDPaint', cur_time, scrw, scrh) then
         InfoDisplay:draw_all()
-        Flux.Bars:DrawTopBars()
+        Flux.Bars:draw_top_bars()
       end
     end
 

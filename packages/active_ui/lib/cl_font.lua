@@ -189,7 +189,7 @@ function Font.create_fonts()
     weight = 1000
   })
 
-  Theme.call('CreateFonts')
+  Theme.hook('CreateFonts')
   --- Called on the client every time the fonts are created again: when the gamemode loads,
   -- once the schema has loaded and after a change of the screen resolution. The built-in fonts
   -- exist at this point and the `CreateFonts` theme hook of the active theme has run. Create

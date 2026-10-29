@@ -239,14 +239,3 @@ function RPCommands:format_message(speaker, text)
 
   return msg_table
 end
-
---- Sends a colored chat message to a single player. Nothing is sent for a player who is not
--- valid, as the message would reach everyone instead.
--- @param receiver [Player player to send the message to]
--- @param notification_color [Color color of the message]
--- @param message [String message]
-function RPCommands:NotifySelf(receiver, notification_color, message)
-  if !IsValid(receiver) then return end
-
-  Cable.send(receiver, 'fl_notify_self', notification_color, message)
-end

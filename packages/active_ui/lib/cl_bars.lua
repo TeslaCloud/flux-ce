@@ -3,7 +3,7 @@
 -- value and maximum, position and size, and optionally a `callback` that returns its current
 -- value. The `type` of a bar decides how it is laid out. `BAR_TOP` bars are stacked from the
 -- top left corner of the screen in order of their `priority` and are drawn together by
--- `Flux.Bars:DrawTopBars`, which the gamemode calls while it paints the HUD of a living
+-- `Flux.Bars:draw_top_bars`, which the gamemode calls while it paints the HUD of a living
 -- player. Bars of the other types (`BAR_MANUAL`, `BAR_HIDDEN`) keep the position they were
 -- registered with and are drawn by their owner with `Flux.Bars:draw`, usually from a HUD
 -- paint hook.
@@ -22,7 +22,7 @@ if !Theme then require_relative 'cl_theme' end
 
 mod 'Flux::Bars'
 
-local theme_call          = Theme.call
+local theme_hook          = Theme.hook
 local math_clamp          = math.Clamp
 local math_round          = math.Round
 
@@ -132,7 +132,7 @@ function Flux.Bars:set_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    theme_call('PreBarValueSet', bar, bar.value, new_value)
+    theme_hook('PreBarValueSet', bar, bar.value, new_value)
 
     local clamped = math_clamp(new_value, 0, bar.max_value)
 
@@ -156,7 +156,7 @@ function Flux.Bars:hinder_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    theme_call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
+    theme_hook('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
 
     if bar.hinder_value != new_value then
       bar.hinder_value = math_clamp(new_value, 0, bar.max_value)
@@ -248,7 +248,7 @@ function Flux.Bars:draw(id)
     -- the bar here (advancing its value animation) and converts its texts to upper case.
     -- @param bar_info [Map bar data]
     hook.Run('PreDrawBar', bar_info)
-    theme_call('PreDrawBar', bar_info)
+    theme_hook('PreDrawBar', bar_info)
 
     --- Asks whether a HUD bar should be drawn. Called on the client by `Flux.Bars:draw` every
     -- time a bar is drawn, and by `Flux.Bars:prioritize` for every registered bar when the top
@@ -262,7 +262,7 @@ function Flux.Bars:draw(id)
       return
     end
 
-    theme_call('DrawBarBackground', bar_info)
+    theme_hook('DrawBarBackground', bar_info)
 
     --- Asks whether the fill of a bar should be drawn. Called on the client every time a bar
     -- is drawn, after its background. The fill is always drawn when the value of the bar is
@@ -270,26 +270,26 @@ function Flux.Bars:draw(id)
     -- @param bar_info [Map bar data]
     -- @return [Boolean Return true to draw the fill even though the value of the bar is 0]
     if hook.Run('ShouldFillBar', bar_info) or bar_info.value != 0 then
-      theme_call('DrawBarFill', bar_info)
+      theme_hook('DrawBarFill', bar_info)
     end
 
     if bar_info.hinder_display and bar_info.hinder_display <= bar_info.hinder_value then
-      theme_call('DrawBarHindrance', bar_info)
+      theme_hook('DrawBarHindrance', bar_info)
     end
 
-    theme_call('DrawBarTexts', bar_info)
+    theme_hook('DrawBarTexts', bar_info)
 
     --- Called on the client after a bar has been drawn, before the `PostDrawBar` theme hook.
     -- Not called for bars that `ShouldDrawBar` has hidden.
     -- @param bar_info [Map bar data]
     hook.Run('PostDrawBar', bar_info)
-    theme_call('PostDrawBar', bar_info)
+    theme_hook('PostDrawBar', bar_info)
   end
 end
 
 --- Draws every bar from the prioritized list of top bars. The gamemode calls it every frame
 -- while it paints the HUD of a living player, along with the info displays.
-function Flux.Bars:DrawTopBars()
+function Flux.Bars:draw_top_bars()
   for _, priority in ipairs(priority_order) do
     local ids = sorted[priority]
 

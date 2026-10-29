@@ -51,7 +51,7 @@ function PANEL:rebuild()
   local font = Theme.get_font('text_small')
   local permission = self:get_permission()
 
-  local paint_button = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
+  local paint_button = function(btn, w, h) Theme.hook('PaintPermissionButton', self, btn, w, h) end
   local request_temporary = function(btn)
     local messages = layer_messages[self.layer]
 
@@ -513,7 +513,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  Theme.call('PaintPermissionEditor', self, w, h)
+  Theme.hook('PaintPermissionEditor', self, w, h)
 end
 
 --- Collects the value of every row that is not set to PERM_NO.

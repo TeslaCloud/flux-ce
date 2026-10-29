@@ -12,13 +12,13 @@
 -- that the theme provides, and plugins add their own values and panels to the theme from an
 -- `OnThemeLoaded` handler.
 --
--- Drawing is delegated to the theme through theme hooks. `Theme.hook` (also available as
--- `Theme.call`) calls the method of that name on the active theme and returns what it returns,
--- and does nothing if the theme has no such method. A panel calls, for example,
--- `Theme.hook('PaintButton', self, w, h)` from its `Paint` function, and a theme changes the
--- look of buttons by defining `THEME:PaintButton(panel, w, h)`. Theme hooks are plain methods
--- of the theme rather than hooks of the `hook` library: plugins cannot add handlers for them,
--- only the active theme answers, with the methods it defines or inherits from its parents.
+-- Drawing is delegated to the theme through theme hooks. `Theme.hook` calls the method of that
+-- name on the active theme and returns what it returns, and does nothing if the theme has no
+-- such method. A panel calls, for example, `Theme.hook('PaintButton', self, w, h)` from its
+-- `Paint` function, and a theme changes the look of buttons by defining
+-- `THEME:PaintButton(panel, w, h)`. Theme hooks are plain methods of the theme rather than
+-- hooks of the `hook` library: plugins cannot add handlers for them, only the active theme
+-- answers, with the methods it defines or inherits from its parents.
 -- @module [Theme]
 
 if Theme then return end
@@ -83,7 +83,7 @@ function Theme.create_panel(panel_id, parent, ...)
 end
 
 --- Calls a method of the active theme in protected mode. Errors are printed to the console
--- instead of being raised. Also available as Theme.call.
+-- instead of being raised.
 -- ```
 -- function PANEL:Paint(w, h)
 --   Theme.hook('PaintButton', self, w, h)
@@ -98,8 +98,6 @@ function Theme.hook(id, ...)
     return hook_result(id, pcall(current_theme[id], current_theme, ...))
   end
 end
-
-Theme.call = Theme.hook
 
 --- Returns the ID of the theme that is currently loaded.
 -- @return [String theme ID, or nil if no theme is loaded]

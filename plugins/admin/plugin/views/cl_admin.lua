@@ -56,7 +56,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PaintOver(w, h)
-  Theme.call('AdminPanelPaintOver', self, w, h)
+  Theme.hook('AdminPanelPaintOver', self, w, h)
 end
 
 --- Registers a page and adds a sidebar button that opens it.
