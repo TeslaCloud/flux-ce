@@ -23,9 +23,9 @@
 -- the server and the client, which is the case when it is registered from shared code.
 --
 -- The package loads the registry, the values of the local player, the types, the language
--- setting and the player extension, then the settings menu and the hooks. On the server it
--- also registers the package's languages with `Pipeline`. During a partial code reload
--- (`LITE_REFRESH`) nothing is loaded again.
+-- setting and the player extension, then the settings menu, the hooks and the network
+-- message handler. On the server it also registers the package's languages with `Pipeline`.
+-- During a partial code reload (`LITE_REFRESH`) nothing is loaded again.
 -- @module [ClientSettings]
 
 if !LITE_REFRESH then
@@ -41,4 +41,5 @@ if !LITE_REFRESH then
 
   require_relative_folder('views', true)
   require_relative_folder('hooks', true)
+  require_relative_folder('nethooks', true)
 end
