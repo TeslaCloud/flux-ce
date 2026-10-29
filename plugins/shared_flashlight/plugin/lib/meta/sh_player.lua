@@ -28,12 +28,13 @@ end
 -- flashlight on creates an `fl_flashlight` entity parented to the player, which is removed
 -- along with the player, and turning it off removes that entity; the engine flashlight is
 -- put out either way, in case the config was turned on while it was lit. While the config
--- is off the engine flashlight is toggled instead.
+-- is off the engine flashlight is toggled instead, except that turning the flashlight off
+-- still removes a shared light that is lit, such as when the config has just been turned off.
 -- @param on [Boolean true to turn the flashlight on, false to turn it off]
 function player_meta:set_flashlight(on)
   if !SERVER then return end
 
-  if !SharedFlashlight:is_enabled() then
+  if !SharedFlashlight:is_enabled() and (on or !self:get_flashlight()) then
     self:Flashlight(on)
     self:set_nv('fl_flashlight_on', false)
 
