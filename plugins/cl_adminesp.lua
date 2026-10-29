@@ -8,6 +8,7 @@ local draw_simple_text = draw.SimpleText
 local draw_rounded_box = draw.RoundedBox
 local text_size = util.text_size
 local clamp = math.Clamp
+local max = math.max
 
 PLUGIN:set_name('Admin ESP')
 PLUGIN:set_author('TeslaCloud Studios')
@@ -31,6 +32,7 @@ do
   local color_red = Color(255, 0, 0)
   local color_blue = Color(0, 0, 255)
   local color_fallback = Color(255, 255, 255)
+  local offset_pos = Vector()
 
   --- Draws the admin ESP for every other player: names, an outline box, health and armor bars.
   -- Only drawn while the local player is noclipping and has the 'admin_esp' permission.
@@ -46,11 +48,18 @@ do
 
         local pos = target:GetPos()
         local screen_pos = pos:ToScreen()
-        local head_pos = Vector(pos.x, pos.y, pos.z + 60):ToScreen()
-        local text_pos = Vector(pos.x, pos.y, pos.z + 90):ToScreen()
+
+        offset_pos:Set(pos)
+        offset_pos.z = pos.z + 60
+
+        local head_pos = offset_pos:ToScreen()
+
+        offset_pos.z = pos.z + 90
+
+        local text_pos = offset_pos:ToScreen()
         local text_x, text_y = text_pos.x, text_pos.y
         local x, y = head_pos.x, head_pos.y
-        local size = 52 * math.abs(350 / client_pos:Distance(pos))
+        local size = 52 * 350 / max(client_pos:Distance(pos), 1)
         local half_size = size * 0.5
         local box_height = (screen_pos.y - y) * 1.25
         local team_color = team.GetColor(target:Team()) or color_fallback
