@@ -28,13 +28,13 @@ es:
       max_message_length:
         name: Longitud máxima de mensaje
         desc: Lo largo que puede ser un mensaje de chat.
-      chat_interval:
+      interval:
         name: Intervalo entre mensajes
         desc: El tiempo mínimo, en milisegundos, entre dos mensajes de chat del mismo jugador. 0 desactiva el límite.
-      chat_avatars:
+      avatars:
         name: Avatares en el chat
         desc: Si se muestra el avatar de Steam de quien habla antes de su nombre en los mensajes normales del chat.
-      chat_timestamps:
+      timestamps:
         name: Marcas de tiempo
         desc: Si se muestra la hora a la que se envió cada mensaje antes de él.
   error:

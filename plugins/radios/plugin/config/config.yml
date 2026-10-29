@@ -1,0 +1,15 @@
+categories:
+  radios:
+    name: config.radios.title
+    description: config.radios.desc
+configs:
+  radios_chat_color:
+    renamed_from: radio_chat_color
+    name: config.radios.chat_color.name
+    description: config.radios.chat_color.desc
+    category: radios
+    type: color
+    default_value:
+      r: 100
+      g: 228
+      b: 100

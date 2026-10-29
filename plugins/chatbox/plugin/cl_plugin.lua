@@ -51,7 +51,7 @@ end
 
 --- Converts a message that was received from the server into a list of pieces with
 -- calculated sizes and positions, ready to be drawn by a fl_chat_message panel.
--- Strings are wrapped to the width of the chatbox. While the 'chat_timestamps' config is
+-- Strings are wrapped to the width of the chatbox. While the 'chatbox_timestamps' config is
 -- enabled the message starts with the time it was sent at. Clientside only.
 -- @param msg_table [Map message data: data (List of strings, font sizes, colors,
 --   image / icon / avatar tables, players and entities), optional size, time (os.time() of
@@ -91,10 +91,10 @@ function Chatbox.compile(msg_table)
   --   and its total_height field should be set to the height of the message]
   -- @return [Boolean return true to skip the default compilation of all pieces]
   if Plugin.call('ChatboxCompileMessage', data, compiled) != true then
-    local message_margin = config_get('message_margin')
+    local message_margin = config_get('chatbox_message_margin')
     local wrap_width = Chatbox.width - get_option('chatbox_padding', scale(8)) * 4
 
-    if config_get('chat_timestamps') then
+    if config_get('chatbox_timestamps') then
       local stamp = os.date('%H:%M', isnumber(msg_table.time) and msg_table.time or os.time())..' '
       local w, h = text_size(stamp, font)
 

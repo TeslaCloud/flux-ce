@@ -1,5 +1,5 @@
 --- A single message of the chatbox (`fl_chat_message`): draws a message compiled by
--- `Chatbox.compile` and fades out after the 'message_fade_delay' config, unless the chatbox is
+-- `Chatbox.compile` and fades out after the 'chatbox_message_fade_delay' config, unless the chatbox is
 -- open. Steam avatars in the message are `AvatarImage` child panels that the message draws
 -- itself.
 
@@ -20,7 +20,7 @@ PANEL.alpha = 255
 --- Records when the message was added and when it should start to fade out.
 function PANEL:Init()
   self.added_at = CurTime()
-  self.fade_at = self.added_at + Config.get('message_fade_delay')
+  self.fade_at = self.added_at + Config.get('chatbox_message_fade_delay')
 end
 
 --- Updates the visibility and opacity of the message: fully visible while the chatbox
@@ -77,7 +77,7 @@ function PANEL:Paint(w, h)
 
     local alpha = self.alpha
     local message_data = self.message_data
-    local cur_font = Font.size(Theme.get_font('chatbox_normal'), math.scale(Config.get('default_font_size')))
+    local cur_font = Font.size(Theme.get_font('chatbox_normal'), math.scale(Config.get('chatbox_default_font_size')))
 
     text_color.r, text_color.g, text_color.b, text_color.a = 255, 255, 255, alpha
     white_alpha.a = alpha

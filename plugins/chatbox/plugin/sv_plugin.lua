@@ -1,7 +1,7 @@
 --- Server side of the Chatbox plugin: builds chat messages, decides who can hear them, sends
 -- them to the clients, and turns what players type into messages. Every text a player submits,
 -- from the chatbox or the `say` console command, goes through the same guard: it is cut to the
--- 'max_message_length' config and dropped while the 'chat_interval' config has not passed since
+-- 'chatbox_max_message_length' config and dropped while the 'chatbox_interval' config has not passed since
 -- their last submission. What a client adds with `chat.AddText`, which only that client
 -- receives, is cut to the same length and relayed `Chatbox.relay_limit` times a second at most.
 
@@ -74,7 +74,7 @@ end
 -- is_data = true are displayed as icons, images or Steam avatars (see `Chatbox.avatar`).
 -- Any other table is merged into the message options: sender, position, radius (0 is
 -- global), size, should_translate, time (when the message was sent, the current
--- os.time() by default; shown when the 'chat_timestamps' config is enabled).
+-- os.time() by default; shown when the 'chatbox_timestamps' config is enabled).
 --
 -- The ShouldSendChatMessage hook can cancel the message before anyone receives it, and
 -- the ChatboxMessageSent hook is run with the players who have received it. Neither is run
@@ -107,7 +107,7 @@ function Chatbox.add_text(listeners, ...)
     radius = 0,
     filter = nil,
     rich = false,
-    size = config_get('default_font_size', 20),
+    size = config_get('chatbox_default_font_size', 20),
     text = nil,
     team_chat = false,
     time = os.time()
@@ -319,7 +319,7 @@ function Chatbox.player_say(actor, text, team_chat)
     { sender = actor }
   }
 
-  if config_get('chat_avatars') then
+  if config_get('chatbox_avatars') then
     table.insert(message, 2, Chatbox.avatar(actor))
   end
 
@@ -330,7 +330,7 @@ function Chatbox.player_say(actor, text, team_chat)
   -- @param text [String the text being said, without surrounding whitespace]
   -- @param message [List arguments for Chatbox.add_text: the icon, the name color, the
   --   speaker, the text color, ': ', the text and the options table; modify it in place.
-  --   While the 'chat_avatars' config is enabled the avatar of the speaker (see
+  --   While the 'chatbox_avatars' config is enabled the avatar of the speaker (see
   --   Chatbox.avatar) comes right after the icon, moving the rest one place further]
   hook.Run('AdjustPlayerSay', actor, text, message)
 
@@ -338,12 +338,12 @@ function Chatbox.player_say(actor, text, team_chat)
 end
 
 --- Checks whether the player may submit a chat message now, that is whether the
--- 'chat_interval' config (in milliseconds) has passed since their last accepted submission.
+-- 'chatbox_interval' config (in milliseconds) has passed since their last accepted submission.
 -- A submission that is accepted starts the next interval. Serverside only.
 -- @param actor [Player the player who submits a message]
 -- @return [Boolean false if the player has to wait, true otherwise]
 function Chatbox.check_interval(actor)
-  local interval = (tonumber(config_get('chat_interval')) or 0) * 0.001
+  local interval = (tonumber(config_get('chatbox_interval')) or 0) * 0.001
 
   if interval <= 0 then return true end
 
@@ -358,13 +358,13 @@ function Chatbox.check_interval(actor)
   return true
 end
 
---- Cuts a text that a player has submitted down to the 'max_message_length' config, counted
+--- Cuts a text that a player has submitted down to the 'chatbox_max_message_length' config, counted
 -- in characters like the limit of the chatbox text entry. A text that is not valid UTF-8 is
 -- cut to that many bytes instead. Serverside only.
 -- @param text [String the submitted text]
 -- @return [String the text, no longer than the limit]
 function Chatbox.limit_text(text)
-  local limit = config_get('max_message_length', 512)
+  local limit = config_get('chatbox_max_message_length', 512)
 
   if #text <= limit then return text end
 
@@ -417,8 +417,8 @@ end
 
 --- Makes a player say a text they have submitted, from the chatbox or the `say` console
 -- command: the text is dropped, and the player told so once a second at most, while the
--- 'chat_interval' config has not passed since their last submission (see
--- `Chatbox.check_interval`); otherwise it is cut to the 'max_message_length' config (see
+-- 'chatbox_interval' config has not passed since their last submission (see
+-- `Chatbox.check_interval`); otherwise it is cut to the 'chatbox_max_message_length' config (see
 -- `Chatbox.limit_text`) and passed to `Chatbox.player_say`. Serverside only.
 -- @param actor [Player the player who has submitted the text]
 -- @param text [String the text as it was typed]

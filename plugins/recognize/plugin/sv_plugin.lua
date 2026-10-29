@@ -57,12 +57,12 @@ local function delete_rows(conditions, except_ids)
   query:execute()
 end
 
---- Returns the distance at which characters hear normal speech: the `talk_radius` config
+--- Returns the distance at which characters hear normal speech: the `rpcommands_talk_radius` config
 -- of the RP Commands plugin, or 350 units without it; introductions to a range of characters are
 -- measured by it.
 -- @return [Number distance in units]
 function Recognition:get_talk_radius()
-  return tonumber(Config.get('talk_radius')) or 350
+  return tonumber(Config.get('rpcommands_talk_radius')) or 350
 end
 
 --- Networks the recognitions that the active character of a player has stored to that

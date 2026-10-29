@@ -1,4 +1,11 @@
 ru:
+  config:
+    radios:
+      title: Рации
+      desc: Настройки радиосвязи.
+      chat_color:
+        name: Цвет радиочата
+        desc: Цвет сообщений, переданных по рации.
   error:
     frequency: Задана неверная частота. Она должна иметь формат XXX.X
     radio:

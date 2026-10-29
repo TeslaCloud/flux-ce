@@ -88,9 +88,9 @@ end
 function Chatbox:OnThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
-  current_theme:set_option('chatbox_text_small_size', scale(config_get('small_font_size')))
-  current_theme:set_option('chatbox_text_normal_size', scale(config_get('default_font_size')))
-  current_theme:set_option('chatbox_text_big_size', scale(config_get('big_font_size')))
+  current_theme:set_option('chatbox_text_small_size', scale(config_get('chatbox_small_font_size')))
+  current_theme:set_option('chatbox_text_normal_size', scale(config_get('chatbox_default_font_size')))
+  current_theme:set_option('chatbox_text_big_size', scale(config_get('chatbox_big_font_size')))
   current_theme:set_option('chatbox_width', scrw * 0.375)
   current_theme:set_option('chatbox_height', scrh * 0.45)
   current_theme:set_option('chatbox_x', scale(8))

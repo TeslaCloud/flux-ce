@@ -1,4 +1,11 @@
 fr:
+  config:
+    radios:
+      title: "Radios"
+      desc: "Paramètres des communications radio."
+      chat_color:
+        name: "Couleur du chat radio"
+        desc: "Couleur des messages prononcés à la radio."
   error:
     frequency: "Fréquence invalide. Elle doit être au format XXX.X."
     radio:

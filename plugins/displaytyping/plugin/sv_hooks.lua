@@ -47,7 +47,7 @@ Cable.receive('fl_typing_report', function(actor, text, exact, kind_id)
     return
   end
 
-  if #text > Config.get('max_message_length', 512) * 4 then return end
+  if #text > Config.get('chatbox_max_message_length', 512) * 4 then return end
   if !DisplayTyping:accept_report(actor, CurTime()) then return end
 
   DisplayTyping:set_typing(actor, text, exact, kind_id)

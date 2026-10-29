@@ -17,7 +17,7 @@ function CMD:on_run(actor, text)
   Chatbox.add_text(nil, Color('orange'):lighten(30), text, {
     sender = actor,
     position = actor:EyePos(),
-    radius = Config.get('talk_radius'),
+    radius = Config.get('rpcommands_talk_radius'),
     ic = true
   })
 

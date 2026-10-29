@@ -4,7 +4,8 @@
 -- `Communications.prefixes`, which make up the `radio` chat prefix of the chatbox, and
 -- everyone with an enabled radio tuned to that frequency in their own hotbar receives the
 -- message wherever they are. The players standing near the speaker overhear it, like
--- anything else that is said out loud.
+-- anything else that is said out loud. Radio messages are written in the color of the
+-- `radios_chat_color` config.
 --
 -- The frequency of a radio is changed through its item menu: the server asks the player
 -- for the new frequency with a prompt and checks the answer before the radio is retuned.

@@ -40,7 +40,7 @@ en:
       description: Toggles on/off your mask as part of the CCA.
       syntax: <none>
   config:
-    roleplay_chat:
+    rpcommands:
       title: Roleplay Chat
       desc: In-character and out-of-character chat settings.
       talk_radius:
@@ -58,19 +58,19 @@ en:
       roll_versus:
         name: Versus Rolls
         desc: Whether rolling while looking at a nearby player also rolls for that player.
-      chat_ic_color:
+      ic_color:
         name: IC Chat Color
         desc: Color of in-character speech and of the typing bubble of a player who is talking.
-      chat_whisper_color:
+      whisper_color:
         name: Whisper Color
         desc: Color of the typing bubble of a player who is whispering.
-      chat_yell_color:
+      yell_color:
         name: Yell Color
         desc: Color of the typing bubble of a player who is yelling.
-      chat_it_color:
+      it_color:
         name: It Color
         desc: Color of the descriptions made with the it command.
-      chat_me_color:
+      me_color:
         name: Action Color
         desc: Color of actions in in-character chat and of the typing bubble of a player who is performing one.
   error:

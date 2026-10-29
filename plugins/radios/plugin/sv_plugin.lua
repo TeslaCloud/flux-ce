@@ -1,8 +1,6 @@
 --- Server side of the Radios plugin: finds the radios a player can use, sends what a player
 -- says over the radio to the players who should receive it, and retunes radios.
 
-Config.set('radio_chat_color', Color(100, 228, 100))
-
 --- Returns the enabled radios a player has in their hotbar. A player who has no character
 -- loaded has no inventories and therefore no radios.
 -- @param owner [Player player to check]
@@ -130,7 +128,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   if !IsValid(speaker) or !speaker:IsPlayer() then return false end
   if !isstring(text) or !isnumber(frequency) then return false end
 
-  local default_radius = Config.get('talk_radius') * 0.5
+  local default_radius = Config.get('rpcommands_talk_radius') * 0.5
   local info = {
     text = text:strip(),
     frequency = frequency,
@@ -191,8 +189,8 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   end
 
   local message = {
-    Config.get('radio_chat_color'),
-    Config.get('default_font_size'),
+    Config.get('radios_chat_color'),
+    Config.get('chatbox_default_font_size'),
     speaker, ' ', t'ui.chat.radio', ': "', info.text:spelling(), '"',
     {
       sender = speaker,

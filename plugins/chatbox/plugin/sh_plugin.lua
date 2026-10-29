@@ -33,7 +33,7 @@ PLUGIN:set_global('Chatbox')
 --   Color(255, 255, 255), ': ', text, { sender = actor })
 --
 -- -- Only when the server has avatars enabled; an empty table adds nothing to a message.
--- Chatbox.add_text(nil, Config.get('chat_avatars') and Chatbox.avatar(actor) or {}, actor, ': ', text)
+-- Chatbox.add_text(nil, Config.get('chatbox_avatars') and Chatbox.avatar(actor) or {}, actor, ': ', text)
 -- ```
 -- @param target [Player/String the player, or a SteamID64]
 -- @param size=nil [Number width and height of the avatar before screen scaling; the height

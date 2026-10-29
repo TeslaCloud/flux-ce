@@ -163,7 +163,7 @@ function PANEL:Init()
   self.text_entry = vgui.Create('fl_text_entry', self)
   self.text_entry:SetText('')
   self.text_entry:SetSize(1, 1)
-  self.text_entry:set_limit(config_get('max_message_length', 512))
+  self.text_entry:set_limit(config_get('chatbox_max_message_length', 512))
   self.text_entry.history = {}
   self.text_entry.last_index = 0
   self.text_entry:SetMultiline(true)
@@ -813,10 +813,10 @@ function PANEL:rebuild_history_indexes()
 end
 
 --- Appends a message panel to the history and to the scroll panel.
--- Ejects the oldest message first if the 'max_messages' limit has been reached.
+-- Ejects the oldest message first if the 'chatbox_max_messages' limit has been reached.
 -- @param panel [Panel a fl_chat_message panel]
 function PANEL:add_panel(panel)
-  if #self.history >= config_get('max_messages') then
+  if #self.history >= config_get('chatbox_max_messages') then
     local last_history = self.history[1]
 
     if IsValid(last_history) then
@@ -836,7 +836,7 @@ function PANEL:add_panel(panel)
   self.scroll_panel:AddItem(panel)
   self.scroll_panel:GetVBar():AnimateTo(self.last_pos, 1, 0, -1)
 
-  self.last_pos = self.last_pos + config_get('message_margin') + panel:GetTall()
+  self.last_pos = self.last_pos + config_get('chatbox_message_margin') + panel:GetTall()
 end
 
 --- Removes the message from the history and rebuilds the history indexes.
@@ -866,7 +866,7 @@ function PANEL:rebuild()
   self.scroll_panel:GetVBar():SetScroll(self.scroll_panel:GetVBar().CanvasSize or 0)
 
   local padding = self.padding
-  local message_margin = config_get('message_margin')
+  local message_margin = config_get('chatbox_message_margin')
   local last_pos = 0
 
   for _, message in ipairs(self.history) do

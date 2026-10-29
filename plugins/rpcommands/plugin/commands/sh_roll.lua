@@ -3,7 +3,7 @@
 -- or a skill of the Stats plugin rolls that stat or skill, and anything else is read as a
 -- formula of the `Dice` library, such as `2d6 + 3` or `4d6kh3`. A formula can use the
 -- IDs of stats and skills, which stand for the modifiers of the player, and `level`, the
--- level of their character. While the 'roll_versus' config is enabled, rolling while
+-- level of their character. While the 'rpcommands_roll_versus' config is enabled, rolling while
 -- looking at a nearby player rolls the same thing for both of them in one line. Plugins can
 -- adjust any roll through the `AdjustPlayerRoll` hook.
 
@@ -123,7 +123,7 @@ end
 -- @return [Player the opponent; nothing if versus rolls are disabled or the caller is not
 --   looking at a nearby player]
 local function find_opponent(actor)
-  if !config_get('roll_versus') then return end
+  if !config_get('rpcommands_roll_versus') then return end
 
   local entity = actor:GetEyeTraceNoCursor().Entity
 
@@ -137,7 +137,7 @@ local function find_opponent(actor)
 
   if !IsValid(target) or !target:IsPlayer() or target == actor or !target:Alive() then return end
 
-  local radius = config_get('talk_radius')
+  local radius = config_get('rpcommands_talk_radius')
 
   if entity:GetPos():DistToSqr(actor:GetPos()) > radius * radius then return end
 

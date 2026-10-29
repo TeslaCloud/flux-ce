@@ -1,4 +1,11 @@
 en:
+  config:
+    radios:
+      title: Radios
+      desc: Settings of radio communication.
+      chat_color:
+        name: Radio Chat Color
+        desc: Color of the messages that are spoken over the radio.
   error:
     frequency: Invalid frequency. It should be in XXX.X format.
     radio:
