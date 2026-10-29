@@ -4,7 +4,7 @@
 --- Reads the spawn points of the current schema and map from the plugin data, replacing the
 -- current list. Does not send them to clients.
 function SpawnPoints:load()
-  local stored = Data.load_plugin('spawnpoints', {})
+  local stored = Data.load_plugin('spawn_points', {})
   local points = {}
 
   if istable(stored) then
@@ -39,12 +39,12 @@ function SpawnPoints:save()
     }
   end
 
-  Data.save_plugin('spawnpoints', stored)
+  Data.save_plugin('spawn_points', stored)
 end
 
 --- Sends the whole list of spawn points to the clients that draw them. Only players with the
--- 'spawnpoints' permission are ever sent the points.
--- @param target=nil [Player who to send the points to; every player with the 'spawnpoints'
+-- 'spawn_points' permission are ever sent the points.
+-- @param target=nil [Player who to send the points to; every player with the 'spawn_points'
 --   permission if nil]
 function SpawnPoints:sync(target)
   local receivers = {}
@@ -55,7 +55,7 @@ function SpawnPoints:sync(target)
     end
   else
     for _, receiver in player.Iterator() do
-      if !receiver:IsBot() and receiver:can('spawnpoints') then
+      if !receiver:IsBot() and receiver:can('spawn_points') then
         receivers[#receivers + 1] = receiver
       end
     end
@@ -63,7 +63,7 @@ function SpawnPoints:sync(target)
 
   if #receivers == 0 then return end
 
-  Cable.send(receivers, 'fl_spawnpoints_load', self.points)
+  Cable.send(receivers, 'fl_spawn_points_load', self.points)
 end
 
 --- Adds a spawn point, saves the list and sends it to the staff who edit spawn points.
@@ -261,14 +261,14 @@ function SpawnPoints:get_anchor()
   return self.anchor
 end
 
-Cable.receive('fl_spawnpoints_request', function(actor)
-  if !actor:can('spawnpoints') then return end
+Cable.receive('fl_spawn_points_request', function(actor)
+  if !actor:can('spawn_points') then return end
 
   local cur_time = CurTime()
 
-  if (actor.next_spawnpoints_request or 0) > cur_time then return end
+  if (actor.next_spawn_points_request or 0) > cur_time then return end
 
-  actor.next_spawnpoints_request = cur_time + 1
+  actor.next_spawn_points_request = cur_time + 1
 
   SpawnPoints:sync(actor)
 end)

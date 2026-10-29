@@ -2,13 +2,13 @@
 -- owner stands, facing the way they look, for the group picked in the tool's settings:
 -- everyone or a faction. Right click removes the point the owner is aiming at.
 -- While the tool is held the existing points are drawn in the world. The tool requires the
--- 'spawnpoints' permission, which each of its actions checks as well.
+-- 'spawn_points' permission, which each of its actions checks as well.
 
 TOOL.Category = 'Flux'
 TOOL.Name = 'Spawn Point Tool'
 TOOL.Command = nil
 TOOL.ConfigName = ''
-TOOL.permission = 'spawnpoints'
+TOOL.permission = 'spawn_points'
 
 TOOL.ClientConVar['group'] = 'default'
 
@@ -20,18 +20,18 @@ local nearest_radius = 48
 -- @param _trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the point was added (always true clientside), false if the
 --   selected group does not exist or there is no room for a point, nil if the owner is not
---   valid or lacks the 'spawnpoints' permission]
+--   valid or lacks the 'spawn_points' permission]
 function TOOL:LeftClick(_trace)
   if CLIENT then return true end
 
   local owner = self:GetOwner()
 
-  if !IsValid(owner) or !owner:can('spawnpoints') then return end
+  if !IsValid(owner) or !owner:can('spawn_points') then return end
 
   local group = self:GetClientInfo('group')
 
   if !SpawnPoints:is_valid_group(group) then
-    owner:notify('error.spawnpoints.invalid_group')
+    owner:notify('error.spawn_points.invalid_group')
 
     return false
   end
@@ -39,14 +39,14 @@ function TOOL:LeftClick(_trace)
   local pos = SpawnPoints:get_floor_position(owner)
 
   if !pos then
-    owner:notify('error.spawnpoints.no_room')
+    owner:notify('error.spawn_points.no_room')
 
     return false
   end
 
   SpawnPoints:add_point(pos, owner:EyeAngles(), group)
 
-  owner:notify('notification.spawnpoints.added', { group = SpawnPoints:get_group_name(group) })
+  owner:notify('notification.spawn_points.added', { group = SpawnPoints:get_group_name(group) })
 
   return true
 end
@@ -56,14 +56,14 @@ end
 -- standing on.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if a point was removed (always true clientside), false if the owner
---   is not aiming at a point, nil if the owner is not valid or lacks the 'spawnpoints'
+--   is not aiming at a point, nil if the owner is not valid or lacks the 'spawn_points'
 --   permission]
 function TOOL:RightClick(trace)
   if CLIENT then return true end
 
   local owner = self:GetOwner()
 
-  if !IsValid(owner) or !owner:can('spawnpoints') then return end
+  if !IsValid(owner) or !owner:can('spawn_points') then return end
 
   local shoot_pos = owner:GetShootPos()
   local index = SpawnPoints:find_aimed_point(
@@ -80,12 +80,12 @@ function TOOL:RightClick(trace)
   local point = index and SpawnPoints:remove_point(index)
 
   if !point then
-    owner:notify('error.spawnpoints.none_aimed')
+    owner:notify('error.spawn_points.none_aimed')
 
     return false
   end
 
-  owner:notify('notification.spawnpoints.removed', { group = SpawnPoints:get_group_name(point.group) })
+  owner:notify('notification.spawn_points.removed', { group = SpawnPoints:get_group_name(point.group) })
 
   return true
 end

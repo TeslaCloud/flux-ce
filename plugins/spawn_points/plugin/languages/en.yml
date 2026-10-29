@@ -1,11 +1,11 @@
 en:
   error:
-    spawnpoints:
+    spawn_points:
       invalid_group: This faction does not exist. Pick another group in the tool settings.
       no_room: There is no room for a spawn point here. Stand where players should appear.
       none_aimed: You are not aiming at a spawn point.
   notification:
-    spawnpoints:
+    spawn_points:
       added: "Spawn point added ({group})."
       removed: "Spawn point removed ({group})."
   tool:
@@ -15,7 +15,7 @@ en:
       "0": "Left Click: Add Spawn Point, Right Click: Remove Spawn Point."
       group: Spawn point for
   ui:
-    spawnpoints:
+    spawn_points:
       label: "Spawn point #{id}: {group}"
       group:
         default: Everyone

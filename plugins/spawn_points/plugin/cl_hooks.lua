@@ -23,7 +23,7 @@ function SpawnPoints:LazyTick()
     if !self.received and cur_time >= (self.next_request or 0) then
       self.next_request = cur_time + request_interval
 
-      Cable.send('fl_spawnpoints_request')
+      Cable.send('fl_spawn_points_request')
     end
   end
 

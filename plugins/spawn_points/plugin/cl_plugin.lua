@@ -11,7 +11,7 @@ function SpawnPoints:set_points(points)
   for index, point in ipairs(self.points) do
     local group_label = self:get_group_label(point.group)
 
-    point.label = t('ui.spawnpoints.label', { id = index, group = group_label })
+    point.label = t('ui.spawn_points.label', { id = index, group = group_label })
     point.color = self:get_group_color(point.group)
   end
 end
@@ -28,9 +28,9 @@ function SpawnPoints:is_tool_held()
     return false
   end
 
-  return weapon:GetMode() == 'spawnpoint' and tobool(PLAYER:can('spawnpoints'))
+  return weapon:GetMode() == 'spawnpoint' and tobool(PLAYER:can('spawn_points'))
 end
 
-Cable.receive('fl_spawnpoints_load', function(points)
+Cable.receive('fl_spawn_points_load', function(points)
   SpawnPoints:set_points(points)
 end)
