@@ -36,7 +36,7 @@ es:
       message: Selecciona un personaje
     characters: Personajes
   config:
-    character:
+    characters:
       title: Personaje
       desc: Ajustes del sistema de personajes.
       min_name_len:

@@ -36,7 +36,7 @@ en:
       message: Select Character
     characters: Characters
   config:
-    character:
+    characters:
       title: Character
       desc: Character system settings.
       min_name_len:

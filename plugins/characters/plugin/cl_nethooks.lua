@@ -82,8 +82,8 @@ Cable.receive('fl_character_desc_prompt', function()
   Derma_StringRequest(
     t'ui.char_desc.title',
     t('ui.char_desc.message', {
-      min = Config.get('character_min_desc_len'),
-      max = Config.get('character_max_desc_len')
+      min = Config.get('characters_min_desc_len'),
+      max = Config.get('characters_max_desc_len')
     }),
     PLAYER:get_phys_desc(),
     function(text)

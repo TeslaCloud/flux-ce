@@ -3,8 +3,8 @@
 -- health, armor, reserve ammo and ban state of the character; other plugins add their own
 -- columns and relations, as Factions does with the faction and rank. A record is only valid
 -- with a name and a physical description; how long they may be is set by the
--- `character_min_name_len`, `character_max_name_len`, `character_min_desc_len` and
--- `character_max_desc_len` configs and checked when a character is created or its description
+-- `characters_min_name_len`, `characters_max_name_len`, `characters_min_desc_len` and
+-- `characters_max_desc_len` configs and checked when a character is created or its description
 -- is changed by its player. Characters are created and changed through the `Characters`
 -- functions and the `Player` extensions rather than directly.
 --

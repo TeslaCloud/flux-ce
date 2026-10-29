@@ -327,8 +327,8 @@ end
 --- Picks a random name from the random_names lists of the faction: a first name from the
 -- lists of the gender, or the 'universal' ones when the gender has none, followed by a last
 -- name when those lists have last names. A character without a gender falls back to the
--- 'male' lists after the 'universal' ones. A name shorter than `character_min_name_len` or
--- longer than `character_max_name_len` is picked again, up to random_name_attempts times.
+-- 'male' lists after the 'universal' ones. A name shorter than `characters_min_name_len` or
+-- longer than `characters_max_name_len` is picked again, up to random_name_attempts times.
 -- @param gender [Number CHAR_GENDER_* value]
 -- @return [String the name, nil when the faction has no lists for the gender or no name
 --   within the length limits came up]
@@ -342,8 +342,8 @@ function Faction:get_random_name(gender)
 
   if !lists or !lists.first then return end
 
-  local min_length = Config.get('character_min_name_len')
-  local max_length = Config.get('character_max_name_len')
+  local min_length = Config.get('characters_min_name_len')
+  local max_length = Config.get('characters_max_name_len')
 
   for _ = 1, random_name_attempts do
     local name = pick_random_name(lists)

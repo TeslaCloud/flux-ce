@@ -193,8 +193,8 @@ function Characters:PlayerCreateCharacter(actor, data)
 
   local name_length = isstring(data.name) and utf8.len(data.name)
 
-  if !isnumber(name_length) or name_length < Config.get('character_min_name_len') or
-    name_length > Config.get('character_max_name_len') then
+  if !isnumber(name_length) or name_length < Config.get('characters_min_name_len') or
+    name_length > Config.get('characters_max_name_len') then
     return CHAR_ERR_NAME
   end
 
@@ -204,8 +204,8 @@ function Characters:PlayerCreateCharacter(actor, data)
     return CHAR_ERR_DESC
   end
 
-  if !data.description_generated and (desc_length < Config.get('character_min_desc_len') or
-    desc_length > Config.get('character_max_desc_len')) then
+  if !data.description_generated and (desc_length < Config.get('characters_min_desc_len') or
+    desc_length > Config.get('characters_max_desc_len')) then
     return CHAR_ERR_DESC
   end
 

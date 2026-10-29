@@ -1,44 +1,49 @@
 categories:
-  character:
-    name: config.character.title
-    description: config.character.desc
+  characters:
+    name: config.characters.title
+    description: config.characters.desc
 configs:
-  character_min_name_len:
-    name: config.character.min_name_len.name
-    description: config.character.min_name_len.desc
-    category: character
+  characters_min_name_len:
+    renamed_from: character_min_name_len
+    name: config.characters.min_name_len.name
+    description: config.characters.min_name_len.desc
+    category: characters
     type: number
     min_value: 1
     max_value: 256
     default_value: 4
-  character_max_name_len:
-    name: config.character.max_name_len.name
-    description: config.character.max_name_len.desc
-    category: character
+  characters_max_name_len:
+    renamed_from: character_max_name_len
+    name: config.characters.max_name_len.name
+    description: config.characters.max_name_len.desc
+    category: characters
     type: number
     min_value: 1
     max_value: 256
     default_value: 24
-  character_min_desc_len:
-    name: config.character.min_desc_len.name
-    description: config.character.min_desc_len.desc
-    category: character
+  characters_min_desc_len:
+    renamed_from: character_min_desc_len
+    name: config.characters.min_desc_len.name
+    description: config.characters.min_desc_len.desc
+    category: characters
     type: number
     min_value: 1
     max_value: 256
     default_value: 32
-  character_max_desc_len:
-    name: config.character.max_desc_len.name
-    description: config.character.max_desc_len.desc
-    category: character
+  characters_max_desc_len:
+    renamed_from: character_max_desc_len
+    name: config.characters.max_desc_len.name
+    description: config.characters.max_desc_len.desc
+    category: characters
     type: number
     min_value: 1
     max_value: 256
     default_value: 256
-  character_limit:
-    name: config.character.limit.name
-    description: config.character.limit.desc
-    category: character
+  characters_limit:
+    renamed_from: character_limit
+    name: config.characters.limit.name
+    description: config.characters.limit.desc
+    category: characters
     type: number
     min_value: 1
     max_value: 64

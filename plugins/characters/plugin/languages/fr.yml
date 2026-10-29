@@ -36,7 +36,7 @@ fr:
       message: "Sélectionnez un personnage"
     characters: "Personnages"
   config:
-    character:
+    characters:
       title: "Personnage"
       desc: "Paramètres du système de personnages."
       min_name_len:

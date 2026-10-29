@@ -7,7 +7,7 @@
 -- functions create, save, delete, ban and edit characters on the server, and the `Player`
 -- extensions return a player's characters and the fields of the active one.
 --
--- A player may have as many characters as the `character_limit` config allows, and a name
+-- A player may have as many characters as the `characters_limit` config allows, and a name
 -- that a player picks has to be unlike the name of any other character. Staff can ban a
 -- character with `/charban add`: it can then be neither loaded nor deleted until
 -- `/charban remove` lifts the ban. Players change their own description with CharPhysDesc.

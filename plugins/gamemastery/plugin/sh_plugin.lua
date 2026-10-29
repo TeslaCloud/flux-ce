@@ -87,7 +87,7 @@ end
 --- Lifts the character limit for players of the `gamemaster` role, whose characters all go
 -- into the pool, and on the server for a player whose request creates a pool character.
 -- @param target [Player]
--- @param _limit [Number the value of the character_limit config]
+-- @param _limit [Number the value of the characters_limit config]
 -- @return [Number math.huge when the limit does not apply, otherwise nil]
 function Gamemastery:GetCharacterLimit(target, _limit)
   if Gamemastery.has_gamemaster_role(target) or (SERVER and target.gm_pool_creation) then

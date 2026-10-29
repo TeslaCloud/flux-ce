@@ -111,7 +111,7 @@ function PANEL:rebuild()
   self.desc:Dock(BOTTOM)
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))
-  self.desc:set_limit(Config.get('character_max_desc_len'))
+  self.desc:set_limit(Config.get('characters_max_desc_len'))
   self.desc.is_applied = function(pnl)
     local text = pnl:GetValue()
 

@@ -84,18 +84,18 @@ function Characters.get_custom_data(character, key, default)
   return default
 end
 
---- Returns how many characters a player may have: the `character_limit` config, unless a
+--- Returns how many characters a player may have: the `characters_limit` config, unless a
 -- GetCharacterLimit hook returns another number.
 -- @param target [Player]
 -- @return [Number]
 function Characters.get_limit(target)
-  local limit = config_get('character_limit', 5)
+  local limit = config_get('characters_limit', 5)
   --- Lets plugins change how many characters a player may have. Called on the server when a
   -- character is about to be created, and on the client for the local player when the main
   -- menu decides whether the creation screen may be opened, so a handler that is meant to be
   -- seen in the menu has to be shared.
   -- @param target [Player the player whose limit is requested]
-  -- @param limit [Number the value of the character_limit config]
+  -- @param limit [Number the value of the characters_limit config]
   -- @return [Number the limit to use for this player; return nothing to keep the config value]
   local adjusted = hook.Run('GetCharacterLimit', target, limit)
 
@@ -552,7 +552,7 @@ if SERVER then
 
   --- Changes the physical description of a player's active character on their own request.
   -- The text is brought to its stored form with `Characters.normalize_desc` and refused when
-  -- its length is outside of the `character_min_desc_len` and `character_max_desc_len` configs,
+  -- its length is outside of the `characters_min_desc_len` and `characters_max_desc_len` configs,
   -- when the player has no character or when they changed it less than a second ago. The
   -- player is notified of the outcome. Server only.
   -- @param actor [Player]
@@ -575,8 +575,8 @@ if SERVER then
 
     local new_desc = Characters.normalize_desc(text)
     local length = utf8.len(new_desc)
-    local min_length = config_get('character_min_desc_len')
-    local max_length = config_get('character_max_desc_len')
+    local min_length = config_get('characters_min_desc_len')
+    local max_length = config_get('characters_max_desc_len')
 
     if !isnumber(length) or length < min_length or length > max_length then
       actor:notify('ui.char_create.desc_len', { min = min_length, max = max_length })

@@ -364,8 +364,8 @@ function PANEL:on_validate()
     end
 
     local length = utf8.len(name)
-    local min_length = config_get('character_min_name_len')
-    local max_length = config_get('character_max_name_len')
+    local min_length = config_get('characters_min_name_len')
+    local max_length = config_get('characters_max_name_len')
 
     if length < min_length or length > max_length then
       return false, t('ui.char_create.name_len', { min = min_length, max = max_length })
@@ -378,8 +378,8 @@ function PANEL:on_validate()
     end
 
     local length = utf8.len(desc)
-    local min_length = config_get('character_min_desc_len')
-    local max_length = config_get('character_max_desc_len')
+    local min_length = config_get('characters_min_desc_len')
+    local max_length = config_get('characters_max_desc_len')
 
     if length < min_length or length > max_length then
       return false, t('ui.char_create.desc_len', { min = min_length, max = max_length })
