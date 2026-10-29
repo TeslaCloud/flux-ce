@@ -100,7 +100,6 @@ if CLIENT then
     local font = Theme.get_font('text_smallest', 'default')
     local line_height = util.font_size(font)
     local x = math.scale(8)
-    -- Sits right above the version line of the developer HUD.
     local pos = ScrH() - x - line_height * 2
 
     draw_simple_text('SV: '..tostring(round(total_sv * 1000, 2))..'ms', font, x, pos - line_height * 3, debug_color)

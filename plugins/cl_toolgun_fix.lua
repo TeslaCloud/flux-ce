@@ -37,14 +37,11 @@ function PLUGIN:FLInitPostEntity()
     local mode = gmod_toolmode:GetString()
     local tool_object = self:GetToolObject()
 
-    -- Don't draw help for a nonexistent tool!
     if !tool_object then return end
 
     tool_object:DrawHUD()
 
     if !gmod_drawhelp:GetBool() then return end
-
-    -- This could probably all suck less than it already does
 
     local s = DermaScale.scale
     local x, y = s(50), s(40)

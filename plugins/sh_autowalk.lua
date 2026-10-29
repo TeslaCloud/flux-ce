@@ -21,13 +21,11 @@ if SERVER then
 
     move_data:SetForwardSpeed(move_data:GetMaxSpeed())
 
-    -- If they try to move, break the autowalk.
     if (cmd_data:GetButtons() & movement_keys) != 0 then
       actor:set_nv('auto_walk', false)
     end
   end
 
-  -- So clients can bind this as they want.
   concommand.Add('toggleautowalk', function(actor)
     if !IsValid(actor) then return end
 

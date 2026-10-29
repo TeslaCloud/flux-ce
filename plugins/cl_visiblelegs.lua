@@ -55,7 +55,6 @@ local hidden_bones = {
   'ValveBiped.Bip01_R_Finger42'
 }
 
--- For refresh.
 if IsValid(PLAYER) and IsValid(PLAYER.legs) then
   PLAYER.legs:Remove()
 end
@@ -85,7 +84,6 @@ function VisibleLegs:RenderScreenspaceEffects()
 
   local angs = client:EyeAngles()
 
-  -- Because we don't need to draw the legs if you wouldn't even be able to see them.
   if angs.p < 0 then return end
 
   cam.Start3D(EyePos(), EyeAngles())

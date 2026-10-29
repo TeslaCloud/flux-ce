@@ -79,7 +79,6 @@ function PLUGIN:HUDPaint()
         if !v.target then
           local next = safe_index(targets, k - step)
 
-          -- Make the first and last weapons look nicer when scrolling.
           if dir and k == 1 then
             v.y = targets[5].y + 50
             v.scale *= 0.5
