@@ -12,92 +12,11 @@
 
 PLUGIN:set_global('StaticEnts')
 
+require_relative 'cl_plugin'
 require_relative 'sv_hooks'
+require_relative 'sv_plugin'
 
 --- Registers the 'static_tool' permission.
 function StaticEnts:RegisterPermissions()
-  Bolt:register_permission(
-    'static_tool',
-    'Static (tool)',
-    'Grants access to make entities static / unstatic.',
-    'permission.categories.level_design'
-  )
-end
-
-if CLIENT then
-  concommand.Add('fl_persistence_backup', function(actor)
-    if actor:can('static') then
-      print('Requesting the server to make a backup...')
-
-      Cable.send('flux_persistence_backup', true)
-    end
-  end)
-
-  Cable.receive('flux_persistence_backup', function(status)
-    if status then
-      print('  -> success!')
-    else
-      print('  -> error!')
-    end
-  end)
-else
-  const backup_interval = 30
-
-  local function _run_backup(actor)
-    local is_player = IsValid(actor)
-
-    if is_player then
-      if !actor:can('static') then return end
-
-      local cur_time = CurTime()
-
-      if (actor.fl_next_backup or 0) > cur_time then return end
-
-      actor.fl_next_backup = cur_time + backup_interval
-    end
-
-    local pn = is_player and actor:Name() or 'Console'
-    local sid = is_player and actor:SteamID() or 'N/A'
-
-    print('Running persistence backup, as requested by '..pn..' ('..sid..')')
-
-    local entities = {}
-
-    for _, ent in ents.Iterator() do
-      if ent:GetPersistent() then
-        local ent_class = ent:GetClass()
-        entities[ent_class] = entities[ent_class] or {}
-        table.insert(entities[ent_class], ent)
-      end
-    end
-
-    local to_save = {}
-
-    for ent_class, class_entities in pairs(entities) do
-      to_save[ent_class] = duplicator.CopyEnts(class_entities)
-    end
-
-    local target_dir = 'static_backups/'..to_timestamp(os.time())
-    local status = true
-
-    for ent_class, save_data in pairs(to_save) do
-      if !istable(save_data) then
-        print('  -> error: saveable data is not a table! ('..ent_class..')')
-        status = false
-        break
-      end
-
-      print('  -> '..ent_class)
-      Data.save_plugin(target_dir..'/'..ent_class, save_data)
-    end
-
-    print('  -> '..(status ? 'done!' : 'error!'))
-
-    if is_player then
-      Cable.send(actor, 'flux_persistence_backup', status)
-    end
-  end
-
-  Cable.receive('flux_persistence_backup', _run_backup)
-  concommand.Add('fl_persistence_backup', _run_backup)
+  Bolt:register_permission('static_tool', nil, nil, 'permission.categories.level_design')
 end

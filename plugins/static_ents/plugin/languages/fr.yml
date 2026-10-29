@@ -20,3 +20,7 @@ fr:
       name: "Ajout/retrait statique"
       desc: "Ajoutez et retirez des entités statiques."
       "0": "Clic gauche : ajouter, clic droit : retirer."
+  permission:
+    static_tool:
+      name: "Statique (outil)"
+      description: "Permet de rendre des entités statiques ou de leur retirer cet état."

@@ -20,3 +20,7 @@ es:
       name: Añadir/quitar estáticas
       desc: Añade y elimina entidades estáticas.
       "0": "Clic izquierdo: añadir, clic derecho: eliminar."
+  permission:
+    static_tool:
+      name: Estático (herramienta)
+      description: Da acceso para hacer entidades estáticas o quitarles lo estático.

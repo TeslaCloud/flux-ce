@@ -20,3 +20,7 @@ en:
       name: Static Add/Remove
       desc: Add and remove static entities.
       "0": "Left Click: Add, Right Click: Remove."
+  permission:
+    static_tool:
+      name: Static (tool)
+      description: Grants access to make entities static / unstatic.
