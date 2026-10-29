@@ -110,7 +110,7 @@ function Levels.get_attribute_points_for_level(level)
 end
 
 --- Returns the maximum health of a player's character:
--- `health_base + (level - 1) * health_per_level + level * endurance`, where endurance is
+-- `levels_health_base + (level - 1) * levels_health_per_level + level * endurance`, where endurance is
 -- the level of the 'endurance' stat with its boosts, or 0 when no such stat is registered.
 -- With the defaults a level 1 character of endurance 0 has 10 health and gains 3 for each
 -- level after that.
@@ -119,8 +119,8 @@ end
 function Levels:get_max_health(target)
   local level = target:get_level()
   local endurance = tonumber((target:get_attribute('endurance'))) or 0
-  local base = get_whole_config('health_base', 10, 1)
-  local per_level = get_whole_config('health_per_level', 3, 0)
+  local base = get_whole_config('levels_health_base', 10, 1)
+  local per_level = get_whole_config('levels_health_per_level', 3, 0)
 
   return math_max(math_floor(base + (level - 1) * per_level + level * endurance), 1)
 end

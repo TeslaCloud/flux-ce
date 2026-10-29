@@ -14,8 +14,8 @@ local math_min = math.min
 local math_round = math.Round
 
 local health_configs = {
-  health_base = true,
-  health_per_level = true
+  levels_health_base = true,
+  levels_health_per_level = true
 }
 
 local point_configs = {

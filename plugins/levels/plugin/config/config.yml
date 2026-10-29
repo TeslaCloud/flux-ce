@@ -44,7 +44,8 @@ configs:
     min_value: 0
     max_value: 10
     default_value: 2
-  health_base:
+  levels_health_base:
+    renamed_from: health_base
     name: config.levels.health_base.name
     description: config.levels.health_base.desc
     category: levels
@@ -52,7 +53,8 @@ configs:
     min_value: 1
     max_value: 1000
     default_value: 10
-  health_per_level:
+  levels_health_per_level:
+    renamed_from: health_per_level
     name: config.levels.health_per_level.name
     description: config.levels.health_per_level.desc
     category: levels
