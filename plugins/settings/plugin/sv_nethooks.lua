@@ -2,10 +2,17 @@
 -- players.
 -- A client sends all of its networked settings when it joins and the changed ones afterward.
 -- Every value is checked against the definition of its setting before it is stored on the
--- player, where `Player:get_setting` reads it.
+-- player, where `Player:get_setting` reads it. A player's messages are taken at most ten times
+-- a second, more often than the client sends them.
 
 Cable.receive('fl_settings_sync', function(actor, data)
   if !IsValid(actor) or !istable(data) then return end
+
+  local cur_time = CurTime()
+
+  if (actor.fl_next_settings_sync or 0) > cur_time then return end
+
+  actor.fl_next_settings_sync = cur_time + 0.1
 
   local values = actor.client_settings or {}
   actor.client_settings = values
