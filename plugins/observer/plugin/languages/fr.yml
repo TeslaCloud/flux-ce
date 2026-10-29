@@ -4,3 +4,21 @@ fr:
       observer_reset:
         name: "Retour après le mode observateur"
         desc: "La position du joueur doit-elle être restaurée lorsqu'il quitte le mode observateur ?"
+  command:
+    vanish:
+      description: "Rend un joueur complètement invisible pour tous les autres joueurs du serveur, ou le rend de nouveau visible."
+      on:
+        description: "Rend un joueur invisible pour tous, sauf pour l'équipe."
+        syntax: "<cible>"
+        message: "{target} a été rendu invisible par {player}."
+      off:
+        description: "Rend un joueur invisible de nouveau visible pour tous."
+        syntax: "<cible>"
+        message: "{target} a été rendu visible par {player}."
+  notification:
+    vanish:
+      enabled: "Vous êtes maintenant invisible."
+      disabled: "Vous êtes de nouveau visible."
+  ui:
+    hud:
+      vanish: "Vous êtes invisible"

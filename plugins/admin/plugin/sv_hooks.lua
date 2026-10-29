@@ -2,9 +2,7 @@
 -- of each player's role and permissions from the database, telling open ban list pages that
 -- the bans have changed, the permission checks for tools, chairs and voice chat, expiry of
 -- temporary permissions, applying and deleting the permissions of characters, giving or
--- stripping the tool gun and the physgun as permissions change, and keeping hidden players
--- (vanished or observing) and everything attached to them hidden as players join, respawn
--- and change permissions.
+-- stripping the tool gun and the physgun as permissions change.
 
 --- Checks connecting players against the ban cache. A timed ban that has expired is lifted
 -- and the connection left to the other checks, such as the server password; any other ban
@@ -126,8 +124,7 @@ end
 
 --- Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
 -- root_steamid config root admins, networks stored permissions, sends the config again if
--- the player turns out to be allowed to edit it, shows hidden players (vanished or observing)
--- to players with the 'moderate' permission and logs the connection.
+-- the player turns out to be allowed to edit it and logs the connection.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function Bolt:PlayerRestored(actor, record)
@@ -177,19 +174,16 @@ function Bolt:PlayerRestored(actor, record)
   end
 
   self:update_config_access(actor)
-  actor:update_hidden_players()
 
   Log:notify(actor:name()..' has connected to the server.', { action = 'player_events' })
 end
 
 --- Remembers whether the player could edit configs when the config was first sent to them,
 -- which the gamemode does right before this hook. Bolt:update_config_access compares against
--- it to tell when the config has to be sent again. Also applies once more which hidden
--- players the player may see, now that their client is in the game and their role is known.
+-- it to tell when the config has to be sent again.
 -- @param actor [Player the player whose client has finished loading]
 function Bolt:PlayerInitialized(actor)
   actor.bolt_config_access = Config.can_manage(actor)
-  actor:update_hidden_players()
 end
 
 --- Checks role immunity for commands that target players, by way of Bolt:check_immunity:
@@ -201,113 +195,6 @@ end
 -- @return [Boolean false if the caller may not target that player]
 function Bolt:CommandCheckImmunity(actor, target, can_equal)
   return self:check_immunity(actor, target, can_equal)
-end
-
---- Hides hidden players (vanished or observing) from a newly connected player. The player's
--- role is not known yet at this point; Bolt:PlayerRestored and Bolt:PlayerInitialized show
--- them again if the player turns out to have the 'moderate' permission.
--- @param actor [Player the player that just connected]
-function Bolt:PlayerInitialSpawn(actor)
-  actor:update_hidden_players()
-end
-
---- Makes a vanished player invisible again after a respawn, which has made them visible.
--- @param actor [Player]
-function Bolt:PostPlayerSpawn(actor)
-  actor:hide_vanished_body()
-end
-
-do
-  local created = {}
-
-  local function get_holder(entity)
-    local parent = entity:GetParent()
-
-    while IsValid(parent) and !parent:IsPlayer() do
-      parent = parent:GetParent()
-    end
-
-    if !IsValid(parent) and entity:IsWeapon() then
-      parent = entity:GetOwner()
-    end
-
-    if IsValid(parent) and parent:IsPlayer() then
-      return parent
-    end
-  end
-
-  --- Hides the entities that have been attached to a hidden player since the last tick, such
-  -- as the weapons they are given when they spawn or their flashlight, from everyone the
-  -- player is hidden from. Hiding the player only hides what they have at that moment.
-  local function hide_created()
-    local entities = created
-
-    created = {}
-
-    for _, ent in ipairs(entities) do
-      if IsValid(ent) then
-        local holder = get_holder(ent)
-
-        if holder and holder:is_hidden() then
-          holder:update_visibility()
-        end
-      end
-    end
-  end
-
-  --- Queues every new entity to be checked on the next tick, once it has been attached to
-  -- whatever it belongs to.
-  -- @param entity [Entity]
-  function Bolt:OnEntityCreated(entity)
-    created[#created + 1] = entity
-
-    if #created == 1 then
-      timer.Simple(0, hide_created)
-    end
-  end
-
-  --- Queues a weapon that a player picks up to be checked on the next tick, as it is not a
-  -- new entity.
-  -- @param weapon [Weapon]
-  -- @param _actor [Player]
-  function Bolt:WeaponEquip(weapon, _actor)
-    self:OnEntityCreated(weapon)
-  end
-end
-
---- Networks a weapon dropped by a hidden player to everyone again: it no longer belongs to
--- the player.
--- @param _actor [Player]
--- @param weapon [Weapon]
-function Bolt:PlayerDroppedWeapon(_actor, weapon)
-  if !IsValid(weapon) then return end
-
-  for _, client in player.Iterator() do
-    weapon:prevent_transmit(client, false)
-  end
-end
-
---- Keeps hidden players (vanished or observing) from picking up weapons that lie in the
--- world. Weapons that they are given are let through: those are created in the same tick.
--- @param actor [Player]
--- @param weapon [Weapon]
--- @return [Boolean false for a hidden player and a weapon that lies in the world]
-function Bolt:PlayerCanPickupWeapon(actor, weapon)
-  if actor:is_hidden() and weapon:GetCreationTime() < CurTime() then
-    return false
-  end
-end
-
---- Keeps hidden players (vanished or observing) from carrying objects in their hands, which
--- would show other players an object floating in the air.
--- @param actor [Player]
--- @param _entity [Entity]
--- @param _drag [Boolean]
--- @return [Boolean false for a hidden player]
-function Bolt:PlayerCanPickupObject(actor, _entity, _drag)
-  if actor:is_hidden() then
-    return false
-  end
 end
 
 --- Removes the expired temporary permissions of the player and of their active character.
@@ -336,7 +223,6 @@ end
 -- @param _value [Number new PERM_ value]
 function Bolt:PlayerPermissionChanged(target, perm_id, _value)
   self:update_config_access(target)
-  target:update_hidden_players()
 
   if perm_id != 'toolgun' and perm_id != 'physgun' then return end
   if !target:Alive() then return end
@@ -360,7 +246,6 @@ end
 -- @param _old_group [Role the player's previous role]
 function Bolt:PlayerUserGroupChanged(target, _group, _old_group)
   self:update_config_access(target)
-  target:update_hidden_players()
 
   if !target:Alive() then return end
 

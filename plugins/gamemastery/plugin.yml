@@ -4,3 +4,4 @@ author: TeslaCloud Studios
 depends:
   - admin
   - characters
+  - observer

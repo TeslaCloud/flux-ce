@@ -162,16 +162,6 @@ fr:
       description: "Vous téléporte à la position de la cible."
       syntax: "<cible>"
       message: "{player} s'est téléporté auprès de {target}."
-    vanish:
-      description: "Rend un joueur complètement invisible pour tous les autres joueurs du serveur, ou le rend de nouveau visible."
-      on:
-        description: "Rend un joueur invisible pour tous, sauf pour l'équipe."
-        syntax: "<cible>"
-        message: "{target} a été rendu invisible par {player}."
-      off:
-        description: "Rend un joueur invisible de nouveau visible pour tous."
-        syntax: "<cible>"
-        message: "{target} a été rendu visible par {player}."
     warn:
       description: "Avertit un joueur."
       syntax: "<cible> [raison]"
@@ -229,9 +219,6 @@ fr:
     setgroup: "Votre groupe d'utilisateurs est désormais {group}."
     slay: "Vous avez été tué par {player}."
     tp: "Vous avez été téléporté."
-    vanish:
-      enabled: "Vous êtes maintenant invisible."
-      disabled: "Vous êtes de nouveau visible."
     freeze: "Vous avez été gelé par {player}."
     unfreeze: "Vous avez été dégelé par {player}."
     warn: "Vous avez reçu un avertissement pour {reason}."
@@ -262,8 +249,6 @@ fr:
     gamemaster: "Un rang de confiance de l'équipe qui anime le monde du jeu, avec les outils d'apparition, d'objets, d'argent et de level design."
     admin: "Le rang le plus élevé de l'équipe, avec accès à tout, y compris la configuration, les permissions et les plugins."
   ui:
-    hud:
-      vanish: "Vous êtes invisible"
     admin:
       player_management: "Gestion des joueurs"
       players: "Joueurs"

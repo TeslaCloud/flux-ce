@@ -162,16 +162,6 @@ es:
       description: Te teletransporta a la posición del objetivo.
       syntax: <jugador>
       message: "{player} se ha teletransportado hasta {target}."
-    vanish:
-      description: Oculta por completo a un jugador del resto del servidor, o lo vuelve a mostrar.
-      "on":
-        description: Oculta a un jugador de todos excepto del staff.
-        syntax: <jugador>
-        message: "{player} ha vuelto invisible a {target}."
-      "off":
-        description: Vuelve a mostrar a todos un jugador oculto.
-        syntax: <jugador>
-        message: "{player} ha vuelto visible a {target}."
     warn:
       description: Advierte a un jugador.
       syntax: <jugador> [motivo]
@@ -229,9 +219,6 @@ es:
     setgroup: Tu grupo de usuario se ha cambiado a {group}.
     slay: "{player} te ha matado."
     tp: Te han teletransportado.
-    vanish:
-      enabled: Ahora eres invisible.
-      disabled: Ahora eres visible.
     freeze: "{player} te ha congelado."
     unfreeze: "{player} te ha descongelado."
     warn: "Te han advertido por {reason}."
@@ -262,8 +249,6 @@ es:
     gamemaster: Un rango de staff de confianza que dirige el mundo del juego, con las herramientas de spawn, objetos, dinero y diseño de niveles.
     admin: El rango de staff más alto, con acceso a todo, incluidos los ajustes, los permisos y los plugins.
   ui:
-    hud:
-      vanish: "Eres invisible"
     admin:
       player_management: Gestión de jugadores
       players: Jugadores

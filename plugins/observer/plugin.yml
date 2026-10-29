@@ -1,5 +1,5 @@
 name: Observer
-description: Turns noclip into an observer mode that hides staff from the other players.
+description: Keeps staff out of sight of the other players with observer mode, vanish and an admin ESP.
 author: TeslaCloud Studios
 depends:
   - admin

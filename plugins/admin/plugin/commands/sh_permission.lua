@@ -121,8 +121,8 @@ end
 
 --- Resets the permission of the targeted players and notifies them and staff. An ID that is
 -- not registered on the server is accepted as well if one of the targets has a value set for
--- it, which is the case for the permissions that only exist on the client, such as
--- 'admin_esp', once they were set in the permission editor.
+-- it, which is the case for the permissions that only exist on the client once they were
+-- set in the permission editor.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players whose permission is reset]
 -- @param permission_id [String permission ID, command ID or command alias]

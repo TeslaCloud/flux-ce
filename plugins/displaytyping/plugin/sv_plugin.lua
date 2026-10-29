@@ -37,7 +37,7 @@ end
 -- @return [Boolean]
 function DisplayTyping:can_display(actor)
   if !actor:Alive() or !actor:has_initialized() then return false end
-  if actor.is_vanished or actor:get_nv('observer') then return false end
+  if Observer and actor:is_hidden() then return false end
   if actor:GetNoDraw() and !self:get_ragdoll(actor) then return false end
 
   --- Asks whether other players may see that a player is typing. Called on the server for

@@ -162,16 +162,6 @@ en:
       description: Teleport to the target's position.
       syntax: <target>
       message: "{player} has teleported to {target}."
-    vanish:
-      description: Completely hides a player from everyone else on the server, or shows them again.
-      "on":
-        description: Hides a player from everyone but the staff.
-        syntax: <target>
-        message: "{target} has been vanished by {player}."
-      "off":
-        description: Shows a hidden player to everyone again.
-        syntax: <target>
-        message: "{target} has been unvanished by {player}."
     warn:
       description: Warns a player.
       syntax: <target> [reason]
@@ -229,9 +219,6 @@ en:
     setgroup: Your usergroup was set to {group}.
     slay: "You have been slain by {player}."
     tp: You have been teleported.
-    vanish:
-      enabled: You are now vanished.
-      disabled: You are now unvanished.
     freeze: "You've been frozen by {player}."
     unfreeze: "You've been unfrozen by {player}."
     warn: "You have been warned for {reason}."
@@ -262,8 +249,6 @@ en:
     gamemaster: A trusted staff rank that runs the game world, with the spawning, item, money and level design tools.
     admin: The highest staff rank, with access to everything, including the configuration, permissions and plugins.
   ui:
-    hud:
-      vanish: "You are vanished"
     admin:
       player_management: Player management
       players: Players

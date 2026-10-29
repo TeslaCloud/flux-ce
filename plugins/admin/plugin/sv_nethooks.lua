@@ -45,8 +45,7 @@ local function is_permission_value(value)
 end
 
 --- Checks that a value received from a client can be a permission ID. The ID does not have
--- to be registered on the server, because a permission may only exist on the client (such as
--- 'admin_esp').
+-- to be registered on the server, because a permission may only exist on the client.
 -- @param perm_id [Any]
 -- @return [Boolean true for a non-empty string]
 local function is_permission_id(perm_id)

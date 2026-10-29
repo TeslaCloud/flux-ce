@@ -1,8 +1,6 @@
 --- Server-side player extensions of the admin plugin: setting and saving the player's role
 -- and their individual and temporary permissions and those of their active character,
--- running commands as the player, teleporting, vanishing, and keeping hidden players
--- (vanished or observing) from being networked to everyone without the 'moderate'
--- permission.
+-- running commands as the player and teleporting.
 
 local player_meta = FindMetaTable('Player')
 
@@ -94,8 +92,8 @@ function player_meta:set_permission(perm_id, value)
   -- player's active character sets for a permission has changed, which happens when a
   -- character is loaded, switched or dropped, when a lasting or temporary permission of the
   -- loaded character is set or removed, and when a temporary one expires. The temporary
-  -- permissions of the player themselves do not run this hook. Use `Player:can` to learn what
-  -- the player may do now.
+  -- permissions of the player themselves run PlayerTempPermissionChanged instead. Use
+  -- `Player:can` to learn what the player may do now.
   -- @param target [Player The player whose permission has changed]
   -- @param perm_id [String Permission ID]
   -- @param value [Number New value in the layer that has changed: PERM_ALLOW, PERM_NEVER, or
@@ -115,7 +113,8 @@ end
 -- permissions until it expires. Updates the TempPermission records and the networked table.
 -- Giving the value the player already has temporarily adds the duration to the time that is
 -- left, up to `Bolt.max_temp_duration` from now; any other value starts counting from now.
--- The config is sent to the player again if that has changed their right to edit configs.
+-- The config is sent to the player again if that has changed their right to edit configs,
+-- and the PlayerTempPermissionChanged hook runs.
 -- @param perm_id [String permission ID]
 -- @param value [Number PERM_ value, normally PERM_ALLOW or PERM_NEVER]
 -- @param duration [Number seconds until the permission expires]
@@ -160,7 +159,15 @@ function player_meta:set_temp_permission(perm_id, value, duration)
   self:set_temp_permissions(perm_table)
 
   Bolt:update_config_access(self)
-  self:update_hidden_players()
+
+  --- Called on the server after a temporary permission of a player has been given with
+  -- `Player:set_temp_permission` or removed with `Bolt:delete_temp_permission`, which also
+  -- happens when it expires. Use `Player:can` to learn what the player may do now.
+  -- @param target [Player The player whose temporary permission has changed]
+  -- @param perm_id [String Permission ID]
+  -- @param value [Number The temporary value: PERM_ALLOW or PERM_NEVER, or PERM_NO when it
+  --   was removed]
+  hook.Run('PlayerTempPermissionChanged', self, perm_id, value)
 end
 
 --- Sets one of the permissions of the player's active character, which apply together with
@@ -199,97 +206,4 @@ function player_meta:teleport(pos)
   self.prev_pos = self:GetPos()
   self:SetPos(pos)
   self:unstuck()
-end
-
---- Checks whether the player is hidden from other players: vanished, or in observer mode.
--- @return [Boolean]
-function player_meta:is_hidden()
-  return self.is_vanished == true or self:get_nv('observer') == true
-end
-
---- Starts or stops networking the player, together with everything attached to them such as
--- their weapons, to one other player, going by whether the player is hidden and whether the
--- receiver has the 'moderate' permission, which lets them see hidden players.
--- @param receiver [Player]
-function player_meta:update_transmit(receiver)
-  if !IsValid(receiver) or receiver == self then return end
-
-  local should_prevent = self:is_hidden() and !receiver:can('moderate')
-
-  self:prevent_transmit(receiver, should_prevent)
-
-  for _, weapon in ipairs(self:GetWeapons()) do
-    weapon:prevent_transmit(receiver, should_prevent)
-  end
-end
-
---- Applies whether the player is hidden to the networking of the player to everyone else and
--- sets their own 'transmission_prevented' net var. Called whenever the player is hidden or
--- shown, and again whenever something new is attached to a hidden player.
-function player_meta:update_visibility()
-  self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
-
-  for _, client in player.Iterator() do
-    self:update_transmit(client)
-  end
-
-  self:set_nv('transmission_prevented', self:is_hidden(), self)
-end
-
---- Applies which of the hidden players this player may see to the networking of all of them.
--- Called when the player joins and whenever their permissions change.
-function player_meta:update_hidden_players()
-  for _, client in player.Iterator() do
-    client:update_transmit(self)
-  end
-end
-
---- Makes a vanished player invisible and not solid. Also used to hide them again after they
--- have respawned, which makes them visible.
--- @param target [Player]
-local function hide_body(target)
-  target:DrawWorldModel(false)
-  target:DrawShadow(false)
-  target:SetNoDraw(true)
-  target:SetNotSolid(true)
-  target:SetColor(Color(0, 0, 0, 0))
-end
-
---- Makes a vanished player invisible and not solid again after they have respawned, unless
--- they are in observer mode, which hides them in its own way. Server-side only.
-function player_meta:hide_vanished_body()
-  if self.is_vanished and !self:get_nv('observer') then
-    hide_body(self)
-  end
-end
-
---- Hides the player from everyone without the 'moderate' permission, or shows them again.
--- A player in observer mode keeps the look the Observer plugin gave them; anyone else is
--- made invisible and not solid, and gets their previous color back when they reappear. The
--- weapon is only drawn again when the player carries nothing, since the engine drops the
--- carried object as soon as the weapon is drawn and draws the weapon by itself once the
--- object is let go of. A player who leaves vanish while in observer mode stays hidden as an
--- observer. Sets the player's is_vanished field and notifies nobody.
--- @param should_vanish [Boolean true to hide the player, false to show them again]
-function player_meta:set_vanished(should_vanish)
-  if !self:get_nv('observer') then
-    if should_vanish then
-      self.old_color = self:GetColor()
-
-      hide_body(self)
-    else
-      if !IsValid(self.holding_object) then
-        self:DrawWorldModel(true)
-      end
-
-      self:DrawShadow(true)
-      self:SetNoDraw(false)
-      self:SetNotSolid(false)
-      self:SetColor(self.old_color or color_white)
-    end
-  end
-
-  self.is_vanished = should_vanish
-
-  self:update_visibility()
 end

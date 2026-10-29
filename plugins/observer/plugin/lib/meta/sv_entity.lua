@@ -1,5 +1,5 @@
---- Entity extensions of the admin plugin: hiding an entity from chosen players by stopping
--- its transmission to them, which the Vanish command is built on.
+--- Entity extensions of the Observer plugin: hiding an entity from chosen players by stopping
+-- its transmission to them, which observer mode and vanish are built on.
 
 local ent_meta = FindMetaTable 'Entity'
 local always_true = || -> true

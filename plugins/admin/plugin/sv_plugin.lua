@@ -4,7 +4,8 @@
 
 --- Removes a temporary permission from a player, destroying its database record, taking it
 -- off the player's record and updating the networked table. The config is sent to the player
--- again if that has changed their right to edit configs.
+-- again if that has changed their right to edit configs, and the PlayerTempPermissionChanged
+-- hook runs.
 -- @param target [Player]
 -- @param perm_id [String permission ID]
 function Bolt:delete_temp_permission(target, perm_id)
@@ -27,7 +28,8 @@ function Bolt:delete_temp_permission(target, perm_id)
   target:set_temp_permissions(perm_table)
 
   self:update_config_access(target)
-  target:update_hidden_players()
+
+  hook.Run('PlayerTempPermissionChanged', target, perm_id, PERM_NO)
 end
 
 --- Finds the permission that an argument of the `grant` and `revoke` subcommands of the

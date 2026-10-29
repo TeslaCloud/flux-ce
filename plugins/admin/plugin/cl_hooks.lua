@@ -1,7 +1,6 @@
 --- Client-side hooks of the admin plugin: the Admin entry of the tab menu and its pages,
 -- keeping the config editor, the plugin manager and the permission editor up to date with
--- the server, the vanish indicator on the HUD, fullbright rendering and the voice permission
--- check.
+-- the server, fullbright rendering and the voice permission check.
 
 local IsValid = IsValid
 
@@ -104,21 +103,6 @@ end
 function Bolt:NetVarChanged(entity, key, _old_value, _new_value)
   if IsValid(self.permissions_editor) then
     self.permissions_editor:on_net_var_changed(entity, key)
-  end
-end
-
---- Draws the vanish indicator in the bottom right corner while the local player is hidden
--- from other players.
-function Bolt:HUDPaint()
-  local client = PLAYER
-
-  if IsValid(client) and client:has_initialized() and client:Alive()
-  and client:get_nv('transmission_prevented') then
-    local text, font = t'ui.hud.vanish', Theme.get_font('text_normal')
-    local w, h = util.text_size(text, font)
-    local x, y = ScrW() - w - 16, ScrH() - h - 16
-    FontAwesome:draw('fa-eye-slash', x - h - math.scale(12), y, h)
-    draw.SimpleText(text, font, x, y, color_white)
   end
 end
 

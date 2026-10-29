@@ -4,3 +4,21 @@ es:
       observer_reset:
         name: Restablecer al salir de observador
         desc: "¿Debe restaurarse la posición del jugador cuando sale del modo observador?"
+  command:
+    vanish:
+      description: Oculta por completo a un jugador del resto del servidor, o lo vuelve a mostrar.
+      "on":
+        description: Oculta a un jugador de todos excepto del staff.
+        syntax: <jugador>
+        message: "{player} ha vuelto invisible a {target}."
+      "off":
+        description: Vuelve a mostrar a todos un jugador oculto.
+        syntax: <jugador>
+        message: "{player} ha vuelto visible a {target}."
+  notification:
+    vanish:
+      enabled: Ahora eres invisible.
+      disabled: Ahora eres visible.
+  ui:
+    hud:
+      vanish: "Eres invisible"
