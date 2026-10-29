@@ -57,7 +57,7 @@ fr:
       view_punch_scale:
         name: "Ampleur de la secousse de la vue"
         desc: "Nombre maximal de degrés de secousse de la vue par point de dégâts. Un seul coup ne la secoue jamais de plus de 30 degrés."
-      log_damage:
+      log:
         name: "Journaliser les dégâts"
         desc: "Indique si les dégâts subis par les joueurs sont inscrits dans le journal."
       log_kills:

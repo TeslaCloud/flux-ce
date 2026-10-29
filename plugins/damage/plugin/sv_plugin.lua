@@ -1,7 +1,7 @@
 --- Server side of the Damage plugin: the rules it applies to players.
 -- Looks up the multiplier of a hit location, remembers where a player has just been hit,
 -- regenerates health, hurts players who stay under water with damage rolled from the
--- 'drowning_damage' dice formula, punches the view of a player who is hurt and writes the
+-- 'damage_drowning_damage' dice formula, punches the view of a player who is hurt and writes the
 -- damage and kill log entries. The hooks that call these functions are in `sv_hooks.lua`.
 --
 -- The log entries are printed and replicated the moment they are written, but they are
@@ -223,26 +223,26 @@ function Damage:reset_player(target)
 end
 
 --- Returns how long a player waits for their next bit of regenerated health: the
--- 'health_regen_fast_interval' config when their health is at or above the
--- 'health_regen_fast_share' percentage of their maximum health, the 'health_regen_interval'
+-- 'damage_health_regen_fast_interval' config when their health is at or above the
+-- 'damage_health_regen_fast_share' percentage of their maximum health, the 'damage_health_regen_interval'
 -- config otherwise. Serverside only.
 -- @param target [Player]
 -- @return [Number seconds]
 function Damage:get_regen_interval(target)
   local share = target:Health() / math_max(target:GetMaxHealth(), 1) * 100
 
-  if share >= config_get('health_regen_fast_share', 50) then
-    return config_get('health_regen_fast_interval', 5)
+  if share >= config_get('damage_health_regen_fast_share', 50) then
+    return config_get('damage_health_regen_fast_interval', 5)
   end
 
-  return config_get('health_regen_interval', 10)
+  return config_get('damage_health_regen_interval', 10)
 end
 
---- Runs the health regeneration of a player: heals them by the 'health_regen_amount' config
+--- Runs the health regeneration of a player: heals them by the 'damage_health_regen_amount' config
 -- once their waiting time has passed, never above their maximum health. The waiting time
 -- starts when the player is first found hurt and starts over whenever they take damage.
 -- Dead players and players at full health do not regenerate. Does not check the
--- 'health_regen' config. Serverside only.
+-- 'damage_health_regen' config. Serverside only.
 -- @param target [Player]
 -- @param cur_time=CurTime() [Number current time]
 -- @return [Boolean whether the player was healed by this call]
@@ -271,7 +271,7 @@ function Damage:regenerate_health(target, cur_time)
 
   --- Asks whether a player may regenerate health right now. Called on the server each time
   -- a hurt, living player is due to be healed by the health regeneration, which only runs
-  -- while the 'health_regen' config is on.
+  -- while the 'damage_health_regen' config is on.
   -- @param target [Player The player about to be healed]
   -- @return [Boolean Return false to skip this heal; the player waits a full interval for
   --   the next one. Return nothing to let other handlers decide]
@@ -279,12 +279,12 @@ function Damage:regenerate_health(target, cur_time)
     return false
   end
 
-  local amount = config_get('health_regen_amount', 1)
+  local amount = config_get('damage_health_regen_amount', 1)
 
   --- Lets plugins change how much health a player regenerates at once. Called on the
   -- server right before the player is healed, after `PlayerCanRegenerateHealth`.
   -- @param target [Player The player about to be healed]
-  -- @param amount [Number Health the player would gain: the 'health_regen_amount' config]
+  -- @param amount [Number Health the player would gain: the 'damage_health_regen_amount' config]
   -- @return [Number Health to give instead, rounded to a whole number; 0 or less gives
   --   none. Return nothing to keep the amount and let other handlers run]
   local override = hook.Run('GetHealthRegeneration', target, amount)
@@ -322,7 +322,7 @@ function Damage:get_water_level(target)
 end
 
 --- Returns how long a player has been completely under water without surfacing. It is only
--- tracked while the 'drowning' config is on. Serverside only.
+-- tracked while the 'damage_drowning' config is on. Serverside only.
 -- @param target [Player]
 -- @return [Number seconds; 0 if the player is not submerged]
 function Damage:get_submerged_time(target)
@@ -388,9 +388,9 @@ function Damage:deal_drowning_damage(target, amount)
 end
 
 --- Runs the drowning of a player: keeps track of how long they have been completely under
--- water and, once that exceeds the 'drowning_time' config, deals damage rolled from the
--- 'drowning_damage' dice formula to them every 'drowning_interval' seconds until they
--- surface. Dead and noclipping players are left alone. Does not check the 'drowning'
+-- water and, once that exceeds the 'damage_drowning_time' config, deals damage rolled from the
+-- 'damage_drowning_damage' dice formula to them every 'damage_drowning_interval' seconds until they
+-- surface. Dead and noclipping players are left alone. Does not check the 'damage_drowning'
 -- config. Serverside only.
 -- @param target [Player]
 -- @param cur_time=CurTime() [Number current time]
@@ -406,21 +406,21 @@ function Damage:update_drowning(target, cur_time)
 
   target.submerged_since = target.submerged_since or cur_time
 
-  if cur_time - target.submerged_since < config_get('drowning_time', 20) then return end
+  if cur_time - target.submerged_since < config_get('damage_drowning_time', 20) then return end
   if target.next_drown_damage and target.next_drown_damage > cur_time then return end
 
-  target.next_drown_damage = cur_time + config_get('drowning_interval', 1)
+  target.next_drown_damage = cur_time + config_get('damage_drowning_interval', 1)
 
   --- Asks whether a player who has run out of breath takes drowning damage. Called on the
-  -- server each time the damage is due, that is every 'drowning_interval' seconds while the
-  -- player has been completely under water for longer than the 'drowning_time' config.
-  -- Only runs while the 'drowning' config is on.
+  -- server each time the damage is due, that is every 'damage_drowning_interval' seconds while the
+  -- player has been completely under water for longer than the 'damage_drowning_time' config.
+  -- Only runs while the 'damage_drowning' config is on.
   -- @param target [Player The player who is drowning]
   -- @return [Boolean Return false to spare the player this time, e.g. for a breathing
   --   apparatus. Return nothing to let other handlers decide]
   if hook.Run('PlayerCanDrown', target) == false then return end
 
-  self:deal_drowning_damage(target, config_get('drowning_damage', '1d4'))
+  self:deal_drowning_damage(target, config_get('damage_drowning_damage', '1d4'))
 end
 
 --- Punches the view of a player by a random angle that grows with the damage: the damage
@@ -570,7 +570,7 @@ end
 -- name, see `Damage:get_limb_name`), from whom and with what, and the health and armor they
 -- are left with. The entry is written with the 'player_damage' action and replicated to the
 -- players who have the 'view_damage_logs' permission; it is saved by `Damage:flush_logs`.
--- Does not check the 'log_damage' config. Serverside only.
+-- Does not check the 'damage_log' config. Serverside only.
 -- @param victim [Player player who has taken the damage]
 -- @param damage_info [CTakeDamageInfo the damage]
 -- @param hitgroup=HITGROUP_GENERIC [Number HITGROUP_ enum of the hit location]
@@ -616,7 +616,7 @@ end
 --- Writes a kill log entry: who has died, who or what has killed them and with what. The
 -- entry is written with the 'player_death' action and replicated to the players who have
 -- the 'view_damage_logs' permission; it is saved by `Damage:flush_logs`. Does not check
--- the 'log_kills' config. Serverside only.
+-- the 'damage_log_kills' config. Serverside only.
 -- @param victim [Player player who has died]
 -- @param inflictor [Entity entity that has dealt the fatal damage]
 -- @param attacker [Entity entity responsible for the death]

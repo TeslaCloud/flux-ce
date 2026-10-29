@@ -57,7 +57,7 @@ en:
       view_punch_scale:
         name: Damage View Punch Scale
         desc: How many degrees the view is jolted by per point of damage, at most. A single hit never jolts it by more than 30 degrees.
-      log_damage:
+      log:
         name: Log Damage
         desc: Whether the damage players take is written to the log.
       log_kills:

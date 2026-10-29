@@ -27,7 +27,7 @@ ATTRIBUTE.effects = {
   Stats:percent_effect('ui.effect.stamina_drain', 'stats_endurance_stamina', true, || -> Stamina != nil),
   Stats:percent_effect('ui.effect.stamina_regen', 'stats_endurance_stamina', false, || -> Stamina != nil),
   Stats:percent_effect('ui.effect.health_regen', 'stats_endurance_recovery', false, function()
-    return Damage != nil and Config.get('health_regen') == true
+    return Damage != nil and Config.get('damage_health_regen') == true
   end),
   Stats:percent_effect('ui.effect.limb_recovery', 'stats_endurance_recovery', false, function()
     return Limbs != nil and Limbs:is_enabled() and (tonumber(Config.get('limbs_recovery')) or 0) > 0

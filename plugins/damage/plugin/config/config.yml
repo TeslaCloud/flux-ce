@@ -63,13 +63,15 @@ configs:
     category: damage
     type: boolean
     default_value: false
-  health_regen:
+  damage_health_regen:
+    renamed_from: health_regen
     name: config.damage.health_regen.name
     description: config.damage.health_regen.desc
     category: damage
     type: boolean
     default_value: false
-  health_regen_amount:
+  damage_health_regen_amount:
+    renamed_from: health_regen_amount
     name: config.damage.health_regen_amount.name
     description: config.damage.health_regen_amount.desc
     category: damage
@@ -77,7 +79,8 @@ configs:
     min_value: 1
     max_value: 100
     default_value: 1
-  health_regen_interval:
+  damage_health_regen_interval:
+    renamed_from: health_regen_interval
     name: config.damage.health_regen_interval.name
     description: config.damage.health_regen_interval.desc
     category: damage
@@ -85,7 +88,8 @@ configs:
     min_value: 1
     max_value: 600
     default_value: 10
-  health_regen_fast_interval:
+  damage_health_regen_fast_interval:
+    renamed_from: health_regen_fast_interval
     name: config.damage.health_regen_fast_interval.name
     description: config.damage.health_regen_fast_interval.desc
     category: damage
@@ -93,7 +97,8 @@ configs:
     min_value: 1
     max_value: 600
     default_value: 5
-  health_regen_fast_share:
+  damage_health_regen_fast_share:
+    renamed_from: health_regen_fast_share
     name: config.damage.health_regen_fast_share.name
     description: config.damage.health_regen_fast_share.desc
     category: damage
@@ -101,13 +106,15 @@ configs:
     min_value: 0
     max_value: 100
     default_value: 50
-  drowning:
+  damage_drowning:
+    renamed_from: drowning
     name: config.damage.drowning.name
     description: config.damage.drowning.desc
     category: damage
     type: boolean
     default_value: false
-  drowning_time:
+  damage_drowning_time:
+    renamed_from: drowning_time
     name: config.damage.drowning_time.name
     description: config.damage.drowning_time.desc
     category: damage
@@ -115,13 +122,15 @@ configs:
     min_value: 0
     max_value: 600
     default_value: 20
-  drowning_damage:
+  damage_drowning_damage:
+    renamed_from: drowning_damage
     name: config.damage.drowning_damage.name
     description: config.damage.drowning_damage.desc
     category: damage
     type: string
     default_value: '1d4'
-  drowning_interval:
+  damage_drowning_interval:
+    renamed_from: drowning_interval
     name: config.damage.drowning_interval.name
     description: config.damage.drowning_interval.desc
     category: damage
@@ -144,13 +153,15 @@ configs:
     max_value: 10
     decimals: 2
     default_value: 1
-  log_damage:
-    name: config.damage.log_damage.name
-    description: config.damage.log_damage.desc
+  damage_log:
+    renamed_from: log_damage
+    name: config.damage.log.name
+    description: config.damage.log.desc
     category: damage
     type: boolean
     default_value: false
-  log_kills:
+  damage_log_kills:
+    renamed_from: log_kills
     name: config.damage.log_kills.name
     description: config.damage.log_kills.desc
     category: damage

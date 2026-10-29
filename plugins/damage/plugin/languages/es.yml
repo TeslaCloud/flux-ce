@@ -57,7 +57,7 @@ es:
       view_punch_scale:
         name: Escala de sacudida de cámara por daño
         desc: Cuántos grados como máximo se sacude la vista por cada punto de daño. Un solo impacto nunca la sacude más de 30 grados.
-      log_damage:
+      log:
         name: Registrar daño
         desc: Si el daño que reciben los jugadores se escribe en el registro.
       log_kills:

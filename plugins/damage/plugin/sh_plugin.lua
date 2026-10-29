@@ -9,10 +9,10 @@
 -- applied to the damage in place, on top of whatever the gamemode, the schema and other
 -- plugins do in their own `ScalePlayerDamage`, `ScaleNPCDamage`, `GetPlayerFallDamage` and
 -- `EntityTakeDamage` handlers: the handlers of the plugin return nothing, so the others still
--- run. `health_regen` slowly heals hurt players, `drowning` hurts players who stay under
--- water for too long with damage rolled from the `drowning_damage` dice formula (1d4 by
--- default), `damage_view_punch` jolts the view of a player who is hurt, and `log_damage` and
--- `log_kills` write the damage players take and their deaths to the log; staff with the
+-- run. `damage_health_regen` slowly heals hurt players, `damage_drowning` hurts players who stay under
+-- water for too long with damage rolled from the `damage_drowning_damage` dice formula (1d4 by
+-- default), `damage_view_punch` jolts the view of a player who is hurt, and `damage_log` and
+-- `damage_log_kills` write the damage players take and their deaths to the log; staff with the
 -- 'view_damage_logs' permission see these entries in their console.
 --
 -- The plugin owns the names of the hit locations on both realms: `Damage:get_limbs` lists

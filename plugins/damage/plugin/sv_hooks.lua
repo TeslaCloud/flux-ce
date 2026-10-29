@@ -109,7 +109,7 @@ end
 
 --- Forgets the hit location of an NPC that has been hit. Handles damage that has been dealt
 -- to a player: restarts the wait for their health regeneration, punches their view if the
--- 'damage_view_punch' config is on, writes the damage log entry if the 'log_damage' config is
+-- 'damage_view_punch' config is on, writes the damage log entry if the 'damage_log' config is
 -- on and runs the PostPlayerTakeDamage hook.
 -- @param entity [Entity the entity that was attacked]
 -- @param damage_info [CTakeDamageInfo]
@@ -136,7 +136,7 @@ function Damage:PostEntityTakeDamage(entity, damage_info, took)
       self:punch_view(entity, damage)
     end
 
-    if config_get('log_damage') then
+    if config_get('damage_log') then
       self:log_damage(entity, damage_info, hitgroup)
     end
   end
@@ -156,7 +156,7 @@ function Damage:PostEntityTakeDamage(entity, damage_info, took)
 end
 
 --- Clears what the plugin tracks about the player who died, writes the kill log entry if
--- the 'log_kills' config is on and saves the queued log entries, so that the hits that led
+-- the 'damage_log_kills' config is on and saves the queued log entries, so that the hits that led
 -- to the death are in the database together with it.
 -- @param victim [Player the player who died]
 -- @param inflictor [Entity entity that has dealt the fatal damage]
@@ -164,7 +164,7 @@ end
 function Damage:PlayerDeath(victim, inflictor, attacker)
   self:reset_player(victim)
 
-  if config_get('log_kills') then
+  if config_get('damage_log_kills') then
     self:log_kill(victim, inflictor, attacker)
   end
 
@@ -188,11 +188,11 @@ function Damage:PlayerSpawn(actor)
 end
 
 --- Tracks how long the player has been under water and deals the drowning damage while the
--- 'drowning' config is on.
+-- 'damage_drowning' config is on.
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the tick]
 function Damage:PlayerThink(actor, cur_time)
-  if config_get('drowning') then
+  if config_get('damage_drowning') then
     self:update_drowning(actor, cur_time)
   elseif actor.submerged_since then
     actor.submerged_since = nil
@@ -200,11 +200,11 @@ function Damage:PlayerThink(actor, cur_time)
   end
 end
 
---- Regenerates the health of the player while the 'health_regen' config is on.
+--- Regenerates the health of the player while the 'damage_health_regen' config is on.
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the tick]
 function Damage:PlayerOneSecond(actor, cur_time)
-  if config_get('health_regen') then
+  if config_get('damage_health_regen') then
     self:regenerate_health(actor, cur_time)
   end
 end
