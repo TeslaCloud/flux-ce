@@ -1,4 +1,4 @@
---- The clock of the tab menu (`fl_gametime_clock`): the game time with the game date below it,
+--- The clock of the tab menu (`fl_game_time_clock`): the game time with the game date below it,
 -- aligned to the right. The Game Time plugin puts it at the right end of the button bar of
 -- the tab menu. It takes no mouse input, so it never gets in the way of the buttons.
 -- A theme can draw the clock itself with the `PaintGameTimeClock` theme hook, which receives
@@ -67,4 +67,4 @@ function PANEL:Paint(w, h)
   end
 end
 
-vgui.Register('fl_gametime_clock', PANEL, 'fl_base_panel')
+vgui.Register('fl_game_time_clock', PANEL, 'fl_base_panel')

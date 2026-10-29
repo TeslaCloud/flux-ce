@@ -1,29 +1,31 @@
 --- Client side of the Game Time plugin: registers the settings of the clock, notices when the
 -- server sets the game clock to another moment and puts the clock into the tab menu.
 
---- Registers the settings of the clock: 'gametime_clock', which shows or hides the clock of
--- the tab menu, and 'gametime_twelve_hour', which switches the game time to the 12-hour
+--- Registers the settings of the clock: 'game_time_clock', which shows or hides the clock of
+-- the tab menu, and 'game_time_twelve_hour', which switches the game time to the 12-hour
 -- format.
 function GameTime:RegisterClientSettings()
-  ClientSettings:register_setting('gametime_clock', {
+  ClientSettings:register_setting('game_time_clock', {
+    renamed_from = 'gametime_clock',
     type = 'boolean',
     default = true,
     category = 'settings.categories.interface',
-    name = 'settings.gametime.clock.name',
-    description = 'settings.gametime.clock.desc'
+    name = 'settings.game_time.clock.name',
+    description = 'settings.game_time.clock.desc'
   })
 
-  ClientSettings:register_setting('gametime_twelve_hour', {
+  ClientSettings:register_setting('game_time_twelve_hour', {
+    renamed_from = 'gametime_twelve_hour',
     type = 'boolean',
     default = false,
     category = 'settings.categories.interface',
-    name = 'settings.gametime.twelve_hour.name',
-    description = 'settings.gametime.twelve_hour.desc'
+    name = 'settings.game_time.twelve_hour.name',
+    description = 'settings.game_time.twelve_hour.desc'
   })
 end
 
 --- Checks whether the clock of the tab menu should be drawn: the game clock has arrived from
--- the server, the player has not turned the 'gametime_clock' setting off and the
+-- the server, the player has not turned the 'game_time_clock' setting off and the
 -- `ShouldDrawGameTime` hook does not object.
 -- @return [Boolean]
 function GameTime:should_draw_clock()
@@ -31,7 +33,7 @@ function GameTime:should_draw_clock()
     return false
   end
 
-  if ClientSettings:get('gametime_clock', true) == false then
+  if ClientSettings:get('game_time_clock', true) == false then
     return false
   end
 
@@ -73,9 +75,9 @@ function GameTime:AddTabMenuItems(menu)
 
   if !IsValid(bar) then return end
 
-  local clock = vgui.Create('fl_gametime_clock', bar)
+  local clock = vgui.Create('fl_game_time_clock', bar)
   clock:SetSize(math.scale(420), bar:GetTall())
   clock:SetPos(bar:GetWide() - clock:GetWide() - math.scale(16), 0)
 
-  menu.gametime_clock = clock
+  menu.game_time_clock = clock
 end

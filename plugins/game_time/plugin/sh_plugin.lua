@@ -7,16 +7,16 @@
 -- one apart, and `GameTime:parse` and `GameTime:to_string` convert between a timestamp and
 -- text such as '2020-01-01 08:00'.
 --
--- The server owns the clock. It starts at the date of the 'gametime_start' config, advances
--- one game minute every 'gametime_minute_length' real seconds and is saved with the rest of
+-- The server owns the clock. It starts at the date of the 'game_time_start' config, advances
+-- one game minute every 'game_time_minute_length' real seconds and is saved with the rest of
 -- the persistent data, so it carries on after a restart or a change of map. While the server
--- is empty and hibernates the clock stands still. With the 'gametime_real_time' config the
+-- is empty and hibernates the clock stands still. With the 'game_time_real_time' config the
 -- clock shows the real date and time of the server instead; the game time that was saved
 -- is kept, and the clock goes back to it when the config is turned off. Staff set the clock
 -- with the SetTime command, code with `GameTime:set`.
 --
 -- The clock is networked as the moment it was last set together with its speed, in the
--- 'gametime' networked global, and every client works the current time out by itself, so
+-- 'game_time' networked global, and every client works the current time out by itself, so
 -- nothing is sent while the clock just runs. `GameTime:now`, `GameTime:get_date` and the
 -- `format` functions therefore work on the server and the client alike.
 -- ```
@@ -58,7 +58,7 @@ local month_ids = {
 }
 local weekday_ids = { 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' }
 
-GameTime.clock_key = 'gametime'
+GameTime.clock_key = 'game_time'
 GameTime.min_timestamp = -62_135_596_800
 GameTime.max_timestamp = 253_402_300_799
 
@@ -265,7 +265,7 @@ function GameTime:get_rate()
 end
 
 --- Checks whether the game clock follows the real date and time of the server, which is
--- what the 'gametime_real_time' config makes it do.
+-- what the 'game_time_real_time' config makes it do.
 -- @return [Boolean]
 function GameTime:is_real_time()
   local clock = self:get_clock()
@@ -320,7 +320,7 @@ function GameTime:get_month_name(month, lang)
     return ''
   end
 
-  return t('gametime.months.'..id, nil, lang)
+  return t('game_time.months.'..id, nil, lang)
 end
 
 --- Returns the name of a day of the week.
@@ -334,15 +334,15 @@ function GameTime:get_weekday_name(weekday, lang)
     return ''
   end
 
-  return t('gametime.weekdays.'..id, nil, lang)
+  return t('game_time.weekdays.'..id, nil, lang)
 end
 
 --- Checks whether times are shown with a 12-hour clock by default. On the client that is the
--- 'gametime_twelve_hour' setting of the player. The server always uses the 24-hour clock.
+-- 'game_time_twelve_hour' setting of the player. The server always uses the 24-hour clock.
 -- @return [Boolean]
 function GameTime:uses_twelve_hour()
   if CLIENT then
-    return ClientSettings:get('gametime_twelve_hour', false) == true
+    return ClientSettings:get('game_time_twelve_hour', false) == true
   end
 
   return false
@@ -365,7 +365,7 @@ function GameTime:format_time(timestamp, twelve_hour, lang)
   end
 
   local hour = date.hour % 12
-  local period = t(date.hour < 12 ? 'gametime.am' : 'gametime.pm', nil, lang)
+  local period = t(date.hour < 12 ? 'game_time.am' : 'game_time.pm', nil, lang)
 
   if hour == 0 then
     hour = 12
@@ -385,13 +385,13 @@ function GameTime:format_date(timestamp, short, lang)
   local text
 
   if short then
-    text = t('gametime.format.date_short', {
+    text = t('game_time.format.date_short', {
       day = format('%02d', date.day),
       month = format('%02d', date.month),
       year = date.year
     }, lang)
   else
-    text = t('gametime.format.date', {
+    text = t('game_time.format.date', {
       weekday = self:get_weekday_name(date.weekday, lang),
       day = date.day,
       month = self:get_month_name(date.month, lang),
@@ -413,7 +413,7 @@ end
 function GameTime:format(timestamp, twelve_hour, lang)
   timestamp = timestamp or self:now()
 
-  return t('gametime.format.date_time', {
+  return t('game_time.format.date_time', {
     date = self:format_date(timestamp, false, lang),
     time = self:format_time(timestamp, twelve_hour, lang)
   }, lang)

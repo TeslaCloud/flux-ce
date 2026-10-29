@@ -19,7 +19,7 @@ function CMD:on_run(actor, text)
   local timestamp = GameTime:parse(text:match('^"([^"]*)"$') or text)
 
   if !timestamp then
-    Flux.Player:notify(actor, 'error.gametime.invalid_format')
+    Flux.Player:notify(actor, 'error.game_time.invalid_format')
 
     return
   end

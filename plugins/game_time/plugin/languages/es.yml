@@ -5,7 +5,7 @@ es:
       syntax: "[AAAA-MM-DD] [HH:MM]"
       message: "{player} ha establecido la hora del juego en {time}."
   config:
-    gametime:
+    game_time:
       title: Hora del juego
       desc: Ajustes del reloj y el calendario del juego.
       minute_length:
@@ -18,12 +18,12 @@ es:
         name: Seguir la hora real
         desc: "Hace que el reloj del juego muestre la fecha y la hora reales del servidor en lugar de avanzar por su cuenta."
   error:
-    gametime:
+    game_time:
       invalid: Esta fecha está fuera del calendario del juego.
       invalid_format: "No es una fecha ni una hora válida. Escríbela como AAAA-MM-DD HH:MM, o indica solo la fecha o solo la hora."
       not_ready: El reloj del juego aún no se ha iniciado.
       real_time: El reloj del juego sigue la hora real del servidor y no se puede ajustar.
-  gametime:
+  game_time:
     am: a. m.
     pm: p. m.
     format:
@@ -52,7 +52,7 @@ es:
       saturday: Sábado
       sunday: Domingo
   settings:
-    gametime:
+    game_time:
       clock:
         name: Mostrar el reloj del juego
         desc: "Muestra la fecha y la hora del juego en la esquina superior derecha del menú que abre la tecla TAB."

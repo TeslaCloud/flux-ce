@@ -1,6 +1,6 @@
 --- Server side of the Game Time plugin: starts the game clock from the saved time or from
--- the 'gametime_start' config, networks it, keeps it on the real time of the server when
--- the 'gametime_real_time' config asks for that, follows the changes of its configs, sets it
+-- the 'game_time_start' config, networks it, keeps it on the real time of the server when
+-- the 'game_time_real_time' config asks for that, follows the changes of its configs, sets it
 -- on request and saves it.
 -- The game time is saved for the schema as a whole rather than for every map, so that the
 -- calendar carries on when the map changes.
@@ -10,27 +10,27 @@ local default_minute_length = 60
 local real_time_tolerance = 2
 
 local function data_key()
-  return 'schemas/'..Flux.get_schema_folder()..'/gametime'
+  return 'schemas/'..Flux.get_schema_folder()..'/game_time'
 end
 
 --- Converts the length of a game minute to the speed of the game clock.
 -- @param minute_length [Number real seconds a game minute lasts, as set in the
---   'gametime_minute_length' config]
+--   'game_time_minute_length' config]
 -- @return [Number game seconds that pass in a real second]
 local function to_rate(minute_length)
   return 60 / math.max(tonumber(minute_length) or default_minute_length, 0.01)
 end
 
 --- Returns the moment the game clock starts from when no game time has been saved: the
--- 'gametime_start' config, or 08:00 of 1 January 2020 if the config cannot be read as a date.
+-- 'game_time_start' config, or 08:00 of 1 January 2020 if the config cannot be read as a date.
 -- @return [Number game seconds since midnight of 1 January 1970]
 function GameTime:get_start()
-  local start = Config.get('gametime_start', default_start)
+  local start = Config.get('game_time_start', default_start)
   local timestamp = self:parse(start, 0)
 
   if !timestamp then
     ErrorNoHalt(
-      "[GameTime] The 'gametime_start' config ('"..tostring(start).."') is not a date written as "..
+      "[GameTime] The 'game_time_start' config ('"..tostring(start).."') is not a date written as "..
       "'YYYY-MM-DD HH:MM'! Starting the game clock at "..default_start..' instead.\n'
     )
 
@@ -82,7 +82,7 @@ function GameTime:set_clock(timestamp, rate, real_time, is_jump)
 
   if is_jump and clock then
     --- Called on the server and the client when the game clock has been set to another
-    -- moment: by the SetTime command or `GameTime:set`, when the 'gametime_real_time' config
+    -- moment: by the SetTime command or `GameTime:set`, when the 'game_time_real_time' config
     -- is turned on or off, or when the real time that the clock follows goes back, as it
     -- does at the end of daylight saving time. The clock already shows the new time. The
     -- rollover hooks (`GameMinutePassed` and the others) are not run for the time that was
@@ -112,23 +112,23 @@ end
 -- @param timestamp [Number game seconds since midnight of 1 January 1970, within the years
 --   from 1 to 9999]
 -- @return [Boolean whether the clock has been set, String language phrase of the error if
---   it has not: 'error.gametime.not_ready', 'error.gametime.real_time' or
---   'error.gametime.invalid']
+--   it has not: 'error.game_time.not_ready', 'error.game_time.real_time' or
+--   'error.game_time.invalid']
 -- @see [GameTime:to_timestamp]
 -- @see [GameTime:parse]
 function GameTime:set(timestamp)
   local clock = self:get_clock()
 
   if !clock then
-    return false, 'error.gametime.not_ready'
+    return false, 'error.game_time.not_ready'
   end
 
   if clock.real then
-    return false, 'error.gametime.real_time'
+    return false, 'error.game_time.real_time'
   end
 
   if !isnumber(timestamp) or !(timestamp >= self.min_timestamp and timestamp <= self.max_timestamp) then
-    return false, 'error.gametime.invalid'
+    return false, 'error.game_time.invalid'
   end
 
   self:set_clock(timestamp, clock.rate, false, true)
@@ -139,7 +139,7 @@ end
 
 --- Writes the current game time to the data of the schema, as a date and a time of day.
 -- Nothing is written while the clock follows the real time of the server, so the game time
--- that was saved before stays there for when the 'gametime_real_time' config is turned off
+-- that was saved before stays there for when the 'game_time_real_time' config is turned off
 -- again.
 function GameTime:save()
   local clock = self:get_clock()
@@ -175,10 +175,10 @@ function GameTime:load()
 end
 
 --- Starts the game clock when the persistent data is loaded: at the real time of the server
--- with the 'gametime_real_time' config, otherwise at the time that was saved, or at the
--- 'gametime_start' config if nothing has been saved yet.
+-- with the 'game_time_real_time' config, otherwise at the time that was saved, or at the
+-- 'game_time_start' config if nothing has been saved yet.
 function GameTime:LoadData()
-  if Config.get('gametime_real_time') == true then
+  if Config.get('game_time_real_time') == true then
     self:set_clock(self:get_real_timestamp(), 1, true)
 
     return
@@ -186,7 +186,7 @@ function GameTime:LoadData()
 
   local timestamp = self:load() or self:get_start()
 
-  self:set_clock(timestamp, to_rate(Config.get('gametime_minute_length')), false)
+  self:set_clock(timestamp, to_rate(Config.get('game_time_minute_length')), false)
 end
 
 --- Saves the game time with the rest of the persistent data.
@@ -194,11 +194,11 @@ function GameTime:SaveData()
   self:save()
 end
 
---- Applies the changes of the 'gametime_minute_length' and 'gametime_real_time' configs to
+--- Applies the changes of the 'game_time_minute_length' and 'game_time_real_time' configs to
 -- the running clock. A new minute length changes the speed from the current moment on.
 -- Turning the real time on saves the game time and moves the clock to the real time of the
 -- server. Turning it off moves the clock back to the game time that was saved, the same
--- moment it would start from after a restart, or to the 'gametime_start' config if nothing
+-- moment it would start from after a restart, or to the 'game_time_start' config if nothing
 -- has been saved. Both count as setting the clock and run `GameTimeSet`. The new value is
 -- compared with the running clock rather than with the old value of the config, because a
 -- code refresh puts the configs back to their defaults without telling the plugin.
@@ -210,20 +210,20 @@ function GameTime:ConfigChanged(key, _old_value, new_value)
 
   if !clock then return end
 
-  if key == 'gametime_minute_length' then
+  if key == 'game_time_minute_length' then
     local rate = to_rate(new_value)
 
     if !clock.real and rate != clock.rate then
       self:set_clock(self:read_clock(clock), rate, false)
     end
-  elseif key == 'gametime_real_time' then
+  elseif key == 'game_time_real_time' then
     if new_value == true and !clock.real then
       self:save()
       self:set_clock(self:get_real_timestamp(), 1, true, true)
     elseif new_value != true and clock.real then
       local timestamp = self:load() or self:get_start()
 
-      self:set_clock(timestamp, to_rate(Config.get('gametime_minute_length')), false, true)
+      self:set_clock(timestamp, to_rate(Config.get('game_time_minute_length')), false, true)
     end
   end
 end
