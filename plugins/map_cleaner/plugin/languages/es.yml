@@ -1,6 +1,6 @@
 es:
   config:
-    mapcleaner:
+    map_cleaner:
       title: Limpiador de mapa
       desc: Ajustes de las entidades que se eliminan del mapa.
       classes:

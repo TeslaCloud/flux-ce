@@ -24,13 +24,13 @@ local function to_lua_pattern(pattern)
 end
 
 --- Returns the class patterns that are currently in effect: the entries of the
--- 'mapcleaner_classes' config, followed by `prop_physics*` if 'mapcleaner_physics' is on
--- and by `prop_vehicle*` if 'mapcleaner_vehicles' is on. Serverside only.
+-- 'map_cleaner_classes' config, followed by `prop_physics*` if 'map_cleaner_physics' is on
+-- and by `prop_vehicle*` if 'map_cleaner_vehicles' is on. Serverside only.
 -- @return [List<String> class patterns in lower case, `*` stands for any number of
 --   characters]
 function MapCleaner:get_patterns()
   local patterns = {}
-  local classes = Config.get('mapcleaner_classes')
+  local classes = Config.get('map_cleaner_classes')
 
   if istable(classes) then
     for _, entry in pairs(classes) do
@@ -44,11 +44,11 @@ function MapCleaner:get_patterns()
     end
   end
 
-  if Config.get('mapcleaner_physics') then
+  if Config.get('map_cleaner_physics') then
     table.insert(patterns, physics_pattern)
   end
 
-  if Config.get('mapcleaner_vehicles') then
+  if Config.get('map_cleaner_vehicles') then
     table.insert(patterns, vehicle_pattern)
   end
 

@@ -1,6 +1,6 @@
 fr:
   config:
-    mapcleaner:
+    map_cleaner:
       title: "Nettoyage de la carte"
       desc: "Paramètres des entités retirées de la carte."
       classes:

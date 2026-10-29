@@ -1,6 +1,6 @@
 ru:
   config:
-    mapcleaner:
+    map_cleaner:
       title: Очистка карты
       desc: Настройка удаления лишних объектов с карты.
       classes:

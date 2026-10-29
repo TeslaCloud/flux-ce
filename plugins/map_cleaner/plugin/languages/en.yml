@@ -1,6 +1,6 @@
 en:
   config:
-    mapcleaner:
+    map_cleaner:
       title: Map Cleaner
       desc: Settings of the entities that are removed from the map.
       classes:
