@@ -158,7 +158,7 @@ function Characters.random_name(actor, faction_id, gender)
   -- @param faction_id [String ID of the faction of the character, nil without one]
   -- @param gender [Number CHAR_GENDER_* value of the character]
   -- @return [String the name; the first non-nil return wins. Character creation shows no
-  --   random name button when no handler returns a name]
+  --   random name button when no handler returns a name for any gender of the faction]
   return hook.Run('GetRandomCharacterName', actor, faction_id, gender)
 end
 

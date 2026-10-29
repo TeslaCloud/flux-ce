@@ -12,6 +12,17 @@ local function random_name(char_data)
   return Characters.random_name(PLAYER, char_data.faction, creation_genders[char_data.gender] or CHAR_GENDER_NONE)
 end
 
+--- Checks whether the faction of the character being created offers a random name for any gender.
+-- @param char_data [Map character data collected so far]
+-- @return [Boolean]
+local function offers_random_name(char_data)
+  local faction_id = char_data.faction
+
+  return Characters.random_name(PLAYER, faction_id, CHAR_GENDER_MALE) != nil
+    or Characters.random_name(PLAYER, faction_id, CHAR_GENDER_FEMALE) != nil
+    or Characters.random_name(PLAYER, faction_id, CHAR_GENDER_NONE) != nil
+end
+
 --- Base panel of the stages of character creation (`fl_character_creation_base`). It only
 -- draws its background through the theme; stage panels derive from it and may define the
 -- on_open, on_close and on_validate methods that the character creation screen calls.
@@ -115,7 +126,7 @@ function PANEL:Init()
   self.name_entry:SetFont(font)
   self.name_entry:SetText('')
 
-  if random_name(self:GetParent().char_data) then
+  if offers_random_name(self:GetParent().char_data) then
     self.name_random = vgui.Create('fl_button', self)
     self.name_random:SetPos(scrw * 0.125 + self.name_entry:GetWide() + 8, math.scale(72.5))
     self.name_random:SetSize(fa_icon_size, fa_icon_size)

@@ -34,6 +34,10 @@ local random_name_keys = {
   [CHAR_GENDER_FEMALE] = 'female'
 }
 
+--- How many names `Faction:get_random_name` picks before it gives up on finding one within the
+-- name length limits.
+const random_name_attempts = 8
+
 --- Creates a faction with default settings: no ranks, no models, no limits, no loadout, name,
 -- description and gender enabled, and the '{rank} {name}' name template, which may also
 -- contain {data:key} to insert a value set with `Faction:set_data`. Fields are left unset
@@ -310,12 +314,24 @@ function Faction:get_gender_models(gender)
   return faction_models[gender]
 end
 
+local function pick_random_name(lists)
+  local first_name = table.Random(lists.first)
+
+  if !first_name then return end
+
+  local last_name = lists.last and table.Random(lists.last)
+
+  return last_name ? first_name..' '..last_name : first_name
+end
+
 --- Picks a random name from the random_names lists of the faction: a first name from the
 -- lists of the gender, or the 'universal' ones when the gender has none, followed by a last
 -- name when those lists have last names. A character without a gender falls back to the
--- 'male' lists after the 'universal' ones.
+-- 'male' lists after the 'universal' ones. A name shorter than `character_min_name_len` or
+-- longer than `character_max_name_len` is picked again, up to random_name_attempts times.
 -- @param gender [Number CHAR_GENDER_* value]
--- @return [String the name, nil when the faction has no lists for the gender]
+-- @return [String the name, nil when the faction has no lists for the gender or no name
+--   within the length limits came up]
 function Faction:get_random_name(gender)
   local random_names = self.random_names
 
@@ -326,12 +342,20 @@ function Faction:get_random_name(gender)
 
   if !lists or !lists.first then return end
 
-  local first_name = table.Random(lists.first)
-  local last_name = lists.last and table.Random(lists.last)
+  local min_length = Config.get('character_min_name_len')
+  local max_length = Config.get('character_max_name_len')
 
-  if !first_name then return end
+  for _ = 1, random_name_attempts do
+    local name = pick_random_name(lists)
 
-  return last_name ? first_name..' '..last_name : first_name
+    if !name then return end
+
+    local length = utf8.len(name)
+
+    if length and length >= min_length and length <= max_length then
+      return name
+    end
+  end
 end
 
 --- Picks a random faction model that matches the player's gender.
@@ -414,7 +438,8 @@ function Faction:generate_name(target, rank, default_data, char_name)
   -- plugin itself returns false for bots.
   -- @param target [Player]
   -- @param faction [Faction the faction that generates the name]
-  -- @param char_name [String the current name of the player]
+  -- @param char_name [String the name used for {name}: the one passed to `Faction:generate_name`,
+  --   or the current name of the player]
   -- @param rank [Number/String rank index or rank ID the name is generated for]
   -- @param default_data [Map values for the {data:key} placeholders of the template]
   -- @return [Boolean return false to keep the current name of the player]
