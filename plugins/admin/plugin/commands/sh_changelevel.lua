@@ -41,8 +41,8 @@ function CMD:on_run(actor, map_name, delay)
 
   timer.Simple(delay, function()
     --- Called on the server when the Changelevel command is about to change the map, the
-    -- same way the Restart command calls it. The gamemode's handler saves the data of every
-    -- player.
+    -- same way the Restart command calls it. The map change that follows saves every player
+    -- through the gamemode's `ShutDown` handler.
     hook.Run('ServerRestart')
 
     RunConsoleCommand('changelevel', map)

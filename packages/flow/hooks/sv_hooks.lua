@@ -756,13 +756,6 @@ end
 function GM:ShowHelp(_actor)
 end
 
---- Saves the data of every player before the server restarts.
-function GM:ServerRestart()
-  for _, client in player_iterator() do
-    client:save_player()
-  end
-end
-
 --- Prevents players from picking entities up with the use key.
 -- @param _actor [Player]
 -- @param _entity [Entity]
