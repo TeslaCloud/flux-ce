@@ -8,7 +8,7 @@ local IsValid = IsValid
 local CurTime = CurTime
 
 --- Creates the fonts once the schema has been loaded on the client.
-function GM:FluxClientSchemaLoaded()
+function GM:ClientSchemaLoaded()
   Font.create_fonts()
 end
 

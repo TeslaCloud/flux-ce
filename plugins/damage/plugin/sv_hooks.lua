@@ -25,7 +25,7 @@ end
 
 --- Lets the ResolvePlayerDamage hook work out the amount of any damage to a player,
 -- multiplies the fall damage of a player by the 'damage_scale_fall' config, whichever way
--- the amount was worked out (the `FLGetFallDamage` hook or the formula of the gamemode), and
+-- the amount was worked out (the `GetPlayerFallDamage` hook or the formula of the gamemode), and
 -- lets the PrePlayerTakeDamage hook change or cancel any damage to a player.
 -- @param entity [Entity the entity taking damage]
 -- @param damage_info [CTakeDamageInfo]

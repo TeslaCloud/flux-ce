@@ -24,7 +24,7 @@ function PLUGIN:CreateFonts()
 end
 
 --- Replaces the tool gun's DrawHUD with a version that understands Flux phrases.
-function PLUGIN:FLInitPostEntity()
+function PLUGIN:PostInitPostEntity()
   local toolgun = weapons.GetStored 'gmod_tool'
   local gmod_drawhelp = CreateClientConVar('gmod_drawhelp', '1', true, false)
   local gmod_toolmode = CreateClientConVar('gmod_toolmode', 'rope', true, true)

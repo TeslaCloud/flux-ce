@@ -2,7 +2,7 @@
 -- player, draw the loading screen, the HUD, the death screen and the target IDs, add the
 -- Flux tools to the spawn menu and hide the parts of the sandbox HUD that Flux replaces.
 -- The handlers that belong to the interface itself are in the Active UI package.
--- Most of Flux's client-side drawing hooks are run from here, such as `FLHUDPaint`,
+-- Most of Flux's client-side drawing hooks are run from here, such as `HUDPaintAlive`,
 -- `ShouldHUDPaint`, `GetDrawPlayerInfo` and `DrawEntityTargetID`.
 
 local IsValid = IsValid
@@ -26,7 +26,7 @@ timer.Remove('HintSystem_Annoy2')
 
 --- Stores the local player in the PLAYER global, sends the client's language to the server,
 -- reports to the server that the player has been created and runs the client-side loading
--- hooks (PlayerModelChanged for every player, SynchronizeTools, LoadData, FLInitPostEntity).
+-- hooks (PlayerModelChanged for every player, SynchronizeTools, LoadData, PostInitPostEntity).
 function GM:InitPostEntity()
   PLAYER = LocalPlayer()
 
@@ -50,7 +50,7 @@ function GM:InitPostEntity()
   hook.Run('SynchronizeTools')
   hook.Run('LoadData')
 
-  Plugin.call('FLInitPostEntity')
+  Plugin.call('PostInitPostEntity')
 
   timer.Create('flux_please_dont_screw_up', 0.1, 0, function()
     if !IsValid(PLAYER) then
@@ -173,7 +173,7 @@ function GM:HUDDrawScoreBoard()
 end
 
 --- Draws the Flux HUD once the local player is initialized: the damage flash, the death
--- screen while dead or the info displays and the top bars while alive (unless FLHUDPaint
+-- screen while dead or the info displays and the top bars while alive (unless HUDPaintAlive
 -- returns a truthy value), and the white respawn fade. Skipped when the ShouldHUDPaint hook
 -- returns false.
 function GM:HUDPaint()
@@ -228,7 +228,7 @@ function GM:HUDPaint()
       -- @param scrh [Number Screen height]
       -- @return [Boolean Return true to keep the info displays and the top bars from being
       --   drawn]
-      if !hook.Run('FLHUDPaint', cur_time, scrw, scrh) then
+      if !hook.Run('HUDPaintAlive', cur_time, scrw, scrh) then
         InfoDisplay:draw_all()
         Flux.Bars:draw_top_bars()
       end
@@ -246,7 +246,7 @@ end
 -- @param _cur_time [Number current CurTime()]
 -- @param _scrw [Number screen width]
 -- @param _scrh [Number screen height]
-function GM:FLHUDPaint(_cur_time, _scrw, _scrh)
+function GM:HUDPaintAlive(_cur_time, _scrw, _scrh)
   local percentage = PLAYER.circle_action_percentage
 
   if percentage and percentage > -1 then
@@ -572,7 +572,7 @@ do
   -- it does while the schema is being included. On the first load the gamemode is not
   -- registered yet at that point and a `GM` method would not be called, which is why the
   -- handler is added with hook.Add instead.
-  hook.Add('RegisterClientSettings', 'FLLanguageSetting', register_language_setting)
+  hook.Add('RegisterClientSettings', 'LanguageSetting', register_language_setting)
 
   --- Keeps the language setting in step when the language of the client changes for
   -- another reason than the setting itself, such as the fl_language console variable.
@@ -587,7 +587,7 @@ do
   -- cleared while the game is set to the same language.
   cvars.AddChangeCallback('fl_language', function(_name, _old_value, _new_value)
     follow_language()
-  end, 'FLLanguageSetting')
+  end, 'LanguageSetting')
 end
 
 --- Intercepts the undo bind and blocks it when the SoftUndo hook returns a value.

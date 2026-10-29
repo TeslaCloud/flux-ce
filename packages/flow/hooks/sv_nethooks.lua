@@ -4,7 +4,7 @@
 
 Cable.receive('fl_client_included_schema', function(actor)
   --- Called on the server when the client of a player reports that it has included the
-  -- schema files. `FluxClientSchemaLoaded` is its client-side counterpart.
+  -- schema files. `ClientSchemaLoaded` is its client-side counterpart.
   -- @param actor [Player The player whose client has loaded the schema]
   hook.Run('ClientIncludedSchema', actor)
 end)

@@ -166,7 +166,7 @@ if SERVER then
     resolve(id, answer)
   end)
 
-  --- Hook handlers of the prompts library, registered as `FLPrompts`.
+  --- Hook handlers of the prompts library, registered as `Prompt`.
   local hooks = {}
 
   --- Closes the requests that a leaving player has not answered.
@@ -185,7 +185,7 @@ if SERVER then
     end
   end
 
-  Plugin.add_hooks('FLPrompts', hooks)
+  Plugin.add_hooks('Prompt', hooks)
 
   local player_meta = FindMetaTable('Player')
 

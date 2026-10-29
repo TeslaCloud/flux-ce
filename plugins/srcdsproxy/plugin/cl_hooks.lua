@@ -14,7 +14,7 @@ local moving_time = 10
 -- the player is being moved to is shown, for at most `moving_time` seconds.
 -- @param cur_time [Number CurTime() of the frame]
 -- @param scrw [Number screen width]
-function SrcdsProxy:FLHUDPaint(cur_time, scrw)
+function SrcdsProxy:HUDPaintAlive(cur_time, scrw)
   local countdown = self.area_countdown
 
   if !countdown then return end

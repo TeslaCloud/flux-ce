@@ -6,7 +6,7 @@
 -- `damage_scale_stomach`, `damage_scale_arms`, `damage_scale_legs`) and falls by
 -- `damage_scale_fall`. The multipliers are applied to the damage in place, on top of whatever
 -- the gamemode, the schema and other plugins do in their own `ScalePlayerDamage`,
--- `FLGetFallDamage` and `EntityTakeDamage` handlers: the handlers of the plugin return
+-- `GetPlayerFallDamage` and `EntityTakeDamage` handlers: the handlers of the plugin return
 -- nothing, so the others still run. `health_regen` slowly heals hurt players, `drowning`
 -- hurts players who stay under water for too long with damage rolled from the
 -- `drowning_damage` dice formula (1d4 by default), `damage_view_punch` jolts the view of a

@@ -113,7 +113,7 @@ function Flux.Undo:get_player(owner)
 end
 
 if SERVER then
-  hook.Add('PlayerDisconnected', 'FLUndo', function(actor)
+  hook.Add('PlayerDisconnected', 'Undo', function(actor)
     queue[actor] = nil
   end)
 end

@@ -327,7 +327,7 @@ if SERVER then
   local hooks = {}
 
   --- Writes the compiled templates along with the other files that get sent to the clients.
-  function hooks:FLWriteClientFiles()
+  function hooks:WriteClientFiles()
     write_client_files()
   end
 

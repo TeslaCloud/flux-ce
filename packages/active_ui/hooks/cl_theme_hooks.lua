@@ -1,4 +1,4 @@
---- Hook handlers of the theme library, registered as `flThemeHooks`. They load the default
+--- Hook handlers of the theme library, registered as `Theme`. They load the default
 -- theme once the local player has been initialized and reload the active theme when the code
 -- is refreshed. They live in the hooks folder rather than next to the `Theme` library because
 -- a code refresh clears the hook cache and only the hooks folder is included again every
@@ -16,5 +16,5 @@ function theme_hooks:OnReloaded()
   Theme.reload()
 end
 
-Plugin.remove_hooks('flThemeHooks')
-Plugin.add_hooks('flThemeHooks', theme_hooks)
+Plugin.remove_hooks('Theme')
+Plugin.add_hooks('Theme', theme_hooks)

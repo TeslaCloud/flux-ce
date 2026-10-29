@@ -4,8 +4,8 @@
 -- the server shuts down, pass chat commands to the command interpreter and write the files
 -- that are sent to clients, and the `fl_save_pers` console command.
 -- Most of Flux's server-side hooks are run from here, including `PostPlayerSpawn`,
--- `PlayerThink`, `PlayerOneSecond`, `FLSaveData`, `PostSaveData` and the
--- `FLPlayerSpawn...` checks.
+-- `PlayerThink`, `PlayerOneSecond`, `GetPlayerFallDamage`, `PlayerCanTakeDamage` and the
+-- `PlayerCanSpawn...` checks.
 
 local IsValid = IsValid
 local CurTime = CurTime
@@ -35,7 +35,7 @@ function GM:CanPlayerSuicide(_actor)
   return false
 end
 
---- Registers the Flux tools with the tool gun and runs the LoadData and FLInitPostEntity hooks.
+--- Registers the Flux tools with the tool gun and runs the LoadData and PostInitPostEntity hooks.
 function GM:InitPostEntity()
   self:SynchronizeTools()
 
@@ -47,7 +47,7 @@ function GM:InitPostEntity()
   --- Called at the end of the gamemode's `InitPostEntity` handler, right after `LoadData`,
   -- on both realms. The Flux tools have been registered with the tool gun by then, and on
   -- the client the `PLAYER` global has been set. Gamemode (`GM`) handlers are not called.
-  Plugin.call('FLInitPostEntity')
+  Plugin.call('PostInitPostEntity')
 end
 
 --- Sets up a newly connected player: assigns the flux_player class and the 'user' group,
@@ -237,19 +237,19 @@ function GM:EntityRemoved(entity)
   self.BaseClass:EntityRemoved(entity)
 end
 
---- Returns the fall damage of a player: the result of the FLGetFallDamage hook if it
+--- Returns the fall damage of a player: the result of the GetPlayerFallDamage hook if it
 -- returns one, otherwise a value calculated from the fall speed.
 -- @param actor [Player]
 -- @param speed [Number fall speed]
 -- @return [Number damage to deal]
 function GM:GetFallDamage(actor, speed)
-  --- Lets plugins set the damage a player takes from a fall. Called on the server from the
-  -- gamemode's `GetFallDamage` handler.
+  --- Lets plugins set the damage a player takes from a fall in place of the gamemode's formula.
+  -- Called on the server from the gamemode's `GetFallDamage` handler, before the formula.
   -- @param actor [Player The player who has hit the ground]
   -- @param speed [Number Speed at which the player hit the ground]
   -- @return [Number Damage to deal; when nothing or false is returned, the damage is
   --   calculated from the speed]
-  local fall_damage = hook.Run('FLGetFallDamage', actor, speed)
+  local fall_damage = hook.Run('GetPlayerFallDamage', actor, speed)
 
   if fall_damage then return fall_damage end
 
@@ -260,7 +260,7 @@ function GM:GetFallDamage(actor, speed)
   return 100 * speed / 850 * 0.75
 end
 
---- Asks the FLPlayerShouldTakeDamage hook whether a player can be damaged. The damage is
+--- Asks the PlayerCanTakeDamage hook whether a player can be damaged. The damage is
 -- only blocked when the hook returns false.
 -- @param victim [Player]
 -- @param attacker [Entity]
@@ -272,11 +272,11 @@ function GM:PlayerShouldTakeDamage(victim, attacker)
   -- @param attacker [Entity The entity dealing the damage]
   -- @return [Boolean Return false to prevent the damage. The player takes the damage when
   --   anything else or nothing is returned]
-  return hook.Run('FLPlayerShouldTakeDamage', victim, attacker) != false
+  return hook.Run('PlayerCanTakeDamage', victim, attacker) != false
 end
 
 --- Decides whether a player may spawn a prop.
--- Requires the spawn_props permission and that the FLPlayerSpawnProp hook does not
+-- Requires the spawn_props permission and that the PlayerCanSpawnProp hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param model [String model of the prop]
@@ -293,7 +293,7 @@ function GM:PlayerSpawnProp(actor, model)
   -- @param actor [Player The player spawning the prop]
   -- @param model [String Model of the prop]
   -- @return [Boolean Return false to prevent the prop from being spawned]
-  if hook.Run('FLPlayerSpawnProp', actor, model) == false then
+  if hook.Run('PlayerCanSpawnProp', actor, model) == false then
     return false
   end
 
@@ -301,7 +301,7 @@ function GM:PlayerSpawnProp(actor, model)
 end
 
 --- Decides whether a player may spawn a prop, ragdoll or effect.
--- Requires the spawn_entities permission and that the FLPlayerSpawnObject hook does not
+-- Requires the spawn_entities permission and that the PlayerCanSpawnObject hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param model [String model of the object]
@@ -320,7 +320,7 @@ function GM:PlayerSpawnObject(actor, model, skin)
   -- @param model [String Model of the object]
   -- @param skin [Number Skin of the object]
   -- @return [Boolean Return false to prevent the object from being spawned]
-  if hook.Run('FLPlayerSpawnObject', actor, model, skin) == false then
+  if hook.Run('PlayerCanSpawnObject', actor, model, skin) == false then
     return false
   end
 
@@ -328,7 +328,7 @@ function GM:PlayerSpawnObject(actor, model, skin)
 end
 
 --- Decides whether a player may spawn an NPC.
--- Requires the spawn_npcs permission and that the FLPlayerSpawnNPC hook does not
+-- Requires the spawn_npcs permission and that the PlayerCanSpawnNPC hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param npc [String type of the NPC]
@@ -347,7 +347,7 @@ function GM:PlayerSpawnNPC(actor, npc, weapon)
   -- @param npc [String Type of the NPC]
   -- @param weapon [String Class of the weapon given to the NPC]
   -- @return [Boolean Return false to prevent the NPC from being spawned]
-  if hook.Run('FLPlayerSpawnNPC', actor, npc, weapon) == false then
+  if hook.Run('PlayerCanSpawnNPC', actor, npc, weapon) == false then
     return false
   end
 
@@ -355,7 +355,7 @@ function GM:PlayerSpawnNPC(actor, npc, weapon)
 end
 
 --- Decides whether a player may spawn an effect.
--- Requires the spawn_entities permission and that the FLPlayerSpawnEffect hook does not
+-- Requires the spawn_entities permission and that the PlayerCanSpawnEffect hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param model [String model of the effect]
@@ -372,7 +372,7 @@ function GM:PlayerSpawnEffect(actor, model)
   -- @param actor [Player The player spawning the effect]
   -- @param model [String Model of the effect]
   -- @return [Boolean Return false to prevent the effect from being spawned]
-  if hook.Run('FLPlayerSpawnEffect', actor, model) == false then
+  if hook.Run('PlayerCanSpawnEffect', actor, model) == false then
     return false
   end
 
@@ -380,7 +380,7 @@ function GM:PlayerSpawnEffect(actor, model)
 end
 
 --- Decides whether a player may spawn a vehicle.
--- Requires the spawn_vehicles permission and that the FLPlayerSpawnVehicle hook does not
+-- Requires the spawn_vehicles permission and that the PlayerCanSpawnVehicle hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param model [String model of the vehicle]
@@ -401,7 +401,7 @@ function GM:PlayerSpawnVehicle(actor, model, name, tab)
   -- @param name [String Name of the vehicle in the vehicle list]
   -- @param tab [Map Vehicle table from the vehicle list]
   -- @return [Boolean Return false to prevent the vehicle from being spawned]
-  if hook.Run('FLPlayerSpawnVehicle', actor, model, name, tab) == false then
+  if hook.Run('PlayerCanSpawnVehicle', actor, model, name, tab) == false then
     return false
   end
 
@@ -409,7 +409,7 @@ function GM:PlayerSpawnVehicle(actor, model, name, tab)
 end
 
 --- Decides whether a player may spawn a weapon.
--- Requires the spawn_sweps permission and that the FLPlayerSpawnSWEP hook does not
+-- Requires the spawn_sweps permission and that the PlayerCanSpawnSWEP hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param weapon [String class of the weapon]
@@ -428,7 +428,7 @@ function GM:PlayerSpawnSWEP(actor, weapon, swep)
   -- @param weapon [String Class of the weapon]
   -- @param swep [Map Information about the weapon from the weapon list]
   -- @return [Boolean Return false to prevent the weapon from being spawned]
-  if hook.Run('FLPlayerSpawnSWEP', actor, weapon, swep) == false then
+  if hook.Run('PlayerCanSpawnSWEP', actor, weapon, swep) == false then
     return false
   end
 
@@ -436,7 +436,7 @@ function GM:PlayerSpawnSWEP(actor, weapon, swep)
 end
 
 --- Decides whether a player may spawn a scripted entity.
--- Requires the spawn_entities permission and that the FLPlayerSpawnSENT hook does not
+-- Requires the spawn_entities permission and that the PlayerCanSpawnSENT hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param class [String class of the entity]
@@ -453,7 +453,7 @@ function GM:PlayerSpawnSENT(actor, class)
   -- @param actor [Player The player spawning the entity]
   -- @param class [String Class of the entity]
   -- @return [Boolean Return false to prevent the entity from being spawned]
-  if hook.Run('FLPlayerSpawnSENT', actor, class) == false then
+  if hook.Run('PlayerCanSpawnSENT', actor, class) == false then
     return false
   end
 
@@ -461,7 +461,7 @@ function GM:PlayerSpawnSENT(actor, class)
 end
 
 --- Decides whether a player may spawn a ragdoll.
--- Requires the spawn_ragdolls permission and that the FLPlayerSpawnRagdoll hook does not
+-- Requires the spawn_ragdolls permission and that the PlayerCanSpawnRagdoll hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param model [String model of the ragdoll]
@@ -478,7 +478,7 @@ function GM:PlayerSpawnRagdoll(actor, model)
   -- @param actor [Player The player spawning the ragdoll]
   -- @param model [String Model of the ragdoll]
   -- @return [Boolean Return false to prevent the ragdoll from being spawned]
-  if hook.Run('FLPlayerSpawnRagdoll', actor, model) == false then
+  if hook.Run('PlayerCanSpawnRagdoll', actor, model) == false then
     return false
   end
 
@@ -486,7 +486,7 @@ function GM:PlayerSpawnRagdoll(actor, model)
 end
 
 --- Decides whether a player may give themselves a weapon.
--- Requires the spawn_sweps permission and that the FLPlayerGiveSWEP hook does not
+-- Requires the spawn_sweps permission and that the PlayerCanGiveSWEP hook does not
 -- return false. Invalid players are always allowed.
 -- @param actor [Player]
 -- @param weapon [String class of the weapon]
@@ -505,7 +505,7 @@ function GM:PlayerGiveSWEP(actor, weapon, swep)
   -- @param weapon [String Class of the weapon]
   -- @param swep [Map Information about the weapon from the weapon list]
   -- @return [Boolean Return false to prevent the weapon from being given]
-  if hook.Run('FLPlayerGiveSWEP', actor, weapon, swep) == false then
+  if hook.Run('PlayerCanGiveSWEP', actor, weapon, swep) == false then
     return false
   end
 
@@ -556,9 +556,9 @@ function GM:PlayerTakeDamage(victim, _damage_info)
   Cable.send(victim, 'fl_player_take_damage')
 end
 
---- Runs the FLSaveData hook every data_save_interval seconds, unless FLShouldSaveData
--- returns false. Also checks every half an hour whether the server is empty and reloads
--- the map if it is, unless ShouldServerAutoRestart returns false.
+--- Saves the data with Flux.save_data every data_save_interval seconds, for the first time
+-- about ten seconds after the server has started. Also checks every half an hour whether the
+-- server is empty and reloads the map if it is, unless ShouldServerAutoRestart returns false.
 function GM:OneSecond()
   local cur_time = CurTime()
   local sys_time = SysTime()
@@ -566,18 +566,7 @@ function GM:OneSecond()
   if !Flux.next_save_data then
     Flux.next_save_data = cur_time + 10
   elseif Flux.next_save_data <= cur_time then
-    --- Asks whether the periodic data save may happen now. Called on the server every
-    -- `data_save_interval` seconds (360 unless configured), for the first time about ten
-    -- seconds after the server has started.
-    -- @return [Boolean Return false to skip this save]
-    if hook.Run('FLShouldSaveData') != false then
-      --- Called on the server when all persistent data has to be saved: every
-      -- `data_save_interval` seconds unless `FLShouldSaveData` returns false, and when the
-      -- server shuts down or changes the map. The gamemode's handler saves the config and
-      -- runs `SaveData`, which is the hook that plugins normally implement, followed by
-      -- `PostSaveData`.
-      hook.Run('FLSaveData')
-    end
+    Flux.save_data()
 
     Flux.next_save_data = cur_time + config_get('data_save_interval', 360)
   end
@@ -600,35 +589,22 @@ function GM:OneSecond()
 end
 
 --- Writes the files that get sent to clients (shared data, settings, language phrases and
--- whatever the FLWriteClientFiles handlers add) into lua/_flux/client.
+-- whatever the WriteClientFiles handlers add) into lua/_flux/client.
 function GM:FluxPackageLoaded()
   Flux.write_client_files()
 end
 
 --- Writes the files that get sent to clients again after a Lua refresh.
-hook.Add('OnReloaded', 'FLWriteClientFiles', Flux.write_client_files)
+hook.Add('OnReloaded', 'WriteClientFiles', Flux.write_client_files)
 
---- Saves the config and runs the SaveData hook, then the PostSaveData hook.
-function GM:FLSaveData()
-  Config.save()
-  --- Called on the server for plugins to save their persistent data, from the gamemode's
-  -- `FLSaveData` handler after the config has been saved. The counterpart of `LoadData`.
-  hook.Run('SaveData')
-  --- Called on the server after a data save, when the config has been saved and every
-  -- `SaveData` handler has run. This is the place for work that depends on the saved
-  -- state, such as a backup or a log entry. Database queries that the handlers have
-  -- started may still be running.
-  hook.Run('PostSaveData')
-end
-
---- Saves everything when the server shuts down or changes the map: runs the FLSaveData
--- hook and saves the data of every player. Flux.shutting_down is true from the start, so
+--- Saves everything when the server shuts down or changes the map: runs Flux.save_data
+-- and saves the data of every player. Flux.shutting_down is true from the start, so
 -- that the save handlers and the code which runs while the map unloads (an entity's
 -- OnRemove, for example) can tell.
 function GM:ShutDown()
   Flux.shutting_down = true
 
-  hook.Run('FLSaveData')
+  Flux.save_data()
 
   for _, client in player_iterator() do
     client:save_player()

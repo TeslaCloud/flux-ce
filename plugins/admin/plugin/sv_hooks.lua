@@ -65,7 +65,7 @@ end
 -- 'spawn_vehicles' permission that the gamemode asks of every other vehicle. A player who
 -- has both is left to the gamemode and to the other handlers of this hook. For a player
 -- who may only spawn chairs the gamemode has to be overruled, which also skips the handlers
--- that come after this one; the chair is passed on to the FLPlayerSpawnVehicle hook the way
+-- that come after this one; the chair is passed on to the PlayerCanSpawnVehicle hook the way
 -- the gamemode passes vehicles on.
 -- @param actor [Player]
 -- @param model [String model of the vehicle]
@@ -91,7 +91,7 @@ function Bolt:PlayerSpawnVehicle(actor, model, name, tab)
   -- @param name [String Name of the chair in the vehicle list]
   -- @param tab [Map Vehicle table from the vehicle list]
   -- @return [Boolean Return false to prevent the chair from being spawned]
-  if hook.Run('FLPlayerSpawnVehicle', actor, model, name, tab) == false then
+  if hook.Run('PlayerCanSpawnVehicle', actor, model, name, tab) == false then
     return false
   end
 

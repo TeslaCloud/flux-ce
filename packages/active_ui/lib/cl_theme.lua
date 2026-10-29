@@ -357,7 +357,7 @@ function Theme.initialized()
 end
 
 --- Loads the default theme of the schema, or the 'factory' theme if the schema has none, and
--- marks the theme library as initialized. Called by the `flThemeHooks` handlers once the
+-- marks the theme library as initialized. Called by the `Theme` hook handlers once the
 -- local player has been initialized.
 function Theme.load_default()
   Theme.load_theme((SCHEMA and SCHEMA.default_theme) or 'factory')

@@ -1,6 +1,6 @@
 --- Writes the Lua files that clients include when they load into `lua/_flux/client` and marks
 -- them for download: the shared data, the settings without their serverside part, the
--- language phrases and whatever the `FLWriteClientFiles` handlers add, such as the compiled
+-- language phrases and whatever the `WriteClientFiles` handlers add, such as the compiled
 -- templates of Lumen. The clients include the files in the order of their names, from
 -- `lib/flux_struct.lua`.
 -- @module [Flux]
@@ -20,7 +20,7 @@ end
 --- Writes a Lua file into lua/_flux/client and marks it for download, so that the clients
 -- include it when they load. The files are included in the order of their names, which
 -- is why the gamemode's own start with a number. Packages that generate clientside code
--- call this from their `FLWriteClientFiles` handler, since the folder is emptied before
+-- call this from their `WriteClientFiles` handler, since the folder is emptied before
 -- the files are written.
 -- @param path [String file name, relative to lua/_flux/client]
 -- @param contents [String Lua code]
@@ -53,7 +53,7 @@ local function write_client_table(name, tab, assign)
 end
 
 --- Empties lua/_flux/client and writes the files that get sent to clients again: the shared
--- data, the settings, the language phrases and whatever the FLWriteClientFiles handlers add.
+-- data, the settings, the language phrases and whatever the WriteClientFiles handlers add.
 function Flux.write_client_files()
   purge_client_files()
 
@@ -69,5 +69,5 @@ function Flux.write_client_files()
   -- the language phrases have been written. Packages and plugins that generate clientside
   -- code of their own, such as the compiled templates of Lumen, write it here with
   -- `Flux.write_client_file`.
-  hook.Run('FLWriteClientFiles')
+  hook.Run('WriteClientFiles')
 end

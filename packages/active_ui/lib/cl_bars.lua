@@ -313,7 +313,7 @@ function Flux.Bars:adjust(id, data)
 end
 
 do
-  --- Hook handlers of the bars library, registered as `FLBarHooks`: they keep the bars
+  --- Hook handlers of the bars library, registered as `Bars`: they keep the bars
   -- positioned and up to date, animate their fill and hide them outside their display range.
   local Bars = {}
   local upper_texts = setmetatable({}, { __mode = 'k' })
@@ -379,7 +379,7 @@ do
     end
   end
 
-  Plugin.add_hooks('FLBarHooks', Bars)
+  Plugin.add_hooks('Bars', Bars)
 
   Flux.Bars:register('respawn', {
     text = t'ui.hud.bar_text.respawn',

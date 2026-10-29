@@ -100,7 +100,7 @@ if CLIENT then
   end
 end
 
---- Hook handlers of the binds library, registered as `FLBinds`.
+--- Hook handlers of the binds library, registered as `Binds`.
 local hooks = {}
 
 if SERVER then
@@ -120,4 +120,4 @@ else
   end)
 end
 
-Plugin.add_hooks('FLBinds', hooks)
+Plugin.add_hooks('Binds', hooks)

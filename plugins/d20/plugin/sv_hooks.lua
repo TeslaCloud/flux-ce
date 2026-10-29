@@ -45,7 +45,7 @@ end
 -- @param actor [Player the player who has hit the ground]
 -- @param speed [Number fall speed]
 -- @return [Number damage to deal, nil while the plugin is disabled]
-function D20:FLGetFallDamage(actor, speed)
+function D20:GetPlayerFallDamage(actor, speed)
   return self:roll_fall_damage(actor, speed)
 end
 

@@ -49,7 +49,7 @@
 --
 -- Fall damage rolls the 'd20_fall_dice' config, `{steps}d6` by default, where `steps` is 1
 -- for the slowest fall that hurts and grows by 1 for every 150 units per second of fall
--- speed above 250, through the `FLGetFallDamage` hook; the 'damage_scale_fall' config of the
+-- speed above 250, through the `GetPlayerFallDamage` hook; the 'damage_scale_fall' config of the
 -- Damage plugin still multiplies it. Drowning rolls the 'drowning_damage' formula of the
 -- Damage plugin (1d4).
 --

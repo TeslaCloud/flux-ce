@@ -49,7 +49,7 @@ end
 -- @param cur_time [Number current CurTime()]
 -- @param scrw [Number screen width]
 -- @param scrh [Number screen height]
-function AreaDisplay:FLHUDPaint(cur_time, scrw, scrh)
+function AreaDisplay:HUDPaintAlive(cur_time, scrw, scrh)
   if next(self.pending) != nil then
     self:flush_pending()
   end

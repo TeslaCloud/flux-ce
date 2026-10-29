@@ -149,7 +149,7 @@ end
 --   Cable.send(actor, 'fl_bind_pressed', key)
 -- end
 --
--- Plugin.add_hooks('FLBinds', hooks)
+-- Plugin.add_hooks('Binds', hooks)
 -- ```
 -- @param id [String unique ID of this set of hooks]
 -- @param obj [Map table with functions named after hooks]

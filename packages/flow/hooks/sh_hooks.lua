@@ -3,7 +3,7 @@
 -- The handlers set players up when they join and spawn, check sandbox actions such as
 -- spawning props against the Flux permissions, play the animations defined by the
 -- `Flux.Anim` tables, draw the HUD and save the data. While doing so they run Flux's own
--- hooks (`PlayerInitialized`, `PostPlayerSpawn`, `PlayerThink`, `LazyTick`, `FLHUDPaint`
+-- hooks (`PlayerInitialized`, `PostPlayerSpawn`, `PlayerThink`, `LazyTick`, `HUDPaintAlive`
 -- and so on, listed on the Hooks page), which are what plugins and schemas are meant to
 -- implement instead of overriding the `GM` functions.
 --
@@ -20,7 +20,7 @@
 
 --- Removes unused sandbox hooks and, on the server, imports the configuration from the
 -- settings, loads the config, connects to the database and registers the Discord webhooks.
--- Runs the FLInitialize hook when done.
+-- Runs the PostInitialize hook when done.
 function GM:Initialize()
   hook.Remove('PostDrawEffects', 'RenderWidgets')
   hook.Remove('PlayerTick', 'TickWidgets')
@@ -56,10 +56,11 @@ function GM:Initialize()
     end
   end
 
-  --- Called at the end of the gamemode's `Initialize` handler, on both realms.
+  --- Called at the end of the gamemode's `Initialize` handler, on both realms. Plugins
+  -- implement this rather than `Initialize`, whose plugin handlers run before the gamemode's.
   -- On the server the config has been loaded, the connection to the database has been
   -- started and the Discord webhooks from the settings have been registered by then.
-  hook.Run('FLInitialize')
+  hook.Run('PostInitialize')
 end
 
 --- Returns the gamemode name shown in the server browser: name_override if it is a string,
@@ -553,7 +554,7 @@ end)
 
 timer.Create('fl_one_second', 1, 0, function()
   --- Called once a second on both realms. On the server the gamemode's handler uses it to
-  -- trigger the periodic data save (`FLSaveData`) and the restart of an empty server.
+  -- trigger the periodic data save (`Flux.save_data`) and the restart of an empty server.
   hook.Run('OneSecond')
 end)
 

@@ -557,7 +557,7 @@ if SERVER then
   Cable.check_networked_string('fl_animation_set')
   Cable.check_networked_string('fl_animation_stop')
 
-  --- Hook handlers of the animation library, registered as `FLAnimations`.
+  --- Hook handlers of the animation library, registered as `Anim`.
   local hooks = {}
 
   --- Shows a player who has finished loading the animations that were set before they
@@ -622,7 +622,7 @@ if SERVER then
     end
   end
 
-  Plugin.add_hooks('FLAnimations', hooks)
+  Plugin.add_hooks('Anim', hooks)
 else
   local desired = {}
 
@@ -667,7 +667,7 @@ else
     end
   end)
 
-  --- Hook handlers of the animation library, registered as `FLAnimations`.
+  --- Hook handlers of the animation library, registered as `Anim`.
   local hooks = {}
 
   --- Applies the animation that the server has set for a player once the player comes into
@@ -708,7 +708,7 @@ else
     end
   end
 
-  Plugin.add_hooks('FLAnimations', hooks)
+  Plugin.add_hooks('Anim', hooks)
 end
 
 --- Plays a gesture on top of the player's regular animations in the custom gesture slot.

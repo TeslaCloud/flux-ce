@@ -62,7 +62,7 @@ function Flux.get_schema_name()
 end
 
 --- Includes the files of the currently loaded schema. On the client, shortly afterward
--- notifies the server and runs the FluxClientSchemaLoaded hook.
+-- notifies the server and runs the ClientSchemaLoaded hook.
 function Flux.include_schema()
   if SERVER then
     return Plugin.include_schema()
@@ -74,7 +74,7 @@ function Flux.include_schema()
       --- Called on the client shortly after the schema files have been included, right after
       -- the server has been told about it (which runs `ClientIncludedSchema` there). The
       -- gamemode's handler creates the fonts.
-      hook.Run('FluxClientSchemaLoaded')
+      hook.Run('ClientSchemaLoaded')
     end)
   end
 end

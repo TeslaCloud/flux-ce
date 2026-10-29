@@ -75,7 +75,7 @@ end
 -- @param _cur_time [Number current CurTime()]
 -- @param scrw [Number screen width]
 -- @param scrh [Number screen height]
-function Limbs:FLHUDPaint(_cur_time, scrw, scrh)
+function Limbs:HUDPaintAlive(_cur_time, scrw, scrh)
   local mode = self:is_enabled() and self:get_hud_mode() or 'never'
   local visible = mode == 'always' or (mode == 'hurt' and self:is_any_damaged(PLAYER))
 

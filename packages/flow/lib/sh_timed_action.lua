@@ -276,7 +276,7 @@ if SERVER then
     return active[actor]
   end
 
-  --- Hook handlers of the timed actions library, registered as `FLTimedActions`.
+  --- Hook handlers of the timed actions library, registered as `TimedAction`.
   local hooks = {}
 
   --- Checks the running timed actions: completes the ones whose time is up and cancels the
@@ -313,7 +313,7 @@ if SERVER then
     finish(actor, false)
   end
 
-  Plugin.add_hooks('FLTimedActions', hooks)
+  Plugin.add_hooks('TimedAction', hooks)
 else
   local current
 
@@ -376,14 +376,14 @@ else
     end
   end)
 
-  --- Hook handlers of the timed actions library, registered as `FLTimedActions`.
+  --- Hook handlers of the timed actions library, registered as `TimedAction`.
   local hooks = {}
 
   --- Draws the progress bar of the local player's timed action in the middle of the screen.
   -- @param cur_time [Number current CurTime()]
   -- @param scrw [Number screen width]
   -- @param scrh [Number screen height]
-  function hooks:FLHUDPaint(cur_time, scrw, scrh)
+  function hooks:HUDPaintAlive(cur_time, scrw, scrh)
     local action = current
 
     if !action then return end
@@ -399,7 +399,7 @@ else
     Flux.Bars:draw('timed_action')
   end
 
-  Plugin.add_hooks('FLTimedActions', hooks)
+  Plugin.add_hooks('TimedAction', hooks)
 end
 
 --- Returns how far the timed action of a player has progressed.
