@@ -5,16 +5,16 @@
 -- the extra damage events of an attack that has already been rolled in the same tick.
 
 --- Rolls the damage of a hit on a player, before the fall damage multiplier and the
--- `PrePlayerTakeDamage` hook of the Damage plugin see it, and applies the 'damage_scale_'
--- config of the hit location to the rolled total again, as the Damage plugin has applied it
--- to the damage of the engine in `ScalePlayerDamage` already.
+-- `PrePlayerTakeDamage` hook of the Damage plugin see it, and applies the hit location
+-- multiplier of the Damage plugin, `Damage:get_player_damage_scale`, to the rolled total
+-- again, as it has been applied to the damage of the engine in `ScalePlayerDamage` already.
 -- @param victim [Player the player about to take the damage]
 -- @param damage_info [CTakeDamageInfo the damage, changed in place]
--- @param hitgroup [Number HITGROUP_ enum of the hit location]
+-- @param _hitgroup [Number HITGROUP_ enum of the hit location]
 -- @return [Boolean true to block an extra damage event of an attack that has already been
 --   rolled, nil otherwise]
-function D20:ResolvePlayerDamage(victim, damage_info, hitgroup)
-  return self:roll_damage(victim, damage_info, Damage:get_hitgroup_scale(hitgroup))
+function D20:ResolvePlayerDamage(victim, damage_info, _hitgroup)
+  return self:roll_damage(victim, damage_info, Damage:get_player_damage_scale(victim))
 end
 
 --- Rolls the damage of a hit on an NPC and applies the hit location multiplier of the

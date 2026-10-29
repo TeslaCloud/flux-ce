@@ -58,13 +58,13 @@ function Damage:EntityTakeDamage(entity, damage_info)
   -- multiplier and before `PrePlayerTakeDamage`, so that both of them, and every
   -- `EntityTakeDamage` handler after the plugin, see the amount that was set here. The hit
   -- location multiplier of a bullet or melee hit has already been applied to the damage by
-  -- then; a handler that replaces the amount applies `Damage:get_hitgroup_scale(hitgroup)`
-  -- to it again.
+  -- then; a handler that replaces the amount applies `Damage:get_player_damage_scale` to it
+  -- again.
   -- ```
   -- -- Every hit deals exactly 10 damage before the multipliers.
-  -- function MyPlugin:ResolvePlayerDamage(victim, damage_info, hitgroup)
+  -- function MyPlugin:ResolvePlayerDamage(victim, damage_info, _hitgroup)
   --   if !damage_info:IsFallDamage() then
-  --     damage_info:SetDamage(10 * Damage:get_hitgroup_scale(hitgroup))
+  --     damage_info:SetDamage(10 * Damage:get_player_damage_scale(victim))
   --   end
   -- end
   -- ```

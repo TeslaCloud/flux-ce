@@ -101,7 +101,8 @@ end
 
 --- Multiplies the damage of a bullet or melee hit by the 'damage_scale_' config of its
 -- location, for an NPC only while the 'damage_scale_npcs' config is on, and runs the
--- `AdjustEntityDamageScale` hook. Serverside only.
+-- `AdjustEntityDamageScale` hook. What the handlers of the hook have multiplied the damage by
+-- is kept for `Damage:get_player_damage_scale`. Serverside only.
 -- @param victim [Entity player or NPC that was hit]
 -- @param hitgroup [Number HITGROUP_ enum of the hit location]
 -- @param damage_info [CTakeDamageInfo the damage, changed in place]
@@ -117,9 +118,8 @@ function Damage:scale_hit(victim, hitgroup, damage_info)
   --- Lets plugins and the schema multiply the damage of a bullet or melee hit on a player
   -- or an NPC by its location. Called on the server from the Damage plugin's
   -- `ScalePlayerDamage` and `ScaleNPCDamage` handlers, after the 'damage_scale_' configs
-  -- have been applied. Scale the damage in place and return nothing, so that the other
-  -- handlers, and the `ScalePlayerDamage` and `ScaleNPCDamage` handlers of the gamemode,
-  -- still run.
+  -- have been applied. Scale the damage in place. The multiplier also applies to damage
+  -- that is rolled anew through `ResolvePlayerDamage`, such as by the D20 plugin.
   -- ```
   -- -- Helmets halve hits to the head.
   -- function MyPlugin:AdjustEntityDamageScale(victim, hitgroup, damage_info)
@@ -131,7 +131,30 @@ function Damage:scale_hit(victim, hitgroup, damage_info)
   -- @param victim [Entity The player or NPC that was hit]
   -- @param hitgroup [Number HITGROUP_ enum of the hit location]
   -- @param damage_info [CTakeDamageInfo The damage being dealt, changed in place]
+  -- @return [Any The return value is ignored; a handler that returns a value keeps the
+  --   handlers of the hook after it from being called, so return nothing]
+  local before = damage_info:GetDamage()
+
   hook.Run('AdjustEntityDamageScale', victim, hitgroup, damage_info)
+
+  local after = damage_info:GetDamage()
+
+  victim.damage_hit_adjust = before > 0 ? after / before : 1
+end
+
+--- Returns the hit location multiplier of the damage that a player is taking: the
+-- 'damage_scale_' config of the location of the hit times what the
+-- `AdjustEntityDamageScale` handlers have multiplied it by. A `ResolvePlayerDamage` handler
+-- that replaces the amount of the damage applies it to the new amount. Only meaningful while
+-- that damage is being processed. Serverside only.
+-- @param victim [Player]
+-- @return [Number multiplier; 1 for damage that was not a bullet or melee hit]
+function Damage:get_player_damage_scale(victim)
+  if !victim.damage_hitgroup or victim.damage_hitgroup_time != CurTime() then
+    return 1
+  end
+
+  return self:get_hitgroup_scale(victim.damage_hitgroup) * (victim.damage_hit_adjust or 1)
 end
 
 --- Adds the damage of a bullet or melee hit on an NPC, before any hit location multiplier,
