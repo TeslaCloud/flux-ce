@@ -17,20 +17,9 @@ function D20:ResolvePlayerDamage(victim, damage_info, hitgroup)
   return self:roll_damage(victim, damage_info, Damage:get_hitgroup_scale(hitgroup))
 end
 
---- Remembers the damage of a bullet or melee hit on an NPC before the schema and the
--- gamemode multiply it by hit location. The damage is left as it is.
--- @param npc [NPC the NPC that was hit]
--- @param _hitgroup [Number HITGROUP_ enum of the body part that was hit]
--- @param damage_info [CTakeDamageInfo]
-function D20:ScaleNPCDamage(npc, _hitgroup, damage_info)
-  if self:is_enabled() then
-    self:remember_npc_damage(npc, damage_info)
-  end
-end
-
 --- Rolls the damage of a hit on an NPC and applies the hit location multiplier of the
--- `ScaleNPCDamage` handlers to the rolled total. Hits on players are rolled through the
--- `ResolvePlayerDamage` hook of the Damage plugin instead.
+-- `ScaleNPCDamage` handlers, `Damage:get_npc_damage_scale`, to the rolled total. Hits on
+-- players are rolled through the `ResolvePlayerDamage` hook of the Damage plugin instead.
 -- @param entity [Entity the entity about to take the damage]
 -- @param damage_info [CTakeDamageInfo the damage, changed in place]
 -- @return [Boolean true to block an extra damage event of an attack that has already been
@@ -38,7 +27,7 @@ end
 function D20:EntityTakeDamage(entity, damage_info)
   if !IsValid(entity) or !entity:IsNPC() then return end
 
-  return self:roll_damage(entity, damage_info, self:take_npc_damage_scale(entity, damage_info))
+  return self:roll_damage(entity, damage_info, Damage:get_npc_damage_scale(entity, damage_info))
 end
 
 --- Rolls the fall damage of a player, see `D20:roll_fall_damage`.

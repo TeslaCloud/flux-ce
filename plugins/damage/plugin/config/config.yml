@@ -57,6 +57,12 @@ configs:
     max_value: 10
     decimals: 2
     default_value: 1
+  damage_scale_npcs:
+    name: config.damage.scale_npcs.name
+    description: config.damage.scale_npcs.desc
+    category: damage
+    type: boolean
+    default_value: false
   health_regen:
     name: config.damage.health_regen.name
     description: config.damage.health_regen.desc

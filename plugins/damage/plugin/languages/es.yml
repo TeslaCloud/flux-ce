@@ -21,6 +21,9 @@ es:
       scale_fall:
         name: Multiplicador de daño por caída
         desc: Por cuánto se multiplica el daño por caída. 1 no cambia nada, 0 desactiva el daño por caída.
+      scale_npcs:
+        name: Multiplicadores por zona en NPC
+        desc: Si los multiplicadores de daño de la cabeza, el pecho, el estómago, los brazos y las piernas también se aplican a los golpes a los NPC.
       health_regen:
         name: Regeneración de salud
         desc: Si los jugadores heridos recuperan salud poco a poco con el tiempo.

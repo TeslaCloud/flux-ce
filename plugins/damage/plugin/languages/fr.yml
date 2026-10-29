@@ -21,6 +21,9 @@ fr:
       scale_fall:
         name: "Multiplicateur des dégâts de chute"
         desc: "Facteur par lequel les dégâts de chute sont multipliés. 1 ne change rien, 0 désactive les dégâts de chute."
+      scale_npcs:
+        name: "Multiplicateurs par zone pour les PNJ"
+        desc: "Indique si les multiplicateurs de dégâts de la tête, du torse, du ventre, des bras et des jambes s'appliquent aussi aux coups portés aux PNJ."
       health_regen:
         name: "Régénération de la santé"
         desc: "Indique si les joueurs blessés regagnent lentement de la santé au fil du temps."

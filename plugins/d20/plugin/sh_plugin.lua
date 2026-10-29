@@ -45,7 +45,8 @@
 -- configs of the Damage plugin, whose `ResolvePlayerDamage` hook is where a hit on a player
 -- is rolled, so that the `PrePlayerTakeDamage` hook and every damage handler after it see
 -- the rolled damage; for NPCs every multiplier that the `ScaleNPCDamage` handlers of the
--- schema and of the gamemode have applied to the hit.
+-- Damage plugin, of the schema and of the gamemode have applied to the hit, as
+-- `Damage:get_npc_damage_scale` reports it.
 --
 -- Fall damage rolls the 'd20_fall_dice' config, `{steps}d6` by default, where `steps` is 1
 -- for the slowest fall that hurts and grows by 1 for every 150 units per second of fall

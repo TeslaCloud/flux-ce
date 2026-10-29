@@ -1,4 +1,4 @@
---- Server hooks of the Damage plugin: scale the damage players take, run the
+--- Server hooks of the Damage plugin: scale the damage players and NPCs take, run the
 -- `ResolvePlayerDamage`, `PrePlayerTakeDamage` and `PostPlayerTakeDamage` hooks around it,
 -- and drive the health regeneration, the drowning and the logs.
 -- The handlers of GMod's damage hooks change the damage in place and return nothing, so the
@@ -9,18 +9,25 @@
 local config_get = Config.get
 
 --- Remembers the location of a bullet or melee hit on a player and multiplies its damage by
--- the 'damage_scale_' config of that location.
+-- the 'damage_scale_' config of that location, see `Damage:scale_hit`.
 -- @param victim [Player]
 -- @param hitgroup [Number HITGROUP_ enum of the hit location]
 -- @param damage_info [CTakeDamageInfo]
 function Damage:ScalePlayerDamage(victim, hitgroup, damage_info)
   self:set_hitgroup(victim, hitgroup)
+  self:scale_hit(victim, hitgroup, damage_info)
+end
 
-  local scale = self:get_hitgroup_scale(hitgroup)
-
-  if scale != 1 then
-    damage_info:ScaleDamage(scale)
-  end
+--- Remembers the location and the unscaled damage of a bullet or melee hit on an NPC and,
+-- while the 'damage_scale_npcs' config is on, multiplies its damage by the 'damage_scale_'
+-- config of that location, see `Damage:scale_hit`.
+-- @param npc [NPC]
+-- @param hitgroup [Number HITGROUP_ enum of the hit location]
+-- @param damage_info [CTakeDamageInfo]
+function Damage:ScaleNPCDamage(npc, hitgroup, damage_info)
+  self:set_hitgroup(npc, hitgroup)
+  self:add_unscaled_damage(npc, damage_info:GetDamage())
+  self:scale_hit(npc, hitgroup, damage_info)
 end
 
 --- Lets the ResolvePlayerDamage hook work out the amount of any damage to a player,
@@ -90,14 +97,22 @@ function Damage:EntityTakeDamage(entity, damage_info)
   end
 end
 
---- Handles damage that has been dealt to a player: restarts the wait for their health
+--- Forgets the hit location and the unscaled damage of an NPC that has been hit. Handles
+-- damage that has been dealt to a player: restarts the wait for their health
 -- regeneration, punches their view if the 'damage_view_punch' config is on, writes the damage
 -- log entry if the 'log_damage' config is on and runs the PostPlayerTakeDamage hook.
 -- @param entity [Entity the entity that was attacked]
 -- @param damage_info [CTakeDamageInfo]
 -- @param took [Boolean whether the entity has actually taken the damage]
 function Damage:PostEntityTakeDamage(entity, damage_info, took)
-  if !IsValid(entity) or !entity:IsPlayer() then return end
+  if !IsValid(entity) then return end
+
+  if !entity:IsPlayer() then
+    entity.damage_hitgroup = nil
+    entity.damage_unscaled = nil
+
+    return
+  end
 
   local hitgroup = self:get_hitgroup(entity)
 

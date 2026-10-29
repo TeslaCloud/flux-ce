@@ -21,6 +21,9 @@ en:
       scale_fall:
         name: Fall Damage Multiplier
         desc: How much fall damage is multiplied by. 1 changes nothing, 0 turns fall damage off.
+      scale_npcs:
+        name: NPC Hit Location Multipliers
+        desc: Whether the head, chest, stomach, arm and leg damage multipliers also apply to hits on NPCs.
       health_regen:
         name: Health Regeneration
         desc: Whether hurt players slowly regain health over time.
