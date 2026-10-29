@@ -1,4 +1,17 @@
 fr:
+  config:
+    mapscenes:
+      title: "Scènes de carte"
+      desc: "La caméra qui montre la carte derrière l'introduction et le menu principal."
+      mapscenes_speed:
+        name: "Durée par point"
+        desc: "Secondes que la caméra passe sur un point avant de passer au suivant."
+      mapscenes_animated:
+        name: "Glisser entre les points"
+        desc: "Si la caméra glisse d'un point à l'autre au lieu de couper."
+      mapscenes_rotate_speed:
+        name: "Vitesse de rotation"
+        desc: "La vitesse à laquelle la caméra tourne sur un point, en degrés par image."
   notification:
     mapscene:
       point_added: "Point ajouté"

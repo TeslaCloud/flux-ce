@@ -1,4 +1,17 @@
 en:
+  config:
+    mapscenes:
+      title: "Mapscenes"
+      desc: "The camera that shows the map behind the intro and the main menu."
+      mapscenes_speed:
+        name: "Time per point"
+        desc: "Seconds the camera spends on a point before it moves to the next one."
+      mapscenes_animated:
+        name: "Glide between points"
+        desc: "Whether the camera glides from point to point instead of cutting."
+      mapscenes_rotate_speed:
+        name: "Rotation speed"
+        desc: "How fast the camera turns while it stays on a point, in degrees per frame."
   notification:
     mapscene:
       point_added: Point added

@@ -1,11 +1,7 @@
---- Server side of the Mapscenes plugin: sets the default camera settings, stores the mapscene
--- points per map and sends them and their changes to the clients.
+--- Server side of the Mapscenes plugin: stores the mapscene points per map and sends them and
+-- their changes to the clients.
 
 local cable_send = Cable.send
-
-Config.set('mapscenes_speed', 15)
-Config.set('mapscenes_animated', false)
-Config.set('mapscenes_rotate_speed', 0.05)
 
 --- Sends all mapscene points to a player who has finished loading.
 -- @param actor [Player]

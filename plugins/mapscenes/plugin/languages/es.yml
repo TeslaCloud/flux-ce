@@ -1,4 +1,17 @@
 es:
+  config:
+    mapscenes:
+      title: "Escenas del mapa"
+      desc: "La cámara que muestra el mapa detrás de la introducción y del menú principal."
+      mapscenes_speed:
+        name: "Tiempo por punto"
+        desc: "Segundos que la cámara pasa en un punto antes de pasar al siguiente."
+      mapscenes_animated:
+        name: "Deslizar entre puntos"
+        desc: "Si la cámara se desliza de un punto a otro en lugar de cortar."
+      mapscenes_rotate_speed:
+        name: "Velocidad de rotación"
+        desc: "Lo rápido que gira la cámara mientras está en un punto, en grados por fotograma."
   notification:
     mapscene:
       point_added: Punto añadido
