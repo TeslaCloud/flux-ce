@@ -992,8 +992,8 @@ if SERVER then
     --   subcommand, and its `parent` is the command it belongs to]
     -- @param from_console [Boolean true if it was run as a console command, nil if it was
     --   typed in the chat]
-    -- @return [Any Return any non-nil value, even true, to stop the command from running]
-    if hook.Run('PlayerCanRunCommand', actor, cmd_table, from_console) != nil then return end
+    -- @return [Boolean Return false to stop the command from running; true and nil let it run]
+    if hook.Run('PlayerCanRunCommand', actor, cmd_table, from_console) == false then return end
 
     if cmd_table.arguments > #args then
       syntax_error(actor, cmd_table)
@@ -1035,15 +1035,17 @@ if SERVER then
     end
 
     --- Called on the server right before a command is logged and run, after all of the
-    -- checks have passed and its targets have been found.
+    -- checks have passed and its targets have been found. A handler that returns true takes
+    -- the command over: the command is then neither logged nor run, and the handler is
+    -- responsible for whatever it does in its place. Return nil to let the command run.
+    -- Unlike `PlayerCanRunCommand`, the handler sees the parsed arguments and targets.
     -- @param actor [Player the player who runs the command, an invalid entity for the
     --   server console]
     -- @param cmd_table [Command the command that runs; for a subcommand this is the
     --   subcommand, and its `parent` is the command it belongs to]
     -- @param args [List arguments that are passed to `on_run`, without the subcommand word;
     --   for a command that targets players, the player argument is already a List<Player>]
-    -- @return [Boolean Return true to stop the command from running; the player is not
-    --   notified]
+    -- @return [Boolean Return true to take the command over; the player is not notified]
     if hook.Run('PlayerRunCommand', actor, cmd_table, args) then return end
 
     local full_name = cmd_table:get_full_name()

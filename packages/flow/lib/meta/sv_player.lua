@@ -24,7 +24,7 @@ local function read_record_data(record)
 end
 
 --- Saves the database record of the player, together with their data table. Does nothing for
--- bots. Can be prevented by returning true from the 'PreSavePlayerData' hook. Runs the
+-- bots. Can be prevented by returning false from the 'PreSavePlayerData' hook. Runs the
 -- 'PostSavePlayerData' hook afterward. The data table is taken from the server's own copy
 -- and never from the networked variables, which are gone once the entity of a leaving
 -- player has been removed: without that copy the record keeps the data it already has.
@@ -34,9 +34,9 @@ function player_meta:save_player()
   --- Called on the server before `Player:save_player` saves the database record of a
   -- player. Not called for bots.
   -- @param actor [Player The player about to be saved]
-  -- @return [Boolean Return true to prevent the record from being saved; in that case
-  --   `PostSavePlayerData` is not run either]
-  if hook.Run('PreSavePlayerData', self) == true then return end
+  -- @return [Boolean Return false to prevent the record from being saved; in that case
+  --   `PostSavePlayerData` is not run either. Any other value lets it be saved]
+  if hook.Run('PreSavePlayerData', self) == false then return end
 
   if self.record then
     local data = self.fl_player_data
