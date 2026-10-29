@@ -93,14 +93,6 @@ if CLIENT then
 
     return true
   end
-
-  Cable.receive('fl_tab_menu_open', function(panel_id)
-    Flux.TabMenu:open(isstring(panel_id) and panel_id or nil)
-  end)
-
-  Cable.receive('fl_tab_menu_close', function()
-    Flux.TabMenu:close()
-  end)
 else
   Cable.check_networked_string('fl_tab_menu_open')
   Cable.check_networked_string('fl_tab_menu_close')
