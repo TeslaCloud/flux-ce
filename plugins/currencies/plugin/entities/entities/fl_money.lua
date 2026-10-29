@@ -2,7 +2,7 @@
 -- player who uses it (`Currencies:pickup_money`), unless the PlayerCanPickupMoney or the
 -- PrePlayerPickupMoney hook prevents that. It is created by `Currencies:spawn_money`, which is
 -- what `Entity:drop_money` puts the money of a player into the world with. While the
--- save_dropped_money config is on, the Currencies plugin saves these entities and puts them
+-- currencies_save_dropped_money config is on, the Currencies plugin saves these entities and puts them
 -- back when the map is loaded again; a pickup marks the saved money as out of date, so that
 -- the next data save writes what is left.
 

@@ -14,7 +14,7 @@ en:
     currencies:
       title: Currencies
       desc: Money and currency settings.
-      default_currency:
+      default:
         name: Default Currency
         desc: ID of the currency that is used whenever none is named, for instance by the money commands. Leave it empty to use the only registered currency.
       starting_money:

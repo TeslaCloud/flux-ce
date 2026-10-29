@@ -64,18 +64,18 @@ function Currencies:PostCreateCharacter(owner, char, char_data)
 end
 
 --- Puts the saved money back into the world when the framework loads its data, if the
--- save_dropped_money config is on.
+-- currencies_save_dropped_money config is on.
 function Currencies:LoadData()
-  if Config.get('save_dropped_money') then
+  if Config.get('currencies_save_dropped_money') then
     self:load_money()
   end
 end
 
 --- Saves the money that lies in the world when the framework saves its data, if the
--- save_dropped_money config is on. Deletes what has been saved for the map otherwise, so
+-- currencies_save_dropped_money config is on. Deletes what has been saved for the map otherwise, so
 -- that money which is long gone does not come back once the config is turned on again.
 function Currencies:SaveData()
-  if Config.get('save_dropped_money') then
+  if Config.get('currencies_save_dropped_money') then
     self:save_money()
   else
     Data.delete_plugin('money')

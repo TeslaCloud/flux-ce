@@ -14,7 +14,7 @@ es:
     currencies:
       title: Monedas
       desc: Ajustes de dinero y monedas.
-      default_currency:
+      default:
         name: Moneda predeterminada
         desc: ID de la moneda que se usa cuando no se indica ninguna, por ejemplo en los comandos de dinero. Déjalo vacío para usar la única moneda registrada.
       starting_money:

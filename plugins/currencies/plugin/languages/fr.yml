@@ -14,7 +14,7 @@ fr:
     currencies:
       title: "Monnaies"
       desc: "Paramètres de l'argent et des monnaies."
-      default_currency:
+      default:
         name: "Monnaie par défaut"
         desc: "ID de la monnaie utilisée chaque fois qu'aucune n'est précisée, par exemple par les commandes d'argent. Laissez vide pour utiliser la seule monnaie enregistrée."
       starting_money:

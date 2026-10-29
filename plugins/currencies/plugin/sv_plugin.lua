@@ -82,13 +82,13 @@ function Currencies:spawn_money(currency, amount, position, angles)
   return money_ent
 end
 
---- Saves the money that lies in the world a second from now, if the save_dropped_money
+--- Saves the money that lies in the world a second from now, if the currencies_save_dropped_money
 -- config is on. Calls that come within that second are saved together. Server only.
 function Currencies:queue_money_save()
-  if !Config.get('save_dropped_money') then return end
+  if !Config.get('currencies_save_dropped_money') then return end
 
   timer.Create('fl_save_dropped_money', 1, 1, function()
-    if Config.get('save_dropped_money') then
+    if Config.get('currencies_save_dropped_money') then
       Currencies:save_money()
     end
   end)
@@ -97,7 +97,7 @@ end
 --- Saves the currency, amount, position and angles of every fl_money entity in the world,
 -- and whether it is frozen, to the plugin data of the current schema and map. Entities that
 -- are being removed are left out, so it can be called right after `Entity:Remove`. The
--- plugin calls it whenever the framework saves its data, while the save_dropped_money
+-- plugin calls it whenever the framework saves its data, while the currencies_save_dropped_money
 -- config is on. Server only.
 function Currencies:save_money()
   local saved = {}

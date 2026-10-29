@@ -8,14 +8,14 @@
 --
 -- One currency is the default one: the money commands use it when no currency is named, and
 -- so can any other plugin, by calling `Currencies:get_default_currency`. It is named by the
--- `default_currency` config; while that config is not set, the only registered currency is
+-- `currencies_default` config; while that config is not set, the only registered currency is
 -- the default one.
 --
 -- A new character starts with the `starting_amount` of every currency, which is 0 unless the
--- currency is registered with another one. The `starting_money` config replaces it for the
+-- currency is registered with another one. The `currencies_starting_money` config replaces it for the
 -- default currency, and the `GetStartingMoney` hook has the last word.
 --
--- Money that lies in the world is kept over restarts while the `save_dropped_money` config is
+-- Money that lies in the world is kept over restarts while the `currencies_save_dropped_money` config is
 -- on: it is saved for every map whenever the framework saves its data, and put back when the
 -- map is loaded again.
 --
@@ -70,7 +70,7 @@ do
     return stored[id:lower()]
   end
 
-  --- Returns the ID of the default currency: the one named by the `default_currency` config
+  --- Returns the ID of the default currency: the one named by the `currencies_default` config
   -- if it is registered, otherwise the only registered currency.
   -- ```
   -- local currency = Currencies:get_default_currency()
@@ -82,7 +82,7 @@ do
   -- @return [String currency ID in lower case; nil if the config does not name a registered
   --   currency while none or more than one are registered]
   function Currencies:get_default_currency()
-    local id = Config.get('default_currency')
+    local id = Config.get('currencies_default')
     local lower_id = isstring(id) and id:lower()
 
     if lower_id and stored[lower_id] then
@@ -115,7 +115,7 @@ do
   end
 
   --- Returns how much of a currency a new character starts with: the `starting_amount` the
-  -- currency is registered with, or the `starting_money` config for the default currency if
+  -- currency is registered with, or the `currencies_starting_money` config for the default currency if
   -- that config is above 0. The GetStartingMoney hook may still change the amount for a
   -- particular character.
   -- @param id [String currency ID, letter case is ignored]
@@ -130,7 +130,7 @@ do
     end
 
     local amount = tonumber(currency_data.starting_amount) or 0
-    local override = Config.get('starting_money')
+    local override = Config.get('currencies_starting_money')
 
     if isnumber(override) and override > 0 and lower_id == self:get_default_currency() then
       amount = override
