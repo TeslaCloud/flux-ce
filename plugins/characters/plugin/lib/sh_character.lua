@@ -133,92 +133,6 @@ function Characters.limit_reached(target)
   return #target:get_all_characters() >= Characters.get_limit(target)
 end
 
---- Creates a character for a player unless a PlayerCreateCharacter hook rejects the data.
--- On the server the character is then saved and sent to its owner.
--- ```
--- local status = Characters.create(target, {
---   name = 'John Doe',
---   phys_desc = 'A tall man in a worn coat.',
---   gender = CHAR_GENDER_MALE,
---   model = 'models/humans/group01/male_02.mdl',
---   skin = 0
--- })
---
--- if status != CHAR_SUCCESS then
---   -- status is one of the CHAR_ERR_* codes
--- end
--- ```
--- The new character belongs to the user record of the player unless a GetCharacterOwner hook
--- hands it to another `User` record; only for a character of the player's own is their
--- character list sent to them again.
--- @param target [Player the player the character is created for, its owner unless a
---   GetCharacterOwner hook names another record]
--- @param data [Map creation data: name, phys_desc, gender, model and optionally skin. Set
---   name_generated to true when the name was not chosen by the player, which lets it
---   repeat the name of another character, and description_generated to true when the
---   description was not written by the player, which frees it from the length limits]
--- @return [Number CHAR_SUCCESS, or the CHAR_ERR_* code returned by the hook]
-function Characters.create(target, data)
-  --- Validates the data of a character that is about to be created. Called by
-  -- `Characters.create`, which the plugin runs on the server, before the character record is
-  -- built.
-  -- @param owner [Player the player the character is created for]
-  -- @param data [Map creation data: name, phys_desc, gender, model, skin, name_generated,
-  --   description_generated and the fields that other plugins add]
-  -- @return [Number return a CHAR_ERR_* code to refuse the character; it becomes the result of
-  --   Characters.create and is sent to the client. Return nothing to accept the data]
-  local hook_result = hook.Run('PlayerCreateCharacter', target, data)
-
-  if hook_result then
-    return hook_result
-  end
-
-  --- Lets plugins give a character that is being created to another user record than the one
-  -- of the player who creates it. Called by `Characters.create`, which the plugin runs on the
-  -- server, once the creation data has passed the PlayerCreateCharacter hook. A character
-  -- that belongs to another record is saved on its own and is not sent to the player.
-  -- @param target [Player the player the character is created for]
-  -- @param data [Map creation data the character is built from]
-  -- @return [User the record that is to own the character; return nothing to let the player
-  --   own it]
-  local owner_record = hook.Run('GetCharacterOwner', target, data)
-  local record = istable(owner_record) and owner_record or target.record
-
-  record.characters = record.characters or {}
-
-  local char = Character.new()
-    char.steam_id = record.steam_id or target:SteamID()
-    char.name = data.name
-    char.model = data.model or ''
-    char.skin = data.skin or 0
-    char.gender = data.gender
-    char.phys_desc = data.phys_desc or ''
-    char.health = 100
-    char.banned = false
-    char.user = record
-    char.user_id = record.id
-  table.insert(record.characters, char)
-
-  if SERVER then
-    --- Called on the server when a character has been built and added to the record of its
-    -- owner, before it is saved and sent to the owner. Handlers copy their own fields from the
-    -- creation data to the character.
-    -- @param owner [Player]
-    -- @param char [Character the new character, not saved yet]
-    -- @param char_data [Map creation data the character was built from]
-    hook.Run('PostCreateCharacter', target, char, data)
-
-    Characters.remember_name(char.name)
-    Characters.save(target, char)
-
-    if record == target.record then
-      Characters.send_to_client(target)
-    end
-  end
-
-  return CHAR_SUCCESS
-end
-
 if SERVER then
   Characters.taken_names = Characters.taken_names or {}
 
@@ -860,6 +774,90 @@ if SERVER then
     hook.Run('CharacterGenderChanged', target, char, new_gender, old_gender)
 
     Characters.send_to_client(target)
+  end
+
+  --- Creates a character for a player unless a PlayerCreateCharacter hook rejects the data.
+  -- The character is then saved and sent to its owner. Server only.
+  -- ```
+  -- local status = Characters.create(target, {
+  --   name = 'John Doe',
+  --   phys_desc = 'A tall man in a worn coat.',
+  --   gender = CHAR_GENDER_MALE,
+  --   model = 'models/humans/group01/male_02.mdl',
+  --   skin = 0
+  -- })
+  --
+  -- if status != CHAR_SUCCESS then
+  --   -- status is one of the CHAR_ERR_* codes
+  -- end
+  -- ```
+  -- The new character belongs to the user record of the player unless a GetCharacterOwner hook
+  -- hands it to another `User` record; only for a character of the player's own is their
+  -- character list sent to them again.
+  -- @param target [Player the player the character is created for, its owner unless a
+  --   GetCharacterOwner hook names another record]
+  -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin. Set
+  --   name_generated to true when the name was not chosen by the player, which lets it
+  --   repeat the name of another character, and description_generated to true when the
+  --   description was not written by the player, which frees it from the length limits]
+  -- @return [Number CHAR_SUCCESS, or the CHAR_ERR_* code returned by the hook]
+  function Characters.create(target, data)
+    --- Validates the data of a character that is about to be created. Called by
+    -- `Characters.create`, which the plugin runs on the server, before the character record is
+    -- built.
+    -- @param owner [Player the player the character is created for]
+    -- @param data [Map creation data: name, phys_desc, gender, model, skin, name_generated,
+    --   description_generated and the fields that other plugins add]
+    -- @return [Number return a CHAR_ERR_* code to refuse the character; it becomes the result of
+    --   Characters.create and is sent to the client. Return nothing to accept the data]
+    local hook_result = hook.Run('PlayerCreateCharacter', target, data)
+
+    if hook_result then
+      return hook_result
+    end
+
+    --- Lets plugins give a character that is being created to another user record than the one
+    -- of the player who creates it. Called by `Characters.create`, which the plugin runs on the
+    -- server, once the creation data has passed the PlayerCreateCharacter hook. A character
+    -- that belongs to another record is saved on its own and is not sent to the player.
+    -- @param target [Player the player the character is created for]
+    -- @param data [Map creation data the character is built from]
+    -- @return [User the record that is to own the character; return nothing to let the player
+    --   own it]
+    local owner_record = hook.Run('GetCharacterOwner', target, data)
+    local record = istable(owner_record) and owner_record or target.record
+
+    record.characters = record.characters or {}
+
+    local char = Character.new()
+      char.steam_id = record.steam_id or target:SteamID()
+      char.name = data.name
+      char.model = data.model or ''
+      char.skin = data.skin or 0
+      char.gender = data.gender
+      char.phys_desc = data.phys_desc or ''
+      char.health = 100
+      char.banned = false
+      char.user = record
+      char.user_id = record.id
+    table.insert(record.characters, char)
+
+    --- Called on the server when a character has been built and added to the record of its
+    -- owner, before it is saved and sent to the owner. Handlers copy their own fields from the
+    -- creation data to the character.
+    -- @param owner [Player]
+    -- @param char [Character the new character, not saved yet]
+    -- @param char_data [Map creation data the character was built from]
+    hook.Run('PostCreateCharacter', target, char, data)
+
+    Characters.remember_name(char.name)
+    Characters.save(target, char)
+
+    if record == target.record then
+      Characters.send_to_client(target)
+    end
+
+    return CHAR_SUCCESS
   end
 end
 
