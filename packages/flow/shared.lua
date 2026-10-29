@@ -1,10 +1,11 @@
 --- Entry point of the Flux gamemode package, run on both realms.
 -- Fills in the gamemode information (`GM.Name`, `GM.version`, `GM.code_name` and so on)
 -- from the package metadata, then loads the core, the libraries, classes and metatable
--- extensions, the models and the tools, and finally the gamemode hooks. On the server it
--- also registers the package's languages and migrations with `Pipeline`. The user interface
--- lives in the Active UI package, which is loaded after this one. During a partial code
--- reload (`LITE_REFRESH`) only the hooks are loaded again.
+-- extensions, the models and the tools, and finally the gamemode hooks and the network
+-- message handlers. On the server it also registers the package's languages and migrations
+-- with `Pipeline`. The user interface lives in the Active UI package, which is loaded after
+-- this one. During a partial code reload (`LITE_REFRESH`) only the hooks and the network
+-- message handlers are loaded again.
 
 local metadata = Flux.__package__
 
@@ -62,3 +63,4 @@ else
 end
 
 require_relative_folder('hooks', true)
+require_relative_folder('nethooks', true)

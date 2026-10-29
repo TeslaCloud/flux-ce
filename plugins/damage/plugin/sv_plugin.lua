@@ -514,7 +514,7 @@ function Damage:write_log(color, message, action, object, subject)
 
   Cable.send(
     self:get_log_viewers(),
-    'log_replicate',
+    'fl_log_replicate',
     message,
     action,
     object,

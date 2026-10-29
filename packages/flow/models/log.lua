@@ -155,7 +155,7 @@ function Log:replicate(condition)
     if !has_condition or condition(client) then
       Cable.send(
         client,
-        'log_replicate',
+        'fl_log_replicate',
         last_log.message,
         last_log.action,
         last_log.object,
@@ -169,26 +169,4 @@ function Log:replicate(condition)
   replication_data = nil
 
   return self
-end
-
-if CLIENT then
-  Cable.receive('log_replicate', function(message, action, object, subject, data)
-    --- Called on the client when a log entry sent with `Log:replicate` arrives, before it is
-    -- output. Gamemode (`GM`) handlers are not called.
-    -- @param message [String Text of the entry]
-    -- @param action [String Type of the logged event in snake_case; empty if there is none]
-    -- @param object [String/Number Who or what performed the action]
-    -- @param subject [String/Number Who or what the action was performed on]
-    -- @param data [Map How the server has output the entry: `type` is 'print', 'colored' or
-    --   'write' (an entry without output), and `color` is the console color of a colored
-    --   entry]
-    -- @return [Any Return any non-nil value to prevent the default output of the entry]
-    if Plugin.call('LogReplicate', message, action, object, subject, data) != nil then
-      return
-    elseif data.type == 'colored' then
-      Log:colored(data.color, message, action, object, subject)
-    elseif Log[data.type] then
-      Log[data.type](Log, message, action, object, subject)
-    end
-  end)
 end

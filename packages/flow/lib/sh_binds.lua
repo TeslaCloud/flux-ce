@@ -110,14 +110,6 @@ if SERVER then
   function hooks:PlayerButtonDown(actor, key)
     Cable.send(actor, 'fl_bind_pressed', key)
   end
-else
-  Cable.receive('fl_bind_pressed', function(key)
-    local bind = Flux.Binds:get_bind(key)
-
-    if bind then
-      RunConsoleCommand(bind)
-    end
-  end)
 end
 
 Plugin.add_hooks('Binds', hooks)

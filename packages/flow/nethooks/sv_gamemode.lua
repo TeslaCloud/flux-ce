@@ -1,24 +1,12 @@
 --- Server-side receivers of the gamemode's network messages: the client's reports that it
 -- has included the schema and created its local player (which run `ClientIncludedSchema`
--- and `PlayerInitialized`), soft undo requests and the client's language.
+-- and `PlayerInitialized`) and the client's language.
 
 Cable.receive('fl_client_included_schema', function(actor)
   --- Called on the server when the client of a player reports that it has included the
   -- schema files. `ClientSchemaLoaded` is its client-side counterpart.
   -- @param actor [Player The player whose client has loaded the schema]
   hook.Run('ClientIncludedSchema', actor)
-end)
-
-Cable.receive('fl_undo_soft', function(actor)
-  if !IsValid(actor) then return end
-
-  local cur_time = CurTime()
-
-  if (actor.fl_next_undo or 0) > cur_time then return end
-
-  actor.fl_next_undo = cur_time + 0.25
-
-  Flux.Undo:do_player(actor)
 end)
 
 Cable.receive('fl_player_created', function(actor)
