@@ -28,11 +28,16 @@ function player_meta:SetUserGroup(group)
   -- @param group [Role The player's new role]
   -- @param old_group [Role The role the player had before]
   hook.Run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
+
+  if !silent and old_id != group then
+    CAMI.SignalUserGroupChanged(self, old_id, group, 'Bolt')
+  end
 end
 
 --- Writes the player's current name and role to their database record, if they have one.
+-- The blank record of a bot is never saved.
 function player_meta:save_usergroup()
-  if self.record then
+  if self.record and !self:IsBot() then
     self.record.name = self:name()
     self.record.role = self:GetUserGroup()
     self.record:save()
