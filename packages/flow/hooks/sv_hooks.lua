@@ -2,7 +2,7 @@
 -- and spawn, decide their model, fall damage and respawn time, check the sandbox spawn
 -- menu and physics gun against the Flux permissions, save the data periodically and when
 -- the server shuts down, pass chat commands to the command interpreter and write the files
--- that are sent to clients.
+-- that are sent to clients, and the `fl_save_pers` console command.
 -- Most of Flux's server-side hooks are run from here, including `PostPlayerSpawn`,
 -- `PlayerThink`, `PlayerOneSecond`, `FLSaveData`, `PostSaveData` and the
 -- `FLPlayerSpawn...` checks.
@@ -904,3 +904,14 @@ do
     end
   end
 end
+
+concommand.Add('fl_save_pers', function(actor)
+  if IsValid(actor) and !actor:is_root() then return end
+
+  if Flux.development then
+    --- Sandbox's `PersistenceSave` hook, which saves the persistent entities. Flux runs it
+    -- on demand from the `fl_save_pers` console command, in development only, when the
+    -- server console or a root player runs it.
+    hook.Run('PersistenceSave')
+  end
+end)
