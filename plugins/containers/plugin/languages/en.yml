@@ -132,3 +132,10 @@ en:
       password:
         title: Password
         message: What is the password for this container?
+  permission:
+    manage_containers:
+      name: Manage containers
+      description: "Grants access to set the names, messages and passwords of containers."
+    fill_containers:
+      name: Fill containers
+      description: Grants access to fill containers with random items.

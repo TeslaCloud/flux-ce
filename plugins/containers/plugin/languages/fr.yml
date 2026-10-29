@@ -132,3 +132,10 @@ fr:
       password:
         title: "Mot de passe"
         message: "Quel est le mot de passe de ce conteneur ?"
+  permission:
+    manage_containers:
+      name: "Gérer les conteneurs"
+      description: "Permet de définir les noms, les messages et les mots de passe des conteneurs."
+    fill_containers:
+      name: "Remplir les conteneurs"
+      description: "Permet de remplir les conteneurs d'objets aléatoires."

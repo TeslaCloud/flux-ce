@@ -29,7 +29,7 @@ local handlers = {}
 function handlers.name(tool, owner, entity, reset)
   local name = !reset and tool:GetClientInfo('name') or nil
 
-  name = Container:set_container_name(entity, name)
+  name = Containers:set_container_name(entity, name)
 
   if name then
     owner:notify('notification.container.name_set', { name = name })
@@ -46,7 +46,7 @@ end
 function handlers.message(tool, owner, entity, reset)
   local message = !reset and tool:GetClientInfo('message') or nil
 
-  if Container:set_container_message(entity, message) then
+  if Containers:set_container_message(entity, message) then
     owner:notify('notification.container.message_set')
   else
     owner:notify('notification.container.message_removed')
@@ -62,7 +62,7 @@ end
 function handlers.password(tool, owner, entity, reset)
   local password = !reset and tool:GetClientInfo('password') or nil
 
-  password = Container:set_container_password(entity, password)
+  password = Containers:set_container_password(entity, password)
 
   if password then
     owner:notify('notification.container.password_set', { password = password })
@@ -94,7 +94,7 @@ function handlers.fill(tool, owner, entity, reset)
   end
 
   local share = math.Clamp(tool:GetClientNumber('share', 50), 1, 100) / 100
-  local added, error_text = Container:fill(entity, share, category)
+  local added, error_text = Containers:fill(entity, share, category)
 
   if !added then
     owner:notify(error_text)
@@ -121,7 +121,7 @@ function TOOL:ApplyMode(trace, reset)
 
   local entity = trace.Entity
 
-  if !Container:is_container(entity) then
+  if !Containers:is_container(entity) then
     owner:notify('error.container.not_valid')
 
     return false
@@ -173,7 +173,7 @@ if CLIENT then
       table.insert(mode_choices, { title = t('tool.container.mode_'..mode), value = tostring(i) })
     end
 
-    for _, category in ipairs(Container:get_loot_categories()) do
+    for _, category in ipairs(Containers:get_loot_categories()) do
       table.insert(category_choices, { title = t(category), value = category })
     end
 

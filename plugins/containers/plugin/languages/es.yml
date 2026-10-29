@@ -132,3 +132,10 @@ es:
       password:
         title: Contraseña
         message: ¿Cuál es la contraseña de este contenedor?
+  permission:
+    manage_containers:
+      name: Gestionar contenedores
+      description: "Da acceso para poner los nombres, los mensajes y las contraseñas de los contenedores."
+    fill_containers:
+      name: Llenar contenedores
+      description: Da acceso para llenar contenedores con objetos aleatorios.

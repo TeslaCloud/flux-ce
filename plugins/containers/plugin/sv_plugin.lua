@@ -3,7 +3,7 @@
 -- and the password of a container and networks what clients may know of them; fills a
 -- container with random items; and destroys or spills the items of a removed container.
 
-Container.pending = Container.pending or {}
+Containers.pending = Containers.pending or {}
 
 local name_length = 64
 local message_length = 256
@@ -132,7 +132,7 @@ end
 --- Sends what clients may know about a container to them: its custom name and whether it
 -- has a password. Called whenever either changes and after the saved containers are loaded.
 -- @param entity [Entity the container prop]
-function Container:update_netvars(entity)
+function Containers:update_netvars(entity)
   entity:set_nv('fl_container_name', entity.container_name)
   entity:set_nv('fl_container_locked', entity.container_password != nil or nil)
 end
@@ -144,7 +144,7 @@ end
 -- with its number before its items can be.
 -- @param entity [Entity the container prop]
 -- @return [Number]
-function Container:get_container_id(entity)
+function Containers:get_container_id(entity)
   if !entity.container_id then
     entity.container_id = Item.generate_id()
 
@@ -157,10 +157,10 @@ function Container:get_container_id(entity)
 end
 
 --- Remembers loaded items of a container whose inventory does not exist, until the
--- container claims them with `Container:get_inventory`.
+-- container claims them with `Containers:get_inventory`.
 -- @param container_id [Number]
 -- @param items [List<Item>]
-function Container:add_pending_items(container_id, items)
+function Containers:add_pending_items(container_id, items)
   local pending = self.pending[container_id] or {}
 
   for _, item_obj in ipairs(items) do
@@ -173,7 +173,7 @@ end
 --- Returns the loaded items of a container that wait for its inventory.
 -- @param entity [Entity the container prop]
 -- @return [List<Item> the items that are still loaded and saved in the container]
-function Container:get_pending_items(entity)
+function Containers:get_pending_items(entity)
   local container_id = entity.container_id
   local items = {}
 
@@ -192,7 +192,7 @@ end
 -- inventory takes in the items that have been loaded for the container in the meantime.
 -- @param entity [Entity the container prop]
 -- @return [Inventory the inventory, or nil if the entity is not a container]
-function Container:get_inventory(entity)
+function Containers:get_inventory(entity)
   local container_data = self:get_container_data(entity)
 
   if !container_data then return end
@@ -229,7 +229,7 @@ end
 --- Unloads the loaded items whose container prop is not on the map, ten seconds from now,
 -- once the persistent entities have had the time to be spawned. Their rows stay as they
 -- are, so they come back if the prop does; each of them is reported in the console.
-function Container:release_unclaimed_items_later()
+function Containers:release_unclaimed_items_later()
   timer.Create('fl_containers_release', 10, 1, function()
     local present = {}
 
@@ -267,16 +267,16 @@ end
 --- Gives a container a name of its own, which replaces the name of its model in its target
 -- text and in the title of its inventory.
 -- ```
--- Container:set_container_name(entity, 'Evidence locker')
+-- Containers:set_container_name(entity, 'Evidence locker')
 -- -- Back to the name registered for the model.
--- Container:set_container_name(entity)
+-- Containers:set_container_name(entity)
 -- ```
 -- @param entity [Entity the container prop]
 -- @param name=nil [String the name, cut to 64 characters; nil or an empty text removes the
 --   custom name]
 -- @return [String the name that was set, or nil if the container has none now or the
 --   entity is not a container]
-function Container:set_container_name(entity, name)
+function Containers:set_container_name(entity, name)
   if !self:is_container(entity) then return end
 
   name = sanitize(name, name_length)
@@ -298,7 +298,7 @@ end
 --- Returns the message that is shown to the players who open a container.
 -- @param entity [Entity the container prop]
 -- @return [String the message, or nil if the container has none]
-function Container:get_container_message(entity)
+function Containers:get_container_message(entity)
   return entity.container_message
 end
 
@@ -308,7 +308,7 @@ end
 --   removes it]
 -- @return [String the message that was set, or nil if the container has none now or the
 --   entity is not a container]
-function Container:set_container_message(entity, message)
+function Containers:set_container_message(entity, message)
   if !self:is_container(entity) then return end
 
   message = sanitize(message, message_length)
@@ -325,7 +325,7 @@ end
 --   removes it]
 -- @return [String the password that was set, or nil if the container has none now or the
 --   entity is not a container]
-function Container:set_container_password(entity, password)
+function Containers:set_container_password(entity, password)
   if !self:is_container(entity) then return end
 
   password = sanitize(password, password_length)
@@ -347,7 +347,7 @@ end
 -- @param password [String the text to check]
 -- @return [Boolean true if the text is the password; false if it is not, or if the
 --   container has no password]
-function Container:check_container_password(entity, password)
+function Containers:check_container_password(entity, password)
   local expected = entity.container_password
 
   return expected != nil and sanitize(password, password_length) == expected
@@ -360,7 +360,7 @@ end
 -- @param entity [Entity the container prop]
 -- @return [Boolean true if the player may open the container, String error phrase when
 --   they may not and there is something to tell them]
-function Container:can_open(actor, entity)
+function Containers:can_open(actor, entity)
   if !self:is_container(entity) then
     return false
   end
@@ -390,7 +390,7 @@ end
 -- @param actor [Player]
 -- @param entity [Entity the container prop]
 -- @return [Boolean true if the container was opened, false if the entity is not a container]
-function Container:open(actor, entity)
+function Containers:open(actor, entity)
   local container_data = self:get_container_data(entity)
 
   if !container_data then return false end
@@ -428,7 +428,7 @@ end
 -- @param entity [Entity the container prop]
 -- @param answer [String the entered text]
 local function submit_password(actor, entity, answer)
-  local allowed, reason = Container:can_open(actor, entity)
+  local allowed, reason = Containers:can_open(actor, entity)
 
   if !allowed then
     if reason then
@@ -438,8 +438,8 @@ local function submit_password(actor, entity, answer)
     return
   end
 
-  local correct = !Container:has_container_password(entity)
-    or Container:check_container_password(entity, answer)
+  local correct = !Containers:has_container_password(entity)
+    or Containers:check_container_password(entity, answer)
 
   --- Called on the server when a player has entered the password of a container, before
   -- the container is opened or the player is told that the password is wrong.
@@ -450,7 +450,7 @@ local function submit_password(actor, entity, answer)
   hook.Run('PlayerEnteredContainerPassword', actor, entity, correct)
 
   if correct then
-    Container:open(actor, entity)
+    Containers:open(actor, entity)
   else
     actor.next_container_password = CurTime() + Config.get('containers_password_delay', 3)
     actor:notify('error.container.wrong_password')
@@ -505,7 +505,7 @@ end
 -- @param entity [Entity the container prop]
 -- @return [Boolean true if the container was opened; false if it was not, or not yet
 --   because the player has been asked for the password]
-function Container:request_open(actor, entity)
+function Containers:request_open(actor, entity)
   local allowed, reason = self:can_open(actor, entity)
 
   if !allowed then
@@ -534,19 +534,19 @@ function Container:request_open(actor, entity)
 end
 
 --- Fills a container with random items until the given share of its slots is taken. Items
--- are picked with `Container:get_loot_items`; an item that does not fit, or that would
+-- are picked with `Containers:get_loot_items`; an item that does not fit, or that would
 -- take the container past the share, is skipped. What is in the container already counts
 -- towards the share.
 -- ```
 -- -- Fills half of the container with food and drinks.
--- local added, error_text = Container:fill(entity, 0.5, 'item.category.consumables')
+-- local added, error_text = Containers:fill(entity, 0.5, 'item.category.consumables')
 -- ```
 -- @param entity [Entity the container prop]
 -- @param share=1 [Number share of the slots to fill, from 0 to 1]
 -- @param category=nil [String item category to pick from; all categories if nil]
 -- @return [Number amount of items that were added, or false if nothing could be added,
 --   String error phrase when nothing could be added]
-function Container:fill(entity, share, category)
+function Containers:fill(entity, share, category)
   local inventory = self:get_inventory(entity)
 
   if !inventory then
@@ -605,7 +605,7 @@ end
 -- @param entity [Entity the container prop]
 -- @param inventory [Inventory the inventory of the container, nil if it was never created]
 -- @param item_ids [List<Number> instance ids of the items of the container]
-function Container:handle_removal(entity, inventory, item_ids)
+function Containers:handle_removal(entity, inventory, item_ids)
   if Flux.shutting_down or self.cleaning_up then return end
 
   local spilled = Config.get('containers_spill_items', false) == true

@@ -11,7 +11,7 @@ local target_outline_color = Color(0, 0, 0)
 -- @param x [Number screen position]
 -- @param y [Number screen position]
 -- @param dist [Number distance between the local player and the entity]
-function Container:DrawEntityTargetID(entity, x, y, dist)
+function Containers:DrawEntityTargetID(entity, x, y, dist)
   if dist < 300 then
     local container_data = self:find(entity:GetModel())
 
@@ -70,7 +70,7 @@ end
 --- Prevents opening the menu of items that are stored inside of containers.
 -- @param item_obj [Item]
 -- @return [Boolean false to prevent the menu from opening, nil otherwise]
-function Container:CanItemMenuOpen(item_obj)
+function Containers:CanItemMenuOpen(item_obj)
   if item_obj.inventory_type == 'container' then
     return false
   end
@@ -79,7 +79,7 @@ end
 --- Returns the name of the container: its custom name, or the translated name of its model.
 -- @param entity [Entity]
 -- @return [String name, or nil if the entity is not a container]
-function Container:GetEntityName(entity)
+function Containers:GetEntityName(entity)
   local container_data = self:find(entity:GetModel())
 
   if container_data then
@@ -93,7 +93,7 @@ end
 -- a lock for an icon if the container asks for a password.
 -- @param menu [Panel the interactions menu]
 -- @param entity [Entity]
-function Container:CreateEntityInteractions(menu, entity)
+function Containers:CreateEntityInteractions(menu, entity)
   local container_data = self:find(entity:GetModel())
 
   if container_data and entity:GetClass() == 'prop_physics' then

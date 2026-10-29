@@ -1,20 +1,19 @@
---- Server side of the Containers plugin: opens a container when a player within reach asks
--- for it, plays its sounds, makes container props persistent, gives the containers the
+--- Server-side hooks of the Containers plugin: they play the sounds of containers, make
+-- container props persistent, gives the containers the
 -- items that are loaded for them, keeps their inventories out of the saved persistent
 -- entities, networks the names of the loaded containers, deals with the inventory and the
 -- items of a container that is removed and keeps the items of the containers through a map
 -- cleanup.
 
 local detached_inventories = {}
-local request_delay = 0.5
 
 --- Closes the inventory of a removed entity for everyone who views it and deletes the
 -- inventory from the server cache. If the entity is a container, its items are destroyed
 -- or dropped on the ground as well, unless the map is unloading or being cleaned up; in
 -- that case they wait for the container to come back.
 -- @param entity [Entity]
--- @see [Container#handle_removal]
-function Container:EntityRemoved(entity)
+-- @see [Containers#handle_removal]
+function Containers:EntityRemoved(entity)
   local inventory = entity.inventory
 
   if inventory then
@@ -56,7 +55,7 @@ end
 --- Gives the containers of the map the items that have been loaded for them. Containers
 -- that are not there yet get them once they are.
 -- @param items [List<Item>]
-function Container:OnMapItemsLoaded(items)
+function Containers:OnMapItemsLoaded(items)
   local by_container = {}
 
   for _, item_obj in ipairs(items) do
@@ -80,7 +79,7 @@ end
 
 --- Creates the inventory of every container that has loaded items waiting for it, which
 -- puts the items into it.
-function Container:claim_pending_items()
+function Containers:claim_pending_items()
   if table.IsEmpty(self.pending) then return end
 
   for _, entity in ents.Iterator() do
@@ -94,12 +93,12 @@ end
 -- cleanup removes are left alone: the persistent props are saved right before the cleanup
 -- and spawned again right after it, and their items, which stay saved as being in them,
 -- come back with them.
-function Container:PreCleanupMap()
+function Containers:PreCleanupMap()
   self.cleaning_up = true
 end
 
 --- Ends the map cleanup, after which removed containers lose their items again.
-function Container:PostCleanupMap()
+function Containers:PostCleanupMap()
   self.cleaning_up = nil
 
   self:release_unclaimed_items_later()
@@ -109,7 +108,7 @@ end
 -- have been loaded with the persistent entities, and gives the containers the items that
 -- have been loaded for them. This is done on the next tick, once every handler of the hook
 -- has spawned its entities and given them their saved fields back.
-function Container:PersistenceLoad()
+function Containers:PersistenceLoad()
   timer.Simple(0, function()
     for _, entity in ents.Iterator() do
       if (entity.container_name or entity.container_password) and self:is_container(entity) then
@@ -130,7 +129,7 @@ end
 -- @param _actor [Player]
 -- @param model [String]
 -- @param entity [Entity]
-function Container:PlayerSpawnedProp(_actor, model, entity)
+function Containers:PlayerSpawnedProp(_actor, model, entity)
   if self:find(model) then
     entity:SetPersistent(true)
 
@@ -141,7 +140,7 @@ end
 --- Plays the closing sound of the container when its inventory gets closed.
 -- @param _actor [Player]
 -- @param inventory [Inventory]
-function Container:OnInventoryClosed(_actor, inventory)
+function Containers:OnInventoryClosed(_actor, inventory)
   local entity = inventory.owner
 
   if IsValid(entity) then
@@ -156,7 +155,7 @@ end
 --- Takes the inventory off every container before the persistent entities are saved, so
 -- that it is not saved with it. The inventories are put back by the 'PostPersistenceSave'
 -- hook.
-function Container:PrePersistenceSave()
+function Containers:PrePersistenceSave()
   for _, entity in ents.Iterator() do
     if entity.inventory and self:find(entity:GetModel()) then
       detached_inventories[entity] = entity.inventory
@@ -168,7 +167,7 @@ end
 
 --- Gives the containers their inventories back once the persistent entities have been
 -- saved, so that the containers that are open at that moment keep working.
-function Container:PostPersistenceSave()
+function Containers:PostPersistenceSave()
   for entity, inventory in pairs(detached_inventories) do
     if IsValid(entity) then
       entity.inventory = inventory
@@ -181,18 +180,8 @@ end
 --- Allows the containers, physics props with a container model, to contain money.
 -- @param object [Entity]
 -- @return [Boolean true if the entity is a container, nil otherwise]
-function Container:CanEntityContainMoney(object)
+function Containers:CanEntityContainMoney(object)
   if self:is_container(object) then
     return true
   end
 end
-
-Cable.receive('fl_container_open', function(actor, entity)
-  local cur_time = CurTime()
-
-  if actor.next_container_request and actor.next_container_request > cur_time then return end
-
-  actor.next_container_request = cur_time + request_delay
-
-  Container:request_open(actor, entity)
-end)
