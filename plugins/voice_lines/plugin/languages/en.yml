@@ -4,7 +4,7 @@ en:
       description: List the voice lines your character can say, or search them by command, text or alias.
       syntax: "[search]"
   config:
-    voicelines:
+    voice_lines:
       title: Voice Lines
       desc: Settings of the voice lines that characters say in the chat.
       interval:

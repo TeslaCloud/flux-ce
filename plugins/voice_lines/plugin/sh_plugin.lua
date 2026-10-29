@@ -37,7 +37,7 @@
 -- The `PlayerCanUseVoiceLine` hook overrides who may use a line, and `VoiceLinePlayed` is run on
 -- the server every time the sound of a line plays. Players find the lines they may use on the
 -- Voice Lines page of the Help tab, where they can listen to a line or say it, and with the
--- `voicelines` command. A player can play a voice line once per 'voicelines_interval' config;
+-- `voicelines` command. A player can play a voice line once per 'voice_lines_interval' config;
 -- a line said sooner shows its text without the sound.
 -- @module [VoiceLines]
 
@@ -658,7 +658,7 @@ end
 -- a line to the fields of `VoiceLines:register_line`:
 -- ```
 -- function SCHEMA:RegisterVoiceLines(voice_lines)
---   voice_lines:load_file(self:get_path()..'/voicelines.yml')
+--   voice_lines:load_file(self:get_path()..'/voice_lines.yml')
 -- end
 -- ```
 -- ```yaml
@@ -678,7 +678,7 @@ end
 --           - dwell on it
 -- ```
 -- @param path [String path of the file in the Lua search path, such as
---   'myschema/voicelines.yml']
+--   'myschema/voice_lines.yml']
 -- @return [Boolean true if the file has been read]
 function VoiceLines:load_file(path)
   local files = Flux.shared.voice_line_files

@@ -1,6 +1,6 @@
 --- Server side of the Voice Lines plugin: turns the text of a line into a phrase of in character
 -- speech, plays the sound of a line to the players who hear it, holds players to the
--- 'voicelines_interval' config and says a line that a player has picked on the Voice Lines
+-- 'voice_lines_interval' config and says a line that a player has picked on the Voice Lines
 -- page.
 
 local config_get = Config.get
@@ -48,7 +48,7 @@ function VoiceLines:get_sound_level(volume)
 end
 
 --- Checks whether a player may play the sound of a line now, that is whether the
--- 'voicelines_interval' config has passed since the last sound they played.
+-- 'voice_lines_interval' config has passed since the last sound they played.
 -- @param target [Player]
 -- @return [Boolean]
 function VoiceLines:can_play(target)
@@ -68,8 +68,8 @@ local function get_sound_source(target)
 end
 
 --- Plays the sound of a line from a player, unless the player has played one within the
--- 'voicelines_interval' config. The players nearby hear it from the speaker, and the players
--- who listen to the speaker over the radio hear it at the 'voicelines_radio_volume' config,
+-- 'voice_lines_interval' config. The players nearby hear it from the speaker, and the players
+-- who listen to the speaker over the radio hear it at the 'voice_lines_radio_volume' config,
 -- as if from their own radio.
 -- @param speaker [Player]
 -- @param category [Map the category of the line]
@@ -100,11 +100,11 @@ function VoiceLines:play(speaker, category, line, receivers, volume, radio_liste
       radio_listeners,
       'fl_voice_line_radio',
       sound_path,
-      math.Clamp(tonumber(config_get('voicelines_radio_volume')) or 0.5, 0, 1)
+      math.Clamp(tonumber(config_get('voice_lines_radio_volume')) or 0.5, 0, 1)
     )
   end
 
-  speaker.fl_next_voice_line_at = CurTime() + (tonumber(config_get('voicelines_interval')) or 0)
+  speaker.fl_next_voice_line_at = CurTime() + (tonumber(config_get('voice_lines_interval')) or 0)
 
   --- Called on the server after the sound of a voice line has played.
   -- @param speaker [Player the player who has said the line]

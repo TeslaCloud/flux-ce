@@ -4,7 +4,7 @@ es:
       description: Muestra las líneas de voz que puede decir tu personaje, o las busca por comando, texto o alias.
       syntax: "[búsqueda]"
   config:
-    voicelines:
+    voice_lines:
       title: Líneas de voz
       desc: Ajustes de las líneas de voz que los personajes dicen en el chat.
       interval:

@@ -4,7 +4,7 @@ fr:
       description: Affiche les répliques vocales que votre personnage peut dire, ou les recherche par commande, texte ou alias.
       syntax: "[recherche]"
   config:
-    voicelines:
+    voice_lines:
       title: Répliques vocales
       desc: Réglages des répliques vocales que les personnages disent dans le chat.
       interval:
