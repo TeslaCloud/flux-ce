@@ -34,12 +34,7 @@ RPCommands.typing_kinds = {
 
 --- Registers the permission that exempts a player from the OOC and LOOC cooldowns.
 function RPCommands:RegisterPermissions()
-  Bolt:register_permission(
-    'bypass_chat_cooldown',
-    'Bypass chat cooldowns',
-    'Lets the player use the OOC and LOOC chats without waiting for the cooldown.',
-    'permission.categories.roleplay'
-  )
+  Bolt:register_permission('bypass_chat_cooldown', nil, nil, 'permission.categories.roleplay')
 end
 
 --- Wraps a text in the markup of a speech command, the way the command itself says it.

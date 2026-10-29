@@ -100,6 +100,9 @@ fr:
   permission:
     categories:
       roleplay: "Roleplay"
+    bypass_chat_cooldown:
+      name: "Ignorer les délais du chat"
+      description: "Permet au joueur d'utiliser les chats OOC et LOOC sans attendre le délai."
   ui:
     hud:
       display_typing:

@@ -100,6 +100,9 @@ es:
   permission:
     categories:
       roleplay: Rol
+    bypass_chat_cooldown:
+      name: Ignorar las esperas del chat
+      description: Permite al jugador usar los chats OOC y LOOC sin esperar.
   ui:
     hud:
       display_typing:

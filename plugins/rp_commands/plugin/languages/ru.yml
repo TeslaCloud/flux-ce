@@ -103,6 +103,9 @@ ru:
   permission:
     categories:
       roleplay: Ролевая игра
+    bypass_chat_cooldown:
+      name: Обход задержек чата
+      description: Позволяет игроку пользоваться чатами OOC и LOOC без ожидания задержки.
   ui:
     hud:
       display_typing:

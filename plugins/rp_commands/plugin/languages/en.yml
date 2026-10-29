@@ -100,6 +100,9 @@ en:
   permission:
     categories:
       roleplay: Roleplay
+    bypass_chat_cooldown:
+      name: Bypass chat cooldowns
+      description: Lets the player use the OOC and LOOC chats without waiting for the cooldown.
   ui:
     hud:
       display_typing:
