@@ -36,3 +36,7 @@ fr:
         title: "Associer une nouvelle clé"
         message: "Choisissez une clé à associer."
         select: "Choisir une clé..."
+      copy:
+        title: "Copier une clé"
+        message: "Choisissez la clé à copier."
+        select: "Choisir une clé..."

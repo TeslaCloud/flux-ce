@@ -36,3 +36,7 @@ en:
         title: Bind new key
         message: Select a key to bind.
         select: Select key...
+      copy:
+        title: Copy key
+        message: Select the key to copy.
+        select: Select key...

@@ -36,3 +36,7 @@ es:
         title: Vincular nueva llave
         message: Selecciona una llave para vincular.
         select: Selecciona una llave...
+      copy:
+        title: Copiar llave
+        message: Selecciona la llave que quieres copiar.
+        select: Selecciona una llave...
