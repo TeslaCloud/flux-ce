@@ -60,3 +60,13 @@ es:
       log_kills:
         name: Registrar muertes
         desc: Si las muertes de los jugadores se escriben en el registro.
+  ui:
+    limbs:
+      body: Cuerpo
+      head: Cabeza
+      chest: Pecho
+      stomach: Estómago
+      left_arm: Brazo izquierdo
+      right_arm: Brazo derecho
+      left_leg: Pierna izquierda
+      right_leg: Pierna derecha

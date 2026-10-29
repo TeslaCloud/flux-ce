@@ -27,17 +27,6 @@ local hitgroup_scales = {
   [HITGROUP_RIGHTLEG] = 'damage_scale_legs'
 }
 
---- Names of the hit locations as they are written to the damage log.
-local hitgroup_names = {
-  [HITGROUP_HEAD] = 'head',
-  [HITGROUP_CHEST] = 'chest',
-  [HITGROUP_STOMACH] = 'stomach',
-  [HITGROUP_LEFTARM] = 'left arm',
-  [HITGROUP_RIGHTARM] = 'right arm',
-  [HITGROUP_LEFTLEG] = 'left leg',
-  [HITGROUP_RIGHTLEG] = 'right leg'
-}
-
 --- Console color of the damage log entries.
 local damage_log_color = Color(255, 170, 60)
 
@@ -462,11 +451,11 @@ function Damage:flush_logs()
   return count
 end
 
---- Writes a damage log entry: who has taken how much damage, where, from whom and with
--- what, and the health and armor they are left with. The entry is written with the
--- 'player_damage' action and replicated to the players who have the 'view_damage_logs'
--- permission; it is saved by `Damage:flush_logs`. Does not check the 'log_damage' config.
--- Serverside only.
+--- Writes a damage log entry: who has taken how much damage, to which limb (its English
+-- name, see `Damage:get_limb_name`), from whom and with what, and the health and armor they
+-- are left with. The entry is written with the 'player_damage' action and replicated to the
+-- players who have the 'view_damage_logs' permission; it is saved by `Damage:flush_logs`.
+-- Does not check the 'log_damage' config. Serverside only.
 -- @param victim [Player player who has taken the damage]
 -- @param damage_info [CTakeDamageInfo the damage]
 -- @param hitgroup=HITGROUP_GENERIC [Number HITGROUP_ enum of the hit location]
@@ -481,10 +470,9 @@ function Damage:log_damage(victim, damage_info, hitgroup)
   end
 
   local message = self:get_log_name(victim)..' has taken '..math.ceil(damage_info:GetDamage())..' '..kind
-  local location = hitgroup_names[hitgroup]
 
-  if location then
-    message ..= ' to the '..location
+  if self:get_limb(hitgroup) then
+    message ..= ' to the '..t(self:get_limb_name(hitgroup)):lower()
   end
 
   if attacker == victim then

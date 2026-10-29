@@ -293,7 +293,7 @@ function Limbs:get_hits(victim, damage_info, amount, hitgroup)
     return hits
   end
 
-  local limb = hitgroup and self:from_hitgroup(hitgroup)
+  local limb = Damage:get_limb(hitgroup)
 
   if !limb then
     limb = self:find_ragdoll_limb(victim, damage_info:GetDamagePosition())

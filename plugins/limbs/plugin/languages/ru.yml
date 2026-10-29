@@ -34,12 +34,3 @@ ru:
       hurt: При повреждениях
       always: Всегда
       never: Никогда
-  ui:
-    limbs:
-      head: Голова
-      chest: Грудь
-      stomach: Живот
-      left_arm: Левая рука
-      right_arm: Правая рука
-      left_leg: Левая нога
-      right_leg: Правая нога

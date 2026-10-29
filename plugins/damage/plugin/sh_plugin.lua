@@ -14,6 +14,10 @@
 -- their deaths to the log; staff with the 'view_damage_logs' permission see these entries in
 -- their console.
 --
+-- The plugin owns the names of the hit locations on both realms: `Damage:get_limb` tells the
+-- limb that a HITGROUP_ enum belongs to, `Damage:get_limb_name` the phrase of its name, and
+-- `Damage:get_hitgroup` where a player has been hit by the damage being processed.
+--
 -- Other plugins take part through hooks. `ResolvePlayerDamage` lets a plugin replace the
 -- amount of any damage to a player before the fall damage multiplier and the other hooks see
 -- it (the D20 plugin rolls dice there), `PrePlayerTakeDamage` runs before a player takes

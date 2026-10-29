@@ -60,3 +60,13 @@ fr:
       log_kills:
         name: "Journaliser les morts"
         desc: "Indique si les morts des joueurs sont inscrites dans le journal."
+  ui:
+    limbs:
+      body: "Corps"
+      head: "Tête"
+      chest: "Torse"
+      stomach: "Ventre"
+      left_arm: "Bras gauche"
+      right_arm: "Bras droit"
+      left_leg: "Jambe gauche"
+      right_leg: "Jambe droite"

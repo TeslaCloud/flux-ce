@@ -1,20 +1,22 @@
 --- Limbs tracks how badly each body part of a character is hurt.
--- Every character has seven limbs: 'head', 'chest', 'stomach', 'left_arm', 'right_arm',
--- 'left_leg' and 'right_leg'. Each of them carries damage from 0 (healthy) to 100 (crippled).
+-- Every character has the seven limbs of the Damage plugin: 'head', 'chest', 'stomach',
+-- 'left_arm', 'right_arm', 'left_leg' and 'right_leg', named by `Damage:get_limb_name`.
+-- Each of them carries damage from 0 (healthy) to 100 (crippled).
 -- The damage is kept in the generic data of the character under the 'limbs' key, so it is
 -- saved with the character, and it is networked to the owner of the character and to nobody
 -- else: a client only ever knows the limbs of the local player.
 --
--- The server watches the damage that players take without changing it. A hit that was traced
--- to a body part hurts that limb, a hit on the ragdoll of a fallen player hurts the limb
--- closest to it, and fall damage is split between the legs. A limb takes the share of the
--- maximum health of the player that the hit has cost them, as a percentage, times the
--- 'limbs_damage_scale' config (1 by default), so a hit that takes half of the maximum health
--- deals 50 damage to the limb however much health the player has. Damage without a
--- location, such as an explosion, hurts no limb unless an `AdjustLimbHits` handler says
--- otherwise. Limbs do not heal with health: they recover slowly on their own (the
--- 'limbs_recovery' config), are healed through `Limbs:heal` and `Limbs:heal_all`, which is
--- what medical items should call, and are reset when the player dies.
+-- The server watches the damage that players take without changing it, through the
+-- `PostPlayerTakeDamage` hook of the Damage plugin. A hit that was traced to a body part
+-- hurts the limb that `Damage:get_limb` gives for it, a hit on the ragdoll of a fallen
+-- player hurts the limb closest to it, and fall damage is split between the legs. A limb
+-- takes the share of the maximum health of the player that the hit has cost them, as a
+-- percentage, times the 'limbs_damage_scale' config (1 by default), so a hit that takes half
+-- of the maximum health deals 50 damage to the limb however much health the player has.
+-- Damage without a location, such as an explosion, hurts no limb unless an `AdjustLimbHits`
+-- handler says otherwise. Limbs do not heal with health: they recover slowly on their own
+-- (the 'limbs_recovery' config), are healed through `Limbs:heal` and `Limbs:heal_all`, which
+-- is what medical items should call, and are reset when the player dies.
 -- ```
 -- -- A medical item that also treats the limbs of its user.
 -- function ITEM:use(actor)
@@ -53,32 +55,13 @@ Limbs.data_key = 'limbs'
 Limbs.max_damage = 100
 Limbs.sway_angle = 1.5
 
-local limb_ids = {
-  'head',
-  'chest',
-  'stomach',
-  'left_arm',
-  'right_arm',
-  'left_leg',
-  'right_leg'
-}
+local limb_ids = Damage:get_limbs()
 
 local limb_lookup = {}
 
 for index, limb_id in ipairs(limb_ids) do
   limb_lookup[limb_id] = index
 end
-
-local hitgroup_limbs = {
-  [HITGROUP_HEAD] = 'head',
-  [HITGROUP_CHEST] = 'chest',
-  [HITGROUP_STOMACH] = 'stomach',
-  [HITGROUP_GEAR] = 'stomach',
-  [HITGROUP_LEFTARM] = 'left_arm',
-  [HITGROUP_RIGHTARM] = 'right_arm',
-  [HITGROUP_LEFTLEG] = 'left_leg',
-  [HITGROUP_RIGHTLEG] = 'right_leg'
-}
 
 local bone_limbs = {
   ['ValveBiped.Bip01_Head1'] = 'head',
@@ -137,33 +120,11 @@ function Limbs:is_limb(limb)
   return limb_lookup[limb] != nil
 end
 
---- Returns the limb that a hit group belongs to.
--- ```
--- Limbs:from_hitgroup(HITGROUP_LEFTLEG) -- 'left_leg'
--- Limbs:from_hitgroup(HITGROUP_GENERIC) -- nil
--- ```
--- @param hitgroup [Number HITGROUP_ enum]
--- @return [String limb ID, or nil for HITGROUP_GENERIC and unknown hit groups; HITGROUP_GEAR
---   counts as the stomach]
-function Limbs:from_hitgroup(hitgroup)
-  return hitgroup_limbs[hitgroup]
-end
-
 --- Returns the limb that a bone of the ValveBiped skeleton belongs to.
 -- @param bone_name [String name of the bone, e.g. 'ValveBiped.Bip01_L_Calf']
 -- @return [String limb ID, or nil if the bone is not a known part of a limb]
 function Limbs:from_bone(bone_name)
   return bone_limbs[bone_name]
-end
-
---- Returns the language phrase of the name of a limb.
--- ```
--- target:notify('my_schema.bandaged', { limb = t(Limbs:get_limb_name('left_arm')) })
--- ```
--- @param limb [String limb ID]
--- @return [String phrase, e.g. 'ui.limbs.left_arm']
-function Limbs:get_limb_name(limb)
-  return 'ui.limbs.'..tostring(limb)
 end
 
 --- Returns the table that holds the limb damage of a player's active character, as it is

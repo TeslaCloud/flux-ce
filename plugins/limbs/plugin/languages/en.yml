@@ -34,12 +34,3 @@ en:
       hurt: While hurt
       always: Always
       never: Never
-  ui:
-    limbs:
-      head: Head
-      chest: Chest
-      stomach: Stomach
-      left_arm: Left arm
-      right_arm: Right arm
-      left_leg: Left leg
-      right_leg: Right leg

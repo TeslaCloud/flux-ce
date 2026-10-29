@@ -60,3 +60,13 @@ en:
       log_kills:
         name: Log Kills
         desc: Whether the deaths of players are written to the log.
+  ui:
+    limbs:
+      body: Body
+      head: Head
+      chest: Chest
+      stomach: Stomach
+      left_arm: Left arm
+      right_arm: Right arm
+      left_leg: Left leg
+      right_leg: Right leg

@@ -34,12 +34,3 @@ es:
       hurt: Al estar herido
       always: Siempre
       never: Nunca
-  ui:
-    limbs:
-      head: Cabeza
-      chest: Pecho
-      stomach: Estómago
-      left_arm: Brazo izquierdo
-      right_arm: Brazo derecho
-      left_leg: Pierna izquierda
-      right_leg: Pierna derecha

@@ -34,12 +34,3 @@ fr:
       hurt: "En cas de blessure"
       always: "Toujours"
       never: "Jamais"
-  ui:
-    limbs:
-      head: "Tête"
-      chest: "Torse"
-      stomach: "Ventre"
-      left_arm: "Bras gauche"
-      right_arm: "Bras droit"
-      left_leg: "Jambe gauche"
-      right_leg: "Jambe droite"
