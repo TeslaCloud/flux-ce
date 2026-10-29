@@ -1,0 +1,73 @@
+# Plugin profiles: named sets of framework plugins that a schema picks with `profile:` in its
+# <schema>.yml. A profile lists its plugins under `plugins` and may build on another profile
+# with `extends`, whose plugins come first. The schema adds plugins with `depends` (and, in
+# development, `depends_development`) and leaves profile plugins out with `exclude`; a plugin
+# that another loaded plugin depends on is loaded all the same. A schema without `profile`
+# loads its `depends` alone. A `profiles.local.yml` next to this file is read in its place.
+#
+# The admin plugin is required: it is the only provider of permissions, so `can` answers
+# nothing without it. Every profile includes it, and a development server warns at boot when
+# a schema ends up without it.
+#
+# Opt-in plugins, in no profile, for a schema to add with `depends`:
+#   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcdsproxy
+# Development tools, for `depends_development`: devhud, profiler
+# Libraries that load as dependencies of other plugins: conditions (doors), areas (areadisplay,
+# srcdsproxy; listed in sandbox)
+
+base:
+  plugins:
+    - admin
+    - 3dtexts
+    - chatbox
+    - crosshair
+    - hints
+    - observer
+    - stamina
+    - staticents
+    - thirdperson
+    - weaponselect
+
+sandbox:
+  extends: base
+  plugins:
+    - areas
+    - propprotection
+
+roleplay:
+  extends: base
+  plugins:
+    - characters
+    - factions
+    - autowalk
+    - raisegun
+
+roleplay_full:
+  extends: roleplay
+  plugins:
+    - items
+    - containers
+    - currencies
+    - vendors
+    - doors
+    - doorkeys
+    - areadisplay
+    - mapscenes
+    - ragdoll
+    - visiblelegs
+    - shared_flashlight
+    - pickup_objects
+    - displaytyping
+    - spawnpoints
+    - spawnsaver
+    - stats
+    - damage
+    - propprotection
+    - mapcleaner
+    - gametime
+    - screeneffects
+    - rpcommands
+    - recognize
+    - voicelines
+    - playersearch
+    - animations

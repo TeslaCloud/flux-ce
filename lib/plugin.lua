@@ -25,6 +25,13 @@
 -- a hook without the gamemode's own handlers, and `Plugin.add_hooks` registers a table of
 -- handlers that does not belong to a plugin.
 --
+-- Framework plugins load only when the schema or another plugin depends on them. The .yml
+-- file of the schema names a `profile` from `config/profiles.yml`, a named set of plugins
+-- such as `roleplay` or `sandbox`, adds plugins with `depends` and `depends_development` and
+-- leaves profile plugins out with `exclude` (see `Plugin.resolve_schema_depends`). Every
+-- schema requires the admin plugin, the only provider of permissions; every profile includes
+-- it.
+--
 -- Plugins can be disabled. A disabled plugin is not included at all, neither on the server
 -- nor on the clients, and a plugin that depends on it is not loaded either, while the schema
 -- simply goes without it. The list of disabled plugins is read from the 'disabled_plugins'
@@ -907,10 +914,73 @@ function Plugin.include(path)
   return data
 end
 
+--- Works out the plugins a schema depends on from the keys of its .yml file: the plugins of
+-- its `profile`, defined in `config/profiles.yml` and preceded by those of the profiles it
+-- extends, then its `depends` and, in development, its `depends_development`, without the
+-- plugins named in `exclude`. Each plugin is listed once, where it is first named. A schema
+-- without a profile depends on its `depends` alone.
+-- ```
+-- Plugin.resolve_schema_depends({ profile = 'roleplay', depends = { 'radios' } }, profiles)
+-- -- { 'admin', '3dtexts', ..., 'raisegun', 'radios' }
+-- ```
+-- @param schema_yml [Map the parsed .yml file of the schema]
+-- @param profiles=nil [Map the parsed profiles, by profile ID]
+-- @param development=false [Boolean whether to add the depends_development plugins]
+-- @return [List<String> the plugin names, nil when a profile is not defined; String the ID
+--   of the missing profile]
+function Plugin.resolve_schema_depends(schema_yml, profiles, development)
+  local resolved, seen, excluded = {}, {}, {}
+
+  profiles = profiles or {}
+
+  for _, name in ipairs(schema_yml.exclude or {}) do
+    excluded[name] = true
+  end
+
+  local function add(list)
+    for _, name in ipairs(istable(list) and list or {}) do
+      if !seen[name] and !excluded[name] then
+        seen[name] = true
+        resolved[#resolved + 1] = name
+      end
+    end
+  end
+
+  local profile_id = schema_yml.profile
+  local chain, visited = {}, {}
+
+  while profile_id and !visited[profile_id] do
+    local profile = profiles[profile_id]
+
+    if !istable(profile) then
+      return nil, profile_id
+    end
+
+    visited[profile_id] = true
+    table.insert(chain, 1, profile)
+    profile_id = profile.extends
+  end
+
+  for _, profile in ipairs(chain) do
+    add(profile.plugins)
+  end
+
+  add(schema_yml.depends)
+
+  if development then
+    add(schema_yml.depends_development)
+  end
+
+  return resolved
+end
+
 --- Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and
 -- plugins, then registers it. Sets the SCHEMA global.
 -- On the server the list of disabled plugins is loaded first; a dependency of the schema
--- that is disabled is left out without stopping the schema from loading.
+-- that is disabled is left out without stopping the schema from loading. The dependencies
+-- come from `Plugin.resolve_schema_depends`, and in development the resolved list is printed
+-- and a schema that ends up without the admin plugin, which every schema requires, is warned
+-- about.
 -- Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.
 function Plugin.include_schema()
   local schema_info = Flux.get_schema_info()
@@ -934,14 +1004,20 @@ function Plugin.include_schema()
 
     Flux.shared.schema_info.depends = {}
 
-    local schema_yml = YAML.eval(File.read(file_path))
-    deps = schema_yml.depends or {}
+    local schema_yml = YAML.eval(File.read(file_path)) or {}
+    local missing_profile
 
-    if IS_DEVELOPMENT then
-      table.map(schema_yml.depends_development or {}, function(v)
-        table.insert(deps, v)
-      end)
+    deps, missing_profile = Plugin.resolve_schema_depends(
+      schema_yml, YAML.read('gamemodes/flux/config/profiles.yml'), IS_DEVELOPMENT
+    )
+
+    if !deps then
+      long_error("Unable to load the schema! Unknown plugin profile: '"..tostring(missing_profile).."'!\n")
+
+      return
     end
+
+    Flux.dev_print('Schema plugins: '..table.concat(deps, ', '))
 
     table.map(deps, function(v)
       if !v:find('sv_') then
@@ -967,6 +1043,10 @@ function Plugin.include_schema()
         return
       end
     end
+  end
+
+  if SERVER and IS_DEVELOPMENT and !Plugin.find('admin') then
+    ErrorNoHalt("[Flux] The schema loads without the 'admin' plugin, which every schema requires!\n")
   end
 
   if SERVER then AddCSLuaFile(schema_path..'/gamemode/cl_init.lua') end

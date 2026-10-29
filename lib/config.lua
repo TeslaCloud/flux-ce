@@ -930,11 +930,13 @@ function Config.get(key, default)
 end
 
 if SERVER then
+  const plugin_keys = { depends = true, depends_development = true, profile = true, exclude = true }
+
   --- Imports config values from a YAML file or from a table and sets every one of them.
-  -- Serverside only. The 'depends' and 'depends_development' keys are skipped, and so is
-  -- every key for which the ShouldConfigImport hook returns a non-nil value. The value of a
-  -- config of the color type goes through `Config.validate`, and is skipped with an error if
-  -- it is not a color.
+  -- Serverside only. The keys that choose plugins ('profile', 'depends', 'depends_development'
+  -- and 'exclude') are skipped, and so is every key for which the ShouldConfigImport hook
+  -- returns a non-nil value. The value of a config of the color type goes through
+  -- `Config.validate`, and is skipped with an error if it is not a color.
   -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
   -- @return [Map the imported table, or nil if the file could not be read or path is
@@ -962,7 +964,7 @@ if SERVER then
       -- @param value [Any value read from the imported file or table]
       -- @return [Boolean Return any value other than nil to skip the key and keep its current
       --   value]
-      if key != 'depends' and key != 'depends_development' and Plugin.call('ShouldConfigImport', key, value) == nil then
+      if !plugin_keys[key] and Plugin.call('ShouldConfigImport', key, value) == nil then
         if definitions[key]?.type == 'color' then
           local valid, converted = Config.validate(key, value)
 
