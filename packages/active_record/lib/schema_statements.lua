@@ -921,7 +921,7 @@ function Statements.add_foreign_key(from_table, to_table, options)
     error('add_foreign_key - the referenced table of '..tostring(from_table)..' is missing!', 0)
   end
 
-  local column = options.column or Flow.Inflector:singularize(to_table)..'_id'
+  local column = options.column or ActiveRecord.Inflector:singularize(to_table)..'_id'
   local primary_key = options.primary_key or 'id'
   local name = options.name or Statements.foreign_key_name(from_table, column, to_table, primary_key)
 
@@ -1071,7 +1071,7 @@ end
 function Statements.clean_orphans(from_table, to_table, options)
   options = options or {}
 
-  local column = options.column or Flow.Inflector:singularize(to_table)..'_id'
+  local column = options.column or ActiveRecord.Inflector:singularize(to_table)..'_id'
   local primary_key = options.primary_key or 'id'
   local action = normalize_on_delete(options.on_delete)
   local count = count_orphans(from_table, column, to_table, primary_key)
@@ -1158,7 +1158,7 @@ function Statements.add_missing_foreign_keys()
         local declared = remember({
           from_table = fk.from_table,
           to_table = fk.to_table,
-          column = fk.column or Flow.Inflector:singularize(fk.to_table)..'_id',
+          column = fk.column or ActiveRecord.Inflector:singularize(fk.to_table)..'_id',
           primary_key = fk.primary_key or 'id',
           on_delete = fk.on_delete
         })

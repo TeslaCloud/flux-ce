@@ -110,7 +110,7 @@ function ActiveRecord.generate_create_funcs(obj)
 
     table.insert(s._references, {
       column = column,
-      to_table = args.to_table or Flow.Inflector:pluralize(name),
+      to_table = args.to_table or ActiveRecord.Inflector:pluralize(name),
       index = args.index,
       foreign_key = args.foreign_key
     })
@@ -176,7 +176,7 @@ end
 -- @param class_name [String]
 -- @return [String]
 function ActiveRecord.generate_table_name(class_name)
-  return Flow.Inflector:pluralize(class_name:underscore())
+  return ActiveRecord.Inflector:pluralize(class_name:underscore())
 end
 
 --- Creates the internal tables if they do not exist yet: 'ar_schema' (the columns of

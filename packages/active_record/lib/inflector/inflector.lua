@@ -1,23 +1,24 @@
 --- Converts words between their singular and plural forms. The rules of a language are declared
--- inside of a `Flow.Inflector:inflections` block as pattern replacements, irregular words and
--- uncountable words; the English rules ship with Flux. `Flow.Inflector:pluralize` and
--- `Flow.Inflector:singularize` apply the rules of the current language to the last part of a
--- snake_case word. ActiveRecord uses them to derive the names of database tables from the names
--- of models, turning 'user' into 'users', and the names of foreign keys from the names of tables.
+-- inside of an `ActiveRecord.Inflector:inflections` block as pattern replacements, irregular words
+-- and uncountable words; the English rules ship with Flux. `ActiveRecord.Inflector:pluralize`
+-- and `ActiveRecord.Inflector:singularize` apply the rules of the current language to the last
+-- part of a snake_case word. ActiveRecord uses them to derive the names of database tables from
+-- the names of models, turning 'user' into 'users', and the names of foreign keys from the names
+-- of tables.
 
-class 'Flow::Inflector'
+class 'ActiveRecord::Inflector'
 
-Flow.Inflector._plurals = {}
-Flow.Inflector._singulars = {}
-Flow.Inflector._irregulars = {}
-Flow.Inflector._irregulars_rev = {}
-Flow.Inflector._uncountables = {}
-Flow.Inflector.current_language = 'en'
+ActiveRecord.Inflector._plurals = {}
+ActiveRecord.Inflector._singulars = {}
+ActiveRecord.Inflector._irregulars = {}
+ActiveRecord.Inflector._irregulars_rev = {}
+ActiveRecord.Inflector._uncountables = {}
+ActiveRecord.Inflector.current_language = 'en'
 
 --- Defines the inflection rules of a language. The rules added inside of the callback
 -- (and anything looked up afterward) belong to that language.
 -- ```
--- Flow.Inflector:inflections('en', function(inflect)
+-- ActiveRecord.Inflector:inflections('en', function(inflect)
 --   inflect:plural(i'^(ox)$', '%1en')
 --   inflect:singular(i'(quiz)zes$', '%1')
 --   inflect:irregular('person', 'people')
@@ -26,8 +27,8 @@ Flow.Inflector.current_language = 'en'
 -- ```
 -- @param lang [String language code]
 -- @param func [Function receives the inflector]
--- @return [Flow::Inflector self, for chaining]
-function Flow.Inflector:inflections(lang, func)
+-- @return [ActiveRecord::Inflector self, for chaining]
+function ActiveRecord.Inflector:inflections(lang, func)
   lang = lang or 'en'
 
   self.current_language      = lang
@@ -44,39 +45,39 @@ end
 
 --- Returns the pluralization rules of the current language.
 -- @return [List<Map> rules with the expression and replacement keys]
-function Flow.Inflector:plurals()
+function ActiveRecord.Inflector:plurals()
   return self._plurals[self.current_language]
 end
 
 --- Returns the singularization rules of the current language.
 -- @return [List<Map> rules with the expression and replacement keys]
-function Flow.Inflector:singulars()
+function ActiveRecord.Inflector:singulars()
   return self._singulars[self.current_language]
 end
 
 --- Returns the uncountable words of the current language.
 -- @return [Map true by word]
-function Flow.Inflector:uncountables()
+function ActiveRecord.Inflector:uncountables()
   return self._uncountables[self.current_language]
 end
 
 --- Returns the irregular words of the current language.
 -- @return [Map plural forms by singular form]
-function Flow.Inflector:irregulars()
+function ActiveRecord.Inflector:irregulars()
   return self._irregulars[self.current_language]
 end
 
 --- Returns the irregular words of the current language, the other way around.
 -- @return [Map singular forms by plural form]
-function Flow.Inflector:irregulars_reverse()
+function ActiveRecord.Inflector:irregulars_reverse()
   return self._irregulars_rev[self.current_language]
 end
 
 --- Adds a pluralization rule to the current language.
 -- @param expression [String Lua pattern that the singular form must match]
 -- @param replacement [String what to replace the match with, can refer to captures]
--- @return [Flow::Inflector self, for chaining]
-function Flow.Inflector:plural(expression, replacement)
+-- @return [ActiveRecord::Inflector self, for chaining]
+function ActiveRecord.Inflector:plural(expression, replacement)
   local rules = self._plurals[self.current_language]
 
   rules[#rules + 1] = {
@@ -90,8 +91,8 @@ end
 --- Adds a singularization rule to the current language.
 -- @param expression [String Lua pattern that the plural form must match]
 -- @param replacement [String what to replace the match with, can refer to captures]
--- @return [Flow::Inflector self, for chaining]
-function Flow.Inflector:singular(expression, replacement)
+-- @return [ActiveRecord::Inflector self, for chaining]
+function ActiveRecord.Inflector:singular(expression, replacement)
   local rules = self._singulars[self.current_language]
 
   rules[#rules + 1] = {
@@ -105,8 +106,8 @@ end
 --- Adds a word that does not follow the regular rules to the current language.
 -- @param word [String singular form]
 -- @param replacement [String plural form]
--- @return [Flow::Inflector self, for chaining]
-function Flow.Inflector:irregular(word, replacement)
+-- @return [ActiveRecord::Inflector self, for chaining]
+function ActiveRecord.Inflector:irregular(word, replacement)
   self._irregulars[self.current_language][word] = replacement
   self._irregulars_rev[self.current_language][replacement] = word
 
@@ -115,8 +116,8 @@ end
 
 --- Adds words that have no separate plural form to the current language.
 -- @param words [String/List<String> a word or a list of words]
--- @return [Flow::Inflector self, for chaining]
-function Flow.Inflector:uncountable(words)
+-- @return [ActiveRecord::Inflector self, for chaining]
+function ActiveRecord.Inflector:uncountable(words)
   local uncountables = self._uncountables[self.current_language]
 
   if isstring(words) then
@@ -154,7 +155,7 @@ end
 -- Only the last part of a snake_case word is converted.
 -- @param word [String]
 -- @return [String plural form]
-function Flow.Inflector:pluralize(word)
+function ActiveRecord.Inflector:pluralize(word)
   return inflect_last_part(word, self:irregulars(), self:uncountables(), self:plurals())
 end
 
@@ -162,6 +163,6 @@ end
 -- Only the last part of a snake_case word is converted.
 -- @param word [String]
 -- @return [String singular form]
-function Flow.Inflector:singularize(word)
+function ActiveRecord.Inflector:singularize(word)
   return inflect_last_part(word, self:irregulars_reverse(), self:uncountables(), self:singulars())
 end

@@ -31,6 +31,8 @@ ActiveRecord.metadata     = ActiveRecord.metadata             or {
   prim_keys   = {}
 }
 
+include 'inflector/inflector.lua'
+include 'inflector/inflections.lua'
 include 'generators/generator.lua'
 include 'database/database.lua'
 include 'database/query.lua'

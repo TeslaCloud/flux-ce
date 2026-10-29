@@ -1,9 +1,7 @@
---- The English rules of `Flow.Inflector`: its plural and singular patterns, irregular words
--- and uncountable words.
+--- The English rules of `ActiveRecord.Inflector`: its plural and singular patterns, irregular
+-- words and uncountable words.
 
-if !Flow.Inflector then require_relative 'sh_inflector' end
-
-Flow.Inflector:inflections('en', function(inflect)
+ActiveRecord.Inflector:inflections('en', function(inflect)
   inflect:plural(i'^(ax)is$', '%1es')
   inflect:plural(i'(test)is$', '%1es')
   inflect:plural(i'(octop)us$', '%1i')

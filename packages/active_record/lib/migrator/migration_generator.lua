@@ -41,7 +41,7 @@ function ActiveRecord.MigrationGenerator:init(name, fields)
 end
 
 local function table_name_from(part)
-  return Flow.Inflector:pluralize(part:underscore())
+  return ActiveRecord.Inflector:pluralize(part:underscore())
 end
 
 local function quote(str)

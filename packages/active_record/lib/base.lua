@@ -70,7 +70,7 @@ end
 -- of the class name, or else this will fail!
 -- @param new_class [ActiveRecord::Base the newly created model class]
 function ActiveRecord.Base:class_extended(new_class)
-  new_class.table_name = Flow.Inflector:pluralize(new_class.class_name:underscore())
+  new_class.table_name = ActiveRecord.Inflector:pluralize(new_class.class_name:underscore())
 
   ActiveRecord.Model:add(new_class)
 end
@@ -866,7 +866,7 @@ end
 -- @param what [String singular underscored name of the child model, e.g. 'ammunition']
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has_one(what)
-  return self:has({ Flow.Inflector:pluralize(what), as = what }, false)
+  return self:has({ ActiveRecord.Inflector:pluralize(what), as = what }, false)
 end
 
 --- Specifies that the object belongs to a parent object.

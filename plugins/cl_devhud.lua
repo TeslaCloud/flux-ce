@@ -18,7 +18,7 @@ function PLUGIN:HUDPaint()
     -- Handlers can draw their own developer information here.
     -- @return [Any Return anything but nil to hide the default version line]
     if hook.Run('HUDPaintDeveloper') == nil then
-      local flow_version = (Flow and Flow.__package__ and Flow.__package__.version) or 'UNKNOWN'
+      local flow_version = Package.installed.flow?.metadata.version or 'UNKNOWN'
       local font = Theme.get_font('text_smallest', 'default')
 
       draw.SimpleText(
