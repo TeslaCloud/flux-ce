@@ -24,68 +24,76 @@
 #                           the next time the server starts.
 #
 categories:
-  general:
-    name: config.general.title
-    description: config.general.desc
+  flow:
+    name: config.flow.title
+    description: config.flow.desc
 configs:
-  walk_speed:
-    name: config.general.walk_speed.name
-    description: config.general.walk_speed.desc
-    category: general
+  flow_walk_speed:
+    renamed_from: walk_speed
+    name: config.flow.walk_speed.name
+    description: config.flow.walk_speed.desc
+    category: flow
     type: number
     min_value: 0
     max_value: 1024
     default_value: 100
-  run_speed:
-    name: config.general.run_speed.name
-    description: config.general.run_speed.desc
-    category: general
+  flow_run_speed:
+    renamed_from: run_speed
+    name: config.flow.run_speed.name
+    description: config.flow.run_speed.desc
+    category: flow
     type: number
     min_value: 0
     max_value: 1024
     default_value: 200
-  crouched_speed:
-    name: config.general.crouch_speed.name
-    description: config.general.crouch_speed.desc
-    category: general
+  flow_crouch_speed:
+    renamed_from: crouched_speed
+    name: config.flow.crouch_speed.name
+    description: config.flow.crouch_speed.desc
+    category: flow
     type: number
     min_value: 0
     max_value: 1024
     default_value: 50
-  respawn_delay:
-    name: config.general.respawn_time.name
-    description: config.general.respawn_time.desc
-    category: general
+  flow_respawn_delay:
+    renamed_from: respawn_delay
+    name: config.flow.respawn_delay.name
+    description: config.flow.respawn_delay.desc
+    category: flow
     type: number
     min_value: 0
     max_value: 600
     default_value: 30
-  command_prefixes:
-    name: config.general.prefixes.name
-    description: config.general.prefixes.desc
-    category: general
+  flow_command_prefixes:
+    renamed_from: command_prefixes
+    name: config.flow.command_prefixes.name
+    description: config.flow.command_prefixes.desc
+    category: flow
     type: table
     default_value: ["!", "/"]
-  jump_power:
-    name: config.general.jump_power.name
-    description: config.general.jump_power.desc
-    category: general
+  flow_jump_power:
+    renamed_from: jump_power
+    name: config.flow.jump_power.name
+    description: config.flow.jump_power.desc
+    category: flow
     type: number
     min_value: 0
     max_value: 1024
     default_value: 150
-  data_save_interval:
-    name: config.general.data_save_interval.name
-    description: config.general.data_save_interval.desc
-    category: general
+  flow_data_save_interval:
+    renamed_from: data_save_interval
+    name: config.flow.data_save_interval.name
+    description: config.flow.data_save_interval.desc
+    category: flow
     type: number
     min_value: 0
     max_value: 3600
     default_value: 360
-  player_data_save_interval:
-    name: config.general.player_data_save_interval.name
-    description: config.general.player_data_save_interval.desc
-    category: general
+  flow_player_data_save_interval:
+    renamed_from: player_data_save_interval
+    name: config.flow.player_data_save_interval.name
+    description: config.flow.player_data_save_interval.desc
+    category: flow
     type: number
     min_value: 0
     max_value: 3600

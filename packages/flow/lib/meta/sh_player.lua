@@ -325,7 +325,7 @@ function player_meta:running()
     return false
   end
 
-  local min_speed = Config.get('walk_speed', 100) + 20
+  local min_speed = Config.get('flow_walk_speed', 100) + 20
 
   return self:GetVelocity():Length2DSqr() > min_speed * min_speed
 end

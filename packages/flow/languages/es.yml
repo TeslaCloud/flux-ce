@@ -1,9 +1,9 @@
 es:
   config:
-    general:
+    flow:
       title: Ajustes generales
       desc: Ajustes generales relacionados con el propio framework Flux.
-      prefixes:
+      command_prefixes:
         name: Prefijos de comandos
         desc: Qué prefijos del chat se consideran prefijos de comandos (<prefijo>somecommand, p. ej. /somecommand).
       walk_speed:
@@ -18,7 +18,7 @@ es:
       jump_power:
         name: Potencia de salto
         desc: La altura a la que salta el jugador por defecto.
-      respawn_time:
+      respawn_delay:
         name: Tiempo de reaparición
         desc: Cuánto tarda un jugador en reaparecer tras su muerte (en segundos).
       data_save_interval:

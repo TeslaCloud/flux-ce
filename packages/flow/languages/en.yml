@@ -1,9 +1,9 @@
 en:
   config:
-    general:
+    flow:
       title: General settings
       desc: General settings related to the Flux framework itself.
-      prefixes:
+      command_prefixes:
         name: Command prefixes
         desc: What chat prefixes to consider as command prefixes (<prefix>somecommand, e.g. /somecommand).
       walk_speed:
@@ -18,7 +18,7 @@ en:
       jump_power:
         name: Jump Power
         desc: How high the player jumps by default.
-      respawn_time:
+      respawn_delay:
         name: Respawn time
         desc: How long does it take for a player to respawn after their death (in seconds).
       data_save_interval:

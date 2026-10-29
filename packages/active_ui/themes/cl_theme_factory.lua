@@ -464,7 +464,7 @@ end
 function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   local client        = PLAYER
   local respawn_time  = client:get_nv('respawn_time', 0) - cur_time
-  local bar_value     = math_clamp(100 - 100 * (respawn_time / Config.get('respawn_delay')), 0, 100)
+  local bar_value     = math_clamp(100 - 100 * (respawn_time / Config.get('flow_respawn_delay')), 0, 100)
   local font          = self:get_font('text_normal_large')
   local small_font    = self:get_font('text_normal')
   local respawn_alpha = math_clamp((client.respawn_alpha or 0) + 1, 0, 200)

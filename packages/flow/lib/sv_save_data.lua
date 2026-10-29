@@ -1,5 +1,5 @@
 --- Saves all persistent data of the server: the config and whatever the `SaveData` handlers of
--- the plugins and the schema save. Runs every `data_save_interval` seconds and when the
+-- the plugins and the schema save. Runs every `flow_data_save_interval` seconds and when the
 -- server shuts down or changes the map.
 -- @module [Flux]
 
@@ -8,7 +8,7 @@
 -- save while the server shuts down or changes the map (`Flux.shutting_down`) always happens.
 function Flux.save_data()
   --- Asks whether the persistent data may be saved now. Called on the server every
-  -- `data_save_interval` seconds (360 unless configured), for the first time about ten
+  -- `flow_data_save_interval` seconds (360 unless configured), for the first time about ten
   -- seconds after the server has started. Not asked for the save while the server shuts down
   -- or changes the map, which is never skipped.
   -- @return [Boolean Return false to skip this save]

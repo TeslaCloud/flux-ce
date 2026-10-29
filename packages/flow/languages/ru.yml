@@ -1,9 +1,9 @@
 ru:
   config:
-    general:
+    flow:
       title: Основные настройки
       desc: Основные настройки, относящиеся непосредственно к фреймворку Flux.
-      prefixes:
+      command_prefixes:
         name: Префиксы команд
         desc: Какие префиксы использовать для определения команд (<префикс>somecommand, например /somecommand).
       walk_speed:
@@ -18,7 +18,7 @@ ru:
       jump_power:
         name: Высота прыжка
         desc: Как высоко игрок прыгает по умолчанию.
-      respawn_time:
+      respawn_delay:
         name: Время возрождения
         desc: Как долго игрок будет возрождаться после смерти.
       data_save_interval:

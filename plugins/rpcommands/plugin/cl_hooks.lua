@@ -19,7 +19,7 @@ local function is_command_like_ooc(text)
 
   if prefix_id != 'ooc' and prefix_id != 'looc' then return false end
 
-  local command_prefixes = Config.get('command_prefixes') or {}
+  local command_prefixes = Config.get('flow_command_prefixes') or {}
 
   for i = 1, #command_prefixes do
     if prefix:start_with(command_prefixes[i]) then

@@ -163,7 +163,7 @@ end
 -- command prefixes of the server, else the first of them.
 -- @return [String]
 function Flux.Help:get_command_prefix()
-  local prefixes = Config.get('command_prefixes')
+  local prefixes = Config.get('flow_command_prefixes')
 
   if !istable(prefixes) or table.HasValue(prefixes, '/') then
     return '/'

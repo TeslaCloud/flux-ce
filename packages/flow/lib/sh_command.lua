@@ -198,13 +198,13 @@ function Flux.Command:find_all(id)
 end
 
 --- Checks whether a text is a command, that is whether it starts with one of the prefixes of
--- the 'command_prefixes' config. If several prefixes match, the longest one is used, so that
+-- the 'flow_command_prefixes' config. If several prefixes match, the longest one is used, so that
 -- prefixes can contain each other (e.g. '/' and '//'). The ShouldTreatAsCommand hook can
 -- return false to prevent that.
 -- @param text [String]
 -- @return [Boolean whether the text is a command, Number length of the prefix if it is one]
 function Flux.Command:is_command(text)
-  local prefixes = Config.get('command_prefixes') or {}
+  local prefixes = Config.get('flow_command_prefixes') or {}
   local longest
 
   for _, prefix in ipairs(prefixes) do

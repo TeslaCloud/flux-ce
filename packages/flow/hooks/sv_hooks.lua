@@ -89,12 +89,12 @@ function GM:PlayerSpawn(actor)
   actor:UnSpectate()
   actor:GodDisable()
 
-  local walk_speed = config_get('walk_speed')
+  local walk_speed = config_get('flow_walk_speed')
 
-  actor:SetCrouchedWalkSpeed(config_get('crouched_speed') / walk_speed)
+  actor:SetCrouchedWalkSpeed(config_get('flow_crouch_speed') / walk_speed)
   actor:SetWalkSpeed(walk_speed)
-  actor:SetJumpPower(config_get('jump_power'))
-  actor:SetRunSpeed(config_get('run_speed'))
+  actor:SetJumpPower(config_get('flow_jump_power'))
+  actor:SetRunSpeed(config_get('flow_run_speed'))
 
   actor:SetNoDraw(false)
   actor:UnLock()
@@ -194,12 +194,12 @@ function GM:PlayerInitialized(actor)
   end)
 end
 
---- Stores the time at which the player may respawn, based on the respawn_delay config.
+--- Stores the time at which the player may respawn, based on the flow_respawn_delay config.
 -- @param victim [Player the player who died]
 -- @param _inflictor [Entity]
 -- @param _attacker [Entity]
 function GM:PlayerDeath(victim, _inflictor, _attacker)
-  victim:set_nv('respawn_time', CurTime() + config_get('respawn_delay'))
+  victim:set_nv('respawn_time', CurTime() + config_get('flow_respawn_delay'))
 end
 
 --- Respawns a dead player once their respawn time has passed.
@@ -556,7 +556,7 @@ function GM:PlayerTakeDamage(victim, _damage_info)
   Cable.send(victim, 'fl_player_take_damage')
 end
 
---- Saves the data with Flux.save_data every data_save_interval seconds, for the first time
+--- Saves the data with Flux.save_data every flow_data_save_interval seconds, for the first time
 -- about ten seconds after the server has started. Also checks every half an hour whether the
 -- server is empty and reloads the map if it is, unless ShouldServerAutoRestart returns false.
 function GM:OneSecond()
@@ -568,7 +568,7 @@ function GM:OneSecond()
   elseif Flux.next_save_data <= cur_time then
     Flux.save_data()
 
-    Flux.next_save_data = cur_time + config_get('data_save_interval', 360)
+    Flux.next_save_data = cur_time + config_get('flow_data_save_interval', 360)
   end
 
   if !Flux.next_player_count_check then
@@ -695,27 +695,27 @@ function GM:PlayerSwitchFlashlight(actor, on)
   return BaseClass.PlayerSwitchFlashlight(self, actor, on)
 end
 
---- Applies changes of the walk_speed, run_speed, crouched_speed and jump_power configs to
--- every player.
+--- Applies changes of the flow_walk_speed, flow_run_speed, flow_crouch_speed and flow_jump_power
+-- configs to every player.
 -- @param key [String key of the config that has changed]
 -- @param _old_value [Any]
 -- @param new_value [Any]
 function GM:ConfigChanged(key, _old_value, new_value)
-  if key == 'walk_speed' then
+  if key == 'flow_walk_speed' then
     for _, client in player_iterator() do
       client:SetWalkSpeed(new_value)
     end
-  elseif key == 'run_speed' then
+  elseif key == 'flow_run_speed' then
     for _, client in player_iterator() do
       client:SetRunSpeed(new_value)
     end
-  elseif key == 'crouched_speed' then
-    local crouched_speed = new_value / config_get('walk_speed')
+  elseif key == 'flow_crouch_speed' then
+    local crouched_speed = new_value / config_get('flow_walk_speed')
 
     for _, client in player_iterator() do
       client:SetCrouchedWalkSpeed(crouched_speed)
     end
-  elseif key == 'jump_power' then
+  elseif key == 'flow_jump_power' then
     for _, client in player_iterator() do
       client:SetJumpPower(new_value)
     end

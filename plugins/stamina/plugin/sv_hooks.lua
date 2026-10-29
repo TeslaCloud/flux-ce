@@ -29,14 +29,14 @@ end
 
 --- Returns the run speed a player should have with the given stamina. An exhausted player
 -- runs at their walk speed. With the 'stamina_slowdown_threshold' config set, the speed falls
--- from the 'run_speed' config to the walk speed as the stamina goes from the threshold to
+-- from the 'flow_run_speed' config to the walk speed as the stamina goes from the threshold to
 -- zero; without it the player keeps the full run speed until they are exhausted.
 -- @param actor [Player]
 -- @param stamina [Number current stamina of the player]
 -- @return [Number run speed]
 local function get_run_speed(actor, stamina)
   local walk_speed = actor:GetWalkSpeed()
-  local run_speed = config_get('run_speed')
+  local run_speed = config_get('flow_run_speed')
   local slowdown_start = get_slowdown_start()
 
   if stamina <= 1 then
@@ -229,7 +229,7 @@ function Stamina:PlayerThink(actor, cur_time)
   if cur_stam < jump_penalty then
     actor:SetJumpPower(1)
   else
-    actor:SetJumpPower(config_get('jump_power'))
+    actor:SetJumpPower(config_get('flow_jump_power'))
   end
 
   actor:SetRunSpeed(get_run_speed(actor, cur_stam))

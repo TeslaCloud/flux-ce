@@ -1,9 +1,9 @@
 fr:
   config:
-    general:
+    flow:
       title: "Paramètres généraux"
       desc: "Paramètres généraux du framework Flux lui-même."
-      prefixes:
+      command_prefixes:
         name: "Préfixes de commande"
         desc: "Les préfixes du chat qui sont considérés comme des préfixes de commande (<préfixe>commande, par ex. /commande)."
       walk_speed:
@@ -18,7 +18,7 @@ fr:
       jump_power:
         name: "Puissance de saut"
         desc: "La hauteur à laquelle le joueur saute par défaut."
-      respawn_time:
+      respawn_delay:
         name: "Délai de réapparition"
         desc: "Le temps qu'il faut à un joueur pour réapparaître après sa mort (en secondes)."
       data_save_interval:
