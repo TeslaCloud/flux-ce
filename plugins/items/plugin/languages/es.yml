@@ -66,6 +66,7 @@ es:
       disabled: El inventario está desactivado.
       cant_equip: Este objeto no se puede equipar.
       too_big: El objeto es demasiado grande.
+      missing: No hay ningún inventario donde poner el objeto.
   item:
     action:
       apply: Aplicar

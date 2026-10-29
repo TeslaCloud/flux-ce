@@ -207,14 +207,19 @@ function player_meta:has_item_by_id(instance_id, inv_type)
   end
 end
 
---- Checking if the player has a certain item equipped by its id.
+--- Checks whether the player has an item with a certain id equipped, looking at every item
+-- with that id in all of their inventories.
 -- @param id [String]
--- @return [Boolean, Item found item]
+-- @return [Boolean, Item the first equipped item]
 function player_meta:has_item_equipped(id)
-  local item_obj = self:find_item(id)
+  local items = self:find_items(id)
 
-  if item_obj and item_obj:is_equipped() then
-    return true, item_obj
+  for i = 1, #items do
+    local item_obj = items[i]
+
+    if item_obj.is_equipped and item_obj:is_equipped() then
+      return true, item_obj
+    end
   end
 
   return false
@@ -452,9 +457,13 @@ if SERVER then
   -- @param amount=1 [Number]
   -- @param data=nil [Map fields to override on the created items]
   -- @param inv_type=self.default_inventory or 'main_inventory' [String]
-  -- @return [Boolean was the item added successfully, String text of the error that occurred]
+  -- @return [Boolean was the item added successfully, String text of the error that occurred,
+  --   'error.inventory.missing' for a player without the inventory]
   function player_meta:give_item(id, amount, data, inv_type)
     local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
+
+    if !inventory then return false, 'error.inventory.missing' end
+
     local success, error_text = inventory:give_item(id, amount, data)
 
     inventory:sync()

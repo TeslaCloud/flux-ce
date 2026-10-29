@@ -66,6 +66,7 @@ fr:
       disabled: "L'inventaire est désactivé."
       cant_equip: "Cet objet ne peut pas être équipé."
       too_big: "L'objet est trop grand."
+      missing: "Il n'y a aucun inventaire où mettre l'objet."
   item:
     action:
       apply: "Appliquer"

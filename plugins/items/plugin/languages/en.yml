@@ -66,6 +66,7 @@ en:
       disabled: The inventory is disabled.
       cant_equip: This item cannot be equipped.
       too_big: The item is too big.
+      missing: There is no inventory to put the item into.
   item:
     action:
       apply: Apply
