@@ -112,14 +112,23 @@ function PANEL:rebuild()
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))
   self.desc:set_limit(Config.get('character_max_desc_len'))
-  self.desc.save = function(pnl)
+  self.desc.is_applied = function(pnl)
     local text = pnl:GetValue()
 
-    if text == PLAYER:get_phys_desc() then
+    if text != pnl.checked_text then
+      pnl.checked_text = text
+      pnl.normalized_text = Characters.normalize_desc(text)
+    end
+
+    return pnl.normalized_text == PLAYER:get_phys_desc()
+  end
+
+  self.desc.save = function(pnl)
+    if pnl:is_applied() then
       return false
     end
 
-    Cable.send('fl_character_physdesc', text)
+    Cable.send('fl_character_physdesc', pnl:GetValue())
 
     return true
   end
@@ -134,7 +143,7 @@ function PANEL:rebuild()
     if pnl:HasFocus() then
       border = Theme.get_color('accent')
     else
-      border = Theme.get_color(pnl:GetValue() == PLAYER:get_phys_desc() ? 'success' : 'warning')
+      border = Theme.get_color(pnl:is_applied() ? 'success' : 'warning')
     end
 
     Theme.hook('DrawCard', 0, 0, desc_w, desc_h, radius, Theme.get_color('field'), border)
