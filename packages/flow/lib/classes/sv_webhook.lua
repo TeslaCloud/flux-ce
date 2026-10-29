@@ -5,8 +5,9 @@
 -- Flux creates the webhooks listed in the settings of the server and queues log messages for
 -- them with `Log:to_discord`. Every five seconds each webhook posts what it has queued, joined
 -- into messages of at most 2000 bytes and at most two messages at a time, which keeps the
--- posts within the rate limit of Discord. Messages are posted as JSON with every mention
--- disabled, so that text from players cannot ping anyone.
+-- posts within the rate limit of Discord; a message that Discord answers with 429 or 5xx is
+-- queued again, and every other failure is reported in the console. Messages are posted as
+-- JSON with every mention disabled, so that text from players cannot ping anyone.
 
 local registered_hooks = Webhook and Webhook.hooks or {}
 
@@ -14,6 +15,7 @@ const max_message_length = 2000
 const max_pending = 200
 const max_posts_per_flush = 2
 const flush_interval = 5
+const empty_data = {}
 
 class 'Webhook'
 
@@ -35,16 +37,32 @@ function Webhook:init(id, key, types)
   self.pending = {}
 end
 
---- Posts a message to the Discord webhook right away, as JSON with every mention disabled.
+--- Puts a batch that Discord refused for the moment back at the front of the queue of a
+-- webhook. The batch is dropped and reported when the queue is full.
+-- @param webhook [Webhook]
+-- @param text [String]
+local function requeue(webhook, text)
+  local pending = webhook.pending
+
+  if #pending >= max_pending then
+    ErrorNoHalt('[Flux:Webhook] Dropped a batch for Discord webhook '..webhook.id..', its queue is full\n')
+
+    return
+  end
+
+  table.insert(pending, 1, text)
+end
+
+--- Posts a message to a Discord webhook as JSON with every mention disabled. A failed request
+-- and a reply other than 2xx are reported; with `retry`, a reply of 429 or 5xx puts the
+-- message back at the front of the queue instead.
+-- @param webhook [Webhook]
 -- @param message [String]
--- @param data={} [Map optional username, avatar_url and tts fields of the message]
-function Webhook:push(message, data)
-  if !self.url or !isstring(message) then return end
-
-  data = data or {}
-
+-- @param data [Map optional username, avatar_url and tts fields of the message]
+-- @param retry [Boolean whether to queue the message again when Discord asks to retry]
+local function post(webhook, message, data, retry)
   HTTP({
-    url = self.url,
+    url = webhook.url,
     method = 'POST',
     type = 'application/json',
     body = util.TableToJSON({
@@ -53,8 +71,28 @@ function Webhook:push(message, data)
       avatar_url = data.avatar_url,
       tts = data.tts,
       allowed_mentions = { parse = {} }
-    })
+    }),
+    success = |code| -> do
+      if code >= 200 and code < 300 then return end
+
+      if retry and (code == 429 or code >= 500) then
+        requeue(webhook, message)
+      else
+        ErrorNoHalt('[Flux:Webhook] Discord webhook '..webhook.id..' replied with HTTP '..code..'\n')
+      end
+    end,
+    failed = reason -> ErrorNoHalt('[Flux:Webhook] Discord webhook '..webhook.id..' failed: '..tostring(reason)..'\n')
   })
+end
+
+--- Posts a message to the Discord webhook right away, as JSON with every mention disabled.
+-- A failed post is reported and the message is not posted again.
+-- @param message [String]
+-- @param data={} [Map optional username, avatar_url and tts fields of the message]
+function Webhook:push(message, data)
+  if !self.url or !isstring(message) then return end
+
+  post(self, message, data or empty_data, false)
 end
 
 --- Queues a message for the next `Webhook:flush`. Once 200 messages are waiting, the oldest
@@ -120,14 +158,15 @@ local function take_message(pending)
 end
 
 --- Posts the queued messages, joined into Discord messages of at most 2000 bytes, at most two
--- of them per call; what does not fit stays queued for the next call.
+-- of them per call; what does not fit stays queued for the next call. A message that Discord
+-- answers with 429 or 5xx goes back to the front of the queue, as long as the queue is not full.
 function Webhook:flush()
   local pending = self.pending
 
   for _ = 1, max_posts_per_flush do
     if #pending == 0 then return end
 
-    self:push(take_message(pending))
+    post(self, take_message(pending), empty_data, true)
   end
 end
 
