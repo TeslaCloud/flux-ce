@@ -1,5 +1,5 @@
---- Registry of the skill definitions, together with the player methods that read and change
--- the skills of a player's character.
+--- Registry of the skill definitions. The player methods that read and change the skills of a
+-- player's character are in `lib/meta`.
 -- Definitions are `SkillBase` objects registered with `Skills.register`, usually by
 -- `Skills.include_skills` loading the files of a plugin's `skills` folder. This file adds
 -- `skills` to the extra folders of every plugin and handles that folder through the
@@ -231,79 +231,6 @@ if SERVER then
     hook.Run('PlayerSkillChanged', target, skill_id, rank, old_rank)
 
     return true
-  end
-end
-
-do
-  local player_meta = FindMetaTable('Player')
-
-  --- Returns the rank of every skill of the player's character. On the client this is what
-  -- the server has networked, which it does for the local player alone: any other player has
-  -- no skills there.
-  -- ```
-  -- local skills = target:get_skills()
-  --
-  -- -- skills.athletics = 2
-  -- ```
-  -- @return [Map ranks keyed by skill ID; empty if the player has no character or, on the
-  --   client, nothing has been networked yet or the player is not the local one]
-  function player_meta:get_skills()
-    if SERVER then
-      return Skills.to_networkable(self)
-    end
-
-    return self:get_nv('skills') or {}
-  end
-
-  --- Returns the player's rank in a skill. A player whose character has no record for the
-  -- skill, such as a bot, is at rank 0.
-  -- @param skill_id [String]
-  -- @return [Number rank; 0 if the skill is not registered]
-  function player_meta:get_skill(skill_id)
-    if !stored[skill_id] then return 0 end
-
-    if CLIENT then
-      local skills = self:get_nv('skills')
-
-      return skills and tonumber(skills[skill_id]) or 0
-    end
-
-    local record = Skills.get_record(self:is_character_loaded() and self:get_character(), skill_id)
-
-    return record and tonumber(record.rank) or 0
-  end
-
-  if SERVER then
-    --- Sets the player's rank in a skill, rounded and clamped between 0 and the skill's max,
-    -- and networks it. Server only.
-    -- @param skill_id [String]
-    -- @param rank [Number]
-    -- @see [Skills.update]
-    function player_meta:set_skill(skill_id, rank)
-      rank = tonumber(rank)
-
-      if !rank then return end
-
-      Skills.update(self, skill_id, rank)
-    end
-
-    --- Raises the player's rank in a skill. Server only.
-    -- @param skill_id [String]
-    -- @param amount=1 [Number ranks to add]
-    function player_meta:increase_skill(skill_id, amount)
-      amount = amount or 1
-
-      self:set_skill(skill_id, self:get_skill(skill_id) + amount)
-    end
-
-    --- Lowers the player's rank in a skill. Server only.
-    -- @param skill_id [String]
-    -- @param amount=1 [Number ranks to remove]
-    function player_meta:decrease_skill(skill_id, amount)
-      amount = amount or 1
-
-      self:set_skill(skill_id, self:get_skill(skill_id) - amount)
-    end
   end
 end
 

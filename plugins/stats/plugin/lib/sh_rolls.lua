@@ -160,7 +160,7 @@ end
 -- @param kind [String 'attribute' or 'skill']
 -- @param modifier [Number modifier of the roll]
 -- @return [Map the Dice result, or nil and String the error of the Dice library]
-local function roll(actor, id, kind, modifier)
+function Stats:roll(actor, id, kind, modifier)
   local roll_data = {
     id = id,
     kind = kind,
@@ -190,75 +190,4 @@ local function roll(actor, id, kind, modifier)
   local formula = isstring(roll_data.formula) and roll_data.formula or Dice.with_modifier('1d20', modifier)
 
   return Dice.roll(formula)
-end
-
-do
-  local player_meta = FindMetaTable('Player')
-
-  --- Returns the modifier that an attribute adds to the player's rolls: its level, boosts
-  -- included.
-  -- @param stat_id [String ID of the stat]
-  -- @return [Number 0 if the attribute is not registered]
-  function player_meta:get_attribute_modifier(stat_id)
-    if !Attributes.find(stat_id) then
-      return 0
-    end
-
-    return self:get_attribute(stat_id)
-  end
-
-  --- Returns the modifier that a skill adds to the player's rolls: the modifier of the key
-  -- stat of the skill plus the player's proficiency in it.
-  -- @param skill_id [String ID of the skill]
-  -- @return [Number 0 if the skill is not registered]
-  -- @see [Stats:get_proficiency]
-  function player_meta:get_skill_modifier(skill_id)
-    local skill = Skills.find(skill_id)
-
-    if !skill then
-      return 0
-    end
-
-    local modifier = Stats:get_proficiency(self, skill_id)
-
-    if isstring(skill.attribute) then
-      modifier += self:get_attribute_modifier(skill.attribute)
-    end
-
-    return modifier
-  end
-
-  --- Rolls a stat for the player: a d20 plus the modifier of the stat, after the
-  -- AdjustAttributeRoll hook.
-  -- ```
-  -- local result = target:roll_attribute('strength')
-  --
-  -- if result and result.total >= 15 then
-  --   door:Fire('Unlock')
-  -- end
-  -- ```
-  -- @param stat_id [String ID of the stat]
-  -- @return [Map the result of `Dice.roll`, or nil and String the reason if nothing was
-  --   rolled]
-  function player_meta:roll_attribute(stat_id)
-    if !Attributes.find(stat_id) then
-      return nil, t('error.stats.not_stat', { name = tostring(stat_id) })
-    end
-
-    return roll(self, stat_id, 'attribute', self:get_attribute_modifier(stat_id))
-  end
-
-  --- Rolls a skill for the player: a d20 plus the modifier of the skill, after the
-  -- AdjustAttributeRoll hook.
-  -- @param skill_id [String ID of the skill]
-  -- @return [Map the result of `Dice.roll`, or nil and String the reason if nothing was
-  --   rolled]
-  -- @see [Player#get_skill_modifier]
-  function player_meta:roll_skill(skill_id)
-    if !Skills.find(skill_id) then
-      return nil, t('error.stats.not_skill', { name = tostring(skill_id) })
-    end
-
-    return roll(self, skill_id, 'skill', self:get_skill_modifier(skill_id))
-  end
 end

@@ -1,9 +1,7 @@
 --- Client side of the Stats plugin: adds the stats stage to character creation, words the
 -- refusal of a character whose stat levels the server did not accept, adds the character
--- sheet to the tab menu as its first and default page, asks the server for the rolls of the
--- sheet and keeps their results for its roll buttons, and opens the window that shows a
--- member of staff the attributes and skills of another player's character when the server
--- sends them, which the `attribute list` command makes it do.
+-- sheet to the tab menu as its first and default page and asks the server for the rolls of
+-- the sheet.
 
 Stats.rolls = Stats.rolls or {}
 
@@ -129,39 +127,3 @@ function Stats:GetCharacterCreationErrorText(_success, status)
     return t'error.attribute.sum'
   end
 end
-
-Cable.receive('fl_stats_roll_result', function(id, result)
-  if !isstring(id) then return end
-
-  if !istable(result) or !isnumber(result.total) then
-    Stats.rolls[id] = nil
-
-    return
-  end
-
-  local now = RealTime()
-  local roll = Stats.rolls[id] or { started = now }
-  local definition = Attributes.find(id) or Skills.find(id)
-
-  roll.pending = false
-  roll.result = result
-  roll.landed = math.max(now, roll.started + Stats.roll_tumble_time)
-  roll.text = t('ui.character_sheet.roll_result', {
-    name = definition and t(definition.name) or id,
-    roll = Stats:format_roll(result)
-  })
-
-  Stats.rolls[id] = roll
-
-  --- Called on the client when the server has answered a roll that the local player made
-  -- from the character sheet, after the result has been stored for `Stats:get_roll`.
-  -- @param id [String ID of the stat or the skill]
-  -- @param result [Map formula, total, natural, critical and rolls of the `Dice` result]
-  hook.Run('OnStatRollResult', id, result)
-end)
-
-Cable.receive('fl_attributes_view', function(target, attributes, skills)
-  if !istable(attributes) then return end
-
-  Attributes.open_viewer(target, attributes, skills)
-end)
