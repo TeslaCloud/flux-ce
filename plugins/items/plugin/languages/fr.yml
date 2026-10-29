@@ -13,7 +13,7 @@ fr:
   config:
     items:
       title: "Objets"
-      desc: "Paramètres des objets et des objets qui se trouvent dans le monde."
+      desc: "Paramètres des objets, des objets qui se trouvent dans le monde et des inventaires des joueurs."
       destroy:
         name: "Autoriser la destruction d'objets"
         desc: "Indique si les joueurs peuvent détruire les objets de leur inventaire depuis le menu de l'objet. Un objet peut l'autoriser ou l'interdire indépendamment de ce paramètre."
@@ -29,13 +29,10 @@ fr:
       drop_weapons_on_death:
         name: "Lâcher les armes à la mort"
         desc: "Indique si les armes équipées d'un joueur tombent dans le monde lorsque le joueur meurt."
-    inventory:
-      title: "Inventaire"
-      desc: "Paramètres généraux de l'inventaire."
-      width:
+      inventory_width:
         name: "Largeur de l'inventaire principal"
         desc: "Largeur de l'inventaire principal du joueur, en emplacements."
-      height:
+      inventory_height:
         name: "Hauteur de l'inventaire principal"
         desc: "Hauteur de l'inventaire principal du joueur, en emplacements."
       hotbar_width:

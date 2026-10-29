@@ -110,7 +110,7 @@ end
 --- Prevents menu actions of players who are dead or lie on the ground as a ragdoll, on
 -- items that the player does not have, and on items in the world that are too far away from
 -- the player, obstructed, not being looked at or already on their way out of the world.
--- With the 'item_drop_ownership' config on, it also keeps players away from the items in
+-- With the 'items_drop_ownership' config on, it also keeps players away from the items in
 -- the world that another of their own characters has dropped.
 -- @param actor [Player]
 -- @param item_obj [Item]
@@ -146,7 +146,7 @@ function Items:PlayerCanUseItem(actor, item_obj, _action, ...)
       return false
     end
 
-    if Config.get('item_drop_ownership') and item_entity:is_dropped_by_other_character(actor) then
+    if Config.get('items_drop_ownership') and item_entity:is_dropped_by_other_character(actor) then
       actor:notify('error.item.other_character')
 
       return false
@@ -290,7 +290,7 @@ function Items:drop_weapons(victim)
 
     if entry.weapon_class and entry.is_equipped and entry:is_equipped() and inventory and inventory.owner == victim then
       --- Called on the server before an equipped weapon item of a dying player is dropped
-      -- into the world, which happens when the `drop_weapons_on_death` config is on. The
+      -- into the world, which happens when the `items_drop_weapons_on_death` config is on. The
       -- `PlayerCanDropItem` hook, and with it the `on_drop` callback of the item, is asked
       -- afterward.
       -- @param victim [Player The player who is dying]
@@ -334,14 +334,14 @@ function Items:drop_weapons(victim)
 end
 
 --- Drops the equipped weapon items of a player who is dying, if the
--- 'drop_weapons_on_death' config is on. It is done here rather than in PlayerDeath so that
+-- 'items_drop_weapons_on_death' config is on. It is done here rather than in PlayerDeath so that
 -- the weapons are still there for the items to store their clips, and so that the items
 -- are gone from the inventory before the character is saved.
 -- @param victim [Player]
 -- @param _attacker [Entity]
 -- @param _damage_info [CTakeDamageInfo]
 function Items:DoPlayerDeath(victim, _attacker, _damage_info)
-  if Config.get('drop_weapons_on_death') then
+  if Config.get('items_drop_weapons_on_death') then
     self:drop_weapons(victim)
   end
 end
@@ -465,14 +465,14 @@ end
 function Items:CreatePlayerInventories(_owner, inventories)
   local main_inventory = Inventory.new()
     main_inventory.title = 'ui.inventory.main_inventory'
-    main_inventory:set_size(Config.get('inventory_width'), Config.get('inventory_height'))
+    main_inventory:set_size(Config.get('items_inventory_width'), Config.get('items_inventory_height'))
     main_inventory.type = 'main_inventory'
     main_inventory.default = true
   inventories[main_inventory.type] = main_inventory
 
   local hotbar = Inventory.new()
     hotbar.title = 'ui.inventory.hotbar'
-    hotbar:set_size(Config.get('hotbar_width'), Config.get('hotbar_height'))
+    hotbar:set_size(Config.get('items_hotbar_width'), Config.get('items_hotbar_height'))
     hotbar.type = 'hotbar'
     hotbar.multislot = false
   inventories[hotbar.type] = hotbar
@@ -535,7 +535,7 @@ function Items:CreatePlayerInventories(_owner, inventories)
 
   local pockets = Inventory.new()
     pockets.title = 'ui.inventory.pockets'
-    pockets:set_size(1, Config.get('pockets_height'))
+    pockets:set_size(1, Config.get('items_pockets_height'))
     pockets.type = 'pockets'
     pockets.infinite_width = true
     pockets.multislot = false

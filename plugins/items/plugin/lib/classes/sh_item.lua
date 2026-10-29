@@ -13,9 +13,9 @@
 -- `icon_data`, `icon_material` and `icon_model` (how its inventory icon is rendered);
 -- `use_text`, `take_text`, `drop_text`, `destroy_text`, `use_icon`, `take_icon`,
 -- `drop_icon` and `destroy_icon` (options of its menu); `destroyable` (true or false to
--- let or forbid players to destroy the item whatever the `item_destroy` config says);
+-- let or forbid players to destroy the item whatever the `items_destroy` config says);
 -- `entity_health` (how much damage the item takes while it lies in the world, instead
--- of the `item_entity_health` config; 0 makes it indestructible); and `data` (default
+-- of the `items_entity_health` config; 0 makes it indestructible); and `data` (default
 -- custom data, read and written with `ItemBase:get_data` and `ItemBase:set_data`).
 --
 -- Callbacks an item can define. Those of the first group are called on the server:
@@ -204,28 +204,28 @@ function ItemBase:get_model_bodygroups()
 end
 
 --- Returns the health that the entity of the item gets when the item is put into the
--- world: the entity_health of the item, or the 'item_entity_health' config if the item
+-- world: the entity_health of the item, or the 'items_entity_health' config if the item
 -- has none.
 -- @return [Number 0 if the item cannot be destroyed by damage]
 function ItemBase:get_entity_health()
   local health = self.entity_health
 
   if !isnumber(health) then
-    health = Config.get('item_entity_health')
+    health = Config.get('items_entity_health')
   end
 
   return isnumber(health) and math.max(health, 0) or 0
 end
 
 --- Checks whether players may destroy the item through its menu: the destroyable field of
--- the item if it is set, and the 'item_destroy' config otherwise.
+-- the item if it is set, and the 'items_destroy' config otherwise.
 -- @return [Boolean]
 function ItemBase:is_destroyable()
   if self.destroyable != nil then
     return self.destroyable == true
   end
 
-  return Config.get('item_destroy') == true
+  return Config.get('items_destroy') == true
 end
 
 --- Returns the camera setup that is used to render the item's model in inventory slots.

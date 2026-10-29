@@ -13,7 +13,7 @@ en:
   config:
     items:
       title: Items
-      desc: Settings of items and of the items that lie in the world.
+      desc: Settings of items, of the items that lie in the world and of player inventories.
       destroy:
         name: Allow destroying items
         desc: Whether players can destroy the items in their inventories through the item menu. An item can allow or forbid it regardless of this setting.
@@ -29,13 +29,10 @@ en:
       drop_weapons_on_death:
         name: Drop weapons on death
         desc: Whether the equipped weapons of a player are dropped into the world when the player dies.
-    inventory:
-      title: Inventory
-      desc: General inventory settings.
-      width:
+      inventory_width:
         name: Main inventory width
         desc: Width of the main player inventory in slots.
-      height:
+      inventory_height:
         name: Main inventory height
         desc: Height of the main player inventory in slots.
       hotbar_width:

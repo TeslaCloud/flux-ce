@@ -3,7 +3,7 @@
 -- it (`'Pistol'` by default), and `ammo_count`, the amount of ammo that one use gives
 -- (16 by default). Using the item gives that ammo to the player. With `max_uses` above 1,
 -- inherited from `ItemUsable`, a box can be used several times before it is gone.
--- With the `ammo_requires_weapon` config on, the ammo can only be loaded by a player who
+-- With the `items_ammo_requires_weapon` config on, the ammo can only be loaded by a player who
 -- carries a weapon that uses it.
 
 if !ItemUsable then
@@ -43,13 +43,13 @@ function ItemAmmo:has_weapon_for(actor)
   return false
 end
 
---- Called by ItemUsable:on_use before the item is used. With the 'ammo_requires_weapon'
+--- Called by ItemUsable:on_use before the item is used. With the 'items_ammo_requires_weapon'
 -- config on, refuses to load the ammo and notifies the player if they carry no weapon
 -- that uses it.
 -- @param actor [Player]
 -- @return [Boolean false to prevent the use, nil otherwise]
 function ItemAmmo:can_use(actor)
-  if Config.get('ammo_requires_weapon') and !self:has_weapon_for(actor) then
+  if Config.get('items_ammo_requires_weapon') and !self:has_weapon_for(actor) then
     actor:notify('error.item.no_weapon_for_ammo')
 
     return false

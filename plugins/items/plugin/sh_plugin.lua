@@ -51,11 +51,11 @@
 -- `fl_inventory_container` shows another inventory next to the player's own.
 --
 -- Five config keys of the plugin, all off by default, let players destroy the items in
--- their inventories (`item_destroy`), give the items that lie in the world health so that
--- they can be destroyed by damage (`item_entity_health`), keep players away from the items
--- that another of their own characters has dropped (`item_drop_ownership`), make
--- ammunition require a weapon that uses it (`ammo_requires_weapon`) and drop the equipped
--- weapons of players who die (`drop_weapons_on_death`).
+-- their inventories (`items_destroy`), give the items that lie in the world health so that
+-- they can be destroyed by damage (`items_entity_health`), keep players away from the items
+-- that another of their own characters has dropped (`items_drop_ownership`), make
+-- ammunition require a weapon that uses it (`items_ammo_requires_weapon`) and drop the equipped
+-- weapons of players who die (`items_drop_weapons_on_death`).
 --
 -- Once this plugin is loaded, every plugin and the schema get their `items/bases/` and
 -- `items/` folders included, so adding an item only takes a file:

@@ -13,7 +13,7 @@ es:
   config:
     items:
       title: Objetos
-      desc: Ajustes de los objetos y de los objetos que hay en el mundo.
+      desc: Ajustes de los objetos, de los objetos que hay en el mundo y de los inventarios de los jugadores.
       destroy:
         name: Permitir destruir objetos
         desc: Si los jugadores pueden destruir los objetos de sus inventarios a través del menú del objeto. Un objeto puede permitirlo o prohibirlo independientemente de este ajuste.
@@ -29,13 +29,10 @@ es:
       drop_weapons_on_death:
         name: Soltar armas al morir
         desc: Si las armas equipadas de un jugador caen al mundo cuando el jugador muere.
-    inventory:
-      title: Inventario
-      desc: Ajustes generales del inventario.
-      width:
+      inventory_width:
         name: Ancho del inventario principal
         desc: Ancho del inventario principal del jugador en casillas.
-      height:
+      inventory_height:
         name: Alto del inventario principal
         desc: Alto del inventario principal del jugador en casillas.
       hotbar_width:

@@ -2,17 +2,16 @@ categories:
   items:
     name: config.items.title
     description: config.items.desc
-  inventory:
-    name: config.inventory.title
-    description: config.inventory.desc
 configs:
-  item_destroy:
+  items_destroy:
+    renamed_from: item_destroy
     name: config.items.destroy.name
     description: config.items.destroy.desc
     category: items
     type: boolean
     default_value: false
-  item_entity_health:
+  items_entity_health:
+    renamed_from: item_entity_health
     name: config.items.entity_health.name
     description: config.items.entity_health.desc
     category: items
@@ -20,76 +19,86 @@ configs:
     min_value: 0
     max_value: 1000
     default_value: 0
-  item_drop_ownership:
+  items_drop_ownership:
+    renamed_from: item_drop_ownership
     name: config.items.drop_ownership.name
     description: config.items.drop_ownership.desc
     category: items
     type: boolean
     default_value: false
-  ammo_requires_weapon:
+  items_ammo_requires_weapon:
+    renamed_from: ammo_requires_weapon
     name: config.items.ammo_requires_weapon.name
     description: config.items.ammo_requires_weapon.desc
     category: items
     type: boolean
     default_value: false
-  drop_weapons_on_death:
+  items_drop_weapons_on_death:
+    renamed_from: drop_weapons_on_death
     name: config.items.drop_weapons_on_death.name
     description: config.items.drop_weapons_on_death.desc
     category: items
     type: boolean
     default_value: false
-  inventory_width:
-    name: config.inventory.width.name
-    description: config.inventory.width.desc
-    category: inventory
+  items_inventory_width:
+    renamed_from: inventory_width
+    name: config.items.inventory_width.name
+    description: config.items.inventory_width.desc
+    category: items
     type: number
     min_value: 1
     max_value: 64
     default_value: 8
-  inventory_height:
-    name: config.inventory.height.name
-    description: config.inventory.height.desc
-    category: inventory
+  items_inventory_height:
+    renamed_from: inventory_height
+    name: config.items.inventory_height.name
+    description: config.items.inventory_height.desc
+    category: items
     type: number
     min_value: 1
     max_value: 64
     default_value: 6
-  hotbar_height:
-    name: config.inventory.hotbar_height.name
-    description: config.inventory.hotbar_height.desc
-    category: inventory
+  items_hotbar_height:
+    renamed_from: hotbar_height
+    name: config.items.hotbar_height.name
+    description: config.items.hotbar_height.desc
+    category: items
     type: number
     min_value: 1
     max_value: 64
     default_value: 1
-  hotbar_width:
-    name: config.inventory.hotbar_width.name
-    description: config.inventory.hotbar_width.desc
-    category: inventory
+  items_hotbar_width:
+    renamed_from: hotbar_width
+    name: config.items.hotbar_width.name
+    description: config.items.hotbar_width.desc
+    category: items
     type: number
     min_value: 1
     max_value: 64
     default_value: 8
-  equipment_width:
-    name: config.inventory.equipment_width.name
-    description: config.inventory.equipment_width.desc
-    category: inventory
+  items_equipment_width:
+    renamed_from: equipment_width
+    name: config.items.equipment_width.name
+    description: config.items.equipment_width.desc
+    category: items
     type: number
     min_value: 1
     max_value: 64
     default_value: 1
-  equipment_height:
-    name: config.inventory.equipment_height.name
-    description: config.inventory.equipment_height.desc
-    category: inventory
+  items_equipment_height:
+    renamed_from: equipment_height
+    name: config.items.equipment_height.name
+    description: config.items.equipment_height.desc
+    category: items
     type: number
     min_value: 1
     max_value: 64
     default_value: 8
-  pockets_height:
-    name: config.inventory.pockets_height.name
-    description: config.inventory.pockets_height.desc
-    category: inventory
+  items_pockets_height:
+    renamed_from: pockets_height
+    name: config.items.pockets_height.name
+    description: config.items.pockets_height.desc
+    category: items
     type: number
     min_value: 1
     max_value: 64
