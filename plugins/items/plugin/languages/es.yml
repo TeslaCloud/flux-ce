@@ -41,12 +41,6 @@ es:
       hotbar_height:
         name: Alto de la barra rápida
         desc: Alto del inventario de la barra rápida del jugador en casillas.
-      equipment_width:
-        name: Ancho del inventario de equipo
-        desc: Ancho del inventario de equipo del jugador en casillas.
-      equipment_height:
-        name: Alto del inventario de equipo
-        desc: Alto del inventario de equipo del jugador en casillas.
       pockets_height:
         name: Alto de los bolsillos
         desc: Alto del inventario de bolsillos del jugador en casillas.

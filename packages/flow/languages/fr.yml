@@ -24,9 +24,6 @@ fr:
       data_save_interval:
         name: "Intervalle de sauvegarde du serveur"
         desc: "Le temps entre deux sauvegardes des données du serveur."
-      player_data_save_interval:
-        name: "Intervalle de sauvegarde des joueurs"
-        desc: "Le temps entre deux sauvegardes des données des joueurs."
   error:
     cant_now: "Vous ne pouvez pas faire cela pour le moment !"
     command:

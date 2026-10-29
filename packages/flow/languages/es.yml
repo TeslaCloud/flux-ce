@@ -24,9 +24,6 @@ es:
       data_save_interval:
         name: Intervalo de guardado del servidor
         desc: Tiempo entre cada guardado de los datos del servidor.
-      player_data_save_interval:
-        name: Intervalo de guardado de jugadores
-        desc: Tiempo entre cada guardado de los datos de los jugadores.
   error:
     cant_now: ¡No puedes hacer esto ahora mismo!
     command:

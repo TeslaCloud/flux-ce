@@ -76,24 +76,6 @@ configs:
     min_value: 1
     max_value: 64
     default_value: 8
-  items_equipment_width:
-    renamed_from: equipment_width
-    name: config.items.equipment_width.name
-    description: config.items.equipment_width.desc
-    category: items
-    type: number
-    min_value: 1
-    max_value: 64
-    default_value: 1
-  items_equipment_height:
-    renamed_from: equipment_height
-    name: config.items.equipment_height.name
-    description: config.items.equipment_height.desc
-    category: items
-    type: number
-    min_value: 1
-    max_value: 64
-    default_value: 8
   items_pockets_height:
     renamed_from: pockets_height
     name: config.items.pockets_height.name

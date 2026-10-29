@@ -41,12 +41,6 @@ en:
       hotbar_height:
         name: Hotbar inventory height
         desc: Height of the player hotbar inventory in slots.
-      equipment_width:
-        name: Equipment inventory width
-        desc: Width of the player equipment inventory in slots.
-      equipment_height:
-        name: Equipment inventory height
-        desc: Height of the player equipment inventory in slots.
       pockets_height:
         name: Pockets height
         desc: Height of the player pockets inventory in slots.

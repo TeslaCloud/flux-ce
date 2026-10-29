@@ -24,9 +24,6 @@ en:
       data_save_interval:
         name: Server data save interval
         desc: Amount of time between server data saves.
-      player_data_save_interval:
-        name: Player data save interval
-        desc: Amount of time between player data saves.
   error:
     cant_now: You cannot do this right now!
     command:

@@ -89,12 +89,3 @@ configs:
     min_value: 0
     max_value: 3600
     default_value: 360
-  flow_player_data_save_interval:
-    renamed_from: player_data_save_interval
-    name: config.flow.player_data_save_interval.name
-    description: config.flow.player_data_save_interval.desc
-    category: flow
-    type: number
-    min_value: 0
-    max_value: 3600
-    default_value: 360

@@ -18,14 +18,14 @@
 --
 -- ```
 -- configs:
---   server_password:
---     name: config.general.server_password.name
---     description: config.general.server_password.desc
---     category: general
---     type: string
---     private: true
---     needs_restart: true
---     default_value: ""
+--   flow_walk_speed:
+--     name: config.flow.walk_speed.name
+--     description: config.flow.walk_speed.desc
+--     category: flow
+--     type: number
+--     min_value: 0
+--     max_value: 1024
+--     default_value: 100
 -- ```
 --
 -- `Config.set` is the low level setter: it stores whatever it is given and does not look at
@@ -1165,7 +1165,7 @@ function Config.read(path, _from_config)
         Config.set(name, default_value(data), data.hidden)
         table.safe_merge(stored[name], data)
       else
-        Config.add_to_menu(data.category or 'general', name, data.name, data.description, data.type, data)
+        Config.add_to_menu(data.category or 'other', name, data.name, data.description, data.type, data)
       end
     end
   end

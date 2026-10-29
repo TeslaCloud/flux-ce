@@ -41,12 +41,6 @@ fr:
       hotbar_height:
         name: "Hauteur de la barre d'accès rapide"
         desc: "Hauteur de la barre d'accès rapide du joueur, en emplacements."
-      equipment_width:
-        name: "Largeur de l'inventaire d'équipement"
-        desc: "Largeur de l'inventaire d'équipement du joueur, en emplacements."
-      equipment_height:
-        name: "Hauteur de l'inventaire d'équipement"
-        desc: "Hauteur de l'inventaire d'équipement du joueur, en emplacements."
       pockets_height:
         name: "Hauteur des poches"
         desc: "Hauteur de l'inventaire des poches du joueur, en emplacements."
