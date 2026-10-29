@@ -118,7 +118,7 @@ function PANEL:rebuild()
 
     if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len')
     and text != PLAYER:get_phys_desc() then
-      Cable.send('fl_character_desc_change', text)
+      Cable.send('fl_character_physdesc', text)
       pnl.saved = true
 
       return true
