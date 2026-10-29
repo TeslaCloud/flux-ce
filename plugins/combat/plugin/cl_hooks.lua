@@ -4,6 +4,12 @@
 local trace_offset = Vector(0, 0, -100)
 local circle_offset = Vector(0, 0, 5)
 local circle_angle = Angle(90, 0, 0)
+const trace_line = util.TraceLine
+const trace_end = Vector()
+const trace_result = {}
+const trace_data = { endpos = trace_end, output = trace_result }
+const circle_pos = Vector()
+const circle_ang = Angle()
 local hud_color = Color('aqua'):alpha(200)
 local hud_outline_color = color_black:alpha(200)
 local draw_text_outlined = draw.SimpleTextOutlined
@@ -22,13 +28,19 @@ function CombatSystem:PostDrawTranslucentRenderables(depth, skybox)
   if pos then
     local turns = client:get_turns(TURN_MOVE)
     local walk_speed, run_speed = client:GetWalkSpeed() * turns, client:GetRunSpeed() * turns
-    local trace = util.TraceLine({
-      start = pos,
-      endpos = pos + trace_offset,
-      filter = client
-    })
 
-    cam.Start3D2D(pos + circle_offset, trace.HitNormal:Angle() + circle_angle, 1)
+    trace_end:Set(pos)
+    trace_end:Add(trace_offset)
+    trace_data.start = pos
+    trace_data.filter = client
+    trace_line(trace_data)
+
+    circle_pos:Set(pos)
+    circle_pos:Add(circle_offset)
+    circle_ang:Set(trace_result.HitNormal:Angle())
+    circle_ang:Add(circle_angle)
+
+    cam.Start3D2D(circle_pos, circle_ang, 1)
       surface.SetDrawColor(35, 210, 250)
       surface.draw_circle_outline(0, 0, walk_speed, 3, 50)
 
