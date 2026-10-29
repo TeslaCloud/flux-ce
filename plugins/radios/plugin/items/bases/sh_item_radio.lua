@@ -58,10 +58,10 @@ end
 
 --- Asks the player to enter a new frequency for the radio. Called on the server when the
 -- frequency button of the item menu is pressed; the answer is checked by
--- `Communications.tune_radio` before the radio is retuned.
+-- `Radios.tune_radio` before the radio is retuned.
 -- @param actor [Player player changing the frequency]
 function ItemRadio:change_frequency(actor)
   if !SERVER then return end
 
-  Communications.request_frequency(actor, self)
+  Radios.request_frequency(actor, self)
 end

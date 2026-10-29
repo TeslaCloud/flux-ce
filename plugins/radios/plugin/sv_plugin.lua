@@ -5,7 +5,7 @@
 -- loaded has no inventories and therefore no radios.
 -- @param owner [Player player to check]
 -- @return [List<Item> enabled radios, empty if there are none]
-function Communications.get_radios(owner)
+function Radios.get_radios(owner)
   local radios = {}
 
   if !IsValid(owner) or !owner:IsPlayer() then return radios end
@@ -30,16 +30,16 @@ end
 --- Returns the first enabled radio in a player's hotbar.
 -- @param owner [Player player to check]
 -- @return [Item enabled radio, nil if there is none]
-function Communications.get_active_radio(owner)
-  return Communications.get_radios(owner)[1]
+function Radios.get_active_radio(owner)
+  return Radios.get_radios(owner)[1]
 end
 
 --- Checks whether a player has an enabled radio tuned to a frequency in their hotbar.
 -- @param owner [Player player to check]
 -- @param frequency [Number frequency to look for]
 -- @return [Boolean]
-function Communications.is_tuned_to(owner, frequency)
-  local radios = Communications.get_radios(owner)
+function Radios.is_tuned_to(owner, frequency)
+  local radios = Radios.get_radios(owner)
 
   for i = 1, #radios do
     if radios[i]:get_frequency() == frequency then
@@ -56,7 +56,7 @@ end
 -- @param item_obj [Item the radio the player speaks into]
 -- @return [Boolean false if a plugin has forbidden it, String phrase or text that says why,
 --   if the plugin has given one]
-function Communications.can_radio(actor, text, item_obj)
+function Radios.can_radio(actor, text, item_obj)
   --- Asks whether a player may speak on the radio. Called on the server when a player
   -- sends a chat message with a radio prefix and has an enabled radio in their hotbar,
   -- before anything is sent.
@@ -82,15 +82,15 @@ end
 -- @param actor [Player player who speaks]
 -- @param text [String message, without the radio prefix]
 -- @return [Boolean true if the message has been sent]
--- @see [Communications.speak_radio]
-function Communications.say_radio(actor, text)
+-- @see [Radios.speak_radio]
+function Radios.say_radio(actor, text)
   if !IsValid(actor) or !actor:IsPlayer() or !isstring(text) then return false end
 
   text = text:strip()
 
   if text == '' then return false end
 
-  local item_obj = Communications.get_active_radio(actor)
+  local item_obj = Radios.get_active_radio(actor)
 
   if !item_obj then
     actor:notify('notification.no_active_radio')
@@ -100,7 +100,7 @@ function Communications.say_radio(actor, text)
 
   if !RPCommands:can_say_ic(actor, text) then return false end
 
-  local allowed, reason = Communications.can_radio(actor, text, item_obj)
+  local allowed, reason = Radios.can_radio(actor, text, item_obj)
 
   if !allowed then
     if isstring(reason) then
@@ -110,21 +110,21 @@ function Communications.say_radio(actor, text)
     return false
   end
 
-  return Communications.speak_radio(actor, text, item_obj:get_frequency(), item_obj)
+  return Radios.speak_radio(actor, text, item_obj:get_frequency(), item_obj)
 end
 
 --- Sends a radio message on a frequency. It is received anywhere by the speaker and by
 -- the players with an enabled radio tuned to the frequency in their hotbar, and overheard
 -- by the players near the speaker. The AdjustRadioInfo hook can change who receives
 -- it, and the PlayerUsedRadio hook is run once it has been sent. The PlayerCanRadio hook
--- is not asked here, see `Communications.say_radio` for that.
+-- is not asked here, see `Radios.say_radio` for that.
 -- @param speaker [Player player talking]
 -- @param text [String message]
 -- @param frequency [Number frequency to talk on]
 -- @param item_obj=nil [Item the radio the player speaks into, passed on to the hooks]
 -- @return [Boolean true if the message has been sent, false if there was nothing to say,
 --   the frequency is not a number or a plugin has canceled the message]
-function Communications.speak_radio(speaker, text, frequency, item_obj)
+function Radios.speak_radio(speaker, text, frequency, item_obj)
   if !IsValid(speaker) or !speaker:IsPlayer() then return false end
   if !isstring(text) or !isnumber(frequency) then return false end
 
@@ -141,7 +141,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   if info.text == '' then return false end
 
   local tuned_in = info.listeners
-  local is_tuned_to = Communications.is_tuned_to
+  local is_tuned_to = Radios.is_tuned_to
 
   for _, target in player.Iterator() do
     if target == speaker or is_tuned_to(target, frequency) then
@@ -150,7 +150,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   end
 
   --- Lets plugins change a radio transmission before it is sent: what is said and who
-  -- receives it. Called on the server by `Communications.speak_radio`.
+  -- receives it. Called on the server by `Radios.speak_radio`.
   -- @param speaker [Player the player talking on the radio]
   -- @param info [Map the transmission, to be modified in place: text (String what is
   --   said), frequency (Number, changing it does not change the listeners), item (Item the
@@ -201,13 +201,13 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
     }
   }
 
-  local previous = Communications.transmission
+  local previous = Radios.transmission
 
-  Communications.transmission = transmission
+  Radios.transmission = transmission
 
   Chatbox.add_text(targets, unpack(message))
 
-  Communications.transmission = previous
+  Radios.transmission = previous
 
   if !transmission.receivers then return false end
 
@@ -250,7 +250,7 @@ end
 -- @param actor [Player player who retunes the radio]
 -- @param item_obj [Item the radio]
 -- @return [Boolean]
-function Communications.can_tune(actor, item_obj)
+function Radios.can_tune(actor, item_obj)
   if !IsValid(actor) or !actor:IsPlayer() then return false end
   if !istable(item_obj) or !isfunction(item_obj.is) or !item_obj:is('radio') then return false end
   if Item.find_instance_by_id(item_obj.instance_id) != item_obj then return false end
@@ -271,9 +271,9 @@ end
 -- @param item_obj [Item the radio]
 -- @param value [String the frequency as the player typed it, such as '100.1']
 -- @return [Boolean true if the radio has been retuned]
--- @see [Communications.parse_frequency]
-function Communications.tune_radio(actor, item_obj, value)
-  if !Communications.can_tune(actor, item_obj) then
+-- @see [Radios.parse_frequency]
+function Radios.tune_radio(actor, item_obj, value)
+  if !Radios.can_tune(actor, item_obj) then
     if IsValid(actor) then
       actor:notify('error.radio.unavailable')
     end
@@ -281,7 +281,7 @@ function Communications.tune_radio(actor, item_obj, value)
     return false
   end
 
-  local frequency = Communications.parse_frequency(value)
+  local frequency = Radios.parse_frequency(value)
 
   if !frequency then
     actor:notify('error.frequency')
@@ -291,7 +291,7 @@ function Communications.tune_radio(actor, item_obj, value)
 
   item_obj:set_frequency(frequency)
 
-  actor:notify('notification.radio.frequency_set', { frequency = Communications.format_frequency(frequency) })
+  actor:notify('notification.radio.frequency_set', { frequency = Radios.format_frequency(frequency) })
 
   return true
 end
@@ -301,15 +301,15 @@ end
 -- @param actor [Player player to ask]
 -- @param item_obj [Item the radio]
 -- @return [Boolean true if the player has been asked]
-function Communications.request_frequency(actor, item_obj)
-  if !Communications.can_tune(actor, item_obj) then return false end
+function Radios.request_frequency(actor, item_obj)
+  if !Radios.can_tune(actor, item_obj) then return false end
 
   if actor.fl_radio_prompt then
     Flux.Prompt:cancel(actor.fl_radio_prompt)
   end
 
   local instance_id = item_obj.instance_id
-  local options = { default = Communications.format_frequency(item_obj:get_frequency()), max_length = 16 }
+  local options = { default = Radios.format_frequency(item_obj:get_frequency()), max_length = 16 }
   local prompt_id
 
   prompt_id = actor:request_string('ui.radio.frequency', 'ui.radio.frequency_message', function(target, answer)
@@ -321,7 +321,7 @@ function Communications.request_frequency(actor, item_obj)
 
     if !answer then return end
 
-    Communications.tune_radio(target, Item.find_instance_by_id(instance_id), answer)
+    Radios.tune_radio(target, Item.find_instance_by_id(instance_id), answer)
   end, options)
 
   actor.fl_radio_prompt = prompt_id

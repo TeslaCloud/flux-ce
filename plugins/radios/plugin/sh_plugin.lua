@@ -1,7 +1,7 @@
 --- Radios lets characters talk to each other over any distance.
 -- A radio is an item with a frequency. A character who keeps an enabled radio in their
 -- hotbar speaks on its frequency by starting a chat message with one of
--- `Communications.prefixes`, which make up the `radio` chat prefix of the chatbox, and
+-- `Radios.prefixes`, which make up the `radio` chat prefix of the chatbox, and
 -- everyone with an enabled radio tuned to that frequency in their own hotbar receives the
 -- message wherever they are. The players standing near the speaker overhear it, like
 -- anything else that is said out loud. Radio messages are written in the color of the
@@ -14,20 +14,20 @@
 -- speak on the radio, `AdjustRadioInfo` decides who receives the message and
 -- `PlayerUsedRadio` is run once it has been sent. If the Display Typing plugin is loaded,
 -- players who are typing a radio message are shown as 'radioing'.
--- @module [Communications]
+-- @module [Radios]
 
-PLUGIN:set_global 'Communications'
+PLUGIN:set_global 'Radios'
 
-Communications.prefixes = { '/r ', '/radio', ';' }
-Communications.typing_color = Color(100, 228, 100)
-Communications.typing_range = 0.5
+Radios.prefixes = { '/r ', '/radio', ';' }
+Radios.typing_color = Color(100, 228, 100)
+Radios.typing_range = 0.5
 
 Chatbox.add_prefix('radio', {
-  prefix = Communications.prefixes,
+  prefix = Radios.prefixes,
   callback = function(actor, text, _team_chat)
     if !IsValid(actor) then return end
 
-    Communications.say_radio(actor, text)
+    Radios.say_radio(actor, text)
   end
 })
 
@@ -36,7 +36,7 @@ Chatbox.add_prefix('radio', {
 -- of the point and the spaces around the text are ignored.
 -- @param value [String text to parse]
 -- @return [Number the frequency, or nil if the text is not a valid frequency]
-function Communications.parse_frequency(value)
+function Radios.parse_frequency(value)
   if !isstring(value) then return end
 
   local whole, tenths = value:strip():match('^(%d%d%d)[%.,](%d)$')
@@ -50,7 +50,7 @@ end
 -- one more digit.
 -- @param frequency [Number]
 -- @return [String for example '100.1', or an empty string if the frequency is not a number]
-function Communications.format_frequency(frequency)
+function Radios.format_frequency(frequency)
   if !isnumber(frequency) then return '' end
 
   return string.format('%05.1f', frequency)
@@ -59,7 +59,7 @@ end
 --- Registers the 'radioing' kind of speech with the Display Typing plugin, if it is loaded.
 -- The bubble of a player who is typing a radio message is visible from as far away as the
 -- message itself is overheard.
-function Communications:OnPluginsLoaded()
+function Radios:OnPluginsLoaded()
   if !DisplayTyping then return end
 
   DisplayTyping:register_kind('radioing', {
