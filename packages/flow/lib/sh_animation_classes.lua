@@ -28,7 +28,7 @@ Flux.Anim:register('metrocop', {
     attack_low = ACT_RANGE_ATTACK_PISTOL_LOW,
     reload     = ACT_GESTURE_RELOAD_PISTOL,
     reload_low = ACT_RELOAD_PISTOL_LOW,
-    raise      = ACT_METROPOLICE_DRAW_PISTOL
+    raise      = 'drawpistol'
   },
   smg = {
     [ACT_MP_STAND_IDLE]  = { ACT_IDLE_SMG1, ACT_IDLE_ANGRY_SMG1 },
@@ -41,12 +41,12 @@ Flux.Anim:register('metrocop', {
     reload_low = ACT_RELOAD_SMG1_LOW
   },
   grenade = {
-    attack = ACT_COMBINE_THROW_GRENADE
+    attack = 'grenadethrow'
   },
   melee = {
     attack = ACT_MELEE_ATTACK_SWING_GESTURE,
-    raise  = ACT_ACTIVATE_BATON,
-    lower  = ACT_DEACTIVATE_BATON
+    raise  = 'activatebaton',
+    lower  = 'deactivatebaton'
   },
   vehicle = metrocop_vehicles
 })
@@ -66,9 +66,9 @@ const combine_soldier_rifle = {
 Flux.Anim:register('combine_soldier', {
   jump = ACT_JUMP,
   normal = {
-    [ACT_MP_STAND_IDLE]  = { ACT_IDLE_UNARMED, ACT_IDLE_ANGRY },
+    [ACT_MP_STAND_IDLE]  = { 'Idle_Unarmed', ACT_IDLE_ANGRY },
     [ACT_MP_CROUCH_IDLE] = ACT_CROUCHIDLE,
-    [ACT_MP_WALK]        = { ACT_WALK_UNARMED, ACT_WALK_RIFLE },
+    [ACT_MP_WALK]        = { 'WalkUnarmed_all', ACT_WALK_RIFLE },
     [ACT_MP_CROUCHWALK]  = ACT_WALK_CROUCH_RIFLE,
     [ACT_MP_RUN]         = { ACT_RUN_RIFLE, ACT_RUN_AIM_RIFLE },
     attack = ACT_MELEE_ATTACK1,
@@ -92,7 +92,7 @@ Flux.Anim:register('combine_soldier', {
   },
   grenade = {
     [ACT_MP_STAND_IDLE] = { ACT_IDLE, ACT_IDLE_ANGRY },
-    attack = ACT_COMBINE_THROW_GRENADE
+    attack = 'grenThrow'
   },
   melee = {
     [ACT_MP_STAND_IDLE] = { ACT_IDLE, ACT_IDLE_ANGRY },
