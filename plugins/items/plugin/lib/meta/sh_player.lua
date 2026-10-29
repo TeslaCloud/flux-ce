@@ -426,9 +426,13 @@ if SERVER then
   --- Give the player a certain item.
   -- @param item_obj [Item]
   -- @param inv_type=self.default_inventory or 'main_inventory' [String]
-  -- @return [Boolean was the item added successfully, String text of the error that occurred]
+  -- @return [Boolean was the item added successfully, String text of the error that occurred,
+  --   'error.inventory.missing' for a player without the inventory]
   function player_meta:add_item(item_obj, inv_type)
     local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
+
+    if !inventory then return false, 'error.inventory.missing' end
+
     local success, error_text = inventory:add_item(item_obj)
 
     inventory:sync()
@@ -479,10 +483,15 @@ if SERVER then
   -- Takes the item from the inventory that has it.
   -- @variant player_meta:take_item(id)
   --   @param id [String]
-  -- @return [Boolean was the item taken successfully, String text of the error that occurred]
+  -- @return [Boolean was the item taken successfully, String text of the error that occurred,
+  --   'error.inventory.invalid_item' when no inventory has the item or the player lacks the
+  --   inventory]
   function player_meta:take_item(id, inv_type)
     if inv_type then
       local inventory = self:get_inventory(inv_type)
+
+      if !inventory then return false, 'error.inventory.invalid_item' end
+
       local success, error_text = inventory:take_item(id)
 
       inventory:sync()
@@ -513,10 +522,14 @@ if SERVER then
   -- @variant player_meta:take_items(id, amount)
   --   @param id [String]
   --   @param amount [Number]
-  -- @return [Boolean have the items been taken successfully, String text of the error that occurred]
+  -- @return [Boolean have the items been taken successfully, String text of the error that occurred,
+  --   'error.inventory.not_enough_items' for a player without the inventory]
   function player_meta:take_items(id, amount, inv_type)
     if inv_type then
       local inventory = self:get_inventory(inv_type)
+
+      if !inventory then return false, 'error.inventory.not_enough_items' end
+
       local success, error_text = inventory:take_items(id, amount)
 
       inventory:sync()
@@ -550,10 +563,15 @@ if SERVER then
   -- Takes the item from the inventory that has it.
   -- @variant player_meta:take_item_by_id(instance_id)
   --   @param instance_id [Number]
-  -- @return [Boolean was the item taken successfully, String text of the error that occurred]
+  -- @return [Boolean was the item taken successfully, String text of the error that occurred,
+  --   'error.inventory.invalid_item' when the player does not have the item or lacks the
+  --   inventory]
   function player_meta:take_item_by_id(instance_id, inv_type)
     if inv_type then
       local inventory = self:get_inventory(inv_type)
+
+      if !inventory then return false, 'error.inventory.invalid_item' end
+
       local success, error_text = inventory:take_item_by_id(instance_id)
 
       inventory:sync()
