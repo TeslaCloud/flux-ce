@@ -3,30 +3,30 @@ es:
     stamina:
       title: Aguante
       desc: Ajustes del plugin de aguante.
-      stam_drain_scale:
+      drain_scale:
         name: Escala de consumo
         desc: Lo rápido que se consume el aguante.
-      stam_regen_scale:
+      regen_scale:
         name: Escala de regeneración
         desc: Lo rápido que se regenera el aguante.
-      stam_jump_penalty:
+      jump_penalty:
         name: Penalización por salto
         desc: Cuántos puntos de aguante se quitan cuando el jugador salta.
-      stam_max:
+      max:
         name: Aguante máximo
         desc: Valor máximo del aguante del jugador.
-      stam_regen_delay:
+      regen_delay:
         name: Retraso de regeneración
         desc: Cuántos segundos esperar antes de empezar a regenerar el aguante.
-      stam_health_drain_scale:
+      health_drain_scale:
         name: Escala de consumo por salud
         desc: Cuánto más rápido se consume el aguante de un jugador herido. Con 1, un jugador casi muerto se cansa el doble de rápido; 0 lo desactiva.
-      stam_crouch_regen_scale:
+      crouch_regen_scale:
         name: Escala de regeneración agachado
         desc: Cuántas veces más rápido se regenera el aguante mientras el jugador está agachado. 1 lo desactiva.
-      stam_slowdown_threshold:
+      slowdown_threshold:
         name: Umbral de ralentización
         desc: Porcentaje del aguante máximo por debajo del cual un jugador que corre se ralentiza poco a poco hasta la velocidad de caminar y tiene que dejar de esprintar para recuperarse. Con 0, el jugador corre a toda velocidad hasta que se le acaba el aguante.
-      stam_persistent:
+      persistent:
         name: Guardar aguante
         desc: Si el aguante se guarda con el personaje y se restaura al cargarlo. De lo contrario, un personaje cargado siempre empieza con el aguante al máximo.

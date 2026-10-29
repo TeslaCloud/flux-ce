@@ -3,75 +3,84 @@ categories:
     name: config.stamina.title
     description: config.stamina.desc
 configs:
-  stam_drain_scale:
-    name: config.stamina.stam_drain_scale.name
-    description: config.stamina.stam_drain_scale.desc
+  stamina_drain_scale:
+    renamed_from: stam_drain_scale
+    name: config.stamina.drain_scale.name
+    description: config.stamina.drain_scale.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 100
     default_value: 1
-  stam_regen_scale:
-    name: config.stamina.stam_regen_scale.name
-    description: config.stamina.stam_regen_scale.desc
+  stamina_regen_scale:
+    renamed_from: stam_regen_scale
+    name: config.stamina.regen_scale.name
+    description: config.stamina.regen_scale.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 100
     default_value: 1
-  stam_jump_penalty:
-    name: config.stamina.stam_jump_penalty.name
-    description: config.stamina.stam_jump_penalty.desc
+  stamina_jump_penalty:
+    renamed_from: stam_jump_penalty
+    name: config.stamina.jump_penalty.name
+    description: config.stamina.jump_penalty.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 1024
     default_value: 25
-  stam_max:
-    name: config.stamina.stam_max.name
-    description: config.stamina.stam_max.desc
+  stamina_max:
+    renamed_from: stam_max
+    name: config.stamina.max.name
+    description: config.stamina.max.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 1024
     default_value: 100
-  stam_regen_delay:
-    name: config.stamina.stam_regen_delay.name
-    description: config.stamina.stam_regen_delay.desc
+  stamina_regen_delay:
+    renamed_from: stam_regen_delay
+    name: config.stamina.regen_delay.name
+    description: config.stamina.regen_delay.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 256
     default_value: 3
-  stam_health_drain_scale:
-    name: config.stamina.stam_health_drain_scale.name
-    description: config.stamina.stam_health_drain_scale.desc
+  stamina_health_drain_scale:
+    renamed_from: stam_health_drain_scale
+    name: config.stamina.health_drain_scale.name
+    description: config.stamina.health_drain_scale.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 10
     decimals: 1
     default_value: 0
-  stam_crouch_regen_scale:
-    name: config.stamina.stam_crouch_regen_scale.name
-    description: config.stamina.stam_crouch_regen_scale.desc
+  stamina_crouch_regen_scale:
+    renamed_from: stam_crouch_regen_scale
+    name: config.stamina.crouch_regen_scale.name
+    description: config.stamina.crouch_regen_scale.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 10
     decimals: 1
     default_value: 1
-  stam_slowdown_threshold:
-    name: config.stamina.stam_slowdown_threshold.name
-    description: config.stamina.stam_slowdown_threshold.desc
+  stamina_slowdown_threshold:
+    renamed_from: stam_slowdown_threshold
+    name: config.stamina.slowdown_threshold.name
+    description: config.stamina.slowdown_threshold.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 100
     default_value: 0
-  stam_persistent:
-    name: config.stamina.stam_persistent.name
-    description: config.stamina.stam_persistent.desc
+  stamina_persistent:
+    renamed_from: stam_persistent
+    name: config.stamina.persistent.name
+    description: config.stamina.persistent.desc
     category: stamina
     type: boolean
     default_value: false

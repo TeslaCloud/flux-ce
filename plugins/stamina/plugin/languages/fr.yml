@@ -3,30 +3,30 @@ fr:
     stamina:
       title: "Endurance"
       desc: "Paramètres du plugin d'endurance."
-      stam_drain_scale:
+      drain_scale:
         name: "Vitesse d'épuisement"
         desc: "Vitesse à laquelle l'endurance diminue."
-      stam_regen_scale:
+      regen_scale:
         name: "Vitesse de régénération"
         desc: "Vitesse à laquelle l'endurance se régénère."
-      stam_jump_penalty:
+      jump_penalty:
         name: "Coût d'un saut"
         desc: "Nombre de points d'endurance retirés quand le joueur saute."
-      stam_max:
+      max:
         name: "Endurance maximale"
         desc: "Valeur maximale de l'endurance du joueur."
-      stam_regen_delay:
+      regen_delay:
         name: "Délai de régénération"
         desc: "Nombre de secondes à attendre avant que l'endurance commence à se régénérer."
-      stam_health_drain_scale:
+      health_drain_scale:
         name: "Épuisement selon la santé"
         desc: "À quel point l'endurance d'un joueur blessé diminue plus vite. À 1, un joueur presque mort se fatigue deux fois plus vite ; 0 désactive cet effet."
-      stam_crouch_regen_scale:
+      crouch_regen_scale:
         name: "Régénération accroupi"
         desc: "Combien de fois plus vite l'endurance se régénère quand le joueur est accroupi. 1 désactive cet effet."
-      stam_slowdown_threshold:
+      slowdown_threshold:
         name: "Seuil de ralentissement"
         desc: "Pourcentage de l'endurance maximale en dessous duquel un joueur qui court ralentit peu à peu jusqu'à marcher, et doit cesser de sprinter pour récupérer. À 0, le joueur court à pleine vitesse jusqu'à épuisement de son endurance."
-      stam_persistent:
+      persistent:
         name: "Sauvegarder l'endurance"
         desc: "Indique si l'endurance est sauvegardée avec le personnage et restaurée à son chargement. Sinon, un personnage chargé commence toujours avec toute son endurance."

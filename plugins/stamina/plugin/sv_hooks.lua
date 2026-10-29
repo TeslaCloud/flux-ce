@@ -10,25 +10,25 @@ local timer_remove = timer.Remove
 
 Stamina.timer_ids = Stamina.timer_ids or {}
 
-local drain_scale = 4 * config_get('stam_drain_scale', 1)
-local regen_scale = 2 * config_get('stam_regen_scale', 1)
-local jump_penalty = config_get('stam_jump_penalty', 25)
-local max_stamina = config_get('stam_max', 100)
-local regen_delay = config_get('stam_regen_delay', 3)
-local health_drain_scale = config_get('stam_health_drain_scale', 0)
-local crouch_regen_scale = config_get('stam_crouch_regen_scale', 1)
-local slowdown_threshold = config_get('stam_slowdown_threshold', 0)
-local persistent = config_get('stam_persistent', false)
+local drain_scale = 4 * config_get('stamina_drain_scale', 1)
+local regen_scale = 2 * config_get('stamina_regen_scale', 1)
+local jump_penalty = config_get('stamina_jump_penalty', 25)
+local max_stamina = config_get('stamina_max', 100)
+local regen_delay = config_get('stamina_regen_delay', 3)
+local health_drain_scale = config_get('stamina_health_drain_scale', 0)
+local crouch_regen_scale = config_get('stamina_crouch_regen_scale', 1)
+local slowdown_threshold = config_get('stamina_slowdown_threshold', 0)
+local persistent = config_get('stamina_persistent', false)
 
 --- Returns the stamina below which a running player is slowed down, as set by the
--- 'stam_slowdown_threshold' config.
+-- 'stamina_slowdown_threshold' config.
 -- @return [Number stamina points; 0 when the gradual slowdown is off]
 local function get_slowdown_start()
   return max_stamina * slowdown_threshold * 0.01
 end
 
 --- Returns the run speed a player should have with the given stamina. An exhausted player
--- runs at their walk speed. With the 'stam_slowdown_threshold' config set, the speed falls
+-- runs at their walk speed. With the 'stamina_slowdown_threshold' config set, the speed falls
 -- from the 'run_speed' config to the walk speed as the stamina goes from the threshold to
 -- zero; without it the player keeps the full run speed until they are exhausted.
 -- @param actor [Player]
@@ -51,7 +51,7 @@ local function get_run_speed(actor, stamina)
 end
 
 --- Checks whether a player is running as far as stamina is concerned. A player who is
--- slowed down by the 'stam_slowdown_threshold' config may be too slow for `Player:running`,
+-- slowed down by the 'stamina_slowdown_threshold' config may be too slow for `Player:running`,
 -- so they also count as running while they hold the sprint key and move on foot at about
 -- their walk speed or faster. This keeps their stamina draining until they stop sprinting.
 -- @param actor [Player]
@@ -70,7 +70,7 @@ local function is_running(actor, stamina)
     and actor:KeyDown(IN_SPEED) and actor:GetVelocity():Length2DSqr() > (actor:GetWalkSpeed() * 0.9) ^ 2
 end
 
---- Stops the stamina regeneration of a player. It starts again once the 'stam_regen_delay'
+--- Stops the stamina regeneration of a player. It starts again once the 'stamina_regen_delay'
 -- config has passed, unless the player is running by then.
 -- @param target [Player]
 local function delay_regen(target)
@@ -80,8 +80,8 @@ local function delay_regen(target)
   timer_pause('stam_regen_'..target:SteamID64())
 end
 
---- Returns how much stamina a running player loses on a drain tick: the 'stam_drain_scale'
--- config, scaled by the GetStaminaDrainScale hook and, if the 'stam_health_drain_scale'
+--- Returns how much stamina a running player loses on a drain tick: the 'stamina_drain_scale'
+-- config, scaled by the GetStaminaDrainScale hook and, if the 'stamina_health_drain_scale'
 -- config is set, by the health the player is missing.
 -- @param target [Player]
 -- @return [Number stamina points]
@@ -102,9 +102,9 @@ local function get_drain_amount(target)
   return drain_scale * adjust_scale
 end
 
---- Returns how much stamina a player recovers on a regeneration tick: the 'stam_regen_scale'
+--- Returns how much stamina a player recovers on a regeneration tick: the 'stamina_regen_scale'
 -- config, scaled by the GetStaminaRegenScale hook and, while the player is crouching, by
--- the 'stam_crouch_regen_scale' config.
+-- the 'stamina_crouch_regen_scale' config.
 -- @param target [Player]
 -- @return [Number stamina points]
 local function get_regen_amount(target)
@@ -121,28 +121,28 @@ local function get_regen_amount(target)
   return regen_scale * adjust_scale
 end
 
---- Keeps the cached stamina settings in sync with changes of the 'stam_' config keys.
+--- Keeps the cached stamina settings in sync with changes of the 'stamina_' config keys.
 -- @param key [String config key]
 -- @param _old_value [Any]
 -- @param new_value [Any]
 function Stamina:ConfigChanged(key, _old_value, new_value)
-  if key == 'stam_drain_scale' then
+  if key == 'stamina_drain_scale' then
     drain_scale = 4 * new_value
-  elseif key == 'stam_regen_scale' then
+  elseif key == 'stamina_regen_scale' then
     regen_scale = 2 * new_value
-  elseif key == 'stam_max' then
+  elseif key == 'stamina_max' then
     max_stamina = new_value
-  elseif key == 'stam_jump_penalty' then
+  elseif key == 'stamina_jump_penalty' then
     jump_penalty = new_value
-  elseif key == 'stam_regen_delay' then
+  elseif key == 'stamina_regen_delay' then
     regen_delay = new_value
-  elseif key == 'stam_health_drain_scale' then
+  elseif key == 'stamina_health_drain_scale' then
     health_drain_scale = new_value
-  elseif key == 'stam_crouch_regen_scale' then
+  elseif key == 'stamina_crouch_regen_scale' then
     crouch_regen_scale = new_value
-  elseif key == 'stam_slowdown_threshold' then
+  elseif key == 'stamina_slowdown_threshold' then
     slowdown_threshold = new_value
-  elseif key == 'stam_persistent' then
+  elseif key == 'stamina_persistent' then
     persistent = new_value
   end
 end
@@ -156,7 +156,7 @@ function Stamina:PostPlayerSpawn(actor)
 end
 
 --- Remembers which character the stamina of the player belongs to and, if the
--- 'stam_persistent' config is on, gives the player the stamina that was saved with the
+-- 'stamina_persistent' config is on, gives the player the stamina that was saved with the
 -- character. A character without saved stamina keeps the full stamina it spawned with.
 -- Only runs when the Characters plugin is loaded.
 -- @param owner [Player]
@@ -185,7 +185,7 @@ end
 
 --- Writes the stamina of the player into the generic data of their character before it is
 -- saved, under the 'stamina' key. Nothing is kept for a dead player, so that the character
--- is loaded with full stamina next time, or while the 'stam_persistent' config is off: a
+-- is loaded with full stamina next time, or while the 'stamina_persistent' config is off: a
 -- value that was saved before is then cleared once, and nothing is written as long as
 -- there is none. A player counts as dead once their health is gone, because the save that
 -- follows a death runs while `Player:Alive` still returns true.
@@ -275,7 +275,7 @@ function Stamina:OnReloaded()
   end
 end
 
---- Sets the player's stamina, clamped between 0 and the 'stam_max' config value, and
+--- Sets the player's stamina, clamped between 0 and the 'stamina_max' config value, and
 -- networks it. Serverside only.
 -- @param target [Player]
 -- @param stamina [Number]
@@ -285,7 +285,7 @@ end
 
 --- Returns the player's current stamina. Serverside only.
 -- @param target [Player]
--- @return [Number current stamina, or the 'stam_max' config value if it was never set]
+-- @return [Number current stamina, or the 'stamina_max' config value if it was never set]
 function Stamina:get_stamina(target)
   return target:get_nv('stamina', max_stamina)
 end
@@ -329,7 +329,7 @@ function Stamina:can_regenerate(target)
   return should_regenerate != false
 end
 
---- Takes stamina from the player and delays its regeneration by the 'stam_regen_delay'
+--- Takes stamina from the player and delays its regeneration by the 'stamina_regen_delay'
 -- config, the way jumping does. Nothing is taken when the stamina may not drain.
 -- Serverside only.
 -- ```
