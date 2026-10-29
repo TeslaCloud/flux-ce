@@ -1231,3 +1231,20 @@ function Dice.d(sides, count)
 
   return total
 end
+
+--- Adds a flat modifier to a formula: `Dice.with_modifier('1d20', 3)` is '1d20 + 3', a
+-- modifier of -2 gives '1d20 - 2' and a modifier of 0 leaves the formula as it is.
+-- @param formula [String dice formula]
+-- @param modifier [Number modifier to add; anything that is not a number counts as 0]
+-- @return [String formula with the modifier]
+function Dice.with_modifier(formula, modifier)
+  modifier = tonumber(modifier) or 0
+
+  if modifier > 0 then
+    return formula..' + '..modifier
+  elseif modifier < 0 then
+    return formula..' - '..math_abs(modifier)
+  end
+
+  return formula
+end

@@ -125,19 +125,6 @@ function D20:get_attack_modifier(attacker)
   return 0
 end
 
---- Builds the formula of an attack roll: a d20 plus a modifier.
--- @param modifier [Number]
--- @return [String formula such as '1d20 + 5', '1d20 - 2' or '1d20']
-function D20:get_attack_formula(modifier)
-  if modifier > 0 then
-    return '1d20 + '..modifier
-  elseif modifier < 0 then
-    return '1d20 - '..-modifier
-  end
-
-  return '1d20'
-end
-
 if SERVER then
   --- Rolls whether an attack hits: a d20 plus the attack modifier of the attacker (see
   -- `D20:get_attack_modifier`) and any `bonus` of the info table, after the AdjustAttackRoll
@@ -163,7 +150,7 @@ if SERVER then
     local modifier = self:get_attack_modifier(attacker) + (tonumber(info.bonus) or 0)
 
     info.modifier = modifier
-    info.formula = info.formula or self:get_attack_formula(modifier)
+    info.formula = info.formula or Dice.with_modifier('1d20', modifier)
 
     if !isnumber(info.armor_class) then
       info.armor_class = IsValid(target) and target:get_armor_class() or 10
@@ -196,7 +183,7 @@ if SERVER then
     if !result then
       Flux.dev_print('Invalid attack roll formula \''..tostring(info.formula)..'\': '..tostring(err))
 
-      result = Dice.roll(self:get_attack_formula(modifier))
+      result = Dice.roll(Dice.with_modifier('1d20', modifier))
     end
 
     local hit = result.total >= armor_class

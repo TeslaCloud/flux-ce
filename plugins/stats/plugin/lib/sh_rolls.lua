@@ -67,22 +67,6 @@ function Stats:get_proficiency(target, skill_id)
   return rank * self:get_rank_bonus() + self:get_character_level(target)
 end
 
---- Builds the formula of a roll with a modifier: '1d20 + 3', '1d20 - 2', or '1d20' for a
--- modifier of 0.
--- @param modifier [Number]
--- @return [String]
-function Stats:get_roll_formula(modifier)
-  modifier = tonumber(modifier) or 0
-
-  if modifier > 0 then
-    return '1d20 + '..modifier
-  elseif modifier < 0 then
-    return '1d20 - '..math.abs(modifier)
-  end
-
-  return '1d20'
-end
-
 --- Describes the result of a roll in short: the dice and the total as
 -- `Dice.format_compact` writes them ('d20 (14) + 3 = 17'), and a note when the roll is a
 -- critical success or failure.
@@ -181,7 +165,7 @@ local function roll(actor, id, kind, modifier)
     id = id,
     kind = kind,
     modifier = modifier,
-    formula = Stats:get_roll_formula(modifier)
+    formula = Dice.with_modifier('1d20', modifier)
   }
 
   --- Lets plugins change a roll of a stat or a skill before it is rolled, for example to
@@ -203,7 +187,7 @@ local function roll(actor, id, kind, modifier)
   --   change it to change the roll)]
   hook.Run('AdjustAttributeRoll', actor, roll_data)
 
-  local formula = isstring(roll_data.formula) and roll_data.formula or Stats:get_roll_formula(modifier)
+  local formula = isstring(roll_data.formula) and roll_data.formula or Dice.with_modifier('1d20', modifier)
 
   return Dice.roll(formula)
 end
