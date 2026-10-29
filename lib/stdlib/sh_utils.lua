@@ -4,7 +4,8 @@
 -- on the client, color and number conversions with `Color` and `math`. This file also holds
 -- general-purpose global functions: formatted printing, `txt` for indented multi-line text,
 -- error reporting with tracebacks, `enumerate` for creating enumerator globals and
--- `include_sandboxed` for running a file in a restricted environment.
+-- `include_sandboxed` for running a file in a restricted environment, and the `game` helpers that
+-- list the ammo types and the maps.
 -- @module [util]
 
 local ipairs = ipairs
@@ -26,6 +27,51 @@ function game.get_ammo_list()
   end
 
   return ammo_table
+end
+
+local map_list
+
+--- Returns the names of the maps that can be loaded, without the .bsp extension and sorted.
+-- Only names made of letters, digits, underscores, dashes and dots are listed, since a map
+-- name ends up in a file path and in a console command. The list is read once and kept; on
+-- the client it holds the maps the client has.
+-- @return [List<String> map names]
+function game.get_maps()
+  if map_list then
+    return map_list
+  end
+
+  local found = {}
+
+  for _, file_name in ipairs(file.Find('maps/*.bsp', 'GAME') or {}) do
+    local name = file_name:gsub('%.bsp$', '')
+
+    if name:match('^[%w_%-%.]+$') then
+      found[#found + 1] = name
+    end
+  end
+
+  table.sort(found)
+
+  map_list = found
+
+  return found
+end
+
+--- Finds a map by its name without the .bsp extension, matched exactly but in any case.
+-- @param name [String map name]
+-- @return [String the name of the map as its file has it, or nil if there is no such map]
+-- @see [game.get_maps]
+function game.find_map(name)
+  if !isstring(name) or name == '' then return end
+
+  local lower = name:utf8lower()
+
+  for _, map_name in ipairs(game.get_maps()) do
+    if map_name:utf8lower() == lower then
+      return map_name
+    end
+  end
 end
 
 --- Checks whether all of the arguments in vararg are valid (via IsValid).

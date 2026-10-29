@@ -523,28 +523,6 @@ function Bolt:check_role_immunity(actor, role_id, can_equal)
   return compare_immunity(roles[actor:GetUserGroup()], roles[role_id], can_equal)
 end
 
---- Checks whether a value has the form of a SteamID, such as 'STEAM_0:1:12345'.
--- @param text [Any]
--- @return [Boolean]
-function Bolt:is_steam_id(text)
-  return isstring(text) and text:match('^STEAM_%d:[01]:%d+$') != nil
-end
-
---- Brings a SteamID into the form the engine gives it, upper case and with the universe digit
--- 0, so that 'steam_1:1:12345' becomes 'STEAM_0:1:12345'. Anything that is not a SteamID in
--- any case is returned as it is.
--- @param text [Any]
--- @return [Any the SteamID in the engine's form, or text]
-function Bolt:normalize_steam_id(text)
-  if !isstring(text) then return text end
-
-  local upper = text:upper()
-
-  if !self:is_steam_id(upper) then return text end
-
-  return (upper:gsub('^STEAM_%d:', 'STEAM_0:', 1))
-end
-
 --- Checks whether a SteamID is listed in the root_steamid config, which makes its owner a
 -- root player when they join.
 -- @param steam_id [String]
@@ -603,49 +581,6 @@ function Bolt:find_permission(id)
 
   if cmd then
     return lookup_permission(cmd:get_permission())
-  end
-end
-
---- Returns the names of the maps that can be loaded, without the .bsp extension and sorted.
--- Only names made of letters, digits, underscores, dashes and dots are listed, since a map
--- name ends up in a file path and in a console command. The list is read once and kept; on
--- the client it holds the maps the client has.
--- @return [List<String> map names]
-function Bolt:get_maps()
-  if self.map_list then
-    return self.map_list
-  end
-
-  local map_list = {}
-
-  for _, file_name in ipairs(file.Find('maps/*.bsp', 'GAME') or {}) do
-    local name = file_name:gsub('%.bsp$', '')
-
-    if name:match('^[%w_%-%.]+$') then
-      map_list[#map_list + 1] = name
-    end
-  end
-
-  table.sort(map_list)
-
-  self.map_list = map_list
-
-  return map_list
-end
-
---- Finds a map by its name without the .bsp extension, matched exactly but in any case.
--- @param name [String map name]
--- @return [String the name of the map as its file has it, or nil if there is no such map]
--- @see [Bolt#get_maps]
-function Bolt:find_map(name)
-  if !isstring(name) or name == '' then return end
-
-  local lower = name:utf8lower()
-
-  for _, map_name in ipairs(self:get_maps()) do
-    if map_name:utf8lower() == lower then
-      return map_name
-    end
   end
 end
 
@@ -739,7 +674,7 @@ if SERVER then
     local steam_id = target
 
     if isstring(target) then
-      local online = self:is_steam_id(target) and player.find(target)
+      local online = player.is_steam_id(target) and player.find(target)
 
       if IsValid(online) then
         target = online

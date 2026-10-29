@@ -19,7 +19,7 @@ CMD.alias = 'map'
 -- @param map_name [String map name without the .bsp extension]
 -- @param delay=0 [String delay in seconds]
 function CMD:on_run(actor, map_name, delay)
-  local map = Bolt:find_map(tostring(map_name))
+  local map = game.find_map(tostring(map_name))
 
   delay = tonumber(delay)
 

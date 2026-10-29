@@ -323,9 +323,9 @@ end)
 
 Cable.receive('fl_bolt_demote', function(actor, steam_id)
   if !actor:can('manage_permissions') then return end
-  if !Bolt:is_steam_id(steam_id) then return end
+  if !player.is_steam_id(steam_id) then return end
 
-  steam_id = Bolt:normalize_steam_id(steam_id)
+  steam_id = player.normalize_steam_id(steam_id)
 
   Bolt:demote_steam_id(actor, steam_id, function(name)
     Command:notify_staff('command.role.remove.message', {

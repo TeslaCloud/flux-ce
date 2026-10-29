@@ -1,5 +1,6 @@
 --- Extensions of the `player` library: picking a random player, finding players by a part of
--- their name, by their exact name or by SteamID, and looking up the Steam name of a SteamID.
+-- their name, by their exact name or by SteamID, checking and normalizing SteamIDs, and looking
+-- up the Steam name of a SteamID.
 
 --- Selects a random player.
 -- @return [Player random player, or nil if there are no players on the server]
@@ -105,6 +106,28 @@ function player.find_exact(name)
   end
 
   return by_steam_name
+end
+
+--- Checks whether a value has the form of a SteamID, such as 'STEAM_0:1:12345'.
+-- @param text [Any]
+-- @return [Boolean]
+function player.is_steam_id(text)
+  return isstring(text) and text:match('^STEAM_%d:[01]:%d+$') != nil
+end
+
+--- Brings a SteamID into the form the engine gives it, upper case and with the universe digit
+-- 0, so that 'steam_1:1:12345' becomes 'STEAM_0:1:12345'. Anything that is not a SteamID in
+-- any case is returned as it is.
+-- @param text [Any]
+-- @return [Any the SteamID in the engine's form, or text]
+function player.normalize_steam_id(text)
+  if !isstring(text) then return text end
+
+  local upper = text:upper()
+
+  if !player.is_steam_id(upper) then return text end
+
+  return (upper:gsub('^STEAM_%d:', 'STEAM_0:', 1))
 end
 
 --- Requests the Steam name that belongs to a SteamID through steamworks.

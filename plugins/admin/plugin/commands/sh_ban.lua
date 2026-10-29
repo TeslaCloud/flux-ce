@@ -88,7 +88,7 @@ remove.arg_types = { 'steamid' }
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param steam_id [String SteamID to unban]
 function remove:on_run(actor, steam_id)
-  steam_id = Bolt:normalize_steam_id(tostring(steam_id):upper())
+  steam_id = player.normalize_steam_id(tostring(steam_id):upper())
 
   local success, copy = Bolt:remove_ban(steam_id)
 

@@ -85,14 +85,10 @@ local function complete_role()
   return ids
 end
 
-local function complete_map()
-  return Bolt:get_maps()
-end
-
 Flux.Command:add_completer('duration', complete_duration)
 Flux.Command:add_completer('permission', complete_permission)
 Flux.Command:add_completer('role', complete_role)
-Flux.Command:add_completer('map', complete_map)
+Flux.Command:add_completer('map', game.get_maps)
 
 --- Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.
 function Bolt:OnPluginLoaded()
