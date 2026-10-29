@@ -24,4 +24,5 @@ Package:describe(function(s)
   s.depends     'active_ui'
   s.depends     'client_settings'
   s.depends     'conditions'
+  s.depends     'cami'
 end)
