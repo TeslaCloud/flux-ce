@@ -3,14 +3,16 @@
 -- server shuts down or changes the map.
 -- @module [Flux]
 
---- Saves all persistent data, unless a ShouldSaveData handler returns false: runs the
--- PreSaveData hook, saves the config, then runs the SaveData and PostSaveData hooks.
+--- Saves all persistent data: runs the PreSaveData hook, saves the config, then runs the
+-- SaveData and PostSaveData hooks. A ShouldSaveData handler can skip a periodic save; the
+-- save while the server shuts down or changes the map (`Flux.shutting_down`) always happens.
 function Flux.save_data()
   --- Asks whether the persistent data may be saved now. Called on the server every
   -- `data_save_interval` seconds (360 unless configured), for the first time about ten
-  -- seconds after the server has started, and when the server shuts down or changes the map.
+  -- seconds after the server has started. Not asked for the save while the server shuts down
+  -- or changes the map, which is never skipped.
   -- @return [Boolean Return false to skip this save]
-  if hook.Run('ShouldSaveData') == false then return end
+  if !Flux.shutting_down and hook.Run('ShouldSaveData') == false then return end
 
   --- Called on the server at the start of a data save, before the config is saved and before
   -- the `SaveData` handlers run, for work that the saved state depends on. The return value
