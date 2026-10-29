@@ -161,7 +161,7 @@ function Cinematics:play_intro(char_id)
   }
 
   --- Called on the client before the intro cinematic is queued, which happens when the local
-  -- player loads a character for the first time since joining (unless the 'cinematic_intro'
+  -- player loads a character for the first time since joining (unless the 'cinematics_intro'
   -- config is off) and whenever `Cinematics:play_intro` is called. Lets a schema change,
   -- replace or suppress the intro.
   -- @param intro [Map the cinematic about to be queued, with the fields that `Cinematics:add`

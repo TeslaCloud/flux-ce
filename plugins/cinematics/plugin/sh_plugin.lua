@@ -24,7 +24,7 @@
 --
 -- When a player loads a character for the first time since joining, the plugin plays an intro:
 -- the name of the schema as the title, its description as the subtitle and a credits line
--- with its author as the caption. The 'cinematic_intro' config turns the intro off, and the
+-- with its author as the caption. The 'cinematics_intro' config turns the intro off, and the
 -- `GetCinematicIntroInfo` hook lets a schema change, replace or suppress it.
 --
 -- The look comes from the theme, which the plugin fills in from its `OnThemeLoaded` handler:

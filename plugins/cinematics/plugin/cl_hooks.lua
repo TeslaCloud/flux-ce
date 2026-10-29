@@ -67,14 +67,14 @@ function Cinematics:ShouldHUDPaintCrosshair()
 end
 
 --- Plays the intro when the local player loads a character for the first time since joining,
--- unless the 'cinematic_intro' config is off.
+-- unless the 'cinematics_intro' config is off.
 -- @param char_id [Number ID of the character that has been loaded]
 function Cinematics:PostCharacterLoaded(char_id)
   if self.intro_played then return end
 
   self.intro_played = true
 
-  if Config.get('cinematic_intro', true) then
+  if Config.get('cinematics_intro', true) then
     self:play_intro(char_id)
   end
 end

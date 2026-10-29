@@ -3,7 +3,8 @@ categories:
     name: config.cinematics.title
     description: config.cinematics.desc
 configs:
-  cinematic_intro:
+  cinematics_intro:
+    renamed_from: cinematic_intro
     name: config.cinematics.intro.name
     description: config.cinematics.intro.desc
     category: cinematics
