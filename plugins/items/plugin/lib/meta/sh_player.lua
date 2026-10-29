@@ -5,7 +5,8 @@
 -- active. The inventories belong to the character, and the items of the character are
 -- loaded from the database into them right afterward. The functions that look items up
 -- work on both the server and the client; those that take an optional `inv_type` go
--- through all inventories of the player when it is omitted. The server-side functions that
+-- through all inventories of the player when it is omitted and answer as for an empty
+-- inventory when the player has no inventory of that type. The server-side functions that
 -- give, take and move the items of a player are in `sv_player.lua`.
 -- @module [Player]
 
@@ -36,7 +37,7 @@ end
 -- @return [List<Item> items]
 function player_meta:get_items(inv_type)
   if inv_type then
-    return self:get_inventory(inv_type):get_items()
+    return self:get_inventory(inv_type)?.:get_items() ?? {}
   else
     local items = {}
 
@@ -57,7 +58,7 @@ end
 -- @return [List<Number> numbers]
 function player_meta:get_items_ids(inv_type)
   if inv_type then
-    return self:get_inventory(inv_type):get_items_ids()
+    return self:get_inventory(inv_type)?.:get_items_ids() ?? {}
   else
     local items = {}
 
@@ -73,18 +74,20 @@ end
 -- @param x [Number]
 -- @param y [Number]
 -- @param inv_type [String]
--- @return [List<Number> numbers]
+-- @return [List<Number> numbers, or nil when the slot is out of bounds or the player has no
+--   such inventory]
 function player_meta:get_slot(x, y, inv_type)
-  return self:get_inventory(inv_type):get_slot(x, y)
+  return self:get_inventory(inv_type)?.:get_slot(x, y)
 end
 
 --- Get the first instance_id from a certain slot of the specified inventory.
 -- @param x [Number]
 -- @param y [Number]
 -- @param inv_type [String]
--- @return [Number]
+-- @return [Number instance id, or nil when the slot is empty or the player has no such
+--   inventory]
 function player_meta:get_first_in_slot(x, y, inv_type)
-  return self:get_inventory(inv_type):get_first_in_slot(x, y)
+  return self:get_inventory(inv_type)?.:get_first_in_slot(x, y)
 end
 
 --- Get the amount of items with a certain id from the specified inventory or from all of them.
@@ -98,7 +101,7 @@ end
 -- @return [Number]
 function player_meta:get_items_count(id, inv_type)
   if inv_type then
-    return self:get_inventory(inv_type):get_items_count(id)
+    return self:get_inventory(inv_type)?.:get_items_count(id) ?? 0
   else
     local count = 0
 
@@ -121,7 +124,7 @@ end
 -- @return [Item]
 function player_meta:find_item(id, inv_type)
   if inv_type then
-    return self:get_inventory(inv_type):find_item(id)
+    return self:get_inventory(inv_type)?.:find_item(id)
   else
     for _, inventory in pairs(self:get_inventories()) do
       local item_obj = inventory:find_item(id)
@@ -144,7 +147,7 @@ end
 -- @return [List<Item> items]
 function player_meta:find_items(id, inv_type)
   if inv_type then
-    return self:get_inventory(inv_type):find_items(id)
+    return self:get_inventory(inv_type)?.:find_items(id) ?? {}
   else
     local items = {}
 
@@ -167,7 +170,11 @@ end
 -- @return [Boolean, Item found item]
 function player_meta:has_item(id, inv_type)
   if inv_type then
-    return self:get_inventory(inv_type):has_item(id)
+    local inventory = self:get_inventory(inv_type)
+
+    if !inventory then return false end
+
+    return inventory:has_item(id)
   else
     for _, inventory in pairs(self:get_inventories()) do
       local found, item_obj = inventory:has_item(id)
@@ -192,7 +199,11 @@ end
 -- @return [Boolean, Item found item]
 function player_meta:has_item_by_id(instance_id, inv_type)
   if inv_type then
-    return self:get_inventory(inv_type):has_item_by_id(instance_id)
+    local inventory = self:get_inventory(inv_type)
+
+    if !inventory then return false end
+
+    return inventory:has_item_by_id(instance_id)
   else
     for _, inventory in pairs(self:get_inventories()) do
       local found, item_obj = inventory:has_item_by_id(instance_id)

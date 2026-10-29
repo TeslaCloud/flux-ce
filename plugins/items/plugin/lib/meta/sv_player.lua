@@ -172,10 +172,10 @@ function player_meta:sync_inventories()
   end
 end
 
---- Synchronize only the specified inventory.
+--- Synchronize only the specified inventory, if the player has it.
 -- @param inv_type [String]
 function player_meta:sync_inventory(inv_type)
-  self:get_inventory(inv_type):sync()
+  self:get_inventory(inv_type)?.:sync()
 end
 
 --- Give the player a certain item.
