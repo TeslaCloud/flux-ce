@@ -80,7 +80,7 @@ Cable.receive('fl_key_copy', function(actor, instance_id)
   -- @param actor [Player player copying the key]
   -- @param item_obj [Item the copy]
   -- @param source_item [Item the key that is copied]
-  hook.Run('OnKeyCopy', actor, item_obj, source_item)
+  hook.Run('AdjustKeyCopy', actor, item_obj, source_item)
 
   if !give_new_item(actor, item_obj) then return end
 

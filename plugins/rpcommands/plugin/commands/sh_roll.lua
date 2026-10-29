@@ -5,7 +5,7 @@
 -- IDs of stats and skills, which stand for the modifiers of the player, and `level`, the
 -- level of their character. While the 'roll_versus' config is enabled, rolling while
 -- looking at a nearby player rolls the same thing for both of them in one line. Plugins can
--- adjust any roll through the `PlayerAdjustRoll` hook.
+-- adjust any roll through the `AdjustPlayerRoll` hook.
 
 local config_get = Config.get
 
@@ -89,7 +89,7 @@ local function adjust_roll(roller, result, formula, opponent)
   --   in place, a total that is not a number is put back), formula (String the formula
   --   that was rolled, or the ID of the stat or the skill) and opponent (Player the other
   --   player of a versus roll, nil for a plain roll)]
-  hook.Run('PlayerAdjustRoll', roller, roll_data)
+  hook.Run('AdjustPlayerRoll', roller, roll_data)
 
   local adjusted = tonumber(result.total)
 

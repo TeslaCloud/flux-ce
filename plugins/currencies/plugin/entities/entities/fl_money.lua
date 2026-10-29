@@ -59,7 +59,7 @@ if SERVER then
   -- PrePlayerPickupMoney hooks, gives the money to the activator with
   -- `Currencies:pickup_money` and removes the entity. Only players pick money up, and money
   -- that is being removed cannot be picked up again. The entity stays if either hook
-  -- returns false or if the money is refused, as it is when the AdjustReceivedMoney hook
+  -- returns false or if the money is refused, as it is when the CanEntityReceiveMoney hook
   -- refuses it.
   -- @param activator [Entity]
   -- @param _caller [Entity]

@@ -38,7 +38,8 @@ local function can_gain_combat_experience(actor)
     actor:IsPlayer() and actor:is_character_loaded()
 end
 
---- Gives a player combat experience after the AdjustCombatExperience hook has had its say.
+--- Gives a player combat experience unless the PlayerCanGainCombatExperience hook refuses it,
+-- after the AdjustCombatExperience hook has changed it.
 -- @param actor [Player the player who fought]
 -- @param amount [Number experience before the hook]
 -- @param reason [String 'damage' or 'kill']
@@ -52,9 +53,20 @@ local function give_combat_experience(actor, amount, reason, victim, damage_info
     damage_info = damage_info
   }
 
-  --- Lets plugins change or cancel the experience a player gains in combat while the
-  -- `levels_combat_experience` config is on. Called on the server by the Levels plugin for
-  -- the damage a player deals to an NPC or another player and for every NPC a player kills.
+  --- Decides whether a player gains experience in combat while the `levels_combat_experience`
+  -- config is on. Called on the server by the Levels plugin for the damage a player deals to
+  -- an NPC or another player and for every NPC a player kills, before
+  -- `AdjustCombatExperience`.
+  -- @param actor [Player The player who would gain the experience]
+  -- @param info [Map amount (Number experience to give), reason ('damage' or 'kill'),
+  --   victim (Entity the NPC or player that was hurt or killed) and damage_info
+  --   (CTakeDamageInfo the damage that was dealt; nil for a kill)]
+  -- @return [Boolean Return false to give no experience]
+  if hook.Run('PlayerCanGainCombatExperience', actor, info) == false then return end
+
+  --- Lets plugins change the experience a player gains in combat, once
+  -- `PlayerCanGainCombatExperience` has allowed it. Every handler may change the table, so
+  -- a handler returns nothing.
   -- Change `info.amount` to give another amount; an amount that is not above 0 gives none.
   -- ```
   -- function PLUGIN:AdjustCombatExperience(actor, info)
@@ -67,9 +79,7 @@ local function give_combat_experience(actor, amount, reason, victim, damage_info
   -- @param info [Map amount (Number experience to give), reason ('damage' or 'kill'),
   --   victim (Entity the NPC or player that was hurt or killed) and damage_info
   --   (CTakeDamageInfo the damage that was dealt; nil for a kill)]
-  -- @return [Boolean Return false to give no experience. Return nothing to let other
-  --   handlers run]
-  if hook.Run('AdjustCombatExperience', actor, info) == false then return end
+  hook.Run('AdjustCombatExperience', actor, info)
 
   amount = math_floor(tonumber(info.amount) or 0)
 

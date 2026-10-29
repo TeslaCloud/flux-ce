@@ -133,7 +133,7 @@ end
 
 --- Freezes the entity and marks it as frozen with the 'fl_frozen' networked variable.
 -- Players are unable to move and to use their active weapon, NPCs are put to sleep.
--- Runs the 'EntityFreeze' hook afterward. Meant to be called on the server.
+-- Runs the 'EntityFrozen' hook afterward. Meant to be called on the server.
 -- @see [Entity#unfreeze]
 -- @see [Player#freeze_move]
 -- @see [Player#freeze_gun]
@@ -150,11 +150,11 @@ function ent_meta:freeze()
   --- Called after an entity has been frozen with `Entity:freeze`, on the realm that
   -- function was called on (it is meant for the server).
   -- @param entity [Entity The entity that has been frozen; can be a player]
-  hook.Run('EntityFreeze', self)
+  hook.Run('EntityFrozen', self)
 end
 
 --- Unfreezes the entity that was frozen with Entity#freeze.
--- Runs the 'EntityUnfreeze' hook afterward. Meant to be called on the server.
+-- Runs the 'EntityUnfrozen' hook afterward. Meant to be called on the server.
 -- @see [Entity#freeze]
 function ent_meta:unfreeze()
   if self:IsPlayer() then
@@ -169,7 +169,7 @@ function ent_meta:unfreeze()
   --- Called after an entity has been unfrozen with `Entity:unfreeze`, on the realm that
   -- function was called on (it is meant for the server).
   -- @param entity [Entity The entity that has been unfrozen; can be a player]
-  hook.Run('EntityUnfreeze', self)
+  hook.Run('EntityUnfrozen', self)
 end
 
 --- Checks whether the entity has been frozen with Entity#freeze.

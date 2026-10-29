@@ -14,7 +14,7 @@
 --
 -- The `ShouldRemoveMapEntity` hook decides about single entities: a schema uses it to keep
 -- an entity whose class is on the list, or to remove one that is not, which is how fixes for
--- a particular map are made. `PostMapClean` runs after every pass.
+-- a particular map are made. `MapCleaned` runs after every pass.
 -- ```
 -- function SCHEMA:ShouldRemoveMapEntity(entity, ent_class, matched)
 --   if ent_class == 'func_button' and entity:GetName() == 'gunstore' then

@@ -105,7 +105,7 @@ end
 
 --- Makes a player sell a door that their active character owns, together with the doors
 -- linked with it: asks the PlayerCanSellDoor hook, pays the refund and releases the door.
--- Nothing changes if the AdjustReceivedMoney hook refuses the refund. The player is told
+-- Nothing changes if the CanEntityReceiveMoney hook refuses the refund. The player is told
 -- about a sale, with the refund they have actually received; a refusal is returned for the
 -- caller to tell.
 -- @param actor [Player]

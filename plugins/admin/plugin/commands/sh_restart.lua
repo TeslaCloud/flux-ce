@@ -1,5 +1,5 @@
 --- The Restart command reloads the current map, optionally after a delay in seconds. It runs the
--- `ServerRestart` hook first. The map change saves everything through the gamemode's
+-- `PreMapChange` hook first. The map change saves everything through the gamemode's
 -- `ShutDown` handler.
 
 CMD.name = 'Restart'
@@ -26,10 +26,14 @@ function CMD:on_run(actor, delay)
   })
 
   timer.Simple(delay, function()
-    --- Called on the server when the Restart command is about to reload the map. The map
-    -- change that follows saves every player through the gamemode's `ShutDown` handler.
-    hook.Run('ServerRestart')
+    local map = game.GetMap()
 
-    RunConsoleCommand('changelevel', game.GetMap())
+    --- Called on the server right before the Restart or the Changelevel command changes the
+    -- map; the Restart command changes it to the current one. The map change that follows
+    -- saves everything through the gamemode's `ShutDown` handler.
+    -- @param map [String name of the map that is about to be loaded]
+    hook.Run('PreMapChange', map)
+
+    RunConsoleCommand('changelevel', map)
   end)
 end

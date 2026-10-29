@@ -10,8 +10,8 @@
 -- commands. When the `levels_combat_experience` config is on, players also gain experience
 -- for the damage they deal to NPCs and other players (`levels_experience_per_damage`) and
 -- for the NPCs they kill (`levels_experience_per_kill`, more for NPCs with more health); the
--- `AdjustCombatExperience` hook changes or cancels that experience. `PlayerExperienceChanged`
--- and `PlayerLevelChanged` report every change.
+-- `PlayerCanGainCombatExperience` hook refuses and the `AdjustCombatExperience` hook changes
+-- that experience. `PlayerExperienceChanged` and `PlayerLevelChanged` report every change.
 --
 -- Every level after the first grants `levels_skill_points_per_level` skill points, and every
 -- `levels_boost_every` levels grant `levels_boost_points` attribute points. The points that

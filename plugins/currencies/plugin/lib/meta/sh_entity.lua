@@ -4,10 +4,10 @@
 -- balance of a player belongs to their active character and is stored in its `Currency`
 -- records, while other entities, such as containers, keep theirs on the entity.
 --
--- Money that is added with `Entity:give_money` passes through the AdjustReceivedMoney hook,
--- which can change the amount or refuse it, whatever the money comes from: another player,
--- a container, money picked up from the ground or a plugin. `Entity:set_money` sets a
--- balance directly and does not run that hook.
+-- Money that is added with `Entity:give_money` passes through the CanEntityReceiveMoney hook,
+-- which can refuse it, and the GetReceivedMoney hook, which can change the amount, whatever
+-- the money comes from: another player, a container, money picked up from the ground or a
+-- plugin. `Entity:set_money` sets a balance directly and does not run those hooks.
 
 local Color = Color
 
@@ -58,7 +58,8 @@ do
 
     --- Works out how much of the money that an entity is about to be given it really gets:
     -- rounds the amount to the decimals of the currency and, if it is above 0, runs the
-    -- AdjustReceivedMoney hook, which can change or refuse it. Nothing is added here.
+    -- CanEntityReceiveMoney hook, which can refuse it, and the GetReceivedMoney hook, which
+    -- can change it. Nothing is added here.
     -- @param entity [Entity the entity that receives the money]
     -- @param currency [String ID of a registered currency]
     -- @param value [Number amount that is given]
@@ -69,12 +70,11 @@ do
       value = round_amount(currency, value)
 
       if value > 0 then
-        --- Lets plugins change or refuse the money that an entity is about to be given, for
-        -- instance to tax it. Called on the server by `Entity:give_money` and
-        -- `Entity:give_money_to` for every amount above 0, whatever it comes from: a transfer
-        -- from a player or a container, money picked up from the ground, or another plugin.
-        -- Nothing has been moved yet when it runs. It is not called when a balance is set
-        -- directly with `Entity:set_money`.
+        --- Decides whether an entity may receive money it is about to be given. Called on the
+        -- server by `Entity:give_money` and `Entity:give_money_to` for every amount above 0,
+        -- whatever it comes from: a transfer from a player or a container, money picked up
+        -- from the ground, or another plugin. Nothing has been moved yet when it runs. It is
+        -- not called when a balance is set directly with `Entity:set_money`.
         -- @param entity [Entity the entity that receives the money: a player, whose active
         --   character gets it, or another entity such as a container]
         -- @param currency [String currency ID]
@@ -82,16 +82,24 @@ do
         --   the currency]
         -- @param source [Any what the money comes from, as passed to give_money: the giving
         --   entity, a string that names the reason, or nil if the caller has not said]
-        -- @return [Boolean/Number return false to refuse the money: nothing is added, and a
-        --   transfer or a pickup it belongs to does not happen. Return a number to add that
-        --   amount instead; it is rounded to the decimals of the currency and never below 0,
-        --   and whoever gives the money still pays the full amount. Return nothing to leave
-        --   the amount as it is]
-        local result = hook.Run('AdjustReceivedMoney', entity, currency, value, source)
-
-        if result == false then
+        -- @return [Boolean return false to refuse the money: nothing is added, and a transfer
+        --   or a pickup it belongs to does not happen]
+        if hook.Run('CanEntityReceiveMoney', entity, currency, value, source) == false then
           return false
         end
+
+        --- Asks how much of the money an entity is about to be given it really gets, for
+        -- instance to tax it. Called on the server right after `CanEntityReceiveMoney` has
+        -- allowed the money; the first handler that returns a number decides.
+        -- @param entity [Entity the entity that receives the money]
+        -- @param currency [String currency ID]
+        -- @param amount [Number amount that is about to be added, rounded to the decimals of
+        --   the currency]
+        -- @param source [Any what the money comes from, as passed to give_money]
+        -- @return [Number amount to add instead; it is rounded to the decimals of the currency
+        --   and never below 0, and whoever gives the money still pays the full amount. Return
+        --   nothing to leave the amount as it is]
+        local result = hook.Run('GetReceivedMoney', entity, currency, value, source)
 
         if isnumber(result) and result == result and result != math.huge then
           return math.max(0, round_amount(currency, result))
@@ -175,7 +183,7 @@ do
         -- money comes from.
         -- @param entity [Entity the entity that has received the money]
         -- @param currency [String currency ID]
-        -- @param amount [Number amount that was added, after the AdjustReceivedMoney hook]
+        -- @param amount [Number amount that was added, after the GetReceivedMoney hook]
         -- @param source [Any what the money comes from, as passed to give_money: the giving
         --   entity, a string that names the reason, or nil if the caller has not said]
         hook.Run('EntityMoneyReceived', entity, currency, value, source)
@@ -198,8 +206,9 @@ do
 
     --- Adds money to the entity. The amount is rounded to the currency's decimals before it
     -- is added, as in take_money. An amount above 0 first goes through the
-    -- AdjustReceivedMoney hook, which can change or refuse it, and is reported with the
-    -- EntityMoneyReceived hook once it has been added. Server only.
+    -- CanEntityReceiveMoney hook, which can refuse it, and the GetReceivedMoney hook, which can
+    -- change it, and is reported with the EntityMoneyReceived hook once it has been added.
+    -- Server only.
     -- ```
     -- local received = target:give_money('tokens', 50, 'reward')
     --
@@ -291,10 +300,10 @@ do
     end
 
     --- Moves money from this entity to another one if the CanEntityGiveMoney hook allows it, and
-    -- notifies the players involved. The AdjustReceivedMoney hook is run for the receiver
-    -- before anything is moved, so it can lower what arrives or refuse the transfer; the
-    -- giver is then charged the full amount and the receiver gets what the hook has left,
-    -- which is reported with the EntityMoneyReceived hook. Server only.
+    -- notifies the players involved. The CanEntityReceiveMoney and GetReceivedMoney hooks are
+    -- run for the receiver before anything is moved, so they can refuse the transfer or lower
+    -- what arrives; the giver is then charged the full amount and the receiver gets what the
+    -- hooks have left, which is reported with the EntityMoneyReceived hook. Server only.
     -- ```
     -- local success, err = actor:give_money_to(target, 'tokens', 50)
     --

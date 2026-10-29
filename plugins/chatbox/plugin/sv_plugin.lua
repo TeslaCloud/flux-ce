@@ -260,7 +260,7 @@ end
 --- Makes the player say the text in the chat, by default to all players.
 -- Runs the PlayerSay hook first, which may change or suppress the text. The icon
 -- and colors come from the ChatboxGetPlayerIcon, ChatboxGetPlayerColor and
--- ChatboxGetMessageColor hooks, and the ChatboxAdjustPlayerSay hook can alter the
+-- ChatboxGetMessageColor hooks, and the AdjustPlayerSay hook can alter the
 -- finished message. Serverside only.
 -- @param actor [Player the speaker]
 -- @param text [String the message]
@@ -332,7 +332,7 @@ function Chatbox.player_say(actor, text, team_chat)
   --   speaker, the text color, ': ', the text and the options table; modify it in place.
   --   While the 'chat_avatars' config is enabled the avatar of the speaker (see
   --   Chatbox.avatar) comes right after the icon, moving the rest one place further]
-  hook.Run('ChatboxAdjustPlayerSay', actor, text, message)
+  hook.Run('AdjustPlayerSay', actor, text, message)
 
   Chatbox.add_text(nil, unpack(message))
 end

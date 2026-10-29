@@ -16,7 +16,7 @@ function TOOL:LeftClick(_trace)
 
   local owner = self:GetOwner()
 
-  Plugin.call('PlayerMakeStatic', owner, true)
+  Plugin.call('PlayerSetEntityStatic', owner, true)
 
   return true
 end
@@ -29,7 +29,7 @@ function TOOL:RightClick(_trace)
 
   local owner = self:GetOwner()
 
-  Plugin.call('PlayerMakeStatic', owner, false)
+  Plugin.call('PlayerSetEntityStatic', owner, false)
 
   return true
 end

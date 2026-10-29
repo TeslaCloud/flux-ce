@@ -5,7 +5,7 @@
 
 local player_meta = FindMetaTable('Player')
 
---- Raises or lowers the player's active weapon and runs the OnWeaponRaised hook.
+--- Raises or lowers the player's active weapon and runs the WeaponRaiseStateChanged hook.
 -- Does nothing clientside. The PlayerCanRaiseWeapon hook can veto the change, and a weapon
 -- that is never raised (see the `never_raised` item field and the `NeverRaised` weapon field)
 -- is not raised.
@@ -28,13 +28,14 @@ function player_meta:set_weapon_raised(raised)
     if hook.Run('PlayerCanRaiseWeapon', self, raised) != false then
       self:SetDTBool(BOOL_WEAPON_RAISED, raised)
 
-      --- Called on the server after the raised state of a player's weapon has been set.
-      -- The gamemode plays the raise or lower gesture from it, and the plugin runs
-      -- `UpdateWeaponRaised`.
+      --- Called on the server after the raised state of a player's weapon has been set, when
+      -- it is raised and when it is lowered. The gamemode plays the raise or lower gesture
+      -- from it, and the plugin runs
+      -- `PlayerApplyWeaponRaiseState`.
       -- @param actor [Player The player holding the weapon]
       -- @param weapon [Weapon The active weapon of the player, which may not be valid]
       -- @param raised [Boolean Whether the weapon is now raised]
-      hook.Run('OnWeaponRaised', self, weapon, raised)
+      hook.Run('WeaponRaiseStateChanged', self, weapon, raised)
     end
   end
 end

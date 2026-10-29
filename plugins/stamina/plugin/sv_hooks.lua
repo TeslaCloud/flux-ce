@@ -354,7 +354,7 @@ function Stamina:drain(target, amount)
 end
 
 --- Pauses the player's stamina regeneration. Unless prevent_drain is set, it also runs the
--- PlayerStartRunning hook on the server and on the player's client, and starts draining
+-- PlayerStartedRunning hook on the server and on the player's client, and starts draining
 -- stamina every 0.2 seconds. Serverside only.
 -- @param target [Player]
 -- @param prevent_drain=false [Boolean only pause the regeneration]
@@ -373,8 +373,8 @@ function Stamina:start_running(target, prevent_drain)
   --- Called when a player starts running and their stamina begins to drain.
   -- The hook is run on the server and then on the client of the player.
   -- @param target [Player The player who started running]
-  hook.Run('PlayerStartRunning', target)
-  hook.run_client(target, 'PlayerStartRunning', target)
+  hook.Run('PlayerStartedRunning', target)
+  hook.run_client(target, 'PlayerStartedRunning', target)
 
   if !timer_exists(id) then
     table.insert(self.timer_ids, id)
@@ -393,7 +393,7 @@ function Stamina:start_running(target, prevent_drain)
   end
 end
 
---- Pauses the player's stamina drain. With prevent_regen set it runs the PlayerStopRunning
+--- Pauses the player's stamina drain. With prevent_regen set it runs the PlayerStoppedRunning
 -- hook on the server and on the player's client; without it, it starts regenerating
 -- stamina every 0.2 seconds instead, until the stamina is full. Serverside only.
 -- @param target [Player]
@@ -411,8 +411,8 @@ function Stamina:stop_running(target, prevent_regen)
     -- Regeneration only starts once the regeneration delay has passed. The hook is run
     -- on the server and then on the client of the player.
     -- @param target [Player The player who stopped running]
-    hook.Run('PlayerStopRunning', target)
-    hook.run_client(target, 'PlayerStopRunning', target)
+    hook.Run('PlayerStoppedRunning', target)
+    hook.run_client(target, 'PlayerStoppedRunning', target)
 
     return
   end

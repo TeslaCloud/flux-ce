@@ -14,7 +14,7 @@
 -- `RPCommands:announce_roll` shows any roll in the chat the way the command does.
 --
 -- Other plugins can step in through the `PlayerCanSayIC`, `PlayerCanUseOOC`,
--- `GetPlayerOOCName` and `PlayerAdjustRoll` hooks.
+-- `GetPlayerOOCName` and `AdjustPlayerRoll` hooks.
 -- @module [RPCommands]
 
 PLUGIN:set_global('RPCommands')

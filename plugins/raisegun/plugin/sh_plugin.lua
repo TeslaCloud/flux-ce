@@ -4,8 +4,9 @@
 -- cannot fire and is held in a lowered pose; the physgun, gravity gun, tool gun and camera
 -- always count as raised. The state is read and changed with `Player:is_weapon_raised`,
 -- `Player:set_weapon_raised` and `Player:toggle_weapon_raised`, and plugins take part through
--- the `PlayerCanRaiseWeapon`, `ShouldWeaponBeRaised`, `OnWeaponRaised`, `WeaponRaised`,
--- `WeaponLowered`, `PlayerCanAttack` and `GetWeaponLoweredView` hooks.
+-- the `PlayerCanRaiseWeapon`, `ShouldWeaponBeRaised`, `WeaponRaiseStateChanged`,
+-- `PlayerApplyWeaponRaiseState`, `WeaponRaised`, `WeaponLowered`, `PlayerCanAttack` and
+-- `GetWeaponLoweredView` hooks.
 --
 -- A weapon can fix its own state and its lowered pose with fields, which are read from the
 -- item that gives the weapon (the item template whose `weapon_class` is the class of the

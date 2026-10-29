@@ -2,7 +2,7 @@
 -- player's weapons.
 -- The invprev, invnext and slot binds move the highlight, and attack selects the highlighted
 -- weapon through the `selectweapon` console command. The selector closes after five seconds
--- without input. Plugins can keep it from reacting with the `ShouldOpenWepselect` hook and
+-- without input. Plugins can keep it from reacting with the `ShouldOpenWeaponSelect` hook and
 -- follow it through `OnWeaponIndexChange` and `OnWeaponSelected`.
 
 local abs = math.abs
@@ -183,7 +183,7 @@ do
 
   --- Handles the weapon selection binds: invprev, invnext and slot binds move the highlight,
   -- attack selects the highlighted weapon while the selector is open.
-  -- Ignored in vehicles, while attack is held and when ShouldOpenWepselect returns false.
+  -- Ignored in vehicles, while attack is held and when ShouldOpenWeaponSelect returns false.
   -- @param client [Player]
   -- @param bind [String the bind's command]
   -- @param pressed [Boolean whether the bind was pressed rather than released]
@@ -197,7 +197,7 @@ do
       -- @param bind [String The command of the bind]
       -- @param pressed [Boolean Whether the bind was pressed rather than released]
       -- @return [Boolean Return false to make the selector ignore the bind]
-      if hook.Run('ShouldOpenWepselect', client, bind, pressed) != false then
+      if hook.Run('ShouldOpenWeaponSelect', client, bind, pressed) != false then
         local cur_time = CurTime()
         local weapon_count = #client:GetWeapons()
         local old_index = self.weapon_index

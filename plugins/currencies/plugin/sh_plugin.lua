@@ -22,9 +22,9 @@
 -- Hooks decide what is allowed: `CanEntityContainMoney` names the entities that can hold
 -- money, `CanEntitySpendMoney`, `CanEntityGiveMoney`, `PlayerCanDropMoney` and
 -- `PlayerCanPickupMoney` can refuse to move it, `PrePlayerPickupMoney` can still cancel an
--- allowed pickup, `AdjustReceivedMoney` changes or refuses the money that an entity is given,
--- `EntityMoneyReceived` reports the money it was given and `EntityMoneyChanged` reports every
--- change of a balance.
+-- allowed pickup, `CanEntityReceiveMoney` refuses and `GetReceivedMoney` changes the money
+-- that an entity is given, `EntityMoneyReceived` reports the money it was given and
+-- `EntityMoneyChanged` reports every change of a balance.
 
 local isstring = isstring
 

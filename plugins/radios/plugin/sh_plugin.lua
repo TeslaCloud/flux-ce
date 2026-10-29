@@ -9,8 +9,8 @@
 -- for the new frequency with a prompt and checks the answer before the radio is retuned.
 --
 -- Three server-side hooks surround a transmission: `PlayerCanRadio` can forbid a player to
--- speak on the radio, `PlayerAdjustRadioInfo` decides who receives the message and
--- `PlayerRadioUsed` is run once it has been sent. If the Display Typing plugin is loaded,
+-- speak on the radio, `AdjustRadioInfo` decides who receives the message and
+-- `PlayerUsedRadio` is run once it has been sent. If the Display Typing plugin is loaded,
 -- players who are typing a radio message are shown as 'radioing'.
 -- @module [Communications]
 

@@ -117,8 +117,8 @@ end
 
 --- Sends a radio message on a frequency. It is received anywhere by the speaker and by
 -- the players with an enabled radio tuned to the frequency in their hotbar, and overheard
--- by the players near the speaker. The PlayerAdjustRadioInfo hook can change who receives
--- it, and the PlayerRadioUsed hook is run once it has been sent. The PlayerCanRadio hook
+-- by the players near the speaker. The AdjustRadioInfo hook can change who receives
+-- it, and the PlayerUsedRadio hook is run once it has been sent. The PlayerCanRadio hook
 -- is not asked here, see `Communications.say_radio` for that.
 -- @param speaker [Player player talking]
 -- @param text [String message]
@@ -164,7 +164,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   --   for each of them; 0 or less means that nobody overhears). A player who has been
   --   removed from the listeners still overhears the message when they are near the speaker,
   --   and the speaker always receives it]
-  hook.Run('PlayerAdjustRadioInfo', speaker, info)
+  hook.Run('AdjustRadioInfo', speaker, info)
 
   if !isstring(info.text) or info.text == '' then return false end
 
@@ -235,7 +235,7 @@ function Communications.speak_radio(speaker, text, frequency, item_obj)
   --   the speaker among them]
   -- @param eavesdroppers [List<Player> the players who overheard the message because they
   --   were near the speaker]
-  hook.Run('PlayerRadioUsed', speaker, info, listeners, eavesdroppers)
+  hook.Run('PlayerUsedRadio', speaker, info, listeners, eavesdroppers)
 
   return true
 end

@@ -7,7 +7,7 @@
 -- `chat.AddText` is redirected to the chatbox too, and what is typed with `say` in the server
 -- console is shown as a line of the console.
 --
--- Plugins shape the chat through hooks: `PlayerSay` and `ChatboxAdjustPlayerSay` change what a
+-- Plugins shape the chat through hooks: `PlayerSay` and `AdjustPlayerSay` change what a
 -- player says, `ChatboxGetPlayerIcon`, `ChatboxGetPlayerColor` and `ChatboxGetMessageColor`
 -- style it, `ShouldSendChatMessage` can cancel a message, `AdjustMessageData` and
 -- `PlayerCanHear` decide who receives it, `ChatboxMessageSent` tells who has received it, and

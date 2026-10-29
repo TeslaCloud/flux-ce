@@ -124,7 +124,7 @@ end
 -- @param _success [Boolean whether the character was created]
 -- @param status [Number CHAR_ERR_ status code]
 -- @return [String error text, nil for other statuses]
-function Stats:GetCharCreationErrorText(_success, status)
+function Stats:GetCharacterCreationErrorText(_success, status)
   if status == CHAR_ERR_ATTRIBUTE_SUM then
     return t'error.attribute.sum'
   end

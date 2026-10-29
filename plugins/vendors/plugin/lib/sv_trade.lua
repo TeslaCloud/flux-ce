@@ -158,9 +158,9 @@ end
 --- Buys an item from a player who is trading with a vendor. Refused if the player does not
 -- have the item, if the vendor does not take it, if the PlayerCanDropItem or the
 -- PlayerCanSellToVendor hook vetoes it, if the money pool of the vendor does not cover the
--- price or if the AdjustReceivedMoney hook refuses the money. The player is paid first, and
+-- price or if the CanEntityReceiveMoney hook refuses the money. The player is paid first, and
 -- only then is the item taken out of their inventory and removed; the money pool of the
--- vendor goes down by what the player has received, which the AdjustReceivedMoney hook may
+-- vendor goes down by what the player has received, which the GetReceivedMoney hook may
 -- have lowered.
 -- @param actor [Player the customer]
 -- @param vendor [Entity]
@@ -270,7 +270,7 @@ function Vendors:sell(actor, vendor, instance_id)
   -- @param actor [Player The customer]
   -- @param vendor [Entity The vendor]
   -- @param item_obj [Item The item instance that was sold; it does not exist anymore]
-  -- @param price [Number What the player has been paid, after the AdjustReceivedMoney hook]
+  -- @param price [Number What the player has been paid, after the GetReceivedMoney hook]
   hook.Run('PlayerSoldToVendor', actor, vendor, item_obj, paid)
 
   self:send_trade_change(vendor, actor)

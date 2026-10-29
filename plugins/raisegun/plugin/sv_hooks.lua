@@ -9,20 +9,21 @@ function RaiseGun:PlayerSwitchWeapon(actor, _old_weapon, _new_weapon)
   actor:set_weapon_raised(false)
 end
 
---- Runs the UpdateWeaponRaised hook with the current time if the weapon is valid.
+--- Runs the PlayerApplyWeaponRaiseState hook with the current time if the weapon is valid.
 -- @param actor [Player]
 -- @param weapon [Weapon the player's active weapon]
 -- @param raised [Boolean whether the weapon is now raised]
-function RaiseGun:OnWeaponRaised(actor, weapon, raised)
+function RaiseGun:WeaponRaiseStateChanged(actor, weapon, raised)
   if IsValid(weapon) then
-    --- Called on the server when the raised state of a player's valid weapon has been set.
-    -- The plugin's own handler lets the weapon fire or blocks its fire, then runs
-    -- `WeaponRaised` or `WeaponLowered`.
+    --- Applies the raised state of a player's valid weapon once it has been set. The plugin's
+    -- own handler does the work: it lets the weapon fire or blocks its fire, then runs
+    -- `WeaponRaised` or `WeaponLowered`. A handler that runs before it and returns a value
+    -- takes the work over.
     -- @param actor [Player The player holding the weapon]
     -- @param weapon [Weapon The active weapon of the player]
     -- @param raised [Boolean Whether the weapon is now raised]
     -- @param cur_time [Number CurTime() of the change]
-    hook.Run('UpdateWeaponRaised', actor, weapon, raised, CurTime())
+    hook.Run('PlayerApplyWeaponRaiseState', actor, weapon, raised, CurTime())
   end
 end
 
@@ -39,7 +40,7 @@ end
 -- @param weapon [Weapon]
 -- @param raised [Boolean whether the weapon is now raised]
 -- @param cur_time [Number CurTime() of the change]
-function RaiseGun:UpdateWeaponRaised(actor, weapon, raised, cur_time)
+function RaiseGun:PlayerApplyWeaponRaiseState(actor, weapon, raised, cur_time)
   local fixed_state = self:get_fixed_state(weapon)
 
   if raised or fixed_state == true then

@@ -1,7 +1,7 @@
 --- Static Entities lets staff make entities persistent, so that they are saved with the map
 -- and spawned again when it loads.
 -- Entities are made static or unstatic with the `static add` and `static remove` commands or
--- with the Static Add/Remove tool, which all go through the `PlayerMakeStatic` hook. Only
+-- with the Static Add/Remove tool, which all go through the `PlayerSetEntityStatic` hook. Only
 -- whitelisted classes can be made static: props, ragdolls, lights and lamps by default, and
 -- whatever plugins add with `StaticEnts:whitelist_ent`. The plugin turns Sandbox's own
 -- persistence off and saves and loads through the `PersistenceSave` and `PersistenceLoad`

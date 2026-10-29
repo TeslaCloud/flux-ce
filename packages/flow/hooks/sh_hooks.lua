@@ -405,7 +405,7 @@ do
   -- @param actor [Player]
   -- @param weapon [Weapon weapon that was raised or lowered]
   -- @param raised [Boolean new state]
-  function GM:OnWeaponRaised(actor, weapon, raised)
+  function GM:WeaponRaiseStateChanged(actor, weapon, raised)
     local animations = actor.fl_anim_table
 
     if !animations or actor.fl_raised_state == raised then return end

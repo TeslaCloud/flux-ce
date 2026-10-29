@@ -84,7 +84,7 @@ end
 -- player needs the 'static' permission of the command or the 'static_tool' permission of the tool.
 -- @param actor [Player]
 -- @param is_static [Boolean true to make the entity static, false to make it unstatic]
-function StaticEnts:PlayerMakeStatic(actor, is_static)
+function StaticEnts:PlayerSetEntityStatic(actor, is_static)
   if !actor:can('static') and !actor:can('static_tool') then
     actor:notify('error.no_permission')
     return

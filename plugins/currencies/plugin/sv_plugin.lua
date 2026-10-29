@@ -15,7 +15,7 @@ local isnumber = isnumber
 -- @param actor [Player]
 -- @param entity [Entity the fl_money entity]
 -- @return [Boolean true if the player has received the money; false if the entity holds no
---   registered currency or the AdjustReceivedMoney hook has refused the money, in which
+--   registered currency or the CanEntityReceiveMoney hook has refused the money, in which
 --   case the money stays where it is]
 function Currencies:pickup_money(actor, entity)
   local currency = entity:get_currency()

@@ -1,7 +1,7 @@
 --- The Changelevel command changes the map to the given one, optionally after a delay in
 -- seconds: `/changelevel <map> [delay]`. The map has to be named exactly, and the names of
 -- the maps are suggested while it is typed. It refuses a map the server does not have, and
--- runs the `ServerRestart` hook before the change, as the Restart command does. The map
+-- runs the `PreMapChange` hook before the change, as the Restart command does. The map
 -- change saves everything through the gamemode's `ShutDown` handler.
 
 CMD.name = 'Changelevel'
@@ -40,10 +40,7 @@ function CMD:on_run(actor, map_name, delay)
   })
 
   timer.Simple(delay, function()
-    --- Called on the server when the Changelevel command is about to change the map, the
-    -- same way the Restart command calls it. The map change that follows saves every player
-    -- through the gamemode's `ShutDown` handler.
-    hook.Run('ServerRestart')
+    hook.Run('PreMapChange', map)
 
     RunConsoleCommand('changelevel', map)
   end)

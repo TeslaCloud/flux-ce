@@ -6,7 +6,7 @@
 -- when the chosen faction does not have them. Factions without gender get the 'universal' one.
 -- @param id [String ID of the stage that has just been opened]
 -- @param panel [Panel the panel of that stage]
-function Factions:CharPanelCreated(id, panel)
+function Factions:CharacterCreationPanelCreated(id, panel)
   if id == 'ui.char_create.general' then
     local faction_table
     local char_data = panel:GetParent().char_data
@@ -214,7 +214,7 @@ end
 -- @param _success [Boolean]
 -- @param status [Number CHAR_* status code sent by the server]
 -- @return [String translated error for the CHAR_ERR_FACTION codes, otherwise nil]
-function Factions:GetCharCreationErrorText(_success, status)
+function Factions:GetCharacterCreationErrorText(_success, status)
   local refusal = self.creation_refusal
 
   self.creation_refusal = nil

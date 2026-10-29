@@ -312,7 +312,7 @@ function PANEL:next_stage()
             -- @param status [Number the CHAR_ERR_* code the server answered with]
             -- @return [String translated error text; when nothing is returned the menu uses
             --   its own text for the codes of the Characters plugin]
-            local hook_text = hook.Run('GetCharCreationErrorText', response.success, status)
+            local hook_text = hook.Run('GetCharacterCreationErrorText', response.success, status)
 
             if hook_text then
               text = hook_text
@@ -392,7 +392,8 @@ function PANEL:clear_data()
 end
 
 --- Slides the current stage panel out, then creates the theme panel with the given ID and
--- slides it in. Runs the 'CharPanelCreated' hook with the ID and the new panel afterward.
+-- slides it in. Runs the 'CharacterCreationPanelCreated' hook with the ID and the panel
+-- afterward.
 -- @param id [String ID of one of the added stages]
 function PANEL:open_panel(id)
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
@@ -436,7 +437,7 @@ function PANEL:open_panel(id)
   -- and run its on_open method. Lets plugins adjust the stage panels of other plugins.
   -- @param id [String ID of the stage, as it was passed to add_stage]
   -- @param panel [Panel the panel created for the stage]
-  hook.Run('CharPanelCreated', id, self.panel)
+  hook.Run('CharacterCreationPanelCreated', id, self.panel)
 end
 
 --- Adds a stage to character creation.

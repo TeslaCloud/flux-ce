@@ -202,7 +202,7 @@ function PANEL:PerformLayout(w, h)
   end
 end
 
---- Sets the character shown by the panel and runs the PanelCharacterSet hook. A banned
+--- Sets the character shown by the panel and runs the CharacterPanelPopulated hook. A banned
 -- character gets a darkened model and a disabled button that says it is banned instead of
 -- the select and delete buttons; the buttons of the active character are hidden.
 -- @param char_data [Map networked character data]
@@ -235,7 +235,7 @@ function PANEL:set_character(char_data)
   -- presented.
   -- @param panel [Panel the fl_character_panel; its model preview is panel.model]
   -- @param char_data [Map networked data of the character]
-  hook.Run('PanelCharacterSet', self, char_data)
+  hook.Run('CharacterPanelPopulated', self, char_data)
 end
 
 vgui.Register('fl_character_panel', PANEL, 'DPanel')

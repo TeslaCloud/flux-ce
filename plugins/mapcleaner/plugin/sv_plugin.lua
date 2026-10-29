@@ -140,7 +140,7 @@ function MapCleaner:should_remove(entity, matched)
 end
 
 --- Removes the unwanted entities of the map: every entity created by the map for which
--- `MapCleaner:should_remove` says so. Runs the PostMapClean hook when done. Serverside only.
+-- `MapCleaner:should_remove` says so. Runs the MapCleaned hook when done. Serverside only.
 -- The plugin calls this once the map has loaded and after every map cleanup.
 -- @return [Number how many entities have been removed]
 function MapCleaner:clean()
@@ -176,7 +176,7 @@ function MapCleaner:clean()
   -- at this point and are gone on the next tick. A schema can use it to put its own
   -- entities in place of what was removed.
   -- @param count [Number How many entities have been removed]
-  hook.Run('PostMapClean', count)
+  hook.Run('MapCleaned', count)
 
   return count
 end

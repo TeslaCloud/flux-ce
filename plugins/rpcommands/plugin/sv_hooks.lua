@@ -55,7 +55,7 @@ end
 -- @param actor [Player player that sent the message]
 -- @param text [String message text]
 -- @param message_data [Table message data, replaced in place]
-function RPCommands:ChatboxAdjustPlayerSay(actor, text, message_data)
+function RPCommands:AdjustPlayerSay(actor, text, message_data)
   table.Empty(message_data)
 
   if !self:has_phrase_content(text) or !self:can_say_ic(actor, text) then
