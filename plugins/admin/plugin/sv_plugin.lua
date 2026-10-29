@@ -5,11 +5,13 @@
 --- Removes a temporary permission from a player, destroying its database record, taking it
 -- off the player's record and updating the networked table. The config is sent to the player
 -- again if that has changed their right to edit configs, and the PlayerTempPermissionChanged
--- hook runs.
+-- hook runs. Does nothing when the player has no such temporary permission.
 -- @param target [Player]
 -- @param perm_id [String permission ID]
 function Bolt:delete_temp_permission(target, perm_id)
   local records = target.record.temp_permissions
+  local perm_table = target:get_temp_permissions()
+  local removed = perm_table[perm_id] != nil
 
   if records then
     for i = #records, 1, -1 do
@@ -17,11 +19,13 @@ function Bolt:delete_temp_permission(target, perm_id)
         records[i]:destroy()
 
         table.remove(records, i)
+
+        removed = true
       end
     end
   end
 
-  local perm_table = target:get_temp_permissions()
+  if !removed then return end
 
   perm_table[perm_id] = nil
 
