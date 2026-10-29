@@ -7,10 +7,10 @@ es:
     voicelines:
       title: Líneas de voz
       desc: Ajustes de las líneas de voz que los personajes dicen en el chat.
-      voicelines_interval:
+      interval:
         name: Intervalo de líneas de voz
         desc: Cuántos segundos debe esperar un jugador antes de que suene otra línea de voz. Una línea dicha antes se muestra en el chat sin su sonido.
-      voicelines_radio_volume:
+      radio_volume:
         name: Volumen de las líneas de voz por radio
         desc: Volumen, de 0 a 1, del sonido de una línea de voz para los jugadores que la oyen por radio.
   notification:

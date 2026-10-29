@@ -7,10 +7,10 @@ fr:
     voicelines:
       title: Répliques vocales
       desc: Réglages des répliques vocales que les personnages disent dans le chat.
-      voicelines_interval:
+      interval:
         name: Intervalle des répliques vocales
         desc: Nombre de secondes qu'un joueur doit attendre avant que le son d'une autre réplique vocale ne soit joué. Une réplique dite plus tôt s'affiche dans le chat sans son.
-      voicelines_radio_volume:
+      radio_volume:
         name: Volume des répliques vocales à la radio
         desc: Volume, de 0 à 1, du son d'une réplique vocale pour les joueurs qui l'entendent à la radio.
   notification:

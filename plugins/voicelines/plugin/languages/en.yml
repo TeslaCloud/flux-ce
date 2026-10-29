@@ -7,10 +7,10 @@ en:
     voicelines:
       title: Voice Lines
       desc: Settings of the voice lines that characters say in the chat.
-      voicelines_interval:
+      interval:
         name: Voice Line Interval
         desc: How many seconds a player has to wait before the sound of another voice line plays. A line said sooner is shown in the chat without its sound.
-      voicelines_radio_volume:
+      radio_volume:
         name: Radio Voice Line Volume
         desc: Volume, from 0 to 1, of the sound of a voice line for the players who hear it over the radio.
   notification:
