@@ -452,7 +452,7 @@ local function submit_password(actor, entity, answer)
   if correct then
     Container:open(actor, entity)
   else
-    actor.next_container_password = CurTime() + Config.get('container_password_delay', 3)
+    actor.next_container_password = CurTime() + Config.get('containers_password_delay', 3)
     actor:notify('error.container.wrong_password')
   end
 end
@@ -594,7 +594,7 @@ function Container:fill(entity, share, category)
 end
 
 --- Deals with the items of a container whose prop is being removed: drops them on the
--- ground if the `container_spill_items` config is on and destroys them otherwise, and
+-- ground if the `containers_spill_items` config is on and destroys them otherwise, and
 -- runs the `OnContainerRemoved` hook. Does nothing while the server is shutting down or
 -- changing the map, or while the map is being cleaned up: the containers are saved then,
 -- and their items stay saved as being in them, to come back with them. Items that turn out
@@ -608,7 +608,7 @@ end
 function Container:handle_removal(entity, inventory, item_ids)
   if Flux.shutting_down or self.cleaning_up then return end
 
-  local spilled = Config.get('container_spill_items', false) == true
+  local spilled = Config.get('containers_spill_items', false) == true
 
   if !table.IsEmpty(item_ids) then
     local origin = entity:WorldSpaceCenter()

@@ -17,14 +17,14 @@
 -- `Container:set_container_password` and `Container:fill`. The name, the message and the
 -- password are kept on the prop in its `container_name`, `container_message` and
 -- `container_password` fields, so they are saved with it, as is its `container_id`. A
--- wrong password makes the player wait for `container_password_delay` seconds before the
+-- wrong password makes the player wait for `containers_password_delay` seconds before the
 -- next attempt.
 --
 -- Random items are picked among all registered items but the bases and those that set
 -- `ITEM.lootable = false`, optionally from one item category.
 --
 -- When a container prop is removed, its items are destroyed with it, or dropped on the
--- ground if the `container_spill_items` config is on.
+-- ground if the `containers_spill_items` config is on.
 --
 -- Hooks: `PlayerCanOpenContainer` and `ShouldAskContainerPassword` decide who opens a
 -- container and who has to enter its password, `PlayerEnteredContainerPassword` tells about
