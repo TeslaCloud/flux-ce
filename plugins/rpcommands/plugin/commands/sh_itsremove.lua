@@ -23,8 +23,10 @@ function CMD:on_run(actor)
     local hit_pos = trace.HitPos
     local steamid = actor:SteamID()
 
+    local is_assistant = Bolt and actor:is_assistant()
+
     for text_id, static_text in pairs(RPCommands.texts) do
-      if hit_pos:DistToSqr(static_text.pos) <= 2500 and (static_text.steamid == steamid or actor:is_assistant()) then
+      if hit_pos:DistToSqr(static_text.pos) <= 2500 and (static_text.steamid == steamid or is_assistant) then
         RPCommands.remove_static_text(text_id)
         actor:notify('notification.static_text.removed')
 

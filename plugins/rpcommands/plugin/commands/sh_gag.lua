@@ -16,7 +16,8 @@ add.immunity = true
 
 --- Mutes the target players in OOC chat for a duration and notifies them and the staff. A
 -- duration that is not a time, or that comes to nothing (0 or 'permanent', which a ban time
--- reads as 0), is refused: a mute always has an end.
+-- reads as 0), is refused: a mute always has an end. Durations are read by the Admin plugin,
+-- without which every duration is refused.
 -- @param actor [Player player running the command; not valid when run from the server console]
 -- @param targets [List<Player> players to gag]
 -- @param duration [String gag duration, parsed like a ban time]
@@ -24,7 +25,7 @@ add.immunity = true
 function add:on_run(actor, targets, duration, reason)
   local entered = tostring(duration):gsub('%%', '')
 
-  duration = Bolt:interpret_ban_time(duration)
+  duration = Bolt and Bolt:interpret_ban_time(duration)
 
   if !reason or reason == '' then
     reason = 'ui.no_reason'
