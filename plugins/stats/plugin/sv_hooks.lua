@@ -263,7 +263,7 @@ end
 -- @param actor [Player player throwing the object]
 -- @param _ent [Entity the object being thrown]
 -- @param info [Map modified in place: force (Number the force of the throw)]
-function Stats:AdjustThrowForce(actor, _ent, info)
+function Stats:AdjustThrow(actor, _ent, info)
   if !IsValid(actor) or !actor:IsPlayer() or !isnumber(info.force) then return end
 
   info.force *= self:get_player_effect_scale(actor, 'strength', 'stats_strength_lifting')

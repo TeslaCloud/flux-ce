@@ -351,11 +351,11 @@ function PickupObjects:drop_entity(actor, forced)
 end
 
 --- Makes a player throw the entity they hold in the direction they are looking.
--- The PlayerCanThrowObject hook can veto the throw, the AdjustThrowForce hook changes its
--- force, and the PlayerCanDropObject hook can veto it as well. The force is scaled with the mass of the entity
--- the way the engine does it for objects carried with the use key, by 0.5 for half a
--- kilogram and less up to 4 for 15 kilograms and more, and is spread over the physics
--- objects of the entity.
+-- The PlayerCanThrowObject hook can veto the throw, the AdjustThrow hook changes its force
+-- and direction, and the PlayerCanDropObject hook can veto it as well. The force is scaled
+-- with the mass of the entity the way the engine does it for objects carried with the use
+-- key, by 0.5 for half a kilogram and less up to 4 for 15 kilograms and more, and is spread
+-- over the physics objects of the entity.
 -- @param actor [Player]
 -- @return [Boolean true if the player has let go of the entity, false if they hold nothing,
 --   the throw was vetoed or its force is not positive]
@@ -371,7 +371,7 @@ function PickupObjects:throw_entity(actor)
   }
 
   --- Asks whether a player may throw the object they hold. Called on the server when the
-  -- player presses primary attack while holding an object, before `AdjustThrowForce` and
+  -- player presses primary attack while holding an object, before `AdjustThrow` and
   -- PlayerCanDropObject. If the throw is prevented, the player keeps holding the object.
   -- @param actor [Player The player throwing the object]
   -- @param ent [Entity The object being thrown]
@@ -386,7 +386,7 @@ function PickupObjects:throw_entity(actor)
   -- @param info [Map Modified in place: force (Number the pickup_throw_force config to
   --   begin with, before it is scaled with the mass of the object) and direction (Vector the
   --   aim vector of the player)]
-  hook.Run('AdjustThrowForce', actor, ent, info)
+  hook.Run('AdjustThrow', actor, ent, info)
 
   local force = tonumber(info.force) or 0
 
