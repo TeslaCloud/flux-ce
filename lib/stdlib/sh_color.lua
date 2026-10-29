@@ -2,7 +2,8 @@
 -- `Color` also accepts hexadecimal strings and CSS color names here, and colors gain methods
 -- that return adjusted copies: `Color:darken`, `Color:lighten`, `Color:saturate`,
 -- `Color:desaturate` and `Color:alpha`. `LerpColor` interpolates between two colors, and the
--- `util` library gets `util.hex_to_color`, `util.to_color` and `util.text_color_from_base`.
+-- `util` library gets `util.hex_to_color`, `util.string_to_color`, `util.to_color` and
+-- `util.text_color_from_base`.
 -- @module [Color]
 
 local color_meta = FindMetaTable('Color')
@@ -206,6 +207,34 @@ do
   local old_color = __OLD_COLOR_FUNCTION__ or Color
   __OLD_COLOR_FUNCTION__ = old_color
 
+  --- Turns a hexadecimal color that starts with '#' or a CSS color name into a Color.
+  -- ```
+  -- util.string_to_color('#ffa500') -- Color(255, 165, 0)
+  -- util.string_to_color('Orange', 100) -- orange with the alpha of 100
+  -- util.string_to_color('#ffa5') -- nil
+  -- ```
+  -- @param text [String '#' and 3, 6 or 8 hexadecimal digits, or a CSS color name such as
+  --   'orange', case-insensitive]
+  -- @param alpha=255 [Number alpha of a named color]
+  -- @return [Color the color, or nil if the text is neither]
+  function util.string_to_color(text, alpha)
+    if text:start_with('#') then
+      local len = #text - 1
+
+      if (len == 3 or len == 6 or len == 8) and !text:find('[^%x]', 2) then
+        return util.hex_to_color(text)
+      end
+
+      return
+    end
+
+    local named = colors[text:lower()]
+
+    if named then
+      return named:alpha(alpha)
+    end
+  end
+
   --- Creates a color. Replaces the built-in Color function to also accept hexadecimal
   -- strings and CSS color names.
   -- ```
@@ -224,17 +253,12 @@ do
   -- @variant Color(r, g)
   --   @param r [String CSS color name such as 'orange', case-insensitive]
   --   @param g=255 [Number alpha, 0-255]
-  -- @return [Color the created color, white if the string is not a known color name]
-  -- @see [util.hex_to_color]
+  -- @return [Color the created color, white if the string is neither a hexadecimal color nor
+  --   a known color name]
+  -- @see [util.string_to_color]
   function Color(r, g, b, a)
     if isstring(r) then
-      if r:start_with('#') then
-        return util.hex_to_color(r)
-      elseif colors[r:lower()] then
-        return colors[r:lower()]:alpha(g)
-      else
-        return Color(255, 255, 255)
-      end
+      return util.string_to_color(r, g) or old_color(255, 255, 255)
     else
       return old_color(r, g, b, a)
     end

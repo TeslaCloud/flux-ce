@@ -82,6 +82,15 @@ local function copy_value(value)
   return value
 end
 
+--- Reads one channel of a color: a finite number, rounded and clamped between 0 and 255.
+-- @param value [Any]
+-- @return [Number the channel, or nil if the value is not a finite number]
+local function color_channel(value)
+  if !isnumber(value) or value != value or value == math.huge or value == -math.huge then return end
+
+  return math.Clamp(math.Round(value), 0, 255)
+end
+
 --- Returns a copy of the default value of a definition, as a Color for a config of the color
 -- type, whose default is written as a table with the r, g and b fields.
 -- @param definition [Map config definition]
@@ -230,7 +239,9 @@ end
 -- if it has any and are clamped between its `min_value` and `max_value`. Booleans may be
 -- given as 1 and 0 or as the strings 'true', 'yes', 'on', '1', 'false', 'no', 'off' and
 -- '0'. Strings may be given as numbers. Tables have to be tables. Colors may be given as
--- any table with the r, g and b fields and are turned into a Color (see `util.to_color`). A
+-- any table with finite numbers in the r, g, b and, optionally, a fields, which are rounded
+-- and clamped between 0 and 255, or as a string that `util.string_to_color` reads; they are
+-- turned into a Color with an alpha of 255 unless one is given. A
 -- config without a definition expects the type of its current value, and a config whose type
 -- is not one of these takes any string, number, boolean or table.
 -- ```
@@ -299,13 +310,22 @@ function Config.validate(key, value)
 
     return true, value
   elseif data_type == 'color' then
-    local color = util.to_color(value)
+    if isstring(value) then
+      value = util.string_to_color(value)
+    end
 
-    if !color then
+    if !istable(value) then
       return false, 'error.config.not_a_color'
     end
 
-    return true, color
+    local r, g, b = color_channel(value.r), color_channel(value.g), color_channel(value.b)
+    local a = value.a == nil ? 255 : color_channel(value.a)
+
+    if !r or !g or !b or !a then
+      return false, 'error.config.not_a_color'
+    end
+
+    return true, Color(r, g, b, a)
   end
 
   if !isstring(value) and !isnumber(value) and !isbool(value) and !istable(value) then
@@ -913,7 +933,8 @@ if SERVER then
   --- Imports config values from a YAML file or from a table and sets every one of them.
   -- Serverside only. The 'depends' and 'depends_development' keys are skipped, and so is
   -- every key for which the ShouldConfigImport hook returns a non-nil value. The value of a
-  -- config of the color type is turned into a Color (see `util.to_color`).
+  -- config of the color type goes through `Config.validate`, and is skipped with an error if
+  -- it is not a color.
   -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
   -- @return [Map the imported table, or nil if the file could not be read or path is
@@ -943,7 +964,15 @@ if SERVER then
       --   value]
       if key != 'depends' and key != 'depends_development' and Plugin.call('ShouldConfigImport', key, value) == nil then
         if definitions[key]?.type == 'color' then
-          value = util.to_color(value) ?? value
+          local valid, converted = Config.validate(key, value)
+
+          if !valid then
+            ErrorNoHalt("Not importing the '"..tostring(key).."' config! The value is not a color.\n")
+
+            continue
+          end
+
+          value = converted
         end
 
         Config.set(key, value, nil, from_config)
