@@ -7,6 +7,7 @@ local ScrW = ScrW
 local ScrH = ScrH
 
 local aborted_hold_start
+local held_entities = {}
 
 --- Fills the circular progress indicator while the local player holds the use key on an item.
 function Items:HUDPaint()
@@ -33,7 +34,9 @@ function Items:PreDrawHalos()
   local ent = client:get_nv('hold_entity')
 
   if IsValid(ent) then
-    halo.Add({ ent }, color_white)
+    held_entities[1] = ent
+
+    halo.Add(held_entities, color_white)
   end
 end
 
