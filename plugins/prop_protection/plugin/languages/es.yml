@@ -53,3 +53,7 @@ es:
       owner: "Dueño: {name}"
       owner_you: Esto te pertenece
       owner_away: El dueño está ausente
+  permission:
+    bypass_prop_protection:
+      name: Ignorar la protección de props
+      description: "Da acceso a las entidades de otros jugadores, del mapa y de nadie."

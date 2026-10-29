@@ -53,3 +53,7 @@ fr:
       owner: "Propriétaire : {name}"
       owner_you: "Cela vous appartient"
       owner_away: "Le propriétaire est absent"
+  permission:
+    bypass_prop_protection:
+      name: "Contourner la protection des props"
+      description: "Donne accès aux entités des autres joueurs, de la carte et de personne."

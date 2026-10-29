@@ -53,3 +53,7 @@ en:
       owner: "Owner: {name}"
       owner_you: This belongs to you
       owner_away: The owner is away
+  permission:
+    bypass_prop_protection:
+      name: Bypass Prop Protection
+      description: "Grants access to the entities of other players, of the map and of nobody."

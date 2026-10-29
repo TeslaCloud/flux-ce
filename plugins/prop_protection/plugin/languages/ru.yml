@@ -53,3 +53,7 @@ ru:
       owner: "Владелец: {name}"
       owner_you: Это принадлежит вам
       owner_away: Владелец отсутствует
+  permission:
+    bypass_prop_protection:
+      name: Обход защиты пропов
+      description: "Дает доступ к сущностям других игроков, карты и ничьим сущностям."
