@@ -45,9 +45,15 @@ es:
     option:
       open: Abrir
   notification:
-    char_desc_changed: Has cambiado la descripción de tu personaje.
     item_given: "Has recibido {item} x {amount}."
     icon_editor: El código se ha copiado en tu portapapeles.
+  permission:
+    spawn_items:
+      name: "Generar objetos"
+      description: "Da acceso para generar objetos desde el menú de generación."
+    give_items:
+      name: "Dar objetos"
+      description: "Da acceso para dar objetos a los jugadores desde el menú de generación."
   ui:
     icon_editor:
       title: Editor de iconos

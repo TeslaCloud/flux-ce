@@ -45,9 +45,15 @@ ru:
     option:
       open: Открыть
   notification:
-    char_desc_changed: Вы изменили описание вашего персонажа.
     item_given: Вам выдали {item} x {amount}.
     icon_editor: Код был скопирован в буфер обмена.
+  permission:
+    spawn_items:
+      name: "Создание предметов"
+      description: "Дает доступ к созданию предметов из меню спавна."
+    give_items:
+      name: "Выдача предметов"
+      description: "Дает доступ к выдаче предметов игрокам из меню спавна."
   ui:
     icon_editor:
       title: Редактор иконок

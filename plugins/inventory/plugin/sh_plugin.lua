@@ -50,6 +50,22 @@ end
 
 Flux.Command:add_completer('item', complete_item)
 
+--- Registers the 'spawn_items' and 'give_items' permissions of the items tab of the spawn menu.
+function Inventories:RegisterPermissions()
+  Bolt:register_permission(
+    'spawn_items',
+    'permission.spawn_items.name',
+    'permission.spawn_items.description',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'give_items',
+    'permission.give_items.name',
+    'permission.give_items.description',
+    'permission.categories.character_management'
+  )
+end
+
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'
 require_relative 'sh_hooks'

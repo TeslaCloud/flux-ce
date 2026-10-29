@@ -45,9 +45,15 @@ fr:
     option:
       open: "Ouvrir"
   notification:
-    char_desc_changed: "Vous avez modifié la description de votre personnage."
     item_given: "Vous avez reçu {item} x {amount}."
     icon_editor: "Le code a été copié dans votre presse-papiers."
+  permission:
+    spawn_items:
+      name: "Faire apparaître des objets"
+      description: "Permet de faire apparaître des objets depuis le menu d'apparition."
+    give_items:
+      name: "Donner des objets"
+      description: "Permet de donner des objets aux joueurs depuis le menu d'apparition."
   ui:
     icon_editor:
       title: "Éditeur d'icônes"

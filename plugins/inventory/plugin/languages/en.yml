@@ -45,9 +45,15 @@ en:
     option:
       open: Open
   notification:
-    char_desc_changed: You have changed your character description.
     item_given: You have been given {item} x {amount}.
     icon_editor: The code was copied to your clipboard.
+  permission:
+    spawn_items:
+      name: "Spawn items"
+      description: "Grants access to spawn items from the spawn menu."
+    give_items:
+      name: "Give items"
+      description: "Grants access to give items to players from the spawn menu."
   ui:
     icon_editor:
       title: Icon Editor

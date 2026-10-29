@@ -1,8 +1,9 @@
 --- The Gamemaster role (`gamemaster`): based on `assistant`, with an immunity of 200. This
 -- file defines the role's default permissions on top of those of `assistant`: the tools that
--- run the game world, such as gamemaster mode, spawning NPCs, vehicles and weapons, picking
--- up any entity, handing out items and money, setting the time and the stats of characters,
--- whitelisting players and managing areas, map scenes, spawn points and container loot.
+-- run the game world, such as gamemaster mode, spawning NPCs, vehicles, weapons and items,
+-- picking up any entity, handing out items and money, setting the time and the stats of
+-- characters, whitelisting players and managing areas, map scenes, spawn points and container
+-- loot.
 -- Other addons see gamemasters as super admins through the `administrate` permission.
 
 ROLE.name = 'Gamemaster'
@@ -37,6 +38,8 @@ function ROLE:define_permissions()
   can 'gmrelease'
 
   can 'giveitem'
+  can 'give_items'
+  can 'spawn_items'
   can 'setmoney'
   can 'whitelist'
 
