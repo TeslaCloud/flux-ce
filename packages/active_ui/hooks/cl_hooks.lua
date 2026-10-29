@@ -92,21 +92,6 @@ function GM:CreateScoreboardPlayerMenu(menu, target, _card)
   end):SetIcon('icon16/page_copy.png')
 end
 
---- Takes the players that are kept off the scoreboard out of the lists that the Factions
--- plugin builds its scoreboard categories from, so that PlayerShouldShowOnScoreboard also
--- applies when the players are grouped by faction. Handles the PreRebuildFactionCategories
--- hook of that plugin and runs after the plugins that regroup the players.
--- @param players_table [Map lists of players keyed by category]
-function GM:PreRebuildFactionCategories(players_table)
-  for _id, players in pairs(players_table) do
-    for key, client in pairs(players) do
-      if IsValid(client) and client:has_initialized() and hook.Run('PlayerShouldShowOnScoreboard', client) == false then
-        players[key] = nil
-      end
-    end
-  end
-end
-
 --- Centers a newly opened panel within the tab menu.
 -- @param menu_panel [Panel the tab menu]
 -- @param active_panel [Panel the panel that has been opened]

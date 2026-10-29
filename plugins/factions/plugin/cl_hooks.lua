@@ -83,6 +83,18 @@ function Factions:GetCharacterCreationModels(char_data)
   return faction_table:get_gender_models(char_data.gender)
 end
 
+--- Takes the players that the scoreboard does not list (see `fl_scoreboard:should_show_player`)
+-- out of the lists of players that the faction categories are built from.
+local function remove_hidden_players(panel, players_table)
+  for _, members in pairs(players_table) do
+    for key, client in pairs(members) do
+      if !panel:should_show_player(client) then
+        members[key] = nil
+      end
+    end
+  end
+end
+
 --- Rebuilds the scoreboard with the players grouped into one collapsible category per
 -- faction, replacing the default player list.
 -- @param panel [Panel the scoreboard]
@@ -135,12 +147,16 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   end
 
   --- Lets plugins regroup the players of the scoreboard before its faction categories are
-  -- created. Called on the client each time the scoreboard is rebuilt.
+  -- created. Called on the client each time the scoreboard is rebuilt. The players that are
+  -- kept off the scoreboard are taken out of the lists afterward, wherever the handlers have
+  -- put them.
   -- @param players_table [Map lists of players keyed by faction ID, with an entry for every
   --   faction that has players online; modify it in place. An entry under the 'players_online'
   --   key becomes a category titled with the 'ui.scoreboard.players_online' phrase; every
   --   other key has to be the ID of a registered faction]
   hook.Run('PreRebuildFactionCategories', players_table)
+
+  remove_hidden_players(panel, players_table)
 
   for id, members in pairs(players_table) do
     local faction = (id == 'players_online' and t'ui.scoreboard.players_online') or Factions.find_by_id(id)
