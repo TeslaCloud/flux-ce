@@ -11,7 +11,7 @@ CMD.aliases = { 'help' }
 CMD.no_console = true
 
 local tag_color = Color(184, 59, 94)
-local report_interval = 5
+const report_interval = 5
 
 --- Sends a report to every online player with the 'staff' permission and to the caller. A
 -- caller who has sent a report within the last five seconds is told to wait instead.

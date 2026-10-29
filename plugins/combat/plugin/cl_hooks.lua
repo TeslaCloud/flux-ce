@@ -8,6 +8,7 @@ local hud_color = Color('aqua'):alpha(200)
 local hud_outline_color = color_black:alpha(200)
 local draw_text_outlined = draw.SimpleTextOutlined
 local text_size = util.text_size
+const empty_turns = {}
 
 --- Draws circles around the local player's turn start position showing how far they can walk and run this turn.
 -- @param depth [Boolean whether the depth pass is being drawn]
@@ -65,7 +66,7 @@ function CombatSystem:HUDPaint()
   local client = PLAYER
 
   if client:in_combat() and !client:is_frozen() then
-    local turns = client:get_nv('fl_combat_turns', {})
+    local turns = client:get_nv('fl_combat_turns', empty_turns)
     local scrw, scrh = ScrC()
     local x, y = scrw, scrh
     local gx, gy = Flux.global_ui_offset()

@@ -50,7 +50,7 @@ function CombatSystem:create_message(text, arguments)
       if isstring(v) then
         arguments[k] = t(v)
       elseif isentity(v) and IsValid(v) then
-        arguments[k] = v:IsPlayer() and v:name() or v:get_name()
+        arguments[k] = v:get_name()
       end
     end
   end
