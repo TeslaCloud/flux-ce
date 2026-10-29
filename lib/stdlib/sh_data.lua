@@ -6,13 +6,17 @@
 -- plugins, which is usually loaded in a `LoadData` handler and saved in a `SaveData` handler:
 -- ```
 -- function PLUGIN:LoadData()
---   self.texts = Data.load_plugin('3dtexts', {})
+--   self.texts = Data.load_plugin('3d_texts', {})
 -- end
 --
 -- function PLUGIN:SaveData()
---   Data.save_plugin('3dtexts', self.texts)
+--   Data.save_plugin('3d_texts', self.texts)
 -- end
 -- ```
+--
+-- A key whose last part is the ID of a renamed plugin (see `Plugin.renamed`) and that has no
+-- file is loaded from the file named after the old ID of the plugin, if there is one, and
+-- `Flux.dev_print` names that file. Saving writes the file named after the current ID.
 
 mod 'Data'
 
@@ -30,7 +34,39 @@ local function with_extension(key, extension)
   return key
 end
 
+--- Returns the key a file has under the old ID of a renamed plugin, for a key whose last part
+-- is the current ID of that plugin.
+-- @param key [String key with its extension]
+-- @param exists [Function(key) that tells whether the file of a key exists]
+-- @return [String the key under the old ID, nil if there is no such file]
+local function renamed_key(key, exists)
+  local renamed = Plugin?.renamed
+
+  if !renamed then return end
+
+  local folder, name, extension = key:match('^(.-)([^/]+)(%.[^./]+)$')
+
+  if !name then return end
+
+  for old_id, new_id in pairs(renamed) do
+    if new_id == name then
+      local old_key = folder..old_id..extension
+
+      if exists(old_key) then
+        Flux.dev_print("The '"..key.."' data file is read from '"..old_key.."', named after the old ID of the '"
+          ..new_id.."' plugin.")
+
+        return old_key
+      end
+    end
+  end
+end
+
 if SERVER then
+  local function server_file_exists(key)
+    return file.Exists('settings/flux/'..key, 'GAME')
+  end
+
   --- Saves a table to 'settings/flux/' in the game folder as JSON. The '.json' extension
   -- is added if the key does not have one. Does nothing unless the value is a table.
   -- @param key [String name of the file, can include folders]
@@ -50,6 +86,10 @@ if SERVER then
     if !isstring(key) then return end
 
     key = with_extension(key, '.json')
+
+    if !server_file_exists(key) then
+      key = renamed_key(key, server_file_exists) or key
+    end
 
     local path = 'settings/flux/'..key
 
@@ -74,6 +114,10 @@ if SERVER then
     end
   end
 else
+  local function client_file_exists(key)
+    return file.Exists('flux/'..key, 'DATA')
+  end
+
   --- Saves a table to the 'flux' folder inside the client's 'data' folder as JSON. The '.dat'
   -- extension is added if the key does not have one. Does nothing unless the value is a table.
   -- @param key [String name of the file, can include folders]
@@ -93,6 +137,10 @@ else
     if !isstring(key) then return end
 
     key = with_extension(key, '.dat')
+
+    if !client_file_exists(key) then
+      key = renamed_key(key, client_file_exists) or key
+    end
 
     local path = 'flux/'..key
 
@@ -160,7 +208,7 @@ end
 
 --- Loads plugin data saved with Data.save_plugin for the current schema and map.
 -- ```
--- local loaded = Data.load_plugin('3dtexts', {})
+-- local loaded = Data.load_plugin('3d_texts', {})
 -- ```
 -- @param key [String]
 -- @param default=nil [Any returned if nothing has been saved yet]

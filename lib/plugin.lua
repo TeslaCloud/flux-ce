@@ -42,6 +42,11 @@
 -- referred to by the name they are required by in `depends`: the name of the folder, or the
 -- file name of a single-file plugin without the realm prefix and the extension (see
 -- `Plugin.normalize_id`).
+--
+-- A renamed plugin keeps its old ID in `Plugin.renamed`, which maps it to the current one.
+-- An old ID in `depends`, `depends_development` or `exclude`, in a profile or on the saved list
+-- of disabled plugins is read as the current ID, and in development `Flux.dev_print` names it
+-- the first time. A data file named after the old ID is read as well (see `Data.load`).
 
 if Plugin then return end
 
@@ -82,6 +87,55 @@ local default_extras = {
 }
 
 local extras = table.Copy(default_extras)
+local warned_renames = {}
+
+--- The current ID of every renamed plugin, by its old ID.
+Plugin.renamed = {
+  ['3dtexts'] = '3d_texts',
+  areadisplay = 'area_display',
+  autowalk = 'auto_walk',
+  datafile = 'data_file',
+  devhud = 'dev_hud',
+  displaytyping = 'display_typing',
+  doorkeys = 'door_keys',
+  forcefields = 'force_fields',
+  gametime = 'game_time',
+  mapcleaner = 'map_cleaner',
+  mapscenes = 'map_scenes',
+  playersearch = 'player_search',
+  propprotection = 'prop_protection',
+  raisegun = 'raise_gun',
+  rpcommands = 'rp_commands',
+  screeneffects = 'screen_effects',
+  spawnpoints = 'spawn_points',
+  spawnsaver = 'spawn_saver',
+  srcdsproxy = 'srcds_proxy',
+  staticents = 'static_ents',
+  thirdperson = 'third_person',
+  visiblelegs = 'visible_legs',
+  voicelines = 'voice_lines',
+  weaponselect = 'weapon_select'
+}
+
+--- Returns the current ID of a plugin that is named by its old ID in `Plugin.renamed`, naming
+-- the old ID with `Flux.dev_print` the first time.
+-- @param id [String plugin ID or dependency name]
+-- @return [String the current ID, or the id itself if the plugin was never renamed]
+local function current_id(id)
+  local new_id = Plugin.renamed[id]
+
+  if !new_id then
+    return id
+  end
+
+  if !warned_renames[id] then
+    warned_renames[id] = true
+
+    Flux.dev_print("The '"..id.."' plugin is called '"..new_id.."'.")
+  end
+
+  return new_id
+end
 
 --- Returns all registered plugins, the schema included.
 -- @return [Map plugin path to plugin object]
@@ -277,12 +331,14 @@ end
 --- Turns a plugin path, folder, file name or dependency name into the ID that the plugin has
 -- on the list of disabled plugins and in `Plugin.known`. That is the name a plugin is
 -- required by in `depends`: the name of its folder, or the file name of a single-file
--- plugin without the realm prefix and the extension.
+-- plugin without the realm prefix and the extension. An old ID of a renamed plugin turns
+-- into its current ID (see `Plugin.renamed`).
 -- ```
 -- Plugin.normalize_id('flux/plugins/doors')              -- 'doors'
 -- Plugin.normalize_id('flux/plugins/doors/plugin')       -- 'doors'
 -- Plugin.normalize_id('flux/plugins/cl_crosshair.lua')   -- 'crosshair'
 -- Plugin.normalize_id('crosshair')                       -- 'crosshair'
+-- Plugin.normalize_id('thirdperson')                     -- 'third_person'
 -- ```
 -- @param id [String plugin path, folder, file name or dependency name]
 -- @return [String normalized ID, or nil if id is not a string or nothing is left of it]
@@ -305,7 +361,7 @@ function Plugin.normalize_id(id)
 
   if name == '' then return end
 
-  return name
+  return current_id(name)
 end
 
 --- Returns the set of plugins that are saved as disabled, which is what applies after the
@@ -916,13 +972,14 @@ end
 -- its `profile`, defined in `config/profiles.yml` and preceded by those of the profiles it
 -- extends, then its `depends` and, in development, its `depends_development`, without the
 -- plugins named in the `exclude` list. An `exclude` that is not a list is ignored with a
--- development notice. Each plugin is listed once, where it is first named. A schema
+-- development notice. An old ID of a renamed plugin is read as its current ID (see
+-- `Plugin.renamed`). Each plugin is listed once, where it is first named. A schema
 -- without a profile depends on its `depends` alone. The plugins load in the order of the list,
 -- each after the plugins of its own `depends`, so an excluded plugin still loads when a plugin
 -- that loads depends on it.
 -- ```
 -- Plugin.resolve_schema_depends({ profile = 'roleplay', depends = { 'radios' } }, profiles)
--- -- { '3dtexts', 'chatbox', ..., 'raisegun', 'radios' }
+-- -- { '3d_texts', 'chatbox', ..., 'raise_gun', 'radios' }
 -- ```
 -- @param schema_yml [Map the parsed .yml file of the schema]
 -- @param profiles=nil [Map the parsed profiles, by profile ID]
@@ -943,11 +1000,13 @@ function Plugin.resolve_schema_depends(schema_yml, profiles, development)
   end
 
   for _, name in ipairs(exclude or {}) do
-    excluded[name] = true
+    excluded[current_id(name)] = true
   end
 
   local function add(list)
     for _, name in ipairs(istable(list) and list or {}) do
+      name = current_id(name)
+
       if !seen[name] and !excluded[name] then
         seen[name] = true
         resolved[#resolved + 1] = name
@@ -1094,13 +1153,17 @@ do
 
   --- Makes sure that a plugin (or a package) is loaded, including it if it has not been yet.
   -- Plugins are looked up in the Flux, cloud and schema plugin folders, single-file plugins
-  -- by their file name with or without the realm prefix and the extension.
+  -- by their file name with or without the realm prefix and the extension, renamed plugins
+  -- also by their old ID (see `Plugin.renamed`).
   -- @param name [String plugin or package name]
   -- @return [Boolean true if the dependency is loaded or could be found; false if it could
   --   not, if the plugin is disabled, or if it was left out because one of its own
   --   dependencies is disabled or missing]
   function Plugin.require(name)
     if !isstring(name) then return false end
+
+    name = current_id(name)
+
     if CLIENT and is_unavailable(name) then return false end
 
     if CLIENT and Flux.shared.deps_info[name] then
