@@ -4,6 +4,7 @@
 local config_get = Config.get
 local marker_material = Material('sprites/combineball_glow_blue_1')
 local marker_color = Color('lightblue')
+local title_args = {}
 
 --- Draws a marker, a direction line and a label for every mapscene point while the local
 -- player holds the mapscene tool and has the 'mapscenes' permission.
@@ -22,7 +23,6 @@ function Mapscenes:RenderScreenspaceEffects()
 
   local points = self.points
   local font = Theme.get_font('text_small')
-  local title = t'ui.mapscene.title'..' #'
 
   for k = 1, #points do
     local v = points[k]
@@ -35,7 +35,9 @@ function Mapscenes:RenderScreenspaceEffects()
       render.DrawLine(pos, pos + v.ang:Forward() * 20, marker_color)
     cam.End3D()
 
-    draw.SimpleText(title..k, font, start_pos.x, start_pos.y, marker_color)
+    title_args.index = k
+
+    draw.SimpleText(t('ui.mapscene.point', title_args), font, start_pos.x, start_pos.y, marker_color)
   end
 end
 

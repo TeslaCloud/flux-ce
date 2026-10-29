@@ -10,3 +10,4 @@ es:
   ui:
     mapscene:
       title: Escena del mapa
+      point: "Escena del mapa n.º {index}"

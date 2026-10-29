@@ -40,7 +40,7 @@ function TOOL.BuildCPanel(CPanel)
       point_list:Clear()
 
       for point_id in pairs(Mapscenes.points) do
-        local line = point_list:AddLine(t'ui.mapscene.title'..' #'..point_id)
+        local line = point_list:AddLine(t('ui.mapscene.point', { index = point_id }))
         line.id = point_id
       end
     end

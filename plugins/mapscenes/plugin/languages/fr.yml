@@ -10,3 +10,4 @@ fr:
   ui:
     mapscene:
       title: "Scène de carte"
+      point: "Scène de carte n° {index}"

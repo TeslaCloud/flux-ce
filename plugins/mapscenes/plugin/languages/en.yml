@@ -10,3 +10,4 @@ en:
   ui:
     mapscene:
       title: Mapscene
+      point: "Mapscene #{index}"

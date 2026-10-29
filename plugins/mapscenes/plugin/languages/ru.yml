@@ -10,3 +10,4 @@ ru:
   ui:
     mapscene:
       title: Точка камеры
+      point: "Точка камеры №{index}"
