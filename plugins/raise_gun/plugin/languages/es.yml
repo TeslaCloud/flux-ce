@@ -1,6 +1,6 @@
 es:
   config:
-    raisegun:
+    raise_gun:
       title: Levantar armas
       desc: Ajustes para bajar y levantar armas.
       enabled:

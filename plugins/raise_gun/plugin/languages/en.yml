@@ -1,6 +1,6 @@
 en:
   config:
-    raisegun:
+    raise_gun:
       title: Weapon Raising
       desc: Settings for lowering and raising weapons.
       enabled:

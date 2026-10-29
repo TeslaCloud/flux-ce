@@ -30,10 +30,10 @@ end
 --- Lets the weapon fire again (raised, or a weapon that cannot be lowered) or blocks its
 -- fire until it is raised (lowered). Then calls the weapon's OnRaised or OnLowered method
 -- and runs the WeaponRaised or WeaponLowered hook.
--- A weapon that has just been raised can fire once the `raisegun_fire_delay` config has
+-- A weapon that has just been raised can fire once the `raise_gun_fire_delay` config has
 -- passed; a weapon that cannot be lowered can fire at once. A weapon that has been raised
 -- while something else still keeps it lowered (the player is running and the
--- `raisegun_sprint_lowers_weapon` config is on, or a ShouldWeaponBeRaised handler holds it down) stays
+-- `raise_gun_sprint_lowers_weapon` config is on, or a ShouldWeaponBeRaised handler holds it down) stays
 -- blocked, and PlayerThink lets it fire once that is over. The fire of a weapon that is
 -- never raised is not blocked when it is lowered.
 -- @param actor [Player]
@@ -55,7 +55,7 @@ function RaiseGun:PlayerApplyWeaponRaiseState(actor, weapon, raised, cur_time)
     end
 
     --- Called on the server after a player's weapon has been raised. It can fire again,
-    -- unless the player is running while the `raisegun_sprint_lowers_weapon` config is on or a
+    -- unless the player is running while the `raise_gun_sprint_lowers_weapon` config is on or a
     -- ShouldWeaponBeRaised handler keeps the weapon lowered.
     -- For the weapons that cannot be lowered (physgun, gravity gun, tool gun, camera and the
     -- weapons marked as always raised) it is called whichever state was set.
@@ -84,7 +84,7 @@ end
 --- Keeps the player's active weapon from firing for as long as it is lowered, and lets it
 -- fire again when it stops being lowered without `Player:set_weapon_raised` having been
 -- called: the player has stopped running, a ShouldWeaponBeRaised handler no longer keeps
--- it down or the `raisegun_enabled` config has been turned off. The fire is touched
+-- it down or the `raise_gun_enabled` config has been turned off. The fire is touched
 -- when the state of the weapon flips, which the `fl_fire_blocked` mark on the weapon keeps
 -- track of, when the player has switched to the weapon, since deploying it may have let it
 -- fire again, and when a lowered weapon has moved its own next fire closer, which a weapon

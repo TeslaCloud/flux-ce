@@ -1,6 +1,6 @@
 fr:
   config:
-    raisegun:
+    raise_gun:
       title: "Lever les armes"
       desc: "Paramètres pour baisser et lever les armes."
       enabled:

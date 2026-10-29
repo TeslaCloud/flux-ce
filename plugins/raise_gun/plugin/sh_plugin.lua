@@ -32,8 +32,8 @@
 -- `RaiseGun:get_fixed_state` tells what the fields make of a weapon.
 --
 -- The plugin has three configs, whose defaults leave it working the way it does without
--- them: `raisegun_enabled` turns the lowering of weapons off altogether,
--- `raisegun_sprint_lowers_weapon` lowers the weapon of a running player, and `raisegun_fire_delay`
+-- them: `raise_gun_enabled` turns the lowering of weapons off altogether,
+-- `raise_gun_sprint_lowers_weapon` lowers the weapon of a running player, and `raise_gun_fire_delay`
 -- is the time a weapon cannot fire for after it has been raised.
 -- @module [RaiseGun]
 
@@ -127,14 +127,14 @@ function RaiseGun:get_fixed_state(weapon)
 end
 
 --- Returns the time a weapon that has just been raised cannot fire for.
--- @return [Number seconds from the `raisegun_fire_delay` config; 0 while the
---   `raisegun_enabled` config is off]
+-- @return [Number seconds from the `raise_gun_fire_delay` config; 0 while the
+--   `raise_gun_enabled` config is off]
 function RaiseGun:get_fire_delay()
-  if !config_get('raisegun_enabled', true) then
+  if !config_get('raise_gun_enabled', true) then
     return 0
   end
 
-  return config_get('raisegun_fire_delay', 0)
+  return config_get('raise_gun_fire_delay', 0)
 end
 
 --- Keeps a weapon from firing, for a day unless `RaiseGun:release_fire` lets it fire again
@@ -177,11 +177,11 @@ function RaiseGun:OnSchemaLoaded()
 end
 
 --- Starts a one second timer that toggles the player's weapon raise when reload is pressed.
--- Does nothing while the `raisegun_enabled` config is off.
+-- Does nothing while the `raise_gun_enabled` config is off.
 -- @param actor [Player]
 -- @param key [Number IN_ enum of the pressed key]
 function RaiseGun:KeyPress(actor, key)
-  if key == IN_RELOAD and config_get('raisegun_enabled', true) then
+  if key == IN_RELOAD and config_get('raise_gun_enabled', true) then
     timer.Create('fl_weapon_raise_'..actor:SteamID(), 1, 1, function()
       if IsValid(actor) then
         actor:toggle_weapon_raised()

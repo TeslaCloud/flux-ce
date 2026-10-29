@@ -1,6 +1,6 @@
 ru:
   config:
-    raisegun:
+    raise_gun:
       title: Поднятие оружия
       desc: Настройки опускания и поднятия оружия.
       enabled:
