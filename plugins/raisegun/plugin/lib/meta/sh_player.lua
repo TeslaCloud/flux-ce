@@ -6,7 +6,7 @@
 local player_meta = FindMetaTable('Player')
 
 --- Raises or lowers the player's active weapon and runs the OnWeaponRaised hook.
--- Does nothing clientside. The CanPlayerRaiseWeapon hook can veto the change, and a weapon
+-- Does nothing clientside. The PlayerCanRaiseWeapon hook can veto the change, and a weapon
 -- that is never raised (see the `never_raised` item field and the `NeverRaised` weapon field)
 -- is not raised.
 -- @param raised [Boolean true to raise the weapon, false to lower it]
@@ -25,7 +25,7 @@ function player_meta:set_weapon_raised(raised)
     -- @param raised [Boolean True if the weapon is about to be raised and false if it is about
     --   to be lowered]
     -- @return [Boolean Return false to leave the weapon as it is]
-    if hook.Run('CanPlayerRaiseWeapon', self, raised) != false then
+    if hook.Run('PlayerCanRaiseWeapon', self, raised) != false then
       self:SetDTBool(BOOL_WEAPON_RAISED, raised)
 
       --- Called on the server after the raised state of a player's weapon has been set.

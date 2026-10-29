@@ -187,7 +187,7 @@ function PickupObjects:get_mass_limit(actor, ent)
 
   --- Lets plugins change the heaviest object a player can carry, for example with the
   -- strength of their character. Called on the server when the plugin's own
-  -- PlayerPickupObject handler compares the mass of an object with the limit, and by
+  -- PlayerCanPickupObject handler compares the mass of an object with the limit, and by
   -- `PickupObjects:get_mass_limit`. Every handler may change the table, so a handler should
   -- return nothing to let the others run. Dragged ragdolls have no mass limit.
   -- @param actor [Player the player picking the object up]
@@ -276,7 +276,7 @@ end
 --- Makes a player pick up an entity if they are able to and the hooks allow it.
 -- The player must be alive, on foot, not ragdolled and hold nothing, and nobody may hold
 -- the entity. A ragdoll is dragged if the pickup_drag_ragdolls config is on, which the
--- PlayerCanDragRagdoll hook can veto; everything else is carried. The PlayerPickupObject
+-- PlayerCanDragRagdoll hook can veto; everything else is carried. The PlayerCanPickupObject
 -- hook can veto both. The distance to the entity is not checked.
 -- @param actor [Player]
 -- @param ent [Entity]
@@ -296,7 +296,7 @@ function PickupObjects:pickup_entity(actor, ent, bone)
 
     --- Asks whether a player may start dragging a ragdoll.
     -- Called on the server when the player tries to pick up a ragdoll within reach while the
-    -- pickup_drag_ragdolls config is on, before PlayerPickupObject. The plugin's own handler
+    -- pickup_drag_ragdolls config is on, before PlayerCanPickupObject. The plugin's own handler
     -- denies it while the player the ragdoll belongs to is getting up.
     -- @param actor [Player The player who is about to drag the ragdoll]
     -- @param ragdoll [Entity The ragdoll]
@@ -317,13 +317,13 @@ function PickupObjects:pickup_entity(actor, ent, bone)
   -- @param drag [Boolean True if the object is a ragdoll that is going to be dragged, false if
   --   it is going to be carried]
   -- @return [Boolean Return false to prevent the pickup]
-  if hook.Run('PlayerPickupObject', actor, ent, drag) == false then return false end
+  if hook.Run('PlayerCanPickupObject', actor, ent, drag) == false then return false end
 
   return self:force_pickup(actor, ent, drag and (bone or 0) or nil)
 end
 
 --- Makes a player let go of the entity they hold.
--- The PlayerDropObject hook can veto a drop that is not forced.
+-- The PlayerCanDropObject hook can veto a drop that is not forced.
 -- @param actor [Player the holder; may no longer be valid for a forced drop]
 -- @param forced=false [Boolean drop the entity whatever the hook returns]
 -- @return [Boolean true if the player has let go of an entity, false if they held nothing
@@ -342,7 +342,7 @@ function PickupObjects:drop_entity(actor, forced)
     --   have disconnected]
     -- @param ent [Entity The object being dropped]
     -- @return [Boolean Return false to keep the player from dropping the object]
-    if hook.Run('PlayerDropObject', actor, data.entity) == false and !forced then return false end
+    if hook.Run('PlayerCanDropObject', actor, data.entity) == false and !forced then return false end
   end
 
   release(actor, data)
@@ -351,8 +351,8 @@ function PickupObjects:drop_entity(actor, forced)
 end
 
 --- Makes a player throw the entity they hold in the direction they are looking.
--- The PlayerThrowObject hook can veto the throw and change its force, and the
--- PlayerDropObject hook can veto it as well. The force is scaled with the mass of the entity
+-- The PlayerCanThrowObject hook can veto the throw and change its force, and the
+-- PlayerCanDropObject hook can veto it as well. The force is scaled with the mass of the entity
 -- the way the engine does it for objects carried with the use key, by 0.5 for half a
 -- kilogram and less up to 4 for 15 kilograms and more, and is spread over the physics
 -- objects of the entity.
@@ -372,7 +372,7 @@ function PickupObjects:throw_entity(actor)
 
   --- Asks whether a player may throw the object they hold, and lets plugins change the
   -- throw. Called on the server when the player presses primary attack while holding an
-  -- object, before PlayerDropObject. Nothing happens if the throw is prevented or its force
+  -- object, before PlayerCanDropObject. Nothing happens if the throw is prevented or its force
   -- is not positive: the player keeps holding the object.
   -- @param actor [Player The player throwing the object]
   -- @param ent [Entity The object being thrown]
@@ -380,7 +380,7 @@ function PickupObjects:throw_entity(actor)
   --   begin with, before it is scaled with the mass of the object) and direction (Vector the
   --   aim vector of the player)]
   -- @return [Boolean Return false to prevent the throw]
-  if hook.Run('PlayerThrowObject', actor, ent, info) == false then return false end
+  if hook.Run('PlayerCanThrowObject', actor, ent, info) == false then return false end
 
   local force = tonumber(info.force) or 0
 

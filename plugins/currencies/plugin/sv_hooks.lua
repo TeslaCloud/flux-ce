@@ -110,7 +110,7 @@ end
 -- @param actor [Player]
 -- @param entity [Entity the fl_money entity]
 -- @return [Boolean false while on cooldown, otherwise nil]
-function Currencies:CanPlayerPickupMoney(actor, entity)
+function Currencies:PlayerCanPickupMoney(actor, entity)
   local cur_time = CurTime()
 
   if actor.next_money_pickup and actor.next_money_pickup > cur_time then
@@ -130,7 +130,7 @@ end
 -- @param amount [Number]
 -- @param currency [String currency ID]
 -- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
-function Currencies:CanPlayerTransferMoney(actor, amount, currency)
+function Currencies:CanEntitySpendMoney(actor, amount, currency)
   if !isnumber(amount) or amount != amount or amount <= 0 or amount == math.huge then
     return false, 'error.invalid_amount'
   end
@@ -160,9 +160,9 @@ end
 -- @param _trace [Map eye trace result of the player]
 -- @return [Boolean false when not allowed, String error phrase if there is one; nothing
 --   when allowed]
-function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, _trace)
+function Currencies:PlayerCanDropMoney(actor, amount, currency, pos, _trace)
   --- Asks whether an entity may part with an amount of money. Called on the server by the
-  -- default handlers of CanPlayerDropMoney and CanGiveMoney, before their own checks. The
+  -- default handlers of PlayerCanDropMoney and CanEntityGiveMoney, before their own checks. The
   -- handler of the Currencies plugin refuses amounts that are not positive, finite numbers
   -- with at most as many decimals as the currency has, unknown currencies and amounts the
   -- entity cannot afford.
@@ -171,7 +171,7 @@ function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, _trace)
   -- @param amount [Number]
   -- @param currency [String currency ID]
   -- @return [Boolean return false to refuse, String error phrase for the player]
-  local success, err = hook.Run('CanPlayerTransferMoney', actor, amount, currency)
+  local success, err = hook.Run('CanEntitySpendMoney', actor, amount, currency)
 
   if success == false then
     return false, err
@@ -199,8 +199,8 @@ end
 -- @param amount [Number]
 -- @param currency [String currency ID]
 -- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
-function Currencies:CanGiveMoney(actor, target, amount, currency)
-  local success, err = hook.Run('CanPlayerTransferMoney', actor, amount, currency)
+function Currencies:CanEntityGiveMoney(actor, target, amount, currency)
+  local success, err = hook.Run('CanEntitySpendMoney', actor, amount, currency)
 
   if success == false then
     return false, err
@@ -210,7 +210,7 @@ function Currencies:CanGiveMoney(actor, target, amount, currency)
     return false, 'error.invalid_entity'
   end
 
-  if !hook.Run('CanContainMoney', target) then
+  if !hook.Run('CanEntityContainMoney', target) then
     return false, 'error.invalid_entity'
   end
 
@@ -222,7 +222,7 @@ end
 --- Allows players that are not bots and have a character loaded to hold money.
 -- @param object [Entity]
 -- @return [Boolean true for valid non-bot players with a loaded character, otherwise nil]
-function Currencies:CanContainMoney(object)
+function Currencies:CanEntityContainMoney(object)
   if IsValid(object) and object:IsPlayer() and !object:IsBot() and object:is_character_loaded() then
     return true
   end

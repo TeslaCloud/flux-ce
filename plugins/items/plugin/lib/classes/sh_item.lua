@@ -333,7 +333,7 @@ function ItemBase:play_sound(act, emitter)
   end
 end
 
---- Called on the server by the 'CanPlayerDropItem' hook when a player is about to drop the item.
+--- Called on the server by the 'PlayerCanDropItem' hook when a player is about to drop the item.
 -- Returning nothing/nil drops the item like normal, returning false
 -- prevents the item from appearing and doesn't remove it from the inventory.
 -- @param _actor [Player]

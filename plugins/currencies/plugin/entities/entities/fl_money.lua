@@ -1,6 +1,6 @@
 --- Money lying in the world (`fl_money`): holds an amount of one currency and hands it to the
--- player who uses it (`Currencies:pickup_money`), unless the CanPlayerPickupMoney or the
--- PlayerPickupMoney hook prevents that. It is created by `Currencies:spawn_money`, which is
+-- player who uses it (`Currencies:pickup_money`), unless the PlayerCanPickupMoney or the
+-- PrePlayerPickupMoney hook prevents that. It is created by `Currencies:spawn_money`, which is
 -- what `Entity:drop_money` puts the money of a player into the world with. While the
 -- save_dropped_money config is on, the Currencies plugin saves these entities and puts them
 -- back when the map is loaded again; a pickup marks the saved money as out of date, so that
@@ -55,8 +55,8 @@ if SERVER then
     end
   end
 
-  --- Lets the activator pick the money up: asks the CanPlayerPickupMoney and the
-  -- PlayerPickupMoney hooks, gives the money to the activator with
+  --- Lets the activator pick the money up: asks the PlayerCanPickupMoney and the
+  -- PrePlayerPickupMoney hooks, gives the money to the activator with
   -- `Currencies:pickup_money` and removes the entity. Only players pick money up, and money
   -- that is being removed cannot be picked up again. The entity stays if either hook
   -- returns false or if the money is refused, as it is when the AdjustReceivedMoney hook
@@ -68,22 +68,24 @@ if SERVER then
   function ENT:Use(activator, _caller, _use_type, _value)
     if !IsValid(activator) or !activator:IsPlayer() or self:IsMarkedForDeletion() then return end
 
-    --- Decides whether money lying in the world may be picked up. Called on the server when
-    -- a valid entity uses an fl_money entity.
-    -- @param activator [Entity the entity that used the money, normally a player]
+    --- Decides whether a player may pick up money lying in the world: the rule, such as the
+    -- pickup cooldowns of the Currencies plugin. Called on the server when a player uses an
+    -- fl_money entity, before `PrePlayerPickupMoney`.
+    -- @param activator [Player the player who used the money]
     -- @param entity [Entity the fl_money entity]
     -- @return [Boolean return false to prevent the pickup]
-    if hook.Run('CanPlayerPickupMoney', activator, self) == false then return end
+    if hook.Run('PlayerCanPickupMoney', activator, self) == false then return end
 
-    --- Called on the server when money is about to be picked up, before anything has
-    -- changed hands. A handler can refuse the pickup or take note of it; the money itself
-    -- is given by `Currencies:pickup_money` once the hook has run.
-    -- @param activator [Entity the entity that used the money, normally a player]
+    --- Called on the server right before money is picked up, once every `PlayerCanPickupMoney`
+    -- handler has allowed the pickup and before anything has changed hands. A handler can
+    -- still cancel this pickup or take note of it; the money itself is given by
+    -- `Currencies:pickup_money` once the hook has run.
+    -- @param activator [Player the player who used the money]
     -- @param entity [Entity the fl_money entity; its get_currency and get_currency_amount
     --   methods return what it holds]
     -- @return [Boolean return false to leave the money where it is. A returned value keeps
     --   the handlers after it from running, so return nothing otherwise]
-    if hook.Run('PlayerPickupMoney', activator, self) == false then return end
+    if hook.Run('PrePlayerPickupMoney', activator, self) == false then return end
 
     if Currencies:pickup_money(activator, self) then
       self:Remove()

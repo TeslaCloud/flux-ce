@@ -671,7 +671,7 @@ function GM:AllowPlayerPickup(_actor, _entity)
   return false
 end
 
---- Lets the PlayerSwitchedFlashlight hook decide whether a player may toggle their flashlight,
+--- Lets the PlayerCanSwitchFlashlight hook decide whether a player may toggle their flashlight,
 -- and leaves the decision to the base gamemode when no handler returns anything. Plugin and
 -- schema handlers of PlayerSwitchFlashlight run before this one and replace it when they
 -- return a value.
@@ -679,14 +679,14 @@ end
 -- @param on [Boolean whether the flashlight is being turned on]
 -- @return [Boolean whether the flashlight may be toggled]
 function GM:PlayerSwitchFlashlight(actor, on)
-  --- Called on the server when a player toggles their flashlight, before the engine does
-  -- it. The Shared Flashlight plugin handles it by toggling a light that other players can
+  --- Asks whether a player may toggle their flashlight. Called on the server before the
+  -- engine toggles it. The Shared Flashlight plugin handles it by toggling a light that other players can
   -- see and returning false.
   -- @param actor [Player The player who toggles the flashlight]
   -- @param on [Boolean Whether the flashlight is being turned on]
   -- @return [Boolean Return false to keep the engine flashlight from toggling, true to allow
   --   it; the base gamemode decides when nothing is returned]
-  local result = hook.Run('PlayerSwitchedFlashlight', actor, on)
+  local result = hook.Run('PlayerCanSwitchFlashlight', actor, on)
 
   if result != nil then
     return result

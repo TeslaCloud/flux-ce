@@ -156,7 +156,7 @@ function Vendors:buy(actor, vendor, item_id)
 end
 
 --- Buys an item from a player who is trading with a vendor. Refused if the player does not
--- have the item, if the vendor does not take it, if the CanPlayerDropItem or the
+-- have the item, if the vendor does not take it, if the PlayerCanDropItem or the
 -- PlayerCanSellToVendor hook vetoes it, if the money pool of the vendor does not cover the
 -- price or if the AdjustReceivedMoney hook refuses the money. The player is paid first, and
 -- only then is the item taken out of their inventory and removed; the money pool of the
@@ -192,7 +192,7 @@ function Vendors:sell(actor, vendor, instance_id)
     return false
   end
 
-  if hook.Run('CanPlayerDropItem', actor, item_obj) == false then
+  if hook.Run('PlayerCanDropItem', actor, item_obj) == false then
     actor:notify('error.vendor.cannot_sell')
 
     return false

@@ -115,7 +115,7 @@ end
 --- Keeps a player in gamemaster mode from leaving noclip.
 -- @param actor [Player]
 -- @return [Boolean false while the player is in gamemaster mode, otherwise nil]
-function Gamemastery:PlayerExitNoclip(actor)
+function Gamemastery:PlayerCanExitNoclip(actor)
   if Gamemastery.is_in_mode(actor) then
     return false
   end

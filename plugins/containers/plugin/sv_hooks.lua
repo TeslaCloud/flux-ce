@@ -181,7 +181,7 @@ end
 --- Allows the containers, physics props with a container model, to contain money.
 -- @param object [Entity]
 -- @return [Boolean true if the entity is a container, nil otherwise]
-function Container:CanContainMoney(object)
+function Container:CanEntityContainMoney(object)
   if self:is_container(object) then
     return true
   end

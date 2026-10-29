@@ -303,7 +303,7 @@ function Inventories:PlayerDropItem(actor, instance_ids)
     -- @param item_obj [Item The item that is about to be dropped]
     -- @return [Boolean Return false to prevent the drop; the items of the stack that
     --   come after this one are not dropped either]
-    if hook.Run('CanPlayerDropItem', actor, item_obj) == false then break end
+    if hook.Run('PlayerCanDropItem', actor, item_obj) == false then break end
 
     hook.Run('PreItemTransfer', item_obj, nil, inventory)
 

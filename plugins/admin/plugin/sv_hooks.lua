@@ -304,7 +304,7 @@ end
 -- @param _entity [Entity]
 -- @param _drag [Boolean]
 -- @return [Boolean false for a hidden player]
-function Bolt:PlayerPickupObject(actor, _entity, _drag)
+function Bolt:PlayerCanPickupObject(actor, _entity, _drag)
   if actor:is_hidden() then
     return false
   end

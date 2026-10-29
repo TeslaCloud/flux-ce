@@ -33,15 +33,15 @@ do
     return self:get_money(currency) >= value
   end
 
-  --- Checks whether the entity is able to hold money by running the CanContainMoney hook.
+  --- Checks whether the entity is able to hold money by running the CanEntityContainMoney hook.
   -- @return [Boolean true when a hook allows it, otherwise nil]
   function entity_meta:can_contain_money()
     --- Asks whether an entity is able to hold money. Called by `Entity:can_contain_money`, and
-    -- on the server by the default CanGiveMoney handler for the receiver of the money.
+    -- on the server by the default CanEntityGiveMoney handler for the receiver of the money.
     -- @param object [Entity]
     -- @return [Boolean return true if the entity can hold money; it cannot when nothing is
     --   returned]
-    return hook.Run('CanContainMoney', self)
+    return hook.Run('CanEntityContainMoney', self)
   end
 
   if SERVER then
@@ -268,7 +268,7 @@ do
       -- @param trace [Map eye trace result of the player]
       -- @return [Boolean return false to refuse the drop, String error phrase that drop_money
       --   returns to its caller]
-      local success, err = hook.Run('CanPlayerDropMoney', self, value, currency, pos, trace)
+      local success, err = hook.Run('PlayerCanDropMoney', self, value, currency, pos, trace)
 
       if success == false then
         return false, err
@@ -290,7 +290,7 @@ do
       Currencies:queue_money_save()
     end
 
-    --- Moves money from this entity to another one if the CanGiveMoney hook allows it, and
+    --- Moves money from this entity to another one if the CanEntityGiveMoney hook allows it, and
     -- notifies the players involved. The AdjustReceivedMoney hook is run for the receiver
     -- before anything is moved, so it can lower what arrives or refuse the transfer; the
     -- giver is then charged the full amount and the receiver gets what the hook has left,
@@ -323,7 +323,7 @@ do
       -- @param currency [String currency ID]
       -- @return [Boolean return false to refuse the transfer, String error phrase that
       --   give_money_to returns to its caller]
-      local success, err = hook.Run('CanGiveMoney', self, target, value, currency)
+      local success, err = hook.Run('CanEntityGiveMoney', self, target, value, currency)
 
       if success == false then
         return false, err

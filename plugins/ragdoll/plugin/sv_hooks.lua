@@ -218,7 +218,7 @@ end
 
 --- Passes damage dealt to the ragdoll of a living player on to that player. Damage that was
 -- not dealt by a player is ignored while the ragdoll is immune, which it is for a moment
--- after the player has fallen; PlayerRagdollCanTakeDamage can block the rest.
+-- after the player has fallen; CanRagdollTakeDamage can block the rest.
 -- @param entity [Entity the damaged entity]
 -- @param damage_info [CTakeDamageInfo]
 function Ragdoll:EntityTakeDamage(entity, damage_info)
@@ -243,7 +243,7 @@ function Ragdoll:EntityTakeDamage(entity, damage_info)
   -- @param ragdoll [Entity Their ragdoll]
   -- @param damage_info [CTakeDamageInfo The damage]
   -- @return [Boolean Return false to keep the player from taking the damage]
-  if hook.Run('PlayerRagdollCanTakeDamage', owner, entity, damage_info) == false then return end
+  if hook.Run('CanRagdollTakeDamage', owner, entity, damage_info) == false then return end
 
   owner:TakeDamageInfo(damage_info)
 end

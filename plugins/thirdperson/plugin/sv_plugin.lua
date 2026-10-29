@@ -18,7 +18,7 @@ concommand.Add('fl_third_person', function(actor)
   actor:set_nv('fl_third_person', !actor:get_nv('fl_third_person', false))
 end)
 
---- How long, in seconds, a raise or lower that the CanPlayerRaiseWeapon hook has refused is
+--- How long, in seconds, a raise or lower that the PlayerCanRaiseWeapon hook has refused is
 -- not asked for again.
 local retry_delay = 0.5
 
@@ -26,7 +26,7 @@ local retry_delay = 0.5
 -- raise window: raised until the `fl_tp_raise_until` field of the player, lowered after it.
 -- `Player:set_weapon_raised` is only called when the networked state differs from the
 -- wanted one, so that the gestures and the fire blocking of the Raise Weapon plugin run once
--- per change, and a change that the CanPlayerRaiseWeapon hook refuses is not asked for again
+-- per change, and a change that the PlayerCanRaiseWeapon hook refuses is not asked for again
 -- for half a second. Does nothing without the Raise Weapon plugin, while its
 -- `weapon_raise_enabled` config is off, without a valid weapon and for the weapons whose
 -- state is fixed (the physgun, gravity gun, tool gun, camera and the weapons marked as

@@ -19,11 +19,12 @@
 -- on: it is saved for every map whenever the framework saves its data, and put back when the
 -- map is loaded again.
 --
--- Hooks decide what is allowed: `CanContainMoney` names the entities that can hold money,
--- `CanPlayerTransferMoney`, `CanGiveMoney`, `CanPlayerDropMoney` and `CanPlayerPickupMoney`
--- can refuse to move it, `PlayerPickupMoney` can refuse a pickup, `AdjustReceivedMoney`
--- changes or refuses the money that an entity is given, `EntityMoneyReceived` reports the
--- money it was given and `EntityMoneyChanged` reports every change of a balance.
+-- Hooks decide what is allowed: `CanEntityContainMoney` names the entities that can hold
+-- money, `CanEntitySpendMoney`, `CanEntityGiveMoney`, `PlayerCanDropMoney` and
+-- `PlayerCanPickupMoney` can refuse to move it, `PrePlayerPickupMoney` can still cancel an
+-- allowed pickup, `AdjustReceivedMoney` changes or refuses the money that an entity is given,
+-- `EntityMoneyReceived` reports the money it was given and `EntityMoneyChanged` reports every
+-- change of a balance.
 
 local isstring = isstring
 

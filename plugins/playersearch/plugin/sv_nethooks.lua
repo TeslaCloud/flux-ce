@@ -9,7 +9,7 @@ Cable.receive('fl_request_player_search', function(actor, target)
   -- @param actor [Player player asking for the search]
   -- @param target [Player player to search]
   -- @return [Boolean false to refuse the request, String error phrase shown to the player]
-  local success, error_text = hook.Run('CanStartSearch', actor, target)
+  local success, error_text = hook.Run('PlayerCanStartSearch', actor, target)
 
   if success != false then
     target.requested_search = actor
@@ -43,7 +43,7 @@ Cable.receive('fl_start_player_search', function(target, actor)
 
   target.requested_search = nil
 
-  local success, error_text = hook.Run('CanSearch', actor, target)
+  local success, error_text = hook.Run('PlayerCanSearch', actor, target)
 
   if success == false then
     actor:notify(error_text)

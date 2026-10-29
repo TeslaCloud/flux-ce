@@ -2,8 +2,8 @@
 -- from them. The search is asked for from the interaction menu of that player, who allows it
 -- or resists. An allowed search opens their inventory to the searcher until the searcher
 -- closes it or the search is no longer allowed, for example because the searched player turned
--- around or the two moved apart. `CanStartSearch` decides whether a search may be asked for,
--- `CanSearch` whether it may start and go on.
+-- around or the two moved apart. `PlayerCanStartSearch` decides whether a search may be asked for,
+-- `PlayerCanSearch` whether it may start and go on.
 
 PLUGIN:set_global 'PlayerSearch'
 

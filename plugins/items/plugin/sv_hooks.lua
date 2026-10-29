@@ -170,7 +170,7 @@ end
 -- @param actor [Player]
 -- @param item_obj [Item]
 -- @return [Boolean false to prevent the drop, nil otherwise]
-function Items:CanPlayerDropItem(actor, item_obj)
+function Items:PlayerCanDropItem(actor, item_obj)
   if !istable(item_obj) then return end
 
   if item_obj.on_drop and item_obj:on_drop(actor) == false then
@@ -281,14 +281,14 @@ end
 -- @param item_obj [Item]
 -- @param _damage_info [CTakeDamageInfo]
 -- @return [Boolean false to ignore the damage, nil otherwise]
-function Items:ItemEntityTakeDamage(_entity, item_obj, _damage_info)
+function Items:CanItemEntityTakeDamage(_entity, item_obj, _damage_info)
   if has_contents(item_obj) then
     return false
   end
 end
 
 --- Drops the equipped weapon items of a player into the world at the position of the
--- player. Each item goes through the 'PlayerCanDropWeaponOnDeath' and 'CanPlayerDropItem'
+-- player. Each item goes through the 'PlayerCanDropWeaponOnDeath' and 'PlayerCanDropItem'
 -- hooks first; the 'PlayerDroppedWeaponOnDeath' hook is run for every item that drops.
 -- @param victim [Player]
 -- @return [List<Entity> the item entities that have been spawned]
@@ -308,7 +308,7 @@ function Items:drop_weapons(victim)
     if entry.weapon_class and entry.is_equipped and entry:is_equipped() and inventory and inventory.owner == victim then
       --- Called on the server before an equipped weapon item of a dying player is dropped
       -- into the world, which happens when the `drop_weapons_on_death` config is on. The
-      -- `CanPlayerDropItem` hook, and with it the `on_drop` callback of the item, is asked
+      -- `PlayerCanDropItem` hook, and with it the `on_drop` callback of the item, is asked
       -- afterward.
       -- @param victim [Player The player who is dying]
       -- @param item_obj [Item The equipped weapon item]
@@ -323,7 +323,7 @@ function Items:drop_weapons(victim)
       -- @param actor [Player The player dropping the item]
       -- @param item_obj [Item The item that is about to be dropped]
       -- @return [Boolean Return false to prevent the drop]
-      if can_drop and hook.Run('CanPlayerDropItem', victim, entry) != false then
+      if can_drop and hook.Run('PlayerCanDropItem', victim, entry) != false then
         hook.Run('PreItemTransfer', entry, nil, inventory)
 
         if entry.inventory_id == inventory.id then

@@ -19,7 +19,7 @@ function PlayerSearch:PlayerOneSecond(actor)
   local target = actor.search_target
 
   if target then
-    local success, error_text = hook.Run('CanSearch', actor, target)
+    local success, error_text = hook.Run('PlayerCanSearch', actor, target)
 
     if success == false then
       actor:notify(error_text)
@@ -36,7 +36,7 @@ end
 -- @param actor [Player player requesting the search]
 -- @param target [Player player to search]
 -- @return [Boolean false and String error phrase if the search cannot start, nil otherwise]
-function PlayerSearch:CanStartSearch(actor, target)
+function PlayerSearch:PlayerCanStartSearch(actor, target)
   local cur_time = CurTime()
 
   if actor.next_search and actor.next_search > cur_time then
@@ -60,7 +60,7 @@ function PlayerSearch:CanStartSearch(actor, target)
   -- @param actor [Player player doing the search]
   -- @param target [Player player being searched]
   -- @return [Boolean false to refuse or end the search, String error phrase shown to the searcher]
-  local success, error_text = hook.Run('CanSearch', actor, target)
+  local success, error_text = hook.Run('PlayerCanSearch', actor, target)
 
   if success == false then
     return false, error_text
@@ -71,7 +71,7 @@ end
 -- @param actor [Player player doing the search]
 -- @param target [Player player being searched]
 -- @return [Boolean false and String error phrase if the search is not allowed, nil otherwise]
-function PlayerSearch:CanSearch(actor, target)
+function PlayerSearch:PlayerCanSearch(actor, target)
   if !IsValid(target) then
     return false, 'error.invalid_entity'
   end

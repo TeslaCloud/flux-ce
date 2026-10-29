@@ -1,83 +1,28 @@
---- Server side of the Observer plugin: puts players into observer mode when they noclip and
--- restores them when they leave it.
+--- Server side of the Observer plugin: turns noclip into observer mode and takes a player who
+-- dies in observer mode out of it.
 
-local invisible_color = Color(0, 0, 0, 0)
-
---- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
--- hidden from players without the 'moderate' permission. The previous position, angles,
--- color and move type are kept in actor.observer_data. Requires the 'noclip' permission.
+--- Puts the player into observer mode in place of the default noclip, if they have the
+-- 'noclip' permission. See Observer#start_observing.
 -- @param actor [Player]
 -- @return [Boolean always false, which blocks the default noclip]
-function Observer:PlayerEnterNoclip(actor)
+function Observer:PlayerCanEnterNoclip(actor)
   if !actor:can('noclip') then
     actor:notify('error.no_permission')
 
     return false
   end
 
-  actor.observer_data = {
-    position = actor:GetPos(),
-    angles = actor:EyeAngles(),
-    color = actor:GetColor(),
-    move_type = actor:GetMoveType(),
-    --- Called on the server when a player enters observer mode, to decide whether they
-    -- are put back where they entered it once they leave.
-    -- @param actor [Player The player entering observer mode]
-    -- @return [Boolean Return false to leave the player where they stop observing]
-    should_reset = (Plugin.call('ShouldObserverReset', actor) != false)
-  }
-
-  actor:SetMoveType(MOVETYPE_NOCLIP)
-  actor:DrawWorldModel(false)
-  actor:DrawShadow(false)
-  actor:SetNoDraw(true)
-  actor:SetNotSolid(true)
-  actor:SetColor(invisible_color)
-  actor:GodEnable()
-
-  actor:set_nv('observer', true)
-  actor:update_visibility()
+  self:start_observing(actor)
 
   return false
 end
 
---- Takes the player out of observer mode and restores what was saved on entering it.
--- The player is moved back to where they started unless ShouldObserverReset said not to.
--- The weapon is only drawn again when the player carries nothing, since the engine drops
--- the carried object as soon as the weapon is drawn and draws the weapon by itself once
--- the object is let go of. A vanished player stays hidden.
+--- Takes the player out of observer mode in place of the default noclip. See
+-- Observer#stop_observing.
 -- @param actor [Player]
 -- @return [Boolean always false, which blocks the default noclip]
-function Observer:PlayerExitNoclip(actor)
-  local data = actor.observer_data
-
-  if data then
-    actor:SetMoveType(data.move_type or MOVETYPE_WALK)
-
-    if !IsValid(actor.holding_object) then
-      actor:DrawWorldModel(true)
-    end
-
-    actor:DrawShadow(true)
-    actor:SetNoDraw(false)
-    actor:SetNotSolid(false)
-    actor:SetColor(data.color)
-    actor:GodDisable()
-
-    if data.should_reset then
-      timer.Simple(FrameTime(), function()
-        if IsValid(actor) then
-          actor:SetPos(data.position)
-          actor:SetEyeAngles(data.angles)
-        end
-      end)
-    end
-  end
-
-  actor.observer_data = nil
-  actor:set_nv('observer', false)
-  actor:hide_vanished_body()
-  actor:update_visibility()
+function Observer:PlayerCanExitNoclip(actor)
+  self:stop_observing(actor)
 
   return false
 end
@@ -104,5 +49,5 @@ function Observer:PlayerDeath(victim, _inflictor, _attacker)
     victim.observer_data.should_reset = false
   end
 
-  self:PlayerExitNoclip(victim)
+  self:stop_observing(victim)
 end

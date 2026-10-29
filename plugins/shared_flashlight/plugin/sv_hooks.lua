@@ -11,7 +11,7 @@
 -- @param actor [Player]
 -- @param _on [Boolean whether the engine flashlight is being turned on]
 -- @return [Boolean false while the plugin is enabled, nil otherwise]
-function SharedFlashlight:PlayerSwitchedFlashlight(actor, _on)
+function SharedFlashlight:PlayerCanSwitchFlashlight(actor, _on)
   if !self:is_enabled() then return end
 
   local turn_on = !actor:is_flashlight_on()

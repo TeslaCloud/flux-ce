@@ -118,7 +118,7 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
   return old_eye_pos, eye_angles
 end
 
---- Removes the attack keys from the command when the CanPlayerAttack hook returns false.
+--- Removes the attack keys from the command when the PlayerCanAttack hook returns false.
 -- @param _actor [Player]
 -- @param user_cmd [CUserCmd]
 function RaiseGun:StartCommand(_actor, user_cmd)
@@ -127,7 +127,7 @@ function RaiseGun:StartCommand(_actor, user_cmd)
   -- denies it while the weapon is lowered.
   -- @return [Boolean Return false to strip the primary and secondary attack keys from the
   --   command]
-  if hook.Run('CanPlayerAttack') == false then
+  if hook.Run('PlayerCanAttack') == false then
     user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2)
   end
 end
@@ -135,7 +135,7 @@ end
 --- Prevents the local player from attacking while their weapon is lowered, unless it is a
 -- weapon that is never raised: such a weapon is used in the lowered pose.
 -- @return [Boolean false if the weapon is lowered, nil otherwise]
-function RaiseGun:CanPlayerAttack()
+function RaiseGun:PlayerCanAttack()
   local client = PLAYER
 
   if !client:is_weapon_raised() then

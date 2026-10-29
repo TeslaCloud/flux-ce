@@ -85,7 +85,7 @@ end
 -- @param ent [Entity the object being picked up]
 -- @param drag [Boolean whether the object is a ragdoll that is going to be dragged]
 -- @return [Boolean false to deny the pickup, nil otherwise]
-function PickupObjects:PlayerPickupObject(actor, ent, drag)
+function PickupObjects:PlayerCanPickupObject(actor, ent, drag)
   if actor.next_pickup and actor.next_pickup > CurTime() then return false end
   if drag then return end
   if ent:IsVehicle() or ent:GetMoveType() != MOVETYPE_VPHYSICS then return false end

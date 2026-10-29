@@ -8,7 +8,7 @@
 -- The entity remembers the character that dropped it (`set_dropper`, `get_dropper`). It
 -- has the health that `ItemBase:get_entity_health` returns for its item: with health
 -- above 0 it takes damage and, once the health is gone, the item is destroyed, which the
--- `ItemEntityTakeDamage` and `ItemEntityDestroyed` hooks tell about. It also calls the
+-- `CanItemEntityTakeDamage` and `ItemEntityDestroyed` hooks tell about. It also calls the
 -- `on_entity_think`, `on_entity_draw`, `on_entity_removed`, `on_entity_take_damage` and
 -- `on_entity_destroyed` callbacks of its item.
 
@@ -188,7 +188,7 @@ if SERVER then
 
   --- Takes health off the item for the damage it receives and destroys the item once no
   -- health is left. The on_entity_take_damage callback of the item and the
-  -- 'ItemEntityTakeDamage' hook can ignore the damage or change it. Both are asked even if
+  -- 'CanItemEntityTakeDamage' hook can ignore the damage or change it. Both are asked even if
   -- the item is not destructible, in which case nothing happens to it afterward.
   -- @param damage_info [CTakeDamageInfo]
   function ENT:OnTakeDamage(damage_info)
@@ -200,8 +200,8 @@ if SERVER then
       return
     end
 
-    --- Called on the server when an item entity takes damage, after the
-    -- `on_entity_take_damage` callback of its item. Handlers can change the damage
+    --- Asks whether an item entity takes damage. Called on the server when it is hit, after
+    -- the `on_entity_take_damage` callback of its item. Handlers can change the damage
     -- through `damage_info`. It is run for every item entity, but the damage only takes
     -- health off those that are destructible (`entity:is_destructible()`). The Items
     -- plugin uses it to keep container items that have something inside from being
@@ -210,7 +210,7 @@ if SERVER then
     -- @param item_obj [Item The item instance tied to the entity]
     -- @param damage_info [CTakeDamageInfo The damage]
     -- @return [Boolean Return false to ignore the damage]
-    if hook.Run('ItemEntityTakeDamage', self, item_obj, damage_info) == false then return end
+    if hook.Run('CanItemEntityTakeDamage', self, item_obj, damage_info) == false then return end
 
     if !self:is_destructible() then return end
 

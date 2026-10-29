@@ -7,4 +7,5 @@
 PLUGIN:set_global('Observer')
 
 require_relative 'cl_hooks'
+require_relative 'sv_plugin'
 require_relative 'sv_hooks'
