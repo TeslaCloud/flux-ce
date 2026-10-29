@@ -202,7 +202,7 @@ end
 
 --- Returns the weapon item that a hit was dealt with: the item of the weapon a player
 -- attacker holds, as long as the damage comes from that weapon and not from a projectile.
--- Needs the Inventory plugin. Serverside only.
+-- Needs the Items plugin. Serverside only.
 -- @param attacker [Entity]
 -- @param victim [Entity]
 -- @param weapon_class [String class of what has dealt the damage, see

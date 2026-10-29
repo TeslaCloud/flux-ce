@@ -2,4 +2,4 @@ name: Player Search
 description: Lets players search the inventories of other players.
 author: TeslaCloud Studios
 depends:
-  - inventory
+  - items

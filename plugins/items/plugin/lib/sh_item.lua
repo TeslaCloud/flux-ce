@@ -25,7 +25,7 @@
 -- `PreItemNetwork` hook.
 --
 -- An item entity remembers the character that dropped it: `Item.spawn` takes the dropper
--- as its last argument, which the Inventory plugin passes whenever a player drops an item
+-- as its last argument, which the Items plugin passes whenever a player drops an item
 -- from an inventory.
 
 local pairs = pairs
@@ -193,7 +193,7 @@ function Item.to_networkable(item_obj)
   --- Lets plugins add fields to what a client is sent about an item instance. Called by
   -- `Item.to_networkable` on the server whenever an instance is sent to a client. The
   -- client builds its copy of the instance out of the template and these fields.
-  -- Handlers write their fields into `fields`; the Inventory plugin adds the position of
+  -- Handlers write their fields into `fields`; the Items plugin adds the position of
   -- the item in its inventory.
   -- @param item_obj [Item The item that is being sent]
   -- @param fields [Map The fields that are going to be sent, to be modified in place]

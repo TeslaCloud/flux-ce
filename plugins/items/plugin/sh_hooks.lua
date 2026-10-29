@@ -1,4 +1,4 @@
---- Shared hooks of the Inventory plugin: turns the slot binds into the `PlayerSelectSlot`
+--- Shared hooks of the Items plugin: turns the slot binds into the `PlayerSelectSlot`
 -- hook, which selects the weapon of the item in that hotbar slot or uses the item.
 
 local IsValid = IsValid
@@ -7,13 +7,13 @@ local IsValid = IsValid
 -- @param client [Player]
 -- @param bind [String]
 -- @param pressed [Boolean]
-function Inventories:PlayerBindPress(client, bind, pressed)
+function Items:PlayerBindPress(client, bind, pressed)
   if bind:find('slot') and pressed then
     local n = tonumber(bind:match('slot(%d+)'))
 
     if n then
       --- Called on the client when the local player presses one of the slot binds, `slot1`
-      -- and so on. The Inventory plugin handles it by selecting the weapon of the item in
+      -- and so on. The Items plugin handles it by selecting the weapon of the item in
       -- that hotbar slot, or using the item. It is run with `Plugin.call`, so gamemode
       -- functions do not receive it.
       -- @param client [Player The local player]
@@ -29,7 +29,7 @@ end
 -- player without a hotbar, such as a gamemaster in gamemaster mode.
 -- @param client [Player]
 -- @param slot [Number hotbar slot from 1 to 8]
-function Inventories:PlayerSelectSlot(client, slot)
+function Items:PlayerSelectSlot(client, slot)
   local hotbar = client:get_inventories().hotbar
 
   if hotbar and slot >= 1 and slot < 9 then

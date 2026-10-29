@@ -209,7 +209,7 @@ end
 -- The opened panel may define get_menu_size, rebuild, on_change and on_close, which the
 -- menu calls when appropriate.
 -- ```
--- function Inventories:AddTabMenuItems(menu)
+-- function Items:AddTabMenuItems(menu)
 --   menu:add_menu_item('inventory', {
 --     title = 'Inventory',
 --     panel = 'fl_inventory_menu',

@@ -1,10 +1,15 @@
---- Client side of the Items plugin: shows the progress of picking an item up by holding
--- the use key, and builds the menu of an item with its use, take, drop, destroy and custom
--- options.
+--- Client hooks of the Items plugin: shows the progress of picking an item up by holding
+-- the use key, builds the menu of an item with its use, take, drop, destroy and custom
+-- options, shows the hotbar while the context menu is open, adds the inventory tab to the
+-- tab menu, and adds the items tab to the spawn menu along with the `fl_icon_editor`
+-- console command.
 
 local IsValid = IsValid
 local ScrW = ScrW
 local ScrH = ScrH
+local math_scale = math.scale
+
+local label_background_color = Color(10, 12, 17, 200)
 
 local aborted_hold_start
 local held_entities = {}
@@ -57,7 +62,7 @@ function Items:Think()
     local scr_pos = ent:GetPos():ToScreen()
     local x, y = scr_pos.x, scr_pos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5
-    local max_offset = math.scale(350)
+    local max_offset = math_scale(350)
 
     if !scr_pos.visible or math.abs(w - x) > max_offset or math.abs(h - y) > max_offset then
       aborted_hold_start = hold_start
@@ -170,16 +175,248 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
   end
 end
 
-Cable.receive('fl_player_use_item_entity', function(entity)
-  if IsValid(entity) and entity.item then
-    --- Called on the client to open the menu of an item.
-    -- Here it is run when the server reports that the local player has pressed the use key
-    -- on an item entity. The Inventory plugin runs it without the second argument when
-    -- an inventory slot is clicked. The Items plugin itself handles the hook by building
-    -- the menu.
-    -- @param instance_id [Number Instance id of the item]
-    -- @param is_entity [Boolean true if the item lies in the world, nil if it is in an
-    --   inventory; decides between the take and the drop option]
-    hook.Run('PlayerUseItemMenu', entity.item.instance_id, true)
+--- Shows the hotbar and makes it interactive while the context menu is open, if the player
+-- has one; a player without a character, such as a gamemaster in gamemaster mode, has none.
+function Items:OnContextMenuOpen()
+  if !PLAYER:get_inventories().hotbar then return end
+
+  if IsValid(PLAYER.hotbar) then
+    PLAYER.hotbar:safe_remove()
   end
+
+  timer.Destroy('fl_hotbar_popup')
+
+  local hotbar = self:create_hotbar()
+
+  PLAYER.hotbar = hotbar
+  hotbar:SetAlpha(255)
+  hotbar:MakePopup()
+  hotbar:MoveToFront()
+  hotbar:SetMouseInputEnabled(true)
+  hotbar:rebuild()
+end
+
+--- Removes the hotbar when the context menu closes.
+function Items:OnContextMenuClose()
+  if IsValid(PLAYER.hotbar) then
+    PLAYER.hotbar:safe_remove()
+  end
+end
+
+--- Adds the inventory to the tab menu, if the player has inventories. A player without a
+-- character, such as a gamemaster in gamemaster mode, has none; the inventory is then also
+-- forgotten as the page to reopen, since the tab menu expects the page it reopens to exist.
+-- @param menu [Panel the tab menu]
+function Items:AddTabMenuItems(menu)
+  if !PLAYER.inventories then
+    if PLAYER.tab_panel == 'inventory' then
+      PLAYER.tab_panel = nil
+    end
+
+    return
+  end
+
+  menu:add_menu_item('inventory', {
+    title = t'ui.tab_menu.inventory',
+    panel = 'fl_inventory_menu',
+    icon = 'fa-briefcase',
+    default = true,
+    priority = 30,
+    callback = function(menu_panel, _button)
+      local inv = menu_panel.active_panel
+      inv:SetTitle('Inventory')
+    end
+  })
+end
+
+--- Keeps the pockets panel no wider than the main inventory panel of the local player shown
+-- in the same view, if there is one.
+-- @param panel [Panel the fl_inventory panel that has been rebuilt]
+function Items:OnInventoryRebuild(panel)
+  if panel:get_inventory_type() == 'pockets' then
+    local parent = panel:GetParent()
+    panel:SizeToContents()
+
+    if !IsValid(parent.main_inventory) then return end
+
+    panel:SetWide(math.min(panel:GetWide(), parent.main_inventory:GetWide()))
+  end
+end
+
+--- Closes the windows of all opened container items when a tab menu panel opens.
+-- @param _menu_panel [Panel the tab menu]
+-- @param _active_panel [Panel the panel that has been opened]
+function Items:OnMenuPanelOpen(_menu_panel, _active_panel)
+  if PLAYER.opened_containers then
+    for _, container in pairs(PLAYER.opened_containers) do
+      if IsValid(container) then
+        container:safe_remove()
+      end
+    end
+
+    PLAYER.opened_containers = {}
+  end
+end
+
+--- Prevents opening the menu of items that are stored inside of container items.
+-- @param item_obj [Item]
+-- @return [Boolean false to prevent the menu from opening, nil otherwise]
+function Items:CanItemMenuOpen(item_obj)
+  local inventory = Inventories.find(item_obj.inventory_id)
+
+  if inventory and inventory.instance_id then
+    return false
+  end
+end
+
+local function create_item_icon(item_obj, parent)
+  local icon = spawnmenu.CreateContentIcon('model', parent, {
+    model = item_obj:get_model(),
+    skin = item_obj:get_skin(),
+    wide = math_scale(128),
+    tall = math_scale(128)
+  })
+
+  local padding = math_scale(4)
+  icon:DockPadding(padding, padding, padding, padding)
+
+  local name_label = vgui.Create('DLabel', icon)
+  name_label:SetText(t(item_obj:get_real_name()))
+  name_label:Dock(BOTTOM)
+  name_label:SetTextColor(color_white)
+  name_label:SetFont(Theme.get_font('text_bar'))
+  name_label:SetWrap(true)
+  name_label:SetAutoStretchVertical(true)
+
+  padding = math_scale(2)
+
+  local padding_double = padding * 2
+  local corner_radius = math_scale(4)
+
+  name_label.Paint = function(_pnl, w, h)
+    DisableClipping(true)
+      draw.RoundedBox(corner_radius, -padding, -padding, w + padding_double, h + padding_double, label_background_color)
+    DisableClipping(false)
+  end
+
+  icon:SetToolTip(t(item_obj:get_real_name())..'\n'..t(item_obj:get_description()))
+  icon.DoRightClick = function(_pnl)
+    local derma_menu = DermaMenu()
+    local give_self = derma_menu:AddSubMenu(t'ui.spawnmenu.give.self', false)
+
+    if item_obj.stackable then
+      give_self:AddOption(t'ui.spawnmenu.give.stack', function()
+        MVC.push('SpawnMenu::GiveItem', PLAYER, item_obj.id, item_obj.max_stack)
+      end)
+    end
+
+    give_self:AddOption(t'ui.spawnmenu.give.one', function()
+      MVC.push('SpawnMenu::GiveItem', PLAYER, item_obj.id, 1)
+    end)
+
+    if player.GetCount() > 1 then
+      local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player', false)
+
+      for _, client in player.Iterator() do
+        if PLAYER == client then continue end
+
+        local player_line = give_player:AddSubMenu(client:Name())
+
+        if item_obj.stackable then
+          player_line:AddOption(t'ui.spawnmenu.give.stack', function()
+            MVC.push('SpawnMenu::GiveItem', client, item_obj.id, item_obj.max_stack)
+          end)
+        end
+
+        player_line:AddOption(t'ui.spawnmenu.give.one', function()
+          MVC.push('SpawnMenu::GiveItem', client, item_obj.id, 1)
+        end)
+      end
+    end
+
+    derma_menu:Open()
+  end
+
+  return icon
+end
+
+--- Fills the items tab of the spawn menu with a node for every item category.
+-- @param content_panel [Panel the content panel of the tab]
+-- @param tree [Panel the navigation tree of the tab]
+-- @param _node [Panel]
+function Items:spawnmenu_populate_items(content_panel, tree, _node)
+  local categories = {}
+
+  for _id, item_obj in pairs(Item.all()) do
+    local category = categories[item_obj.category]
+
+    if !category then
+      category = {}
+      categories[item_obj.category] = category
+    end
+
+    category[#category + 1] = item_obj
+  end
+
+  for name, category in pairs(categories) do
+    local node = tree:AddNode(t(name), Item.get_category_icon(name))
+
+    node.DoPopulate = function(pnl)
+      if IsValid(pnl.list) then return end
+
+      pnl.list = vgui.Create('ContentContainer', content_panel)
+      pnl.list:SetVisible(false)
+      pnl.list:SetTriggerSpawnlistChange(false)
+
+      for _, item_obj in SortedPairsByMemberValue(category, 'name') do
+        local icon = create_item_icon(item_obj, pnl.list)
+        icon.DoClick = function(_pnl)
+          MVC.push('SpawnMenu::SpawnItem', item_obj.id)
+        end
+      end
+    end
+
+    node.DoClick = function(pnl)
+      pnl:DoPopulate()
+      content_panel:SwitchPanel(pnl.list)
+    end
+  end
+end
+
+--- Adds the items tab to the spawn menu.
+function Items:PopulateSpawnMenu()
+  spawnmenu.AddCreationTab(t'ui.spawnmenu.items', function()
+    local panel = vgui.Create('SpawnmenuContentPanel')
+    panel:EnableSearch('items', 'spawnmenu_populate_items')
+    panel:CallPopulateHook('spawnmenu_populate_items')
+
+    return panel
+  end, 'icon16/briefcase.png', 40)
+end
+
+search.AddProvider(function(query)
+  query = query:utf8lower()
+
+  local results = {}
+
+  for _, item_obj in pairs(Item.all()) do
+    if t(item_obj:get_name()):utf8lower():find(query, 1, true) then
+      results[#results + 1] = {
+        text = item_obj.id,
+        func = function() MVC.push('SpawnMenu::SpawnItem', item_obj.id) end,
+        icon = create_item_icon(item_obj),
+        words = { item_obj }
+      }
+    end
+  end
+
+  return results
+end, 'items')
+
+concommand.Add('fl_icon_editor', function()
+  if IsValid(Flux.icon_editor) then
+    Flux.icon_editor:safe_remove()
+  end
+
+  Flux.icon_editor = vgui.Create('fl_icon_editor')
 end)

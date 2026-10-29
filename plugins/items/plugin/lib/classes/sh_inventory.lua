@@ -870,7 +870,7 @@ if SERVER then
     if !item_obj then return false, 'error.inventory.invalid_item' end
 
     --- Called on the server before an item is moved to another slot of the inventory it
-    -- is in. The Inventory plugin uses it to ask the `can_move` callback of the item and to
+    -- is in. The Items plugin uses it to ask the `can_move` callback of the item and to
     -- keep items in disabled inventories where they are.
     -- @param item_obj [Item The item that is being moved]
     -- @param inventory [Inventory The inventory the item is in]
@@ -966,8 +966,8 @@ if SERVER then
     if !item_obj then return false, 'error.inventory.invalid_item' end
 
     --- Called on the server before an item is transferred from one inventory to another.
-    -- The Inventory plugin also runs it, without a target slot, before a player picks an
-    -- item up from the world into one of their inventories. The Inventory plugin uses it
+    -- The Items plugin also runs it, without a target slot, before a player picks an
+    -- item up from the world into one of their inventories. The Items plugin uses it
     -- to enforce what equipment slots, pockets, container items and disabled inventories
     -- accept, and to ask the `can_transfer` callback of the item.
     -- @param item_obj [Item The item that is being transferred]
@@ -1014,10 +1014,10 @@ if SERVER then
     end
 
     --- Called on the server right before an item changes its inventory.
-    -- Besides a transfer between two inventories, as here, the Inventory plugin runs it
+    -- Besides a transfer between two inventories, as here, the Items plugin runs it
     -- when a player picks an item up from the world (without `old_inventory`, and only
     -- if the item fits), and `Inventory:release_item` runs it when an item leaves its
-    -- inventory for good (with nil as `new_inventory`). The Inventory plugin uses it to
+    -- inventory for good (with nil as `new_inventory`). The Items plugin uses it to
     -- call the `on_transfer` callback of the item, which is how equipable items get
     -- equipped and unequipped.
     -- @param item_obj [Item The item that is about to be moved]

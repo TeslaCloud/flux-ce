@@ -4,7 +4,7 @@
 -- default), and `thrown_ammo_class`, the ammo type that the weapon throws (`'Grenade'`
 -- by default). Equipping the item gives the weapon with a single piece of that ammo and
 -- makes it the active weapon. Unequipping strips the weapon and, if the ammo is gone,
--- takes the item away from the player. The Inventory plugin takes equipped throwable
+-- takes the item away from the player. The Items plugin takes equipped throwable
 -- items away when the `PlayerThrewGrenade` hook is run.
 -- @module [ItemThrowable]
 

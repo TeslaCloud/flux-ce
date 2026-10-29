@@ -418,7 +418,7 @@ if SERVER then
 
     if act == 'on_take' then
       --- Called on the server when a player takes an item, after `PlayerCanUseItem`.
-      -- The hook is what performs the action: the Inventory plugin handles it by putting
+      -- The hook is what performs the action: the Items plugin handles it by putting
       -- an item that lies in the world into one of the player's inventories.
       -- @param actor [Player The player taking the item]
       -- @param item_obj [Item The item instance]
@@ -431,7 +431,7 @@ if SERVER then
 
     if act == 'on_use' then
       --- Called on the server when a player uses an item, after `PlayerCanUseItem`.
-      -- The hook is what performs the action: the Inventory plugin handles it by calling
+      -- The hook is what performs the action: the Items plugin handles it by calling
       -- the `on_use` callback of the item and removing the item afterward, unless the
       -- callback returns true to keep it. It returns false when the callback cancels the
       -- use.
@@ -445,9 +445,9 @@ if SERVER then
 
     if act == 'on_drop' then
       --- Called on the server when a player drops an item through its menu, after
-      -- `PlayerCanUseItem`. The hook is what performs the action: the Inventory plugin
+      -- `PlayerCanUseItem`. The hook is what performs the action: the Items plugin
       -- handles it by taking the item out of its inventory and spawning it in front of
-      -- the player. The Inventory plugin also runs this hook itself, with a list of
+      -- the player. The Items plugin also runs this hook itself, with a list of
       -- instance ids instead of a single one, when items are dragged out of an inventory
       -- panel.
       -- @param actor [Player The player dropping the item]

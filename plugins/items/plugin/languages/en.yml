@@ -29,6 +29,30 @@ en:
       drop_weapons_on_death:
         name: Drop weapons on death
         desc: Whether the equipped weapons of a player are dropped into the world when the player dies.
+    inventory:
+      title: Inventory
+      desc: General inventory settings.
+      width:
+        name: Main inventory width
+        desc: Width of the main player inventory in slots.
+      height:
+        name: Main inventory height
+        desc: Height of the main player inventory in slots.
+      hotbar_width:
+        name: Hotbar inventory width
+        desc: Width of the player hotbar inventory in slots.
+      hotbar_height:
+        name: Hotbar inventory height
+        desc: Height of the player hotbar inventory in slots.
+      equipment_width:
+        name: Equipment inventory width
+        desc: Width of the player equipment inventory in slots.
+      equipment_height:
+        name: Equipment inventory height
+        desc: Height of the player equipment inventory in slots.
+      pockets_height:
+        name: Pockets height
+        desc: Height of the player pockets inventory in slots.
   error:
     item:
       other_character: You cannot touch an item that another character of yours has dropped.
@@ -36,6 +60,15 @@ en:
       destroy_not_empty: Empty this item before you destroy it.
       nothing_to_treat: You have no wounds that this could treat.
       already_healing: You are already healing.
+    invalid_item: Item '{item}' is not valid.
+    inventory:
+      invalid_item: Invalid item.
+      no_space: Not enough space.
+      not_enough_items: Not enough items.
+      slot_occupied: The slot is occupied.
+      disabled: The inventory is disabled.
+      cant_equip: This item cannot be equipped.
+      too_big: The item is too big.
   item:
     action:
       apply: Apply
@@ -66,7 +99,59 @@ en:
       unload: Unload
       load: Load
       destroy: Destroy
+      open: Open
   ui:
     item:
       destroy_title: Destroy Item
       destroy_message: "Are you sure that you want to destroy {item}? This cannot be undone."
+    icon_editor:
+      title: Icon Editor
+      best: Best View
+      front: Front View
+      above: View Above
+      right: View on the right
+      center: Center view
+      width: Item Width (Slots)
+      height: Item Height (Slots)
+      slot_size: Slot Size (px)
+      copy: Copy item code
+    inventory:
+      main_inventory: Inventory
+      hotbar: Hotbar
+      equipment:
+        title: Equipment
+        helmet: Helmet
+        mask: Mask
+        torso: Torso
+        hands: Hands
+        legs: Legs
+        accessories: Accessories
+      pockets: Pockets
+      title: Inventory
+      container: Container
+    tab_menu:
+      inventory: Inventory
+    spawnmenu:
+      items: Items
+      give:
+        self: Give Self
+        player: Give To Other Player
+        stack: Stack
+        one: One
+  command:
+    giveitem:
+      description: Gives the specified item to a player.
+      syntax: "<target> <item ID or name> [amount]"
+      message: "{player} has given {item} x {amount} to {target}."
+  hint:
+    inventory: Drag'n'Drop an item outside of the inventory screen to drop it.
+  notification:
+    item_given: You have been given {item} x {amount}.
+    icon_editor: The code was copied to your clipboard.
+  permission:
+    spawn_items:
+      name: "Spawn items"
+      description: "Grants access to spawn items from the spawn menu."
+    give_items:
+      name: "Give items"
+      description: "Grants access to give items to players from the spawn menu."

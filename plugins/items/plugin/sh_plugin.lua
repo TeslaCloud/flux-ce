@@ -5,21 +5,52 @@
 -- registers it under the id taken from the file name (`sh_test_item.lua` becomes
 -- `test_item`). An item class can build upon a base class from an `items/bases/` folder
 -- with `ItemBase:base_off`; this plugin comes with `ItemUsable`, `ItemConsumable`,
--- `ItemMedical`, `ItemAmmo`, `ItemEquipable`, `ItemWeapon`, `ItemThrowable` and
--- `ItemWearable`.
+-- `ItemMedical`, `ItemAmmo`, `ItemEquipable`, `ItemWeapon`, `ItemThrowable`,
+-- `ItemWearable` and `ItemContainer`.
 --
 -- What players actually own are item instances, made out of a template by `Item.create`,
 -- each with its own numeric instance id and custom data. An instance either sits in an
--- inventory (see the Inventory plugin) or lies in the world as an `fl_item` entity spawned
--- by `Item.spawn`. Every instance is a row of the `items` table of the database; the
--- server loads the instances when they are needed and writes back what changes (see
--- `lib/sv_storage.lua`), and sends each client the instances it needs. Players act on an
--- instance through its menu: the use, take, drop and destroy options and the custom
--- buttons of the item all end up in `ItemBase:do_menu_action` on the server, which runs
--- the `PlayerCanUseItem`, `PlayerUseItem`, `PlayerTakeItem`, `PlayerDropItem`,
--- `PlayerDestroyItem` and `PlayerUsedItem` hooks.
+-- inventory or lies in the world as an `fl_item` entity spawned by `Item.spawn`. Every
+-- instance is a row of the `items` table of the database; the server loads the instances
+-- when they are needed and writes back what changes (see `lib/sv_storage.lua`), and sends
+-- each client the instances it needs. Players act on an instance through its menu: the
+-- use, take, drop and destroy options and the custom buttons of the item all end up in
+-- `ItemBase:do_menu_action` on the server, which runs the `PlayerCanUseItem`,
+-- `PlayerUseItem`, `PlayerTakeItem`, `PlayerDropItem`, `PlayerDestroyItem` and
+-- `PlayerUsedItem` hooks, which this plugin handles by doing what the action says.
 --
--- The config keys of the plugin, all off by default, let players destroy the items in
+-- Inventories are where players and other objects keep their items.
+-- An `Inventory` is a grid of slots, `width` by `height`, with a numeric id and a type such
+-- as `'main_inventory'` or `'hotbar'`. Every slot holds a stack of item instance ids. In
+-- a multislot inventory an item covers as many slots as its `width` and `height` say and
+-- can be rotated; in any other inventory every item takes a single slot. An inventory
+-- can also grow with its contents (`infinite_width`, `infinite_height`) and be disabled.
+-- `Inventories.find` looks an inventory up by its id.
+--
+-- When a character becomes active, the `CreatePlayerInventories` hook builds the
+-- inventories of the player. This plugin creates the main inventory, the hotbar, the
+-- pockets and the equipment slots there, sized by the `inventory_`, `hotbar_` and
+-- `pockets_` config keys, and other plugins can add their own. The items of the character
+-- are then loaded from the database into them, and they are written back and unloaded
+-- once the character is no longer in use, so a character keeps its items from map to map.
+-- Further inventories can be created with `Inventory.new` for anything else that holds
+-- items, such as the bags based on `ItemContainer`, and shown to a player with
+-- `Player:open_inventory`.
+--
+-- Inventories are managed by the server. Each one has a list of receivers: the players
+-- who are sent its contents whenever `Inventory:sync` is called, and the only ones whose
+-- requests to move or drop its items are accepted. A player is a receiver of their own
+-- inventories and of those that were opened for them; once a second the server closes the
+-- opened ones for the players who are no longer entitled to them, such as those who have
+-- walked away from a container (`Inventory:can_be_viewed_by`). The client keeps a copy
+-- and displays it in an `fl_inventory` panel made of `fl_inventory_item` slots. Dragging
+-- an item to another slot asks the server to move it, which goes through the
+-- `PlayerCanMoveItem`, `CanItemMove` or `CanItemTransfer`, `PreItemTransfer` and
+-- `ItemTransferred` hooks; dragging it out of the panel drops it into the world. The
+-- `fl_inventory_menu` panel is the inventory tab of the tab menu, and
+-- `fl_inventory_container` shows another inventory next to the player's own.
+--
+-- Five config keys of the plugin, all off by default, let players destroy the items in
 -- their inventories (`item_destroy`), give the items that lie in the world health so that
 -- they can be destroyed by damage (`item_entity_health`), keep players away from the items
 -- that another of their own characters has dropped (`item_drop_ownership`), make
@@ -38,13 +69,49 @@
 --   actor:SetHealth(math.min(actor:Health() + 10, actor:GetMaxHealth()))
 -- end
 -- ```
--- The plugin also registers the `has_item` and `has_item_data` conditions.
+-- The plugin also lets the slot binds select the items of the hotbar, and adds the
+-- GiveItem command, the 'item' argument type that completes item IDs for commands, an
+-- items tab to the spawn menu, and the `has_item` and `has_item_data` conditions.
 -- @module [Items]
 
 PLUGIN:set_global('Items')
 
+local function complete_item()
+  local ids = {}
+
+  for item_id in pairs(Item.all()) do
+    ids[#ids + 1] = item_id
+  end
+
+  table.sort(ids)
+
+  return ids
+end
+
+Flux.Command:add_completer('item', complete_item)
+
+require_relative 'cl_plugin'
 require_relative 'cl_hooks'
+require_relative 'sh_hooks'
 require_relative 'sv_hooks'
+require_relative 'cl_nethooks'
+require_relative 'sv_nethooks'
+
+--- Registers the 'spawn_items' and 'give_items' permissions of the items tab of the spawn menu.
+function Items:RegisterPermissions()
+  Bolt:register_permission(
+    'spawn_items',
+    'permission.spawn_items.name',
+    'permission.spawn_items.description',
+    'permission.categories.spawn'
+  )
+  Bolt:register_permission(
+    'give_items',
+    'permission.give_items.name',
+    'permission.give_items.description',
+    'permission.categories.character_management'
+  )
+end
 
 --- Registers the 'items/bases' and 'items' plugin folders
 -- and includes the item bases and the items that come with this plugin.

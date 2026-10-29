@@ -25,7 +25,7 @@
 -- and the serialized overridden fields of an instance must each stay below 64 KB, the size
 -- of a MySQL text column; an instance with more is not written, and an error is printed.
 --
--- The server keeps only the instances that are in use. The Inventory plugin loads the
+-- The server keeps only the instances that are in use. The Items plugin loads the
 -- items of a character with `Item.load_character` when the character becomes active and
 -- unloads them with `Item.unload` once it is not in use anymore, so they follow the
 -- character from map to map. `Item.load_map` loads the items of the current map when it
@@ -659,7 +659,7 @@ function Item.load_map(callback)
     --- Called on the server once the items of the current map have been loaded from the
     -- database, after those that lie in the world have been spawned. Handlers put the
     -- other items where they belong: the Containers plugin claims the items of its
-    -- container props, and the Inventory plugin puts the contents of container items
+    -- container props, and the Items plugin puts the contents of container items
     -- into the inventories of their containers.
     -- @param items [List<Item> The loaded instances, the contents of container items
     --   among them]

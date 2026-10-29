@@ -1,3 +1,5 @@
 name: Items System
-description: Provides items that can be instantiated.
+description: Provides items that can be instantiated, and the inventories that hold them.
 author: TeslaCloud Studios
+depends:
+  - characters
