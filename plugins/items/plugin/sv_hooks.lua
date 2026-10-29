@@ -4,9 +4,9 @@
 -- `on_drop`, `on_destroy`, `on_loadout`, `on_save`, `on_created` and `on_transfer`
 -- callbacks of items. It also creates the default inventories of players, loads and unloads
 -- the items of characters, enforces the rules of moving items between inventories, closes
--- the inventories that players are no longer entitled to, destroys items on request of
--- their owners, keeps players away from the items that another of their characters has
--- dropped, and drops the weapons of players who die, each of which a config key turns on.
+-- the inventories that players are no longer entitled to. Config keys turn on destroying
+-- items on request of their owners, keeping players away from items another of their
+-- characters has dropped, and dropping the weapons of players who die.
 
 local pairs = pairs
 local IsValid = IsValid
