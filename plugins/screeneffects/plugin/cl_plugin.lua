@@ -55,25 +55,25 @@ local two_pi, four_pi = pi * 2, pi * 4
 
 local stored = {
   low_health = {
-    config = 'allow_low_health_effect',
+    config = 'screeneffects_low_health',
     setting = 'low_health_effect',
     strength = 'low_health_effect_strength',
     max_strength = 100
   },
   heartbeat = {
-    config = 'allow_heartbeat_effect',
+    config = 'screeneffects_heartbeat',
     setting = 'heartbeat_effect',
     strength = 'heartbeat_effect_strength',
     max_strength = 100
   },
   underwater = {
-    config = 'allow_underwater_effect',
+    config = 'screeneffects_underwater',
     setting = 'underwater_effect',
     strength = 'underwater_effect_strength',
     max_strength = 200
   },
   headbob = {
-    config = 'allow_headbob_effect',
+    config = 'screeneffects_headbob',
     setting = 'headbob_effect',
     strength = 'headbob_effect_strength',
     max_strength = 300
@@ -573,7 +573,7 @@ function ScreenEffects:update_headbob_target()
   local speed = velocity:Length2D()
 
   if speed > defaults.bob_min_speed then
-    local run_speed = max(to_number(Config.get('run_speed', 200), 200), 1)
+    local run_speed = max(to_number(Config.get('flow_run_speed', 200), 200), 1)
     local fraction = min(speed / run_speed, 1)
     local strength = strengths.headbob
     local sideways = clamp(client:EyeAngles():Right():Dot(velocity) / run_speed, -1, 1)

@@ -9,8 +9,8 @@
 --   a fall.
 --
 -- An effect is applied when the server allows it, the player has it turned on and no plugin
--- suppresses it. The server allows the effects with the 'allow_low_health_effect',
--- 'allow_heartbeat_effect', 'allow_underwater_effect' and 'allow_headbob_effect' configs, all
+-- suppresses it. The server allows the effects with the 'screeneffects_low_health',
+-- 'screeneffects_heartbeat', 'screeneffects_underwater' and 'screeneffects_headbob' configs, all
 -- on by default. Every player gets a switch and a strength slider for each effect in the
 -- Settings tab: the 'low_health_effect', 'heartbeat_effect', 'underwater_effect' and
 -- 'headbob_effect' settings and the settings of the same names ending in '_strength'. A
