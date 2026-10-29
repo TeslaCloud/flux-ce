@@ -497,14 +497,6 @@ if SERVER then
     -- @param ... [Vararg Extra arguments that were passed to `ItemBase:do_menu_action`]
     hook.Run('PlayerUsedItem', actor, self, act, ...)
   end
-
-  Cable.receive('fl_items_menu_action', function(actor, instance_id, action, ...)
-    local item_obj = Item.find_instance_by_id(instance_id)
-
-    if !item_obj or !item_obj:has_menu_action(action) then return end
-
-    item_obj:do_menu_action(action, actor, ...)
-  end)
 else
   --- Asks the server to perform a menu action on the item on behalf of the local player.
   -- The server ignores the actions that ItemBase:has_menu_action does not allow.

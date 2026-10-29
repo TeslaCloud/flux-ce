@@ -1,8 +1,5 @@
---- Server-side network receivers of the Items plugin: aborts the pickup of an item when
--- the client says it has looked away, and handles the move, drop and close requests of the
--- inventory panels once they have been checked.
-
-local IsValid = IsValid
+--- Server-side receivers of the Items plugin for inventories: the move, drop and close
+-- requests of the inventory panels, handled once they have been checked.
 
 local function can_handle_items(actor)
   if !actor:Alive() then
@@ -46,17 +43,6 @@ local function find_requested_stack(actor, instance_ids)
 
   return inventory, stack
 end
-
-Cable.receive('fl_items_abort_hold_start', function(actor)
-  local ent = actor:get_nv('hold_entity')
-
-  if IsValid(ent) then
-    ent:set_nv('last_activator', false)
-  end
-
-  actor:set_nv('hold_start', false)
-  actor:set_nv('hold_entity', false)
-end)
 
 Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, was_rotated)
   local old_inventory, stack = find_requested_stack(actor, instance_ids)

@@ -94,23 +94,11 @@ require_relative 'cl_plugin'
 require_relative 'cl_hooks'
 require_relative 'sh_hooks'
 require_relative 'sv_hooks'
-require_relative 'cl_nethooks'
-require_relative 'sv_nethooks'
 
 --- Registers the 'spawn_items' and 'give_items' permissions of the items tab of the spawn menu.
 function Items:RegisterPermissions()
-  Bolt:register_permission(
-    'spawn_items',
-    'permission.spawn_items.name',
-    'permission.spawn_items.description',
-    'permission.categories.spawn'
-  )
-  Bolt:register_permission(
-    'give_items',
-    'permission.give_items.name',
-    'permission.give_items.description',
-    'permission.categories.character_management'
-  )
+  Bolt:register_permission('spawn_items', nil, nil, 'permission.categories.spawn')
+  Bolt:register_permission('give_items', nil, nil, 'permission.categories.character_management')
 end
 
 --- Registers the 'items/bases' and 'items' plugin folders

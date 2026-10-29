@@ -1,21 +1,8 @@
---- Client-side network receivers of the Items plugin: opens the menu of an item entity
--- that the local player uses, receives the inventories and the requests to open or close
--- them from the server, and rebuilds the player model preview when the server asks for it.
+--- Client-side receivers of the Items plugin for inventories: the inventories and the
+-- requests to open or close them that the server sends, and its requests to rebuild the
+-- player model preview.
 
 local IsValid = IsValid
-
-Cable.receive('fl_player_use_item_entity', function(entity)
-  if IsValid(entity) and entity.item then
-    --- Called on the client to open the menu of an item.
-    -- Here it is run when the server reports that the local player has pressed the use key
-    -- on an item entity. An inventory slot runs it without the second argument when it is
-    -- clicked. The Items plugin handles the hook by building the menu.
-    -- @param instance_id [Number Instance id of the item]
-    -- @param is_entity [Boolean true if the item lies in the world, nil if it is in an
-    --   inventory; decides between the take and the drop option]
-    hook.Run('PlayerUseItemMenu', entity.item.instance_id, true)
-  end
-end)
 
 Cable.receive('fl_inventory_sync', function(data)
   local inventory = Inventories.stored[data.id] or Inventory.new(data.id)
