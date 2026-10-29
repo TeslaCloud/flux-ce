@@ -95,11 +95,9 @@ Plugin.renamed = {
   ['3dtexts'] = '3d_texts',
   areadisplay = 'area_display',
   autowalk = 'auto_walk',
-  datafile = 'data_file',
   devhud = 'dev_hud',
   displaytyping = 'display_typing',
   doorkeys = 'door_keys',
-  forcefields = 'force_fields',
   gametime = 'game_time',
   mapcleaner = 'map_cleaner',
   mapscenes = 'map_scenes',
@@ -152,13 +150,14 @@ end
 
 --- Clears the hook and load caches and resets the extra folders, ready for a code refresh.
 -- Does nothing before Flux has initialized. On a lite refresh only the entries of plugins
--- whose path does not contain 'flux' are dropped.
+-- whose path does not contain 'flux' are dropped and the extra folders stay, as the packages
+-- and framework plugins that add them are not included again.
 function Plugin.clear_cache()
   if !Flux.initialized then return end
 
-  Plugin.clear_extras()
-
   if !LITE_REFRESH then
+    Plugin.clear_extras()
+
     hooks_cache = {}
     load_cache = {}
   else
