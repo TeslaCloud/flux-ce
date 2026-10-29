@@ -1,7 +1,7 @@
 --- Log entries, stored in the `logs` table of the database.
 -- The class methods record an entry and output it in one go: `Log:print` and
 -- `Log:colored` write to the console, `Log:notify` notifies every player and `Log:replicate`
--- repeats the last entry on the clients. Every entry is also pushed with `Log:to_discord` to
+-- repeats the last entry on the clients. Every entry is also queued with `Log:to_discord` for
 -- the Discord webhooks that accept its action. They return the class, so the calls can be
 -- chained.
 
@@ -10,7 +10,7 @@ class 'Log' extends 'ActiveRecord::Base'
 local last_log
 local replication_data
 
---- Records a log entry. On the server the entry is saved to the logs table and pushed to the
+--- Records a log entry. On the server the entry is saved to the logs table and queued for the
 -- Discord webhooks whose types include its action or 'all'. The entry is also remembered so
 -- that it can be passed on with Log:replicate.
 -- @param message [String text of the entry]
@@ -54,10 +54,10 @@ function Log:write(message, action, object, subject, io)
   return self
 end
 
---- Pushes a message to every Discord webhook registered for the given type. Does nothing
--- on the client.
+--- Queues a message for every Discord webhook registered for the given type; the webhooks post
+-- their queued messages every few seconds (see `Webhook:flush`). Does nothing on the client.
 -- @param webhook_type='all' [String webhook type]
--- @param message=nil [String text to push; defaults to the last message given to Log:write]
+-- @param message=nil [String text to queue; defaults to the last message given to Log:write]
 -- @return [Log the Log class, for chaining]
 function Log:to_discord(webhook_type, message)
   if SERVER then
@@ -67,7 +67,7 @@ function Log:to_discord(webhook_type, message)
     local webhooks = Webhook:get_type(string.lower(webhook_type))
 
     for _, webhook in ipairs(webhooks) do
-      webhook:push(message)
+      webhook:queue(message)
     end
   end
 
