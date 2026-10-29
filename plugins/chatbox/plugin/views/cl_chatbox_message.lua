@@ -163,14 +163,14 @@ function PANEL:create_avatars()
 end
 
 --- Removes the message from the chatbox history and deletes its panel,
--- unless the ShouldMessageeject hook returns false.
+-- unless the ShouldMessageEject hook returns false.
 function PANEL:eject()
   --- Decides whether a message may be removed from the chatbox. Called on the client when the
   -- history is full and its oldest message is about to be ejected; gamemode hooks are not
   -- called.
   -- @param panel [Panel the fl_chat_message panel]
   -- @return [Boolean return false to keep the message]
-  if Plugin.call('ShouldMessageeject', self) != false then
+  if Plugin.call('ShouldMessageEject', self) != false then
     local parent = Chatbox.panel
 
     if !IsValid(parent) then return end
