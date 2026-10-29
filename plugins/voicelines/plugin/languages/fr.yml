@@ -1,0 +1,38 @@
+fr:
+  command:
+    voicelines:
+      description: Affiche les répliques vocales que votre personnage peut dire, ou les recherche par commande, texte ou alias.
+      syntax: "[recherche]"
+  config:
+    voicelines:
+      title: Répliques vocales
+      desc: Réglages des répliques vocales que les personnages disent dans le chat.
+      voicelines_interval:
+        name: Intervalle des répliques vocales
+        desc: Nombre de secondes qu'un joueur doit attendre avant que le son d'une autre réplique vocale ne soit joué. Une réplique dite plus tôt s'affiche dans le chat sans son.
+      voicelines_radio_volume:
+        name: Volume des répliques vocales à la radio
+        desc: Volume, de 0 à 1, du son d'une réplique vocale pour les joueurs qui l'entendent à la radio.
+  notification:
+    voice_lines:
+      none: Votre personnage n'a aucune réplique vocale.
+      not_found: Aucune réplique vocale ne correspond à « {query} ».
+  ui:
+    voice_lines:
+      title: Répliques vocales
+      description: Pour dire une réplique, écrivez dans le chat sa commande, son texte ou l'un de ses alias dans un message à part. Mettez-la entre parenthèses pour la chuchoter, ou ajoutez !! pour la crier.
+      search: Rechercher par commande, texte ou alias...
+      all: Toutes
+      empty: Aucune réplique vocale ne correspond à la recherche.
+      truncated: "{shown} répliques affichées sur {total}. Affinez la recherche."
+      listen: Écouter
+      say: Dire
+      say_tooltip: Dire cette réplique en personnage.
+      aliases: Alias
+      list_header: "Répliques vocales de votre personnage (voir la page Répliques vocales de l'onglet Aide, ou cherchez avec /voicelines <texte>) :"
+      line_count:
+        "1": "{count} réplique"
+        "2": "{count} répliques"
+      results:
+        "1": "{count} réplique vocale trouvée, {shown} affichée :"
+        "2": "{count} répliques vocales trouvées, {shown} affichées :"

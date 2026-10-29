@@ -1,0 +1,38 @@
+en:
+  command:
+    voicelines:
+      description: List the voice lines your character can say, or search them by command, text or alias.
+      syntax: "[search]"
+  config:
+    voicelines:
+      title: Voice Lines
+      desc: Settings of the voice lines that characters say in the chat.
+      voicelines_interval:
+        name: Voice Line Interval
+        desc: How many seconds a player has to wait before the sound of another voice line plays. A line said sooner is shown in the chat without its sound.
+      voicelines_radio_volume:
+        name: Radio Voice Line Volume
+        desc: Volume, from 0 to 1, of the sound of a voice line for the players who hear it over the radio.
+  notification:
+    voice_lines:
+      none: Your character has no voice lines.
+      not_found: 'No voice line matches "{query}".'
+  ui:
+    voice_lines:
+      title: Voice Lines
+      description: To say a line, type its command, its text or one of its aliases in the chat as a message of its own. Put it in parentheses to whisper it, or add !! to yell it.
+      search: Search by command, text or alias...
+      all: All
+      empty: No voice line matches the search.
+      truncated: Showing {shown} of {total} lines. Search to narrow them down.
+      listen: Listen
+      say: Say
+      say_tooltip: Say this line in character.
+      aliases: Aliases
+      list_header: "Voice lines of your character (see the Voice Lines page of the Help tab, or search with /voicelines <text>):"
+      line_count:
+        "1": "{count} line"
+        "2": "{count} lines"
+      results:
+        "1": "Found {count} voice line, showing {shown}:"
+        "2": "Found {count} voice lines, showing {shown}:"

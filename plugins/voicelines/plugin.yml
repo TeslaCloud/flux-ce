@@ -1,0 +1,8 @@
+name: Voice Lines
+description: Lets characters say the voice lines of their faction by typing them in the chat.
+author: TeslaCloud Studios
+depends:
+  - characters
+  - factions
+  - chatbox
+  - rpcommands

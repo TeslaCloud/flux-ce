@@ -1,0 +1,116 @@
+--- The Voice Lines page of the Help tab: the voice lines the character of the local player may
+-- use, grouped by category, with a search field that filters them by command, text and alias
+-- and a row of buttons that shows one category at a time. Every line has a button that plays
+-- its sound to the local player only and a button that says it in character, which the
+-- server checks. Long lists are cut off after `max_shown` lines, with a note to search. The
+-- lines come from `VoiceLines:get_local_available`, which keeps them while the character stays
+-- the same, and a selected category that the character no longer has falls back to all.
+
+local max_shown = 100
+local card_style = {
+  direction = 'row', align = 'center', gap = 8, padding = { 6, 10 }, background = 'surface_raised', radius = 6
+}
+local small_button = { font = 'text_small', padding = { 4, 10 } }
+
+--- One voice line.
+-- @param props [Map line (Map), gender (String gender of the character of the local player)]
+local function Line(props)
+  local line = props.line
+  local dim = Lumen.Style.color('text_muted') or color_white
+
+  return <view style={card_style}>
+    <button icon="fa-play" tooltip={t'ui.voice_lines.listen'} style={small_button}
+      on_press={function() VoiceLines:preview(line) end} />
+    <view style={{ flex = 1, gap = 2 }}>
+      <text style={{ font = 'text_normal', color = 'accent_light' }}>{line.id}</text>
+      <text style={{ font = 'text_small' }}>{VoiceLines:get_text(line, props.gender)}</text>
+      {#line.aliases > 0 and <text style={{ font = 'text_smallest', color = dim }}>
+        {t'ui.voice_lines.aliases'..': '..table.concat(line.aliases, ', ')}
+      </text>}
+    </view>
+    <button tooltip={t'ui.voice_lines.say_tooltip'} style={small_button}
+      on_press={function() VoiceLines:request_say(line.category, line.id) end}>
+      {t'ui.voice_lines.say'}
+    </button>
+  </view>
+end
+
+return function(_props)
+  local query, set_query = use_state('')
+  local selected, set_selected = use_state(nil)
+  local gender = VoiceLines:get_gender(PLAYER)
+  local available = VoiceLines:get_local_available()
+  local search = query:strip():utf8lower()
+  local is_stale = selected != nil
+
+  for _k, group in ipairs(available) do
+    if group.category.id == selected then
+      is_stale = false
+    end
+  end
+
+  use_effect(function()
+    if is_stale then
+      set_selected(nil)
+    end
+  end, { is_stale })
+
+  if is_stale then
+    selected = nil
+  end
+
+  local groups = {}
+  local shown, total = 0, 0
+
+  for _k, group in ipairs(available) do
+    if !selected or selected == group.category.id then
+      local lines = {}
+
+      for _k2, line in ipairs(group.lines) do
+        if VoiceLines:line_matches_query(line, search) then
+          total += 1
+
+          if shown < max_shown then
+            shown += 1
+            lines[#lines + 1] = line
+          end
+        end
+      end
+
+      if #lines > 0 then
+        groups[#groups + 1] = { category = group.category, lines = lines }
+      end
+    end
+  end
+
+  return <view style={{ gap = 8 }}>
+    <text style={{ font = 'menu_large' }}>{t'ui.voice_lines.title'}</text>
+    <text style={{ font = 'text_smaller', color = 'text_muted' }}>{t'ui.voice_lines.description'}</text>
+    <input value={query} placeholder={t'ui.voice_lines.search'}
+      ref={function(panel) if IsValid(panel) then panel:SetUpdateOnType(true) end end}
+      on_change={function(value) set_query(value) end} />
+    {#available > 1 and <view style={{ direction = 'row', wrap = true, gap = 6 }}>
+      <button active={selected == nil} style={small_button} on_press={function() set_selected(nil) end}>
+        {t'ui.voice_lines.all'}
+      </button>
+      {Lumen.map(available, function(group)
+        return <button key={group.category.id} active={selected == group.category.id} style={small_button}
+          on_press={function() set_selected(group.category.id) end}>
+          {t(group.category.name)}
+        </button>
+      end)}
+    </view>}
+    {total == 0 and <view style={card_style}>
+      <text style={{ font = 'text_normal' }}>{t'ui.voice_lines.empty'}</text>
+    </view>}
+    {total > shown and <text style={{ font = 'text_smaller', color = 'text_muted' }}>
+      {t('ui.voice_lines.truncated', { shown = shown, total = total })}
+    </text>}
+    {Lumen.map(groups, function(group)
+      return <view key={group.category.id} style={{ gap = 4 }}>
+        <text style={{ font = 'menu_normal', margin_top = 8, color = 'text_muted' }}>{t(group.category.name)}</text>
+        {Lumen.map(group.lines, line -> <Line key={line.category..'.'..line.id} line={line} gender={gender} />)}
+      </view>
+    end)}
+  </view>
+end

@@ -1,0 +1,23 @@
+categories:
+  voicelines:
+    name: config.voicelines.title
+    description: config.voicelines.desc
+configs:
+  voicelines_interval:
+    name: config.voicelines.voicelines_interval.name
+    description: config.voicelines.voicelines_interval.desc
+    category: voicelines
+    type: number
+    min_value: 0
+    max_value: 60
+    decimals: 1
+    default_value: 2
+  voicelines_radio_volume:
+    name: config.voicelines.voicelines_radio_volume.name
+    description: config.voicelines.voicelines_radio_volume.desc
+    category: voicelines
+    type: number
+    min_value: 0
+    max_value: 1
+    decimals: 2
+    default_value: 0.5
