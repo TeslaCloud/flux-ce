@@ -6,32 +6,37 @@ local player_meta = FindMetaTable('Player')
 
 player_meta.engine_set_user_group = player_meta.engine_set_user_group or player_meta.SetUserGroup
 
---- Sets the player's role, overriding the engine method. Networks the role, sets the
--- engine's usergroup to it as well, calls on_role_taken / on_role_set on the roles involved,
--- saves the role to the database unless one of them returns a value, and runs the
--- PlayerUserGroupChanged hook. While Bolt is the admin mod that CAMI hears from, a change
--- that another addon makes this way is signaled to CAMI as coming from 'Bolt', unless it is
--- silent. Bolt's own changes go through `Bolt:set_role`, which signals them in both modes.
--- @param group='user' [String role ID]
+--- Sets the player's role, overriding the engine method. Sets the engine's usergroup, and
+-- while Bolt is the admin mod also networks the role, calls on_role_taken / on_role_set on
+-- the roles involved and saves the role to the database unless one of them returns a value.
+-- While Bolt defers to another admin mod, the usergroup is all that changes: that admin mod
+-- keeps its own groups and Bolt neither networks nor saves a role. The PlayerUserGroupChanged
+-- hook runs in both modes, with the roles that `Bolt:get_group_role` finds for the two
+-- usergroups. While Bolt is the admin mod that CAMI hears from, a change that another addon
+-- makes this way is signaled to CAMI as coming from 'Bolt', unless it is silent. Bolt's own
+-- changes go through `Bolt:set_role`, which signals them in both modes.
+-- @param group='user' [String role ID or usergroup name]
 -- @param silent=false [Boolean keep CAMI from hearing of the change]
 function player_meta:SetUserGroup(group, silent)
   group = group or 'user'
 
   local old_id = self:GetUserGroup()
-  local group_obj = Bolt:find_group(group)
-  local old_group_obj = Bolt:find_group(old_id)
+  local group_obj = Bolt:get_group_role(group)
+  local old_group_obj = Bolt:get_group_role(old_id)
 
-  self:set_nv('role', group)
   self:engine_set_user_group(group)
 
-  if old_group_obj and group_obj and old_group_obj:on_role_taken(self, group_obj) == nil then
-    if group_obj:on_role_set(self, old_group_obj) == nil then
+  if !Bolt:uses_external_admin() then
+    self:set_nv('role', group)
+
+    if old_group_obj and group_obj and old_group_obj:on_role_taken(self, group_obj) == nil
+      and group_obj:on_role_set(self, old_group_obj) == nil then
       self:save_usergroup()
     end
   end
 
   --- Called on the server after a player's role has been set with `Player:SetUserGroup`.
-  -- Either role is nil when its ID does not belong to a registered role.
+  -- Either role is nil when no registered role stands for its usergroup.
   -- @param target [Player The player whose role has changed]
   -- @param group [Role The player's new role]
   -- @param old_group [Role The role the player had before]
@@ -43,7 +48,8 @@ function player_meta:SetUserGroup(group, silent)
 end
 
 --- Writes the player's current name and role to their database record, if they have one.
--- The blank record of a bot is never saved.
+-- The blank record of a bot is never saved. `Player:SetUserGroup` calls it only while Bolt
+-- is the admin mod; another admin mod that Bolt defers to saves its own groups.
 function player_meta:save_usergroup()
   if self.record and !self:IsBot() then
     self.record.name = self:name()

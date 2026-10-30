@@ -113,7 +113,8 @@ end
 -- had for the same actions and count as its own, `allow_anything` carries over, and the
 -- entries are copied into every role based on it, recursively, except where a role decided
 -- the same action itself. The other fields of data are ignored then, and an existing role is
--- never replaced. Does nothing unless id is a string.
+-- never replaced. A role that is stored is also registered as a usergroup of CAMI, see
+-- `Bolt:register_cami_usergroup`. Does nothing unless id is a string.
 -- ```
 -- -- A schema plugin's roles/sh_user.lua: lets every player run the plugin's Report command.
 -- function ROLE:define_permissions()
@@ -170,9 +171,7 @@ function Bolt:create_role(id, data)
     end
   end
 
-  if self:is_cami_provider() then
-    self:register_cami_usergroup(data)
-  end
+  self:register_cami_usergroup(data)
 end
 
 --- Copies permission entries (allowed or denied actions, with their callbacks) into a role

@@ -91,8 +91,8 @@ end
 
 --- Applies which hidden players the player may see after their role has changed.
 -- @param target [Player]
--- @param _group [Role the player's new role, nil if its ID is not registered]
--- @param _old_group [Role the player's previous role]
+-- @param _group [Role the player's new role, nil when no registered role stands for its usergroup]
+-- @param _old_group [Role the player's previous role, nil when no registered role stands for its usergroup]
 function Observer:PlayerUserGroupChanged(target, _group, _old_group)
   target:update_hidden_players()
 end

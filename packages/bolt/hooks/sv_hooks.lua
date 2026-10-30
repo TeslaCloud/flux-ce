@@ -248,8 +248,8 @@ end
 -- tools they are allowed when they spawn. Also sends the config to the player again if the
 -- new role has changed their right to edit configs.
 -- @param target [Player]
--- @param _group [Role the player's new role, nil if its ID is not registered]
--- @param _old_group [Role the player's previous role]
+-- @param _group [Role the player's new role, nil when no registered role stands for its usergroup]
+-- @param _old_group [Role the player's previous role, nil when no registered role stands for its usergroup]
 function hooks:PlayerUserGroupChanged(target, _group, _old_group)
   Bolt:update_config_access(target)
 

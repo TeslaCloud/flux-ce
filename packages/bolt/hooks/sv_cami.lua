@@ -30,9 +30,9 @@ hooks['CAMI.PlayerUsergroupChanged'] = function(_self, target, _old, new, source
   end
 end
 
---- Stores the role that another admin mod has signaled as the usergroup of a SteamID, if the
--- usergroup is a Bolt role, without signaling it back. A player with that SteamID who is on
--- the server gets the role right away.
+--- Changes the stored role of a SteamID that has joined before to the one that another admin
+-- mod has signaled as its usergroup, if the usergroup is a Bolt role, without signaling it
+-- back. A player with that SteamID who is on the server gets the role right away.
 -- @param _self [Map the hook table]
 -- @param steam_id [String the SteamID whose usergroup has changed]
 -- @param old [String the usergroup it had]
