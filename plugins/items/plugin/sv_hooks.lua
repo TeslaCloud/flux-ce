@@ -462,7 +462,7 @@ end
 -- main inventory, hotbar, pockets and the equipment slots.
 -- @param _owner [Player]
 -- @param inventories [Map table to put the new inventories into, keyed by inventory type]
-function Items:CreatePlayerInventories(_owner, inventories)
+function Items:AdjustPlayerInventories(_owner, inventories)
   local main_inventory = Inventory.new()
     main_inventory.title = 'ui.inventory.main_inventory'
     main_inventory:set_size(Config.get('items_inventory_width'), Config.get('items_inventory_height'))

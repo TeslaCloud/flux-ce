@@ -273,12 +273,13 @@ function PANEL:next_stage()
         table.safe_merge(request_data, self.extra_data)
       end
 
-      --- Lets plugins add to the data of a character creation request. Called on the client
+      --- Lets plugins change the data of a character creation request. Called on the client
       -- right before the request is sent, after the extra_data table of the creation screen
-      -- has been merged into the data the stages have collected.
+      -- has been merged into the data the stages have collected. Handlers add, change or
+      -- remove fields in place and return nothing.
       -- @param panel [Panel the fl_char_create panel]
       -- @param data [Map the data that is about to be sent, changed in place]
-      hook.Run('CollectCharacterCreationData', self, request_data)
+      hook.Run('AdjustCharacterCreationData', self, request_data)
 
       self:request('fl_create_character', function(response)
         if IsValid(Flux.intro_panel) and IsValid(self) then

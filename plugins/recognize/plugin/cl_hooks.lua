@@ -59,75 +59,108 @@ end
 --- Adds a recognize submenu to introduce yourself to a player by real name, a new fake name or a recent one,
 -- and to forget the player if the character of the local player has them stored. Nothing
 -- is added while the recognition system is off.
--- @param menu [Panel interaction menu]
+-- @param options [List<Map> options of the interaction menu, changed in place]
 -- @param target [Player player the menu was opened for]
-function Recognition:CreatePlayerInteractions(menu, target)
+function Recognition:AdjustPlayerInteractions(options, target)
   if !self:is_enabled() then return end
 
-  local recognize_menu, recognize_menu_option = menu:AddSubMenu(t'ui.recognize.title')
-  recognize_menu_option:SetIcon('icon16/user_comment.png')
-
-  recognize_menu:AddOption(t'ui.recognize.character_name', function()
-    surface.PlaySound('buttons/blip1.wav')
-
-    Cable.send('fl_recognize', 'target', false, target)
-  end):SetIcon('icon16/emoticon_grin.png')
-
   local history = Data.load('name_history/'..PLAYER:name(true), {})
+  local fake_name_options = {
+    {
+      id = 'enter_fake_name',
+      text = t'ui.recognize.enter_fake_name',
+      callback = function()
+        Derma_StringRequest(t'ui.recognize.enter_fake_name', t'ui.recognize.message', PLAYER:name(), function(text)
+          surface.PlaySound('buttons/blip1.wav')
 
-  local fake_name, fake_name_option = recognize_menu:AddSubMenu(t'ui.recognize.fake_name')
-  fake_name_option:SetIcon('icon16/emoticon_evilgrin.png')
+          if text and text != '' then
+            Cable.send('fl_recognize', 'target', text, target)
 
-  fake_name:AddOption(t'ui.recognize.enter_fake_name', function()
-    Derma_StringRequest(t'ui.recognize.enter_fake_name', t'ui.recognize.message', PLAYER:name(), function(text)
-      surface.PlaySound('buttons/blip1.wav')
+            if text != PLAYER:name(true) and !table.HasValue(history, text) then
+              table.insert(history, 1, text)
 
-      if text and text != '' then
-        Cable.send('fl_recognize', 'target', text, target)
+              if #history > 5 then
+                table.remove(history, 6)
+              end
 
-        if text != PLAYER:name(true) and !table.HasValue(history, text) then
-          table.insert(history, 1, text)
-
-          if #history > 5 then
-            table.remove(history, 6)
+              Data.save('name_history/'..PLAYER:name(true), history)
+            end
           end
-
-          Data.save('name_history/'..PLAYER:name(true), history)
-        end
+        end)
       end
-    end)
-  end)
+    }
+  }
 
-  for _, name in pairs(history) do
-    fake_name:AddOption(name, function()
-      Cable.send('fl_recognize', 'target', name, target)
-    end)
+  for index, name in pairs(history) do
+    fake_name_options[#fake_name_options + 1] = {
+      id = 'recent_name_'..index,
+      text = name,
+      callback = function()
+        Cable.send('fl_recognize', 'target', name, target)
+      end
+    }
   end
+
+  local recognize_options = {
+    {
+      id = 'character_name',
+      text = t'ui.recognize.character_name',
+      icon = 'icon16/emoticon_grin.png',
+      callback = function()
+        surface.PlaySound('buttons/blip1.wav')
+
+        Cable.send('fl_recognize', 'target', false, target)
+      end
+    },
+    {
+      id = 'fake_name',
+      text = t'ui.recognize.fake_name',
+      icon = 'icon16/emoticon_evilgrin.png',
+      options = fake_name_options
+    }
+  }
 
   if PLAYER:get_recognize(target) then
-    recognize_menu:AddOption(t'ui.recognize.forget', function()
-      surface.PlaySound('buttons/blip1.wav')
+    recognize_options[#recognize_options + 1] = {
+      id = 'forget',
+      text = t'ui.recognize.forget',
+      icon = 'icon16/user_delete.png',
+      callback = function()
+        surface.PlaySound('buttons/blip1.wav')
 
-      if IsValid(target) then
-        Cable.send('fl_recognize_forget', target)
+        if IsValid(target) then
+          Cable.send('fl_recognize_forget', target)
+        end
       end
-    end):SetIcon('icon16/user_delete.png')
+    }
   end
+
+  options[#options + 1] = {
+    id = 'recognize',
+    text = t'ui.recognize.title',
+    icon = 'icon16/user_comment.png',
+    options = recognize_options
+  }
 end
 
 --- Adds the option to forget a player to the menu of their scoreboard card, if the
 -- character of the local player has them stored.
--- @param menu [Panel the DermaMenu being filled]
+-- @param options [List<Map> options of the card's menu, changed in place]
 -- @param target [Player the player the card shows]
 -- @param _card [Panel the fl_scoreboard_player card that was clicked]
-function Recognition:CreateScoreboardPlayerMenu(menu, target, _card)
+function Recognition:AdjustScoreboardPlayerMenu(options, target, _card)
   if !self:is_enabled() or target == PLAYER or !PLAYER:get_recognize(target) then return end
 
-  menu:AddOption(t'ui.recognize.forget', function()
-    if IsValid(target) then
-      Cable.send('fl_recognize_forget', target)
+  options[#options + 1] = {
+    id = 'forget',
+    text = t'ui.recognize.forget',
+    icon = 'icon16/user_delete.png',
+    callback = function()
+      if IsValid(target) then
+        Cable.send('fl_recognize_forget', target)
+      end
     end
-  end):SetIcon('icon16/user_delete.png')
+  }
 end
 
 --- Moves players the local player does not recognize out of their faction into a players online category.

@@ -3,7 +3,7 @@
 -- Plugins change its contents through the `PreRebuildScoreboard`, `RebuildScoreboard` and
 -- `RebuildScoreboardPlayerCard` hooks, keep players off it with
 -- `ShouldShowPlayerOnScoreboard` and add to the menu that a click on a player card opens
--- with `CreateScoreboardPlayerMenu`.
+-- with `AdjustScoreboardPlayerMenu`.
 
 local IsValid = IsValid
 
@@ -140,7 +140,7 @@ vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
 -- Assign the player with `set_player`, which also builds the card. Plugins add their own
 -- elements in the `RebuildScoreboardPlayerCard` hook. A click on the card opens a menu of
 -- things to do with the player (`open_menu`), which plugins fill in the
--- `CreateScoreboardPlayerMenu` hook.
+-- `AdjustScoreboardPlayerMenu` hook.
 local PANEL = {}
 PANEL.player = false
 
@@ -155,44 +155,48 @@ function PANEL:OnMousePressed(code)
 end
 
 --- Builds the menu of things to do with the card's player through the
--- CreateScoreboardPlayerMenu hook and opens it at the cursor. No menu is shown if no
--- handler has added an option.
+-- AdjustScoreboardPlayerMenu hook and opens it at the cursor. No menu is shown if the
+-- hook leaves no option.
 -- @return [Panel the opened DermaMenu, or nil if there is nothing to show]
 function PANEL:open_menu()
   local target = self.player
 
   if !IsValid(target) then return end
 
-  local menu = DermaMenu()
+  local options = {}
 
   --- Called on the client when a player card of the scoreboard is clicked, to fill the menu
-  -- of things to do with that player. The menu opens at the cursor if a handler has added
-  -- anything to it and is removed otherwise. The gamemode's handler, which runs last,
-  -- adds the options to open the Steam profile of the player and to copy their SteamID.
-  -- An option that does something on the server still has to be checked there: sending a
-  -- command with `Flux.Command:send` takes care of that.
+  -- of things to do with that player. Handlers add options to `options` or remove the ones
+  -- that other handlers have added, in place, and return nothing, so that the other
+  -- handlers run as well. The menu opens at the cursor if the list holds anything once
+  -- every handler has run. The gamemode's handler, which runs last, adds the options to
+  -- open the Steam profile of the player and to copy their SteamID. An option that does
+  -- something on the server still has to be checked there: sending a command with
+  -- `Flux.Command:send` takes care of that.
   -- ```
-  -- function MyPlugin:CreateScoreboardPlayerMenu(menu, target, card)
+  -- function MyPlugin:AdjustScoreboardPlayerMenu(options, target, card)
   --   if target != PLAYER and PLAYER:can('poke') then
-  --     menu:AddOption(t'ui.my_plugin.poke', function()
-  --       Flux.Command:send('poke "'..target:name()..'"')
-  --     end):SetIcon('icon16/user_comment.png')
+  --     options[#options + 1] = {
+  --       id = 'poke',
+  --       text = t'ui.my_plugin.poke',
+  --       icon = 'icon16/user_comment.png',
+  --       callback = function() Flux.Command:send('poke "'..target:name()..'"') end
+  --     }
   --   end
   -- end
   -- ```
-  -- @param menu [Panel The `DermaMenu` to add options to]
+  -- @param options [List<Map> The options of the menu, see `util.build_menu`]
   -- @param target [Player The player the card shows]
   -- @param card [Panel The `fl_scoreboard_player` card that was clicked]
-  -- @return [Any Return nothing, so that the other handlers can add their options as well]
-  hook.Run('CreateScoreboardPlayerMenu', menu, target, self)
+  hook.Run('AdjustScoreboardPlayerMenu', options, target, self)
 
-  if menu:ChildCount() > 0 then
-    menu:Open()
+  if #options == 0 then return end
 
-    return menu
-  end
+  local menu = util.build_menu(options)
 
-  menu:safe_remove()
+  menu:Open()
+
+  return menu
 end
 
 --- Draws the background of the player card through the theme's PaintScoreboardPlayer hook.

@@ -3,7 +3,7 @@
 -- Flux tools to the spawn menu and hide the parts of the sandbox HUD that Flux replaces.
 -- The handlers that belong to the interface itself are in the Active UI package.
 -- Most of Flux's client-side drawing hooks are run from here, such as `HUDPaintAlive`,
--- `ShouldHUDPaint`, `GetDrawPlayerInfo` and `DrawEntityTargetID`.
+-- `ShouldHUDPaint`, `AdjustPlayerInfoLines` and `DrawEntityTargetID`.
 
 local IsValid = IsValid
 local CurTime = CurTime
@@ -334,7 +334,7 @@ function GM:HUDDrawTargetID()
         --- Called on the client every frame to draw the target ID of the player that the local
         -- player is looking at, or has closest to the crosshair. Only happens while the local
         -- player is alive and for targets that are alive, initialized and not obstructed. The
-        -- gamemode's handler draws the lines collected with `GetDrawPlayerInfo`.
+        -- gamemode's handler draws the lines collected with `AdjustPlayerInfoLines`.
         -- @param target [Player The player being looked at]
         -- @param x [Number Screen x of the point above the target to center the text on]
         -- @param y [Number Screen y of that point]
@@ -364,7 +364,7 @@ end
 -- @param _distance [Number distance to the player in units]
 -- @param lines [Map lines to draw, keyed by ID. Each one is a table with the text and
 --   priority fields, and optionally font, color, offset_x and offset_y]
-function GM:GetDrawPlayerInfo(target, _x, _y, _distance, lines)
+function GM:AdjustPlayerInfoLines(target, _x, _y, _distance, lines)
   lines['name'] = {
     text = target:name(),
     font = Theme.get_font('tooltip_large'),
@@ -373,7 +373,7 @@ function GM:GetDrawPlayerInfo(target, _x, _y, _distance, lines)
   }
 end
 
---- Collects the target ID lines of a player through the GetDrawPlayerInfo hook and draws
+--- Collects the target ID lines of a player through the AdjustPlayerInfoLines hook and draws
 -- them in order of priority, fading out between 500 and 640 units of distance. Nothing is
 -- drawn if the PreDrawPlayerInfo hook returns false.
 -- @param target [Player the player being looked at]
@@ -386,9 +386,9 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   local lines = {}
 
   --- Collects the lines of text shown in the target ID of a player. Called on the client
-  -- every frame the gamemode draws a player's target ID. Handlers add their entries to
-  -- `lines` and should not return anything, so that the other handlers run too; the
-  -- gamemode's handler adds the `name` line.
+  -- every frame the gamemode draws a player's target ID. Handlers add or remove entries of
+  -- `lines` in place and return nothing, so that the other handlers run too; the
+  -- gamemode's handler runs last and adds the `name` line.
   -- @param target [Player The player being looked at]
   -- @param x [Number Screen x of the target ID]
   -- @param y [Number Screen y of the target ID]
@@ -396,16 +396,16 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   -- @param lines [Map Lines to draw by ID. Each one is a table with the `text` and
   --   `priority` fields (lines with a lower priority are drawn first) and optionally
   --   `color` (white by default), `font`, `offset_x` and `offset_y`]
-  hook.Run('GetDrawPlayerInfo', target, x, y, distance, lines)
+  hook.Run('AdjustPlayerInfoLines', target, x, y, distance, lines)
 
   --- Called on the client after the target ID lines of a player have been collected with
-  -- `GetDrawPlayerInfo` and before they are drawn. Handlers can change or remove the
+  -- `AdjustPlayerInfoLines` and before they are drawn. Handlers can change or remove the
   -- entries of `lines`.
   -- @param target [Player The player being looked at]
   -- @param x [Number Screen x of the target ID]
   -- @param y [Number Screen y of the target ID]
   -- @param distance [Number Distance to the player in units]
-  -- @param lines [Map Lines about to be drawn by ID, see `GetDrawPlayerInfo`]
+  -- @param lines [Map Lines about to be drawn by ID, see `AdjustPlayerInfoLines`]
   -- @return [Boolean Return false to draw nothing for this player]
   if hook.Run('PreDrawPlayerInfo', target, x, y, distance, lines) == false then return end
 

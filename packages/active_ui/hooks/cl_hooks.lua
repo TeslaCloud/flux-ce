@@ -73,23 +73,33 @@ end
 
 --- Adds the options that the scoreboard offers for every player to the menu of a player
 -- card: opening their Steam profile and copying their SteamID. Bots have neither.
--- @param menu [Panel the DermaMenu being filled]
+-- @param options [List<Map> options of the card's menu, changed in place]
 -- @param target [Player the player the card shows]
 -- @param _card [Panel the fl_scoreboard_player card that was clicked]
-function GM:CreateScoreboardPlayerMenu(menu, target, _card)
+function GM:AdjustScoreboardPlayerMenu(options, target, _card)
   if target:IsBot() then return end
 
-  menu:AddOption(t'ui.scoreboard.menu.profile', function()
-    if IsValid(target) then
-      target:ShowProfile()
+  options[#options + 1] = {
+    id = 'profile',
+    text = t'ui.scoreboard.menu.profile',
+    icon = 'icon16/user.png',
+    callback = function()
+      if IsValid(target) then
+        target:ShowProfile()
+      end
     end
-  end):SetIcon('icon16/user.png')
+  }
 
-  menu:AddOption(t'ui.scoreboard.menu.copy_steam_id', function()
-    if IsValid(target) then
-      SetClipboardText(target:SteamID())
+  options[#options + 1] = {
+    id = 'copy_steam_id',
+    text = t'ui.scoreboard.menu.copy_steam_id',
+    icon = 'icon16/page_copy.png',
+    callback = function()
+      if IsValid(target) then
+        SetClipboardText(target:SteamID())
+      end
     end
-  end):SetIcon('icon16/page_copy.png')
+  }
 end
 
 --- Centers a newly opened panel within the tab menu.

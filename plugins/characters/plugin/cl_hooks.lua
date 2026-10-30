@@ -235,7 +235,7 @@ end
 -- @param _y [Number]
 -- @param _distance [Number]
 -- @param lines [Map line definitions keyed by ID, modified in place]
-function Characters:GetDrawPlayerInfo(target, _x, _y, _distance, lines)
+function Characters:AdjustPlayerInfoLines(target, _x, _y, _distance, lines)
   lines['desc'] = {
     text = target:get_phys_desc(),
     font = Theme.get_font('tooltip_small'),

@@ -1,7 +1,7 @@
 --- Player extensions of the Items plugin: everything a player can do with their
 -- inventories and the items in them.
 -- A player has one inventory per type (`'main_inventory'`, `'hotbar'`, `'pockets'` and
--- so on), built by the `CreatePlayerInventories` hook when their character becomes
+-- so on), built by the `AdjustPlayerInventories` hook when their character becomes
 -- active. The inventories belong to the character, and the items of the character are
 -- loaded from the database into them right afterward. The functions that look items up
 -- work on both the server and the client; those that take an optional `inv_type` go

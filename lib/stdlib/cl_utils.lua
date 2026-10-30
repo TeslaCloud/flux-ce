@@ -1,5 +1,5 @@
---- Client side of the `util` extensions: measuring and wrapping text, cubic easing, cached
--- materials and materials downloaded from a URL.
+--- Client side of the `util` extensions: measuring and wrapping text, building menus out of
+-- lists of options, cubic easing, cached materials and materials downloaded from a URL.
 
 local pow = math.pow
 local set_font = surface.SetFont
@@ -83,6 +83,46 @@ function util.get_panel_class(panel)
       return panel_table.ClassName
     end
   end
+end
+
+--- Builds a `DermaMenu` out of a list of options, in order. An option with an `options` list
+-- becomes a submenu that holds those options; any other option runs its `callback` when it
+-- is chosen. The `id` of an option is not shown: it lets code find the option in the list.
+-- ```
+-- util.build_menu({
+--   { id = 'wave', text = t'ui.my_plugin.wave', icon = 'icon16/user.png', callback = wave },
+--   { id = 'more', text = t'ui.my_plugin.more', options = {
+--     { id = 'poke', text = t'ui.my_plugin.poke', callback = poke }
+--   } }
+-- }):Open()
+-- ```
+-- @param options [List<Map> options with id (String), text (String shown as it is), icon
+--   (String material path, optional) and either callback (Function) or options (List of the
+--   options of a submenu)]
+-- @param menu=DermaMenu() [Panel menu or submenu to add the options to]
+-- @return [Panel the menu]
+function util.build_menu(options, menu)
+  menu = menu or DermaMenu()
+
+  for _, option in ipairs(options) do
+    local option_panel
+
+    if option.options then
+      local submenu
+
+      submenu, option_panel = menu:AddSubMenu(option.text)
+
+      util.build_menu(option.options, submenu)
+    else
+      option_panel = menu:AddOption(option.text, option.callback)
+    end
+
+    if option.icon then
+      option_panel:SetIcon(option.icon)
+    end
+  end
+
+  return menu
 end
 
 --- Adjusts x, y to fit inside x2, y2 while keeping the original aspect ratio.

@@ -89,16 +89,21 @@ function Containers:GetEntityName(entity)
   end
 end
 
---- Adds the 'open' option to the interactions menu of the container props. The option has
--- a lock for an icon if the container asks for a password.
--- @param menu [Panel the interactions menu]
+--- Adds the 'open' option to the interactions of the container props. The option has a lock
+-- for an icon if the container asks for a password.
+-- @param options [List<Map> options of the interaction menu, changed in place]
 -- @param entity [Entity]
-function Containers:CreateEntityInteractions(menu, entity)
+function Containers:AdjustEntityInteractions(options, entity)
   local container_data = self:find(entity:GetModel())
 
   if container_data and entity:GetClass() == 'prop_physics' then
-    menu:AddOption(t'ui.container.open', function()
-      Cable.send('fl_container_open', entity)
-    end):SetIcon(self:has_container_password(entity) ? 'icon16/lock.png' : 'icon16/box.png')
+    options[#options + 1] = {
+      id = 'open_container',
+      text = t'ui.container.open',
+      icon = self:has_container_password(entity) ? 'icon16/lock.png' : 'icon16/box.png',
+      callback = function()
+        Cable.send('fl_container_open', entity)
+      end
+    }
   end
 end

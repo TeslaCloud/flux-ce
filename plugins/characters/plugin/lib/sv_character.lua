@@ -140,7 +140,7 @@ end
 
 --- Finds the characters that have a name, compared without regard to letter case. The
 -- characters of the user records that are loaded are searched first: those of connected
--- players and those that a CollectLoadedUserRecords handler adds. Only when none of them
+-- players and those that a AdjustLoadedUserRecords handler adds. Only when none of them
 -- matches are the characters of offline players loaded from the database, which makes the
 -- callback run later. Server only.
 -- @param name [String]
@@ -159,11 +159,11 @@ function Characters.find_by_name(name, callback)
 
   --- Lets plugins add user records that are loaded although no connected player owns
   -- them, so that their characters are found in memory rather than loaded again from the
-  -- database. Called on the server by `Characters.find_by_name`, with the records of the
-  -- connected players already in the list.
-  -- @param records [List<User> the records whose characters are searched, added to in
-  --   place]
-  hook.Run('CollectLoadedUserRecords', records)
+  -- database, or remove records from the search. Called on the server by
+  -- `Characters.find_by_name`, with the records of the connected players already in the
+  -- list. Handlers add or remove entries in place and return nothing.
+  -- @param records [List<User> the records whose characters are searched, changed in place]
+  hook.Run('AdjustLoadedUserRecords', records)
 
   for _, record in ipairs(records) do
     if istable(record.characters) then

@@ -27,7 +27,7 @@
 -- can also grow with its contents (`infinite_width`, `infinite_height`) and be disabled.
 -- `Inventories.find` looks an inventory up by its id.
 --
--- When a character becomes active, the `CreatePlayerInventories` hook builds the
+-- When a character becomes active, the `AdjustPlayerInventories` hook builds the
 -- inventories of the player. This plugin creates the main inventory, the hotbar, the
 -- pockets and the equipment slots there, sized by the `inventory_`, `hotbar_` and
 -- `pockets_` config keys, and other plugins can add their own. The items of the character

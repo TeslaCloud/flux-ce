@@ -57,38 +57,47 @@ function Currencies:ContainerOpened(panel, inventory_id)
   panel.container_money:SetPos(inv_panel.x, inv_panel.y + inv_panel:GetTall() + text_h + scale(8))
 end
 
---- Adds a money submenu to the player interaction menu with a 'give' option for every
--- currency that is not hidden or that the local player owns.
--- @param menu [Panel the interaction menu]
+--- Adds a money submenu to the player interactions with a 'give' option for every currency
+-- that is not hidden or that the local player owns.
+-- @param options [List<Map> options of the interaction menu, changed in place]
 -- @param target [Player the player being interacted with]
-function Currencies:CreatePlayerInteractions(menu, target)
-  local money_menu, money_menu_option = menu:AddSubMenu(t'ui.currency.title')
-  money_menu_option:SetIcon('icon16/money.png')
-
+function Currencies:AdjustPlayerInteractions(options, target)
+  local money_options = {}
   local client = PLAYER
 
   for currency_id, currency_data in pairs(Currencies.all()) do
     local amount = client:get_money(currency_id) or 0
 
     if !currency_data.hidden or currency_data.hidden and amount > 0 then
-      money_menu:AddOption(t'ui.currency.menu.give'..' '..t(currency_data.name), function()
-        Derma_StringRequest(
-          t'ui.currency.give.title',
-          t('ui.currency.give.message', { currency = t(currency_data.name) }),
-          '',
-          function(text)
-            local value = tonumber(text)
+      money_options[#money_options + 1] = {
+        id = 'give_'..currency_id,
+        text = t'ui.currency.menu.give'..' '..t(currency_data.name),
+        callback = function()
+          Derma_StringRequest(
+            t'ui.currency.give.title',
+            t('ui.currency.give.message', { currency = t(currency_data.name) }),
+            '',
+            function(text)
+              local value = tonumber(text)
 
-            if value and value > 0 then
-              Cable.send('fl_currency_give', value, currency_id, target)
-            else
-              client:notify('error.invalid_amount')
+              if value and value > 0 then
+                Cable.send('fl_currency_give', value, currency_id, target)
+              else
+                client:notify('error.invalid_amount')
+              end
             end
-          end
-        )
-      end)
+          )
+        end
+      }
     end
   end
+
+  options[#options + 1] = {
+    id = 'money',
+    text = t'ui.currency.title',
+    icon = 'icon16/money.png',
+    options = money_options
+  }
 end
 
 --- Creates a panel that lists the money of an entity and keeps track of it so that it is

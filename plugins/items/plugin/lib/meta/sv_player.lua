@@ -13,13 +13,14 @@ function player_meta:create_inventories()
 
   --- Called on the server to build the inventories of a player, every time their
   -- active character is set. Handlers create their inventories with `Inventory.new`
-  -- and put them into `inventories` under the type of each one; the Items plugin
-  -- adds the main inventory, the hotbar, the pockets and the equipment slots this
-  -- way. Afterward every inventory in the table gets the player as its owner and
-  -- receiver and the character as the holder of its items, the inventories are
-  -- synchronized, and the items of the character are loaded into them.
+  -- and put them into `inventories` under the type of each one, or remove the entries
+  -- that other handlers have put there, and return nothing; the Items plugin adds the
+  -- main inventory, the hotbar, the pockets and the equipment slots this way. Afterward
+  -- every inventory in the table gets the player as its owner and receiver and the
+  -- character as the holder of its items, the inventories are synchronized, and the items
+  -- of the character are loaded into them.
   -- ```
-  -- function PLUGIN:CreatePlayerInventories(owner, inventories)
+  -- function PLUGIN:AdjustPlayerInventories(owner, inventories)
   --   local wallet = Inventory.new()
   --   wallet.title = 'Wallet'
   --   wallet.type = 'wallet'
@@ -29,8 +30,8 @@ function player_meta:create_inventories()
   -- ```
   -- @param owner [Player The player the inventories are created for]
   -- @param inventories [Map The inventories of the player, keyed by inventory type,
-  --   to be filled in place]
-  hook.Run('CreatePlayerInventories', self, inventories)
+  --   changed in place]
+  hook.Run('AdjustPlayerInventories', self, inventories)
 
   local character = self:get_character()
   local character_id = istable(character) and tonumber(character.id) or nil
