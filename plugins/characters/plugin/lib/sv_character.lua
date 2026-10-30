@@ -140,7 +140,7 @@ end
 
 --- Finds the characters that have a name, compared without regard to letter case. The
 -- characters of the user records that are loaded are searched first: those of connected
--- players and those that a AdjustLoadedUserRecords handler adds. Only when none of them
+-- players and those that an AdjustLoadedUserRecords handler adds. Only when none of them
 -- matches are the characters of offline players loaded from the database, which makes the
 -- callback run later. Server only.
 -- @param name [String]

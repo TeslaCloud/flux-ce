@@ -15,7 +15,9 @@ function player_meta:create_inventories()
   -- active character is set. Handlers create their inventories with `Inventory.new`
   -- and put them into `inventories` under the type of each one, or remove the entries
   -- that other handlers have put there, and return nothing; the Items plugin adds the
-  -- main inventory, the hotbar, the pockets and the equipment slots this way. Afterward
+  -- main inventory, the hotbar, the pockets and the equipment slots this way. `Inventory.new`
+  -- registers an inventory in `Inventories.stored` at once, so a handler that removes an
+  -- entry also takes it out of there with `Inventories.stored[inventory.id] = nil`. Afterward
   -- every inventory in the table gets the player as its owner and receiver and the
   -- character as the holder of its items, the inventories are synchronized, and the items
   -- of the character are loaded into them.

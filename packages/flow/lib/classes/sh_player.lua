@@ -85,6 +85,7 @@ function flux_player:Loadout()
   -- @param actor [Player the player who has spawned]
   -- @param loadout [List<String> weapon classes, a copy of the default loadout of the player
   --   class]
+  -- @realm [server]
   hook.Run('AdjustPlayerLoadout', self.Player, loadout)
 
   self.Player:give_loadout(loadout)
