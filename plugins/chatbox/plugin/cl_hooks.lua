@@ -9,7 +9,7 @@ local config_get = Config.get
 -- and removes the chatbox panel so that it gets recreated.
 -- @param new_width [Number new screen width]
 -- @param new_height [Number new screen height]
-function Chatbox:OnResolutionChanged(new_width, new_height)
+function Chatbox:ResolutionChanged(new_width, new_height)
   Theme.set_option('chatbox_width', new_width * 0.375)
   Theme.set_option('chatbox_height', new_height * 0.45)
   Theme.set_option('chatbox_x', scale(8))
@@ -85,7 +85,7 @@ end
 
 --- Sets the options, fonts and colors of the chatbox on the theme that was loaded.
 -- @param current_theme [ThemeBase]
-function Chatbox:OnThemeLoaded(current_theme)
+function Chatbox:ThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
   current_theme:set_option('chatbox_text_small_size', scale(config_get('chatbox_small_font_size')))

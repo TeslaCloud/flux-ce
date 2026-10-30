@@ -59,7 +59,7 @@ end
 --- Registers the 'radioing' kind of speech with the Display Typing plugin, if it is loaded.
 -- The bubble of a player who is typing a radio message is visible from as far away as the
 -- message itself is overheard.
-function Radios:OnPluginsLoaded()
+function Radios:PluginsLoaded()
   if !DisplayTyping then return end
 
   DisplayTyping:register_kind('radioing', {

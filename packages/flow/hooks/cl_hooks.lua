@@ -88,7 +88,7 @@ do
   local next_check = CurTime()
 
   --- Checks once a second whether the screen resolution has changed and runs the
-  -- OnResolutionChanged hook if it has.
+  -- ResolutionChanged hook if it has.
   function GM:Tick()
     local cur_time = CurTime()
 
@@ -104,7 +104,7 @@ do
         -- @param new_h [Number New screen height]
         -- @param old_w [Number Previous screen width]
         -- @param old_h [Number Previous screen height]
-        hook.Run('OnResolutionChanged', new_w, new_h, scrw, scrh)
+        hook.Run('ResolutionChanged', new_w, new_h, scrw, scrh)
 
         scrw, scrh = new_w, new_h
       end

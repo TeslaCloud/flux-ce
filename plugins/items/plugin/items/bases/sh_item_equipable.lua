@@ -12,7 +12,7 @@
 -- The base class adds the equip button to the menu of the item and reacts to inventory
 -- transfers through its `can_transfer` and `on_transfer` callbacks, so that moving the
 -- item into or out of its equipment inventory equips or unequips it. The
--- `OnItemEquipped` and `OnItemUnequipped` hooks tell other plugins about it.
+-- `ItemEquipped` and `ItemUnequipped` hooks tell other plugins about it.
 -- @module [ItemEquipable]
 
 class 'ItemEquipable' extends 'ItemBase'
@@ -110,7 +110,7 @@ end
 
 --- Applies or reverts the equipped state of the item; it does not move the item itself.
 -- Empties and disables (or enables back) the inventories listed in disabled_inventories, calls
--- post_equipped or post_unequipped and runs the 'OnItemEquipped' or 'OnItemUnequipped' hook.
+-- post_equipped or post_unequipped and runs the 'ItemEquipped' or 'ItemUnequipped' hook.
 -- @param owner [Player]
 -- @param should_equip [Boolean true to equip the item, false to unequip it]
 function ItemEquipable:equip(owner, should_equip)
@@ -142,7 +142,7 @@ function ItemEquipable:equip(owner, should_equip)
     -- @param owner [Player The player who has the item]
     -- @param item_obj [Item The equipped item]
     -- @realm [server]
-    hook.Run('OnItemEquipped', owner, self)
+    hook.Run('ItemEquipped', owner, self)
   else
     for _, inventory_type in pairs(self.disabled_inventories) do
       local inventory = owner:get_inventory(inventory_type)
@@ -160,7 +160,7 @@ function ItemEquipable:equip(owner, should_equip)
     -- @param owner [Player The player who has the item]
     -- @param item_obj [Item The unequipped item]
     -- @realm [server]
-    hook.Run('OnItemUnequipped', owner, self)
+    hook.Run('ItemUnequipped', owner, self)
   end
 end
 

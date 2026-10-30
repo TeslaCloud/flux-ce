@@ -97,7 +97,7 @@ end
 -- of its faction.
 -- @param owner [Player]
 -- @param character [Character the character that is now active]
-function Stats:OnActiveCharacterSet(owner, character)
+function Stats:ActiveCharacterSet(owner, character)
   Attributes.create_records(character)
   Attributes.remove_expired(owner)
   Attributes.sync(owner)
@@ -111,7 +111,7 @@ end
 -- it, and forgets when its next boost expires and the fractions of effects carried over.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function Stats:OnActiveCharacterCleared(owner, _character)
+function Stats:ActiveCharacterCleared(owner, _character)
   owner.attribute_expiry = nil
   owner.stat_effect_carry = nil
 
@@ -139,7 +139,7 @@ end
 -- @param target [Player]
 -- @param _faction_table [Faction the faction the player is in now]
 -- @param _old_faction [Faction the faction the player was in before, or nil]
-function Stats:OnPlayerFactionChanged(target, _faction_table, _old_faction)
+function Stats:PlayerFactionChanged(target, _faction_table, _old_faction)
   self:apply_faction_bonuses(target)
 end
 

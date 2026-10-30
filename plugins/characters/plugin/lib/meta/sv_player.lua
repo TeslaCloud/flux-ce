@@ -19,7 +19,7 @@ function player_meta:set_active_character(id)
 end
 
 --- Leaves the player without an active character. The active character is saved first and
--- the OnActiveCharacterCleared hook is run while it is still active; then the player's name
+-- the ActiveCharacterCleared hook is run while it is still active; then the player's name
 -- goes back to their Steam name and their gender, description and model to the defaults.
 -- The player is neither spawned nor killed here.
 function player_meta:clear_active_character()
@@ -33,7 +33,7 @@ function player_meta:clear_active_character()
     -- they have given the player for the character.
     -- @param owner [Player]
     -- @param character [Character the character that is being dropped]
-    hook.Run('OnActiveCharacterCleared', self, character)
+    hook.Run('ActiveCharacterCleared', self, character)
   end
 
   if !self:IsBot() then

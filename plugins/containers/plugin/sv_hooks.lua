@@ -54,7 +54,7 @@ end
 --- Gives the containers of the map the items that have been loaded for them. Containers
 -- that are not there yet get them once they are.
 -- @param items [List<Item>]
-function Containers:OnMapItemsLoaded(items)
+function Containers:MapItemsLoaded(items)
   local by_container = {}
 
   for _, item_obj in ipairs(items) do
@@ -139,7 +139,7 @@ end
 --- Plays the closing sound of the container when its inventory gets closed.
 -- @param _actor [Player]
 -- @param inventory [Inventory]
-function Containers:OnInventoryClosed(_actor, inventory)
+function Containers:InventoryClosed(_actor, inventory)
   local entity = inventory.owner
 
   if IsValid(entity) then

@@ -110,7 +110,7 @@ function Flux.Bars:register(id, data, force)
   -- @param id [String bar ID]
   -- @param force [Boolean true if an existing bar with this ID was allowed to be overwritten,
   --   which is always the case in development mode]
-  hook.Run('OnBarRegistered', stored[id], id, force)
+  hook.Run('BarRegistered', stored[id], id, force)
 
   return stored[id]
 end

@@ -101,7 +101,7 @@ end
 -- as far as the level cap allows and applies its maximum health.
 -- @param owner [Player]
 -- @param _character [Character]
-function Levels:OnActiveCharacterSet(owner, _character)
+function Levels:ActiveCharacterSet(owner, _character)
   Levels.update_points(owner)
   Levels.sync(owner)
   Levels.apply_server_level(owner)
@@ -112,7 +112,7 @@ end
 --- Takes the networked level and experience of a character away from the player who drops it.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function Levels:OnActiveCharacterCleared(owner, _character)
+function Levels:ActiveCharacterCleared(owner, _character)
   owner:set_private_nv('level', nil)
   owner:set_private_nv('experience', nil)
 end

@@ -7,7 +7,7 @@ local scale = math.scale
 
 --- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel.
 -- @param panel [Panel the inventory panel that was rebuilt]
-function Currencies:OnInventoryRebuild(panel)
+function Currencies:InventoryRebuilt(panel)
   if panel:get_inventory_type() == 'pockets' then
     local parent = panel:GetParent()
 
@@ -38,7 +38,7 @@ end
 -- that have an instance_id are skipped.
 -- @param panel [Panel the container panel]
 -- @param inventory_id [Number]
-function Currencies:OnContainerOpened(panel, inventory_id)
+function Currencies:ContainerOpened(panel, inventory_id)
   local inventory = Inventories.find(inventory_id)
   local inv_panel = panel.inventory
 

@@ -112,7 +112,7 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
   -- @param inventory_id [Number Id of the inventory the items were moved to]
   -- @param x [Number Column of the target slot]
   -- @param y [Number Row of the target slot]
-  hook.Run('OnItemMoved', actor, item_obj, instance_ids, inventory_id, x, y)
+  hook.Run('ItemMoved', actor, item_obj, instance_ids, inventory_id, x, y)
 end)
 
 Cable.receive('fl_item_drop', function(actor, instance_ids)
@@ -168,5 +168,5 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
   -- a player, which it does by itself once the player is no longer entitled to them.
   -- @param actor [Player The player who closed the inventories]
   -- @param inventory [Inventory The first of the inventories that were closed]
-  hook.Run('OnInventoryClosed', actor, closed_inventory)
+  hook.Run('InventoryClosed', actor, closed_inventory)
 end)

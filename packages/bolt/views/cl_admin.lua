@@ -31,7 +31,7 @@ function PANEL:Init()
 
   --- Called on the client when the admin panel is created. Add pages to it here with
   -- `panel:add_panel(id, title, permission)`; the page itself must be registered with the
-  -- theme under the same ID, as Bolt's `OnThemeLoaded` handler does.
+  -- theme under the same ID, as Bolt's `ThemeLoaded` handler does.
   -- @param panel [Panel The admin panel, an `fl_admin_panel`]
   -- @param sidebar [Panel The sidebar of the admin panel, which holds the page buttons]
   hook.Run('AddAdminMenuItems', self, self.sidebar)

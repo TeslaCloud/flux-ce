@@ -116,7 +116,7 @@ end
 
 --- Shows the specified inventory next to the inventories of the local player, or at the
 -- center of the screen if they have none.
--- Runs the 'OnContainerOpened' hook afterward.
+-- Runs the 'ContainerOpened' hook afterward.
 -- @param inventory_id [Number id of the inventory]
 function PANEL:open_inventory(inventory_id)
   local inventory = Inventories.find(inventory_id)
@@ -140,7 +140,7 @@ function PANEL:open_inventory(inventory_id)
   -- the inventories of another player.
   -- @param panel [Panel The `fl_inventory_container` panel]
   -- @param inventory_id [Number Id of the inventory that has been opened]
-  hook.Run('OnContainerOpened', self, inventory_id)
+  hook.Run('ContainerOpened', self, inventory_id)
 end
 
 --- Shows the inventories of another player next to the inventories of the local player, or

@@ -3,7 +3,7 @@
 -- registered as its 'tab_menu' panel); the gamemode opens it with `Flux.TabMenu:open` when
 -- the scoreboard key is pressed and plugins can do the same, for example to bring the
 -- player to their inventory. The menu that is open is kept in `Flux.tab_menu`.
--- `OnTabMenuOpened` and `OnTabMenuClosed` are run when it opens and closes. The server
+-- `TabMenuOpened` and `TabMenuClosed` are run when it opens and closes. The server
 -- reaches the menu of a player through `Flux.Player:open_tab_menu` and
 -- `Flux.Player:close_tab_menu`, or `Player:open_tab_menu` and `Player:close_tab_menu`.
 -- @module [Flux.TabMenu]
@@ -74,9 +74,9 @@ if CLIENT then
 
     --- Called on the client when the tab menu has been opened, with the scoreboard key or
     -- from code, after its buttons have been created and the item it starts on has been
-    -- shown (`OnMenuPanelOpen` has run for that one already).
+    -- shown (`MenuPanelOpened` has run for that one already).
     -- @param menu [Panel The tab menu that has been opened]
-    hook.Run('OnTabMenuOpened', menu)
+    hook.Run('TabMenuOpened', menu)
 
     return menu
   end

@@ -4,7 +4,7 @@
 local hooks = {}
 
 --- Runs the RegisterConditions hook so that plugins can register their condition types.
-function hooks:OnPluginsLoaded()
+function hooks:PluginsLoaded()
   --- Lets plugins register their condition types with `Conditions:register_condition`. Called
   -- on the server and the client once all plugins have been loaded. Do not return anything
   -- from the handler, or the plugins after it are not asked.

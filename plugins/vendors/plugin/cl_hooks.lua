@@ -101,7 +101,7 @@ end
 --- Asks the server for fresh prices shortly after an inventory of the local player has
 -- changed while the trade panel is open, unless the server sends them first.
 -- @param inventory [Inventory the inventory that has been received]
-function Vendors:OnInventorySync(inventory)
+function Vendors:InventorySynced(inventory)
   if !IsValid(self.trade_panel) or inventory.owner != PLAYER then return end
 
   timer.Create('fl_vendor_refresh', refresh_delay, 1, function()

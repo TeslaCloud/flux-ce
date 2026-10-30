@@ -13,7 +13,7 @@ local player_meta = FindMetaTable('Player')
 -- is offered, so they do not keep the name the old faction generated. The player then
 -- gets the weapons, the maximum health and armor and the rank model of the new faction,
 -- and NPCs feel about them as that faction says. The rank is set here rather than with
--- `Player:set_rank`, so only the OnPlayerFactionChanged hook reports the move. Neither the
+-- `Player:set_rank`, so only the PlayerFactionChanged hook reports the move. Neither the
 -- limit of the faction nor its can_transfer callback is checked; see
 -- `Factions.can_transfer`. Server only.
 -- @param id [String ID of a registered faction]
@@ -71,7 +71,7 @@ function player_meta:set_faction(id)
   -- @param faction_table [Faction the faction the player is in now]
   -- @param old_faction [Faction the faction the player was in before, nil if that was not
   --   a registered faction]
-  hook.Run('OnPlayerFactionChanged', self, faction_table, old_faction)
+  hook.Run('PlayerFactionChanged', self, faction_table, old_faction)
 end
 
 --- Sets the player's rank in their current faction, networks it, regenerates their name
@@ -99,7 +99,7 @@ function player_meta:set_rank(rank)
   -- @param target [Player]
   -- @param rank [Number the new rank index]
   -- @param old_rank [Number the rank index before the change]
-  hook.Run('OnRankChanged', self, rank, old_rank)
+  hook.Run('PlayerRankChanged', self, rank, old_rank)
 end
 
 --- Moves the player one rank up unless they already hold the highest rank. Server only.

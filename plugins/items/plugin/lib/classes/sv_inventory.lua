@@ -60,7 +60,7 @@ function Inventory:add_item(item_obj, x, y)
     -- @param inventory [Inventory The inventory the item is in now]
     -- @param x [Number Column of the slot the item has been placed in]
     -- @param y [Number Row of the slot the item has been placed in]
-    hook.Run('OnItemAdded', item_obj, self, x, y)
+    hook.Run('ItemAdded', item_obj, self, x, y)
 
     self:check_size()
   else
@@ -108,12 +108,12 @@ function Inventory:give_item(id, amount, data)
     end
 
     --- Called on the server for every item that `Inventory:give_item` has created and
-    -- added to an inventory, after `OnItemAdded`.
+    -- added to an inventory, after `ItemAdded`.
     -- @param item_obj [Item The new item instance]
     -- @param inventory [Inventory The inventory the item has been added to]
     -- @param data [Map The fields that were overridden on the item, or nil if there are
     --   none]
-    hook.Run('OnItemGiven', item_obj, self, data)
+    hook.Run('ItemGiven', item_obj, self, data)
   end
 
   return true
@@ -172,7 +172,7 @@ function Inventory:take_item_table(item_obj)
   -- run when an item leaves for another inventory through `Inventory:transfer_item`.
   -- @param item_obj [Item The item that has been taken]
   -- @param inventory [Inventory The inventory the item was in]
-  hook.Run('OnItemTaken', item_obj, self)
+  hook.Run('ItemTaken', item_obj, self)
 
   return true
 end

@@ -83,7 +83,7 @@ end
 -- NPCs towards the faction. The hook runs once the Characters plugin has spawned the
 -- player, given them the model of the character and restored their saved health, armor and
 -- ammo, so the model of the rank is put over that of the character here no matter which
--- plugin's handler of OnActiveCharacterSet ran first. The team of the player is set as they
+-- plugin's handler of ActiveCharacterSet ran first. The team of the player is set as they
 -- spawn, see Factions:PostPlayerSpawn. A player whose faction is not registered only loses
 -- the rank model and the feelings of NPCs that an earlier character of theirs has left.
 -- @param owner [Player]
@@ -126,7 +126,7 @@ end
 -- back into the unassigned team.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function Factions:OnActiveCharacterCleared(owner, _character)
+function Factions:ActiveCharacterCleared(owner, _character)
   self.reset_npc_relations(owner)
 
   owner.faction_model = nil

@@ -104,7 +104,7 @@ function ItemContainer:create_inventory()
   self.inventory = inventory
 end
 
---- Called on the server by the 'OnItemCreated' hook right after an instance of the item
+--- Called on the server by the 'ItemCreated' hook right after an instance of the item
 -- is created. Fills the container with the items listed in default_inventory.
 function ItemContainer:on_created()
   if !table.IsEmpty(self.default_inventory) then

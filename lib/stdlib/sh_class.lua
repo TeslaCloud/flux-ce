@@ -177,7 +177,7 @@ end
 
 --- Sets the base class of the class that is currently being created.
 -- Copies the base class into the class created by the last `class` call, then calls the
--- base class's `class_extended(new_class)` method and runs the OnClassExtended hook.
+-- base class's `class_extended(new_class)` method and runs the ClassExtended hook.
 -- ```
 -- class 'DateTime' extends 'Date'
 --
@@ -217,7 +217,7 @@ function extends(parent_class)
     -- the second argument of `class` do not run it.
     -- @param new_class [Map the class that is being created]
     -- @param parent_class [Map the base class it extends]
-    hook.Run('OnClassExtended', obj, parent_class)
+    hook.Run('ClassExtended', obj, parent_class)
 
     last_class.parent[last_class.name] = obj
     last_class = nil

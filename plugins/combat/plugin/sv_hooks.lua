@@ -131,7 +131,7 @@ end
 -- @param _inventory_id [Number ID of the target inventory]
 -- @param _x [Number target slot column]
 -- @param _y [Number target slot row]
-function CombatSystem:OnItemMoved(actor, _item_obj, _instance_ids, _inventory_id, _x, _y)
+function CombatSystem:ItemMoved(actor, _item_obj, _instance_ids, _inventory_id, _x, _y)
   if actor:in_combat() and !actor:is_frozen() then
     actor:take_turn(TURN_MOVE)
   end

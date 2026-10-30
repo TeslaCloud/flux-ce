@@ -1585,7 +1585,7 @@ DermaScale.replace_global(
 --- Rebuilds the spawn menu once the fonts have been recreated for the new resolution, since
 -- its panels were sized for the previous one. Panels that are open at that moment keep their
 -- sizes until they are created again.
-hook.Add('OnResolutionChanged', 'DermaScale', function(_new_w, new_h, _old_w, old_h)
+hook.Add('ResolutionChanged', 'DermaScale', function(_new_w, new_h, _old_w, old_h)
   if math_max(new_h / 1080, 1) == math_max(old_h / 1080, 1) then return end
 
   timer.Simple(0, function()

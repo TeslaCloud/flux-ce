@@ -116,7 +116,7 @@ function PANEL:Init()
     self.drop_target = menu
   end
 
-  hook.Add('OnGamemasterPoolReceived', self, self.rebuild)
+  hook.Add('GamemasterPoolReceived', self, self.rebuild)
 
   Gamemastery.request_pool()
 end

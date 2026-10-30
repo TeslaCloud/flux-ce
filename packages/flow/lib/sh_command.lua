@@ -121,7 +121,7 @@ local function descend(cmd, tokens, last)
 end
 
 --- Registers a command along with its aliases, fills in the defaults for missing fields of
--- the command and its subcommands, and runs the 'OnCommandCreated' hook. Commands defined in
+-- the command and its subcommands, and runs the 'CommandCreated' hook. Commands defined in
 -- the 'commands' folder of a plugin are registered automatically, see Command#on_run for an
 -- example. When `player_arg` is not set, the position of the first 'player' entry of
 -- `arg_types` is used.
@@ -163,7 +163,7 @@ function Flux.Command:create(id, data)
   -- @param id [String command ID]
   -- @param data [Command the command, with the defaults filled in; its subcommands are in
   --   `Command:get_subcommands`]
-  hook.Run('OnCommandCreated', id, data)
+  hook.Run('CommandCreated', id, data)
 end
 
 --- Finds a command by its exact ID or alias, ignoring the case.

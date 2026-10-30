@@ -24,7 +24,7 @@
 -- example to put the in-game time into its text. The server shows a notice of its own with
 -- `AreaDisplay:show`, client code with `AreaDisplay:add`.
 --
--- The look comes from the theme, which the plugin fills in from its `OnThemeLoaded` handler:
+-- The look comes from the theme, which the plugin fills in from its `ThemeLoaded` handler:
 -- the 'area_display_duration', 'area_display_fade_time', 'area_display_type_interval' and
 -- 'area_display_type_volume' options, the 'area_display_text' color, the 'area_display_type'
 -- sound and the 'area_display_title' and 'area_display_typewriter' fonts.

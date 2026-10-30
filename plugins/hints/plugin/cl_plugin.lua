@@ -225,7 +225,7 @@ function Hints:OneMinute()
 end
 
 --- Lets the other plugins and the schema register their hints once all of them are loaded.
-function Hints:OnSchemaLoaded()
+function Hints:SchemaLoaded()
   --- Lets plugins and the schema register their hints with `Hints:add`.
   -- Called on the client once all plugins and the schema have been loaded, and again on
   -- every code refresh. Only the Hints plugin runs it, so a handler does not have to check

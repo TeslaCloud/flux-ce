@@ -180,14 +180,14 @@ end
 --- Hands the entities of a character back to the player who has loaded it.
 -- @param owner [Player]
 -- @param _character [Character the character that is now active]
-function PropProtection:OnActiveCharacterSet(owner, _character)
+function PropProtection:ActiveCharacterSet(owner, _character)
   self:return_ownership(owner)
 end
 
 --- Starts the removal countdown for the entities of the character a player drops.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function PropProtection:OnActiveCharacterCleared(owner, _character)
+function PropProtection:ActiveCharacterCleared(owner, _character)
   self:abandon_entities(owner)
 end
 

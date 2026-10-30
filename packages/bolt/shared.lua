@@ -67,7 +67,7 @@
 --
 -- The package loads its libraries, classes and player extensions, its configs, the models and
 -- the admin panel, then the hooks and the network handlers, so that its own commands, which
--- follow, get their permissions from the `OnCommandCreated` handler. Then it adds 'roles' to
+-- follow, get their permissions from the `CommandCreated` handler. Then it adds 'roles' to
 -- the extra folders of plugins and loads its own roles. On the server it also registers the
 -- package's languages and migrations with `Pipeline`. During a partial code reload
 -- (`LITE_REFRESH`) nothing is loaded again.

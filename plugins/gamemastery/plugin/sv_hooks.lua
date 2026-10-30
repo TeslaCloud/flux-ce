@@ -19,7 +19,7 @@ end
 --- Takes a player out of gamemaster mode once a character has become their active one.
 -- @param owner [Player]
 -- @param _character [Character]
-function Gamemastery:OnActiveCharacterSet(owner, _character)
+function Gamemastery:ActiveCharacterSet(owner, _character)
   Gamemastery.exit_mode(owner)
 end
 
@@ -59,7 +59,7 @@ end
 --- Forgets who played a pool character that its player drops.
 -- @param owner [Player]
 -- @param character [Character the character that is being dropped]
-function Gamemastery:OnActiveCharacterCleared(owner, character)
+function Gamemastery:ActiveCharacterCleared(owner, character)
   if character.possessed_by == owner then
     character.possessed_by = nil
 

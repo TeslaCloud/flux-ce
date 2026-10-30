@@ -111,7 +111,7 @@ end
 -- no longer written into that character.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function Stamina:OnActiveCharacterCleared(owner, _character)
+function Stamina:ActiveCharacterCleared(owner, _character)
   owner.stamina_character_id = nil
 end
 

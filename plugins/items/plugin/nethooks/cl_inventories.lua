@@ -31,7 +31,7 @@ Cable.receive('fl_inventory_sync', function(data)
   -- The local copy of the inventory has been updated by now and its panel, if it has
   -- one, has been rebuilt.
   -- @param inventory [Inventory The inventory that has been updated]
-  hook.Run('OnInventorySync', inventory)
+  hook.Run('InventorySynced', inventory)
 end)
 
 Cable.receive('fl_inventories_clear', function()

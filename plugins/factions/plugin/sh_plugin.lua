@@ -16,8 +16,8 @@
 -- permission may use on anyone.
 --
 -- The `Factions` functions register and look up factions, and the `Player` extensions read and
--- change the faction, rank and whitelists of a player. The `OnPlayerFactionChanged` and
--- `OnRankChanged` hooks report changes, `ShouldNameGenerate` can stop a name from being
+-- change the faction, rank and whitelists of a player. The `PlayerFactionChanged` and
+-- `PlayerRankChanged` hooks report changes, `ShouldNameGenerate` can stop a name from being
 -- generated, `GetFactionLimit` and `PlayerCanBypassFactionLimit` adjust the limits, and
 -- `PlayerCanTransferFaction` can refuse a transfer by the SetFaction command. The plugin
 -- answers `GetRandomCharacterName` from the random_names lists of a faction. The 'faction'

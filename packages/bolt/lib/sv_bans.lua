@@ -17,7 +17,7 @@ Cable.check_networked_string('fl_bolt_bans')
 Cable.check_networked_string('fl_bolt_bans_changed')
 
 --- Creates or updates the ban record for a SteamID, saves it to the database and caches it.
--- Runs the OnBanAdded hook afterwards.
+-- Runs the BanAdded hook afterwards.
 -- @warning [Internal] Use Bolt:ban to ban somebody.
 -- @param steam_id [String SteamID of the banned player]
 -- @param name [String name stored with the ban]
@@ -43,7 +43,7 @@ function Bolt:add_ban(steam_id, name, unban_time, duration, reason, admin)
   -- @param steam_id [String SteamID that has been banned]
   -- @param ban [Ban The ban record: name, steam_id, reason, duration (seconds, 0 for a
   --   permanent ban), unban_time, admin_name and admin_steam_id]
-  hook.Run('OnBanAdded', steam_id, obj)
+  hook.Run('BanAdded', steam_id, obj)
 
   return obj
 end
@@ -108,7 +108,7 @@ end
 
 --- Deletes the ban record of a SteamID from the database and from the ban cache, so that
 -- the player can connect again right away and a later ban gets a record of its own. Runs
--- the OnBanRemoved hook if there was a ban.
+-- the BanRemoved hook if there was a ban.
 -- @param steam_id [String]
 -- @return [Boolean whether a ban record was found and deleted, Map the deleted record's
 --   column values (only when found)]
@@ -126,7 +126,7 @@ function Bolt:remove_ban(steam_id)
     -- tried to join.
     -- @param steam_id [String SteamID that is no longer banned]
     -- @param data [Map Column values of the deleted ban record]
-    hook.Run('OnBanRemoved', steam_id, dump)
+    hook.Run('BanRemoved', steam_id, dump)
 
     return true, dump
   end

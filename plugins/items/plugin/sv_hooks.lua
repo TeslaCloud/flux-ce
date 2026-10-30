@@ -377,7 +377,7 @@ end
 -- @param owner [Player]
 -- @param _character [Character]
 -- @param _items [List<Item>]
-function Items:OnCharacterItemsLoaded(owner, _character, _items)
+function Items:CharacterItemsLoaded(owner, _character, _items)
   if owner.loadout_pending and owner:Alive() then
     owner.loadout_pending = nil
 
@@ -406,7 +406,7 @@ end
 --- Calls the on_created callback of an item instance that has just been created, then
 -- marks the instance as not rotated.
 -- @param item_obj [Item]
-function Items:OnItemCreated(item_obj)
+function Items:ItemCreated(item_obj)
   if item_obj.on_created then
     item_obj:on_created()
   end
@@ -436,7 +436,7 @@ end
 -- their inventories for the new character, which loads its items.
 -- @param owner [Player]
 -- @param _character [Character]
-function Items:OnActiveCharacterSet(owner, _character)
+function Items:ActiveCharacterSet(owner, _character)
   owner:unload_items()
   owner:delete_inventories()
   owner:create_inventories()
@@ -447,7 +447,7 @@ end
 -- character, and tells their client to forget its copies of them.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function Items:OnActiveCharacterCleared(owner, _character)
+function Items:ActiveCharacterCleared(owner, _character)
   owner:unload_items()
   owner:delete_inventories()
   owner.inventories = nil
@@ -554,7 +554,7 @@ end
 -- container items once the items of the map have been loaded. Contents that do not fit
 -- are unloaded again.
 -- @param items [List<Item>]
-function Items:OnMapItemsLoaded(items)
+function Items:MapItemsLoaded(items)
   Item.unload(Inventories.place_items(items))
 end
 
@@ -716,7 +716,7 @@ end
 --- Closes, once a second, every inventory for the receivers who are no longer entitled to
 -- it, so that staying a receiver does not depend on the client reporting that it has closed
 -- the window. The inventories that one entity owns are closed for a receiver together, so
--- that the 'OnInventoryClosed' hook runs once when, for example, a player walks away from
+-- that the 'InventoryClosed' hook runs once when, for example, a player walks away from
 -- another player whose inventories they were viewing.
 -- @see [Inventory#can_be_viewed_by]
 -- @see [Player#close_inventories]
@@ -864,7 +864,7 @@ end
 --- Tells the client to rebuild the player model preview when a wearable item is equipped.
 -- @param owner [Player]
 -- @param item_obj [Item]
-function Items:OnItemEquipped(owner, item_obj)
+function Items:ItemEquipped(owner, item_obj)
   if item_obj:is('wearable') then
     Cable.send(owner, 'fl_rebuild_player_panel')
   end
@@ -873,7 +873,7 @@ end
 --- Tells the client to rebuild the player model preview when a wearable item is unequipped.
 -- @param owner [Player]
 -- @param item_obj [Item]
-function Items:OnItemUnequipped(owner, item_obj)
+function Items:ItemUnequipped(owner, item_obj)
   if item_obj:is('wearable') then
     Cable.send(owner, 'fl_rebuild_player_panel')
   end

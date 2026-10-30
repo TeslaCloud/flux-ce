@@ -377,7 +377,7 @@ Item.set_category_icon('item.category.equipment', 'icon16/package.png')
 
 if SERVER then
   --- Creates a new instance of an item template, with a new instance id. Server-side only.
-  -- Runs the 'OnItemCreated' hook. The instance is written to the database once it is
+  -- Runs the 'ItemCreated' hook. The instance is written to the database once it is
   -- somewhere: in an inventory that is saved, or in the world. An instance that is still
   -- nowhere when the changes are written is removed, so put it where it belongs right away.
   -- ```
@@ -411,7 +411,7 @@ if SERVER then
     -- The Items plugin uses the hook to call the `on_created` callback of the item.
     -- It is not run for the instances that are loaded from the database.
     -- @param item_obj [Item The new item instance]
-    hook.Run('OnItemCreated', new_item)
+    hook.Run('ItemCreated', new_item)
 
     Item.mark_dirty(new_item)
 

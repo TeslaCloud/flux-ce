@@ -65,7 +65,7 @@ end
 
 --- Opens the main menu after the intro if the local player has no character and needs one
 -- (see `Characters.needs_character`), retrying on a timer until the panel can be created.
-function Characters:OnIntroPanelRemoved()
+function Characters:IntroPanelRemoved()
   if !PLAYER:get_character() and Characters.needs_character(PLAYER) then
     Flux.intro_panel = Theme.create_panel('main_menu')
 
@@ -88,7 +88,7 @@ end
 --- Registers the main menu and character creation panels with the theme, and recreates the
 -- main menu if it is currently open.
 -- @param current_theme [ThemeBase]
-function Characters:OnThemeLoaded(current_theme)
+function Characters:ThemeLoaded(current_theme)
   current_theme:add_panel('main_menu', function(_id, parent, ...)
     return vgui.Create('fl_main_menu', parent)
   end)

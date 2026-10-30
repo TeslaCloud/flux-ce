@@ -66,7 +66,7 @@ end
 --- Networks the currency balances of the newly active character to the player entity.
 -- @param owner [Player]
 -- @param character [Character]
-function Currencies:OnActiveCharacterSet(owner, character)
+function Currencies:ActiveCharacterSet(owner, character)
   local currencies = {}
 
   if character.currencies then
@@ -81,7 +81,7 @@ end
 --- Clears the networked currency balances of a player who drops their character.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function Currencies:OnActiveCharacterCleared(owner, _character)
+function Currencies:ActiveCharacterCleared(owner, _character)
   owner:set_nv('fl_currencies', {})
 end
 

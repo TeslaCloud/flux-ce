@@ -29,7 +29,7 @@
 -- Hooks: `PlayerCanOpenContainer` and `ShouldAskContainerPassword` decide who opens a
 -- container and who has to enter its password, `PlayerEnteredContainerPassword` tells about
 -- every entered password, `PreContainerOpen` is run before a container is shown to a player
--- and `OnContainerRemoved` after the items of a removed container have been dealt with.
+-- and `ContainerRemoved` after the items of a removed container have been dealt with.
 
 PLUGIN:set_global('Containers')
 

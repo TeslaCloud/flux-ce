@@ -3,7 +3,7 @@
 -- The invprev, invnext and slot binds move the highlight, and attack selects the highlighted
 -- weapon through the `selectweapon` console command. The selector closes after five seconds
 -- without input. Plugins can keep it from reacting with the `ShouldOpenWeaponSelect` hook and
--- follow it through `OnWeaponIndexChange` and `OnWeaponSelected`.
+-- follow it through `WeaponIndexChanged` and `WeaponSelected`.
 
 local abs = math.abs
 local clamp = math.Clamp
@@ -213,13 +213,13 @@ do
             -- @param old_index [Number Previously highlighted index in the weapon list of the
             --   player]
             -- @param index [Number Newly highlighted index]
-            Plugin.call('OnWeaponIndexChange', old_index, self.weapon_index)
+            Plugin.call('WeaponIndexChanged', old_index, self.weapon_index)
 
             return true
           elseif bind:find('invnext') and pressed then
             self.weapon_index = relative_clamp(self.weapon_index + 1, 1, weapon_count)
 
-            Plugin.call('OnWeaponIndexChange', old_index, self.weapon_index)
+            Plugin.call('WeaponIndexChanged', old_index, self.weapon_index)
 
             return true
           elseif bind:find('slot') and pressed then
@@ -248,7 +248,7 @@ do
               index = self.weapon_index
             end
 
-            Plugin.call('OnWeaponIndexChange', old_index, index)
+            Plugin.call('WeaponIndexChanged', old_index, index)
 
             return true
           elseif bind:find('attack') and self.is_open and pressed then
@@ -258,7 +258,7 @@ do
             -- attack, right after the `selectweapon` command has been sent to the server.
             -- @param index [Number Index of the selected weapon in the weapon list of the
             --   player]
-            Plugin.call('OnWeaponSelected', self.weapon_index)
+            Plugin.call('WeaponSelected', self.weapon_index)
 
             return true
           end
@@ -273,7 +273,7 @@ end
 --- Opens the weapon selector and starts scrolling it from the old index to the new one.
 -- @param old_index [Number previously highlighted index in the player's weapon list]
 -- @param index [Number newly highlighted index]
-function PLUGIN:OnWeaponIndexChange(old_index, index)
+function PLUGIN:WeaponIndexChanged(old_index, index)
   self.is_open = true
   self.open_time = CurTime()
 
@@ -292,7 +292,7 @@ end
 
 --- Closes the weapon selector and clears its entries once a weapon has been selected.
 -- @param _index [Number index of the selected weapon in the player's weapon list]
-function PLUGIN:OnWeaponSelected(_index)
+function PLUGIN:WeaponSelected(_index)
   self.is_open = false
   self.cur_alpha = 0
   self.display = {}

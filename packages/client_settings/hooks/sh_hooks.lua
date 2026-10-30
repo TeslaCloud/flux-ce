@@ -7,7 +7,7 @@ local hooks = {}
 -- settings that depend on what has loaded. On the client it then sends the networked
 -- settings to the server again if they have been sent before, which is the case after a code
 -- refresh.
-function hooks:OnSchemaLoaded()
+function hooks:SchemaLoaded()
   --- Lets plugins and the schema register settings with `ClientSettings:register_setting`
   -- once all plugins and the schema have been loaded, for settings that depend on what they
   -- register; any other setting may be registered here or at file level. Called on the server

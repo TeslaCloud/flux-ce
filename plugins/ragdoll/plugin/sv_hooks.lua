@@ -153,7 +153,7 @@ end
 -- been stripped of their weapons, into the weapons they get back when they get up.
 -- @param owner [Player]
 -- @param item_obj [Item the equipped item]
-function Ragdoll:OnItemEquipped(owner, item_obj)
+function Ragdoll:ItemEquipped(owner, item_obj)
   local weapon_class = item_obj.weapon_class
   local data = isstring(weapon_class) and fallen_data(owner)
 
@@ -185,7 +185,7 @@ end
 -- the weapon does not come back without its item.
 -- @param owner [Player]
 -- @param item_obj [Item the unequipped item]
-function Ragdoll:OnItemUnequipped(owner, item_obj)
+function Ragdoll:ItemUnequipped(owner, item_obj)
   local weapon_class = item_obj.weapon_class
   local data = isstring(weapon_class) and fallen_data(owner)
 

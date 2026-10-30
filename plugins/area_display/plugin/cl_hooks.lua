@@ -5,7 +5,7 @@
 --- Sets the options, the color, the sound and the fonts of the area notices on the theme that
 -- was loaded.
 -- @param current_theme [ThemeBase]
-function AreaDisplay:OnThemeLoaded(current_theme)
+function AreaDisplay:ThemeLoaded(current_theme)
   local defaults = self.defaults
   local main_font = current_theme:get_font('main_font', 'flRoboto')
   local light_font = current_theme:get_font('light_font', 'flRobotoLight')

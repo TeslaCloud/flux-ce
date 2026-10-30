@@ -87,7 +87,7 @@ Area.tool_modes = {
 }
 
 --- Calls the AddAreaToolModes hook so that plugins can add their modes to the area tool.
-function Area:OnSchemaLoaded()
+function Area:SchemaLoaded()
   --- Called on both realms once the schema has loaded. Add modes to the Area Tool here with
   -- `mode_list:Add(mode)`, where a mode is a table with a title, the area type it creates,
   -- its convars and its click handlers.

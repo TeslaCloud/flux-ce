@@ -313,7 +313,7 @@ if SERVER then
     -- spawned by `Item.spawn`, the entity itself has not been positioned or spawned yet.
     -- @param entity [Entity The `fl_item` entity]
     -- @param item_obj [Item The item instance that has been set]
-    hook.Run('OnEntityItemSet', self, item_obj)
+    hook.Run('EntityItemSet', self, item_obj)
   end
 else
   local target_text_color = Color(255, 255, 255)

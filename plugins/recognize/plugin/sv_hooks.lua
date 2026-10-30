@@ -12,7 +12,7 @@ end
 --- Takes the networked recognitions of a character away from the player who drops it.
 -- @param owner [Player player the character belongs to]
 -- @param _character [Character the character that is being dropped]
-function Recognition:OnActiveCharacterCleared(owner, _character)
+function Recognition:ActiveCharacterCleared(owner, _character)
   owner:set_private_nv('fl_recognizes', {})
 end
 

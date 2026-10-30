@@ -36,7 +36,7 @@ end
 
 --- Makes every door work its status text out again when the doors_price config changes.
 -- @param key [String config key]
-function Doors:OnConfigReceived(key)
+function Doors:ConfigReceived(key)
   if key == 'doors_price' then
     self:invalidate_status_texts()
   end

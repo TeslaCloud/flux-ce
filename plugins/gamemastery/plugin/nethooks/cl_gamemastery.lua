@@ -9,5 +9,5 @@ Cable.receive('fl_gm_pool', function(pool)
   -- permissions change and whenever the pool changes; the gamemaster panel rebuilds itself.
   -- @param pool [List<Map> entries with the id, name, model, skin, phys_desc, faction,
   --   banned, possessed_by and in_world fields]
-  hook.Run('OnGamemasterPoolReceived', Gamemastery.pool)
+  hook.Run('GamemasterPoolReceived', Gamemastery.pool)
 end)

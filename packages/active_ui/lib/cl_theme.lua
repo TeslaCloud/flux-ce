@@ -10,7 +10,7 @@
 -- This library is the way to reach the active theme. `Theme.get_color`, `Theme.get_font`,
 -- `Theme.get_option` and their siblings read its values, `Theme.create_panel` creates a panel
 -- that the theme provides, and plugins add their own values and panels to the theme from an
--- `OnThemeLoaded` handler.
+-- `ThemeLoaded` handler.
 --
 -- Drawing is delegated to the theme through theme hooks. `Theme.hook` calls the method of that
 -- name on the active theme and returns what it returns, and does nothing if the theme has no
@@ -252,7 +252,7 @@ function Theme.set_derma_skin()
 end
 
 --- Makes the specified theme the active one. Calls on_loaded of every theme it derives from
--- and of the theme itself, applies its Derma skin, and runs the 'OnThemeLoaded' hook.
+-- and of the theme itself, applies its Derma skin, and runs the 'ThemeLoaded' hook.
 -- It can be prevented with the 'ShouldThemeLoad' hook.
 -- @param theme_id [String ID of a registered theme]
 -- @return [Boolean true if the theme has been loaded, false if it is not registered or the
@@ -292,7 +292,7 @@ function Theme.load_theme(theme_id)
     -- reloaded. Plugins use it to add their own colors, fonts, options and panels to the
     -- theme.
     -- @param current_theme [ThemeBase the theme that has been loaded]
-    hook.Run('OnThemeLoaded', current_theme)
+    hook.Run('ThemeLoaded', current_theme)
 
     return true
   end
@@ -300,7 +300,7 @@ function Theme.load_theme(theme_id)
   return false
 end
 
---- Unloads the active theme, calling its on_unloaded method and the 'OnThemeUnloaded' hook.
+--- Unloads the active theme, calling its on_unloaded method and the 'ThemeUnloaded' hook.
 -- Can be prevented with the 'ShouldThemeUnload' hook. Does nothing if no theme is loaded.
 function Theme.unload_theme()
   if !current_theme then return end
@@ -319,16 +319,16 @@ function Theme.unload_theme()
   --- Called on the client while the active theme is being unloaded, after its `on_unloaded`
   -- method has run and before it stops being the active theme.
   -- @param current_theme [ThemeBase the theme that is being unloaded]
-  hook.Run('OnThemeUnloaded', current_theme)
+  hook.Run('ThemeUnloaded', current_theme)
 
   current_theme = nil
 end
 
---- Loads the active theme again, then calls its 'OnReloaded' method and the 'OnThemeReloaded'
+--- Loads the active theme again, then calls its 'OnReloaded' method and the 'ThemeReloaded'
 -- hook. Does nothing if the theme has should_reload set to false, or if the
 -- 'ShouldThemeReload' hook returns false. The theme is loaded the same way as the first
 -- time, so the 'ShouldThemeLoad' hook can prevent the reload too; 'OnReloaded' and
--- 'OnThemeReloaded' are then not called.
+-- 'ThemeReloaded' are then not called.
 function Theme.reload()
   if !current_theme then return end
 
@@ -347,7 +347,7 @@ function Theme.reload()
   --- Called on the client after `Theme.reload` has loaded the active theme again and called
   -- its `OnReloaded` theme hook.
   -- @param current_theme [ThemeBase the active theme]
-  hook.Run('OnThemeReloaded', current_theme)
+  hook.Run('ThemeReloaded', current_theme)
 end
 
 --- Checks whether the default theme has been loaded for the local player.

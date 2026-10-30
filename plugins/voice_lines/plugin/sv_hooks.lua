@@ -161,6 +161,6 @@ end
 --- Cancels the chain of a player who is left without a character.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function VoiceLines:OnActiveCharacterCleared(owner, _character)
+function VoiceLines:ActiveCharacterCleared(owner, _character)
   self:cancel_chain(owner)
 end

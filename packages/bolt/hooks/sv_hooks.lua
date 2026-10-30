@@ -283,14 +283,14 @@ end
 --- Lets open ban list pages know that a ban has been added.
 -- @param _steam_id [String SteamID that has been banned]
 -- @param _ban [Ban the ban record]
-function hooks:OnBanAdded(_steam_id, _ban)
+function hooks:BanAdded(_steam_id, _ban)
   Bolt:send_ban_list_changed()
 end
 
 --- Lets open ban list pages know that a ban has been lifted.
 -- @param _steam_id [String SteamID that is no longer banned]
 -- @param _data [Map column values of the deleted ban record]
-function hooks:OnBanRemoved(_steam_id, _data)
+function hooks:BanRemoved(_steam_id, _data)
   Bolt:send_ban_list_changed()
 end
 
@@ -298,7 +298,7 @@ end
 -- Expired temporary permissions of the character are deleted first.
 -- @param owner [Player]
 -- @param character [Character]
-function hooks:OnActiveCharacterSet(owner, character)
+function hooks:ActiveCharacterSet(owner, character)
   Bolt:remove_expired_character_permissions(character)
   Bolt:apply_character_permissions(owner, character)
 end
@@ -330,7 +330,7 @@ end
 --- Takes the permissions of a character away from the player who is dropping it.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function hooks:OnActiveCharacterCleared(owner, _character)
+function hooks:ActiveCharacterCleared(owner, _character)
   Bolt:apply_character_permissions(owner, nil)
 end
 

@@ -1,6 +1,6 @@
 --- Database record of a permission set on a single character: the permission ID and its
 -- `PERM_` value, which is kept in the `object` column. Belongs to a `Character`; the relation
--- is set up by Bolt's `OnPluginsLoaded` handler once the Characters plugin has defined the
+-- is set up by Bolt's `PluginsLoaded` handler once the Characters plugin has defined the
 -- model.
 -- Records are created and changed with `Bolt:set_character_permission`.
 -- @module [CharacterPermission]

@@ -632,7 +632,7 @@ if SERVER then
   -- A plugin that the schema or a plugin that is not disabled depends on is not disabled
   -- unless force is true; the names of the dependents are returned instead. The function
   -- does not check who is asking: do that before calling it. The new state is sent to all
-  -- clients and the OnPluginStateChanged hook is run.
+  -- clients and the PluginStateChanged hook is run.
   -- ```
   -- local success, phrase, dependents = Plugin.set_disabled('doors', true)
   --
@@ -683,7 +683,7 @@ if SERVER then
     -- @param id [String normalized ID of the plugin, see `Plugin.normalize_id`]
     -- @param disabled [Boolean true if the plugin will be disabled after the restart, false
     --   if it will be enabled]
-    hook.Run('OnPluginStateChanged', id, disabled)
+    hook.Run('PluginStateChanged', id, disabled)
 
     return true
   end
@@ -722,7 +722,7 @@ else
 
     pending_set()[id] = disabled ? true : nil
 
-    hook.Run('OnPluginStateChanged', id, disabled ? true : false)
+    hook.Run('PluginStateChanged', id, disabled ? true : false)
   end)
 
   Cable.receive('fl_plugin_disabled_list', function(list)
@@ -990,7 +990,7 @@ end
 -- On the server the list of disabled plugins is loaded first; a dependency of the schema
 -- that is disabled is left out without stopping the schema from loading. The dependencies
 -- come from `Plugin.resolve_schema_depends`, and in development the resolved list is printed.
--- Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.
+-- Runs the PreLoadPlugins, PluginsLoaded and SchemaLoaded hooks.
 function Plugin.include_schema()
   local schema_info = Flux.get_schema_info()
   local schema_path = schema_info.folder
@@ -1070,8 +1070,8 @@ function Plugin.include_schema()
   -- Runs on both the server and the client. Plugins commonly use it to run registration hooks
   -- of their own, since every plugin is able to answer them by now. On the first load the
   -- schema's functions are not in the hook cache yet at this point; the schema can use
-  -- OnSchemaLoaded instead.
-  hook.Run('OnPluginsLoaded')
+  -- SchemaLoaded instead.
+  hook.Run('PluginsLoaded')
 
   if schema_info.name and schema_info.author then
     MsgC(Color(255, 255, 0), schema_info.name)
@@ -1083,7 +1083,7 @@ function Plugin.include_schema()
   --- Called at the end of `Plugin.include_schema`, once all plugins have been loaded and the
   -- schema has been registered.
   -- Runs on both the server and the client.
-  hook.Call('OnSchemaLoaded', GM)
+  hook.Call('SchemaLoaded', GM)
 end
 
 do
@@ -1337,7 +1337,7 @@ do
   if Flux.development then
     --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
     -- before the regular hooks. Development variant: handlers are run with pcall, failures
-    -- are printed and reported through the OnHookError hook.
+    -- are printed and reported through the HookErrored hook.
     -- @param name [String hook name]
     -- @param gm [Map gamemode table, or nil to skip gamemode hooks]
     -- @param ... [Vararg arguments to pass to the handlers]
@@ -1354,17 +1354,17 @@ do
             ErrorNoHalt('[Flux - '..(entry.id or entry[2]:get_name())..'] The '..name..' hook has failed to run!\n')
             error_with_traceback(tostring(a))
 
-            if name != 'OnHookError' then
+            if name != 'HookErrored' then
               --- Called when a handler from the hook cache (a plugin's, the schema's or one
               -- added with `Plugin.add_hooks`) throws an error.
               -- Only runs outside of the production environment, where these handlers are
-              -- called through pcall. An error inside of an OnHookError handler does not run
+              -- called through pcall. An error inside of an HookErrored handler does not run
               -- the hook again.
               -- @param name [String name of the hook whose handler has failed]
               -- @param entry [Map hook cache entry: the handler at index 1, the table it
               --   belongs to at index 2 and the ID given to `Plugin.add_hooks` in the `id`
               --   field]
-              hook.Call('OnHookError', gm, name, entry)
+              hook.Call('HookErrored', gm, name, entry)
             end
           elseif a != nil then
             return a, b, c, d, e, f

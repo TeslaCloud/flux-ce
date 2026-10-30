@@ -38,7 +38,7 @@ end
 
 --- Has the look of the bubbles read from the theme again once it has been loaded.
 -- @param _current_theme [ThemeBase]
-function DisplayTyping:OnThemeLoaded(_current_theme)
+function DisplayTyping:ThemeLoaded(_current_theme)
   self:invalidate_metrics()
 end
 
@@ -66,7 +66,7 @@ end
 -- @param key [String config key]
 -- @param _old_value [Any value the client had before]
 -- @param _new_value [Any value that has been received]
-function DisplayTyping:OnConfigReceived(key, _old_value, _new_value)
+function DisplayTyping:ConfigReceived(key, _old_value, _new_value)
   if key == 'display_typing_exact_message' then
     self:invalidate_metrics()
   end

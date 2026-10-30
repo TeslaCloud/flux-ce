@@ -137,7 +137,7 @@ end
 -- @param key [String config key]
 -- @param _old_value [Any value the client had before]
 -- @param _new_value [Any value that has been received]
-function RPCommands:OnConfigReceived(key, _old_value, _new_value)
+function RPCommands:ConfigReceived(key, _old_value, _new_value)
   if !DisplayTyping or !isfunction(DisplayTyping.find_kind) then return end
 
   for id, data in pairs(self.typing_kinds) do

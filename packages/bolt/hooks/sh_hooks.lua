@@ -65,7 +65,7 @@ end
 -- `Bolt:allow_command_roles` does for the others.
 -- @param _id [String command ID]
 -- @param data [Command command table]
-function hooks:OnCommandCreated(_id, data)
+function hooks:CommandCreated(_id, data)
   Bolt:permission_from_command(data)
 
   if Flux.initialized then
@@ -88,7 +88,7 @@ end
 -- `permission` field to that role. Also ties the character permission models to the
 -- `Character` model. After a code refresh, once the mode of CAMI is known, it is applied
 -- again with `Bolt:setup_cami` for what the refresh has registered.
-function hooks:OnPluginsLoaded()
+function hooks:PluginsLoaded()
   relate_character_permissions()
 
   --- Called on both realms once all plugins have loaded. Register permissions here with

@@ -29,7 +29,7 @@ Cable.receive('fl_stats_roll_result', function(id, result)
   -- from the character sheet, after the result has been stored for `Stats:get_roll`.
   -- @param id [String ID of the stat or the skill]
   -- @param result [Map formula, total, natural, critical and rolls of the `Dice` result]
-  hook.Run('OnStatRollResult', id, result)
+  hook.Run('StatRolled', id, result)
 end)
 
 Cable.receive('fl_attributes_view', function(target, attributes, skills)

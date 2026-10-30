@@ -35,6 +35,6 @@ end
 
 --- Refreshes the ESP colors from the theme that has just been loaded.
 -- @param current_theme [ThemeBase the loaded theme]
-function Observer:OnThemeLoaded(current_theme)
+function Observer:ThemeLoaded(current_theme)
   self:set_esp_colors(current_theme)
 end

@@ -44,7 +44,7 @@ function PANEL:Init()
   --- Rebuilds the list every time the character list arrives from the server.
   -- The list can only be trusted once the server has sent the characters again, which
   -- may happen long after the request that has changed them.
-  hook.Add('OnCharactersReceived', self, self.rebuild)
+  hook.Add('CharactersReceived', self, self.rebuild)
 
   --- Rebuilds the list when the server has refused a request, which brings back the card of
   -- a character that was faded out for a deletion that did not happen.

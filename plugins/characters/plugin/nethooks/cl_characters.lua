@@ -17,7 +17,7 @@ Cable.receive('fl_characters_load', function(data)
     -- sends after it are handled with the new list in place; only while the local player
     -- does not exist yet is it held back.
     -- @param characters [List<Map> networked data of every character of the local player]
-    hook.Run('OnCharactersReceived', data)
+    hook.Run('CharactersReceived', data)
 
     return true
   end

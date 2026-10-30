@@ -62,7 +62,7 @@ end
 
 --- Registers the faction selection panel with the theme.
 -- @param current_theme [ThemeBase]
-function Factions:OnThemeLoaded(current_theme)
+function Factions:ThemeLoaded(current_theme)
   current_theme:add_panel('ui.char_create.faction', function(_id, parent, ...)
     return vgui.Create('fl_char_create_faction', parent)
   end)

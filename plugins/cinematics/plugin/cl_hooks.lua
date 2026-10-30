@@ -4,7 +4,7 @@
 
 --- Sets the options, colors and fonts of the cinematics on the theme that was loaded.
 -- @param current_theme [ThemeBase]
-function Cinematics:OnThemeLoaded(current_theme)
+function Cinematics:ThemeLoaded(current_theme)
   local defaults = self.defaults
   local main_font = current_theme:get_font('main_font', 'flRoboto')
   local light_font = current_theme:get_font('light_font', 'flRobotoLight')

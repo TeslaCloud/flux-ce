@@ -217,7 +217,7 @@ do
   local loading_cache = {}
 
   --- Downloads an image from a URL into data/flux/materials and caches it as a material.
-  -- The download is asynchronous: the OnURLMatLoaded hook runs with the URL and the material
+  -- The download is asynchronous: the URLMaterialLoaded hook runs with the URL and the material
   -- once it finishes. Images that were downloaded before are loaded from disk right away.
   -- @param url [String direct link to an image, has to end with a file extension]
   -- @see [URLMaterial]
@@ -257,7 +257,7 @@ do
             -- Images that are on disk already are loaded without running this hook.
             -- @param url [String URL the image was downloaded from]
             -- @param material [Material the downloaded image]
-            hook.Run('OnURLMatLoaded', url, cache[url_crc])
+            hook.Run('URLMaterialLoaded', url, cache[url_crc])
           end)
         end
       end

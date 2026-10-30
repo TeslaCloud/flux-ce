@@ -4,7 +4,7 @@
 --- Ends the search when the searcher closes the searched player's inventory.
 -- @param actor [Player player that closed the inventory]
 -- @param inventory [Inventory closed inventory]
-function PlayerSearch:OnInventoryClosed(actor, inventory)
+function PlayerSearch:InventoryClosed(actor, inventory)
   local target = inventory.owner
 
   if IsValid(target) and target:IsPlayer() and target != actor

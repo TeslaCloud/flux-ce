@@ -232,7 +232,7 @@ end
 --- Keeps the pockets panel no wider than the main inventory panel of the local player shown
 -- in the same view, if there is one.
 -- @param panel [Panel the fl_inventory panel that has been rebuilt]
-function Items:OnInventoryRebuild(panel)
+function Items:InventoryRebuilt(panel)
   if panel:get_inventory_type() == 'pockets' then
     local parent = panel:GetParent()
     panel:SizeToContents()
@@ -246,7 +246,7 @@ end
 --- Closes the windows of all opened container items when a tab menu panel opens.
 -- @param _menu_panel [Panel the tab menu]
 -- @param _active_panel [Panel the panel that has been opened]
-function Items:OnMenuPanelOpen(_menu_panel, _active_panel)
+function Items:MenuPanelOpened(_menu_panel, _active_panel)
   if PLAYER.opened_containers then
     for _, container in pairs(PLAYER.opened_containers) do
       if IsValid(container) then

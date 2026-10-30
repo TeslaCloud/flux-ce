@@ -54,7 +54,7 @@ end
 -- Loads the items of the player's active character from the database into the
 -- inventories of the player, which may take a moment. Until the items are there,
 -- `loading_items` is true on the player. Once they are, the inventories are
--- synchronized and the 'OnCharacterItemsLoaded' hook is run. Items that turn up after
+-- synchronized and the 'CharacterItemsLoaded' hook is run. Items that turn up after
 -- the player has switched to another character are dropped without being used.
 function player_meta:load_inventories()
   local character = self:get_character()
@@ -83,7 +83,7 @@ function player_meta:load_inventories()
     -- @param character [Character the active character of the player]
     -- @param items [List<Item> the items of the character, along with the contents of
     --   its container items]
-    hook.Run('OnCharacterItemsLoaded', self, character, items)
+    hook.Run('CharacterItemsLoaded', self, character, items)
   end)
 end
 
@@ -429,7 +429,7 @@ function player_meta:open_player_inventory(target)
 end
 
 --- Closes inventories that were opened for the player: removes the player from their
--- receivers, tells the client to remove their windows and runs the 'OnInventoryClosed'
+-- receivers, tells the client to remove their windows and runs the 'InventoryClosed'
 -- hook once, with the first of them. The player's own inventories and inventories that
 -- are not open for the player are skipped.
 -- @param inventories [List<Inventory>]
@@ -448,7 +448,7 @@ function player_meta:close_inventories(inventories)
 
   if !closed_inventory then return end
 
-  hook.Run('OnInventoryClosed', self, closed_inventory)
+  hook.Run('InventoryClosed', self, closed_inventory)
 end
 
 --- Closes an inventory that was opened for the player with open_inventory.

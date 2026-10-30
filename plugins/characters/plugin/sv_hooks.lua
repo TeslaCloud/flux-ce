@@ -137,7 +137,7 @@ end
 -- runs the PostCharacterLoaded hook.
 -- @param owner [Player]
 -- @param character [Character]
-function Characters:OnActiveCharacterSet(owner, character)
+function Characters:ActiveCharacterSet(owner, character)
   owner:Spawn()
   owner:SetModel(character.model or Characters.default_model)
   owner:SetSkin(character.skin or 1)

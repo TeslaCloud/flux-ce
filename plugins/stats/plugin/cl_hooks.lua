@@ -80,7 +80,7 @@ end
 
 --- Registers the stats character creation panel and the character sheet with the theme.
 -- @param current_theme [Theme theme that was loaded]
-function Stats:OnThemeLoaded(current_theme)
+function Stats:ThemeLoaded(current_theme)
   current_theme:add_panel('ui.char_create.stats', function(_id, parent, ...)
     return vgui.Create('fl_character_creation_stats', parent)
   end)

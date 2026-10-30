@@ -4,9 +4,9 @@
 -- pressed. Plugins add their entries in the `AddTabMenuItems` hook by calling `add_menu_item`
 -- with the class of the panel to open. When an entry is clicked the menu creates that panel,
 -- sizes it with the panel's `get_menu_size`, calls its `rebuild` and runs the
--- `OnMenuPanelOpen` hook. The panel that was open when the menu closed is opened again the
+-- `MenuPanelOpened` hook. The panel that was open when the menu closed is opened again the
 -- next time. `open_panel` switches to another entry and `close_menu` closes the menu, which
--- runs the `OnTabMenuClosed` hook. `set_faded` fades the menu out of the way, so that the
+-- runs the `TabMenuClosed` hook. `set_faded` fades the menu out of the way, so that the
 -- world behind it can be seen while something is dragged out of it. Code that wants the menu
 -- opened or closed goes through `Flux.TabMenu`.
 
@@ -142,7 +142,7 @@ function PANEL:Init()
         -- The gamemode centers the panel in the menu.
         -- @param menu_panel [Panel The `fl_tab_menu`]
         -- @param active_panel [Panel The panel that has been opened]
-        hook.Run('OnMenuPanelOpen', self, self.active_panel)
+        hook.Run('MenuPanelOpened', self, self.active_panel)
       end
 
       if menu_item.callback then
@@ -265,7 +265,7 @@ end
 
 --- Closes the menu: fades the active panel out, remembers it for the next time the menu
 -- opens, calls its on_close method, slides the button bar away before removing the menu and
--- runs the OnTabMenuClosed hook. Does nothing if the menu is closing already.
+-- runs the TabMenuClosed hook. Does nothing if the menu is closing already.
 function PANEL:close_menu()
   if self.closing then return end
 
@@ -294,7 +294,7 @@ function PANEL:close_menu()
   -- code did, after the `on_close` method of its open panel has been called. The menu is
   -- still valid at that point: it is removed once its closing animation has finished.
   -- @param menu [Panel The tab menu that is closing]
-  hook.Run('OnTabMenuClosed', self)
+  hook.Run('TabMenuClosed', self)
 end
 
 vgui.Register('fl_tab_menu', PANEL, 'EditablePanel')

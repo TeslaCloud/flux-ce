@@ -23,7 +23,7 @@ end
 -- @param _new_h [Number new screen height]
 -- @param _old_w [Number previous screen width]
 -- @param _old_h [Number previous screen height]
-function GM:OnResolutionChanged(_new_w, _new_h, _old_w, _old_h)
+function GM:ResolutionChanged(_new_w, _new_h, _old_w, _old_h)
   Font.create_fonts()
 end
 
@@ -95,7 +95,7 @@ end
 --- Centers a newly opened panel within the tab menu.
 -- @param menu_panel [Panel the tab menu]
 -- @param active_panel [Panel the panel that has been opened]
-function GM:OnMenuPanelOpen(menu_panel, active_panel)
+function GM:MenuPanelOpened(menu_panel, active_panel)
   active_panel:SetPos(
     menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5,
     menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5
@@ -103,6 +103,6 @@ function GM:OnMenuPanelOpen(menu_panel, active_panel)
 end
 
 --- Flashes the game window in the taskbar when the intro panel appears.
-function GM:OnIntroPanelCreated()
+function GM:IntroPanelCreated()
   system.FlashWindow()
 end

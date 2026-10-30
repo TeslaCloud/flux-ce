@@ -590,7 +590,7 @@ if SERVER then
       -- includes the defaults set by `Config.read` and the values set by `Config.import`,
       -- and for every value `Config.load` restores. On the client it only runs for values
       -- set locally with `Config.set`, not for the ones received from the server, which run
-      -- OnConfigReceived instead. `Config.load` and the client side `Config.set` call it
+      -- ConfigReceived instead. `Config.load` and the client side `Config.set` call it
       -- through `Plugin.call`, which skips gamemode handlers. The return value is ignored.
       -- @param key [String config key]
       -- @param old_value [Any previous value, nil if the config has just been created]
@@ -848,7 +848,7 @@ else
   -- Private configs and pending values only reach the players who may edit configs, and
   -- the server decides that at the moment it sends them. A config editor should call this
   -- when it opens to get the values its player is allowed to see by then; they arrive
-  -- shortly after and run the OnConfigReceived and OnConfigPendingReceived hooks. The server
+  -- shortly after and run the ConfigReceived and ConfigPendingReceived hooks. The server
   -- answers one request per second.
   function Config.request()
     Cable.send('fl_config_request')
@@ -871,7 +871,7 @@ else
     -- @param key [String config key]
     -- @param old_value [Any value the client had before]
     -- @param new_value [Any value that has been received]
-    hook.Run('OnConfigReceived', key, old_value, value)
+    hook.Run('ConfigReceived', key, old_value, value)
   end)
 
   Cable.receive('fl_config_set_pending', function(key, is_pending, value)
@@ -895,7 +895,7 @@ else
     -- @param value [Any value the config takes on the next start of the server, nil if
     --   nothing is pending]
     -- @see [Config.get_pending]
-    hook.Run('OnConfigPendingReceived', key, is_pending ? true : false, value)
+    hook.Run('ConfigPendingReceived', key, is_pending ? true : false, value)
   end)
 end
 

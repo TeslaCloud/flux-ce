@@ -172,7 +172,7 @@ end
 
 --- Forgets which items give which weapons, so that they are looked up again among the items
 -- of the schema and the plugins that have just been loaded.
-function RaiseGun:OnSchemaLoaded()
+function RaiseGun:SchemaLoaded()
   self.weapon_items = {}
 end
 

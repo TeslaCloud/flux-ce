@@ -40,7 +40,7 @@ end
 -- is unequipped, whether it is moved, dropped or used up.
 -- @param owner [Player]
 -- @param item_obj [Item the unequipped item]
-function SharedFlashlight:OnItemUnequipped(owner, item_obj)
+function SharedFlashlight:ItemUnequipped(owner, item_obj)
   if IsValid(owner) and item_obj.id == Config.get('shared_flashlight_item', '') and owner:is_flashlight_on() then
     owner:set_flashlight(false)
   end

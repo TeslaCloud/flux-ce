@@ -595,7 +595,7 @@ end
 
 --- Deals with the items of a container whose prop is being removed: drops them on the
 -- ground if the `containers_spill_items` config is on and destroys them otherwise, and
--- runs the `OnContainerRemoved` hook. Does nothing while the server is shutting down or
+-- runs the `ContainerRemoved` hook. Does nothing while the server is shutting down or
 -- changing the map, or while the map is being cleaned up: the containers are saved then,
 -- and their items stay saved as being in them, to come back with them. Items that turn out
 -- to be in the world or in another inventory are left alone.
@@ -630,5 +630,5 @@ function Containers:handle_removal(entity, inventory, item_ids)
   -- @param entity [Entity The container prop that is being removed]
   -- @param spilled [Boolean true if the items are dropped on the ground, false if they
   --   are destroyed]
-  hook.Run('OnContainerRemoved', entity, spilled)
+  hook.Run('ContainerRemoved', entity, spilled)
 end

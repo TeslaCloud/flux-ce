@@ -29,7 +29,7 @@
 -- items of a character with `Item.load_character` when the character becomes active and
 -- unloads them with `Item.unload` once it is not in use anymore, so they follow the
 -- character from map to map. `Item.load_map` loads the items of the current map when it
--- starts: the items lying in the world are spawned, and the `OnMapItemsLoaded` hook hands
+-- starts: the items lying in the world are spawned, and the `MapItemsLoaded` hook hands
 -- all of them to the plugins that put them where they belong.
 --
 -- On the server an instance carries where it is in its `character_id`, `parent_id` and
@@ -636,7 +636,7 @@ end
 
 --- Loads the items of the current map from the database: those lying in the world, those
 -- in the container props, and what is inside of their container items. Spawns the items
--- that lie in the world and runs the 'OnMapItemsLoaded' hook. Server-side only.
+-- that lie in the world and runs the 'MapItemsLoaded' hook. Server-side only.
 -- @param callback=nil [Function receives the List<Item> of the loaded instances]
 function Item.load_map(callback)
   if !storage_ready() then return end
@@ -663,7 +663,7 @@ function Item.load_map(callback)
     -- into the inventories of their containers.
     -- @param items [List<Item> The loaded instances, the contents of container items
     --   among them]
-    hook.Run('OnMapItemsLoaded', items)
+    hook.Run('MapItemsLoaded', items)
 
     if callback then
       callback(items)

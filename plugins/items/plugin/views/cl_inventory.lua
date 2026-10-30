@@ -282,7 +282,7 @@ function PANEL:set_inventory_id(inventory_id)
 end
 
 --- Recreates the slot panels based on the current contents of the inventory.
--- Runs the 'OnInventoryRebuild' hook afterward.
+-- Runs the 'InventoryRebuilt' hook afterward.
 function PANEL:rebuild()
   local scroll = self.scroll
   local slot_panels = self.slot_panels
@@ -369,7 +369,7 @@ function PANEL:rebuild()
   -- happens when it is set up and every time its inventory is synchronized. Handlers
   -- can use it to resize the panel or to attach their own panels to it.
   -- @param panel [Panel The `fl_inventory` panel that has been rebuilt]
-  hook.Run('OnInventoryRebuild', self)
+  hook.Run('InventoryRebuilt', self)
 end
 
 --- Sets the size of a single slot.

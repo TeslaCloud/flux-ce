@@ -2,7 +2,7 @@
 -- player.
 
 --- Makes a character the active character of a player. Runs OnCharacterChange if another
--- character was active, networks the basic character data and runs OnActiveCharacterSet. The
+-- character was active, networks the basic character data and runs ActiveCharacterSet. The
 -- character does not have to belong to the player: one of another user record is sent to the
 -- player on its own, so that their client knows the character it is playing. Nothing is
 -- checked here: the requests of players go through `Characters.can_use` first, which is what
@@ -43,5 +43,5 @@ function Characters.activate(target, character)
   -- they keep on the character.
   -- @param owner [Player]
   -- @param character [Character the character that is now active]
-  hook.Run('OnActiveCharacterSet', target, target:get_character())
+  hook.Run('ActiveCharacterSet', target, target:get_character())
 end

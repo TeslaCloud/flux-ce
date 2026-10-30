@@ -46,7 +46,7 @@ end
 --- Forgets the colors of the diagram when a theme is loaded, so that they come from the
 -- new theme.
 -- @param _current_theme [Theme the theme that has been loaded]
-function Limbs:OnThemeLoaded(_current_theme)
+function Limbs:ThemeLoaded(_current_theme)
   self:reset_colors()
 end
 

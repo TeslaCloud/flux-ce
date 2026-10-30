@@ -94,7 +94,7 @@ end
 -- 'ui.hud.display_typing' phrase and has the range of its default volume;
 -- `RPCommands:DisplayTypingGetKind` refines the color and the range for each text on the
 -- client.
-function RPCommands:OnPluginsLoaded()
+function RPCommands:PluginsLoaded()
   if !DisplayTyping or !isfunction(DisplayTyping.register_kind) then return end
 
   for id, data in pairs(self.typing_kinds) do

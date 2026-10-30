@@ -42,7 +42,7 @@ end
 
 --- Registers the constructors of the admin panel's pages with the loaded theme.
 -- @param current_theme [ThemeBase]
-function hooks:OnThemeLoaded(current_theme)
+function hooks:ThemeLoaded(current_theme)
   current_theme:add_panel('admin_player_management', function(_id, parent, ...)
     return vgui.Create('fl_player_management', parent)
   end)
@@ -70,7 +70,7 @@ end
 -- @param key [String config key]
 -- @param _old_value [Any value the client had before]
 -- @param _new_value [Any value that has been received]
-function hooks:OnConfigReceived(key, _old_value, _new_value)
+function hooks:ConfigReceived(key, _old_value, _new_value)
   if key == 'bolt_external_admin' and Bolt.cami_mode != Bolt:get_cami_mode() then
     Bolt:setup_cami()
   end
@@ -85,7 +85,7 @@ end
 -- @param key [String config key]
 -- @param _is_pending [Boolean whether the config has a pending value now]
 -- @param _value [Any value the config takes on the next start of the server]
-function hooks:OnConfigPendingReceived(key, _is_pending, _value)
+function hooks:ConfigPendingReceived(key, _is_pending, _value)
   if IsValid(Bolt.config_editor) then
     Bolt.config_editor:update_config(key)
   end
@@ -95,7 +95,7 @@ end
 -- plugin has been disabled or enabled.
 -- @param _id [String normalized ID of the plugin]
 -- @param _disabled [Boolean true if the plugin will be disabled after the restart]
-function hooks:OnPluginStateChanged(_id, _disabled)
+function hooks:PluginStateChanged(_id, _disabled)
   if IsValid(Bolt.plugin_manager) then
     Bolt.plugin_manager:rebuild()
   end

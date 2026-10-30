@@ -59,7 +59,7 @@ end
 -- start one right away.
 -- @param owner [Player player whose character was set]
 -- @param _character [Character newly active character]
-function Animations:OnActiveCharacterSet(owner, _character)
+function Animations:ActiveCharacterSet(owner, _character)
   self:stop(owner)
 
   owner.next_animation = nil
@@ -68,7 +68,7 @@ end
 --- Ends the animation of a player who drops their character.
 -- @param owner [Player player whose character is being dropped]
 -- @param _character [Character the character that is being dropped]
-function Animations:OnActiveCharacterCleared(owner, _character)
+function Animations:ActiveCharacterCleared(owner, _character)
   self:stop(owner)
 
   owner.next_animation = nil

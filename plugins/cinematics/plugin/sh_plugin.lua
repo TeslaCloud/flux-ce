@@ -27,12 +27,12 @@
 -- with its author as the caption. The 'cinematics_intro' config turns the intro off, and the
 -- `GetCinematicIntroInfo` hook lets a schema change, replace or suppress it.
 --
--- The look comes from the theme, which the plugin fills in from its `OnThemeLoaded` handler:
+-- The look comes from the theme, which the plugin fills in from its `ThemeLoaded` handler:
 -- the 'cinematic_bar_size', 'cinematic_duration', 'cinematic_slide_time' and
 -- 'cinematic_fade_time' options, the 'cinematic_bars', 'cinematic_text' and 'cinematic_title'
 -- colors and the 'cinematic_caption', 'cinematic_title' and 'cinematic_subtitle' fonts. The
 -- handler of a schema runs after the one of the plugin, so a schema overrides them from its
--- own `OnThemeLoaded`.
+-- own `ThemeLoaded`.
 -- @module [Cinematics]
 
 PLUGIN:set_global('Cinematics')

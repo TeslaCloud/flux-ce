@@ -44,14 +44,14 @@ end
 --- Stops the trading of a player whose active character changes.
 -- @param owner [Player]
 -- @param _character [Character]
-function Vendors:OnActiveCharacterSet(owner, _character)
+function Vendors:ActiveCharacterSet(owner, _character)
   self:close(owner, false, true)
 end
 
 --- Stops the trading of a player who drops their character.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
-function Vendors:OnActiveCharacterCleared(owner, _character)
+function Vendors:ActiveCharacterCleared(owner, _character)
   self:close(owner, false, true)
 end
 

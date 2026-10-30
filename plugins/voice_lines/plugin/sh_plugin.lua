@@ -826,7 +826,7 @@ end
 
 --- Lets the other plugins and the schema add their categories and lines once all of them are
 -- loaded, and logs how many there are in development.
-function VoiceLines:OnSchemaLoaded()
+function VoiceLines:SchemaLoaded()
   --- Lets plugins and the schema add voice line categories and lines with
   -- `VoiceLines:load_file`, `VoiceLines:register_category` and `VoiceLines:register_line`.
   -- Called on both realms once all plugins and the schema have been loaded, and again on
