@@ -60,9 +60,9 @@ local function value_changed(setting, value, old_value)
 end
 
 --- Returns the value saved for a setting. While nothing is saved under its id, the value
--- saved under the newest of the ids in its `renamed_from` is moved to the current id and
--- returned, and `Flux.dev_print` names the old id. An old id that is a registered setting of
--- its own keeps its value.
+-- saved under the newest of the ids in its `renamed_from` is copied to the current id and
+-- returned, and `Flux.dev_print` names the old id. The value always stays saved under the old
+-- id as well. An old id that is a registered setting of its own is skipped.
 -- @param setting [Map registered setting]
 -- @return [Any saved value, nil if there is none]
 local function saved_value(setting)
@@ -80,7 +80,6 @@ local function saved_value(setting)
       Flux.dev_print("The '"..old_id.."' setting is called '"..id.."'.")
 
       values[id] = values[old_id]
-      values[old_id] = nil
 
       queue_save()
 
@@ -180,8 +179,9 @@ function ClientSettings:set(id, value)
   return true
 end
 
---- Sets a setting back to its default value by forgetting what the player has set it to.
--- Runs the same callbacks as ClientSettings:set if that changes the value.
+--- Sets a setting back to its default value by forgetting what the player has set it to,
+-- under its id and under every id in its `renamed_from` that is not a registered setting of
+-- its own. Runs the same callbacks as ClientSettings:set if that changes the value.
 -- @param id [String setting id]
 -- @return [Boolean true if the setting has been reset, false if it is not registered]
 function ClientSettings:reset(id)
@@ -195,9 +195,20 @@ function ClientSettings:reset(id)
 
   cache[id] = nil
 
-  if values[id] != nil then
-    values[id] = nil
+  local changed = values[id] != nil
 
+  values[id] = nil
+
+  if istable(setting.renamed_from) then
+    for _, old_id in ipairs(setting.renamed_from) do
+      if values[old_id] != nil and !stored[old_id] then
+        values[old_id] = nil
+        changed = true
+      end
+    end
+  end
+
+  if changed then
     queue_save()
   end
 
