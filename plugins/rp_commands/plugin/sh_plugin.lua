@@ -92,7 +92,7 @@ end
 -- loaded, on both realms: the server reads the range of a kind to decide who is sent the
 -- typing bubble, the client its label and color. Each kind is named by its
 -- 'ui.hud.display_typing' phrase and has the range of its default volume;
--- `RPCommands:DisplayTypingGetKind` refines the color and the range for each text on the
+-- `RPCommands:AdjustTypingDisplay` refines the color and the range for each text on the
 -- client.
 function RPCommands:PluginsLoaded()
   if !DisplayTyping or !isfunction(DisplayTyping.register_kind) then return end

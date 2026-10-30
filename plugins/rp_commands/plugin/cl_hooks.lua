@@ -12,7 +12,6 @@ const wrap_text = util.wrap_text
 
 const text_color = Color(255, 255, 255)
 const text_outline_color = Color(0, 0, 0)
-const hidden_ooc_kind = { id = 'typing', name = 'ui.hud.display_typing.typing', live = false }
 
 --- Checks whether a text is out of character chat behind a prefix that starts like a command,
 -- such as `//`, `/ooc` and `/looc`.
@@ -149,60 +148,45 @@ function RPCommands:ConfigReceived(key, _old_value, _new_value)
   end
 end
 
---- Gives the typing bubble of a player the kind of speech they are typing: its label, the
--- color of the chat line it will become and the range that line will be heard from, which
--- follows the volume of the phrase. A knocked out player gets no bubble for in character
--- speech, which they cannot say. Out of character chat typed behind a prefix that starts
--- like a command (`//`, `/ooc`, `/looc`) gets the plain typing bubble without its text, as
--- commands do; `.//`, `[[` and the other chat prefixes are left to the other plugins.
+--- Gives the typing bubble of a player the kind of speech they are typing: talking,
+-- whispering, yelling or performing (see `RPCommands:get_typing_kind`), each registered with
+-- its label, its color and the range of its default volume. A knocked out player gets no
+-- bubble for in character speech, which they cannot say. Out of character chat typed behind
+-- a prefix that starts like a command (`//`, `/ooc`, `/looc`) gets the plain typing bubble;
+-- `.//`, `[[` and the other chat prefixes are left to the other plugins.
 -- @param target [Player player that is typing]
 -- @param text [String text being typed, or its outline]
--- @return [Map/Boolean kind definition for the Display Typing plugin, false to show no bubble,
---   nil for anything else that is not in character speech]
-function RPCommands:DisplayTypingGetKind(target, text)
-  local id, volume = self:get_typing_kind(text)
+-- @return [String/Boolean ID of the kind of speech, false to show no bubble, nil for
+--   anything else that is not in character speech]
+function RPCommands:GetTypingKind(target, text)
+  local id = self:get_typing_kind(text)
 
   if !id then
-    return is_command_like_ooc(text) ? hidden_ooc_kind : nil
+    return is_command_like_ooc(text) ? 'typing' : nil
   end
 
   if IsValid(target) and isfunction(target.is_knocked_out) and target:is_knocked_out() then
     return false
   end
 
-  return {
-    id = id,
-    name = 'ui.hud.display_typing.'..id,
-    color = util.to_color(Config.get(self.typing_kinds[id].color)),
-    range = self:get_volume_range(volume),
-    live = true
-  }
+  return id
 end
 
---- Returns the typing indicator text for emotes, whispers, yells and regular talking. Only
--- asked when `RPCommands:DisplayTypingGetKind` has not decided the kind of speech.
+--- Fits the typing bubble of in character speech to the phrase being typed: the color of
+-- the chat line it will become and the range that line will be heard from, which follows
+-- the volume of the phrase, so that `((` shrinks the bubble of a whisper and `!!!` widens
+-- the one of a yell. Out of character chat behind a prefix that starts like a command shows
+-- no text, as commands do.
 -- @param _target [Player player that is typing]
--- @param text [String text being typed]
--- @return [String indicator text, nil for other commands]
-function RPCommands:GetDisplayTypingTextType(_target, text)
-  local id = self:get_typing_kind(text)
-
-  if id then
-    return t('ui.hud.display_typing.'..id)
-  end
-end
-
---- Shrinks the typing indicator range for whispers and extends it for yells, by as much as
--- the volume of the phrase changes its hearing radius.
--- @param _target [Player player that is typing]
--- @param text [String text being typed]
--- @return [Number multiplier of the squared range, nil for regular talking]
-function RPCommands:GetDisplayTypingFadeoffMultiplier(_target, text)
+-- @param text [String text being typed, or its outline]
+-- @param display [Map what the bubble shows, changed in place]
+function RPCommands:AdjustTypingDisplay(_target, text, display)
   local id, volume = self:get_typing_kind(text)
 
-  if id and volume != 0 then
-    local range = self:get_volume_range(volume)
-
-    return range * range
+  if id and display.id == id then
+    display.color = util.to_color(Config.get(self.typing_kinds[id].color))
+    display.range = self:get_volume_range(volume)
+  elseif !id and display.id == 'typing' and is_command_like_ooc(text) then
+    display.live = false
   end
 end

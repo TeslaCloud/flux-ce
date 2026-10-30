@@ -6,7 +6,7 @@
 -- @param _target [Player player that is typing]
 -- @param text [String text being typed, or its outline]
 -- @return [String 'radioing' for a radio message, nil for anything else]
-function Radios:DisplayTypingGetKind(_target, text)
+function Radios:GetTypingKind(_target, text)
   if Chatbox.find_prefix(text) == 'radio' then
     return 'radioing'
   end

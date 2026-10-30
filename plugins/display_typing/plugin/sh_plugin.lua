@@ -11,14 +11,28 @@
 -- claimed as speech, the text itself never leaves the client: only its outline is sent (see
 -- `DisplayTyping:outline`), which is enough for hooks to tell the kind of speech.
 --
--- The kind of speech is decided on the client by the `DisplayTypingGetKind` hook, which
--- returns the ID of a kind registered with `DisplayTyping:register_kind`. The client of the
--- typing player reports that ID, and the server takes the range the bubble is sent within
--- from the kind, so a kind has to be registered on both realms for its range to count. When
--- that hook decides nothing, the `GetDisplayTypingTextType` and
--- `GetDisplayTypingFadeoffMultiplier` hooks give a label and a range, but that range only
--- scales the distance the bubble fades at on the viewer's client. Each player can turn the
--- bubbles or the live text off in the client settings.
+-- The kind of speech is decided on the client by the `GetTypingKind` hook, which returns the
+-- ID of a kind registered with `DisplayTyping:register_kind`, or false for no bubble. The
+-- client of the typing player reports that ID, and the server takes the range the bubble is
+-- sent within from the kind, so a kind has to be registered on both realms for its range to
+-- count. The `AdjustTypingDisplay` hook then changes what the bubble shows for the text: the
+-- kind, the label, the color, the range it fades out at on the viewer's client and whether
+-- the text is shown as it is typed. Each player can turn the bubbles or the live text off in
+-- the client settings.
+-- ```
+-- function MyPlugin:GetTypingKind(target, text)
+--   if text:start_with('/w ') then
+--     return 'whispering'
+--   end
+-- end
+--
+-- function MyPlugin:AdjustTypingDisplay(target, text, display)
+--   if display.id == 'whispering' and text:find('%(%(') then
+--     display.label = t'ui.my_plugin.murmuring'
+--     display.range = 0.1
+--   end
+-- end
+-- ```
 -- @module [DisplayTyping]
 
 PLUGIN:set_global('DisplayTyping')
@@ -38,12 +52,6 @@ local punctuation_limit = 8
 --   color = Color(150, 170, 200),
 --   range = 0.25
 -- })
---
--- function MyPlugin:DisplayTypingGetKind(target, text)
---   if text:start_with('/w ') then
---     return 'whispering'
---   end
--- end
 -- ```
 -- @param id [String unique ID of the kind]
 -- @param data [Map kind definition, all fields optional: name (String phrase or text of the

@@ -38,14 +38,14 @@ function DisplayTyping:get_preference(id)
   return ClientSettings:get(id, true) != false
 end
 
---- Tells what kind of speech a text is, by asking the DisplayTypingGetKind hook and, if it
--- decides nothing, the GetDisplayTypingTextType and GetDisplayTypingFadeoffMultiplier hooks.
+--- Tells what kind of speech a text is and what its typing bubble shows: the kind comes from
+-- the GetTypingKind hook, and the AdjustTypingDisplay hook changes what the bubble shows.
 -- @param target [Player the player who is typing]
 -- @param text [String the text being typed, or its outline]
--- @return [Map the kind: id (String), label (String translated label), color (Color, or nil
---   for the accent color of the bubble), range (Number multiplier of the
---   'display_typing_range' config) and live (Boolean whether the text may be shown); nil if
---   no bubble should be shown for this text]
+-- @return [Map what the bubble shows: id (String ID of the kind), label (String translated
+--   label), color (Color, or nil for the accent color of the bubble), range (Number
+--   multiplier of the 'display_typing_range' config) and live (Boolean whether the text may
+--   be shown); nil if no bubble should be shown for this text]
 function DisplayTyping:get_kind(target, text)
   --- Asks what kind of speech a player is typing, which decides the label, the color and
   -- the range of their typing bubble. Called on the client whenever the text of a typing
@@ -55,58 +55,62 @@ function DisplayTyping:get_kind(target, text)
   -- at what it starts and ends with.
   -- @param target [Player the player who is typing]
   -- @param text [String the text being typed, or its outline]
-  -- @return [String/Map/Boolean ID of a kind registered with
-  --   `DisplayTyping:register_kind`; or a kind definition with the same fields; or false to
-  --   show no bubble for this text. When nothing is returned the GetDisplayTypingTextType and
-  --   GetDisplayTypingFadeoffMultiplier hooks are asked instead]
-  local result = hook.Run('DisplayTypingGetKind', target, text)
+  -- @return [String/Boolean ID of a kind registered with `DisplayTyping:register_kind`, or
+  --   false to show no bubble for this text. The 'typing' kind is used when nothing or an
+  --   ID that is not registered is returned]
+  local result = hook.Run('GetTypingKind', target, text)
 
   if result == false then return end
 
   local fallback = self.kinds.typing
-  local kind = istable(result) and result or isstring(result) and self.kinds[result]
+  local kind = isstring(result) and self.kinds[result]
+  local display
 
   if kind then
-    local name = t(kind.name or fallback.name)
-
-    return {
-      id = kind.id or 'custom',
-      label = trim_label(name),
+    display = {
+      id = kind.id,
+      label = t(kind.name),
       color = kind.color,
-      range = math.Clamp(tonumber(kind.range) or 1, 0, self.max_range),
-      live = kind.live != false
+      range = kind.range,
+      live = kind.live
+    }
+  else
+    display = {
+      id = fallback.id,
+      label = t(fallback.name),
+      color = fallback.color,
+      range = fallback.range,
+      live = !Flux.Command:is_command(text)
     }
   end
 
-  --- Asks for the label of the typing bubble of a player. Called on the client when the
-  -- DisplayTypingGetKind hook has not decided the kind of speech: whenever the text of a
-  -- typing player nearby changes, and for the local player on every change of their own
-  -- text. A text that gets a label is treated as speech, so it may be shown as it is typed
-  -- even if it is a command.
+  --- Lets plugins change what the typing bubble of a player shows. Called on the client
+  -- right after `GetTypingKind` has decided the kind of speech, under the same conditions,
+  -- and not when it has returned false. Handlers change the fields of `display` in place
+  -- and return nothing. The server sends the bubble within the range of the kind that `id`
+  -- names, so a different `range` only changes the distance it fades out at on the
+  -- viewer's client; set `id` to a kind registered on both realms to change both.
+  -- ```
+  -- function MyPlugin:AdjustTypingDisplay(target, text, display)
+  --   if display.id == 'talking' and text:end_with('?') then
+  --     display.label = t'ui.my_plugin.asking'
+  --   end
+  -- end
+  -- ```
   -- @param target [Player the player who is typing]
-  -- @param text [String the text being typed, or its outline (see
-  --   `DisplayTyping:outline`) if the viewer may not see the text itself]
-  -- @return [String label to draw; the translated 'typing' label is used when nothing is
-  --   returned]
-  local label = hook.Run('GetDisplayTypingTextType', target, text)
-  --- Lets plugins scale the distance from which the typing bubble of a player is visible.
-  -- Called on the client right after the GetDisplayTypingTextType hook, under the same
-  -- conditions.
-  -- @param target [Player the player who is typing]
-  -- @param text [String the text being typed, or its outline (see
-  --   `DisplayTyping:outline`) if the viewer may not see the text itself]
-  -- @return [Number multiplier of the squared distance at which the bubble has faded out,
-  --   so 4 doubles the range; 1 when nothing is returned]
-  local multiplier = tonumber((hook.Run('GetDisplayTypingFadeoffMultiplier', target, text))) or 1
-  local name = isstring(label) and label or t(fallback.name)
+  -- @param text [String the text being typed, or its outline]
+  -- @param display [Map what the bubble shows: id (String ID of the kind, reported to the
+  --   server for the local player), label (String translated label), color (Color of the
+  --   label and the dots, nil for the accent color of the bubble), range (Number multiplier
+  --   of the 'display_typing_range' config) and live (Boolean whether the text may be shown
+  --   as it is typed)]
+  hook.Run('AdjustTypingDisplay', target, text, display)
 
-  return {
-    id = isstring(label) ? 'custom' : fallback.id,
-    label = trim_label(name),
-    color = fallback.color,
-    range = math.Clamp(math.sqrt(math.max(multiplier, 0)), 0, self.max_range),
-    live = isstring(label) or !Flux.Command:is_command(text)
-  }
+  display.label = trim_label(isstring(display.label) and display.label or t(fallback.name))
+  display.range = math.Clamp(tonumber(display.range) or 1, 0, self.max_range)
+  display.live = display.live != false
+
+  return display
 end
 
 --- Checks whether a player is known to be typing. On the client that is known for the local
