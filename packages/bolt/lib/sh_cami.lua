@@ -3,6 +3,10 @@
 -- `Bolt:setup_cami` applies once the config is known: on the server after the gamemode has
 -- initialized, on the client once the config has arrived. Bolt's roles are CAMI usergroups in
 -- both modes, so that the role it gives a player is a usergroup that every admin mod knows.
+-- Most roles are the usergroup of the same name, but two are the usergroups that CAMI defines
+-- itself: `user` is 'user' and `admin` is 'superadmin'. `assistant` inherits from 'admin',
+-- `gamemaster` from `assistant`, and every other role from the usergroup of its base role.
+-- `Bolt:get_cami_name` and `Bolt:role_for_cami_group` translate between the two.
 --
 -- As the provider (`bolt_external_admin` off), Bolt is the admin mod of the server. The
 -- usergroups and privileges of other addons become Bolt roles and permissions, and Bolt
@@ -20,17 +24,21 @@
 --- The usergroups that CAMI defines itself, which Bolt never registers.
 local engine_groups = { user = true, admin = true, superadmin = true }
 
---- The Bolt role that each usergroup of CAMI stands for, by usergroup.
-local engine_roles = { user = 'user', admin = 'assistant', superadmin = 'gamemaster' }
+--- The usergroup of CAMI of each Bolt role whose usergroup has another name, by role.
+local cami_name_of_role = { admin = 'superadmin' }
 
---- The usergroup of CAMI that Bolt's roles for 'admin' and 'superadmin' inherit from, by role.
-local engine_parents = { assistant = 'admin', gamemaster = 'superadmin' }
+--- The Bolt role that each usergroup that CAMI defines itself stands for, by usergroup.
+local role_of_cami_group = { user = 'user', admin = 'assistant', superadmin = 'admin' }
 
---- The usergroup of CAMI that each of Bolt's default roles stands for, lowest first.
+--- The usergroup of CAMI that `assistant` and `gamemaster` inherit from, by role.
+local engine_parents = { assistant = 'admin', gamemaster = 'assistant' }
+
+--- The usergroup of CAMI that each of Bolt's default roles counts as for a privilege's minimum
+-- access, lowest first.
 local role_access = {
   { 'user', 'user' },
   { 'assistant', 'admin' },
-  { 'gamemaster', 'superadmin' },
+  { 'gamemaster', 'admin' },
   { 'admin', 'superadmin' }
 }
 
@@ -66,12 +74,20 @@ function Bolt:is_cami_provider()
   return self.cami_mode == 'provider'
 end
 
+--- Returns the usergroup of CAMI that a Bolt role is: 'superadmin' for `admin`, and the
+-- usergroup of the same name for every other role.
+-- @param role_id [String role ID]
+-- @return [String usergroup name]
+function Bolt:get_cami_name(role_id)
+  return cami_name_of_role[role_id] or role_id
+end
+
 --- Returns the Bolt role that a usergroup of CAMI stands for: `user` for 'user', `assistant`
--- for 'admin' and `gamemaster` for 'superadmin', or the role of the same ID otherwise.
+-- for 'admin' and `admin` for 'superadmin', or the role of the same ID otherwise.
 -- @param group [String usergroup name]
 -- @return [String role ID, nil if the usergroup is no Bolt role]
 function Bolt:role_for_cami_group(group)
-  local role_id = engine_roles[group] or group
+  local role_id = role_of_cami_group[group] or group
 
   return self:find_group(role_id) and role_id or nil
 end
@@ -80,7 +96,7 @@ end
 -- the same ID. Deferring to another admin mod, the usergroups of CAMI stand for the roles of
 -- `Bolt:role_for_cami_group`, and any other usergroup for the role that the usergroup it
 -- inherits from at the root stands for, so that 'user', 'admin' and 'superadmin' rank as
--- `user`, `assistant` and `gamemaster`.
+-- `user`, `assistant` and `admin`.
 -- @param group [String usergroup name]
 -- @return [Role the role, or nil if no role stands for the usergroup]
 function Bolt:get_group_role(group)
@@ -106,28 +122,32 @@ function Bolt:role_allows(role, action)
 end
 
 --- Registers a role as a usergroup of CAMI. `assistant` inherits from 'admin' and
--- `gamemaster` from 'superadmin', the usergroups they stand for, and every other role from
--- its base role or from 'user'. Runs in both modes. Does nothing for the usergroups that CAMI
--- defines itself and for the roles that come from another admin mod's usergroups, and leaves a
--- usergroup of the same name that another admin mod has registered as it is.
+-- `gamemaster` from `assistant`, and every other role from the usergroup of its base role
+-- (see `Bolt:get_cami_name`) or from 'user'. Runs in both modes. Does nothing for the roles
+-- that are usergroups CAMI defines itself (`user` and `admin`) and for the roles that come
+-- from another admin mod's usergroups, and leaves a usergroup of the same name that another
+-- admin mod has registered as it is.
 -- @param role [Role]
 function Bolt:register_cami_usergroup(role)
   local role_id = role.id or role.role_id
 
-  if engine_groups[role_id] or role.cami_source then return end
+  if engine_groups[self:get_cami_name(role_id)] or role.cami_source then return end
 
   local usergroup = CAMI.GetUsergroup(role_id)
 
   if usergroup and usergroup.CAMI_Source != 'Bolt' then return end
 
-  CAMI.RegisterUsergroup({ Name = role_id, Inherits = engine_parents[role_id] or role.base or 'user' }, 'Bolt')
+  local inherits = engine_parents[role_id] or (role.base and self:get_cami_name(role.base)) or 'user'
+
+  CAMI.RegisterUsergroup({ Name = role_id, Inherits = inherits }, 'Bolt')
 end
 
 --- Makes a usergroup of another admin mod a Bolt role of the same ID, so that it can be given
 -- and edited. A registered usergroup that it inherits from and that is no role yet is made
 -- one first. The role is based on the role its `Inherits` usergroup stands for, see
--- `Bolt:role_for_cami_group`, or on `user`, and has the immunity of that role. Does nothing
--- for the usergroups that CAMI defines itself and for a usergroup that already is a role.
+-- `Bolt:role_for_cami_group`, so `admin` for 'superadmin', or on `user`, and has the immunity
+-- of that role. Does nothing for the usergroups that CAMI defines itself ('user', 'admin' and
+-- 'superadmin') and for a usergroup that already is a role.
 -- @param usergroup [Map CAMI usergroup: Name and Inherits]
 -- @param source [Any the admin mod that registered the usergroup]
 function Bolt:import_cami_usergroup(usergroup, source)
@@ -158,9 +178,9 @@ end
 
 --- Makes a privilege of another addon a Bolt permission under the 'cami' category, allowed to
 -- the role its `MinAccess` stands for and to the roles based on that role: `user` for 'user',
--- `assistant` for 'admin' (also when MinAccess is missing or none of the three) and
--- `gamemaster` for 'superadmin'. Server owners change that like any permission. Does nothing
--- for a privilege that is a Bolt permission already.
+-- `assistant` for 'admin' (also when MinAccess is missing or none of the three) and `admin`
+-- for 'superadmin'. Server owners change that like any permission. Does nothing for a
+-- privilege that is a Bolt permission already.
 -- @param privilege [Map CAMI privilege: Name, MinAccess and Description]
 function Bolt:import_cami_privilege(privilege)
   local name = istable(privilege) and privilege.Name
@@ -171,7 +191,7 @@ function Bolt:import_cami_privilege(privilege)
 
   imported_privileges[name] = true
 
-  local role = self:find_group(engine_roles[privilege.MinAccess] or 'assistant')
+  local role = self:find_group(role_of_cami_group[privilege.MinAccess] or 'assistant')
 
   if role then
     self:merge_permissions(role, { anything = { [name] = { allowed = true } } })
@@ -190,8 +210,9 @@ function Bolt:remove_cami_privilege(name)
 end
 
 --- Returns the usergroup of CAMI that a permission is meant for: the one that the lowest of
--- Bolt's default roles that allows the permission stands for ('user' for `user`, 'admin' for
--- `assistant`, 'superadmin' for `gamemaster` and `admin`), and 'superadmin' if none does.
+-- Bolt's default roles that allows the permission counts as ('user' for `user`, 'admin' for
+-- `assistant` and `gamemaster`, whose usergroups inherit from 'admin', and 'superadmin' for
+-- `admin`), and 'superadmin' if none does.
 -- @param perm_id [String permission ID]
 -- @return [String 'user', 'admin' or 'superadmin']
 function Bolt:get_cami_min_access(perm_id)
@@ -233,8 +254,7 @@ function Bolt:ask_cami(actor, action, object)
   if !CAMI.GetPrivilege(action) then return end
 
   if object != nil then
-    local role = self:get_group_role(actor:GetUserGroup())
-    local entries = role and role.permissions[object]
+    local entries = actor:get_role_table().permissions?.[object]
 
     if entries and entries[action] then return end
   end

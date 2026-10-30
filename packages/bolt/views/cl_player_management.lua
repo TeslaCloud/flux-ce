@@ -159,7 +159,7 @@ function PANEL:rebuild()
   self.name_label:SetText(target:steam_name(true)..' ('..target:name(true)..')')
   self.name_label:SizeToContents()
 
-  self.role_label:SetText(t'ui.admin.role'..': '..target:GetUserGroup():upper())
+  self.role_label:SetText(t'ui.admin.role'..': '..target:get_role():upper())
   self.role_label:SizeToContents()
 
   self:InvalidateLayout()

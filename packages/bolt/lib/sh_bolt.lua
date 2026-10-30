@@ -442,9 +442,9 @@ function Bolt:get_permission_layer(actor, action, object)
     end
   end
 
-  local role = self:get_group_role(actor:GetUserGroup())
+  local role = actor:get_role_table()
 
-  if istable(role) and isfunction(role.can) then
+  if isfunction(role.can) then
     return role:can(actor, action, object), 'role'
   end
 
@@ -563,15 +563,15 @@ function Bolt:check_immunity(actor, target, can_equal)
     return true
   end
 
-  return compare_immunity(self:get_group_role(actor:GetUserGroup()), self:get_group_role(target:GetUserGroup()),
-    can_equal)
+  return compare_immunity(self:get_group_role(actor:get_role()), self:get_group_role(target:get_role()), can_equal)
 end
 
 --- Checks whether a player's role has enough immunity to act on the holder of a role. This
 -- is `Bolt:check_immunity` for a target who is not on the server and is only known by the
 -- role stored for them. An invalid player (the server console) and a root player always
 -- pass, and so does everybody when a registered role has no numeric immunity. A role ID that
--- is not registered counts as lower than every registered role.
+-- is not registered counts as lower than every registered role. The ID is a Bolt role in both
+-- modes, so that deferring to another admin mod, `admin` still ranks above `gamemaster`.
 -- @param actor [Player the player performing the action]
 -- @param role_id [String ID of the role of whoever is acted on]
 -- @param can_equal=false [Boolean also pass when both roles have the same immunity]
@@ -582,7 +582,7 @@ function Bolt:check_role_immunity(actor, role_id, can_equal)
     return true
   end
 
-  return compare_immunity(self:get_group_role(actor:GetUserGroup()), self:get_group_role(role_id), can_equal)
+  return compare_immunity(self:get_group_role(actor:get_role()), self:find_group(role_id), can_equal)
 end
 
 --- Checks whether a SteamID is listed in the bolt_root_steamid config, which makes its owner a

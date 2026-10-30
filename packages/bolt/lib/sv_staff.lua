@@ -42,24 +42,33 @@ function Bolt:find_user(steam_id, callback)
 end
 
 --- Gives a player on the server a role and signals the change to CAMI as coming from 'Bolt',
--- in both modes, so that another admin mod that Bolt defers to hears of it. This is how
+-- with the usergroups of CAMI that the two roles are (see `Bolt:get_cami_name`), in both
+-- modes, so that another admin mod that Bolt defers to hears of it. Deferring, the player's
+-- usergroup becomes the usergroup of the role, so that `admin` gives 'superadmin'. This is how
 -- Bolt's commands and the admin panel change roles. Does not check permissions or immunity.
 -- @param target [Player]
 -- @param role_id [String role ID]
 function Bolt:set_role(target, role_id)
-  local old_id = target:GetUserGroup()
+  local old_group = target:GetUserGroup()
 
-  target:SetUserGroup(role_id, true)
+  if self:uses_external_admin() then
+    target:SetUserGroup(self:get_cami_name(role_id), true)
+  else
+    target:SetUserGroup(role_id, true)
+  end
 
-  if old_id != role_id then
-    CAMI.SignalUserGroupChanged(target, old_id, role_id, 'Bolt')
+  local new_group = target:GetUserGroup()
+
+  if old_group != new_group then
+    CAMI.SignalUserGroupChanged(target, old_group, new_group, 'Bolt')
   end
 end
 
 --- Changes the role that is stored for a SteamID, which its owner gets the next time they
 -- join. Use `Bolt:set_role` for a player who is on the server. Does not check
 -- permissions or immunity. Once the role is stored, the change is signaled to CAMI as coming
--- from 'Bolt', unless it is silent, as it is for a role that another admin mod has given.
+-- from 'Bolt', with the usergroups of CAMI that the two roles are, unless it is silent, as it
+-- is for a role that another admin mod has given.
 -- @param steam_id [String]
 -- @param role_id [String role ID]
 -- @param callback=nil [Function called without arguments once the role has been stored]
@@ -72,7 +81,9 @@ function Bolt:set_stored_role(steam_id, role_id, callback, old_role, silent)
     query:update('updated_at', to_datetime(os.time()))
     query:callback(function()
       if !silent and old_role != role_id then
-        CAMI.SignalSteamIDUserGroupChanged(steam_id, old_role, role_id, 'Bolt')
+        local old_group = old_role and self:get_cami_name(old_role)
+
+        CAMI.SignalSteamIDUserGroupChanged(steam_id, old_group, self:get_cami_name(role_id), 'Bolt')
       end
 
       if callback then
@@ -203,7 +214,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
   local online = player.find(steam_id)
 
   if IsValid(online) then
-    local old_role = online:GetUserGroup()
+    local old_role = online:get_role()
 
     if !self:check_immunity(actor, online) then
       Flux.Player:notify(actor, 'error.command.higher_immunity', { target = get_player_name(online) })
@@ -243,7 +254,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
     self:set_stored_role(steam_id, 'user', function()
       local joined = player.find(steam_id)
 
-      if IsValid(joined) and joined:GetUserGroup() != 'user' then
+      if IsValid(joined) and joined:get_role() != 'user' then
         self:set_role(joined, 'user')
       end
 
@@ -289,7 +300,7 @@ function Bolt:send_staff_list(target)
       for _, client in player.Iterator() do
         if !client:IsBot() then
           local steam_id = client:SteamID()
-          local role = client:GetUserGroup()
+          local role = client:get_role()
           local member = listed[steam_id]
 
           if member then

@@ -2,8 +2,8 @@
 -- of 100. This file defines the role's default permissions on top of those of `user`: the
 -- physics and tool guns, spawning props and entities, the context menu, observer mode and
 -- the admin ESP, the level design tools that place texts, containers, doors, static entities
--- and vendors, and the commands that moderate players and characters. Other addons see
--- assistants as admins through the `moderate` permission.
+-- and vendors, and the commands that moderate players and characters. `IsAdmin` is true for
+-- assistants through the `moderate` permission.
 
 ROLE.name = 'Assistant'
 ROLE.description = 'role.assistant'

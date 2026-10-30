@@ -4,7 +4,7 @@
 -- picking up any entity, handing out items and money, setting the time, the health, the armor
 -- and the stats of characters, whitelisting players and managing areas, map scenes, spawn
 -- points and container loot.
--- Other addons see gamemasters as super admins through the `administrate` permission.
+-- `IsSuperAdmin` is true for gamemasters through the `administrate` permission.
 
 ROLE.name = 'Gamemaster'
 ROLE.description = 'role.gamemaster'

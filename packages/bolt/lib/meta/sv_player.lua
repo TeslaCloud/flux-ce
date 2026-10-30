@@ -6,27 +6,37 @@ local player_meta = FindMetaTable('Player')
 
 player_meta.engine_set_user_group = player_meta.engine_set_user_group or player_meta.SetUserGroup
 
---- Sets the player's role, overriding the engine method. Sets the engine's usergroup, and
--- while Bolt is the admin mod also networks the role, calls on_role_taken / on_role_set on
--- the roles involved and saves the role to the database unless one of them returns a value.
--- While Bolt defers to another admin mod, the usergroup is all that changes: that admin mod
--- keeps its own groups and Bolt neither networks nor saves a role. The PlayerUserGroupChanged
--- hook runs in both modes, with the roles that `Bolt:get_group_role` finds for the two
--- usergroups. While Bolt is the admin mod that CAMI hears from, a change that another addon
--- makes this way is signaled to CAMI as coming from 'Bolt', unless it is silent. Bolt's own
--- changes go through `Bolt:set_role`, which signals them in both modes.
+--- Sets the player's role, overriding the engine method. While Bolt is the admin mod, group is
+-- a role ID, or a usergroup of CAMI that is no role ID, which gives the role that
+-- `Bolt:role_for_cami_group` finds for it, so that 'superadmin' gives `admin`. The engine's
+-- usergroup becomes the usergroup of CAMI that the role is (see `Bolt:get_cami_name`), the
+-- role is networked, on_role_taken / on_role_set are called on the roles involved and the
+-- role is saved to the database unless one of them returns a value. While Bolt defers to
+-- another admin mod, group is the usergroup and it is all that changes: that admin mod keeps
+-- its own groups and Bolt neither networks nor saves a role. The PlayerUserGroupChanged hook
+-- runs in both modes, with the roles that `Bolt:get_group_role` finds for the two. While Bolt
+-- is the admin mod that CAMI hears from, a change that another addon makes this way is
+-- signaled to CAMI as coming from 'Bolt', with the usergroups of the two roles, unless it is
+-- silent. Bolt's own changes go through `Bolt:set_role`, which signals them in both modes.
 -- @param group='user' [String role ID or usergroup name]
 -- @param silent=false [Boolean keep CAMI from hearing of the change]
 function player_meta:SetUserGroup(group, silent)
   group = group or 'user'
 
-  local old_id = self:GetUserGroup()
+  local external = Bolt:uses_external_admin()
+
+  if !external and !Bolt:find_group(group) then
+    group = Bolt:role_for_cami_group(group) or group
+  end
+
+  local old_id = self:get_role()
   local group_obj = Bolt:get_group_role(group)
   local old_group_obj = Bolt:get_group_role(old_id)
 
-  self:engine_set_user_group(group)
-
-  if !Bolt:uses_external_admin() then
+  if external then
+    self:engine_set_user_group(group)
+  else
+    self:engine_set_user_group(Bolt:get_cami_name(group))
     self:set_nv('role', group)
 
     if old_group_obj and group_obj and old_group_obj:on_role_taken(self, group_obj) == nil
@@ -43,7 +53,7 @@ function player_meta:SetUserGroup(group, silent)
   hook.Run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
 
   if !silent and old_id != group and Bolt:is_cami_provider() then
-    CAMI.SignalUserGroupChanged(self, old_id, group, 'Bolt')
+    CAMI.SignalUserGroupChanged(self, Bolt:get_cami_name(old_id), Bolt:get_cami_name(group), 'Bolt')
   end
 end
 
@@ -53,7 +63,7 @@ end
 function player_meta:save_usergroup()
   if self.record and !self:IsBot() then
     self.record.name = self:name()
-    self.record.role = self:GetUserGroup()
+    self.record.role = self:get_role()
     self.record:save()
   end
 end

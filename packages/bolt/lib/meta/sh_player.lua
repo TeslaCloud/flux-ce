@@ -1,8 +1,10 @@
 --- Player extensions of Bolt: the player's role, their individual and temporary permissions,
 -- those of their active character, and the staff level checks. The engine's
 -- `GetUserGroup`, `IsAdmin` and `IsSuperAdmin` are overridden so that other addons see Flux
--- roles and permissions. When Bolt defers to another admin mod (`bolt_external_admin`), the
--- overrides call the engine's own methods, and the role of a player is their usergroup.
+-- roles and permissions: `GetUserGroup` returns the usergroup of CAMI that the role is, such
+-- as 'superadmin' for `admin`, and `Player:get_role` the role itself. When Bolt defers to
+-- another admin mod (`bolt_external_admin`), the overrides call the engine's own methods, and
+-- the role of a player is their usergroup.
 
 local player_meta = FindMetaTable('Player')
 
@@ -57,11 +59,17 @@ function player_meta:is_staff()
   return self:can 'staff'
 end
 
---- Overrides the engine method to return the player's role, see `Player:get_role`: the ID
--- of their Flux role, or the engine's usergroup when Bolt defers to another admin mod.
--- @return [String role ID or usergroup name]
+--- Overrides the engine method to return the usergroup of CAMI that the player's role is, see
+-- `Bolt:get_cami_name`, so that other addons rank a Flux administrator as 'superadmin'. Returns
+-- the engine's usergroup when Bolt defers to another admin mod. Use `Player:get_role` for
+-- the role.
+-- @return [String usergroup name]
 function player_meta:GetUserGroup()
-  return self:get_role()
+  if Bolt:uses_external_admin() then
+    return self:engine_get_user_group()
+  end
+
+  return Bolt:get_cami_name(self:get_role())
 end
 
 --- Overrides the engine method so that other addons recognize Flux super admins. Calls the

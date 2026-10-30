@@ -699,7 +699,7 @@ if SERVER then
       local to_ret = {}
 
       for _, client in player.Iterator() do
-        if client:GetUserGroup() == group_name then
+        if client:get_role() == group_name then
           to_ret[#to_ret + 1] = client
         end
       end

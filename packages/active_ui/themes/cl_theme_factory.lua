@@ -620,7 +620,7 @@ function THEME:AdminPanelPaintOver(_panel, width, height)
 
   DisableClipping(true)
     draw_rounded_box_ex(radius, 0, height, width, footer, self:get_color('surface_sunken'), false, false, true, true)
-    draw_simple_text(PLAYER:steam_name()..' ('..PLAYER:GetUserGroup()..')', font, padding, text_y, text_color)
+    draw_simple_text(PLAYER:steam_name()..' ('..PLAYER:get_role()..')', font, padding, text_y, text_color)
     draw_simple_text(version_string, font, width - text_w - padding, text_y, text_color)
   DisableClipping(false)
 end

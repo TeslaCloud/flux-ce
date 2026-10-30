@@ -12,8 +12,9 @@ function hooks:PostInitialize()
 end
 
 --- Gives a player the role that another admin mod has signaled as their usergroup, if the
--- usergroup is a Bolt role (see `Bolt:role_for_cami_group`), without signaling it back. A
--- usergroup that is the player's role already is left as it is, before it is mapped.
+-- usergroup is a Bolt role (see `Bolt:role_for_cami_group`, so that 'superadmin' gives
+-- `admin`), without signaling it back. A usergroup that the player has already, see
+-- `Player:GetUserGroup`, is left as it is.
 -- @param _self [Map the hook table]
 -- @param target [Player the player whose usergroup has changed]
 -- @param _old [String the usergroup they had]
@@ -25,20 +26,21 @@ hooks['CAMI.PlayerUsergroupChanged'] = function(_self, target, _old, new, source
 
   local role_id = Bolt:role_for_cami_group(new)
 
-  if role_id and target:GetUserGroup() != role_id then
+  if role_id and target:get_role() != role_id then
     target:SetUserGroup(role_id, true)
   end
 end
 
 --- Changes the stored role of a SteamID that has joined before to the one that another admin
--- mod has signaled as its usergroup, if the usergroup is a Bolt role, without signaling it
--- back. A player with that SteamID who is on the server gets the role right away.
+-- mod has signaled as its usergroup, if the usergroup is a Bolt role (see
+-- `Bolt:role_for_cami_group`), without signaling it back. A player with that SteamID who is
+-- on the server gets the role right away.
 -- @param _self [Map the hook table]
 -- @param steam_id [String the SteamID whose usergroup has changed]
--- @param old [String the usergroup it had]
+-- @param _old [String the usergroup it had]
 -- @param new [String the usergroup it has]
 -- @param source [Any the admin mod that changed it]
-hooks['CAMI.SteamIDUsergroupChanged'] = function(_self, steam_id, old, new, source)
+hooks['CAMI.SteamIDUsergroupChanged'] = function(_self, steam_id, _old, new, source)
   if !Bolt:is_cami_provider() or source == 'Bolt' or !isstring(steam_id) then return end
 
   steam_id = player.normalize_steam_id(steam_id)
@@ -52,7 +54,7 @@ hooks['CAMI.SteamIDUsergroupChanged'] = function(_self, steam_id, old, new, sour
   if IsValid(online) then
     online:SetUserGroup(role_id, true)
   else
-    Bolt:set_stored_role(steam_id, role_id, nil, old, true)
+    Bolt:set_stored_role(steam_id, role_id, nil, nil, true)
   end
 end
 

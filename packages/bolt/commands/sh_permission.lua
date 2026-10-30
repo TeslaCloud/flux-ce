@@ -189,7 +189,7 @@ function list_cmd:on_run(actor, targets)
 
   Flux.Player:notify(actor, 'command.permission.list.role', {
     target = name,
-    role = target:GetUserGroup()
+    role = target:get_role()
   })
 
   if #allowed > 0 then

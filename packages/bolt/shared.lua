@@ -22,11 +22,11 @@
 --
 -- Each role is based on the one below it and has every permission that role allows. Assistants
 -- have the basic staff tools: kicking, banning, vanishing, observer mode, the physics and tool
--- guns and spawning props, and other addons see them as admins. Gamemasters also get the
--- tools that run the game world, such as spawning NPCs, vehicles and weapons, handing out
--- items and money, and managing areas, map scenes and spawn points, and other addons see
--- them as super admins. Administrators may do anything, including editing the configuration,
--- permissions and plugins, managing roles and restarting the server.
+-- guns and spawning props, and `IsAdmin` is true for them. Gamemasters also get the tools that
+-- run the game world, such as spawning NPCs, vehicles and weapons, handing out items and money,
+-- and managing areas, map scenes and spawn points, and `IsSuperAdmin` is true for them.
+-- Administrators may do anything, including editing the configuration, permissions and
+-- plugins, managing roles and restarting the server.
 --
 -- Bans are stored in the database and checked whenever a player connects. Staff manage
 -- players with Bolt's commands, such as `/ban add|remove`, `/role set|remove`,
@@ -46,17 +46,21 @@
 --
 -- Bolt speaks CAMI, the interface through which admin mods and addons share usergroups and
 -- privileges, in one of two modes that the static `bolt_external_admin` config picks. Its
--- roles are CAMI usergroups in both modes. By default Bolt is the admin mod of the server: the
--- usergroups and privileges that other addons register become Bolt roles and permissions (a
--- privilege is allowed to `user`, `assistant` or `gamemaster` as its minimum access is 'user',
--- 'admin' or 'superadmin'), and Bolt answers CAMI's access checks for the permissions it
--- knows. With `bolt_external_admin` on, another admin mod owns and stores the usergroups: Bolt
--- registers its permissions as privileges and leaves the engine's usergroup methods to that
--- admin mod, so setting a player's usergroup, as Bolt's own role changes also do, changes
--- nothing but the engine's usergroup and Bolt saves no role for it. Root access and the
--- permissions set on the player and their character still decide first, and CAMI is asked in
--- place of the role. Either way, Bolt signals the role changes it makes to CAMI, and bans,
--- commands and the admin panel work the same in both modes. See `lib/sh_cami.lua`.
+-- roles are CAMI usergroups in both modes: `user` is 'user' and `admin` is 'superadmin', the
+-- usergroups that CAMI defines itself, `assistant` inherits from 'admin', `gamemaster` from
+-- `assistant`, and every other role from the usergroup of its base role, so that
+-- `GetUserGroup` is 'superadmin' for an administrator while `Player:get_role` is `admin`. By
+-- default Bolt is the admin mod of the server: the usergroups and privileges that other addons
+-- register become Bolt roles and permissions (a privilege is allowed to `user`, `assistant` or
+-- `admin` as its minimum access is 'user', 'admin' or 'superadmin'), and Bolt answers CAMI's
+-- access checks for the permissions it knows. With `bolt_external_admin` on, another admin
+-- mod owns and stores the usergroups: Bolt registers its permissions as privileges and leaves
+-- the engine's usergroup methods to that admin mod, so setting a player's usergroup, as Bolt's
+-- own role changes also do, changes nothing but the engine's usergroup and Bolt saves no role
+-- for it. Root access and the permissions set on the player and their character still decide
+-- first, and CAMI is asked in place of the role. Either way, Bolt signals the role changes it
+-- makes to CAMI under the usergroups of the roles, and bans, commands and the admin panel work
+-- the same in both modes. See `lib/sh_cami.lua`.
 --
 -- The package loads its libraries, classes and player extensions, its configs, the models and
 -- the admin panel, then the hooks and the network handlers, so that its own commands, which

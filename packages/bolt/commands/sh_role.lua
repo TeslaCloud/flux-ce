@@ -86,7 +86,7 @@ function remove:on_run(actor, target)
   if targets then
     for _, client in ipairs(targets) do
       client:notify('notification.demote', {
-        group = client:GetUserGroup()
+        group = client:get_role()
       })
       Bolt:set_role(client, 'user')
     end

@@ -36,7 +36,7 @@ end
 -- @param target [Player]
 -- @return [Boolean]
 function Gamemastery.has_gamemaster_role(target)
-  return IsValid(target) and target:GetUserGroup() == Gamemastery.role_id
+  return IsValid(target) and target:get_role() == Gamemastery.role_id
 end
 
 --- Checks whether a player is in gamemaster mode.
