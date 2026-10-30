@@ -65,7 +65,7 @@ function GM:InitPostEntity()
 end
 
 --- Creates the scaled fonts of the help box of the tool gun.
-function GM:CreateFonts()
+function GM:RegisterFonts()
   Flux.Tool:create_hud_fonts()
 end
 

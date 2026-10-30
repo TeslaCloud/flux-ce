@@ -12,8 +12,8 @@
 -- value refreshed; other bars are updated with `Flux.Bars:set_value`, which animates the fill
 -- toward the new value. Part of a bar can be blocked off with `Flux.Bars:hinder_value`. A bar
 -- is only drawn while its value is inside its display range (above `min_display` and not above
--- `display`). The drawing itself is done by the active theme through the `DrawBarBackground`,
--- `DrawBarFill`, `DrawBarHindrance` and `DrawBarTexts` theme hooks, and plugins can step in
+-- `display`). The drawing itself is done by the active theme through the `PaintBarBackground`,
+-- `PaintBarFill`, `PaintBarHindrance` and `PaintBarTexts` theme hooks, and plugins can step in
 -- with the bar hooks (`ShouldDrawBar`, `PreDrawBar`, `GetBarOffset`, `AdjustBarInfo` and so
 -- on).
 -- @module [Flux.Bars]
@@ -127,14 +127,14 @@ function Flux.Bars:get(id)
 end
 
 --- Sets the value of a bar, clamped between 0 and its max value, and starts the fill
--- animation toward it. Calls the 'PreBarValueSet' theme hook first.
+-- animation toward it. Calls the 'PreSetBarValue' theme hook first.
 -- @param id [String bar ID]
 -- @param new_value [Number]
 function Flux.Bars:set_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    theme_hook('PreBarValueSet', bar, bar.value, new_value)
+    theme_hook('PreSetBarValue', bar, bar.value, new_value)
 
     local clamped = math_clamp(new_value, 0, bar.max_value)
 
@@ -151,14 +151,14 @@ function Flux.Bars:set_value(id, new_value)
 end
 
 --- Sets the hindrance value of a bar (the part of it that is blocked off), clamped between
--- 0 and its max value. Calls the 'PreBarHinderValueSet' theme hook first.
+-- 0 and its max value. Calls the 'PreSetBarHinderValue' theme hook first.
 -- @param id [String bar ID]
 -- @param new_value [Number]
 function Flux.Bars:hinder_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    theme_hook('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
+    theme_hook('PreSetBarHinderValue', bar, bar.hinder_value, new_value)
 
     if bar.hinder_value != new_value then
       bar.hinder_value = math_clamp(new_value, 0, bar.max_value)
@@ -245,12 +245,12 @@ function Flux.Bars:draw(id)
   local bar_info = self:get(id)
 
   if bar_info then
-    --- Called on the client when a bar is about to be drawn, before the `PreDrawBar` theme
+    --- Called on the client when a bar is about to be drawn, before the `PrePaintBar` theme
     -- hook and before `ShouldDrawBar` is asked. Flux's own handler works out the fill width of
     -- the bar here (advancing its value animation) and converts its texts to upper case.
     -- @param bar_info [Map bar data]
     hook.Run('PreDrawBar', bar_info)
-    theme_hook('PreDrawBar', bar_info)
+    theme_hook('PrePaintBar', bar_info)
 
     --- Asks whether a HUD bar should be drawn. Called on the client by `Flux.Bars:draw` every
     -- time a bar is drawn, and by `Flux.Bars:prioritize` for every registered bar when the top
@@ -264,7 +264,7 @@ function Flux.Bars:draw(id)
       return
     end
 
-    theme_hook('DrawBarBackground', bar_info)
+    theme_hook('PaintBarBackground', bar_info)
 
     --- Asks whether the fill of a bar should be drawn. Called on the client every time a bar
     -- is drawn, after its background. The fill is always drawn when the value of the bar is
@@ -272,20 +272,20 @@ function Flux.Bars:draw(id)
     -- @param bar_info [Map bar data]
     -- @return [Boolean Return true to draw the fill even though the value of the bar is 0]
     if hook.Run('ShouldFillBar', bar_info) or bar_info.value != 0 then
-      theme_hook('DrawBarFill', bar_info)
+      theme_hook('PaintBarFill', bar_info)
     end
 
     if bar_info.hinder_display and bar_info.hinder_display <= bar_info.hinder_value then
-      theme_hook('DrawBarHindrance', bar_info)
+      theme_hook('PaintBarHindrance', bar_info)
     end
 
-    theme_hook('DrawBarTexts', bar_info)
+    theme_hook('PaintBarTexts', bar_info)
 
-    --- Called on the client after a bar has been drawn, before the `PostDrawBar` theme hook.
+    --- Called on the client after a bar has been drawn, before the `PostPaintBar` theme hook.
     -- Not called for bars that `ShouldDrawBar` has hidden.
     -- @param bar_info [Map bar data]
     hook.Run('PostDrawBar', bar_info)
-    theme_hook('PostDrawBar', bar_info)
+    theme_hook('PostPaintBar', bar_info)
   end
 end
 

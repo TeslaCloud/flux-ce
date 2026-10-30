@@ -9,7 +9,7 @@ local math_scale_x = math.scale_x
 local math_round = math.round
 
 local function paint_well(_pnl, w, h)
-  Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius_small'), Theme.get_color('surface_sunken'))
+  Theme.hook('PaintCard', 0, 0, w, h, Theme.get_option('corner_radius_small'), Theme.get_color('surface_sunken'))
 end
 
 local PANEL = {}

@@ -105,7 +105,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  Theme.hook('DrawCard', 0, 0, w, h, get_option('corner_radius'), ColorAlpha(get_color('surface_sunken'), 250))
+  Theme.hook('PaintCard', 0, 0, w, h, get_option('corner_radius'), ColorAlpha(get_color('surface_sunken'), 250))
 end
 
 --- Makes the menu and all of its options as wide as the widest option and as tall as the

@@ -324,10 +324,10 @@ function Theme.unload_theme()
   current_theme = nil
 end
 
---- Loads the active theme again, then calls its 'OnReloaded' method and the 'ThemeReloaded'
+--- Loads the active theme again, then calls its 'Reloaded' method and the 'ThemeReloaded'
 -- hook. Does nothing if the theme has should_reload set to false, or if the
 -- 'ShouldThemeReload' hook returns false. The theme is loaded the same way as the first
--- time, so the 'ShouldThemeLoad' hook can prevent the reload too; 'OnReloaded' and
+-- time, so the 'ShouldThemeLoad' hook can prevent the reload too; 'Reloaded' and
 -- 'ThemeReloaded' are then not called.
 function Theme.reload()
   if !current_theme then return end
@@ -343,9 +343,9 @@ function Theme.reload()
 
   if !Theme.load_theme(current_theme.id) then return end
 
-  Theme.hook('OnReloaded')
+  Theme.hook('Reloaded')
   --- Called on the client after `Theme.reload` has loaded the active theme again and called
-  -- its `OnReloaded` theme hook.
+  -- its `Reloaded` theme hook.
   -- @param current_theme [ThemeBase the active theme]
   hook.Run('ThemeReloaded', current_theme)
 end

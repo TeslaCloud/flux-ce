@@ -87,12 +87,12 @@ function PANEL:Init()
   self:rebuild()
 end
 
---- Draws the panel through the theme's PaintCharCreationMainPanel hook.
+--- Draws the panel through the theme's PaintCharacterCreationMainPanel hook.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    Theme.hook('PaintCharCreationMainPanel', self, w, h)
+    Theme.hook('PaintCharacterCreationMainPanel', self, w, h)
   end
 end
 

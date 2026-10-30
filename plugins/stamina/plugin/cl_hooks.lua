@@ -8,7 +8,7 @@ local empty_color = Color(200, 0, 0)
 
 --- Draws the stamina bar, which fades in while stamina is below 98% of the 'stamina_max'
 -- config and out otherwise.
--- The theme can take over the drawing through its DrawStaminaBar hook.
+-- The theme can take over the drawing through its PaintStaminaBar hook.
 function Stamina:HUDPaint()
   local client = PLAYER
 
@@ -24,7 +24,7 @@ function Stamina:HUDPaint()
       cur_alpha = Lerp(frame_time, cur_alpha, 0)
     end
 
-    if Theme.hook('DrawStaminaBar', stamina, percentage, cur_alpha, frame_time) == nil then
+    if Theme.hook('PaintStaminaBar', stamina, percentage, cur_alpha, frame_time) == nil then
       local cx, cy = ScrC()
       local gx, gy = Flux.global_ui_offset()
       local x, y = gx + cx - w * 0.5, gy + cy - h * 0.5 + math.scale(300)

@@ -38,7 +38,7 @@
 -- The local player sees a small body diagram on the HUD while any limb is hurt, colored by
 -- the damage of each limb. The 'limbs_hud' client setting changes when it is shown, the
 -- `ShouldDrawLimbDiagram` hook hides it, and a theme can take over the drawing with a
--- `DrawLimbDiagram` method or move it with the 'limbs_diagram_x', 'limbs_diagram_y' and
+-- `PaintLimbDiagram` method or move it with the 'limbs_diagram_x', 'limbs_diagram_y' and
 -- 'limbs_diagram_height' options.
 --
 -- The `PlayerLimbDamaged`, `PlayerLimbHealed` and `PlayerLimbsReset` hooks report changes on

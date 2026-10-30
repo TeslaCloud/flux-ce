@@ -33,12 +33,12 @@ PANEL.text = 'Click sidebar buttons to open character creation menus.'
 --- Does nothing; character creation stage panels override it.
 function PANEL:Init() end
 
---- Draws the panel through the theme's PaintCharCreationBasePanel hook.
+--- Draws the panel through the theme's PaintCharacterCreationBasePanel hook.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    Theme.hook('PaintCharCreationBasePanel', self, w, h)
+    Theme.hook('PaintCharacterCreationBasePanel', self, w, h)
   end
 end
 

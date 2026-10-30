@@ -325,7 +325,7 @@ function PANEL:OnStopDragging()
   end
 end
 
---- Draws the card through the theme's PaintCharPanel hook, or the tag that follows the cursor
+--- Draws the card through the theme's PaintCharacterPanel hook, or the tag that follows the cursor
 -- while the card is dragged.
 -- @param w [Number]
 -- @param h [Number]
@@ -333,7 +333,7 @@ function PANEL:Paint(w, h)
   if self.PaintingDragging then
     self:paint_drag_tag(w, h)
   elseif self:IsVisible() then
-    Theme.hook('PaintCharPanel', self, w, h)
+    Theme.hook('PaintCharacterPanel', self, w, h)
   end
 end
 
@@ -354,7 +354,7 @@ function PANEL:paint_drag_tag(w, h)
   local tag_h = name_h + hint_h + padding * 2
   local x, y = math.floor(w * 0.5 + math.scale(12)), math.floor(h * 0.5 + math.scale(12))
 
-  Theme.hook('DrawCard', x, y, tag_w, tag_h, Theme.get_option('corner_radius_small'), Theme.get_color('surface'))
+  Theme.hook('PaintCard', x, y, tag_w, tag_h, Theme.get_option('corner_radius_small'), Theme.get_color('surface'))
 
   FontAwesome:draw('fa-hat-wizard', x + padding, y + padding, icon_size, Theme.get_color('accent'))
   draw.SimpleText(name, name_font, x + padding * 2 + icon_size, y + padding, Theme.get_color('text'))

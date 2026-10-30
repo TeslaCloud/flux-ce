@@ -59,7 +59,7 @@ function Chatbox:HUDShouldDraw(element)
 end
 
 --- Creates the normal, bold, italic and bold italic fonts of the chatbox.
-function Chatbox:CreateFonts()
+function Chatbox:RegisterFonts()
   Font.create('chat_font', {
     font = 'Montserrat Medium',
     size = 16

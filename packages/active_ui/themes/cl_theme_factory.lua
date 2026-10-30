@@ -26,7 +26,7 @@
 -- `main`, `main_dark`, `main_light`, `outline`, `menu_background` and `schema_text` are kept
 -- for the themes and plugins that read them.
 --
--- The drawing helpers `DrawCard` and `DrawTitleTag`, and the generic hooks `PaintSurface`,
+-- The drawing helpers `PaintCard` and `PaintTitleTag`, and the generic hooks `PaintSurface`,
 -- `PaintSectionTitle`, `PaintRow` and `PaintTextEntry`, are what the panels of Flux use for
 -- their cards, titles, list rows and fields, so a theme that overrides them restyles all of
 -- those at once.
@@ -167,7 +167,7 @@ end
 
 --- Draws a rounded card: a box with a one pixel border.
 -- ```
--- Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius'), Theme.get_color('surface'))
+-- Theme.hook('PaintCard', 0, 0, w, h, Theme.get_option('corner_radius'), Theme.get_color('surface'))
 -- ```
 -- @param x [Number]
 -- @param y [Number]
@@ -177,7 +177,7 @@ end
 -- @param fill [Color]
 -- @param border=nil [Color border; the 'border' color of the theme when omitted, false for
 --   no border]
-function THEME:DrawCard(x, y, w, h, radius, fill, border)
+function THEME:PaintCard(x, y, w, h, radius, fill, border)
   if border == nil then
     border = self:get_color('border')
   end
@@ -196,7 +196,7 @@ end
 -- @param y [Number top edge of the tag]
 -- @param font=nil [String font; the 'section_title' font of the theme when omitted]
 -- @return [Number width of the tag, Number height of the tag]
-function THEME:DrawTitleTag(text, x, y, font)
+function THEME:PaintTitleTag(text, x, y, font)
   font = font or self:get_font('section_title')
 
   local text_w, text_h = text_size(text, font)
@@ -216,7 +216,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function THEME:PaintSurface(_panel, w, h)
-  self:DrawCard(0, 0, w, h, self:get_option('corner_radius'), self:get_color('surface'))
+  self:PaintCard(0, 0, w, h, self:get_option('corner_radius'), self:get_color('surface'))
 end
 
 --- Draws the title of a content panel as a tag that sticks out above its top left corner.
@@ -232,7 +232,7 @@ function THEME:PaintSectionTitle(_panel, text, _w, _h)
   local tag_h = text_h + math.scale(8)
 
   DisableClipping(true)
-    self:DrawTitleTag(text, 0, -tag_h, font)
+    self:PaintTitleTag(text, 0, -tag_h, font)
   DisableClipping(false)
 end
 
@@ -265,7 +265,7 @@ function THEME:PaintTextEntry(panel, w, h)
   local text_color = self:get_color('text')
   local border = panel:HasFocus() and self:get_color('accent') or self:get_color('border')
 
-  self:DrawCard(0, 0, w, h, self:get_option('corner_radius_small'), self:get_color('field'), border)
+  self:PaintCard(0, 0, w, h, self:get_option('corner_radius_small'), self:get_color('field'), border)
 
   panel:DrawTextEntryText(text_color, ColorAlpha(self:get_color('accent'), 120), text_color)
 end
@@ -273,7 +273,7 @@ end
 --- Called when the main menu is created, so that a theme can customize it. Does nothing
 -- in the factory theme.
 -- @param _panel [Panel the main menu]
-function THEME:CreateMainMenu(_panel)
+function THEME:MainMenuCreated(_panel)
 end
 
 --- Draws an fl_frame: a rounded card with a header band and the title of the frame in it.
@@ -291,7 +291,7 @@ function THEME:PaintFrame(panel, w, h)
     draw_rounded_box(radius + 2, -2, -1, w + 4, h + 4, color_frame_shadow)
   DisableClipping(false)
 
-  self:DrawCard(0, 0, w, h, radius, self:get_color('surface'))
+  self:PaintCard(0, 0, w, h, radius, self:get_color('surface'))
   draw_rounded_box_ex(
     math_max(radius - 1, 0),
     1,
@@ -407,9 +407,9 @@ function THEME:PaintButton(panel, w, h)
     if background_color then
       local border = panel.draw_outline and self:get_color('border') or false
 
-      self:DrawCard(0, 0, w, h, radius, background_color, border)
+      self:PaintCard(0, 0, w, h, radius, background_color, border)
     elseif panel.draw_outline then
-      self:DrawCard(0, 0, w, h, radius, ColorAlpha(self:get_color('main'), 0), self:get_color('border'))
+      self:PaintCard(0, 0, w, h, radius, ColorAlpha(self:get_color('main'), 0), self:get_color('border'))
     end
   elseif active then
     text_color = self:get_color('accent_light')
@@ -527,8 +527,8 @@ end
 
 --- Draws the background of a HUD bar.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
-function THEME:DrawBarBackground(bar_info)
-  self:DrawCard(
+function THEME:PaintBarBackground(bar_info)
+  self:PaintCard(
     bar_info.x,
     bar_info.y,
     bar_info.width,
@@ -541,7 +541,7 @@ end
 
 --- Draws the hindered portion at the right end of a HUD bar.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
-function THEME:DrawBarHindrance(bar_info)
+function THEME:PaintBarHindrance(bar_info)
   local length = bar_info.width * (bar_info.hinder_value / bar_info.max_value)
 
   draw_rounded_box(
@@ -557,7 +557,7 @@ end
 --- Draws the filled portion of a HUD bar in the color of the bar. While the displayed fill is
 -- catching up with the actual value, the difference between the two is drawn lighter.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
-function THEME:DrawBarFill(bar_info)
+function THEME:PaintBarFill(bar_info)
   local radius          = self:get_bar_radius(bar_info)
   local x, y            = bar_info.x + 1, bar_info.y + 1
   local fill_h          = bar_info.height - 2
@@ -581,7 +581,7 @@ end
 --- Draws the text of a HUD bar with a shadow, so that it stays readable over the filled and
 -- the empty portions alike, and the hindrance text when the hindrance is displayed.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
-function THEME:DrawBarTexts(bar_info)
+function THEME:PaintBarTexts(bar_info)
   local font            = Theme.get_font(bar_info.font)
   local x, y            = bar_info.x, bar_info.y
   local width           = bar_info.width
@@ -608,7 +608,7 @@ end
 -- @param _panel [Panel the admin panel]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
-function THEME:AdminPanelPaintOver(_panel, width, height)
+function THEME:PaintOverAdminPanel(_panel, width, height)
   local font            = self:get_font('text_smallest')
   local text_color      = self:get_color('text_muted')
   local version_string  = 'Admin Mod Version: v0.2.0 (indev)'
@@ -672,7 +672,7 @@ function THEME:PaintPermissionButton(_perm_panel, btn, w, h)
     text_color = color
   end
 
-  self:DrawCard(0, 0, w, h, radius, fill, ColorAlpha(color, selected ? 255 : 140))
+  self:PaintCard(0, 0, w, h, radius, fill, ColorAlpha(color, selected ? 255 : 140))
 
   local tw, th = text_size(title, font)
 
@@ -788,7 +788,7 @@ function THEME:PaintInventoryBackground(_panel, w, h)
   local padding = math.scale(6)
 
   DisableClipping(true)
-    self:DrawCard(
+    self:PaintCard(
       -padding,
       -padding,
       w + padding * 2,
@@ -817,7 +817,7 @@ function THEME:PaintTabInventoryBackground(panel, _w, _h)
     local _text_w, text_h = text_size(text, font)
 
     DisableClipping(true)
-      self:DrawCard(
+      self:PaintCard(
         x - padding,
         y - padding,
         player_w + padding * 2,
@@ -827,7 +827,7 @@ function THEME:PaintTabInventoryBackground(panel, _w, _h)
       )
       draw_rounded_box(radius - 1, x, y, player_w, player_h, color_model_background)
       textured_rect(self:get_material('gradient_up'), x, y, player_w, player_h, color_slot_gradient)
-      self:DrawTitleTag(text, x - padding, y - padding - text_h - math.scale(8), font)
+      self:PaintTitleTag(text, x - padding, y - padding - text_h - math.scale(8), font)
     DisableClipping(false)
   end
 end
@@ -844,7 +844,7 @@ function THEME:PaintOverInventoryBackground(panel, _w, _h)
     local padding = math.scale(6)
 
     DisableClipping(true)
-      self:DrawTitleTag(text, -padding, -padding - text_h - math.scale(8), font)
+      self:PaintTitleTag(text, -padding, -padding - text_h - math.scale(8), font)
     DisableClipping(false)
   end
 end
@@ -853,11 +853,11 @@ end
 -- @param panel [Panel the chatbox]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
-function THEME:ChatboxPaintBackground(panel, width, height)
+function THEME:PaintChatboxBackground(panel, width, height)
   local padding = math.scale(8)
 
   DisableClipping(true)
-    self:DrawCard(
+    self:PaintCard(
       -padding,
       -padding,
       width + padding * 2,
@@ -873,12 +873,12 @@ end
 -- @param panel [Panel the character card]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintCharPanel(panel, w, h)
+function THEME:PaintCharacterPanel(panel, w, h)
   local radius = self:get_option('corner_radius')
   local char_data = panel.char_data
   local is_active = char_data and PLAYER:get_character_id() == char_data.character_id
 
-  self:DrawCard(0, 0, w, h, radius, self:get_color('surface'), is_active and self:get_color('accent') or nil)
+  self:PaintCard(0, 0, w, h, radius, self:get_color('surface'), is_active and self:get_color('accent') or nil)
 
   if char_data then
     local font            = self:get_font('main_menu_titles')
@@ -904,7 +904,7 @@ end
 -- @param _panel [Panel the character creation panel]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintCharCreationMainPanel(_panel, w, h)
+function THEME:PaintCharacterCreationMainPanel(_panel, w, h)
   local title, font = t'ui.char_create.text', Theme.get_font 'main_menu_title'
   local title_w, _title_h = text_size(title, font)
 
@@ -915,7 +915,7 @@ end
 -- @param _panel [Panel the character loading panel]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintCharCreationLoadPanel(_panel, w, h)
+function THEME:PaintCharacterCreationLoadPanel(_panel, w, h)
   local title, font = t'ui.char_create.load', Theme.get_font 'main_menu_title'
   local title_w, _title_h = text_size(title, font)
 
@@ -926,8 +926,8 @@ end
 -- @param panel [Panel the stage panel]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
-function THEME:PaintCharCreationBasePanel(panel, w, h)
-  self:DrawCard(0, 0, w, h, self:get_option('corner_radius'), self:get_color('surface'))
+function THEME:PaintCharacterCreationBasePanel(panel, w, h)
+  self:PaintCard(0, 0, w, h, self:get_option('corner_radius'), self:get_color('surface'))
 
   if isstring(panel.text) then
     local text            = t(panel.text)

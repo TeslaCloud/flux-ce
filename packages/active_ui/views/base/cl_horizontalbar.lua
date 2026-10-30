@@ -2,7 +2,7 @@
 -- not fit.
 -- It extends `DHorizontalScroller`: add panels with `AddPanel` and they are lined up from the
 -- left and stretched to the height of the bar, or centered after `set_centered(true)`. The
--- background is left to the active theme's `PaintHorizontalbar` hook. Used for the character
+-- background is left to the active theme's `PaintHorizontalBar` hook. Used for the character
 -- list, the stages of the character creation and the faction chooser.
 
 local PANEL = {}
@@ -15,11 +15,11 @@ function PANEL:Init()
   self.btnRight:SetVisible(false)
 end
 
---- Delegates drawing of the bar to the active theme's PaintHorizontalbar hook.
+--- Delegates drawing of the bar to the active theme's PaintHorizontalBar hook.
 -- @param width [Number panel width]
 -- @param height [Number panel height]
 function PANEL:Paint(width, height)
-  Theme.hook('PaintHorizontalbar', self, width, height)
+  Theme.hook('PaintHorizontalBar', self, width, height)
 end
 
 --- Adds a panel to the bar and immediately lays the bar out again.

@@ -51,12 +51,12 @@ function PANEL:Init()
   hook.Add('CharacterRequestFailed', self, self.rebuild)
 end
 
---- Draws the panel through the theme's PaintCharCreationLoadPanel hook.
+--- Draws the panel through the theme's PaintCharacterCreationLoadPanel hook.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    Theme.hook('PaintCharCreationLoadPanel', self, w, h)
+    Theme.hook('PaintCharacterCreationLoadPanel', self, w, h)
   end
 end
 
@@ -165,12 +165,12 @@ function PANEL:Init()
   end
 end
 
---- Draws the panel through the theme's PaintCharPanel hook.
+--- Draws the panel through the theme's PaintCharacterPanel hook.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    Theme.hook('PaintCharPanel', self, w, h)
+    Theme.hook('PaintCharacterPanel', self, w, h)
   end
 end
 

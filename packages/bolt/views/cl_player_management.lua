@@ -116,7 +116,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius'), Theme.get_color('surface_raised'), false)
+  Theme.hook('PaintCard', 0, 0, w, h, Theme.get_option('corner_radius'), Theme.get_color('surface_raised'), false)
 end
 
 --- Positions the avatar on the right and the labels and the role button on the left.

@@ -8,7 +8,7 @@
 -- of the word that is typed, and pressing it again replaces that with the next suggestion
 -- (Shift+Tab goes back); the up and down keys move the selection while there are
 -- suggestions. Enter sends the text as it is typed. The state of the suggestions is kept on
--- the panel for themes that draw them through the ChatboxPaintOver hook: `completion` (the
+-- the panel for themes that draw them through the PaintOverChatbox hook: `completion` (the
 -- result of `Flux.Command:complete`, nil while no command is typed), `completion_index` (the
 -- selected suggestion), `completion_offset` (how many suggestions are scrolled past) and
 -- `completion_prefix` (the command prefix that was typed).
@@ -259,7 +259,7 @@ function PANEL:Init()
     local border = entry:HasFocus() and get_color('accent') or get_color('border')
 
     Theme.hook(
-      'DrawCard',
+      'PaintCard',
       0,
       0,
       entry_w,
@@ -296,22 +296,22 @@ function PANEL:Think()
   end
 end
 
---- Draws the background through the ChatboxPaintBackground theme hook
+--- Draws the background through the PaintChatboxBackground theme hook
 -- while the chatbox is open.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
   if self.is_open then
-    Theme.hook('ChatboxPaintBackground', self, w, h)
+    Theme.hook('PaintChatboxBackground', self, w, h)
   end
 end
 
 --- Draws the suggestions for the command that is being typed above the text entry, see
--- `PANEL:draw_completion`. The ChatboxPaintOver theme hook can override this.
+-- `PANEL:draw_completion`. The PaintOverChatbox theme hook can override this.
 -- @param width [Number]
 -- @param height [Number]
 function PANEL:PaintOver(width, height)
-  if Theme.hook('ChatboxPaintOver', self, width, height) == nil and self.completion and
+  if Theme.hook('PaintOverChatbox', self, width, height) == nil and self.completion and
      IsValid(self.text_entry) then
     self:draw_completion(width, height - self.text_entry:GetTall() - math.scale(8))
   end
@@ -532,7 +532,7 @@ function PANEL:draw_command_info(info, y, width, padding)
   local emphasis_fill = ColorAlpha(get_color('accent'), 90)
 
   Theme.hook(
-    'DrawCard',
+    'PaintCard',
     0,
     y,
     width,
@@ -557,7 +557,7 @@ function PANEL:draw_command_info(info, y, width, padding)
       local segment_w = util.text_size(segment.text, font)
 
       Theme.hook(
-        'DrawCard',
+        'PaintCard',
         x - math.scale(3),
         cur_y,
         segment_w + math.scale(6),
@@ -608,7 +608,7 @@ function PANEL:draw_completion(width, bottom)
   if !cmd and count == 0 then
     local card_h = font_h + padding * 2
 
-    Theme.hook('DrawCard', 0, bottom - card_h, width, card_h, radius, background)
+    Theme.hook('PaintCard', 0, bottom - card_h, width, card_h, radius, background)
     draw_text(t'ui.chat.no_commands_found', font, padding, bottom - card_h + padding, get_color('accent_light'))
 
     return
@@ -642,7 +642,7 @@ function PANEL:draw_completion(width, bottom)
     self.completion_offset = offset
     list_y = bottom - list_h
 
-    Theme.hook('DrawCard', 0, list_y, width, list_h, radius, background)
+    Theme.hook('PaintCard', 0, list_y, width, list_h, radius, background)
 
     local y = list_y + padding
 
@@ -659,7 +659,7 @@ function PANEL:draw_completion(width, bottom)
       local candidate_cmd = result.commands[i]
 
       if is_selected then
-        Theme.hook('DrawCard', padding * 0.5, y, width - padding, row_h, radius_small, highlight, false)
+        Theme.hook('PaintCard', padding * 0.5, y, width - padding, row_h, radius_small, highlight, false)
       end
 
       local text_x = padding + draw_text(prefix..candidates[i], font, padding, y + math.scale(3), text_color)

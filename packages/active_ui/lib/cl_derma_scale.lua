@@ -9,7 +9,7 @@
 -- * The built-in fonts ('DermaDefault', 'DermaDefaultBold', 'DermaLarge', 'Default',
 --   'Trebuchet18', 'Trebuchet24', 'HudHintTextLarge', 'HudHintTextSmall', 'CenterPrintText',
 --   'DebugFixed', 'DebugFixedSmall', 'BudgetLabel', 'ChatFont' and the spawn menu's
---   'ContentHeader') are created again at the scaled size from the `CreateFonts` hook, with
+--   'ContentHeader') are created again at the scaled size from the `RegisterFonts` hook, with
 --   the families and weights of Garry's Mod's own definitions, so they follow the same rebuilds
 --   as the Flux fonts (load, schema load and resolution change).
 -- * The sizes that the stock panel classes hardcode in their `Init`, `PerformLayout` and setup
@@ -115,7 +115,7 @@ function DermaScale.create_fonts()
   end
 end
 
-hook.Add('CreateFonts', 'DermaScale', DermaScale.create_fonts)
+hook.Add('RegisterFonts', 'DermaScale', DermaScale.create_fonts)
 
 local function original_of(class_table, class_name, method)
   local key = class_name..':'..method

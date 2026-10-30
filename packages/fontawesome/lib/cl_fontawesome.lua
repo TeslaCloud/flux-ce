@@ -1,6 +1,6 @@
 --- Font Awesome icons for the interface. Maps the icon names ('fa-plus', 'fa-shield-halved'
 -- and so on) to the glyphs of the bundled Font Awesome Free fonts, and draws them as text of
--- any size and color with `FontAwesome:draw`. Three fonts are created from the `CreateFonts`
+-- any size and color with `FontAwesome:draw`. Three fonts are created from the `RegisterFonts`
 -- hook: 'FluxFontAwesome' holds the solid icons, 'FluxFontAwesomeRegular' the outlined
 -- variants and 'FluxFontAwesomeBrands' the brand logos. An icon is drawn from the solid font
 -- unless it only exists as a brand, or the ID carries one of the Font Awesome style prefixes
@@ -49,7 +49,7 @@ function FontAwesome.load(data)
 end
 
 --- Creates the fonts that are used to draw the icons.
-function FontAwesome.hooks:CreateFonts()
+function FontAwesome.hooks:RegisterFonts()
   for style, name in pairs(font_names) do
     local font_data = FontAwesome.fonts[style]
 

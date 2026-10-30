@@ -127,7 +127,7 @@ function PLUGIN:HUDPaint()
     render.SetScissorRect(x - padding, y - padding, x + w + padding, y + h + padding, true)
 
     Theme.hook(
-      'DrawCard',
+      'PaintCard',
       x - padding,
       y - padding,
       w + padding * 2,

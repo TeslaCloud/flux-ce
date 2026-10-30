@@ -70,7 +70,7 @@ end
 -- of the local player is hurt (or always, or never, as the 'limbs_hud' client setting says)
 -- and is hidden while limb damage is disabled or cinematic bars are on screen. The theme
 -- options 'limbs_diagram_x', 'limbs_diagram_y' and 'limbs_diagram_height' move and resize
--- it, and a theme that has a `DrawLimbDiagram(x, y, height, alpha)` method draws it instead
+-- it, and a theme that has a `PaintLimbDiagram(x, y, height, alpha)` method draws it instead
 -- of `Limbs:draw_diagram`, unless that method returns nil.
 -- @param _cur_time [Number current CurTime()]
 -- @param scrw [Number screen width]
@@ -98,7 +98,7 @@ function Limbs:HUDPaintAlive(_cur_time, scrw, scrh)
   local x = (Theme.get_option('limbs_diagram_x') or (scrw - height * 0.5 - margin)) + offset_x
   local y = (Theme.get_option('limbs_diagram_y') or (scrh - height - margin)) + offset_y
 
-  if Theme.hook('DrawLimbDiagram', x, y, height, diagram_alpha) == nil then
+  if Theme.hook('PaintLimbDiagram', x, y, height, diagram_alpha) == nil then
     self:draw_diagram(x, y, height, diagram_alpha)
   end
 end

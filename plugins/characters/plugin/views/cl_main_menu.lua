@@ -33,7 +33,7 @@ function PANEL:Init()
     end
   end
 
-  Theme.hook('CreateMainMenu', self)
+  Theme.hook('MainMenuCreated', self)
 
   Flux.blur_update_fps = 0
 end

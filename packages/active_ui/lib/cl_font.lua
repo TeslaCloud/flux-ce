@@ -4,8 +4,8 @@
 -- interface can ask for a scaled font wherever it draws text. All fonts are created again by
 -- `Font.create_fonts` when the gamemode loads on the client, once the schema has loaded and
 -- whenever the screen resolution changes. It creates the built-in Roboto family ('flRoboto',
--- 'flRobotoCondensed' and so on) and then runs the `CreateFonts` theme hook and the
--- `CreateFonts` hook. Plugins create their fonts from a `CreateFonts` handler so that they
+-- 'flRobotoCondensed' and so on) and then runs the `RegisterFonts` theme hook and the
+-- `RegisterFonts` hook. Plugins create their fonts from a `RegisterFonts` handler so that they
 -- survive these rebuilds, and themes give fonts a role with `ThemeBase:set_font`, which the
 -- interface looks up with `Theme.get_font`.
 
@@ -104,7 +104,7 @@ function Font.get(name)
 end
 
 --- Clears the stored fonts and creates the built-in Flux fonts again, then calls the
--- 'CreateFonts' theme and plugin hooks so that everything else can create theirs.
+-- 'RegisterFonts' theme and plugin hooks so that everything else can create theirs.
 function Font.create_fonts()
   Font.clear()
 
@@ -189,10 +189,10 @@ function Font.create_fonts()
     weight = 1000
   })
 
-  Theme.hook('CreateFonts')
+  Theme.hook('RegisterFonts')
   --- Called on the client every time the fonts are created again: when the gamemode loads,
   -- once the schema has loaded and after a change of the screen resolution. The built-in fonts
-  -- exist at this point and the `CreateFonts` theme hook of the active theme has run. Create
+  -- exist at this point and the `RegisterFonts` theme hook of the active theme has run. Create
   -- your own fonts here with `Font.create`.
-  hook.Run('CreateFonts')
+  hook.Run('RegisterFonts')
 end

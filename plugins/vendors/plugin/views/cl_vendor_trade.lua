@@ -155,7 +155,7 @@ function PANEL:Paint(w, h)
   local title_font = get_font('main_menu_titles')
   local _title_w, title_h = text_size(title, title_font)
 
-  Theme.hook('DrawCard', 0, 0, w, h, Theme.get_option('corner_radius'), get_color('surface_sunken'))
+  Theme.hook('PaintCard', 0, 0, w, h, Theme.get_option('corner_radius'), get_color('surface_sunken'))
   simple_text(title, title_font, scale(10), header * 0.5 - title_h * 0.5, get_color('text'))
 
   if #self.rows == 0 then

@@ -52,11 +52,11 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Lets the active theme draw over the panel through its AdminPanelPaintOver hook.
+--- Lets the active theme draw over the panel through its PaintOverAdminPanel hook.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:PaintOver(w, h)
-  Theme.hook('AdminPanelPaintOver', self, w, h)
+  Theme.hook('PaintOverAdminPanel', self, w, h)
 end
 
 --- Registers a page and adds a sidebar button that opens it.

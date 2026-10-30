@@ -146,7 +146,7 @@ function PANEL:rebuild()
       border = Theme.get_color(pnl:is_applied() ? 'success' : 'warning')
     end
 
-    Theme.hook('DrawCard', 0, 0, desc_w, desc_h, radius, Theme.get_color('field'), border)
+    Theme.hook('PaintCard', 0, 0, desc_w, desc_h, radius, Theme.get_color('field'), border)
 
     pnl:DrawTextEntryText(text_color, ColorAlpha(Theme.get_color('accent'), 120), text_color)
   end
