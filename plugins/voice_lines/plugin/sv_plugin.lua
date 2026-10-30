@@ -71,9 +71,10 @@ end
 --- Plays the sound of a line from a player, unless the player has played one within the
 -- 'voice_lines_interval' config. The players nearby hear it from the speaker, and the players
 -- who listen to the speaker over the radio hear it at the 'voice_lines_radio_volume' config,
--- as if from their own radio. The line that a chain of the player says plays unless the chain
--- started within the interval, and holds the next line off until the interval has passed
--- after its sound has ended, see `VoiceLines:start_chain`.
+-- as if from their own radio. The lines of a chain of the player play unless the chain started
+-- within the interval, and a line the player says outside the chain plays only once the
+-- interval has passed after the sound of the last line the chain has played has ended, see
+-- `VoiceLines:start_chain`.
 -- @param speaker [Player]
 -- @param category [Map the category of the line]
 -- @param line [Map the line]
