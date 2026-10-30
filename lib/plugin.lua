@@ -150,8 +150,8 @@ end
 
 --- Clears the hook and load caches and resets the extra folders, ready for a code refresh.
 -- Does nothing before Flux has initialized. On a lite refresh only the entries of plugins
--- whose path does not contain 'flux' are dropped and the extra folders stay, as the packages
--- and framework plugins that add them are not included again.
+-- whose path does not contain 'flux' are dropped and the extra folders stay, as the files of
+-- the packages and framework plugins that add them are not included again.
 function Plugin.clear_cache()
   if !Flux.initialized then return end
 
