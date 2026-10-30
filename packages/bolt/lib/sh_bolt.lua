@@ -287,8 +287,10 @@ end
 --- Registers a permission that can then be checked with actor:can(id), and that the
 -- permission editor lists under its category. Registering a permission does not allow it for
 -- anybody: the role files allow it to roles with `can`, and roles based on those inherit it.
--- The name and the description are language phrases or text; without them the permission
--- is shown with the `permission.<id>.name` and `permission.<id>.description` phrases.
+-- The name and the description are language phrases or text. Without a name the permission
+-- is shown with the `permission.<id>.name` phrase, and without a description with the
+-- `permission.<id>.description` phrase, or with 'permission.no_description' when it has a
+-- name.
 -- ```
 -- function Doors:RegisterPermissions()
 --   Bolt:register_permission('manage_doors', nil, nil, 'permission.categories.level_design')
@@ -301,15 +303,16 @@ end
 -- ```
 -- @param id [String permission ID; nothing happens if it is empty or not a string]
 -- @param name=nil [String display name or language phrase; `permission.<id>.name` if nil]
--- @param description=nil [String description or language phrase; `permission.<id>.description`
---   if nil]
+-- @param description=nil [String description or language phrase; if nil,
+--   `permission.<id>.description` when name is nil too and 'permission.no_description'
+--   otherwise]
 -- @param category='general' [String category name or language phrase]
 function Bolt:register_permission(id, name, description, category)
   if !isstring(id) or id == '' then return end
 
   local data = {}
     data.id = id:to_id()
-    data.description = description or 'permission.'..data.id..'.description'
+    data.description = description or (name ? 'permission.no_description' : 'permission.'..data.id..'.description')
     data.category = category or 'general'
     data.name = name or 'permission.'..data.id..'.name'
   self:add_permission(id, category, data, true)
