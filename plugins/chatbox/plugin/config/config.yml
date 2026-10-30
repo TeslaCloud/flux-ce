@@ -4,7 +4,6 @@ categories:
     description: config.chatbox.desc
 configs:
   chatbox_default_font_size:
-    renamed_from: default_font_size
     name: config.chatbox.default_font_size.name
     description: config.chatbox.default_font_size.desc
     category: chatbox
@@ -13,7 +12,6 @@ configs:
     max_value: 128
     default_value: 22
   chatbox_small_font_size:
-    renamed_from: small_font_size
     name: config.chatbox.small_font_size.name
     description: config.chatbox.small_font_size.desc
     category: chatbox
@@ -22,7 +20,6 @@ configs:
     max_value: 128
     default_value: 20
   chatbox_big_font_size:
-    renamed_from: big_font_size
     name: config.chatbox.big_font_size.name
     description: config.chatbox.big_font_size.desc
     category: chatbox
@@ -31,7 +28,6 @@ configs:
     max_value: 128
     default_value: 26
   chatbox_max_message_length:
-    renamed_from: max_message_length
     name: config.chatbox.max_message_length.name
     description: config.chatbox.max_message_length.desc
     category: chatbox
@@ -40,7 +36,6 @@ configs:
     max_value: 2048
     default_value: 512
   chatbox_message_margin:
-    renamed_from: message_margin
     name: config.chatbox.message_margin.name
     description: config.chatbox.message_margin.desc
     category: chatbox
@@ -49,7 +44,6 @@ configs:
     max_value: 64
     default_value: 2
   chatbox_message_fade_delay:
-    renamed_from: message_fade_delay
     name: config.chatbox.message_fade_delay.name
     description: config.chatbox.message_fade_delay.desc
     category: chatbox
@@ -58,7 +52,6 @@ configs:
     max_value: 128
     default_value: 12
   chatbox_max_messages:
-    renamed_from: max_messages
     name: config.chatbox.max_messages.name
     description: config.chatbox.max_messages.desc
     category: chatbox
@@ -67,7 +60,6 @@ configs:
     max_value: 256
     default_value: 100
   chatbox_interval:
-    renamed_from: chat_interval
     name: config.chatbox.interval.name
     description: config.chatbox.interval.desc
     category: chatbox
@@ -76,14 +68,12 @@ configs:
     max_value: 5000
     default_value: 200
   chatbox_avatars:
-    renamed_from: chat_avatars
     name: config.chatbox.avatars.name
     description: config.chatbox.avatars.desc
     category: chatbox
     type: boolean
     default_value: false
   chatbox_timestamps:
-    renamed_from: chat_timestamps
     name: config.chatbox.timestamps.name
     description: config.chatbox.timestamps.desc
     category: chatbox

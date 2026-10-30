@@ -10,7 +10,6 @@ configs:
     type: boolean
     default_value: true
   shared_flashlight_fov:
-    renamed_from: flashlight_fov
     name: config.shared_flashlight.fov.name
     description: config.shared_flashlight.fov.desc
     category: shared_flashlight
@@ -19,7 +18,6 @@ configs:
     max_value: 120
     default_value: 50
   shared_flashlight_distance:
-    renamed_from: flashlight_distance
     name: config.shared_flashlight.distance.name
     description: config.shared_flashlight.distance.desc
     category: shared_flashlight
@@ -28,7 +26,6 @@ configs:
     max_value: 4096
     default_value: 1024
   shared_flashlight_brightness:
-    renamed_from: flashlight_brightness
     name: config.shared_flashlight.brightness.name
     description: config.shared_flashlight.brightness.desc
     category: shared_flashlight
@@ -38,7 +35,6 @@ configs:
     decimals: 1
     default_value: 1
   shared_flashlight_shadows:
-    renamed_from: flashlight_shadows
     name: config.shared_flashlight.shadows.name
     description: config.shared_flashlight.shadows.desc
     category: shared_flashlight

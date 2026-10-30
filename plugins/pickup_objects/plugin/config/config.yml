@@ -4,7 +4,6 @@ categories:
     description: config.pickup_objects.desc
 configs:
   pickup_objects_max_mass:
-    renamed_from: pickup_max_mass
     name: config.pickup_objects.max_mass.name
     description: config.pickup_objects.max_mass.desc
     category: pickup_objects
@@ -13,7 +12,6 @@ configs:
     max_value: 1000
     default_value: 25
   pickup_objects_throw_force:
-    renamed_from: pickup_throw_force
     name: config.pickup_objects.throw_force.name
     description: config.pickup_objects.throw_force.desc
     category: pickup_objects
@@ -22,7 +20,6 @@ configs:
     max_value: 10000
     default_value: 1000
   pickup_objects_drag_ragdolls:
-    renamed_from: pickup_drag_ragdolls
     name: config.pickup_objects.drag_ragdolls.name
     description: config.pickup_objects.drag_ragdolls.desc
     category: pickup_objects

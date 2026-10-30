@@ -4,7 +4,6 @@ categories:
     description: config.stamina.desc
 configs:
   stamina_drain_scale:
-    renamed_from: stam_drain_scale
     name: config.stamina.drain_scale.name
     description: config.stamina.drain_scale.desc
     category: stamina
@@ -13,7 +12,6 @@ configs:
     max_value: 100
     default_value: 1
   stamina_regen_scale:
-    renamed_from: stam_regen_scale
     name: config.stamina.regen_scale.name
     description: config.stamina.regen_scale.desc
     category: stamina
@@ -22,7 +20,6 @@ configs:
     max_value: 100
     default_value: 1
   stamina_jump_penalty:
-    renamed_from: stam_jump_penalty
     name: config.stamina.jump_penalty.name
     description: config.stamina.jump_penalty.desc
     category: stamina
@@ -31,7 +28,6 @@ configs:
     max_value: 1024
     default_value: 25
   stamina_max:
-    renamed_from: stam_max
     name: config.stamina.max.name
     description: config.stamina.max.desc
     category: stamina
@@ -40,7 +36,6 @@ configs:
     max_value: 1024
     default_value: 100
   stamina_regen_delay:
-    renamed_from: stam_regen_delay
     name: config.stamina.regen_delay.name
     description: config.stamina.regen_delay.desc
     category: stamina
@@ -49,7 +44,6 @@ configs:
     max_value: 256
     default_value: 3
   stamina_health_drain_scale:
-    renamed_from: stam_health_drain_scale
     name: config.stamina.health_drain_scale.name
     description: config.stamina.health_drain_scale.desc
     category: stamina
@@ -59,7 +53,6 @@ configs:
     decimals: 1
     default_value: 0
   stamina_crouch_regen_scale:
-    renamed_from: stam_crouch_regen_scale
     name: config.stamina.crouch_regen_scale.name
     description: config.stamina.crouch_regen_scale.desc
     category: stamina
@@ -69,7 +62,6 @@ configs:
     decimals: 1
     default_value: 1
   stamina_slowdown_threshold:
-    renamed_from: stam_slowdown_threshold
     name: config.stamina.slowdown_threshold.name
     description: config.stamina.slowdown_threshold.desc
     category: stamina
@@ -78,7 +70,6 @@ configs:
     max_value: 100
     default_value: 0
   stamina_persistent:
-    renamed_from: stam_persistent
     name: config.stamina.persistent.name
     description: config.stamina.persistent.desc
     category: stamina

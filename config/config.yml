@@ -29,7 +29,6 @@ categories:
     description: config.flow.desc
 configs:
   flow_walk_speed:
-    renamed_from: walk_speed
     name: config.flow.walk_speed.name
     description: config.flow.walk_speed.desc
     category: flow
@@ -38,7 +37,6 @@ configs:
     max_value: 1024
     default_value: 100
   flow_run_speed:
-    renamed_from: run_speed
     name: config.flow.run_speed.name
     description: config.flow.run_speed.desc
     category: flow
@@ -47,7 +45,6 @@ configs:
     max_value: 1024
     default_value: 200
   flow_crouch_speed:
-    renamed_from: crouched_speed
     name: config.flow.crouch_speed.name
     description: config.flow.crouch_speed.desc
     category: flow
@@ -56,7 +53,6 @@ configs:
     max_value: 1024
     default_value: 50
   flow_respawn_delay:
-    renamed_from: respawn_delay
     name: config.flow.respawn_delay.name
     description: config.flow.respawn_delay.desc
     category: flow
@@ -65,14 +61,12 @@ configs:
     max_value: 600
     default_value: 30
   flow_command_prefixes:
-    renamed_from: command_prefixes
     name: config.flow.command_prefixes.name
     description: config.flow.command_prefixes.desc
     category: flow
     type: table
     default_value: ["!", "/"]
   flow_jump_power:
-    renamed_from: jump_power
     name: config.flow.jump_power.name
     description: config.flow.jump_power.desc
     category: flow
@@ -81,7 +75,6 @@ configs:
     max_value: 1024
     default_value: 150
   flow_data_save_interval:
-    renamed_from: data_save_interval
     name: config.flow.data_save_interval.name
     description: config.flow.data_save_interval.desc
     category: flow

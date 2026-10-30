@@ -4,36 +4,24 @@ categories:
     description: config.screen_effects.desc
 configs:
   screen_effects_low_health:
-    renamed_from:
-      - allow_low_health_effect
-      - screeneffects_low_health
     name: config.screen_effects.low_health.name
     description: config.screen_effects.low_health.desc
     category: screen_effects
     type: boolean
     default_value: true
   screen_effects_heartbeat:
-    renamed_from:
-      - allow_heartbeat_effect
-      - screeneffects_heartbeat
     name: config.screen_effects.heartbeat.name
     description: config.screen_effects.heartbeat.desc
     category: screen_effects
     type: boolean
     default_value: true
   screen_effects_underwater:
-    renamed_from:
-      - allow_underwater_effect
-      - screeneffects_underwater
     name: config.screen_effects.underwater.name
     description: config.screen_effects.underwater.desc
     category: screen_effects
     type: boolean
     default_value: true
   screen_effects_headbob:
-    renamed_from:
-      - allow_headbob_effect
-      - screeneffects_headbob
     name: config.screen_effects.headbob.name
     description: config.screen_effects.headbob.desc
     category: screen_effects

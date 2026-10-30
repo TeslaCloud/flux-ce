@@ -4,7 +4,6 @@ categories:
     description: config.radios.desc
 configs:
   radios_chat_color:
-    renamed_from: radio_chat_color
     name: config.radios.chat_color.name
     description: config.radios.chat_color.desc
     category: radios

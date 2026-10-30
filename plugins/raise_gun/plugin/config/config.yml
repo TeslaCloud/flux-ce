@@ -4,27 +4,18 @@ categories:
     description: config.raise_gun.desc
 configs:
   raise_gun_enabled:
-    renamed_from:
-      - weapon_raise_enabled
-      - raisegun_enabled
     name: config.raise_gun.enabled.name
     description: config.raise_gun.enabled.desc
     category: raise_gun
     type: boolean
     default_value: true
   raise_gun_sprint_lowers_weapon:
-    renamed_from:
-      - sprint_lowers_weapon
-      - raisegun_sprint_lowers_weapon
     name: config.raise_gun.sprint_lowers_weapon.name
     description: config.raise_gun.sprint_lowers_weapon.desc
     category: raise_gun
     type: boolean
     default_value: false
   raise_gun_fire_delay:
-    renamed_from:
-      - weapon_raise_fire_delay
-      - raisegun_fire_delay
     name: config.raise_gun.fire_delay.name
     description: config.raise_gun.fire_delay.desc
     category: raise_gun

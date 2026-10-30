@@ -4,7 +4,6 @@ categories:
     description: config.area_display.desc
 configs:
   area_display_cooldown:
-    renamed_from: areadisplay_cooldown
     name: config.area_display.cooldown.name
     description: config.area_display.cooldown.desc
     category: area_display

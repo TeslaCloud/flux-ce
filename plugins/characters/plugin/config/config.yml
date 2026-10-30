@@ -4,7 +4,6 @@ categories:
     description: config.characters.desc
 configs:
   characters_min_name_len:
-    renamed_from: character_min_name_len
     name: config.characters.min_name_len.name
     description: config.characters.min_name_len.desc
     category: characters
@@ -13,7 +12,6 @@ configs:
     max_value: 256
     default_value: 4
   characters_max_name_len:
-    renamed_from: character_max_name_len
     name: config.characters.max_name_len.name
     description: config.characters.max_name_len.desc
     category: characters
@@ -22,7 +20,6 @@ configs:
     max_value: 256
     default_value: 24
   characters_min_desc_len:
-    renamed_from: character_min_desc_len
     name: config.characters.min_desc_len.name
     description: config.characters.min_desc_len.desc
     category: characters
@@ -31,7 +28,6 @@ configs:
     max_value: 256
     default_value: 32
   characters_max_desc_len:
-    renamed_from: character_max_desc_len
     name: config.characters.max_desc_len.name
     description: config.characters.max_desc_len.desc
     category: characters
@@ -40,7 +36,6 @@ configs:
     max_value: 256
     default_value: 256
   characters_limit:
-    renamed_from: character_limit
     name: config.characters.limit.name
     description: config.characters.limit.desc
     category: characters

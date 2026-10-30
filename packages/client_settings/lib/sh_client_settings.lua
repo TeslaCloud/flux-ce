@@ -105,8 +105,7 @@ end
 --   the menu; clientside), on_change (Function(value, old_value, setting) called on the
 --   client when the value changes). By type: min (0), max (100) and decimals (0) for
 --   'number'; choices (List of values or of { value, name } tables) for 'choice';
---   max_length (128) for 'string'. renamed_from (String or List of the ids the setting had
---   before, oldest first) moves a value saved under an old id to the current id]
+--   max_length (128) for 'string']
 -- @return [Map the registered setting, or nil if it could not be registered]
 function ClientSettings:register_setting(id, data)
   if !isstring(id) or !istable(data) then return end
@@ -156,10 +155,6 @@ function ClientSettings:register_setting(id, data)
   data.name = data.name or id
   data.category = data.category or 'settings.categories.general'
   data.networked = data.networked == true
-
-  if isstring(data.renamed_from) then
-    data.renamed_from = { data.renamed_from }
-  end
 
   stored[id] = data
 

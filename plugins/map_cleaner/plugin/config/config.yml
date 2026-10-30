@@ -4,27 +4,18 @@ categories:
     description: config.map_cleaner.desc
 configs:
   map_cleaner_classes:
-    renamed_from:
-      - remove_map_classes
-      - mapcleaner_classes
     name: config.map_cleaner.classes.name
     description: config.map_cleaner.classes.desc
     category: map_cleaner
     type: table
     default_value: ["item_healthcharger", "item_suitcharger", "weapon_*", "item_ammo_*", "item_box_buckshot", "item_rpg_round", "item_healthkit", "item_healthvial", "item_battery"]
   map_cleaner_physics:
-    renamed_from:
-      - remove_map_physics
-      - mapcleaner_physics
     name: config.map_cleaner.physics.name
     description: config.map_cleaner.physics.desc
     category: map_cleaner
     type: boolean
     default_value: false
   map_cleaner_vehicles:
-    renamed_from:
-      - remove_map_vehicles
-      - mapcleaner_vehicles
     name: config.map_cleaner.vehicles.name
     description: config.map_cleaner.vehicles.desc
     category: map_cleaner

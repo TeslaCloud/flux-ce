@@ -4,9 +4,6 @@ categories:
     description: config.rp_commands.desc
 configs:
   rp_commands_talk_radius:
-    renamed_from:
-      - talk_radius
-      - rpcommands_talk_radius
     name: config.rp_commands.talk_radius.name
     description: config.rp_commands.talk_radius.desc
     category: rp_commands
@@ -15,9 +12,6 @@ configs:
     max_value: 4096
     default_value: 350
   rp_commands_ooc_interval:
-    renamed_from:
-      - ooc_interval
-      - rpcommands_ooc_interval
     name: config.rp_commands.ooc_interval.name
     description: config.rp_commands.ooc_interval.desc
     category: rp_commands
@@ -26,9 +20,6 @@ configs:
     max_value: 3600
     default_value: 0
   rp_commands_looc_interval:
-    renamed_from:
-      - looc_interval
-      - rpcommands_looc_interval
     name: config.rp_commands.looc_interval.name
     description: config.rp_commands.looc_interval.desc
     category: rp_commands
@@ -37,27 +28,18 @@ configs:
     max_value: 3600
     default_value: 0
   rp_commands_ooc_avatars:
-    renamed_from:
-      - ooc_avatars
-      - rpcommands_ooc_avatars
     name: config.rp_commands.ooc_avatars.name
     description: config.rp_commands.ooc_avatars.desc
     category: rp_commands
     type: boolean
     default_value: true
   rp_commands_roll_versus:
-    renamed_from:
-      - roll_versus
-      - rpcommands_roll_versus
     name: config.rp_commands.roll_versus.name
     description: config.rp_commands.roll_versus.desc
     category: rp_commands
     type: boolean
     default_value: true
   rp_commands_ic_color:
-    renamed_from:
-      - chat_ic_color
-      - rpcommands_ic_color
     name: config.rp_commands.ic_color.name
     description: config.rp_commands.ic_color.desc
     category: rp_commands
@@ -67,9 +49,6 @@ configs:
       g: 230
       b: 140
   rp_commands_whisper_color:
-    renamed_from:
-      - chat_whisper_color
-      - rpcommands_whisper_color
     name: config.rp_commands.whisper_color.name
     description: config.rp_commands.whisper_color.desc
     category: rp_commands
@@ -79,9 +58,6 @@ configs:
       g: 208
       b: 154
   rp_commands_yell_color:
-    renamed_from:
-      - chat_yell_color
-      - rpcommands_yell_color
     name: config.rp_commands.yell_color.name
     description: config.rp_commands.yell_color.desc
     category: rp_commands
@@ -91,9 +67,6 @@ configs:
       g: 247
       b: 130
   rp_commands_it_color:
-    renamed_from:
-      - chat_it_color
-      - rpcommands_it_color
     name: config.rp_commands.it_color.name
     description: config.rp_commands.it_color.desc
     category: rp_commands
@@ -103,9 +76,6 @@ configs:
       g: 216
       b: 230
   rp_commands_me_color:
-    renamed_from:
-      - chat_me_color
-      - rpcommands_me_color
     name: config.rp_commands.me_color.name
     description: config.rp_commands.me_color.desc
     category: rp_commands

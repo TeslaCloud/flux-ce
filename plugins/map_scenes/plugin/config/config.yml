@@ -4,7 +4,6 @@ categories:
     description: config.map_scenes.desc
 configs:
   map_scenes_speed:
-    renamed_from: mapscenes_speed
     name: config.map_scenes.speed.name
     description: config.map_scenes.speed.desc
     category: map_scenes
@@ -13,14 +12,12 @@ configs:
     max_value: 300
     default_value: 15
   map_scenes_animated:
-    renamed_from: mapscenes_animated
     name: config.map_scenes.animated.name
     description: config.map_scenes.animated.desc
     category: map_scenes
     type: boolean
     default_value: false
   map_scenes_rotate_speed:
-    renamed_from: mapscenes_rotate_speed
     name: config.map_scenes.rotate_speed.name
     description: config.map_scenes.rotate_speed.desc
     category: map_scenes

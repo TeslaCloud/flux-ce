@@ -6,7 +6,6 @@
 -- format.
 function GameTime:RegisterClientSettings()
   ClientSettings:register_setting('game_time_clock', {
-    renamed_from = 'gametime_clock',
     type = 'boolean',
     default = true,
     category = 'settings.categories.interface',
@@ -15,7 +14,6 @@ function GameTime:RegisterClientSettings()
   })
 
   ClientSettings:register_setting('game_time_twelve_hour', {
-    renamed_from = 'gametime_twelve_hour',
     type = 'boolean',
     default = false,
     category = 'settings.categories.interface',

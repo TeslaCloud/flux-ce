@@ -59,44 +59,13 @@ local function value_changed(setting, value, old_value)
   hook.Run('ClientSettingChanged', setting.id, value, old_value)
 end
 
---- Returns the value saved for a setting. While nothing is saved under its id, the value
--- saved under the newest of the ids in its `renamed_from` is copied to the current id and
--- returned, and `Flux.dev_print` names the old id. The value always stays saved under the old
--- id as well. An old id that is a registered setting of its own is skipped.
--- @param setting [Map registered setting]
--- @return [Any saved value, nil if there is none]
-local function saved_value(setting)
-  local id = setting.id
-  local renamed_from = setting.renamed_from
-
-  if values[id] != nil or !istable(renamed_from) then
-    return values[id]
-  end
-
-  for i = #renamed_from, 1, -1 do
-    local old_id = renamed_from[i]
-
-    if values[old_id] != nil and !stored[old_id] then
-      Flux.dev_print("The '"..old_id.."' setting is called '"..id.."'.")
-
-      values[id] = values[old_id]
-
-      queue_save()
-
-      return values[id]
-    end
-  end
-end
-
 --- Reads the saved value of a setting again and checks it against the definition of the
 -- setting; a saved value that is not valid for the setting is ignored. Called when a
 -- setting is registered or removed.
 -- @param id [String setting id]
 function ClientSettings:load_value(id)
-  local setting = stored[id]
-
-  if setting then
-    cache[id] = self:sanitize(id, saved_value(setting))
+  if stored[id] then
+    cache[id] = self:sanitize(id, values[id])
   else
     cache[id] = nil
   end
@@ -179,9 +148,8 @@ function ClientSettings:set(id, value)
   return true
 end
 
---- Sets a setting back to its default value by forgetting what the player has set it to,
--- under its id and under every id in its `renamed_from` that is not a registered setting of
--- its own. Runs the same callbacks as ClientSettings:set if that changes the value.
+--- Sets a setting back to its default value by forgetting what the player has set it to.
+-- Runs the same callbacks as ClientSettings:set if that changes the value.
 -- @param id [String setting id]
 -- @return [Boolean true if the setting has been reset, false if it is not registered]
 function ClientSettings:reset(id)
@@ -195,20 +163,9 @@ function ClientSettings:reset(id)
 
   cache[id] = nil
 
-  local changed = values[id] != nil
+  if values[id] != nil then
+    values[id] = nil
 
-  values[id] = nil
-
-  if istable(setting.renamed_from) then
-    for _, old_id in ipairs(setting.renamed_from) do
-      if values[old_id] != nil and !stored[old_id] then
-        values[old_id] = nil
-        changed = true
-      end
-    end
-  end
-
-  if changed then
     queue_save()
   end
 

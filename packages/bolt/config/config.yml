@@ -4,18 +4,12 @@ categories:
     description: config.bolt.desc
 configs:
   bolt_ban_message_language:
-    renamed_from:
-      - ban_message_language
-      - admin_ban_message_language
     name: config.bolt.ban_message_language.name
     description: config.bolt.ban_message_language.desc
     category: bolt
     type: string
     default_value: "en"
   bolt_root_steamid:
-    renamed_from:
-      - root_steamid
-      - admin_root_steamid
     name: config.bolt.root_steamid.name
     description: config.bolt.root_steamid.desc
     category: bolt

@@ -4,7 +4,6 @@ categories:
     description: config.containers.desc
 configs:
   containers_password_delay:
-    renamed_from: container_password_delay
     name: config.containers.password_delay.name
     description: config.containers.password_delay.desc
     category: containers
@@ -13,7 +12,6 @@ configs:
     max_value: 300
     default_value: 3
   containers_spill_items:
-    renamed_from: container_spill_items
     name: config.containers.spill_items.name
     description: config.containers.spill_items.desc
     category: containers

@@ -4,28 +4,24 @@ categories:
     description: config.recognize.desc
 configs:
   recognize_enabled:
-    renamed_from: recog_enabled
     name: config.recognize.enabled.name
     description: config.recognize.enabled.desc
     category: recognize
     type: boolean
     default_value: true
   recognize_must_see:
-    renamed_from: recog_must_see
     name: config.recognize.must_see.name
     description: config.recognize.must_see.desc
     category: recognize
     type: boolean
     default_value: true
   recognize_forget_on_death:
-    renamed_from: recog_forget_on_death
     name: config.recognize.forget_on_death.name
     description: config.recognize.forget_on_death.desc
     category: recognize
     type: boolean
     default_value: false
   recognize_forgotten_on_death:
-    renamed_from: recog_forgotten_on_death
     name: config.recognize.forgotten_on_death.name
     description: config.recognize.forgotten_on_death.desc
     category: recognize

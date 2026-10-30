@@ -4,7 +4,6 @@ categories:
     description: config.doors.desc
 configs:
   doors_price:
-    renamed_from: door_price
     name: config.doors.price.name
     description: config.doors.price.desc
     category: doors
@@ -13,7 +12,6 @@ configs:
     max_value: 1000000
     default_value: 50
   doors_sell_share:
-    renamed_from: door_sell_share
     name: config.doors.sell_share.name
     description: config.doors.sell_share.desc
     category: doors
@@ -22,7 +20,6 @@ configs:
     max_value: 100
     default_value: 50
   doors_limit:
-    renamed_from: door_limit
     name: config.doors.limit.name
     description: config.doors.limit.desc
     category: doors
@@ -31,7 +28,6 @@ configs:
     max_value: 100
     default_value: 5
   doors_lock_time:
-    renamed_from: door_lock_time
     name: config.doors.lock_time.name
     description: config.doors.lock_time.desc
     category: doors
@@ -40,7 +36,6 @@ configs:
     max_value: 60
     default_value: 0
   doors_unlock_time:
-    renamed_from: door_unlock_time
     name: config.doors.unlock_time.name
     description: config.doors.unlock_time.desc
     category: doors
@@ -49,7 +44,6 @@ configs:
     max_value: 60
     default_value: 0
   doors_text_length:
-    renamed_from: door_text_length
     name: config.doors.text_length.name
     description: config.doors.text_length.desc
     category: doors
@@ -58,7 +52,6 @@ configs:
     max_value: 128
     default_value: 32
   doors_access_entries:
-    renamed_from: door_access_entries
     name: config.doors.access_entries.name
     description: config.doors.access_entries.desc
     category: doors

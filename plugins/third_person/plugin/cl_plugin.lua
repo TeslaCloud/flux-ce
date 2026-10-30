@@ -508,7 +508,6 @@ end
 -- character it is while not aiming.
 function ThirdPerson:RegisterClientSettings()
   ClientSettings:register_setting('third_person_shoulder', {
-    renamed_from = 'thirdperson_shoulder',
     type = 'choice',
     default = 'right',
     choices = {
@@ -522,7 +521,6 @@ function ThirdPerson:RegisterClientSettings()
   })
 
   ClientSettings:register_setting('third_person_distance', {
-    renamed_from = 'thirdperson_distance',
     type = 'number',
     default = default_distance,
     min = 50,

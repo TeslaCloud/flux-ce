@@ -4,13 +4,11 @@ categories:
     description: config.currencies.desc
 configs:
   currencies_default:
-    renamed_from: default_currency
     name: config.currencies.default.name
     description: config.currencies.default.desc
     category: currencies
     type: string
   currencies_starting_money:
-    renamed_from: starting_money
     name: config.currencies.starting_money.name
     description: config.currencies.starting_money.desc
     category: currencies
@@ -19,7 +17,6 @@ configs:
     max_value: 100000
     default_value: 0
   currencies_save_dropped_money:
-    renamed_from: save_dropped_money
     name: config.currencies.save_dropped_money.name
     description: config.currencies.save_dropped_money.desc
     category: currencies

@@ -34,18 +34,6 @@
 -- value back when the config needs a restart, and through `Config.reset`, which puts the
 -- default value back.
 --
--- A definition can name the key or keys a config had before with `renamed_from`, a list
--- ordered oldest first. `Config.load` and `Config.import` read a value saved or written under
--- such a key as the value of the config unless the current key or an old key listed after it
--- is present too, and in development warn once about every old key they meet (see
--- `Config.renamed`). A key that has a definition of its own is never read as an old key.
---
--- ```
--- configs:
---   stamina_drain_scale:
---     renamed_from: stam_drain_scale
--- ```
---
 -- `Config.set` and `Config.import` label where a config came from with one of the sources
 -- defined here: `CONFIG_PLUGIN` (a plugin's config file), `CONFIG_SCHEMA` (the schema's config
 -- file) or `CONFIG_FLUX` (the server configuration of Flux).
@@ -70,11 +58,6 @@ Config.stored = stored
 
 local definitions = Config.definitions or {}
 Config.definitions = definitions
-
---- The current key of every renamed config, by its old key, filled by `Config.read` from the
--- `renamed_from` field of the definitions.
-local renamed = Config.renamed or {}
-Config.renamed = renamed
 
 local cache = {}
 
@@ -150,76 +133,6 @@ local function expected_type(key)
   elseif istable(current) then
     return 'table'
   end
-end
-
-local warned_renames = {}
-
---- Returns the current key of a config: the key itself when it has a definition or was never
--- renamed. The first time an old key of a renamed config is met, `Flux.dev_print` names it and
--- its current key.
--- @param key [String config key, current or old]
--- @param source [String where the key was found, for the warning]
--- @return [String the current key]
-local function current_key(key, source)
-  local new_key = renamed[key]
-
-  if !new_key or definitions[key] then
-    return key
-  end
-
-  if !warned_renames[key] then
-    warned_renames[key] = true
-
-    Flux.dev_print("The '"..key.."' config, read from "..source..", is called '"..new_key.."'.")
-  end
-
-  return new_key
-end
-
---- Checks whether the value under the old key of a renamed config gives way to another key of
--- the same config in one table: the current key, or an old key listed after it in
--- `renamed_from`.
--- @param values [Map config key to value]
--- @param old_key [String the old key]
--- @param key [String the current key]
--- @return [Boolean]
-local function superseded(values, old_key, key)
-  if values[key] != nil then
-    return true
-  end
-
-  local renamed_from = definitions[key]?.renamed_from
-
-  if !istable(renamed_from) then
-    return false
-  end
-
-  local later = false
-
-  for _, other_key in ipairs(renamed_from) do
-    if later and values[other_key] != nil then
-      return true
-    end
-
-    if other_key == old_key then
-      later = true
-    end
-  end
-
-  return false
-end
-
---- Maps an old key of a config onto its current key, refusing a key renamed onto itself.
--- @param old_key [String]
--- @param key [String the current key]
-local function add_rename(old_key, key)
-  if old_key == key then
-    ErrorNoHalt("The '"..key.."' config names its own key in renamed_from!\n")
-
-    return
-  end
-
-  renamed[old_key] = key
 end
 
 --- Returns the table of all stored configs.
@@ -523,9 +436,7 @@ if SERVER then
   -- `Config.validate`, or if the config has no definition and was not changed with
   -- `Config.change`, so that a value set in code is not replaced with a stale copy of
   -- itself. A saved config that is not stored at all, such as one of a plugin that is not
-  -- loaded, is added the way it was saved. A value saved under the old key of a renamed
-  -- config is loaded into the config unless the file also holds the current key or an old key
-  -- listed after it in `renamed_from`.
+  -- loaded, is added the way it was saved.
   -- @return [Map all stored configs]
   function Config.load()
     local loaded = Data.load('config', {})
@@ -536,14 +447,6 @@ if SERVER then
 
     for key, saved in pairs(loaded) do
       if !istable(saved) then continue end
-
-      local new_key = current_key(key, 'the config data file')
-
-      if new_key != key then
-        if superseded(loaded, key, new_key) then continue end
-
-        key = new_key
-      end
 
       local entry = stored[key]
       local value = saved.value
@@ -1031,10 +934,8 @@ if SERVER then
   --- Imports config values from a YAML file or from a table and sets every one of them.
   -- Serverside only. The keys that choose plugins ('profile', 'depends', 'depends_development'
   -- and 'exclude') are skipped, and so is every key for which the ShouldConfigImport hook
-  -- returns a non-nil value. The old key of a renamed config sets the config under its
-  -- current key, unless the table also holds the current key or an old key listed after it in
-  -- `renamed_from`. The value of a config of the color type goes through `Config.validate`, and
-  -- is skipped with an error if it is not a color.
+  -- returns a non-nil value. The value of a config of the color type goes through
+  -- `Config.validate`, and is skipped with an error if it is not a color.
   -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
   -- @return [Map the imported table, or nil if the file could not be read or path is
@@ -1056,17 +957,7 @@ if SERVER then
 
     if !istable(config_table) then return end
 
-    local source = isstring(path) ? path : 'an imported table'
-
     for key, value in pairs(config_table) do
-      local new_key = current_key(key, source)
-
-      if new_key != key then
-        if superseded(config_table, key, new_key) then continue end
-
-        key = new_key
-      end
-
       --- Called on the server for every key that `Config.import` is about to set.
       -- @param key [String config key]
       -- @param value [Any value read from the imported file or table]
@@ -1099,9 +990,7 @@ end
 -- the definitions for `Config.get_definition`. Besides the fields shown below a config can
 -- be marked with `hidden`, `static`, `private` and `needs_restart`, which are described at
 -- the top of this file. A config of the `color` type holds a Color and writes its default
--- value as a map of r, g, b and, optionally, a. `renamed_from` holds the old key of the config,
--- or a list of its old keys ordered oldest first, and fills `Config.renamed`; an old key equal
--- to the key of the config is refused with an error.
+-- value as a map of r, g, b and, optionally, a.
 -- ```
 -- Config.read('gamemodes/flux/config/config.yml')
 --
@@ -1150,16 +1039,6 @@ function Config.read(path, _from_config)
   if istable(config_table.configs) then
     for name, data in pairs(config_table.configs) do
       definitions[name] = data
-
-      local renamed_from = data.renamed_from
-
-      if isstring(renamed_from) then
-        add_rename(renamed_from, name)
-      elseif istable(renamed_from) then
-        for _, old_key in ipairs(renamed_from) do
-          add_rename(old_key, name)
-        end
-      end
 
       if SERVER then
         Config.set(name, default_value(data), data.hidden)
