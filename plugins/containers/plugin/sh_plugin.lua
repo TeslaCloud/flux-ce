@@ -1,13 +1,13 @@
 --- Containers turns props with certain models into storage for items.
 -- A model is registered with `Containers:register_prop` together with the size of its
 -- inventory, its name, its description and its sounds; common furniture, crates and boxes of
--- Half-Life 2 are registered here. A prop that is spawned with such a model becomes
--- persistent, shows its name when it is looked at and can be opened from its interaction menu
--- by a player within reach of it. Its inventory is created the first time it is opened, or
--- when the map starts if it holds items, and is closed for a player who moves out of reach.
--- The items are saved in the database as being in the container, which the prop knows by
--- the number in its `container_id` field, and are loaded along with the other items of the
--- map.
+-- Half-Life 2 are registered in `lib/sh_default_props.lua`. A prop that is spawned with such a
+-- model becomes persistent, shows its name when it is looked at and can be opened from its
+-- interaction menu by a player within reach of it. Its inventory is created the first time it
+-- is opened, or when the map starts if it holds items, and is closed for a player who moves
+-- out of reach. The items are saved in the database as being in the container, which the prop
+-- knows by the number in its `container_id` field, and are loaded along with the other items
+-- of the map.
 --
 -- Staff can give a container a name of its own, a message that is shown to whoever opens it
 -- and a password that has to be entered before it opens, and fill it with random items.

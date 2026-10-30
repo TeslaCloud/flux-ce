@@ -1,9 +1,8 @@
 --- Server-side hooks of the Containers plugin: they play the sounds of containers, make
--- container props persistent, gives the containers the
--- items that are loaded for them, keeps their inventories out of the saved persistent
--- entities, networks the names of the loaded containers, deals with the inventory and the
--- items of a container that is removed and keeps the items of the containers through a map
--- cleanup.
+-- container props persistent, give the containers the items that are loaded for them, keep
+-- their inventories out of the saved persistent entities, network the names of the loaded
+-- containers, deal with the inventory and the items of a container that is removed and keep
+-- the items of the containers through a map cleanup.
 
 local detached_inventories = {}
 
