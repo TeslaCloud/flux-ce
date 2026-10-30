@@ -2,7 +2,9 @@
 -- next ones are said by a timer, each when the sound of the one before it has ended and the
 -- pause after it has passed, through the same path as a line the player says on their own. The
 -- state of the chain is kept on the player, so that a code refresh does not lose it, and a
--- player has one chain at most: a chain that starts replaces the one that is running.
+-- player has one chain at most: a chain that starts replaces the one that is running. The
+-- line that the chain is saying is known by the IDs of its category and of itself, and every
+-- line is looked up again before it is said, as a code refresh registers the lines again.
 
 if !VoiceLines then
   PLUGIN:set_global('VoiceLines')
@@ -60,7 +62,8 @@ function VoiceLines:start_chain(actor, lines, volume, radio)
     volume = tonumber(volume) or 0,
     radio = radio == true,
     silent = !self:can_play(actor),
-    current = lines[1].line
+    current_category = lines[1].category.id,
+    current_line = lines[1].line.id
   }
 
   actor.fl_voice_line_chain = chain
@@ -81,25 +84,35 @@ function VoiceLines:continue_chain(actor)
   chain.position += 1
 
   local entry = chain.lines[chain.position]
+  local line = entry and self:find_line(entry.category.id, entry.line.id)
+  local category = line and self:find_category(entry.category.id)
 
-  if !entry or !self:can_use(actor, entry.category, entry.line) then
+  if !line or !self:can_use(actor, category, line) then
     self:cancel_chain(actor)
 
     return
   end
 
-  local text = self:get_text(entry.line, self:get_gender(actor))
+  entry.category, entry.line = category, line
 
-  chain.current = entry.line
+  local text = self:get_text(line, self:get_gender(actor))
+
+  chain.current_category, chain.current_line = category.id, line.id
+
+  local said = true
 
   if chain.radio then
-    if !Radios or !self:speak_line(actor, entry.category, entry.line, text, true) then
-      self:cancel_chain(actor)
-
-      return
-    end
+    said = Radios != nil and self:speak_line(actor, category, line, text, true)
   else
-    self:speak_line(actor, entry.category, entry.line, self:wrap_text(text, chain.volume))
+    self:speak_line(actor, category, line, self:wrap_text(text, chain.volume))
+  end
+
+  chain.current_category, chain.current_line = nil, nil
+
+  if !said then
+    self:cancel_chain(actor)
+
+    return
   end
 
   if actor.fl_voice_line_chain != chain then return end

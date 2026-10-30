@@ -85,10 +85,10 @@ function VoiceLines:play(speaker, category, line, receivers, volume, radio_liste
   if !IsValid(speaker) then return false end
 
   local chain = speaker.fl_voice_line_chain
-  local chained = chain != nil and chain.current == line
+  local chained = chain != nil and chain.current_line == line.id and chain.current_category == category.id
 
   if chained then
-    chain.current = nil
+    chain.current_category, chain.current_line = nil, nil
 
     if chain.silent then return false end
   elseif !self:can_play(speaker) then
