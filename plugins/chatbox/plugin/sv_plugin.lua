@@ -23,7 +23,7 @@ function Chatbox.add_filter(id, data)
 end
 
 --- Checks whether the listener should receive the message. Serverside only.
--- The PlayerCanHear hook can force a message through. Otherwise a radius of 0 reaches
+-- The PlayerCanHearChat hook can force a message through. Otherwise a radius of 0 reaches
 -- every initialized player, a negative radius reaches nobody, and a positive radius
 -- reaches the players whose eyes are within it from the position of the message.
 -- @param listener [Player]
@@ -37,7 +37,7 @@ function Chatbox.can_hear(listener, message_data)
   -- @param message_data [Map message data, see Chatbox.add_text]
   -- @return [Boolean return true to let the listener receive the message. Any other value
   --   leaves the decision to the radius check, so a handler cannot block a message]
-  if Plugin.call('PlayerCanHear', listener, message_data) then
+  if Plugin.call('PlayerCanHearChat', listener, message_data) then
     return true
   end
 
@@ -77,7 +77,7 @@ end
 -- os.time() by default; shown when the 'chatbox_timestamps' config is enabled).
 --
 -- The ShouldSendChatMessage hook can cancel the message before anyone receives it, and
--- the ChatboxMessageSent hook is run with the players who have received it. Neither is run
+-- the ChatMessageSent hook is run with the players who have received it. Neither is run
 -- for the text that a client adds with chat.AddText.
 -- ```
 -- -- Message for everyone.
@@ -165,8 +165,8 @@ function Chatbox.add_text(listeners, ...)
   end
 
   --- Decides whether a chat message is sent at all. Called on the server by
-  -- `Chatbox.add_text` once the message has been put together, before the AdjustMessageData
-  -- and PlayerCanHear hooks are run for its listeners. Not called for the text that a client
+  -- `Chatbox.add_text` once the message has been put together, before the AdjustChatMessageData
+  -- and PlayerCanHearChat hooks are run for its listeners. Not called for the text that a client
   -- adds with `chat.AddText`, which only that client receives.
   -- @param message_data [Map message data: data (the pieces), sender, position, radius, size,
   --   time and the other options given to Chatbox.add_text; a change made to it applies to
@@ -174,7 +174,7 @@ function Chatbox.add_text(listeners, ...)
   -- @param listeners [List<Player> the players the message is meant for, before it is checked
   --   who of them can hear it]
   -- @return [Boolean return false to cancel the message, so that nobody receives it and
-  --   ChatboxMessageSent is not run]
+  --   ChatMessageSent is not run]
   if !client_mode and hook.Run('ShouldSendChatMessage', message_data, listeners) == false then
     return
   end
@@ -191,7 +191,7 @@ function Chatbox.add_text(listeners, ...)
     -- @param listener [Player the player who may receive the message]
     -- @param message_data [Map message data: data (the pieces), sender, position, radius, size
     --   and the other options given to Chatbox.add_text]
-    hook.Run('AdjustMessageData', listener, data)
+    hook.Run('AdjustChatMessageData', listener, data)
 
     if Chatbox.can_hear(listener, data) then
       Cable.send(listener, 'fl_chat_message_add', data)
@@ -205,12 +205,12 @@ function Chatbox.add_text(listeners, ...)
     --- Called on the server after a chat message has been sent to everyone who can hear it.
     -- Not called for a message that ShouldSendChatMessage has canceled, nor for the text
     -- that a client adds with `chat.AddText`.
-    -- @param message_data [Map message data as it was before the AdjustMessageData hook
+    -- @param message_data [Map message data as it was before the AdjustChatMessageData hook
     --   changed the copies of the listeners: data (the pieces), sender, position, radius,
     --   size, time and the other options given to Chatbox.add_text]
     -- @param receivers [List<Player> the players the message has been sent to, in the order
     --   they received it; empty if nobody could hear it]
-    hook.Run('ChatboxMessageSent', message_data, receivers)
+    hook.Run('ChatMessageSent', message_data, receivers)
   end
 end
 
@@ -241,7 +241,7 @@ function Chatbox.message_to_string(message_data, concatenator)
       if piece:IsPlayer() then
         --- Asks for the name to display for a player, here while a message is being turned
         -- into a string. It is the hook behind `Player:name`; `Chatbox.compile` also runs it
-        -- on the client for the players in a message, unless the ShouldProcessPlayerName hook
+        -- on the client for the players in a message, unless the ShouldProcessChatPlayerName hook
         -- returns false.
         -- @param target [Player]
         -- @return [String name to use instead of the name of the player]
@@ -259,8 +259,8 @@ end
 
 --- Makes the player say the text in the chat, by default to all players.
 -- Runs the PlayerSay hook first, which may change or suppress the text. The icon
--- and colors come from the ChatboxGetPlayerIcon, ChatboxGetPlayerColor and
--- ChatboxGetMessageColor hooks, and the AdjustPlayerSay hook can alter the
+-- and colors come from the GetChatPlayerIcon, GetChatPlayerColor and
+-- GetChatMessageColor hooks, and the AdjustPlayerSay hook can alter the
 -- finished message. Serverside only.
 -- @param actor [Player the speaker]
 -- @param text [String the message]
@@ -297,7 +297,7 @@ function Chatbox.player_say(actor, text, team_chat)
     -- @param text [String the message]
     -- @param team_chat [Boolean whether the message is meant for the team chat]
     -- @return [Map icon piece for Chatbox.add_text; no icon is shown when nothing is returned]
-    hook.Run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
+    hook.Run('GetChatPlayerIcon', actor, text, team_chat) or {},
     --- Provides the color of the name of a player in what they say. Called on the server by
     -- `Chatbox.player_say`. The Chatbox plugin's own handler supplies the team color.
     -- @param actor [Player the speaker]
@@ -305,7 +305,7 @@ function Chatbox.player_say(actor, text, team_chat)
     -- @param team_chat [Boolean whether the message is meant for the team chat]
     -- @return [Color color of the name; the color of the speaker's team when nothing is
     --   returned]
-    hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
+    hook.Run('GetChatPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
     actor,
     --- Provides the color of the text of what a player says. Called on the server by
     -- `Chatbox.player_say`. The Chatbox plugin's own handler supplies white.
@@ -313,7 +313,7 @@ function Chatbox.player_say(actor, text, team_chat)
     -- @param text [String the message]
     -- @param team_chat [Boolean whether the message is meant for the team chat]
     -- @return [Color color of the text; white when nothing is returned]
-    hook.Run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
+    hook.Run('GetChatMessageColor', actor, text, team_chat) or Color(255, 255, 255),
     ': ',
     text,
     { sender = actor }
@@ -387,7 +387,7 @@ function Chatbox.is_submitting()
 end
 
 --- Hands a text that a player has submitted to the callback of the chat prefix it starts with
--- (see `Chatbox.add_prefix`), without the prefix, then runs the PlayerUsedPrefix hook. Neither
+-- (see `Chatbox.add_prefix`), without the prefix, then runs the PlayerUsedChatPrefix hook. Neither
 -- is run if nothing is left of the text once the prefix is cut off. Serverside only.
 -- @param actor [Player the speaker]
 -- @param text [String the text as it was typed]
@@ -409,7 +409,7 @@ function Chatbox.use_prefix(actor, text, team_chat)
     -- @param prefix_id [String ID the prefix was registered with]
     -- @param message [String The message without the prefix]
     -- @param team_chat [Boolean Whether the message was sent to the team chat]
-    hook.Run('PlayerUsedPrefix', actor, prefix_id, message, team_chat)
+    hook.Run('PlayerUsedChatPrefix', actor, prefix_id, message, team_chat)
   end
 
   return true

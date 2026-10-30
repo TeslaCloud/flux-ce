@@ -274,7 +274,7 @@ end
 -- @param _team_chat [Boolean]
 -- @return [Map icon data for the chatbox (icon, size, margin, is_data), or nothing if the
 --   player is invalid]
-function hooks:ChatboxGetPlayerIcon(speaker, _text, _team_chat)
+function hooks:GetChatPlayerIcon(speaker, _text, _team_chat)
   if IsValid(speaker) then
     return { icon = speaker:get_role_table().icon or 'fa-user', size = 14, margin = 10, is_data = true }
   end

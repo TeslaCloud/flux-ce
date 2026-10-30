@@ -373,14 +373,14 @@ function Bolt:send_staff_message(actor, text, tag, tag_color)
     -- @param text [String The message]
     -- @return [Color Color of the name; the color of the sender's team when nothing is
     --   returned]
-    hook.Run('ChatboxGetPlayerColor', actor, text) or team.GetColor(actor:Team()),
+    hook.Run('GetChatPlayerColor', actor, text) or team.GetColor(actor:Team()),
     get_player_name(actor),
     --- Run when a staff or report message is sent to get the color of the message text, the
     -- same hook the chatbox runs for a regular chat message.
     -- @param speaker [Player Player who sent the message]
     -- @param text [String The message]
     -- @return [Color Color of the text; white when nothing is returned]
-    hook.Run('ChatboxGetMessageColor', actor, text) or Color(255, 255, 255),
+    hook.Run('GetChatMessageColor', actor, text) or Color(255, 255, 255),
     ': ',
     text:chomp(' '),
     { sender = actor }

@@ -1,6 +1,6 @@
 --- A text entry (`fl_text_entry`) in the theme's colors with an optional character limit.
 -- Set the limit with `set_limit`; once it is reached, further input is blocked. The drawing
--- can be replaced through the `ChatboxEntryPaint` hook. Used by the chatbox and by the
+-- can be replaced through the `PrePaintTextEntry` hook. Used by the chatbox and by the
 -- description field of the inventory menu. Derives from `DTextEntry`.
 
 local PANEL = {}
@@ -18,7 +18,7 @@ function PANEL:Init()
 end
 
 --- Draws the field and the text through the theme's PaintTextEntry hook, unless the
--- ChatboxEntryPaint hook returns a truthy value.
+-- PrePaintTextEntry hook returns false.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
@@ -30,8 +30,8 @@ function PANEL:Paint(w, h)
   -- @param y [Number Top edge of the area to draw in, always 0]
   -- @param w [Number Width of the entry]
   -- @param h [Number Height of the entry]
-  -- @return [Boolean Return true to skip the default background and text]
-  if !hook.Run('ChatboxEntryPaint', self, 0, 0, w, h) then
+  -- @return [Boolean Return false to skip the default background and text]
+  if hook.Run('PrePaintTextEntry', self, 0, 0, w, h) != false then
     Theme.hook('PaintTextEntry', self, w, h)
   end
 end

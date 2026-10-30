@@ -171,12 +171,12 @@ function RPCommands:say_ooc(actor, text, team_chat)
     if !actor:IsPlayer() or !self:can_use_ooc(actor, 'ooc', text) then return end
 
     msg_table = {
-      hook.Run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
+      hook.Run('GetChatPlayerIcon', actor, text, team_chat) or {},
       config_get('rp_commands_ooc_avatars') and Chatbox.avatar(actor) or {},
       Color('red'), '[OOC] ',
-      hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
+      hook.Run('GetChatPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
       actor:steam_name(),
-      hook.Run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
+      hook.Run('GetChatMessageColor', actor, text, team_chat) or Color(255, 255, 255),
       ': ',
       text,
       { sender = actor }
@@ -211,9 +211,9 @@ function RPCommands:say_looc(actor, text, team_chat)
   if text == '' or !self:can_use_ooc(actor, 'looc', text) then return end
 
   local msg_table = {
-    hook.Run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
+    hook.Run('GetChatPlayerIcon', actor, text, team_chat) or {},
     Color('red'):lighten(100), '[LOOC] ',
-    hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
+    hook.Run('GetChatPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
     actor:Nick(),
     ': ',
     Color('white'),

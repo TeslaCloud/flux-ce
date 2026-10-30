@@ -89,8 +89,8 @@ function Chatbox.compile(msg_table)
   -- @param data [List pieces of the message as they were received from the server]
   -- @param compiled [Map compiled message to fill in; it already holds the initial font size,
   --   and its total_height field should be set to the height of the message]
-  -- @return [Boolean return true to skip the default compilation of all pieces]
-  if Plugin.call('ChatboxCompileMessage', data, compiled) != true then
+  -- @return [Boolean return false to skip the default compilation of all pieces]
+  if Plugin.call('PreCompileChatMessage', data, compiled) != false then
     local message_margin = config_get('chatbox_message_margin')
     local wrap_width = Chatbox.width - get_option('chatbox_padding', scale(8)) * 4
 
@@ -115,13 +115,13 @@ function Chatbox.compile(msg_table)
 
     for index, piece in ipairs(data) do
       --- Lets plugins compile a single piece of a message. Called on the client for every
-      -- piece in order, unless ChatboxCompileMessage has taken over the whole message;
+      -- piece in order, unless PreCompileChatMessage has taken over the whole message;
       -- gamemode hooks are not called.
       -- @param piece [Any a string, font size, color, icon, image or avatar table, player or
       --   entity]
       -- @param compiled [Map the message compiled so far, to append to]
-      -- @return [Boolean return true to skip the default handling of this piece]
-      if Plugin.call('ChatboxCompileMessageData', piece, compiled) == true then
+      -- @return [Boolean return false to skip the default handling of this piece]
+      if Plugin.call('PreCompileChatMessageData', piece, compiled) == false then
         continue
       end
 
@@ -231,7 +231,7 @@ function Chatbox.compile(msg_table)
             -- @param target [Player the player whose name is displayed]
             -- @param message_data [Map message data received from the server]
             -- @return [Boolean return false to display the true name of the player]
-            hook.Run('ShouldProcessPlayerName', piece, msg_table) != false and
+            hook.Run('ShouldProcessChatPlayerName', piece, msg_table) != false and
               hook.Run('GetPlayerName', piece) or piece:name(true)
         else
           to_insert = tostring(piece)
@@ -260,7 +260,7 @@ function Chatbox.compile(msg_table)
   --- Called on the client when a message has been compiled, before `Chatbox.compile` returns
   -- it. The Chatbox plugin itself uses it to print the message to the console.
   -- @param compiled [Map the compiled message; changes made to it are kept]
-  hook.Run('ChatboxMessageCompiled', compiled)
+  hook.Run('ChatMessageCompiled', compiled)
 
   return compiled
 end

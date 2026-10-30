@@ -60,7 +60,7 @@ function PANEL:Think()
 end
 
 --- Draws the texts, images, icons and avatars of the compiled message, unless the
--- ChatboxPrePaintMessage hook returns true.
+-- PrePaintChatMessage hook returns false.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
@@ -72,8 +72,8 @@ function PANEL:Paint(w, h)
     -- @param h [Number height of the message panel]
     -- @param panel [Panel the fl_chat_message panel; its message_data field holds the compiled
     --   message and its alpha field the current opacity]
-    -- @return [Boolean return true to skip the default drawing]
-    if Plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
+    -- @return [Boolean return false to skip the default drawing]
+    if Plugin.call('PrePaintChatMessage', w, h, self) == false then return end
 
     local alpha = self.alpha
     local message_data = self.message_data

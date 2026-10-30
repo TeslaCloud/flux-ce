@@ -161,12 +161,12 @@ end
 -- it for every level below zero.
 -- Only a message that has a hearing range is changed. The Chatbox plugin sends a message
 -- with a radius of 0 to everyone and one with a negative radius to nobody but the players
--- that the PlayerCanHear hook lets through, which is how a radio transmission that is not
+-- that the PlayerCanHearChat hook lets through, which is how a radio transmission that is not
 -- overheard is sent, so those radii are left alone. For the same reason a shortened radius
 -- never falls below `Stats.min_hearing_radius`: at 0 the message would reach everyone.
 -- @param listener [Player player hearing the message]
 -- @param message_data [Map chat message data]
-function Stats:AdjustMessageData(listener, message_data)
+function Stats:AdjustChatMessageData(listener, message_data)
   local radius = message_data.radius
 
   if !message_data.ic or !isnumber(radius) or radius <= 0 then return end

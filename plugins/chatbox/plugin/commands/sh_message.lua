@@ -32,7 +32,7 @@ function CMD:on_run(actor, targets, text)
     { icon = 'fa-paper-plane', size = 16, margin = 12, is_data = true },
     get_player_name(target),
     ': ',
-    hook.Run('ChatboxGetMessageColor', actor, text) or Color(255, 255, 255),
+    hook.Run('GetChatMessageColor', actor, text) or Color(255, 255, 255),
     text:chomp(' '),
     { sender = actor }
   }

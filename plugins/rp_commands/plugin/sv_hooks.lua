@@ -54,7 +54,7 @@ end
 -- @param listener [Player player that would hear the message]
 -- @param message_data [Table chat message data]
 -- @return [Boolean whether the listener hears a look-based message, nil for other messages]
-function RPCommands:PlayerCanHear(listener, message_data)
+function RPCommands:PlayerCanHearChat(listener, message_data)
   local radius = message_data.radius
 
   if message_data.hear_when_look and IsValid(message_data.sender) and isnumber(radius) then

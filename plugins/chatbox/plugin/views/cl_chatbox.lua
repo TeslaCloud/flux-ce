@@ -198,7 +198,7 @@ function PANEL:Init()
     --- Called on the client when the player presses enter in the chatbox. The handler of the
     -- Chatbox plugin itself sends the text to the server and closes the chatbox.
     -- @param text [String contents of the text entry, which may be empty]
-    hook.Run('ChatboxTextEntered', value)
+    hook.Run('ChatTextEntered', value)
 
     if entry.history[1] != value then
       table.insert(entry.history, 1, value)

@@ -115,7 +115,7 @@ end
 --- Sends the entered text to the server, unless it is empty, along with whether the chatbox
 -- was opened for team chat, and closes the chatbox.
 -- @param text [String the text that was entered]
-function Chatbox:ChatboxTextEntered(text)
+function Chatbox:ChatTextEntered(text)
   if text and text != '' then
     Cable.send('fl_chat_player_say', text, PLAYER.typing_team_chat)
   end
@@ -125,7 +125,7 @@ end
 
 --- Prints the texts and colors of a compiled chat message to the console.
 -- @param compiled [Map compiled message, as returned by Chatbox.compile]
-function Chatbox:ChatboxMessageCompiled(compiled)
+function Chatbox:ChatMessageCompiled(compiled)
   local to_print = {}
   local count = 0
 

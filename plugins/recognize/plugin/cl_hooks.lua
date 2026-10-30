@@ -40,7 +40,7 @@ end
 -- @param _target [Player player whose name is processed]
 -- @param message_data [Table chat message data]
 -- @return [Boolean false for non-IC messages, nil otherwise]
-function Recognition:ShouldProcessPlayerName(_target, message_data)
+function Recognition:ShouldProcessChatPlayerName(_target, message_data)
   if !message_data.ic then
     return false
   end

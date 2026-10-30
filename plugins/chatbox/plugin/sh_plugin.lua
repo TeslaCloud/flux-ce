@@ -11,11 +11,11 @@
 -- Every player may send another one a private message with `/message`.
 --
 -- Plugins shape the chat through hooks: `PlayerSay` and `AdjustPlayerSay` change what a
--- player says, `ChatboxGetPlayerIcon`, `ChatboxGetPlayerColor` and `ChatboxGetMessageColor`
--- style it, `ShouldSendChatMessage` can cancel a message, `AdjustMessageData` and
--- `PlayerCanHear` decide who receives it, `ChatboxMessageSent` tells who has received it,
--- `PlayerUsedPrefix` tells that a chat prefix has handled a message, and
--- `ChatboxCompileMessage`, `ShouldAddChatMessage` and `ChatboxPrePaintMessage` take over
+-- player says, `GetChatPlayerIcon`, `GetChatPlayerColor` and `GetChatMessageColor`
+-- style it, `ShouldSendChatMessage` can cancel a message, `AdjustChatMessageData` and
+-- `PlayerCanHearChat` decide who receives it, `ChatMessageSent` tells who has received it,
+-- `PlayerUsedChatPrefix` tells that a chat prefix has handled a message, and
+-- `PreCompileChatMessage`, `ShouldAddChatMessage` and `PrePaintChatMessage` take over
 -- how it is displayed. Font sizes, the message limit, the fade delay, the length of a message,
 -- the interval between two messages of a player, avatars and timestamps are set through the
 -- config keys of the chatbox category.

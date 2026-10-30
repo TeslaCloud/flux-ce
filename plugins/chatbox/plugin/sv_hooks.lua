@@ -9,7 +9,7 @@
 -- @param _text [String the message]
 -- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [Map icon piece for Chatbox.add_text]
-function Chatbox:ChatboxGetPlayerIcon(_speaker, _text, _team_chat)
+function Chatbox:GetChatPlayerIcon(_speaker, _text, _team_chat)
   return { icon = 'fa-shield-alt', size = 14, margin = 8, is_data = true }
 end
 
@@ -18,7 +18,7 @@ end
 -- @param _text [String the message]
 -- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [Color the color of the player's team]
-function Chatbox:ChatboxGetPlayerColor(speaker, _text, _team_chat)
+function Chatbox:GetChatPlayerColor(speaker, _text, _team_chat)
   return team.GetColor(speaker:Team()) or Color(255, 255, 255)
 end
 
@@ -27,7 +27,7 @@ end
 -- @param _text [String the message]
 -- @param _team_chat [Boolean whether the message was sent to the team chat]
 -- @return [Color white]
-function Chatbox:ChatboxGetMessageColor(_speaker, _text, _team_chat)
+function Chatbox:GetChatMessageColor(_speaker, _text, _team_chat)
   return Color(255, 255, 255)
 end
 
@@ -60,7 +60,7 @@ end
 -- @param listener [Player the listener]
 -- @param message_data [Map message data, see Chatbox.add_text]
 -- @return [Boolean true if the player is the sender of the message, nil otherwise]
-function Chatbox:PlayerCanHear(listener, message_data)
+function Chatbox:PlayerCanHearChat(listener, message_data)
   if listener == message_data.sender then
     return true
   end

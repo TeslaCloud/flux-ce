@@ -58,7 +58,7 @@ end
 -- once the chain that the message starts, if any, has been started.
 -- @param message_data [Map the message data, see Chatbox.add_text]
 -- @param receivers [List<Player> the players the message has been sent to]
-function VoiceLines:ChatboxMessageSent(message_data, receivers)
+function VoiceLines:ChatMessageSent(message_data, receivers)
   local voice_line = message_data.voice_line
 
   if !istable(voice_line) then return end
@@ -78,7 +78,7 @@ end
 --- Keeps the voice line of a message out of the copies that are sent to the clients.
 -- @param _listener [Player the player the copy is for]
 -- @param message_data [Map the copy of the message data]
-function VoiceLines:AdjustMessageData(_listener, message_data)
+function VoiceLines:AdjustChatMessageData(_listener, message_data)
   message_data.voice_line = nil
 end
 
