@@ -21,9 +21,6 @@ en:
       ragdolls:
         name: Protect player ragdolls from the physics gun
         desc: Whether or not players are kept from picking up the ragdolls of dead and knocked down players.
-      owner_display:
-        name: Show entity owners
-        desc: Whether or not players see who owns the entity they are looking at. Staff who bypass prop protection always do.
       removal_delay:
         name: Abandoned entity removal delay
         desc: How long the entities of a player stay after they disconnect or switch characters (in seconds). They keep the entities if they return in time. Set to 0 to never remove them.
@@ -43,16 +40,6 @@ en:
   notification:
     prop_protection:
       returned: "Your entities are yours again ({count})."
-  settings:
-    prop_protection:
-      show_owners:
-        name: Show entity owners
-        desc: Whether or not the owner of the entity you are looking at is shown above it.
-  ui:
-    prop_protection:
-      owner: "Owner: {name}"
-      owner_you: This belongs to you
-      owner_away: The owner is away
   permission:
     bypass_prop_protection:
       name: Bypass Prop Protection

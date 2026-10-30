@@ -21,9 +21,6 @@ fr:
       ragdolls:
         name: "Protéger les ragdolls des joueurs du physics gun"
         desc: "Indique si les joueurs sont empêchés de saisir les ragdolls des joueurs morts ou assommés."
-      owner_display:
-        name: "Afficher les propriétaires des entités"
-        desc: "Indique si les joueurs voient à qui appartient l'entité qu'ils regardent. Les membres de l'équipe qui contournent la protection des props la voient toujours."
       removal_delay:
         name: "Délai de suppression des entités abandonnées"
         desc: "Combien de temps les entités d'un joueur restent après sa déconnexion ou un changement de personnage (en secondes). Il garde ses entités s'il revient à temps. Mettez 0 pour ne jamais les supprimer."
@@ -43,16 +40,6 @@ fr:
   notification:
     prop_protection:
       returned: "Vos entités vous appartiennent à nouveau ({count})."
-  settings:
-    prop_protection:
-      show_owners:
-        name: "Afficher les propriétaires des entités"
-        desc: "Indique si le propriétaire de l'entité que vous regardez est affiché au-dessus d'elle."
-  ui:
-    prop_protection:
-      owner: "Propriétaire : {name}"
-      owner_you: "Cela vous appartient"
-      owner_away: "Le propriétaire est absent"
   permission:
     bypass_prop_protection:
       name: "Contourner la protection des props"

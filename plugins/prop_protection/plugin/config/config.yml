@@ -39,12 +39,6 @@ configs:
     category: prop_protection
     type: boolean
     default_value: true
-  prop_protection_owner_display:
-    name: config.prop_protection.owner_display.name
-    description: config.prop_protection.owner_display.desc
-    category: prop_protection
-    type: boolean
-    default_value: true
   prop_protection_removal_delay:
     name: config.prop_protection.removal_delay.name
     description: config.prop_protection.removal_delay.desc

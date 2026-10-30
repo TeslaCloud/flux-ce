@@ -21,9 +21,6 @@ es:
       ragdolls:
         name: Proteger ragdolls de jugadores de la pistola física
         desc: Si se impide o no que los jugadores levanten los ragdolls de jugadores muertos o noqueados.
-      owner_display:
-        name: Mostrar dueños de entidades
-        desc: Si los jugadores ven o no quién es el dueño de la entidad que están mirando. El staff que ignora la protección de props siempre lo ve.
       removal_delay:
         name: Retraso de eliminación de entidades abandonadas
         desc: Cuánto tiempo permanecen las entidades de un jugador después de que se desconecte o cambie de personaje (en segundos). Si vuelve a tiempo, conserva las entidades. Pon 0 para no eliminarlas nunca.
@@ -43,16 +40,6 @@ es:
   notification:
     prop_protection:
       returned: "Tus entidades vuelven a ser tuyas ({count})."
-  settings:
-    prop_protection:
-      show_owners:
-        name: Mostrar dueños de entidades
-        desc: Si se muestra o no sobre la entidad que estás mirando quién es su dueño.
-  ui:
-    prop_protection:
-      owner: "Dueño: {name}"
-      owner_you: Esto te pertenece
-      owner_away: El dueño está ausente
   permission:
     bypass_prop_protection:
       name: Ignorar la protección de props

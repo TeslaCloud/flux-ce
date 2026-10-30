@@ -59,14 +59,13 @@ local action_permissions = {
 PropProtection.rules = rules
 
 --- Owners that the client has looked up lately, by ownership key: the player and the
--- RealTime() until which the answer is trusted. The lookup walks every player, and the
--- target ID asks for it every frame, so the client keeps the answer for a moment.
+-- RealTime() until which the answer is trusted. The lookup walks every player, so the
+-- client keeps the answer for a moment.
 local owner_cache = {}
 
 --- Seconds for which the client trusts a cached owner lookup.
 local owner_cache_time = 0.5
 
-require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
 
@@ -88,7 +87,7 @@ end
 
 --- Finds the connected player who currently plays the character behind an ownership key.
 -- On the client the answer is kept for half a second, as the lookup walks every player and
--- is asked for every frame while an owned entity is looked at; the server always looks.
+-- addons may ask for it every frame through `CPPIGetOwner`; the server always looks.
 -- @param key [String ownership key, see PropProtection:get_key]
 -- @return [Player the owner, or nil if they are not connected or play another character]
 function PropProtection:find_owner(key)
