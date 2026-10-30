@@ -190,7 +190,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
       local timer_name = 'ping_updater_'..client:SteamID()
 
       timer.Create(timer_name, 1, 0, function()
-        if IsValid(player_card) and IsValid(client) then
+        if IsValid(player_card) and IsValid(player_card.ping) and IsValid(client) then
           player_card.ping:SetText(client:Ping())
         else
           timer.Remove(timer_name)
