@@ -4,7 +4,7 @@ AllReaders:
     - '**/*.min.lua'
     - 'packages/yaml/lib/yaml.lua'
     - 'packages/sfs/lib/sfs.lua'
-    - 'packages/cami/lib/sh_cami.lua'
+    - 'packages/cami/lib/cami.lua'
     - 'packages/tween/**/*'
     - 'packages/utf8/**/*'
 

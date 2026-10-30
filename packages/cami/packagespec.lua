@@ -6,7 +6,7 @@ Package:describe(function(s)
   s.description = 'An interface through which admin mods share their usergroups and privileges with '..
                   'each other and with the addons that ask whether a player may do something.'
   s.authors     = { 'CAMI Contributors' }
-  s.file        = 'shared.lua'
+  s.file        = 'lib/install.lua'
   s.website     = 'https://github.com/glua/CAMI'
   s.license     = 'MIT'
 end)
