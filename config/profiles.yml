@@ -27,6 +27,7 @@ sandbox:
   extends: base
   plugins:
     - areas
+    - prop_protection
 
 roleplay:
   extends: base
@@ -56,6 +57,7 @@ roleplay_full:
     - spawn_saver
     - stats
     - damage
+    - prop_protection
     - map_cleaner
     - game_time
     - screen_effects
