@@ -167,17 +167,35 @@ local function find_relation(relations, name)
 end
 
 --- @ignore
--- Raises an error at the caller of a query method when the preload tree names a relation
--- that the model does not have or that has no model to load.
-local function check_preloads(model, tree)
-  for name in pairs(tree) do
+-- Returns why a preload tree cannot be loaded for a model, nested relations included: a
+-- relation that the model does not have or that has no model to load.
+local function preload_error(model, tree)
+  for name, nested in pairs(tree) do
     local relation = find_relation(model.relations, name)
+    local target = relation and (relation.child and relation.target_class or relation.model)
 
     if !relation then
-      error(model.class_name..' has no relation named \''..tostring(name)..'\'', 3)
-    elseif !(relation.child and relation.target_class or relation.model) then
-      error('relation \''..name..'\' of '..model.class_name..' has no model', 3)
+      return model.class_name..' has no relation named \''..tostring(name)..'\''
+    elseif !target then
+      return 'relation \''..name..'\' of '..model.class_name..' has no model'
     end
+
+    local nested_error = preload_error(target, nested)
+
+    if nested_error then
+      return nested_error
+    end
+  end
+end
+
+--- @ignore
+-- Raises an error at the caller of a query method when the preload tree, or a tree nested
+-- in it, names a relation that cannot be loaded.
+local function check_preloads(model, tree)
+  local message = preload_error(model, tree)
+
+  if message then
+    error(message, 3)
   end
 end
 

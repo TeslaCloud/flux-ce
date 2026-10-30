@@ -126,7 +126,8 @@ function ActiveRecord.Query:where(key, value)
   self:where_equal(key, value)
 end
 
---- Adds a raw SQL condition. Nothing in it is escaped or quoted.
+--- Adds a raw SQL condition. Nothing in it is escaped or quoted. When the query has several
+-- conditions each one is put in parentheses, so an OR inside of one does not reach the others.
 -- ```
 -- query:where_raw('money > 100')
 -- query:where_raw('money > ? AND name != ?', { 100, 'John' })
@@ -328,6 +329,7 @@ end
 local function build_where(query_obj)
   local where_list = query_obj.where_list
   local conditions = {}
+  local joined = #where_list > 1
 
   for i = 1, #where_list do
     local entry = where_list[i]
@@ -342,7 +344,7 @@ local function build_where(query_obj)
       end)
     end
 
-    conditions[#conditions + 1] = condition
+    conditions[#conditions + 1] = joined ? '('..condition..')' : condition
   end
 
   return concat(conditions, ' AND ')
