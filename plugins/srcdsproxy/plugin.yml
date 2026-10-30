@@ -1,4 +1,4 @@
-name: srcds_proxy
+name: srcdsproxy
 description: Runs the commands of the srcdsproxy network through Flux, with Bolt permissions, and adds areas that move players to another server of the network.
 author: TeslaCloud Studios
 depends:

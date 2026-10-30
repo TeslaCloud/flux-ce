@@ -6,9 +6,9 @@
 # loads its `depends` alone. A `profiles.local.yml` next to this file is read in its place.
 #
 # Opt-in plugins, in no profile, for a schema to add with `depends`:
-#   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcds_proxy
+#   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcdsproxy
 # Development tools, for `depends_development`: dev_hud, profiler
-# Libraries that load as dependencies of other plugins: areas (area_display, srcds_proxy; listed
+# Libraries that load as dependencies of other plugins: areas (area_display, srcdsproxy; listed
 # in sandbox)
 
 base:
