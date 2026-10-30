@@ -141,8 +141,8 @@ end
 --- Finds the characters that have a name, compared without regard to letter case. The
 -- characters of the user records that are loaded are searched first: those of connected
 -- players and those that an AdjustLoadedUserRecords handler adds. Only when none of them
--- matches are the characters of offline players loaded from the database, which makes the
--- callback run later. Server only.
+-- matches are the characters of offline players loaded from the database, without their
+-- relations, which makes the callback run later. Server only.
 -- @param name [String]
 -- @param callback [Function receives a List<Character>, empty when nothing was found]
 -- @return [Any what the callback returns if a loaded character matches, nil otherwise]
@@ -179,21 +179,35 @@ function Characters.find_by_name(name, callback)
     return callback(found)
   end
 
-  local answered = false
+  Character:where('lower(name) = lower(?)', string_trim(name)):get(callback):fetch()
+end
 
-  Character:where('lower(name) = lower(?)', string_trim(name)):get(function(characters)
-    if answered then return end
+--- Returns the relations of the `Character` model that are loaded together with the
+-- characters of a user record, as the AdjustCharacterPreloads handlers name them. Server
+-- only.
+-- ```
+-- User:where('steam_id', steam_id):preload({ characters = Characters.preloads() }):expect(...):fetch()
+-- ```
+-- @return [Map relation names in the list part and relation names mapped to their nested
+--   relations, in the form `ActiveRecord::Base#preload` takes]
+function Characters.preloads()
+  local preloads = {}
 
-    answered = true
+  --- Lets plugins name the relations of the `Character` model that are loaded together with
+  -- the characters of a user record, such as those of a player who joins; a relation that
+  -- nobody names is nil on the characters. Called on the server by `Characters.preloads`.
+  -- Handlers append relation names, or set a relation name to the list of its nested
+  -- relations, in the form `ActiveRecord::Base#preload` takes, and return nothing.
+  -- ```
+  -- function PLUGIN:AdjustCharacterPreloads(preloads)
+  --   preloads[#preloads + 1] = 'recognizes'
+  -- end
+  -- ```
+  -- @param preloads [Map relation names in the list part and relation names mapped to their
+  --   nested relations, changed in place]
+  hook.Run('AdjustCharacterPreloads', preloads)
 
-    callback(characters)
-  end):rescue(function()
-    if answered then return end
-
-    answered = true
-
-    callback({})
-  end)
+  return preloads
 end
 
 --- Checks whether a player may load one of their characters. A banned character and the

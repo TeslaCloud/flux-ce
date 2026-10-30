@@ -8,6 +8,12 @@ local pairs = pairs
 
 local reach_sqr = 120 * 120
 
+--- Loads the balances of characters together with them.
+-- @param preloads [Map relations of the characters, changed in place]
+function Currencies:AdjustCharacterPreloads(preloads)
+  preloads[#preloads + 1] = 'currencies'
+end
+
 --- Adds a Currency record for every registered currency to a new character, with the
 -- starting amount of that currency as its balance. Runs the GetStartingMoney hook for every
 -- currency.

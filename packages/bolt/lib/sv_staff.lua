@@ -5,9 +5,6 @@
 -- Also lists the staff: the players on the server with the `staff` permission, who receive
 -- the chat messages of the Staff and Report commands, and for the staff page of the admin
 -- panel everybody whose role is not `user`, connected or not.
---
--- The lookups query the `users` table directly instead of loading `User` models, so that
--- listing the staff does not load the characters and inventories of every staff member.
 
 local staff_limit = 256
 
@@ -16,29 +13,10 @@ Cable.check_networked_string('fl_bolt_staff')
 --- Looks up the stored user of a SteamID. The query is asynchronous on most databases: the
 -- callback runs once the answer has arrived, and not at all if the query fails.
 -- @param steam_id [String]
--- @param callback [Function called with a table that has the id, steam_id, name and role
---   fields of the user, or with nil if nobody with that SteamID has ever joined]
+-- @param callback [Function called with the `User` record, without its relations, or with
+--   nil if nobody with that SteamID has ever joined]
 function Bolt:find_user(steam_id, callback)
-  local query = ActiveRecord.Database:select('users')
-    query:where('steam_id', steam_id)
-    query:limit(1)
-    query:callback(function(results)
-      local row = istable(results) and results[1]
-
-      if !row then
-        callback(nil)
-
-        return
-      end
-
-      callback({
-        id = tonumber(row.id),
-        steam_id = tostring(row.steam_id),
-        name = tostring(row.name or row.steam_id),
-        role = row.role and tostring(row.role) or 'user'
-      })
-    end)
-  query:execute()
+  User:find_by('steam_id', steam_id, callback):fetch()
 end
 
 --- Gives a player on the server a role and signals the change to CAMI as coming from 'Bolt',
@@ -71,22 +49,17 @@ end
 -- @param old_role=nil [String ID of the role that was stored before, for CAMI]
 -- @param silent=false [Boolean keep CAMI from hearing of the change]
 function Bolt:set_stored_role(steam_id, role_id, callback, old_role, silent)
-  local query = ActiveRecord.Database:update('users')
-    query:where('steam_id', steam_id)
-    query:update('role', role_id)
-    query:update('updated_at', to_datetime(os.time()))
-    query:callback(function()
-      if !silent and old_role != role_id then
-        local old_group = old_role and self:get_cami_name(old_role)
+  User:where('steam_id', steam_id):update_all({ role = role_id }, function()
+    if !silent and old_role != role_id then
+      local old_group = old_role and self:get_cami_name(old_role)
 
-        CAMI.SignalSteamIDUserGroupChanged(steam_id, old_group, self:get_cami_name(role_id), 'Bolt')
-      end
+      CAMI.SignalSteamIDUserGroupChanged(steam_id, old_group, self:get_cami_name(role_id), 'Bolt')
+    end
 
-      if callback then
-        callback()
-      end
-    end)
-  query:execute()
+    if callback then
+      callback()
+    end
+  end)
 end
 
 --- Checks whether a player may act on somebody who is not on the server. The server console
@@ -115,8 +88,8 @@ end
 -- @param actor [Player the player performing the action, an invalid entity for the server
 --   console]
 -- @param steam_id [String SteamID of whoever is acted on]
--- @param callback [Function called with the user table of Bolt:find_user, or with nil if
---   nobody with that SteamID has ever joined]
+-- @param callback [Function called with the `User` record that Bolt:find_user finds, or with
+--   nil if nobody with that SteamID has ever joined]
 function Bolt:with_offline_target(actor, steam_id, callback)
   local from_console = !IsValid(actor)
 
@@ -268,65 +241,58 @@ end
 function Bolt:send_staff_list(target)
   if !IsValid(target) then return end
 
-  local query = ActiveRecord.Database:select('users')
-    query:where_not_equal('role', 'user')
-    query:order('name')
-    query:limit(staff_limit)
-    query:callback(function(results)
-      if !IsValid(target) then return end
+  User:where_not('role', 'user'):order('name'):limit(staff_limit):get(function(users)
+    if !IsValid(target) then return end
 
-      local members, listed = {}, {}
+    local members, listed = {}, {}
 
-      if istable(results) then
-        for _, row in ipairs(results) do
-          local steam_id = tostring(row.steam_id)
-          local member = {
+    for _, user in ipairs(users) do
+      local steam_id = tostring(user.steam_id)
+      local member = {
+        steam_id = steam_id,
+        name = tostring(user.name or steam_id),
+        role = tostring(user.role),
+        online = false
+      }
+
+      listed[steam_id] = member
+
+      table.insert(members, member)
+    end
+
+    for _, client in player.Iterator() do
+      if !client:IsBot() then
+        local steam_id = client:SteamID()
+        local role = client:get_role_table().id or client:get_role()
+        local member = listed[steam_id]
+
+        if member then
+          member.name = client:steam_name()
+          member.role = role
+          member.online = true
+        elseif role != 'user' then
+          members[#members + 1] = {
             steam_id = steam_id,
-            name = tostring(row.name or steam_id),
-            role = tostring(row.role),
-            online = false
+            name = client:steam_name(),
+            role = role,
+            online = true
           }
-
-          listed[steam_id] = member
-
-          table.insert(members, member)
         end
       end
+    end
 
-      for _, client in player.Iterator() do
-        if !client:IsBot() then
-          local steam_id = client:SteamID()
-          local role = client:get_role_table().id or client:get_role()
-          local member = listed[steam_id]
+    local staff = {}
 
-          if member then
-            member.name = client:steam_name()
-            member.role = role
-            member.online = true
-          elseif role != 'user' then
-            members[#members + 1] = {
-              steam_id = steam_id,
-              name = client:steam_name(),
-              role = role,
-              online = true
-            }
-          end
-        end
+    for i = 1, #members do
+      local member = members[i]
+
+      if member.role != 'user' then
+        staff[#staff + 1] = member
       end
+    end
 
-      local staff = {}
-
-      for i = 1, #members do
-        local member = members[i]
-
-        if member.role != 'user' then
-          staff[#staff + 1] = member
-        end
-      end
-
-      Cable.send({ target }, 'fl_bolt_staff', staff)
-    end)
-  query:execute()
+    Cable.send({ target }, 'fl_bolt_staff', staff)
+  end):fetch()
 end
 
 --- Returns the players on the server who have the 'staff' permission.

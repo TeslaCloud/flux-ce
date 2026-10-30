@@ -78,6 +78,14 @@ function Stats:apply_faction_bonuses(target)
   return changed
 end
 
+--- Loads the attribute records of characters, with their boosts, and their skill records
+-- together with them.
+-- @param preloads [Map relations of the characters, changed in place]
+function Stats:AdjustCharacterPreloads(preloads)
+  preloads.attributes = { 'attribute_boosts' }
+  preloads[#preloads + 1] = 'skills'
+end
+
 --- Adds an Attribute record for every registered attribute to a new character, using the
 -- level chosen during creation or the attribute's default, and a Skill record at rank 0 for
 -- every registered skill. A chosen level is rounded down and kept between the attribute's

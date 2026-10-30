@@ -172,6 +172,12 @@ function Factions:PostCreateCharacter(owner, char, char_data)
   self.send_character_counts(owner)
 end
 
+--- Loads the whitelists of a player together with their user record.
+-- @param preloads [Map relations of the user record, changed in place]
+function Factions:AdjustPlayerRecordPreloads(preloads)
+  preloads[#preloads + 1] = 'whitelists'
+end
+
 --- Networks the IDs of the factions the player is whitelisted for, and how many characters
 -- they have in each faction.
 -- @param actor [Player]

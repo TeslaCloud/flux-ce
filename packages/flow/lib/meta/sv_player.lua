@@ -161,7 +161,8 @@ function player_meta:get_ammo_table()
 end
 
 --- Loads the database record of the player by their SteamID, creating and saving a new one
--- if they have joined for the first time. The query is asynchronous: the record is put
+-- if they have joined for the first time. The record is loaded with the relations that the
+-- AdjustPlayerRecordPreloads handlers name. The query is asynchronous: the record is put
 -- into self.record, the saved data table of the player is loaded from it (values set
 -- during this session before the record arrived are kept) and the 'PlayerRestored' hook
 -- is run once it has loaded. Nothing happens if the player has left by then. Bots get a
@@ -172,7 +173,23 @@ function player_meta:restore_player()
     return hook.Run('PlayerRestored', self, self.record)
   end
 
-  User:where('steam_id', self:SteamID()):expect(function(obj)
+  local preloads = {}
+
+  --- Lets plugins name the relations of the `User` model that are loaded together with the
+  -- database record of a player who joins, before `PlayerRestored`; a relation that nobody
+  -- names is nil on the record. Called on the server by `Player:restore_player`. Handlers
+  -- append relation names, or set a relation name to the list of its nested relations, in the
+  -- form `ActiveRecord::Base#preload` takes, and return nothing.
+  -- ```
+  -- function PLUGIN:AdjustPlayerRecordPreloads(preloads)
+  --   preloads[#preloads + 1] = 'whitelists'
+  -- end
+  -- ```
+  -- @param preloads [Map relation names in the list part and relation names mapped to their
+  --   nested relations, changed in place]
+  hook.Run('AdjustPlayerRecordPreloads', preloads)
+
+  User:where('steam_id', self:SteamID()):preload(preloads):expect(function(obj)
     if !IsValid(self) then return end
 
     local data = read_record_data(obj)

@@ -6,7 +6,7 @@
 -- The recognitions of the characters of connected players live in memory, in the
 -- `recognizes` list of each `Character` record, and reach the database when the character
 -- is saved. Whatever is forgotten is therefore removed from those lists first; the rows of
--- characters that are not loaded are deleted from the database directly.
+-- characters that are not loaded are deleted from the database with `delete_all`.
 
 --- Shares of the talk radius within which an introduction to a range of characters is
 -- heard.
@@ -34,27 +34,25 @@ local function discard(record, keep_row)
   end
 end
 
---- Deletes rows of the `recognizes` table.
+--- Deletes the rows of the `recognizes` table that match conditions.
 -- @param conditions [Map column names to the values the deleted rows have]
 -- @param except_ids=nil [List<Number> IDs of the characters whose rows are left alone.
 --   They are written into the query as whole numbers rather than bound, so that a full
 --   server cannot run into the limit that a database puts on bound values]
 local function delete_rows(conditions, except_ids)
-  local query = ActiveRecord.Database:delete('recognizes')
-    for column, value in pairs(conditions) do
-      query:where(column, value)
+  local query = Recognize:where(conditions)
+
+  if except_ids and #except_ids > 0 then
+    local ids = {}
+
+    for index, except_id in ipairs(except_ids) do
+      ids[index] = string.format('%d', except_id)
     end
 
-    if except_ids and #except_ids > 0 then
-      local ids = {}
+    query:where_not('character_id IN ('..table.concat(ids, ', ')..')')
+  end
 
-      for index, except_id in ipairs(except_ids) do
-        ids[index] = string.format('%d', except_id)
-      end
-
-      query:where_raw(query:quote_column('character_id')..' NOT IN ('..table.concat(ids, ', ')..')')
-    end
-  query:execute()
+  query:delete_all()
 end
 
 --- Returns the distance at which characters hear normal speech: the `rp_commands_talk_radius` config

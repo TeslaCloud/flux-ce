@@ -15,9 +15,10 @@
 -- Other plugins build on it through hooks: `PlayerCreateCharacter` validates the data of a new
 -- character, `PostCreateCharacter` and `SaveCharacterData` let them keep their own fields on a
 -- character, `ActiveCharacterSet` and `PostLoadCharacter` tell them that a character has
--- been loaded, and `AddCharacterCreationMenuStages` and `AddMainMenuItems` add stages to the
--- character creation screen and buttons to the main menu. `GetCharacterLimit` changes the
--- limit for a player, and `PlayerCanUseCharacter`, `PlayerCanSwitchCharacter` and
+-- been loaded, `AdjustCharacterPreloads` names the relations that are loaded with the
+-- characters of a player, and `AddCharacterCreationMenuStages` and `AddMainMenuItems` add
+-- stages to the character creation screen and buttons to the main menu. `GetCharacterLimit`
+-- changes the limit for a player, and `PlayerCanUseCharacter`, `PlayerCanSwitchCharacter` and
 -- `PlayerCanDeleteCharacter` can refuse a request to load or delete a character with a
 -- reason. `PlayerNeedsCharacter` lets a player stay in the world without a character,
 -- `GetCharacterOwner` gives a new character to another user record than its creator's, and

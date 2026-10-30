@@ -118,6 +118,21 @@ function hooks:PlayerInitialSpawn(actor)
   end
 end
 
+--- Loads the individual and the temporary permissions of a player together with their user
+-- record.
+-- @param preloads [Map relations of the user record, changed in place]
+function hooks:AdjustPlayerRecordPreloads(preloads)
+  preloads[#preloads + 1] = 'permissions'
+  preloads[#preloads + 1] = 'temp_permissions'
+end
+
+--- Loads the lasting and the temporary permissions of characters together with them.
+-- @param preloads [Map relations of the characters, changed in place]
+function hooks:AdjustCharacterPreloads(preloads)
+  preloads[#preloads + 1] = 'character_permissions'
+  preloads[#preloads + 1] = 'character_temp_permissions'
+end
+
 --- Defaults the banned flag of a newly created user record to false.
 -- @param _actor [Player]
 -- @param record [User the player's database record]
@@ -320,11 +335,8 @@ function hooks:PreDeleteCharacter(_actor, id, character)
 
   if !id then return end
 
-  for _, table_name in ipairs({ 'character_permissions', 'character_temp_permissions' }) do
-    local query = ActiveRecord.Database:delete(table_name)
-      query:where('character_id', id)
-    query:execute()
-  end
+  CharacterPermission:where('character_id', id):delete_all()
+  CharacterTempPermission:where('character_id', id):delete_all()
 end
 
 --- Takes the permissions of a character away from the player who is dropping it.

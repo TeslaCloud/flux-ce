@@ -54,13 +54,13 @@ function Gamemastery.is_throttled(actor, kind)
   return false
 end
 
---- Loads the user record that owns the pool characters, together with the characters, or
--- creates and saves it when it does not exist yet. The pool is sent to the gamemasters once
--- it has been loaded.
+--- Loads the user record that owns the pool characters, together with the characters and
+-- the relations that `Characters.preloads` names, or creates and saves it when it does not
+-- exist yet. The pool is sent to the gamemasters once it has been loaded.
 function Gamemastery.load_pool()
-  User:where('steam_id', Gamemastery.pool_steam_id):expect(function(record)
-    record.characters = record.characters or {}
+  local query = User:where('steam_id', Gamemastery.pool_steam_id):preload({ characters = Characters.preloads() })
 
+  query:expect(function(record)
     Gamemastery.pool_record = record
     Gamemastery.send_pool()
   end):rescue(function(record)

@@ -6,18 +6,20 @@
 --- Reads the names of all characters from the database, so that `Characters.is_name_taken`
 -- also knows the characters of players who are not connected.
 function Characters:ActiveRecordReady()
-  local query = ActiveRecord.Database:select('characters')
-    query:select('name')
-    query:callback(function(result)
-      Characters.taken_names = {}
+  Character:all():get(function(characters)
+    Characters.taken_names = {}
 
-      if istable(result) then
-        for _, row in ipairs(result) do
-          Characters.remember_name(row.name)
-        end
-      end
-    end)
-  query:execute()
+    for _, character in ipairs(characters) do
+      Characters.remember_name(character.name)
+    end
+  end):fetch()
+end
+
+--- Loads the characters of a player who joins together with their user record, with the
+-- relations that `Characters.preloads` names.
+-- @param preloads [Map relations of the user record, changed in place]
+function Characters:AdjustPlayerRecordPreloads(preloads)
+  preloads.characters = Characters.preloads()
 end
 
 --- Hides, locks and silently kills players who spawn without an active character or with a

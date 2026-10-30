@@ -2,6 +2,12 @@
 -- character, decides who an introduction reaches, erases recognitions when a character
 -- dies or is deleted and names the characters on the access lists of doors.
 
+--- Loads the recognitions of characters together with them.
+-- @param preloads [Map relations of the characters, changed in place]
+function Recognition:AdjustCharacterPreloads(preloads)
+  preloads[#preloads + 1] = 'recognizes'
+end
+
 --- Networks the names a character recognizes others by once it is loaded.
 -- @param owner [Player player the character belongs to]
 -- @param _character [Character loaded character]
