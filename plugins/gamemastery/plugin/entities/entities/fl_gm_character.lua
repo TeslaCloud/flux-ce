@@ -16,7 +16,6 @@ ENT.Spawnable = false
 ENT.AutomaticFrameAdvance = true
 ENT.RenderGroup = RENDERGROUP_OPAQUE
 
-local default_model = 'models/humans/group01/male_02.mdl'
 local mins, maxs = Vector(-16, -16, 0), Vector(16, 16, 72)
 
 if SERVER then
@@ -40,7 +39,7 @@ if SERVER then
   function ENT:set_character(character)
     self.gm_character_id = tonumber(character.id)
 
-    self:SetModel(character.model or default_model)
+    self:SetModel(character.model or Characters.default_model)
     self:SetSkin(tonumber(character.skin) or 0)
     self:SetCollisionBounds(mins, maxs)
     self:set_nv('gm_character_id', self.gm_character_id)

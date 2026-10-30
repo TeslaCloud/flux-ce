@@ -17,7 +17,6 @@ local tonumber = tonumber
 local cable_send = Cable.send
 local string_trim = string.Trim
 
-local default_model = 'models/humans/group01/male_02.mdl'
 local request_delay = 1
 local spawn_distance = 4096
 local floor_normal_z = 0.7
@@ -181,7 +180,7 @@ function Gamemastery.pool_to_networkable()
     result[#result + 1] = {
       id = id,
       name = char_data.name,
-      model = char_data.model or default_model,
+      model = char_data.model or Characters.default_model,
       skin = tonumber(char_data.skin) or 0,
       phys_desc = char_data.phys_desc or '',
       faction = isstring(char_data.faction) and char_data.faction or nil,
