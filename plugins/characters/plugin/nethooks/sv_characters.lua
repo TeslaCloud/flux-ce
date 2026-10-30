@@ -106,11 +106,12 @@ Cable.receive('fl_player_delete_character', function(actor, id)
   Flux.dev_print(actor:name()..' has deleted character #'..id)
 
   --- Called on the server when a player has asked to delete one of their characters, right
-  -- before it is deleted. The request has passed `Characters.can_delete` by then.
+  -- before it is deleted. The request has passed `Characters.can_delete` by then, so the return
+  -- value is ignored: `PlayerCanDeleteCharacter` decides whether the deletion may happen.
   -- @param actor [Player]
   -- @param id [Number ID of the character]
   -- @param character [Character the character that is about to be deleted]
-  hook.Run('OnCharacterDelete', actor, id, character)
+  hook.Run('PreDeleteCharacter', actor, id, character)
 
   Characters.delete(actor, id)
 end)

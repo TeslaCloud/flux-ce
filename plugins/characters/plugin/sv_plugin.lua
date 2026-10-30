@@ -1,7 +1,7 @@
 --- Server side of the Characters plugin: making a character the active character of a
 -- player.
 
---- Makes a character the active character of a player. Runs OnCharacterChange if another
+--- Makes a character the active character of a player. Runs PreSwitchCharacter if another
 -- character was active, networks the basic character data and runs ActiveCharacterSet. The
 -- character does not have to belong to the player: one of another user record is sent to the
 -- player on its own, so that their client knows the character it is playing. Nothing is
@@ -14,11 +14,12 @@ function Characters.activate(target, character)
 
   if target:get_character_id() then
     --- Called on the server when a player who already has an active character selects a
-    -- character, before the selected character becomes the active one.
+    -- character, before the selected character becomes the active one. The return value is
+    -- ignored: `PlayerCanSwitchCharacter` decides whether the switch may happen.
     -- @param owner [Player]
     -- @param new_char [Character the character that is about to become active]
     -- @param old_char [Character the character that is still active]
-    hook.Run('OnCharacterChange', target, character, target:get_character())
+    hook.Run('PreSwitchCharacter', target, character, target:get_character())
   end
 
   if !target:IsBot() then

@@ -546,7 +546,7 @@ end
 -- @param _actor [Player]
 -- @param id [Number ID of the character]
 -- @param _character [Character]
-function Items:OnCharacterDelete(_actor, id, _character)
+function Items:PreDeleteCharacter(_actor, id, _character)
   Item.delete_character_items(id)
 end
 

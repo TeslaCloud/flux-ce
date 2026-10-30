@@ -154,7 +154,7 @@ end
 -- @param owner [Player]
 -- @param _new_char [Character the character that is about to become active]
 -- @param _old_char [Character the character that is still active]
-function VoiceLines:OnCharacterChange(owner, _new_char, _old_char)
+function VoiceLines:PreSwitchCharacter(owner, _new_char, _old_char)
   self:cancel_chain(owner)
 end
 

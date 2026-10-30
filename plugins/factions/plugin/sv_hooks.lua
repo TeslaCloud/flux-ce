@@ -195,7 +195,7 @@ end
 -- @param actor [Player]
 -- @param _id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
-function Factions:OnCharacterDelete(actor, _id, character)
+function Factions:PreDeleteCharacter(actor, _id, character)
   self.send_character_counts(actor, character)
 end
 

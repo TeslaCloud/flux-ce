@@ -169,7 +169,7 @@ end
 -- @param owner [Player]
 -- @param new_char [Character the character that is about to become active]
 -- @param old_char [Character the character that is still active]
-function PropProtection:OnCharacterChange(owner, new_char, old_char)
+function PropProtection:PreSwitchCharacter(owner, new_char, old_char)
   if new_char and old_char and new_char.id != nil and tonumber(new_char.id) == tonumber(old_char.id) then
     return
   end

@@ -113,6 +113,6 @@ end
 -- @param _actor [Player the player who deletes the character]
 -- @param id [Number ID of the character]
 -- @param _character [Character the character that is about to be deleted]
-function Doors:OnCharacterDelete(_actor, id, _character)
+function Doors:PreDeleteCharacter(_actor, id, _character)
   self:release_character(id)
 end

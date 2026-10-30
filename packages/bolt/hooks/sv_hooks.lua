@@ -310,7 +310,7 @@ end
 -- @param _actor [Player the player who deletes the character]
 -- @param id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
-function hooks:OnCharacterDelete(_actor, id, character)
+function hooks:PreDeleteCharacter(_actor, id, character)
   if istable(character) then
     character.character_permissions = {}
     character.character_temp_permissions = {}

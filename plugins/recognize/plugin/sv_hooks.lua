@@ -57,7 +57,7 @@ end
 -- @param _actor [Player player who deletes the character]
 -- @param id [Number ID of the character]
 -- @param character [Character the character that is about to be deleted]
-function Recognition:OnCharacterDelete(_actor, id, character)
+function Recognition:PreDeleteCharacter(_actor, id, character)
   self:clear_records(character)
   self:forget_character(id)
 end

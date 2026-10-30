@@ -158,7 +158,7 @@ end
 -- @param owner [Player]
 -- @param _new_char [Character]
 -- @param _old_char [Character]
-function Characters:OnCharacterChange(owner, _new_char, _old_char)
+function Characters:PreSwitchCharacter(owner, _new_char, _old_char)
   owner:save_character()
 end
 

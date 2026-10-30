@@ -48,7 +48,7 @@ end
 -- @param owner [Player]
 -- @param _new_char [Character the character that is about to become active]
 -- @param old_char [Character the character that is still active]
-function Gamemastery:OnCharacterChange(owner, _new_char, old_char)
+function Gamemastery:PreSwitchCharacter(owner, _new_char, old_char)
   if istable(old_char) and old_char.possessed_by == owner then
     old_char.possessed_by = nil
 

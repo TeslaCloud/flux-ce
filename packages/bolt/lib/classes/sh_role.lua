@@ -195,7 +195,7 @@ end
 
 --- Registers the role with Bolt. If the role has a define_permissions method, it is run first
 -- with the can, cannot and allow_anything globals temporarily bound to this role, followed
--- by the OnDefinePermissions hook. A role file whose ID is already registered adds its
+-- by the AdjustRolePermissions hook. A role file whose ID is already registered adds its
 -- permissions to that role and to the roles based on it that have nothing of their own for
 -- the same actions; its other fields are ignored, see `Bolt:create_role`.
 -- ```
@@ -244,10 +244,11 @@ function Role:register()
 
     --- Called on both realms while a role is being registered, right after its
     -- `define_permissions` method has run. The `can`, `cannot` and `allow_anything` globals
-    -- are still bound to the role, so a handler can adjust its permissions. Roles without
-    -- a `define_permissions` method do not run this hook.
+    -- are still bound to the role, so a handler can adjust its permissions in place; the
+    -- return value is ignored. Roles without a `define_permissions` method do not run this
+    -- hook.
     -- @param role [Role The role being registered]
-    hook.Run('OnDefinePermissions', self)
+    hook.Run('AdjustRolePermissions', self)
 
     can, cannot, allow_anything = old_can, old_cannot, old_anything
   end
