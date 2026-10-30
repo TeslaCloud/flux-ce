@@ -13,6 +13,12 @@ es:
       radio_volume:
         name: Volumen de las líneas de voz por radio
         desc: Volumen, de 0 a 1, del sonido de una línea de voz para los jugadores que la oyen por radio.
+      default_duration:
+        name: Duración predeterminada de las líneas de voz
+        desc: Cuántos segundos espera una cadena de líneas de voz por una línea cuya duración de sonido el servidor no puede saber antes de decir la siguiente.
+      max_chain:
+        name: Longitud de las cadenas de líneas de voz
+        desc: Cuántas líneas de voz dice como máximo una cadena. Un mensaje más largo es habla normal.
   notification:
     voice_lines:
       none: Tu personaje no tiene líneas de voz.
@@ -20,7 +26,7 @@ es:
   ui:
     voice_lines:
       title: Líneas de voz
-      description: Para decir una línea, escribe en el chat su comando, su texto o uno de sus alias en un mensaje aparte. Ponla entre paréntesis para susurrarla, o añade !! para gritarla.
+      description: Para decir una línea, escribe en el chat su comando, su texto o uno de sus alias en un mensaje aparte. Ponla entre paréntesis para susurrarla, o añade !! para gritarla. Los comandos y alias separados por espacios dicen sus líneas una tras otra, y una coma o un punto después de uno de ellos añade una pausa de uno o dos segundos, como en CAN1 CAN2, CAN3. CAN4
       search: Buscar por comando, texto o alias...
       all: Todas
       empty: Ninguna línea de voz coincide con la búsqueda.

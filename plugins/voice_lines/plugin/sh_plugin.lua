@@ -8,6 +8,18 @@
 -- speaker hear the sound from the speaker and the listeners on the frequency hear it quieter,
 -- as if from their own radio.
 --
+-- A message made of nothing but the commands and aliases of several lines, separated by
+-- spaces, is a chain: the lines are said one after the other, each once the sound of the one
+-- before it has ended, and a comma after a command waits one second more before the next line,
+-- a period two seconds. Every line shows its text in the chat, or goes over the radio, as a
+-- message of its own when its sound starts, at the volume of the whole message:
+-- ```
+-- CAN1 CAN2, CAN3. CAN4
+-- ```
+-- A chain says up to 'voice_lines_max_chain' config lines, and every one of them has to be a
+-- line the character may use; any other message is ordinary speech. See
+-- `VoiceLines:parse_chain` and `VoiceLines:start_chain`.
+--
 -- Lines are grouped into categories, and a category names the factions whose members may use
 -- its lines, and optionally the rank they need in a faction. The plugin has no lines of its
 -- own: the schema and other plugins add categories and lines from the `RegisterVoiceLines`
@@ -37,8 +49,9 @@
 -- The `PlayerCanUseVoiceLine` hook overrides who may use a line, and `VoiceLinePlayed` is run on
 -- the server every time the sound of a line plays. Players find the lines they may use on the
 -- Voice Lines page of the Help tab, where they can listen to a line or say it, and with the
--- `voicelines` command. A player can play a voice line once per 'voice_lines_interval' config;
--- a line said sooner shows its text without the sound.
+-- `voicelines` command. A player can play a voice line once per 'voice_lines_interval' config,
+-- and a chain counts as one line that ends with its last sound; a line said sooner shows its
+-- text without the sound.
 -- @module [VoiceLines]
 
 PLUGIN:set_global('VoiceLines')
@@ -50,6 +63,8 @@ VoiceLines.categories = {}
 
 local categories = VoiceLines.categories
 local index = {}
+local chain_index = {}
+local chain_words = 0
 local index_dirty = true
 
 VoiceLines.version = (VoiceLines.version or 0) + 1
@@ -452,20 +467,32 @@ function VoiceLines:can_use(target, category, line)
   return self:is_member(target, category)
 end
 
---- Builds the lookup table of the commands, the texts and the aliases of all lines, so that
--- a message is matched without going through every line. A phrase that belongs to several
--- lines goes to the command of a line first, then to a text, then to an alias, and among
--- equals to the category that comes first and then to the line ID that sorts first. A text
--- that is an action is left out, as a message that is an action never says a line.
+local function entry_before(a, b)
+  if a.kind != b.kind then
+    return a.kind < b.kind
+  end
+
+  if a.category != b.category then
+    return category_before(a.category, b.category)
+  end
+
+  return a.line.id < b.line.id
+end
+
+--- Builds the lookup tables of the phrases that say a line: one of the commands, the texts and
+-- the aliases of all lines, so that a message is matched without going through every line,
+-- and one of the commands and the aliases alone, which are what a chain is made of. A phrase
+-- that belongs to several lines goes to the command of a line first, then to a text, then to
+-- an alias, and among equals to the category that comes first and then to the line ID that
+-- sorts first. A text that is an action is left out, as a message that is an action never
+-- says a line.
 local function build_index()
   index = {}
+  chain_index = {}
+  chain_words = 0
 
-  local function add(phrase, line, category, kind)
-    phrase = VoiceLines:normalize(phrase)
-
-    if phrase == '' then return end
-
-    local entries = index[phrase] or {}
+  local function add(target_index, phrase, line, category, kind)
+    local entries = target_index[phrase] or {}
 
     for _k, entry in ipairs(entries) do
       if entry.line == line then
@@ -476,42 +503,69 @@ local function build_index()
     end
 
     entries[#entries + 1] = { line = line, category = category, kind = kind }
-    index[phrase] = entries
+    target_index[phrase] = entries
+  end
+
+  local function add_phrase(phrase, line, category, kind)
+    phrase = VoiceLines:normalize(phrase)
+
+    if phrase == '' then return end
+
+    add(index, phrase, line, category, kind)
+
+    if kind != 2 then
+      add(chain_index, phrase, line, category, kind)
+      chain_words = math.max(chain_words, #phrase:split(' '))
+    end
   end
 
   for _id, category in pairs(categories) do
     for line_id, line in pairs(category.lines) do
-      add(line_id, line, category, 1)
+      add_phrase(line_id, line, category, 1)
 
       local texts = istable(line.text) and line.text or { line.text }
 
       for _key, text in pairs(texts) do
         if !VoiceLines:is_action(text) then
-          add(text, line, category, 2)
+          add_phrase(text, line, category, 2)
         end
       end
 
       for _k, alias in ipairs(line.aliases) do
-        add(alias, line, category, 3)
+        add_phrase(alias, line, category, 3)
       end
     end
   end
 
   for _phrase, entries in pairs(index) do
-    table.sort(entries, function(a, b)
-      if a.kind != b.kind then
-        return a.kind < b.kind
-      end
+    table.sort(entries, entry_before)
+  end
 
-      if a.category != b.category then
-        return category_before(a.category, b.category)
-      end
-
-      return a.line.id < b.line.id
-    end)
+  for _phrase, entries in pairs(chain_index) do
+    table.sort(entries, entry_before)
   end
 
   index_dirty = false
+end
+
+--- Returns the first of the lines that a phrase stands for that a player may use.
+-- @param target [Player the speaker]
+-- @param entries [List<Map> the entries of the phrase in a lookup table, or nil]
+-- @param no_actions [Boolean leave out the lines whose text is an action]
+-- @return [Map the line, Map its category; nothing if the player may use none of them]
+local function find_usable(target, entries, no_actions)
+  if !entries then return end
+
+  local gender = VoiceLines:get_gender(target)
+
+  for _k, entry in ipairs(entries) do
+    local line, category = entry.line, entry.category
+
+    if (!no_actions or !VoiceLines:is_action(VoiceLines:get_text(line, gender)))
+      and VoiceLines:can_use(target, category, line) then
+      return line, category
+    end
+  end
 end
 
 --- Finds the line that a message says for a player: the first line they may use whose
@@ -529,19 +583,93 @@ function VoiceLines:match(target, text, no_actions)
     build_index()
   end
 
-  local entries = index[self:normalize(text)]
+  return find_usable(target, index[self:normalize(text)], no_actions)
+end
 
-  if !entries then return end
+--- Returns how long a chain waits after a line before the next one, besides the sound of the
+-- line, from the punctuation at the end of the word that ends it: two seconds for a period,
+-- one for a comma, none otherwise.
+-- @param word [String]
+-- @return [Number seconds]
+local function get_pause(word)
+  local punctuation = word:match('[%p]+$')
 
-  local gender = self:get_gender(target)
+  if !punctuation then return 0 end
 
-  for _k, entry in ipairs(entries) do
-    local line, category = entry.line, entry.category
+  if punctuation:find('.', 1, true) then return 2 end
 
-    if (!no_actions or !self:is_action(self:get_text(line, gender))) and self:can_use(target, category, line) then
-      return line, category
+  return punctuation:find(',', 1, true) ? 1 : 0
+end
+
+--- Finds the line that the words of a message from a position on start with, trying the
+-- longest phrase first.
+-- @param target [Player the speaker]
+-- @param words [List<String> the words of the message]
+-- @param first [Number the position of the first word]
+-- @param no_actions [Boolean leave out the lines whose text is an action]
+-- @return [Map the line, Map its category, Number the position of its last word; nothing if
+--   no command or alias of a line the player may use starts there]
+local function match_words(target, words, first, no_actions)
+  for last = math.min(#words, first + chain_words - 1), first, -1 do
+    local line, category = find_usable(target, chain_index[VoiceLines:normalize(table.concat(words, ' ', first, last))],
+      no_actions)
+
+    if line then
+      return line, category, last
     end
   end
+end
+
+--- Splits a message into the chain of lines it says for a player: a message made of nothing
+-- but the commands and aliases of at least two lines that the player may use, separated by
+-- spaces, and of no more lines than the 'voice_lines_max_chain' config allows. Where an alias
+-- of several words could also be read as shorter commands, the longest phrase wins. The
+-- punctuation at the end of a command sets the pause after its line, see the module.
+-- ```
+-- VoiceLines:parse_chain(actor, 'CAN1 CAN2, CAN3. CAN4')
+-- -- { { line = ..., category = ..., pause = 0 }, { ..., pause = 1 }, { ..., pause = 2 },
+-- --   { ..., pause = 0 } }
+-- ```
+-- @param target [Player the speaker]
+-- @param phrase [String the message, without any markup]
+-- @param no_actions=false [Boolean leave out the lines whose text is an action]
+-- @return [List<Map> line, category and pause (Number seconds to wait after the sound of the
+--   line, before the next one) of every line in the order they are said; nil if the message
+--   is no chain]
+function VoiceLines:parse_chain(target, phrase, no_actions)
+  if !isstring(phrase) or phrase:start_with('*') then return end
+
+  if index_dirty then
+    build_index()
+  end
+
+  local words = {}
+
+  for word in phrase:gmatch('%S+') do
+    words[#words + 1] = word
+  end
+
+  local max_lines = math.floor(tonumber(Config.get('voice_lines_max_chain')) or 6)
+
+  if #words < 2 or #words > max_lines * chain_words then return end
+
+  local chain = {}
+  local first = 1
+
+  while first <= #words do
+    if #chain >= max_lines then return end
+
+    local line, category, last = match_words(target, words, first, no_actions)
+
+    if !line then return end
+
+    chain[#chain + 1] = { line = line, category = category, pause = get_pause(words[last]) }
+    first = last + 1
+  end
+
+  if #chain < 2 then return end
+
+  return chain
 end
 
 --- Returns the lines a player may use, by category.

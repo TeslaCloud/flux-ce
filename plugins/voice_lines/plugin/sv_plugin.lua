@@ -1,12 +1,13 @@
 --- Server side of the Voice Lines plugin: turns the text of a line into a phrase of in character
 -- speech, plays the sound of a line to the players who hear it, holds players to the
 -- 'voice_lines_interval' config and says a line that a player has picked on the Voice Lines
--- page.
+-- page or that a chain says next.
 
 local config_get = Config.get
 
---- The line that `VoiceLines:say` is making a player say: actor, category and line. It is only
--- set while `Chatbox.submit` runs, which turns the text into a message right away.
+--- The line that `VoiceLines:speak_line` is making a player say: actor, category and line. It is
+-- only set while `Chatbox.submit` or `Radios.say_radio` runs, which turns the text into a
+-- message right away.
 local forced = nil
 
 --- Writes the text of a line as a phrase of the volume it is said at, in the markup of the
@@ -70,7 +71,9 @@ end
 --- Plays the sound of a line from a player, unless the player has played one within the
 -- 'voice_lines_interval' config. The players nearby hear it from the speaker, and the players
 -- who listen to the speaker over the radio hear it at the 'voice_lines_radio_volume' config,
--- as if from their own radio.
+-- as if from their own radio. The line that a chain of the player says plays unless the chain
+-- started within the interval, and holds the next line off until the interval has passed
+-- after its sound has ended, see `VoiceLines:start_chain`.
 -- @param speaker [Player]
 -- @param category [Map the category of the line]
 -- @param line [Map the line]
@@ -79,9 +82,21 @@ end
 -- @param radio_listeners=nil [List<Player> the players who hear the line over the radio]
 -- @return [Boolean true if the sound has been played]
 function VoiceLines:play(speaker, category, line, receivers, volume, radio_listeners)
-  if !IsValid(speaker) or !self:can_play(speaker) then return false end
+  if !IsValid(speaker) then return false end
 
-  local sound_path = self:get_sound(line, self:get_gender(speaker))
+  local chain = speaker.fl_voice_line_chain
+  local chained = chain != nil and chain.current == line
+
+  if chained then
+    chain.current = nil
+
+    if chain.silent then return false end
+  elseif !self:can_play(speaker) then
+    return false
+  end
+
+  local gender = self:get_gender(speaker)
+  local sound_path = self:get_sound(line, gender)
   local level, sound_volume = self:get_sound_level(volume)
   local filter = RecipientFilter()
 
@@ -104,7 +119,13 @@ function VoiceLines:play(speaker, category, line, receivers, volume, radio_liste
     )
   end
 
-  speaker.fl_next_voice_line_at = CurTime() + (tonumber(config_get('voice_lines_interval')) or 0)
+  local ends_at = CurTime()
+
+  if chained then
+    ends_at += self:get_duration(line, gender)
+  end
+
+  speaker.fl_next_voice_line_at = ends_at + (tonumber(config_get('voice_lines_interval')) or 0)
 
   --- Called on the server after the sound of a voice line has played.
   -- @param speaker [Player the player who has said the line]
@@ -118,20 +139,63 @@ function VoiceLines:play(speaker, category, line, receivers, volume, radio_liste
   return true
 end
 
---- Returns the line a player says with a phrase of in character speech: the line picked on
--- the Voice Lines page while it is being said, else the line the phrase matches. A phrase that
--- is an action says no line.
+--- Returns the line a player says with a phrase of in character speech: the line that
+-- `VoiceLines:speak_line` is making them say, else the line the phrase matches, else the first
+-- line of the chain the phrase is, see `VoiceLines:parse_chain`. A phrase that is an action
+-- says no line.
 -- @param actor [Player the speaker]
 -- @param phrase [String the phrase without its volume markup]
--- @return [Map the line, Map its category; nothing if the phrase says no line]
-function VoiceLines:find_spoken_line(actor, phrase)
+-- @param no_actions=false [Boolean leave out the lines whose text is an action]
+-- @return [Map the line, Map its category, List<Map> the chain when the phrase is one; nothing
+--   if the phrase says no line]
+function VoiceLines:find_spoken_line(actor, phrase, no_actions)
   if forced and forced.actor == actor then
     return forced.line, forced.category
   end
 
   if phrase:start_with('*') then return end
 
-  return self:match(actor, phrase)
+  local line, category = self:match(actor, phrase, no_actions)
+
+  if line then
+    return line, category
+  end
+
+  local chain = self:parse_chain(actor, phrase, no_actions)
+
+  if chain then
+    return chain[1].line, chain[1].category, chain
+  end
+end
+
+--- Makes a player say a text that stands for a line, as if they had typed it into the chat
+-- or, with radio, into their radio: the message says that line whatever the text is. The
+-- chat guards of `Chatbox.submit`, or those of `Radios.say_radio`, apply.
+-- @param actor [Player]
+-- @param category [Map the category of the line]
+-- @param line [Map the line]
+-- @param text [String the text to say, with its volume markup]
+-- @param radio=false [Boolean say it over the radio]
+-- @return [Boolean true if the text has been said]
+function VoiceLines:speak_line(actor, category, line, text, radio)
+  forced = { actor = actor, category = category, line = line }
+
+  local success, said
+
+  if radio then
+    success, said = pcall(Radios.say_radio, actor, text)
+
+    if !success then
+      ErrorNoHalt('[Flux - Voice Lines] Failed to say a line over the radio: '..tostring(said)..'\n')
+    end
+  else
+    success = Chatbox.submit(actor, text)
+    said = success
+  end
+
+  forced = nil
+
+  return success and said == true
 end
 
 --- Makes a player say a line they have picked, as if they had typed its text into the chat.
@@ -149,11 +213,5 @@ function VoiceLines:say(actor, category_id, line_id)
 
   if !line or !self:can_use(actor, category, line) then return false end
 
-  forced = { actor = actor, category = category, line = line }
-
-  local success = Chatbox.submit(actor, self:get_text(line, self:get_gender(actor)))
-
-  forced = nil
-
-  return success
+  return self:speak_line(actor, category, line, self:get_text(line, self:get_gender(actor)))
 end

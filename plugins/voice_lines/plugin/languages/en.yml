@@ -13,6 +13,12 @@ en:
       radio_volume:
         name: Radio Voice Line Volume
         desc: Volume, from 0 to 1, of the sound of a voice line for the players who hear it over the radio.
+      default_duration:
+        name: Default Voice Line Duration
+        desc: How many seconds a chain of voice lines waits for a line whose sound length the server cannot tell before it says the next line.
+      max_chain:
+        name: Voice Line Chain Length
+        desc: How many voice lines a chain says at most. A longer message is ordinary speech.
   notification:
     voice_lines:
       none: Your character has no voice lines.
@@ -20,7 +26,7 @@ en:
   ui:
     voice_lines:
       title: Voice Lines
-      description: To say a line, type its command, its text or one of its aliases in the chat as a message of its own. Put it in parentheses to whisper it, or add !! to yell it.
+      description: To say a line, type its command, its text or one of its aliases in the chat as a message of its own. Put it in parentheses to whisper it, or add !! to yell it. Commands and aliases separated by spaces say their lines one after the other, and a comma or a period after one of them adds a pause of one or two seconds, as in CAN1 CAN2, CAN3. CAN4
       search: Search by command, text or alias...
       all: All
       empty: No voice line matches the search.

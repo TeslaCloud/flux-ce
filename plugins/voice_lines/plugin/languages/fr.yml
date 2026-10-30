@@ -13,6 +13,12 @@ fr:
       radio_volume:
         name: Volume des répliques vocales à la radio
         desc: Volume, de 0 à 1, du son d'une réplique vocale pour les joueurs qui l'entendent à la radio.
+      default_duration:
+        name: Durée par défaut des répliques vocales
+        desc: Nombre de secondes qu'une chaîne de répliques vocales attend pour une réplique dont le serveur ne connaît pas la durée du son avant de dire la suivante.
+      max_chain:
+        name: Longueur des chaînes de répliques vocales
+        desc: Nombre maximal de répliques vocales qu'une chaîne dit. Un message plus long est une parole ordinaire.
   notification:
     voice_lines:
       none: Votre personnage n'a aucune réplique vocale.
@@ -20,7 +26,7 @@ fr:
   ui:
     voice_lines:
       title: Répliques vocales
-      description: Pour dire une réplique, écrivez dans le chat sa commande, son texte ou l'un de ses alias dans un message à part. Mettez-la entre parenthèses pour la chuchoter, ou ajoutez !! pour la crier.
+      description: Pour dire une réplique, écrivez dans le chat sa commande, son texte ou l'un de ses alias dans un message à part. Mettez-la entre parenthèses pour la chuchoter, ou ajoutez !! pour la crier. Les commandes et les alias séparés par des espaces disent leurs répliques l'une après l'autre, et une virgule ou un point après l'un d'eux ajoute une pause d'une ou deux secondes, comme dans CAN1 CAN2, CAN3. CAN4
       search: Rechercher par commande, texte ou alias...
       all: Toutes
       empty: Aucune réplique vocale ne correspond à la recherche.
