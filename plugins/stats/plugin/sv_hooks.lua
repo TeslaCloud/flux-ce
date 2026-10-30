@@ -1,17 +1,18 @@
---- Server side of the Stats plugin: gives characters their attribute and skill records,
--- networks a character's attributes and skills when it becomes active and removes its boosts
--- as they expire, checks the stats of new characters, keeps the stat bonuses of the faction
--- on every character, applies the effects of the stats through the hooks of the Chatbox,
--- Stamina, Pickup Objects, Damage, Limb Damage and Vendors plugins; the rolls that a player
--- asks for with the 'fl_stats_roll' message are in `nethooks/sv_stats.lua`. A handler of a plugin
--- that is not loaded is never called. The 'fl_attributes_view' message, which the
--- `attribute list` command sends to show a character's attributes and skills to a member of
--- staff, is registered here; it carries the player, their attributes as
--- `Player:get_attributes` returns them and their skills as `Player:get_skills` returns them.
--- So is the 'fl_stats_roll_result' message, the answer to 'fl_stats_roll' that lets the
--- character sheet show the result on the button that was pressed; it carries the ID of the
--- stat or the skill and the result (a Map with the formula, total, natural, critical and
--- rolls fields of the `Dice` result), or nil when nothing was rolled.
+--- Server side of the Stats plugin: loads the attribute records, with their boosts, and the
+-- skill records together with the characters, gives characters their attribute and skill
+-- records, networks a character's attributes and skills when it becomes active and removes
+-- its boosts as they expire, checks the stats of new characters, keeps the stat bonuses of
+-- the faction on every character, applies the effects of the stats through the hooks of the
+-- Chatbox, Stamina, Pickup Objects, Damage, Limb Damage and Vendors plugins; the rolls that
+-- a player asks for with the 'fl_stats_roll' message are in `nethooks/sv_stats.lua`. A
+-- handler of a plugin that is not loaded is never called. The 'fl_attributes_view' message,
+-- which the `attribute list` command sends to show a character's attributes and skills to a
+-- member of staff, is registered here; it carries the player, their attributes as
+-- `Player:get_attributes` returns them and their skills as `Player:get_skills` returns
+-- them. So is the 'fl_stats_roll_result' message, the answer to 'fl_stats_roll' that lets
+-- the character sheet show the result on the button that was pressed; it carries the ID of
+-- the stat or the skill and the result (a Map with the formula, total, natural, critical
+-- and rolls fields of the `Dice` result), or nil when nothing was rolled.
 
 local IsValid = IsValid
 local isnumber = isnumber
@@ -82,7 +83,10 @@ end
 -- together with them.
 -- @param preloads [Map relations of the characters, changed in place]
 function Stats:AdjustCharacterPreloads(preloads)
-  preloads.attributes = { 'attribute_boosts' }
+  local attributes = preloads.attributes or {}
+
+  attributes[#attributes + 1] = 'attribute_boosts'
+  preloads.attributes = attributes
   preloads[#preloads + 1] = 'skills'
 end
 

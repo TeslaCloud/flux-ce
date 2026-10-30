@@ -342,13 +342,14 @@ function ActiveRecord.Base:order(column, direction)
 end
 
 --- Finds an object in the database by its ID.
--- Optionally can also call a callback right away.
+-- Optionally also names the #expect callback; the query runs with #fetch.
 -- ```
 -- Object:find(1)
--- Object:find(1, function(obj) ... end)
+-- Object:find(1, function(obj) ... end):fetch()
 -- ```
 -- @param id [Number]
--- @param callback=nil [Function passed to #expect, receives the object that was found]
+-- @param callback=nil [Function passed to #expect, receives the object that was found, or nil
+--   when nothing was found]
 -- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:find(id, callback)
   if !callback then
@@ -359,14 +360,15 @@ function ActiveRecord.Base:find(id, callback)
 end
 
 --- Finds an object in the database by a column value.
--- Optionally can also call a callback right away.
+-- Optionally also names the #expect callback; the query runs with #fetch.
 -- ```
 -- Object:find_by('id', 1)
--- Object:find_by('id', 1, function(obj) ... end)
+-- Object:find_by('id', 1, function(obj) ... end):fetch()
 -- ```
 -- @param column [String]
 -- @param value [Any value to look for, converted to a string]
--- @param callback=nil [Function passed to #expect, receives the object that was found]
+-- @param callback=nil [Function passed to #expect, receives the object that was found, or nil
+--   when nothing was found]
 -- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:find_by(column, value, callback)
   if !callback then

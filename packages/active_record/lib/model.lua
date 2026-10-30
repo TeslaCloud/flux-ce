@@ -21,7 +21,8 @@ function ActiveRecord.Model:all()
   return self.models
 end
 
---- Adds a find_by_<column> shortcut for ActiveRecord::Base#find_by to a model class.
+--- Adds a find_by_<column> shortcut for ActiveRecord::Base#find_by to a model class. The
+-- callback of the shortcut receives the object that was found, or nil when nothing was found.
 -- ```
 -- ActiveRecord.Model:generate_helpers(User, 'steam_id', 'string')
 --

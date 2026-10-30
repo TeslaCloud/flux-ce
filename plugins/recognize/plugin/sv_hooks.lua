@@ -1,6 +1,7 @@
---- Server-side hooks of the Recognize plugin: networks the recognitions of a loaded
--- character, decides who an introduction reaches, erases recognitions when a character
--- dies or is deleted and names the characters on the access lists of doors.
+--- Server-side hooks of the Recognize plugin: loads the recognitions together with the
+-- characters, networks the recognitions of a loaded character, decides who an introduction
+-- reaches, erases recognitions when a character dies or is deleted and names the characters
+-- on the access lists of doors.
 
 --- Loads the recognitions of characters together with them.
 -- @param preloads [Map relations of the characters, changed in place]

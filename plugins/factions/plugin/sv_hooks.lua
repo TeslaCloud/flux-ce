@@ -1,11 +1,11 @@
 --- Server side of the Factions plugin: keeps the team, the networked faction and the rank of
 -- a player in line with their character, stores the faction on new characters, checks the
 -- faction, the whitelist, the gender and the model of a character that is being created
--- against the faction's definition, and networks whitelists. It also enforces the whitelist
--- and the limits of factions and ranks when a character is loaded and the amount of
--- characters a player may have in a faction, and gives the members of a faction their
--- weapons, maximum health and armor, rank model and the feelings of NPCs whenever they spawn
--- or their membership changes.
+-- against the faction's definition, loads the whitelists with the user record of a player
+-- and networks them. It also enforces the whitelist and the limits of factions and ranks
+-- when a character is loaded and the amount of characters a player may have in a faction,
+-- and gives the members of a faction their weapons, maximum health and armor, rank model
+-- and the feelings of NPCs whenever they spawn or their membership changes.
 
 Cable.check_networked_string('fl_faction_creation_refused')
 

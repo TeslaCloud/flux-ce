@@ -1,6 +1,7 @@
---- Server-side hooks of the Currencies plugin: they give new characters their balances,
--- network the balances of characters and containers, hold the default rules for giving,
--- dropping and picking up money, and save and load the money that lies in the world.
+--- Server-side hooks of the Currencies plugin: they load the balances together with the
+-- characters, give new characters their balances, network the balances of characters and
+-- containers, hold the default rules for giving, dropping and picking up money, and save
+-- and load the money that lies in the world.
 
 local IsValid = IsValid
 local CurTime = CurTime

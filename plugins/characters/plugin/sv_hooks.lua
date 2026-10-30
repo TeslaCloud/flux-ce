@@ -1,7 +1,8 @@
 --- Server side of the Characters plugin: keeps players without a character or with a banned
--- one out of the world, sends the character list to players who join, applies a character to
--- its player when it is loaded, saves characters together with the health, armor and ammo of
--- their players, validates character creation data and remembers which names are taken.
+-- one out of the world, loads the characters of players who join together with their user
+-- record, sends the character list to them, applies a character to its player when it is
+-- loaded, saves characters together with the health, armor and ammo of their players,
+-- validates character creation data and remembers which names are taken.
 
 --- Reads the names of all characters from the database, so that `Characters.is_name_taken`
 -- also knows the characters of players who are not connected.
