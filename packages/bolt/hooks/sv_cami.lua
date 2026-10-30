@@ -27,7 +27,7 @@ hooks['CAMI.PlayerUsergroupChanged'] = function(_self, target, _old, new, source
   local role_id = Bolt:role_for_cami_group(new)
 
   if role_id and target:get_role() != role_id then
-    target:SetUserGroup(role_id, true)
+    target:set_role_id(role_id, true)
   end
 end
 
@@ -52,7 +52,7 @@ hooks['CAMI.SteamIDUsergroupChanged'] = function(_self, steam_id, _old, new, sou
   local online = player.find(steam_id)
 
   if IsValid(online) then
-    online:SetUserGroup(role_id, true)
+    online:set_role_id(role_id, true)
   else
     Bolt:set_stored_role(steam_id, role_id, nil, nil, true)
   end

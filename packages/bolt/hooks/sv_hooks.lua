@@ -114,7 +114,7 @@ end
 -- @param actor [Player]
 function hooks:PlayerInitialSpawn(actor)
   if !Bolt:uses_external_admin() then
-    actor:SetUserGroup('user', true)
+    actor:set_role_id('user', true)
   end
 end
 
@@ -145,12 +145,12 @@ function hooks:PlayerRestored(actor, record)
   local sets_role = !Bolt:uses_external_admin()
 
   if sets_role and record.role then
-    actor:SetUserGroup(record.role, true)
+    actor:set_role_id(record.role, true)
   end
 
   if Bolt:is_root_steam_id(actor:SteamID()) then
     if sets_role then
-      actor:SetUserGroup('admin', true)
+      actor:set_role_id('admin', true)
     end
 
     actor.can_anything = true

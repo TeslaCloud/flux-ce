@@ -118,7 +118,7 @@ function hooks:RegisterConditions()
     check = function(target, data)
       if !data.operator or !data.role then return false end
 
-      return util.process_operator(data.operator, target:get_role(), data.role)
+      return util.process_operator(data.operator, target:get_role_table().id, data.role)
     end,
     set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.role.message', 'condition.roles', Bolt:get_roles(),

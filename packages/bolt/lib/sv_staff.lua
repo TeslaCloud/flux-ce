@@ -43,19 +43,15 @@ end
 
 --- Gives a player on the server a role and signals the change to CAMI as coming from 'Bolt',
 -- with the usergroups of CAMI that the two roles are (see `Bolt:get_cami_name`), in both
--- modes, so that another admin mod that Bolt defers to hears of it. Deferring, the player's
--- usergroup becomes the usergroup of the role, so that `admin` gives 'superadmin'. This is how
--- Bolt's commands and the admin panel change roles. Does not check permissions or immunity.
+-- modes, so that another admin mod that Bolt defers to hears of it, see `Player:set_role_id`.
+-- This is how Bolt's commands and the admin panel change roles. Does not check permissions or
+-- immunity.
 -- @param target [Player]
 -- @param role_id [String role ID]
 function Bolt:set_role(target, role_id)
   local old_group = target:GetUserGroup()
 
-  if self:uses_external_admin() then
-    target:SetUserGroup(self:get_cami_name(role_id), true)
-  else
-    target:SetUserGroup(role_id, true)
-  end
+  target:set_role_id(role_id, true)
 
   local new_group = target:GetUserGroup()
 
@@ -214,7 +210,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
   local online = player.find(steam_id)
 
   if IsValid(online) then
-    local old_role = online:get_role()
+    local old_role = online:get_role_table().id or online:get_role()
 
     if !self:check_immunity(actor, online) then
       Flux.Player:notify(actor, 'error.command.higher_immunity', { target = get_player_name(online) })
@@ -254,7 +250,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
     self:set_stored_role(steam_id, 'user', function()
       local joined = player.find(steam_id)
 
-      if IsValid(joined) and joined:get_role() != 'user' then
+      if IsValid(joined) and joined:get_role_table().id != 'user' then
         self:set_role(joined, 'user')
       end
 
@@ -300,7 +296,7 @@ function Bolt:send_staff_list(target)
       for _, client in player.Iterator() do
         if !client:IsBot() then
           local steam_id = client:SteamID()
-          local role = client:get_role()
+          local role = client:get_role_table().id or client:get_role()
           local member = listed[steam_id]
 
           if member then

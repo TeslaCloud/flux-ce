@@ -49,7 +49,10 @@
 -- roles are CAMI usergroups in both modes: `user` is 'user' and `admin` is 'superadmin', the
 -- usergroups that CAMI defines itself, `assistant` inherits from 'admin', `gamemaster` from
 -- `assistant`, and every other role from the usergroup of its base role, so that
--- `GetUserGroup` is 'superadmin' for an administrator while `Player:get_role` is `admin`. By
+-- `GetUserGroup` is 'superadmin' for an administrator whose role (`Player:get_role_table`) is
+-- `admin`. The engine's `SetUserGroup` speaks CAMI usergroups as well: 'admin' gives
+-- `assistant` and 'superadmin' gives `admin`, so that an addon that passes 'admin' never grants
+-- full administration, while Bolt sets roles by their ID with `Player:set_role_id`. By
 -- default Bolt is the admin mod of the server: the usergroups and privileges that other addons
 -- register become Bolt roles and permissions (a privilege is allowed to `user`, `assistant` or
 -- `admin` as its minimum access is 'user', 'admin' or 'superadmin'), and Bolt answers CAMI's
