@@ -1,7 +1,10 @@
 --- ActiveRecord is Flux's object-relational mapper. It ties classes to database tables: a
 -- model is a class that extends `ActiveRecord::Base`, its table is named after the
 -- lowercase plural of the class name, and every row of that table is loaded as an object
--- of the class and written back with `ActiveRecord::Base#save`.
+-- of the class and written back with `ActiveRecord::Base#save`. Models are related with
+-- `has_many`, `has_one` and `belongs_to`; a query loads the rows of its own model only, and
+-- the related objects are loaded when the query asks for them with
+-- `ActiveRecord::Base#preload`.
 --
 -- The tables are described by migrations (`ActiveRecord::Migration`): files in the
 -- schema's `db/migrate/` folder that change the database through the schema statements

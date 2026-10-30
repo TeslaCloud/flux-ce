@@ -2,18 +2,28 @@
 -- it is tied to the database table named after the lowercase plural of its class name,
 -- and each of its objects stands for one row, with the columns of the table as fields.
 --
--- Objects are loaded by chaining query methods (`where`, `order`, `limit` and so on) on
--- the class, naming a callback with `expect` (a single object) or `get` (a list) and then
--- launching the query with `fetch`, or with `rescue`, which also names the callback for
--- when nothing is found. Every chain builds a query of its own: the first query method
--- called on a class or an object starts a new query object, which inherits everything else
--- from the class or object, and the methods after it add to that query object. Queries
--- built at the same time, or one that is never launched, do not affect each other.
+-- Objects are loaded by chaining query methods (`where`, `order`, `limit`, `preload` and so
+-- on) on the class, naming a callback with `expect` (a single object, nil when nothing is
+-- found) or `get` (a list, empty when nothing is found) and then launching the query with
+-- `fetch`, or with `rescue`, which also names the callback for when nothing is found and
+-- hands it a new object instead. Every chain builds a query of its own: the first query
+-- method called on a class or an object starts a new query object, which inherits
+-- everything else from the class or object, and the methods after it add to that query
+-- object. Queries built at the same time, or one that is never launched, do not affect each
+-- other. `update_all` and `delete_all` change or delete every row the conditions of a chain
+-- match with one query, without loading any object.
 --
--- `save` validates an object and inserts or updates its row, and `destroy` deletes it.
--- Models are related to each other with `has_many`, `has_one` and `belongs_to`, validated
--- with `validates`, and may define the `before_save`, `before_create`, `after_create`,
--- `after_save` and `restored` callbacks.
+-- Models are related to each other with `has_many`, `has_one` and `belongs_to`. A query
+-- loads the rows of its own table only: the relations of the loaded objects are loaded when
+-- the query names them with `preload`, nested relations included, and `load_relations`
+-- loads them for objects that are loaded already. Reading a relation that was not loaded
+-- gives nil, whereas a loaded `has_many` without rows is an empty list; a new object starts
+-- with empty `has_many` lists.
+--
+-- `save` validates an object, inserts or updates its row and saves the objects of its loaded
+-- `has_many` and `has_one` relations; relations that were not loaded are left alone. `destroy`
+-- deletes the row of the object alone. Models are validated with `validates`, and may define
+-- the `before_save`, `before_create`, `after_create`, `after_save` and `restored` callbacks.
 --
 -- The file is also sent to the client, where the methods that need the database are
 -- replaced by stubs.
@@ -49,15 +59,15 @@ ActiveRecord.Base.relations   = {}
 ActiveRecord.Base.validations = {}
 
 --- @warning [Internal]
--- Sets up basic variables and creates empty tables for
--- relations that the object has many of.
+-- Sets up basic variables and creates empty lists for the relations that the object has
+-- many of, since a new object has no children yet.
 function ActiveRecord.Base:init()
   self.fetched = false
   self.saving = false
 
   for _, relation in ipairs(self.relations) do
-    if !self[relation.table_name] and relation.many then
-      self[relation.table_name] = {}
+    if relation.many and !self[relation.as] then
+      self[relation.as] = {}
     end
   end
 end
@@ -121,6 +131,54 @@ local function bind_list(values, list)
   end
 
   return concat(placeholders, ', ')
+end
+
+--- @ignore
+-- Adds the relation names of a preload specification to a preload tree, which maps every
+-- relation name to the tree of its own nested relations. A specification is a relation name,
+-- or a table whose list part holds specifications and whose hash part maps relation names to
+-- the specification of their nested relations.
+local function merge_preloads(tree, spec)
+  if isstring(spec) then
+    tree[spec] = tree[spec] or {}
+  elseif istable(spec) then
+    for key, value in pairs(spec) do
+      if isnumber(key) then
+        merge_preloads(tree, value)
+      elseif isstring(key) then
+        local nested = tree[key] or {}
+
+        tree[key] = nested
+
+        merge_preloads(nested, value)
+      end
+    end
+  end
+
+  return tree
+end
+
+local function find_relation(relations, name)
+  for _, relation in ipairs(relations) do
+    if relation.as == name then
+      return relation
+    end
+  end
+end
+
+--- @ignore
+-- Raises an error at the caller of a query method when the preload tree names a relation
+-- that the model does not have or that has no model to load.
+local function check_preloads(model, tree)
+  for name in pairs(tree) do
+    local relation = find_relation(model.relations, name)
+
+    if !relation then
+      error(model.class_name..' has no relation named \''..tostring(name)..'\'', 3)
+    elseif !(relation.child and relation.target_class or relation.model) then
+      error('relation \''..name..'\' of '..model.class_name..' has no model', 3)
+    end
+  end
 end
 
 --- Specifies a WHERE condition in the query.
@@ -331,6 +389,35 @@ function ActiveRecord.Base:skip(amt)
   return query
 end
 
+--- Names the relations that are loaded together with the objects of the query. Without it a
+-- query loads none: reading a relation that was not loaded gives nil, on the objects and on
+-- their children alike. Each relation is loaded with one query for up to 500 objects at a
+-- time; nested relations are named in a table under the name of their parent relation.
+-- Calling it again adds to the relations named before.
+-- ```
+-- User:where('steam_id', steam_id):preload('characters', 'whitelists'):expect(function(user)
+--   print(#user.characters)
+-- end):fetch()
+--
+-- User:all():preload({ characters = { 'skills', attributes = { 'attribute_boosts' } } }):get(function(users)
+--   ...
+-- end):fetch()
+-- ```
+-- @param ... [Vararg relation names, as the fields they are stored in, or tables that list
+--   them and map a relation name to the relations to load for its objects]
+-- @return [ActiveRecord::Base query object]
+function ActiveRecord.Base:preload(...)
+  local tree = merge_preloads({}, { ... })
+
+  check_preloads(self, tree)
+
+  local query = query_of(self)
+
+  query.query_map:insert { 'preload', tree }
+
+  return query
+end
+
 --- @warning [Internal]
 -- Internal function to process child objects or the current object as a child to another object.
 -- @param obj [ActiveRecord::Base parent object]
@@ -361,86 +448,166 @@ end
 
 local relation_batch_size = 500
 
---- @warning [Internal]
--- Internal function to fetch all relations when the objects are fetched from the database.
--- Each relation is loaded with one query for up to 500 of the objects at a time.
--- @param callback [Function called with the objects once all of their relations are loaded]
--- @param objects [List<ActiveRecord::Base> objects to fetch the relations of]
--- @param n=1 [Number index of the relation to fetch]
--- @param offset=0 [Number amount of objects whose relation n has been fetched already]
--- @return [ActiveRecord::Base(self)]
-function ActiveRecord.Base:_fetch_relation(callback, objects, n, offset)
-  n = n or 1
+--- @ignore
+-- Loads one relation of a list of objects, with one query for up to 500 of them at a time,
+-- and the nested relations of the loaded objects with it. A `has_many` field of each object
+-- becomes a list, empty when there are no rows; a `has_one` or `belongs_to` field without a
+-- row becomes nil.
+-- @param relation [Map]
+-- @param objects [List<ActiveRecord::Base>]
+-- @param nested [Map preload tree of the loaded objects, nil to load no nested relations]
+-- @param callback [Function called once the relation of every object has been loaded]
+-- @param offset=0 [Number amount of objects whose relation has been loaded already]
+local function fetch_relation(relation, objects, nested, callback, offset)
   offset = offset or 0
 
-  local relation = self.relations[n]
-
-  if !relation then
-    callback(objects)
-
-    return self
-  end
-
-  if relation.child then
-    return self:_fetch_relation(callback, objects, n + 1)
-  end
-
-  if !relation.model then
-    error_with_traceback('Relation has no model! ('..tostring(relation.table_name)..')')
-    return
-  end
-
+  local child = relation.child
+  local field = relation.as
+  local key_column = child ? 'id' : relation.column_name
   local last = math.min(offset + relation_batch_size, #objects)
-  local by_id = {}
-  local ids = {}
+  local owners_by_key = {}
+  local keys = {}
 
   for i = offset + 1, last do
     local object = objects[i]
+    local key = nil
 
-    if relation.many then
-      object[relation.as] = {}
+    if child then
+      key = object[relation.column_name]
+    else
+      key = object.id
     end
 
-    if object.id != nil then
-      by_id[tostring(object.id)] = object
-      ids[#ids + 1] = object.id
+    object[field] = relation.many ? {} : nil
+
+    if key != nil then
+      local id = tostring(key)
+      local owners = owners_by_key[id]
+
+      if !owners then
+        owners = {}
+        owners_by_key[id] = owners
+        keys[#keys + 1] = key
+      end
+
+      owners[#owners + 1] = object
     end
   end
 
   local function proceed()
     if last < #objects then
-      return self:_fetch_relation(callback, objects, n, last)
+      return fetch_relation(relation, objects, nested, callback, last)
     end
 
-    return self:_fetch_relation(callback, objects, n + 1)
+    callback()
   end
 
-  if #ids == 0 then
+  if #keys == 0 then
     return proceed()
   end
 
-  relation.model:where({ [relation.column_name] = ids }):order('id'):get(function(children)
-    local found = {}
+  local query = (child and relation.target_class or relation.model):where({ [key_column] = keys }):order('id')
 
-    for _, child in ipairs(children) do
-      local parent = by_id[tostring(child[relation.column_name])]
+  if nested then
+    query:preload(nested)
+  end
 
-      if parent and (relation.many or !found[parent]) then
-        found[parent] = true
-        child:_process_child(parent, parent.class)
+  query:get(function(rows)
+    for _, row in ipairs(rows) do
+      local owners = owners_by_key[tostring(row[key_column])]
 
-        if relation.many then
-          local list = parent[relation.as]
+      if !owners then continue end
 
-          list[#list + 1] = child
-        else
-          parent[relation.as] = child
+      for _, owner in ipairs(owners) do
+        if child then
+          owner[field] = row
+        elseif relation.many then
+          local list = owner[field]
+
+          list[#list + 1] = row
+          row:_process_child(owner, owner.class)
+        elseif owner[field] == nil then
+          owner[field] = row
+          row:_process_child(owner, owner.class)
         end
       end
     end
 
-    return proceed()
-  end):rescue(|| -> proceed())
+    proceed()
+  end):fetch()
+end
+
+--- @warning [Internal]
+-- Loads the relations named in a preload tree for a list of objects of the model, one
+-- relation after another, and then calls the callback with the objects.
+-- @param objects [List<ActiveRecord::Base> objects to load the relations of]
+-- @param preloads [Map preload tree: relation names mapped to the trees of their nested
+--   relations]
+-- @param callback [Function called with the objects once their relations have been loaded]
+-- @return [ActiveRecord::Base(self)]
+function ActiveRecord.Base:_fetch_relations(objects, preloads, callback)
+  local names = table.GetKeys(preloads)
+  local index = 0
+
+  table.sort(names)
+
+  local function load_next()
+    index += 1
+
+    local name = names[index]
+
+    if !name then
+      return callback(objects)
+    end
+
+    local nested = preloads[name]
+
+    fetch_relation(find_relation(self.relations, name), objects, next(nested) != nil and nested or nil, load_next)
+  end
+
+  load_next()
+
+  return self
+end
+
+--- Loads relations of objects that are loaded already, with the same batched queries as
+-- #preload, and replaces whatever their relation fields held. Called on an object it loads
+-- the relations of that object; called on a list of objects of one model, as
+-- `ActiveRecord.Base.load_relations(objects, ...)`, those of every object in it.
+-- ```
+-- character:load_relations('recognizes', function(character)
+--   print(#character.recognizes)
+-- end)
+--
+-- ActiveRecord.Base.load_relations(characters, { attributes = { 'attribute_boosts' } }, function(characters)
+--   ...
+-- end)
+-- ```
+-- @param preloads [String/Map relation name, or a table of them as #preload takes it]
+-- @param callback=nil [Function called with the object or the list once the relations have
+--   been loaded]
+-- @return [ActiveRecord::Base/List the object or the list]
+function ActiveRecord.Base:load_relations(preloads, callback)
+  local objects = self.static_class == false ? { self } : self
+  local model = objects[1]?.class
+
+  if !model then
+    if callback then
+      callback(self)
+    end
+
+    return self
+  end
+
+  local tree = merge_preloads({}, preloads)
+
+  check_preloads(model, tree)
+
+  model:_fetch_relations(objects, tree, function()
+    if callback then
+      callback(self)
+    end
+  end)
 
   return self
 end
@@ -448,9 +615,10 @@ end
 --- @warning [Internal]
 -- Runs the query based on the query map of the query object and flushes the query map.
 -- The callback, the #rescue callback and the conditions are taken from the query object
--- when the query is sent.
--- @param callback [Function called with a List of the loaded objects; not called if
---   nothing was found]
+-- when the query is sent. When nothing is found, the #rescue callback is called with a new
+-- object if there is one, and the callback with an empty list otherwise. The relations
+-- named with #preload are loaded before the callback is called.
+-- @param callback [Function called with a List of the loaded objects]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:run_query(callback)
   local query_map = self.query_map
@@ -458,6 +626,7 @@ function ActiveRecord.Base:run_query(callback)
   if istable(query_map) and #query_map > 0 then
     local query = ActiveRecord.Database:select(self.table_name)
     local rescue = self._rescue
+    local preloads = nil
 
     for _, entry in ipairs(query_map) do
       local t, a, b = entry[1], entry[2], entry[3]
@@ -474,6 +643,8 @@ function ActiveRecord.Base:run_query(callback)
         query:limit(a)
       elseif t == 'offset' then
         query:offset(a)
+      elseif t == 'preload' then
+        preloads = merge_preloads(preloads or {}, a)
       end
     end
 
@@ -483,30 +654,35 @@ function ActiveRecord.Base:run_query(callback)
     query:callback(function(results, query_str, time, bindings)
       print_query(self.class_name..' Load ('..time..'s)', query_str, bindings)
 
-      if istable(results) and #results > 0 then
-        if !isfunction(callback) then return end
+      local found = istable(results) and #results > 0
 
-        local objects = {}
-
-        for i = 1, #results do
-          objects[i] = self:_create_restored(results[i])
-        end
-
-        if #self.relations == 0 then
-          return callback(objects)
-        else
-          ar_add_indent()
-          local ret = self:_fetch_relation(callback, objects)
-          ar_sub_indent()
-          return ret
-        end
-      elseif isfunction(rescue) then
+      if !found and isfunction(rescue) then
         rescue(self.class.new())
 
         if isfunction(self.created) then
           self:created()
         end
+
+        return
       end
+
+      if !isfunction(callback) then return end
+
+      local objects = {}
+
+      if found then
+        for i = 1, #results do
+          objects[i] = self:_create_restored(results[i])
+        end
+      end
+
+      if !preloads or next(preloads) == nil or #objects == 0 then
+        return callback(objects)
+      end
+
+      ar_add_indent()
+      self:_fetch_relations(objects, preloads, callback)
+      ar_sub_indent()
     end)
 
     query:execute()
@@ -517,13 +693,20 @@ end
 
 --- @warning [Internal]
 -- Internal function to create a new instance of the object based on the
--- data from the database.
+-- data from the database. The relations of the instance are not loaded, so its `has_many`
+-- fields are nil.
 -- @param data [Map row returned by the database]
 -- @return [ActiveRecord::Base(object)]
 function ActiveRecord.Base:_create_restored(data)
   local object = self.class.new()
   object.id = data.id
   object.fetched = true
+
+  for _, relation in ipairs(self.relations) do
+    if relation.many then
+      object[relation.as] = nil
+    end
+  end
 
   local schema = ActiveRecord.schema[self.table_name] or {}
   local str_to_type = ActiveRecord.str_to_type
@@ -543,19 +726,17 @@ end
 
 --- Used when a single return value is expected.
 -- Calls the callback with a single object when the object has
--- finished loading from the database.
+-- finished loading from the database, or with nil when nothing was found.
 -- ```
--- Object:first():expect(function(obj) ... end)
+-- Object:first():expect(function(obj) ... end):fetch()
 -- ```
--- @param callback [Function receives the loaded object]
+-- @param callback [Function receives the loaded object, nil when nothing was found]
 -- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:expect(callback)
   local query = query_of(self)
 
   query._get = nil
-  query._expect = function(results)
-    callback(results[1])
-  end
+  query._expect = |results| -> callback(results[1])
 
   return query
 end
@@ -564,23 +745,16 @@ end
 -- Calls the callback with all objects that were returned from
 -- the database once the object has finished loading.
 -- ```
--- Object:all():get(function(results) ... end)
+-- Object:all():get(function(results) ... end):fetch()
 -- ```
--- @param callback [Function receives a List of the loaded objects]
+-- @param callback [Function receives a List of the loaded objects, empty when nothing was
+--   found]
 -- @return [ActiveRecord::Base query object]
 function ActiveRecord.Base:get(callback)
   local query = query_of(self)
 
   query._expect = nil
-  query._get = function(results)
-    local all_objects = {}
-
-    for index, object in ipairs(results) do
-      all_objects[index] = object
-    end
-
-    callback(all_objects)
-  end
+  query._get = callback
 
   return query
 end
@@ -607,9 +781,9 @@ function ActiveRecord.Base:fetch()
   return query:run_query(callback)
 end
 
---- Used to catch errors during queries.
--- This callback is called in case no object was found in the database.
--- The callback's first argument is a new object of the same class pre-made for you.
+--- Runs the query like #fetch, with a callback for when nothing is found in the database
+-- instead of the #expect or #get callback. The callback's first argument is a new object of
+-- the same class pre-made for you.
 -- ```
 -- Object:where('id > 100000'):first():expect(function(obj)
 --   ...
@@ -625,6 +799,97 @@ function ActiveRecord.Base:rescue(callback)
   query._rescue = callback
 
   return query:fetch()
+end
+
+--- @ignore
+-- Collects the WHERE conditions of a query map into a query of the Database layer for
+-- #update_all and #delete_all, and raises an error at their caller for a LIMIT or OFFSET,
+-- which those statements do not take on every database.
+local function apply_conditions(query, query_map, method)
+  for _, entry in ipairs(query_map) do
+    local kind = entry[1]
+
+    if kind == 'where' then
+      query:where_raw(entry[2], entry[3])
+    elseif kind == 'limit' or kind == 'offset' then
+      error(method..' does not take a '..kind, 3)
+    end
+  end
+end
+
+--- Changes columns of every row that the conditions of the query match, with a single
+-- UPDATE and without loading any object, and sets their `updated_at` as #save does. Objects
+-- that are loaded already keep their values. Without conditions every row is changed.
+-- ```
+-- User:where('steam_id', steam_id):update_all({ role = 'admin' }, function() ... end)
+-- ```
+-- @param fields [Map new values keyed by column name]
+-- @param callback=nil [Function called without arguments once the rows have been changed]
+-- @return [ActiveRecord::Base query object]
+function ActiveRecord.Base:update_all(fields, callback)
+  local query = query_of(self)
+  local schema = self:get_schema()
+  local type_to_db = ActiveRecord.type_to_db
+  local statement = ActiveRecord.Database:update(self.table_name)
+
+  apply_conditions(statement, query.query_map, 'update_all')
+
+  for column, value in pairs(fields) do
+    local column_data = schema[column]
+
+    if column_data then
+      value = type_to_db(value, column_data.type)
+    end
+
+    statement:update(column, value)
+  end
+
+  if fields.updated_at == nil then
+    statement:update('updated_at', to_datetime(os.time()))
+  end
+
+  query.query_map = a{}
+
+  statement:callback(function(_result, query_str, time, bindings)
+    print_query(self.class_name..' Update All ('..time..'s)', query_str, bindings)
+
+    if isfunction(callback) then
+      callback()
+    end
+  end)
+
+  statement:execute()
+
+  return query
+end
+
+--- Deletes every row that the conditions of the query match, with a single DELETE and
+-- without loading any object or running their callbacks. Without conditions every row is
+-- deleted.
+-- ```
+-- CharacterPermission:where('character_id', id):delete_all()
+-- ```
+-- @param callback=nil [Function called without arguments once the rows have been deleted]
+-- @return [ActiveRecord::Base query object]
+function ActiveRecord.Base:delete_all(callback)
+  local query = query_of(self)
+  local statement = ActiveRecord.Database:delete(self.table_name)
+
+  apply_conditions(statement, query.query_map, 'delete_all')
+
+  query.query_map = a{}
+
+  statement:callback(function(_result, query_str, time, bindings)
+    print_query(self.class_name..' Delete All ('..time..'s)', query_str, bindings)
+
+    if isfunction(callback) then
+      callback()
+    end
+  end)
+
+  statement:execute()
+
+  return query
 end
 
 --- @ignore
@@ -681,7 +946,9 @@ local function gen_callback(self, insert)
 end
 
 --- Saves the object to the database.
--- This is the function that actually commits data to the database.
+-- This is the function that actually commits data to the database. Once the row is
+-- written, the objects of the loaded `has_many` and `has_one` relations are saved as well;
+-- a relation that was not loaded is nil and left alone, so its rows stay as they are.
 -- ```
 -- local obj = Object.new()
 --   obj.money = 100
@@ -758,7 +1025,8 @@ function ActiveRecord.Base:save()
   return self
 end
 
---- Deletes the current object from the database.
+--- Deletes the current object from the database. The rows of its relations are left to
+-- the foreign keys of the database.
 -- @warning [Once done, do not attempt saving the object again, since it will cause unpredictable behavior]
 -- ```
 -- obj:destroy()
@@ -779,13 +1047,14 @@ end
 
 --- Specifies that the object has one or many of another object.
 -- The object(s) will be stored in a field with the same name
--- as the child's database table.
+-- as the child's database table, once the relation is loaded with #preload or
+-- #load_relations; until then the field is nil.
 -- ```
 -- MyClass:has('users', true)
 -- ...
--- MyClass:first():expect(function(obj)
+-- MyClass:first():preload('users'):expect(function(obj)
 --   print(obj.users) -- table
--- end)
+-- end):fetch()
 -- ```
 -- @param what [String/Map table name of the child model, or a hash such as
 --   { 'table_name', as = 'field_name' } to store the object(s) in another field]
@@ -838,13 +1107,14 @@ end
 
 --- Specifies that the object has many instances of another object.
 -- The objects will be stored in a field with the same name
--- as the child's database table.
+-- as the child's database table, once the relation is loaded with #preload or
+-- #load_relations; until then the field is nil, and it is an empty list for a new object.
 -- ```
 -- MyClass:has_many 'users'
 -- ...
--- MyClass:first():expect(function(obj)
+-- MyClass:first():preload('users'):expect(function(obj)
 --   print(obj.users) -- table
--- end)
+-- end):fetch()
 -- ```
 -- @param what [String/Map table name of the child model, or a hash such as
 --   { 'table_name', as = 'field_name' } to store the objects in another field]
@@ -854,14 +1124,15 @@ function ActiveRecord.Base:has_many(what)
 end
 
 --- Specifies that the object has one instance of another object.
--- The object will be stored in a field with the same name
--- as the child's database table.
+-- The object will be stored in a field named after the child model, once the relation is
+-- loaded with #preload or #load_relations; until then, and when there is no such object,
+-- the field is nil.
 -- ```
 -- MyClass:has_one 'user'
 -- ...
--- MyClass:first():expect(function(obj)
+-- MyClass:first():preload('user'):expect(function(obj)
 --   print(obj.user) -- #<User>
--- end)
+-- end):fetch()
 -- ```
 -- @param what [String singular underscored name of the child model, e.g. 'ammunition']
 -- @return [ActiveRecord::Base(self)]
@@ -869,9 +1140,16 @@ function ActiveRecord.Base:has_one(what)
   return self:has({ ActiveRecord.Inflector:pluralize(what), as = what }, false)
 end
 
---- Specifies that the object belongs to a parent object.
+--- Specifies that the object belongs to a parent object. The parent is stored in a field
+-- named after the parent model (`user` for 'User'), found by the `<field>_id` column. It is
+-- set when the parent loads this object as its child, or when the relation is loaded with
+-- #preload or #load_relations; until then the field is nil.
 -- ```
 -- MyClass:belongs_to 'User'
+-- ...
+-- MyClass:first():preload('user'):expect(function(obj)
+--   print(obj.user) -- #<User>
+-- end):fetch()
 -- ```
 -- @param target [String/ActiveRecord::Base class of the parent model, or its name
 --   (e.g. 'User')]
@@ -884,10 +1162,13 @@ function ActiveRecord.Base:belongs_to(target, one)
   end
 
   if istable(target) then
+    local field = target.class_name:underscore()
+
     target:has(self.table_name, !one)
     table.insert(self.relations, {
       child = true,
-      as = target.class_name:underscore(),
+      as = field,
+      column_name = field..'_id',
       target_class = target
     })
   end

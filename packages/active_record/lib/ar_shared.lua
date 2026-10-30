@@ -16,9 +16,10 @@ if !ActiveRecord.Base then
   local remove_keys = {
     'class_extended', 'dump', 'where', 'where_not',
     'first', 'last', 'all', 'order', 'find', 'find_by',
-    'limit', '_process_child',  '_fetch_relation',
-    'run_query', 'expect', 'get', 'rescue', 'destroy',
-    'save', 'has', 'has_many', 'has_one', 'belongs_to'
+    'limit', 'skip', 'preload', '_process_child', '_fetch_relations',
+    'load_relations', 'run_query', 'expect', 'get', 'fetch', 'rescue',
+    'update_all', 'delete_all', 'destroy', 'save', 'has', 'has_many',
+    'has_one', 'belongs_to'
   }
 
   for _, method_name in ipairs(remove_keys) do
