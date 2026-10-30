@@ -19,7 +19,6 @@ function ROLE:define_permissions()
   can 'gamemastery'
 
   can 'physgun_pickup'
-  can 'bypass_prop_protection'
 
   can 'spawn_vehicles'
   can 'spawn_npcs'

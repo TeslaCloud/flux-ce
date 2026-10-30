@@ -521,8 +521,8 @@ end
 -- @return [Boolean false if the entity has been frozen, nil otherwise]
 function GM:OnPhysgunFreeze(weapon, phys_obj, entity, actor)
   --- Asks whether a player who lacks the physgun_freeze permission may freeze an entity
-  -- with the physics gun all the same, for instance because they own it. Called on the
-  -- server after every OnPhysgunFreeze handler has had the chance to refuse.
+  -- with the physics gun all the same. Called on the server after every OnPhysgunFreeze
+  -- handler has had the chance to refuse.
   -- @param actor [Player The player holding the physics gun]
   -- @param entity [Entity The entity being frozen]
   -- @return [Boolean Return true to allow the freeze]

@@ -495,8 +495,8 @@ function GM:PhysgunPickup(actor, entity)
   end
 
   --- Asks whether a player who lacks the physgun_pickup permission may pick an entity up
-  -- with the physics gun all the same, for instance because they own it. Called on both the
-  -- server and the client after every PhysgunPickup handler has had the chance to refuse.
+  -- with the physics gun all the same. Called on both the server and the client after every
+  -- PhysgunPickup handler has had the chance to refuse.
   -- @param actor [Player The player holding the physics gun]
   -- @param entity [Entity The entity being picked up]
   -- @return [Boolean Return true to allow the pickup]
