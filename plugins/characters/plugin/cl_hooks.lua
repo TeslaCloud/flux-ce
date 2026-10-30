@@ -129,7 +129,7 @@ end
 
 --- Closes the main menu after a character has been loaded.
 -- @param _char_id [Number]
-function Characters:PostCharacterLoaded(_char_id)
+function Characters:PostLoadCharacter(_char_id)
   if IsValid(Flux.intro_panel) then
     Flux.intro_panel:safe_remove()
   end
@@ -169,7 +169,7 @@ end
 -- returns false, the player's model icon and physical description.
 -- @param card [Panel the scoreboard player card]
 -- @param target [Player]
-function Characters:RebuildScoreboardPlayerCard(card, target)
+function Characters:PostRebuildScoreboardPlayerCard(card, target)
   local text = target:steam_name()
   local font = Theme.get_font('text_normal')
   local text_height = util.text_height(text, font)

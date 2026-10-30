@@ -210,7 +210,7 @@ end
 --- Gives a container zero balances for every currency if it has none yet and networks its
 -- balances.
 -- @param entity [Entity the container]
-function Currencies:PreContainerOpen(entity)
+function Currencies:PreOpenContainer(entity)
   if !entity.currencies then
     local currencies = {}
 

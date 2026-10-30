@@ -47,7 +47,7 @@ end
 -- @param id [String ID of the stage being left]
 -- @param panel [Panel the panel of that stage]
 -- @return [Boolean false to block the change, String translated error; nothing otherwise]
-function Factions:PreStageChange(id, panel)
+function Factions:PreChangeStage(id, panel)
   if id == 'ui.char_create.general' then
     local gender =
       (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
@@ -204,6 +204,13 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
     cur_y = cur_y + category:GetTall() + card_tall + margin
   end
+
+  --- Called on the client after the faction categories of the scoreboard and their player
+  -- cards have been created.
+  -- @param players_table [Map lists of players keyed by faction ID or 'players_online', as
+  --   the categories have been built from them]
+  -- @param panel [Panel the scoreboard]
+  hook.Run('PostRebuildFactionCategories', players_table, panel)
 
   return true
 end

@@ -182,7 +182,7 @@ function Flux.Bars:prioritize()
     -- sorted into the prioritized list of top bars. This happens every `LazyTick` and is the
     -- place to change the `priority` of a bar.
     -- @param bar [Map bar data]
-    hook.Run('PreBarPrioritized', bar)
+    hook.Run('PrePrioritizeBar', bar)
 
     local priority = bar.priority
     local ids = sorted[priority]

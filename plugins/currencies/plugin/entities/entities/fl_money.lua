@@ -88,6 +88,12 @@ if SERVER then
     if hook.Run('PrePlayerPickupMoney', activator, self) == false then return end
 
     if Currencies:pickup_money(activator, self) then
+      --- Called on the server after a player has picked money up, right before the money
+      -- entity is removed. Not called when nothing has changed hands.
+      -- @param activator [Player the player who has picked the money up]
+      -- @param entity [Entity the fl_money entity]
+      hook.Run('PostPlayerPickupMoney', activator, self)
+
       self:Remove()
     end
   end

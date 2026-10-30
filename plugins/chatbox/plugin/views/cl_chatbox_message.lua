@@ -107,6 +107,14 @@ function PANEL:Paint(w, h)
         cur_font = Font.size(Theme.get_font('chatbox_normal'), v)
       end
     end
+
+    --- Called on the client every frame for each visible chat message, after its default
+    -- drawing, for drawing on top of it. Not called when PrePaintChatMessage has skipped the
+    -- default drawing; gamemode hooks are not called.
+    -- @param w [Number width of the message panel]
+    -- @param h [Number height of the message panel]
+    -- @param panel [Panel the fl_chat_message panel]
+    Plugin.call('PostPaintChatMessage', w, h, self)
   end
 end
 

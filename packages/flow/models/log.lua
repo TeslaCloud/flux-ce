@@ -141,7 +141,7 @@ end
 
 --- Sends the most recent entry to the clients, where it is handled the same way it was made:
 -- an entry of Log:print or Log:colored is printed to the console, and an entry of Log:write
--- or Log:notify is only recorded, with no output of its own (the LogReplicate hook still
+-- or Log:notify is only recorded, with no output of its own (the PreReplicateLog hook still
 -- runs for it). Does nothing if the most recent entry has already been sent. Server only.
 -- @param condition=nil [Function called with each Player; return true to send the entry to
 --   them. Everyone receives it when omitted]

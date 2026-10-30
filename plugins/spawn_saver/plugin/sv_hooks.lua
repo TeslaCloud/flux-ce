@@ -44,7 +44,7 @@ end
 -- position of the player be saved with that character from now on.
 -- @param owner [Player]
 -- @param character [Character the loaded character]
-function SpawnSaver:PostCharacterLoaded(owner, character)
+function SpawnSaver:PostLoadCharacter(owner, character)
   if !owner:IsBot() and Config.get('spawn_saver_enabled') then
     self:restore_spawn_point(owner, character)
   end

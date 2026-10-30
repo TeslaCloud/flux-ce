@@ -5,7 +5,7 @@
 --- Networks the names a character recognizes others by once it is loaded.
 -- @param owner [Player player the character belongs to]
 -- @param _character [Character loaded character]
-function Recognition:PostCharacterLoaded(owner, _character)
+function Recognition:PostLoadCharacter(owner, _character)
   self:sync(owner)
 end
 

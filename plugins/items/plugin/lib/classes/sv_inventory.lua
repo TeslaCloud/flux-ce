@@ -214,9 +214,9 @@ function Inventory:take_item_by_id(instance_id)
 end
 
 --- Takes an item out of the inventory for good, to be dropped into the world or removed,
--- between the `PreItemTransfer` and `ItemTransferred` hooks. Returns false without
+-- between the `PreTransferItem` and `ItemTransferred` hooks. Returns false without
 -- running either hook when the item is not in this inventory. Otherwise
--- `PreItemTransfer` always runs; when a handler of it has taken the item out of the
+-- `PreTransferItem` always runs; when a handler of it has taken the item out of the
 -- inventory by itself, or the item cannot be taken out, `ItemTransferred` is not run and
 -- the item is left where it is. Does not synchronize the inventory, so that a caller
 -- that releases several items syncs once.
@@ -237,7 +237,7 @@ function Inventory:release_item(item_obj)
   -- @param new_inventory [Inventory Always nil here: the item does not go to another
   --   inventory]
   -- @param old_inventory [Inventory The inventory the item is in]
-  hook.Run('PreItemTransfer', item_obj, nil, self)
+  hook.Run('PreTransferItem', item_obj, nil, self)
 
   if item_obj.inventory_id != self.id or !self:take_item_table(item_obj) then
     return false
@@ -445,7 +445,7 @@ function Inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
   --   for the world or is removed]
   -- @param old_inventory [Inventory The inventory the item is in, or nil if it comes from
   --   the world]
-  hook.Run('PreItemTransfer', item_obj, inventory, self)
+  hook.Run('PreTransferItem', item_obj, inventory, self)
 
   if item_obj.inventory_id != self.id then
     return false, 'error.inventory.invalid_item'
@@ -491,7 +491,7 @@ function Inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
   inventory:check_size()
 
   --- Called on the server right after an item has changed its inventory. It is run in
-  -- the same cases as `PreItemTransfer`: a transfer between two inventories, as here, a
+  -- the same cases as `PreTransferItem`: a transfer between two inventories, as here, a
   -- pickup from the world (without `old_inventory`, and only if the item did fit) and an
   -- item leaving its inventory for good through `Inventory:release_item` (with nil as
   -- `new_inventory`).

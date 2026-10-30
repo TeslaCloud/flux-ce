@@ -721,29 +721,6 @@ function GM:ConfigChanged(key, _old_value, new_value)
   end
 end
 
---- Strips the weapons of the player, gives them the default loadout and selects the first
--- weapon of it, then runs the PlayerLoadoutGiven hook for the weapons that plugins add.
--- @param actor [Player]
--- @param default_loadout [List<String> weapon classes to give]
-function GM:PostPlayerLoadout(actor, default_loadout)
-  actor:StripWeapons()
-
-  for _, weapon_class in pairs(default_loadout) do
-    actor:Give(weapon_class)
-  end
-
-  actor:SelectWeapon(default_loadout[1])
-
-  --- Called on the server once a spawning player holds the default loadout, after the
-  -- gamemode has stripped their weapons and given the default ones. This is where a plugin
-  -- or schema gives the player the weapons of their faction, rank or job: a weapon given
-  -- from `PostPlayerLoadout` would be stripped right after. Runs inside `Player:Spawn`, so
-  -- whatever happens after the spawn, such as restoring saved ammo, sees these weapons.
-  -- @param actor [Player the player who has spawned]
-  -- @param default_loadout [List<String> weapon classes the player has been given]
-  hook.Run('PlayerLoadoutGiven', actor, default_loadout)
-end
-
 --- Tells the client of the player to open the interaction menu for the player or entity
 -- they pressed the use key on, at most once a second.
 -- @param activator [Player]

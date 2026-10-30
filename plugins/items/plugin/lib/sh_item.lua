@@ -22,7 +22,7 @@
 -- reaches it. The server remembers which players know an instance, so that changes and
 -- the removal of the instance reach exactly them (`Item.network_item`,
 -- `Item.network_item_data`). Plugins can add fields to what is sent through the
--- `PreItemNetwork` hook.
+-- `AdjustItemNetworkData` hook.
 --
 -- An item entity remembers the character that dropped it: `Item.spawn` takes the dropper
 -- as its last argument, which the Items plugin passes whenever a player drops an item
@@ -172,7 +172,7 @@ end
 
 --- Builds a plain table with what a client needs to know about an item instance: its
 -- template, its instance id, its custom data and its overridden fields.
--- Runs the 'PreItemNetwork' hook so that plugins can add fields of their own.
+-- Runs the 'AdjustItemNetworkData' hook so that plugins can add fields of their own.
 -- @param item_obj [Item]
 -- @return [Map networkable fields, or nil if no item was given]
 function Item.to_networkable(item_obj)
@@ -193,11 +193,11 @@ function Item.to_networkable(item_obj)
   --- Lets plugins add fields to what a client is sent about an item instance. Called by
   -- `Item.to_networkable` on the server whenever an instance is sent to a client. The
   -- client builds its copy of the instance out of the template and these fields.
-  -- Handlers write their fields into `fields`; the Items plugin adds the position of
-  -- the item in its inventory.
+  -- Handlers add, change or remove the entries of `fields` in place and return nothing;
+  -- the Items plugin adds the position of the item in its inventory.
   -- @param item_obj [Item The item that is being sent]
   -- @param fields [Map The fields that are going to be sent, to be modified in place]
-  hook.Run('PreItemNetwork', item_obj, fields)
+  hook.Run('AdjustItemNetworkData', item_obj, fields)
 
   return fields
 end

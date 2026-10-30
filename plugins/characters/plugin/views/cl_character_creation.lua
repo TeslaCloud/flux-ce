@@ -248,7 +248,7 @@ function PANEL:next_stage()
   -- @param panel [Panel the panel of that stage]
   -- @return [Boolean return false to stay on the stage, String error text to show; a generic
   --   error is shown when it is omitted]
-  local success, error_text = hook.Run('PreStageChange', self.stages[self.stage], self.panel)
+  local success, error_text = hook.Run('PreChangeStage', self.stages[self.stage], self.panel)
 
   if success == false then
     self:GetParent():notify(error_text or t'ui.char_create.unknown_error')
@@ -258,6 +258,12 @@ function PANEL:next_stage()
 
   if self.stage != #self.stages then
     self:set_stage(self.stage + 1)
+
+    --- Called on the client after the character creation screen has moved on to the next
+    -- stage. Not called on the last stage, where the player is asked to confirm instead.
+    -- @param id [String ID of the stage that is open now]
+    -- @param panel [Panel the panel of that stage]
+    hook.Run('PostChangeStage', self.stages[self.stage], self.panel)
   else
     if self.panel.on_close then
       self.panel:on_close(self)

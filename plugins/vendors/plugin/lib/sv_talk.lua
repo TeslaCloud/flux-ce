@@ -30,7 +30,7 @@ function Vendors:say(vendor, actor, id)
   --   'thanks']
   -- @param text [String What the vendor is about to say]
   -- @return [Boolean Return false to keep the vendor silent, String Text to say instead]
-  local result = hook.Run('VendorSay', vendor, actor, id, text)
+  local result = hook.Run('GetVendorSpeech', vendor, actor, id, text)
 
   if result == false then return end
 

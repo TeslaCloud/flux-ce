@@ -72,7 +72,7 @@ function Flux.include_schema()
     timer.Simple(0.2, function()
       Cable.send('fl_client_included_schema', true)
       --- Called on the client shortly after the schema files have been included, right after
-      -- the server has been told about it (which runs `ClientIncludedSchema` there). The
+      -- the server has been told about it (which runs `PlayerSchemaLoaded` there). The
       -- gamemode's handler creates the fonts.
       hook.Run('ClientSchemaLoaded')
     end)

@@ -203,7 +203,7 @@ end
 -- @param actor [Player]
 -- @param _model [String the player's model]
 -- @return [Boolean whether the player's weapon is raised]
-function RaiseGun:ModelWeaponRaised(actor, _model)
+function RaiseGun:ShouldUseRaisedAnimations(actor, _model)
   return actor:is_weapon_raised()
 end
 

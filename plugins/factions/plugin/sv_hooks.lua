@@ -56,8 +56,8 @@ end
 -- that the Characters plugin restores once the player has spawned is set on top of these
 -- weapons.
 -- @param actor [Player]
--- @param _default_loadout [List<String> weapon classes of the default loadout]
-function Factions:PlayerLoadoutGiven(actor, _default_loadout)
+-- @param _loadout [List<String> weapon classes the player has been given]
+function Factions:PlayerLoadoutGiven(actor, _loadout)
   actor.faction_weapons = nil
 
   self.give_loadout(actor)
@@ -88,7 +88,7 @@ end
 -- the rank model and the feelings of NPCs that an earlier character of theirs has left.
 -- @param owner [Player]
 -- @param character [Character]
-function Factions:PostCharacterLoaded(owner, character)
+function Factions:PostLoadCharacter(owner, character)
   owner:set_nv('faction', character.faction)
 
   local faction_table = owner:get_faction()

@@ -14,7 +14,7 @@
 --
 -- Other plugins build on it through hooks: `PlayerCreateCharacter` validates the data of a new
 -- character, `PostCreateCharacter` and `SaveCharacterData` let them keep their own fields on a
--- character, `ActiveCharacterSet` and `PostCharacterLoaded` tell them that a character has
+-- character, `ActiveCharacterSet` and `PostLoadCharacter` tell them that a character has
 -- been loaded, and `AddCharacterCreationMenuStages` and `AddMainMenuItems` add stages to the
 -- character creation screen and buttons to the main menu. `GetCharacterLimit` changes the
 -- limit for a player, and `PlayerCanUseCharacter`, `PlayerCanSwitchCharacter` and

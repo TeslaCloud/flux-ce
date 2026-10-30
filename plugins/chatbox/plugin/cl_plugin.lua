@@ -252,6 +252,13 @@ function Chatbox.compile(msg_table)
           total_height = h + message_margin
         end
       end
+
+      --- Called on the client after a piece of a message has been compiled, unless
+      -- PreCompileChatMessageData has skipped its default handling; gamemode hooks are not
+      -- called.
+      -- @param piece [Any the piece that has been compiled]
+      -- @param compiled [Map the message compiled so far, the piece included]
+      Plugin.call('PostCompileChatMessageData', piece, compiled)
     end
   end
 

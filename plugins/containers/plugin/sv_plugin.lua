@@ -386,7 +386,7 @@ function Containers:can_open(actor, entity)
 end
 
 --- Opens a container for a player without any checks: plays its opening sound, runs the
--- `PreContainerOpen` hook, shows its inventory and its message to the player.
+-- `PreOpenContainer` hook, shows its inventory and its message to the player.
 -- @param actor [Player]
 -- @param entity [Entity the container prop]
 -- @return [Boolean true if the container was opened, false if the entity is not a container]
@@ -403,12 +403,19 @@ function Containers:open(actor, entity)
 
   --- Called on the server when a container is opened for a player, after its inventory has
   -- been created or found and its opening sound played, right before the inventory is
-  -- shown to the player.
+  -- shown to the player. The return value is ignored: `PlayerCanOpenContainer` decides whether
+  -- the container may be opened.
   -- @param entity [Entity the container prop; its inventory is entity.inventory]
   -- @param actor [Player the player the container is opened for]
-  hook.Run('PreContainerOpen', entity, actor)
+  hook.Run('PreOpenContainer', entity, actor)
 
   actor:open_inventory(inventory)
+
+  --- Called on the server right after the inventory of a container has been shown to a
+  -- player, before the message of the container is sent to them.
+  -- @param entity [Entity the container prop; its inventory is entity.inventory]
+  -- @param actor [Player the player the container has been opened for]
+  hook.Run('PostOpenContainer', entity, actor)
 
   local message = entity.container_message
 

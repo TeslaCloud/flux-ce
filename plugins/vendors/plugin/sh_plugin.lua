@@ -25,7 +25,7 @@
 --
 -- Hooks: `PlayerCanUseVendor` decides who may trade, `AdjustVendorPrice` changes prices,
 -- `PlayerCanBuyFromVendor` and `PlayerCanSellToVendor` veto single trades,
--- `PlayerBoughtFromVendor` and `PlayerSoldToVendor` report them, and `VendorSay` changes or
+-- `PlayerBoughtFromVendor` and `PlayerSoldToVendor` report them, and `GetVendorSpeech` changes or
 -- mutes what a vendor says.
 -- @module [Vendors]
 

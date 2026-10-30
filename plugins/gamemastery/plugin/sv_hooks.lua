@@ -26,7 +26,7 @@ end
 --- Moves a player who has possessed a pool character back to where they possessed it.
 -- @param owner [Player]
 -- @param _character [Character]
-function Gamemastery:PostCharacterLoaded(owner, _character)
+function Gamemastery:PostLoadCharacter(owner, _character)
   if owner.gm_transform then
     Gamemastery.apply_transform(owner)
   end

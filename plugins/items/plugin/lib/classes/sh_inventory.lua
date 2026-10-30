@@ -9,7 +9,7 @@
 -- Inventories are created and changed on the server. Items are put in with
 -- `Inventory:add_item` or `Inventory:give_item`, taken out with the `take_` functions and
 -- moved with `Inventory:move_item` and `Inventory:transfer_item`, which run the
--- `CanItemMove`, `CanItemTransfer`, `PreItemTransfer` and `ItemTransferred` hooks.
+-- `CanItemMove`, `CanItemTransfer`, `PreTransferItem` and `ItemTransferred` hooks.
 -- `Inventory:release_item` takes an item out for good between the last two hooks, to be
 -- dropped into the world, and `Inventory:destroy_item` also synchronizes the inventory and
 -- removes the item. The changes reach the clients when `Inventory:sync` is called, which

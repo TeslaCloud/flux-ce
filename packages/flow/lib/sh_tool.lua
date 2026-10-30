@@ -30,11 +30,16 @@ Pipeline.register('tool', function(id, file_name, _pipe)
   --- Called on the server and the client after a tool file has been included, right before the
   -- console variables of the tool are created with `Tool:CreateConVars`.
   -- @param tool [Tool the tool that has been loaded]
-  hook.Run('ToolPreCreateConvars', TOOL)
+  hook.Run('PreCreateToolConvars', TOOL)
 
   TOOL:CreateConVars()
 
   Flux.Tool.stored[id] = table.Copy(TOOL)
+
+  --- Called on the server and the client after a tool file has been included, its console
+  -- variables have been created and the tool has been stored for `Flux.Tool:get`.
+  -- @param tool [Tool the stored tool]
+  hook.Run('PostIncludeTool', Flux.Tool.stored[id])
 
   add_debug_metric('tools', id)
 

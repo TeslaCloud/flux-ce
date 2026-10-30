@@ -35,14 +35,14 @@ function StaticEnts:ShutDown()
 end
 
 --- Saves every persistent entity to the plugin data of the current schema and map, one
--- 'static/<class>' entry per entity class. Runs the PrePersistenceSave hook first and the
--- PostPersistenceSave hook once everything has been saved.
+-- 'static/<class>' entry per entity class. Runs the PreSavePersistence hook first and the
+-- PostSavePersistence hook once everything has been saved.
 function StaticEnts:PersistenceSave()
   --- Called on the server right before the static entities are copied and saved, so that
   -- plugins can prepare their entities for it.
   -- The Containers plugin takes the inventory off every container here, so that it is not
   -- saved with the container.
-  hook.Run('PrePersistenceSave')
+  hook.Run('PreSavePersistence')
 
   local entities = {}
 
@@ -67,9 +67,9 @@ function StaticEnts:PersistenceSave()
   end
 
   --- Called on the server right after the static entities have been copied and saved, so
-  -- that plugins can undo what they did to their entities in `PrePersistenceSave`.
+  -- that plugins can undo what they did to their entities in `PreSavePersistence`.
   -- The Containers plugin gives the containers their inventories back here.
-  hook.Run('PostPersistenceSave')
+  hook.Run('PostSavePersistence')
 end
 
 --- Loads the saved static entities of every whitelisted class.

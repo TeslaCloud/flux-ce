@@ -159,6 +159,14 @@ function GM:HUDDrawScoreBoard()
 
     percentage = math_clamp(percentage, 0, 100)
 
+    --- Called on the client every frame right before the loading screen is drawn. Gamemode
+    -- (`GM`) handlers are not called.
+    -- @param text [String the status text about to be shown]
+    -- @param percentage [Number progress of the bar from 0 to 100]
+    -- @return [Boolean Return false to draw the loading screen yourself; the default one and
+    --   `PostDrawLoadingScreen` are skipped]
+    if Plugin.call('PreDrawLoadingScreen', text, percentage) == false then return end
+
     local font = Font.size('flRobotoCondensed', math.scale(24))
     local scrw, scrh = ScrW(), ScrH()
     local w = util.text_size(text, font)
@@ -176,7 +184,9 @@ function GM:HUDDrawScoreBoard()
 
     --- Called on the client every frame right after the loading screen has been drawn, for
     -- drawing on top of it. Gamemode (`GM`) handlers are not called.
-    Plugin.call('PostDrawLoadingScreen')
+    -- @param text [String the status text that has been shown]
+    -- @param percentage [Number progress of the bar from 0 to 100]
+    Plugin.call('PostDrawLoadingScreen', text, percentage)
   end
 end
 
@@ -447,6 +457,16 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
       y = y + h + 1
     end
   end
+
+  --- Called on the client every frame after the target ID lines of a player have been
+  -- drawn, for drawing more below them. Not called when PreDrawPlayerInfo has returned
+  -- false.
+  -- @param target [Player The player being looked at]
+  -- @param x [Number Screen x of the target ID]
+  -- @param y [Number Screen y right below the last line]
+  -- @param distance [Number Distance to the player in units]
+  -- @param lines [Map Lines that have been drawn by ID, see `AdjustPlayerInfoLines`]
+  hook.Run('PostDrawPlayerInfo', target, x, y, distance, lines)
 end
 
 --- Does nothing, which disables the default item pickup notification.
@@ -515,7 +535,7 @@ function GM:RenderScreenspaceEffects()
   end
 end
 
---- Intercepts the undo bind and blocks it when the SoftUndo hook returns a value.
+--- Intercepts the undo bind and blocks it when the PlayerSoftUndo hook returns a value.
 -- @param client [Player]
 -- @param bind [String the bind that was triggered]
 -- @param pressed [Boolean whether the key was pressed rather than released]
@@ -528,7 +548,7 @@ function GM:PlayerBindPress(client, bind, pressed)
     -- @param client [Player The local player]
     -- @return [Any Return any non-nil value to block the bind, which keeps sandbox's own
     --   undo from running as well]
-    if hook.Run('SoftUndo', client) != nil then
+    if hook.Run('PlayerSoftUndo', client) != nil then
       return true
     end
   end
@@ -566,7 +586,7 @@ end
 --- Asks the server to undo the last Flux undo entry of the local player.
 -- @param _client [Player unused, the local player is always used]
 -- @return [Boolean true if the local player has entries in their undo queue, nil otherwise]
-function GM:SoftUndo(_client)
+function GM:PlayerSoftUndo(_client)
   Cable.send('fl_undo_soft')
 
   if #Flux.Undo:get_player(PLAYER) > 0 then return true end

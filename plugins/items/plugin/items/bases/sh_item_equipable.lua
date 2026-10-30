@@ -164,7 +164,7 @@ function ItemEquipable:equip(owner, should_equip)
   end
 end
 
---- Called on the server by the 'PreItemTransfer' hook when the item is about to change its
+--- Called on the server by the 'PreTransferItem' hook when the item is about to change its
 -- inventory. Equips or unequips the item if it enters or leaves its equipment inventory.
 -- @param new_inventory [Inventory where the item goes, or nil if it is dropped]
 -- @param old_inventory [Inventory where the item was, or nil if it is picked up]

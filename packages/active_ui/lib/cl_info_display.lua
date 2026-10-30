@@ -130,6 +130,14 @@ function InfoDisplay:draw(info)
       end
     end
 
+    --- Called on the client after an icon of the info display has been drawn, for drawing
+    -- on top of it. Not called for an icon that `PreDrawInfoDisplayItem` has skipped or that
+    -- its percentage hides.
+    -- @param info [Map icon data, as stored by `InfoDisplay:add`]
+    -- @param x [Number left edge of the icon]
+    -- @param size [Number width and height of the icon]
+    hook.Run('PostDrawInfoDisplayItem', info, last_x + margin, size)
+
     return margin + size
   end
 
@@ -147,6 +155,11 @@ function InfoDisplay:draw_all()
     for _, info in pairs(stored) do
       last_x += self:draw(info)
     end
+
+    --- Called on the client every time the info display has been drawn. Not called when
+    -- `PreDrawInfoDisplay` has prevented the drawing.
+    -- @param icons [Map all of the registered icons by ID]
+    hook.Run('PostDrawInfoDisplay', stored)
   end
 
   last_x = 0

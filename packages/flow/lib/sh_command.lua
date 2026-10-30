@@ -19,7 +19,7 @@
 -- into a list of targets (player names or the selectors described under
 -- `Flux.Command:str_to_player`), checks their immunity, logs the command and calls its
 -- `on_run`. Plugins can step in through the `PlayerCanRunCommand`, `CommandCheckImmunity`,
--- `PlayerRunCommand` and `TargetFromString` hooks. On the client `Flux.Command:send` asks
+-- `PlayerRunCommand` and `GetTargetSelector` hooks. On the client `Flux.Command:send` asks
 -- the server to run a command for the local player.
 
 mod 'Flux::Command'
@@ -766,7 +766,7 @@ if SERVER then
   -- target selectors: '@group' (everyone in a user group), '(name)' (everyone with this text
   -- in their name), '[name]' (the player with exactly this name, in this case), '^'
   -- (yourself), '*' (everyone) and '!radius' (everyone within this distance from you).
-  -- Plugins can add more by returning a parser function from the 'TargetFromString' hook. A
+  -- Plugins can add more by returning a parser function from the 'GetTargetSelector' hook. A
   -- name that several players have targets nobody. Serverside only.
   -- @param actor [Player the player who is running the command]
   -- @param str [String player name, SteamID or target selector]
@@ -785,7 +785,7 @@ if SERVER then
     -- @param start [String first character of the argument]
     -- @return [Function Parser that is called with the actor and the argument; it returns a
     --   List<Player> of targets, or false if there are none, and the selector character]
-    local parser = macros[start] or hook.Run('TargetFromString', actor, str, start)
+    local parser = macros[start] or hook.Run('GetTargetSelector', actor, str, start)
 
     if isfunction(parser) then
       return parser(actor, str)

@@ -261,7 +261,7 @@ do
       -- @param model [String Path of the model the player's animation table belongs to]
       -- @return [Boolean Return true to use the raised animations; the lowered ones are used
       --   when nothing or false is returned]
-      if hook.Call('ModelWeaponRaised', nil, actor, actor.fl_anim_model) then
+      if hook.Call('ShouldUseRaisedAnimations', nil, actor, actor.fl_anim_model) then
         anim = pair[2]
       else
         anim = pair[1]

@@ -562,7 +562,7 @@ end
 -- about the item.
 -- @param item_obj [Item]
 -- @param fields [Map fields of the item that are going to be sent]
-function Items:PreItemNetwork(item_obj, fields)
+function Items:AdjustItemNetworkData(item_obj, fields)
   fields.x = item_obj.x
   fields.y = item_obj.y
   fields.inventory_type = item_obj.inventory_type
@@ -617,7 +617,7 @@ function Items:PlayerTakeItem(actor, item_obj, ...)
       return
     end
 
-    hook.Run('PreItemTransfer', item_obj, player_inventory)
+    hook.Run('PreTransferItem', item_obj, player_inventory)
 
     local success, error_text = actor:add_item(item_obj, inv_type)
 
@@ -635,7 +635,7 @@ end
 --- Takes the items out of their inventory and spawns them in front of the player. Does
 -- nothing if the first item does not exist, is not in an inventory or its inventory is
 -- disabled; stops at the first item that is not in that inventory. An item that a
--- 'PreItemTransfer' handler takes out of the inventory by itself is not spawned.
+-- 'PreTransferItem' handler takes out of the inventory by itself is not spawned.
 -- @param actor [Player]
 -- @param instance_ids [Number/List<Number> instance id(s) of items from the same inventory]
 function Items:PlayerDropItem(actor, instance_ids)
@@ -686,7 +686,7 @@ end
 -- @param item_obj [Item]
 -- @param new_inventory [Inventory where the item goes, or nil if it is dropped or used up]
 -- @param old_inventory [Inventory where the item was, or nil if it is picked up]
-function Items:PreItemTransfer(item_obj, new_inventory, old_inventory)
+function Items:PreTransferItem(item_obj, new_inventory, old_inventory)
   if item_obj.on_transfer then
     item_obj:on_transfer(new_inventory, old_inventory)
   end
@@ -835,7 +835,7 @@ end
 --- Calls the on_use callback of the item, then takes the item out of its inventory and
 -- removes it, along with its entity if it lies in the world, unless the callback returned
 -- true to keep it or false to cancel the use. The callback cannot be undone, so an item
--- that a `PreItemTransfer` handler takes out of its inventory by itself is kept where the
+-- that a `PreTransferItem` handler takes out of its inventory by itself is kept where the
 -- handler has put it.
 -- @param actor [Player]
 -- @param item_obj [Item]

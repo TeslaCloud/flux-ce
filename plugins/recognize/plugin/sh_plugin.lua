@@ -16,7 +16,7 @@
 --
 -- `Player:recognizes`, `Player:knows_real_name` and `Player:get_recognize` read the
 -- recognitions on both realms; `Player:add_recognize`, `Player:remove_recognize` and
--- `Player:clear_recognizes` change them on the server. The `PlayerRecognizeTarget` hook
+-- `Player:clear_recognizes` change them on the server. The `GetPlayerRecognition` hook
 -- makes a player recognize another regardless of what is stored, and `PlayerCanRecognize`
 -- and `PlayerCanForget` can refuse what players ask for.
 --

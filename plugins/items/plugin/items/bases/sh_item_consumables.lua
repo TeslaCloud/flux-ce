@@ -15,7 +15,8 @@ ItemConsumable.description = 'An item that can be consumed.'
 ItemConsumable.category = 'item.category.consumables'
 
 --- Called on the server by the 'PlayerUseItem' hook when a player uses the item.
--- Runs the 'PlayerConsumeItem' hook unless 'PrePlayerConsumeItem' returns false.
+-- Runs the 'PlayerConsumeItem' and 'PostPlayerConsumeItem' hooks unless 'PrePlayerConsumeItem'
+-- returns false.
 -- Returns nothing, so the item is always removed afterward.
 -- @param actor [Player]
 function ItemConsumable:on_use(actor)
@@ -33,5 +34,13 @@ function ItemConsumable:on_use(actor)
     -- @param item_obj [Item The consumable item]
     -- @realm [server]
     hook.Run('PlayerConsumeItem', actor, self)
+
+    --- Called on the server after `PlayerConsumeItem` has run for a consumable item, before
+    -- the item is removed from the inventory. Not called when `PrePlayerConsumeItem` has
+    -- returned false.
+    -- @param actor [Player The player who has consumed the item]
+    -- @param item_obj [Item The consumable item]
+    -- @realm [server]
+    hook.Run('PostPlayerConsumeItem', actor, self)
   end
 end

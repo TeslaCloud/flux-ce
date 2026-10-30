@@ -121,7 +121,7 @@ end
 --- Defaults the banned flag of a newly created user record to false.
 -- @param _actor [Player]
 -- @param record [User the player's database record]
-function hooks:PlayerCreated(_actor, record)
+function hooks:PlayerRecordCreated(_actor, record)
   record.banned = record.banned or false
 end
 

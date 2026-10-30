@@ -145,7 +145,7 @@ end
 -- health saved with the character, so that saved health above the maximum is cut down.
 -- @param owner [Player]
 -- @param _character [Character]
-function Levels:PostCharacterLoaded(owner, _character)
+function Levels:PostLoadCharacter(owner, _character)
   self:apply_max_health(owner)
 end
 

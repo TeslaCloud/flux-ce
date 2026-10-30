@@ -488,9 +488,10 @@ function Characters.to_networkable(target, char)
   }
 end
 
---- Runs the SaveCharacterData hook and saves the player's record to the database, unless a
--- PreSaveCharacter hook returns false. A character that belongs to another user record
--- than the player's is saved on its own, together with its own relations. Server only.
+--- Runs the SaveCharacterData hook, saves the player's record to the database and runs the
+-- PostSaveCharacter hook, unless a PreSaveCharacter hook returns false. A character that
+-- belongs to another user record than the player's is saved on its own, together with its
+-- own relations. Server only.
 -- @param target [Player the player whose data goes into the character]
 -- @param character [Character]
 function Characters.save(target, character)
@@ -513,6 +514,12 @@ function Characters.save(target, character)
   else
     target:save_player()
   end
+
+  --- Called on the server by `Characters.save` once the record of a character has been handed
+  -- to the database to be saved. Not called when `PreSaveCharacter` has canceled the save.
+  -- @param owner [Player]
+  -- @param character [Character the character that has been saved]
+  hook.Run('PostSaveCharacter', target, character)
 end
 
 --- Destroys one of the player's characters, removes it from their record, frees its name

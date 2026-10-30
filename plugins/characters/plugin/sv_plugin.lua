@@ -2,9 +2,10 @@
 -- player.
 
 --- Makes a character the active character of a player. Runs PreSwitchCharacter if another
--- character was active, networks the basic character data and runs ActiveCharacterSet. The
--- character does not have to belong to the player: one of another user record is sent to the
--- player on its own, so that their client knows the character it is playing. Nothing is
+-- character was active, networks the basic character data and runs ActiveCharacterSet, then
+-- PostSwitchCharacter if another character was active. The character does not have to
+-- belong to the player: one of another user record is sent to the player on its own, so
+-- that their client knows the character it is playing. Nothing is
 -- checked here: the requests of players go through `Characters.can_use` first, which is what
 -- keeps banned characters from being loaded.
 -- @param target [Player]
@@ -12,14 +13,17 @@
 function Characters.activate(target, character)
   if !istable(character) then return end
 
-  if target:get_character_id() then
+  local old_id = target:get_character_id()
+  local old_char = target:get_character()
+
+  if old_id then
     --- Called on the server when a player who already has an active character selects a
     -- character, before the selected character becomes the active one. The return value is
     -- ignored: `PlayerCanSwitchCharacter` decides whether the switch may happen.
     -- @param owner [Player]
     -- @param new_char [Character the character that is about to become active]
     -- @param old_char [Character the character that is still active]
-    hook.Run('PreSwitchCharacter', target, character, target:get_character())
+    hook.Run('PreSwitchCharacter', target, character, old_char)
   end
 
   if !target:IsBot() then
@@ -45,4 +49,13 @@ function Characters.activate(target, character)
   -- @param owner [Player]
   -- @param character [Character the character that is now active]
   hook.Run('ActiveCharacterSet', target, target:get_character())
+
+  if old_id then
+    --- Called on the server when a player who had an active character has switched to
+    -- another one, after `ActiveCharacterSet` has run for the character they have switched to.
+    -- @param owner [Player]
+    -- @param new_char [Character the active character]
+    -- @param old_char [Character the character that was active before]
+    hook.Run('PostSwitchCharacter', target, character, old_char)
+  end
 end

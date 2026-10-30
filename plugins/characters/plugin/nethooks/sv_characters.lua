@@ -114,6 +114,13 @@ Cable.receive('fl_player_delete_character', function(actor, id)
   hook.Run('PreDeleteCharacter', actor, id, character)
 
   Characters.delete(actor, id)
+
+  --- Called on the server after a character that a player has asked to delete has been
+  -- deleted, removed from their record and the character list has been sent to them again.
+  -- @param actor [Player]
+  -- @param id [Number ID of the character]
+  -- @param character [Character the deleted character]
+  hook.Run('PostDeleteCharacter', actor, id, character)
 end)
 
 Cable.receive('fl_player_select_character', function(actor, id)

@@ -9,7 +9,7 @@ do
 
   --- Checks whether the player recognizes a target. Players always recognize themselves,
   -- bots and others while noclipping, everyone is recognized while the recognition system
-  -- is off, and the PlayerRecognizeTarget hook can override the result.
+  -- is off, and the GetPlayerRecognition hook can override the result.
   -- @param target [Player player to check]
   -- @return [Boolean whether the target is recognized, String name they are known by]
   function player_meta:recognizes(target)
@@ -30,7 +30,7 @@ do
     -- @param target [Player the player who may be recognized]
     -- @return [Boolean return true to make the viewer recognize the target, String the
     --   name the viewer knows the target by; their real name when it is left out]
-    local recognizes_override, name_override = hook.Run('PlayerRecognizeTarget', self, target)
+    local recognizes_override, name_override = hook.Run('GetPlayerRecognition', self, target)
 
     if recognizes_override then
       return true, name_override or target:name(true)

@@ -126,18 +126,25 @@ function Characters:PostCreateCharacter(_owner, char, _char_data)
   char.phys_desc = char.phys_desc:gsub('\n', ' | ')
 end
 
---- Forwards the PostCharacterLoaded hook to the player's client, passing the character ID.
+--- Forwards the PostLoadCharacter hook to the player's client, passing the character ID.
 -- @param owner [Player]
 -- @param character [Character]
-function Characters:PostCharacterLoaded(owner, character)
-  hook.run_client(owner, 'PostCharacterLoaded', character.id)
+function Characters:PostLoadCharacter(owner, character)
+  hook.run_client(owner, 'PostLoadCharacter', character.id)
 end
 
---- Spawns the player and applies the character's model, skin, health, armor and ammo, then
--- runs the PostCharacterLoaded hook.
+--- Runs the PreLoadCharacter hook, spawns the player and applies the character's model, skin,
+-- health, armor and ammo, then runs the PostLoadCharacter hook.
 -- @param owner [Player]
 -- @param character [Character]
 function Characters:ActiveCharacterSet(owner, character)
+  --- Called on the server when a character that has become the active one is about to be
+  -- applied to its player, before the player is spawned and given the model, skin, health,
+  -- armor and ammo of the character. The return value is ignored.
+  -- @param owner [Player]
+  -- @param character [Character]
+  hook.Run('PreLoadCharacter', owner, character)
+
   owner:Spawn()
   owner:SetModel(character.model or Characters.default_model)
   owner:SetSkin(character.skin or 1)
@@ -151,7 +158,7 @@ function Characters:ActiveCharacterSet(owner, character)
   -- only the ID of the character.
   -- @param owner [Player]
   -- @param character [Character]
-  hook.Run('PostCharacterLoaded', owner, character)
+  hook.Run('PostLoadCharacter', owner, character)
 end
 
 --- Saves the player's current character before they switch to another one.

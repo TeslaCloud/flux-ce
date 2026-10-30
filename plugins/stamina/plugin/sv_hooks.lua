@@ -82,7 +82,7 @@ end
 --- Refills the player's stamina when they spawn. When a character is loaded, the stamina
 -- saved with it is applied afterwards.
 -- @param actor [Player]
--- @see [Stamina:PostCharacterLoaded]
+-- @see [Stamina:PostLoadCharacter]
 function Stamina:PostPlayerSpawn(actor)
   actor:set_nv('stamina', max_stamina)
 end
@@ -93,7 +93,7 @@ end
 -- Only runs when the Characters plugin is loaded.
 -- @param owner [Player]
 -- @param character [Character the character that has been loaded]
-function Stamina:PostCharacterLoaded(owner, character)
+function Stamina:PostLoadCharacter(owner, character)
   if !Characters then return end
 
   owner.stamina_character_id = tonumber(character.id)

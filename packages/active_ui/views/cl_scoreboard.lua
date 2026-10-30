@@ -1,9 +1,9 @@
 --- The scoreboard of the tab menu: `fl_scoreboard`, the list of players, and
 -- `fl_scoreboard_player`, the card of a single player.
--- Plugins change its contents through the `PreRebuildScoreboard`, `RebuildScoreboard` and
--- `RebuildScoreboardPlayerCard` hooks, keep players off it with
--- `ShouldShowPlayerOnScoreboard` and add to the menu that a click on a player card opens
--- with `AdjustScoreboardPlayerMenu`.
+-- Plugins change its contents through the `PreRebuildScoreboard`, `PostRebuildScoreboard`,
+-- `PreRebuildScoreboardPlayerCard` and `PostRebuildScoreboardPlayerCard` hooks, keep players
+-- off it with `ShouldShowPlayerOnScoreboard` and add to the menu that a click on a player
+-- card opens with `AdjustScoreboardPlayerMenu`.
 
 local IsValid = IsValid
 
@@ -11,7 +11,7 @@ local IsValid = IsValid
 -- `fl_scoreboard_player` card per initialized player, drawn by the active theme's
 -- `PaintScoreboard` hook, which also writes how many players are online.
 -- `rebuild` recreates the cards. A `PreRebuildScoreboard` handler can build the list itself,
--- which is how the Factions plugin groups the players by faction, and `RebuildScoreboard`
+-- which is how the Factions plugin groups the players by faction, and `PostRebuildScoreboard`
 -- handlers can add to the default list. Either way a player is left out when a
 -- `ShouldShowPlayerOnScoreboard` handler returns false.
 local PANEL = {}
@@ -73,7 +73,7 @@ function PANEL:get_online_text()
 end
 
 --- Counts the players online, removes the existing player cards and creates one for every
--- player that is listed, then runs the RebuildScoreboard hook. Only the count is done if
+-- player that is listed, then runs the PostRebuildScoreboard hook. Only the count is done if
 -- PreRebuildScoreboard returns a value.
 function PANEL:rebuild()
   local w, h = self:GetSize()
@@ -86,7 +86,7 @@ function PANEL:rebuild()
   -- @param w [Number Width of the scoreboard]
   -- @param h [Number Height of the scoreboard]
   -- @return [Any Return anything but nil to skip the default player list and the
-  --   `RebuildScoreboard` hook]
+  --   `PostRebuildScoreboard` hook]
   if hook.Run('PreRebuildScoreboard', self, w, h) != nil then
     return
   end
@@ -124,7 +124,7 @@ function PANEL:rebuild()
   -- @param panel [Panel The `fl_scoreboard` that has been rebuilt]
   -- @param w [Number Width of the scoreboard]
   -- @param h [Number Height of the scoreboard]
-  hook.Run('RebuildScoreboard', self, w, h)
+  hook.Run('PostRebuildScoreboard', self, w, h)
 end
 
 --- Returns the size the tab menu gives this panel when it opens it.
@@ -138,7 +138,7 @@ vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
 --- The card of one player on the scoreboard (`fl_scoreboard_player`): their avatar, name and
 -- ping.
 -- Assign the player with `set_player`, which also builds the card. Plugins add their own
--- elements in the `RebuildScoreboardPlayerCard` hook. A click on the card opens a menu of
+-- elements in the `PostRebuildScoreboardPlayerCard` hook. A click on the card opens a menu of
 -- things to do with the player (`open_menu`), which plugins fill in the
 -- `AdjustScoreboardPlayerMenu` hook.
 local PANEL = {}
@@ -215,9 +215,18 @@ function PANEL:set_player(target)
 end
 
 --- Recreates the avatar, name and ping labels for the card's player and runs the
--- RebuildScoreboardPlayerCard hook. Does nothing if no player is set.
+-- PostRebuildScoreboardPlayerCard hook. Does nothing if no player is set or the
+-- PreRebuildScoreboardPlayerCard hook returns false.
 function PANEL:rebuild()
   if !self.player then return end
+
+  --- Called on the client before a scoreboard player card removes and recreates its avatar,
+  -- name and ping labels.
+  -- @param card [Panel The `fl_scoreboard_player` card]
+  -- @param target [Player The player the card shows]
+  -- @return [Boolean Return false to leave the card as it is; the
+  --   `PostRebuildScoreboardPlayerCard` hook is not run then]
+  if hook.Run('PreRebuildScoreboardPlayerCard', self, self.player) == false then return end
 
   if IsValid(self.avatar_panel) then
     self.avatar_panel:safe_remove()
@@ -267,7 +276,7 @@ function PANEL:rebuild()
   -- can add to the card or rearrange it.
   -- @param card [Panel The `fl_scoreboard_player` card]
   -- @param target [Player The player the card shows]
-  hook.Run('RebuildScoreboardPlayerCard', self, target)
+  hook.Run('PostRebuildScoreboardPlayerCard', self, target)
 end
 
 vgui.Register('fl_scoreboard_player', PANEL, 'fl_base_panel')

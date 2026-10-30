@@ -1,5 +1,5 @@
 --- The Restart command reloads the current map, optionally after a delay in seconds. It runs the
--- `PreMapChange` hook first. The map change saves everything through the gamemode's
+-- `PreChangeMap` hook first. The map change saves everything through the gamemode's
 -- `ShutDown` handler.
 
 CMD.name = 'Restart'
@@ -32,7 +32,7 @@ function CMD:on_run(actor, delay)
     -- map; the Restart command changes it to the current one. The map change that follows
     -- saves everything through the gamemode's `ShutDown` handler.
     -- @param map [String name of the map that is about to be loaded]
-    hook.Run('PreMapChange', map)
+    hook.Run('PreChangeMap', map)
 
     RunConsoleCommand('changelevel', map)
   end)

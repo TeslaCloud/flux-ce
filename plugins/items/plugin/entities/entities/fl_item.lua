@@ -290,7 +290,7 @@ if SERVER then
     -- entity still has the model, skin and color it had before.
     -- @param entity [Entity The `fl_item` entity]
     -- @param item_obj [Item The item instance that is about to be set]
-    hook.Run('PreEntityItemSet', self, item_obj)
+    hook.Run('PreSetEntityItem', self, item_obj)
 
     self:SetModel(item_obj:get_model())
     self:SetSkin(item_obj:get_skin())

@@ -152,9 +152,9 @@ function Containers:InventoryClosed(_actor, inventory)
 end
 
 --- Takes the inventory off every container before the persistent entities are saved, so
--- that it is not saved with it. The inventories are put back by the 'PostPersistenceSave'
+-- that it is not saved with it. The inventories are put back by the 'PostSavePersistence'
 -- hook.
-function Containers:PrePersistenceSave()
+function Containers:PreSavePersistence()
   for _, entity in ents.Iterator() do
     if entity.inventory and self:find(entity:GetModel()) then
       detached_inventories[entity] = entity.inventory
@@ -166,7 +166,7 @@ end
 
 --- Gives the containers their inventories back once the persistent entities have been
 -- saved, so that the containers that are open at that moment keep working.
-function Containers:PostPersistenceSave()
+function Containers:PostSavePersistence()
   for entity, inventory in pairs(detached_inventories) do
     if IsValid(entity) then
       entity.inventory = inventory

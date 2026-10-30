@@ -68,7 +68,7 @@ end
 --- Plays the intro when the local player loads a character for the first time since joining,
 -- unless the 'cinematics_intro' config is off.
 -- @param char_id [Number ID of the character that has been loaded]
-function Cinematics:PostCharacterLoaded(char_id)
+function Cinematics:PostLoadCharacter(char_id)
   if self.intro_played then return end
 
   self.intro_played = true

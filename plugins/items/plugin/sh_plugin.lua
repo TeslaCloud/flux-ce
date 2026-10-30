@@ -45,7 +45,7 @@
 -- walked away from a container (`Inventory:can_be_viewed_by`). The client keeps a copy
 -- and displays it in an `fl_inventory` panel made of `fl_inventory_item` slots. Dragging
 -- an item to another slot asks the server to move it, which goes through the
--- `PlayerCanMoveItem`, `CanItemMove` or `CanItemTransfer`, `PreItemTransfer` and
+-- `PlayerCanMoveItem`, `CanItemMove` or `CanItemTransfer`, `PreTransferItem` and
 -- `ItemTransferred` hooks; dragging it out of the panel drops it into the world. The
 -- `fl_inventory_menu` panel is the inventory tab of the tab menu, and
 -- `fl_inventory_container` shows another inventory next to the player's own.

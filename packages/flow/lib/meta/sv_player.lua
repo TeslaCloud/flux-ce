@@ -187,7 +187,7 @@ function player_meta:restore_player()
 
     --- Called on the server once the database record of a player who has just joined is
     -- available as `actor.record`. For a player who joins for the first time it runs after
-    -- `PlayerCreated`, when the new record has been saved. Bots get it right away with a
+    -- `PlayerRecordCreated`, when the new record has been saved. Bots get it right away with a
     -- blank record.
     -- @param actor [Player The player who has joined]
     -- @param record [User The database record of the player]
@@ -209,12 +209,35 @@ function player_meta:restore_player()
     -- is saved. Handlers can set further defaults on the record. `PlayerRestored` follows.
     -- @param actor [Player The player who has joined]
     -- @param record [User The new database record of the player]
-    hook.Run('PlayerCreated', self, obj)
+    hook.Run('PlayerRecordCreated', self, obj)
 
     obj:save()
 
     hook.Run('PlayerRestored', self, obj)
   end)
+end
+
+--- Gives the player a loadout: strips their weapons, gives them the weapons of the loadout
+-- with their default ammo and selects the first one, then runs the PlayerLoadoutGiven hook.
+-- @param loadout [List<String> weapon classes to give]
+function player_meta:give_loadout(loadout)
+  self:StripWeapons()
+  self:give_weapons(loadout)
+
+  if loadout[1] then
+    self:SelectWeapon(loadout[1])
+  end
+
+  --- Called on the server once a player holds their loadout, after `Player:give_loadout` has
+  -- stripped their weapons and given them the weapons of the loadout, which happens every
+  -- time a player spawns. This is where a plugin or schema gives the player the weapons of
+  -- their faction, rank or job: a weapon given from an `AdjustPlayerLoadout` handler would
+  -- be stripped right after, though its class can be added to the loadout there. Runs inside
+  -- `Player:Spawn`, so whatever happens after the spawn, such as restoring saved ammo, sees
+  -- these weapons.
+  -- @param actor [Player the player who has been given the loadout]
+  -- @param loadout [List<String> weapon classes the player has been given]
+  hook.Run('PlayerLoadoutGiven', self, loadout)
 end
 
 --- Looks for unobstructed spots around the player that the player can be moved to.

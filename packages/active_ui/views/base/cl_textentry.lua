@@ -33,6 +33,16 @@ function PANEL:Paint(w, h)
   -- @return [Boolean Return false to skip the default background and text]
   if hook.Run('PrePaintTextEntry', self, 0, 0, w, h) != false then
     Theme.hook('PaintTextEntry', self, w, h)
+
+    --- Called on the client every time an `fl_text_entry` has been painted by the theme, for
+    -- drawing on top of it. Not called when PrePaintTextEntry has skipped the default
+    -- background and text.
+    -- @param panel [Panel The text entry that has been painted]
+    -- @param x [Number Left edge of the area to draw in, always 0]
+    -- @param y [Number Top edge of the area to draw in, always 0]
+    -- @param w [Number Width of the entry]
+    -- @param h [Number Height of the entry]
+    hook.Run('PostPaintTextEntry', self, 0, 0, w, h)
   end
 end
 
