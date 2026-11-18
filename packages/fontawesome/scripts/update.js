@@ -7,8 +7,10 @@
  * Installs @fortawesome/fontawesome-free (the latest release unless a version is given),
  * wawoff2 and fonteditor-core into a temporary folder, then:
  *   - decompresses the solid, regular and brands web fonts and converts them to TrueType
- *     outlines in content/resource/fonts of the gamemode, since the engine only loads .ttf
- *     fonts from a mounted content folder and the package ships CFF-based OpenType fonts,
+ *     outlines, since the engine only loads .ttf fonts from a mounted content folder and the
+ *     npm package ships CFF-based OpenType fonts, into the content/resource/fonts folder of
+ *     this package, which the package manager copies into the content folder of the schema's
+ *     gamemode,
  *   - reads the family name and weight of every font from its name and OS/2 tables,
  *   - regenerates lib/cl_icons.lua from metadata/icon-families.json and metadata/shims.yml,
  *     keeping the old names of renamed icons and the Font Awesome 4 names as aliases,
@@ -24,7 +26,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const PACKAGE_DIR = path.resolve(__dirname, '..');
-const FONTS_DIR = path.resolve(PACKAGE_DIR, '..', '..', 'content', 'resource', 'fonts');
+const FONTS_DIR = path.join(PACKAGE_DIR, 'content', 'resource', 'fonts');
 const ICONS_FILE = path.join(PACKAGE_DIR, 'lib', 'cl_icons.lua');
 const SPEC_FILE = path.join(PACKAGE_DIR, 'packagespec.lua');
 const LICENSE_FILE = path.join(PACKAGE_DIR, 'LICENSE.txt');
@@ -70,7 +72,10 @@ async function main() {
   }
 }
 
-/* Converts the web fonts to TrueType in content/resource/fonts and returns their font data by style. */
+/*
+ * Converts the web fonts to TrueType in content/resource/fonts of the package and returns their
+ * font data by style.
+ */
 async function installFonts(source, wawoff2, Font) {
   fs.mkdirSync(FONTS_DIR, { recursive: true });
 
@@ -269,7 +274,9 @@ function renderLua({ version, date, fonts, icons, styles, regular }) {
     '-- Do not edit by hand: run the script again to update Font Awesome instead.',
     "-- Lists every icon of the Free set under its name with the 'fa-' prefix, along with the old",
     '-- names of icons that were renamed and the Font Awesome 4 names, and hands the data to',
-    '-- `FontAwesome.load`. The codepoints are the ones of the fonts in `content/resource/fonts`.',
+    '-- `FontAwesome.load`. The codepoints are the ones of the fonts in the `content/resource/fonts`',
+    "-- folder of the package, which the package manager copies into the content folder of the",
+    "-- schema's gamemode.",
     '',
     'FontAwesome.load({',
     `  version = ${luaString(version)},`,

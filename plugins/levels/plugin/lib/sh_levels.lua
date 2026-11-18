@@ -516,11 +516,10 @@ if SERVER then
   end
 
   --- Returns the key of the data file of the server level: 'schemas/<schema folder>/levels',
-  -- the same for every map of the schema, with 'flux' as the folder when no schema is
-  -- loaded.
+  -- the same for every map of the schema.
   -- @return [String key for `Data.save` and `Data.load`]
   local function get_data_key()
-    return 'schemas/'..(Flux.get_schema_folder() or 'flux')..'/levels'
+    return 'schemas/'..Flux.get_schema_folder()..'/levels'
   end
 
   --- Loads the saved data of the server level of the schema.

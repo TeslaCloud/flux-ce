@@ -992,7 +992,7 @@ end
 -- the top of this file. A config of the `color` type holds a Color and writes its default
 -- value as a map of r, g, b and, optionally, a.
 -- ```
--- Config.read('gamemodes/flux/config/config.yml')
+-- Config.read(Flux.find_config('config.yml'))
 --
 -- Config.read({
 --   categories = {
@@ -1058,7 +1058,7 @@ end
 -- the files. Called by the plugin loader for the `config` folder of every plugin and of the
 -- schema, and by the packages that define configs.
 -- ```
--- Config.include_folder('flux/plugins/doors/plugin/config')
+-- Config.include_folder(FLUX_PATH..'plugins/doors/plugin/config')
 -- Config.include_folder(PACKAGE.__path__..'config')
 -- ```
 -- @param folder [String folder of the .yml files, relative to the gamemodes folder]

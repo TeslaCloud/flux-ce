@@ -25,9 +25,9 @@ ActiveRecord.Adapters.Pg.types = {
 
 ActiveRecord.Adapters.Pg._sql_syntax = 'postgresql'
 
---- Loads the 'pg' binary module.
+--- Loads the 'pg' binary module. When it cannot be opened, #connect says how to install it.
 function ActiveRecord.Adapters.Pg:init()
-  require 'pg'
+  require_module 'pg'
 end
 
 --- Checks whether the adapter talks to a PostgreSQL database.
@@ -77,7 +77,8 @@ function ActiveRecord.Adapters.Pg:connect(config, on_connected)
     end
   else
     ErrorNoHalt(
-      'ActiveRecord - PostgreSQL (pg) is not found!\nPlease make sure you have gmsv_pg in your lua/bin folder!\n'
+      'ActiveRecord - PostgreSQL (pg) is not found!\nUncomment s.depends \'gmsv_pg\' in the packagespec.lua of '..
+      'your gamemode and run "fpkg install" to put gmsv_pg in your lua/bin folder!\n'
     )
   end
 end

@@ -65,19 +65,21 @@ function require_relative(file_name)
 end
 
 --- Require all files in a folder using require_relative.
--- Relative to gamemodes/flux/ by default, unless `base` is specified. Files are included in
--- alphabetical order; when recursive, the subfolders follow them, also alphabetically.
+-- `dir` is relative to the `LUA` search path unless `base` is given. A `base` of true stands
+-- for the folder of the package being included, or `FLUX_PATH` outside of one. Files are
+-- included in alphabetical order; when recursive, the subfolders follow them, also
+-- alphabetically.
 -- ```
 -- require_relative_folder 'my_folder'
 -- ```
 -- @param dir [String folder to include]
--- @param base=flux/ [String base folder for relativity]
+-- @param base=nil [String/Boolean base folder for relativity, true for the current package]
 -- @param recursive=false [Boolean include all files recursively]
 -- @see [require_relative]
 function require_relative_folder(dir, base, recursive)
   if base then
     if isbool(base) then
-      base = PACKAGE and PACKAGE.__path__ or 'flux/'
+      base = PACKAGE and PACKAGE.__path__ or FLUX_PATH
     elseif !base:EndsWith('/') then
       base ..= '/'
     end

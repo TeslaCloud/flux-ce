@@ -3,22 +3,24 @@
 --
 -- This library is the centralized controlling mechanism for them.
 -- Individual packages are represented by PackageInstance objects.
+--
+-- Packages are looked up in an ordered list of search paths: the `packages` folder of the
+-- project (the schema's gamemode folder), then `_flux/packages/`. A package that has a
+-- `packages` folder of its own, such as a development checkout of Flux, appends it to the list
+-- when it is included, so top-level packages win over nested ones. Clients find packages
+-- through the metadata the server sends them.
 
 AddCSLuaFile()
 
 if Package then return end
 
-local schema_name = engine.ActiveGamemode()
 local search_paths = {
-  ['flux/packages/']            = true,
-  [schema_name..'/schema/lib/'] = true,
-  [schema_name..'/packages/']   = true,
-  ['_flux/packages/']           = true,
-  ['']                          = true
+  engine.ActiveGamemode()..'/packages/',
+  '_flux/packages/'
 }
 
 if !Flux or (CLIENT and (!Flux or !Flux.shared or !Flux.shared.packages)) then
-  require_relative 'flux/lib/flux_struct'
+  require_relative(FLUX_PATH..'lib/flux_struct')
 end
 
 require_relative 'package_instance'
@@ -35,22 +37,29 @@ Package           = {}
 Package.installed = {}
 Package.current   = nil
 
---- Adds a search path relative to the 'LUA' system.
+--- Appends a search path relative to the 'LUA' system, after the ones already listed. A path
+-- that is listed already is ignored.
 -- @param path [String folder to look for packages in; a trailing slash is added if missing]
 -- @return [Package self]
 function Package:add_path(path)
-  search_paths[path:ensure_end('/')] = true
+  path = path:ensure_end('/')
+
+  if !table.HasValue(search_paths, path) then
+    search_paths[#search_paths + 1] = path
+  end
+
   return self
 end
 
 --- Describes the current package's specification.
 -- A field may be given in its plural form, such as `authors` or `files`, and is stored under
--- the singular one. Once the globals are set up, the dependencies are included.
+-- the singular one. Once the globals are set up, the dependencies are included. A package
+-- without a `global`, such as the project manifest of a schema, creates none.
 -- ```
 -- Package:describe(function(s)
 --   s.name        = 'Example Package'
---   s.version     = '1.0'
---   s.date        = '2019-03-09'
+--   s.version     = '1.0.0'
+--   s.date        = '2026-11-17'
 --   s.summary     = 'Brief summary of what the package does.'
 --   s.description = 'A more detailed description of what the package does.'
 --   s.authors     = { 'Flux Developer' }
@@ -61,6 +70,7 @@ end
 --   s.license     = 'MIT'
 --
 --   s.depends     'random_dependency'
+--   s.depends('flux', '~> 0.9')
 --
 --   if IS_DEVELOPMENT then
 --     s.depends   'random_development_package'
@@ -107,7 +117,7 @@ function Package:describe(callback)
   end
 
   for _, global_name in ipairs(meta.global) do
-    if isstring(global_name) then
+    if isstring(global_name) and global_name != '' then
       _G[global_name] = istable(_G[global_name]) and _G[global_name] or {}
 
       if !_G[global_name].__package__ then
@@ -187,25 +197,25 @@ Package.is_installed  = Package.included
 --- Searches for a package with the specified name and returns
 -- the full path to its packagespec, the name of the package and
 -- the full path to the folder.
+-- The search paths are tried in order, the name as a path to the package's folder last, so
+-- `Package:find('hl2rp')` finds the project manifest `hl2rp/packagespec.lua`.
 -- Returns false if the package cannot be found.
 -- @param name [String package name, or path to the package's folder]
 -- @return [String/Boolean packagespec path or false if not found, String name,
 --   String folder path]
 function Package:find(name)
   local folder_path = name:ensure_end('/')
-  local files, _ = file.Find(folder_path..'packagespec.lua', 'LUA')
 
-  if !istable(files) or #files == 0 then
-    for path in pairs(search_paths) do
-      local full_path = path..folder_path:ensure_end('/')
-      local spec_files, _ = file.Find(full_path..'packagespec.lua', 'LUA')
+  for _, path in ipairs(search_paths) do
+    local full_path = path..folder_path
 
-      if istable(spec_files) and #spec_files > 0 then
-        return full_path..spec_files[1], name, full_path
-      end
+    if file.Exists(full_path..'packagespec.lua', 'LUA') then
+      return full_path..'packagespec.lua', name, full_path
     end
-  elseif istable(files) then
-    return folder_path..files[1], name, folder_path
+  end
+
+  if file.Exists(folder_path..'packagespec.lua', 'LUA') then
+    return folder_path..'packagespec.lua', name, folder_path
   end
 
   return false
@@ -390,8 +400,10 @@ do
   end
 
   --- Attempts to include the package with the specified name.
-  -- This function will look for the package in the search paths that have previously been added.
-  -- If no package with the matching name can be found, throws an error.
+  -- On the server the package is looked up with `Package:find`; a `packages` folder inside it
+  -- is appended to the search paths before its specification runs. On the client the
+  -- metadata the server sent is used. If no package with the matching name can be found,
+  -- throws an error.
   -- @param name [String package name, or path to the package's folder]
   -- @param _version=nil [String ignored]
   -- @return [Boolean true if name is a .lua file, which is skipped; nothing otherwise]
@@ -404,6 +416,10 @@ do
 
       if !spec_path then
         error('could not load "'..name..'" (no package spec file found)')
+      end
+
+      if file.IsDir(full_path..'packages', 'LUA') then
+        self:add_path(full_path..'packages/')
       end
 
       return do_include(spec_path, name, full_path)

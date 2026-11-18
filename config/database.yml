@@ -1,5 +1,7 @@
 #
-# This is your database configuration file.
+# This is the default database configuration file. Do not edit it:
+# copy it to gamemodes/<schema>/config/database.yml (or
+# database.local.yml) and edit the copy, which is read in its place.
 # Entries are separated by environment like so:
 ##
 # environment_name:

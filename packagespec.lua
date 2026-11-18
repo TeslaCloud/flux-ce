@@ -1,5 +1,6 @@
 Package:describe(function(s)
   s.name        = 'Flux'
+  s.id          = 'flux'
   s.version     = '0.9.0'
   s.date        = '2026-10-28'
   s.summary     = 'A gamemode framework.'
@@ -10,6 +11,7 @@ Package:describe(function(s)
   s.website     = 'https://teslacloud.net'
   s.license     = 'MIT'
 
+  s.depends     'gmsv_file'
   s.depends     'sfs'
   s.depends     'cable'
   s.depends     'utf8'

@@ -26,9 +26,10 @@
 -- handlers that does not belong to a plugin.
 --
 -- Framework plugins load only when the schema or another plugin depends on them. The .yml
--- file of the schema names a `profile` from `config/profiles.yml`, a named set of plugins
--- such as `roleplay` or `sandbox`, adds plugins with `depends` and `depends_development` and
--- leaves profile plugins out with `exclude` (see `Plugin.resolve_schema_depends`).
+-- file of the schema names a `profile` from `profiles.yml` (see `Flux.find_config`), a named
+-- set of plugins such as `roleplay` or `sandbox`, adds plugins with `depends` and
+-- `depends_development` and leaves profile plugins out with `exclude` (see
+-- `Plugin.resolve_schema_depends`).
 --
 -- Plugins can be disabled. A disabled plugin is not included at all, neither on the server
 -- nor on the clients, and a plugin that depends on it is not loaded either, while the schema
@@ -84,6 +85,12 @@ local default_extras = {
 
 local extras = table.Copy(default_extras)
 
+--- Tells whether a path belongs to the framework: the Flux package or the plugins and
+-- packages downloaded into `_flux`. A lite refresh does not include such files again.
+local function is_framework_path(path)
+  return path:start_with(FLUX_PATH) or path:start_with('_flux/')
+end
+
 --- Returns all registered plugins, the schema included.
 -- @return [Map plugin path to plugin object]
 function Plugin.all()
@@ -98,8 +105,9 @@ end
 
 --- Clears the hook and load caches and resets the extra folders, ready for a code refresh.
 -- Does nothing before Flux has initialized. On a lite refresh only the entries of plugins
--- whose path does not contain 'flux' are dropped and the extra folders stay, as the files of
--- the packages and framework plugins that add them are not included again.
+-- whose path is outside the framework (the Flux package and `_flux`) are dropped and the extra
+-- folders stay, as the files of the packages and framework plugins that add them are not
+-- included again.
 function Plugin.clear_cache()
   if !Flux.initialized then return end
 
@@ -114,7 +122,7 @@ function Plugin.clear_cache()
         local handler = hook_table[index]
 
         if istable(handler) and istable(handler[2]) and isstring(handler[2].path)
-          and !handler[2].path:include('flux') then
+          and !is_framework_path(handler[2].path) then
           load_cache[handler[2].id] = nil
           table.remove(hook_table, index)
         end
@@ -281,10 +289,10 @@ end
 -- required by in `depends`: the name of its folder, or the file name of a single-file
 -- plugin without the realm prefix and the extension.
 -- ```
--- Plugin.normalize_id('flux/plugins/doors')              -- 'doors'
--- Plugin.normalize_id('flux/plugins/doors/plugin')       -- 'doors'
--- Plugin.normalize_id('flux/plugins/cl_crosshair.lua')   -- 'crosshair'
--- Plugin.normalize_id('crosshair')                       -- 'crosshair'
+-- Plugin.normalize_id(FLUX_PATH..'plugins/doors')            -- 'doors'
+-- Plugin.normalize_id(FLUX_PATH..'plugins/doors/plugin')     -- 'doors'
+-- Plugin.normalize_id(FLUX_PATH..'plugins/cl_crosshair.lua') -- 'crosshair'
+-- Plugin.normalize_id('crosshair')                           -- 'crosshair'
 -- ```
 -- @param id [String plugin path, folder, file name or dependency name]
 -- @return [String normalized ID, or nil if id is not a string or nothing is left of it]
@@ -1017,7 +1025,7 @@ function Plugin.include_schema()
     local missing_profile
 
     deps, missing_profile = Plugin.resolve_schema_depends(
-      schema_yml, YAML.read('gamemodes/flux/config/profiles.yml'), IS_DEVELOPMENT
+      schema_yml, YAML.read(Flux.find_config('profiles.yml')), IS_DEVELOPMENT
     )
 
     if !deps then
@@ -1054,8 +1062,6 @@ function Plugin.include_schema()
       end
     end
   end
-
-  if SERVER then AddCSLuaFile(schema_path..'/gamemode/cl_init.lua') end
 
   SCHEMA = PluginInstance.new(schema_info.name, schema_info)
   SCHEMA._is_schema = true
@@ -1095,8 +1101,10 @@ do
   }
 
   --- Makes sure that a plugin (or a package) is loaded, including it if it has not been yet.
-  -- Plugins are looked up in the Flux, cloud and schema plugin folders, single-file plugins
-  -- by their file name with or without the realm prefix and the extension.
+  -- Plugins are looked up in the `plugins` folder of the Flux package, the cloud plugin folder
+  -- and the `plugins` folder of the schema, single-file plugins by their file name with or
+  -- without the realm prefix and the extension. On a lite refresh the plugins of the
+  -- framework are not included again.
   -- @param name [String plugin or package name]
   -- @return [Boolean true if the dependency is loaded or could be found; false if it could
   --   not, if the plugin is disabled, or if it was left out because one of its own
@@ -1114,13 +1122,13 @@ do
 
     if !Plugin.loaded(name) then
       local search_paths = {
-        'flux/plugins/',
+        FLUX_PATH..'plugins/',
         '_flux/plugins/'..Flux.get_version()..'/',
-        (Flux.get_schema_folder() or 'flux')..'/plugins/'
+        Flux.get_schema_folder()..'/plugins/'
       }
 
       for _, search_path in ipairs(search_paths) do
-        local should_include = !LITE_REFRESH or !search_path:include('flux')
+        local should_include = !LITE_REFRESH or !is_framework_path(search_path)
 
         for _, ending in ipairs(tolerance) do
           if file.Exists(search_path..name..ending, 'LUA') then

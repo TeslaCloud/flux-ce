@@ -249,7 +249,7 @@ if SERVER then
   -- compilation fails are stored with their error, so that the clients can report it.
   -- @param id [String template ID]
   -- @param file_name [String path of the file relative to the Lua search path, such as
-  --   'flux/packages/active_ui/views/lumen/help.lumen']
+  --   PACKAGE.__path__..'views/lumen/help.lumen']
   -- @return [Map the stored template, or nil if the file could not be read]
   function Lumen.include_file(id, file_name)
     local path = 'gamemodes/'..file_name

@@ -1,8 +1,9 @@
 --- Environment variables of Flux: the `ENV` table with `getenv` and `setenv`, and the
 -- `FLUX_ENV` variable that names the environment Flux runs in.
--- Both entry points of the gamemode include this file first. On the first boot it reads
--- `FLUX_ENV` from `config/environment.local.lua` if that file exists, else from
--- `config/environment.lua`, and falls back to 'development' when the file returns nothing.
+-- `boot.lua` includes this file first. On the first boot it reads `FLUX_ENV` from the first
+-- file that exists of `config/environment.local.lua` and `config/environment.lua` of the
+-- schema's gamemode folder and `config/environment.lua` of the Flux package, and falls back to
+-- 'development' when the file returns nothing. `FLUX_ENV_PATH` holds the path of that file.
 -- The server shares variables with clients through `add_client_env`, which appends `setenv`
 -- calls to the generated `lua/_flux/environment.lua` file that clients include here.
 
@@ -58,8 +59,18 @@ end
 
 if Flux and Flux.initialized then return end
 
-FLUX_ENV_PATH = file.Exists('flux/config/environment.local.lua', 'LUA') ? 'flux/config/environment.local.lua' :
-  'flux/config/environment.lua'
+do
+  local project_config = engine.ActiveGamemode()..'/config/'
+
+  if file.Exists(project_config..'environment.local.lua', 'LUA') then
+    FLUX_ENV_PATH = project_config..'environment.local.lua'
+  elseif file.Exists(project_config..'environment.lua', 'LUA') then
+    FLUX_ENV_PATH = project_config..'environment.lua'
+  else
+    FLUX_ENV_PATH = FLUX_PATH..'config/environment.lua'
+  end
+end
+
 setenv('FLUX_ENV', string.lower(include(FLUX_ENV_PATH) or 'development'))
 
 if CLIENT then

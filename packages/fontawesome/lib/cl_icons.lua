@@ -2,7 +2,9 @@
 -- Do not edit by hand: run the script again to update Font Awesome instead.
 -- Lists every icon of the Free set under its name with the 'fa-' prefix, along with the old
 -- names of icons that were renamed and the Font Awesome 4 names, and hands the data to
--- `FontAwesome.load`. The codepoints are the ones of the fonts in `content/resource/fonts`.
+-- `FontAwesome.load`. The codepoints are the ones of the fonts in the `content/resource/fonts`
+-- folder of the package, which the package manager copies into the content folder of the
+-- schema's gamemode.
 
 FontAwesome.load({
   version = '7.3.1',

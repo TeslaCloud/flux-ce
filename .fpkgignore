@@ -1,0 +1,9 @@
+docker/
+docs/
+Dockerfile
+Dockerfile.dev
+docker-compose.yml
+docker-compose.override.yml
+.github/
+.dockerignore
+.proofreader.yml

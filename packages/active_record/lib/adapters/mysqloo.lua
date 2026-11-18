@@ -26,9 +26,10 @@ ActiveRecord.Adapters.Mysqloo.types = {
 
 ActiveRecord.Adapters.Mysqloo._sql_syntax = 'mysql'
 
---- Loads the 'mysqloo' binary module.
+--- Loads the 'mysqloo' binary module. When it cannot be opened, #connect says how to install
+-- it.
 function ActiveRecord.Adapters.Mysqloo:init()
-  require('mysqloo')
+  require_module 'mysqloo'
 end
 
 --- Converts a unix timestamp to the date-time form that MySQL takes in date-time columns.
@@ -94,7 +95,8 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
     end)
   else
     ErrorNoHalt(
-      'ActiveRecord - MySQLOO is not found!\nPlease make sure you have gmsv_mysqloo in your lua/bin folder!\n'
+      'ActiveRecord - MySQLOO is not found!\nIt is not an fpkg package yet: copy gmsv_mysqloo to your '..
+      'lua/bin folder by hand!\n'
     )
   end
 end

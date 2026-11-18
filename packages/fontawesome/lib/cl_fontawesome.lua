@@ -6,8 +6,9 @@
 -- unless it only exists as a brand, or the ID carries one of the Font Awesome style prefixes
 -- ('far fa-heart' draws the outlined heart, 'fab fa-github' the GitHub logo).
 -- The icon data comes from `cl_icons.lua`, which `scripts/update.js` generates from the
--- `@fortawesome/fontawesome-free` npm package together with the TrueType fonts in
--- `content/resource/fonts` of the gamemode, which the package spec sends to clients.
+-- `@fortawesome/fontawesome-free` npm package together with the TrueType fonts in the
+-- `content/resource/fonts` folder of the package, which the package manager copies into the
+-- content folder of the schema's gamemode and the package spec sends to clients.
 -- @module [FontAwesome]
 
 mod 'FontAwesome'

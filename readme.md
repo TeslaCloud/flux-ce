@@ -18,7 +18,7 @@ The current version of Flux is currently in active development. This means that 
 
 ## Docker (easy mode)
 
-If you have Docker and simply want a running server, you can skip the installation guide below. The `Dockerfile` in this repository performs the steps from [General installation](#general-installation) for you: it installs the x86-64 Garry's Mod dedicated server, the dependencies, Flux and the HL2RP schema.
+If you have Docker and simply want a running server, you can skip the installation guide below. The `Dockerfile` in this repository performs the steps from [General installation](#general-installation) for you: it installs the x86-64 Garry's Mod dedicated server, the binary modules, the HL2RP schema as the gamemode and this checkout as its `flux` package.
 
 ```sh
 # Clone the Flux repository and build the image.
@@ -52,32 +52,40 @@ docker run -it --name flux -p 27015:27015/udp -p 27015:27015/tcp flux \
 
 Things to keep in mind:
 
-* Flux is copied into the image from your checkout, including any `*.local.yml` and `*.local.lua` files. Run `docker build` again after changing the code or the configuration, then create a new container.
-* The dependencies and the schema are cloned during the build and then cached. Add `--no-cache-filter deps,schema` to `docker build` to pull in their latest versions without downloading the server again.
-* To use a schema other than HL2RP, build with `--build-arg SCHEMA_REPO=https://github.com/you/your_schema.git` and pass the matching `+gamemode`.
+* Flux is copied into the image from your checkout to `garrysmod/gamemodes/hl2rp/packages/flux`. Run `docker build` again after changing the code, then create a new container.
+* The dependencies, the schema and the `gmsv_file` package are cloned during the build and then cached. Add `--no-cache-filter deps,schema,gmsv_file` to `docker build` to pull in their latest versions without downloading the server again.
+* To use a schema other than HL2RP, build with `--build-arg SCHEMA_REPO=https://github.com/you/your_schema.git --build-arg SCHEMA=your_schema` and pass `+gamemode your_schema`.
 * The image replaces the server's Lua library, `bin/linux64/lua_shared.so`, with Flux's build of it from https://data.nighty.cloud/gmod/lua_shared.so, and so does the development image below. Build with `--build-arg LUA_SHARED_URL=` to keep the stock library, or with `--no-cache-filter lua_shared` to download its newest version.
-* SQLite, the default database, needs no setup. To use MySQL or PostgreSQL, point `config/database.local.yml` at a database server reachable from the container, see [Database setup](#database-setup).
+* SQLite, the default database, needs no setup. To use MySQL or PostgreSQL, put a `database.yml` that points at a database server reachable from the container into a `config` folder on the host and mount it as the `config` folder of the schema's gamemode with `-v "$PWD/config:/home/steam/flux_server/garrysmod/gamemodes/hl2rp/config"` on `docker run`, see [Database setup](#database-setup).
 
 ## Docker (development)
 
-If you are working on Flux or on a schema, use `docker-compose.yml` instead. It starts a server that runs your checkouts directly rather than a copy of them, in the `development` [environment](#environment), so the server reloads your code as you save it.
+If you are working on Flux or on a schema, use `docker-compose.yml` instead. It starts a server that runs your checkouts directly rather than a copy of them, in the `development` [environment](#environment), so the server reloads your code as you save it. The schema checkout is the gamemode and this checkout is mounted as its `flux` package.
 
 ```sh
-# Flux and the schema are expected to be next to each other.
+# Flux, the schema and gmsv_file are expected to be next to each other.
 git clone https://github.com/TeslaCloud/flux-ce.git
 git clone https://github.com/TeslaCloud/hl2rp.git
-cd flux-ce
+git clone https://github.com/Meow/gmsv_file.git
+
+# Link the checkouts into the packages folder of the schema.
+cd hl2rp
+fpkg link ../flux-ce
+fpkg link ../gmsv_file
+fpkg install
+cd ../flux-ce
 
 docker compose up                       # SQLite
 docker compose --profile postgres up    # PostgreSQL
 docker compose --profile mariadb up     # MariaDB
 ```
 
+* The stack always runs this checkout as the `flux` package, whatever `packages/flux` of the schema checkout is. The other packages that `fpkg install` put into the schema checkout are used as they are. A package that is a link made by `fpkg link`, such as `gmsv_file` above, needs a bind mount in `docker-compose.override.yml` (the comment at the top of `docker-compose.yml` shows where), and the container names the ones that are missing when it starts.
 * The server is hidden from the server list. Join it with `connect localhost` (or the address of the machine) from the game console. `docker compose attach flux` opens the server console.
 * The database is picked by the profile, there is nothing to configure. The SQLite database is the `docker/sqlite/sv.db` file, everything else that the server stores is kept in Docker volumes. `docker compose down -v` deletes those.
 * To use another schema, another map or a Workshop collection, set the variables listed at the top of `docker-compose.yml`, for example `FLUX_SCHEMA=reborn docker compose up`. They can also be put into an `.env` file.
 * The server runs a local build of `lua_shared.so` when `FLUX_LUA_SHARED` points to one, instead of the build in the image. Mounts that only exist on your machine go into `docker-compose.override.yml`, which Compose merges in and Git ignores.
-* Changes to the files in `config` need a restart of the container. `database.local.yml` and `environment.local.lua` are written by the container and never touch your checkout.
+* The `config` folder of the schema checkout holds the configuration of the development server. Changes to it need a restart of the container. `database.local.yml` and `environment.local.lua` are written by the container and never touch your checkout.
 
 ## Installation
 
@@ -89,6 +97,7 @@ Our installation and maintenance guides are primarily written with the assumptio
 
 * SteamCMD
 * Git
+* [fpkg](https://fluxpkg.dev), the package manager of Flux
 * The `x86-64` branch of the Garry's Mod dedicated server. Flux only ships 64-bit modules, so the default 32-bit server will not work.
 * Linux: a 64-bit distribution with glibc 2.35 or newer (Debian 12, Ubuntu 22.04 or newer)
 * Windows: Windows 10 / Windows Server 2016+ recommended
@@ -96,7 +105,7 @@ Our installation and maintenance guides are primarily written with the assumptio
 
 ### General installation
 
-If you want to just get Flux up and running, clone the [dependencies repository](https://github.com/TeslaCloud/flux-dependencies). After that, simply clone the repo inside of the `gamemodes` folder, as well as the [reborn schema](https://github.com/TeslaCloud/reborn) repo.
+Flux is a package that a schema depends on: the schema is the only folder you add to `gamemodes` (Flux itself is not one), and `fpkg` installs Flux and every package it needs into the `packages` folder of the schema. The binary modules come from the [dependencies repository](https://github.com/TeslaCloud/flux-dependencies), see [Binary modules](#binary-modules).
 
 Here is approximately what you will need to do on a Linux system (you can probably do the same on Windows):
 ```sh
@@ -106,17 +115,38 @@ git clone https://github.com/TeslaCloud/flux-dependencies.git flux_server
 # Then install the server files on top. Flux requires the x86-64 branch.
 steamcmd +login anonymous +force_install_dir ./flux_server +app_update 4020 -beta x86-64 validate +quit
 
-# Navigate to the gamemodes folder.
+# Put the Reborn schema, or any other schema you'd like to use, into the gamemodes folder.
 cd ./flux_server/garrysmod/gamemodes
-
-# Clone the Flux repository as a gamemode. Make sure to clone into the "flux" folder.
-git clone https://github.com/TeslaCloud/flux-ce.git flux
-
-# Then clone the Reborn schema, or any other schema you'd like to use.
 git clone https://github.com/TeslaCloud/reborn.git
+
+# Install Flux and the other packages of the schema. fpkg finds the schema from any
+# folder of the server.
+fpkg install
 
 # And you're all set!
 ```
+
+The configuration of your server goes into `gamemodes/<your_schema>/config/`. A `settings.yml`, `database.yml`, `profiles.yml` or `environment.lua` there (or its `.local` variant, such as `database.local.yml`) is read in place of the file of the same name in `gamemodes/<your_schema>/packages/flux/config/`, which is where the defaults and their documentation are. Never edit the files in `packages`: `fpkg` verifies them and replaces them on the next install.
+
+#### Developing Flux or a schema
+
+```sh
+# Create a schema, or clone one.
+fpkg new schema my_schema
+cd my_schema
+
+# Use your checkout of Flux instead of the published package.
+fpkg link ../flux-ce
+
+# Install the rest.
+fpkg install
+```
+
+`fpkg link` makes `packages/flux` a link to the checkout. The checkout keeps its own packages in its `packages` folder, which Flux finds as well. To run the schema in a container, see [Docker (development)](#docker-development).
+
+#### Binary modules
+
+Flux cannot start without the `file` module, which comes with the `gmsv_file` package, a dependency of `flux`: `fpkg install` puts it into `garrysmod/lua/bin`. A PostgreSQL server needs the `pg` module: uncomment `s.depends 'gmsv_pg'` in the `packagespec.lua` of your schema and run `fpkg install`. MySQLOO, the module for MySQL and MariaDB, is not an fpkg package yet: copy it from the [dependencies repository](https://github.com/TeslaCloud/flux-dependencies) into `garrysmod/lua/bin` by hand.
 
 ### Creating a server startup script
 
@@ -158,7 +188,7 @@ _The `admin` role will have every single permission by default._ Similarly to th
 
 Depending on your use case, you may want to set up a database. SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
 
-Follow the instructions in `/garrysmod/gamemodes/flux/config/database.yml` to learn more.
+Follow the instructions in `/garrysmod/gamemodes/<your_schema>/packages/flux/config/database.yml` to learn more. Copy that file to `/garrysmod/gamemodes/<your_schema>/config/database.yml` and change the copy.
 
 ### Migrations
 
@@ -194,7 +224,7 @@ flux generate migration AddRoleToUsers role:string
 
 ### Environment
 
-By default, Flux comes with the `production` environment pre-chosen. It is good if you don't want to write code. If you plan on writing plugins, schemas or modifying the framework, you should set your environment to `development`. A third environment, `test`, runs like `development` and sets `IS_TEST`. If you wish to change your environment, copy the `gamemodes/flux/config/environment.lua` file as `environment.local.lua` and change `production` to `development` inside that file.
+By default, Flux comes with the `production` environment pre-chosen. It is good if you don't want to write code. If you plan on writing plugins, schemas or modifying the framework, you should set your environment to `development`. A third environment, `test`, runs like `development` and sets `IS_TEST`. If you wish to change your environment, copy the `gamemodes/<your_schema>/packages/flux/config/environment.lua` file to `gamemodes/<your_schema>/config/environment.lua` and change `production` to `development` inside that file.
 
 **What is the difference between production and development?**
 
@@ -209,7 +239,7 @@ _tl;dr:_
 
 ## Plugins
 
-A plugin is a folder (or a single `.lua` file, whose `sv_`, `sh_` or `cl_` prefix sets its realm) in `flux/plugins` or in the `plugins` folder of a schema. All plugins of the schema are loaded, the ones that come with Flux only when the schema or another plugin lists them under `depends`. A plugin folder looks like this:
+A plugin is a folder (or a single `.lua` file, whose `sv_`, `sh_` or `cl_` prefix sets its realm) in the `plugins` folder of the `flux` package or in the `plugins` folder of a schema. All plugins of the schema are loaded, the ones that come with Flux only when the schema or another plugin lists them under `depends`. A plugin folder looks like this:
 
 ```
 plugins/doors/
@@ -250,7 +280,7 @@ To do that, simply follow the steps below:
 ### MySQL (MariaDB / MySQL)
 
 1. Open the MySQL console (`mysql` command on Linux) or any other means of managing your database.
-2. Drop the table specified in `/garrysmod/gamemodes/flux/config/database[.local].yml`. To do that from the console, simply run `DROP DATABASE database_name_here;`, replace `database_name_here` with your database name.
+2. Drop the table specified in `/garrysmod/gamemodes/**your_schema**/config/database[.local].yml`. To do that from the console, simply run `DROP DATABASE database_name_here;`, replace `database_name_here` with your database name.
 3. Create a new database. To do that, run `CREATE DATABASE database_name_here;`, replace `database_name_here` with your database name.
 4. Start the server.
 

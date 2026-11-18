@@ -1,12 +1,12 @@
 --- Core of the Flux package, included as a dependency by its package specification.
 -- Sets the environment constants (`IS_PRODUCTION`, `IS_DEVELOPMENT` and `IS_TEST`), loads the
 -- `Pipeline`, `Plugin` and `Config` libraries, provides the version of Flux, debug output and
--- the loaded schema (its folder, name, information and inclusion) and defines what happens
--- once the package and all of its dependencies have been included: the schema is loaded and
--- the FluxPackageLoaded hook runs.
--- On the server it also reads `settings.yml`, `config.yml` and `database.yml` from the
--- gamemode's `config` folder into the `Settings` and `DatabaseSettings` globals and shares the
--- schema information with clients.
+-- the loaded schema (its folder, name, information and inclusion) and reloads the
+-- dependencies of the package on a code refresh. `boot.lua` includes the schema once every
+-- package is in.
+-- On the server it also reads `settings.yml`, `config.yml` and `database.yml`, each found with
+-- `Flux.find_config`, into the `Settings` and `DatabaseSettings` globals and shares the schema
+-- information with clients.
 
 AddCSLuaFile()
 
@@ -46,12 +46,13 @@ if !Pipeline or !Plugin or !Config then
 end
 
 --- Gets the folder of the currently loaded schema.
--- @return [String the schema folder; the client falls back to 'flux' if it is not known yet]
+-- @return [String the schema folder; the client falls back to the active gamemode if it is
+--   not known yet]
 function Flux.get_schema_folder()
   if SERVER then
     return Flux.schema
   else
-    return Flux.shared.schema_folder or 'flux'
+    return Flux.shared.schema_folder or engine.ActiveGamemode()
   end
 end
 
@@ -112,37 +113,51 @@ end
 
 if PACKAGE then
   --- Called by the Package manager once the Flux package has been included.
-  -- Reloads the dependencies when this is a code refresh (on a lite refresh only the flow and
-  -- active_ui packages, whose shared files are needed either way), includes the schema and
-  -- runs the FluxPackageLoaded hook.
+  -- On a code refresh it reloads the dependencies of the package (on a lite refresh only the
+  -- flow and active_ui packages, whose shared files are needed either way). Does nothing on
+  -- the first boot.
   function PACKAGE:__installed__()
-    if Flux.initialized then
-      if !LITE_REFRESH then
-        for _, dep_name in pairs(self.metadata.deps) do
-          Package:reload(dep_name)
-        end
-      else
-        Package:reload 'flow'
-        Package:reload 'active_ui'
+    if !Flux.initialized then return end
+
+    if !LITE_REFRESH then
+      for _, dep_name in pairs(self.metadata.deps) do
+        Package:reload(dep_name)
       end
+    else
+      Package:reload 'flow'
+      Package:reload 'active_ui'
     end
-
-    Flux.include_schema()
-
-    --- Called once the Flux package, all of its dependencies and the schema with its plugins
-    -- have been included.
-    -- Runs on both the server and the client, on boot and again every time a code refresh
-    -- reloads the package.
-    hook.Call('FluxPackageLoaded', GM or GAMEMODE)
-    Flux.initialized = true
   end
 end
 
 if !SERVER then return end
 
-Settings          = Settings or YAML.read('gamemodes/flux/config/settings.yml')
-Settings.configs  = Settings.configs or YAML.read('gamemodes/flux/config/config.yml')
-DatabaseSettings  = YAML.read('gamemodes/flux/config/database.yml')
+--- Finds a configuration file. The server's own config lives in the `config` folder of the
+-- schema's gamemode and replaces the file that ships with Flux, file by file: the first that
+-- exists of `<name>.local.<ext>` and `<name>.<ext>` there is used, else the file of the same
+-- name in the `config` folder of the Flux package.
+-- ```
+-- Flux.find_config('settings.yml') -- 'gamemodes/hl2rp/config/settings.local.yml'
+-- ```
+-- @realm [server]
+-- @param file_name [String name of the file with its extension, such as 'database.yml']
+-- @return [String path of the file relative to the game folder]
+function Flux.find_config(file_name)
+  local folder = 'gamemodes/'..Flux.get_schema_folder()..'/config/'
+  local local_name = file_name:gsub('(%.[^.]+)$', '.local%1')
+
+  if file.Exists(folder..local_name, 'GAME') then
+    return folder..local_name
+  elseif file.Exists(folder..file_name, 'GAME') then
+    return folder..file_name
+  end
+
+  return 'gamemodes/'..FLUX_PATH..'config/'..file_name
+end
+
+Settings          = Settings or YAML.read(Flux.find_config('settings.yml'))
+Settings.configs  = Settings.configs or YAML.read(Flux.find_config('config.yml'))
+DatabaseSettings  = YAML.read(Flux.find_config('database.yml'))
 
 LITE_REFRESH = Flux.initialized and Settings.lite_refresh or false
 
