@@ -356,7 +356,7 @@ do
       bar.cur_i = 1
     else
       bar.fill_width = bar.width * (interpolated[math_round(cur_i)] / bar.max_value)
-      bar.cur_i = cur_i + math_clamp(math_round(FrameTime() / 0.006), 1, 10)
+      bar.cur_i = cur_i + math_clamp(math_round(FrameTime() / 0.003), 2, 20)
     end
 
     if bar.text != upper_texts[bar] then

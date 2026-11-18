@@ -234,7 +234,7 @@ function GM:HUDPaint()
       local white_alpha = client.white_alpha
 
       if isnumber(white_alpha) and white_alpha > 0.5 then
-        client.white_alpha = Lerp(0.04, white_alpha, 0)
+        client.white_alpha = Lerp(0.0784, white_alpha, 0)
       end
 
       --- Called on the client every frame while the local player is alive and the HUD is

@@ -83,7 +83,7 @@ function Limbs:HUDPaintAlive(_cur_time, scrw, scrh)
     visible = false
   end
 
-  diagram_alpha = math_approach(diagram_alpha, visible ? 1 : 0, FrameTime() * 4)
+  diagram_alpha = math_approach(diagram_alpha, visible ? 1 : 0, FrameTime() * 8)
 
   if diagram_alpha <= 0 then return end
 
