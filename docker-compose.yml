@@ -1,10 +1,22 @@
-# Development setup: a dedicated server that runs this checkout of Flux and a
-# checkout of a schema, both mounted into the container, so that changes to the
-# code are picked up by the Lua refresh of the running server.
+# Development setup: a dedicated server that runs a checkout of a schema with this
+# checkout of Flux as its "flux" package, both mounted into the container, so that
+# changes to the code are picked up by the Lua refresh of the running server.
 #
 #   docker compose up                       SQLite, kept in docker/sqlite/sv.db
 #   docker compose --profile postgres up    PostgreSQL
 #   docker compose --profile mariadb up     MariaDB
+#
+# The schema checkout is mounted at garrysmod/gamemodes/<schema>. Its "packages"
+# folder is covered by an empty tmpfs, and this checkout is mounted at
+# packages/flux inside it, so whatever packages/flux is in the schema checkout (a
+# link made by "fpkg link ../flux-ce", relative or absolute, a copy, or nothing),
+# the server always loads this checkout. The entry point links the other package
+# folders that "fpkg install" put into the schema checkout into the tmpfs. Links
+# of the schema checkout, such as gmsv_file linked with "fpkg link ../gmsv_file",
+# point outside of the container: add a bind mount of the folder each one
+# resolves to on the host to
+# /home/steam/flux_server/garrysmod/gamemodes/<schema>/packages/<id> in
+# docker-compose.override.yml. The entry point names the ones it misses.
 #
 # The server is published on FLUX_PORT of every address of the host. It is kept
 # off the master server list and does not answer server browser queries, so
@@ -32,6 +44,11 @@
 # in docker-compose.override.yml next to this file, which Compose merges in and
 # Git ignores.
 #
+# Docker creates the mount points "packages" and "config" in the schema checkout,
+# owned by root, when the checkout has no such folders; create them first. Nothing
+# else is written into it apart from what the server itself writes there, such as
+# db/.
+#
 # The owner of the files in the checkouts needs to have the user ID 1000, which
 # is the one the server runs as.
 
@@ -53,13 +70,20 @@ services:
       - "${FLUX_PORT:-27015}:27015/udp"
       - "${FLUX_PORT:-27015}:27015/tcp"
     volumes:
-      - .:/home/steam/flux_server/garrysmod/gamemodes/flux
-      - ./config:/home/steam/flux_config:ro
       - type: bind
         source: ${FLUX_SCHEMA_PATH:-../${FLUX_SCHEMA:-hl2rp}}
         target: /home/steam/flux_server/garrysmod/gamemodes/${FLUX_SCHEMA:-hl2rp}
         bind:
           create_host_path: false
+      # The schema checkout once more, read-only, for the entry point to copy its
+      # config files from and to compare its packages with the mounted ones.
+      - type: bind
+        source: ${FLUX_SCHEMA_PATH:-../${FLUX_SCHEMA:-hl2rp}}
+        target: /home/steam/schema
+        read_only: true
+        bind:
+          create_host_path: false
+      - .:/home/steam/flux_server/garrysmod/gamemodes/${FLUX_SCHEMA:-hl2rp}/packages/flux
       - ./docker/sqlite:/home/steam/sqlite
       - data:/home/steam/flux_server/garrysmod/data
       - settings:/home/steam/flux_server/garrysmod/settings/flux
@@ -72,9 +96,12 @@ services:
         bind:
           create_host_path: false
     tmpfs:
-      # The config folder is replaced by a copy that the entry point adds the
-      # database and environment settings to, see docker/entrypoint.sh.
-      - /home/steam/flux_server/garrysmod/gamemodes/flux/config:uid=1000,gid=1000,mode=755
+      # The packages folder of the schema checkout is replaced by an empty one,
+      # which this checkout and the other mounted packages are put into.
+      - /home/steam/flux_server/garrysmod/gamemodes/${FLUX_SCHEMA:-hl2rp}/packages:uid=1000,gid=1000,mode=755
+      # The config folder of the schema is replaced by a copy that the entry point
+      # adds the database and environment settings to, see docker/entrypoint.sh.
+      - /home/steam/flux_server/garrysmod/gamemodes/${FLUX_SCHEMA:-hl2rp}/config:uid=1000,gid=1000,mode=755
     depends_on:
       postgres:
         condition: service_healthy
@@ -84,7 +111,7 @@ services:
         required: false
 
   postgres:
-    image: postgres:18
+    image: postgres:18.7
     profiles: [postgres]
     environment:
       POSTGRES_USER: flux
