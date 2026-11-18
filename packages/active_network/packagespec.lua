@@ -1,6 +1,6 @@
 Package:describe(function(s)
   s.name        = 'Active Network'
-  s.version     = '1.0'
+  s.version     = '1.0.0'
   s.date        = '2019-03-09'
   s.summary     = 'Networking utilities'
   s.description = 'Active Network provides various convenience libraries for automatic variable networking '..

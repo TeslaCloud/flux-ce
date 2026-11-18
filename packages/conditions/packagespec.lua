@@ -1,6 +1,6 @@
 Package:describe(function(s)
   s.name        = 'Conditions'
-  s.version     = '1.0'
+  s.version     = '1.0.0'
   s.date        = '2026-10-29'
   s.summary     = 'Rules about players that are edited in game and checked on the server.'
   s.description = 'Conditions are rules about a player, such as who may lock a door: a registry of '..

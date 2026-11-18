@@ -1,6 +1,6 @@
 Package:describe(function(s)
   s.name        = 'Bolt'
-  s.version     = '1.0'
+  s.version     = '1.0.0'
   s.date        = '2026-10-29'
   s.summary     = 'The admin mod of Flux.'
   s.description = 'Bolt gives every player a role with an immunity level and a set of permissions, '..

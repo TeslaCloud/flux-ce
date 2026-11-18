@@ -1,6 +1,6 @@
 Package:describe(function(s)
   s.name        = 'Lumen'
-  s.version     = '1.0'
+  s.version     = '1.0.0'
   s.date        = '2026-10-10'
   s.summary     = 'Declarative Derma interfaces from Lua templates with markup.'
   s.description = 'Lumen builds Derma interfaces from templates: Lua code with markup in it that describes '..

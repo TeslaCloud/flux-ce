@@ -1,6 +1,6 @@
 Package:describe(function(s)
   s.name        = 'CAMI'
-  s.version     = '20211019'
+  s.version     = '2021.10.19'
   s.date        = '2021-10-19'
   s.summary     = 'Common Admin Mod Interface.'
   s.description = 'An interface through which admin mods share their usergroups and privileges with '..

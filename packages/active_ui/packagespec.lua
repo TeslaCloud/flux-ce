@@ -1,6 +1,6 @@
 Package:describe(function(s)
   s.name        = 'Active UI'
-  s.version     = '1.0'
+  s.version     = '1.0.0'
   s.date        = '2026-10-10'
   s.summary     = 'The user interface of Flux.'
   s.description = 'Active UI is the frontend of Flux: the themes and the Derma skin, the fonts and the '..

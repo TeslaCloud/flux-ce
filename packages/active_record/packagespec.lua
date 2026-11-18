@@ -1,6 +1,6 @@
 Package:describe(function(s)
   s.name        = 'Active Record'
-  s.version     = '1.0'
+  s.version     = '1.0.0'
   s.date        = '2019-03-09'
   s.summary     = 'Active Record pattern ORM.'
   s.description = 'Active Record is a database relation mapping library that binds objects to database rows.'
