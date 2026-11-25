@@ -207,14 +207,14 @@ function PropProtection:can_bypass(actor, action)
   return false
 end
 
---- Decides whether a player may do something to an entity. The world and invalid entities
--- are never protected.
+--- Decides whether a player may do something to an entity. Anything that is not a valid
+-- player may do nothing; the world and invalid entities are never protected.
 -- ```
 -- if !PropProtection:can_manipulate(actor, entity, 'tool', 'my_tool') then
 --   return false
 -- end
 -- ```
--- @param actor [Player]
+-- @param actor [Any the player]
 -- @param entity [Entity]
 -- @param action [String 'physgun', 'freeze', 'unfreeze', 'tool', 'property' or 'drive';
 --   plugins may pass names of their own, which are checked like 'tool']
@@ -222,6 +222,7 @@ end
 -- @return [Boolean whether the action is allowed, String ID of the rule that refuses it (nil
 --   if it is allowed or was refused by the PlayerCanManipulateEntity hook alone)]
 function PropProtection:can_manipulate(actor, entity, action, detail)
+  if !IsValid(actor) or !actor:IsPlayer() then return false end
   if !IsValid(entity) then return true end
 
   local rule
