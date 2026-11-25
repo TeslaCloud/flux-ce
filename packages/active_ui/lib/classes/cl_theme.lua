@@ -28,13 +28,21 @@ ThemeBase.fonts     = {}
 ThemeBase.skin      = {}
 ThemeBase.should_reload = true
 
---- Creates a new theme. The ID of the theme is derived from its name.
+--- Creates a theme with empty tables of colors, fonts, options, panels, skin overrides,
+-- sounds and materials of its own. The ID of the theme is derived from its name.
 -- @param name='Unknown' [String]
 -- @param parent=nil [String ID of the theme to inherit from]
 function ThemeBase:init(name, parent)
-  self.name   = name or 'Unknown'
-  self.id     = self.name:to_id()
-  self.parent = parent
+  self.name      = name or 'Unknown'
+  self.id        = self.name:to_id()
+  self.parent    = parent
+  self.colors    = {}
+  self.sounds    = {}
+  self.materials = {}
+  self.options   = {}
+  self.panels    = {}
+  self.fonts     = {}
+  self.skin      = {}
 
   if !self.id then
     error 'Cannot create a theme without a valid unique ID!\n'

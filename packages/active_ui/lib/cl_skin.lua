@@ -4,9 +4,9 @@
 -- texture atlas. Its colors are a palette of plain fields on the skin table, so that a theme can
 -- recolor the whole of Derma: `SKIN:apply_theme` maps the semantic colors of the active theme
 -- ('surface', 'border', 'text', 'accent' and so on) onto those fields and is run by
--- `Theme.set_derma_skin` whenever a theme is loaded, after the `skin` table of the theme has
--- been copied over. The defaults below match the factory theme, so the skin looks right before
--- any theme has loaded.
+-- `Theme.set_derma_skin` whenever a theme is loaded, after `SKIN:reset` has restored the
+-- defaults below and before the `skin` table of the theme is copied over. The defaults match
+-- the factory theme, so the skin looks right before any theme has loaded.
 
 local set_draw_color = surface.SetDrawColor
 local draw_rect      = surface.DrawRect
@@ -22,26 +22,10 @@ local function scale(size)
   return DermaScale and DermaScale.scale(size) or size
 end
 
-local alpha_cache = setmetatable({}, { __mode = 'k' })
+if !Theme then require_relative 'cl_theme' end
+
+local with_alpha = Theme.with_alpha
 local close_hover_color = Color(228, 92, 104)
-
-local function with_alpha(color, alpha)
-  local by_alpha = alpha_cache[color]
-
-  if !by_alpha then
-    by_alpha = {}
-    alpha_cache[color] = by_alpha
-  end
-
-  local result = by_alpha[alpha]
-
-  if !result then
-    result = ColorAlpha(color, alpha)
-    by_alpha[alpha] = result
-  end
-
-  return result
-end
 
 local function card(radius, x, y, w, h, fill, border)
   if border then
@@ -209,7 +193,7 @@ SKIN.Colours.TooltipText                      = SKIN.text_normal
 --- Recolors the skin from the semantic colors of a theme. Every field of the palette and
 -- every entry of `Colours` is set, so a theme only has to define its colors; it can still
 -- override single fields through its `skin` table, which `Theme.set_derma_skin` copies over
--- before it calls this.
+-- after it calls this.
 -- @param theme [ThemeBase the theme that has been loaded]
 function SKIN:apply_theme(theme)
   local get = |id, fallback| -> theme:get_color(id, fallback)
@@ -1018,4 +1002,23 @@ function SKIN:PaintMenuBar(_panel, w, h)
   draw_rect(0, h - 1, w, 1)
 end
 
+local defaults
+
+--- Restores every field of the skin to the value it has had when the skin was defined, so
+-- that neither the colors nor the overrides of a theme that was loaded before carry over to
+-- the next one. `Theme.set_derma_skin` calls it before it applies a theme.
+function SKIN:reset()
+  for key in pairs(self) do
+    if defaults[key] == nil then
+      self[key] = nil
+    end
+  end
+
+  for key, value in pairs(defaults) do
+    self[key] = istable(value) and table.Copy(value) or value
+  end
+end
+
 derma.DefineSkin('Flux', 'The flat, dark skin of Flux.', SKIN)
+
+defaults = table.Copy(SKIN)

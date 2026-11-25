@@ -40,6 +40,39 @@ local function hook_result(id, success, ...)
   return ...
 end
 
+local alpha_cache = setmetatable({}, { __mode = 'k' })
+local math_floor = math.floor
+local math_clamp = math.Clamp
+
+--- Returns a copy of a color with another alpha, for drawing code that runs every frame. The
+-- copies are cached by color and alpha, so asking again for the same pair creates nothing;
+-- the returned color is shared and must not be changed.
+-- ```
+-- draw.RoundedBox(radius, 0, 0, w, h, Theme.with_alpha(Theme.get_color('surface'), 240 * fraction))
+-- ```
+-- @param color [Color]
+-- @param alpha [Number from 0 to 255, rounded down]
+-- @return [Color]
+function Theme.with_alpha(color, alpha)
+  alpha = math_clamp(math_floor(alpha), 0, 255)
+
+  local by_alpha = alpha_cache[color]
+
+  if !by_alpha then
+    by_alpha = {}
+    alpha_cache[color] = by_alpha
+  end
+
+  local result = by_alpha[alpha]
+
+  if !result then
+    result = ColorAlpha(color, alpha)
+    by_alpha[alpha] = result
+  end
+
+  return result
+end
+
 --- Returns all of the registered themes.
 -- @return [Map themes by ID]
 function Theme.all()
@@ -47,7 +80,8 @@ function Theme.all()
 end
 
 --- Registers a theme. If the theme has a registered parent, it is replaced with a copy
--- of the parent that has the theme merged on top of it.
+-- of the parent that has the theme merged on top of it. A theme whose parent is not
+-- registered yet is registered without inheriting anything, with an error in the console.
 -- @param obj [ThemeBase]
 function Theme.register_theme(obj)
   if obj.parent then
@@ -60,6 +94,9 @@ function Theme.register_theme(obj)
 
       obj = new_obj
       obj.base = parent_theme
+    else
+      ErrorNoHalt("The '"..tostring(obj.id).."' theme derives from the '"..tostring(obj.parent)..
+        "' theme, which is not registered! It inherits nothing.\n")
     end
   end
 
@@ -232,27 +269,32 @@ function Theme.remove_theme(id)
   end
 end
 
---- Copies the skin overrides of the active theme into the 'Flux' Derma skin, recolors the
--- skin from the colors of the theme (see `SKIN:apply_theme`) and refreshes the skins of all
--- panels.
+--- Restores the 'Flux' Derma skin to its defaults (see `SKIN:reset`), recolors it from the
+-- colors of the active theme (see `SKIN:apply_theme`), copies the skin overrides of the theme
+-- into it and refreshes the skins of all panels.
 function Theme.set_derma_skin()
   if current_theme then
     local skin_table = derma.GetNamedSkin('Flux')
 
-    for key, value in pairs(current_theme.skin) do
-      skin_table[key] = value
+    if isfunction(skin_table.reset) then
+      skin_table:reset()
     end
 
     if isfunction(skin_table.apply_theme) then
       skin_table:apply_theme(current_theme)
+    end
+
+    for key, value in pairs(current_theme.skin) do
+      skin_table[key] = value
     end
   end
 
   derma.RefreshSkins()
 end
 
---- Makes the specified theme the active one. Calls on_loaded of every theme it derives from
--- and of the theme itself, applies its Derma skin, and runs the 'ThemeLoaded' hook.
+--- Makes the specified theme the active one. Calls on_loaded of every theme it derives from,
+-- starting with the root, then of the theme itself, each method once, applies its Derma skin,
+-- and runs the 'ThemeLoaded' hook.
 -- It can be prevented with the 'ShouldThemeLoad' hook.
 -- @param theme_id [String ID of a registered theme]
 -- @return [Boolean true if the theme has been loaded, false if it is not registered or the
@@ -271,18 +313,27 @@ function Theme.load_theme(theme_id)
 
     current_theme = theme_table
 
-    local next = theme_table.base
+    local chain = {}
+    local base = theme_table.base
 
-    while next do
-      if next.on_loaded then
-        next.on_loaded(current_theme)
-      end
+    while base do
+      table.insert(chain, 1, base)
 
-      next = next.base
+      base = base.base
     end
 
-    if current_theme.on_loaded then
-      current_theme:on_loaded()
+    chain[#chain + 1] = theme_table
+
+    local last_on_loaded
+
+    for i = 1, #chain do
+      local on_loaded = chain[i].on_loaded
+
+      if on_loaded and on_loaded != last_on_loaded then
+        on_loaded(current_theme)
+
+        last_on_loaded = on_loaded
+      end
     end
 
     Theme.set_derma_skin()
