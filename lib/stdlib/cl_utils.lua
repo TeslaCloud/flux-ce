@@ -200,18 +200,22 @@ function util.cubic_ease_out_t(steps, from, to)
 end
 
 --- Calculates the value of a cubic ease-in-out interpolation at a given step.
--- Uses util.cubic_ease_in for the first half of the steps and util.cubic_ease_out for
--- the second half.
+-- Eases in with util.cubic_ease_in from the starting value to the middle of the range over
+-- the first half of the steps, and out with util.cubic_ease_out from the middle to the final
+-- value over the second half.
 -- @param cur_step [Number current step]
 -- @param steps [Number total amount of steps]
 -- @param from [Number starting value]
 -- @param to [Number final value]
 -- @return [Number interpolated value]
 function util.cubic_ease_in_out(cur_step, steps, from, to)
-  if cur_step > (steps * 0.5) then
-    return util.cubic_ease_out(cur_step - steps * 0.5, steps * 0.5, from, to)
+  local half = steps * 0.5
+  local middle = (from + to) * 0.5
+
+  if cur_step > half then
+    return util.cubic_ease_out(cur_step - half, half, middle, to)
   else
-    return util.cubic_ease_in(cur_step, steps, from, to)
+    return util.cubic_ease_in(cur_step, half, from, middle)
   end
 end
 
@@ -329,7 +333,11 @@ do
 end
 
 --- Splits a text into lines that fit into the given width when drawn with the given font.
--- Words that are wider than a whole line are broken up with a dash. Newlines are removed.
+-- Words are separated by spaces, and line breaks count as spaces. Words that are wider than a
+-- whole line are broken up with a dash. The spaces at a line break are dropped; every other
+-- space is kept, the ones at the start and the end of the text included, so that texts
+-- wrapped one after another can be drawn side by side. The first line is empty when not even
+-- the first word fits into the space that is left by `initial_width`.
 -- @param text [String text to wrap]
 -- @param font [String font name]
 -- @param width [Number maximum width of a line in pixels]
@@ -338,12 +346,11 @@ end
 function util.wrap_text(text, font, width, initial_width)
   if !text or !font or !width then return end
 
-  text = text:gsub('\n', '')
-
   local output = {}
   local space_width = util.text_size(' ', font)
   local dash_width = util.text_size('-', font)
-  local pieces = text:split(' ')
+  local pieces = text:gsub('\n', ' '):split(' ')
+  local piece_count = #pieces
   local cur_width = initial_width or 0
   local line = {}
 
@@ -353,13 +360,7 @@ function util.wrap_text(text, font, width, initial_width)
 
     if word_width <= remain then
       line[#line + 1] = word
-
-      if index != #pieces then
-        line[#line + 1] = ' '
-        cur_width = cur_width + word_width + space_width
-      else
-        cur_width += word_width
-      end
+      cur_width += word_width
     elseif word_width > width then
       for i = 1, utf8.len(word) do
         local char = word:utf8sub(i, i)
@@ -378,11 +379,22 @@ function util.wrap_text(text, font, width, initial_width)
           cur_width = 0
         end
       end
+
+      if #line == 0 then continue end
     else
+      while line[#line] == ' ' or line[#line] == '' do
+        line[#line] = nil
+      end
+
       output[#output + 1] = table.concat(line)
 
-      line = { word, ' ' }
-      cur_width = util.text_size(word..' ', font)
+      line = { word }
+      cur_width = word_width
+    end
+
+    if index != piece_count then
+      line[#line + 1] = ' '
+      cur_width += space_width
     end
   end
 
