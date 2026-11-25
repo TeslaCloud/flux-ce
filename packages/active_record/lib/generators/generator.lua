@@ -27,7 +27,8 @@ end
 
 --- Adds a column type method to a query, which lets columns be defined DSL-style.
 -- The generated method takes the column name followed by its options, or a single
--- table holding both.
+-- table holding both. The column is added to the definition of the query and queued for
+-- the schema, which ActiveRecord.apply_schema_changes records once the statement has run.
 -- ```
 -- ActiveRecord.generate_create_func(query, 'string', 'varchar(255)')
 --
@@ -51,12 +52,33 @@ function ActiveRecord.generate_create_func(obj, type, def)
 
     s:create(name, s.def)
 
-    if ActiveRecord.ready then
-      ActiveRecord.add_to_schema(obj.table_name, name, type, s.def, args)
-    end
+    local changes = s._schema_changes or {}
+
+    s._schema_changes = changes
+    changes[#changes + 1] = { name, type, s.def, args }
 
     ActiveRecord.adapter:create_column(s, name, args, obj, type, def)
   end
+end
+
+--- Records the columns that the column type methods of a 'create' or 'change' query have
+-- queued in the schema (see ActiveRecord.add_to_schema), after forgetting the columns of the
+-- table first if the query replaces it. Called once the statement of the query has run, so
+-- that a statement that fails leaves the schema as it was. The columns are not recorded
+-- before ActiveRecord is ready.
+-- @param query [ActiveRecord::Query]
+function ActiveRecord.apply_schema_changes(query)
+  if query._overwrite then
+    ActiveRecord.drop_from_schema(query.table_name)
+  end
+
+  if ActiveRecord.ready then
+    for _, change in ipairs(query._schema_changes or {}) do
+      ActiveRecord.add_to_schema(query.table_name, change[1], change[2], change[3], change[4])
+    end
+  end
+
+  query._schema_changes = nil
 end
 
 --- Adds a column type method for every type supported by the current adapter.
@@ -125,7 +147,12 @@ do
     float = tonumber,
     boolean = tobool,
     decimal = tonumber,
-    primary_key = tonumber
+    primary_key = tonumber,
+    json = function(val)
+      local decoded = isstring(val) and util.JSONToTable(val)
+
+      return istable(decoded) and decoded or val
+    end
   }
 
   local reverse_converters = {
@@ -135,14 +162,16 @@ do
       end
 
       return 1
-    end
+    end,
+    json = val -> istable(val) and util.TableToJSON(val) or tostring(val)
   }
 
   --- Converts a raw database value to the Lua type matching an abstract column type.
   -- @param str [Any value as returned by the database, usually a string]
   -- @param type [String abstract column type]
-  -- @return [Number/Boolean/Any number for 'integer', 'float', 'decimal' and 'primary_key'
-  --   columns, boolean for 'boolean' columns, the unchanged value for anything else]
+  -- @return [Number/Boolean/Map/Any number for 'integer', 'float', 'decimal' and
+  --   'primary_key' columns, boolean for 'boolean' columns, the decoded table for 'json'
+  --   columns that hold a JSON object or array, the unchanged value for anything else]
   function ActiveRecord.str_to_type(str, type)
     local conv = converters[type]
 
@@ -153,11 +182,17 @@ do
     return str
   end
 
+  local numeric_types = {
+    integer = true, float = true, decimal = true, primary_key = true
+  }
+
   --- Converts a Lua value to the form in which it is written to the database.
   -- @param val [Any]
   -- @param type [String abstract column type]
-  -- @return [Number/String 0 or 1 for 'boolean' columns, otherwise the value converted
-  --   to a string; nil if the value is nil]
+  -- @return [Number/String 0 or 1 for 'boolean' columns, the JSON text of a table for 'json'
+  --   columns, a number as it is for numeric columns and in its exact text form (see
+  --   ActiveRecord.number_to_sql) for the others, otherwise the value converted to a string;
+  --   nil if the value is nil]
   function ActiveRecord.type_to_db(val, type)
     if val == nil then return end
 
@@ -165,6 +200,10 @@ do
 
     if conv then
       return conv(val)
+    end
+
+    if isnumber(val) then
+      return numeric_types[type] and val or ActiveRecord.number_to_sql(val)
     end
 
     return tostring(val)

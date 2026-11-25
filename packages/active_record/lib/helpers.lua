@@ -345,6 +345,31 @@ function revert(callback)
   running_migration('revert'):revert(callback)
 end
 
+--- Writes a number as SQL text without losing any of it: a whole number with all of its
+-- digits and never in exponent form, any other number in the shortest form that reads back
+-- as the same number.
+-- ```
+-- ActiveRecord.number_to_sql(76561198000000000) -- '76561198000000000'
+-- ActiveRecord.number_to_sql(0.1)               -- '0.1'
+-- ```
+-- @param value [Number]
+-- @return [String]
+function ActiveRecord.number_to_sql(value)
+  if value % 1 == 0 then
+    return string.format('%.0f', value)
+  end
+
+  for precision = 15, 16 do
+    local text = string.format('%.'..precision..'g', value)
+
+    if tonumber(text) == value then
+      return text
+    end
+  end
+
+  return string.format('%.17g', value)
+end
+
 --- Converts a unix timestamp to a date-time string in UTC, in the form that the current
 -- database adapter writes into date-time columns: ISO 8601 ('2019-03-09T12:00:00Z') unless
 -- the adapter needs another one, as MySQL does ('2019-03-09 12:00:00').
@@ -375,6 +400,10 @@ do
   local max_binding_length = 255
 
   local function format_binding(value)
+    if isnumber(value) then
+      return ActiveRecord.number_to_sql(value)
+    end
+
     value = tostring(value)
 
     if value:match('^%-?%d+%.?%d*$') then

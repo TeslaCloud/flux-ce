@@ -91,8 +91,9 @@ function ActiveRecord.Query:quote_column(text)
 end
 
 --- Adds a value to the bind parameters of the query. The value is sent to the database
--- apart from the SQL, so nothing in it has to be escaped.
--- @param value [Any value to bind, converted to a string; booleans become '1' and '0']
+-- apart from the SQL, so nothing in it has to be escaped. Numbers are handed to the adapter
+-- as numbers (see ActiveRecord::Adapters::Abstract#bind_value), anything else as a string.
+-- @param value [Any value to bind; booleans become 1 and 0]
 -- @return [String placeholder that stands for the value in the SQL; NULL if the value
 --   is nil]
 function ActiveRecord.Query:bind(value)
@@ -105,9 +106,11 @@ function ActiveRecord.Query:bind(value)
 
   if isbool(value) then
     value = value ? 1 : 0
+  elseif !isnumber(value) then
+    value = tostring(value)
   end
 
-  bindings[index] = tostring(value)
+  bindings[index] = ActiveRecord.adapter:bind_value(value)
 
   return ActiveRecord.adapter:placeholder(index)
 end
@@ -120,7 +123,7 @@ end
 
 --- Adds a "column = value" condition. Multiple conditions are joined with AND.
 -- @param key [String column name]
--- @param value [Any value to compare with, converted to a string]
+-- @param value [Any value to compare with, bound as #bind binds it]
 -- @see [ActiveRecord::Query#where_equal]
 function ActiveRecord.Query:where(key, value)
   self:where_equal(key, value)
@@ -143,14 +146,14 @@ end
 
 --- Adds a "column = value" condition.
 -- @param key [String column name]
--- @param value [Any value to compare with, converted to a string]
+-- @param value [Any value to compare with, bound as #bind binds it]
 function ActiveRecord.Query:where_equal(key, value)
   self:where_raw(self:quote_column(key)..' = ?', { value })
 end
 
 --- Adds a "column != value" condition.
 -- @param key [String column name]
--- @param value [Any value to compare with, converted to a string]
+-- @param value [Any value to compare with, bound as #bind binds it]
 function ActiveRecord.Query:where_not_equal(key, value)
   self:where_raw(self:quote_column(key)..' != ?', { value })
 end
@@ -171,28 +174,28 @@ end
 
 --- Adds a "column > value" condition.
 -- @param key [String column name]
--- @param value [Any value to compare with, converted to a string]
+-- @param value [Any value to compare with, bound as #bind binds it]
 function ActiveRecord.Query:where_gt(key, value)
   self:where_raw(self:quote_column(key)..' > ?', { value })
 end
 
 --- Adds a "column < value" condition.
 -- @param key [String column name]
--- @param value [Any value to compare with, converted to a string]
+-- @param value [Any value to compare with, bound as #bind binds it]
 function ActiveRecord.Query:where_lt(key, value)
   self:where_raw(self:quote_column(key)..' < ?', { value })
 end
 
 --- Adds a "column >= value" condition.
 -- @param key [String column name]
--- @param value [Any value to compare with, converted to a string]
+-- @param value [Any value to compare with, bound as #bind binds it]
 function ActiveRecord.Query:where_gte(key, value)
   self:where_raw(self:quote_column(key)..' >= ?', { value })
 end
 
 --- Adds a "column <= value" condition.
 -- @param key [String column name]
--- @param value [Any value to compare with, converted to a string]
+-- @param value [Any value to compare with, bound as #bind binds it]
 function ActiveRecord.Query:where_lte(key, value)
   self:where_raw(self:quote_column(key)..' <= ?', { value })
 end
@@ -260,7 +263,7 @@ end
 
 --- Sets the value of a column for an 'insert' query.
 -- @param key [String column name]
--- @param value [Any value to insert, converted to a string]
+-- @param value [Any value to insert, bound as #bind binds it]
 function ActiveRecord.Query:insert(key, value)
   local insert_list = self.insert_list
 
@@ -269,7 +272,7 @@ end
 
 --- Sets the new value of a column for an 'update' query.
 -- @param key [String column name]
--- @param value [Any new value, converted to a string]
+-- @param value [Any new value, bound as #bind binds it]
 function ActiveRecord.Query:update(key, value)
   local update_list = self.update_list
 
@@ -324,6 +327,14 @@ end
 -- @param if_exists [Boolean]
 function ActiveRecord.Query:if_exists(if_exists)
   self._if_exists = if_exists
+end
+
+--- Sets whether a 'drop' query also drops the foreign keys of other tables that refer to
+-- the table (DROP TABLE ... CASCADE). Only PostgreSQL needs it; the other databases leave it
+-- out.
+-- @param cascade [Boolean]
+function ActiveRecord.Query:cascade(cascade)
+  self._cascade = cascade
 end
 
 local function build_where(query_obj)
@@ -436,19 +447,19 @@ local function build_update_query(query_obj)
     return
   end
 
-  if istable(update_list) and #update_list > 0 then
-    local assignments = {}
-
-    query_string[3] = ' SET'
-
-    for i = 1, #update_list do
-      local entry = update_list[i]
-
-      assignments[i] = query_obj:quote_column(entry[1])..' = '..query_obj:bind(entry[2])
-    end
-
-    query_string[4] = ' '..concat(assignments, ', ')
+  if !istable(update_list) or #update_list == 0 then
+    return
   end
+
+  local assignments = {}
+
+  for i = 1, #update_list do
+    local entry = update_list[i]
+
+    assignments[i] = query_obj:quote_column(entry[1])..' = '..query_obj:bind(entry[2])
+  end
+
+  query_string[3] = ' SET '..concat(assignments, ', ')
 
   if istable(where_list) and #where_list > 0 then
     query_string[#query_string + 1] = ' WHERE '
@@ -489,8 +500,9 @@ local function build_drop_query(query_obj)
   end
 
   local prefix = query_obj._if_exists ? 'DROP TABLE IF EXISTS ' : 'DROP TABLE '
+  local suffix = (query_obj._cascade and ActiveRecord.adapter:is_postgres()) ? ' CASCADE' : ''
 
-  return prefix..query_obj:quote_column(query_obj.table_name)
+  return prefix..query_obj:quote_column(query_obj.table_name)..suffix
 end
 
 local function build_truncate_query(query_obj)

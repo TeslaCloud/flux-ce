@@ -36,6 +36,48 @@ local function with_print(query, label)
   return query
 end
 
+--- Runs a 'create' or 'change' query and records its columns in the schema once it has
+-- succeeded (see ActiveRecord.apply_schema_changes), whether the adapter delivers the result
+-- right away or later.
+-- @param query [ActiveRecord::Query]
+-- @param label [String printed in front of the query]
+local function run_definition(query, label)
+  local returned = false
+  local succeeded = false
+
+  query:callback(function(_result, query_str, time, bindings)
+    print_query(label..' ('..time..'s)', query_str, bindings)
+
+    if returned then
+      ActiveRecord.apply_schema_changes(query)
+    else
+      succeeded = true
+    end
+  end)
+
+  query:execute()
+
+  returned = true
+
+  if succeeded then
+    ActiveRecord.apply_schema_changes(query)
+  end
+end
+
+--- Runs a 'change' query that the callback has described and creates the indexes and
+-- foreign keys that its t:references queued.
+-- @param table_name [String]
+-- @param callback [Function receives the 'change' ActiveRecord::Query]
+local function alter_table(table_name, callback)
+  local query = ActiveRecord.Database:change(table_name)
+
+  callback(query)
+
+  run_definition(query, 'Change Table')
+
+  Statements.apply_references(table_name, query)
+end
+
 local function raw(label, sql, bindings)
   return ActiveRecord.adapter:raw_query(sql, function(_result, query_str, time)
     print_query(label..' ('..time..'s)', query_str, bindings)
@@ -91,7 +133,6 @@ function Statements.create_table(name, options, callback)
 
   if options.force then
     query:overwrite(true)
-    ActiveRecord.drop_from_schema(name)
   elseif options.if_not_exists then
     query:if_not_exists(true)
   end
@@ -116,7 +157,7 @@ function Statements.create_table(name, options, callback)
     end
   end
 
-  with_print(query, 'Create Table'):execute()
+  run_definition(query, 'Create Table')
 
   Statements.apply_references(name, query)
 end
@@ -136,7 +177,8 @@ end
 --- Drops a database table, along with what the metadata knows about its indexes and
 -- foreign keys.
 -- @param name [String table name]
--- @param options=nil [Map if_exists (ignore a missing table)]
+-- @param options=nil [Map if_exists (ignore a missing table) and cascade (drop the foreign
+--   keys of other tables that refer to it as well, on PostgreSQL)]
 function Statements.drop_table(name, options)
   if isfunction(options) then options = nil end
 
@@ -146,6 +188,10 @@ function Statements.drop_table(name, options)
 
   if options.if_exists then
     query:if_exists(true)
+  end
+
+  if options.cascade then
+    query:cascade(true)
   end
 
   with_print(query, 'Drop Table'):execute()
@@ -196,7 +242,9 @@ function Statements.rename_table(name, new_name)
   end
 end
 
---- Alters an existing database table.
+--- Alters an existing database table. The columns given to t:remove are removed first, as
+-- remove_column does it, then the ones given to t:rename are renamed, as rename_column does
+-- it, and then the columns of the type methods are added.
 -- ```
 -- change_table('users', function(t)
 --   t:rename('name', 'nickname')
@@ -209,13 +257,23 @@ end
 -- @param callback [Function receives the 'change' ActiveRecord::Query to describe the
 --   changes on]
 function Statements.change_table(name, callback)
-  local query = ActiveRecord.Database:change(name)
+  local removed = {}
+  local renamed = {}
 
-  callback(query)
+  alter_table(name, function(t)
+    t.remove = |_t, column| -> do removed[#removed + 1] = column end
+    t.rename = |_t, column, new_name| -> do renamed[#renamed + 1] = { column, new_name } end
 
-  with_print(query, 'Change Table'):execute()
+    callback(t)
 
-  Statements.apply_references(name, query)
+    for _, column in ipairs(removed) do
+      Statements.remove_column(name, column)
+    end
+
+    for _, entry in ipairs(renamed) do
+      Statements.rename_column(name, entry[1], entry[2])
+    end
+  end)
 end
 
 --- Adds a column to an existing table.
@@ -680,9 +738,7 @@ function Statements.remove_column(table_name, name, type, options)
   if ActiveRecord.adapter:is_sqlite() then
     rebuild_sqlite_table('remove_column', table_name, { removed = { [name] = true } })
   else
-    Statements.change_table(table_name, function(t)
-      t:remove(name)
-    end)
+    alter_table(table_name, |t| -> t:remove(name))
   end
 
   ActiveRecord.remove_from_schema(table_name, name)
@@ -693,9 +749,7 @@ end
 -- @param name [String current column name]
 -- @param new_name [String]
 function Statements.rename_column(table_name, name, new_name)
-  Statements.change_table(table_name, function(t)
-    t:rename(name, new_name)
-  end)
+  alter_table(table_name, |t| -> t:rename(name, new_name))
 
   ActiveRecord.rename_in_schema(table_name, name, new_name)
 end
@@ -801,15 +855,15 @@ function Statements.add_index(table_name, columns, options)
     query ..= 'IF NOT EXISTS '
   end
 
-  query ..= index_name..' ON '..table_name
+  query ..= sql_quote_name(index_name)..' ON '..sql_quote_name(table_name)
 
   local column_parts = {}
 
   for index, column in ipairs(cols) do
     if len and !sqlite then
-      column_parts[index] = column..'('..(istable(len) and len[column] or len)..')'
+      column_parts[index] = sql_quote_name(column)..'('..(istable(len) and len[column] or len)..')'
     else
-      column_parts[index] = column
+      column_parts[index] = sql_quote_name(column)
     end
   end
 
@@ -875,10 +929,10 @@ function Statements.remove_index(table_name, options)
     error('remove_index - no index name or columns given for table '..tostring(table_name)..'!', 0)
   end
 
-  local query = 'DROP INDEX '..(if_exists ? 'IF EXISTS ' : '')..index_name
+  local query = 'DROP INDEX '..(if_exists ? 'IF EXISTS ' : '')..sql_quote_name(index_name)
 
   if ActiveRecord.adapter:is_mysql() then
-    query ..= ' ON '..table_name
+    query ..= ' ON '..sql_quote_name(table_name)
   end
 
   raw('Remove Index', query..';')
@@ -939,8 +993,9 @@ function Statements.add_foreign_key(from_table, to_table, options)
       })
     end
   else
-    local query = 'ALTER TABLE '..from_table..' ADD CONSTRAINT '..name
-      ..' FOREIGN KEY ('..column..') REFERENCES '..to_table..'('..primary_key..')'
+    local query = 'ALTER TABLE '..sql_quote_name(from_table)..' ADD CONSTRAINT '..sql_quote_name(name)
+      ..' FOREIGN KEY ('..sql_quote_name(column)..') REFERENCES '..sql_quote_name(to_table)
+      ..'('..sql_quote_name(primary_key)..')'
 
     if on_delete then
       query ..= ' ON DELETE '..on_delete
@@ -992,7 +1047,8 @@ function Statements.remove_foreign_key(from_table, to_table, options)
   end
 
   if ActiveRecord.adapter:is_mysql() then
-    raw('Remove Foreign Key', 'ALTER TABLE '..from_table..' DROP FOREIGN KEY '..name..';')
+    raw('Remove Foreign Key', 'ALTER TABLE '..sql_quote_name(from_table)..' DROP FOREIGN KEY '
+      ..sql_quote_name(name)..';')
   elseif ActiveRecord.adapter:is_sqlite() then
     local fk = ActiveRecord.metadata.references[name]
 
@@ -1004,7 +1060,8 @@ function Statements.remove_foreign_key(from_table, to_table, options)
       })
     end
   else
-    raw('Remove Foreign Key', 'ALTER TABLE '..from_table..' DROP CONSTRAINT '..name..';')
+    raw('Remove Foreign Key', 'ALTER TABLE '..sql_quote_name(from_table)..' DROP CONSTRAINT '
+      ..sql_quote_name(name)..';')
   end
 
   ActiveRecord.forget_metadata('foreign_key', name)
@@ -1334,7 +1391,8 @@ function Statements.create_primary_key(table_name, key)
 
   if ActiveRecord.metadata.prim_keys[pkey_name] then return end
 
-  raw('Create Primary Key', 'ALTER TABLE '..table_name..' ADD CONSTRAINT '..pkey_name..' PRIMARY KEY ('..key..');')
+  raw('Create Primary Key', 'ALTER TABLE '..sql_quote_name(table_name)..' ADD CONSTRAINT '..sql_quote_name(pkey_name)
+    ..' PRIMARY KEY ('..sql_quote_name(key)..');')
 
   ActiveRecord.store_metadata('primary_key', pkey_name, { table = table_name, column = key })
 end
