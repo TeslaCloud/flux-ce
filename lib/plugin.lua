@@ -4,7 +4,7 @@
 -- While a plugin is being included the `PLUGIN` global holds its `PluginInstance`.
 --
 -- The root of a plugin's `plugin` folder holds only Lua files of two kinds: its main file
--- `sh_plugin.lua` (or `sh_<name>.lua`, named after the plugin) with `cl_plugin.lua` and
+-- `sh_plugin.lua` (or `sh_<id>.lua`, named after the plugin's folder) with `cl_plugin.lua` and
 -- `sv_plugin.lua`, and the hook handlers in `cl_hooks.lua`, `sh_hooks.lua` and
 -- `sv_hooks.lua`. The loader includes the main file, which includes the others with
 -- `require_relative`. Everything else lives in extra folders that are included
@@ -26,8 +26,9 @@
 -- handlers that does not belong to a plugin.
 --
 -- Framework plugins load only when the schema or another plugin depends on them. The .yml
--- file of the schema names a `profile` from `profiles.yml` (see `Flux.find_config`), a named
--- set of plugins such as `roleplay` or `sandbox`, adds plugins with `depends` and
+-- file of the schema names a `profile` from `profiles.yml`, a named set of plugins such as
+-- `roleplay` or `sandbox` (the profiles of Flux, with those of a `profiles.yml` in the schema's
+-- `config` folder over them by ID, see `Flux.find_config`), adds plugins with `depends` and
 -- `depends_development` and leaves profile plugins out with `exclude` (see
 -- `Plugin.resolve_schema_depends`).
 --
@@ -65,6 +66,7 @@ local load_cache = {}
 local schema_depends = {}
 local disabled_loaded = false
 local pending_disabled
+local include_stack = {}
 local default_extras = {
   'lib',
   'lib/meta',
@@ -84,6 +86,16 @@ local default_extras = {
 }
 
 local extras = table.Copy(default_extras)
+
+const plugin_yml_keys = {
+  name = true,
+  description = true,
+  author = true,
+  version = true,
+  depends = true,
+  depends_development = true,
+  environment = true
+}
 
 --- Tells whether a path belongs to the framework: the Flux package or the plugins and
 -- packages downloaded into `_flux`. A lite refresh does not include such files again.
@@ -356,10 +368,12 @@ local function mark_unloaded(info, reason)
 end
 
 --- Checks whether a plugin cannot be relied upon as a dependency in this session: it is
--- disabled, or it was not loaded because a dependency of its own is disabled or missing.
+-- disabled, or it was not loaded because a dependency of its own is disabled or missing, or,
+-- when asked for, because it is meant for another environment.
 -- @param name [String plugin path, ID or dependency name]
+-- @param count_environment=false [Boolean whether a plugin skipped for its environment counts]
 -- @return [Boolean]
-local function is_unavailable(name)
+local function is_unavailable(name, count_environment)
   if Plugin.is_disabled(name) then
     return true
   end
@@ -367,7 +381,7 @@ local function is_unavailable(name)
   local id = Plugin.normalize_id(name)
   local info = id and Flux.shared.unloaded_plugins and Flux.shared.unloaded_plugins[id]
 
-  return istable(info) and info.reason != 'environment'
+  return istable(info) and (count_environment == true or info.reason != 'environment')
 end
 
 --- Gathers what is known about every plugin the loader has come across in this session:
@@ -811,8 +825,11 @@ end
 --- Includes a plugin from a folder or from a single .lua file and registers it.
 -- Reads plugin.yml on the server, checks the plugin's environment and dependencies, includes
 -- its extra folders and its main file. The PLUGIN global is set while the plugin loads.
--- A disabled plugin is skipped, and so is a plugin with a dependency that is disabled or
--- was not loaded because of its own dependencies.
+-- A disabled plugin is skipped, and so is a plugin with a dependency that is disabled, meant
+-- for another environment or was not loaded because of its own dependencies. A folder without
+-- a plugin.yml is skipped with an error, and so is a plugin whose ID another path has loaded
+-- already. In development the keys of plugin.yml that the loader does not know and a
+-- `depends` that is not a list are reported.
 -- @param path [String plugin folder or .lua file, relative to the LUA search path]
 -- @return [Map plugin info, or nil if the plugin was not loaded (already loaded, disabled,
 --   wrong environment or missing dependency)]
@@ -826,13 +843,22 @@ function Plugin.include(path)
   data.single_file = ext == 'lua'
 
   if Plugin.loaded(id) then
+    if SERVER and !stored[path] then
+      local _loaded_plugin, loaded_path = Plugin.find(id)
+
+      if loaded_path and loaded_path != path then
+        ErrorNoHalt("Not loading the '"..path.."' plugin: a plugin with the ID '"..id.."' is loaded from '"
+          ..loaded_path.."' already!\n")
+      end
+    end
+
     return
   end
 
   if Plugin.is_disabled(id) then
     if SERVER then
       if !data.single_file and file.Exists(path..'/plugin.yml', 'LUA') then
-        table.safe_merge(data, YAML.eval(file.Read(path..'/plugin.yml', 'LUA')) or {})
+        table.safe_merge(data, Flux.read_yaml(path..'/plugin.yml', 'LUA'))
       end
 
       mark_unloaded(data, 'disabled')
@@ -846,22 +872,34 @@ function Plugin.include(path)
   Flux.dev_print('Loading plugin: '..path)
 
   if !data.single_file and SERVER then
-    if file.Exists(path..'/plugin.yml', 'LUA') then
-      local data_table = YAML.eval(file.Read(path..'/plugin.yml', 'LUA')) or {}
+    if !file.Exists(path..'/plugin.yml', 'LUA') then
+      ErrorNoHalt("'"..path.."' is not a plugin: "..path..'/plugin.yml is missing!\n')
 
-      data_table.folder = path..'/plugin'
-      data_table.plugin_main = 'sh_plugin.lua'
-
-      if file.Exists(data_table.folder..'/sh_'..(data_table.name or id)..'.lua', 'LUA') then
-        data_table.plugin_main = 'sh_'..(data_table.name or id)..'.lua'
-      end
-
-      table.safe_merge(data, data_table)
-
-      Flux.shared.plugin_info[path] = data
+      return
     end
+
+    local data_table = Flux.read_yaml(path..'/plugin.yml', 'LUA')
+
+    for key in pairs(data_table) do
+      if !plugin_yml_keys[key] then
+        Flux.dev_print("Unknown key '"..tostring(key).."' in "..path..'/plugin.yml')
+      end
+    end
+
+    data_table.folder = path..'/plugin'
+    data_table.plugin_main = 'sh_plugin.lua'
+
+    if file.Exists(data_table.folder..'/sh_'..id..'.lua', 'LUA') then
+      data_table.plugin_main = 'sh_'..id..'.lua'
+    end
+
+    table.safe_merge(data, data_table)
+
+    Flux.shared.plugin_info[path] = data
   else
     table.safe_merge(data, Flux.shared.plugin_info[path] or {})
+
+    if !data.single_file and !data.plugin_main then return end
   end
 
   if data.environment then
@@ -876,27 +914,37 @@ function Plugin.include(path)
     end
   end
 
-  if istable(data.depends) then
-    if IS_DEVELOPMENT then
-      table.map(data.depends_development or {}, function(v)
-        table.insert(data.depends, v)
-      end)
-    end
+  if data.depends != nil and !istable(data.depends) then
+    Flux.dev_print("Ignoring the depends of the '"..path.."' plugin, which is not a list: "..tostring(data.depends))
+  end
 
-    for _, dependency in ipairs(data.depends) do
-      if !Plugin.require(dependency) then
-        if !is_unavailable(dependency) then
-          ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"
-            ..tostring(dependency).."'!\n")
-        elseif SERVER then
-          print("Not loading the '"..tostring(path).."' plugin: the '"..tostring(dependency)
-            .."' plugin is not available.")
-        end
+  local depends = table.Copy(istable(data.depends) and data.depends or {})
 
-        mark_unloaded(data, 'dependency')
-
-        return
+  if IS_DEVELOPMENT and istable(data.depends_development) then
+    for _, dependency in ipairs(data.depends_development) do
+      if !table.HasValue(depends, dependency) then
+        depends[#depends + 1] = dependency
       end
+    end
+  end
+
+  data.depends = depends
+  include_stack[#include_stack + 1] = Plugin.normalize_id(id)
+
+  for _, dependency in ipairs(depends) do
+    if !Plugin.require(dependency) or is_unavailable(dependency, true) then
+      if !is_unavailable(dependency, true) then
+        ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"
+          ..tostring(dependency).."'!\n")
+      elseif SERVER then
+        print("Not loading the '"..tostring(path).."' plugin: the '"..tostring(dependency)
+          .."' plugin is not available.")
+      end
+
+      mark_unloaded(data, 'dependency')
+      include_stack[#include_stack] = nil
+
+      return
     end
   end
 
@@ -918,6 +966,7 @@ function Plugin.include(path)
 
   PLUGIN:register()
   PLUGIN = nil
+  include_stack[#include_stack] = nil
 
   return data
 end
@@ -925,8 +974,9 @@ end
 --- Works out the plugins a schema depends on from the keys of its .yml file: the plugins of
 -- its `profile`, defined in `config/profiles.yml` and preceded by those of the profiles it
 -- extends, then its `depends` and, in development, its `depends_development`, without the
--- plugins named in the `exclude` list. An `exclude` that is not a list is ignored with a
--- development notice. Each plugin is listed once, where it is first named. A schema
+-- plugins named in the `exclude` list. An `exclude`, `depends` or `depends_development` that is
+-- not a list is ignored with a development notice, and so is an `exclude` entry that names a
+-- plugin nothing lists. Each plugin is listed once, where it is first named. A schema
 -- without a profile depends on its `depends` alone. The plugins load in the order of the list,
 -- each after the plugins of its own `depends`, so an excluded plugin still loads when a plugin
 -- that loads depends on it.
@@ -944,21 +994,25 @@ function Plugin.resolve_schema_depends(schema_yml, profiles, development)
 
   profiles = profiles or {}
 
-  local exclude = schema_yml.exclude
+  for _, key in ipairs({ 'exclude', 'depends', 'depends_development' }) do
+    local list = schema_yml[key]
 
-  if exclude != nil and !istable(exclude) then
-    Flux.dev_print("Ignoring the schema's exclude, which is not a list: "..tostring(exclude))
-
-    exclude = nil
+    if list != nil and !istable(list) then
+      Flux.dev_print("Ignoring the schema's "..key..', which is not a list: '..tostring(list))
+    end
   end
 
-  for _, name in ipairs(exclude or {}) do
+  local exclude = istable(schema_yml.exclude) and schema_yml.exclude or {}
+
+  for _, name in ipairs(exclude) do
     excluded[name] = true
   end
 
   local function add(list)
     for _, name in ipairs(istable(list) and list or {}) do
-      if !seen[name] and !excluded[name] then
+      if excluded[name] then
+        excluded[name] = 'listed'
+      elseif !seen[name] then
         seen[name] = true
         resolved[#resolved + 1] = name
       end
@@ -990,7 +1044,63 @@ function Plugin.resolve_schema_depends(schema_yml, profiles, development)
     add(schema_yml.depends_development)
   end
 
+  for _, name in ipairs(exclude) do
+    if excluded[name] == true then
+      Flux.dev_print("The schema excludes the '"..tostring(name)
+        .."' plugin, which neither its profile nor its depends list")
+    end
+  end
+
   return resolved
+end
+
+--- Reads the plugin profiles: those of the `profiles.yml` of Flux, with the profiles of a
+-- `profiles.yml` or `profiles.local.yml` in the `config` folder of the schema's gamemode over
+-- them by ID, a schema profile replacing the whole profile of Flux with the same ID.
+-- @return [Map profiles by ID, List<String> the files read, Map the file each profile comes from]
+local function read_profiles()
+  local flux_file = 'gamemodes/'..FLUX_PATH..'config/profiles.yml'
+  local schema_file = Flux.find_config('profiles.yml')
+  local profiles, files, origins = {}, { flux_file }, {}
+
+  if schema_file != flux_file then
+    files[2] = schema_file
+  end
+
+  for _, profile_file in ipairs(files) do
+    for id, profile in pairs(Flux.read_yaml(profile_file) or {}) do
+      profiles[id] = profile
+      origins[id] = profile_file
+    end
+  end
+
+  return profiles, files, origins
+end
+
+--- Names the file that makes a schema depend on a plugin, for the error when the plugin is
+-- missing: the .yml file of the schema or the profile that lists the plugin.
+-- @param schema_yml [Map the parsed .yml file of the schema]
+-- @param profiles [Map the parsed profiles, by profile ID]
+-- @param origins [Map the file each profile comes from, by profile ID]
+-- @param name [String plugin name]
+-- @param file_path [String path of the .yml file of the schema]
+-- @return [String]
+local function dependency_source(schema_yml, profiles, origins, name, file_path)
+  local profile_id = schema_yml.profile
+  local visited = {}
+
+  while isstring(profile_id) and istable(profiles[profile_id]) and !visited[profile_id] do
+    local plugins = profiles[profile_id].plugins
+
+    if istable(plugins) and table.HasValue(plugins, name) then
+      return "the '"..profile_id.."' profile in "..origins[profile_id]
+    end
+
+    visited[profile_id] = true
+    profile_id = profiles[profile_id].extends
+  end
+
+  return file_path
 end
 
 --- Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and
@@ -998,13 +1108,15 @@ end
 -- On the server the list of disabled plugins is loaded first; a dependency of the schema
 -- that is disabled is left out without stopping the schema from loading. The dependencies
 -- come from `Plugin.resolve_schema_depends`, and in development the resolved list is printed.
--- Runs the PreLoadPlugins, PluginsLoaded and SchemaLoaded hooks.
+-- A profile that is not defined and a dependency that cannot be found throw an error, which
+-- stops the boot. Runs the PreLoadPlugins, PluginsLoaded and SchemaLoaded hooks.
 function Plugin.include_schema()
   local schema_info = Flux.get_schema_info()
   local schema_path = schema_info.folder
   local schema_folder = schema_path..'/schema'
   local file_path = 'gamemodes/'..schema_path..'/'..schema_path..'.yml'
   local deps = {}
+  local schema_yml, profiles, origins
 
   if SERVER then
     Plugin.load_disabled()
@@ -1019,29 +1131,31 @@ function Plugin.include_schema()
   if SERVER and file.Exists(file_path, 'GAME') then
     Flux.dev_print('Reading and loading schema dependencies from '..file_path)
 
-    Flux.shared.schema_info.depends = {}
+    local profile_files, missing_profile
 
-    local schema_yml = YAML.eval(File.read(file_path)) or {}
-    local missing_profile
-
-    deps, missing_profile = Plugin.resolve_schema_depends(
-      schema_yml, YAML.read(Flux.find_config('profiles.yml')), IS_DEVELOPMENT
-    )
+    schema_yml = Flux.read_yaml(file_path)
+    profiles, profile_files, origins = read_profiles()
+    deps, missing_profile = Plugin.resolve_schema_depends(schema_yml, profiles, IS_DEVELOPMENT)
 
     if !deps then
-      long_error("Unable to load the schema! The plugin profile '"..tostring(missing_profile)
-        .."' is not defined or extends itself!\n")
+      local profile_ids = table.GetKeys(profiles)
 
-      return
+      table.sort(profile_ids)
+
+      error("Unable to load the schema! The plugin profile '"..tostring(missing_profile).."' that "..file_path
+        ..' asks for is not defined in '..table.concat(profile_files, ' or ')..', or extends itself!\n'
+        ..'Defined profiles: '..table.concat(profile_ids, ', ')..'\n', 0)
     end
 
     Flux.dev_print('Schema plugins: '..table.concat(deps, ', '))
 
-    table.map(deps, function(v)
-      if !v:find('sv_') then
-        table.insert(Flux.shared.schema_info.depends, v)
+    Flux.shared.schema_info.depends = {}
+
+    for _, dependency in ipairs(deps) do
+      if !dependency:start_with('sv_') then
+        table.insert(Flux.shared.schema_info.depends, dependency)
       end
-    end)
+    end
   elseif CLIENT then
     deps = Flux.shared.schema_info.depends
   end
@@ -1051,14 +1165,11 @@ function Plugin.include_schema()
   if istable(deps) then
     for _, dependency in ipairs(deps) do
       if !Plugin.require(dependency) and !is_unavailable(dependency) then
-        long_error(
-          "Unable to load the schema! Dependency missing: '"..
-          tostring(dependency)..
-          "'!\nPlease install this plugin in your schema's 'plugins' folder!\n"..
-          'Alternatively please make sure that your server can download packages from the cloud!\n'
-        )
+        local source = schema_yml and dependency_source(schema_yml, profiles, origins, dependency, file_path)
 
-        return
+        error("Unable to load the schema! The '"..tostring(dependency).."' plugin"
+          ..(source ? ', listed in '..source..',' : '')..' was found neither in '..FLUX_PATH
+          ..'plugins/ nor in '..schema_path..'/plugins/, nor is it a package!\n', 0)
       end
     end
   end
@@ -1101,16 +1212,26 @@ do
   }
 
   --- Makes sure that a plugin (or a package) is loaded, including it if it has not been yet.
-  -- Plugins are looked up in the `plugins` folder of the Flux package, the cloud plugin folder
-  -- and the `plugins` folder of the schema, single-file plugins by their file name with or
-  -- without the realm prefix and the extension. On a lite refresh the plugins of the
-  -- framework are not included again.
+  -- Plugins are looked up in the `plugins` folder of the Flux package, the `_flux/plugins`
+  -- folder and the `plugins` folder of the schema, single-file plugins by their file name with
+  -- or without the realm prefix and the extension. On a lite refresh the plugins of the
+  -- framework are not included again. A plugin that is being included further up the chain of
+  -- dependencies is reported as a cyclic dependency, and a package that fails to load as an
+  -- error with its message.
   -- @param name [String plugin or package name]
   -- @return [Boolean true if the dependency is loaded or could be found; false if it could
   --   not, if the plugin is disabled, or if it was left out because one of its own
   --   dependencies is disabled or missing]
   function Plugin.require(name)
     if !isstring(name) then return false end
+
+    local cycle_start = table.KeyFromValue(include_stack, Plugin.normalize_id(name))
+
+    if cycle_start then
+      ErrorNoHalt('Cyclic plugin dependency: '..table.concat(include_stack, ' -> ', cycle_start)..' -> '..name..'!\n')
+
+      return false
+    end
 
     if CLIENT and is_unavailable(name) then return false end
 
@@ -1133,7 +1254,7 @@ do
         for _, ending in ipairs(tolerance) do
           if file.Exists(search_path..name..ending, 'LUA') then
             if should_include then
-              Plugin.include(search_path..name)
+              Plugin.include(search_path..name..(ending == '.lua' ? '.lua' : ''))
             end
 
             return !is_unavailable(name)
@@ -1163,11 +1284,13 @@ do
     if Package:included(name) then
       return true
     elseif Package:exists(name) then
-      local success, _err = pcall(Package.include, Package, name)
+      local success, err = pcall(Package.include, Package, name)
 
       if success then
         return true
       end
+
+      ErrorNoHalt("Could not include the '"..name.."' package: "..tostring(err)..'\n')
     end
 
     return false

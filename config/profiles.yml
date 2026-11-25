@@ -4,7 +4,8 @@
 # development, `depends_development`) and leaves profile plugins out with `exclude`; a plugin
 # that another loaded plugin depends on is loaded all the same. A schema without `profile`
 # loads its `depends` alone. A `profiles.yml` or `profiles.local.yml` in the `config` folder of
-# the schema's gamemode is read in its place.
+# the schema's gamemode is read after this file: its profiles are added to these, and one with
+# the ID of a profile here replaces that whole profile.
 #
 # Opt-in plugins, in no profile, for a schema to add with `depends`:
 #   cinematics, combat, d20, gamemastery, levels, limbs, radios, srcdsproxy
