@@ -73,26 +73,11 @@ do
     ['u'] = true
   }
 
-  --- Checks whether the character is a vowel or not.
-  -- On the client the current language can override the result with its `is_vowel` function.
+  --- Checks whether the character is one of the English vowels a, e, i, o and u, in any case.
   -- @param char [String single character]
-  -- @return [Boolean true if it is a vowel, nil (or the language's own answer) otherwise]
+  -- @return [Boolean true if it is a vowel, nil otherwise]
   function string.vowel(char)
-    char = String.lower(char)
-
-    if CLIENT then
-      local lang = Flux.Lang:GetTable(GetConVar('gmod_language'):GetString())
-
-      if lang and isfunction(lang.is_vowel) then
-        local override = lang:is_vowel(char)
-
-        if override != nil then
-          return override
-        end
-      end
-    end
-
-    return vowels[char]
+    return vowels[String.lower(char)]
   end
 end
 
@@ -246,12 +231,13 @@ function string.ensure_start(str, start)
   return start..str
 end
 
---- Indents every line of the string. Lines that would only consist of whitespace are left empty.
+--- Indents every line of the string. Empty lines and lines that consist of whitespace only are
+-- left empty, and every line break is kept.
 -- @param str [String]
 -- @param indent [String text to put in front of every line, such as a few spaces]
 -- @return [String the indented string]
 function string.set_indent(str, indent)
-  return indent..str:gsub('\n', '\n'..indent):gsub('\n%s+\n', '\n\n')
+  return (str:gsub('[^\n]+', line -> line:find('%S') ? indent..line : ''))
 end
 
 --- Makes the `+` operator concatenate strings.
@@ -314,6 +300,32 @@ end
 -- @return [String the same string, or nil if it is empty or not a string at all]
 function string.presence(str)
   return isstring(str) and (str != '' and str) or nil
+end
+
+--- Makes a single line of text out of a text from a player or a file: every control character,
+-- line breaks and tabs included, becomes a space, the spaces at both ends are removed and,
+-- when a maximum length is given, the text is cut to that many UTF-8 characters (to that many
+-- bytes if the text is not valid UTF-8).
+-- ```
+-- string.clean_line('  Front\tdoor\n', 5) -- 'Front'
+-- ```
+-- @param text [String]
+-- @param max_length=nil [Number most characters to keep, no limit if nil]
+-- @return [String the cleaned line, an empty string if nothing is left of the text]
+function string.clean_line(text, max_length)
+  text = string.Trim((text:gsub('%c', ' ')))
+
+  if !max_length or #text <= max_length then return text end
+
+  local length = utf8.len(text)
+
+  if !isnumber(length) then
+    return string_sub(text, 1, max_length)
+  end
+
+  if length <= max_length then return text end
+
+  return String.sub(text, 1, max_length)
 end
 
 --- Converts a ConstantStyle or camelCase string to snake_case.
@@ -417,32 +429,71 @@ function string.parse_parent(str, ref)
   end
 end
 
-local function case_insensitive_letter(percent, letter)
-  if percent != '' or !letter:match('%a') then
-    return percent..letter
-  else
-    return string.format('[%s%s]', letter:lower(), letter:upper())
-  end
+local function both_cases(char)
+  if !char:match('%a') then return char end
+
+  return char:lower()..char:upper()
 end
 
-local function real_gsub(pat)
-  return pat:gsub('(%%?)(.)', case_insensitive_letter)
-end
-
---- Makes a Lua pattern case-insensitive.
+--- Makes a Lua pattern case-insensitive. A letter outside of a set becomes a set of both of its
+-- cases, and a set such as `[ti]`, `[^f]` or `[a-z]` gets the other case of every letter and
+-- range in it. Escapes such as `%a` and `%%` are left as they are.
 -- ```
 -- inflect:plural(i'(octop)us$', '%1i') -- the pattern becomes '([oO][cC][tT][oO][pP])[uU][sS]$'
+-- i'([ti])um$'                        -- '([tTiI])[uU][mM]$'
 -- ```
 -- @param pattern [String Lua pattern]
 -- @return [String pattern that matches both lowercase and uppercase letters]
 function i(pattern)
-  if pattern:include('[') then
-    return (pattern:gsub('([.]*)%[([%w]*)%]([.]*)', function(before, letters, after)
-      return real_gsub(before)..'['..letters:lower()..letters:upper()..']'..real_gsub(after)
-    end))
+  local pieces = {}
+  local length = #pattern
+  local index = 1
+  local set_start = nil
+
+  while index <= length do
+    local char = string_sub(pattern, index, index)
+
+    if char == '%' then
+      local escape_length = string_sub(pattern, index + 1, index + 1) == 'b' ? 4 : 2
+
+      pieces[#pieces + 1] = string_sub(pattern, index, index + escape_length - 1)
+      index += escape_length
+    elseif set_start then
+      local range_end = string_sub(pattern, index + 2, index + 2)
+
+      if char == ']' and index > set_start then
+        pieces[#pieces + 1] = char
+        set_start = nil
+        index += 1
+      elseif string_sub(pattern, index + 1, index + 1) == '-' and range_end != '' and range_end != ']' then
+        local range = char..'-'..range_end
+
+        if (char..range_end):match('^%a%a$') then
+          range = range:lower()..range:upper()
+        end
+
+        pieces[#pieces + 1] = range
+        index += 3
+      else
+        pieces[#pieces + 1] = both_cases(char)
+        index += 1
+      end
+    elseif char == '[' then
+      local negated = string_sub(pattern, index + 1, index + 1) == '^'
+
+      pieces[#pieces + 1] = negated ? '[^' : '['
+      index += negated ? 2 : 1
+      set_start = index
+    elseif char:match('%a') then
+      pieces[#pieces + 1] = '['..char:lower()..char:upper()..']'
+      index += 1
+    else
+      pieces[#pieces + 1] = char
+      index += 1
+    end
   end
 
-  return (real_gsub(pattern))
+  return table.concat(pieces)
 end
 
 --- Replaces the `{name}` placeholders in a string with the values from a hash.
