@@ -41,7 +41,7 @@ local tonumber          = tonumber
 local tostring          = tostring
 local pairs             = pairs
 local string_find       = string.find
-local string_replace    = string.Replace
+local string_gsub       = string.gsub
 
 local current_language  = Flux.Lang.current or 'en'
 local stored            = Flux.Lang.stored or {}
@@ -91,13 +91,17 @@ do
       if !ref then return false end
     end
 
-    for i = 1, #tabs do
+    local last = #tabs
+
+    for i = 1, last do
       local val = ref[tabs[i]]
 
       if istable(val) then
         ref = val
-      else
+      elseif i == last then
         return val
+      else
+        return
       end
     end
 
@@ -152,6 +156,42 @@ do
 
   local phrase_parts = {}
   local no_args = {}
+  local reported_missing = {}
+  local substitution_args, substitution_lang
+
+  --- Returns the text that a `{placeholder}` of a phrase is replaced with, from the arguments
+  -- of the `t` call that runs.
+  -- @param key [String name of the placeholder]
+  -- @return [String the text, or nil to leave the placeholder as it is]
+  local function substitute(key)
+    local replacement = substitution_args[key]
+
+    if replacement == nil then
+      replacement = substitution_args[tonumber(key)]
+
+      if replacement == nil then return end
+    end
+
+    if istable(replacement) and replacement.nice_time then
+      replacement = Flux.Lang:nice_time(replacement.nice_time, substitution_lang)
+    end
+
+    return tostring(replacement)
+  end
+
+  --- Warns once, in development, about a phrase ID that does not resolve: a text without
+  -- spaces whose first part is one of the top-level groups of the English phrases, such as
+  -- 'ui' or 'error'.
+  -- @param phrase [String]
+  -- @param tabs [List<String> the parts of the phrase ID]
+  local function report_missing(phrase, tabs)
+    if reported_missing[phrase] or #tabs < 2 or string_find(phrase, ' ', 1, true) then return end
+    if !istable(stored['en']?.[tabs[1]]) then return end
+
+    reported_missing[phrase] = true
+
+    Flux.dev_print('Missing phrase: '..phrase)
+  end
 
   --- Translates a phrase to the current language. English is used if the language is not
   -- available or does not have the phrase, and the phrase itself is returned if it has no
@@ -202,16 +242,16 @@ do
     if translated then
       phrase_parts[phrase] = tabs
       phrase = translated
+    elseif Flux.development then
+      report_missing(phrase, tabs)
     end
 
     if string_find(phrase, '{', 1, true) then
-      for placeholder, replacement in pairs(args) do
-        if istable(replacement) and replacement.nice_time then
-          replacement = Flux.Lang:nice_time(replacement.nice_time, lang)
-        end
+      local outer_args, outer_lang = substitution_args, substitution_lang
 
-        phrase = string_replace(phrase, '{'..placeholder..'}', tostring(replacement))
-      end
+      substitution_args, substitution_lang = args, lang
+      phrase = string_gsub(phrase, '{([%w_]+)}', substitute)
+      substitution_args, substitution_lang = outer_args, outer_lang
     end
 
     if !string_find(phrase, '\n', 1, true) then
@@ -252,6 +292,34 @@ function Flux.Lang:add(index, value, reference)
   else
     reference[index] = value
   end
+end
+
+--- Prepares the arguments of a notification phrase for its reader: strings are translated,
+-- as they may be phrases themselves, and valid entities are replaced with their names (see
+-- `Entity:get_name`). Notifications do this on the client of each recipient, and for the
+-- server console on the server.
+-- ```
+-- local text = t(message, Flux.Lang:translate_arguments(arguments))
+-- ```
+-- @param args [Map/Any arguments of the phrase; anything but a table is returned as it is]
+-- @param lang=nil [String language code to translate to, the current language by default]
+-- @return [Map/Any a copy of the table with the prepared arguments]
+function Flux.Lang:translate_arguments(args, lang)
+  if !istable(args) then return args end
+
+  local translated = {}
+
+  for key, value in pairs(args) do
+    if isstring(value) then
+      translated[key] = t(value, nil, lang)
+    elseif isentity(value) and IsValid(value) then
+      translated[key] = value:get_name()
+    else
+      translated[key] = value
+    end
+  end
+
+  return translated
 end
 
 --- Sets the plural rule of a language: the function that decides which plural form of a

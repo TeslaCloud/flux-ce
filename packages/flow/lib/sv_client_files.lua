@@ -2,7 +2,8 @@
 -- them for download: the shared data, the settings without their serverside part, the
 -- language phrases and whatever the `WriteClientFiles` handlers add, such as the compiled
 -- templates of Lumen. The clients include the files in the order of their names, from
--- `lib/flux_struct.lua`.
+-- `lib/flux_struct.lua`. The phrases replace the contents of the phrase table the client
+-- already has, which `t` keeps using after a refresh.
 -- @module [Flux]
 
 local chunk_size = 100_000
@@ -62,7 +63,12 @@ function Flux.write_client_files()
 
   write_client_table('0_shared', Flux.shared, 'Flux.shared = data')
   write_client_table('1_settings', settings_copy, 'Settings = data')
-  write_client_table('2_lang', Flux.Lang.stored, "mod'Flux::Lang' Flux.Lang.stored = data")
+  write_client_table(
+    '2_lang',
+    Flux.Lang.stored,
+    "mod'Flux::Lang' local stored = Flux.Lang.stored or {} Flux.Lang.stored = stored "
+      ..'table.Empty(stored) table.Merge(stored, data)'
+  )
 
   --- Called on the server while the files that get sent to the clients are written, on
   -- `FluxPackageLoaded` and after a Lua refresh, once the shared data, the settings and
