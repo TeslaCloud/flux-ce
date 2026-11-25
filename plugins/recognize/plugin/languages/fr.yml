@@ -38,6 +38,7 @@ fr:
       change_name: "Vous connaissez désormais {name} sous le nom de {new_name}"
       true_name: "Vous vous êtes présenté sous le nom de {name} (vrai nom)"
       false_name: "Vous vous êtes présenté sous le nom de {name} (faux nom)"
+      nobody_heard: "Personne ne vous a entendu vous présenter."
       forgotten: "Vous ne vous souvenez plus de {name}."
       forgot_everyone: "Vous ne vous souvenez plus de personne parmi ceux que vous connaissiez."
   ui:

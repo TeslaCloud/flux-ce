@@ -183,6 +183,38 @@ function Recognition:forget_character(character_id, name)
   return count
 end
 
+--- Makes everyone who knows a character by one name know it by another: the characters of
+-- connected players, active or not, and those in the database. Their players are sent
+-- their recognitions again.
+-- @param character_id [Number ID of the renamed character]
+-- @param old_name [String the name it is known by]
+-- @param new_name [String the name it is to be known by]
+function Recognition:rename_character(character_id, old_name, new_name)
+  for _, client in player.Iterator() do
+    local characters = istable(client.record) and client.record.characters
+    local renamed = false
+
+    if istable(characters) then
+      for _, character in pairs(characters) do
+        if istable(character.recognizes) then
+          for _, record in ipairs(character.recognizes) do
+            if tonumber(record.target_id) == character_id and record.name == old_name then
+              record.name = new_name
+              renamed = true
+            end
+          end
+        end
+      end
+    end
+
+    if renamed then
+      self:sync(client)
+    end
+  end
+
+  Recognize:where({ target_id = character_id, name = old_name }):update_all({ name = new_name })
+end
+
 --- Turns the name a player has asked to be known by into one that can be stored: control
 -- characters become spaces, the name is trimmed and cut to `Recognition.max_name_length`
 -- characters.
@@ -231,7 +263,9 @@ function Recognition:accept_request(actor)
 end
 
 --- Introduces a player to the player they look at or to everyone within a range, which
--- makes those characters know the player by the given name. Everyone involved is notified.
+-- makes those characters know the player by the given name. Everyone who learns something
+-- is notified, and the player is told the name they introduced themselves under, or that
+-- nobody heard them. A listener who knows the player by that name already learns nothing.
 -- An introduction can be refused for each listener by the PlayerCanRecognize hook, and
 -- players who have no character loaded learn nothing.
 -- @param actor [Player player who introduces themselves]
@@ -285,6 +319,8 @@ function Recognition:introduce(actor, kind, name, target)
     return false
   end
 
+  local heard = 0
+
   for i = 1, #targets do
     local listener = targets[i]
 
@@ -299,22 +335,26 @@ function Recognition:introduce(actor, kind, name, target)
     if hook.Run('PlayerCanRecognize', actor, listener) != false and listener:is_character_loaded() then
       local is_known, known_name = listener:recognizes(actor)
 
-      if !listener:knows_real_name(actor) then
+      heard += 1
+
+      if !is_known or known_name != name then
         if !is_known then
           listener:notify('notification.recognize.new_name', { name = tostring(name) }, color_light_green)
-        else
+        elseif known_name != real_name then
           listener:notify('notification.recognize.change_name', {
             name = tostring(known_name),
             new_name = tostring(name)
           }, color_salmon)
         end
-      end
 
-      listener:add_recognize(actor, name)
+        listener:add_recognize(actor, name)
+      end
     end
   end
 
-  if name == real_name then
+  if heard == 0 then
+    actor:notify('notification.recognize.nobody_heard')
+  elseif name == real_name then
     actor:notify('notification.recognize.true_name', { name = tostring(name) }, color_light_green)
   else
     actor:notify('notification.recognize.false_name', { name = tostring(name) }, color_salmon)

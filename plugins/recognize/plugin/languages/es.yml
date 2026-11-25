@@ -38,6 +38,7 @@ es:
       change_name: Ahora conoces a {name} como {new_name}
       true_name: Te has presentado como {name} (nombre real)
       false_name: Te has presentado como {name} (nombre falso)
+      nobody_heard: Nadie te ha oído presentarte.
       forgotten: Ya no recuerdas a {name}.
       forgot_everyone: Ya no recuerdas a nadie de los que conocías.
   ui:

@@ -110,7 +110,7 @@ function PANEL:Init()
 
   total_height = total_height + self.real_name_button:GetTall() + margin
 
-  local history = Data.load('name_history/'..PLAYER:name(true), {})
+  local history = Recognition:get_name_history()
 
   self.fake_name = vgui.Create('fl_base_panel', self.list)
   self.fake_name:SetTall(scale(24))
@@ -136,15 +136,7 @@ function PANEL:Init()
     if text and text != '' then
       Cable.send('fl_recognize', self.range.type, text)
 
-      if text != PLAYER:name(true) and !table.HasValue(history, text) then
-        table.insert(history, 1, text)
-
-        if #history > 5 then
-          table.remove(history, 6)
-        end
-
-        Data.save('name_history/'..PLAYER:name(true), history)
-      end
+      Recognition:remember_false_name(text)
     end
 
     self:safe_remove()

@@ -38,6 +38,7 @@ ru:
       change_name: Теперь вы знаете {name} как {new_name}
       true_name: Вы представились реальным именем {name}
       false_name: Вы представились ложным именем {name}
+      nobody_heard: Никто не слышал, как Вы представились.
       forgotten: Вы больше не помните {name}.
       forgot_everyone: Вы больше не помните никого из тех, кого знали.
   ui:

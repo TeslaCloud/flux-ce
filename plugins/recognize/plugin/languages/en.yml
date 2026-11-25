@@ -38,6 +38,7 @@ en:
       change_name: You now know {name} as {new_name}
       true_name: You introduced yourself as {name} (real name)
       false_name: You introduced yourself as {name} (fake name)
+      nobody_heard: Nobody heard you introduce yourself.
       forgotten: You no longer remember {name}.
       forgot_everyone: You no longer remember anyone you knew.
   ui:
@@ -57,4 +58,4 @@ en:
         whisper: All characters within whisper range
         talk: All characters within talk range
         yell: All characters within yell range
-        target: Character you looking at
+        target: The character you are looking at

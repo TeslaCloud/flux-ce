@@ -23,6 +23,10 @@
 -- The plugin also keeps the completion of player arguments of commands from giving names
 -- away: players without the 'staff' permission are only offered the real names of the
 -- characters they know by that name and of their own (see `Recognition.complete_player`).
+--
+-- Recognition masks names in the interface only. The real name of every character is the
+-- public 'name' networked variable of its player, so client-side code can still read it with
+-- `Player:name(true)`.
 
 PLUGIN:set_global('Recognition')
 
@@ -133,6 +137,7 @@ end
 
 Flux.Command:add_completer('player', Recognition.complete_player)
 
+require_relative 'cl_plugin'
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'

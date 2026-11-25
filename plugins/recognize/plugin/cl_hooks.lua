@@ -27,13 +27,19 @@ function Recognition:PreDrawPlayerInfo(target, _x, _y, _distance, lines)
   end
 end
 
---- Returns the name the local player knows a player by, or the start of their physical description.
+--- Returns the name the local player knows a player by, or the start of their physical
+-- description, when it is not the real name of the player. Returns nothing for a real name
+-- and while the recognition system is off, which leaves the name to other handlers.
 -- @param target [Player player to get the name of]
--- @return [String displayed name]
+-- @return [String displayed name, nil when it is the real name]
 function Recognition:GetPlayerName(target)
-  if !IsValid(PLAYER) then return end
+  if !IsValid(PLAYER) or !IsValid(target) or !self:is_enabled() then return end
 
-  return self:get_known_name(PLAYER, target)
+  local name = self:get_known_name(PLAYER, target)
+
+  if name != target:name(true) then
+    return name
+  end
 end
 
 --- Shows real names in out of character messages.
@@ -64,7 +70,7 @@ end
 function Recognition:AdjustPlayerInteractions(options, target)
   if !self:is_enabled() then return end
 
-  local history = Data.load('name_history/'..PLAYER:name(true), {})
+  local history = self:get_name_history()
   local fake_name_options = {
     {
       id = 'enter_fake_name',
@@ -76,15 +82,7 @@ function Recognition:AdjustPlayerInteractions(options, target)
           if text and text != '' then
             Cable.send('fl_recognize', 'target', text, target)
 
-            if text != PLAYER:name(true) and !table.HasValue(history, text) then
-              table.insert(history, 1, text)
-
-              if #history > 5 then
-                table.remove(history, 6)
-              end
-
-              Data.save('name_history/'..PLAYER:name(true), history)
-            end
+            self:remember_false_name(text)
           end
         end)
       end

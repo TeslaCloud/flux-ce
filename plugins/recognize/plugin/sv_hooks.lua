@@ -1,7 +1,7 @@
 --- Server-side hooks of the Recognize plugin: loads the recognitions together with the
 -- characters, networks the recognitions of a loaded character, decides who an introduction
--- reaches, erases recognitions when a character dies or is deleted and names the characters
--- on the access lists of doors.
+-- reaches, follows the renames of characters, erases recognitions when a character dies or
+-- is deleted and names the characters on the access lists of doors.
 
 --- Loads the recognitions of characters together with them.
 -- @param preloads [Map relations of the characters, changed in place]
@@ -56,6 +56,21 @@ function Recognition:PlayerDeath(victim, _inflictor, _attacker)
   if Config.get('recognize_forgotten_on_death') then
     self:forget_character(victim:get_character_id(), victim:name(true))
   end
+end
+
+--- Keeps the recognitions of a renamed character in step with its name: everyone who knew
+-- it by its real name knows it by the name it has been given, on the characters that are
+-- loaded and in the database. Those who know it by a false name keep that name.
+-- @param _owner [Player the player whose active character has been renamed]
+-- @param char [Character the renamed character, nil if the player has none]
+-- @param new_name [String]
+-- @param old_name [String]
+function Recognition:CharacterNameChanged(_owner, char, new_name, old_name)
+  local character_id = char and tonumber(char.id)
+
+  if !character_id or !isstring(old_name) or old_name == new_name then return end
+
+  self:rename_character(character_id, old_name, new_name)
 end
 
 --- Deletes the recognitions of a character that is about to be deleted, and makes every

@@ -70,11 +70,12 @@ do
   end
 
   if SERVER then
-    --- Makes the player recognize a target by a name, updating the stored and networked recognizes.
+    --- Makes the player recognize a target by a name, updating the stored and networked
+    -- recognizes. Nothing happens while the player has no active character.
     -- @param target [Player player to recognize]
     -- @param name=nil [String name to know them by, the target's real name by default]
     function player_meta:add_recognize(target, name)
-      if !IsValid(target) or self:IsBot() then return end
+      if !IsValid(target) or self:IsBot() or !self:is_character_loaded() then return end
 
       local char_id = target:get_character_id()
 
