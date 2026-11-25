@@ -1,11 +1,11 @@
 --- Entry point of the Flux gamemode package, run on both realms.
 -- Fills in the gamemode information (`GM.Name`, `GM.version`, `GM.code_name` and so on)
--- from the package metadata, then loads the core, the libraries, classes and metatable
--- extensions, the models and the tools, and finally the gamemode hooks and the network
--- message handlers. On the server it also registers the package's languages and migrations
--- with `Pipeline`. The user interface lives in the Active UI package, which is loaded after
--- this one. During a partial code reload (`LITE_REFRESH`) only the hooks and the network
--- message handlers are loaded again.
+-- from the package metadata, then loads the core, the configs of its `config` folder, the
+-- libraries, classes and metatable extensions, the models and the tools, and finally the
+-- gamemode hooks and the network message handlers. On the server it also registers the
+-- package's languages and migrations with `Pipeline`. The user interface lives in the Active
+-- UI package, which is loaded after this one. During a partial code reload (`LITE_REFRESH`)
+-- only the hooks and the network message handlers are loaded again.
 
 local metadata = Flux.__package__
 
@@ -28,23 +28,16 @@ GM.name_override = false
 
 AddCSLuaFile(FLUX_ENV_PATH)
 
-Plugin.clear_cache()
-
 if !LITE_REFRESH then
   print('Environment: '..ENV['FLUX_ENV'])
 
   local package_path = PACKAGE.__path__
 
   require_relative 'core/sh_core'
-
-  if CLIENT then
-    include 'lib/sh_lang.lua'
-  end
-
   require_relative 'core/cl_core'
   require_relative 'core/sv_core'
 
-  Config.read(Settings.configs)
+  Config.include_folder(package_path..'config')
 
   require_relative_folder('lib', true)
   require_relative_folder('lib/classes', true)

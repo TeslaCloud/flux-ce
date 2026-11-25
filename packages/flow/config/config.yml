@@ -1,17 +1,8 @@
 #
-# Use this file to register new configs related to Flux itself.
-#
-# Looking for Flux framework settings? Check out the settings.yml file!
-#
-# !!!!
-# DO NOT USE THIS FILE TO REGISTER CONFIGURATION FOR YOUR SCHEMA
-# OR PLUGIN.
-#
-# If you wish to add configuration to your plugin, create a similar
-# file in the following path:
-# plugins/<your_plugin>/plugin/config/config.yml
-# gamemodes/<your_schema>/schema/config/config.yml
-# !!!!
+# Configs of the flow package. Plugins and schemas define their own in the `config` folder of
+# the plugin or of the schema (plugins/<plugin>/plugin/config/config.yml,
+# gamemodes/<schema>/schema/config/config.yml); their values are set in <schema>.yml or in the
+# `configuration` section of settings.yml.
 #
 # Besides the fields used below, a config can be marked with:
 #   hidden: true          - the value is never sent to clients.

@@ -3,8 +3,9 @@
 -- aborted, then loads the environment, the standard library and the package manager and
 -- includes the project, the package of the schema's own folder, whose specification depends
 -- on `flux` and through it on every other package. Once the packages are in, the schema is
--- included. On a code refresh the project, the `flux` package and, unless the refresh is a
--- lite one, the other dependencies of the project are reloaded instead.
+-- included. On a code refresh the hook and load caches of `Plugin` are cleared first, then
+-- the project, the `flux` package and, unless the refresh is a lite one, the other
+-- dependencies of the project are reloaded instead.
 
 AddCSLuaFile()
 
@@ -18,14 +19,14 @@ if SERVER then
   resource.AddWorkshop('1518849094')
 
   --- Includes a module and returns a boolean depending on success.
-  -- Does not throw Lua errors.
+  -- Does not throw Lua errors: a failure is printed with the error `require` gave.
   -- @param mod [String module name, as passed to require]
   -- @return [Boolean success]
   function require_module(mod)
-    local success, _value = pcall(require, mod)
+    local success, result = pcall(require, mod)
 
     if !success then
-      ErrorNoHalt('Failed to open the "'..mod..'" module!\n')
+      ErrorNoHalt('Failed to open the "'..mod..'" module: '..tostring(result)..'\n')
       return false
     end
 
@@ -33,10 +34,12 @@ if SERVER then
   end
 
   if !require_module 'file' then
+    local is_64_bit = jit.arch == 'x64'
+    local platform = system.IsWindows() ? (is_64_bit ? 'win64' : 'win32') : (is_64_bit ? 'linux64' : 'linux')
+
     ErrorNoHalt(
       'The file module has failed to load!\nIt comes with the gmsv_file package, a dependency of Flux: run '..
-      '"fpkg install" to put gmsv_file_'..((system.IsWindows() and 'win64') or 'linux64')..
-      '.dll in the garrysmod/lua/bin folder!\nAborting startup...\n'
+      '"fpkg install" to put gmsv_file_'..platform..'.dll in the garrysmod/lua/bin folder!\nAborting startup...\n'
     )
     return
   end
@@ -48,7 +51,13 @@ include(FLUX_PATH..'lib/package.lua')
 
 local refresh = Flux.initialized
 
+--- Whether this code refresh is a lite one, which only reloads the schema and the code outside
+-- of the framework: true during a refresh on the server when `lite_refresh` is on in
+-- `settings.yml`, false on the first boot and on the client, which always makes a full refresh.
+LITE_REFRESH = refresh and SERVER and Settings.lite_refresh or false
+
 if refresh then
+  Plugin.clear_cache()
   Package:reload(project)
   Package:reload 'flux'
 
@@ -77,10 +86,6 @@ if refresh then
   MsgC(Color(0, 255, 100, 255), 'Code reloaded in '..math.Round(os.clock() - start_time, 3)..' second(s)\n')
 else
   MsgC(Color(0, 255, 100, 255), 'Boot complete in '..math.Round(os.clock() - start_time, 3)..' second(s)\n')
-end
-
-if CLIENT then
-  Font.create_fonts()
 end
 
 print_debug_metrics()

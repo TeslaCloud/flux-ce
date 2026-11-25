@@ -2,8 +2,10 @@
 -- `FLUX_ENV` variable that names the environment Flux runs in.
 -- `boot.lua` includes this file first. On the first boot it reads `FLUX_ENV` from the first
 -- file that exists of `config/environment.local.lua` and `config/environment.lua` of the
--- schema's gamemode folder and `config/environment.lua` of the Flux package, and falls back to
--- 'development' when the file returns nothing. `FLUX_ENV_PATH` holds the path of that file.
+-- schema's gamemode folder and `config/environment.lua` of the Flux package (see
+-- `find_config_file`), and falls back to 'development' when the file returns nothing. Any name
+-- other than 'development', 'production' and 'test' stops the boot with an error.
+-- `FLUX_ENV_PATH` holds the path of that file.
 -- The server shares variables with clients through `add_client_env`, which appends `setenv`
 -- calls to the generated `lua/_flux/environment.lua` file that clients include here.
 
@@ -38,12 +40,12 @@ if !setenv then
   end
 end
 
-do
+if !add_client_env then
   local client_vars = {}
 
   --- Adds an environment variable to the clientside environment variables list.
-  -- Only the first call for a key has an effect. Key and value are converted to strings.
-  -- Serverside only, does nothing on the client.
+  -- Only the first call for a key has an effect, also across code refreshes. Key and value are
+  -- converted to strings. Serverside only, does nothing on the client.
   -- @param key [String variable name]
   -- @param value [String variable value]
   function add_client_env(key, value)
@@ -57,21 +59,47 @@ do
   end
 end
 
-if Flux and Flux.initialized then return end
+--- Finds a configuration file. The server's own config lives in the `config` folder of the
+-- schema's gamemode and replaces the file that ships with Flux, file by file: the first that
+-- exists of `<name>.local.<ext>` and `<name>.<ext>` there is used, else the file of the same
+-- name in the `config` folder of the Flux package.
+-- ```
+-- find_config_file('environment.lua', 'LUA') -- 'hl2rp/config/environment.lua'
+-- ```
+-- @param file_name [String name of the file with its extension, such as 'database.yml']
+-- @param path_id='GAME' [String 'GAME' for a path relative to the game folder, 'LUA' for one
+--   relative to the Lua search path]
+-- @return [String path of the file]
+function find_config_file(file_name, path_id)
+  path_id = path_id or 'GAME'
 
-do
-  local project_config = engine.ActiveGamemode()..'/config/'
+  local root = path_id == 'GAME' ? 'gamemodes/' : ''
+  local folder = root..engine.ActiveGamemode()..'/config/'
+  local local_name = file_name:gsub('(%.[^.]+)$', '.local%1')
 
-  if file.Exists(project_config..'environment.local.lua', 'LUA') then
-    FLUX_ENV_PATH = project_config..'environment.local.lua'
-  elseif file.Exists(project_config..'environment.lua', 'LUA') then
-    FLUX_ENV_PATH = project_config..'environment.lua'
-  else
-    FLUX_ENV_PATH = FLUX_PATH..'config/environment.lua'
+  if file.Exists(folder..local_name, path_id) then
+    return folder..local_name
+  elseif file.Exists(folder..file_name, path_id) then
+    return folder..file_name
   end
+
+  return root..FLUX_PATH..'config/'..file_name
 end
 
-setenv('FLUX_ENV', string.lower(include(FLUX_ENV_PATH) or 'development'))
+if Flux and Flux.initialized then return end
+
+FLUX_ENV_PATH = find_config_file('environment.lua', 'LUA')
+
+do
+  local environment = string.lower(include(FLUX_ENV_PATH) or 'development')
+
+  if environment != 'development' and environment != 'production' and environment != 'test' then
+    error('Unknown environment "'..environment..'" returned by '..FLUX_ENV_PATH
+      ..'! Return "development", "production" or "test".', 0)
+  end
+
+  setenv('FLUX_ENV', environment)
+end
 
 if CLIENT then
   include '_flux/environment.lua'

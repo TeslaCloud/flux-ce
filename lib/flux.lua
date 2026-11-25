@@ -4,7 +4,7 @@
 -- the loaded schema (its folder, name, information and inclusion) and reloads the
 -- dependencies of the package on a code refresh. `boot.lua` includes the schema once every
 -- package is in.
--- On the server it also reads `settings.yml`, `config.yml` and `database.yml`, each found with
+-- On the server it also reads `settings.yml` and `database.yml`, each found with
 -- `Flux.find_config`, into the `Settings` and `DatabaseSettings` globals and shares the schema
 -- information with clients.
 
@@ -102,7 +102,7 @@ function Flux.get_schema_info()
       author      = schema_data['author'] or 'Undefined',
       description = schema_data['description'] or 'Undefined',
       version     = schema_data['version'] or 'Undefined',
-      folder      = string.gsub(schema_folder, '/schema', '')
+      folder      = schema_folder
     }
 
     return Flux.schema_info
@@ -113,14 +113,15 @@ end
 
 if PACKAGE then
   --- Called by the Package manager once the Flux package has been included.
-  -- On a code refresh it reloads the dependencies of the package (on a lite refresh only the
-  -- flow and active_ui packages, whose shared files are needed either way). Does nothing on
-  -- the first boot.
+  -- On a code refresh it reloads the dependencies of the package in the order they are listed
+  -- (on a lite refresh only the flow and active_ui packages, whose shared files are needed
+  -- either way). Only the server makes lite refreshes, see `LITE_REFRESH` in `boot.lua`. Does
+  -- nothing on the first boot.
   function PACKAGE:__installed__()
     if !Flux.initialized then return end
 
     if !LITE_REFRESH then
-      for _, dep_name in pairs(self.metadata.deps) do
+      for _, dep_name in ipairs(self.metadata.deps) do
         Package:reload(dep_name)
       end
     else
@@ -142,24 +143,43 @@ if !SERVER then return end
 -- @realm [server]
 -- @param file_name [String name of the file with its extension, such as 'database.yml']
 -- @return [String path of the file relative to the game folder]
+-- @see [find_config_file]
 function Flux.find_config(file_name)
-  local folder = 'gamemodes/'..Flux.get_schema_folder()..'/config/'
-  local local_name = file_name:gsub('(%.[^.]+)$', '.local%1')
-
-  if file.Exists(folder..local_name, 'GAME') then
-    return folder..local_name
-  elseif file.Exists(folder..file_name, 'GAME') then
-    return folder..file_name
-  end
-
-  return 'gamemodes/'..FLUX_PATH..'config/'..file_name
+  return find_config_file(file_name, 'GAME')
 end
 
-Settings          = Settings or YAML.read(Flux.find_config('settings.yml'))
-Settings.configs  = Settings.configs or YAML.read(Flux.find_config('config.yml'))
-DatabaseSettings  = YAML.read(Flux.find_config('database.yml'))
+--- Reads a YAML file that holds a map, such as `settings.yml`, a `plugin.yml` or the .yml file of
+-- the schema. A file that is empty or holds nothing but comments reads as an empty map.
+-- ```
+-- Flux.read_yaml(Flux.find_config('settings.yml'))
+-- ```
+-- @realm [server]
+-- @param path [String path of the file]
+-- @param path_id='GAME' [String search path the path is relative to, such as 'GAME' or 'LUA']
+-- @return [Map the parsed file, or nil if the file does not exist; throws an error naming the
+--   file if it is not valid YAML or does not hold a map]
+function Flux.read_yaml(path, path_id)
+  local contents = file.Read(path, path_id or 'GAME')
 
-LITE_REFRESH = Flux.initialized and Settings.lite_refresh or false
+  if !contents then return end
+
+  if contents:gsub('#[^\n]*', ''):match('^%s*$') then
+    return {}
+  end
+
+  local success, result = pcall(YAML.eval, contents)
+
+  if !success then
+    error('Invalid YAML in '..path..': '..tostring(result), 0)
+  elseif !istable(result) then
+    error('Invalid YAML in '..path..': the file has to hold a map of keys to values', 0)
+  end
+
+  return result
+end
+
+Settings          = Settings or Flux.read_yaml(Flux.find_config('settings.yml'))
+DatabaseSettings  = Flux.read_yaml(Flux.find_config('database.yml'))
 
 AddCSLuaFile('_flux/environment.lua')
 
