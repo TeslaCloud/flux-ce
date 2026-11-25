@@ -107,9 +107,11 @@ end
 
 --- Stores a role under the given ID, inheriting the permissions and unset fields of the role
 -- named in data.base if that role is already registered. A field counts as unset while it is
--- nil or has the default of the Role class, which every role is created with, such as the
--- immunity of 0 and the name 'Undefined'. Roles registered earlier that are
--- based on the new role get its permissions too, except for the actions they set themselves.
+-- nil and, for a role from a role file, also while it holds the default of the Role class
+-- (such as the immunity of 0 and the name 'Undefined') because the file never assigned it,
+-- see `own_fields` and the `role` pipeline; a value the file assigns is kept, even if it is
+-- the default. Roles registered earlier that are based on the new role get its permissions
+-- too, except for the actions they set themselves.
 -- A role file whose ID is already registered adds its permissions to that role instead: the
 -- allowed and denied actions of data, with their callbacks, replace what the registered role
 -- had for the same actions and count as its own, `allow_anything` carries over, and the
@@ -155,12 +157,12 @@ function Bolt:create_role(id, data)
 
       data.permissions = copy.permissions
 
+      local own_fields = data.own_fields
+
       for key, value in pairs(copy) do
-        if key == 'permissions' or key == 'own_permissions' then continue end
+        if key == 'permissions' or key == 'own_permissions' or key == 'own_fields' then continue end
 
-        local own_value = data[key]
-
-        if own_value == nil or own_value == Role[key] then
+        if data[key] == nil or (own_fields and !own_fields[key] and Role[key] != nil) then
           data[key] = value
         end
       end
@@ -764,11 +766,28 @@ do
   end
 end
 
+--- Runs a role file with the `ROLE` global standing for a new Role of the file's ID, and
+-- registers the role. While the file runs, `ROLE` is a stand-in that passes every read and
+-- assignment on to the role and records the fields the file assigns in the role's
+-- `own_fields`, so that `Bolt:create_role` inherits the others from the base role. The
+-- stand-in stays in place while the role registers.
 Pipeline.register('role', function(id, file_name, _pipe)
-  ROLE = Role.new(id)
+  local role = Role.new(id)
+  local own_fields = {}
+
+  role.own_fields = own_fields
+
+  ROLE = setmetatable({}, {
+    __index = role,
+    __newindex = function(_proxy, key, value)
+      own_fields[key] = true
+      role[key] = value
+    end
+  })
 
   require_relative(file_name)
 
-  ROLE:register()
+  role:register()
+
   ROLE = nil
 end)
