@@ -29,9 +29,13 @@ ActiveRecord.Adapters.Pg._sql_syntax = 'postgresql'
 -- @return [Number]
 ActiveRecord.Adapters.Pg.default_port = 5432
 
+--- Name of the binary module the adapter is built on.
+-- @return [String]
+ActiveRecord.Adapters.Pg.binary_module = 'pg'
+
 --- Loads the 'pg' binary module. When it cannot be opened, #connect says how to install it.
 function ActiveRecord.Adapters.Pg:init()
-  require_module 'pg'
+  require_module(self.binary_module)
 end
 
 --- Checks whether the adapter talks to a PostgreSQL database.

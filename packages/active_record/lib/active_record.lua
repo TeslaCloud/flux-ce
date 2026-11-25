@@ -9,10 +9,11 @@
 -- The tables are described by migrations (`ActiveRecord::Migration`): files in the
 -- schema's `db/migrate/` folder that change the database through the schema statements
 -- (`create_table`, `add_column`, `add_index` and so on). Pending migrations are run when
--- the server starts or through the `flux db:*` console commands (`ActiveRecord.Tasks`),
--- and the resulting schema is dumped into `db/schema.lua`. All SQL goes through a database
--- adapter (`ActiveRecord::Adapters::Abstract`) for SQLite, MySQL or PostgreSQL, picked by
--- the settings of the current environment in `config/database.yml`.
+-- the server starts, through the `flux db:*` console commands, or from the shell without the
+-- server through fpkg's tasks (`fpkg db:migrate`, see the package's `taskspec.lua`), all of
+-- them `ActiveRecord.Tasks`, and the resulting schema is dumped into `db/schema.lua`. All SQL
+-- goes through a database adapter (`ActiveRecord::Adapters::Abstract`) for SQLite, MySQL or
+-- PostgreSQL, picked by the settings of the current environment in `config/database.yml`.
 --
 -- The functions on the `ActiveRecord` table itself connect to the database, bring the
 -- library up and keep its bookkeeping: the columns of every table are mirrored in
@@ -390,21 +391,14 @@ local function valid_adapter_names()
   return names
 end
 
---- Loads the database adapter named in the config and connects it to the database.
--- Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'postgres',
--- 'sqlite3', 'mysql' and 'mariadb' (the config's adapter field is rewritten in that case).
--- The resolved name is stored in ActiveRecord.adapter_name. An unknown name is reported
--- along with the valid ones, and no connection is made. A connection that fails is tried
--- again, see ActiveRecord.reconnect.
--- ```
--- ActiveRecord.establish_connection {
---   adapter = 'mysqloo', host = '127.0.0.1', port = 3306,
---   user = 'username', password = 'password', database = 'flux_dev'
--- }
--- ```
--- @param config [Map database settings as found in config/database.yml: adapter, host,
---   port, user, password, database, encoding, socket and flags]
-function ActiveRecord.establish_connection(config)
+--- Finds the adapter class that database settings name: 'sqlite' if they name none, with the
+-- aliases 'postgresql', 'postgres', 'sqlite3', 'mysql' and 'mariadb' resolved (the adapter
+-- field of the settings is rewritten in that case). Loads the file of the adapter and stores
+-- the resolved name in ActiveRecord.adapter_name.
+-- @param config [Map database settings]
+-- @return [Class the adapter class, nil for an unknown name; String the reason, which names
+--   the valid adapters]
+local function find_adapter(config)
   local adapter = isstring(config.adapter) and config.adapter:lower() or 'sqlite'
 
   if adapter_aliases[adapter] then
@@ -423,9 +417,33 @@ function ActiveRecord.establish_connection(config)
   local adapter_class = adapter != 'abstract' and ActiveRecord.Adapters[adapter:capitalize()]
 
   if !adapter_class then
-    ErrorNoHalt('ActiveRecord - Unknown database adapter \''..adapter..'\' in the \''..ActiveRecord.db_section
-      ..'\' section of '..Flux.find_config('database.yml')..'!\nValid adapters: '
-      ..table.concat(valid_adapter_names(), ', ')..'\n')
+    return nil, 'Unknown database adapter \''..adapter..'\' in the \''..ActiveRecord.db_section..'\' section of '
+      ..Flux.find_config('database.yml')..'! Valid adapters: '..table.concat(valid_adapter_names(), ', ')
+  end
+
+  return adapter_class
+end
+
+--- Loads the database adapter named in the config and connects it to the database.
+-- Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'postgres',
+-- 'sqlite3', 'mysql' and 'mariadb' (the config's adapter field is rewritten in that case).
+-- The resolved name is stored in ActiveRecord.adapter_name. An unknown name is reported
+-- along with the valid ones, and no connection is made. A connection that fails is tried
+-- again, see ActiveRecord.reconnect. Once connected, ActiveRecord starts up, see
+-- ActiveRecord.on_connected.
+-- ```
+-- ActiveRecord.establish_connection {
+--   adapter = 'mysqloo', host = '127.0.0.1', port = 3306,
+--   user = 'username', password = 'password', database = 'flux_dev'
+-- }
+-- ```
+-- @param config [Map database settings as found in config/database.yml: adapter, host,
+--   port, user, password, database, encoding, socket and flags]
+function ActiveRecord.establish_connection(config)
+  local adapter_class, reason = find_adapter(config)
+
+  if !adapter_class then
+    ErrorNoHalt('ActiveRecord - '..reason..'\n')
 
     return
   end
@@ -434,6 +452,75 @@ function ActiveRecord.establish_connection(config)
   ActiveRecord.connection_attempts = 0
   ActiveRecord.adapter = adapter_class.new()
   ActiveRecord.adapter:connect(config, ActiveRecord.Adapters.Abstract.on_connected)
+end
+
+--- Creates the adapter that database settings name and stores it in ActiveRecord.adapter,
+-- without connecting it, as the tasks that need no connection (`db:create`, `db:drop`) want
+-- it. Raises an error for an unknown adapter, and one with the reason when the binary module
+-- of the adapter cannot be opened.
+-- @param config [Map database settings, see ActiveRecord.establish_connection]
+-- @return [ActiveRecord::Adapters::Abstract the adapter]
+function ActiveRecord.create_adapter(config)
+  local adapter_class, reason = find_adapter(config)
+
+  if !adapter_class then
+    error('ActiveRecord - '..reason, 0)
+  end
+
+  local binary_module = adapter_class.binary_module
+
+  if binary_module then
+    local loaded, exception = pcall(require, binary_module)
+
+    if !loaded then
+      error('ActiveRecord - The '..binary_module..' module of the '..ActiveRecord.adapter_name..' adapter cannot be '
+        ..'opened: '..tostring(exception):match('^[^\n]*'), 0)
+    end
+  end
+
+  ActiveRecord.connection_settings = config
+  ActiveRecord.adapter = adapter_class.new()
+
+  return ActiveRecord.adapter
+end
+
+--- Connects to the database for fpkg's tasks: creates the adapter (see
+-- ActiveRecord.create_adapter), connects it and readies the database without changing the
+-- tables of the application, which creates the internal tables, restores the schema and
+-- installs the migrations of the packages and plugins (see ActiveRecord.open_database and
+-- ActiveRecord.Tasks.install). Nothing is migrated and no hook is run. Raises an error that says
+-- why when the database cannot be used.
+-- @param config [Map database settings, see ActiveRecord.establish_connection]
+function ActiveRecord.connect(config)
+  local adapter = ActiveRecord.create_adapter(config)
+  local done, success, exception = false, false, nil
+
+  adapter:connect(config, function(connected)
+    connected._connected = true
+    connected:sync(true)
+
+    success, exception = pcall(function()
+      local opened, reason = ActiveRecord.open_database()
+
+      if !opened then
+        error('ActiveRecord - '..reason, 0)
+      end
+
+      ActiveRecord.Tasks.install()
+    end)
+
+    connected:sync(false)
+    done = true
+  end)
+
+  if !adapter:wait_until(|| -> done, 10) then
+    error('ActiveRecord - Unable to connect to the database through the '..ActiveRecord.adapter_name
+      ..' adapter, see the error above', 0)
+  end
+
+  if !success then
+    error(exception, 0)
+  end
 end
 
 --- Connects the adapter again after its connection has failed while ActiveRecord is
@@ -478,19 +565,15 @@ local function describe_database(settings)
     ..(port and ':'..port or '')
 end
 
---- Bootstraps ActiveRecord once the adapter is connected: prints which database it is
--- connected to and where the settings come from, creates the internal tables, restores the
--- schema, brings the database up to date (see ActiveRecord.Tasks.prepare) and fires the
--- 'ActiveRecordReady' hook. A database whose tables were created through another adapter
--- is reported and left alone: ActiveRecord is not marked as ready, nothing is migrated and
--- the hook is not run.
+--- Readies the database once the adapter is connected, without changing the tables of the
+-- application: prints which database it is connected to and where the settings come from,
+-- creates the internal tables, restores the schema and checks that the tables were created
+-- through the adapter that is configured. A database whose tables were created through another
+-- adapter is left alone and ActiveRecord is not marked as ready. The server goes on with
+-- ActiveRecord.on_connected, fpkg's tasks with ActiveRecord.connect.
 -- @warning [Internal]
--- @return [Boolean whether ActiveRecord has started up]
-function ActiveRecord.on_connected()
-  timer.Remove('ActiveRecord#reconnect')
-
-  ActiveRecord.connection_attempts = 0
-
+-- @return [Boolean whether the database can be used, String the reason when it cannot]
+function ActiveRecord.open_database()
   print('ActiveRecord - Connected to '..describe_database(ActiveRecord.connection_settings or ActiveRecord.db_settings)
     ..' through the '..ActiveRecord.adapter_name..' adapter, as set in the \''..ActiveRecord.db_section
     ..'\' section of '..Flux.find_config('database.yml'))
@@ -502,21 +585,46 @@ function ActiveRecord.on_connected()
   local adapter = ActiveRecord.get_meta_key('adapter', class_name)
 
   if adapter != class_name then
-    ErrorNoHalt('ActiveRecord - The tables of this database were created through the \''..tostring(adapter)
-      ..'\' adapter, but the \''..class_name..'\' adapter is configured. Nothing has been changed and no '
-      ..'migration has been run. If it is the same database, delete the \'adapter\' row of the ar_metadata '
-      ..'table; otherwise point the settings at the right database.\n')
-
     ActiveRecord.ready = false
 
-    return false
+    return false, 'The tables of this database were created through the \''..tostring(adapter)
+      ..'\' adapter, but the \''..class_name..'\' adapter is configured. Nothing has been changed and no '
+      ..'migration has been run. If it is the same database, delete the \'adapter\' row of the ar_metadata '
+      ..'table; otherwise point the settings at the right database.'
   end
 
   ActiveRecord.set_meta_key('adapter', adapter)
 
   ActiveRecord.migration_context = ActiveRecord.MigrationContext.new()
 
-  local success, exception = pcall(ActiveRecord.Tasks.prepare)
+  return true
+end
+
+--- Bootstraps ActiveRecord on the server once the adapter is connected: readies the database
+-- (see ActiveRecord.open_database), installs the migrations of the packages and plugins (see
+-- ActiveRecord.Tasks.install), brings the database up to date (see ActiveRecord.Tasks.prepare)
+-- and fires the 'ActiveRecordReady' hook. A database that cannot be used is reported and left
+-- alone: ActiveRecord is not marked as ready, nothing is migrated and the hook is not run.
+-- @warning [Internal]
+-- @return [Boolean whether ActiveRecord has started up]
+function ActiveRecord.on_connected()
+  timer.Remove('ActiveRecord#reconnect')
+
+  ActiveRecord.connection_attempts = 0
+
+  local opened, reason = ActiveRecord.open_database()
+
+  if !opened then
+    ErrorNoHalt('ActiveRecord - '..reason..'\n')
+
+    return false
+  end
+
+  local success, exception = pcall(ActiveRecord.Tasks.install)
+
+  if success then
+    success, exception = pcall(ActiveRecord.Tasks.prepare)
+  end
 
   if !success then
     ErrorNoHalt('ActiveRecord - Unable to bring the database up to date!\n')

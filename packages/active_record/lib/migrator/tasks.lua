@@ -1,5 +1,8 @@
---- The database tasks behind the `flux db:*` console commands: migrating, rolling back,
--- inspecting the migration status and dumping or loading the schema file.
+--- The database tasks behind the `flux db:*` console commands and fpkg's `db:*` tasks
+-- (`fpkg db:migrate`, run from the shell without the game server): migrating, rolling back,
+-- inspecting the migration status, dumping or loading the schema file, and the generators
+-- behind `flux generate` and `fpkg generate`. The tasks are listed once, in `task_list.lua`.
+-- `Tasks.execute` runs one and raises its errors, `Tasks.run` prints them instead.
 ActiveRecord.Tasks = ActiveRecord.Tasks or {}
 
 local Tasks = ActiveRecord.Tasks
@@ -219,11 +222,12 @@ function Tasks.import_structure_metadata(metadata)
   end
 end
 
---- Brings the database up to date when the server starts: installs the migrations of
--- the packages and plugins, warns about versions that have been run but have no file
--- anymore, loads the schema file into a fresh database and runs the pending migrations.
--- @return [List<ActiveRecord::MigrationProxy> migrations that were run]
-function Tasks.prepare()
+--- Records what the database has run and installs the migrations of the packages and plugins:
+-- imports the version of a database that keeps it in the metadata, copies the registered
+-- migrations into the schema's folder (see ActiveRecord::MigrationContext#install_migrations)
+-- and warns about versions that have been run but have no file anymore. The connection does
+-- this on the server and in fpkg's tasks, before anything else uses the database.
+function Tasks.install()
   local context = Tasks.context()
 
   Tasks.import_metadata_version()
@@ -238,8 +242,13 @@ function Tasks.prepare()
       'Restore the files, or check `flux db:migrate:status`.\n'
     )
   end
+end
 
-  local fresh = #context:get_all_versions() == 0 and table.Count(ActiveRecord.schema) == 0
+--- Brings the database up to date, as the server does once it has connected (`flux db:prepare`):
+-- loads the schema file into a fresh database and runs the pending migrations.
+-- @return [List<ActiveRecord::MigrationProxy> migrations that were run]
+function Tasks.prepare()
+  local fresh = #Tasks.context():get_all_versions() == 0 and table.Count(ActiveRecord.schema) == 0
 
   if fresh and file.Exists(Tasks.schema_path(), 'GAME') and !Tasks.structure_schema_file() then
     Tasks.schema_load()
@@ -248,65 +257,182 @@ function Tasks.prepare()
   return Tasks.migrate()
 end
 
-local tasks = {
-  ['migrate']         = env -> Tasks.migrate(env.VERSION),
-  ['migrate:up']      = env -> Tasks.migrate_up(env.VERSION),
-  ['migrate:down']    = env -> Tasks.migrate_down(env.VERSION),
-  ['migrate:redo']    = env -> Tasks.redo(env.STEP, env.VERSION),
-  ['migrate:status']  = _env -> Tasks.migrate_status(),
-  ['rollback']        = env -> Tasks.rollback(env.STEP),
-  ['forward']         = env -> Tasks.forward(env.STEP),
-  ['version']         = _env -> Tasks.version(),
-  ['schema:dump']     = _env -> Tasks.schema_dump(),
-  ['schema:load']     = _env -> Tasks.schema_load(),
-  ['create']          = _env -> ActiveRecord.Database:setup(ActiveRecord.db_settings),
-  ['drop']            = _env -> ActiveRecord.Database:drop_database(ActiveRecord.db_settings)
-}
+--- Connects to the database of the current environment for fpkg's tasks, raising an error that
+-- says why when it cannot (see ActiveRecord.connect). Nothing of the application changes: the
+-- connection only readies the database and installs the migrations (see Tasks.install).
+function Tasks.connect()
+  ActiveRecord.connect(ActiveRecord.db_settings)
+end
 
---- Tasks that run without a connected database.
-local needs_connection = {
-  ['create'] = false,
-  ['drop'] = false
-}
+--- The tasks, their usage and their descriptions, see `task_list.lua`.
+Tasks.list = include 'task_list.lua'
 
---- Returns the names of the console tasks.
+local by_name = {}
+local generators = {}
+
+for _, entry in ipairs(Tasks.list.database) do
+  by_name[entry.name] = entry
+end
+
+for _, entry in ipairs(Tasks.list.generators) do
+  generators[entry.name] = entry
+end
+
+--- Returns the names of the database tasks.
 -- @return [List<String> sorted]
 function Tasks.names()
-  local names = table.GetKeys(tasks)
+  local names = table.GetKeys(by_name)
   table.sort(names)
   return names
 end
 
---- Runs a task by its console name, e.g. 'migrate:status', with the adapter in sync
--- mode. Errors are printed instead of raised.
--- @param name [String]
--- @param env=nil [Map KEY=VALUE arguments of the command, e.g. { VERSION = '2019...' }]
--- @return [Boolean whether the task ran without an error]
-function Tasks.run(name, env)
-  local task = tasks[name]
+local option_checks = {
+  x = value -> value:match('^%d+$') != nil,
+  n = value -> value:match('^%d+$') != nil and tonumber(value) > 0
+}
 
-  if !task then
-    print('Unknown task db:'..tostring(name)..'. Available tasks: db:'..table.concat(Tasks.names(), ', db:'))
-    return false
+local option_kinds = {
+  x = 'the version of a migration, the number its file name starts with (db:migrate:status lists them)',
+  n = 'a number of migrations, 1 or more'
+}
+
+--- Finds a task by its name and checks the options and words it is given against its usage.
+-- Raises an error for an unknown task, and one that says what to pass when the options or words
+-- do not fit: an option or word the task does not take, an option it needs that is missing or
+-- the value of an option that is not what the option stands for.
+-- @param name [String task name without the 'db:' prefix]
+-- @param env=nil [Map KEY=VALUE options]
+-- @param words=nil [List<String> other words]
+-- @return [Map the task, see task_list.lua]
+function Tasks.check(name, env, words)
+  local entry = by_name[name]
+
+  if !entry then
+    error('Unknown task db:'..tostring(name)..'. Available tasks: db:'..table.concat(Tasks.names(), ', db:'), 0)
   end
 
-  if needs_connection[name] != false and !ActiveRecord.ready then
-    print('ActiveRecord is not connected to the database yet!')
-    return false
+  env = env or {}
+  words = words or {}
+
+  local task_name = 'db:'..entry.name
+  local accepted = {}
+  local usage = entry.usage or ''
+
+  for word in usage:gmatch('%S+') do
+    local optional, key, kind = word:match('^(%[?)([%u_]+)=(%a)%]?$')
+
+    if key then
+      accepted[key] = kind
+
+      if optional == '' and env[key] == nil then
+        error(task_name..' needs '..key..'='..kind..', '..option_kinds[kind], 0)
+      end
+    end
+  end
+
+  local takes = usage != '' ? ' It takes '..usage..'.' : ' It takes no arguments.'
+
+  if words[1] then
+    error(task_name..' does not take \''..words[1]..'\'.'..takes, 0)
+  end
+
+  for key, value in pairs(env) do
+    local kind = accepted[key]
+
+    if !kind then
+      error(task_name..' does not take '..key..'.'..takes, 0)
+    elseif !option_checks[kind](tostring(value)) then
+      error(key..' of '..task_name..' has to be '..option_kinds[kind]..', not \''..tostring(value)..'\'', 0)
+    end
+  end
+
+  return entry
+end
+
+--- Runs a task by its name, e.g. 'migrate:status', with the adapter in sync mode, and raises an
+-- error when it fails: when Tasks.check refuses it, when it needs a connection while there is
+-- none, and for an error of the task itself. A task that runs without a connection creates the
+-- adapter of the database settings first when there is none.
+-- @param name [String task name without the 'db:' prefix]
+-- @param env=nil [Map KEY=VALUE options, e.g. { VERSION = '2019...' }]
+-- @param words=nil [List<String> other words given to the task]
+function Tasks.execute(name, env, words)
+  env = env or {}
+
+  local entry = Tasks.check(name, env, words)
+
+  if entry.connection != false and !ActiveRecord.ready then
+    error('ActiveRecord is not connected to the database!', 0)
+  end
+
+  if !ActiveRecord.adapter then
+    ActiveRecord.create_adapter(ActiveRecord.db_settings)
   end
 
   local adapter = ActiveRecord.adapter
 
   adapter:sync(true)
 
-  local success, exception = pcall(task, env or {})
+  local success, exception = pcall(entry.run, env)
 
   adapter:sync(false)
 
   if !success then
-    ErrorNoHalt('ActiveRecord - db:'..name..' failed!\n')
+    error(exception, 0)
+  end
+end
+
+--- Runs a task by its console name, e.g. 'migrate:status', and prints the error instead of
+-- raising it, see Tasks.execute.
+-- @param name [String task name without the 'db:' prefix]
+-- @param env=nil [Map KEY=VALUE options of the command, e.g. { VERSION = '2019...' }]
+-- @param words=nil [List<String> other words of the command]
+-- @return [Boolean whether the task ran without an error]
+function Tasks.run(name, env, words)
+  local success, exception = pcall(Tasks.execute, name, env, words)
+
+  if !success then
+    ErrorNoHalt('ActiveRecord - db:'..tostring(name)..' failed!\n')
     long_error(tostring(exception)..'\n')
   end
 
   return success
+end
+
+--- Runs a generator (`flux generate migration AddRoleToUsers role:string`) and raises an error
+-- that says what to pass when the words do not name one.
+-- @param words [List<String> the name of the generator, then the words it takes]
+-- @return [String path of the file written]
+function Tasks.generate(words)
+  local entry = generators[words[1]]
+
+  if !entry then
+    local usages = {}
+
+    for _, generator in ipairs(Tasks.list.generators) do
+      usages[#usages + 1] = 'generate '..generator.name..' '..generator.usage
+    end
+
+    local unknown = words[1] ? 'Unknown generator \''..tostring(words[1])..'\'. ' : ''
+
+    error(unknown..'Use '..table.concat(usages, ', or '), 0)
+  end
+
+  return entry.run({ unpack(words, 2) })
+end
+
+--- Writes a migration file with `ActiveRecord::MigrationGenerator` and prints its path.
+-- @param words [List<String> the name of the migration in CamelCase, then its columns as
+--   'name:type']
+-- @return [String path of the file, relative to the game folder]
+function Tasks.generate_migration(words)
+  if !words[1] then
+    error('The migration needs a name: generate migration <Name> [column:type ...]', 0)
+  end
+
+  local path = ActiveRecord.MigrationGenerator.new(words[1], { unpack(words, 2) }):generate()
+
+  print('Generated migration:\n-> '..path)
+
+  return path
 end

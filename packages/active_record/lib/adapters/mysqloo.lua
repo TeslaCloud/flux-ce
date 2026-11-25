@@ -44,10 +44,14 @@ local function character_set()
   return encoding
 end
 
+--- Name of the binary module the adapter is built on.
+-- @return [String]
+ActiveRecord.Adapters.Mysqloo.binary_module = 'mysqloo'
+
 --- Loads the 'mysqloo' binary module. When it cannot be opened, #connect says how to install
 -- it.
 function ActiveRecord.Adapters.Mysqloo:init()
-  require_module 'mysqloo'
+  require_module(self.binary_module)
 end
 
 --- Converts a unix timestamp to the date-time form that MySQL takes in date-time columns.
