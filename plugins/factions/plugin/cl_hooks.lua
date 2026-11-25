@@ -120,16 +120,6 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     panel.player_cards[index] = nil
   end
 
-  panel.faction_categories = panel.faction_categories or {}
-
-  for index, category_panel in ipairs(panel.faction_categories) do
-    if IsValid(category_panel) then
-      category_panel:safe_remove()
-    end
-
-    panel.faction_categories[index] = nil
-  end
-
   local padding = math.scale(12)
   local cur_y = math.scale(44)
   local card_tall = math.scale(44)
@@ -201,16 +191,6 @@ function Factions:PreRebuildScoreboard(panel, w, h)
       player_card:SetSize(w - padding * 2 - margin * 4, card_tall)
       player_card:set_player(client)
       player_card:SetPos(0, 5)
-
-      local timer_name = 'ping_updater_'..client:SteamID()
-
-      timer.Create(timer_name, 1, 0, function()
-        if IsValid(player_card) and IsValid(player_card.ping) and IsValid(client) then
-          player_card.ping:SetText(client:Ping())
-        else
-          timer.Remove(timer_name)
-        end
-      end)
 
       card_list:AddItem(player_card)
 
