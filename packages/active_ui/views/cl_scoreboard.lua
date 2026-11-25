@@ -6,17 +6,24 @@
 -- card opens with `AdjustScoreboardPlayerMenu`.
 
 local IsValid = IsValid
+local CurTime = CurTime
+local player_iterator = player.Iterator
+local base_think = vgui.GetControlTable('fl_base_panel').Think
 
 --- The scoreboard page of the tab menu (`fl_scoreboard`): a scrollable list with one
 -- `fl_scoreboard_player` card per initialized player, drawn by the active theme's
 -- `PaintScoreboard` hook, which also writes how many players are online.
--- `rebuild` recreates the cards. A `PreRebuildScoreboard` handler can build the list itself,
--- which is how the Factions plugin groups the players by faction, and `PostRebuildScoreboard`
--- handlers can add to the default list. Either way a player is left out when a
--- `ShouldShowPlayerOnScoreboard` handler returns false.
+-- `rebuild` clears the list and recreates the cards. A `PreRebuildScoreboard` handler can build
+-- the list itself, which is how the Factions plugin groups the players by faction, and
+-- `PostRebuildScoreboard` handlers can add to the default list. Either way a player is left
+-- out when a `ShouldShowPlayerOnScoreboard` handler returns false. While the scoreboard is
+-- open it refreshes the ping of every card once a second, and rebuilds itself when a player
+-- has finished loading or has left.
 local PANEL = {}
 PANEL.player_cards = {}
 PANEL.online_count = 0
+PANEL.initialized_count = 0
+PANEL.next_refresh = 0
 
 --- Creates the scroll panel that holds the player cards.
 function PANEL:Init()
@@ -24,6 +31,58 @@ function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
   self.scroll_panel:SetPos(0, 0)
   self.scroll_panel:SetSize(self:get_menu_size())
+end
+
+--- Counts the players who have finished loading.
+-- @return [Number]
+local function count_initialized()
+  local count = 0
+
+  for _, client in player_iterator() do
+    if client:has_initialized() then
+      count += 1
+    end
+  end
+
+  return count
+end
+
+--- Once a second, rebuilds the scoreboard if a player has finished loading or has left since
+-- it was last built, and refreshes the ping of every card otherwise. Runs the PanelThink theme
+-- hook of the base panel every frame.
+function PANEL:Think()
+  base_think(self)
+
+  local cur_time = CurTime()
+
+  if cur_time < self.next_refresh then return end
+
+  self.next_refresh = cur_time + 1
+
+  local cards = self.player_cards
+  local changed = count_initialized() != self.initialized_count
+
+  for i = 1, #cards do
+    local card = cards[i]
+
+    if IsValid(card) and !IsValid(card.target) then
+      changed = true
+    end
+  end
+
+  if changed then
+    self:rebuild()
+
+    return
+  end
+
+  for i = 1, #cards do
+    local card = cards[i]
+
+    if IsValid(card) and card.update_ping then
+      card:update_ping()
+    end
+  end
 end
 
 --- Delegates drawing of the scoreboard to the active theme's PaintScoreboard hook.
@@ -56,7 +115,7 @@ end
 function PANEL:count_players()
   local count = 0
 
-  for _, client in player.Iterator() do
+  for _, client in player_iterator() do
     if !client:has_initialized() or self:should_show_player(client) then
       count += 1
     end
@@ -72,13 +131,15 @@ function PANEL:get_online_text()
   return (t('ui.scoreboard.online', { count = self.online_count, max = game.MaxPlayers() }))
 end
 
---- Counts the players online, removes the existing player cards and creates one for every
--- player that is listed, then runs the PostRebuildScoreboard hook. Only the count is done if
--- PreRebuildScoreboard returns a value.
+--- Counts the players online, clears the scroll panel, removes the existing player cards and
+-- creates one for every player that is listed, then runs the PostRebuildScoreboard hook. Only
+-- the count and the clearing are done if PreRebuildScoreboard returns a value.
 function PANEL:rebuild()
   local w, h = self:GetSize()
 
   self.online_count = self:count_players()
+  self.initialized_count = count_initialized()
+  self.scroll_panel:Clear()
 
   --- Called on the client before the scoreboard builds its list of players.
   -- A handler can build the contents itself, for example to group the players.
@@ -104,7 +165,7 @@ function PANEL:rebuild()
   local card_tall = math.scale(32) + math.scale(12)
   local margin = math.scale(4)
 
-  for _, client in player.Iterator() do
+  for _, client in player_iterator() do
     if !self:should_show_player(client) then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)
@@ -142,7 +203,7 @@ vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
 -- things to do with the player (`open_menu`), which plugins fill in the
 -- `AdjustScoreboardPlayerMenu` hook.
 local PANEL = {}
-PANEL.player = false
+PANEL.target = false
 
 --- Opens the menu of the card's player when the card is clicked with the left or the right
 -- mouse button. Children of the card that take clicks themselves, such as the avatar, keep
@@ -159,7 +220,7 @@ end
 -- hook leaves no option.
 -- @return [Panel the opened DermaMenu, or nil if there is nothing to show]
 function PANEL:open_menu()
-  local target = self.player
+  local target = self.target
 
   if !IsValid(target) then return end
 
@@ -209,7 +270,7 @@ end
 --- Sets the player this card represents and rebuilds the card.
 -- @param target [Player]
 function PANEL:set_player(target)
-  self.player = target
+  self.target = target
 
   self:rebuild()
 end
@@ -218,7 +279,7 @@ end
 -- PostRebuildScoreboardPlayerCard hook. Does nothing if no player is set or the
 -- PreRebuildScoreboardPlayerCard hook returns false.
 function PANEL:rebuild()
-  if !self.player then return end
+  if !self.target then return end
 
   --- Called on the client before a scoreboard player card removes and recreates its avatar,
   -- name and ping labels.
@@ -226,7 +287,7 @@ function PANEL:rebuild()
   -- @param target [Player The player the card shows]
   -- @return [Boolean Return false to leave the card as it is; the
   --   `PostRebuildScoreboardPlayerCard` hook is not run then]
-  if hook.Run('PreRebuildScoreboardPlayerCard', self, self.player) == false then return end
+  if hook.Run('PreRebuildScoreboardPlayerCard', self, self.target) == false then return end
 
   if IsValid(self.avatar_panel) then
     self.avatar_panel:safe_remove()
@@ -240,7 +301,7 @@ function PANEL:rebuild()
     self.ping:safe_remove()
   end
 
-  local target = self.player
+  local target = self.target
 
   local padding = math.scale(6)
   local avatar_size = math.scale(32)
@@ -260,16 +321,11 @@ function PANEL:rebuild()
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
 
-  text = target:Ping()
-
-  local text_w, text_h = util.text_size(text, font)
-
   self.ping = vgui.Create('DLabel', self)
-  self.ping:SetText(text)
-  self.ping:SetPos(self:GetWide() - text_w - math.scale(16), self:GetTall() * 0.5 - text_h * 0.5)
   self.ping:SetFont(font)
   self.ping:SetTextColor(Theme.get_color('text_muted'))
-  self.ping:SizeToContents()
+
+  self:update_ping()
 
   --- Called on the client after a scoreboard player card has created its avatar, name and ping
   -- labels (the `avatar_panel`, `name_label` and `ping` fields of the card), so that plugins
@@ -277,6 +333,22 @@ function PANEL:rebuild()
   -- @param card [Panel The `fl_scoreboard_player` card]
   -- @param target [Player The player the card shows]
   hook.Run('PostRebuildScoreboardPlayerCard', self, target)
+end
+
+--- Shows the current ping of the card's player in the ping label, aligned to the right edge
+-- of the card. The scoreboard calls it once a second.
+function PANEL:update_ping()
+  local ping_label = self.ping
+  local target = self.target
+
+  if !IsValid(ping_label) or !IsValid(target) then return end
+
+  ping_label:SetText(target:Ping())
+  ping_label:SizeToContents()
+
+  local text_w, text_h = ping_label:GetSize()
+
+  ping_label:SetPos(self:GetWide() - text_w - math.scale(16), self:GetTall() * 0.5 - text_h * 0.5)
 end
 
 vgui.Register('fl_scoreboard_player', PANEL, 'fl_base_panel')

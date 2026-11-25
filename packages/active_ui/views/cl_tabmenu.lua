@@ -122,6 +122,13 @@ function PANEL:Init()
 
         self.active_panel = vgui.Create(menu_item.panel, self)
 
+        if !IsValid(self.active_panel) then
+          ErrorNoHalt("The '"..tostring(menu_item.id).."' tab menu item has an unknown panel class '"..
+            tostring(menu_item.panel).."'!\n")
+
+          return
+        end
+
         if self.active_panel.get_menu_size then
           self.active_panel:SetSize(self.active_panel:get_menu_size())
         else
@@ -189,10 +196,11 @@ function PANEL:Think()
   end
 end
 
---- Closes the menu when the TAB key is pressed.
+--- Closes the menu when the key bound to the scoreboard (`+showscores`, TAB if it is not
+-- bound) is pressed.
 -- @param key [Number key code, one of the KEY_ enums]
 function PANEL:OnKeyCodePressed(key)
-  if key == KEY_TAB then
+  if key == input.GetKeyCode(input.LookupBinding('+showscores') or 'tab') then
     self:close_menu()
   end
 end
@@ -224,8 +232,9 @@ end
 -- end
 -- ```
 -- @param id [String unique ID of the item]
--- @param data [Map item options. priority (Number) is required. Optional: title (String),
---   icon (String FontAwesome ID), panel (String VGUI class to open on click),
+-- @param data [Map item options: priority (Number buttons are ordered by ascending priority,
+--   50 by default), title (String), icon (String FontAwesome ID), panel (String VGUI class to
+--   open on click),
 --   default (Boolean the item with the lowest priority that sets it opens when none was
 --   open before),
 --   callback (Function(menu_panel, button) called after the click was handled),
@@ -235,6 +244,7 @@ function PANEL:add_menu_item(id, data, _index)
   data.id = id
   data.title = data.title or 'error'
   data.icon = data.icon or false
+  data.priority = tonumber(data.priority) or 50
 
   table.insert(self.menu_items, data)
   table.sort(self.menu_items, |a, b| -> a.priority < b.priority)

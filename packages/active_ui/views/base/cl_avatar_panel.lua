@@ -17,7 +17,7 @@ function PANEL:Init()
   end
 
   self.button.DoClick = function(_pnl)
-    local target = self.player
+    local target = self.target
 
     if IsValid(target) then
       target:ShowProfile()
@@ -25,7 +25,7 @@ function PANEL:Init()
   end
 
   self.button.DoRightClick = function(_pnl)
-    local target = self.player
+    local target = self.target
 
     if IsValid(target) then
       SetClipboardText(target:SteamID())
@@ -38,7 +38,7 @@ end
 -- @param size [Number avatar resolution passed to AvatarImage:SetPlayer, e.g. 32, 64 or 184]
 function PANEL:set_player(target, size)
   self:SetPlayer(target, size)
-  self.player = target
+  self.target = target
 end
 
 vgui.Register('fl_avatar_panel', PANEL, 'AvatarImage')

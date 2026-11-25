@@ -1,17 +1,12 @@
 --- The help page of the tab menu (`fl_help`): the 'help' Lumen template mounted into the
 -- panel. The template gives every page that has been added with `Flux.Help:add_page` a tab of
 -- its own, so that is the place to add to the contents of this panel. `rebuild` renders the
--- template again. Derives from `fl_base_panel`.
+-- template, which the tab menu calls once it has sized the panel. Derives from `fl_base_panel`.
 
 local PANEL = {}
 
---- Mounts the help template.
-function PANEL:Init()
-  self.root = Lumen.render('help', nil, self)
-end
-
---- Renders the help template again, with the pages that `Flux.Help:get_pages` returns at that
--- moment.
+--- Mounts the help template, or renders it again with the pages that `Flux.Help:get_pages`
+-- returns at that moment once it is mounted.
 function PANEL:rebuild()
   if self.root then
     self.root:update()
