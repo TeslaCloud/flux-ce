@@ -92,8 +92,9 @@ function RPCommands:get_phrase_table(text)
 end
 
 --- Formats an in character message, scaling its font size, verb and hearing radius by the phrase volume.
--- The exclamation marks of a yell that follow the closing asterisk of an action (`*waves*!!`) are
--- markup and left out of the line; those at the end of speech (`*waves* hey!!`) are shown.
+-- The exclamation marks of a yell that follow the closing asterisk of an action (`*waves*!!`,
+-- `*waves* !!`) are markup and left out of the line; those at the end of speech
+-- (`*waves* hey!!`) are shown.
 -- @param speaker [Player player speaking]
 -- @param text [String phrase]
 -- @return [Table chat message parts ending with the message data]
@@ -108,7 +109,7 @@ function RPCommands:format_message(speaker, text)
     speaker, ' '
   }
 
-  if volume > 0 and phrase:find('%*!+$') then
+  if volume > 0 and phrase:find('%*%s*!+$') then
     phrase = phrase:gsub('!+$', '')
   end
 

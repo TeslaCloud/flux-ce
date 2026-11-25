@@ -38,8 +38,10 @@ function RPCommands:RegisterPermissions()
 end
 
 --- Wraps a text in the markup of a speech command, the way the command itself says it. The
--- volume markup of the text stays outside the markup of `me` and `yell`: parentheses around the
--- whole text, and for `me` the exclamation marks at its end. A whisper wraps the whole text.
+-- volume markup of the text stays outside the markup of `me` and `yell`: as many opening as
+-- closing parentheses around a text that has no parentheses or asterisks of its own, and for
+-- `me` two or more exclamation marks at the end of a text without parentheses or asterisks.
+-- A whisper wraps the whole text, and any other text gets the markup around all of it.
 -- ```
 -- RPCommands:wrap_speech('me', 'waves') -- '*waves*'
 -- RPCommands:wrap_speech('me', '(waves)') -- '(*waves*)'
@@ -61,15 +63,18 @@ function RPCommands:wrap_speech(id, text)
   local open, close = markup[1], markup[2]
 
   if open != '(' then
-    local lead, inner, trail = text:match('^(%(+)(.-%S.-)(%)+)$')
+    local lead, inner, trail = text:match('^(%(+)([^()*]*[^()*%s][^()*]*)(%)+)$')
 
-    if !lead then
-      lead = ''
-      inner, trail = text:match('^(.-[^!%s])(!!+)$')
+    if lead and #lead == #trail then
+      return lead..open..inner..close..trail
     end
 
-    if inner then
-      return lead..open..inner..close..trail
+    if open == '*' then
+      inner, trail = text:match('^([^()*]-[^()*!%s])(!!+)$')
+
+      if inner then
+        return open..inner..close..trail
+      end
     end
   end
 
