@@ -53,6 +53,8 @@ function PANEL:Think()
 
     if diff < 1 then
       self.alpha = Lerp(FrameTime() * 6, self.alpha, 0)
+    else
+      self.alpha = 255
     end
   else
     self.alpha = 0
@@ -184,7 +186,6 @@ function PANEL:eject()
     if !IsValid(parent) then return end
 
     parent:remove_message(self.msg_index or 1)
-    parent:rebuild_history_indexes()
 
     self:safe_remove()
   end

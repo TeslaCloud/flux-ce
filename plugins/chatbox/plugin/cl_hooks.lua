@@ -6,7 +6,8 @@ local scale = math.scale
 local config_get = Config.get
 
 --- Recalculates the size and position options of the chatbox for the new resolution
--- and removes the chatbox panel so that it gets recreated.
+-- and removes the chatbox panel so that it gets recreated, with the messages and the input
+-- history it had.
 -- @param new_width [Number new screen width]
 -- @param new_height [Number new screen height]
 function Chatbox:ResolutionChanged(new_width, new_height)

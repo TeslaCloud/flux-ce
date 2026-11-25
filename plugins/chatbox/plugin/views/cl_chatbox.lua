@@ -12,7 +12,9 @@
 -- result of `Flux.Command:complete`, nil while no command is typed), `completion_index` (the
 -- selected suggestion), `completion_offset` (how many suggestions are scrolled past) and
 -- `completion_prefix` (the command prefix that was typed).
--- `Chatbox.create` creates the panel and keeps it in Chatbox.panel.
+-- `Chatbox.create` creates the panel and keeps it in Chatbox.panel. The messages and the
+-- entries of the input history live on `Chatbox` (`Chatbox.messages`, `Chatbox.input_history`),
+-- so that a panel created again, after a change of the resolution, shows them as well.
 
 local get_option, get_font, get_color = Theme.get_option, Theme.get_font, Theme.get_color
 local config_get = Config.get
@@ -164,7 +166,7 @@ function PANEL:Init()
   self.text_entry:SetText('')
   self.text_entry:SetSize(1, 1)
   self.text_entry:set_limit(config_get('chatbox_max_message_length', 512))
-  self.text_entry.history = {}
+  self.text_entry.history = Chatbox.input_history
   self.text_entry.last_index = 0
   self.text_entry:SetMultiline(true)
   self.text_entry:SetTabbingDisabled(true)
@@ -200,9 +202,10 @@ function PANEL:Init()
     -- @param text [String contents of the text entry, which may be empty]
     hook.Run('ChatTextEntered', value)
 
-    if entry.history[1] != value then
+    if value != '' and entry.history[1] != value then
       table.insert(entry.history, 1, value)
 
+      entry.history[Chatbox.input_history_limit + 1] = nil
       entry.last_index = 1
     end
 
@@ -767,7 +770,8 @@ function PANEL:create_message(message_data)
 end
 
 --- Creates a panel for the message and adds it to the chatbox, unless the
--- ShouldAddChatMessage hook returns false.
+-- ShouldAddChatMessage hook returns false. The message is kept in `Chatbox.messages` as well,
+-- so that a chatbox panel created later shows it again.
 -- @param message_data [Map message data received from the server]
 function PANEL:add_message(message_data)
   --- Decides whether a message received from the server is added to the chatbox. Called on the
@@ -778,6 +782,8 @@ function PANEL:add_message(message_data)
     local panel = self:create_message(message_data)
 
     if IsValid(panel) then
+      Chatbox.keep_message(message_data, panel.added_at)
+
       self:add_panel(panel)
 
       timer.Simple(0.05, function()
@@ -790,6 +796,23 @@ function PANEL:add_message(message_data)
           self.scroll_panel:GetVBar():AddScroll(value)
         end
       end)
+    end
+  end
+end
+
+--- Adds the messages kept in `Chatbox.messages` to the chatbox, each fading out when it would
+-- have if the chatbox had shown it all along.
+function PANEL:restore_messages()
+  local fade_delay = config_get('chatbox_message_fade_delay')
+
+  for _, entry in ipairs(Chatbox.messages) do
+    local panel = self:create_message(entry.data)
+
+    if IsValid(panel) then
+      panel.added_at = entry.added_at
+      panel.fade_at = entry.added_at + fade_delay
+
+      self:add_panel(panel)
     end
   end
 end

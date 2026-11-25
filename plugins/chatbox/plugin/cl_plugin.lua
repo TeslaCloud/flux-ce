@@ -16,6 +16,9 @@ Chatbox.x = Chatbox.x or 0
 Chatbox.y = Chatbox.y or 0
 
 Chatbox.old_add_text = Chatbox.old_add_text or chat.AddText
+Chatbox.messages = Chatbox.messages or {}
+Chatbox.input_history = Chatbox.input_history or {}
+Chatbox.input_history_limit = 50
 
 --- Replaces the default chat.AddText. The arguments are sent to the server, which
 -- sends them back to the local player as a chatbox message.
@@ -51,8 +54,9 @@ end
 
 --- Converts a message that was received from the server into a list of pieces with
 -- calculated sizes and positions, ready to be drawn by a fl_chat_message panel.
--- Strings are wrapped to the width of the chatbox. While the 'chatbox_timestamps' config is
--- enabled the message starts with the time it was sent at. Clientside only.
+-- Strings are wrapped to the width of the chatbox, and a line break (`\n`) in a string moves
+-- the rest of it to the next line. While the 'chatbox_timestamps' config is enabled the
+-- message starts with the time it was sent at. Clientside only.
 -- @param msg_table [Map message data: data (List of strings, font sizes, colors,
 --   image / icon / avatar tables, players and entities), optional size, time (os.time() of
 --   the message, the current time when omitted) and should_translate]
@@ -127,37 +131,60 @@ function Chatbox.compile(msg_table)
 
       if isstring(piece) then
         if should_translate then
-          data[index] = t(piece)
+          piece = t(piece)
+          data[index] = piece
         end
 
-        local wrapped = util.wrap_text(piece, font, wrap_width, cur_x)
-        local line_count = #wrapped
+        local segment_start = 1
 
-        for k2 = 1, line_count do
-          local v2 = wrapped[k2]
-          local w, h = text_size(v2, font)
+        repeat
+          local line_break = piece:find('\n', segment_start, true)
+          local wrapped = util.wrap_text(piece:sub(segment_start, (line_break or 0) - 1), font, wrap_width, cur_x)
+          local line_count = #wrapped
 
-          if !fix then
-            compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y }
-          else
-            compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
-            h -= h * fix_const
+          for k2 = 1, line_count do
+            local v2 = wrapped[k2]
+            local w, h = text_size(v2, font)
+
+            if !fix then
+              compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y }
+            else
+              compiled[#compiled + 1] = { text = v2, w = w, h = h, x = cur_x, y = cur_y - h * fix_const }
+              h -= h * fix_const
+            end
+
+            cur_x += w
+
+            if total_height < h then
+              total_height = h + message_margin
+            end
+
+            if line_count > 1 and k2 != line_count then
+              cur_y = cur_y + h + message_margin
+
+              total_height = total_height + h + message_margin
+
+              cur_x = 0
+            end
           end
 
-          cur_x += w
+          if line_break then
+            local _, h = text_size('W', font)
 
-          if total_height < h then
-            total_height = h + message_margin
-          end
+            if fix then
+              h -= h * fix_const
+            end
 
-          if line_count > 1 and k2 != line_count then
+            if total_height < h then
+              total_height = h + message_margin
+            end
+
             cur_y = cur_y + h + message_margin
-
             total_height = total_height + h + message_margin
-
             cur_x = 0
+            segment_start = line_break + 1
           end
-        end
+        until !line_break
       elseif isnumber(piece) then
         cur_size = scale(piece)
 
@@ -272,8 +299,24 @@ function Chatbox.compile(msg_table)
   return compiled
 end
 
+--- Keeps a message that has been added to the chatbox in `Chatbox.messages`, up to the
+-- 'chatbox_max_messages' config, so that `Chatbox.create` can show it again. Clientside only.
+-- @param message_data [Map message data received from the server]
+-- @param added_at [Number CurTime() of when the message was added]
+function Chatbox.keep_message(message_data, added_at)
+  local messages = Chatbox.messages
+  local overflow = #messages + 1 - config_get('chatbox_max_messages')
+
+  for _ = 1, overflow do
+    table.remove(messages, 1)
+  end
+
+  messages[#messages + 1] = { data = message_data, added_at = added_at }
+end
+
 --- Creates the chatbox panel in its closed state, taking the size and position
--- from the current theme. The panel is stored in Chatbox.panel.
+-- from the current theme, with the messages kept in `Chatbox.messages`. The panel is stored
+-- in Chatbox.panel.
 function Chatbox.create()
   Chatbox.width = get_option('chatbox_width') or 100
   Chatbox.height = get_option('chatbox_height') or 100
@@ -281,6 +324,7 @@ function Chatbox.create()
   Chatbox.y = get_option('chatbox_y') or 0
 
   Chatbox.panel = vgui.Create('fl_chat_panel')
+  Chatbox.panel:restore_messages()
   Chatbox.panel:set_open(false)
 end
 
@@ -312,6 +356,8 @@ function Chatbox.hide()
 end
 
 concommand.Add('fl_reset_chat', function()
+  Chatbox.messages = {}
+
   if IsValid(Chatbox.panel) then
     Chatbox.panel:safe_remove()
   end
