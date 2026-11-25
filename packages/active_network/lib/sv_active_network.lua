@@ -256,8 +256,9 @@ function ActiveNetwork.set_nv_recipients(key, send)
 end
 
 --- Sets a networked global variable and sends it to clients.
--- Does nothing if neither the value nor the recipients have changed. Functions and tables
--- that contain functions cannot be networked.
+-- Does nothing if neither a non-table value nor the recipients have changed, so a table
+-- that was changed in place is sent again. Functions and tables that contain functions
+-- cannot be networked.
 -- @param key [String variable name]
 -- @param value [Any new value, anything but a function or a table that contains one]
 -- @param send=nil [Player/List<Player> makes the variable private: these players become
@@ -276,7 +277,7 @@ function ActiveNetwork.set_nv(key, value, send)
 
   local same_audience = same_recipients(old_allowed, allowed)
 
-  if old_value == value and same_audience then return end
+  if !istable(value) and old_value == value and same_audience then return end
 
   globals[key] = value
 
