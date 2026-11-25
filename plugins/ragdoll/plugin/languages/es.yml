@@ -7,10 +7,12 @@ es:
       description: Obliga a un jugador a caer al suelo.
       syntax: "<jugador> [tiempo para levantarse]"
       message: "{player} ha hecho caer a {target} durante {time} s."
+      message_untimed: "{player} ha hecho caer a {target} hasta que se levante."
     forcegetup:
       description: Obliga a un jugador a levantarse.
       syntax: "<jugador> [tiempo para levantarse]"
       message: "{player} ha obligado a {target} a levantarse en {time} s."
+      message_now: "{player} ha obligado a {target} a levantarse."
     getup:
       description: Levántate si estás en el suelo.
       syntax: "[tiempo para levantarse]"
@@ -18,6 +20,7 @@ es:
       description: Deja inconsciente a un jugador. No podrá levantarse por sí mismo hasta que recupere el conocimiento.
       syntax: "<jugador> [tiempo hasta recuperar el conocimiento]"
       message: "{player} ha dejado inconsciente a {target} durante {time} s."
+      message_untimed: "{player} ha dejado inconsciente a {target} hasta que alguien lo levante."
   config:
     ragdoll:
       title: Ragdoll

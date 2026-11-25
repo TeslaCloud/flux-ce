@@ -7,10 +7,12 @@ fr:
       description: "Force un joueur à tomber au sol."
       syntax: "<cible> [délai avant de se relever]"
       message: "{player} a fait tomber {target} pour {time} s."
+      message_untimed: "{player} a fait tomber {target} jusqu'à ce qu'il se relève."
     forcegetup:
       description: "Force un joueur à se relever."
       syntax: "<cible> [délai avant de se relever]"
       message: "{player} a forcé {target} à se relever en {time} s."
+      message_now: "{player} a forcé {target} à se relever."
     getup:
       description: "Vous relève si vous êtes à terre."
       syntax: "[délai avant de se relever]"
@@ -18,6 +20,7 @@ fr:
       description: "Assomme un joueur. Il ne peut pas se relever seul avant d'avoir repris connaissance."
       syntax: "<cible> [délai avant de reprendre connaissance]"
       message: "{player} a assommé {target} pour {time} s."
+      message_untimed: "{player} a assommé {target} jusqu'à ce que quelqu'un le relève."
   config:
     ragdoll:
       title: "Ragdoll"

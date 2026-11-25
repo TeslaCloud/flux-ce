@@ -7,6 +7,7 @@ CMD.syntax = 'command.knockout.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
 CMD.arg_types = { 'player', 'number' }
+CMD.immunity = true
 CMD.aliases = { 'plyknockout', 'forceknockout' }
 
 --- Knocks every living target out, including the ones who are lying on the ground already,
@@ -26,7 +27,7 @@ function CMD:on_run(actor, targets, delay)
     end
   end
 
-  self:notify_staff('command.knockout.message', {
+  self:notify_staff(delay > 0 ? 'command.knockout.message' : 'command.knockout.message_untimed', {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     time = delay

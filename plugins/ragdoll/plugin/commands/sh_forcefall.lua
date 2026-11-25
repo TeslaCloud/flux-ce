@@ -7,6 +7,7 @@ CMD.syntax = 'command.forcefall.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
 CMD.arg_types = { 'player', 'number' }
+CMD.immunity = true
 CMD.aliases = { 'forcefallover', 'plyfall' }
 
 --- Makes every living target that is not ragdolled fall over, and notifies the staff.
@@ -23,7 +24,7 @@ function CMD:on_run(actor, targets, delay)
     end
   end
 
-  self:notify_staff('command.forcefall.message', {
+  self:notify_staff(delay > 0 ? 'command.forcefall.message' : 'command.forcefall.message_untimed', {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     time = delay

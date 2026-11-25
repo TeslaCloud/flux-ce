@@ -7,10 +7,12 @@ ru:
       description: Уронить игрока на землю.
       syntax: "<игрок> [время на подъем]"
       message: "{player} уронил {target} на {time} с."
+      message_untimed: "{player} уронил {target} на землю до тех пор, пока тот сам не встанет."
     forcegetup:
       description: Поднять игрока с земли.
       syntax: "<игрок> [время на подъем]"
       message: "{player} поднимает {target} на ноги, это займет {time} с."
+      message_now: "{player} поднял {target} на ноги."
     getup:
       description: Подняться с земли.
       syntax: "[время на подъем]"
@@ -18,6 +20,7 @@ ru:
       description: Лишить игрока сознания. Он не сможет подняться сам, пока не придёт в себя.
       syntax: "<игрок> [время без сознания]"
       message: "{player} лишил {target} сознания на {time} с."
+      message_untimed: "{player} лишил {target} сознания до тех пор, пока его кто-нибудь не поднимет."
   config:
     ragdoll:
       title: Рэгдоллы

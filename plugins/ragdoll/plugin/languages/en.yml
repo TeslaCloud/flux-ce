@@ -7,10 +7,12 @@ en:
       description: Forces a player to fall down on the ground.
       syntax: "<target> [Get up time]"
       message: "{player} forced {target} to fall over for {time} s."
+      message_untimed: "{player} forced {target} to fall over until they get up."
     forcegetup:
       description: Forces a player to get up.
       syntax: "<target> [Get up time]"
       message: "{player} forced {target} to get up for {time} s."
+      message_now: "{player} forced {target} to get up."
     getup:
       description: Get up if you are currently fallen.
       syntax: "[Get up time]"
@@ -18,6 +20,7 @@ en:
       description: Knocks a player out. They cannot get up by themselves until they come to.
       syntax: "<target> [Time until they come to]"
       message: "{player} knocked {target} out for {time} s."
+      message_untimed: "{player} knocked {target} out until someone gets them up."
   config:
     ragdoll:
       title: Ragdoll

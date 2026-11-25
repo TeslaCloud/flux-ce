@@ -7,7 +7,8 @@ CMD.syntax = 'command.forcegetup.syntax'
 CMD.category = 'permission.categories.roleplay'
 CMD.arguments = 1
 CMD.arg_types = { 'player', 'number' }
-CMD.aliases = { 'forcegetup', 'plygetup' }
+CMD.immunity = true
+CMD.aliases = { 'plygetup' }
 
 --- Makes every living, ragdolled target get up, and notifies the staff. With a delay the
 -- targets are given a get up timer, which replaces the one they have; without one they get
@@ -27,7 +28,7 @@ function CMD:on_run(actor, targets, delay)
     end
   end
 
-  self:notify_staff('command.forcegetup.message', {
+  self:notify_staff(delay > 0 ? 'command.forcegetup.message' : 'command.forcegetup.message_now', {
     player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     time = delay
