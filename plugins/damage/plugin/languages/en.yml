@@ -5,19 +5,19 @@ en:
       desc: Damage multipliers, health regeneration, drowning and damage logs.
       scale_head:
         name: Head Damage Multiplier
-        desc: How much the damage of a hit to the head is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+        desc: "How much the damage of a hit to the head is multiplied by. The base gamemode doubles it on its own, so the damage ends up multiplied by twice this value: by 2 at the default of 1, by 4 at 2. The schema and other plugins may scale hits as well."
       scale_chest:
         name: Chest Damage Multiplier
-        desc: How much the damage of a hit to the chest is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+        desc: "How much the damage of a hit to the chest is multiplied by. The base gamemode leaves these hits alone, so this is the whole multiplier: 1, the default, changes nothing. The schema and other plugins may scale hits as well."
       scale_stomach:
         name: Stomach Damage Multiplier
-        desc: How much the damage of a hit to the stomach is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+        desc: "How much the damage of a hit to the stomach is multiplied by. The base gamemode leaves these hits alone, so this is the whole multiplier: 1, the default, changes nothing. The schema and other plugins may scale hits as well."
       scale_arms:
         name: Arm Damage Multiplier
-        desc: How much the damage of a hit to an arm is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+        desc: "How much the damage of a hit to an arm is multiplied by. The base gamemode quarters it on its own, so the damage ends up multiplied by a quarter of this value: by 0.25 at the default of 1, by 0.5 at 2. The schema and other plugins may scale hits as well."
       scale_legs:
         name: Leg Damage Multiplier
-        desc: How much the damage of a hit to a leg is multiplied by, on top of what the gamemode and the schema already do. 1 changes nothing.
+        desc: "How much the damage of a hit to a leg is multiplied by. The base gamemode quarters it on its own, so the damage ends up multiplied by a quarter of this value: by 0.25 at the default of 1, by 0.5 at 2. The schema and other plugins may scale hits as well."
       scale_fall:
         name: Fall Damage Multiplier
         desc: How much fall damage is multiplied by. 1 changes nothing, 0 turns fall damage off.

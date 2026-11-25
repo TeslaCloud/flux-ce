@@ -5,19 +5,19 @@ es:
       desc: Multiplicadores de daño, regeneración de salud, ahogamiento y registros de daño.
       scale_head:
         name: Multiplicador de daño en la cabeza
-        desc: Por cuánto se multiplica el daño de un impacto en la cabeza, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+        desc: "Por cuánto se multiplica el daño de un impacto en la cabeza. El modo de juego base ya lo duplica por su cuenta, así que el daño acaba multiplicado por el doble de este valor: por 2 con el valor por defecto de 1, por 4 con 2. El schema y otros plugins también pueden escalar los impactos."
       scale_chest:
         name: Multiplicador de daño en el pecho
-        desc: Por cuánto se multiplica el daño de un impacto en el pecho, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+        desc: "Por cuánto se multiplica el daño de un impacto en el pecho. El modo de juego base no cambia estos impactos, así que este es el multiplicador completo: 1, el valor por defecto, no cambia nada. El schema y otros plugins también pueden escalar los impactos."
       scale_stomach:
         name: Multiplicador de daño en el estómago
-        desc: Por cuánto se multiplica el daño de un impacto en el estómago, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+        desc: "Por cuánto se multiplica el daño de un impacto en el estómago. El modo de juego base no cambia estos impactos, así que este es el multiplicador completo: 1, el valor por defecto, no cambia nada. El schema y otros plugins también pueden escalar los impactos."
       scale_arms:
         name: Multiplicador de daño en los brazos
-        desc: Por cuánto se multiplica el daño de un impacto en un brazo, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+        desc: "Por cuánto se multiplica el daño de un impacto en un brazo. El modo de juego base ya lo reduce a la cuarta parte por su cuenta, así que el daño acaba multiplicado por la cuarta parte de este valor: por 0,25 con el valor por defecto de 1, por 0,5 con 2. El schema y otros plugins también pueden escalar los impactos."
       scale_legs:
         name: Multiplicador de daño en las piernas
-        desc: Por cuánto se multiplica el daño de un impacto en una pierna, además de lo que ya hacen el modo de juego y el schema. 1 no cambia nada.
+        desc: "Por cuánto se multiplica el daño de un impacto en una pierna. El modo de juego base ya lo reduce a la cuarta parte por su cuenta, así que el daño acaba multiplicado por la cuarta parte de este valor: por 0,25 con el valor por defecto de 1, por 0,5 con 2. El schema y otros plugins también pueden escalar los impactos."
       scale_fall:
         name: Multiplicador de daño por caída
         desc: Por cuánto se multiplica el daño por caída. 1 no cambia nada, 0 desactiva el daño por caída.

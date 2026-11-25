@@ -5,19 +5,19 @@ fr:
       desc: "Multiplicateurs de dégâts, régénération de la santé, noyade et journaux des dégâts."
       scale_head:
         name: "Multiplicateur des dégâts à la tête"
-        desc: "Facteur par lequel les dégâts d'un coup à la tête sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+        desc: "Facteur par lequel les dégâts d'un coup à la tête sont multipliés. Le gamemode de base les double déjà de lui-même, donc les dégâts sont multipliés au final par le double de cette valeur : par 2 avec la valeur par défaut de 1, par 4 avec 2. Le schéma et d'autres plugins peuvent aussi modifier les coups."
       scale_chest:
         name: "Multiplicateur des dégâts au torse"
-        desc: "Facteur par lequel les dégâts d'un coup au torse sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+        desc: "Facteur par lequel les dégâts d'un coup au torse sont multipliés. Le gamemode de base ne modifie pas ces coups, donc c'est le multiplicateur entier : 1, la valeur par défaut, ne change rien. Le schéma et d'autres plugins peuvent aussi modifier les coups."
       scale_stomach:
         name: "Multiplicateur des dégâts au ventre"
-        desc: "Facteur par lequel les dégâts d'un coup au ventre sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+        desc: "Facteur par lequel les dégâts d'un coup au ventre sont multipliés. Le gamemode de base ne modifie pas ces coups, donc c'est le multiplicateur entier : 1, la valeur par défaut, ne change rien. Le schéma et d'autres plugins peuvent aussi modifier les coups."
       scale_arms:
         name: "Multiplicateur des dégâts aux bras"
-        desc: "Facteur par lequel les dégâts d'un coup à un bras sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+        desc: "Facteur par lequel les dégâts d'un coup à un bras sont multipliés. Le gamemode de base les divise déjà par quatre de lui-même, donc les dégâts sont multipliés au final par le quart de cette valeur : par 0,25 avec la valeur par défaut de 1, par 0,5 avec 2. Le schéma et d'autres plugins peuvent aussi modifier les coups."
       scale_legs:
         name: "Multiplicateur des dégâts aux jambes"
-        desc: "Facteur par lequel les dégâts d'un coup à une jambe sont multipliés, en plus de ce que font déjà le gamemode et le schéma. 1 ne change rien."
+        desc: "Facteur par lequel les dégâts d'un coup à une jambe sont multipliés. Le gamemode de base les divise déjà par quatre de lui-même, donc les dégâts sont multipliés au final par le quart de cette valeur : par 0,25 avec la valeur par défaut de 1, par 0,5 avec 2. Le schéma et d'autres plugins peuvent aussi modifier les coups."
       scale_fall:
         name: "Multiplicateur des dégâts de chute"
         desc: "Facteur par lequel les dégâts de chute sont multipliés. 1 ne change rien, 0 désactive les dégâts de chute."
