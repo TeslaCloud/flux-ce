@@ -13,8 +13,9 @@ function player.random()
 end
 
 --- Finds a player based on their name or SteamID.
--- A SteamID has to match exactly. A name is searched for as plain text in both the name and
--- the Steam name of every player; Steam names are always matched case-insensitively.
+-- A SteamID has to match exactly, in any case and with either universe digit ('STEAM_0:' or
+-- 'STEAM_1:'). A name is searched for as plain text in both the name and the Steam name of
+-- every player; Steam names are always matched case-insensitively.
 -- @param name [String/Player part of a name, or a SteamID; a valid player is returned as-is]
 -- @param case_sensitive=false [Boolean match player names case-sensitively]
 -- @param return_first=false [Boolean return the first match instead of all of them]
@@ -24,12 +25,13 @@ function player.find(name, case_sensitive, return_first)
   if !isstring(name) then return (IsValid(name) and name) or nil end
 
   local hits = {}
-  local is_steamid = name:start_with('STEAM_')
+  local is_steamid = name:sub(1, 6):upper() == 'STEAM_'
+  local steam_id = player.normalize_steam_id(name)
   local lower_name
 
   for _, client in player.Iterator() do
     if is_steamid then
-      if client:SteamID() == name then
+      if client:SteamID() == steam_id then
         return client
       end
 
@@ -63,11 +65,11 @@ function player.find(name, case_sensitive, return_first)
 end
 
 --- Finds the players a name stands for when it has to match exactly, as for the player
--- arguments of commands. A SteamID ('STEAM_0:1:12345', in any case) or SteamID64 finds the
--- player who has it. Any other name is compared, ignoring the case, with the character name
--- of every player (their name without the 'GetPlayerName' hook) and, if no character name is
--- equal to it, with their Steam names. Several players can share a name; all of them are
--- returned then.
+-- arguments of commands. A SteamID ('STEAM_0:1:12345', in any case and with either universe
+-- digit) or SteamID64 finds the player who has it. Any other name is compared, ignoring the
+-- case, with the character name of every player (their name without the 'GetPlayerName' hook)
+-- and, if no character name is equal to it, with their Steam names. Several players can share
+-- a name; all of them are returned then.
 -- @param name [String SteamID, SteamID64, character name or Steam name]
 -- @return [List<Player> the players, empty if nobody has this name]
 function player.find_exact(name)
@@ -78,7 +80,7 @@ function player.find_exact(name)
   local lower = name:utf8lower()
 
   if lower:sub(1, 6) == 'steam_' or (#name == 17 and tonumber(name)) then
-    local upper = name:upper()
+    local upper = player.normalize_steam_id(name:upper())
 
     for _, client in player.Iterator() do
       if client:SteamID() == upper or client:SteamID64() == name then
@@ -130,17 +132,33 @@ function player.normalize_steam_id(text)
   return (upper:gsub('^STEAM_%d:', 'STEAM_0:', 1))
 end
 
---- Requests the Steam name that belongs to a SteamID through steamworks.
--- The request is asynchronous, so the name is only returned if it is available right away.
--- @param steamid [String SteamID, e.g. 'STEAM_0:1:12345678']
--- @return [String Steam name, or nil if it has not been received by the time this returns]
-function player.name_from_steamid(steamid)
-  local steam64 = util.SteamIDTo64(steamid)
-  local steam_name
+do
+  local requested = {}
 
-  steamworks.RequestPlayerInfo(steam64, function(_steam_name)
-    steam_name = _steam_name
-  end)
+  local function ignore_name() end
 
-  return steam_name
+  --- Returns the Steam name that belongs to a SteamID, as far as the client knows it.
+  -- On the client a name that is not known yet is requested from Steam once, and a later call
+  -- returns it when Steam has answered, so the function is cheap enough to call every frame.
+  -- The server has no access to Steam names and always gets an empty string.
+  -- @param steamid [String SteamID, e.g. 'STEAM_0:1:12345678']
+  -- @return [String Steam name, or an empty string while it is not known]
+  function player.name_from_steamid(steamid)
+    if SERVER or !isstring(steamid) then return '' end
+
+    local steam64 = util.SteamIDTo64(steamid)
+    local steam_name = steamworks.GetPlayerName(steam64)
+
+    if isstring(steam_name) and steam_name != '' and steam_name != '[unknown]' then
+      return steam_name
+    end
+
+    if !requested[steam64] then
+      requested[steam64] = true
+
+      steamworks.RequestPlayerInfo(steam64, ignore_name)
+    end
+
+    return ''
+  end
 end
