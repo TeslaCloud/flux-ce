@@ -1,9 +1,9 @@
 --- Hook Profiler measures how much time the server and the client spend in each hook.
 -- It wraps `hook.Call` to add up the run time and the number of calls of every hook, and the
--- server sends its numbers once a second to the players who may read the profiler. The client
--- draws the totals and the slowest hook of both sides on the HUD, and the `fl_profiler_toggle`
--- console command opens a window that lists the hooks of the server. The plugin does nothing
--- when DBugR is installed.
+-- server sends its numbers once a second to the players with the `staff` permission. The
+-- client draws the totals and the slowest hook of both sides on the HUD, and for these players
+-- the `fl_profiler_toggle` console command opens a window that lists the hooks of the server.
+-- The plugin does nothing when DBugR is installed.
 -- @environment [development]
 -- @module [Profiler]
 
@@ -185,7 +185,7 @@ if CLIENT then
   vgui.Register('profiler_window', PANEL, 'fl_base_panel')
 
   concommand.Add('fl_profiler_toggle', function()
-    if can('read', Profiler) then
+    if can('staff') then
       if !IsValid(Profiler.panel) then
         local scrw, scrh = ScrW(), ScrH()
         local pw, ph = scrw * 0.5, scrh * 0.5
@@ -211,7 +211,7 @@ else
     local receivers = {}
 
     for _, target in player.Iterator() do
-      if target:can('read', Profiler) then
+      if target:can('staff') then
         receivers[#receivers + 1] = target
       end
     end
