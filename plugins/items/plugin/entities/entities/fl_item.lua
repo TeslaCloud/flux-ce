@@ -21,6 +21,8 @@ ENT.PrintName = 'Item'
 ENT.Category = 'Flux'
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
+ENT.DoNotDuplicate = true
+ENT.DisableDuplicator = true
 
 --- Calls the on_entity_think callback of the item once a second, or after as many seconds
 -- as the callback has returned the last time, 0.1 at least.
@@ -319,6 +321,20 @@ else
   local target_text_color = Color(255, 255, 255)
   local target_outline_color = Color(0, 0, 0)
   local loading_cog_color = Color(255, 255, 255)
+  local accent_color = Color(255, 255, 255, 200)
+  local gradient = { x = 0, w = 0, h = 0, snap = false }
+
+  local function draw_gradient(gradient_x, gradient_y)
+    draw.textured_rect(
+      Theme.get_material('gradient'),
+      gradient.snap ? gradient.x : gradient_x,
+      gradient_y,
+      gradient.w,
+      gradient.h,
+      accent_color
+    )
+  end
+
   local request_delay = 2
   local requests_per_second = 32
   local request_queue = {}
@@ -374,6 +390,63 @@ else
     self:DrawModel()
   end
 
+  --- Returns the measurements of the target ID of the entity: the size of the name, the
+  -- lines of the wrapped description with their sizes, and the id of the animation of its
+  -- background. They are measured again only when the item, its texts, the fonts or the
+  -- width of the screen have changed.
+  -- @param item_obj [Item]
+  -- @param text [String translated name of the item]
+  -- @param desc [String translated description of the item]
+  -- @return [Map]
+  function ENT:get_target_id_layout(item_obj, text, desc)
+    local layout = self.target_id_layout
+    local name_font = Theme.get_font('tooltip_large')
+    local desc_font = Theme.get_font('tooltip_small')
+    local scrw = ScrW()
+
+    if layout and layout.item == item_obj and layout.text == text and layout.desc == desc
+    and layout.name_font == name_font and layout.desc_font == desc_font and layout.scrw == scrw then
+      return layout
+    end
+
+    local width, height = util.text_size(text, name_font)
+    local lines = util.wrap_text(desc, desc_font, scrw * 0.33, 0) or {}
+    local line_widths, line_heights = {}, {}
+    local max_width, desc_height = width, 0
+
+    for i = 1, #lines do
+      local w, h = util.text_size(lines[i], desc_font)
+
+      line_widths[i], line_heights[i] = w, h
+      desc_height += h
+
+      if w > max_width then
+        max_width = w
+      end
+    end
+
+    layout = {
+      item = item_obj,
+      text = text,
+      desc = desc,
+      name_font = name_font,
+      desc_font = desc_font,
+      scrw = scrw,
+      width = width,
+      height = height,
+      lines = lines,
+      line_widths = line_widths,
+      line_heights = line_heights,
+      max_width = max_width,
+      desc_height = desc_height,
+      anim_id = 'itemid_gradient_'..item_obj.instance_id
+    }
+
+    self.target_id_layout = layout
+
+    return layout
+  end
+
   --- Draws the name and the description of the item when the local player looks at it up close.
   -- Requests the item from the server and draws a loading cog if it is not known yet.
   -- @param x [Number screen position]
@@ -418,43 +491,24 @@ else
 
     local text = t(item_obj:get_name())
     local desc = t(item_obj:get_description())
-    local name_font = Theme.get_font('tooltip_large')
-    local desc_font = Theme.get_font('tooltip_small')
-    local width, height = util.text_size(text, name_font)
-    local max_width = width
-    local desc_height = 0
-    local wrapped = util.wrap_text(desc, desc_font, ScrW() * 0.33, 0)
-
-    for _, line in pairs(wrapped) do
-      local w, h = util.text_size(line, desc_font)
-
-      desc_height += h
-
-      if w > max_width then
-        max_width = w
-      end
-    end
-
+    local layout = self:get_target_id_layout(item_obj, text, desc)
+    local name_font, desc_font = layout.name_font, layout.desc_font
+    local width, height = layout.width, layout.height
+    local max_width, desc_height = layout.max_width, layout.desc_height
     local padding = math.scale(8)
     local box_x, box_y = x - max_width * 0.5 - padding, y - padding
     local box_width, box_height = max_width + padding * 2, height + desc_height + padding * 2
-    local accent_color = Theme.get_color('accent'):alpha(200)
+    local accent = Theme.get_color('accent')
     local ent_pos = self:GetPos():ToScreen()
-    local anim_id = 'itemid_gradient_'..item_obj.instance_id
+    local anim_id = layout.anim_id
+
+    accent_color.r, accent_color.g, accent_color.b = accent.r, accent.g, accent.b
+    gradient.x, gradient.w, gradient.h, gradient.snap = box_x, box_width, box_height, alpha > 240
 
     Flux.register_animation(anim_id, box_x - max_width, nil, FrameTime() * 8)
 
     render.SetScissorRect(box_x, box_y, box_x + box_width, box_y + box_height, true)
-      Flux.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, function(gradient_x, gradient_y)
-        draw.textured_rect(
-          Theme.get_material('gradient'),
-          alpha > 240 and box_x or gradient_x,
-          gradient_y,
-          box_width,
-          box_height,
-          accent_color
-        )
-      end)
+      Flux.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, draw_gradient)
     render.SetScissorRect(0, 0, 0, 0, false)
 
     if alpha > 100 then
@@ -471,12 +525,12 @@ else
 
     y += height
 
-    for _, line in pairs(wrapped) do
-      local w, h = util.text_size(line, desc_font)
+    local lines, line_widths, line_heights = layout.lines, layout.line_widths, layout.line_heights
 
-      draw.SimpleTextOutlined(line, desc_font, x - w * 0.5, y, col, nil, nil, 1, col2)
+    for i = 1, #lines do
+      draw.SimpleTextOutlined(lines[i], desc_font, x - line_widths[i] * 0.5, y, col, nil, nil, 1, col2)
 
-      y += h
+      y += line_heights[i]
     end
 
     --- Called on the client every frame after the name and the description of an item
