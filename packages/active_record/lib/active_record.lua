@@ -484,33 +484,19 @@ function ActiveRecord.create_adapter(config)
   return ActiveRecord.adapter
 end
 
---- Connects to the database for fpkg's tasks: creates the adapter (see
--- ActiveRecord.create_adapter), connects it and readies the database without changing the
--- tables of the application, which creates the internal tables, restores the schema and
--- installs the migrations of the packages and plugins (see ActiveRecord.open_database and
--- ActiveRecord.Tasks.install). Nothing is migrated, no hook is run and a failed connection is
--- not tried again. Raises an error that says why when the database cannot be used, with the
--- error of the database module when the connection fails.
+--- Connects an adapter, waits until the connection is ready or has failed and runs a function
+-- with the connected adapter. A failed connection is not tried again and runs no hook. Raises
+-- an error with the reason of the database module when the connection fails, one when the
+-- database does not answer within 10 seconds, and the error of the function.
+-- @param adapter [ActiveRecord::Adapters::Abstract the adapter to connect]
 -- @param config [Map database settings, see ActiveRecord.establish_connection]
-function ActiveRecord.connect(config)
-  local adapter = ActiveRecord.create_adapter(config)
+-- @param callback [Function called with the adapter once it is connected]
+function ActiveRecord.connect_adapter(adapter, config, callback)
   local done, success, exception = false, false, nil
 
   local function on_connected(connected)
     connected._connected = true
-    connected:sync(true)
-
-    success, exception = pcall(function()
-      local opened, reason = ActiveRecord.open_database()
-
-      if !opened then
-        error('ActiveRecord - '..reason, 0)
-      end
-
-      ActiveRecord.Tasks.install()
-    end)
-
-    connected:sync(false)
+    success, exception = pcall(callback, connected)
     done = true
   end
 
@@ -529,6 +515,36 @@ function ActiveRecord.connect(config)
   if !success then
     error(exception, 0)
   end
+end
+
+--- Connects to the database for fpkg's tasks: creates the adapter (see
+-- ActiveRecord.create_adapter), connects it (see ActiveRecord.connect_adapter) and readies the
+-- database without changing the tables of the application, which creates the internal tables,
+-- restores the schema and installs the migrations of the packages and plugins (see
+-- ActiveRecord.open_database and ActiveRecord.Tasks.install). Nothing is migrated, no hook is
+-- run and a failed connection is not tried again. Raises an error that says why when the
+-- database cannot be used, with the error of the database module when the connection fails.
+-- @param config [Map database settings, see ActiveRecord.establish_connection]
+function ActiveRecord.connect(config)
+  ActiveRecord.connect_adapter(ActiveRecord.create_adapter(config), config, function(connected)
+    connected:sync(true)
+
+    local success, exception = pcall(function()
+      local opened, reason = ActiveRecord.open_database()
+
+      if !opened then
+        error('ActiveRecord - '..reason, 0)
+      end
+
+      ActiveRecord.Tasks.install()
+    end)
+
+    connected:sync(false)
+
+    if !success then
+      error(exception, 0)
+    end
+  end)
 end
 
 --- Connects the adapter again after its connection has failed while ActiveRecord is

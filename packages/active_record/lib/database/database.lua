@@ -96,8 +96,62 @@ function ActiveRecord.Database:change(table_name)
   return ActiveRecord.Query.new(table_name, 'change')
 end
 
---- Creates the database named in the settings and disconnects the adapter afterward.
--- Only PostgreSQL is supported; on MySQL and SQLite an error says what to do instead.
+--- Connects another adapter of the configured kind to PostgreSQL's 'postgres' maintenance
+-- database with the settings, runs a function with it and disconnects it afterward, also when
+-- the function raises. The adapter is in sync mode and raises the errors of its queries while
+-- the function runs; the adapter of ActiveRecord is left as it is. Raises an error when the
+-- settings name no database, when the connection fails (see ActiveRecord.connect_adapter) and
+-- the error of the function.
+-- @param settings [Map database settings: host, user, port, password and database]
+-- @param callback [Function called with the connected adapter and the name of the database]
+local function with_maintenance_database(settings, callback)
+  local name = settings.database
+
+  if !isstring(name) or name == '' then
+    error('ActiveRecord - The \''..ActiveRecord.db_section..'\' section of '..Flux.find_config('database.yml')
+      ..' names no database', 0)
+  end
+
+  local maintenance = {
+    host = settings.host,
+    user = settings.user,
+    port = settings.port,
+    password = settings.password,
+    encoding = settings.encoding,
+    database = 'postgres'
+  }
+
+  ActiveRecord.connect_adapter(ActiveRecord.adapter.class.new(), maintenance, function(adapter)
+    adapter:sync(true)
+    adapter:raise_errors(true)
+
+    local success, exception = pcall(callback, adapter, name)
+
+    adapter:disconnect()
+    adapter:raise_errors(false)
+    adapter:sync(false)
+
+    if !success then
+      error(exception, 0)
+    end
+  end)
+end
+
+--- Checks whether the PostgreSQL server that an adapter is connected to has a database.
+-- @param adapter [ActiveRecord::Adapters::Pg]
+-- @param name [String]
+-- @return [Boolean]
+local function database_exists(adapter, name)
+  return adapter:raw_query(
+    'SELECT 1 FROM pg_database WHERE datname = '..adapter:quote(name)..';',
+    result -> adapter:is_result(result)
+  ) == true
+end
+
+--- Creates the database named in the settings, unless it exists, and says which of the two
+-- happened. Only PostgreSQL is supported, through its 'postgres' maintenance database; on
+-- MySQL and SQLite an error says what to do instead. Raises the reason of the database when
+-- the connection or the statement fails. The adapter of ActiveRecord is left as it is.
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:setup(settings)
   local adapter = ActiveRecord.adapter
@@ -110,43 +164,30 @@ function ActiveRecord.Database:setup(settings)
       ..'db:migrate or the start of the server creates them.', 0)
   end
 
-  adapter:sync(true)
-  ActiveRecord.adapter:connect {
-    host = settings.host,
-    user = settings.user,
-    port = settings.port,
-    password = settings.password,
-    database = 'postgres'
-  }
+  with_maintenance_database(settings, function(maintenance, name)
+    if database_exists(maintenance, name) then
+      print('Database \''..name..'\' already exists')
 
-    local database = ActiveRecord.adapter:quote(settings.database)
+      return
+    end
 
-    ActiveRecord.adapter:raw_query(txt([[
-      DO
-      $do$
-      DECLARE
-        _db TEXT := ]]..database..[[;
-      BEGIN
-        CREATE EXTENSION IF NOT EXISTS dblink;
-        IF EXISTS (SELECT 1 FROM pg_database WHERE datname = _db) THEN
-          RAISE NOTICE 'Database already exists';
-        ELSE
-          PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE ' || quote_ident(_db));
-        END IF;
-      END
-      $do$;
-    ]]), function(_result, _query_str, time)
-      print_query('Create Database ('..time..'s)', 'Success!')
-      print 'Please restart your server for changes to take effect!'
+    maintenance:raw_query('CREATE DATABASE '..maintenance:quote_name(name)..';', function(_result, query_str, time)
+      print_query('Create Database ('..time..'s)', query_str)
     end)
 
-  ActiveRecord.adapter:disconnect()
-  ActiveRecord.adapter:sync(false)
+    print('Created database \''..name..'\'')
+
+    if !IS_TASK then
+      print 'Please restart your server for changes to take effect!'
+    end
+  end)
 end
 
---- Drops the database named in the settings and disconnects the adapter afterward.
--- Only PostgreSQL is supported, through its 'template1' database; on MySQL and SQLite an
--- error says what to do instead.
+--- Drops the database named in the settings, unless it does not exist, and says which of the
+-- two happened. Only PostgreSQL is supported, through its 'postgres' maintenance database; on
+-- MySQL and SQLite an error says what to do instead. Raises the reason of the database when
+-- the connection or the statement fails, as it does while another session is connected to the
+-- database. The adapter of ActiveRecord is left as it is.
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:drop_database(settings)
   local adapter = ActiveRecord.adapter
@@ -159,23 +200,19 @@ function ActiveRecord.Database:drop_database(settings)
       ..'server is stopped, or enter ar_recreate_schema twice in the server console.', 0)
   end
 
-  ActiveRecord.adapter:sync(true)
-  ActiveRecord.adapter:connect {
-    host = settings.host,
-    user = settings.user,
-    port = settings.port,
-    password = settings.password,
-    database = 'template1'
-  }
-  ActiveRecord.adapter:raw_query(
-    'DROP DATABASE '..ActiveRecord.adapter:quote_name(settings.database)..';',
-    function(_result, query_str, time)
-      print_query('Drop Database ('..time..'s)', query_str)
-    end
-  )
+  with_maintenance_database(settings, function(maintenance, name)
+    if !database_exists(maintenance, name) then
+      print('Database \''..name..'\' does not exist')
 
-  ActiveRecord.adapter:disconnect()
-  ActiveRecord.adapter:sync(false)
+      return
+    end
+
+    maintenance:raw_query('DROP DATABASE '..maintenance:quote_name(name)..';', function(_result, query_str, time)
+      print_query('Drop Database ('..time..'s)', query_str)
+    end)
+
+    print('Dropped database \''..name..'\'')
+  end)
 end
 
 --- Disconnects the active adapter from the database.
