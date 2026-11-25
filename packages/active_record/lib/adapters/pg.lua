@@ -51,11 +51,13 @@ function ActiveRecord.Adapters.Pg:supports_ddl_transactions()
 end
 
 --- Connects to a PostgreSQL server through the 'pg' module and sets the connection
--- encoding. Calls #on_connection_failed if the connection fails.
+-- encoding. Reports a failed connection with #connection_failed.
 -- @param config [Map database settings: host, user, password, database, port (5432 if
 --   omitted) and encoding ('UTF8' if omitted)]
 -- @param on_connected=nil [Function called with the adapter once the connection is ready]
-function ActiveRecord.Adapters.Pg:connect(config, on_connected)
+-- @param on_failed=nil [Function called with the adapter and the error text when the
+--   connection fails, in place of #on_connection_failed]
+function ActiveRecord.Adapters.Pg:connect(config, on_connected, on_failed)
   local host, user, password, port, database = config.host, config.user, config.password, config.port, config.database
 
   if !port then
@@ -81,7 +83,7 @@ function ActiveRecord.Adapters.Pg:connect(config, on_connected)
 
       if isfunction(on_connected) then on_connected(self) end
     else
-      self:on_connection_failed(err)
+      self:connection_failed(err, on_failed)
     end
   else
     ErrorNoHalt(

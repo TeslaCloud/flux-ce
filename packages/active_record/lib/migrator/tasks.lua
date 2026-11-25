@@ -350,7 +350,8 @@ function Tasks.check(name, env, words)
 end
 
 --- Runs a task by its name, e.g. 'migrate:status', with the adapter in sync mode, and raises an
--- error when it fails: when Tasks.check refuses it, when it needs a connection while there is
+-- error when it fails. It validates the task and its arguments with Tasks.check first, since
+-- the console calls it directly, then raises when the task needs a connection while there is
 -- none, and for an error of the task itself. A task that runs without a connection creates the
 -- adapter of the database settings first when there is none.
 -- @param name [String task name without the 'db:' prefix]

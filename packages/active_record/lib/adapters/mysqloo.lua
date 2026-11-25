@@ -68,11 +68,13 @@ function ActiveRecord.Adapters.Mysqloo:is_mysql()
 end
 
 --- Connects to a MySQL server through MySQLOO and pings it every 30 seconds to keep
--- the connection alive. Calls #on_connection_failed if the connection fails.
+-- the connection alive. Reports a failed connection with #connection_failed.
 -- @param config [Map database settings: host, user, password, database, port (3306 if
 --   omitted), socket and flags]
 -- @param on_connected=nil [Function called with the adapter once the connection is ready]
-function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
+-- @param on_failed=nil [Function called with the adapter and the error text when the
+--   connection fails, in place of #on_connection_failed]
+function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected, on_failed)
   local host, user, password, port, database, socket, flags =
     config.host, config.user, config.password, config.port, config.database, config.socket, config.flags
 
@@ -105,7 +107,7 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
     end
 
     self.connection.onConnectionFailed = function(_database, error_text)
-      self:on_connection_failed(error_text)
+      self:connection_failed(error_text, on_failed)
     end
 
     self.connection:connect()

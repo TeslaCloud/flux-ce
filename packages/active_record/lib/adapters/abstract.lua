@@ -190,11 +190,26 @@ function ActiveRecord.Adapters.Abstract:is_sqlite()
 end
 
 --- Connects to the database. The abstract implementation only marks the adapter as
--- connected and never calls the callback; real adapters override it.
+-- connected and never calls the callbacks; real adapters override it and report a failed
+-- connection with #connection_failed.
 -- @param _config [Map database settings: host, user, password, port, database]
--- @param _on_connected [Function called with the adapter once the connection is ready]
-function ActiveRecord.Adapters.Abstract:connect(_config, _on_connected)
+-- @param _on_connected=nil [Function called with the adapter once the connection is ready]
+-- @param _on_failed=nil [Function called with the adapter and the error text when the
+--   connection fails, in place of #on_connection_failed]
+function ActiveRecord.Adapters.Abstract:connect(_config, _on_connected, _on_failed)
   self._connected = true
+end
+
+--- Reports a connection that has failed: to the callback that #connect was given for it, or
+-- else to #on_connection_failed.
+-- @param error_text [String error reported by the database module]
+-- @param on_failed=nil [Function the on_failed callback of #connect]
+function ActiveRecord.Adapters.Abstract:connection_failed(error_text, on_failed)
+  if isfunction(on_failed) then
+    on_failed(self, tostring(error_text))
+  else
+    self:on_connection_failed(error_text)
+  end
 end
 
 --- Closes the database connection. The abstract implementation only clears the
@@ -386,12 +401,17 @@ function ActiveRecord.Adapters.Abstract:on_connected()
   self:sync(false)
 end
 
---- Called when the database connection fails. Prints the error, fires the
--- 'DatabaseConnectionFailed' hook and, while ActiveRecord is starting up, schedules
--- another attempt (see ActiveRecord.reconnect).
+--- Called when the database connection fails and #connect was given no on_failed callback.
+-- Prints the error, fires the 'DatabaseConnectionFailed' hook and, while ActiveRecord is
+-- starting up, schedules another attempt (see ActiveRecord.reconnect). In fpkg's tasks it
+-- raises the error instead, without the hook and without another attempt.
 -- @param error_text [String error reported by the database module]
 function ActiveRecord.Adapters.Abstract:on_connection_failed(error_text)
   error_text = tostring(error_text)
+
+  if IS_TASK then
+    error('ActiveRecord - Unable to connect to the database: '..error_text, 0)
+  end
 
   ErrorNoHalt('ActiveRecord - Unable to connect to the database!\n'..error_text..'\n')
 

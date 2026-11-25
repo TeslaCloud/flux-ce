@@ -488,14 +488,15 @@ end
 -- ActiveRecord.create_adapter), connects it and readies the database without changing the
 -- tables of the application, which creates the internal tables, restores the schema and
 -- installs the migrations of the packages and plugins (see ActiveRecord.open_database and
--- ActiveRecord.Tasks.install). Nothing is migrated and no hook is run. Raises an error that says
--- why when the database cannot be used.
+-- ActiveRecord.Tasks.install). Nothing is migrated, no hook is run and a failed connection is
+-- not tried again. Raises an error that says why when the database cannot be used, with the
+-- error of the database module when the connection fails.
 -- @param config [Map database settings, see ActiveRecord.establish_connection]
 function ActiveRecord.connect(config)
   local adapter = ActiveRecord.create_adapter(config)
   local done, success, exception = false, false, nil
 
-  adapter:connect(config, function(connected)
+  local function on_connected(connected)
     connected._connected = true
     connected:sync(true)
 
@@ -511,11 +512,18 @@ function ActiveRecord.connect(config)
 
     connected:sync(false)
     done = true
-  end)
+  end
+
+  local function on_failed(_adapter, error_text)
+    exception = 'ActiveRecord - Unable to connect to the database through the '..ActiveRecord.adapter_name
+      ..' adapter: '..error_text
+    done = true
+  end
+
+  adapter:connect(config, on_connected, on_failed)
 
   if !adapter:wait_until(|| -> done, 10) then
-    error('ActiveRecord - Unable to connect to the database through the '..ActiveRecord.adapter_name
-      ..' adapter, see the error above', 0)
+    error('ActiveRecord - The database did not answer the '..ActiveRecord.adapter_name..' adapter within 10 seconds', 0)
   end
 
   if !success then

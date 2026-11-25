@@ -20,8 +20,10 @@ local function describe(entry, usage)
   return usage and entry.description..': '..usage or entry.description
 end
 
---- Runs a database task: checks its arguments, connects when the task needs a connection, so
--- that wrong arguments fail before the database is touched, then runs it.
+--- Runs a database task: checks its arguments before connecting, since `db:connect` already
+-- writes to the database and installs migration files and wrong arguments should change
+-- nothing, connects when the task needs a connection, then runs it (`Tasks.execute` checks the
+-- arguments again, for the console that calls it directly).
 -- @param entry [Map the task, see task_list.lua]
 -- @param args [Map the arguments fpkg gives the task]
 local function run_database_task(entry, args)
