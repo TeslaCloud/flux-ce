@@ -6,11 +6,20 @@
 # The arguments are passed on to the server.
 set -euo pipefail
 
-schema=${FLUX_SCHEMA:-reborn}
+schema=${FLUX_SCHEMA:-hl2rp}
 environment=${FLUX_ENV:-development}
 gamemode=garrysmod/gamemodes/$schema
 config=$gamemode/config
 checkout=/home/steam/schema
+
+case "$environment" in
+  development | production | test) ;;
+  *)
+    echo "FLUX_ENV is \"$environment\", which is not an environment of Flux." >&2
+    echo "Set it to development, production or test." >&2
+    exit 1
+    ;;
+esac
 
 if [ ! -f "$gamemode/$schema.txt" ]; then
   echo "There is no \"$schema\" schema at $gamemode." >&2
@@ -21,6 +30,15 @@ fi
 if [ ! -f "$gamemode/packages/flux/boot.lua" ]; then
   echo "Flux is not installed at $gamemode/packages/flux." >&2
   echo "Run \"fpkg link ../flux-ce\" or \"fpkg install\" in the schema checkout." >&2
+  exit 1
+fi
+
+# The tmpfs mounts of docker-compose.yml belong to FLUX_UID, the server to the
+# user the image was built for. They only differ when FLUX_UID changed after the
+# image was built.
+if [ ! -w "$gamemode/packages" ]; then
+  echo "$gamemode/packages belongs to user $(stat -c %u "$gamemode/packages"), the server runs as user $(id -u)." >&2
+  echo "Run \"docker compose build\" after changing FLUX_UID." >&2
   exit 1
 fi
 
