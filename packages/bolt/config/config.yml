@@ -15,7 +15,8 @@ configs:
     category: bolt
     type: table
     static: true
-    default_value: ["STEAM_0:0:000000000"]
+    private: true
+    default_value: []
   bolt_external_admin:
     name: config.bolt.external_admin.name
     description: config.bolt.external_admin.desc
