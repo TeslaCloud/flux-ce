@@ -78,7 +78,10 @@ function PluginInstance:set_data(data)
 end
 
 --- Makes the plugin available as a global variable, unless a global table with that name
--- already exists. Throws an error if the name starts with a lowercase letter.
+-- already exists. Throws an error if the name starts with a lowercase letter. In development
+-- a global table with that name that is not this plugin, such as one a library of the plugin
+-- created with `mod` before the main file ran, is reported, since the hook handlers defined on
+-- it would never run.
 -- @param alias [String name of the global, in ConstantStyle]
 function PluginInstance:set_global(alias)
   if isstring(alias) then
@@ -86,9 +89,14 @@ function PluginInstance:set_global(alias)
       error('bad plugin alias ('..alias..')\nplugin globals must follow the ConstantStyle!\n')
     end
 
-    if !istable(_G[alias]) then
+    local existing = _G[alias]
+
+    if !istable(existing) then
       _G[alias] = self
       self.alias = alias
+    elseif existing != self and IS_DEVELOPMENT then
+      ErrorNoHalt("The global '"..alias.."' of "..tostring(self)..' is '..tostring(existing)
+        ..' already: the hooks defined on it do not reach the plugin!\n')
     end
   end
 end
