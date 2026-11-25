@@ -8,10 +8,3 @@ SKILL.description = 'skill.medicine.description'
 SKILL.icon = 'fa-kit-medical'
 SKILL.attribute = 'intelligence'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.medicine.untrained',
-  trained = 'skill.medicine.trained',
-  expert = 'skill.medicine.expert',
-  master = 'skill.medicine.master',
-  legendary = 'skill.medicine.legendary'
-}

@@ -39,8 +39,10 @@ function Skills.find(id)
 end
 
 --- Stores a skill definition and runs the SkillRegistered hook. Missing fields get defaults:
--- the name 'skill.other.name', the description 'skill.other.desc' and a `max` of 4. The `max`
--- is rounded down and is never below 1.
+-- the name 'skill.other.name', the description 'skill.other.desc', a `max` of 4 and `ranks`
+-- describing every entry of `rank_order` with the phrase `skill.<id>.<rank ID>`; a definition
+-- that sets `ranks` to false describes no ranks. The `max` is rounded down and is never
+-- below 1.
 -- ```
 -- local skill = SkillBase.new('lockpicking')
 -- skill.name = 'skill.lockpicking.title'
@@ -63,6 +65,16 @@ function Skills.register(id, data)
   data.name = data.name or 'skill.other.name'
   data.description = data.description or 'skill.other.desc'
   data.max = math.max(math.floor(tonumber(data.max) or 4), 1)
+
+  if data.ranks == nil and istable(data.rank_order) then
+    local ranks = {}
+
+    for _, rank_id in ipairs(data.rank_order) do
+      ranks[rank_id] = 'skill.'..id..'.'..rank_id
+    end
+
+    data.ranks = ranks
+  end
 
   --- Called on both realms when a skill definition is registered, after its missing fields
   -- have been given their defaults and before it is stored. A handler may change the

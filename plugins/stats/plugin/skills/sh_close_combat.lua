@@ -8,10 +8,3 @@ SKILL.description = 'skill.close_combat.description'
 SKILL.icon = 'fa-hand-fist'
 SKILL.attribute = 'strength'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.close_combat.untrained',
-  trained = 'skill.close_combat.trained',
-  expert = 'skill.close_combat.expert',
-  master = 'skill.close_combat.master',
-  legendary = 'skill.close_combat.legendary'
-}

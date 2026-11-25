@@ -8,10 +8,3 @@ SKILL.description = 'skill.lore.description'
 SKILL.icon = 'fa-book-open'
 SKILL.attribute = 'intelligence'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.lore.untrained',
-  trained = 'skill.lore.trained',
-  expert = 'skill.lore.expert',
-  master = 'skill.lore.master',
-  legendary = 'skill.lore.legendary'
-}

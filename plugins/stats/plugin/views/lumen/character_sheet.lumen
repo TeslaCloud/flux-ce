@@ -14,76 +14,20 @@
 local card_style = {
   direction = 'row', align = 'center', gap = 8, padding = { 6, 10 }, background = 'surface_raised', radius = 6
 }
-local stat_order = {
-  'strength', 'reflexes', 'endurance', 'perception', 'intelligence', 'determination', 'charisma'
-}
 
---- Formats a modifier with its sign: '+2', '-1', '+0'.
--- @param value [Number]
--- @return [String]
-local function signed(value)
-  value = math.Round(tonumber(value) or 0, 2)
-
-  if value < 0 then
-    return tostring(value)
-  end
-
-  return '+'..value
-end
-
---- Sorts stat or skill definitions by their translated names, and by their IDs when the
--- names are the same.
--- @param list [List<AttributeBase/SkillBase> sorted in place]
--- @return [List<AttributeBase/SkillBase> the same list]
-local function sort_by_name(list)
-  local names = {}
-
-  for _k, v in ipairs(list) do
-    names[v] = t(v.name)
-  end
-
-  table.sort(list, function(a, b)
-    if names[a] != names[b] then
-      return names[a] < names[b]
-    end
-
-    return tostring(a.attribute_id or a.skill_id) < tostring(b.attribute_id or b.skill_id)
-  end)
-
-  return list
-end
-
---- Returns the stats the local player sees, in the order of `stat_order`, with stats that
--- are not in that list after them, sorted by name.
+--- Returns the stats the local player sees, in the order `Stats:sort_stats` gives them.
 -- @param actor [Player]
 -- @return [List<AttributeBase>]
 local function get_stats(actor)
-  local stats = Attributes.get_stored()
-  local ordered = {}
-  local rest = {}
-  local placed = {}
+  local stats = {}
 
-  for _k, id in ipairs(stat_order) do
-    local stat = stats[id]
-
-    if stat and Attributes.is_visible(stat, actor) then
-      ordered[#ordered + 1] = stat
-    end
-
-    placed[id] = true
-  end
-
-  for k, v in pairs(stats) do
-    if !placed[k] and Attributes.is_visible(v, actor) then
-      rest[#rest + 1] = v
+  for _k, v in pairs(Attributes.get_stored()) do
+    if Attributes.is_visible(v, actor) then
+      stats[#stats + 1] = v
     end
   end
 
-  for _k, v in ipairs(sort_by_name(rest)) do
-    ordered[#ordered + 1] = v
-  end
-
-  return ordered
+  return Stats:sort_stats(stats)
 end
 
 --- Groups the skills the local player sees under their key stats, in the order of the stats.
@@ -92,38 +36,24 @@ end
 -- @param stats [List<AttributeBase> the stats, as get_stats returns them]
 -- @return [List<Map> groups: id (String), title (String) and skills (List<SkillBase>)]
 local function get_skill_groups(actor, stats)
-  local by_stat = {}
+  local by_stat, other = Stats:group_skills(skill -> Skills.is_visible(skill, actor))
   local groups = {}
-  local other = {}
-
-  for _k, v in pairs(Skills.get_stored()) do
-    if Skills.is_visible(v, actor) then
-      local key_stat = isstring(v.attribute) and Attributes.find(v.attribute)
-
-      if key_stat then
-        by_stat[v.attribute] = by_stat[v.attribute] or {}
-        table.insert(by_stat[v.attribute], v)
-      else
-        other[#other + 1] = v
-      end
-    end
-  end
 
   for _k, v in ipairs(stats) do
     local skills = by_stat[v.attribute_id]
 
     if skills then
-      groups[#groups + 1] = { id = v.attribute_id, title = t(v.name), skills = sort_by_name(skills) }
+      groups[#groups + 1] = { id = v.attribute_id, title = t(v.name), skills = Stats:sort_by_name(skills) }
       by_stat[v.attribute_id] = nil
     end
   end
 
   for id, skills in SortedPairs(by_stat) do
-    groups[#groups + 1] = { id = id, title = t(Attributes.find(id).name), skills = sort_by_name(skills) }
+    groups[#groups + 1] = { id = id, title = t(Attributes.find(id).name), skills = Stats:sort_by_name(skills) }
   end
 
   if #other > 0 then
-    groups[#groups + 1] = { id = '', title = t'ui.character_sheet.other_skills', skills = sort_by_name(other) }
+    groups[#groups + 1] = { id = '', title = t'ui.character_sheet.other_skills', skills = Stats:sort_by_name(other) }
   end
 
   return groups
@@ -137,12 +67,13 @@ end
 local function Icon(props)
   local icon = props.icon
   local size = props.size
+  local kind = Stats:get_icon_kind(icon)
 
-  if !isstring(icon) or icon == '' then
+  if !kind then
     return <view style={{ width = size, height = size }} />
   end
 
-  if icon:start_with('fa-') then
+  if kind == 'fontawesome' then
     return <button icon={icon} style={{
       width = size, height = size, padding = 0, font = props.font, background = false,
       hover_background = false, cursor = 'arrow'
@@ -273,7 +204,7 @@ local function StatRow(props)
       </text>}
     </view>
     <text style={{ font = 'menu_large', min_width = 48, text_align = 'right', wrap_text = false }}>
-      {signed(actor:get_attribute_modifier(id))}
+      {Stats:format_modifier(actor:get_attribute_modifier(id))}
     </text>
     <RollButton id={id} />
     {props.can_spend and base_level < stat.max and <SpendButton message="fl_levels_spend_attribute" id={id}
@@ -298,8 +229,8 @@ local function SkillRow(props)
     local args = {
       rank = rank_name,
       attribute = t('attribute.'..key_stat.attribute_id..'.short'),
-      modifier = signed(actor:get_attribute_modifier(key_stat.attribute_id)),
-      proficiency = signed(proficiency)
+      modifier = Stats:format_modifier(actor:get_attribute_modifier(key_stat.attribute_id)),
+      proficiency = Stats:format_modifier(proficiency)
     }
 
     details = t(proficiency != 0 ? 'ui.character_sheet.skill_trained' : 'ui.character_sheet.skill_untrained', args)
@@ -314,7 +245,7 @@ local function SkillRow(props)
       <text style={{ font = 'text_smallest', color = 'text_muted', wrap_text = false }}>{details}</text>
     </view>
     <text style={{ font = 'menu_normal', min_width = 48, text_align = 'right', wrap_text = false }}>
-      {signed(actor:get_skill_modifier(id))}
+      {Stats:format_modifier(actor:get_skill_modifier(id))}
     </text>
     <RollButton id={id} />
     {props.can_spend and rank < skill.max and <SpendButton message="fl_levels_spend_skill" id={id}

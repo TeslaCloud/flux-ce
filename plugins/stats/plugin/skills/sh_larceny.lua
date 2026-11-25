@@ -7,10 +7,3 @@ SKILL.description = 'skill.larceny.description'
 SKILL.icon = 'fa-unlock'
 SKILL.attribute = 'reflexes'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.larceny.untrained',
-  trained = 'skill.larceny.trained',
-  expert = 'skill.larceny.expert',
-  master = 'skill.larceny.master',
-  legendary = 'skill.larceny.legendary'
-}

@@ -91,6 +91,8 @@ Stats.faction_boost_id = 'faction'
 Stats.roll_interval = 1
 Stats.min_hearing_radius = 1
 
+require_relative 'cl_plugin'
+require_relative 'sv_plugin'
 require_relative 'sh_hooks'
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'
@@ -130,20 +132,24 @@ function Stats:get_creation_max(attribute_table)
 end
 
 --- Returns the points a new character has to spread over its stats: the
--- `stats_creation_points` config, never more than the stats can take at creation. The
--- levels a player picks have to add up to this number.
+-- `stats_creation_points` config, never more than the stats can take at creation and never
+-- less than their lowest levels add up to. The levels a player picks for the stats that are
+-- not hidden have to add up to this number; a hidden stat starts at its default level.
 -- @return [Number attribute points]
 -- @see [Stats:get_creation_max]
 function Stats:default_attribute_points()
   local key = 'stats_creation_points'
   local points = tonumber(Config.get(key)) or tonumber(Config.get_default(key)) or 0
-  local highest = 0
+  local lowest, highest = 0, 0
 
   for _, attribute_table in pairs(Attributes.get_stored()) do
-    highest += self:get_creation_max(attribute_table)
+    if !attribute_table.hidden then
+      lowest += attribute_table.min
+      highest += self:get_creation_max(attribute_table)
+    end
   end
 
-  return math.min(math.floor(points), highest)
+  return math.max(math.min(math.floor(points), highest), lowest)
 end
 
 --- Checks whether characters get the stat bonuses of their faction.
@@ -152,8 +158,9 @@ function Stats:faction_bonuses_enabled()
   return Config.get('stats_faction_bonuses') != false
 end
 
---- Returns the stat bonuses that a faction lists in its `stats` field. Entries that do not
--- name a registered stat or do not hold a number other than zero are left out.
+--- Returns the stat bonuses that a faction lists in its `stats` field, rounded to whole
+-- levels. Entries that do not name a registered stat or do not round to a number other than
+-- zero are left out.
 -- ```
 -- -- factions/sh_cca.lua
 -- FACTION.stats = {
@@ -175,8 +182,12 @@ function Stats:get_faction_bonuses(faction_table)
   for stat_id, value in pairs(faction_table.stats) do
     local bonus = tonumber(value)
 
-    if stats[stat_id] and bonus and bonus == bonus and bonus != 0 then
-      bonuses[stat_id] = bonus
+    if stats[stat_id] and bonus and bonus == bonus then
+      bonus = math.Round(bonus)
+
+      if bonus != 0 then
+        bonuses[stat_id] = bonus
+      end
     end
   end
 

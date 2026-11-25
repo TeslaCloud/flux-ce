@@ -38,10 +38,12 @@ function Attributes.find(id)
 end
 
 --- Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get
--- defaults: min 0, max 10 and default equal to min.
+-- defaults: min 0, max 10, default equal to min, and `levels` describing every entry of
+-- `level_order` with the phrase `attribute.<id>.<level ID>`; a definition that sets `levels`
+-- to false describes no levels.
 -- ```
 -- local attribute = AttributeBase.new('sanity')
--- attribute.name = 'attribute.sanity.name'
+-- attribute.name = 'attribute.sanity.title'
 -- attribute.boostable = false
 --
 -- Attributes.register(attribute.attribute_id, attribute)
@@ -65,6 +67,16 @@ function Attributes.register(id, data)
   data.default = math_clamp(tonumber(data.default) or data.min, data.min, data.max)
   data.category = data.category or 'attribute.category.other'
 
+  if data.levels == nil and istable(data.level_order) then
+    local levels = {}
+
+    for _, level_id in ipairs(data.level_order) do
+      levels[level_id] = 'attribute.'..id..'.'..level_id
+    end
+
+    data.levels = levels
+  end
+
   --- Called on both realms when an attribute definition is registered, after its missing
   -- fields have been given their defaults and before it is stored. A handler may change the
   -- definition.
@@ -79,7 +91,7 @@ end
 -- global, an AttributeBase named after the file, that is registered once the file has run.
 -- ```
 -- -- attributes/sh_strength.lua, registered as 'strength'
--- ATTRIBUTE.name = 'attribute.strength.name'
+-- ATTRIBUTE.name = 'attribute.strength.title'
 -- ATTRIBUTE.max = 20
 -- ```
 -- @param directory [String folder to include files from]
@@ -111,6 +123,27 @@ function Attributes.sum_boosts(attribute_table, attribute)
   end
 
   return boost
+end
+
+--- Returns the level of an attribute out of its data, with its boosts added unless they are
+-- left out or the attribute is not boostable. Both realms work out the level of a player
+-- this way, from the data the server networks.
+-- @param attribute_table [AttributeBase attribute definition]
+-- @param attribute [Map data of the attribute as `Player:get_attribute_data` returns it; nil
+--   gives the default level]
+-- @param no_boost=false [Boolean leave the boosts out]
+-- @return [Number]
+-- @see [Attributes.sum_boosts]
+function Attributes.get_total(attribute_table, attribute, no_boost)
+  if !attribute then return attribute_table.default end
+
+  local level = attribute.level or attribute_table.default
+
+  if no_boost or attribute_table.boostable == false then
+    return level
+  end
+
+  return level + Attributes.sum_boosts(attribute_table, attribute)
 end
 
 --- Checks whether an attribute is shown to a player on the character sheet. An attribute

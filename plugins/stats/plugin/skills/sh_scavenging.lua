@@ -8,10 +8,3 @@ SKILL.description = 'skill.scavenging.description'
 SKILL.icon = 'fa-box-open'
 SKILL.attribute = 'perception'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.scavenging.untrained',
-  trained = 'skill.scavenging.trained',
-  expert = 'skill.scavenging.expert',
-  master = 'skill.scavenging.master',
-  legendary = 'skill.scavenging.legendary'
-}

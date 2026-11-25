@@ -160,40 +160,35 @@ function Attributes.get_data(target, attribute_id)
   return data
 end
 
---- Returns the level of one attribute of a player's character and the sum of its boosts
--- that have not expired, read from the record without building the networked form.
+--- Returns the level of one attribute of a player's character and what its boosts add to
+-- it, as `Attributes.sync` has worked them out of the data it has networked last, so that
+-- the server counts the same boosts as the client. Before the first sync of the character
+-- they are worked out of its records.
 -- @param target [Player]
 -- @param attribute_id [String]
--- @return [Number level and Number sum of the boosts, cut down for an attribute that has
---   boost_limited set; nil if the attribute is not registered or the player's character has
---   no record for it]
+-- @return [Number level and Number what the boosts add, cut down for an attribute that has
+--   boost_limited set and 0 for one that is not boostable; nil if the attribute is not
+--   registered or the player's character has no record for it]
+-- @see [Attributes.get_total]
 function Attributes.get_level(target, attribute_id)
+  local levels = target.attribute_character == get_character(target) and target.attribute_levels
+
+  if levels then
+    local level = levels[attribute_id]
+
+    if !level then return end
+
+    return level, target.attribute_totals[attribute_id] - level
+  end
+
+  local data = Attributes.get_data(target, attribute_id)
+
+  if !data then return end
+
   local attribute_table = stored[attribute_id]
-  local record = attribute_table and Attributes.get_record(get_character(target), attribute_id)
+  local level = Attributes.get_total(attribute_table, data, true)
 
-  if !record then return end
-
-  local level = tonumber(record.level) or attribute_table.default
-  local boosts = record.attribute_boosts
-  local boost = 0
-
-  if boosts and boosts[1] then
-    local unix_time = os_time()
-
-    for _, modifier in ipairs(boosts) do
-      local expiry = get_expiry(modifier)
-
-      if !expiry or expiry > unix_time then
-        boost += tonumber(modifier.value) or 0
-      end
-    end
-  end
-
-  if attribute_table.boost_limited then
-    boost = math_clamp(level + boost, attribute_table.min, attribute_table.max) - level
-  end
-
-  return level, boost
+  return level, Attributes.get_total(attribute_table, data) - level
 end
 
 --- Gives a character a record for every registered attribute it has none for. A new
@@ -256,16 +251,30 @@ function Attributes.to_networkable(target)
   return attributes, earliest
 end
 
---- Networks the attributes of a player's character to that player again and notes when
--- the next of its boosts expires. Called after every change the plugin
--- makes; call it yourself after changing the records directly.
+--- Networks the attributes of a player's character to that player again, notes when the
+-- next of its boosts expires and keeps the level of every attribute, without and with its
+-- boosts, worked out of the networked data with `Attributes.get_total`, together with the
+-- character they belong to; `Attributes.get_level` reads them. Called after every change
+-- the plugin makes and once a boost has expired; call it yourself after changing the
+-- records directly.
 -- @param target [Player]
 function Attributes.sync(target)
   if !IsValid(target) then return end
 
   local attributes, earliest = Attributes.to_networkable(target)
+  local levels, totals = {}, {}
+
+  for attribute_id, attribute in pairs(attributes) do
+    local attribute_table = stored[attribute_id]
+
+    levels[attribute_id] = Attributes.get_total(attribute_table, attribute, true)
+    totals[attribute_id] = Attributes.get_total(attribute_table, attribute)
+  end
 
   target.attribute_expiry = earliest
+  target.attribute_character = get_character(target)
+  target.attribute_levels = levels
+  target.attribute_totals = totals
   target:set_private_nv('attributes', attributes)
 end
 
@@ -333,7 +342,7 @@ end
 -- @param list_key [String field of the Attribute record that holds the records,
 --   'attribute_boosts']
 -- @param model [ActiveRecord::Base class of the records, AttributeBoost]
--- @param value [Number]
+-- @param value [Number levels, rounded to a whole number]
 -- @param duration=nil [Number seconds until it expires; it never expires if this is nil
 --   or not above 0]
 -- @param identifier=nil [Any identifier, converted to a string]
@@ -346,6 +355,8 @@ function Attributes.add_modifier(target, attribute_id, list_key, model, value, d
   duration = tonumber(duration)
 
   if !record or !value or value != value then return end
+
+  value = math_round(value)
 
   record[list_key] = record[list_key] or {}
 

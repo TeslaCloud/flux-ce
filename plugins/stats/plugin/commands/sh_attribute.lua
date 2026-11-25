@@ -40,11 +40,12 @@ function set:get_description()
   return describe_with_attributes(self.description)
 end
 
---- Sets the level of an attribute for every target, then notifies the targets and staff.
+--- Sets the level of an attribute for every target, then notifies the targets whose level
+-- has changed and staff, with the level as the attribute keeps it.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_text [String ID of the attribute to set]
--- @param value [String new level, parsed with tonumber]
+-- @param value [String/Number new level, parsed with tonumber]
 function set:on_run(actor, targets, attribute_text, value)
   local attribute_id, attribute = find_attribute(attribute_text)
   value = tonumber(value)
@@ -61,19 +62,33 @@ function set:on_run(actor, targets, attribute_text, value)
     return
   end
 
+  local changed = {}
+  local level
+
   for _, target in ipairs(targets) do
-    target:notify('notification.attribute.set', {
-      attribute = attribute.name,
-      value = value
-    })
-    target:set_attribute(attribute_id, value)
+    if target:set_attribute(attribute_id, value) then
+      level = target:get_attribute(attribute_id, true)
+
+      target:notify('notification.attribute.set', {
+        attribute = attribute.name,
+        value = level
+      })
+
+      changed[#changed + 1] = target
+    end
+  end
+
+  if #changed == 0 then
+    Flux.Player:notify(actor, 'error.stats.unchanged', { target = util.player_list_to_string(targets) })
+
+    return
   end
 
   self:notify_staff('command.attribute.set.message', {
     player = get_player_name(actor),
-    target = util.player_list_to_string(targets),
+    target = util.player_list_to_string(changed),
     attribute = attribute.name,
-    value = value
+    value = level
   })
 end
 
@@ -89,13 +104,13 @@ function boost:get_description()
   return describe_with_attributes(self.description)
 end
 
---- Gives every target a boost to an attribute, then notifies the targets and staff. A
--- duration of 0 gives a boost that does not expire. Rejects invalid values, durations and
--- attributes that are not boostable.
+--- Gives every target a boost to an attribute, then notifies the targets who got it and
+-- staff, with the value as the boost keeps it. A duration of 0 gives a boost that does not
+-- expire. Rejects invalid values, durations and attributes that are not boostable.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_text [String ID of the attribute to boost]
--- @param value [String number of levels to add, parsed with tonumber]
+-- @param value [String/Number number of levels to add, parsed with tonumber]
 -- @param duration [String boost length as read by Bolt:interpret_ban_time, e.g. '30'
 --   (minutes), '2 hours' or 'perma']
 function boost:on_run(actor, targets, attribute_text, value, duration)
@@ -124,19 +139,33 @@ function boost:on_run(actor, targets, attribute_text, value, duration)
   end
 
   local permanent = duration <= 0
+  local changed = {}
 
   for _, target in ipairs(targets) do
-    target:notify(permanent ? 'notification.attribute.boost_permanent' : 'notification.attribute.boost', {
-      attribute = attribute.name,
-      value = value,
-      time = Flux.Lang:duration(duration)
-    })
-    target:boost_attribute(attribute_id, value, duration)
+    local record = target:boost_attribute(attribute_id, value, duration)
+
+    if record then
+      value = record.value
+
+      target:notify(permanent ? 'notification.attribute.boost_permanent' : 'notification.attribute.boost', {
+        attribute = attribute.name,
+        value = value,
+        time = Flux.Lang:duration(duration)
+      })
+
+      changed[#changed + 1] = target
+    end
+  end
+
+  if #changed == 0 then
+    Flux.Player:notify(actor, 'error.stats.unchanged', { target = util.player_list_to_string(targets) })
+
+    return
   end
 
   self:notify_staff('command.attribute.boost.'..(permanent ? 'message_permanent' : 'message'), {
     player = get_player_name(actor),
-    target = util.player_list_to_string(targets),
+    target = util.player_list_to_string(changed),
     attribute = attribute.name,
     value = value,
     time = Flux.Lang:duration(duration)

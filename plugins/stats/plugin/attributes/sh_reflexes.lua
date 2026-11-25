@@ -10,17 +10,7 @@ ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
 ATTRIBUTE.default = 0
-ATTRIBUTE.levels = {
-  legendary = 'attribute.reflexes.legendary',
-  heroic = 'attribute.reflexes.heroic',
-  superb = 'attribute.reflexes.superb',
-  great = 'attribute.reflexes.great',
-  good = 'attribute.reflexes.good',
-  fair = 'attribute.reflexes.fair',
-  mediocre = 'attribute.reflexes.mediocre',
-  poor = 'attribute.reflexes.poor',
-  terrible = 'attribute.reflexes.terrible'
-}
+ATTRIBUTE.order = 2
 
 ATTRIBUTE.effects = {
   Stats:percent_effect('ui.effect.fall_damage', 'stats_reflexes_fall', true, || -> Damage != nil)

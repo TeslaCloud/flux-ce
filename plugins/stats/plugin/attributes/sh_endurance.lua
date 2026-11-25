@@ -11,17 +11,7 @@ ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
 ATTRIBUTE.default = 0
-ATTRIBUTE.levels = {
-  legendary = 'attribute.endurance.legendary',
-  heroic = 'attribute.endurance.heroic',
-  superb = 'attribute.endurance.superb',
-  great = 'attribute.endurance.great',
-  good = 'attribute.endurance.good',
-  fair = 'attribute.endurance.fair',
-  mediocre = 'attribute.endurance.mediocre',
-  poor = 'attribute.endurance.poor',
-  terrible = 'attribute.endurance.terrible'
-}
+ATTRIBUTE.order = 3
 
 ATTRIBUTE.effects = {
   Stats:percent_effect('ui.effect.stamina_drain', 'stats_endurance_stamina', true, || -> Stamina != nil),

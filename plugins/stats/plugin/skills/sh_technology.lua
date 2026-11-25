@@ -8,10 +8,3 @@ SKILL.description = 'skill.technology.description'
 SKILL.icon = 'fa-microchip'
 SKILL.attribute = 'intelligence'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.technology.untrained',
-  trained = 'skill.technology.trained',
-  expert = 'skill.technology.expert',
-  master = 'skill.technology.master',
-  legendary = 'skill.technology.legendary'
-}

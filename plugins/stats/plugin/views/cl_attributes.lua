@@ -30,10 +30,8 @@ local function translate(phrase, args)
   return text
 end
 
-local function format_number(value, signed)
-  value = math.round(tonumber(value) or 0, 2)
-
-  return (signed and value > 0 ? '+' : '')..tostring(value)
+local function format_number(value)
+  return tostring(math.round(tonumber(value) or 0, 2))
 end
 
 local function active_boosts(boosts)
@@ -60,7 +58,7 @@ local function describe_boosts(boosts)
   local parts = {}
 
   for _, boost in ipairs(boosts) do
-    local text = format_number(boost.value, true)
+    local text = Stats:format_modifier(boost.value)
 
     if boost.end_time then
       text = translate('ui.attributes.timed', {
@@ -73,22 +71,6 @@ local function describe_boosts(boosts)
   end
 
   return table.concat(parts, ', ')
-end
-
---- Sorts attribute or skill definitions by their translated names, and by their IDs when
--- the names are the same.
--- @param list [List<AttributeBase/SkillBase> sorted in place]
--- @param translated_names [Map translated names keyed by definition]
-local function sort_definitions(list, translated_names)
-  table.sort(list, function(a, b)
-    local name_a, name_b = translated_names[a], translated_names[b]
-
-    if name_a != name_b then
-      return name_a < name_b
-    end
-
-    return tostring(a.attribute_id or a.skill_id) < tostring(b.attribute_id or b.skill_id)
-  end)
 end
 
 --- The attribute list (`fl_attributes`): a scrollable list with a header for every category
@@ -198,9 +180,6 @@ function PANEL:get_sections()
   local attribute_sections = {}
   local skill_sections = {}
   local by_category = {}
-  local by_stat = {}
-  local translated_names = {}
-  local other_skills
 
   for _, attribute_table in pairs(Attributes.get_stored()) do
     if self.snapshot or Attributes.is_visible(attribute_table, target) then
@@ -221,40 +200,21 @@ function PANEL:get_sections()
       end
 
       section.attributes[#section.attributes + 1] = attribute_table
-      translated_names[attribute_table] = translate(attribute_table.name)
     end
   end
 
-  for _, skill_table in pairs(Skills.get_stored()) do
-    if self.snapshot or Skills.is_visible(skill_table, target) then
-      local key_stat = isstring(skill_table.attribute) and Attributes.find(skill_table.attribute)
-      local section
+  local by_stat, other = Stats:group_skills(skill_table -> self.snapshot or Skills.is_visible(skill_table, target))
 
-      if key_stat then
-        section = by_stat[skill_table.attribute]
+  for stat_id, skills in pairs(by_stat) do
+    local stat_name = translate(Attributes.find(stat_id).name)
 
-        if !section then
-          local stat_name = translate(key_stat.name)
-
-          section = {
-            name = translate('ui.attributes.skills')..' - '..stat_name,
-            stat_name = stat_name,
-            stat_id = skill_table.attribute,
-            attributes = {},
-            skills = {}
-          }
-          by_stat[skill_table.attribute] = section
-
-          skill_sections[#skill_sections + 1] = section
-        end
-      else
-        other_skills = other_skills or { name = translate('ui.attributes.skills'), attributes = {}, skills = {} }
-        section = other_skills
-      end
-
-      section.skills[#section.skills + 1] = skill_table
-      translated_names[skill_table] = translate(skill_table.name)
-    end
+    skill_sections[#skill_sections + 1] = {
+      name = translate('ui.attributes.skills')..' - '..stat_name,
+      stat_name = stat_name,
+      stat_id = stat_id,
+      attributes = {},
+      skills = skills
+    }
   end
 
   table.sort(attribute_sections, |a, b| -> a.name < b.name)
@@ -273,13 +233,13 @@ function PANEL:get_sections()
     sections[#sections + 1] = section
   end
 
-  if other_skills then
-    sections[#sections + 1] = other_skills
+  if #other > 0 then
+    sections[#sections + 1] = { name = translate('ui.attributes.skills'), attributes = {}, skills = other }
   end
 
   for _, section in ipairs(sections) do
-    sort_definitions(section.attributes, translated_names)
-    sort_definitions(section.skills, translated_names)
+    Stats:sort_by_name(section.attributes)
+    Stats:sort_by_name(section.skills)
   end
 
   return sections
@@ -517,8 +477,7 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Creates the icon of the row. An icon that starts with 'fa-' is drawn as a FontAwesome
--- icon, any other is loaded as an image.
+--- Creates the icon of the row: a FontAwesome icon or an image, see `Stats:get_icon_kind`.
 -- @param icon=nil [String FontAwesome icon name or path of an image]
 function PANEL:set_icon(icon)
   self.fa_icon = nil
@@ -529,14 +488,14 @@ function PANEL:set_icon(icon)
 
   self.image = nil
 
-  if isstring(icon) and icon != '' then
-    if icon:start_with('fa-') then
-      self.fa_icon = icon
-    else
-      self.image = vgui.Create('DImage', self)
-      self.image:SetImage(icon)
-      self.image:SetMouseInputEnabled(false)
-    end
+  local kind = Stats:get_icon_kind(icon)
+
+  if kind == 'fontawesome' then
+    self.fa_icon = icon
+  elseif kind == 'image' then
+    self.image = vgui.Create('DImage', self)
+    self.image:SetImage(icon)
+    self.image:SetMouseInputEnabled(false)
   end
 end
 
@@ -731,7 +690,7 @@ function PANEL:update_attribute()
     })
   end
 
-  self.boost_text = boost != 0 and format_number(boost, true) or ''
+  self.boost_text = boost == 0 ? '' : Stats:format_modifier(boost)
   self.level_fraction = range > 0 and math_clamp((base_level - min) / range, 0, 1) or 1
   self.boosted_fraction = range > 0 and math_clamp((level - min) / range, 0, 1) or 1
   self.details_text = ''

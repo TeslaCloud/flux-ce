@@ -8,10 +8,3 @@ SKILL.description = 'skill.focus.description'
 SKILL.icon = 'fa-bullseye'
 SKILL.attribute = 'determination'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.focus.untrained',
-  trained = 'skill.focus.trained',
-  expert = 'skill.focus.expert',
-  master = 'skill.focus.master',
-  legendary = 'skill.focus.legendary'
-}

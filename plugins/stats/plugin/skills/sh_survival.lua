@@ -8,10 +8,3 @@ SKILL.description = 'skill.survival.description'
 SKILL.icon = 'fa-campground'
 SKILL.attribute = 'endurance'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.survival.untrained',
-  trained = 'skill.survival.trained',
-  expert = 'skill.survival.expert',
-  master = 'skill.survival.master',
-  legendary = 'skill.survival.legendary'
-}

@@ -380,8 +380,9 @@ fr:
       unknown_rollable: "« {name} » n'est ni une statistique ni une compétence."
       not_stat: "« {name} » n'est pas une statistique."
       not_skill: "« {name} » n'est pas une compétence."
+      unchanged: "Rien n'a changé pour {target}."
     attribute:
-      sum: "La somme des attributs n'est pas égale au nombre maximal de points d'attributs."
+      sum: "Répartissez exactement {points} points entre vos statistiques, en gardant chacune dans les niveaux qu'elle permet à la création."
   notification:
     attribute:
       boost: "Votre attribut « {attribute} » a reçu un bonus de {value} pour {time}."

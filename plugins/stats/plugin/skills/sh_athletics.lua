@@ -8,10 +8,3 @@ SKILL.description = 'skill.athletics.description'
 SKILL.icon = 'fa-person-running'
 SKILL.attribute = 'strength'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.athletics.untrained',
-  trained = 'skill.athletics.trained',
-  expert = 'skill.athletics.expert',
-  master = 'skill.athletics.master',
-  legendary = 'skill.athletics.legendary'
-}

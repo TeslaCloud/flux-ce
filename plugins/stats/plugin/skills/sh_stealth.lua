@@ -7,10 +7,3 @@ SKILL.description = 'skill.stealth.description'
 SKILL.icon = 'fa-user-ninja'
 SKILL.attribute = 'reflexes'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.stealth.untrained',
-  trained = 'skill.stealth.trained',
-  expert = 'skill.stealth.expert',
-  master = 'skill.stealth.master',
-  legendary = 'skill.stealth.legendary'
-}

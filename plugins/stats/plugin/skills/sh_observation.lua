@@ -8,10 +8,3 @@ SKILL.description = 'skill.observation.description'
 SKILL.icon = 'fa-binoculars'
 SKILL.attribute = 'perception'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.observation.untrained',
-  trained = 'skill.observation.trained',
-  expert = 'skill.observation.expert',
-  master = 'skill.observation.master',
-  legendary = 'skill.observation.legendary'
-}

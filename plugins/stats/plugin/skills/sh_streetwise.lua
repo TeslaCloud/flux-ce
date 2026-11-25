@@ -8,10 +8,3 @@ SKILL.description = 'skill.streetwise.description'
 SKILL.icon = 'fa-city'
 SKILL.attribute = 'charisma'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.streetwise.untrained',
-  trained = 'skill.streetwise.trained',
-  expert = 'skill.streetwise.expert',
-  master = 'skill.streetwise.master',
-  legendary = 'skill.streetwise.legendary'
-}

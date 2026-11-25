@@ -8,10 +8,3 @@ SKILL.description = 'skill.persuasion.description'
 SKILL.icon = 'fa-handshake'
 SKILL.attribute = 'charisma'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.persuasion.untrained',
-  trained = 'skill.persuasion.trained',
-  expert = 'skill.persuasion.expert',
-  master = 'skill.persuasion.master',
-  legendary = 'skill.persuasion.legendary'
-}

@@ -7,10 +7,3 @@ SKILL.description = 'skill.acrobatics.description'
 SKILL.icon = 'fa-person-falling'
 SKILL.attribute = 'reflexes'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.acrobatics.untrained',
-  trained = 'skill.acrobatics.trained',
-  expert = 'skill.acrobatics.expert',
-  master = 'skill.acrobatics.master',
-  legendary = 'skill.acrobatics.legendary'
-}

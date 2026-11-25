@@ -8,10 +8,3 @@ SKILL.description = 'skill.marksmanship.description'
 SKILL.icon = 'fa-crosshairs'
 SKILL.attribute = 'reflexes'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.marksmanship.untrained',
-  trained = 'skill.marksmanship.trained',
-  expert = 'skill.marksmanship.expert',
-  master = 'skill.marksmanship.master',
-  legendary = 'skill.marksmanship.legendary'
-}

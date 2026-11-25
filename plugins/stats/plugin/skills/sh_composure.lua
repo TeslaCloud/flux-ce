@@ -8,10 +8,3 @@ SKILL.description = 'skill.composure.description'
 SKILL.icon = 'fa-scale-balanced'
 SKILL.attribute = 'determination'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.composure.untrained',
-  trained = 'skill.composure.trained',
-  expert = 'skill.composure.expert',
-  master = 'skill.composure.master',
-  legendary = 'skill.composure.legendary'
-}

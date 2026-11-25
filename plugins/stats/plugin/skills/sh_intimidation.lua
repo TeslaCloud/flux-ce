@@ -8,10 +8,3 @@ SKILL.description = 'skill.intimidation.description'
 SKILL.icon = 'fa-face-angry'
 SKILL.attribute = 'charisma'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.intimidation.untrained',
-  trained = 'skill.intimidation.trained',
-  expert = 'skill.intimidation.expert',
-  master = 'skill.intimidation.master',
-  legendary = 'skill.intimidation.legendary'
-}

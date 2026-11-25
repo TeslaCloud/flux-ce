@@ -1,4 +1,5 @@
---- Definition of an attribute: its name, description, category and icon, its level range
+--- Definition of an attribute: its name, description, category, icon and place on the
+-- character sheet (`order`), its level range
 -- (`min`, `max`, `default`, and `creation_max`, the highest level a new character can pick),
 -- and the `boostable`, `boost_limited` and `hidden` flags.
 -- A file in a plugin's `attributes` folder fills in an `AttributeBase` through the
@@ -9,13 +10,18 @@
 -- and `level_names` optionally maps a level ID to the phrase of its name, which is
 -- `attribute.level.<id>` otherwise. The default `level_order` is the nine step ladder from
 -- 'terrible' through 'superb' to 'heroic' and 'legendary', which fits an attribute that goes
--- from -3 to 5.
+-- from -3 to 5. Without `levels` of its own every level of `level_order` is described by the
+-- phrase `attribute.<attribute ID>.<level ID>`; `levels = false` describes none.
+--
+-- The character sheet lists the attributes by their `order` field, lowest first, and those
+-- without one after them, by name.
 -- ```
 -- -- attributes/sh_endurance.lua
 -- ATTRIBUTE.name = 'attribute.endurance.title'
 -- ATTRIBUTE.min = -3
 -- ATTRIBUTE.max = 5
 -- ATTRIBUTE.default = 0
+-- ATTRIBUTE.order = 3
 -- ATTRIBUTE.levels = {
 --   superb = 'attribute.endurance.superb',
 --   fair = 'attribute.endurance.fair',
@@ -32,8 +38,8 @@ AttributeBase.level_order = {
 --- Creates an attribute definition. Fill in its fields and call register to make it available.
 -- ```
 -- local attribute = AttributeBase.new('strength')
--- attribute.name = 'attribute.strength.name'
--- attribute.description = 'attribute.strength.desc'
+-- attribute.name = 'attribute.strength.title'
+-- attribute.description = 'attribute.strength.description'
 -- attribute.max = 20
 -- attribute:register()
 -- ```

@@ -8,10 +8,3 @@ SKILL.description = 'skill.fortitude.description'
 SKILL.icon = 'fa-shield-halved'
 SKILL.attribute = 'endurance'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.fortitude.untrained',
-  trained = 'skill.fortitude.trained',
-  expert = 'skill.fortitude.expert',
-  master = 'skill.fortitude.master',
-  legendary = 'skill.fortitude.legendary'
-}

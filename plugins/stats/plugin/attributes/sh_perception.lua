@@ -10,17 +10,7 @@ ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
 ATTRIBUTE.default = 0
-ATTRIBUTE.levels = {
-  legendary = 'attribute.perception.legendary',
-  heroic = 'attribute.perception.heroic',
-  superb = 'attribute.perception.superb',
-  great = 'attribute.perception.great',
-  good = 'attribute.perception.good',
-  fair = 'attribute.perception.fair',
-  mediocre = 'attribute.perception.mediocre',
-  poor = 'attribute.perception.poor',
-  terrible = 'attribute.perception.terrible'
-}
+ATTRIBUTE.order = 4
 
 ATTRIBUTE.effects = {
   Stats:distance_effect('ui.effect.hearing_radius', 'stats_perception_hearing')

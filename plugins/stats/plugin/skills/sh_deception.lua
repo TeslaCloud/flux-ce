@@ -7,10 +7,3 @@ SKILL.description = 'skill.deception.description'
 SKILL.icon = 'fa-masks-theater'
 SKILL.attribute = 'charisma'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.deception.untrained',
-  trained = 'skill.deception.trained',
-  expert = 'skill.deception.expert',
-  master = 'skill.deception.master',
-  legendary = 'skill.deception.legendary'
-}

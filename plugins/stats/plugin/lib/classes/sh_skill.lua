@@ -12,19 +12,19 @@
 -- `rank_names` optionally maps a rank ID to the phrase of its name, which is
 -- `skill.rank.<id>` otherwise. The default `rank_order` goes from 'untrained' through
 -- 'trained', 'expert' and 'master' to 'legendary', which fits a skill with a `max` of 4.
+-- Without `ranks` of its own every rank of `rank_order` is described by the phrase
+-- `skill.<skill ID>.<rank ID>`; `ranks = false` describes none.
 -- ```
--- -- skills/sh_athletics.lua
--- SKILL.name = 'skill.athletics.title'
--- SKILL.description = 'skill.athletics.description'
--- SKILL.icon = 'fa-person-running'
--- SKILL.attribute = 'strength'
--- SKILL.max = 4
+-- -- skills/sh_lockpicking.lua
+-- SKILL.name = 'skill.lockpicking.title'
+-- SKILL.description = 'skill.lockpicking.description'
+-- SKILL.icon = 'fa-unlock'
+-- SKILL.attribute = 'reflexes'
+-- SKILL.max = 2
 -- SKILL.ranks = {
---   untrained = 'skill.athletics.untrained',
---   trained = 'skill.athletics.trained',
---   expert = 'skill.athletics.expert',
---   master = 'skill.athletics.master',
---   legendary = 'skill.athletics.legendary'
+--   untrained = 'skill.lockpicking.untrained',
+--   trained = 'skill.lockpicking.trained',
+--   expert = 'skill.lockpicking.expert'
 -- }
 -- ```
 

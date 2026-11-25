@@ -1,82 +1,54 @@
---- Server side of the Stats plugin: loads the attribute records, with their boosts, and the
--- skill records together with the characters, gives characters their attribute and skill
--- records, networks a character's attributes and skills when it becomes active and removes
--- its boosts as they expire, checks the stats of new characters, keeps the stat bonuses of
--- the faction on every character, applies the effects of the stats through the hooks of the
--- Chatbox, Stamina, Pickup Objects, Damage, Limb Damage and Vendors plugins; the rolls that
--- a player asks for with the 'fl_stats_roll' message are in `nethooks/sv_stats.lua`. A
--- handler of a plugin that is not loaded is never called. The 'fl_attributes_view' message,
--- which the `attribute list` command sends to show a character's attributes and skills to a
--- member of staff, is registered here; it carries the player, their attributes as
--- `Player:get_attributes` returns them and their skills as `Player:get_skills` returns
--- them. So is the 'fl_stats_roll_result' message, the answer to 'fl_stats_roll' that lets
--- the character sheet show the result on the button that was pressed; it carries the ID of
--- the stat or the skill and the result (a Map with the formula, total, natural, critical
--- and rolls fields of the `Dice` result), or nil when nothing was rolled.
+--- Server hook handlers of the Stats plugin: load the attribute records, with their boosts,
+-- and the skill records together with the characters, give characters their attribute and
+-- skill records, network a character's attributes and skills when it becomes active and
+-- remove its boosts as they expire, check the stats of new characters, keep the stat bonuses
+-- of the faction on every character, apply the effects of the stats through the hooks of the
+-- Chatbox, Stamina, Pickup Objects, Damage, Limb Damage and Vendors plugins and warn about
+-- mistakes in the definitions of attributes and skills. The rolls that a player asks for
+-- with the 'fl_stats_roll' message are in `nethooks/sv_stats.lua`. A handler of a plugin
+-- that is not loaded is never called.
 
 local IsValid = IsValid
 local isnumber = isnumber
 local math_max = math.max
 
-Cable.check_networked_string('fl_attributes_view')
-Cable.check_networked_string('fl_stats_roll_result')
+--- Prints the names of a map that are missing from a list, in development mode.
+-- @param kind [String 'attribute' or 'skill']
+-- @param id [String ID of the definition]
+-- @param map [Map the levels or the ranks of the definition]
+-- @param order [List<String> the level or rank order of the definition]
+local function warn_unordered(kind, id, map, order)
+  if !istable(map) or !istable(order) then return end
 
---- Multiplies an amount that is handed out in whole points, keeping the fraction that gets
--- cut off for the next call. Over time the player receives exactly the scaled amount, which
--- rounding every call by itself would not give for small amounts.
--- @param target [Player player the amount is for; the fraction is kept on them]
--- @param id [String name of what is being handed out, the fractions are kept apart by it]
--- @param amount [Number amount before scaling]
--- @param scale [Number multiplier]
--- @return [Number whole amount to hand out now, 0 or more]
-local function scale_whole(target, id, amount, scale)
-  local carry = target.stat_effect_carry or {}
-  local scaled = amount * scale + (carry[id] or 0)
-  local whole = math_max(math.floor(scaled), 0)
-
-  carry[id] = math_max(scaled - whole, 0)
-  target.stat_effect_carry = carry
-
-  return whole
-end
-
---- Gives a player the stat bonuses of their faction and takes away the ones that their
--- faction does not give: every bonus is a boost without expiry that carries the
--- `Stats.faction_boost_id` identifier. Boosts that are right already are left alone, so
--- loading a character does not rewrite them. Without the Factions plugin, or with the
--- bonuses turned off, all of them are removed.
--- @param target [Player]
--- @return [Number amount of stats whose bonus was added, replaced or removed]
-function Stats:apply_faction_bonuses(target)
-  if !IsValid(target) or !target:is_character_loaded() then
-    return 0
-  end
-
-  local enabled = self:faction_bonuses_enabled()
-
-  local bonuses = {}
-
-  if enabled and Factions then
-    bonuses = self:get_faction_bonuses(target:get_faction())
-  end
-
-  local changed = 0
-
-  for stat_id in pairs(Attributes.get_stored()) do
-    local wanted, current = bonuses[stat_id], self:get_faction_boost(target, stat_id)
-
-    if wanted and wanted != current then
-      if target:boost_attribute(stat_id, wanted, nil, self.faction_boost_id) then
-        changed += 1
-      end
-    elseif !wanted and current then
-      if target:remove_attribute_boost(stat_id, self.faction_boost_id) then
-        changed += 1
-      end
+  for key in pairs(map) do
+    if !table.HasValue(order, key) then
+      Flux.dev_print('The '..kind..' \''..id..'\' names \''..tostring(key)..'\', which its order does not list.')
     end
   end
+end
 
-  return changed
+--- Warns in development mode about the mistakes in the definitions of attributes and skills
+-- that would otherwise go unnoticed: a skill whose key stat is not registered, an attribute
+-- whose `creation_max` is above its `max`, and a level or rank that `level_order` or
+-- `rank_order` does not list.
+function Stats:PluginsLoaded()
+  for id, attribute_table in pairs(Attributes.get_stored()) do
+    local creation_max = tonumber(attribute_table.creation_max)
+
+    if creation_max and creation_max > attribute_table.max then
+      Flux.dev_print('The attribute \''..id..'\' has a creation_max above its max.')
+    end
+
+    warn_unordered('attribute', id, attribute_table.levels, attribute_table.level_order)
+  end
+
+  for id, skill in pairs(Skills.get_stored()) do
+    if isstring(skill.attribute) and !Attributes.find(skill.attribute) then
+      Flux.dev_print('The skill \''..id..'\' has the key stat \''..skill.attribute..'\', which is not registered.')
+    end
+
+    warn_unordered('skill', id, skill.ranks, skill.rank_order)
+  end
 end
 
 --- Loads the attribute records of characters, with their boosts, and their skill records
@@ -120,11 +92,15 @@ function Stats:ActiveCharacterSet(owner, character)
 end
 
 --- Takes the networked attributes and skills of a character away from the player who drops
--- it, and forgets when its next boost expires and the fractions of effects carried over.
+-- it, and forgets the levels kept of its attributes, when its next boost expires and the
+-- fractions of effects carried over.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
 function Stats:ActiveCharacterCleared(owner, _character)
   owner.attribute_expiry = nil
+  owner.attribute_character = nil
+  owner.attribute_levels = nil
+  owner.attribute_totals = nil
   owner.stat_effect_carry = nil
 
   owner:set_private_nv('attributes', {})
@@ -194,8 +170,9 @@ function Stats:AdjustChatMessageData(listener, message_data)
   message_data.radius = math_max(radius + Unit:meter(level * meters), self.min_hearing_radius)
 end
 
---- Rejects new characters unless each stat has a whole level between its minimum and its
--- creation limit and the levels add up to the points a new character gets.
+--- Rejects new characters unless each stat that is not hidden has a whole level between its
+-- minimum and its creation limit, no level is given for any other ID and the levels add up
+-- to the points a new character gets.
 -- @param _actor [Player player creating the character]
 -- @param data [Map character creation data]
 -- @return [Number CHAR_ERR_ATTRIBUTE_SUM if the stat levels are not valid, nil otherwise]
@@ -212,19 +189,21 @@ function Stats:PlayerCreateCharacter(_actor, data)
   local sum = 0
 
   for stat_id in pairs(levels) do
-    if !stats[stat_id] then
+    if !stats[stat_id] or stats[stat_id].hidden then
       return CHAR_ERR_ATTRIBUTE_SUM
     end
   end
 
   for stat_id, stat in pairs(stats) do
-    local level = levels[stat_id]
+    if !stat.hidden then
+      local level = levels[stat_id]
 
-    if !isnumber(level) or level != math.floor(level) or level < stat.min or level > self:get_creation_max(stat) then
-      return CHAR_ERR_ATTRIBUTE_SUM
+      if !isnumber(level) or level != math.floor(level) or level < stat.min or level > self:get_creation_max(stat) then
+        return CHAR_ERR_ATTRIBUTE_SUM
+      end
+
+      sum += level
     end
-
-    sum += level
   end
 
   if sum != self:default_attribute_points() then
@@ -310,7 +289,7 @@ function Stats:GetHealthRegeneration(target, amount)
   local scale = self:get_player_effect_scale(target, 'endurance', 'stats_endurance_recovery')
 
   if scale != 1 then
-    return scale_whole(target, 'health', amount, scale)
+    return self:scale_whole(target, 'health', amount, scale)
   end
 end
 
@@ -328,7 +307,7 @@ function Stats:GetLimbRecovery(actor, amount)
   local scale = self:get_player_effect_scale(actor, 'endurance', 'stats_endurance_recovery')
 
   if scale != 1 then
-    return scale_whole(actor, 'limbs', amount, scale)
+    return self:scale_whole(actor, 'limbs', amount, scale)
   end
 end
 
@@ -360,46 +339,4 @@ function Stats:AdjustVendorPrice(actor, vendor, item_obj, price_info)
   end
 
   price_info.price = price
-end
-
---- Rolls an attribute or a skill of a player and shows the result to the players nearby, the way
--- the `roll` command of the RolePlay Commands plugin shows a roll. Without that plugin the
--- result is shown to the player alone, as a notification. A roll that fails, such as one
--- whose formula a handler of the AdjustAttributeRoll hook has broken, is reported to the
--- player.
--- @param actor [Player player who rolls]
--- @param id [String ID of an attribute or a skill; an attribute wins over a skill with the
---   same ID]
--- @return [Map the Dice result, or nil and String the reason if nothing was rolled]
--- @see [Player#roll_attribute]
--- @see [Player#roll_skill]
-function Stats:roll_and_announce(actor, id)
-  local definition = Attributes.find(id)
-  local result, err
-
-  if definition then
-    result, err = actor:roll_attribute(id)
-  else
-    definition = Skills.find(id)
-
-    if !definition then
-      return nil, t('error.stats.unknown_rollable', { name = tostring(id) })
-    end
-
-    result, err = actor:roll_skill(id)
-  end
-
-  if !result then
-    actor:notify('error.stats.roll', { name = definition.name, message = tostring(err) })
-
-    return nil, err
-  end
-
-  if RPCommands and isfunction(RPCommands.announce_roll) then
-    RPCommands:announce_roll(actor, result, nil, nil, t(definition.name))
-  else
-    actor:notify('notification.stats.roll', { name = definition.name, roll = self:format_roll(result) })
-  end
-
-  return result
 end

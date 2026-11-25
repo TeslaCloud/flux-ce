@@ -556,8 +556,9 @@ es:
       unknown_rollable: "'{name}' no es una estadística ni una habilidad."
       not_stat: "'{name}' no es una estadística."
       not_skill: "'{name}' no es una habilidad."
+      unchanged: "No ha cambiado nada para {target}."
     attribute:
-      sum: La suma de atributos no es igual a la cantidad máxima de atributos.
+      sum: "Reparte exactamente {points} puntos entre tus estadísticas, manteniendo cada una dentro de los niveles que permite en la creación."
   notification:
     attribute:
       boost: Tu atributo '{attribute}' ha sido potenciado en {value} durante {time}.

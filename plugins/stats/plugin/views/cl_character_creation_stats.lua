@@ -1,7 +1,8 @@
 --- The stats stage of character creation (`fl_character_creation_stats`): a list of the
--- stats with a counter each, the points that are left to spend, a button that spreads the
--- points at random, and a panel that describes the selected stat, the level picked for it,
--- the bonus the chosen faction adds and what the stat changes in play at that level.
+-- stats that are not hidden with a counter each, the points that are left to spend, a button
+-- that spreads the points at random, and a panel that describes the selected stat, the level
+-- picked for it, the bonus the chosen faction adds and what the stat changes in play at that
+-- level.
 -- A stat can be raised up to its creation limit (`Stats:get_creation_max`), below the
 -- highest level it can reach in play. The picked levels are handed over as the
 -- `attributes` field of the creation data, which the server checks again.
@@ -15,16 +16,17 @@ local PANEL = {}
 PANEL.id = 'stats'
 PANEL.text = 'ui.char_create.stats'
 
---- Creates the icon of a stat: a FontAwesome icon if its name starts with 'fa-', otherwise
--- an image.
+--- Creates the icon of a stat: a FontAwesome icon or an image, see `Stats:get_icon_kind`.
 -- @param parent [Panel panel to put the icon in]
 -- @param icon [String FontAwesome icon name or path of an image]
 -- @param size [Number width and height of the icon]
 -- @return [Panel the icon, or nil if the stat has none]
 local function create_icon(parent, icon, size)
-  if !isstring(icon) or icon == '' then return end
+  local kind = Stats:get_icon_kind(icon)
 
-  if icon:start_with('fa-') then
+  if !kind then return end
+
+  if kind == 'fontawesome' then
     local icon_size = math.floor(size * 0.75)
     local panel = vgui.Create('DPanel', parent)
     panel:SetSize(size, size)
@@ -211,6 +213,8 @@ function PANEL:on_open(parent)
   end
 
   for attribute_id, attribute_table in pairs(Attributes.get_stored()) do
+    if attribute_table.hidden then continue end
+
     local stat_line = vgui.Create('DPanel', self.attributes_list)
     stat_line:SetTall(math_scale(64))
     stat_line:Dock(TOP)

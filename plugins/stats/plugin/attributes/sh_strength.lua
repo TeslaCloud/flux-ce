@@ -11,17 +11,7 @@ ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
 ATTRIBUTE.default = 0
-ATTRIBUTE.levels = {
-  legendary = 'attribute.strength.legendary',
-  heroic = 'attribute.strength.heroic',
-  superb = 'attribute.strength.superb',
-  great = 'attribute.strength.great',
-  good = 'attribute.strength.good',
-  fair = 'attribute.strength.fair',
-  mediocre = 'attribute.strength.mediocre',
-  poor = 'attribute.strength.poor',
-  terrible = 'attribute.strength.terrible'
-}
+ATTRIBUTE.order = 1
 
 ATTRIBUTE.effects = {
   Stats:percent_effect('ui.effect.carry_mass', 'stats_strength_lifting', false, function()

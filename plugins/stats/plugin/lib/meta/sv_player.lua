@@ -9,13 +9,14 @@ local player_meta = FindMetaTable('Player')
 -- and max, and networks it. Server only.
 -- @param attribute_id [String]
 -- @param level [Number]
+-- @return [Boolean true if the level has changed]
 -- @see [Attributes.update]
 function player_meta:set_attribute(attribute_id, level)
   level = tonumber(level)
 
-  if !level then return end
+  if !level then return false end
 
-  Attributes.update(self, attribute_id, level)
+  return Attributes.update(self, attribute_id, level)
 end
 
 --- Raises the player's level in an attribute. Boosts are not counted. Server only.
@@ -47,7 +48,8 @@ end
 -- target:boost_attribute('strength', -1, nil, 'drunk')
 -- ```
 -- @param attribute_id [String attribute to boost; ignored when it is not boostable]
--- @param value [Number levels to add, negative to take levels away]
+-- @param value [Number levels to add, negative to take levels away; rounded to a whole
+--   number]
 -- @param duration=nil [Number seconds until the boost expires; it never expires if this
 --   is nil or not above 0]
 -- @param identifier=nil [Any name of the boost, kept as a string]
@@ -100,13 +102,14 @@ end
 -- and networks it. Server only.
 -- @param skill_id [String]
 -- @param rank [Number]
+-- @return [Boolean true if the rank has changed]
 -- @see [Skills.update]
 function player_meta:set_skill(skill_id, rank)
   rank = tonumber(rank)
 
-  if !rank then return end
+  if !rank then return false end
 
-  Skills.update(self, skill_id, rank)
+  return Skills.update(self, skill_id, rank)
 end
 
 --- Raises the player's rank in a skill. Server only.

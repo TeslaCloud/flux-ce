@@ -11,17 +11,7 @@ ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
 ATTRIBUTE.default = 0
-ATTRIBUTE.levels = {
-  legendary = 'attribute.charisma.legendary',
-  heroic = 'attribute.charisma.heroic',
-  superb = 'attribute.charisma.superb',
-  great = 'attribute.charisma.great',
-  good = 'attribute.charisma.good',
-  fair = 'attribute.charisma.fair',
-  mediocre = 'attribute.charisma.mediocre',
-  poor = 'attribute.charisma.poor',
-  terrible = 'attribute.charisma.terrible'
-}
+ATTRIBUTE.order = 7
 
 ATTRIBUTE.effects = {
   Stats:percent_effect('ui.effect.vendor_prices', 'stats_charisma_prices', true, || -> Vendors != nil)

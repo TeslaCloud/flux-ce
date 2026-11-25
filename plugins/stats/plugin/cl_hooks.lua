@@ -1,82 +1,6 @@
---- Client side of the Stats plugin: adds the stats stage to character creation, words the
--- refusal of a character whose stat levels the server did not accept, adds the character
--- sheet to the tab menu as its first and default page and asks the server for the rolls of
--- the sheet.
-
-Stats.rolls = Stats.rolls or {}
-
---- How long a roll button tumbles at least before it shows the result, in seconds, so that
--- the result of a quick answer does not just blink into place.
-Stats.roll_tumble_time = 0.45
-
---- How long a roll button waits for the answer of the server before it gives up, in seconds.
-Stats.roll_timeout = 3
-
---- Asks the server to roll a stat or a skill of the local player and starts the animation
--- of its roll button. Does nothing sooner than `Stats.roll_interval` after the last roll,
--- which the server would refuse.
--- @param id [String ID of the stat or the skill]
--- @return [Boolean whether the roll was asked for]
-function Stats:request_roll(id)
-  local now = RealTime()
-
-  if self.next_roll and self.next_roll > now then
-    return false
-  end
-
-  self.next_roll = now + self.roll_interval + 0.1
-  self.rolls[id] = { started = now, pending = true }
-
-  Cable.send('fl_stats_roll', id)
-
-  return true
-end
-
---- Returns the last roll of a stat or a skill that the local player made from the
--- character sheet.
--- @param id [String ID of the stat or the skill]
--- @return [Map started (Number RealTime of the click), pending (Boolean while the server has
---   not answered), result (Map formula, total, natural, critical and rolls, once it has),
---   landed (Number RealTime at which the button stops tumbling and shows the result) and text
---   (String the result in words); nil if there is none]
-function Stats:get_roll(id)
-  return self.rolls[id]
-end
-
---- Opens a window that lists the given attributes and skills of a player's character,
--- hidden ones included. The list is a snapshot: it does not follow later changes. A window
--- that is still open from an earlier call is replaced.
--- @param target [Player player the attributes and skills belong to]
--- @param attributes [Map attribute data keyed by attribute ID, as `Player:get_attributes`
---   returns it]
--- @param skills=nil [Map Number ranks keyed by skill ID, as `Player:get_skills` returns it]
--- @return [Panel the `fl_frame` that was opened]
-function Attributes.open_viewer(target, attributes, skills)
-  if IsValid(Attributes.viewer) then
-    Attributes.viewer:safe_remove()
-  end
-
-  local name = IsValid(target) and target:name() or ''
-  local title = t('ui.attributes.viewer_title', { name = name })
-
-  local frame = vgui.Create('fl_frame')
-  frame:SetSize(math.scale(720), math.scale(640))
-  frame:Center()
-  frame:MakePopup()
-  frame:set_title(title)
-  frame:set_draggable(true)
-
-  local attribute_list = vgui.Create('fl_attributes', frame)
-  attribute_list:Dock(FILL)
-  attribute_list:set_snapshot(target, attributes, skills)
-  attribute_list:rebuild()
-
-  frame.attribute_list = attribute_list
-
-  Attributes.viewer = frame
-
-  return frame
-end
+--- Client hook handlers of the Stats plugin: add the stats stage to character creation, word
+-- the refusal of a character whose stat levels the server did not accept and add the
+-- character sheet to the tab menu as its first and default page.
 
 --- Registers the stats character creation panel and the character sheet with the theme.
 -- @param current_theme [Theme theme that was loaded]
@@ -124,6 +48,6 @@ end
 -- @return [String error text, nil for other statuses]
 function Stats:GetCharacterCreationErrorText(_success, status)
   if status == CHAR_ERR_ATTRIBUTE_SUM then
-    return t'error.attribute.sum'
+    return t('error.attribute.sum', { points = Stats:default_attribute_points() })
   end
 end

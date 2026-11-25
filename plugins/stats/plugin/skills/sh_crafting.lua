@@ -8,10 +8,3 @@ SKILL.description = 'skill.crafting.description'
 SKILL.icon = 'fa-hammer'
 SKILL.attribute = 'intelligence'
 SKILL.max = 4
-SKILL.ranks = {
-  untrained = 'skill.crafting.untrained',
-  trained = 'skill.crafting.trained',
-  expert = 'skill.crafting.expert',
-  master = 'skill.crafting.master',
-  legendary = 'skill.crafting.legendary'
-}

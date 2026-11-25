@@ -57,10 +57,16 @@ end
 
 --- Returns the player's level in an attribute. Active boosts are added to the level unless
 -- disabled or the attribute is not boostable. A player whose character has no data for the
--- attribute, such as a bot, is at the attribute's default level.
+-- attribute, such as a bot, is at the attribute's default level. Both realms count what the
+-- server has networked last (see `Attributes.get_level`), so a boost that expires stops
+-- counting on both when the server removes it.
+-- Also available as `Player:get_attribute_modifier`, the modifier the attribute adds to
+-- rolls.
+-- @alias [Player#get_attribute_modifier]
 -- @param attribute_id [String]
 -- @param no_boost=false [Boolean leave active boosts out of the level]
 -- @return [Number level; 0 if the attribute is not registered]
+-- @see [Attributes.get_total]
 function player_meta:get_attribute(attribute_id, no_boost)
   local attribute_table = attribute_definitions[attribute_id]
 
@@ -73,28 +79,13 @@ function player_meta:get_attribute(attribute_id, no_boost)
       return attribute_table.default
     end
 
-    if no_boost or attribute_table.boostable == false then
-      return level
-    end
-
-    return level + boost
+    return no_boost ? level : level + boost
   end
 
-  local attribute = self:get_attribute_data(attribute_id)
-
-  if !attribute then
-    return attribute_table.default
-  end
-
-  local level = attribute.level or attribute_table.default
-  local boost = 0
-
-  if !no_boost and attribute_table.boostable != false then
-    boost = Attributes.sum_boosts(attribute_table, attribute)
-  end
-
-  return level + boost
+  return Attributes.get_total(attribute_table, self:get_attribute_data(attribute_id), no_boost)
 end
+
+player_meta.get_attribute_modifier = player_meta.get_attribute
 
 --- Returns the sum of the player's active boosts to an attribute. The server leaves an
 -- expired boost out and takes it out of the networked data, so on the client every
@@ -173,18 +164,6 @@ function player_meta:get_skill(skill_id)
   local record = Skills.get_record(self:is_character_loaded() and self:get_character(), skill_id)
 
   return record and tonumber(record.rank) or 0
-end
-
---- Returns the modifier that an attribute adds to the player's rolls: its level, boosts
--- included.
--- @param stat_id [String ID of the stat]
--- @return [Number 0 if the attribute is not registered]
-function player_meta:get_attribute_modifier(stat_id)
-  if !Attributes.find(stat_id) then
-    return 0
-  end
-
-  return self:get_attribute(stat_id)
 end
 
 --- Returns the modifier that a skill adds to the player's rolls: the modifier of the key

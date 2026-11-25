@@ -10,14 +10,4 @@ ATTRIBUTE.min = -3
 ATTRIBUTE.max = 5
 ATTRIBUTE.creation_max = 3
 ATTRIBUTE.default = 0
-ATTRIBUTE.levels = {
-  legendary = 'attribute.intelligence.legendary',
-  heroic = 'attribute.intelligence.heroic',
-  superb = 'attribute.intelligence.superb',
-  great = 'attribute.intelligence.great',
-  good = 'attribute.intelligence.good',
-  fair = 'attribute.intelligence.fair',
-  mediocre = 'attribute.intelligence.mediocre',
-  poor = 'attribute.intelligence.poor',
-  terrible = 'attribute.intelligence.terrible'
-}
+ATTRIBUTE.order = 5

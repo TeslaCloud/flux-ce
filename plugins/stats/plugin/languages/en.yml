@@ -555,8 +555,9 @@ en:
       unknown_rollable: "'{name}' is not a stat or a skill."
       not_stat: "'{name}' is not a stat."
       not_skill: "'{name}' is not a skill."
+      unchanged: "Nothing has changed for {target}."
     attribute:
-      sum: Attribute sum is not equal to the maximum amount of the attributes.
+      sum: "Spread exactly {points} points over your stats, keeping each stat within the levels it allows at creation."
   notification:
     attribute:
       boost: Your attribute '{attribute}' was boosted by {value} for {time}.
