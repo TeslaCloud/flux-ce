@@ -11,7 +11,7 @@ en:
         desc: "Whether the camera glides from point to point instead of cutting."
       rotate_speed:
         name: "Rotation speed"
-        desc: "How fast the camera turns while it stays on a point, in degrees per frame."
+        desc: "How fast the camera turns while it stays on a point, in degrees per sixtieth of a second."
   notification:
     mapscene:
       point_added: Point added
@@ -24,6 +24,7 @@ en:
     mapscene:
       title: Mapscene
       point: "Mapscene #{index}"
+      delete: Delete
   permission:
     manage_map_scenes:
       name: "Manage map scenes"

@@ -19,7 +19,7 @@ function TOOL:LeftClick(_trace)
 
   if !IsValid(owner) or !owner:can('manage_map_scenes') then return end
 
-  MapScenes:add_point(owner:EyePos(), owner:GetAngles())
+  MapScenes:add_point(owner:EyePos(), owner:EyeAngles())
 
   owner:notify('notification.mapscene.point_added')
 
@@ -39,9 +39,9 @@ function TOOL.BuildCPanel(CPanel)
     if #MapScenes.points != #point_list:GetLines() then
       point_list:Clear()
 
-      for point_id in pairs(MapScenes.points) do
-        local line = point_list:AddLine(t('ui.mapscene.point', { index = point_id }))
-        line.id = point_id
+      for index, point in ipairs(MapScenes.points) do
+        local line = point_list:AddLine(t('ui.mapscene.point', { index = index }))
+        line.id = point.id
       end
     end
   end
@@ -50,7 +50,7 @@ function TOOL.BuildCPanel(CPanel)
     if !can('manage_map_scenes') then return end
 
     local menu = DermaMenu()
-    menu:AddOption('delete', function()
+    menu:AddOption(t'ui.mapscene.delete', function()
       Cable.send('fl_mapscene_remove', line.id)
     end):SetIcon('icon16/cancel.png')
     menu:Open()

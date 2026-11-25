@@ -11,7 +11,7 @@ es:
         desc: "Si la cámara se desliza de un punto a otro en lugar de cortar."
       rotate_speed:
         name: "Velocidad de rotación"
-        desc: "Lo rápido que gira la cámara mientras está en un punto, en grados por fotograma."
+        desc: "Lo rápido que gira la cámara mientras está en un punto, en grados por cada sexagésima de segundo."
   notification:
     mapscene:
       point_added: Punto añadido
@@ -24,6 +24,7 @@ es:
     mapscene:
       title: Escena del mapa
       point: "Escena del mapa n.º {index}"
+      delete: Eliminar
   permission:
     manage_map_scenes:
       name: "Gestionar escenas del mapa"

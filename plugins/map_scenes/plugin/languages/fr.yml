@@ -11,7 +11,7 @@ fr:
         desc: "Si la caméra glisse d'un point à l'autre au lieu de couper."
       rotate_speed:
         name: "Vitesse de rotation"
-        desc: "La vitesse à laquelle la caméra tourne sur un point, en degrés par image."
+        desc: "La vitesse à laquelle la caméra tourne sur un point, en degrés par soixantième de seconde."
   notification:
     mapscene:
       point_added: "Point ajouté"
@@ -24,6 +24,7 @@ fr:
     mapscene:
       title: "Scène de carte"
       point: "Scène de carte n° {index}"
+      delete: "Supprimer"
   permission:
     manage_map_scenes:
       name: "Gérer les scènes de la carte"

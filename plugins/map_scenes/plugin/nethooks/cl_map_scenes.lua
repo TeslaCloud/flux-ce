@@ -5,13 +5,14 @@ Cable.receive('fl_mapscene_load', function(points)
   MapScenes.points = points or {}
 end)
 
-Cable.receive('fl_mapscene_add', function(pos, ang)
-  table.insert(MapScenes.points, {
-    pos = pos,
-    ang = ang
-  })
+Cable.receive('fl_mapscene_add', function(point)
+  table.insert(MapScenes.points, point)
 end)
 
-Cable.receive('fl_mapscene_delete', function(index)
-  table.remove(MapScenes.points, index)
+Cable.receive('fl_mapscene_delete', function(id)
+  local index = MapScenes:find_point_index(id)
+
+  if index then
+    table.remove(MapScenes.points, index)
+  end
 end)

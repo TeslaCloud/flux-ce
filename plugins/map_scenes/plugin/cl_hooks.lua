@@ -5,9 +5,13 @@ local config_get = Config.get
 local marker_material = Material('sprites/combineball_glow_blue_1')
 local marker_color = Color('lightblue')
 local title_args = {}
+local labels = {}
+local labeled_points = nil
+local labeled_count = 0
 
 --- Draws a marker, a direction line and a label for every mapscene point while the local
--- player holds the mapscene tool and has the 'manage_map_scenes' permission.
+-- player holds the mapscene tool and has the 'manage_map_scenes' permission. The labels are
+-- translated again only when the points change.
 function MapScenes:RenderScreenspaceEffects()
   local client = PLAYER
 
@@ -15,29 +19,40 @@ function MapScenes:RenderScreenspaceEffects()
 
   local weapon = client:GetActiveWeapon()
 
-  if !IsValid(weapon) or weapon:GetClass() != 'gmod_tool' then return end
-
-  local tool = client:GetTool()
-
-  if !tool or tool.Name != 'Mapscene tool' or IsValid(Flux.intro_panel) or !can('manage_map_scenes') then return end
+  if !IsValid(weapon) or weapon:GetClass() != 'gmod_tool' or weapon:GetMode() != 'mapscene' then return end
+  if IsValid(Flux.intro_panel) or !can('manage_map_scenes') then return end
 
   local points = self.points
-  local font = Theme.get_font('text_small')
+  local count = #points
 
-  for k = 1, #points do
-    local v = points[k]
-    local pos = v.pos
-    local start_pos = pos:ToScreen()
+  if points != labeled_points or count != labeled_count then
+    labeled_points = points
+    labeled_count = count
 
-    cam.Start3D()
-      render.SetMaterial(marker_material)
+    for k = 1, count do
+      title_args.index = k
+      labels[k] = t('ui.mapscene.point', title_args)
+    end
+  end
+
+  cam.Start3D()
+    render.SetMaterial(marker_material)
+
+    for k = 1, count do
+      local v = points[k]
+      local pos = v.pos
+
       render.DrawSphere(pos, 5, 10, 10, marker_color)
       render.DrawLine(pos, pos + v.ang:Forward() * 20, marker_color)
-    cam.End3D()
+    end
+  cam.End3D()
 
-    title_args.index = k
+  local font = Theme.get_font('text_small')
 
-    draw.SimpleText(t('ui.mapscene.point', title_args), font, start_pos.x, start_pos.y, marker_color)
+  for k = 1, count do
+    local screen_pos = points[k].pos:ToScreen()
+
+    draw.SimpleText(labels[k], font, screen_pos.x, screen_pos.y, marker_color)
   end
 end
 
@@ -45,7 +60,7 @@ local view = {}
 
 --- Replaces the view with the current mapscene point while the ShouldMapsceneRender hook
 -- returns true. Depending on the config it cuts to the next point with a fade, glides
--- between the points or slowly rotates the camera.
+-- between the points or slowly rotates the camera, at the same speed at any frame rate.
 -- @param _client [Player]
 -- @param _origin [Vector]
 -- @param _angles [Angle]
@@ -120,7 +135,7 @@ function MapScenes:CalcView(_client, _origin, _angles, _fov)
 
           if rotate_speed > 0 then
             self.angle_offset = self.angle_offset or Angle()
-            self.angle_offset.y = self.angle_offset.y + rotate_speed
+            self.angle_offset.y += rotate_speed * 60 * FrameTime()
             self.ang += self.angle_offset
           end
         end
