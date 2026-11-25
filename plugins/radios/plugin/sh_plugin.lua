@@ -18,7 +18,7 @@
 
 PLUGIN:set_global 'Radios'
 
-Radios.prefixes = { '/r ', '/radio', ';' }
+Radios.prefixes = { '/r ', '/radio ', ';' }
 Radios.typing_color = Color(100, 228, 100)
 Radios.typing_range = 0.5
 
