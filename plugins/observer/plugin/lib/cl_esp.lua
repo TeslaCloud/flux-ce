@@ -88,7 +88,8 @@ local function draw_target(target, client_pos, teams, font_small, font_smaller)
   end
 end
 
---- Draws the admin ESP for every player but the local one.
+--- Draws the admin ESP for every player but the local one, leaving out the dormant players,
+-- whose position and health the client does not receive.
 -- @param client [Player the local player]
 function Observer:draw_esp(client)
   local client_pos = client:GetPos()
@@ -97,7 +98,7 @@ function Observer:draw_esp(client)
   local font_smaller = get_font('text_smaller')
 
   for _, target in player_iterator() do
-    if target != client then
+    if target != client and !target:IsDormant() then
       draw_target(target, client_pos, teams, font_small, font_smaller)
     end
   end
