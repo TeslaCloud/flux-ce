@@ -3,6 +3,7 @@
 -- receives it draws a projected light from the owner's eyes along their view, shaped by the
 -- `shared_flashlight_fov`, `shared_flashlight_distance`, `shared_flashlight_brightness` and
 -- `shared_flashlight_shadows` configs, so the owner and everyone around them see the same beam.
+-- The light goes out while the entity is dormant and comes back on its first think after.
 
 AddCSLuaFile()
 
@@ -56,22 +57,33 @@ else
       light:SetNearZ(12)
 
       self.light = light
+      self:apply_config()
     end
 
     light:SetPos(owner:EyePos())
     light:SetAngles(owner:EyeAngles())
+    light:Update()
+  end
+
+  --- Shapes the light by the `shared_flashlight_fov`, `shared_flashlight_distance`,
+  -- `shared_flashlight_brightness` and `shared_flashlight_shadows` configs. Runs when the
+  -- light is created and when one of the configs arrives from the server, not every frame.
+  function ENT:apply_config()
+    local light = self.light
+
+    if !light then return end
+
     light:SetFOV(config_get('shared_flashlight_fov', 50))
     light:SetFarZ(config_get('shared_flashlight_distance', 1024))
     light:SetBrightness(config_get('shared_flashlight_brightness', 1))
     light:SetEnableShadows(config_get('shared_flashlight_shadows', true))
-    light:Update()
   end
 
   --- Draws nothing: the entity has no model, only the light.
   function ENT:Draw() end
 
-  --- Removes the light, for the frames the owner is not known on. The next think that finds
-  -- the owner creates it again.
+  --- Removes the light, for the frames the owner is not known on and while the entity is
+  -- dormant. The next think that finds the owner creates it again.
   function ENT:switch_off()
     if self.light then
       self.light:Remove()

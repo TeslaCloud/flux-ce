@@ -44,4 +44,5 @@ function SharedFlashlight:has_flashlight_item(target)
   return (target:has_item_equipped(item_id))
 end
 
+require_relative 'cl_hooks'
 require_relative 'sv_hooks'
