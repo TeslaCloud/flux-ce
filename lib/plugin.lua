@@ -1255,7 +1255,7 @@ end
 -- the migrations of the plugins with it. The plugins count as loaded afterward, so this is
 -- meant for a Lua state that has included no plugin, such as that of a task.
 -- ```
--- Plugin.walk_schema(folder -> Pipeline.include_folder('migrations', folder..'/migrations/'))
+-- Plugin.walk_schema(folder -> Package:add_migrations(folder))
 -- ```
 -- @realm [server]
 -- @param callback [Function called with the folder, relative to the LUA search path and
@@ -1533,7 +1533,7 @@ function Plugin.include_folders(folder)
         if extra == 'languages' then
           Pipeline.include_folder('language', folder..'/languages/')
         elseif extra == 'migrations' then
-          Pipeline.include_folder('migrations', folder..'/migrations/')
+          Package:add_migrations(folder)
         elseif extra == 'views/lumen' then
           Pipeline.include_folder('lumen', folder..'/'..extra)
         else

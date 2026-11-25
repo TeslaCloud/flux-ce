@@ -9,7 +9,8 @@
 -- `packages` folder of its own, such as a development checkout of Flux, appends it to the list
 -- when it is included, so top-level packages win over nested ones. Clients find packages
 -- through the metadata the server sends them. The server registers the migrations of every
--- package it includes (see `Package:add_migrations`).
+-- package it includes (see `Package:add_migrations`), and `Package:walk` goes through the
+-- packages of a project in the same order without including them.
 
 AddCSLuaFile()
 
@@ -203,18 +204,27 @@ function Package:include_dependencies(instance, last)
   end
 end
 
---- Registers the migrations a package ships in its `migrations` folder with the 'migrations'
--- pipeline, which installs them into the schema's `db/migrate` folder (see
--- `ActiveRecord::MigrationContext`). The server registers the folder of every package it
--- includes, once the package is in, and fpkg's tasks those of the packages of the project in
--- the same order. Does nothing before ActiveRecord is loaded or for a package without the
--- folder.
+local pending_migrations = {}
+
+--- Registers the migrations in the `migrations` folder of a package, a plugin or the schema with
+-- the 'migrations' pipeline, which installs them into the schema's `db/migrate` folder (see
+-- `ActiveRecord::MigrationContext`). The server registers the folder of every package once the
+-- package is in, and of every plugin and the schema as it includes their extra folders; fpkg's
+-- tasks register the same folders in the same order (see `lib/tasks.lua`). The folders given
+-- before ActiveRecord has registered the pipeline are kept and registered, in the order they
+-- were given, as soon as it has. Does nothing for a folder without migrations.
 -- @realm [server]
--- @param path [String folder of the package, with a trailing slash]
-function Package:add_migrations(path)
-  if Pipeline then
-    Pipeline.include_folder('migrations', path..'migrations/')
+-- @param folder [String folder of the package, plugin or schema, relative to the LUA search path]
+function Package:add_migrations(folder)
+  pending_migrations[#pending_migrations + 1] = folder:ensure_end('/')..'migrations/'
+
+  if !Pipeline or !Pipeline.find('migrations') then return end
+
+  for _, path in ipairs(pending_migrations) do
+    Pipeline.include_folder('migrations', path)
   end
+
+  pending_migrations = {}
 end
 
 --- Determines if the package has already been installed.
@@ -538,5 +548,40 @@ do
     PACKAGE = parent_package
 
     return instance
+  end
+
+  local function walk(name, callback, visited)
+    if visited[name] then return end
+
+    visited[name] = true
+
+    local instance = Package:read(name)
+    local meta = instance.metadata
+
+    if !meta.clientside and istable(meta.deps) then
+      for _, dependency in ipairs(meta.deps) do
+        if !dependency:end_with('.lua') then
+          walk(dependency, callback, visited)
+        end
+      end
+    end
+
+    callback(instance.__path__)
+  end
+
+  --- Walks a package and the packages it depends on in the order `Package:include` includes
+  -- them, without including any of them: reads every specification (see `Package:read`) and
+  -- calls the callback with the folder of each package once its dependencies are done, once per
+  -- package. As on the server, the dependencies of a clientside package are left out. fpkg's
+  -- tasks register the migrations of the project's packages this way, with the dependencies
+  -- the specifications give in the environment Flux runs in.
+  -- ```
+  -- Package:walk(engine.ActiveGamemode(), folder -> Package:add_migrations(folder))
+  -- ```
+  -- @realm [server]
+  -- @param name [String package name, or path to the package's folder]
+  -- @param callback [Function called with the folder of each package, with a trailing slash]
+  function Package:walk(name, callback)
+    walk(name, callback, {})
   end
 end
