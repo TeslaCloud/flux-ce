@@ -1,7 +1,8 @@
 --- The static texts of the RolePlay Commands plugin on the server: adding and removing them,
 -- which sends the change to every player, and saving and loading them with the plugin data.
 -- Only the players who may see who placed a text (see `RPCommands:can_see_static_text_authors`)
--- receive the name and the SteamID of its author.
+-- receive the name and the SteamID of its author; a player whose role changes is sent all of
+-- the texts again.
 
 if !RPCommands then
   PLUGIN:set_global('RPCommands')

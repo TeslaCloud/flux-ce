@@ -132,3 +132,16 @@ end
 function RPCommands:PlayerInitialized(actor)
   self:send_static_texts(actor)
 end
+
+--- Sends all static texts to a player again once their role has changed, so that the
+-- client's copy holds the authors exactly when the role they have been given may see them. A
+-- player who has not loaded in yet receives the texts from `RPCommands:PlayerInitialized`.
+-- @param target [Player the player whose role has changed]
+-- @param _group [Role the role they have been given, nil when no registered role stands for its
+--   usergroup]
+-- @param _old_group [Role the previous role, nil when no registered role stands for its usergroup]
+function RPCommands:PlayerUserGroupChanged(target, _group, _old_group)
+  if !IsValid(target) or !target:has_initialized() then return end
+
+  self:send_static_texts(target)
+end
