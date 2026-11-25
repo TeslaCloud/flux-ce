@@ -1,0 +1,13 @@
+categories:
+  hints:
+    name: config.hints.title
+    description: config.hints.desc
+configs:
+  hints_interval:
+    name: config.hints.interval.name
+    description: config.hints.interval.desc
+    category: hints
+    type: number
+    min_value: 0
+    max_value: 86400
+    default_value: 300

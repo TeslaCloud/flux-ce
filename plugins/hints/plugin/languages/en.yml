@@ -1,4 +1,11 @@
 en:
+  config:
+    hints:
+      title: "Hints"
+      desc: "Settings of the gameplay hints that players are shown."
+      interval:
+        name: "Hint Interval"
+        desc: "How many seconds pass between two hints, rounded up to whole minutes. Set to 0 to show no hints automatically."
   hint:
     forums:
       You can visit the TeslaCloud forums to get support, download schemas and

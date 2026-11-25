@@ -1,4 +1,11 @@
 es:
+  config:
+    hints:
+      title: "Consejos"
+      desc: "Ajustes de los consejos de juego que se muestran a los jugadores."
+      interval:
+        name: "Intervalo de consejos"
+        desc: "Cuántos segundos pasan entre dos consejos, redondeados a minutos enteros. Pon 0 para no mostrar consejos automáticamente."
   hint:
     forums: ¡Puedes visitar los foros de TeslaCloud para obtener soporte, descargar schemas y charlar con otros usuarios de Flux!
     hints: Puedes desactivar estas pistas en la pestaña Ajustes del menú.

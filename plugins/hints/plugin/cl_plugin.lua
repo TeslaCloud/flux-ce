@@ -10,11 +10,12 @@ local hint_sound = 'hl1/fvox/blip.wav'
 local stored = Hints.stored or {}
 Hints.stored = stored
 
---- Returns the time that passes between two automatic hints.
+--- Returns the time that passes between two automatic hints: the one set with
+-- `Hints:set_interval`, else the 'hints_interval' config.
 -- @return [Number interval in seconds; zero or less means that no hints are shown
 --   automatically]
 function Hints:get_interval()
-  return self.interval or default_interval
+  return self.interval or Config.get('hints_interval', default_interval)
 end
 
 --- Sets the time that passes between two automatic hints. The change applies to the hint
@@ -26,7 +27,7 @@ end
 -- Hints:set_interval(0)
 -- ```
 -- @param seconds [Number interval in seconds, zero or less to turn the automatic hints off;
---   anything that is not a number restores the default of five minutes]
+--   anything that is not a number restores the 'hints_interval' config]
 function Hints:set_interval(seconds)
   self.interval = tonumber(seconds)
 end

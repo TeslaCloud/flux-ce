@@ -1,4 +1,11 @@
 fr:
+  config:
+    hints:
+      title: "Astuces"
+      desc: "Réglages des astuces de jeu montrées aux joueurs."
+      interval:
+        name: "Intervalle des astuces"
+        desc: "Combien de secondes s'écoulent entre deux astuces, arrondies à la minute supérieure. Mettez 0 pour ne montrer aucune astuce automatiquement."
   hint:
     forums: "Vous pouvez visiter les forums de TeslaCloud pour obtenir de l'aide, télécharger des schémas et discuter avec d'autres utilisateurs de Flux !"
     hints: "Ces astuces peuvent être désactivées dans l'onglet Options du menu."
