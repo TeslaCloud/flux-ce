@@ -2,8 +2,9 @@
 -- template mounted into the panel, which shows the character of the local player with its
 -- level, health, stats and skills and lets the player roll them and spend unspent points.
 -- What the sheet shows arrives from the server over time, so twice a second the panel checks
--- whether any of it has changed and renders the template again if it has. `rebuild` renders
--- it again right away. Derives from `fl_base_panel`.
+-- whether any of it has changed and renders the template again if it has. `rebuild` mounts
+-- the template, which the tab menu calls once it has sized the panel, or renders it again
+-- right away once it is mounted. Derives from `fl_base_panel`.
 
 local math_min = math.min
 local math_scale = math.scale
@@ -59,13 +60,8 @@ local function get_state_key()
   return table_concat(parts, ';')
 end
 
---- Mounts the character sheet template.
-function PANEL:Init()
-  self.state_key = get_state_key()
-  self.root = Lumen.render('character_sheet', nil, self)
-end
-
---- Renders the character sheet template again with the current data of the local player.
+--- Mounts the character sheet template, or renders it again with the current data of the
+-- local player once it is mounted.
 function PANEL:rebuild()
   self.state_key = get_state_key()
 
@@ -88,14 +84,6 @@ function PANEL:Think()
 
   if get_state_key() != self.state_key then
     self:rebuild()
-  end
-end
-
---- Takes the template down with the panel.
-function PANEL:OnRemove()
-  if self.root then
-    self.root:unmount()
-    self.root = nil
   end
 end
 

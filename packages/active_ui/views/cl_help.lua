@@ -15,14 +15,6 @@ function PANEL:rebuild()
   end
 end
 
---- Takes the template down with the panel.
-function PANEL:OnRemove()
-  if self.root then
-    self.root:unmount()
-    self.root = nil
-  end
-end
-
 --- Returns the size the tab menu gives this panel when it opens it.
 -- @return [Number width, Number height]
 function PANEL:get_menu_size()
