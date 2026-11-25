@@ -219,42 +219,16 @@ function Limbs:reset(target)
   return true
 end
 
---- Finds the limb of a fallen player that is closest to a position, by looking for the
--- nearest physics bone of their ragdoll. Needs the Ragdoll plugin.
+--- Finds the limb of a fallen player that is closest to a position, the limb of the hit group
+-- that `Damage:find_ragdoll_hitgroup` finds on their ragdoll. Needs the Ragdoll plugin.
 -- @param target [Player]
 -- @param position [Vector world position, e.g. where the damage was dealt]
 -- @return [String limb ID, or nil if the player has no ragdoll, the position is not set or
 --   the nearest bone is not a known part of a limb]
 function Limbs:find_ragdoll_limb(target, position)
   if !isfunction(target.get_ragdoll_entity) then return end
-  if !isvector(position) or position:IsZero() then return end
 
-  local ragdoll = target:get_ragdoll_entity()
-
-  if !IsValid(ragdoll) then return end
-
-  local closest, closest_distance
-
-  for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
-    local phys_obj = ragdoll:GetPhysicsObjectNum(i)
-
-    if IsValid(phys_obj) then
-      local distance = phys_obj:GetPos():DistToSqr(position)
-
-      if !closest_distance or distance < closest_distance then
-        closest = i
-        closest_distance = distance
-      end
-    end
-  end
-
-  if !closest then return end
-
-  local bone = ragdoll:TranslatePhysBoneToBone(closest)
-
-  if !bone or bone < 0 then return end
-
-  return self:from_bone(ragdoll:GetBoneName(bone))
+  return Damage:get_limb(Damage:find_ragdoll_hitgroup(target:get_ragdoll_entity(), position))
 end
 
 --- Works out which limbs a hit has landed on and how much damage each of them takes, before
@@ -262,8 +236,8 @@ end
 -- the player that the hit has taken, as a percentage, times the 'limbs_damage_scale'
 -- config: losing a quarter of the maximum health deals 25 limb damage at a scale of 1,
 -- whatever the maximum health is. Fall damage is split between the legs when the
--- 'limbs_fall_damage' config is on; other damage goes to the limb of the hit group, or, for
--- a fallen player, to the limb of their ragdoll that is closest to the hit.
+-- 'limbs_fall_damage' config is on; other damage goes to the limb of the hit group, which
+-- for a hit on the ragdoll of a fallen player is the limb closest to the hit.
 -- ```
 -- -- A player with 20 maximum health loses 5 health to a shot in the arm.
 -- Limbs:get_hits(victim, damage_info, 5, HITGROUP_LEFTARM)
@@ -294,10 +268,6 @@ function Limbs:get_hits(victim, damage_info, amount, hitgroup)
   end
 
   local limb = Damage:get_limb(hitgroup)
-
-  if !limb then
-    limb = self:find_ragdoll_limb(victim, damage_info:GetDamagePosition())
-  end
 
   if limb then
     hits[limb] = limb_damage

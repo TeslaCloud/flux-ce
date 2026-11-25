@@ -279,7 +279,7 @@ function player_meta:create_ragdoll_entity(decay, fallen, force)
     ragdoll:SetBodygroup(body_group.id, self:GetBodygroup(body_group.id))
   end
 
-  ragdoll.player = self
+  ragdoll.fl_ragdoll_owner = self
   ragdoll.decay = decay
   ragdoll:Spawn()
 
@@ -356,7 +356,9 @@ end
 --- Lets go of the player's ragdoll and removes it, right away or after its decay time
 -- (unless PlayerCanRagdollDecay keeps it). A player whose body the ragdoll had taken over
 -- gets it back: unless they are dead or being reset, they are moved to the ragdoll, given
--- their weapons and view back and keep burning if the ragdoll was. Serverside only.
+-- their weapons and view back and keep burning if the ragdoll was. A ragdoll that is removed
+-- right away stops being solid first, so that it is not in the way of the player getting up.
+-- Serverside only.
 -- @param reset=false [Boolean the player is being respawned: only make them visible, solid
 --   and able to move again]
 function player_meta:reset_ragdoll_entity(reset)
@@ -366,12 +368,16 @@ function player_meta:reset_ragdoll_entity(reset)
   self.ragdoll_data = nil
   self:SetDTEntity(ENT_RAGDOLL, NULL)
 
+  if IsValid(ragdoll) and (ragdoll.decay or 0) <= 0 then
+    ragdoll:SetNotSolid(true)
+  end
+
   if data and data.fallen then
     stand_up(self, data, ragdoll, reset or !self:Alive())
   end
 
   if IsValid(ragdoll) then
-    ragdoll.player = nil
+    ragdoll.fl_ragdoll_owner = nil
 
     if !data or !data.removed then
       ragdoll:RemoveCallOnRemove('fl_ragdoll')

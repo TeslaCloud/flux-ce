@@ -76,8 +76,9 @@ end
 
 --- Remembers the location of the hit a player or an NPC is about to take damage from. The
 -- engine only reports it to `ScalePlayerDamage` and `ScaleNPCDamage`, so it is kept for the
--- `EntityTakeDamage` and `PostEntityTakeDamage` handlers that follow in the same tick.
--- Serverside only.
+-- `EntityTakeDamage` and `PostEntityTakeDamage` handlers that follow in the same tick. The
+-- Ragdoll plugin sets it as well, for the damage that the ragdoll of a fallen player passes
+-- on to them, from `Damage:find_ragdoll_hitgroup`. Serverside only.
 -- @param victim [Entity player or NPC]
 -- @param hitgroup [Number HITGROUP_ enum]
 function Damage:set_hitgroup(victim, hitgroup)
@@ -91,13 +92,47 @@ end
 -- `PostPlayerTakeDamage` handlers. Serverside only.
 -- @param victim [Entity player or NPC]
 -- @return [Number HITGROUP_ enum; HITGROUP_GENERIC when the damage does not come from a
---   bullet or melee hit, e.g. a fall, an explosion or drowning]
+--   bullet or melee hit, e.g. a fall, an explosion or drowning, unless it was dealt to the
+--   ragdoll of a fallen player, which is located by the bone closest to it]
 function Damage:get_hitgroup(victim)
   if victim.damage_hitgroup and victim.damage_hitgroup_time == CurTime() then
     return victim.damage_hitgroup
   end
 
   return HITGROUP_GENERIC
+end
+
+--- Finds the hit group of a ragdoll that is closest to a position, by looking for the
+-- nearest physics bone of the ragdoll. Serverside only.
+-- @param ragdoll [Entity]
+-- @param position [Vector world position, e.g. where the damage was dealt]
+-- @return [Number HITGROUP_ enum, or nil if the ragdoll is not valid, the position is not set
+--   or the nearest bone is not a known part of a limb]
+function Damage:find_ragdoll_hitgroup(ragdoll, position)
+  if !IsValid(ragdoll) or !isvector(position) or position:IsZero() then return end
+
+  local closest, closest_distance
+
+  for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
+    local phys_obj = ragdoll:GetPhysicsObjectNum(i)
+
+    if IsValid(phys_obj) then
+      local distance = phys_obj:GetPos():DistToSqr(position)
+
+      if !closest_distance or distance < closest_distance then
+        closest = i
+        closest_distance = distance
+      end
+    end
+  end
+
+  if !closest then return end
+
+  local bone = ragdoll:TranslatePhysBoneToBone(closest)
+
+  if !bone or bone < 0 then return end
+
+  return self:get_hitgroup_from_bone(ragdoll:GetBoneName(bone))
 end
 
 --- Handles a bullet or melee hit on a player or an NPC: remembers its location and its

@@ -8,7 +8,7 @@ local entity_meta = FindMetaTable('Entity')
 -- @return [Player the owner, or nil if the entity is not the ragdoll of a player]
 function entity_meta:get_ragdoll_owner()
   if SERVER then
-    local owner = self.player
+    local owner = self.fl_ragdoll_owner
 
     if IsValid(owner) and owner:IsPlayer() and owner:GetDTEntity(ENT_RAGDOLL) == self then
       return owner

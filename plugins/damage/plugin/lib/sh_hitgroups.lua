@@ -3,7 +3,8 @@
 -- bullet or melee hit; a limb is one of seven IDs, 'head', 'chest', 'stomach', 'left_arm',
 -- 'right_arm', 'left_leg' and 'right_leg'. HITGROUP_GEAR, the gear that a model wears,
 -- counts as the stomach. HITGROUP_GENERIC and unknown hit groups belong to no limb and are
--- named 'ui.limbs.body'.
+-- named 'ui.limbs.body'. The bones of the ValveBiped skeleton map onto the hit groups, which
+-- locates the hits on a ragdoll.
 
 if !Damage then
   PLUGIN:set_global('Damage')
@@ -34,6 +35,33 @@ const hitgroup_limbs = {
   [HITGROUP_RIGHTLEG] = 'right_leg'
 }
 
+--- Hit group of every bone of the ValveBiped skeleton that belongs to a limb.
+const bone_hitgroups = {
+  ['ValveBiped.Bip01_Head1'] = HITGROUP_HEAD,
+  ['ValveBiped.Bip01_Neck1'] = HITGROUP_HEAD,
+  ['ValveBiped.Bip01_Spine1'] = HITGROUP_CHEST,
+  ['ValveBiped.Bip01_Spine2'] = HITGROUP_CHEST,
+  ['ValveBiped.Bip01_Spine4'] = HITGROUP_CHEST,
+  ['ValveBiped.Bip01_L_Clavicle'] = HITGROUP_CHEST,
+  ['ValveBiped.Bip01_R_Clavicle'] = HITGROUP_CHEST,
+  ['ValveBiped.Bip01_Spine'] = HITGROUP_STOMACH,
+  ['ValveBiped.Bip01_Pelvis'] = HITGROUP_STOMACH,
+  ['ValveBiped.Bip01_L_UpperArm'] = HITGROUP_LEFTARM,
+  ['ValveBiped.Bip01_L_Forearm'] = HITGROUP_LEFTARM,
+  ['ValveBiped.Bip01_L_Hand'] = HITGROUP_LEFTARM,
+  ['ValveBiped.Bip01_R_UpperArm'] = HITGROUP_RIGHTARM,
+  ['ValveBiped.Bip01_R_Forearm'] = HITGROUP_RIGHTARM,
+  ['ValveBiped.Bip01_R_Hand'] = HITGROUP_RIGHTARM,
+  ['ValveBiped.Bip01_L_Thigh'] = HITGROUP_LEFTLEG,
+  ['ValveBiped.Bip01_L_Calf'] = HITGROUP_LEFTLEG,
+  ['ValveBiped.Bip01_L_Foot'] = HITGROUP_LEFTLEG,
+  ['ValveBiped.Bip01_L_Toe0'] = HITGROUP_LEFTLEG,
+  ['ValveBiped.Bip01_R_Thigh'] = HITGROUP_RIGHTLEG,
+  ['ValveBiped.Bip01_R_Calf'] = HITGROUP_RIGHTLEG,
+  ['ValveBiped.Bip01_R_Foot'] = HITGROUP_RIGHTLEG,
+  ['ValveBiped.Bip01_R_Toe0'] = HITGROUP_RIGHTLEG
+}
+
 --- Phrase of the name of every limb, by limb ID.
 const limb_names = {}
 
@@ -58,6 +86,16 @@ end
 -- @return [String limb ID, or nil for HITGROUP_GENERIC and unknown hit groups]
 function Damage:get_limb(hitgroup)
   return hitgroup_limbs[hitgroup]
+end
+
+--- Returns the hit group that a bone of the ValveBiped skeleton belongs to.
+-- ```
+-- Damage:get_hitgroup_from_bone('ValveBiped.Bip01_L_Calf') -- HITGROUP_LEFTLEG
+-- ```
+-- @param bone_name [String name of the bone]
+-- @return [Number HITGROUP_ enum, or nil if the bone is not a known part of a limb]
+function Damage:get_hitgroup_from_bone(bone_name)
+  return bone_hitgroups[bone_name]
 end
 
 --- Returns the language phrase of the name of a hit location.

@@ -9,7 +9,8 @@
 -- The server watches the damage that players take without changing it, through the
 -- `PostPlayerTakeDamage` hook of the Damage plugin. A hit that was traced to a body part
 -- hurts the limb that `Damage:get_limb` gives for it, a hit on the ragdoll of a fallen
--- player hurts the limb closest to it, and fall damage is split between the legs. A limb
+-- player hurts the limb closest to it, which the Ragdoll plugin reports as the location of
+-- the hit, and fall damage is split between the legs. A limb
 -- takes the share of the maximum health of the player that the hit has cost them, as a
 -- percentage, times the 'limbs_damage_scale' config (1 by default), so a hit that takes half
 -- of the maximum health deals 50 damage to the limb however much health the player has.
@@ -63,32 +64,6 @@ for index, limb_id in ipairs(limb_ids) do
   limb_lookup[limb_id] = index
 end
 
-local bone_limbs = {
-  ['ValveBiped.Bip01_Head1'] = 'head',
-  ['ValveBiped.Bip01_Neck1'] = 'head',
-  ['ValveBiped.Bip01_Spine1'] = 'chest',
-  ['ValveBiped.Bip01_Spine2'] = 'chest',
-  ['ValveBiped.Bip01_Spine4'] = 'chest',
-  ['ValveBiped.Bip01_L_Clavicle'] = 'chest',
-  ['ValveBiped.Bip01_R_Clavicle'] = 'chest',
-  ['ValveBiped.Bip01_Spine'] = 'stomach',
-  ['ValveBiped.Bip01_Pelvis'] = 'stomach',
-  ['ValveBiped.Bip01_L_UpperArm'] = 'left_arm',
-  ['ValveBiped.Bip01_L_Forearm'] = 'left_arm',
-  ['ValveBiped.Bip01_L_Hand'] = 'left_arm',
-  ['ValveBiped.Bip01_R_UpperArm'] = 'right_arm',
-  ['ValveBiped.Bip01_R_Forearm'] = 'right_arm',
-  ['ValveBiped.Bip01_R_Hand'] = 'right_arm',
-  ['ValveBiped.Bip01_L_Thigh'] = 'left_leg',
-  ['ValveBiped.Bip01_L_Calf'] = 'left_leg',
-  ['ValveBiped.Bip01_L_Foot'] = 'left_leg',
-  ['ValveBiped.Bip01_L_Toe0'] = 'left_leg',
-  ['ValveBiped.Bip01_R_Thigh'] = 'right_leg',
-  ['ValveBiped.Bip01_R_Calf'] = 'right_leg',
-  ['ValveBiped.Bip01_R_Foot'] = 'right_leg',
-  ['ValveBiped.Bip01_R_Toe0'] = 'right_leg'
-}
-
 local leg_ids = { 'left_leg', 'right_leg' }
 local arm_ids = { 'left_arm', 'right_arm' }
 
@@ -113,11 +88,12 @@ function Limbs:is_limb(limb)
   return limb_lookup[limb] != nil
 end
 
---- Returns the limb that a bone of the ValveBiped skeleton belongs to.
+--- Returns the limb that a bone of the ValveBiped skeleton belongs to, the limb of
+-- `Damage:get_hitgroup_from_bone`.
 -- @param bone_name [String name of the bone, e.g. 'ValveBiped.Bip01_L_Calf']
 -- @return [String limb ID, or nil if the bone is not a known part of a limb]
 function Limbs:from_bone(bone_name)
-  return bone_limbs[bone_name]
+  return Damage:get_limb(Damage:get_hitgroup_from_bone(bone_name))
 end
 
 --- Returns the table that holds the limb damage of a player's active character, as it is

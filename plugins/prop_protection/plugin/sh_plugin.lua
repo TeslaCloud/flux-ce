@@ -128,12 +128,12 @@ function PropProtection:is_map_entity(entity)
 end
 
 --- Checks whether an entity is the ragdoll of a player, as created by the Ragdoll plugin for
--- players who are dead or knocked down. Only the server knows which player a ragdoll
--- belongs to.
+-- players who are dead or knocked down, by `Entity:get_ragdoll_owner`. Without the Ragdoll
+-- plugin no entity is.
 -- @param entity [Entity]
 -- @return [Boolean]
 function PropProtection:is_player_ragdoll(entity)
-  return entity:IsRagdoll() and IsValid(entity.player)
+  return entity:IsRagdoll() and isfunction(entity.get_ragdoll_owner) and IsValid(entity:get_ragdoll_owner())
 end
 
 --- Finds the rule that keeps an entity from being picked up with the physics gun whoever

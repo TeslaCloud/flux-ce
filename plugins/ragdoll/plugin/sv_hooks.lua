@@ -218,13 +218,15 @@ end
 
 --- Passes damage dealt to the ragdoll of a living player on to that player. Damage that was
 -- not dealt by a player is ignored while the ragdoll is immune, which it is for a moment
--- after the player has fallen; CanRagdollTakeDamage can block the rest.
+-- after the player has fallen; CanRagdollTakeDamage can block the rest. With the Damage
+-- plugin, the damage reaches the player at the hit location of the bone of the ragdoll that
+-- is closest to where it was dealt (`Damage:find_ragdoll_hitgroup`).
 -- @param entity [Entity the damaged entity]
 -- @param damage_info [CTakeDamageInfo]
 function Ragdoll:EntityTakeDamage(entity, damage_info)
   if !entity:IsRagdoll() then return end
 
-  local owner = entity.player
+  local owner = entity:get_ragdoll_owner()
 
   if !IsValid(owner) or !owner:Alive() then return end
 
@@ -244,6 +246,14 @@ function Ragdoll:EntityTakeDamage(entity, damage_info)
   -- @param damage_info [CTakeDamageInfo The damage]
   -- @return [Boolean Return false to keep the player from taking the damage]
   if hook.Run('CanRagdollTakeDamage', owner, entity, damage_info) == false then return end
+
+  if Damage then
+    local hitgroup = Damage:find_ragdoll_hitgroup(entity, damage_info:GetDamagePosition())
+
+    if hitgroup then
+      Damage:set_hitgroup(owner, hitgroup)
+    end
+  end
 
   owner:TakeDamageInfo(damage_info)
 end
