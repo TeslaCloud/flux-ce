@@ -4,8 +4,9 @@
 -- default), and `thrown_ammo_class`, the ammo type that the weapon throws (`'Grenade'`
 -- by default). Equipping the item gives the weapon with a single piece of that ammo and
 -- makes it the active weapon. Unequipping strips the weapon and, if the ammo is gone,
--- takes the item away from the player. The Items plugin takes equipped throwable
--- items away when the `PlayerThrewGrenade` hook is run.
+-- takes the item away from the player. Unlike the other weapons it has no unload button.
+-- The Items plugin takes equipped throwable items away when the `PlayerThrewGrenade` hook
+-- is run.
 -- @module [ItemThrowable]
 
 if !ItemWeapon then
@@ -21,11 +22,7 @@ ItemThrowable.equip_slot = 'item.slot.throwable'
 ItemThrowable.weapon_class = 'weapon_frag'
 ItemThrowable.thrown_ammo_class = 'Grenade'
 ItemThrowable.background_color = Color(150, 150, 50)
-ItemThrowable:add_button('unload', {
-  icon = 'icon16/add.png',
-  callback = 'on_unload',
-  on_show = _item_obj -> false
-})
+ItemThrowable.custom_buttons.unload = nil
 
 --- Called when the item gets equipped.
 -- Gives the player the throwable weapon with a single piece of ammo and makes it active.
