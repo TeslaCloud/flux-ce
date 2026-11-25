@@ -2,12 +2,12 @@
 -- `surface.CreateFont` and remembers the data of the font, which lets `Font.size` derive a
 -- copy of any created font at another size on demand (named 'name:size', with the extra font
 -- data appended when there is any), so that the interface can ask for a scaled font wherever
--- it draws text. All fonts are created again by `Font.create_fonts` when the gamemode loads on
--- the client, once the schema has loaded and whenever the screen resolution changes. It
--- creates the built-in Roboto family ('flRoboto', 'flRobotoCondensed' and so on) and then runs
--- the `RegisterFonts` theme hook and the `RegisterFonts` hook. Plugins create their fonts from
--- a `RegisterFonts` handler so that they survive these rebuilds, and themes give fonts a role
--- with `ThemeBase:set_font`, which the interface looks up with `Theme.get_font`.
+-- it draws text. All fonts are created by `Font.create_fonts` once the schema has loaded on
+-- the client and again whenever the screen resolution changes. It creates the built-in
+-- Roboto family ('flRoboto', 'flRobotoCondensed' and so on) and then runs the `RegisterFonts`
+-- theme hook and the `RegisterFonts` hook. Plugins create their fonts from a `RegisterFonts`
+-- handler so that they survive these rebuilds, and themes give fonts a role with
+-- `ThemeBase:set_font`, which the interface looks up with `Theme.get_font`.
 
 mod 'Font'
 
