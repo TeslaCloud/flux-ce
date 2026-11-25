@@ -1,19 +1,23 @@
 --- Cable is a thin wrapper around the net library that sends any number of values in one call.
--- `Cable.send` writes its arguments one after another, serializing tables with SFS, and
--- `Cable.receive` sets the handler that gets them back as regular arguments, so that there is
--- no reading or writing of individual net types. A nil argument arrives as nil and does not
--- cut off the arguments after it. Message names become networked strings the first time
--- the server uses them.
+-- `Cable.send` writes its arguments one after another, serializing tables (and strings that
+-- hold a zero byte) with SFS, and `Cable.receive` sets the handler that gets them back as
+-- regular arguments, so that there is no reading or writing of individual net types. A nil
+-- argument arrives as nil and does not cut off the arguments after it. Message names become
+-- networked strings the first time the server uses them.
 --
 -- A net message holds 64 KB at most. Values that do not fit are sent in chunks: the whole
 -- argument list is serialized with SFS as one block, compressed, cut into pieces of
 -- `Cable.chunk_size` bytes and sent one piece every `Cable.chunk_interval` seconds under the
 -- `fl_cable_chunk` name. The other side puts the pieces back together and runs the handler
 -- as if the message had arrived in one piece, so a table of any size goes through a single
--- `Cable.send` call. Values that SFS cannot serialize, such as functions, cannot be chunked.
+-- `Cable.send` call. The pieces after the first follow on timers, so a message of several
+-- pieces arrives after the messages that are sent in one piece right after it. Values that
+-- SFS cannot serialize, such as functions, cannot be chunked.
 -- The server accepts chunked messages from a client only for names that have a handler, up
--- to `Cable.max_transfer_size` bytes and `Cable.max_transfers_per_player` at a time, and
--- forgets a transfer that has not completed within `Cable.transfer_timeout` seconds.
+-- to `Cable.max_transfer_size` bytes and `Cable.max_transfers_per_player` at a time, decodes
+-- at most `Cable.max_completed_transfers_per_second` of them a second for each player, does
+-- not decompress one beyond `Cable.max_decompressed_size` bytes, and forgets a transfer that
+-- has not completed within `Cable.transfer_timeout` seconds.
 -- ```
 -- -- Any size, on either side:
 -- Cable.send(target, 'fl_map_data', huge_table)
@@ -27,6 +31,8 @@
 local IsValid = IsValid
 local isstring = isstring
 local istable = istable
+local TypeID = TypeID
+local find = string.find
 local tonumber = tonumber
 local unpack = unpack
 local select = select
@@ -42,6 +48,7 @@ local net_cache = {}
 local delayed = {}
 local handlers = {}
 local transfers = {}
+local completed = setmetatable({}, { __mode = 'k' })
 local next_transfer_id = 0
 
 local CHUNK_MESSAGE = 'fl_cable_chunk'
@@ -51,7 +58,8 @@ cable.chunk_size = 60_000
 cable.chunk_interval = 0.1
 cable.max_transfer_size = 4 * 1024 * 1024
 cable.max_transfers_per_player = 4
-cable.max_decompressed_size = 32 * 1024 * 1024
+cable.max_completed_transfers_per_second = 2
+cable.max_decompressed_size = cable.max_transfer_size
 cable.transfer_timeout = 60
 
 --- Runs the handler of a message with the values that have arrived. On the server the
@@ -108,10 +116,11 @@ local function read_args(id)
   return args, count
 end
 
---- Serializes the tables among the values of a message and measures the message.
+--- Serializes the tables among the values of a message, and the strings that hold a zero
+-- byte, which the net library would cut off there, and measures the message.
 -- @param ... [Vararg values to send]
 -- @return [List<Any> values with tables replaced by their SFS data, Map<Number, Boolean>
---   which of them are tables, String table index header, Number how many values there are,
+--   which of them are SFS data, String table index header, Number how many values there are,
 --   Number rough size of the message in bytes]
 local function encode_args(...)
   local args = { ... }
@@ -124,7 +133,7 @@ local function encode_args(...)
   for i = 1, length do
     local v = args[i]
 
-    if istable(v) then
+    if istable(v) or (isstring(v) and find(v, '\0', 1, true)) then
       local data, err = sfs.encode(v)
 
       if err then
@@ -195,7 +204,8 @@ local function encode_transfer(...)
 end
 
 --- Turns the block of a completed chunked transfer back into the argument list. On the
--- server a compressed block is not decompressed beyond `Cable.max_decompressed_size` bytes.
+-- server a compressed block is not decompressed beyond `Cable.max_decompressed_size` bytes,
+-- which is `Cable.max_transfer_size` unless changed.
 -- @param data [String the block]
 -- @param compressed [Boolean whether the block is compressed]
 -- @return [List<Any> the values with their amount in the n field, or nil and an error
@@ -297,6 +307,28 @@ local function send_chunked(receivers, id, ...)
   end
 
   return transfer_id, count
+end
+
+--- Counts a chunked transfer of a player that has received its last piece, and tells
+-- whether it may be decoded: no more than `Cable.max_completed_transfers_per_second` are
+-- in each second.
+-- @param sender [Player]
+-- @return [Boolean]
+local function may_complete(sender)
+  local now = SysTime()
+  local window = completed[sender]
+
+  if !window then
+    window = { started = now, count = 0 }
+    completed[sender] = window
+  elseif now - window.started >= 1 then
+    window.started = now
+    window.count = 0
+  end
+
+  window.count += 1
+
+  return window.count <= cable.max_completed_transfers_per_second
 end
 
 --- Forgets the chunked transfers that have been waiting for their pieces for longer than
@@ -423,6 +455,8 @@ net.Receive(CHUNK_MESSAGE, function(_length, sender)
     transfers[owner] = nil
   end
 
+  if SERVER and !may_complete(sender) then return end
+
   local packet, err = decode_transfer(table.concat(transfer.pieces, '', 1, count), transfer.compressed)
 
   if !packet then
@@ -464,13 +498,19 @@ if SERVER then
   -- ```
   -- A player who is not valid any more, such as one who has left, is nobody: a single invalid
   -- player gets no message and invalid players are left out of a list. A list without a valid
-  -- player sends nothing. Only nil stands for everyone.
-  -- @param target [Player/List<Player> who to send the message to; everyone if nil]
+  -- player sends nothing. Only nil stands for everyone. A recipient filter stands for the
+  -- players it holds at the time of the call.
+  -- @param target [Player/List<Player>/CRecipientFilter who to send the message to; everyone
+  --   if nil]
   -- @param id [String message name]
   -- @param ... [Vararg values to send]
   function cable.send(target, id, ...)
     if isstring(target) then
       error('cable.send - bad argument #1 (must not be a string)\n')
+    end
+
+    if TypeID(target) == TYPE_RECIPIENTFILTER then
+      target = target:GetPlayers()
     end
 
     local queue = delayed[id]
