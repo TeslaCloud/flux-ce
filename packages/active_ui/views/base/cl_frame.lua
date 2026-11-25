@@ -62,7 +62,7 @@ function PANEL:Paint(w, h)
 end
 
 --- Moves the frame with the cursor while it is being dragged, keeping it on the screen,
--- and runs the active theme's FrameThink hook.
+-- and runs the active theme's FrameThink hook with the frame.
 function PANEL:Think()
   if self.dragging then
     local scrw, scrh = ScrW(), ScrH()
@@ -76,7 +76,7 @@ function PANEL:Think()
     self:SetPos(x, y)
   end
 
-  Theme.hook('FrameThink')
+  Theme.hook('FrameThink', self)
 end
 
 --- Starts dragging the frame if it is draggable.

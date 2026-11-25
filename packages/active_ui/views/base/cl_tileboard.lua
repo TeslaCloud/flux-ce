@@ -12,15 +12,22 @@ function PANEL:Init()
   self.docked = {}
 end
 
---- Twice a second, drops docked entries whose panel is no longer valid.
+--- Twice a second, drops docked entries whose panel is not valid and numbers the
+-- remaining panels again.
 function PANEL:Think()
   local cur_time = CurTime()
 
   if cur_time > self.next_think then
-    for index = #self.docked, 1, -1 do
-      if !IsValid(self.docked[index].panel) then
-        table.remove(self.docked, index)
+    local docked = self.docked
+
+    for index = #docked, 1, -1 do
+      if !IsValid(docked[index].panel) then
+        table.remove(docked, index)
       end
+    end
+
+    for index = 1, #docked do
+      docked[index].panel.m_DockedTileID = index
     end
 
     self.next_think = cur_time + 0.5
@@ -72,7 +79,7 @@ function PANEL:position_panel(obj)
   local w, h = self:GetWide(), self:GetTall()
   local unit_x, unit_y = w / size.x, h / size.y
 
-  panel:SetPos(obj.pos.x * (size.x - 1) * unit_x, obj.pos.y * (size.y - 1) * unit_y)
+  panel:SetPos((obj.pos.x - 1) * unit_x, (obj.pos.y - 1) * unit_y)
   panel:SetSize(unit_x * obj.pos.w, unit_y * obj.pos.h)
 
   return obj
@@ -97,8 +104,8 @@ end
 
 --- Parents a panel to the board and docks it at a grid position.
 -- @param panel [Panel]
--- @param x=1 [Number horizontal grid position]
--- @param y=1 [Number vertical grid position]
+-- @param x=1 [Number column of the top left cell of the panel, 1 for the first column]
+-- @param y=1 [Number row of the top left cell of the panel, 1 for the first row]
 -- @param w=1 [Number width in grid cells]
 -- @param h=1 [Number height in grid cells]
 -- @return [Map the docked entry { panel = Panel, pos = { x, y, w, h } }, or nil if it could

@@ -44,15 +44,20 @@ function PANEL:PaintOver(w, h)
   end
 end
 
---- Updates the hover fade amount and stretches the image to the size of the button.
+--- Updates the hover fade amount.
 function PANEL:Think()
   if self:IsHovered() then
     self.cur_amt = math_clamp(self.cur_amt - 1, 0, 40)
   else
     self.cur_amt = math_clamp(self.cur_amt + 1, 0, 40)
   end
+end
 
-  self.Image:SetSize(self:GetSize())
+--- Stretches the image to the size of the button.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
+function PANEL:PerformLayout(w, h)
+  self.Image:SetSize(w, h)
 end
 
 vgui.Register('fl_image_button', PANEL, 'fl_button')

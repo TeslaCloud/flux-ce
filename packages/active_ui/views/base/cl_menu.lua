@@ -3,6 +3,7 @@
 
 local get_color = Theme.get_color
 local get_option = Theme.get_option
+local with_alpha = Theme.with_alpha
 local color_icon = Color(255, 255, 255)
 
 --- A single option of an `fl_menu`: a `DButton` in the theme's colors with an optional icon.
@@ -46,7 +47,7 @@ function PANEL:Paint(w, h)
       1,
       w - inset * 2,
       h - 2,
-      ColorAlpha(get_color('main_light'), 255 * self.hover_amount)
+      with_alpha(get_color('main_light'), 255 * self.hover_amount)
     )
   end
 
@@ -55,7 +56,8 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Calls DoClick on a left or right click, then forwards to DButton.OnMouseReleased.
+--- Calls DoClick on a left or right click and closes the menu, then forwards to
+-- DButton.OnMouseReleased.
 -- @param mouse [Number mouse button code, one of the MOUSE_ enums]
 -- @return [Any result of DButton.OnMouseReleased, normally nil]
 function PANEL:OnMousePressed(mouse)
@@ -63,6 +65,8 @@ function PANEL:OnMousePressed(mouse)
     if self.DoClick then
       self:DoClick()
     end
+
+    CloseDermaMenus()
   end
 
   return DButton.OnMouseReleased(self, mouse)
@@ -89,7 +93,8 @@ vgui.Register('fl_menu_item', PANEL, 'DButton')
 --- A popup context menu (`fl_menu`), built on `DScrollPanel`.
 -- Create it, add entries with `add_option` and `add_spacer`, then call `open` to show it at
 -- the cursor or at a given position. It is registered with Derma's menu system, so it is
--- removed when the Derma menus are closed. The action menu of an item is built with it.
+-- removed when the Derma menus are closed, which choosing one of its options does. It leaves
+-- the keyboard to the game. The action menu of an item is built with it.
 local PANEL = {}
 PANEL.last = 0
 PANEL.option_height = math.scale(32)
@@ -105,7 +110,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  Theme.hook('PaintCard', 0, 0, w, h, get_option('corner_radius'), ColorAlpha(get_color('surface_sunken'), 250))
+  Theme.hook('PaintCard', 0, 0, w, h, get_option('corner_radius'), with_alpha(get_color('surface_sunken'), 250))
 end
 
 --- Makes the menu and all of its options as wide as the widest option and as tall as the
@@ -137,8 +142,6 @@ function PANEL:PerformLayout()
   self:SetTall(math.min(y, ScrH() * 0.75))
 
   DScrollPanel.PerformLayout(self)
-
-  self:SetKeyboardInputEnabled(true)
 end
 
 --- Tells the Derma menu system to remove this menu when menus are closed.

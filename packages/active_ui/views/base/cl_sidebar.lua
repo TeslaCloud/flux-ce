@@ -82,7 +82,7 @@ end
 -- @return [Panel the created fl_button]
 function PANEL:add_button(text, callback)
   local button = vgui.Create('fl_button', self)
-  button:SetSize(self:GetWide(), Theme.get_option('menu_sidebar_height'))
+  button:SetSize(self:GetWide(), Theme.get_option('menu_sidebar_button_height'))
   button:SetDrawBackground(true)
   button:SetFont(Theme.get_font('text_normal_smaller'))
   button:set_text(text)
