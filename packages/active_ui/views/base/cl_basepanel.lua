@@ -3,8 +3,8 @@
 -- `SetBackgroundColor`, `SetTextColor`, `SetMainColor`, `SetAccentColor`, `SetTitle` and
 -- `SetFont`), leaves painting and thinking to the active theme's `PaintPanel` and `PanelThink`
 -- hooks, and gives every derived panel the MVC helpers `push`, `pull` and `request` for
--- exchanging data with the server. Register your own panels with `fl_base_panel` as their base
--- rather than using it on its own.
+-- exchanging data with the server; the callbacks it registers with `pull` go away with it.
+-- Register your own panels with `fl_base_panel` as their base rather than using it on its own.
 
 local theme_hook = Theme.hook
 
@@ -55,13 +55,25 @@ function PANEL:push(name, ...)
 end
 
 --- Registers a callback for data the server pushes to this client under the name.
--- The callback is removed after it has run once unless prevent_remove is set.
+-- The callback is removed after it has run once unless prevent_remove is set, and in any
+-- case once the panel is removed; it is not called while the panel is not valid.
 -- @param name [String name of the MVC response to wait for]
 -- @param handler [Function called with the values sent by the server]
 -- @param prevent_remove=false [Boolean keep the handler registered after it has run]
 -- @see [MVC.pull]
 function PANEL:pull(name, handler, prevent_remove)
-  MVC.pull(name, handler, prevent_remove)
+  if !isfunction(handler) then return end
+
+  local listener = function(...)
+    if IsValid(self) then
+      return handler(...)
+    end
+  end
+
+  self.mvc_listeners = self.mvc_listeners or {}
+  self.mvc_listeners[#self.mvc_listeners + 1] = { name = name, handler = listener }
+
+  MVC.pull(name, listener, prevent_remove)
 end
 
 --- Sends an MVC request to the server and registers a one-time callback for its response.
@@ -77,8 +89,22 @@ end
 -- @param ... [Vararg data passed to the server-side handler]
 -- @see [MVC.request]
 function PANEL:request(name, handler, ...)
-  self:pull(name, handler)
-  self:push(name, ...)
+  MVC.request(name, handler, ...)
+end
+
+--- Removes the callbacks the panel has registered with pull.
+function PANEL:OnRemove()
+  local listeners = self.mvc_listeners
+
+  if !listeners then return end
+
+  for i = 1, #listeners do
+    local listener = listeners[i]
+
+    MVC.unlisten(listener.name, listener.handler)
+  end
+
+  self.mvc_listeners = nil
 end
 
 PANEL.set_title = PANEL.SetTitle
