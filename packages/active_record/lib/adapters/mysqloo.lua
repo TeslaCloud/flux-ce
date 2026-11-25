@@ -89,6 +89,8 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected, on_failed)
   if mysqloo then
     local client_flag = flags or 0
 
+    self._last_query = nil
+
     if !isstring(socket) then
       self.connection = mysqloo.connect(host, user, password, database, port)
     else
@@ -128,14 +130,16 @@ end
 --- Waits until a condition is met, delivering the callbacks of MySQLOO in the meantime. MySQLOO
 -- connects and runs the queries in a thread of its own and calls their callbacks only from its
 -- Think hook, which does not run while the server waits, and from the wait functions of its
--- objects. While the connection is being made, the condition is checked until the timeout,
--- since the wait function of the connection would wait for as long as the system takes to give
--- up on the host. Once it is made or has failed, the wait function of the connection delivers
--- its callback and those of the queries that are done, and that of the newest asynchronous
--- query waits for it and for every query started before it. Gives up at once when there is no
--- connection or no query left to wait for, and after the timeout.
+-- objects. While the connection is being made, the server thread is held and nothing is
+-- delivered: the condition is checked again and again until the timeout, since the wait
+-- function of the connection would wait for as long as the system takes to give up on the
+-- host. Once it is made or has failed, the wait function of the connection delivers its
+-- callback and those of the queries that are done, and that of the newest asynchronous query
+-- waits for it and for every query started before it, until it finishes however long that
+-- takes, since the wait function of a query has no time limit. The timeout is checked between
+-- these waits. Gives up at once when there is no connection or no query left to wait for.
 -- @param condition [Function returns true once there is nothing more to wait for]
--- @param timeout=10 [Number seconds after which to give up]
+-- @param timeout=10 [Number seconds after which to stop waiting, checked between the waits]
 -- @return [Boolean whether the condition is met]
 function ActiveRecord.Adapters.Mysqloo:wait_until(condition, timeout)
   local deadline = SysTime() + (timeout or 10)
