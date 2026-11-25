@@ -37,8 +37,8 @@ function Doors:save()
 end
 
 --- Applies the saved properties, conditions and ownership to the doors of the map, skipping
--- the saved doors that the map no longer has. Runs the InitialDoorsLoad hook instead if
--- nothing has been saved yet.
+-- the saved doors that the map no longer has, and releases the doors of characters that do
+-- not exist anymore. Runs the InitialDoorsLoad hook instead if nothing has been saved yet.
 function Doors:load()
   local doors = Data.load_plugin('doors', {})
 
@@ -64,6 +64,7 @@ function Doors:load()
     end
 
     self:restore_links(loaded)
+    self:release_missing_owners(loaded)
   else
     --- Called on the server when the doors are loaded and no door data has been saved for the
     -- map yet. Lets a schema set the doors of the map up for the first time.

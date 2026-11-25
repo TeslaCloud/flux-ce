@@ -60,6 +60,7 @@ fr:
       already_linked: "Ces portes sont déjà liées !"
       not_linked: "Cette porte n'est liée à aucune autre !"
       link_owned: "Une porte qui a un propriétaire ne peut pas être liée. Déliez-la ou expulsez d'abord le propriétaire !"
+      invalid_conditions: "Ces conditions ne peuvent pas être mises sur une porte !"
   notification:
     door:
       bought: "Vous avez acheté la porte pour {value} {currency}."

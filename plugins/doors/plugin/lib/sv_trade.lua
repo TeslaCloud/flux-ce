@@ -20,12 +20,10 @@ function Doors:get_refund(entity)
 
   if !owner or !Currencies or !isstring(owner.currency) then return 0 end
 
-  local currency_data = Currencies:find_currency(owner.currency)
-
-  if !currency_data then return 0 end
+  if !Currencies:find_currency(owner.currency) then return 0 end
 
   local share = math.Clamp(tonumber(Config.get('doors_sell_share')) or 0, 0, 100)
-  local refund = math.round((tonumber(owner.paid) or 0) * share / 100, currency_data.decimals or 0)
+  local refund = Currencies:round(owner.currency, (tonumber(owner.paid) or 0) * share / 100)
 
   if refund <= 0 then return 0 end
 

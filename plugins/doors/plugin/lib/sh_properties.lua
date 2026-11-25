@@ -5,6 +5,10 @@ if !Doors then
   PLUGIN:set_global('Doors')
 end
 
+local title_white = Color(255, 255, 255)
+local title_outline = Color(0, 0, 0)
+local title_background = Color(0, 0, 0)
+
 Doors:register_property('name', {
   --- Returns the name of the door.
   -- @param entity [Entity the door]
@@ -16,6 +20,11 @@ Doors:register_property('name', {
   on_load = function(entity, data)
     entity:set_nv('fl_name', data)
   end,
+  --- Accepts a name that is text.
+  -- @param _entity [Entity the door]
+  -- @param data [Any the name sent by the door menu]
+  -- @return [Boolean]
+  validate = |_entity, data| -> isstring(data),
   --- Creates the text row for the name of the door in the door menu.
   -- @param _entity [Entity the door]
   -- @param panel [Panel the fl_door_menu panel]
@@ -39,6 +48,11 @@ Doors:register_property('title_type', {
   on_load = function(entity, data)
     entity:set_nv('fl_title_type', data)
   end,
+  --- Accepts the id of a registered title type, or an empty string.
+  -- @param _entity [Entity the door]
+  -- @param data [Any the title type id sent by the door menu]
+  -- @return [Boolean]
+  validate = |_entity, data| -> isstring(data) and (data == '' or Doors.title_types[data] != nil),
   --- Creates the combo box row with all registered title types in the door menu.
   -- @param _entity [Entity the door]
   -- @param panel [Panel the fl_door_menu panel]
@@ -67,7 +81,12 @@ Doors:register_property('skin', {
   -- @param data [Number the skin index]
   on_load = function(entity, data)
     entity:SetSkin(data)
-  end
+  end,
+  --- Accepts a skin index that the model of the door has.
+  -- @param entity [Entity the door]
+  -- @param data [Any the skin index sent by the door menu]
+  -- @return [Boolean]
+  validate = |entity, data| -> isnumber(data) and data >= 0 and data < entity:SkinCount() and data == math.floor(data)
 })
 
 Doors:register_property('bodygroups', {
@@ -212,13 +231,20 @@ Doors:register_title_type('center', {
     local box_x, box_y = -text_w * 0.55, quarter_h - text_h * 0.55
     local box_w, box_h = text_w * 1.1, text_h * 1.1
     local status_y = quarter_h
-    local white = color_white:alpha(alpha)
-    local outline = Color(0, 0, 0, alpha)
+    local white = title_white
+    local outline = title_outline
+
+    white.a = alpha
+    outline.a = alpha
 
     if has_text then
       local rounded_box = draw.RoundedBox
+      local background = Theme.get_color('background')
 
-      rounded_box(0, box_x, box_y, box_w, box_h, Theme.get_color('background'):alpha(alpha))
+      title_background.r, title_background.g, title_background.b = background.r, background.g, background.b
+      title_background.a = alpha
+
+      rounded_box(0, box_x, box_y, box_w, box_h, title_background)
       rounded_box(2, box_x - 4, box_y, box_w + 8, 4, white)
       rounded_box(2, box_x - 4, box_y + box_h, box_w + 8, 4, white)
 

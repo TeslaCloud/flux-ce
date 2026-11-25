@@ -115,7 +115,7 @@ end
 function Doors:set_price(entity, price)
   price = tonumber(price)
 
-  if price and (price != price or price == math.huge or price == -math.huge) then
+  if !math.is_finite(price) then
     price = nil
   end
 
@@ -354,8 +354,9 @@ function Doors:link(entity, parent)
 end
 
 --- Takes a door out of the group it is linked into. The door keeps the price and the
--- ownable flag of the group but not its owner. Unlinking the main door of a group breaks
--- the whole group up, and the main door keeps the owner. The doors are saved.
+-- ownable flag of the group but not its owner, and is unlocked if the group has an owner.
+-- Unlinking the main door of a group breaks the whole group up, and the main door keeps the
+-- owner. The doors are saved.
 -- @param entity [Entity the door]
 -- @return [Boolean whether anything was unlinked, String error phrase if the door is not
 --   linked to any other]
@@ -386,6 +387,10 @@ function Doors:unlink(entity)
   for _, door in ipairs(released) do
     door.door_parent = nil
     door.door_state = { ownable = state.ownable, price = state.price }
+
+    if state.owner and door:get_nv('fl_locked') then
+      self.properties['locked'].on_load(door, false)
+    end
 
     self:sync(door)
   end

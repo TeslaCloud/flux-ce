@@ -60,6 +60,7 @@ es:
       already_linked: ¡Estas puertas ya están vinculadas!
       not_linked: ¡Esta puerta no está vinculada a ninguna otra!
       link_owned: Una puerta que tiene dueño no se puede vincular. ¡Desvincúlala o desaloja primero a su dueño!
+      invalid_conditions: ¡Estas condiciones no se pueden poner en una puerta!
   notification:
     door:
       bought: "Has comprado la puerta por {value} {currency}."

@@ -14,9 +14,15 @@ local offset_side = Angle(0, 90, 90)
 local offset_front = Angle(0, 0, 90)
 local offset_flat = Angle(90, 90, 0)
 local offset_back = Angle(0, 180, 0)
+local trace_start = Vector()
+local to_eye = Vector()
+local draw_pos = Vector()
+local trace_result = {}
 local trace_data = {
+  start = trace_start,
   collisiongroup = COLLISION_GROUP_WORLD,
-  ignoreworld = true
+  ignoreworld = true,
+  output = trace_result
 }
 
 --- Makes a door work its status text out again when one of its ownership variables
@@ -72,27 +78,32 @@ function Doors:PostDrawTranslucentRenderables(depth, skybox)
       end
 
       local ang, pos = v:GetAngles(), v:LocalToWorld(v:OBBCenter())
-      local mins, maxs = v:OBBMins(), v:OBBMaxs()
-      local size = maxs - mins
+      local size = v:OBBMaxs()
+
+      size:Sub(v:OBBMins())
+
       local alpha = 255 * (1 - eye_pos:Distance(pos) * inverse_title_distance)
       local ang_offset, pos_offset
       local w, h
 
       if size.x < size.y and size.x < size.z then
         ang_offset = offset_side
-        pos_offset = v:GetForward() * size.x * 0.5
+        pos_offset = v:GetForward()
+        pos_offset:Mul(size.x * 0.5)
 
         w = size.y
         h = size.z
       elseif size.y < size.z then
         ang_offset = offset_front
-        pos_offset = v:GetRight() * size.y * 0.5
+        pos_offset = v:GetRight()
+        pos_offset:Mul(size.y * 0.5)
 
         w = size.x
         h = size.z
       else
         ang_offset = offset_flat
-        pos_offset = v:GetUp() * size.z * 0.5
+        pos_offset = v:GetUp()
+        pos_offset:Mul(size.z * 0.5)
 
         w = size.x
         h = size.y
@@ -100,18 +111,34 @@ function Doors:PostDrawTranslucentRenderables(depth, skybox)
 
       ang:Add(ang_offset)
 
-      trace_data.start = pos + pos_offset
+      trace_start:Set(pos)
+      trace_start:Add(pos_offset)
       trace_data.endpos = pos
 
-      local trace = trace_line(trace_data)
+      trace_line(trace_data)
+
+      local hit_pos = trace_result.HitPos
       local draw_w, draw_h = w / title_scale, h / title_scale
 
-      if trace.HitNormal:Dot((eye_pos - pos):GetNormalized()) > 0 then
-        start_3d2d(trace.HitPos + pos_offset * 0.05, ang, title_scale)
+      to_eye:Set(eye_pos)
+      to_eye:Sub(pos)
+
+      if trace_result.HitNormal:Dot(to_eye) > 0 then
+        draw_pos:Set(pos_offset)
+        draw_pos:Mul(0.05)
+        draw_pos:Add(hit_pos)
+
+        start_3d2d(draw_pos, ang, title_scale)
           title_data.draw(v, draw_w, draw_h, alpha)
         end_3d2d()
       else
-        start_3d2d(pos + (pos - trace.HitPos) * 1.05, ang + offset_back, title_scale)
+        draw_pos:Set(pos)
+        draw_pos:Sub(hit_pos)
+        draw_pos:Mul(1.05)
+        draw_pos:Add(pos)
+        ang:Add(offset_back)
+
+        start_3d2d(draw_pos, ang, title_scale)
           if title_data.draw_back then
             title_data.draw_back(v, draw_w, draw_h, alpha)
           else

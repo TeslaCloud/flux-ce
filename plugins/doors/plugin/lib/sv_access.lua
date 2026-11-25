@@ -213,10 +213,10 @@ function Doors:change_access(actor, entity, character_id, level)
   return true
 end
 
---- Makes a player put a text on a door that they manage (DOOR_ACCESS_MANAGE). Line breaks
--- and other control characters become spaces and the text is cut to the length that the
--- doors_text_length config allows; an empty text removes the text. A refusal is returned
--- for the caller to tell.
+--- Makes a player put a text on a door that they manage (DOOR_ACCESS_MANAGE). The text has
+-- to be valid UTF-8; line breaks and other control characters become spaces and the text is
+-- cut to the length that the doors_text_length config allows, see `string.clean_line`; an
+-- empty text removes the text. A refusal is returned for the caller to tell.
 -- @param actor [Player]
 -- @param entity [Entity the door]
 -- @param text [String]
@@ -228,17 +228,9 @@ function Doors:change_text(actor, entity, text)
     return false, 'error.door.no_access'
   end
 
-  text = string.Trim((text:gsub('%c+', ' ')))
+  if !isnumber(utf8.len(text)) then return false, 'error.door.invalid_text' end
 
-  local length = utf8.len(text)
-
-  if !isnumber(length) then return false, 'error.door.invalid_text' end
-
-  local max_length = tonumber(Config.get('doors_text_length')) or 32
-
-  if length > max_length then
-    text = text:utf8sub(1, max_length)
-  end
+  text = text:clean_line(tonumber(Config.get('doors_text_length')) or 32)
 
   self:set_text(entity, text)
   self:save()

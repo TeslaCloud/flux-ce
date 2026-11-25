@@ -1,14 +1,17 @@
 --- Saving and loading of door ownership, serverside.
 -- `Doors:get_ownership_data` turns the ownership state of a door into what `Doors:save`
 -- writes under its `ownership` key, `Doors:set_ownership_data` applies what `Doors:load`
--- reads back, and `Doors:restore_links` links the loaded doors into their groups again once
--- every door has been loaded.
+-- reads back, `Doors:restore_links` links the loaded doors into their groups again once
+-- every door has been loaded, and `Doors:release_missing_owners` releases the loaded doors
+-- whose owners do not exist anymore.
 
 if !Doors then
   PLUGIN:set_global('Doors')
 end
 
 local IsValid = IsValid
+local ipairs = ipairs
+local pairs = pairs
 local istable = istable
 local isstring = isstring
 local tonumber = tonumber
@@ -109,4 +112,54 @@ function Doors:restore_links(doors)
       self:sync(door)
     end
   end
+end
+
+--- Releases the loaded doors whose owning characters do not exist anymore, such as characters
+-- that were deleted while the server was on another map. The owners of all the doors are
+-- looked up with one query; a door that has changed hands while the query ran is left alone. The
+-- doors are saved if any of them was released. Does nothing while the Characters plugin is
+-- not loaded.
+-- @param doors [List<Entity> the doors that were loaded]
+function Doors:release_missing_owners(doors)
+  if !Characters then return end
+
+  local owners = {}
+  local ids = {}
+  local listed = {}
+
+  for _, door in ipairs(doors) do
+    local owner = IsValid(door) and !IsValid(door.door_parent) and self:get_owner(door)
+
+    if owner then
+      owners[door] = owner
+
+      if !listed[owner.id] then
+        listed[owner.id] = true
+        ids[#ids + 1] = owner.id
+      end
+    end
+  end
+
+  if #ids == 0 then return end
+
+  Character:where({ id = ids }):get(function(characters)
+    local existing = {}
+    local released = false
+
+    for _, character in ipairs(characters) do
+      existing[tonumber(character.id)] = true
+    end
+
+    for door, owner in pairs(owners) do
+      if IsValid(door) and !existing[owner.id] and self:get_owner(door) == owner then
+        self:clear_owner(door)
+
+        released = true
+      end
+    end
+
+    if released then
+      self:save()
+    end
+  end):fetch()
 end

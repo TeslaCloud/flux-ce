@@ -46,6 +46,11 @@ Doors.default_title_type = Doors.default_title_type or 'center'
 --   on_load = function(entity, data)
 --     entity:set_nv('fl_name', data)
 --   end,
+--   -- Optional, serverside. Checks a value that the door menu of a player has sent before
+--   -- on_load gets it; a value it does not return true for is dropped.
+--   validate = function(_entity, data)
+--     return isstring(data)
+--   end,
 --   -- Optional, clientside. Creates and returns the row for the door menu.
 --   create_panel = function(entity, panel)
 --     local name = panel.properties:CreateRow(t'door.categories.general', t'door.properties.name')
@@ -57,8 +62,9 @@ Doors.default_title_type = Doors.default_title_type or 'center'
 -- ```
 -- @param id [String unique property id, also the key the value is saved under]
 -- @param data [Map property definition: the optional get_save_data(entity),
---   on_load(entity, data) and create_panel(entity, panel); a property without
---   get_save_data is not saved]
+--   on_load(entity, data), validate(entity, data) and create_panel(entity, panel); a
+--   property without get_save_data is not saved, and every value that the door menu sends
+--   for a property without validate reaches on_load as it is]
 function Doors:register_property(id, data)
   properties[id] = data
 end
@@ -146,8 +152,7 @@ function Doors:get_price(entity)
 
   if !currency then return 0 end
 
-  local currency_data = Currencies:find_currency(currency)
   local price = tonumber(entity:get_nv('fl_door_price')) or tonumber(Config.get('doors_price')) or 0
 
-  return math.round(math.max(price, 0), currency_data.decimals or 0), currency
+  return Currencies:round(currency, math.max(price, 0)), currency
 end

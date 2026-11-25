@@ -1,6 +1,8 @@
 --- Server-side network receivers of the Doors plugin: applies what the door menu and the
 -- door management menu of a player send, once the request has been checked.
 
+local conditions_interval = 1
+
 --- Checks a request that the door menu of a player has sent: the entity has to be a door
 -- within `Doors.use_distance` of the living player, and a player may send a request only
 -- every 0.3 seconds. The player is told what is wrong.
@@ -40,26 +42,45 @@ Cable.receive('fl_send_door_data', function(actor, entity, id, data)
   and actor:is_in_reach(entity, Doors.use_distance) then
     local property = Doors.properties[id]
 
-    if property and property.on_load then
+    if property and property.on_load and (!property.validate or property.validate(entity, data) == true) then
       property.on_load(entity, data)
     end
   end
 end)
 
 Cable.receive('fl_lock_door', function(actor, entity, lock)
-  if isentity(entity) and IsValid(entity) and entity:is_door() and actor:is_in_reach(entity, Doors.use_distance)
-  and hook.Run('PlayerCanLockDoor', actor, entity) then
-    if !Doors:player_lock_door(actor, entity, tobool(lock)) then
-      actor:notify('error.cant_now')
-    end
+  if !accept_request(actor, entity) or !hook.Run('PlayerCanLockDoor', actor, entity) then return end
+
+  if !Doors:player_lock_door(actor, entity, tobool(lock)) then
+    actor:notify('error.cant_now')
   end
 end)
 
 Cable.receive('fl_send_door_conditions', function(actor, entity, conditions)
-  if actor:can('manage_doors') and isentity(entity) and IsValid(entity) and entity:is_door()
-  and istable(conditions) and actor:is_in_reach(entity, Doors.use_distance) then
-    entity.conditions = conditions
+  if !actor:can('manage_doors') or !isentity(entity) or !IsValid(entity) or !entity:is_door()
+  or !actor:is_in_reach(entity, Doors.use_distance) then return end
+
+  local cur_time = CurTime()
+
+  if actor.next_door_conditions and actor.next_door_conditions > cur_time then
+    actor:notify('error.wait')
+
+    return
   end
+
+  actor.next_door_conditions = cur_time + conditions_interval
+
+  local cleaned = Doors:clean_conditions(conditions)
+
+  if !cleaned then
+    actor:notify('error.door.invalid_conditions')
+
+    return
+  end
+
+  entity.conditions = cleaned
+
+  Doors:save()
 end)
 
 Cable.receive('fl_door_buy', function(actor, entity)

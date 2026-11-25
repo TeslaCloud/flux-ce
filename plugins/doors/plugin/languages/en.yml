@@ -60,6 +60,7 @@ en:
       already_linked: These doors are linked already!
       not_linked: This door is not linked to any other!
       link_owned: A door that has an owner cannot be linked. Unlink it or evict the owner first!
+      invalid_conditions: These conditions cannot be set on a door!
   notification:
     door:
       bought: "You have bought the door for {value} {currency}."
