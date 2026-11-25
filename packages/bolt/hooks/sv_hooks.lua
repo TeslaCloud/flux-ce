@@ -143,8 +143,12 @@ end
 
 --- Prints how to become an administrator to the server console while nobody can manage the
 -- server: the bolt_root_steamid config is empty and no stored user has a role other than
--- `user`.
+-- `user`. Prints nothing while `bolt_external_admin` has Bolt defer to another admin mod,
+-- which keeps the usergroups. The config is read rather than the mode, because the database
+-- can be ready before `Bolt:setup_cami` has applied it.
 local function print_admin_hint()
+  if Bolt:get_cami_mode() == 'external' then return end
+
   local root_steamid = Config.get('bolt_root_steamid')
 
   if (isstring(root_steamid) and root_steamid != '') or (istable(root_steamid) and next(root_steamid) != nil) then
