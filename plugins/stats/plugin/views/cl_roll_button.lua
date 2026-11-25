@@ -9,18 +9,42 @@
 
 local math_floor = math.floor
 local math_clamp = math.Clamp
+local math_min = math.min
 
 local face_time = 0.06
 local flash_time = 0.9
 local show_time = 6
+local box_color = Color(0, 0, 0)
+local light_color = Color(0, 0, 0)
+local text_color = Color(0, 0, 0)
 
-local function mix(from, to, fraction)
-  return Color(
-    from.r + (to.r - from.r) * fraction,
-    from.g + (to.g - from.g) * fraction,
-    from.b + (to.b - from.b) * fraction,
-    from.a + (to.a - from.a) * fraction
-  )
+--- Mixes two colors into a color that is reused, so that drawing allocates nothing.
+-- @param out [Color the color to write to]
+-- @param from [Color]
+-- @param to [Color]
+-- @param fraction [Number 0 gives from, 1 gives to]
+-- @return [Color out]
+local function mix(out, from, to, fraction)
+  out.r = from.r + (to.r - from.r) * fraction
+  out.g = from.g + (to.g - from.g) * fraction
+  out.b = from.b + (to.b - from.b) * fraction
+  out.a = from.a + (to.a - from.a) * fraction
+
+  return out
+end
+
+--- Writes a lighter copy of a color into a color that is reused, as `Color:lighten` does.
+-- @param out [Color the color to write to]
+-- @param from [Color]
+-- @param amount [Number amount to add to the red, green and blue channels, 0 or more]
+-- @return [Color out]
+local function lighten(out, from, amount)
+  out.r = math_min(from.r + amount, 255)
+  out.g = math_min(from.g + amount, 255)
+  out.b = math_min(from.b + amount, 255)
+  out.a = from.a
+
+  return out
 end
 
 local PANEL = {}
@@ -136,9 +160,11 @@ function PANEL:Paint(w, h)
 
   flash *= flash
 
-  Lumen.paint_box(self, w, h, mix(background, color, 0.25 + 0.75 * flash))
+  Lumen.paint_box(self, w, h, mix(box_color, background, color, 0.25 + 0.75 * flash))
 
-  self:draw_roll_text(tostring(result.total), mix(color:lighten(40), color_white, flash), w, h)
+  local light = lighten(light_color, color, 40)
+
+  self:draw_roll_text(tostring(result.total), mix(text_color, light, color_white, flash), w, h)
 end
 
 vgui.Register('fl_stats_roll_button', PANEL, 'lumen_button')
