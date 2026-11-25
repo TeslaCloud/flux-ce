@@ -45,12 +45,25 @@ function ent_meta:CPPIGetOwner()
   return PropProtection:find_owner(key), key
 end
 
+--- Checks with `PropProtection:can_manipulate` whether a player may manipulate an entity, for
+-- the CPPI methods. Anything that is not a valid player, such as nil or NULL, may not.
+-- @param actor [Any the player]
+-- @param entity [Entity]
+-- @param action [String see PropProtection:can_manipulate]
+-- @param detail=nil [String see PropProtection:can_manipulate]
+-- @return [Boolean]
+local function can_manipulate(actor, entity, action, detail)
+  if !IsValid(actor) or !actor:IsPlayer() then return false end
+
+  return PropProtection:can_manipulate(actor, entity, action, detail) ? true : false
+end
+
 --- Checks whether a player may pick the entity up with the physics gun, as the CPPI asks
 -- for it.
 -- @param actor [Player]
 -- @return [Boolean]
 function ent_meta:CPPICanPhysgun(actor)
-  return PropProtection:can_manipulate(actor, self, 'physgun') ? true : false
+  return can_manipulate(actor, self, 'physgun')
 end
 
 --- Checks whether a player may use a tool on the entity, as the CPPI asks for it.
@@ -58,7 +71,7 @@ end
 -- @param tool [String tool ID]
 -- @return [Boolean]
 function ent_meta:CPPICanTool(actor, tool)
-  return PropProtection:can_manipulate(actor, self, 'tool', tool) ? true : false
+  return can_manipulate(actor, self, 'tool', tool)
 end
 
 --- Checks whether a player may use a property of the context menu on the entity, as the
@@ -67,14 +80,14 @@ end
 -- @param property [String property name]
 -- @return [Boolean]
 function ent_meta:CPPICanProperty(actor, property)
-  return PropProtection:can_manipulate(actor, self, 'property', property) ? true : false
+  return can_manipulate(actor, self, 'property', property)
 end
 
 --- Checks whether a player may drive the entity, as the CPPI asks for it.
 -- @param actor [Player]
 -- @return [Boolean]
 function ent_meta:CPPICanDrive(actor)
-  return PropProtection:can_manipulate(actor, self, 'drive') ? true : false
+  return can_manipulate(actor, self, 'drive')
 end
 
 --- Returns the friends of the player, as the CPPI asks for it. The plugin has no friends,
