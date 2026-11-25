@@ -33,11 +33,17 @@ local sorted              = Flux.Bars.sorted or {}
 local priority_order      = {}
 Flux.Bars.stored          = stored
 Flux.Bars.sorted          = sorted
-Flux.Bars.default_x       = math.scale_x(8)
-Flux.Bars.default_y       = math.scale(8)
-Flux.Bars.default_w       = math.scale_width(312)
-Flux.Bars.default_h       = math.scale(18)
-Flux.Bars.default_spacing = math.scale(6)
+
+--- Sets the default position, size and spacing of the bars for the current resolution.
+local function set_defaults()
+  Flux.Bars.default_x       = math.scale_x(8)
+  Flux.Bars.default_y       = math.scale(8)
+  Flux.Bars.default_w       = math.scale_width(312)
+  Flux.Bars.default_h       = math.scale(18)
+  Flux.Bars.default_spacing = math.scale(6)
+end
+
+set_defaults()
 
 --- Scales a size given for a 1080p screen, leaving a missing one alone.
 -- @param size [Number size at 1080p, or nil]
@@ -379,16 +385,29 @@ do
     end
   end
 
+  --- Registers the respawn bar in the middle of the screen.
+  -- @param force=false [Boolean replace the bar if it exists]
+  local function register_respawn_bar(force)
+    Flux.Bars:register('respawn', {
+      text = t'ui.hud.bar_text.respawn',
+      color = Color(50, 200, 50),
+      max_value = 100,
+      x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
+      y = ScrH() * 0.5 - math.scale(8),
+      text_offset = 1,
+      height = 16,
+      type = BAR_MANUAL
+    }, force)
+  end
+
+  --- Sets the defaults of the bars for the resolution the screen has changed to and places the
+  -- respawn bar again.
+  function Bars:ResolutionChanged()
+    set_defaults()
+    register_respawn_bar(true)
+  end
+
   Plugin.add_hooks('Bars', Bars)
 
-  Flux.Bars:register('respawn', {
-    text = t'ui.hud.bar_text.respawn',
-    color = Color(50, 200, 50),
-    max_value = 100,
-    x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
-    y = ScrH() * 0.5 - math.scale(8),
-    text_offset = 1,
-    height = 16,
-    type = BAR_MANUAL
-  })
+  register_respawn_bar()
 end

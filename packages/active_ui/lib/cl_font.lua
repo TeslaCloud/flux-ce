@@ -1,13 +1,13 @@
 --- Creates and keeps track of the fonts of the Flux interface. `Font.create` wraps
 -- `surface.CreateFont` and remembers the data of the font, which lets `Font.size` derive a
--- copy of any created font at another size on demand (named 'name:size'), so that the
--- interface can ask for a scaled font wherever it draws text. All fonts are created again by
--- `Font.create_fonts` when the gamemode loads on the client, once the schema has loaded and
--- whenever the screen resolution changes. It creates the built-in Roboto family ('flRoboto',
--- 'flRobotoCondensed' and so on) and then runs the `RegisterFonts` theme hook and the
--- `RegisterFonts` hook. Plugins create their fonts from a `RegisterFonts` handler so that they
--- survive these rebuilds, and themes give fonts a role with `ThemeBase:set_font`, which the
--- interface looks up with `Theme.get_font`.
+-- copy of any created font at another size on demand (named 'name:size', with the extra font
+-- data appended when there is any), so that the interface can ask for a scaled font wherever
+-- it draws text. All fonts are created again by `Font.create_fonts` when the gamemode loads on
+-- the client, once the schema has loaded and whenever the screen resolution changes. It
+-- creates the built-in Roboto family ('flRoboto', 'flRobotoCondensed' and so on) and then runs
+-- the `RegisterFonts` theme hook and the `RegisterFonts` hook. Plugins create their fonts from
+-- a `RegisterFonts` handler so that they survive these rebuilds, and themes give fonts a role
+-- with `ThemeBase:set_font`, which the interface looks up with `Theme.get_font`.
 
 mod 'Font'
 
@@ -38,11 +38,38 @@ function Font.create(name, font_data)
   return stored[name]
 end
 
+--- Builds the part of the name of a sized font that tells its extra font data apart: the
+-- sorted 'key=value' pairs of the data after a colon, or an empty string without data.
+-- @param data [Map/Nil extra font data]
+-- @return [String]
+local function data_suffix(data)
+  if !istable(data) or next(data) == nil then return '' end
+
+  local keys = table.GetKeys(data)
+  local parts = {}
+
+  table.sort(keys, |a, b| -> tostring(a) < tostring(b))
+
+  for i = 1, #keys do
+    local key = keys[i]
+
+    parts[i] = tostring(key)..'='..tostring(data[key])
+  end
+
+  return ':'..table.concat(parts, ',')
+end
+
 --- Returns the name of the specified font scaled to the specified size. The sized font
--- is created from the original one on first use and is named 'name:size'.
+-- is created from the original one on first use and is named 'name:size', followed by the
+-- sorted extra data when there is any ('name:size:key=value,key=value'), so that two calls
+-- with different data never share a font. A font sized from a font that `Font.create_fonts`
+-- has not created again yet is derived from the base font of that sized font.
 -- ```
 -- -- Creates 'flRobotoCondensed:24' if it does not exist yet.
 -- local font = Font.size('flRobotoCondensed', 24)
+--
+-- -- Creates 'flRoboto:14:weight=600'.
+-- local bold = Font.size('flRoboto', 14, { weight = 600 })
 -- ```
 -- @param name [String name of a font created with Font.create]
 -- @param size=nil [Number font size, the name is returned unchanged if omitted]
@@ -52,9 +79,10 @@ function Font.size(name, size, data)
   if !size then return name end
   if !name then return false end
 
+  local suffix = data_suffix(data)
   local font = stored[name]
 
-  if font and font.size == size then
+  if suffix == '' and font and font.size == size then
     return name
   end
 
@@ -65,24 +93,31 @@ function Font.size(name, size, data)
     sized_names[name] = names_by_size
   end
 
-  local new_name = names_by_size[size]
+  local key = suffix == '' and size or size..suffix
+  local new_name = names_by_size[key]
 
   if !new_name then
-    local raw_name, original_size = string.match(name, '^(.+):(%d)')
-
-    new_name = (original_size and raw_name or name)..':'..size
-    names_by_size[size] = new_name
+    new_name = (string.match(name, '^(.+):%d+$') or name)..':'..size..suffix
+    names_by_size[key] = new_name
   end
 
   if !stored[new_name] then
-    local font_data = table.Copy(stored[name])
+    local source = font
 
-    if font_data then
-      if !istable(data) then data = {} end
+    if !source then
+      local raw_name = string.match(name, '^(.+):%d+$')
+
+      source = raw_name and stored[raw_name]
+    end
+
+    if source then
+      local font_data = table.Copy(source)
 
       font_data.size = size
 
-      table.Merge(font_data, data)
+      if suffix != '' then
+        table.Merge(font_data, data)
+      end
 
       Font.create(new_name, font_data)
     end

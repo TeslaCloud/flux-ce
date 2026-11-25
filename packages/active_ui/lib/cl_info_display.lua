@@ -4,9 +4,9 @@
 -- every draw. The icon sits on a dark disc, is drawn dimmed and then filled with its color
 -- from the bottom up to that percentage. It is hidden while the percentage is outside of the range between
 -- `min_percentage` and `max_percentage`, so that the health icon, for example, only appears
--- once the player is hurt. Flux registers the 'health' and 'armor' icons itself and draws all
--- of the icons with `InfoDisplay:draw_all` from its HUD paint hook while the local player is
--- alive.
+-- once the player is hurt. The icons are lined up from left to right in the order of their
+-- `priority`. Flux registers the 'health' and 'armor' icons itself and draws all of the icons
+-- with `InfoDisplay:draw_all` from its HUD paint hook while the local player is alive.
 
 mod 'InfoDisplay'
 
@@ -15,14 +15,35 @@ local scale         = math.scale
 local stored        = InfoDisplay.stored or {}
 InfoDisplay.stored  = stored
 
+local sorted        = {}
 local margin        = scale(26)
+local custom_margin = nil
 local last_x        = 0
 local white         = Color(255, 255, 255)
 local back_color    = Color(40, 40, 40, 120)
 
+--- Rebuilds the list of icons in the order they are drawn in: by priority, icons of the
+-- same priority by ID.
+local function sort_icons()
+  table.Empty(sorted)
+
+  for _, info in pairs(stored) do
+    sorted[#sorted + 1] = info
+  end
+
+  table.sort(sorted, function(a, b)
+    if a.priority == b.priority then
+      return a.id < b.id
+    end
+
+    return a.priority < b.priority
+  end)
+end
+
 --- Adds an icon to the HUD info display. The icon is filled from the bottom
 -- according to its percentage, and is hidden while the percentage is outside
--- of the (min_percentage, max_percentage) range.
+-- of the (min_percentage, max_percentage) range. Icons are drawn from left to right in the
+-- order of their priority. Adding an icon under an ID that exists replaces that icon.
 -- ```
 -- InfoDisplay:add('armor', {
 --   icon = 'fa-shield-alt',
@@ -38,7 +59,8 @@ local back_color    = Color(40, 40, 40, 120)
 -- @param data [Map settings: icon, size, color (of the filled part, the 'text' color of the
 --   theme by default), dim_color (of the empty part, the 'text_dim' color of the theme by
 --   default), back_color (of the disc behind the icon, the 'hud_backdrop' color of the
---   theme by default), percentage, min_percentage, max_percentage, offset_x, offset_y, and
+--   theme by default), percentage, min_percentage, max_percentage, offset_x, offset_y,
+--   priority (Number icons with a lower one are drawn further left, 50 by default) and
 --   callback, which is called with this hash before every draw; missing keys get defaults]
 -- @return [InfoDisplay self, for chaining]
 function InfoDisplay:add(id, data)
@@ -52,8 +74,11 @@ function InfoDisplay:add(id, data)
   data.percentage     = data.percentage     or 100
   data.offset_x       = data.offset_x       or 0
   data.offset_y       = data.offset_y       or 0
+  data.priority       = data.priority       or 50
 
   stored[id]          = data
+
+  sort_icons()
 
   return self
 end
@@ -65,18 +90,22 @@ function InfoDisplay:all()
 end
 
 --- Removes an icon from the info display.
--- @param id [String ID of the icon, exactly as it is stored]
+-- @param id [String ID of the icon, converted with string.to_id as in InfoDisplay#add]
 -- @return [InfoDisplay self, for chaining]
 function InfoDisplay:remove(id)
-  stored[id] = nil
+  stored[id:to_id()] = nil
+
+  sort_icons()
+
   return self
 end
 
---- Sets the gap between the info display icons and the edges of the screen.
--- @param val [Number margin in pixels]
+--- Sets the gap between the info display icons and the edges of the screen. Without one the
+-- gap is 26 pixels at 1080p, scaled to the resolution.
+-- @param val=nil [Number margin in pixels, nil for the scaled default]
 -- @return [InfoDisplay self, for chaining]
 function InfoDisplay:set_margin(val)
-  margin = val
+  custom_margin = val
   return self
 end
 
@@ -144,16 +173,18 @@ function InfoDisplay:draw(info)
   return 0
 end
 
---- Draws all of the registered info display icons next to each other. Can be prevented
--- with the 'PreDrawInfoDisplay' hook.
+--- Draws all of the registered info display icons next to each other, in the order of their
+-- priority. Can be prevented with the 'PreDrawInfoDisplay' hook.
 -- @return [InfoDisplay self, for chaining]
 function InfoDisplay:draw_all()
+  margin = custom_margin or scale(26)
+
   --- Called on the client every time the info display is about to be drawn.
   -- @param icons [Map all of the registered icons by ID]
   -- @return [Any Return any non-nil value to prevent the info display from being drawn]
   if hook.Run('PreDrawInfoDisplay', stored) == nil then
-    for _, info in pairs(stored) do
-      last_x += self:draw(info)
+    for i = 1, #sorted do
+      last_x += self:draw(sorted[i])
     end
 
     --- Called on the client every time the info display has been drawn. Not called when
@@ -171,6 +202,7 @@ InfoDisplay:add('health', {
   icon = 'fa-plus',
   max_percentage = 95,
   size = 80,
+  priority = 10,
   offset_x = 4,
   callback = function(data)
     data.percentage = (PLAYER:Health() / PLAYER:GetMaxHealth()) * 100
@@ -182,6 +214,7 @@ InfoDisplay:add('armor', {
   min_percentage = 2,
   max_percentage = 101,
   size = 80,
+  priority = 20,
   callback = function(data)
     data.percentage = (PLAYER:Armor() / 100) * 100
   end

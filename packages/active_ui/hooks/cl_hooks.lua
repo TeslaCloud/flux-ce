@@ -1,8 +1,8 @@
 --- Client side of the interface hooks: the `GM` handlers that make Derma use the Flux skin,
--- create the fonts once the schema has loaded and again when the screen resolution changes,
--- open the tab menu in place of the scoreboard, fill the tab menu and the player menu of
--- the scoreboard, center the panels of the tab menu and flash the game window when the
--- intro appears.
+-- create the fonts once the schema has loaded, create them again and reload the theme when the
+-- screen resolution changes, open the tab menu in place of the scoreboard, fill the tab menu
+-- and the player menu of the scoreboard, center the panels of the tab menu and flash the game
+-- window when the intro appears.
 
 local IsValid = IsValid
 local CurTime = CurTime
@@ -18,13 +18,21 @@ function GM:ForceDermaSkin()
   return 'Flux'
 end
 
---- Recreates the fonts so that they fit the new resolution.
+--- Recreates the fonts and loads the active theme again, which runs its `on_loaded` methods
+-- and the `ThemeLoaded` handlers, so that the fonts and the options of the theme fit the new
+-- resolution.
 -- @param _new_w [Number new screen width]
 -- @param _new_h [Number new screen height]
 -- @param _old_w [Number previous screen width]
 -- @param _old_h [Number previous screen height]
 function GM:ResolutionChanged(_new_w, _new_h, _old_w, _old_h)
   Font.create_fonts()
+
+  local theme_id = Theme.get_active_theme()
+
+  if theme_id then
+    Theme.load_theme(theme_id)
+  end
 end
 
 --- Opens the tab menu in place of the default scoreboard, unless the ShouldScoreboardShow
