@@ -11,11 +11,29 @@ PLUGIN:set_name('Crosshair')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a crosshair.')
 
-local size = math.scale(2)
-local half_size = size * 0.5
-local double_size = size * 2
-local gap = math.scale(8)
+local secondary_color = Color(255, 255, 255)
+local size, half_size, double_size, gap
+
+--- Scales the size of the crosshair and its default gap to the screen.
+local function scale_to_screen()
+  size = math.scale(2)
+  half_size = size * 0.5
+  double_size = size * 2
+  gap = math.scale(8)
+end
+
+scale_to_screen()
+
 local cur_gap = gap
+
+--- Scales the crosshair to the screen again when the resolution changes.
+-- @param _old_width [Number]
+-- @param _old_height [Number]
+-- @param _new_width [Number]
+-- @param _new_height [Number]
+function PLUGIN:OnScreenSizeChanged(_old_width, _old_height, _new_width, _new_height)
+  scale_to_screen()
+end
 
 --- Hides the crosshair while the local player is running, dead or not yet initialized.
 -- @return [Boolean false to hide the crosshair, nil otherwise]
@@ -59,7 +77,11 @@ function PLUGIN:HUDPaint()
       cur_gap = real_gap
     end
 
-    local secondary_draw_color = draw_color:alpha(draw_color != color_white ? 255 : 25)
+    local secondary_draw_color = secondary_color
+
+    secondary_draw_color.r, secondary_draw_color.g, secondary_draw_color.b = draw_color.r, draw_color.g, draw_color.b
+    secondary_draw_color.a = draw_color != color_white ? 255 : 25
+
     local gox, goy = Flux.global_ui_offset()
     local center_x, center_y = gox + ScrW() * 0.5, goy + ScrH() * 0.5
     local bar_x, bar_y = center_x - size, center_y - size
