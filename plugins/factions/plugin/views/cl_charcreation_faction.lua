@@ -7,9 +7,11 @@ PANEL.text = 'ui.char_create.faction'
 PANEL.faction_id = ''
 
 --- Builds the faction chooser with a button for every faction the local player may pick,
--- preselecting the faction chosen earlier. A whitelisted faction is offered to players who
--- have its whitelist, and every faction to a player whom `Factions.can_bypass_creation_limits`
--- lets past the whitelist for the extra data of the creation screen.
+-- preselecting the faction chosen earlier. A button shows the image of its faction with the
+-- name below it; the button of a faction without an image shows only the name, centered. A
+-- whitelisted faction is offered to players who have its whitelist, and every faction to a
+-- player whom `Factions.can_bypass_creation_limits` lets past the whitelist for the extra
+-- data of the creation screen.
 -- @param parent [Panel the character creation menu]
 function PANEL:on_open(parent)
   self.faction_id = parent.char_data.faction or self.faction_id
@@ -24,10 +26,15 @@ function PANEL:on_open(parent)
 
   for _, faction_table in pairs(Factions.all()) do
     if bypass or !faction_table.whitelisted or PLAYER:has_whitelist(faction_table.faction_id) then
+      local image = faction_table:get_image()
+      local has_image = isstring(image) and image != ''
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() * 0.33, self.chooser:GetTall())
-      button:SetImage(faction_table.material)
       button.faction = faction_table
+
+      if has_image then
+        button:SetImage(image)
+      end
 
       if faction_table.faction_id == self.faction_id then
         button:set_active(true)
@@ -35,7 +42,7 @@ function PANEL:on_open(parent)
       end
 
       local label = vgui.Create('DLabel', button)
-      label:Dock(BOTTOM)
+      label:Dock(has_image ? BOTTOM : FILL)
       label:SetText(t(faction_table.name))
       label:SetFont(Theme.get_font('text_normal_large'))
       label:SetTextColor(Theme.get_color('text'))
