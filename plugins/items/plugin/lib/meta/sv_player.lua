@@ -10,17 +10,17 @@ local player_meta = FindMetaTable('Player')
 -- Creates the player's default inventories.
 function player_meta:create_inventories()
   local inventories = {}
+  local first_id = (Inventories.last_id or 0) + 1
 
   --- Called on the server to build the inventories of a player, every time their
   -- active character is set. Handlers create their inventories with `Inventory.new`
   -- and put them into `inventories` under the type of each one, or remove the entries
   -- that other handlers have put there, and return nothing; the Items plugin adds the
-  -- main inventory, the hotbar, the pockets and the equipment slots this way. `Inventory.new`
-  -- registers an inventory in `Inventories.stored` at once, so a handler that removes an
-  -- entry also takes it out of there with `Inventories.stored[inventory.id] = nil`. Afterward
-  -- every inventory in the table gets the player as its owner and receiver and the
-  -- character as the holder of its items, the inventories are synchronized, and the items
-  -- of the character are loaded into them.
+  -- main inventory, the hotbar, the pockets and the equipment slots this way. The
+  -- inventories created while the hook runs that are not in the table afterward are
+  -- unregistered again. Every inventory in the table gets the player as its owner and
+  -- receiver and the character as the holder of its items, the inventories are
+  -- synchronized, and the items of the character are loaded into them.
   -- ```
   -- function PLUGIN:AdjustPlayerInventories(owner, inventories)
   --   local wallet = Inventory.new()
@@ -34,6 +34,18 @@ function player_meta:create_inventories()
   -- @param inventories [Map The inventories of the player, keyed by inventory type,
   --   changed in place]
   hook.Run('AdjustPlayerInventories', self, inventories)
+
+  local kept = {}
+
+  for _, inventory in pairs(inventories) do
+    kept[inventory] = true
+  end
+
+  for id, inventory in pairs(Inventories.stored) do
+    if isnumber(id) and id >= first_id and !kept[inventory] then
+      Inventories.stored[id] = nil
+    end
+  end
 
   local character = self:get_character()
   local character_id = istable(character) and tonumber(character.id) or nil
@@ -76,6 +88,7 @@ function player_meta:load_inventories()
     self.loading_items = nil
     self.unplaced_items = Inventories.place_items(items, self)
     self:sync_inventories()
+    self:report_unplaced_items()
     self:give_default_items()
 
     --- Called on the server once the items of a player's active character have been
@@ -88,6 +101,24 @@ function player_meta:load_inventories()
     --   its container items]
     hook.Run('CharacterItemsLoaded', self, character, items)
   end)
+end
+
+--- @warning [Internal]
+-- Tells the player how many items of their character did not fit into their inventories
+-- when the items were loaded, and logs it. Those items are kept and saved, and they are
+-- placed again the next time the character is loaded.
+function player_meta:report_unplaced_items()
+  local amount = #(self.unplaced_items or {})
+
+  if amount == 0 then return end
+
+  self:notify('notification.items_unplaced', { amount = amount })
+
+  Log:print(t('notification.items_unplaced_log', {
+    player = self:name(),
+    steam_id = self:SteamID(),
+    amount = amount
+  }), 'items', self:SteamID(), self:get_character_id())
 end
 
 --- @warning [Internal]
@@ -139,13 +170,7 @@ function player_meta:unload_items(defer)
     local inventory = item_obj.inventory
 
     if inventory and inventory.instance_id == item_obj.instance_id then
-      for _, receiver in ipairs(table.Copy(inventory.receivers)) do
-        if IsValid(receiver) then
-          receiver:close_inventory(inventory)
-        end
-      end
-
-      Inventories.stored[inventory.id] = nil
+      Inventories.remove({ inventory })
     end
   end
 
@@ -159,13 +184,19 @@ function player_meta:unload_items(defer)
 end
 
 --- @warning [Internal]
--- Deletes the player's inventories from the server cache.
+-- Deletes the player's inventories from the server cache, closing them for the other
+-- players who are viewing them.
+-- @see [Inventories.remove]
 function player_meta:delete_inventories()
+  local inventories = {}
+
   for _, inventory in pairs(self:get_inventories()) do
     if inventory.owner == self then
-      Inventories.stored[inventory.id] = nil
+      inventories[#inventories + 1] = inventory
     end
   end
+
+  Inventories.remove(inventories)
 end
 
 --- Synchronize all the inventories that the player has.
@@ -181,7 +212,8 @@ function player_meta:sync_inventory(inv_type)
   self:get_inventory(inv_type)?.:sync()
 end
 
---- Give the player a certain item.
+--- Give the player a certain item. The item must not be in an inventory or in the world,
+-- see `Inventory:add_item`.
 -- @param item_obj [Item]
 -- @param inv_type=self.default_inventory or 'main_inventory' [String]
 -- @return [Boolean was the item added successfully, String text of the error that occurred,
@@ -193,12 +225,16 @@ function player_meta:add_item(item_obj, inv_type)
 
   local success, error_text = inventory:add_item(item_obj)
 
-  inventory:sync()
+  if success then
+    inventory:sync()
+  end
 
   return success, error_text
 end
 
---- Give the player a certain item by its instance id.
+--- Give the player a certain item by its instance id. An item that is in an inventory
+-- already is refused, as with `Player:add_item`; move it with `Player:transfer_item` or
+-- `Inventory:transfer_item` instead.
 -- @param instance_id [Number]
 -- @param inv_type=self.default_inventory or 'main_inventory' [String]
 -- @return [Boolean was the item added successfully, String text of the error that occurred,
@@ -220,18 +256,19 @@ end
 -- @param amount=1 [Number]
 -- @param data=nil [Map fields to override on the created items]
 -- @param inv_type=self.default_inventory or 'main_inventory' [String]
--- @return [Boolean was the item added successfully, String text of the error that occurred,
---   'error.inventory.missing' for a player without the inventory]
+-- @return [Boolean were all the items added successfully, String text of the error that
+--   occurred, 'error.inventory.missing' for a player without the inventory; Number how many
+--   items have been given, the ones given before an error are kept]
 function player_meta:give_item(id, amount, data, inv_type)
   local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
 
-  if !inventory then return false, 'error.inventory.missing' end
+  if !inventory then return false, 'error.inventory.missing', 0 end
 
-  local success, error_text = inventory:give_item(id, amount, data)
+  local success, error_text, given = inventory:give_item(id, amount, data)
 
   inventory:sync()
 
-  return success, error_text
+  return success, error_text, given
 end
 
 --- Takes one item from the player.

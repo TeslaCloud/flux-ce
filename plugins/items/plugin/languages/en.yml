@@ -49,6 +49,7 @@ en:
       other_character: You cannot touch an item that another character of yours has dropped.
       no_weapon_for_ammo: You are not carrying a weapon that uses this ammunition.
       destroy_not_empty: Empty this item before you destroy it.
+      destroy_equipped: "You cannot destroy this item while it cannot be unequipped."
       nothing_to_treat: You have no wounds that this could treat.
       already_healing: You are already healing.
     invalid_item: Item '{item}' is not valid.
@@ -118,6 +119,7 @@ en:
         hands: Hands
         legs: Legs
         accessories: Accessories
+        back: "Back"
       pockets: Pockets
       title: Inventory
       container: Container
@@ -139,6 +141,8 @@ en:
     inventory: Drag'n'Drop an item outside of the inventory screen to drop it.
   notification:
     item_given: You have been given {item} x {amount}.
+    items_unplaced: "{amount} of your items did not fit into your inventories. They are kept and come back once there is room for them when the character is loaded again."
+    items_unplaced_log: "{player} ({steam_id}) has {amount} items that did not fit into the inventories of their character."
     icon_editor: The code was copied to your clipboard.
   permission:
     spawn_items:

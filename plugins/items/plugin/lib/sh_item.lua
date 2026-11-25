@@ -35,10 +35,11 @@ mod 'Item'
 
 local stored = Item.stored or {}
 local instances = Item.instances or {}
-local instance_metas = setmetatable({}, { __mode = 'k' })
+local instance_metas = Item.instance_metas or setmetatable({}, { __mode = 'k' })
 
 Item.stored = stored
 Item.instances = instances
+Item.instance_metas = instance_metas
 
 --- Returns all the registered item templates.
 -- @return [Map item templates, keyed by item id]
@@ -75,8 +76,13 @@ function Item.register(id, data)
 
   add_debug_metric('items', tostring(id))
 
+  if !isstring(data.name) then
+    ErrorNoHalt("Item '"..tostring(id).."' has no name, it is registered as 'Unknown Item'.\n")
+
+    data.name = 'Unknown Item'
+  end
+
   data.id = id
-  data.name = data.name or 'Unknown Item'
   data.print_name = data.print_name or data.name
   data.description = data.description or 'This item has no description!'
   data.weight = data.weight or 1
@@ -206,17 +212,7 @@ end
 -- @param id [String item id]
 -- @return [Item the template, or nil if not found]
 function Item.find_by_id(id)
-  local item_obj = stored[id]
-
-  if item_obj then
-    return item_obj
-  end
-
-  for item_id, template in pairs(stored) do
-    if item_id == id or template.id == id then
-      return template
-    end
-  end
+  return stored[id]
 end
 
 --- Finds all the loaded instances of a certain item template.
@@ -271,21 +267,16 @@ function Item.find(name)
       if template.id == name or template.name:find(name) or template.print_name:find(name) then
         return template
       end
-
-      if CLIENT then
-        if template.print_name:find(name) then
-          return template
-        end
-      end
     end
   end
 end
 
 --- Removes an item instance along with its entity in the world, if it has one, and along
--- with everything inside of it, if it is a container item. Does not take the item out of
--- the inventory that holds it. On the server it also deletes the instance from the
--- database and tells the clients that know the instance to forget it; the client only
--- forgets the instance, since the entity is removed by the server.
+-- with everything inside of it, if it is a container item, whose inventory is closed for
+-- the players viewing it and unregistered. Does not take the item out of the inventory
+-- that holds it. On the server it also deletes the instance from the database and tells
+-- the clients that know the instance to forget it; the client only forgets the instance,
+-- since the entity is removed by the server.
 -- @param instance_id [Number/Item instance id, or the item instance itself]
 function Item.remove(instance_id)
   local item_obj = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
@@ -304,6 +295,10 @@ function Item.remove(instance_id)
         if content_id != item_obj.instance_id then
           Item.remove(content_id)
         end
+      end
+
+      if inventory.instance_id == item_obj.instance_id then
+        Inventories.remove({ inventory })
       end
     end
 
@@ -439,6 +434,26 @@ if SERVER then
     return list
   end
 
+  --- Takes note that an instance has changed its place in an inventory, or has left its
+  -- inventory, so that `Inventory:sync` sends it again to the players who know it.
+  -- Server-side only.
+  -- @param item_obj [Item]
+  function Item.mark_moved(item_obj)
+    item_obj.place_revision = (item_obj.place_revision or 0) + 1
+  end
+
+  --- Checks whether a player has been sent an instance since it last changed its place in an
+  -- inventory. Server-side only.
+  -- @param item_obj [Item]
+  -- @param receiver [Player]
+  -- @return [Boolean]
+  -- @see [Item.mark_moved]
+  function Item.is_networked_to(item_obj, receiver)
+    local receivers = item_obj.receivers
+
+    return receivers != nil and receivers[receiver] == (item_obj.place_revision or 0)
+  end
+
   local function add_receivers(target, item_obj)
     local receivers = item_obj.receivers
 
@@ -448,10 +463,11 @@ if SERVER then
     end
 
     local targets = istable(target) and target or { target }
+    local revision = item_obj.place_revision or 0
 
     for _, receiver in ipairs(targets) do
       if IsValid(receiver) and receiver:IsPlayer() then
-        receivers[receiver] = true
+        receivers[receiver] = revision
 
         local known = receiver.known_items or {}
 
@@ -556,7 +572,8 @@ if SERVER then
   -- @param dropper=nil [Player/Map/Boolean the player who drops the item, or a table with
   --   the character_id and steam_id fields of an earlier drop; nil or false if nobody does]
   -- @param exact=false [Boolean put the entity exactly at the position, without raising it]
-  -- @return [Entity the item entity, Item the spawned item; nothing if the arguments are invalid]
+  -- @return [Entity the item entity, Item the spawned item; nothing if the arguments are
+  --   invalid or the item is in an inventory or in the world already]
   function Item.spawn(position, angles, item_obj, dropper, exact)
     if !position or !istable(item_obj) then
       error_with_traceback('No position or item table is not a table!')
@@ -565,6 +582,13 @@ if SERVER then
 
     if !Item.is_instance(item_obj) then
       error_with_traceback('Cannot spawn a non-instantiated item!')
+      return
+    end
+
+    if Inventories.find_by_item(item_obj) or IsValid(item_obj.entity) then
+      error_with_traceback(
+        'Cannot spawn item #'..item_obj.instance_id..', it is in an inventory or in the world already!'
+      )
       return
     end
 
@@ -605,5 +629,13 @@ Pipeline.register('item', function(id, file_name, _pipe)
 
   if Pipeline.is_aborted() then ITEM = nil return end
 
-  ITEM:register() ITEM = nil
+  ITEM:register()
+
+  local model = ITEM.model
+
+  if SERVER and isstring(model) and !util.IsValidModel(model) then
+    ErrorNoHalt("Item '"..tostring(ITEM.id).."' of "..file_name..' has a model that does not exist: '..model..'\n')
+  end
+
+  ITEM = nil
 end)

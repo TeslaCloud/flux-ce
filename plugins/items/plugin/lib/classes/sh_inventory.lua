@@ -43,7 +43,8 @@ local table_has_value = table.HasValue
 class 'Inventory'
 
 --- Initializes the new inventory class
--- and loads it to the server cache.
+-- and loads it to the server cache. On the server the inventory gets the id that follows
+-- the last one handed out, so that an id is never used twice while the server runs.
 -- ```
 -- -- Creating a new inventory
 -- local inventory = Inventory.new()
@@ -69,10 +70,18 @@ function Inventory:init(id)
     self.default = false
     self.receivers = {}
 
-    id = table.insert(Inventories.stored, self)
-  else
-    Inventories.stored[id] = self
+    local stored = Inventories.stored
+
+    id = (Inventories.last_id or 0) + 1
+
+    while stored[id] do
+      id += 1
+    end
+
+    Inventories.last_id = id
   end
+
+  Inventories.stored[id] = self
 
   self.id = id
 end

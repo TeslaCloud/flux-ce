@@ -1,5 +1,23 @@
 --- Server-side receivers of the Items plugin for inventories: the move, drop and close
--- requests of the inventory panels, handled once they have been checked.
+-- requests of the inventory panels, handled once they have been checked. A player's move
+-- and drop requests, along with the menu actions of items, are taken at most once every
+-- tenth of a second.
+
+local action_delay = 0.1
+
+--- Checks whether a player may act on items again, and makes them wait before the next
+-- action if they may.
+-- @param actor [Player]
+-- @return [Boolean false if the player has acted too recently]
+local function take_action_turn(actor)
+  local cur_time = CurTime()
+
+  if (actor.fl_next_item_action or 0) > cur_time then return false end
+
+  actor.fl_next_item_action = cur_time + action_delay
+
+  return true
+end
 
 local function can_handle_items(actor)
   if !actor:Alive() then
@@ -45,6 +63,8 @@ local function find_requested_stack(actor, instance_ids)
 end
 
 Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, was_rotated)
+  if !take_action_turn(actor) then return end
+
   local old_inventory, stack = find_requested_stack(actor, instance_ids)
   local inventory = Inventories.find(inventory_id)
 
@@ -116,6 +136,8 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
 end)
 
 Cable.receive('fl_item_drop', function(actor, instance_ids)
+  if !take_action_turn(actor) then return end
+
   local inventory, stack = find_requested_stack(actor, instance_ids)
 
   if !inventory then return end

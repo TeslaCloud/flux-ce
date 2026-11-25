@@ -6,7 +6,20 @@ local math_max = math.max
 local table_has_value = table.HasValue
 local table_remove_by_value = table.RemoveByValue
 
---- Add an item object to an inventory.
+--- Checks whether an area of slots lies inside of the inventory.
+-- @param x [Number column of the top left slot]
+-- @param y [Number row of the top left slot]
+-- @param w [Number width of the area]
+-- @param h [Number height of the area]
+-- @return [Boolean false also if x or y is nil]
+function Inventory:fits_in_bounds(x, y, w, h)
+  return x != nil and y != nil and x >= 1 and y >= 1 and x + w - 1 <= self.width and y + h - 1 <= self.height
+end
+
+--- Add an item object to an inventory. An item that is in an inventory already or lies in
+-- the world is refused; `Inventory:transfer_item` moves an item from one inventory to
+-- another. A position that is outside of the inventory or taken by another item is
+-- replaced with the best free one, unless the item can join the stack there.
 -- @variant Inventory:add_item(item_obj, x, y)
 --   @param item_obj [Item]
 --   @param x [Number]
@@ -16,13 +29,23 @@ local table_remove_by_value = table.RemoveByValue
 --   @param item_obj [Item]
 -- @return [Boolean was the item added successfully, String text of the error that occurred]
 function Inventory:add_item(item_obj, x, y)
-  if !item_obj then return false, 'error.inventory.invalid_item' end
+  if !item_obj or Inventories.find_by_item(item_obj) or IsValid(item_obj.entity) then
+    return false, 'error.inventory.invalid_item'
+  end
 
   local need_rotation = false
   local w, h = self:get_item_size(item_obj)
 
-  if !x or !y or x < 1 or y < 1 or x + w - 1 > self.width or y + h - 1 > self.height then
+  if !self:fits_in_bounds(x, y, w, h) then
     x, y, need_rotation = self:find_position(item_obj, w, h)
+  elseif !self:slots_empty(x, y, w, h) then
+    local overlap, stack_x, stack_y, stack_rotation = self:overlaps_stack(item_obj, x, y, w, h)
+
+    if overlap then
+      x, y, need_rotation = stack_x, stack_y, stack_rotation
+    else
+      x, y, need_rotation = self:find_position(item_obj, w, h)
+    end
   end
 
   if x and y then
@@ -38,6 +61,7 @@ function Inventory:add_item(item_obj, x, y)
     end
 
     Item.set_holder(item_obj, self)
+    Item.mark_moved(item_obj)
 
     local slots = self.slots
     local instance_id = item_obj.instance_id
@@ -70,7 +94,9 @@ function Inventory:add_item(item_obj, x, y)
   return true
 end
 
---- Add an item to an inventory by its instance id.
+--- Add an item to an inventory by its instance id. The same as `Inventory:add_item`, so
+-- an item that is in an inventory already is refused; move it with
+-- `Inventory:transfer_item` instead.
 -- @variant Inventory:add_item_by_id(instance_id, x, y)
 --   @param instance_id [Number]
 --   @param x [Number]
@@ -95,16 +121,18 @@ end
 -- @param id [String]
 -- @param amount=1 [Number]
 -- @param data=nil [Map fields to override on the created items]
--- @return [Boolean was the item given successfully, String text of the error that occurred]
+-- @return [Boolean were all the items given successfully, String text of the error that
+--   occurred, Number how many items have been given; the items given before an error are
+--   kept]
 function Inventory:give_item(id, amount, data)
   amount = amount or 1
 
-  for _i = 1, amount do
+  for i = 1, amount do
     local item_obj = Item.create(id, data)
     local success, error_text = self:add_item(item_obj)
 
     if !success then
-      return success, error_text
+      return success, error_text, i - 1
     end
 
     --- Called on the server for every item that `Inventory:give_item` has created and
@@ -116,7 +144,7 @@ function Inventory:give_item(id, amount, data)
     hook.Run('ItemGiven', item_obj, self, data)
   end
 
-  return true
+  return true, nil, amount
 end
 
 --- Take an item object from the inventory. An item that another inventory holds, such
@@ -152,6 +180,7 @@ function Inventory:take_item_table(item_obj)
   item_obj.rotated = false
 
   Item.set_holder(item_obj)
+  Item.mark_moved(item_obj)
 
   local slots = self.slots
   local instance_id = item_obj.instance_id
@@ -314,7 +343,8 @@ function Inventory:move_item(instance_id, x, y, was_rotated)
     w, h = h, w
   end
 
-  if !x or !y or x < 1 or y < 1 or x + w - 1 > self.width or y + h - 1 > self.height then
+  if !self:fits_in_bounds(x, y, w, h) then
+    w, h, was_rotated = old_w, old_h, false
     x, y, need_rotation = self:find_position(item_obj, w, h)
 
     if !x or !y then
@@ -346,6 +376,7 @@ function Inventory:move_item(instance_id, x, y, was_rotated)
   end
 
   Item.mark_dirty(item_obj)
+  Item.mark_moved(item_obj)
 
   local slots = self.slots
 
@@ -413,7 +444,9 @@ function Inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
     w, h = h, w
   end
 
-  if !x or !y or x < 1 or y < 1 or x + w - 1 > inventory.width or y + h - 1 > inventory.height then
+  if !inventory:fits_in_bounds(x, y, w, h) then
+    w, h = inventory:get_item_size(item_obj)
+    was_rotated = false
     x, y, need_rotation = inventory:find_position(item_obj, w, h)
 
     if !x or !y then
@@ -465,6 +498,7 @@ function Inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
   end
 
   Item.set_holder(item_obj, inventory)
+  Item.mark_moved(item_obj)
 
   local old_slots = self.slots
   local new_slots = inventory.slots
@@ -586,12 +620,14 @@ end
 
 --- Checks whether a player is entitled to have the inventory open. The owner always is.
 -- The inside of a container item is for whoever carries the item, or stands within reach
--- of it while it lies in the world. Any other inventory that belongs to an entity is for
--- those within reach of that entity, and an inventory without an owner is for anyone.
--- The server closes an inventory for the receivers that fail this check.
+-- of it and can see it while it lies in the world. An inventory of another player is for
+-- those within reach of that player, any other inventory that belongs to an entity for
+-- those within reach of the entity who can see it, and an inventory without an owner is
+-- for anyone. The server closes an inventory for the receivers that fail this check.
 -- @param receiver [Player]
 -- @return [Boolean]
 -- @see [Player#is_in_reach]
+-- @see [Player#can_see]
 function Inventory:can_be_viewed_by(receiver)
   local owner = self.owner
 
@@ -606,24 +642,36 @@ function Inventory:can_be_viewed_by(receiver)
       return false
     end
 
-    if IsValid(item_obj.entity) then
-      return receiver:is_in_reach(item_obj.entity)
+    local entity = item_obj.entity
+
+    if IsValid(entity) then
+      return receiver:is_in_reach(entity) and receiver:can_see(entity)
     end
 
     return receiver:has_item_by_id(self.instance_id)
   end
 
   if owner != nil then
-    return receiver:is_in_reach(owner)
+    if !receiver:is_in_reach(owner) then
+      return false
+    end
+
+    return owner:IsPlayer() or receiver:can_see(owner)
   end
 
   return true
 end
 
---- Send inventory data to its receivers.
+--- Send inventory data to its receivers. A receiver is sent along the items of the
+-- inventory that it does not know yet or that have been moved since it was last sent
+-- them; changes of the custom data of an item reach the players who know the item by
+-- themselves, see `ItemBase:set_data`.
+-- @see [Item.is_networked_to]
 function Inventory:sync()
   local ids, networkable
   local receivers = self.receivers
+  local find_instance_by_id = Item.find_instance_by_id
+  local is_networked_to = Item.is_networked_to
 
   for index = #receivers, 1, -1 do
     local receiver = receivers[index]
@@ -635,7 +683,12 @@ function Inventory:sync()
       end
 
       for i = 1, #ids do
-        Item.network_item(receiver, ids[i])
+        local instance_id = ids[i]
+        local item_obj = find_instance_by_id(instance_id)
+
+        if item_obj and !is_networked_to(item_obj, receiver) then
+          Item.network_item(receiver, instance_id)
+        end
       end
 
       Cable.send(receiver, 'fl_inventory_sync', networkable)
@@ -646,7 +699,8 @@ function Inventory:sync()
 end
 
 --- @warning [Internal]
--- Check the size of the inventory and resize it if needed.
+-- Check the size of the inventory and resize it if needed. Does not synchronize the
+-- inventory; the functions that change what is in it leave that to their callers.
 function Inventory:check_size()
   local infinite_width, infinite_height = self.infinite_width, self.infinite_height
 
@@ -675,7 +729,6 @@ function Inventory:check_size()
   end
 
   self:rebuild()
-  self:sync()
 end
 
 --- Disables the inventory, preventing the manipulation of items inside it.

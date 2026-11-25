@@ -40,14 +40,16 @@ MVC.handler('SpawnMenu::GiveItem', function(actor, target, item_id, amount)
 
   amount = math.Clamp(math.floor(tonumber(amount) or 1), 1, item_obj.max_stack or 1)
 
-  local success, error_text = target:give_item(item_obj.id, amount)
+  local success, error_text, given = target:give_item(item_obj.id, amount)
 
-  if success then
+  if (given or 0) > 0 then
     target:notify('notification.item_given', {
-      amount = amount,
+      amount = given,
       item = item_obj.name
     })
-  else
+  end
+
+  if !success then
     actor:notify(error_text)
   end
 end)

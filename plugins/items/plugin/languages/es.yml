@@ -49,6 +49,7 @@ es:
       other_character: No puedes tocar un objeto que ha soltado otro de tus personajes.
       no_weapon_for_ammo: No llevas ningún arma que use esta munición.
       destroy_not_empty: Vacía este objeto antes de destruirlo.
+      destroy_equipped: "No puedes destruir este objeto mientras no se pueda desequipar."
       nothing_to_treat: No tienes heridas que esto pueda tratar.
       already_healing: Ya te estás curando.
     invalid_item: "El objeto '{item}' no es válido."
@@ -118,6 +119,7 @@ es:
         hands: Manos
         legs: Piernas
         accessories: Accesorios
+        back: "Espalda"
       pockets: Bolsillos
       title: Inventario
       container: Contenedor
@@ -139,6 +141,8 @@ es:
     inventory: Arrastra un objeto fuera de la pantalla del inventario para soltarlo.
   notification:
     item_given: "Has recibido {item} x {amount}."
+    items_unplaced: "{amount} de tus objetos no cabían en tus inventarios. Se conservan y volverán cuando haya sitio para ellos al cargar de nuevo el personaje."
+    items_unplaced_log: "{player} ({steam_id}) tiene {amount} objetos que no cabían en los inventarios de su personaje."
     icon_editor: El código se ha copiado en tu portapapeles.
   permission:
     spawn_items:

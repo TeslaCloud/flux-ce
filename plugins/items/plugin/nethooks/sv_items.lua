@@ -1,11 +1,13 @@
 --- Server-side receivers of the Items plugin for item instances: the requests of clients for
 -- the data of an item entity they see, at most 64 a second for each player and one a second
--- for each entity, and the client's report that its player has looked away from the item
--- they are picking up.
+-- for each entity, the menu actions of items, at most one every tenth of a second for each
+-- player, and the client's report that its player has looked away from the item they are
+-- picking up.
 
 local IsValid = IsValid
 local request_limit = 64
 local request_cooldown = 1
+local action_delay = 0.1
 
 Cable.receive('fl_items_abort_hold_start', function(actor)
   local ent = actor:get_nv('hold_entity')
@@ -45,9 +47,7 @@ Cable.receive('fl_items_data_request', function(actor, ent_index)
   if !IsValid(ent) or ent:GetClass() != 'fl_item' or !ent.item then return end
   if !actor:TestPVS(ent) then return end
 
-  local receivers = ent.item.receivers
-
-  if receivers and receivers[actor] then
+  if Item.is_networked_to(ent.item, actor) then
     Item.network_entity_data(actor, ent)
   else
     Item.send_entity(actor, ent)
@@ -55,6 +55,14 @@ Cable.receive('fl_items_data_request', function(actor, ent_index)
 end)
 
 Cable.receive('fl_items_menu_action', function(actor, instance_id, action, ...)
+  if !isstring(action) then return end
+
+  local cur_time = CurTime()
+
+  if (actor.fl_next_item_action or 0) > cur_time then return end
+
+  actor.fl_next_item_action = cur_time + action_delay
+
   local item_obj = Item.find_instance_by_id(instance_id)
 
   if !item_obj or !item_obj:has_menu_action(action) then return end

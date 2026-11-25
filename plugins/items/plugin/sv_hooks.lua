@@ -255,7 +255,7 @@ end
 function Items:PlayerCanDestroyItem(actor, item_obj)
   if item_obj.is_equipped and item_obj:is_equipped() and item_obj.can_unequip
   and item_obj:can_unequip(actor) == false then
-    return false
+    return false, 'error.item.destroy_equipped'
   end
 
   if has_contents(item_obj) then
@@ -458,88 +458,56 @@ function Items:ActiveCharacterCleared(owner, _character)
   end
 end
 
+local equipment_slots = {
+  { 'equipment_helmet', 'ui.inventory.equipment.helmet', 'flux/icons/helmet.png', 1 },
+  { 'equipment_mask', 'ui.inventory.equipment.mask', 'flux/icons/gas-mask.png', 1 },
+  { 'equipment_torso', 'ui.inventory.equipment.torso', 'flux/icons/t-shirt.png', 1 },
+  { 'equipment_hands', 'ui.inventory.equipment.hands', 'flux/icons/gloves.png', 1 },
+  { 'equipment_legs', 'ui.inventory.equipment.legs', 'flux/icons/trousers.png', 1 },
+  { 'equipment_back', 'ui.inventory.equipment.back', 'flux/icons/light-backpack.png', 1 },
+  { 'equipment_accessories', 'ui.inventory.equipment.accessories', 'flux/icons/cube.png', 4 }
+}
+
+--- Creates an inventory and puts it into the table of the player's inventories.
+-- @param inventories [Map the inventories of the player, keyed by inventory type]
+-- @param inv_type [String]
+-- @param title [String language phrase]
+-- @param width [Number]
+-- @param height [Number]
+-- @param multislot [Boolean]
+-- @return [Inventory]
+local function add_inventory(inventories, inv_type, title, width, height, multislot)
+  local inventory = Inventory.new()
+    inventory.title = title
+    inventory:set_size(width, height)
+    inventory.type = inv_type
+    inventory.multislot = multislot
+  inventories[inv_type] = inventory
+
+  return inventory
+end
+
 --- Creates the default set of the player's inventories:
 -- main inventory, hotbar, pockets and the equipment slots.
 -- @param _owner [Player]
 -- @param inventories [Map table to put the new inventories into, keyed by inventory type]
 function Items:AdjustPlayerInventories(_owner, inventories)
-  local main_inventory = Inventory.new()
-    main_inventory.title = 'ui.inventory.main_inventory'
-    main_inventory:set_size(Config.get('items_inventory_width'), Config.get('items_inventory_height'))
-    main_inventory.type = 'main_inventory'
-    main_inventory.default = true
-  inventories[main_inventory.type] = main_inventory
+  local main_inventory = add_inventory(inventories, 'main_inventory', 'ui.inventory.main_inventory',
+    Config.get('items_inventory_width'), Config.get('items_inventory_height'), true)
+  main_inventory.default = true
 
-  local hotbar = Inventory.new()
-    hotbar.title = 'ui.inventory.hotbar'
-    hotbar:set_size(Config.get('items_hotbar_width'), Config.get('items_hotbar_height'))
-    hotbar.type = 'hotbar'
-    hotbar.multislot = false
-  inventories[hotbar.type] = hotbar
+  add_inventory(inventories, 'hotbar', 'ui.inventory.hotbar',
+    Config.get('items_hotbar_width'), Config.get('items_hotbar_height'), false)
 
-  local equipment_helmet = Inventory.new()
-    equipment_helmet.title = 'ui.inventory.equipment.helmet'
-    equipment_helmet.icon = 'flux/icons/helmet.png'
-    equipment_helmet:set_size(1, 1)
-    equipment_helmet.type = 'equipment_helmet'
-    equipment_helmet.multislot = false
-  inventories[equipment_helmet.type] = equipment_helmet
+  for _, slot in ipairs(equipment_slots) do
+    local inv_type, title, icon, height = unpack(slot)
 
-  local equipment_mask = Inventory.new()
-    equipment_mask.title = 'ui.inventory.equipment.mask'
-    equipment_mask.icon = 'flux/icons/gas-mask.png'
-    equipment_mask:set_size(1, 1)
-    equipment_mask.type = 'equipment_mask'
-    equipment_mask.multislot = false
-  inventories[equipment_mask.type] = equipment_mask
+    add_inventory(inventories, inv_type, title, 1, height, false).icon = icon
+  end
 
-  local equipment_torso = Inventory.new()
-    equipment_torso.title = 'ui.inventory.equipment.torso'
-    equipment_torso.icon = 'flux/icons/t-shirt.png'
-    equipment_torso:set_size(1, 1)
-    equipment_torso.type = 'equipment_torso'
-    equipment_torso.multislot = false
-  inventories[equipment_torso.type] = equipment_torso
-
-  local equipment_hands = Inventory.new()
-    equipment_hands.title = 'ui.inventory.equipment.hands'
-    equipment_hands.icon = 'flux/icons/gloves.png'
-    equipment_hands:set_size(1, 1)
-    equipment_hands.type = 'equipment_hands'
-    equipment_hands.multislot = false
-  inventories[equipment_hands.type] = equipment_hands
-
-  local equipment_legs = Inventory.new()
-    equipment_legs.title = 'ui.inventory.equipment.legs'
-    equipment_legs.icon = 'flux/icons/trousers.png'
-    equipment_legs:set_size(1, 1)
-    equipment_legs.type = 'equipment_legs'
-    equipment_legs.multislot = false
-  inventories[equipment_legs.type] = equipment_legs
-
-  local equipment_back = Inventory.new()
-    equipment_back.title = 'ui.inventory.equipment.accessories'
-    equipment_back.icon = 'flux/icons/light-backpack.png'
-    equipment_back:set_size(1, 1)
-    equipment_back.type = 'equipment_back'
-    equipment_back.multislot = false
-  inventories[equipment_back.type] = equipment_back
-
-  local equipment_accessories = Inventory.new()
-    equipment_accessories.title = 'ui.inventory.equipment.accessories'
-    equipment_accessories.icon = 'flux/icons/cube.png'
-    equipment_accessories:set_size(1, 4)
-    equipment_accessories.type = 'equipment_accessories'
-    equipment_accessories.multislot = false
-  inventories[equipment_accessories.type] = equipment_accessories
-
-  local pockets = Inventory.new()
-    pockets.title = 'ui.inventory.pockets'
-    pockets:set_size(1, Config.get('items_pockets_height'))
-    pockets.type = 'pockets'
-    pockets.infinite_width = true
-    pockets.multislot = false
-  inventories[pockets.type] = pockets
+  local pockets = add_inventory(inventories, 'pockets', 'ui.inventory.pockets',
+    1, Config.get('items_pockets_height'), false)
+  pockets.infinite_width = true
 end
 
 --- Deletes the items of a character that is about to be deleted.
@@ -619,6 +587,8 @@ function Items:PlayerTakeItem(actor, item_obj, ...)
 
     hook.Run('PreTransferItem', item_obj, player_inventory)
 
+    item_obj:set_entity(nil)
+
     local success, error_text = actor:add_item(item_obj, inv_type)
 
     if success then
@@ -627,6 +597,7 @@ function Items:PlayerTakeItem(actor, item_obj, ...)
 
       hook.Run('ItemTransferred', item_obj, player_inventory)
     else
+      item_obj:set_entity(item_entity)
       actor:notify(error_text)
     end
   end

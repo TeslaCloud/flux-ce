@@ -49,6 +49,7 @@ fr:
       other_character: "Vous ne pouvez pas toucher un objet qu'un autre de vos personnages a lâché."
       no_weapon_for_ammo: "Vous ne portez aucune arme qui utilise ces munitions."
       destroy_not_empty: "Videz cet objet avant de le détruire."
+      destroy_equipped: "Vous ne pouvez pas détruire cet objet tant qu’il ne peut pas être déséquipé."
       nothing_to_treat: "Vous n'avez aucune blessure que ceci pourrait soigner."
       already_healing: "Vous êtes déjà en train de vous soigner."
     invalid_item: "L'objet « {item} » n'est pas valide."
@@ -118,6 +119,7 @@ fr:
         hands: "Mains"
         legs: "Jambes"
         accessories: "Accessoires"
+        back: "Dos"
       pockets: "Poches"
       title: "Inventaire"
       container: "Conteneur"
@@ -139,6 +141,8 @@ fr:
     inventory: "Faites glisser un objet hors de l'écran d'inventaire pour le lâcher."
   notification:
     item_given: "Vous avez reçu {item} x {amount}."
+    items_unplaced: "{amount} de vos objets ne tenaient pas dans vos inventaires. Ils sont conservés et reviendront dès qu’il y aura de la place pour eux au prochain chargement du personnage."
+    items_unplaced_log: "{player} ({steam_id}) a {amount} objets qui ne tenaient pas dans les inventaires de son personnage."
     icon_editor: "Le code a été copié dans votre presse-papiers."
   permission:
     spawn_items:
