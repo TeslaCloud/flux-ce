@@ -1,5 +1,5 @@
 --- Extensions of the `math` library: snake_case aliases for the built-in functions, scaling of
--- sizes to the screen resolution and checks for even, odd and divisible numbers.
+-- sizes to the screen resolution and checks for finite, even, odd and divisible numbers.
 -- Numbers get the `math` library as their methods here, so that `n:floor()` and
 -- `n:clamp(0, 3)` work. The `Time` and `Unit` classes add their constructors and converters
 -- to the library as well, as in `math.minutes(5)` and `math.meters(2)`. This file also defines
@@ -7,6 +7,7 @@
 -- @module [math]
 
 local floor = math.floor
+local math_huge = math.huge
 local ScrW = ScrW
 local ScrH = ScrH
 
@@ -27,60 +28,34 @@ math.round            = math.Round
 math.time_fraction    = math.TimeFraction
 math.truncate         = math.Truncate
 
-do
-  local hex_digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' }
-  local hex_values = {}
-
-  for index, digit in ipairs(hex_digits) do
-    hex_values[digit] = index - 1
+--- Converts a single hexadecimal digit to decimal.
+-- @param hex [String/Number hexadecimal digit, may be prefixed with '-'; numbers pass through]
+-- @return [Number decimal value, or 0 (after printing an error) if it is not a hexadecimal digit]
+function util.hex_to_decimal(hex)
+  if isnumber(hex) then
+    return hex
   end
 
-  --- Converts a single hexadecimal digit to decimal.
-  -- @param hex [String/Number hexadecimal digit, may be prefixed with '-'; numbers pass through]
-  -- @return [Number decimal value, or 0 (after printing an error) if it is not a hexadecimal digit]
-  function util.hex_to_decimal(hex)
-    if isnumber(hex) then
-      return hex
-    end
+  local sign, digit = hex:match('^(%-?)(%x)$')
 
-    hex = hex:lower()
-
-    local negative = false
-
-    if hex:start_with('-') then
-      hex = hex:sub(2, 2)
-      negative = true
-    end
-
-    local value = hex_values[hex]
-
-    if value then
-      if !negative then
-        return value
-      else
-        return -value
-      end
-    end
-
+  if !digit then
     ErrorNoHalt("hex_to_decimal - '"..hex.."' is not a hexadecimal digit!\n")
 
     return 0
   end
+
+  local value = tonumber(digit, 16)
+
+  return sign == '' ? value : -value
 end
 
 --- Converts a hexadecimal number to decimal.
 -- @param hex [String/Number hexadecimal number without a prefix, e.g. 'ff'; numbers pass through]
--- @return [Number decimal value]
+-- @return [Number decimal value, 0 if hex is not a hexadecimal number]
 function util.hex_to_dec(hex)
   if isnumber(hex) then return hex end
 
-  local sum = 0
-
-  for index, char in ipairs(table.Reverse(hex:split())) do
-    sum += util.hex_to_decimal(char) * 16 ^ (index - 1)
-  end
-
-  return sum
+  return hex:match('^%x+$') and tonumber(hex, 16) or 0
 end
 
 --- Determines whether a vector from A to B intersects with a vector from C to D.
@@ -116,6 +91,8 @@ function util.vectors_intersect(from, to, from2, to2)
   return true
 end
 
+const far_point = Vector(99_999, 99_999, 0)
+
 --- Determines whether a 2D point is inside of a 2D polygon.
 -- @param point [Vector point to check, only x and y are used]
 -- @param poly_vertices [List<Vector> vertices of the polygon, in order]
@@ -127,7 +104,6 @@ function util.vector_in_poly(point, poly_vertices)
 
   local intersections = 0
   local vertex_count = #poly_vertices
-  local far_point = Vector(99_999, 99_999, 0)
 
   for index, vertex in ipairs(poly_vertices) do
     local next_vert = poly_vertices[index % vertex_count + 1]
@@ -172,6 +148,20 @@ do
   math.scale_y      = math.scale
   math.scale_width  = math.scale_x
   math.scale_height = math.scale
+end
+
+--- Checks whether a value is a finite number: a number that is neither NaN nor positive or
+-- negative infinity.
+-- ```
+-- math.is_finite(12)        -- true
+-- math.is_finite(0 / 0)     -- false
+-- math.is_finite(math.huge) -- false
+-- math.is_finite('12')      -- false
+-- ```
+-- @param value [Any]
+-- @return [Boolean true for a finite number, false for anything else]
+function math.is_finite(value)
+  return isnumber(value) and value == value and value != math_huge and value != -math_huge
 end
 
 --- Checks whether a number is even.
