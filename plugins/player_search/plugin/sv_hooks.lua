@@ -47,7 +47,7 @@ function PlayerSearch:PlayerCanStartSearch(actor, target)
     return false, 'error.cant_now'
   end
 
-  if IsValid(target.requested_search) then
+  if self:get_requester(target) then
     return false, 'error.search.request'
   end
 
@@ -73,6 +73,10 @@ end
 -- @param target [Player player being searched]
 -- @return [Boolean false and String error phrase if the search is not allowed, nil otherwise]
 function PlayerSearch:PlayerCanSearch(actor, target)
+  if !actor:Alive() then
+    return false, 'error.cant_now'
+  end
+
   if !IsValid(target) then
     return false, 'error.invalid_entity'
   end

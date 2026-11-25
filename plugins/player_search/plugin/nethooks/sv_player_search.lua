@@ -12,7 +12,7 @@ Cable.receive('fl_request_player_search', function(actor, target)
   local success, error_text = hook.Run('PlayerCanStartSearch', actor, target)
 
   if success != false then
-    target.requested_search = actor
+    PlayerSearch:add_request(actor, target)
 
     Cable.send(target, 'fl_request_player_search', actor)
   else
@@ -26,22 +26,22 @@ Cable.receive('fl_request_player_search', function(actor, target)
 end)
 
 Cable.receive('fl_resist_player_search', function(target, actor)
-  local requester = target.requested_search
+  local requester = PlayerSearch:get_requester(target)
 
-  if !IsValid(requester) or requester != actor then return end
+  if !requester or requester != actor then return end
 
   actor:notify('notification.search.resist', { player = target })
 
-  target.requested_search = nil
+  PlayerSearch:clear_request(target)
   actor.next_search = (actor.next_search or CurTime()) + 5
 end)
 
 Cable.receive('fl_start_player_search', function(target, actor)
-  local requester = target.requested_search
+  local requester = PlayerSearch:get_requester(target)
 
-  if !IsValid(requester) or requester != actor then return end
+  if !requester or requester != actor then return end
 
-  target.requested_search = nil
+  PlayerSearch:clear_request(target)
 
   local success, error_text = hook.Run('PlayerCanSearch', actor, target)
 
