@@ -8,7 +8,8 @@
 -- project (the schema's gamemode folder), then `_flux/packages/`. A package that has a
 -- `packages` folder of its own, such as a development checkout of Flux, appends it to the list
 -- when it is included, so top-level packages win over nested ones. Clients find packages
--- through the metadata the server sends them.
+-- through the metadata the server sends them. The server registers the migrations of every
+-- package it includes (see `Package:add_migrations`).
 
 AddCSLuaFile()
 
@@ -53,10 +54,11 @@ end
 
 --- Describes the current package's specification.
 -- A field may be given in its plural form, such as `authors` or `files`, and is stored under
--- the singular one. Once the globals are set up, the dependencies are included. A package
--- without a `global`, such as the project manifest of a schema, creates none. The version
--- requirement of a dependency (`'~> 0.9'` below) is checked by fpkg when it installs the
--- packages; at runtime only the name counts.
+-- the singular one. Once the globals are set up, the dependencies are included, unless the
+-- specification is only being read (see `Package:read`). A package without a `global`, such
+-- as the project manifest of a schema, creates none. The version requirement of a dependency
+-- (`'~> 0.9'` below) is checked by fpkg when it installs the packages; at runtime only the
+-- name counts.
 -- ```
 -- Package:describe(function(s)
 --   s.name        = 'Example Package'
@@ -128,18 +130,11 @@ function Package:describe(callback)
     end
   end
 
-  if istable(meta.deps) then
-    for _, name in ipairs(meta.deps) do
-      if name:end_with('.lua') then
-        include(self.current.__path__..name)
-        continue
-      end
-
-      if !self:included(name) then
-        self:include(name)
-      end
-    end
+  if self.current.read_only then
+    return self.current
   end
+
+  self:include_dependencies(self.current)
 
   if meta.serverside then
     require_ignore('client', true)
@@ -182,6 +177,44 @@ function Package:describe(callback)
   end
 
   return self.current
+end
+
+--- Includes the dependencies of a package in the order its specification lists them: the
+-- packages that are not included yet and the .lua files of the package itself. Given `last`,
+-- stops once that dependency is in.
+-- ```
+-- Package:include_dependencies(Package:read('flux'), 'active_record')
+-- ```
+-- @param instance [PackageInstance package whose dependencies to include]
+-- @param last=nil [String name of the last dependency to include]
+function Package:include_dependencies(instance, last)
+  local deps = instance.metadata.deps
+
+  if !istable(deps) then return end
+
+  for _, name in ipairs(deps) do
+    if name:end_with('.lua') then
+      include(instance.__path__..name)
+    elseif !self:included(name) then
+      self:include(name)
+    end
+
+    if name == last then return end
+  end
+end
+
+--- Registers the migrations a package ships in its `migrations` folder with the 'migrations'
+-- pipeline, which installs them into the schema's `db/migrate` folder (see
+-- `ActiveRecord::MigrationContext`). The server registers the folder of every package it
+-- includes, once the package is in, and fpkg's tasks those of the packages of the project in
+-- the same order. Does nothing before ActiveRecord is loaded or for a package without the
+-- folder.
+-- @realm [server]
+-- @param path [String folder of the package, with a trailing slash]
+function Package:add_migrations(path)
+  if Pipeline then
+    Pipeline.include_folder('migrations', path..'migrations/')
+  end
 end
 
 --- Determines if the package has already been installed.
@@ -375,6 +408,7 @@ do
       Package:describe()
     else
       include(file_path)
+      Package:add_migrations(full_path)
 
       if !Package.current.metadata.serverside then
         Flux.shared.packages[lib_path] = table.Copy(Package.current.metadata)
@@ -423,6 +457,38 @@ do
     end
   end
 
+  --- Finds a package on the server and appends a `packages` folder inside it to the search
+  -- paths. Throws an error that names the package depending on it and the folders searched if
+  -- there is no such package.
+  -- @param name [String package name, or path to the package's folder]
+  -- @return [String path to the package's packagespec.lua, String path to its folder]
+  local function locate(name)
+    local spec_path, _, full_path = Package:find(name)
+
+    if !spec_path then
+      local folders = {}
+
+      for index, path in ipairs(search_paths) do
+        folders[index] = path..name..'/'
+      end
+
+      folders[#folders + 1] = name:ensure_end('/')
+
+      local project = engine.ActiveGamemode()
+      local dependent = Package.current ? ', a dependency of "'..Package.current.metadata.lib_path..'"' : ''
+
+      error('could not load "'..name..'"'..dependent..': no packagespec.lua in '..table.concat(folders, ', ')
+        ..'\nRun "fpkg install" in gamemodes/'..project
+        ..', or "fpkg link <checkout>" for a development checkout.', 0)
+    end
+
+    if file.IsDir(full_path..'packages', 'LUA') then
+      Package:add_path(full_path..'packages/')
+    end
+
+    return spec_path, full_path
+  end
+
   --- Attempts to include the package with the specified name.
   -- On the server the package is looked up with `Package:find`; a `packages` folder inside it
   -- is appended to the search paths before its specification runs. On the client the
@@ -437,28 +503,7 @@ do
     if name:EndsWith('.lua') then return true end
 
     if SERVER then
-      local spec_path, _, full_path = self:find(name)
-
-      if !spec_path then
-        local folders = {}
-
-        for index, path in ipairs(search_paths) do
-          folders[index] = path..name..'/'
-        end
-
-        folders[#folders + 1] = name:ensure_end('/')
-
-        local project = engine.ActiveGamemode()
-        local dependent = self.current ? ', a dependency of "'..self.current.metadata.lib_path..'"' : ''
-
-        error('could not load "'..name..'"'..dependent..': no packagespec.lua in '..table.concat(folders, ', ')
-          ..'\nRun "fpkg install" in gamemodes/'..project
-          ..', or "fpkg link <checkout>" for a development checkout.', 0)
-      end
-
-      if file.IsDir(full_path..'packages', 'LUA') then
-        self:add_path(full_path..'packages/')
-      end
+      local spec_path, full_path = locate(name)
 
       return do_include(spec_path, name, full_path)
     else
@@ -468,5 +513,30 @@ do
 
       return do_include(meta.file_path, name, meta.full_path)
     end
+  end
+
+  --- Reads the specification of a package without including the package: its packagespec.lua
+  -- runs and creates the globals it names, but none of its dependencies and files are
+  -- included, its `__installed__` is not run and it does not count as included. A `packages`
+  -- folder inside it is appended to the search paths, as `Package:include` does. fpkg's tasks
+  -- read the `flux` package this way, which gives `Flux.get_version` its version.
+  -- @realm [server]
+  -- @param name [String package name, or path to the package's folder]
+  -- @return [PackageInstance the package, with its metadata filled in]
+  function Package:read(name)
+    local spec_path, full_path = locate(name)
+    local parent_package = self.current
+    local instance = PackageInstance.new(spec_path, name, full_path)
+
+    instance.read_only = true
+    self.current = instance
+    PACKAGE = instance
+
+    include(spec_path)
+
+    self.current = parent_package
+    PACKAGE = parent_package
+
+    return instance
   end
 end

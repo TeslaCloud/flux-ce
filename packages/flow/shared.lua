@@ -3,9 +3,10 @@
 -- from the package metadata, then loads the core, the configs of its `config` folder, the
 -- libraries, classes and metatable extensions, the models and the tools, and finally the
 -- gamemode hooks and the network message handlers. On the server it also registers the
--- package's languages and migrations with `Pipeline`. The user interface lives in the Active
--- UI package, which is loaded after this one. During a partial code reload (`LITE_REFRESH`)
--- only the hooks and the network message handlers are loaded again.
+-- package's languages with `Pipeline`; its migrations are registered by `Package`, as those of
+-- every package. The user interface lives in the Active UI package, which is loaded after this
+-- one. During a partial code reload (`LITE_REFRESH`) only the hooks and the network message
+-- handlers are loaded again.
 
 local metadata = Flux.__package__
 
@@ -45,7 +46,6 @@ if !LITE_REFRESH then
 
   if SERVER then
     Pipeline.include_folder('language', package_path..'languages')
-    Pipeline.include_folder('migrations', package_path..'migrations')
   end
 
   require_relative_folder('models', true)

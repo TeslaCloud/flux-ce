@@ -69,8 +69,8 @@
 -- the admin panel, then the hooks and the network handlers, so that its own commands, which
 -- follow, get their permissions from the `CommandCreated` handler. Then it adds 'roles' to
 -- the extra folders of plugins and loads its own roles. On the server it also registers the
--- package's languages and migrations with `Pipeline`. During a partial code reload
--- (`LITE_REFRESH`) nothing is loaded again.
+-- package's languages with `Pipeline`; its migrations are registered by `Package`, as those of
+-- every package. During a partial code reload (`LITE_REFRESH`) nothing is loaded again.
 -- @module [Bolt]
 
 if !LITE_REFRESH then
@@ -84,7 +84,6 @@ if !LITE_REFRESH then
 
   if SERVER then
     Pipeline.include_folder('language', package_path..'languages')
-    Pipeline.include_folder('migrations', package_path..'migrations')
   end
 
   require_relative_folder('models', true)
