@@ -173,21 +173,18 @@ function Flux.Anim:register(class, data)
   return data
 end
 
---- Sets which animation table a model uses. Falls back to the 'player' class
--- if the specified class does not exist.
+--- Sets which animation table a model uses. The class may be registered later: until it is,
+-- the model uses the 'player' class.
 -- @param model [String path to the model]
 -- @param class [String model class, a key of the table returned by Flux.Anim#all]
 function Flux.Anim:set_model_class(model, class)
-  if !stored[class] then
-    class = 'player'
-  end
-
   models[string_lower(model)] = class
   model_tables = {}
 end
 
---- Returns the animation class of a model. A model that none was set for gets the 'female'
--- class if its path contains 'female' and the 'player' class otherwise.
+--- Returns the animation class of a model: the one set with `Flux.Anim:set_model_class`, or
+-- 'player' while that class is not registered. A model that none was set for gets the
+-- 'female' class if its path contains 'female' and the 'player' class otherwise.
 -- @param model [String path to the model]
 -- @return [String model class]
 function Flux.Anim:get_model_class(model)
@@ -197,7 +194,7 @@ function Flux.Anim:get_model_class(model)
   local model_class = models[lowered]
 
   if model_class then
-    return model_class
+    return stored[model_class] ? model_class : 'player'
   end
 
   if string_find(lowered, 'female', 1, true) then

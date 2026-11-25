@@ -4,8 +4,14 @@
 -- `RightClick`, `Reload`, `Think`, `Deploy`, `Holster`, `DrawHUD`) and the same helpers for
 -- console variables, selected objects and ghost entities. What Flux adds is that the name and
 -- the description of a tool come from the `tool.<id>.name` and `tool.<id>.desc` language
--- phrases. Tool files are loaded from the `tools` folders by the `Flux.Tool` library, which
--- creates the object and passes it to the file as `TOOL`.
+-- phrases, and that `TOOL.permission` names a permission a player needs to use the tool,
+-- which Bolt checks in `CanTool`. Tool files are loaded from the `tools` folders by the
+-- `Flux.Tool` library, which creates the object and passes it to the file as `TOOL`.
+-- ```
+-- -- plugins/areas/plugin/tools/sh_area.lua
+-- TOOL.Category = 'Flux'
+-- TOOL.permission = 'manage_areas'
+-- ```
 
 class 'Tool'
 Tool.is_flux_tool = true

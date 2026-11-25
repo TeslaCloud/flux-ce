@@ -38,7 +38,10 @@ function flux_player:SetupDataTables()
   hook.Run('PlayerSetupDataTables', self.Player)
 end
 
---- Determines which hands model to use for the player's current model.
+--- Determines which hands model to use for the player's current model: the hands of the
+-- registered player model with this path, else of the longest registered model name that
+-- the path contains once its underscores are removed, so that 'female_01' gets the hands of
+-- 'female01' and not of 'male01'.
 -- @return [Map hands info with the model, skin and body keys]
 function flux_player:GetHandsModel()
   local player_model = string.lower(self.Player:GetModel())
@@ -48,16 +51,17 @@ function flux_player:GetHandsModel()
   end
 
   local stripped_model = string.gsub(player_model, '_', '')
+  local best_match
 
   for _, model_name in pairs(model_list) do
-    if string.find(stripped_model, model_name, 1, true) then
-      model_list[player_model] = model_name
-
-      break
+    if (!best_match or #model_name > #best_match) and string.find(stripped_model, model_name, 1, true) then
+      best_match = model_name
     end
   end
 
-  return player_manager.TranslatePlayerHands(model_list[player_model])
+  model_list[player_model] = best_match
+
+  return player_manager.TranslatePlayerHands(best_match)
 end
 
 --- Draws the hands of the local player after the view model has been drawn.
