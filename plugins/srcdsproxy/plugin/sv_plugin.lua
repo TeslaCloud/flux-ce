@@ -153,25 +153,97 @@ function SrcdsProxy:is_duration(text)
   return count > 0 and rest == ''
 end
 
---- Finds the player on this server whom the proxy knows by a SteamID64 or by a SteamID3
--- (`[U:1:123]`).
--- @param argument [String]
--- @return [Player the player, or nil if the argument is neither or nobody here has it]
-function SrcdsProxy:find_local_steam_id(argument)
-  local account_id = argument:match('^%[U:1:(%d+)%]$')
+--- Reads the account number of a SteamID in any spelling the proxy accepts: a SteamID64, a
+-- SteamID (`STEAM_0:1:123`, any universe digit and case) or a SteamID3 (`[U:1:123]`).
+-- ```
+-- SrcdsProxy:account_id('76561197960265974') -- 246
+-- SrcdsProxy:account_id('STEAM_1:0:123')     -- 246
+-- SrcdsProxy:account_id('[U:1:246]')         -- 246
+-- ```
+-- @param text [Any]
+-- @return [Number the account number, or nil if the text is not a SteamID]
+function SrcdsProxy:account_id(text)
+  if !isstring(text) then return end
 
-  if !account_id and !argument:match('^7656%d%d%d%d%d%d%d%d%d%d%d%d%d$') then
-    return
+  local steam3 = text:match('^%[U:1:(%d+)%]$')
+
+  if steam3 then
+    return tonumber(steam3)
   end
+
+  local y, z = player.normalize_steam_id(text):match('^STEAM_0:([01]):(%d+)$')
+
+  if y then
+    return tonumber(z) * 2 + tonumber(y)
+  end
+
+  local high, low = text:match('^(76561%d%d)(%d%d%d%d%d%d%d%d%d%d)$')
+
+  if high then
+    local account = (tonumber(high) - 7_656_119) * 10_000_000_000 + tonumber(low) - 7_960_265_728
+
+    return (account >= 0 and account < 4_294_967_296) ? account : nil
+  end
+end
+
+--- Finds the player on this server whom the proxy knows by a SteamID in any spelling that
+-- `SrcdsProxy:account_id` reads, comparing it with the SteamID each player has claimed to
+-- the proxy, as the proxy does.
+-- @param argument [String]
+-- @return [Player the player, or nil if the argument is no SteamID or nobody here has it]
+function SrcdsProxy:find_local_steam_id(argument)
+  local account_id = self:account_id(argument)
+
+  if !account_id then return end
 
   for _, candidate in player.Iterator() do
-    if Proxy.is_proxied(candidate) then
-      if account_id and candidate:AccountID() == tonumber(account_id) or
-         !account_id and Proxy.claimed_steamid64(candidate) == argument then
-        return candidate
-      end
+    if Proxy.is_proxied(candidate) and self:account_id(Proxy.claimed_steamid64(candidate)) == account_id then
+      return candidate
     end
   end
+end
+
+--- Finds the players on this server the proxy may take a name for: those connected through
+-- it whose Steam name, the name the proxy knows, contains the text in any case. The proxy
+-- picks a unique exact match on the network first and a unique part of a name second, so
+-- every player it could pick on this server is among them.
+-- @param argument [String]
+-- @return [List<Player>]
+function SrcdsProxy:find_local_name_matches(argument)
+  local lower = argument:utf8lower()
+  local matches = {}
+
+  for _, candidate in player.Iterator() do
+    if Proxy.is_proxied(candidate) and candidate:steam_name():utf8lower():find(lower, 1, true) then
+      matches[#matches + 1] = candidate
+    end
+  end
+
+  return matches
+end
+
+--- Checks whether the caller passes the immunity check against every one of the targets, and
+-- tells the caller about the first one who is immune.
+-- @param actor [Player the caller]
+-- @param targets [List<Player> players on this server]
+-- @return [Boolean]
+local function passes_immunity(actor, targets)
+  for _, target in ipairs(targets) do
+    --- Run by the proxy commands that act on players (Transfer, `netban add` and
+    -- `netban addip`) for every player on this server they are about to affect, the same
+    -- way the command interpreter runs it for a command with `immunity` set.
+    -- @param actor [Player Player who runs the command]
+    -- @param target [Player Player the command targets]
+    -- @param can_equal [Boolean Whether a target of the same standing may be affected]
+    -- @return [Boolean Return false if the target is immune to the actor]
+    if hook.Run('CommandCheckImmunity', actor, target, false) == false then
+      Flux.Player:notify(actor, 'error.command.higher_immunity', { target = get_player_name(target) })
+
+      return false
+    end
+  end
+
+  return true
 end
 
 --- Sends one or more commands to the proxy on behalf of the caller, who has to be connected
@@ -204,7 +276,7 @@ end
 --- Finds whom a player argument of a proxy command targets, as IDs the proxy understands.
 -- An argument that has the form of an IP address or a subnet goes to the proxy as it is, and
 -- so does one that starts with `#` (a session ID from GList). Otherwise the players on this
--- server are looked up by their SteamID64 or SteamID3 and with `Flux.Command:str_to_player`,
+-- server are looked up by a SteamID in any spelling and with `Flux.Command:str_to_player`,
 -- which matches their names exactly and makes the target selectors work for them, and each
 -- of them stands for the SteamID64 the proxy knows them by. A name that several players here
 -- have targets nobody, and the caller is told to use a SteamID. Those who are not connected
@@ -213,7 +285,9 @@ end
 -- finds players on every server of the network by name, SteamID or `#id`.
 -- With check_immunity the caller has to pass the immunity check against every player found
 -- on this server, unless the command is run from the server console; if any of them is
--- immune, nobody is targeted. Since a `#id` may belong to a player on this server whose
+-- immune, nobody is targeted. When nobody here matches, the check runs against every player
+-- here whom the proxy may take the name for (`SrcdsProxy:find_local_name_matches`) before
+-- the argument goes to the proxy. Since a `#id` may belong to a player on this server whose
 -- immunity cannot be checked, players are not allowed to use one then.
 -- @param actor [Player the caller, an invalid entity for the server console]
 -- @param argument [String player name, target selector, SteamID, `#id`, address or subnet]
@@ -271,26 +345,15 @@ function SrcdsProxy:find_targets(actor, argument, check_immunity)
     end
   end
 
+  local checked = check_immunity and IsValid(actor)
+
   if #locals == 0 then
+    if checked and !passes_immunity(actor, self:find_local_name_matches(argument)) then return end
+
     return { { id = argument } }
   end
 
-  if check_immunity and IsValid(actor) then
-    for _, target in ipairs(locals) do
-      --- Run by the proxy commands that act on players (Transfer, `netban add` and
-      -- `netban addip`) for every player on this server they are about to affect, the same
-      -- way the command interpreter runs it for a command with `immunity` set.
-      -- @param actor [Player Player who runs the command]
-      -- @param target [Player Player the command targets]
-      -- @param can_equal [Boolean Whether a target of the same standing may be affected]
-      -- @return [Boolean Return false if the target is immune to the actor]
-      if hook.Run('CommandCheckImmunity', actor, target, false) == false then
-        Flux.Player:notify(actor, 'error.command.higher_immunity', { target = get_player_name(target) })
-
-        return
-      end
-    end
-  end
+  if checked and !passes_immunity(actor, locals) then return end
 
   local entries = {}
 
