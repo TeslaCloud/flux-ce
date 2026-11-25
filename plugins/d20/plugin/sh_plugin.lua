@@ -15,7 +15,10 @@
 -- 4. The damage type: 1d4 for burns, 1d12 for explosions, 1d10 for crushing blows. Fall
 --    damage and drowning are left to their own rules (see below).
 -- 5. The damage of the engine itself: 1d4 up to 10, 1d6 up to 20, 1d10 up to 40, 1d12 above
---    that, and the 'd20_default_dice' config (1d6) when the engine damage is 0.
+--    that.
+--
+-- An event whose engine damage is 0 or less rolls nothing and deals no damage. A formula that
+-- cannot be rolled falls back to the 'd20_default_dice' config (1d6).
 --
 -- The dice of the weapons that come with the game: fists and stunstick 1d4, crowbar, pistol
 -- and SMG 1d6, .357, AR2 and shotgun 1d10, crossbow, RPG and grenades 1d12, and the same for

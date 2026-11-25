@@ -102,6 +102,26 @@ local function read_overrides(value)
   return overrides
 end
 
+--- The maps of the override configs as `read_overrides` has read them, by config key, each
+-- with the value it was read from.
+local override_cache = {}
+
+--- Returns the map of one of the override configs, reading its value again only when it is
+-- not the value it was last read from.
+-- @param key [String 'd20_weapon_dice' or 'd20_npc_dice']
+-- @return [Map dice formula by class]
+local function get_overrides(key)
+  local value = config_get(key)
+  local cached = override_cache[key]
+
+  if !cached or cached.value != value then
+    cached = { value = value, overrides = read_overrides(value) }
+    override_cache[key] = cached
+  end
+
+  return cached.overrides
+end
+
 --- Checks a formula that is about to be stored, when the Dice library can tell.
 -- @param formula [String]
 -- @return [Boolean whether it can be rolled, String the error if it cannot]
@@ -156,7 +176,7 @@ function D20:get_weapon_dice(class)
 
   class = class:lower()
 
-  return read_overrides(config_get('d20_weapon_dice'))[class] or weapon_dice[class]
+  return get_overrides('d20_weapon_dice')[class] or weapon_dice[class]
 end
 
 --- Sets the dice formula of the attacks of an NPC class, which its hits roll when they do
@@ -197,7 +217,7 @@ function D20:get_npc_dice(class)
 
   class = class:lower()
 
-  return read_overrides(config_get('d20_npc_dice'))[class] or npc_dice[class]
+  return get_overrides('d20_npc_dice')[class] or npc_dice[class]
 end
 
 --- Returns the weapon item that a hit was dealt with: the item of the weapon a player
@@ -224,8 +244,8 @@ end
 -- (`D20:get_weapon_dice`), the dice of the class of an NPC attacker (`D20:get_npc_dice`),
 -- the dice of the damage type (1d4 for burns, 1d12 for explosions, 1d10 for crushing blows),
 -- and last the dice of the damage of the engine: 1d4 up to 10, 1d6 up to 20, 1d10 up to 40,
--- 1d12 above, and the 'd20_default_dice' config when it is 0. Fall damage and drowning have
--- no formula here: falls roll in `D20:roll_fall_damage` and drowning in the Damage plugin.
+-- 1d12 above. An event whose engine damage is 0 or less has no formula, and neither have fall
+-- damage and drowning: falls roll in `D20:roll_fall_damage` and drowning in the Damage plugin.
 -- Serverside only.
 -- ```
 -- D20:get_damage_formula(attacker, victim, damage_info)
@@ -235,10 +255,14 @@ end
 -- @param victim [Entity entity taking the damage]
 -- @param damage_info [CTakeDamageInfo the damage]
 -- @return [String dice formula, String where it comes from: 'item:<item id>',
---   'weapon:<class>', 'npc:<class>', 'type:<burn, blast or crush>', 'damage' or 'default';
---   nothing for fall damage and drowning]
+--   'weapon:<class>', 'npc:<class>', 'type:<burn, blast or crush>' or 'damage'; nothing for
+--   fall damage, drowning and an event without damage]
 function D20:get_damage_formula(attacker, victim, damage_info)
   if damage_info:IsFallDamage() or damage_info:IsDamageType(DMG_DROWN) then return end
+
+  local damage = damage_info:GetDamage()
+
+  if !damage or damage <= 0 or damage != damage then return end
 
   local weapon_class = Damage:get_weapon_class(attacker, damage_info:GetInflictor(), victim)
 
@@ -269,12 +293,6 @@ function D20:get_damage_formula(attacker, victim, damage_info)
     if damage_info:IsDamageType(type_dice[1]) then
       return type_dice[2], 'type:'..type_dice[3]
     end
-  end
-
-  local damage = damage_info:GetDamage()
-
-  if !damage or damage <= 0 or damage != damage then
-    return config_get('d20_default_dice', '1d6'), 'default'
   end
 
   for _, band in ipairs(damage_bands) do
@@ -346,7 +364,8 @@ end
 -- times the hit location multiplier. Runs the PlayerDamageRolled hook with the result.
 -- Damage events from the same attacker and inflictor that hit the same victim in the same
 -- tick count as one attack: the first one rolls and the others are to be blocked. Does
--- nothing while the plugin is disabled, for fall damage and for drowning. Serverside only.
+-- nothing while the plugin is disabled, for fall damage, for drowning and for an event whose
+-- engine damage is 0 or less. Serverside only.
 -- @param victim [Entity player or NPC taking the damage]
 -- @param damage_info [CTakeDamageInfo the damage, changed in place]
 -- @param scale=1 [Number hit location multiplier to apply to the rolled total]
@@ -379,9 +398,10 @@ function D20:roll_damage(victim, damage_info, scale)
 
   --- Lets plugins change the dice that a hit on a player or an NPC rolls. Called on the
   -- server for every hit that is rolled, after the formula has been picked and before the
-  -- roll, while the 'd20_enabled' config is on. Not called for fall damage, drowning and the
-  -- extra damage events of an attack that has already been rolled. Every handler may change
-  -- the table, so a handler should return nothing to let the others run.
+  -- roll, while the 'd20_enabled' config is on. Not called for fall damage, drowning, events
+  -- without engine damage and the extra damage events of an attack that has already been
+  -- rolled. Every handler may change the table, so a handler should return nothing to let the
+  -- others run.
   -- ```
   -- -- Hits from behind roll an extra die.
   -- function MyPlugin:AdjustDamageDice(attacker, victim, damage_info, info)

@@ -8,7 +8,7 @@ en:
         desc: "Roll dice for the damage of every hit on a player or an NPC instead of using the damage of the engine, roll fall damage and scale the health of NPCs."
       default_dice:
         name: Default Damage Dice
-        desc: "The dice formula rolled for a hit that no weapon, NPC or damage type gives a formula for and whose engine damage is 0."
+        desc: "The dice formula rolled in place of a damage formula that cannot be rolled."
       fall_dice:
         name: Fall Damage Dice
         desc: "The dice formula of fall damage. The steps variable is 1 for the slowest fall that hurts and grows by 1 for every 150 units per second of fall speed. The Fall Damage Multiplier of the Damage plugin still applies."

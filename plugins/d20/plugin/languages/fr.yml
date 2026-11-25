@@ -8,7 +8,7 @@ fr:
         desc: "Lance les dés pour les dégâts de chaque coup porté à un joueur ou à un PNJ au lieu d'utiliser les dégâts du moteur, lance les dégâts de chute et adapte la santé des PNJ."
       default_dice:
         name: "Dés de dégâts par défaut"
-        desc: "Formule de dés lancée pour un coup dont aucune arme, aucun PNJ ni aucun type de dégâts ne donne la formule et dont les dégâts du moteur sont de 0."
+        desc: "Formule de dés lancée à la place d'une formule de dégâts qui ne peut pas être lancée."
       fall_dice:
         name: "Dés des dégâts de chute"
         desc: "Formule de dés des dégâts de chute. La variable steps vaut 1 pour la chute la plus lente qui blesse et augmente de 1 toutes les 150 unités par seconde de vitesse de chute. Le multiplicateur des dégâts de chute du plugin de dégâts s'applique toujours."

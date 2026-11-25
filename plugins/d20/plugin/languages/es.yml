@@ -8,7 +8,7 @@ es:
         desc: "Tira dados para el daño de cada golpe a un jugador o NPC en lugar de usar el daño del motor, tira dados para el daño por caída y escala la salud de los NPC."
       default_dice:
         name: Dados de daño predeterminados
-        desc: "La fórmula de dados que se tira para un golpe para el que ningún arma, NPC o tipo de daño da una fórmula y cuyo daño del motor es 0."
+        desc: "La fórmula de dados que se tira en lugar de una fórmula de daño que no se puede tirar."
       fall_dice:
         name: Dados de daño por caída
         desc: "La fórmula de dados del daño por caída. La variable steps vale 1 para la caída más lenta que hace daño y aumenta en 1 por cada 150 unidades por segundo de velocidad de caída. El multiplicador de daño por caída del plugin Damage sigue aplicándose."
