@@ -14,17 +14,19 @@
 
 mod 'Lumen::Reconciler'
 
-local IsValid    = IsValid
-local isstring   = isstring
-local isnumber   = isnumber
-local isfunction = isfunction
-local istable    = istable
-local tostring   = tostring
-local pcall      = pcall
+local IsValid     = IsValid
+local isstring    = isstring
+local isnumber    = isnumber
+local isfunction  = isfunction
+local istable     = istable
+local tostring    = tostring
+local pcall       = pcall
+local string_find = string.find
 
 local dirty = {}
 local effects = {}
 local scheduled = false
+local reported = {}
 
 local instantiate, update, reconcile, reconcile_children, unmount
 
@@ -72,6 +74,34 @@ local function resolve(element)
   end
 
   return nil
+end
+
+--- Describes where the nearest component above an instance is defined, for error messages.
+-- @param instance [Map the instance to start from, or nil]
+-- @return [String 'file:line' of the function of the component, or 'the root' if there is none]
+local function component_source(instance)
+  while instance do
+    if instance.kind == 'component' then
+      local info = debug.getinfo(instance.component, 'S')
+
+      return info.short_src..':'..info.linedefined
+    end
+
+    instance = instance.parent
+  end
+
+  return 'the root'
+end
+
+--- Reports an error the first time it happens at a place.
+-- @param place [String what tells the place apart from others]
+-- @param message [String]
+local function report_once(place, message)
+  if reported[place] then return end
+
+  reported[place] = true
+
+  ErrorNoHalt(message)
 end
 
 local function nearest_host(instance)
@@ -157,7 +187,11 @@ function instantiate(element, container, root, parent)
   local kind, payload = resolve(element)
 
   if !kind then
-    ErrorNoHalt("Lumen: unknown element type '"..tostring(element.type).."'\n")
+    local source = component_source(parent)
+    local type_name = tostring(element.type)
+
+    report_once('type:'..source..':'..type_name, "Lumen: unknown element type '"..type_name..
+      "' in the component of "..source..'\n')
 
     return nil
   end
@@ -303,7 +337,7 @@ function reconcile(instance, element, container, root, parent)
 end
 
 --- Reconciles the children of a host, a fragment or the root against a list of elements,
--- matching them by key or by position.
+-- matching them by key or by position. Text that is only spaces is left out.
 -- @param parent [Map the instance whose children they are]
 -- @param old_children [List<Map> the current instances]
 -- @param children [List the new children: elements, text and false for left out children]
@@ -311,6 +345,7 @@ end
 function reconcile_children(parent, old_children, children)
   local container = parent.child_container or parent.container
   local by_key = {}
+  local seen = {}
   local result = {}
 
   for _, instance in ipairs(old_children or {}) do
@@ -325,11 +360,24 @@ function reconcile_children(parent, old_children, children)
 
   if istable(children) then
     for i = 1, table.maxn(children) do
-      local element = normalize(children[i])
+      local child = children[i]
+
+      if isstring(child) and string_find(child, '^%s*$') then continue end
+
+      local element = normalize(child)
 
       if element then
         local list_key = element.key != nil and ('k:'..tostring(element.key)) or ('i:'..i)
         local old = by_key[list_key]
+
+        if seen[list_key] then
+          local source = component_source(parent)
+
+          report_once('key:'..source, "Lumen: the key '"..tostring(element.key).."' is given to more than one "..
+            'child in the component of '..source..', which mounts them again on every render\n')
+        end
+
+        seen[list_key] = true
 
         by_key[list_key] = nil
 
@@ -431,6 +479,8 @@ function Lumen.Reconciler.flush()
 
       if root and !root:is_valid() then
         instance.dirty = false
+
+        root:unmount()
       else
         update(instance, instance.element)
 
@@ -524,7 +574,8 @@ function LumenRoot:invalidate()
   end
 end
 
---- Mounts an element into a panel and returns the root of the tree.
+--- Mounts an element into a panel and returns the root of the tree. The tree is unmounted when
+-- the panel is removed, after the `OnRemove` the panel already has.
 -- ```
 -- local Greeting = Lumen.load([[
 --   return function(props) return <text>Hello, {props.name}!</text> end
@@ -543,6 +594,15 @@ function Lumen.mount(element, container)
   end
 
   local root = LumenRoot.new(container)
+  local on_remove = container.OnRemove
+
+  container.OnRemove = function(panel)
+    if on_remove then
+      on_remove(panel)
+    end
+
+    root:unmount()
+  end
 
   root:update(element)
 
