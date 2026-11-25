@@ -9,8 +9,6 @@ PLUGIN:set_name('Visible Legs')
 PLUGIN:set_author('NightAngel')
 PLUGIN:set_description("Lets clients see their character's legs.")
 
-if !CLIENT then return end
-
 local hidden_bones = {
   'ValveBiped.Bip01_Head1',
   'ValveBiped.Bip01_Neck1',
@@ -60,7 +58,7 @@ if IsValid(PLAYER) and IsValid(PLAYER.legs) then
 end
 
 --- Removes the local player's legs model when the local player's model changes.
--- It is recreated with the current model the next time the legs are rendered.
+-- It is recreated with the current model and bodygroups the next time the legs are rendered.
 -- @param target [Player the player whose model has changed]
 -- @param _new_model [String new model path]
 -- @param _old_model [String previous model path]
@@ -73,9 +71,10 @@ end
 local offset = Vector(-50, -50, 0)
 local scale = Vector(0, 0, 0)
 
---- Draws the local player's legs model in first person, following their animation.
--- Skipped while in observer mode, not drawn, in third person, dead or looking above the
--- horizon.
+--- Draws the local player's legs model in first person, following their animation and with
+-- the skin, material, color and render mode of the player.
+-- Skipped while in observer mode, not drawn, in third person, dead, looking above the
+-- horizon or when the legs model cannot be created.
 function VisibleLegs:RenderScreenspaceEffects()
   local client = PLAYER
 
@@ -86,11 +85,13 @@ function VisibleLegs:RenderScreenspaceEffects()
 
   if angs.p < 0 then return end
 
-  cam.Start3D(EyePos(), EyeAngles())
-    if !IsValid(client.legs) then
-      self:spawn_legs(client)
-    end
+  if !IsValid(client.legs) then
+    self:spawn_legs(client)
 
+    if !IsValid(client.legs) then return end
+  end
+
+  cam.Start3D(EyePos(), EyeAngles())
     local real_time = RealTime()
     local legs = client.legs
 
@@ -110,6 +111,7 @@ function VisibleLegs:RenderScreenspaceEffects()
 
     legs:SetRenderMode(client:GetRenderMode())
     legs:SetMaterial(client:GetMaterial())
+    legs:SetSkin(client:GetSkin())
     legs:SetSequence(client:GetSequence())
     legs:SetColor(client:GetColor())
     legs:FrameAdvance(real_time - (legs.last_draw or real_time))
@@ -123,7 +125,9 @@ function VisibleLegs:RenderScreenspaceEffects()
 end
 
 --- Creates the clientside legs model of the player, replacing the previous one, and stores
--- it in client.legs. The upper body bones are moved out of view and scaled down to nothing.
+-- it in client.legs. The model gets the bodygroups of the player, and the upper body bones
+-- are moved out of view and scaled down to nothing. client.legs is not valid when the model
+-- cannot be created.
 -- @param client [Player normally the local player]
 function VisibleLegs:spawn_legs(client)
   if IsValid(client.legs) then
@@ -142,6 +146,10 @@ function VisibleLegs:spawn_legs(client)
         legs:ManipulateBonePosition(bone, offset)
         legs:ManipulateBoneScale(bone, scale)
       end
+    end
+
+    for i = 0, client:GetNumBodyGroups() - 1 do
+      legs:SetBodygroup(i, client:GetBodygroup(i))
     end
 
     legs:SetNoDraw(true)
