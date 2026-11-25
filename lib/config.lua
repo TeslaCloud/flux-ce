@@ -1,10 +1,15 @@
 --- Config stores the settings of the server under string keys and shares them with clients.
 -- The server owns the values: `Config.set` changes one, runs the ConfigChanged hook and sends
 -- the new value to every player who may see it, and `Config.get` reads one on either side.
--- `Config.save` and `Config.load` keep the values in the 'config' data file, and
--- `Config.import` sets them from a YAML file. `Config.read` reads config definitions (default
--- values, names, descriptions and editor types) from YAML, out of which the client builds the
--- categories of the config menu.
+-- `Config.save` and `Config.load` keep the values changed in game in the 'config' data file,
+-- and `Config.import` sets them from a YAML file. `Config.read` reads config definitions
+-- (default values, names, descriptions and editor types) from YAML, out of which the client
+-- builds the categories of the config menu.
+--
+-- A config takes the first of these that applies: the value changed in game (`Config.change`),
+-- kept over code refreshes and restarts; the value of `settings.yml` or of the schema's .yml
+-- file (`Config.import`); the `default_value` of its definition. A config that was never changed
+-- in game follows its files and its definition whenever the server starts.
 --
 -- Besides `hidden` (the value is never sent to clients) a definition can carry three flags:
 --
@@ -105,6 +110,19 @@ end
 
 local function values_equal(first, second)
   return first == second or (istable(first) and istable(second) and table.equal(first, second))
+end
+
+--- Tells whether `Config.read` puts the default value of a definition into a config: when the
+-- config has no value yet, or when it was never changed in game and still holds the default of
+-- the definition it had before.
+-- @param entry [Map stored config data, nil if there is none]
+-- @param previous [Map definition the config had before, nil if it had none]
+-- @return [Boolean]
+local function takes_default(entry, previous)
+  if !entry or entry.value == nil then return true end
+  if entry.changed or !previous then return false end
+
+  return values_equal(entry.value, default_value(previous))
 end
 
 --- Works out the type the value of a config has to have: the type given in its definition,
@@ -430,13 +448,13 @@ if SERVER then
     return loaded
   end
 
-  --- Loads the saved configs from the 'config' data file and puts them over the stored ones.
-  -- Serverside only. This is where the pending value of a config that needs a restart takes
-  -- effect. A saved value is skipped if the config is static, if it does not pass
-  -- `Config.validate`, or if the config has no definition and was not changed with
-  -- `Config.change`, so that a value set in code is not replaced with a stale copy of
-  -- itself. A saved config that is not stored at all, such as one of a plugin that is not
-  -- loaded, is added the way it was saved.
+  --- Loads the configs changed in game from the 'config' data file and puts them over the
+  -- stored ones. Serverside only. This is where the pending value of a config that needs a
+  -- restart takes effect. A saved value is skipped if it was neither changed with
+  -- `Config.change` nor is pending, if the config is static, or if it does not pass
+  -- `Config.validate`, so that the files and the definition decide every other value. A saved
+  -- config that is not stored at all, such as one of a plugin that is not loaded, is added the
+  -- way it was saved and is saved again.
   -- @return [Map all stored configs]
   function Config.load()
     local loaded = Data.load('config', {})
@@ -446,7 +464,7 @@ if SERVER then
     end
 
     for key, saved in pairs(loaded) do
-      if !istable(saved) then continue end
+      if !istable(saved) or !(saved.changed or saved.pending) then continue end
 
       local entry = stored[key]
       local value = saved.value
@@ -464,7 +482,7 @@ if SERVER then
         cache[key] = value
 
         Plugin.call('ConfigChanged', key, nil, value)
-      elseif !Config.is_static(key) and (definitions[key] or saved.changed or saved.pending) then
+      elseif !Config.is_static(key) then
         local valid, converted = Config.validate(key, value)
 
         if valid then
@@ -487,9 +505,18 @@ if SERVER then
     return stored
   end
 
-  --- Writes all stored configs to the 'config' data file. Serverside only.
+  --- Writes the configs that have been changed in game or have a pending value to the 'config'
+  -- data file. Serverside only.
   function Config.save()
-    Data.save('config', stored)
+    local changed = {}
+
+    for key, entry in pairs(stored) do
+      if entry.changed or entry.pending then
+        changed[key] = entry
+      end
+    end
+
+    Data.save('config', changed)
   end
 
   --- Checks whether a player may be sent the value of a config.
@@ -900,32 +927,26 @@ else
 end
 
 --- Returns the value of a config.
--- The result is cached, and that includes the default when the config has no value.
+-- The value is cached; the default is only returned, never cached.
 -- @param key [String config key]
 -- @param default=nil [Any value to return if the config has no value]
 -- @return [Any config value, or default]
 function Config.get(key, default)
   local value = cache[key]
 
-  if value then
+  if value != nil then
     return value
   end
 
-  local entry = stored[key]
+  value = stored[key]?.value
 
-  if entry != nil then
-    value = entry.value
-
-    if value != nil then
-      cache[key] = value
-
-      return value
-    end
+  if value == nil then
+    return default
   end
 
-  cache[key] = default
+  cache[key] = value
 
-  return default
+  return value
 end
 
 if SERVER then
@@ -933,9 +954,11 @@ if SERVER then
 
   --- Imports config values from a YAML file or from a table and sets every one of them.
   -- Serverside only. The keys that choose plugins ('profile', 'depends', 'depends_development'
-  -- and 'exclude') are skipped, and so is every key for which the ShouldConfigImport hook
-  -- returns a non-nil value. The value of a config of the color type goes through
-  -- `Config.validate`, and is skipped with an error if it is not a color.
+  -- and 'exclude') are skipped, and so is every config that has been changed in game and every
+  -- key for which the ShouldConfigImport hook returns a non-nil value. The value of a defined
+  -- config goes through `Config.validate` and is skipped with an error naming the key and the
+  -- file if it does not pass; in development a key without a definition is reported, and set
+  -- all the same.
   -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
   -- @return [Map the imported table, or nil if the file could not be read or path is
@@ -943,16 +966,14 @@ if SERVER then
   function Config.import(path, from_config)
     from_config = from_config or CONFIG_FLUX
 
-    local config_table
+    local config_table, source
 
     if isstring(path) then
-      local contents = File.read(path)
-
-      if contents then
-        config_table = YAML.eval(contents)
-      end
+      config_table = Flux.read_yaml(path)
+      source = path
     elseif istable(path) then
       config_table = path
+      source = from_config == CONFIG_FLUX ? 'the configuration of settings.yml' : 'the imported table'
     end
 
     if !istable(config_table) then return end
@@ -963,17 +984,19 @@ if SERVER then
       -- @param value [Any value read from the imported file or table]
       -- @return [Boolean Return any value other than nil to skip the key and keep its current
       --   value]
-      if !plugin_keys[key] and Plugin.call('ShouldConfigImport', key, value) == nil then
-        if definitions[key]?.type == 'color' then
-          local valid, converted = Config.validate(key, value)
+      if !plugin_keys[key] and !stored[key]?.changed and Plugin.call('ShouldConfigImport', key, value) == nil then
+        if definitions[key] then
+          local valid, result = Config.validate(key, value)
 
           if !valid then
-            ErrorNoHalt("Not importing the '"..tostring(key).."' config! The value is not a color.\n")
+            ErrorNoHalt("Not importing the '"..tostring(key).."' config from "..source..': '..t(result)..'\n')
 
             continue
           end
 
-          value = converted
+          value = result
+        elseif IS_DEVELOPMENT then
+          ErrorNoHalt("The '"..tostring(key).."' config imported from "..source..' has no definition!\n')
         end
 
         Config.set(key, value, nil, from_config)
@@ -985,14 +1008,17 @@ if SERVER then
 end
 
 --- Reads config definitions (categories and configs) from a YAML file or from a table.
--- On the server every config is set to its default_value and its definition is stored.
+-- On the server a config is set to its default_value when it has no value yet, or when it
+-- was never changed in game and still holds the default of the definition it had before,
+-- so a code refresh keeps the values changed in game and imported from files; its definition
+-- is stored either way.
 -- On the client the categories and configs are added to the config menu. Both sides keep
 -- the definitions for `Config.get_definition`. Besides the fields shown below a config can
 -- be marked with `hidden`, `static`, `private` and `needs_restart`, which are described at
 -- the top of this file. A config of the `color` type holds a Color and writes its default
 -- value as a map of r, g, b and, optionally, a.
 -- ```
--- Config.read(Flux.find_config('config.yml'))
+-- Config.read('gamemodes/'..PACKAGE.__path__..'config/config.yml')
 --
 -- Config.read({
 --   categories = {
@@ -1011,19 +1037,16 @@ end
 --   }
 -- })
 -- ```
--- @param path [String/Map path to a YAML file, or the already parsed definitions]
+-- @param path [String/Map path to a YAML file relative to the game folder, read on the server
+--   only, or the already parsed definitions]
 -- @param _from_config=nil [Number ignored]
 -- @return [Map the definitions table, or nil if path is neither a string nor a table or the
 --   file could not be read]
 function Config.read(path, _from_config)
   local config_table
 
-  if isstring(path) then
-    local contents = File.read(path)
-
-    if contents then
-      config_table = YAML.eval(contents)
-    end
+  if SERVER and isstring(path) then
+    config_table = Flux.read_yaml(path)
   elseif istable(path) then
     config_table = path
   end
@@ -1038,10 +1061,15 @@ function Config.read(path, _from_config)
 
   if istable(config_table.configs) then
     for name, data in pairs(config_table.configs) do
+      local previous = definitions[name]
+
       definitions[name] = data
 
       if SERVER then
-        Config.set(name, default_value(data), data.hidden)
+        if takes_default(stored[name], previous) then
+          Config.set(name, default_value(data), data.hidden)
+        end
+
         table.safe_merge(stored[name], data)
       else
         Config.add_to_menu(data.category or 'other', name, data.name, data.description, data.type, data)
@@ -1073,7 +1101,11 @@ function Config.include_folder(folder)
     local configs = {}
 
     for _, file_name in ipairs(files) do
-      table.Merge(configs, Config.read('gamemodes/'..folder..'/'..file_name))
+      local definitions_read = Config.read('gamemodes/'..folder..'/'..file_name)
+
+      if definitions_read then
+        table.Merge(configs, definitions_read)
+      end
     end
 
     Flux.shared.configs[folder] = configs
