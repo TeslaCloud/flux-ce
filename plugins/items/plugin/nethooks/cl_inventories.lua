@@ -1,6 +1,7 @@
 --- Client-side receivers of the Items plugin for inventories: the inventories and the
 -- requests to open or close them that the server sends, and its requests to rebuild the
--- player model preview.
+-- player model preview. Closing an inventory that the server has removed forgets the copy
+-- of it as well.
 
 local IsValid = IsValid
 
@@ -110,7 +111,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
   end
 end)
 
-Cable.receive('fl_inventory_close', function(inventory_id)
+Cable.receive('fl_inventory_close', function(inventory_id, removed)
   local container_panel = Flux.container_panel
 
   if inventory_id then
@@ -120,6 +121,10 @@ Cable.receive('fl_inventory_close', function(inventory_id)
       inventory_panel:safe_remove()
     elseif IsValid(container_panel) and table.HasValue(container_panel:get_inventory_ids() or {}, inventory_id) then
       container_panel:safe_remove()
+    end
+
+    if removed then
+      Inventories.stored[inventory_id] = nil
     end
   else
     if IsValid(container_panel) then

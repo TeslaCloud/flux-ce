@@ -94,6 +94,13 @@ function Currencies:ActiveCharacterCleared(owner, _character)
   owner:set_private_nv('fl_currencies', {})
 end
 
+--- Sends the balances of a player to someone who has opened the inventories of that player.
+-- @param _actor [Player the player the inventories have been opened for]
+-- @param target [Player the player whose inventories have been opened]
+function Currencies:PlayerInventoryOpened(_actor, target)
+  self:update_balance_recipients(target)
+end
+
 --- Stops sending the balances of a player to someone who has closed the inventories of
 -- that player.
 -- @param _actor [Player the player who has closed the inventory]

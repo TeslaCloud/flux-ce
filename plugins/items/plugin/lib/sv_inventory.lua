@@ -18,8 +18,9 @@ function Inventories.find_by_item(item_obj)
 end
 
 --- Closes inventories for every player they are open for, other than their owner, and
--- unregisters them, so that nothing reaches them anymore. Each of those players gets the
--- `InventoryClosed` hook once for all of the inventories. Server-side only.
+-- unregisters them, so that nothing reaches them anymore. The clients of those players
+-- forget their copies of them. Each of those players gets the `InventoryClosed` hook once
+-- for all of the inventories. Server-side only.
 -- @param inventories [List<Inventory>]
 -- @see [Player#close_inventories]
 function Inventories.remove(inventories)
@@ -34,7 +35,7 @@ function Inventories.remove(inventories)
   end
 
   for receiver in pairs(viewers) do
-    receiver:close_inventories(inventories)
+    receiver:close_inventories(inventories, true)
   end
 
   local stored = Inventories.stored
@@ -91,8 +92,8 @@ end
 -- were saved in, or into the default inventory if the player has no such inventory.
 -- The items whose saved slot lies inside of their inventory are placed first, so that the
 -- others, which get the best free slot, do not take a slot that an item has been saved in.
--- Items that already are in an inventory and items that belong elsewhere are skipped.
--- Server-side only.
+-- Items that already are in the slots of a registered inventory and items that belong
+-- elsewhere are skipped. Server-side only.
 -- @param items [List<Item>]
 -- @param owner=nil [Player the player whose character the items belong to]
 -- @return [List<Item> the items that did not fit anywhere]
@@ -101,7 +102,7 @@ function Inventories.place_items(items, owner)
   local deferred = {}
 
   for _, item_obj in ipairs(items) do
-    if !item_obj.inventory_id then
+    if !Inventories.find_by_item(item_obj) then
       local inventory, x, y = find_target(item_obj, owner)
 
       if inventory then

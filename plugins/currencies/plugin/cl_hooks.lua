@@ -8,21 +8,14 @@ local scale = math.scale
 
 Flux.money_panels = Flux.money_panels or {}
 
---- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel. The
--- server is asked for the balances of another player whose inventories are shown.
+--- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel.
 -- @param panel [Panel the inventory panel that was rebuilt]
 function Currencies:InventoryRebuilt(panel)
   if panel:get_inventory_type() == 'pockets' then
     local parent = panel:GetParent()
 
     if !IsValid(panel.money) then
-      local owner = Inventories.find(panel:get_inventory_id()).owner
-
-      if IsValid(owner) and owner:IsPlayer() and owner != PLAYER then
-        Cable.send('fl_currency_watch', owner)
-      end
-
-      panel.money = self:create_panel(owner, parent)
+      panel.money = self:create_panel(Inventories.find(panel:get_inventory_id()).owner, parent)
     else
       panel.money:rebuild()
     end

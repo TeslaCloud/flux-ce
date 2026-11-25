@@ -1,8 +1,6 @@
 --- Server-side receivers of the Currencies plugin: the requests of the money panel to give,
--- drop and take money, and to be sent the balances of another player. Money can only be
--- taken from, and the balances of a player only be seen of, an entity that has an inventory
--- open for the player who asks: a container, or another player whose inventories are being
--- viewed.
+-- drop and take money. Money can only be taken from an entity that has an inventory open for
+-- the player who asks: a container, or another player whose inventories are being viewed.
 
 local IsValid = IsValid
 local CurTime = CurTime
@@ -54,11 +52,4 @@ Cable.receive('fl_currency_take', function(actor, entity, amount, currency)
   end
 
   cable_send(inventory.receivers, 'fl_rebuild_currency_panel')
-end)
-
-Cable.receive('fl_currency_watch', function(actor, target)
-  if !isentity(target) or !IsValid(target) or !target:IsPlayer() or target == actor then return end
-  if !Currencies:find_open_inventory(actor, target) then return end
-
-  Currencies:update_balance_recipients(target)
 end)

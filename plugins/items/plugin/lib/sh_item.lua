@@ -36,10 +36,12 @@ mod 'Item'
 local stored = Item.stored or {}
 local instances = Item.instances or {}
 local instance_metas = Item.instance_metas or setmetatable({}, { __mode = 'k' })
+local missing_models = Item.missing_models or {}
 
 Item.stored = stored
 Item.instances = instances
 Item.instance_metas = instance_metas
+Item.missing_models = missing_models
 
 --- Returns all the registered item templates.
 -- @return [Map item templates, keyed by item id]
@@ -633,8 +635,10 @@ Pipeline.register('item', function(id, file_name, _pipe)
 
   local model = ITEM.model
 
-  if SERVER and isstring(model) and !util.IsValidModel(model) then
-    ErrorNoHalt("Item '"..tostring(ITEM.id).."' of "..file_name..' has a model that does not exist: '..model..'\n')
+  if SERVER and isstring(model) and missing_models[ITEM.id] != model and !util.IsValidModel(model) then
+    missing_models[ITEM.id] = model
+
+    Flux.dev_print("Item '"..tostring(ITEM.id).."' of "..file_name..' has a model the server does not have: '..model)
   end
 
   ITEM = nil

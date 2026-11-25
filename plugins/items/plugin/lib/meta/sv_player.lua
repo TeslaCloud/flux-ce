@@ -154,8 +154,8 @@ end
 -- Writes the changes of the items in the player's inventories, and of the items of the
 -- character that could not be put into them, and makes the server forget them. Called
 -- when the character is no longer in use. The inventories of the container items among
--- them are closed and deleted from the server cache; the player's own inventories are
--- left alone.
+-- them are closed, deleted from the server cache and taken off the container items; the
+-- player's own inventories are left alone.
 -- @param defer=false [Boolean do it on the next tick, so that what is saved along with
 --   the character in the meantime is not lost]
 function player_meta:unload_items(defer)
@@ -171,6 +171,8 @@ function player_meta:unload_items(defer)
 
     if inventory and inventory.instance_id == item_obj.instance_id then
       Inventories.remove({ inventory })
+
+      item_obj.inventory = nil
     end
   end
 
@@ -466,6 +468,12 @@ function player_meta:open_player_inventory(target)
   end
 
   Cable.send(self, 'fl_open_player_inventory', target, inventory_ids)
+
+  --- Called on the server after the inventories of a player have been opened for another
+  -- player: that player is among their receivers and has been sent them.
+  -- @param actor [Player The player the inventories have been opened for]
+  -- @param target [Player The player whose inventories have been opened]
+  hook.Run('PlayerInventoryOpened', self, target)
 end
 
 --- Closes inventories that were opened for the player: removes the player from their
@@ -473,14 +481,18 @@ end
 -- hook once, with the first of them. The player's own inventories and inventories that
 -- are not open for the player are skipped.
 -- @param inventories [List<Inventory>]
-function player_meta:close_inventories(inventories)
+-- @param removed=false [Boolean the inventories are being removed from the server, so the
+--   client forgets its copies of them too]
+function player_meta:close_inventories(inventories, removed)
+  removed = removed == true
+
   local closed_inventory
 
   for _, inventory in pairs(inventories) do
     if inventory.owner != self and inventory:has_receiver(self) then
       inventory:remove_receiver(self)
 
-      Cable.send(self, 'fl_inventory_close', inventory.id)
+      Cable.send(self, 'fl_inventory_close', inventory.id, removed)
 
       closed_inventory = closed_inventory or inventory
     end
