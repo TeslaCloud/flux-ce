@@ -140,11 +140,14 @@ function ItemWearable:post_equipped(owner)
   end
 end
 
---- Called when the item gets unequipped. Gives the player their model and bodygroups back.
+--- Called when the item gets unequipped. Gives the player their model and bodygroups back,
+-- those that the item has stored when it was equipped.
 -- @param owner [Player]
 function ItemWearable:post_unequipped(owner)
-  if self:get_equip_model(owner) then
-    owner:SetModel(self:get_data('native_model'))
+  local native_model = self:get_data('native_model')
+
+  if native_model and self:get_equip_model(owner) then
+    owner:SetModel(native_model)
   end
 
   if self:get_bodygroups(owner) then

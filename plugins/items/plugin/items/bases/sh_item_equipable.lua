@@ -42,16 +42,20 @@ end
 --- Called on the server by the 'CanItemTransfer' hook before the item is moved to another
 -- inventory or picked up into one. Prevents equipping the item if can_equip disallows it
 -- for the owner of that inventory or its equipment slot is occupied, and prevents
--- unequipping it if can_unequip disallows it.
+-- unequipping it if can_unequip disallows it. Before the item is equipped, the
+-- inventories of `disabled_inventories` are emptied; the item is not equipped if that
+-- fails.
 -- @param inventory [Inventory the inventory the item is being moved to]
 -- @param _x [Number target slot, or nil if the position is yet to be found]
 -- @param _y [Number target slot, or nil if the position is yet to be found]
--- @return [Boolean false to prevent the transfer, nil otherwise]
+-- @return [Boolean false to prevent the transfer, nil otherwise; String error phrase]
 function ItemEquipable:can_transfer(inventory, _x, _y)
   local inv_type = inventory.type
 
   if inv_type == self.equip_inv then
-    if self:can_equip(inventory.owner) == false then
+    local owner = inventory.owner
+
+    if self:can_equip(owner) == false then
       return false
     end
 
@@ -72,6 +76,14 @@ function ItemEquipable:can_transfer(inventory, _x, _y)
             end
           end
         end
+      end
+    end
+
+    if IsValid(owner) and owner:IsPlayer() then
+      local emptied, error_text = self:empty_disabled_inventories(owner)
+
+      if !emptied then
+        return false, error_text
       end
     end
   elseif inv_type != self.equip_inv and self.inventory_type == self.equip_inv then
@@ -108,27 +120,49 @@ end
 function ItemEquipable:post_unequipped(_owner)
 end
 
+--- Moves the items of the inventories listed in disabled_inventories into the main
+-- inventory of the player, all but this item itself.
+-- @param owner [Player]
+-- @return [Boolean false if an item could not be moved, String error phrase]
+function ItemEquipable:empty_disabled_inventories(owner)
+  for _, inventory_type in pairs(self.disabled_inventories) do
+    local inventory = owner:get_inventory(inventory_type)
+
+    if inventory then
+      for _, instance_id in ipairs(inventory:get_items_ids()) do
+        if instance_id != self.instance_id then
+          local success, error_text = owner:transfer_item(instance_id, 'main_inventory')
+
+          if success == false then
+            return false, error_text
+          end
+        end
+      end
+    end
+  end
+
+  return true
+end
+
 --- Applies or reverts the equipped state of the item; it does not move the item itself.
 -- Empties and disables (or enables back) the inventories listed in disabled_inventories, calls
 -- post_equipped or post_unequipped and runs the 'ItemEquipped' or 'ItemUnequipped' hook.
+-- The player is notified of an item that could not be moved out of an inventory that is
+-- disabled; it stays there.
 -- @param owner [Player]
 -- @param should_equip [Boolean true to equip the item, false to unequip it]
 function ItemEquipable:equip(owner, should_equip)
   if should_equip then
+    local emptied, error_text = self:empty_disabled_inventories(owner)
+
+    if !emptied then
+      owner:notify(error_text)
+    end
+
     for _, inventory_type in pairs(self.disabled_inventories) do
       local inventory = owner:get_inventory(inventory_type)
 
       if inventory then
-        for _, item_obj in pairs(inventory:get_items()) do
-          local success, error_text = owner:transfer_item(item_obj.instance_id, 'main_inventory')
-
-          if !success then
-            owner:notify(error_text)
-
-            return
-          end
-        end
-
         inventory:set_disabled(true)
       end
     end
