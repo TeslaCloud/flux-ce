@@ -13,18 +13,21 @@
 -- You can continue writing description after examples.
 -- All lines that begin with @ will be treated differently.
 --
--- @warning [Internal] Some custom message to append instead of default message for "Internal".
+-- @warning [Internal] Text shown below the notice that the function is internal.
+-- @warning [Slow] Any other label titles a warning box of its own.
 -- @deprecation [Text to display in the warning window. Should be deprecation reason.]
 -- @deprecation_version [0.8.0]
+-- @since [0.7.0]
 -- @alias [Demo.other_test]
--- @param a=Default Value or Description [Number Some number]
+-- @param a=1 [Number Some number. The default after the name, 1, marks the parameter optional]
 -- @param b [Player Some player]
 -- @param c [Map Table]
 -- @return [Foo blank foo object, Number one hundred]
 --
--- You can also refer to other functions (both variations are valid)
--- @see other_function
--- @see [MyClass#method]
+-- You can also refer to other functions (both variations are valid), such as `Class#method`
+-- for a method of a class
+-- @see foo
+-- @see [run_demo_hook]
 function test(a, b, c)
   return Foo.new(), 100
 end
@@ -49,6 +52,10 @@ function debug_print(text)
     print(text)
   end
 end
+
+--- @category [Hooks]
+-- A doc comment that holds nothing but a category starts a section, which groups the
+-- functions below it in this file. This text describes the section.
 
 --- Demo a function that runs a hook.
 -- @param actor [Player player the hook is about]
