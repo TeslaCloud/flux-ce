@@ -418,6 +418,19 @@ function compare(a, b)
   return -1
 end
 
+local trace_color = Color(0, 255, 255)
+
+--- Prints a line of a traceback: in color to the console, or through ErrorNoHalt in fpkg's
+-- tasks, where that goes to the error stream along with the message of the error.
+-- @param trace_line [String]
+local write_trace_line = IS_TASK and function(trace_line)
+  ErrorNoHalt('    from '..trace_line..'\n')
+end or function(trace_line)
+  Msg('    ')
+  MsgC(trace_color, 'from '..trace_line)
+  Msg('\n')
+end
+
 --- Print a traceback to the current function call.
 -- @param suppress=false [Boolean do not print the traceback, only return it]
 -- @param ... [Vararg arguments for debug.traceback, such as a message and a level]
@@ -436,13 +449,9 @@ function print_traceback(suppress, ...)
   pieces[1] = ''
 
   if !suppress then
-    local trace_color = Color(0, 255, 255)
-
     for _, trace_line in ipairs(pieces) do
       if trace_line and trace_line != '' then
-        Msg('    ')
-        MsgC(trace_color, 'from '..trace_line)
-        Msg('\n')
+        write_trace_line(trace_line)
       end
     end
   end
@@ -450,11 +459,19 @@ function print_traceback(suppress, ...)
   return pieces
 end
 
---- Prints an error using ErrorNoHalt but without the character limit.
+--- Prints an error using ErrorNoHalt but without the character limit. fpkg's tasks have no
+-- such limit and get the error in one piece.
 -- @param ... [Vararg strings that are concatenated into the error message]
 -- @see [ErrorNoHalt]
 function long_error(...)
   local text = table.concat({ ... })
+
+  if IS_TASK then
+    ErrorNoHalt(text)
+
+    return
+  end
+
   local len = string.len(text)
   local pieces = {}
 

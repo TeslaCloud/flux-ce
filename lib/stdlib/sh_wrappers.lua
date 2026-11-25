@@ -1,6 +1,6 @@
 --- Shorthand wrappers around built-in Lua functions: `typeof` and `try`.
 -- On Linux servers `ErrorNoHalt` is also replaced to print errors on a red background,
--- with the original kept as `_ErrorNoHalt`.
+-- with the original kept as `_ErrorNoHalt`; fpkg's tasks keep the original.
 
 --- Gets the type of an object while ensuring the output is always lowercase.
 -- Functions exactly the same as `type`.
@@ -28,7 +28,7 @@ function try(func, ...)
   return a, b, c, d, e, f
 end
 
-if SERVER and system.IsLinux() then
+if SERVER and system.IsLinux() and !IS_TASK then
   _ErrorNoHalt = _ErrorNoHalt or ErrorNoHalt
 
   --- Prints the error in bold on a red background using ANSI escape sequences.
