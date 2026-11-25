@@ -90,11 +90,13 @@ function ItemBase:get_name()
   return self.print_name or self.name
 end
 
-ItemBase.name = ItemBase.get_name
-
 --- Bases the item off an item base.
--- Copies every function of the base, and every other field that the item has not set yet.
--- Also available as ItemBase:derive.
+-- Copies every function of the base, and every other field that the item has not set yet;
+-- tables such as the custom buttons and the action sounds are copied, so that the item
+-- changes them for itself alone. Since the functions of the base replace those of the
+-- item, `base_off` comes first in an item file, before the item defines its callbacks. A
+-- base that does not exist is reported with a traceback. Also available as
+-- ItemBase:derive.
 -- ```
 -- ITEM:base_off 'ItemContainer'
 -- ITEM.name = 'Test Bag'
@@ -107,11 +109,17 @@ function ItemBase:base_off(what)
 
   local module_table = isstring(what) and (what:parse_table() or ('Item'..what):parse_table()) or what
 
-  if !istable(module_table) then return end
+  if !istable(module_table) then
+    error_with_traceback('Unknown item base '..tostring(what)..' in item '..tostring(self.id))
+
+    return
+  end
 
   for key, value in pairs(module_table) do
-    if !self[key] or isfunction(value) then
+    if isfunction(value) then
       self[key] = value
+    elseif !self[key] then
+      self[key] = (istable(value) and !value.class_name) ? table.Copy(value) : value
     end
   end
 
@@ -253,6 +261,8 @@ end
 --   end
 -- })
 -- ```
+-- The callback receives the player and the extra arguments that their client has sent
+-- along with the action, as they arrived: check them before using them.
 -- @param name [String id of the button; also its title, unless data has name or get_name]
 -- @param data [Map button data: icon (String), callback (String name of the item's method
 --   to call on the server), and optionally name (String) or the client-side functions
