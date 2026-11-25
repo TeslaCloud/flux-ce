@@ -21,6 +21,8 @@ function try(func, ...)
 
   if !success then
     error_with_traceback(tostring(a))
+
+    return
   end
 
   return a, b, c, d, e, f
@@ -33,10 +35,10 @@ if SERVER and system.IsLinux() then
   -- Trailing newlines are printed after the styling is reset.
   -- @param msg [String error message]
   function ErrorNoHalt(msg)
-    local new_msg, count = tostring(msg):gsub('\n+$', '')
+    local text, newlines = tostring(msg):match('^(.-)(\n*)$')
 
     Msg('\27[41;15m\27[1m')
-    _ErrorNoHalt(new_msg)
-    Msg('\27[0m'..string.rep('\n', count))
+    _ErrorNoHalt(text)
+    Msg('\27[0m'..newlines)
   end
 end
