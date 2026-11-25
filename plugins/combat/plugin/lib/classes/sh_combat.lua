@@ -14,6 +14,7 @@ function Combat:init()
   self.id = CombatSystem:add(self)
   self.round = 1
   self.current_member = 1
+  self.skipped_turns = 0
   self.started = false
   self.finished = false
   self.members = {}
@@ -173,11 +174,11 @@ function Combat:round_end()
 end
 
 --- Adds a player or NPC to the combat, freezing them if the combat has already started.
+-- Entities that `CombatSystem:can_fight` refuses are left out.
 -- @param entity [Entity player or NPC to add]
 -- @param position=nil [Number position in the turn order, appended to the end by default]
 function Combat:add_member(entity, position)
-  if !IsValid(entity) or (!entity:IsNPC() and !entity:IsPlayer())
-  or table.HasValue(self.members, entity) then return end
+  if !CombatSystem:can_fight(entity) or table.HasValue(self.members, entity) then return end
 
   entity:set_nv('combat_id', self.id)
   position = position or #self.members + 1
@@ -190,7 +191,8 @@ function Combat:add_member(entity, position)
   end
 end
 
---- Removes a member from the combat, unfreezing them and ending their turn.
+--- Removes a member from the combat, unfreezing them, ending their turn and clearing their
+-- combat ID and turns.
 -- @param id [Entity member, or Number index of the member in the turn order]
 -- @param all=nil [Boolean true to keep the member in the list, used when removing every member]
 function Combat:remove_member(id, all)
@@ -206,7 +208,8 @@ function Combat:remove_member(id, all)
   if !id then return end
 
   if IsValid(entity) then
-    entity:set_nv('combat_id', false)
+    entity:set_nv('combat_id', nil)
+    entity:set_nv('fl_combat_turns', nil)
     entity:unfreeze()
 
     if entity:IsPlayer() then
@@ -277,11 +280,23 @@ function Combat:check()
 end
 
 --- Starts an entity's turn. Players get 60 seconds and use up move turns as they walk, NPCs act for 4 seconds.
+-- A player who has fallen over or is knocked out loses the turn, unless every member has lost theirs in a row.
 -- @param entity [Entity member whose turn it is]
 -- @param first=nil [Boolean whether this is the first turn of the combat]
 function Combat:turn(entity, first)
   if IsValid(entity) then
+    if entity:IsPlayer() and isfunction(entity.is_ragdolled) and entity:is_ragdolled()
+    and self.skipped_turns < #self.members then
+      self.skipped_turns += 1
+      self:send_message('notification.combat.down', { player = entity })
+      self:next_turn()
+
+      return
+    end
+
     local timer_name = 'combat_action_'..self.id
+
+    self.skipped_turns = 0
     entity:unfreeze()
     self:notify_turn()
 
@@ -356,6 +371,7 @@ function Combat:notify_finish()
 end
 
 --- Ends the acting member's turn, gives the turn to the next member and checks whether the combat is over.
+-- Members that are not valid are removed on the way, until a valid one gets the turn or the combat is over.
 function Combat:next_turn()
   if self.finished then return end
 
@@ -377,9 +393,10 @@ function Combat:next_turn()
 
   if IsValid(member) then
     self:turn(member)
+    self:check()
   else
     self:remove_member(self.current_member)
+    self:check()
+    self:next_turn()
   end
-
-  self:check()
 end

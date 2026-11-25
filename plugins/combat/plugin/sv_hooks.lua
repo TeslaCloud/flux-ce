@@ -48,6 +48,18 @@ function CombatSystem:PlayerDeath(target, _inflictor, attacker)
   end
 end
 
+--- Keeps players in a combat from switching characters: the spawn of the other character
+-- would let them move and shoot during the turns of the other members.
+-- @param actor [Player player who wants to switch]
+-- @param _character [Character character the player wants to load]
+-- @param _current [Character active character of the player]
+-- @return [Boolean false and String the reason while the player is in a combat, nil otherwise]
+function CombatSystem:PlayerCanSwitchCharacter(actor, _character, _current)
+  if actor:in_combat() then
+    return false, 'error.combat.switch'
+  end
+end
+
 --- Blocks weapon switching without an attack turn in combat, otherwise switching uses up all attack turns.
 -- @param actor [Player player switching weapons]
 -- @return [Boolean true to block the switch, nil otherwise]
@@ -70,11 +82,13 @@ function CombatSystem:DoAnimationEvent(actor, event)
   end
 end
 
---- Prevents players from raising their weapon in combat without an attack turn.
--- @param actor [Player player raising the weapon]
+--- Prevents players from raising their weapon in combat without an attack turn. Lowering
+-- is always allowed.
+-- @param actor [Player player raising or lowering the weapon]
+-- @param raised [Boolean true if the weapon is about to be raised]
 -- @return [Boolean false to prevent raising, nil otherwise]
-function CombatSystem:PlayerCanRaiseWeapon(actor)
-  if actor:in_combat() and (actor:is_frozen() or !actor:has_turn(TURN_ATTACK)) then
+function CombatSystem:PlayerCanRaiseWeapon(actor, raised)
+  if raised and actor:in_combat() and (actor:is_frozen() or !actor:has_turn(TURN_ATTACK)) then
     return false
   end
 end
@@ -157,7 +171,8 @@ end
 -- whether the attack hits (see `CombatSystem:calculate_hit`) and uses up an attack turn of a
 -- player attacker. A missed attack is blocked; a hit is left alone, so the damage that the
 -- D20 plugin has rolled for it is dealt. An attack outside of a combat that starts none is
--- left alone as well.
+-- left alone as well, and so are the damage an entity deals to itself and the attacks of
+-- and on entities that `CombatSystem:can_fight` refuses.
 --
 -- The plugin depends on the D20 and Damage plugins, which load first, so this handler runs
 -- after theirs. The damage of a hit on a player is rolled by `D20:ResolvePlayerDamage`, which
@@ -172,8 +187,7 @@ end
 function CombatSystem:EntityTakeDamage(entity, damage_info)
   local attacker = damage_info:GetAttacker()
 
-  if IsValid(attacker) and IsValid(entity)
-  and ((attacker:IsPlayer() or attacker:IsNPC()) and (entity:IsPlayer() or entity:IsNPC()))
+  if attacker != entity and self:can_fight(attacker) and self:can_fight(entity)
   and !(attacker:IsNPC() and entity:IsNPC()) then
     local attacker_combat = attacker:get_combat()
     local entity_combat = entity:get_combat()

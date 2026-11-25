@@ -6,6 +6,9 @@ en:
       auto_start:
         name: "Start Combat Automatically"
         desc: "Whether an attack between a player and an NPC, or between two players, starts a turn based combat when neither of them is in one. When off, combat only starts through code, and attacks in a running combat are still rolled."
+  error:
+    combat:
+      switch: "You cannot switch characters during a combat."
   notification:
     combat:
       finish: "The combat is over"
@@ -15,6 +18,7 @@ en:
       turn_order: "The combat begins. Turn order:"
       enter: "{player} enters the combat."
       leave: "{player} leaves the combat."
+      down: "{player} is down and loses the turn."
       skip: "You are skipping your turn."
       leave_try: "You are trying to leave the combat."
       leave_interrupt: "You have been interrupted from leaving the combat!"

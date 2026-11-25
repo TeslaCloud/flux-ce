@@ -6,6 +6,9 @@ es:
       auto_start:
         name: "Iniciar el combate automáticamente"
         desc: "Si un ataque entre un jugador y un PNJ, o entre dos jugadores, inicia un combate por turnos cuando ninguno de ellos está en uno. Si está desactivado, el combate solo empieza mediante código, y los ataques en un combate en curso se siguen tirando."
+  error:
+    combat:
+      switch: "No puedes cambiar de personaje durante un combate."
   notification:
     combat:
       finish: "El combate ha terminado"
@@ -15,6 +18,7 @@ es:
       turn_order: "Comienza el combate. Orden de turnos:"
       enter: "{player} entra en el combate."
       leave: "{player} abandona el combate."
+      down: "{player} está en el suelo y pierde el turno."
       skip: "Pasas tu turno."
       leave_try: "Intentas abandonar el combate."
       leave_interrupt: "¡Te han interrumpido mientras abandonabas el combate!"

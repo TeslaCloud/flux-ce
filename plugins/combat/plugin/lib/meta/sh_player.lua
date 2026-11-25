@@ -22,11 +22,11 @@ function player_meta:take_turn(turn_type, amount)
   turns[turn_type] -= amount
   self:set_nv('fl_combat_turns', turns)
 
-  if turns[TURN_ATTACK] <= 0 then
+  if (turns[TURN_ATTACK] or 0) <= 0 then
     self:freeze_gun()
   end
 
-  if turns[TURN_MOVE] <= 0 then
+  if (turns[TURN_MOVE] or 0) <= 0 then
     self:freeze_move()
   end
 

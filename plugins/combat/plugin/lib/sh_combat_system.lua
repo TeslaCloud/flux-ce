@@ -17,11 +17,16 @@ end
 local stored = CombatSystem.stored or {}
 CombatSystem.stored = stored
 
---- Stores a combat.
+--- Stores a combat under an ID that no other combat has had since the plugin was loaded.
 -- @param combat [Combat combat to store]
 -- @return [Number ID of the stored combat]
 function CombatSystem:add(combat)
-  return table.insert(stored, combat)
+  local id = (self.last_id or 0) + 1
+
+  self.last_id = id
+  stored[id] = combat
+
+  return id
 end
 
 --- Removes a stored combat.
@@ -35,6 +40,30 @@ end
 -- @return [Combat combat, nil if it does not exist]
 function CombatSystem:find(id)
   return stored[id]
+end
+
+--- Tells whether an entity can take part in a combat: an NPC, or a living player with a
+-- loaded character who is neither noclipping nor hidden by the Observer plugin.
+-- @param entity [Entity]
+-- @return [Boolean]
+function CombatSystem:can_fight(entity)
+  if !IsValid(entity) then
+    return false
+  end
+
+  if entity:IsNPC() then
+    return true
+  end
+
+  if !entity:IsPlayer() or !entity:Alive() or entity:GetMoveType() == MOVETYPE_NOCLIP then
+    return false
+  end
+
+  if isfunction(entity.is_character_loaded) and !entity:is_character_loaded() then
+    return false
+  end
+
+  return !(isfunction(entity.is_hidden) and entity:is_hidden())
 end
 
 --- Adds an entity to a combat.

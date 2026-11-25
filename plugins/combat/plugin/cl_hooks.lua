@@ -94,7 +94,7 @@ function CombatSystem:HUDPaint()
     FontAwesome:draw('fa-crosshairs', icon_x, icon_y, icon_size, hud_color, nil, nil, 1, hud_outline_color)
     FontAwesome:draw('fa-shoe-prints', icon_x_right, icon_y, icon_size, hud_color, nil, nil, 1, hud_outline_color)
 
-    local text = turns[TURN_ATTACK]
+    local text = turns[TURN_ATTACK] or 0
     local font = Theme.get_font('menu_large')
     local text_w, text_h = text_size(text, font)
 
@@ -110,7 +110,7 @@ function CombatSystem:HUDPaint()
       hud_outline_color
     )
 
-    text = turns[TURN_MOVE]
+    text = turns[TURN_MOVE] or 0
     text_w, text_h = text_size(text, font)
 
     draw_text_outlined(

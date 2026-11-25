@@ -6,6 +6,9 @@ fr:
       auto_start:
         name: "Démarrer le combat automatiquement"
         desc: "Si une attaque entre un joueur et un PNJ, ou entre deux joueurs, démarre un combat au tour par tour lorsqu'aucun d'eux n'est en combat. Désactivé, le combat ne démarre que par le code, et les attaques d'un combat en cours sont toujours lancées."
+  error:
+    combat:
+      switch: "Vous ne pouvez pas changer de personnage pendant un combat."
   notification:
     combat:
       finish: "Le combat est terminé"
@@ -15,6 +18,7 @@ fr:
       turn_order: "Le combat commence. Ordre des tours :"
       enter: "{player} entre dans le combat."
       leave: "{player} quitte le combat."
+      down: "{player} est à terre et perd son tour."
       skip: "Vous passez votre tour."
       leave_try: "Vous essayez de quitter le combat."
       leave_interrupt: "Vous avez été interrompu en quittant le combat !"
