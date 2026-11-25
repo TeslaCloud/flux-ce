@@ -187,7 +187,9 @@ function Containers:get_pending_items(entity)
 end
 
 --- Returns the inventory of a container, creating it if it does not exist yet. The
--- inventory takes in the items that have been loaded for the container in the meantime.
+-- inventory takes in the items that have been loaded for the container in the meantime:
+-- those whose saved slot lies inside of it first, then the others, which get the best free
+-- slot, so that they do not take a slot that an item has been saved in.
 -- @param entity [Entity the container prop]
 -- @return [Inventory the inventory, or nil if the entity is not a container]
 function Containers:get_inventory(entity)
@@ -212,8 +214,20 @@ function Containers:get_inventory(entity)
   local pending = self:get_pending_items(entity)
 
   if #pending > 0 then
+    local deferred = {}
+
     for _, item_obj in ipairs(pending) do
-      inventory:add_item(item_obj, item_obj.x, item_obj.y)
+      local w, h = inventory:get_item_size(item_obj)
+
+      if inventory:fits_in_bounds(item_obj.x, item_obj.y, w, h) then
+        inventory:add_item(item_obj, item_obj.x, item_obj.y)
+      else
+        deferred[#deferred + 1] = item_obj
+      end
+    end
+
+    for _, item_obj in ipairs(deferred) do
+      inventory:add_item(item_obj)
     end
 
     inventory:sync()
