@@ -203,25 +203,28 @@ end
 return AddRoleToUsers
 ```
 
-Migrations of the schema live in `gamemodes/<your_schema>/db/migrate/`. Migrations shipped with packages and plugins (their `migrations/` folders) are installed into that folder when the server starts, under a new version and the name of the plugin. Every migration that has been run is recorded in the `ar_schema_migrations` table, so each one runs exactly once; pending ones are run when the server starts. After migrating, the current state of the database is dumped into `gamemodes/<your_schema>/db/schema.lua`, which is loaded instead of the migrations when an empty database is set up.
+Migrations of the schema live in `gamemodes/<your_schema>/db/migrate/`. Migrations shipped with packages and plugins (their `migrations/` folders) are installed into that folder when the server starts or a task of fpkg connects to the database (see below), under a new version and the name of the plugin. Every migration that has been run is recorded in the `ar_schema_migrations` table, so each one runs exactly once; pending ones are run when the server starts. After migrating, the current state of the database is dumped into `gamemodes/<your_schema>/db/schema.lua`, which is loaded instead of the migrations when an empty database is set up.
 
-`change` is reverted automatically for `create_table`, `add_column`, `rename_column`, `rename_table`, `add_index`, `add_reference`, `add_foreign_key`, `add_timestamps` and their counterparts. Use `reversible` for anything else, or define `up` and `down` instead of `change`. The available tasks are run from the server console:
+`change` is reverted automatically for `create_table`, `add_column`, `rename_column`, `rename_table`, `add_index`, `add_reference`, `add_foreign_key`, `add_timestamps` and their counterparts. Use `reversible` for anything else, or define `up` and `down` instead of `change`. The available tasks are run from the server console (`flux` alone prints them):
 
 ```
-flux db:migrate [VERSION=x]       run the pending migrations, or migrate to a version
-flux db:migrate:status            list the migrations and whether they have been run
-flux db:migrate:up VERSION=x      run a single migration
-flux db:migrate:down VERSION=x    revert a single migration
-flux db:migrate:redo [STEP=n]     revert and re-run the newest migration(s)
-flux db:rollback [STEP=n]         revert the newest migration(s)
-flux db:forward [STEP=n]          run the next pending migration(s)
-flux db:version                   print the current schema version
-flux db:schema:dump               write the schema into db/schema.lua
-flux db:schema:load               create the tables of db/schema.lua
-flux db:create                    create the database (PostgreSQL only)
-flux db:drop                      drop the database (PostgreSQL only)
+flux db:migrate [VERSION=x]                run the pending migrations, or migrate to a version
+flux db:migrate:status                     list the migrations and whether they have been run
+flux db:migrate:up VERSION=x               run a single migration
+flux db:migrate:down VERSION=x             revert a single migration
+flux db:migrate:redo [STEP=n] [VERSION=x]  revert and re-run the newest migration(s), or the one of VERSION
+flux db:rollback [STEP=n]                  revert the newest migration(s)
+flux db:forward [STEP=n]                   run the next pending migration(s)
+flux db:version                            print the current schema version
+flux db:schema:dump                        write the schema into db/schema.lua
+flux db:schema:load                        create the tables of db/schema.lua
+flux db:prepare                            bring the database up to date as the server does when it starts
+flux db:create                             create the database (PostgreSQL only)
+flux db:drop                               drop the database (PostgreSQL only)
 flux generate migration AddRoleToUsers role:string
 ```
+
+The same tasks run from the shell without the server, through [fpkg](https://github.com/TeslaCloud/fpkg): `fpkg db:migrate`, `fpkg db:rollback STEP=2`, `fpkg generate migration AddRoleToUsers role:string` (or `fpkg g ...`) in the schema's folder, and `fpkg tasks` lists them. They boot Flux as far as the database in fpkg's own runtime, find the same migrations the server would (those of the packages and of the plugins the schema loads), and exit with 1 when they fail. `fpkg --env development db:migrate` picks the section of `database.yml` and the plugins of that environment; without `--env` the environment comes from `config/environment.lua`, as on the server. Inside a server folder (`garrysmod/gamemodes/<your_schema>`) they use the server's database: its `sv.db`, or the PostgreSQL or MySQL database of `database.yml`. In a schema checkout outside of a server they use SQLite in `<your_schema>/.fpkg/garrysmod/sv.db`, unless `--server <dir>` points fpkg at a server folder. PostgreSQL and MySQL are not available from fpkg yet: with those adapters a task stops and says so.
 
 ### Environment
 

@@ -236,7 +236,7 @@ end
 return CreateNotes
 ```
 
-Flux installs it into the schema's `db/migrate/` and runs it when the server starts (see [Migrations](../readme.md#migrations) in the readme). The model, `plugin/models/note.lua`, and the relation it adds to the `Character` model of the Characters plugin, `plugin/models/character.lua`:
+Flux installs it into the schema's `db/migrate/` and runs it when the server starts, or when you run `fpkg db:migrate` in the schema's folder, which needs no server (see [Migrations](../readme.md#migrations) in the readme). The model, `plugin/models/note.lua`, and the relation it adds to the `Character` model of the Characters plugin, `plugin/models/character.lua`:
 
 ```lua
 --- A note that a `Character` has written, stored in the `notes` table.
