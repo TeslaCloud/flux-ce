@@ -30,3 +30,16 @@ Style/ShortFunction:
 
 Style/TernaryOperator:
   Enabled: true
+
+Lint/HookName:
+  Functions:
+    hook.Add: 1
+    hook.Remove: 1
+    hook.Run: 1
+    hook.Call: 1
+    gamemode.Call: 1
+    Plugin.call: 1
+
+Performance/ExpensiveCallInHotPath:
+  Alternatives:
+    Material: util.get_material
