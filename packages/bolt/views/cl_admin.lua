@@ -1,12 +1,13 @@
 --- The admin panel shown by the Admin entry of the tab menu: a sidebar of page buttons and
--- the page that is currently open.
+-- the page that is currently open, the first page the local player may open to begin with.
 -- Pages are added from the `AddAdminMenuItems` hook with `add_panel`, may require a
--- permission, and are created through the theme when their button is clicked.
+-- permission, which a page needs for its button to be shown, and are created through the
+-- theme when their button is clicked.
 
 local PANEL = {}
 
---- Sizes and centers the admin panel, creates its sidebar and lets plugins add their pages
--- through the AddAdminMenuItems hook.
+--- Sizes and centers the admin panel, creates its sidebar, lets plugins add their pages
+-- through the AddAdminMenuItems hook and opens the first page that has a button.
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
   local width, height = self:get_menu_size()
@@ -35,6 +36,10 @@ function PANEL:Init()
   -- @param panel [Panel The admin panel, an `fl_admin_panel`]
   -- @param sidebar [Panel The sidebar of the admin panel, which holds the page buttons]
   hook.Run('AddAdminMenuItems', self, self.sidebar)
+
+  if self.first_page then
+    self:open_panel(self.first_page)
+  end
 end
 
 --- Draws the card of the panel and the divider between the sidebar and the page.
@@ -59,7 +64,8 @@ function PANEL:PaintOver(w, h)
   Theme.hook('PaintOverAdminPanel', self, w, h)
 end
 
---- Registers a page and adds a sidebar button that opens it.
+--- Registers a page and, if the local player has the permission it needs, adds a sidebar
+-- button that opens it.
 -- @param id [String page ID; must match a panel registered with the theme]
 -- @param title [String button text]
 -- @param permission=nil [String permission needed to open the page]
@@ -71,6 +77,10 @@ function PANEL:add_panel(id, title, permission, ...)
     permission = permission,
     arguments = { ... }
   }
+
+  if permission and !PLAYER:can(permission) then return end
+
+  self.first_page = self.first_page or id
 
   local button = vgui.Create('fl_button')
   button:SetSize(self.sidebar:GetWide(), math.scale(36))

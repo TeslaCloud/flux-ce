@@ -14,6 +14,23 @@ local function get_columns(w)
   return w * 0.28, w * 0.17
 end
 
+--- The values that the bulk buttons of a category set, in the order of the buttons.
+local bulk_values = { PERM_ALLOW, PERM_NO, PERM_NEVER }
+
+--- Loads the values of the edited layer into the rows of the open permission editor again a
+-- second after a change has been sent to the server, so that a change the server refuses is
+-- undone in the editor.
+local function reload_editor_soon()
+  timer.Create('fl_bolt_permissions_reload', 1, 1, function()
+    local editor = Bolt.permissions_editor
+
+    if IsValid(editor) then
+      editor:load_values()
+      editor:update_decisions()
+    end
+  end)
+end
+
 --- The network messages that set each layer's values, by layer.
 local layer_messages = {
   user = {
@@ -61,6 +78,7 @@ function PANEL:rebuild()
       Cable.send(messages.delete_temporary, self:get_player(), self:get_permission().id)
 
       self:set_temporary(PERM_NO, 0)
+      reload_editor_soon()
 
       return
     end
@@ -77,6 +95,7 @@ function PANEL:rebuild()
           Cable.send(messages.delete_temporary, self:get_player(), perm_id)
 
           self:set_temporary(perm_value, 0)
+          reload_editor_soon()
 
           return
         end
@@ -90,6 +109,7 @@ function PANEL:rebuild()
         Cable.send(messages.temporary, self:get_player(), perm_id, perm_value, duration)
 
         self:set_temporary(perm_value, os.time() + duration)
+        reload_editor_soon()
       end)
   end
 
@@ -211,7 +231,8 @@ end
 
 --- Marks a button as the selected value and, if that differs from the current value of the
 -- edited layer (the player's own permission or their character's), sends the change to the
--- server.
+-- server. The rows show the values of the server again a second later, which undoes a change
+-- that the server has refused.
 -- @param button [Panel one of the row's value buttons]
 function PANEL:select_button(button)
   local value = button.perm_value or PERM_NO
@@ -229,6 +250,7 @@ function PANEL:select_button(button)
 
     if value != current then
       Cable.send(layer_messages[self.layer].set, target, perm.id, value)
+      reload_editor_soon()
     end
   end
 
@@ -587,8 +609,11 @@ function PANEL:get_player()
 end
 
 --- Recreates the list: a collapsible category per permission category with a row for each
--- permission, plus bulk allow / not set / never buttons where a category has several. The
--- list is docked into a scroll panel, so the rows keep clear of the scroll bar.
+-- permission, plus bulk allow / not set / never buttons where a category has several. A bulk
+-- button only changes the permissions that the local player has, which are the only ones the
+-- server lets them change, and tells a player who is not root that they cannot change their
+-- own permissions. The list is docked into a scroll panel, so the rows keep clear of the
+-- scroll bar.
 function PANEL:rebuild()
   if IsValid(self.scroll_panel) then
     self.scroll_panel:safe_remove()
@@ -646,22 +671,29 @@ function PANEL:rebuild()
         button:set_text(label)
         button:set_centered(true)
         button.DoClick = function(_btn)
-          local can_click = false
+          local value = bulk_values[i]
+          local client = PLAYER
+
+          if self:get_player() == client and !client:is_root() then
+            client:notify('error.permission_own')
+
+            return
+          end
+
+          local changed = {}
 
           for _, perm in pairs(perms) do
-            if self.permissions[perm.id]:get_value() != i - 1 then
-              can_click = true
-
-              break
+            if client:can(perm.id) and self.permissions[perm.id]:get_value() != value then
+              changed[#changed + 1] = self.permissions[perm.id]
             end
           end
 
-          if !can_click then return end
+          if #changed == 0 then return end
 
           surface.PlaySound('buttons/button4.wav')
 
-          for _, perm in pairs(perms) do
-            self.permissions[perm.id]:set_value(i - 1)
+          for _, row in ipairs(changed) do
+            row:set_value(value)
           end
         end
       end

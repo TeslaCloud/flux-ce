@@ -2,16 +2,21 @@
 -- permission: a list of the online players and, for the selected one, a header with their
 -- avatar, name and role above the permission editor.
 -- The header is the `fl_player_info` panel, which is also defined here; its edit button
--- opens a selector that changes the player's role. The server only applies the changes made
--- here to the editing player themselves and to players whose role has a lower immunity than
--- theirs (root players may edit anyone).
+-- opens a selector of the roles the editing player may give, which changes the player's role.
+-- The server only applies the changes made here to the editing player themselves and to
+-- players whose role has a lower immunity than theirs (root players may edit anyone), and the
+-- permissions only to others, unless the editing player is root. The list of players follows
+-- the players who join and leave, and the header follows the role of the selected player.
 
 local PANEL = {}
 
---- Creates the player list, the player info header and the permissions editor. The last two
--- stay hidden until a player is selected.
+--- Creates the player list, the player info header and the permissions editor, and makes the
+-- page known to Bolt as `Bolt.player_management`, so that its list hears of the players who
+-- join and leave. The header and the editor stay hidden until a player is selected.
 function PANEL:Init()
   local scrw = ScrW()
+
+  Bolt.player_management = self
 
   self.player_list = vgui.Create('DListView', self)
   self.player_list:DockMargin(0, 0, math.scale(8), 0)
@@ -19,9 +24,7 @@ function PANEL:Init()
   self.player_list:AddColumn(t('ui.admin.players'), 1)
   self.player_list:SetWide(scrw / 6)
 
-  for _, client in player.Iterator() do
-    self.player_list:AddLine(client:steam_name(true)..' ('..client:name(true)..')').player = client
-  end
+  self:rebuild_list()
 
   self.player_list.OnRowSelected = function(_list, _index, panel)
     if IsValid(panel.player) and self:get_player() != panel.player then
@@ -34,6 +37,24 @@ function PANEL:Init()
 
   self.perm_editor = vgui.Create('fl_permissions_editor', self)
   self.perm_editor:SetVisible(false)
+end
+
+--- Fills the player list with the players on the server, keeping the selected player
+-- selected.
+-- @param leaving=nil [Player a player who is leaving and is left out]
+function PANEL:rebuild_list(leaving)
+  self.player_list:Clear()
+
+  for _, client in player.Iterator() do
+    if client != leaving then
+      local line = self.player_list:AddLine(client:steam_name(true)..' ('..client:name(true)..')')
+      line.player = client
+
+      if client == self.active_player then
+        self.player_list:SelectItem(line)
+      end
+    end
+  end
 end
 
 --- Docks and sizes the info header and the permissions editor once the admin panel has opened
@@ -76,8 +97,13 @@ vgui.Register('fl_player_management', PANEL, 'fl_base_panel')
 
 PANEL = {}
 
---- Creates the avatar, the name and role labels and the button that opens the role selector.
+--- Creates the avatar, the name and role labels and the button that opens the role selector,
+-- and makes the header known to Bolt as `Bolt.player_info`, so that it hears of the changes
+-- to the role of its player. The selector offers the roles that the local player may give,
+-- see `Bolt:check_role_immunity`.
 function PANEL:Init()
+  Bolt.player_info = self
+
   self.avatar = vgui.Create('fl_avatar_panel', self)
 
   self.name_label = vgui.Create('DLabel', self)
@@ -99,15 +125,11 @@ function PANEL:Init()
     selector:set_value(t'ui.admin.selector.roles')
 
     for _, role in pairs(Bolt:get_roles()) do
-      selector:add_choice(role.name, function()
-        Cable.send('fl_bolt_set_role', self.player, role.role_id)
-
-        timer.Simple(0.05, function()
-          if IsValid(self) then
-            self:rebuild()
-          end
+      if Bolt:check_role_immunity(PLAYER, role.role_id, true) then
+        selector:add_choice(t(role.name), function()
+          Cable.send('fl_bolt_set_role', self.player, role.role_id)
         end)
-      end)
+      end
     end
   end
 end
@@ -148,7 +170,17 @@ function PANEL:set_player(target)
   self:rebuild()
 end
 
---- Refreshes the avatar, name and role label from the current player.
+--- Refreshes the role label when the role of the displayed player has changed.
+-- @param entity [Entity the entity whose networked variable has changed]
+-- @param key [String name of the variable]
+function PANEL:on_net_var_changed(entity, key)
+  if key == 'role' and entity == self.player then
+    self:rebuild()
+  end
+end
+
+--- Refreshes the avatar, name and role label from the current player. The role label names
+-- the role, or the role ID of a role that is not registered.
 function PANEL:rebuild()
   local target = self.player
 
@@ -159,7 +191,7 @@ function PANEL:rebuild()
   self.name_label:SetText(target:steam_name(true)..' ('..target:name(true)..')')
   self.name_label:SizeToContents()
 
-  self.role_label:SetText(t'ui.admin.role'..': '..target:get_role():upper())
+  self.role_label:SetText(t'ui.admin.role'..': '..t(target:get_role_table().name or target:get_role()))
   self.role_label:SizeToContents()
 
   self:InvalidateLayout()
