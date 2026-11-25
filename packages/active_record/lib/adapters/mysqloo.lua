@@ -1,10 +1,10 @@
---- Adapter for MySQL servers, built on the MySQLOO binary module (`gmsv_mysqloo`). It is
--- used when the database settings name the 'mysqloo' or 'mysql' adapter. Queries run
--- asynchronously unless the adapter is in sync mode, and queries with bind parameters are
--- sent as prepared statements. Tables are created with the InnoDB engine and the encoding
--- of the database settings ('utf8' by default), and the connection is pinged every 30
--- seconds to keep it alive. Unlike the other adapters, it does not run migrations in a
--- transaction.
+--- Adapter for MySQL and MariaDB servers, built on the MySQLOO binary module
+-- (`gmsv_mysqloo`). It is used when the database settings name the 'mysqloo', 'mysql' or
+-- 'mariadb' adapter. Queries run asynchronously unless the adapter is in sync mode, and
+-- queries with bind parameters are sent as prepared statements. Tables are created with the
+-- InnoDB engine and the encoding of the database settings (utf8mb4 for 'utf8' or none), and
+-- the connection is pinged every 30 seconds to keep it alive. Unlike the other adapters, it
+-- does not run migrations in a transaction.
 
 class 'ActiveRecord::Adapters::Mysqloo' extends 'ActiveRecord::Adapters::Abstract'
 
@@ -25,6 +25,24 @@ ActiveRecord.Adapters.Mysqloo.types = {
 }
 
 ActiveRecord.Adapters.Mysqloo._sql_syntax = 'mysql'
+
+--- Port that the adapter connects to when the database settings give none.
+-- @return [Number]
+ActiveRecord.Adapters.Mysqloo.default_port = 3306
+
+--- Returns the character set of the connection and of the tables it creates: the encoding of the
+-- database settings, where 'utf8' (or none at all) stands for utf8mb4, the full UTF-8 of
+-- MySQL, rather than for its three-byte utf8 that cannot hold emoji.
+-- @return [String]
+local function character_set()
+  local encoding = ActiveRecord.db_settings.encoding
+
+  if !isstring(encoding) or encoding:lower() == 'utf8' or encoding:lower() == 'utf-8' then
+    return 'utf8mb4'
+  end
+
+  return encoding
+end
 
 --- Loads the 'mysqloo' binary module. When it cannot be opened, #connect says how to install
 -- it.
@@ -55,7 +73,7 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
     config.host, config.user, config.password, config.port, config.database, config.socket, config.flags
 
   if !port then
-    port = 3306
+    port = self.default_port
   end
 
   if host == 'localhost' then
@@ -72,10 +90,10 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
     end
 
     self.connection.onConnected = function(connection)
-      local success, error_message = connection:setCharacterSet(ActiveRecord.db_settings.encoding or 'utf8')
+      local success, error_message = connection:setCharacterSet(character_set())
 
       if !success then
-        ErrorNoHalt('ActiveRecord - Failed to set MySQL encoding to UTF-8!\n')
+        ErrorNoHalt('ActiveRecord - Failed to set the MySQL character set to '..character_set()..'!\n')
         error_with_traceback(error_message)
       end
 
@@ -160,21 +178,14 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
     query_obj = self.connection:query(query)
   end
 
-  local query_start = os.clock()
+  local query_start = SysTime()
   local success_func = function(completed_query, result)
     if callback then
       if query_type == 'insert' then
         result = { { id = completed_query:lastInsert() } }
       end
 
-      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
-
-      if !status then
-        ErrorNoHalt('ActiveRecord - MySQL Callback Error!\n')
-        error_with_traceback(a)
-      end
-
-      return a, b, c, d
+      return self:run_callback(callback, result, query, query_start, bindings)
     end
   end
 
@@ -208,13 +219,13 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
   end
 end
 
---- Sets the table options (InnoDB engine and default charset) on a query before its
+--- Sets the table options (InnoDB engine and default character set) on a query before its
 -- SQL is built.
 -- @param query [ActiveRecord::Query]
 -- @param _query_type [String unused]
 -- @param _queue=nil [Boolean unused]
 function ActiveRecord.Adapters.Mysqloo:append_query(query, _query_type, _queue)
-  query.options = 'ENGINE=InnoDB DEFAULT CHARSET='..(ActiveRecord.db_settings.encoding or 'utf8')
+  query.options = 'ENGINE=InnoDB DEFAULT CHARSET='..character_set()
 end
 
 --- Makes the column the primary key of the table when a 'primary_key' column is created.

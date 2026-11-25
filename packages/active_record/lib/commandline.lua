@@ -44,7 +44,7 @@ local usage = txt[[
     flux db:schema:dump                write the schema into db/schema.lua
     flux db:schema:load                create the tables of db/schema.lua
     flux db:create                     create the database (PostgreSQL only)
-    flux db:drop                       drop the database
+    flux db:drop                       drop the database (PostgreSQL only)
 
   Generators:
     flux generate migration <Name> [column:type ...]

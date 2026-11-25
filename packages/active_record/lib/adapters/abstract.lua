@@ -275,6 +275,37 @@ function ActiveRecord.Adapters.Abstract:report_failure(query, error_text, error_
   return self:query_failed(query, error_text, raise)
 end
 
+--- Calls the callback of a query that has succeeded. An error raised by the callback is
+-- printed and does not reach the caller of the query.
+-- @param callback [Function receives the result, the query string, the time the query took
+--   in seconds and the bindings]
+-- @param result [Any result of the query]
+-- @param query [String SQL that was run]
+-- @param query_start [Number SysTime when the query was started]
+-- @param bindings=nil [List values bound to the placeholders of the query]
+-- @return [Any whatever the callback returns; nothing if it raised an error]
+function ActiveRecord.Adapters.Abstract:run_callback(callback, result, query, query_start, bindings)
+  local status, a, b, c, d = pcall(callback, result, query, math.Round(SysTime() - query_start, 3), bindings)
+
+  if !status then
+    ErrorNoHalt('ActiveRecord - '..self:get_sql_std()..' callback error!\n')
+    error_with_traceback(a)
+
+    return
+  end
+
+  return a, b, c, d
+end
+
+--- Converts a value that ActiveRecord::Query#bind binds to the form in which the adapter
+-- hands it to the database. The abstract implementation passes it on unchanged, which
+-- suits database modules that take numbers as they are.
+-- @param value [String/Number]
+-- @return [String/Number]
+function ActiveRecord.Adapters.Abstract:bind_value(value)
+  return value
+end
+
 --- Puts a raw SQL string into the queue. Queued queries are run one at a time by #think.
 -- @param query [String SQL to run; anything that is not a string is ignored]
 -- @param callback=nil [Function passed on to #raw_query]
@@ -338,26 +369,30 @@ function ActiveRecord.Adapters.Abstract:is_result(result)
 end
 
 --- Called when the database connects successfully. Runs ActiveRecord's startup in sync
--- mode and fires the 'DatabaseConnected' hook.
+-- mode and fires the 'DatabaseConnected' hook once it has succeeded.
 function ActiveRecord.Adapters.Abstract:on_connected()
   self._connected = true
   self:sync(true)
 
-  ActiveRecord.on_connected()
-  --- Called on the server once the adapter is connected to the database and ActiveRecord
-  -- has finished starting up, right after the `ActiveRecordReady` hook. The adapter is
-  -- still in sync mode during the call, so queries made by a handler finish before it
-  -- returns.
-  -- @realm [server]
-  hook.Run('DatabaseConnected')
+  if ActiveRecord.on_connected() then
+    --- Called on the server once the adapter is connected to the database and ActiveRecord
+    -- has finished starting up, right after the `ActiveRecordReady` hook. The adapter is
+    -- still in sync mode during the call, so queries made by a handler finish before it
+    -- returns.
+    -- @realm [server]
+    hook.Run('DatabaseConnected')
+  end
 
   self:sync(false)
 end
 
---- Called when the database connection fails. Prints the error and fires the
--- 'DatabaseConnectionFailed' hook.
+--- Called when the database connection fails. Prints the error, fires the
+-- 'DatabaseConnectionFailed' hook and, while ActiveRecord is starting up, schedules
+-- another attempt (see ActiveRecord.reconnect).
 -- @param error_text [String error reported by the database module]
 function ActiveRecord.Adapters.Abstract:on_connection_failed(error_text)
+  error_text = tostring(error_text)
+
   ErrorNoHalt('ActiveRecord - Unable to connect to the database!\n'..error_text..'\n')
 
   if error_text:find('does not exist') and !self:is_sqlite() then
@@ -370,6 +405,10 @@ function ActiveRecord.Adapters.Abstract:on_connection_failed(error_text)
   -- @param error_text [String error reported by the database module]
   -- @realm [server]
   hook.Run('DatabaseConnectionFailed', error_text)
+
+  if self == ActiveRecord.adapter then
+    ActiveRecord.reconnect()
+  end
 end
 
 --- Checks whether or not the adapter is connected to a database.

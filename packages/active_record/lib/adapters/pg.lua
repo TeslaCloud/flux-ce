@@ -1,5 +1,5 @@
 --- Adapter for PostgreSQL servers, built on the `pg` binary module (`gmsv_pg`). It is used
--- when the database settings name the 'pg' or 'postgresql' adapter. Queries run
+-- when the database settings name the 'pg', 'postgres' or 'postgresql' adapter. Queries run
 -- asynchronously unless the adapter is in sync mode, bind parameters are numbered ($1,
 -- $2 and so on), and insert queries get the id of the new row through RETURNING id.
 -- Schema changes can be rolled back, so migrations run in a transaction. It is the only
@@ -24,6 +24,10 @@ ActiveRecord.Adapters.Pg.types = {
 }
 
 ActiveRecord.Adapters.Pg._sql_syntax = 'postgresql'
+
+--- Port that the adapter connects to when the database settings give none.
+-- @return [Number]
+ActiveRecord.Adapters.Pg.default_port = 5432
 
 --- Loads the 'pg' binary module. When it cannot be opened, #connect says how to install it.
 function ActiveRecord.Adapters.Pg:init()
@@ -51,7 +55,7 @@ function ActiveRecord.Adapters.Pg:connect(config, on_connected)
   local host, user, password, port, database = config.host, config.user, config.password, config.port, config.database
 
   if !port then
-    port = 5432
+    port = self.default_port
   end
 
   if host == 'localhost' then
@@ -138,17 +142,10 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
   bindings = bindings or {}
 
   local query_obj = self.connection:query(query)
-  local query_start = os.clock()
+  local query_start = SysTime()
   local success_func = function(result, _size)
     if callback then
-      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
-
-      if !status then
-        ErrorNoHalt('ActiveRecord - PostgreSQL Callback Error!\n')
-        error_with_traceback(a)
-      end
-
-      return a, b, c, d
+      return self:run_callback(callback, result, query, query_start, bindings)
     end
   end
 

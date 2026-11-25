@@ -145,9 +145,27 @@ function ActiveRecord.Database:setup(settings)
 end
 
 --- Drops the database named in the settings and disconnects the adapter afterward.
--- Connects to the 'template1' database to do so.
+-- Only PostgreSQL is supported, through its 'template1' database; on MySQL and SQLite
+-- instructions are printed instead.
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:drop_database(settings)
+  local adapter = ActiveRecord.adapter
+
+  if adapter:is_mysql() then
+    ErrorNoHalt('MySQL does not support automatic database removal, sorry!\n')
+    ErrorNoHalt(
+      'Please go to your MySQL terminal and use this to drop the database:\nmysql> drop database '..
+        settings.database..'\n(without the "mysql>" part)\n'
+    )
+
+    return
+  elseif !adapter:is_postgres() then
+    ErrorNoHalt('SQLite keeps the tables in the sv.db file of the server and has no database to drop. '..
+      'Use ar_recreate_schema to wipe them.\n')
+
+    return
+  end
+
   ActiveRecord.adapter:sync(true)
   ActiveRecord.adapter:connect {
     host = settings.host,

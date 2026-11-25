@@ -17,7 +17,9 @@
 #
 # If you are running a moderately large server (24+ players online), or if you
 # experience lag (particularly when players join), it is highly
-# recommended that you switch your database adapter to "mysqloo" or "pg".
+# recommended that you switch your database adapter to "mysqloo" or "pg"
+# ("mysql" and "mariadb" stand for "mysqloo", "postgres" and "postgresql"
+# for "pg").
 #
 # MySQLOO is for MySQL, use it if you have a MySQL server. It provides
 # moderately good performance and support for queries-in-the-background.
@@ -26,7 +28,7 @@
 # PG is for PostgreSQL, if you happen to run your server on a VPS/VDS,
 # it is highly recommended that you install PostgreSQL since it provides
 # better performance when dealing with larger data sets.
-# PostgreSQL 9.1+ is supported.
+# PostgreSQL 14 and newer is supported.
 #
 # Additionally both MySQL and PostgreSQL support database constraints and
 # indexes that make complex database operations that Flux performs safer
@@ -35,6 +37,12 @@
 # mysqloo - default port is 3306
 # pg      - default port is 5432
 #
+# Leave the port at ~ to use the default port of the adapter. The "utf8"
+# encoding is full UTF-8 on every adapter: MySQL gets its utf8mb4.
+#
+# The server prints which adapter, database and section of this file it
+# uses once it has connected.
+#
 development:
   adapter: "sqlite"
   encoding: "utf8"
@@ -42,7 +50,7 @@ development:
   user: "username"
   password: "password"
   database: "flux_dev"
-  port: 1234
+  port: ~
   socket: ~
   flags: ~
 production:
@@ -52,6 +60,16 @@ production:
   user: "username"
   password: "password"
   database: "flux"
-  port: 1234
+  port: ~
+  socket: ~
+  flags: ~
+test:
+  adapter: "sqlite"
+  encoding: "utf8"
+  host: "127.0.0.1"
+  user: "username"
+  password: "password"
+  database: "flux_test"
+  port: ~
   socket: ~
   flags: ~

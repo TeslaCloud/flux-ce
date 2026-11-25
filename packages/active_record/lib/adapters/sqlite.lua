@@ -160,6 +160,19 @@ function ActiveRecord.Adapters.Sqlite:escape(str)
   return sql.SQLStr(str, true)
 end
 
+--- Writes a number that ActiveRecord::Query#bind binds as text in its exact form: a whole
+-- number with all of its digits, any other number in the shortest form that reads back as
+-- the same number. The column then converts it as it does any text it is given.
+-- @param value [String/Number]
+-- @return [String/Number the number as text, anything else unchanged]
+function ActiveRecord.Adapters.Sqlite:bind_value(value)
+  if isnumber(value) then
+    return ActiveRecord.number_to_sql(value)
+  end
+
+  return value
+end
+
 --- Quotes an identifier such as a table or column name with double quotes, doubling the
 -- double quotes in it.
 -- @param str [String]
@@ -192,7 +205,7 @@ end
 -- @param error_callback=nil [Function called with the error text if the query fails]
 -- @return [Any whatever the callback returns; nothing without a callback or on error]
 function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bindings, error_callback)
-  local query_start = os.clock()
+  local query_start = SysTime()
   local result = nil
 
   if bindings then
@@ -209,14 +222,7 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bin
     end
 
     if callback then
-      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3), bindings)
-
-      if !status then
-        ErrorNoHalt('ActiveRecord - SQLite Callback Error!\n')
-        error_with_traceback(a)
-      end
-
-      return a, b, c, d
+      return self:run_callback(callback, result, query, query_start, bindings)
     end
   end
 end

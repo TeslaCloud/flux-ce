@@ -25,10 +25,11 @@
 
 local PACKAGE = PACKAGE
 
-ActiveRecord.schema       = ActiveRecord.schema               or {}
-ActiveRecord.db_settings  = DatabaseSettings[ENV['FLUX_ENV']] or DatabaseSettings['development'] or {}
-ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter  or 'sqlite'
-ActiveRecord.metadata     = ActiveRecord.metadata             or {
+ActiveRecord.schema       = ActiveRecord.schema or {}
+ActiveRecord.db_section   = DatabaseSettings[ENV['FLUX_ENV']] and ENV['FLUX_ENV'] or 'development'
+ActiveRecord.db_settings  = DatabaseSettings[ActiveRecord.db_section] or {}
+ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter or 'sqlite'
+ActiveRecord.metadata     = ActiveRecord.metadata or {
   indexes     = {},
   references  = {},
   prim_keys   = {}
@@ -362,14 +363,39 @@ end
 --- Aliases for common adapter names.
 local adapter_aliases = {
   ['postgresql']  = 'pg',
+  ['postgres']    = 'pg',
   ['sqlite3']     = 'sqlite',
-  ['mysql']       = 'mysqloo'
+  ['mysql']       = 'mysqloo',
+  ['mariadb']     = 'mysqloo'
 }
 
+--- Lists the adapter names that the database settings may give: the adapters in
+-- `lib/adapters/` and their aliases.
+-- @return [List<String> sorted]
+local function valid_adapter_names()
+  local names = {}
+
+  for _, file_name in ipairs(file.Find(PACKAGE.__path__..'lib/adapters/*.lua', 'LUA')) do
+    if file_name != 'abstract.lua' then
+      names[#names + 1] = file_name:gsub('%.lua$', '')
+    end
+  end
+
+  for alias in pairs(adapter_aliases) do
+    names[#names + 1] = alias
+  end
+
+  table.sort(names)
+
+  return names
+end
+
 --- Loads the database adapter named in the config and connects it to the database.
--- Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'sqlite3'
--- and 'mysql' (the config's adapter field is rewritten in that case). The resolved name
--- is stored in ActiveRecord.adapter_name.
+-- Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'postgres',
+-- 'sqlite3', 'mysql' and 'mariadb' (the config's adapter field is rewritten in that case).
+-- The resolved name is stored in ActiveRecord.adapter_name. An unknown name is reported
+-- along with the valid ones, and no connection is made. A connection that fails is tried
+-- again, see ActiveRecord.reconnect.
 -- ```
 -- ActiveRecord.establish_connection {
 --   adapter = 'mysqloo', host = '127.0.0.1', port = 3306,
@@ -388,22 +414,86 @@ function ActiveRecord.establish_connection(config)
 
   ActiveRecord.adapter_name = adapter
 
-  local path = PACKAGE.__path__
+  local path = PACKAGE.__path__..'lib/adapters/'..adapter..'.lua'
 
-  if file.Exists(path..'lib/adapters/'..adapter..'.lua', 'LUA') then
-    include(path..'lib/adapters/'..adapter..'.lua')
+  if adapter != 'abstract' and file.Exists(path, 'LUA') then
+    include(path)
   end
 
-  ActiveRecord.adapter = (ActiveRecord.Adapters[adapter:capitalize()] or ActiveRecord.Adapters.Abstract).new()
+  local adapter_class = adapter != 'abstract' and ActiveRecord.Adapters[adapter:capitalize()]
+
+  if !adapter_class then
+    ErrorNoHalt('ActiveRecord - Unknown database adapter \''..adapter..'\' in the \''..ActiveRecord.db_section
+      ..'\' section of '..Flux.find_config('database.yml')..'!\nValid adapters: '
+      ..table.concat(valid_adapter_names(), ', ')..'\n')
+
+    return
+  end
+
+  ActiveRecord.connection_settings = config
+  ActiveRecord.connection_attempts = 0
+  ActiveRecord.adapter = adapter_class.new()
   ActiveRecord.adapter:connect(config, ActiveRecord.Adapters.Abstract.on_connected)
 end
 
---- Bootstraps ActiveRecord once the adapter is connected: creates the internal tables,
--- restores the schema, brings the database up to date (see ActiveRecord.Tasks.prepare)
--- and fires the 'ActiveRecordReady' hook.
+--- Connects the adapter again after its connection has failed while ActiveRecord is
+-- starting up, with the settings that ActiveRecord.establish_connection was given. The
+-- attempts are spaced 5, 10, 20 and 40 seconds apart and then every 60 seconds, until one
+-- of them succeeds; each one is announced in the console.
 -- @warning [Internal]
+function ActiveRecord.reconnect()
+  local settings = ActiveRecord.connection_settings
+
+  if ActiveRecord.ready or !settings then return end
+
+  local attempt = (ActiveRecord.connection_attempts or 0) + 1
+  local delay = math.min(5 * 2 ^ (attempt - 1), 60)
+
+  ActiveRecord.connection_attempts = attempt
+
+  print('ActiveRecord - Connecting to the database again in '..delay..' seconds (attempt '..attempt..')...')
+
+  timer.Create('ActiveRecord#reconnect', delay, 1, function()
+    if ActiveRecord.ready then return end
+
+    print('ActiveRecord - Connecting to the database (attempt '..attempt..')...')
+
+    ActiveRecord.adapter:connect(settings, ActiveRecord.Adapters.Abstract.on_connected)
+  end)
+end
+
+--- Describes the database that the adapter is connected to, for the console.
+-- @param settings [Map database settings]
+-- @return [String]
+local function describe_database(settings)
+  local adapter = ActiveRecord.adapter
+
+  if adapter:is_sqlite() then
+    return 'the SQLite database of the server (sv.db)'
+  end
+
+  local port = settings.port or adapter.default_port
+
+  return 'database \''..tostring(settings.database)..'\' on '..tostring(settings.host or '127.0.0.1')
+    ..(port and ':'..port or '')
+end
+
+--- Bootstraps ActiveRecord once the adapter is connected: prints which database it is
+-- connected to and where the settings come from, creates the internal tables, restores the
+-- schema, brings the database up to date (see ActiveRecord.Tasks.prepare) and fires the
+-- 'ActiveRecordReady' hook. A database whose tables were created through another adapter
+-- is reported and left alone: ActiveRecord is not marked as ready, nothing is migrated and
+-- the hook is not run.
+-- @warning [Internal]
+-- @return [Boolean whether ActiveRecord has started up]
 function ActiveRecord.on_connected()
-  Flux.dev_print 'ActiveRecord - Connected to the database!'
+  timer.Remove('ActiveRecord#reconnect')
+
+  ActiveRecord.connection_attempts = 0
+
+  print('ActiveRecord - Connected to '..describe_database(ActiveRecord.connection_settings or ActiveRecord.db_settings)
+    ..' through the '..ActiveRecord.adapter_name..' adapter, as set in the \''..ActiveRecord.db_section
+    ..'\' section of '..Flux.find_config('database.yml'))
 
   ActiveRecord.generate_tables()
   ActiveRecord.restore_schema()
@@ -412,11 +502,14 @@ function ActiveRecord.on_connected()
   local adapter = ActiveRecord.get_meta_key('adapter', class_name)
 
   if adapter != class_name then
-    ActiveRecord.drop_schema(true)
-    ActiveRecord.generate_tables()
-    ActiveRecord.restore_schema()
+    ErrorNoHalt('ActiveRecord - The tables of this database were created through the \''..tostring(adapter)
+      ..'\' adapter, but the \''..class_name..'\' adapter is configured. Nothing has been changed and no '
+      ..'migration has been run. If it is the same database, delete the \'adapter\' row of the ar_metadata '
+      ..'table; otherwise point the settings at the right database.\n')
 
-    adapter = class_name
+    ActiveRecord.ready = false
+
+    return false
   end
 
   ActiveRecord.set_meta_key('adapter', adapter)
@@ -438,28 +531,49 @@ function ActiveRecord.on_connected()
   -- before it returns. `DatabaseConnected` is run right after it.
   -- @realm [server]
   hook.Run('ActiveRecordReady')
+
+  return true
 end
 
 --- Drops the internal 'ar_schema', 'ar_metadata' and 'ar_schema_migrations' tables and,
 -- unless told otherwise, every table known to the schema. This destroys the stored data.
+-- The tables are dropped while foreign keys are not enforced (SQLite, MySQL) or together
+-- with the foreign keys that refer to them (PostgreSQL), so that their order does not
+-- matter. ActiveRecord is not ready afterward. A table that cannot be dropped raises
+-- an error while the adapter raises errors (see ActiveRecord::Adapters::Abstract#raise_errors)
+-- and stays in the schema.
 -- @param meta_only=false [Boolean only drop the internal tables]
 function ActiveRecord.drop_schema(meta_only)
+  local adapter = ActiveRecord.adapter
+
   if !meta_only then
-    local foreign_keys = ActiveRecord.adapter:disable_foreign_keys()
+    local foreign_keys = adapter:disable_foreign_keys()
+    local mysql = adapter:is_mysql()
+
+    if mysql then
+      adapter:raw_query('SET FOREIGN_KEY_CHECKS = 0;')
+    end
+
     local success, exception = pcall(function()
       for _, table_name in ipairs(table.GetKeys(ActiveRecord.schema)) do
-        ActiveRecord.SchemaStatements.drop_table(table_name, { if_exists = true })
+        ActiveRecord.SchemaStatements.drop_table(table_name, { if_exists = true, cascade = true })
       end
     end)
 
+    if mysql then
+      adapter:raw_query('SET FOREIGN_KEY_CHECKS = 1;')
+    end
+
     if foreign_keys then
-      ActiveRecord.adapter:enable_foreign_keys()
+      adapter:enable_foreign_keys()
     end
 
     if !success then
       error(exception, 0)
     end
   end
+
+  ActiveRecord.ready = false
 
   ActiveRecord.SchemaStatements.drop_table('ar_schema', { if_exists = true })
   ActiveRecord.SchemaStatements.drop_table('ar_metadata', { if_exists = true })
@@ -470,18 +584,34 @@ function ActiveRecord.drop_schema(meta_only)
 end
 
 --- Drops all tables, recreates the internal ones and then restarts the current map.
--- This destroys all data stored in the database.
+-- This destroys all data stored in the database. Everything runs in sync mode, and the
+-- first statement that fails stops it: the error is printed and the map is not restarted.
 function ActiveRecord.recreate_schema()
-  ActiveRecord.drop_schema()
+  local adapter = ActiveRecord.adapter
+  local sync = adapter:is_sync()
 
-  timer.Simple(0.25, function()
+  adapter:sync(true)
+  adapter:raise_errors(true)
+
+  local success, exception = pcall(function()
+    ActiveRecord.drop_schema()
     ActiveRecord.generate_tables()
+  end)
 
-    print 'Done! Restarting...'
+  adapter:raise_errors(false)
+  adapter:sync(sync)
 
-    timer.Simple(0.5, function()
-      RunConsoleCommand('changelevel', game.GetMap())
-    end)
+  if !success then
+    ErrorNoHalt('ActiveRecord - Unable to recreate the database, the map is not restarted!\n')
+    long_error(tostring(exception)..'\n')
+
+    return
+  end
+
+  print 'Done! Restarting...'
+
+  timer.Simple(0.5, function()
+    RunConsoleCommand('changelevel', game.GetMap())
   end)
 end
 
