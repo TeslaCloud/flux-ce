@@ -1,0 +1,4 @@
+ru:
+  ui:
+    admin:
+      version: "Версия админ-мода: {version}"

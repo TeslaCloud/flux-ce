@@ -42,6 +42,7 @@ local textured_rect = draw.textured_rect
 local surface_set_draw_color = surface.SetDrawColor
 local surface_draw_rect = surface.DrawRect
 local lerp_color = LerpColor
+local with_alpha = Theme.with_alpha
 
 local color_model_background = Color(0, 0, 0, 90)
 local color_slot_gradient = Color(255, 255, 255, 10)
@@ -267,7 +268,7 @@ function THEME:PaintTextEntry(panel, w, h)
 
   self:PaintCard(0, 0, w, h, self:get_option('corner_radius_small'), self:get_color('field'), border)
 
-  panel:DrawTextEntryText(text_color, ColorAlpha(self:get_color('accent'), 120), text_color)
+  panel:DrawTextEntryText(text_color, with_alpha(self:get_color('accent'), 120), text_color)
 end
 
 --- Called when the main menu is created, so that a theme can customize it. Does nothing
@@ -339,7 +340,7 @@ function THEME:PaintMainMenu(_panel, width, height)
 
   textured_rect(self:get_material('gradient_up'), 0, height * 0.5, width, height * 0.5, self:get_color('scrim'))
 
-  surface_set_draw_color(ColorAlpha(self:get_color('surface'), 200))
+  surface_set_draw_color(with_alpha(self:get_color('surface'), 200))
   surface_draw_rect(0, 0, width, bar_height)
 
   surface_set_draw_color(self:get_color('border'))
@@ -401,7 +402,7 @@ function THEME:PaintButton(panel, w, h)
     elseif background_color then
       background_color = lerp_color(hover, background_color, self:get_color('main_light'))
     elseif hover > 0 then
-      background_color = ColorAlpha(self:get_color('main_light'), 255 * hover)
+      background_color = with_alpha(self:get_color('main_light'), 255 * hover)
     end
 
     if background_color then
@@ -409,7 +410,7 @@ function THEME:PaintButton(panel, w, h)
 
       self:PaintCard(0, 0, w, h, radius, background_color, border)
     elseif panel.draw_outline then
-      self:PaintCard(0, 0, w, h, radius, ColorAlpha(self:get_color('main'), 0), self:get_color('border'))
+      self:PaintCard(0, 0, w, h, radius, with_alpha(self:get_color('main'), 0), self:get_color('border'))
     end
   elseif active then
     text_color = self:get_color('accent_light')
@@ -456,8 +457,8 @@ function THEME:PaintButton(panel, w, h)
   end
 end
 
---- Draws the death screen with the respawn countdown and progress bar, and sets up the
--- white fade for the last 3 seconds before the respawn.
+--- Draws the death screen, which darkens over one second, with the respawn countdown and
+-- progress bar, and sets up the white fade for the last 3 seconds before the respawn.
 -- @param cur_time [Number current CurTime()]
 -- @param scrw [Number screen width]
 -- @param scrh [Number screen height]
@@ -467,7 +468,7 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   local bar_value     = math_clamp(100 - 100 * (respawn_time / Config.get('flow_respawn_delay')), 0, 100)
   local font          = self:get_font('text_normal_large')
   local small_font    = self:get_font('text_normal')
-  local respawn_alpha = math_clamp((client.respawn_alpha or 0) + 2, 0, 200)
+  local respawn_alpha = math_clamp((client.respawn_alpha or 0) + 200 * FrameTime(), 0, 200)
   local padding       = math.scale(24)
   local text_color    = self:get_color('text')
   local bar_w, bar_h  = math.scale(320), math.scale(6)
@@ -565,7 +566,7 @@ function THEME:PaintBarFill(bar_info)
   local real_fill_width = bar_info.real_fill_width
   local fill_w          = (fill_width or bar_info.width) - 2
   local color           = bar_info.color
-  local trail_color     = ColorAlpha(color, 110)
+  local trail_color     = with_alpha(color, 110)
 
   if real_fill_width < fill_width then
     draw_rounded_box(radius, x, y, fill_w, fill_h, trail_color)
@@ -604,24 +605,32 @@ function THEME:PaintBarTexts(bar_info)
 end
 
 --- Draws the footer below the admin panel with the Steam name and user group of the local
--- player and the version of the admin mod.
+-- player and the version of the Bolt package, which is left out if the package metadata of
+-- Bolt cannot be found.
 -- @param _panel [Panel the admin panel]
 -- @param width [Number panel width]
 -- @param height [Number panel height]
 function THEME:PaintOverAdminPanel(_panel, width, height)
   local font            = self:get_font('text_smallest')
   local text_color      = self:get_color('text_muted')
-  local version_string  = 'Admin Mod Version: v0.2.0 (indev)'
+  local name_text       = PLAYER:steam_name()..' ('..PLAYER:get_role()..')'
+  local version         = Bolt?.__package__?.version
   local footer          = math.scale(22)
   local radius          = self:get_option('corner_radius')
   local padding         = math.scale(10)
-  local text_w, text_h  = text_size(version_string, font)
+  local _text_w, text_h = text_size(name_text, font)
   local text_y          = height + footer * 0.5 - text_h * 0.5
 
   DisableClipping(true)
     draw_rounded_box_ex(radius, 0, height, width, footer, self:get_color('surface_sunken'), false, false, true, true)
-    draw_simple_text(PLAYER:steam_name()..' ('..PLAYER:get_role()..')', font, padding, text_y, text_color)
-    draw_simple_text(version_string, font, width - text_w - padding, text_y, text_color)
+    draw_simple_text(name_text, font, padding, text_y, text_color)
+
+    if version then
+      local version_text = t('ui.admin.version', { version = version })
+      local version_w = text_size(version_text, font)
+
+      draw_simple_text(version_text, font, width - version_w - padding, text_y, text_color)
+    end
   DisableClipping(false)
 end
 
@@ -668,11 +677,11 @@ function THEME:PaintPermissionButton(_perm_panel, btn, w, h)
     fill = color
     text_color = self:get_color('background')
   else
-    fill = ColorAlpha(color, btn:IsHovered() ? 50 : 18)
+    fill = with_alpha(color, btn:IsHovered() ? 50 : 18)
     text_color = color
   end
 
-  self:PaintCard(0, 0, w, h, radius, fill, ColorAlpha(color, selected ? 255 : 140))
+  self:PaintCard(0, 0, w, h, radius, fill, with_alpha(color, selected ? 255 : 140))
 
   local tw, th = text_size(title, font)
 
@@ -749,7 +758,7 @@ end
 -- @param width [Number width of the button bar]
 -- @param height [Number height of the button bar]
 function THEME:PaintTabMenuButtonPanel(_panel, width, height)
-  surface_set_draw_color(ColorAlpha(self:get_color('background'), 235))
+  surface_set_draw_color(with_alpha(self:get_color('background'), 235))
   surface_draw_rect(0, 0, width, height)
 
   surface_set_draw_color(self:get_color('border'))
@@ -863,7 +872,7 @@ function THEME:PaintChatboxBackground(panel, width, height)
       width + padding * 2,
       height - panel.text_entry:GetTall() + padding,
       self:get_option('corner_radius'),
-      ColorAlpha(self:get_color('surface'), 225)
+      with_alpha(self:get_color('surface'), 225)
     )
   DisableClipping(false)
 end

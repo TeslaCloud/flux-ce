@@ -1,0 +1,4 @@
+es:
+  ui:
+    admin:
+      version: "Versión del mod de administración: {version}"
