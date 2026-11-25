@@ -22,6 +22,33 @@ local color = Color(140, 0, 220)
 local remove_alpha = 255
 local logo_color = Color(255, 255, 255, 255)
 local logo_tween = Tween.new(1.5, logo_data, { width = logo_w * 0.6, height = logo_h * 0.6 }, 'inOutCubic')
+local circle_passes = 180
+local circle_vertices, circle_cos, circle_sin = {}, {}, {}
+
+for i = 1, circle_passes + 1 do
+  local angle = i * math.pi / (circle_passes * 0.5)
+
+  circle_vertices[i] = { x = 0, y = 0 }
+  circle_cos[i] = math.cos(angle)
+  circle_sin[i] = math.sin(angle)
+end
+
+--- Draws a filled circle in the current draw color, moving the vertices of one reused polygon
+-- instead of caching a polygon for every radius the growing circle passes through.
+-- @param x [Number screen x of the center]
+-- @param y [Number screen y of the center]
+-- @param radius [Number]
+local function draw_growing_circle(x, y, radius)
+  for i = 1, circle_passes + 1 do
+    local vertex = circle_vertices[i]
+
+    vertex.x = x + circle_cos[i] * radius
+    vertex.y = y + circle_sin[i] * radius
+  end
+
+  draw.NoTexture()
+  surface.DrawPoly(circle_vertices)
+end
 
 --- Covers the whole screen, starts the intro animation, schedules the panel to close after
 -- 4 seconds and runs the IntroPanelCreated hook.
@@ -47,7 +74,8 @@ function PANEL:Init()
 end
 
 --- Draws the shrinking logo on a black background and the expanding circle effect, and
--- fades everything out once the panel is closing.
+-- fades everything out within the second the panel takes to close. The fade and the growth
+-- of the circle follow the time, not the frame rate.
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
@@ -73,7 +101,7 @@ function PANEL:Paint(w, h)
     if self.should_remove then
       self:MoveToFront()
 
-      remove_alpha = math_clamp(remove_alpha - 3, 0, 255)
+      remove_alpha = math_clamp(remove_alpha - 300 * frame_time, 0, 255)
     elseif logo_data.width < logo_w * 0.7 then
       exx, exy = ScrC()
 
@@ -93,9 +121,9 @@ function PANEL:Paint(w, h)
       end
 
       surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)
-      surface.draw_circle(exx, exy, cur_radius, 180)
+      draw_growing_circle(exx, exy, cur_radius)
 
-      cur_radius += 3
+      cur_radius += 300 * frame_time
       cur_alpha = math_clamp(Lerp(frame_time * 8, cur_alpha, 1), 0, 255)
     end
   end
