@@ -1,8 +1,9 @@
 --- Server-side hooks of the Containers plugin: they play the sounds of containers, make
 -- container props persistent, give the containers the items that are loaded for them, keep
 -- their inventories out of the saved persistent entities, network the names of the loaded
--- containers, deal with the inventory and the items of a container that is removed and keep
--- the items of the containers through a map cleanup.
+-- containers, deal with the inventory and the items of a container that is removed, keep
+-- the items of the containers through a map cleanup and save the containers whose money has
+-- changed.
 
 local detached_inventories = {}
 
@@ -182,5 +183,14 @@ end
 function Containers:CanEntityContainMoney(object)
   if self:is_container(object) then
     return true
+  end
+end
+
+--- Saves the persistent entities a second after the money in a container has changed, so
+-- that the balance of the container is kept as soon as the balances of the players are.
+-- @param entity [Entity the entity whose balance has changed]
+function Containers:EntityMoneyChanged(entity)
+  if self:is_container(entity) then
+    self:queue_persistence_save()
   end
 end

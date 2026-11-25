@@ -10,23 +10,15 @@ local message_length = 256
 local password_length = 64
 local password_timeout = 60
 
---- Cleans a text that was entered by a player: replaces control characters with spaces,
--- trims the text and cuts it to the given length.
+--- Cleans a text that was entered by a player with `string.clean_line`: replaces control
+-- characters with spaces, trims the text and cuts it to the given length.
 -- @param text [String the text; anything else gives nil]
 -- @param max_length [Number longest allowed text in characters]
 -- @return [String the cleaned text, or nil if nothing is left of it]
 local function sanitize(text, max_length)
   if !isstring(text) then return end
 
-  text = string.Trim((text:gsub('%c', ' ')))
-
-  local length = utf8.len(text)
-
-  if !isnumber(length) then
-    text = text:sub(1, max_length)
-  elseif length > max_length then
-    text = text:utf8sub(1, max_length)
-  end
+  text = text:clean_line(max_length)
 
   if text != '' then
     return text
@@ -137,6 +129,14 @@ function Containers:update_netvars(entity)
   entity:set_nv('fl_container_locked', entity.container_password != nil or nil)
 end
 
+--- Saves the persistent entities, and with them the containers and what is kept on them,
+-- a second from now. Calls that come within that second are saved together.
+function Containers:queue_persistence_save()
+  timer.Create('fl_containers_persist', 1, 1, function()
+    hook.Run('PersistenceSave')
+  end)
+end
+
 --- Returns the number that the items of a container are saved under, giving the container
 -- one if it has none yet. The number is kept in the `container_id` field of the prop and
 -- comes from the item instance ids, so no two containers ever share one. A prop that gets
@@ -148,9 +148,7 @@ function Containers:get_container_id(entity)
   if !entity.container_id then
     entity.container_id = Item.generate_id()
 
-    timer.Create('fl_containers_persist', 1, 1, function()
-      hook.Run('PersistenceSave')
-    end)
+    self:queue_persistence_save()
   end
 
   return entity.container_id
@@ -354,8 +352,8 @@ function Containers:check_container_password(entity, password)
 end
 
 --- Checks whether a player may open a container right now: the entity has to be a
--- container within reach of the player, and the `PlayerCanOpenContainer` hook must not
--- object. The password of the container is not a part of this check.
+-- container within reach and in sight of the player, and the `PlayerCanOpenContainer` hook
+-- must not object. The password of the container is not a part of this check.
 -- @param actor [Player]
 -- @param entity [Entity the container prop]
 -- @return [Boolean true if the player may open the container, String error phrase when
@@ -365,13 +363,13 @@ function Containers:can_open(actor, entity)
     return false
   end
 
-  if !actor:is_in_reach(entity) then
+  if !actor:is_in_reach(entity) or !actor:can_see(entity) then
     return false, 'error.too_far'
   end
 
   --- Called on the server before a container is opened for a player who has asked for it,
   -- and once more after they have entered its password. The entity is a container within
-  -- reach of the player at this point.
+  -- reach and in sight of the player at this point.
   -- @param actor [Player The player who wants to open the container]
   -- @param entity [Entity The container prop]
   -- @return [Boolean Return false to keep the container closed for the player, String
