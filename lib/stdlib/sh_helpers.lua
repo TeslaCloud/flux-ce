@@ -1,7 +1,8 @@
 --- File inclusion helpers built around `require_relative`, which includes a file and sends it
 -- to clients as its name calls for.
--- The realm is taken from the path: a file with `cl_` in it is only sent to clients, one with
--- `sv_` in it only runs on the server, and everything else is shared.
+-- The realm is taken from the file name: a file whose name starts with `cl_` is only sent to
+-- clients, one whose name starts with `sv_` only runs on the server, and everything else is
+-- shared. The names of the folders on the path do not matter.
 -- `require_relative_folder` does the same for a whole folder, and `require_client`,
 -- `require_server` and `require_shared` set the realm regardless of the name.
 
@@ -29,8 +30,8 @@ end
 
 --- Require a file relative to the current file's directory.
 -- The .lua file ending may be omitted.
--- This function will try to guess the realm the file should be in and
--- AddCSLuaFile accordingly and automatically.
+-- The realm is taken from the prefix of the file name (not of its folders), and the file is
+-- sent to clients with AddCSLuaFile accordingly and automatically.
 -- ```
 -- require_relative 'cl_file'     -- will include cl_file.lua only on client
 -- require_relative 'sv_file'     -- will include sv_file.lua only on server
@@ -43,16 +44,18 @@ function require_relative(file_name)
     file_name ..= '.lua'
   end
 
+  local prefix = file_name:match('[^/]*$'):sub(1, 3)
+
   if SERVER then
     if !should_ignore_client then
-      if string.find(file_name, 'cl_', 1, true) or file_name:EndsWith('/cl_init.lua') then
+      if prefix == 'cl_' then
         return AddCSLuaFile(file_name)
-      elseif !string.find(file_name, 'sv_', 1, true) then
+      elseif prefix != 'sv_' then
         AddCSLuaFile(file_name)
       end
     end
   else
-    if string.find(file_name, 'sv_', 1, true) or
+    if prefix == 'sv_' or
        string.find(file_name, 'packagespec', 1, true) or
        file_name:EndsWith('/init.lua') then
       return
