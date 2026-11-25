@@ -100,7 +100,7 @@ function SrcdsProxy:LazyTick()
     end
   end
 
-  local areas = Areas.get_by_type(self.transfer_area_type)
+  local areas = self:get_transfer_areas()
 
   if #areas == 0 then return end
 

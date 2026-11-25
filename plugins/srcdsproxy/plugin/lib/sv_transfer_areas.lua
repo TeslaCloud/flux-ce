@@ -5,7 +5,8 @@
 -- are dead or outside of it by then, nothing happens.
 --
 -- A player who may not enter that server, because it is whitelist-only and they are neither
--- on its whitelist nor a proxy admin, is told so once and not moved.
+-- on its whitelist nor a proxy admin, is told so once and not moved. Players in noclip outside
+-- of a vehicle and hidden players (see the Observer plugin) pass through transfer areas.
 --
 -- Eight times a second the server checks the positions of the players against the transfer
 -- areas itself: a player is in an area while their position is inside of one of its
@@ -54,12 +55,54 @@ local function position_in_area(pos, area)
   local z = pos.z + 16
 
   for _, poly in ipairs(area.polys) do
-    if z > poly[1].z and z < area.maxh and util.vector_in_poly(pos, poly) then
+    local first_vertex = poly[1]
+
+    if first_vertex and z > first_vertex.z and z < area.maxh and util.vector_in_poly(pos, poly) then
       return true
     end
   end
 
   return false
+end
+
+--- Checks whether a player passes through the transfer areas without being moved: while in
+-- noclip outside of a vehicle, or hidden by the Observer plugin.
+-- @param actor [Player]
+-- @return [Boolean]
+local function passes_through(actor)
+  return (actor:GetMoveType() == MOVETYPE_NOCLIP and !actor:InVehicle()) or (Observer and actor:is_hidden())
+end
+
+local transfer_areas = {}
+local listed_from, listed_count
+
+--- Returns the transfer areas. The list is kept and built again only once an area has been
+-- registered or replaced or one of the listed areas has been removed, so that reading it eight
+-- times a second allocates nothing.
+-- @return [List<Map> the transfer areas]
+function SrcdsProxy:get_transfer_areas()
+  local stored = Areas.all()
+  local count = Areas.get_count()
+  local current = stored == listed_from and count == listed_count
+
+  if current then
+    for i = 1, #transfer_areas do
+      local area = transfer_areas[i]
+
+      if stored[area.id] != area then
+        current = false
+
+        break
+      end
+    end
+  end
+
+  if !current then
+    transfer_areas = Areas.get_by_type(self.transfer_area_type)
+    listed_from, listed_count = stored, count
+  end
+
+  return transfer_areas
 end
 
 --- Checks whether a player is on the named server of the network already. Server names are
@@ -103,15 +146,17 @@ function SrcdsProxy:cancel_transfer_countdown(actor, state)
 end
 
 --- Deals with a player who has entered a transfer area. Nothing happens when the addon is
--- missing, the player is not connected through the proxy or is dead, the area names no
--- server, the player has been dealt with in this area since they entered it, or another
--- countdown of theirs runs. A player who is on the area's server already is left alone, one
--- who may not enter it is told that it is whitelist-only, and everyone else gets a countdown
--- of the area's delay, which they are told about.
+-- missing, the player is not connected through the proxy, is dead or passes through transfer
+-- areas (in noclip or hidden), the area names no server, the player has been dealt with in
+-- this area since they entered it, or another countdown of theirs runs. A player who is on
+-- the area's server already is left alone, one who may not enter it is told that it is
+-- whitelist-only, and everyone else gets a countdown of the area's delay, which they are told
+-- about.
 -- @param actor [Player the player who has entered the area]
 -- @param area [Map the transfer area]
 function SrcdsProxy:enter_transfer_area(actor, area)
   if !self:available() or !IsValid(actor) or !Proxy.is_proxied(actor) or !actor:Alive() then return end
+  if passes_through(actor) then return end
 
   local backend = self:server_name(area.backend)
 
@@ -181,16 +226,17 @@ function SrcdsProxy:transfer_from_area(actor, area)
   return Proxy.transfer(actor, backend, 'area '..tostring(area.id))
 end
 
---- Ends the countdown of a player: moves them if they are alive, which the caller has
--- checked them to be in the area too. A move that has been sent stays on the HUD while the
--- player is in the area; otherwise the countdown is taken off it.
+--- Ends the countdown of a player: moves them if they are alive and do not pass through
+-- transfer areas (in noclip or hidden), which the caller has checked them to be in the area
+-- too. A move that has been sent stays on the HUD while the player is in the area; otherwise
+-- the countdown is taken off it.
 -- @param actor [Player]
 -- @param state [Map the transfer state of the player]
 -- @param area [Map the transfer area of the countdown]
 function SrcdsProxy:finish_transfer_countdown(actor, state, area)
   local countdown = state.countdown
 
-  if actor:Alive() and self:transfer_from_area(actor, area) then
+  if actor:Alive() and !passes_through(actor) and self:transfer_from_area(actor, area) then
     state.countdown = nil
     state.moving = countdown.shown and area.id or nil
 
@@ -239,11 +285,12 @@ function SrcdsProxy:update_transfer_state(actor, state, stored, cur_time)
 end
 
 --- Starts the transfer area a player is in, when no countdown of theirs runs: the first one
--- they have not been dealt with in since they entered it.
+-- they have not been dealt with in since they entered it. Players who pass through transfer
+-- areas (in noclip or hidden) are left alone.
 -- @param actor [Player]
 -- @param areas [List<Map> the transfer areas]
 function SrcdsProxy:enter_transfer_areas_at(actor, areas)
-  if !Proxy.is_proxied(actor) or !actor:Alive() then return end
+  if !Proxy.is_proxied(actor) or !actor:Alive() or passes_through(actor) then return end
 
   local state = states[actor]
 
