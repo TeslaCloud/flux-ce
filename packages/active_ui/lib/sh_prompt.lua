@@ -5,13 +5,13 @@
 -- and the server passes it to the callback of the request.
 -- ```
 -- actor:request_string('ui.rename.title', 'ui.rename.message', function(target, name)
---   if name then
+--   if name and IsValid(target) then
 --     rename_item(target, item, name)
 --   end
 -- end, { default = item.name, max_length = 32 })
 --
 -- actor:request_confirmation('ui.destroy.title', 'ui.destroy.message', function(target, confirmed)
---   if confirmed then
+--   if confirmed and IsValid(target) then
 --     destroy_item(target, item)
 --   end
 -- end)
@@ -20,7 +20,9 @@
 -- Every request has an ID and can only be answered once, by the player who was asked and
 -- with the kind of answer it expects. A request that is not answered in time (5 minutes
 -- unless set otherwise) or whose player leaves is closed, and its callback is called with
--- false, so the callback of a request that was sent always runs exactly once.
+-- false, so the callback of a request that was sent always runs exactly once. The player that
+-- the callback receives is not valid once they have left, so a callback checks it with
+-- `IsValid` before it uses it.
 -- @module [Flux.Prompt]
 
 mod 'Flux::Prompt'
@@ -100,7 +102,8 @@ if SERVER then
   -- @param target [Player the player to ask; bots cannot be asked]
   -- @param title [String title of the dialog, text or language phrase]
   -- @param message [String question shown above the text field, text or language phrase]
-  -- @param callback [Function called with the player and the answer (String, or false)]
+  -- @param callback [Function called with the player, who is not valid if they have left, and
+  --   the answer (String, or false)]
   -- @param options=nil [Map optional settings: default (String text the field starts
   --   with), max_length (Number longest answer in characters, 256 by default; a longer
   --   one is cut), timeout (Number seconds to wait for the answer, 300 by default, 0 to
@@ -117,7 +120,8 @@ if SERVER then
   -- @param target [Player the player to ask; bots cannot be asked]
   -- @param title [String title of the dialog, text or language phrase]
   -- @param message [String question, text or language phrase]
-  -- @param callback [Function called with the player and the answer (Boolean)]
+  -- @param callback [Function called with the player, who is not valid if they have left, and
+  --   the answer (Boolean)]
   -- @param options=nil [Map optional settings: timeout (Number seconds to wait for the
   --   answer, 300 by default, 0 to wait until the player leaves) and arguments (Map
   --   values to substitute into the title and the message)]
@@ -205,7 +209,8 @@ if SERVER then
   --- Asks the player a yes or no question. Serverside only.
   -- @param title [String title of the dialog, text or language phrase]
   -- @param message [String question, text or language phrase]
-  -- @param callback [Function called with the player and the answer (Boolean)]
+  -- @param callback [Function called with the player, who is not valid if they have left, and
+  --   the answer (Boolean)]
   -- @param options=nil [Map timeout and arguments, see Flux.Prompt#request_confirmation]
   -- @return [Number request ID, nil if the player cannot be asked]
   -- @see [Flux.Prompt#request_confirmation]
