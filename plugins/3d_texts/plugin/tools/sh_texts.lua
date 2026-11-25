@@ -25,7 +25,8 @@ TOOL.ClientConVar['a2']     = 100
 --- Places a 3D text built from the tool's settings on the surface that was hit.
 -- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the text was placed (always true clientside), false if the
---   text is empty, nil if the owner lacks the 'manage_texts' permission]
+--   text is empty or was refused, nil if the owner lacks the 'manage_texts' permission]
+-- @see [SurfaceText:add_text]
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
@@ -52,23 +53,19 @@ function TOOL:LeftClick(trace)
 
   if !text or text == '' then return false end
 
-  local angle = trace.HitNormal:Angle()
-  angle:RotateAroundAxis(angle:Forward(), 90)
-  angle:RotateAroundAxis(angle:Right(), 270)
-
   local data = {
     text        = text,
     style       = style,
     color       = color,
     extra_color = extra_color,
-    angle       = angle,
+    angle       = SurfaceText:surface_angle(trace.HitNormal),
     pos         = trace.HitPos,
     normal      = trace.HitNormal,
     scale       = scale,
     fade_offset = fade_offset
   }
 
-  SurfaceText:add_text(data)
+  if !SurfaceText:add_text(data) then return false end
 
   owner:notify('notification.3d_text.text_added')
 
@@ -102,6 +99,7 @@ local text_styles = {
 --- Builds the tool's settings panel: style, text, colors, scale and fade offset.
 -- @param CPanel [Panel the tool's control panel]
 function TOOL.BuildCPanel(CPanel)
+  local limits = SurfaceText.limits
   local options = {}
 
   for phrase, style_id in pairs(text_styles) do
@@ -117,9 +115,13 @@ function TOOL.BuildCPanel(CPanel)
     CVars = { 'texts_style' }
   })
   control_resets.Button:SetVisible(false)
-  control_resets.DropDown:SetValue('Please Choose')
+  control_resets.DropDown:SetValue(t'tool.texts.choose_style')
 
-  CPanel:AddControl('TextBox', { Label = t'tool.texts.text', Command = 'texts_text', MaxLenth = '128' })
+  CPanel:AddControl('TextBox', {
+    Label = t'tool.texts.text',
+    Command = 'texts_text',
+    MaxLenth = tostring(limits.text_length)
+  })
   CPanel:AddControl('Color', {
     Label = t'tool.texts.color',
     Red = 'texts_r',
@@ -138,14 +140,14 @@ function TOOL.BuildCPanel(CPanel)
     Label = t'tool.texts.scale',
     Command = 'texts_scale',
     Type = 'Float',
-    Min = 0.01,
-    Max = 10
+    Min = limits.min_scale,
+    Max = limits.max_scale
   })
   CPanel:AddControl('Slider', {
     Label = t'tool.texts.fade',
     Command = 'texts_fade',
     Type = 'Integer',
-    Min = -1024,
-    Max = 10_000
+    Min = limits.min_fade,
+    Max = limits.max_fade
   })
 end

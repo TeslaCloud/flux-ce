@@ -4,7 +4,8 @@
 local abs = math.abs
 local cable_send = Cable.send
 
---- Finds the 3D text hit by the trace and asks the server to remove it. Clientside only.
+--- Finds the 3D text hit by the trace and asks the server to remove it by its ID.
+-- Clientside only.
 -- @param trace [Map trace result, e.g. from Player:GetEyeTraceNoCursor]
 -- @return [Boolean true if a text was hit and its removal was requested]
 function SurfaceText:trace_remove_text(trace)
@@ -15,7 +16,7 @@ function SurfaceText:trace_remove_text(trace)
   local trace_start = trace.StartPos
   local font = Theme.get_font('text_3d2d')
 
-  for text_id, text_data in pairs(self.texts) do
+  for _, text_data in ipairs(self.texts) do
     local pos = text_data.pos
     local normal = text_data.normal
     local ang = normal:Angle()
@@ -27,7 +28,7 @@ function SurfaceText:trace_remove_text(trace)
 
     if abs(hit_z - abs(pos.z)) < 4 * scale then
       if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-        cable_send('fl_surface_text_remove', text_id)
+        cable_send('fl_surface_text_remove', text_data.id)
 
         return true
       end
@@ -37,7 +38,8 @@ function SurfaceText:trace_remove_text(trace)
   return false
 end
 
---- Finds the 3D picture hit by the trace and asks the server to remove it. Clientside only.
+--- Finds the 3D picture hit by the trace and asks the server to remove it by its ID.
+-- Clientside only.
 -- @param trace [Map trace result, e.g. from Player:GetEyeTraceNoCursor]
 -- @return [Boolean true if a picture was hit and its removal was requested]
 function SurfaceText:trace_remove_picture(trace)
@@ -47,7 +49,7 @@ function SurfaceText:trace_remove_picture(trace)
   local hit_z = abs(hit_pos.z)
   local trace_start = trace.StartPos
 
-  for picture_id, picture in pairs(self.pictures) do
+  for _, picture in ipairs(self.pictures) do
     local pos = picture.pos
     local normal = picture.normal
     local ang = normal:Angle()
@@ -58,7 +60,7 @@ function SurfaceText:trace_remove_picture(trace)
 
     if abs(hit_z - abs(pos.z)) < height * 0.05 then
       if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-        cable_send('fl_surface_picture_remove', picture_id)
+        cable_send('fl_surface_picture_remove', picture.id)
 
         return true
       end

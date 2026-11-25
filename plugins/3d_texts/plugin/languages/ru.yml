@@ -27,6 +27,7 @@ ru:
       opt8: Текст в Табличке (вариант 3)
       opt9: Текст в Табличке (вариант 4)
       opt91: Текст в Табличке (блюр)
+      choose_style: Выберите стиль
     pictures:
       name: Картинки
       desc: Добавляет 3D картинки на поверхности.
@@ -35,6 +36,12 @@ ru:
       width: Ширина
       height: Высота
       fade: Дистанция отрисовки
+  error:
+    3d_text:
+      nothing_aimed: Вы не смотрите на текст.
+    3d_picture:
+      nothing_aimed: Вы не смотрите на картинку.
+      invalid_url: Картинка должна быть https-ссылкой на изображение png или jpg.
   permission:
     manage_texts:
       name: Размещение / удаление текстов

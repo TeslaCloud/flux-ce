@@ -27,6 +27,7 @@ fr:
       opt8: "Texte dans un cadre (style 3)"
       opt9: "Texte dans un cadre (style 4)"
       opt91: "Texte dans un cadre (flou)"
+      choose_style: "Choisissez un style"
     pictures:
       name: "Outil de placement d'images"
       desc: "Ajoute des images sur les surfaces 3D."
@@ -35,6 +36,12 @@ fr:
       width: "Largeur"
       height: "Hauteur"
       fade: "Décalage de la distance de fondu"
+  error:
+    3d_text:
+      nothing_aimed: "Vous ne regardez aucun texte 3D."
+    3d_picture:
+      nothing_aimed: "Vous ne regardez aucune image."
+      invalid_url: "L'image doit être un lien https vers une image png ou jpg."
   permission:
     manage_texts:
       name: "Placer / supprimer des textes"

@@ -27,6 +27,7 @@ en:
       opt8: Text Wrapped in a Box (Style 3)
       opt9: Text Wrapped in a Box (Style 4)
       opt91: Text Wrapped in a Box (Blurry)
+      choose_style: Please Choose
     pictures:
       name: Picture Placer
       desc: Add images to 3D surfaces.
@@ -35,6 +36,12 @@ en:
       width: Width
       height: Height
       fade: Fade Distance Offset
+  error:
+    3d_text:
+      nothing_aimed: You are not looking at a 3D text.
+    3d_picture:
+      nothing_aimed: You are not looking at a picture.
+      invalid_url: The picture has to be an https link to a png or jpg image.
   permission:
     manage_texts:
       name: Place / delete texts

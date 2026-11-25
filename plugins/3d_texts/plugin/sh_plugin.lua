@@ -1,8 +1,9 @@
 --- 3D Texts lets staff put texts and pictures on the surfaces of the map.
 -- They are placed and removed with the Text Tool and the Picture Placer of the tool gun, or
--- from code with `SurfaceText:add_text` and `SurfaceText:add_picture`. The server keeps
--- them in `SurfaceText.texts` and `SurfaceText.pictures`, saves them with the plugin data
--- and sends them to every client, which draws them in the world and fades them out with
+-- from code with `SurfaceText:add_text` and `SurfaceText:add_picture`, and removed by their
+-- ID with `SurfaceText:delete_text` and `SurfaceText:delete_picture`. The server keeps them
+-- in `SurfaceText.texts` and `SurfaceText.pictures`, saves them with the plugin data and
+-- sends them to every client, which draws them in the world and fades them out with
 -- distance.
 
 PLUGIN:set_global('SurfaceText')

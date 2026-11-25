@@ -27,6 +27,7 @@ es:
       opt8: Texto dentro de un recuadro (estilo 3)
       opt9: Texto dentro de un recuadro (estilo 4)
       opt91: Texto dentro de un recuadro (borroso)
+      choose_style: Elige un estilo
     pictures:
       name: Colocador de imágenes
       desc: Añade imágenes a superficies 3D.
@@ -35,6 +36,12 @@ es:
       width: Ancho
       height: Alto
       fade: Ajuste de distancia de desvanecimiento
+  error:
+    3d_text:
+      nothing_aimed: No estás mirando ningún texto 3D.
+    3d_picture:
+      nothing_aimed: No estás mirando ninguna imagen.
+      invalid_url: La imagen tiene que ser un enlace https a una imagen png o jpg.
   permission:
     manage_texts:
       name: Colocar / borrar textos
