@@ -165,7 +165,7 @@ end)
 Cable.receive('fl_inventory_close', function(actor, inventory_ids)
   if !istable(inventory_ids) then return end
 
-  local closed_inventory
+  local closed = {}
 
   for _, inventory_id in pairs(inventory_ids) do
     local inventory = Inventories.find(inventory_id)
@@ -174,21 +174,9 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
       inventory:remove_receiver(actor)
       inventory:sync()
 
-      closed_inventory = closed_inventory or inventory
+      closed[#closed + 1] = inventory
     end
   end
 
-  if !closed_inventory then return end
-
-  --- Called on the server when a player has closed the inventories that were opened for
-  -- them, such as a container or the inventories of another player. The player has been
-  -- removed from the receivers of every closed inventory by now. The hook is run once
-  -- per request, with the first of the closed inventories; the player's own inventories
-  -- and inventories that do not exist or were not open for the player are skipped, and the
-  -- hook is not run when none is left.
-  -- `Player:close_inventories` runs the same hook when the server closes inventories for
-  -- a player, which it does by itself once the player is no longer entitled to them.
-  -- @param actor [Player The player who closed the inventories]
-  -- @param inventory [Inventory The first of the inventories that were closed]
-  hook.Run('InventoryClosed', actor, closed_inventory)
+  Inventories.run_closed_hooks(actor, closed)
 end)

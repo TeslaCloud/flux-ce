@@ -478,7 +478,7 @@ end
 
 --- Closes inventories that were opened for the player: removes the player from their
 -- receivers, tells the client to remove their windows and runs the 'InventoryClosed'
--- hook once, with the first of them. The player's own inventories and inventories that
+-- hook once for every owner of them. The player's own inventories and inventories that
 -- are not open for the player are skipped.
 -- @param inventories [List<Inventory>]
 -- @param removed=false [Boolean the inventories are being removed from the server, so the
@@ -486,7 +486,7 @@ end
 function player_meta:close_inventories(inventories, removed)
   removed = removed == true
 
-  local closed_inventory
+  local closed = {}
 
   for _, inventory in pairs(inventories) do
     if inventory.owner != self and inventory:has_receiver(self) then
@@ -494,13 +494,11 @@ function player_meta:close_inventories(inventories, removed)
 
       Cable.send(self, 'fl_inventory_close', inventory.id, removed)
 
-      closed_inventory = closed_inventory or inventory
+      closed[#closed + 1] = inventory
     end
   end
 
-  if !closed_inventory then return end
-
-  hook.Run('InventoryClosed', self, closed_inventory)
+  Inventories.run_closed_hooks(self, closed)
 end
 
 --- Closes an inventory that was opened for the player with open_inventory.
