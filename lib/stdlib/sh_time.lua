@@ -209,9 +209,9 @@ function Time:nice_from_now(time)
     time = time.time
   end
 
-  local diff = Time.new(DateTime:at(time).time - DateTime:now().time)
+  local now = os.time()
 
-  return diff:nice()
+  return Time.new((time or now) - now):nice()
 end
 
 --- Same as nice, but performs formatting.

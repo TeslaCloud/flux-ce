@@ -125,12 +125,21 @@ function Date:__sub(right)
   return run_if_valid_time(right, duration -> self.class:at(self.time - duration.time))
 end
 
---- Add the specified amount of Time to the Date.
--- @param right [Time]
--- @return [Date or DateTime]
+--- Adds the specified amount of Time to the Date, like `+`. Concatenated with anything else,
+-- such as a string on either side, the Date is converted to its ISO string.
+-- ```
+-- local tomorrow = Date:today()..Time:days(1)
+-- print('Today is '..Date:today()) -- 'Today is 2019-09-24'
+-- ```
+-- @param right [Any the right operand; the Date itself when the Date is on the right]
+-- @return [Date/DateTime/String the shifted date, or the concatenated string]
 -- @see [Date#__add]
 function Date:__concat(right)
-  return run_if_valid_time(right, duration -> self.class:at(self.time + duration.time))
+  if istable(self) and self.class and istable(right) and right.class_name == 'Time' then
+    return self.class:at(self.time + right.time)
+  end
+
+  return tostring(self)..tostring(right)
 end
 
 --- Converts this Date object to an ISO-8601 string.

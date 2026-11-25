@@ -75,11 +75,18 @@ function DateTime:now()
 end
 
 --- Get the UTC time, or alternatively a UTC time at a specified UNIX timestamp.
--- @param time=self.time [Number UNIX time]
+-- The result is the same point in time, with the date and time fields in UTC.
+-- @param time=self.time [Number UNIX time, the current time if neither is given]
 -- @return [DateTime]
 function DateTime:utc(time)
-  local date = os_date('!*t', time or self.time)
-  return DateTime.new(date.year, date.month, date.day, date.hour, date.min, date.sec, 'utc')
+  time = time or self.time or os.time()
+
+  local date = os_date('!*t', time)
+  local obj = DateTime.new(date.year, date.month, date.day, date.hour, date.min, date.sec, 'utc')
+
+  obj.time = time
+
+  return obj
 end
 
 --- Converts the DateTime object to Date.
