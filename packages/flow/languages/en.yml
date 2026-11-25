@@ -39,7 +39,7 @@ en:
       not_a_number: "'{value}' is not a number!"
       not_valid: "'{command}' is not a valid command!"
       player_ambiguous: "Several players are named '{player}', use the SteamID of the one you mean!"
-      player_invalid: "'{player}' is not a valid player!"
+      player_invalid: "'{player}' is not a valid player! Names with spaces go in double quotes."
       player_suggestion: "'{player}' is not a valid player, did you mean {suggestion}? Names with spaces go in double quotes."
       syntax: "Incorrect syntax, use /{command} {syntax}"
       too_long: This command is too long!

@@ -1019,25 +1019,62 @@ if SERVER then
     return true
   end
 
-  --- Finds the name of the only player whose character name or Steam name contains a text,
+  --- Returns the name of a player whose character name or Steam name contains a text,
   -- ignoring the case: the character name if it contains the text, else the Steam name.
-  -- @param text [String]
-  -- @return [String the name, or nil if no player or several players have the text in their
-  --   names]
-  local function suggest_player(text)
-    local found = player.find(text)
+  -- @param client [Player]
+  -- @param lower [String the text in lower case]
+  -- @return [String the name, nil if neither contains the text]
+  local function matching_name(client, lower)
+    local char_name = client:name(true)
 
-    if !isentity(found) then return end
+    if char_name:utf8lower():find(lower, 1, true) then
+      return char_name
+    end
 
-    local char_name = found:name(true)
+    local steam_name = client:steam_name()
 
-    return char_name:utf8lower():find(text:utf8lower(), 1, true) and char_name or found:steam_name()
+    if steam_name:utf8lower():find(lower, 1, true) then
+      return steam_name
+    end
+  end
+
+  --- Finds the name of the only player whose name contains a text, for a "did you mean"
+  -- error. Only the server console and players with the 'staff' permission, who may see the
+  -- real names of everyone, get a suggestion. A player who is hidden (whose `is_hidden`
+  -- method, when a plugin adds one, returns true) is only suggested to the console and to
+  -- players with the 'moderate' permission, and is not counted otherwise.
+  -- @param actor [Player the player who runs the command, an invalid entity for the server
+  --   console]
+  -- @param text [String the player argument]
+  -- @return [String the name, or nil if there is nothing to suggest to the actor]
+  local function suggest_player(actor, text)
+    local is_console = !IsValid(actor)
+
+    if !is_console and !actor:can('staff') then return end
+
+    local sees_hidden = is_console or actor:can('moderate')
+    local lower = text:utf8lower()
+    local suggestion
+
+    for _, client in player.Iterator() do
+      if sees_hidden or !isfunction(client.is_hidden) or !client:is_hidden() then
+        local name = matching_name(client, lower)
+
+        if name then
+          if suggestion then return end
+
+          suggestion = name
+        end
+      end
+    end
+
+    return suggestion
   end
 
   --- Turns the player argument of a command into the list of its targets and checks their
   -- immunity, telling the player if there is a problem. When the argument names nobody
-  -- exactly but is part of the name of a single player, the player is asked whether they
-  -- meant that one.
+  -- exactly but is part of the name of a single player, the console and staff are asked
+  -- whether they meant that one (see `suggest_player`).
   -- @param actor [Player the player, an invalid entity for the server console]
   -- @param cmd [Command the command or subcommand]
   -- @param target_arg [String the player argument]
@@ -1057,7 +1094,7 @@ if SERVER then
     end
 
     if #targets == 0 then
-      local suggestion = kind == nil and suggest_player(target_arg)
+      local suggestion = kind == nil and suggest_player(actor, target_arg)
 
       if kind == 'ambiguous' then
         command_error(actor, 'error.command.player_ambiguous', { player = target_arg })

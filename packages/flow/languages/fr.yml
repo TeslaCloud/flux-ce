@@ -39,7 +39,7 @@ fr:
       not_a_number: "« {value} » n'est pas un nombre !"
       not_valid: "« {command} » n'est pas une commande valide !"
       player_ambiguous: "Plusieurs joueurs s'appellent « {player} », utilisez le SteamID de celui que vous voulez !"
-      player_invalid: "« {player} » n'est pas un joueur valide !"
+      player_invalid: "« {player} » n'est pas un joueur valide ! Les noms avec des espaces se mettent entre guillemets droits."
       player_suggestion: "« {player} » n'est pas un joueur valide, vouliez-vous dire {suggestion} ? Les noms avec des espaces se mettent entre guillemets droits."
       syntax: "Syntaxe incorrecte, utilisez /{command} {syntax}"
       too_long: "Cette commande est trop longue !"

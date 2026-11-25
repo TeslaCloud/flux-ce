@@ -39,7 +39,7 @@ es:
       not_a_number: "¡'{value}' no es un número!"
       not_valid: "¡'{command}' no es un comando válido!"
       player_ambiguous: "Hay varios jugadores llamados '{player}', ¡usa el SteamID del que buscas!"
-      player_invalid: "¡'{player}' no es un jugador válido!"
+      player_invalid: "¡'{player}' no es un jugador válido! Los nombres con espacios van entre comillas dobles."
       player_suggestion: "'{player}' no es un jugador válido, ¿te refieres a {suggestion}? Los nombres con espacios van entre comillas dobles."
       syntax: "Sintaxis incorrecta, usa /{command} {syntax}"
       too_long: ¡Este comando es demasiado largo!
