@@ -6,10 +6,12 @@
 -- (default values, names, descriptions and editor types) from YAML, out of which the client
 -- builds the categories of the config menu.
 --
--- A config takes the first of these that applies: the value changed in game (`Config.change`),
--- kept over code refreshes and restarts; the value of `settings.yml` or of the schema's .yml
--- file (`Config.import`); the `default_value` of its definition. A config that was never changed
--- in game follows its files and its definition whenever the server starts.
+-- A config takes the first of these that applies, after a boot and after a code refresh alike:
+-- the value changed in game (`Config.change`), kept over refreshes and restarts; the value of
+-- the `server.configuration` section of `settings.yml`; the value of the schema's .yml file;
+-- the `default_value` of its definition. A config that was never changed in game, or that has
+-- been reset with `Config.reset`, follows its files and its definition whenever the server
+-- starts.
 --
 -- Besides `hidden` (the value is never sent to clients) a definition can carry three flags:
 --
@@ -36,8 +38,8 @@
 -- `Config.set` is the low level setter: it stores whatever it is given and does not look at
 -- the flags. Changes requested by players go through `Config.change`, which refuses static
 -- configs, checks the value against the definition with `Config.validate` and holds the
--- value back when the config needs a restart, and through `Config.reset`, which puts the
--- default value back.
+-- value back when the config needs a restart, and through `Config.reset`, which puts back the
+-- value the files give.
 --
 -- `Config.set` and `Config.import` label where a config came from with one of the sources
 -- defined here: `CONFIG_PLUGIN` (a plugin's config file), `CONFIG_SCHEMA` (the schema's config
@@ -121,13 +123,13 @@ local values_equal = Config.values_equal
 
 --- Tells whether `Config.read` puts the default value of a definition into a config: when the
 -- config has no value yet, or when it was never changed in game and still holds the default of
--- the definition it had before.
+-- the definition it had before and no file has set it.
 -- @param entry [Map stored config data, nil if there is none]
 -- @param previous [Map definition the config had before, nil if it had none]
 -- @return [Boolean]
 local function takes_default(entry, previous)
   if !entry or entry.value == nil then return true end
-  if entry.changed or !previous then return false end
+  if entry.changed or entry.imported_from != nil or !previous then return false end
 
   return values_equal(entry.value, default_value(previous))
 end
@@ -698,26 +700,67 @@ if SERVER then
     return true, result, false
   end
 
-  --- Puts the default value of a config back. Serverside only.
-  -- Follows the same rules as `Config.change`: static configs are refused, and the default
-  -- of a config that needs a restart becomes its pending value.
+  --- Puts a config back into the state of one that was never changed in game. Serverside only.
+  -- The config takes the value its files give it, the one `Config.import` last set from
+  -- `settings.yml` or the schema's .yml file, else the default of its definition, and loses its
+  -- changed mark, so the next `Config.save` leaves it out and it follows its files and its
+  -- definition from then on. Static configs are refused. For a config that needs a restart that
+  -- value becomes pending and takes effect the next time the server starts; otherwise it is set
+  -- at once, which tells the players and runs ConfigChanged like a change does.
   -- @param key [String config key]
-  -- @return [Boolean whether the config was reset, Any the default value or the language
-  --   phrase of the error, Boolean true if the default is pending and takes effect after a
+  -- @return [Boolean whether the config was reset, Any the value it takes or the language
+  --   phrase of the error, Boolean true if the value is pending and takes effect after a
   --   restart]
   -- @see [Config.change]
   function Config.reset(key)
-    if !isstring(key) or !stored[key] then
+    local entry = isstring(key) and stored[key]
+
+    if !entry then
       return false, 'error.config.unknown'
     end
 
-    local definition = definitions[key]
+    if Config.is_static(key) then
+      return false, 'error.config.static'
+    end
 
-    if !definition or definition.default_value == nil then
+    local definition = definitions[key]
+    local value
+
+    if entry.imported_from != nil then
+      value = copy_value(entry.imported_value)
+    elseif definition and definition.default_value != nil then
+      value = default_value(definition)
+    else
       return false, 'error.config.no_default'
     end
 
-    return Config.change(key, default_value(definition))
+    local had_pending = entry.pending
+
+    entry.changed = nil
+
+    if Config.needs_restart(key) and !values_equal(entry.value, value) then
+      entry.pending = true
+      entry.pending_value = value
+
+      send_pending(nil, key)
+
+      Config.save()
+
+      return true, value, true
+    end
+
+    entry.pending = nil
+    entry.pending_value = nil
+
+    Config.set(key, value)
+
+    if had_pending then
+      send_pending(nil, key)
+
+      Config.save()
+    end
+
+    return true, value, false
   end
 
   local player_meta = FindMetaTable('Player')
@@ -958,11 +1001,28 @@ end
 
 if SERVER then
   const plugin_keys = { depends = true, depends_development = true, profile = true, exclude = true }
+  const import_rank = { [CONFIG_PLUGIN] = 1, [CONFIG_SCHEMA] = 2, [CONFIG_FLUX] = 3 }
+
+  --- Tells whether `Config.import` may set a config: not when it has been changed in game, and
+  -- not when a file of higher precedence has set it (`settings.yml` over the schema's .yml file
+  -- over a plugin's), whatever order the files are imported in.
+  -- @param key [String config key]
+  -- @param from_config [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
+  -- @return [Boolean]
+  local function may_import(key, from_config)
+    local entry = stored[key]
+
+    if !entry then return true end
+    if entry.changed then return false end
+
+    return (import_rank[entry.imported_from] or 0) <= (import_rank[from_config] or 0)
+  end
 
   --- Imports config values from a YAML file or from a table and sets every one of them.
   -- Serverside only. The keys that choose plugins ('profile', 'depends', 'depends_development'
-  -- and 'exclude') are skipped, and so is every config that has been changed in game and every
-  -- key for which the ShouldConfigImport hook returns a non-nil value. The value of a defined
+  -- and 'exclude') are skipped, and so is every config that has been changed in game or set by a
+  -- file of higher precedence (`settings.yml` over the schema's .yml file over a plugin's) and
+  -- every key for which the ShouldConfigImport hook returns a non-nil value. The value of a defined
   -- config goes through `Config.validate` and is skipped with an error naming the key and the
   -- file if it does not pass; in development a key without a definition is reported, and set
   -- all the same.
@@ -986,12 +1046,14 @@ if SERVER then
     if !istable(config_table) then return end
 
     for key, value in pairs(config_table) do
+      if plugin_keys[key] or !may_import(key, from_config) then continue end
+
       --- Called on the server for every key that `Config.import` is about to set.
       -- @param key [String config key]
       -- @param value [Any value read from the imported file or table]
       -- @return [Boolean Return any value other than nil to skip the key and keep its current
       --   value]
-      if !plugin_keys[key] and !stored[key]?.changed and Plugin.call('ShouldConfigImport', key, value) == nil then
+      if Plugin.call('ShouldConfigImport', key, value) == nil then
         if definitions[key] then
           local valid, result = Config.validate(key, value)
 
@@ -1007,6 +1069,11 @@ if SERVER then
         end
 
         Config.set(key, value, nil, from_config)
+
+        local entry = stored[key]
+
+        entry.imported_from = from_config
+        entry.imported_value = copy_value(value)
       end
     end
 
