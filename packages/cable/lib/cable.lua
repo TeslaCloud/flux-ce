@@ -311,10 +311,11 @@ end
 
 --- Counts a chunked transfer of a player that has received its last piece, and tells
 -- whether it may be decoded: no more than `Cable.max_completed_transfers_per_second` are
--- in each second.
+-- in each second. The first transfer of a second that is dropped is reported in development.
 -- @param sender [Player]
+-- @param id [String name of the message]
 -- @return [Boolean]
-local function may_complete(sender)
+local function may_complete(sender, id)
   local now = SysTime()
   local window = completed[sender]
 
@@ -324,11 +325,23 @@ local function may_complete(sender)
   elseif now - window.started >= 1 then
     window.started = now
     window.count = 0
+    window.reported = nil
   end
 
   window.count += 1
 
-  return window.count <= cable.max_completed_transfers_per_second
+  if window.count <= cable.max_completed_transfers_per_second then
+    return true
+  end
+
+  if !window.reported then
+    window.reported = true
+
+    Flux.dev_print('Cable: dropping the chunked "'..id..'" message of '..tostring(sender)
+      ..', which completed more than '..cable.max_completed_transfers_per_second..' chunked messages within a second')
+  end
+
+  return false
 end
 
 --- Forgets the chunked transfers that have been waiting for their pieces for longer than
@@ -455,7 +468,7 @@ net.Receive(CHUNK_MESSAGE, function(_length, sender)
     transfers[owner] = nil
   end
 
-  if SERVER and !may_complete(sender) then return end
+  if SERVER and !may_complete(sender, id) then return end
 
   local packet, err = decode_transfer(table.concat(transfer.pieces, '', 1, count), transfer.compressed)
 
