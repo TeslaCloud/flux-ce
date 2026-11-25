@@ -98,7 +98,7 @@ local function decode_entities(text)
 
   return (text:gsub('&(#?)(x?)([%w]+);', function(hash, hex, body)
     if hash == '' then
-      return named_entities[body] or ('&'..body..';')
+      return named_entities[hex..body] or ('&'..hex..body..';')
     end
 
     local code = tonumber(body, hex == 'x' ? 16 : 10)
@@ -220,7 +220,8 @@ local function number_end(src, pos)
   end
 end
 
---- Checks whether a `<` at a position starts markup rather than being the less-than operator.
+--- Checks whether a `<` at a position starts markup rather than being the less-than operator
+-- or the second half of a shift (`<<`).
 -- @param src [String source]
 -- @param pos [Number position of the `<`]
 -- @param last [String kind of the token before it: 'operand', 'operator' or nil at the start]
@@ -228,7 +229,7 @@ end
 local function starts_markup(src, pos, last)
   local next_char = string_sub(src, pos + 1, pos + 1)
 
-  if next_char != '>' and !string_match(next_char, '[%a_]') then
+  if next_char != '>' and !string_match(next_char, '[%a_]') or string_sub(src, pos - 1, pos - 1) == '<' then
     return false
   end
 
