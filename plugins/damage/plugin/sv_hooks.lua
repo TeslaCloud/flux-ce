@@ -3,8 +3,9 @@
 -- and drive the health regeneration, the drowning and the logs.
 -- The handlers of GMod's damage hooks change the damage in place and return nothing, so the
 -- handlers of the schema, of other plugins and of the gamemode still run after them. The
--- exceptions are damage blocked through `ResolvePlayerDamage` and damage canceled through
--- `PrePlayerTakeDamage`, which are blocked for everyone.
+-- exceptions are damage blocked through `ResolvePlayerDamage`, damage canceled through
+-- `PrePlayerTakeDamage` and damage that `Ragdoll:hits_hidden_body` refuses, which are blocked
+-- for everyone.
 
 local config_get = Config.get
 
@@ -28,7 +29,9 @@ function Damage:ScaleNPCDamage(npc, hitgroup, damage_info)
   self:scale_hit(npc, hitgroup, damage_info)
 end
 
---- Works out the hit location multiplier of a damage event on a player or an NPC, see
+--- Blocks damage that hits the hidden entity of a fallen player rather than their ragdoll,
+-- as the Ragdoll plugin tells with `Ragdoll:hits_hidden_body`, before anything else is worked
+-- out for it. Works out the hit location multiplier of a damage event on a player or an NPC, see
 -- `Damage:measure_damage_scale`. Lets the ResolvePlayerDamage hook work out the amount
 -- of any damage to a player, multiplies the fall damage of a player by the
 -- 'damage_scale_fall' config, whichever way the amount was worked out (the
@@ -36,11 +39,16 @@ end
 -- PrePlayerTakeDamage hook change or cancel any damage to a player.
 -- @param entity [Entity the entity taking damage]
 -- @param damage_info [CTakeDamageInfo]
--- @return [Boolean true to block damage that one of the hooks has blocked, nil otherwise]
+-- @return [Boolean true to block damage that one of the hooks or the Ragdoll plugin has
+--   blocked, nil otherwise]
 function Damage:EntityTakeDamage(entity, damage_info)
   if !IsValid(entity) then return end
 
   local is_player = entity:IsPlayer()
+
+  if is_player and Ragdoll and Ragdoll:hits_hidden_body(entity, damage_info) then
+    return true
+  end
 
   if is_player or entity:IsNPC() then
     self:measure_damage_scale(entity, damage_info)

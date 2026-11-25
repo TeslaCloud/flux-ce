@@ -217,47 +217,25 @@ function Ragdoll:SetupPlayerVisibility(actor, _view_entity)
   end
 end
 
---- Damage types that the world deals to a body where it lies: explosions, fire, shots, melee
--- hits and impacts.
-const body_damage_types = DMG_BLAST | DMG_BURN | DMG_BULLET | DMG_CLUB | DMG_SLASH | DMG_CRUSH
-
---- Tells whether damage dealt to a living player who has fallen over hits their own hidden
--- entity rather than their body. While they are down their body is the ragdoll, which passes
--- the damage it takes on to them; the hidden entity still lies in the reach of explosions
--- and fire where the player fell.
--- @param target [Player the damaged player]
--- @param damage_info [CTakeDamageInfo]
--- @return [Boolean true for damage of the `body_damage_types` that the ragdoll is not passing
---   on]
-local function hits_hidden_body(target, damage_info)
-  if target.fl_ragdoll_forwarding or !target:Alive() then return false end
-
-  local data = target.ragdoll_data
-
-  if !data or !data.fallen or !IsValid(data.entity) then return false end
-
-  return (damage_info:GetDamageType() & body_damage_types) != 0
-end
-
 --- Passes damage dealt to the ragdoll of a living player on to that player. Damage that was
 -- not dealt by a player is ignored while the ragdoll is immune, which it is for a moment
 -- after the player has fallen; CanRagdollTakeDamage can block the rest. With the Damage
 -- plugin, the damage reaches the player at the hit location of the bone of the ragdoll that
 -- is closest to where it was dealt (`Damage:find_ragdoll_hitgroup`).
 --
--- The hidden entity of a fallen player takes no blast, fire, bullet, melee or crush damage
--- of its own, so that the player is not hurt twice by what also hits their ragdoll, nor at
--- the spot they fell from. Every other damage reaches them: falls, drowning and anything dealt
--- with another damage type. Code that hurts a fallen player with one of these types deals
--- the damage to their ragdoll (`Player:get_ragdoll_entity`), which passes it on with its hit
--- location.
+-- The hidden entity of a fallen player takes no damage that `Ragdoll:hits_hidden_body`
+-- refuses (blast, fire, bullet, melee and crush), so that the player is not hurt twice by what
+-- also hits their ragdoll, nor at the spot they fell from. Every other damage reaches them:
+-- falls, drowning and anything dealt with another damage type. Code that hurts a fallen
+-- player with one of these types deals the damage to their ragdoll
+-- (`Player:get_ragdoll_entity`), which passes it on with its hit location.
 -- @param entity [Entity the damaged entity]
 -- @param damage_info [CTakeDamageInfo]
 -- @return [Boolean true to block damage to the hidden entity of a fallen player, nil
 --   otherwise]
 function Ragdoll:EntityTakeDamage(entity, damage_info)
   if entity:IsPlayer() then
-    if hits_hidden_body(entity, damage_info) then
+    if self:hits_hidden_body(entity, damage_info) then
       return true
     end
 
