@@ -2,24 +2,9 @@
 -- other or into classes with `include`.
 -- Libraries such as `Plugin`, `Config` and `Pipeline` are declared this way.
 
-local function include_module(self, what)
-  local module_table = isstring(what) and what:parse_table() or what
-
-  if !istable(module_table) then return end
-
-  for member_name, member in pairs(module_table) do
-    if !self[member_name] then
-      self[member_name] = member
-    end
-  end
-
-  local included_modules = self.included_modules
-
-  included_modules[#included_modules + 1] = module_table
-end
-
 --- Create a module with a specified name, or return the module that already exists under
 -- that name, so that a refreshed file keeps the state of its module.
+-- A namespaced module is created inside of the table its name points to, which has to exist.
 -- The resulting object will have the `include` method by default.
 -- ```
 -- mod 'Talkable'
@@ -34,7 +19,8 @@ end
 -- @param name [String module name in ConstantStyle, may be namespaced (e.g. 'Flux::Anim')]
 -- @return [Object created module]
 function mod(name)
-  local parent, module_name = name:parse_parent()
+  local path = name:split('::')
+  local module_name = table.remove(path)
 
   if module_name[1]:is_lower() then
     error('bad module name ('..module_name..')\nmodule names must follow the ConstantStyle!\n')
@@ -43,6 +29,16 @@ function mod(name)
   local obj = name:parse_table()
 
   if !obj then
+    local parent, missing = _G, nil
+
+    if #path > 0 then
+      parent, missing = table.concat(path, '::'):parse_table()
+    end
+
+    if !parent then
+      error('cannot create module '..name..', '..missing..' does not exist\n')
+    end
+
     obj = {}
     parent[module_name] = obj
   end

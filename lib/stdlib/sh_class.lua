@@ -24,10 +24,113 @@ function isclass(obj)
   return istable(obj) and istable(obj.class) and isstring(obj.class_name)
 end
 
+--- Mixes a module into a class or another module: copies every member of the module that the
+-- object does not have yet and adds the module to the `included_modules` list of the object.
+-- Every class and every module has this function as its `include` method.
+-- @param obj [Map class or module that receives the members]
+-- @param what [String/Map the module or its name]
+-- @see [mod]
+function include_module(obj, what)
+  local module_table = isstring(what) and what:parse_table() or what
+
+  if !istable(module_table) then return end
+
+  for member_name, member in pairs(module_table) do
+    if !obj[member_name] then
+      obj[member_name] = member
+    end
+  end
+
+  local included_modules = obj.included_modules
+
+  included_modules[#included_modules + 1] = module_table
+end
+
+--- Finds the base class given to a class by its name, and reports one that is not defined.
+-- @param class_name [String name of the class that is being created]
+-- @param base [String/Map/Nil the base class or its name]
+-- @return [Map/Boolean the base class, or false if it is not defined]
+local function find_base(class_name, base)
+  if istable(base) then return base end
+
+  local base_name = isstring(base) and base or tostring(base)
+  local found = isstring(base) and base:parse_table()
+
+  if !found then
+    error_with_traceback(
+      'class '..class_name.." extends '"..base_name.."', but "..base_name..' is not defined: include its file first'
+    )
+  end
+
+  return found
+end
+
+--- Copies a base class into a class and announces the extension to the base class and to the
+-- ClassExtended hook, both of which receive the class itself.
+-- @param obj [Map the class that is being created]
+-- @param base_class [Map the class it extends]
+local function apply_base(obj, base_class)
+  local copy = table.Copy(base_class)
+
+  table.safe_merge(copy, obj)
+  table.safe_merge(obj, copy)
+
+  obj.parent = base_class
+  obj.BaseClass = base_class
+
+  if isfunction(base_class.class_extended) then
+    local success, exception = pcall(base_class.class_extended, base_class, obj)
+
+    if !success then
+      error_with_traceback(tostring(exception))
+    end
+  end
+
+  --- Called when a class is given a base class, with `extends` or with the second argument of
+  -- `class`, after the base class has been copied into it.
+  -- Runs on the realm the class is defined on.
+  -- @param new_class [Map the class that is being created]
+  -- @param parent_class [Map the base class it extends]
+  hook.Run('ClassExtended', obj, base_class)
+end
+
+--- Runs the constructor of a class on the object being created. Inside of it, `super` runs the
+-- constructor of the nearest base class that defines a different one, so that every level of a
+-- hierarchy calls the level above it.
+-- @param class_table [Map/Boolean the class, or false above the topmost class]
+-- @param obj [Map the object being created]
+-- @param ... [Vararg arguments of the constructor]
+local function call_init(class_table, obj, ...)
+  if !istable(class_table) then return end
+
+  local base_class = class_table.parent
+
+  while istable(base_class) and (!isfunction(class_table.init) or class_table.init == base_class.init) do
+    class_table = base_class
+    base_class = class_table.parent
+  end
+
+  local init = class_table.init
+
+  if !isfunction(init) then return end
+
+  local old_super = super
+
+  super = function(...)
+    return call_init(base_class, obj, ...)
+  end
+
+  init(obj, ...)
+
+  super = old_super
+end
+
 --- Creates a new class. Supports constructors and inheritance.
 -- The class is stored in the global table, or inside of another table when the name is
--- namespaced with `::`. Every class gets a `new` function that creates an instance and calls
--- its `init` constructor, and an `include` method that mixes a module into the class.
+-- namespaced with `::`; that table has to exist. Every class gets a `new` function that
+-- creates an instance and calls its `init` constructor, and an `include` method that mixes a
+-- module into the class. Inside of a constructor, `super(...)` calls the constructor of the
+-- base class, at every level of the hierarchy.
 -- ```
 -- class 'Animal'
 --
@@ -45,21 +148,32 @@ end
 --
 -- local dog = Dog.new('Rex')
 -- ```
+-- `new` copies the fields of the class into every instance. A table stored on the class is
+-- therefore one table shared by the class and all of its instances: create the tables an
+-- instance owns in `init`.
+--
+-- Running `class` for a name that exists, as a code refresh does, replaces the class table.
+-- Static state stored on the class is lost, and the instances created before keep the
+-- methods and the `class` field of the replaced table.
 -- @param name [String class name in ConstantStyle, may be namespaced (e.g. 'ActiveRecord::Model')]
 -- @param parent_class=nil [String/Map base class or its name]
 -- @return [Map the created class]
 -- @see [extends]
 -- @see [mod]
 function class(name, parent_class)
-  if isstring(parent_class) then
-    parent_class = parent_class:parse_table()
+  if parent_class != nil then
+    parent_class = find_base(name, parent_class)
   end
 
   local path = name:split('::')
 
   name = table.remove(path)
 
-  local parent = #path > 0 and table.concat(path, '::'):parse_table() or _G
+  local parent = _G
+
+  if #path > 0 then
+    parent = table.concat(path, '::'):parse_table()
+  end
 
   if !istable(parent) then
     error('cannot create class '..name..', the table it belongs in does not exist\n')
@@ -80,24 +194,6 @@ function class(name, parent_class)
   obj.class = obj
   obj.included_modules = {}
 
-  if istable(parent_class) then
-    local copy = table.Copy(parent_class)
-    table.safe_merge(copy, obj)
-
-    if isfunction(parent_class.class_extended) then
-      local success, exception = pcall(parent_class.class_extended, parent_class, copy)
-
-      if !success then
-        error_with_traceback(tostring(exception))
-      end
-    end
-
-    obj = copy
-    parent[name] = obj
-  end
-
-  last_class = { name = name, parent = parent }
-
   obj.new = function(...)
     local new_obj = {}
     local real_class = parent[name]
@@ -106,51 +202,31 @@ function class(name, parent_class)
     setmetatable(new_obj, real_class)
     table.safe_merge(new_obj, real_class)
 
-    local base_class = real_class.parent
+    local success, value = pcall(call_init, real_class, new_obj, ...)
 
-    if base_class and isfunction(base_class.init) then
-      super = function(...)
-        return base_class.init(new_obj, ...)
-      end
+    super = old_super
 
-      real_class.init = isfunction(real_class.init) and real_class.init or function(_obj, ...) super(...) end
-    end
-
-    if real_class.init then
-      local success, value = pcall(real_class.init, new_obj, ...)
-
-      if !success then
-        ErrorNoHalt('['..name..'] Class constructor has failed to run!\n')
-        error_with_traceback(value)
-      end
+    if !success then
+      ErrorNoHalt('['..name..'] Class constructor has failed to run!\n')
+      error_with_traceback(value)
     end
 
     new_obj.class = real_class
     new_obj.static_class = false
     new_obj.IsValid = always_valid
 
-    super = old_super
-
     return new_obj
   end
 
-  obj.include = function(self, what)
-    local module_table = isstring(what) and what:parse_table() or what
+  obj.include = include_module
 
-    if !istable(module_table) then return end
-
-    for member_name, member in pairs(module_table) do
-      if !self[member_name] then
-        self[member_name] = member
-      end
-    end
-
-    local included_modules = self.included_modules
-
-    included_modules[#included_modules + 1] = module_table
+  if istable(parent_class) then
+    apply_base(obj, parent_class)
   end
 
-  return parent[name]
+  last_class = { name = name, parent = parent }
+
+  return obj
 end
 
 --- Copies the listed methods of a class onto another object.
@@ -177,7 +253,9 @@ end
 
 --- Sets the base class of the class that is currently being created.
 -- Copies the base class into the class created by the last `class` call, then calls the
--- base class's `class_extended(new_class)` method and runs the ClassExtended hook.
+-- base class's `class_extended(new_class)` method with that class and runs the ClassExtended
+-- hook. A base class that is not defined is reported with a traceback, and the class is left
+-- without a base.
 -- ```
 -- class 'DateTime' extends 'Date'
 --
@@ -188,42 +266,17 @@ end
 -- @return [Boolean whether the extension succeeded]
 -- @see [class]
 function extends(parent_class)
-  if isstring(parent_class) then
-    parent_class = parent_class:parse_table()
-  end
+  if !istable(last_class) then return false end
 
-  if istable(last_class) and istable(parent_class) then
-    local obj = last_class.parent[last_class.name]
-    local copy = table.Copy(parent_class)
+  local obj = last_class.parent[last_class.name]
 
-    table.safe_merge(copy, obj)
+  parent_class = find_base(obj.class_name, parent_class)
 
-    if isfunction(parent_class.class_extended) then
-      local success, exception = pcall(parent_class.class_extended, parent_class, copy)
+  if !parent_class then return false end
 
-      if !success then
-        error_with_traceback(tostring(exception))
-      end
-    end
+  apply_base(obj, parent_class)
 
-    table.safe_merge(obj, copy)
+  last_class = nil
 
-    obj.parent = parent_class
-    obj.BaseClass = obj.parent
-
-    --- Called when a class is given a base class with `extends`, after the base class has been
-    -- copied into it.
-    -- Runs on the realm the class is defined on. Classes that get their base class through
-    -- the second argument of `class` do not run it.
-    -- @param new_class [Map the class that is being created]
-    -- @param parent_class [Map the base class it extends]
-    hook.Run('ClassExtended', obj, parent_class)
-
-    last_class.parent[last_class.name] = obj
-    last_class = nil
-
-    return true
-  end
-
-  return false
+  return true
 end
