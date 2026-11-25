@@ -1,9 +1,12 @@
 --- Server side of the Voice Lines plugin: turns the text of a line into a phrase of in character
 -- speech, plays the sound of a line to the players who hear it, holds players to the
 -- 'voice_lines_interval' config and says a line that a player has picked on the Voice Lines
--- page or that a chain says next.
+-- page or that a chain says next. The `voice_line` option of a chat message stays on the server
+-- (see `Chatbox.server_options`).
 
 local config_get = Config.get
+
+Chatbox.server_options.voice_line = true
 
 --- The line that `VoiceLines:speak_line` is making a player say: actor, category and line. It is
 -- only set while `Chatbox.submit` or `Radios.say_radio` runs, which turns the text into a

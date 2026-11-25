@@ -49,4 +49,6 @@ en:
       no_commands_found: No commands found!
       more_above: "{count} more above"
       more_below: "{count} more below"
+      message_to: "To {name}"
+      message_from: "From {name}"
       everyone: everyone

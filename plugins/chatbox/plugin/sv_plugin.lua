@@ -14,6 +14,34 @@ local submitting = false
 
 Chatbox.relay_limit = 20
 
+--- The options of a message that stay on the server: `Chatbox.add_text` leaves them out of the
+-- copies that the AdjustChatMessageData and PlayerCanHearChat hooks see and the listeners
+-- receive, and puts them back before the ChatMessageSent hook. A plugin adds the options of
+-- its own that the clients have no use for.
+-- ```
+-- Chatbox.server_options.voice_line = true
+-- ```
+Chatbox.server_options = Chatbox.server_options or {
+  listeners = true,
+  filter = true,
+  rich = true,
+  team_chat = true,
+  text = true,
+  refused = true
+}
+
+--- Tells a player that they are sending messages too fast, once a second at most.
+-- @param actor [Player]
+local function notify_too_fast(actor)
+  local cur_time = CurTime()
+
+  if cur_time >= (actor.fl_next_chat_notice_at or 0) then
+    actor.fl_next_chat_notice_at = cur_time + 1
+
+    actor:notify('error.chat.too_fast')
+  end
+end
+
 --- Stores a message filter under the specified id. Serverside only.
 -- The chatbox itself does not read the stored filters.
 -- @param id [String unique filter id]
@@ -181,6 +209,12 @@ function Chatbox.add_text(listeners, ...)
 
   local receivers = {}
   local receiver_count = 0
+  local server_data = {}
+
+  for key in pairs(Chatbox.server_options) do
+    server_data[key] = message_data[key]
+    message_data[key] = nil
+  end
 
   for _, listener in ipairs(listeners) do
     local data = table.Copy(message_data)
@@ -190,7 +224,8 @@ function Chatbox.add_text(listeners, ...)
     -- copy of the message data, so a change made for one of them does not affect the others.
     -- @param listener [Player the player who may receive the message]
     -- @param message_data [Map message data: data (the pieces), sender, position, radius, size
-    --   and the other options given to Chatbox.add_text]
+    --   and the other options given to Chatbox.add_text, without the ones of
+    --   `Chatbox.server_options`]
     hook.Run('AdjustChatMessageData', listener, data)
 
     if Chatbox.can_hear(listener, data) then
@@ -199,6 +234,10 @@ function Chatbox.add_text(listeners, ...)
       receiver_count += 1
       receivers[receiver_count] = listener
     end
+  end
+
+  for key, value in pairs(server_data) do
+    message_data[key] = value
   end
 
   if !client_mode then
@@ -289,6 +328,8 @@ function Chatbox.player_say(actor, text, team_chat)
 
   text = text:strip()
 
+  if text == '' then return end
+
   local message = {
     --- Provides the icon displayed before the name of a player in what they say. Called on
     -- the server by `Chatbox.player_say`. The Chatbox plugin's own handler supplies the
@@ -359,11 +400,14 @@ function Chatbox.check_interval(actor)
 end
 
 --- Cuts a text that a player has submitted down to the 'chatbox_max_message_length' config, counted
--- in characters like the limit of the chatbox text entry. A text that is not valid UTF-8 is
--- cut to that many bytes instead. Serverside only.
+-- in characters like the limit of the chatbox text entry, and turns its line breaks into
+-- spaces, so that only the messages the server puts together span several lines. A text that
+-- is not valid UTF-8 is cut to that many bytes instead. Serverside only.
 -- @param text [String the submitted text]
--- @return [String the text, no longer than the limit]
+-- @return [String the text on one line, cut to the limit]
 function Chatbox.limit_text(text)
+  text = text:gsub('\n', ' ')
+
   local limit = config_get('chatbox_max_message_length', 512)
 
   if #text <= limit then return text end
@@ -375,6 +419,33 @@ function Chatbox.limit_text(text)
   local success, cut = pcall(string.utf8sub, text, 1, limit)
 
   return success and cut or text:sub(1, limit)
+end
+
+--- Checks the text that a command such as `/me` or `/message` says in the chat the way
+-- `Chatbox.submit` checks what is typed. A command typed into the chatbox has passed that guard
+-- already; one run from the console is held to the 'chatbox_interval' config here, and the
+-- player is told that they are too fast once a second at most. Serverside only.
+-- ```
+-- function CMD:on_run(actor, text)
+--   text = Chatbox.check_command_text(actor, text)
+--
+--   if !text then return end
+--
+--   Chatbox.player_say(actor, text)
+-- end
+-- ```
+-- @param actor [Player the player who runs the command]
+-- @param text [String the text given to the command]
+-- @return [String the text cut to the 'chatbox_max_message_length' config, nil while the player
+--   has to wait]
+function Chatbox.check_command_text(actor, text)
+  if !submitting and !Chatbox.check_interval(actor) then
+    notify_too_fast(actor)
+
+    return
+  end
+
+  return Chatbox.limit_text(text)
 end
 
 --- Checks whether a text that a player has submitted is being turned into a message at the
@@ -429,13 +500,7 @@ function Chatbox.submit(actor, text, team_chat)
   if !IsValid(actor) or !isstring(text) then return false end
 
   if !Chatbox.check_interval(actor) then
-    local cur_time = CurTime()
-
-    if cur_time >= (actor.fl_next_chat_notice_at or 0) then
-      actor.fl_next_chat_notice_at = cur_time + 1
-
-      actor:notify('error.chat.too_fast')
-    end
+    notify_too_fast(actor)
 
     return false
   end

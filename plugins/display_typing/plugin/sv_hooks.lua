@@ -1,18 +1,5 @@
---- Server-side hooks of the Display Typing plugin: registers the networked client setting and
--- keeps the players near every typing player up to date.
-
---- Registers the networked client setting of the plugin on the server, so that it knows
--- which players have turned typing bubbles off.
-function DisplayTyping:RegisterClientSettings()
-  ClientSettings:register_setting('display_typing_bubbles', {
-    type = 'boolean',
-    default = true,
-    category = 'settings.categories.chat',
-    name = 'settings.display_typing.bubbles.name',
-    description = 'settings.display_typing.bubbles.desc',
-    networked = true
-  })
-end
+--- Server-side hooks of the Display Typing plugin: keeps the players near every typing player
+-- up to date.
 
 --- Looks after the typing players eight times a second: ends the typing of those who have
 -- reported nothing for too long, sends changes that had to wait for the relay interval and

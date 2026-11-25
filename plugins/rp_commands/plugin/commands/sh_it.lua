@@ -14,9 +14,11 @@ CMD.no_console = true
 -- @param actor [Player player running the command]
 -- @param text [String the description, as it was typed]
 function CMD:on_run(actor, text)
-  if !Chatbox.is_submitting() and !Chatbox.check_interval(actor) then return end
+  text = Chatbox.check_command_text(actor, text)
 
-  local phrase, volume = RPCommands:get_phrase_volume(Chatbox.limit_text(text))
+  if !text then return end
+
+  local phrase, volume = RPCommands:get_phrase_volume(text)
 
   phrase = phrase:spelling()
 

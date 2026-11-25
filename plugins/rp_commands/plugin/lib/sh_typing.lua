@@ -1,5 +1,6 @@
 --- The kind of in character speech that a text being typed is going to be, which the client
--- hooks of the RolePlay Commands plugin tell the Display Typing plugin.
+-- hooks of the RolePlay Commands plugin tell the Display Typing plugin and which the server
+-- reads to keep the text of a whisper from the players who will not hear it.
 
 if !RPCommands then
   PLUGIN:set_global('RPCommands')

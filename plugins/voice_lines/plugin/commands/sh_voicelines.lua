@@ -14,7 +14,8 @@ CMD.permission = 'user'
 
 local max_results = 15
 
---- Lists the matching voice lines to the player, in their language.
+--- Lists the matching voice lines to the player, in their language, as one chat message with a
+-- line for each of them.
 -- @param actor [Player player running the command]
 -- @param query=nil [String text to search for]
 function CMD:on_run(actor, query)
@@ -33,12 +34,16 @@ function CMD:on_run(actor, query)
       return
     end
 
-    Chatbox.add_text(actor, header_color, t('ui.voice_lines.list_header', nil, lang))
+    local pieces = { header_color, t('ui.voice_lines.list_header', nil, lang) }
 
     for _k, group in ipairs(available) do
-      Chatbox.add_text(actor, Color(255, 255, 255), t(group.category.name, nil, lang)..': ',
-        dim, t('ui.voice_lines.line_count', { count = #group.lines }, lang))
+      table.Add(pieces, {
+        Color(255, 255, 255), '\n'..t(group.category.name, nil, lang)..': ',
+        dim, t('ui.voice_lines.line_count', { count = #group.lines }, lang)
+      })
     end
+
+    Chatbox.add_text(actor, unpack(pieces))
 
     return
   end
@@ -51,15 +56,19 @@ function CMD:on_run(actor, query)
     return
   end
 
-  Chatbox.add_text(actor, header_color,
-    t('ui.voice_lines.results', { count = #results, shown = math.min(#results, max_results) }, lang))
-
+  local pieces = {
+    header_color, t('ui.voice_lines.results', { count = #results, shown = math.min(#results, max_results) }, lang)
+  }
   local gender = VoiceLines:get_gender(actor)
 
   for i = 1, math.min(#results, max_results) do
     local result = results[i]
 
-    Chatbox.add_text(actor, Color(255, 220, 120), result.line.id, Color(255, 255, 255), ' - ',
-      VoiceLines:get_text(result.line, gender), dim, ' ('..t(result.category.name, nil, lang)..')')
+    table.Add(pieces, {
+      Color(255, 220, 120), '\n'..result.line.id, Color(255, 255, 255), ' - ',
+      VoiceLines:get_text(result.line, gender), dim, ' ('..t(result.category.name, nil, lang)..')'
+    })
   end
+
+  Chatbox.add_text(actor, unpack(pieces))
 end

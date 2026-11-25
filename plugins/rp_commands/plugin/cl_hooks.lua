@@ -69,7 +69,7 @@ local function draw_line(line, font, x, y, offset)
 end
 
 --- Draws nearby visible static texts, fading with distance and screen position. Staff holding Alt also see
--- who placed each text and when.
+-- who placed each text and when, for the texts that the server has sent with their author.
 function RPCommands:HUDPaint()
   local client = PLAYER
   local texts = RPCommands.texts
@@ -93,7 +93,8 @@ function RPCommands:HUDPaint()
       local distance_mult = (1 - client_pos:Distance(text_pos) / 300)
       local alpha = 255 * cam_mult * distance_mult
       local lines, full_h = get_wrapped_lines(text_data, font, scrw, cx)
-      local line_count = show_author ? #lines + 2 : #lines
+      local has_author = show_author and text_data.steamid != nil
+      local line_count = has_author ? #lines + 2 : #lines
       local cur_y = pos.y - ((full_h + offset) * line_count) * 0.5
 
       text_color.a = alpha
@@ -103,7 +104,7 @@ function RPCommands:HUDPaint()
         cur_y = draw_line(lines[i], font, x, cur_y, offset)
       end
 
-      if show_author then
+      if has_author then
         text_data.author_line = text_data.author_line or text_data.name..' ('..text_data.steamid..')'
 
         cur_y = draw_line(text_data.author_line, font, x, cur_y, offset)

@@ -1,8 +1,10 @@
---- The `itsremove` command: removes the static text the caller is looking at.
+--- The `itsremove` command: removes the static text the caller is looking at. Every player may
+-- run it to remove the texts they have placed; staff remove anyone's.
 
 CMD.name = 'Itsremove'
 CMD.description = 'command.itsremove.description'
 CMD.category = 'permission.categories.roleplay'
+CMD.permission = 'user'
 CMD.aliases = {
   'removedescribe',
   'describeremove',

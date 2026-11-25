@@ -8,7 +8,9 @@
 -- console is shown as a line of the console. Plugins register chat prefixes with
 -- `Chatbox.add_prefix`: a message that starts with one, such as `//` for out of character
 -- chat, is handed to the callback of the prefix instead of being said, and is never a command.
--- Every player may send another one a private message with `/message`.
+-- A command that says a text in the chat holds it to the same flood guard and length limit as
+-- the chatbox with `Chatbox.check_command_text`. Every player may send another one a private
+-- message with `/message`, which the `PlayerCanSendPrivateMessage` hook can refuse.
 --
 -- Plugins shape the chat through hooks: `PlayerSay` and `AdjustPlayerSay` change what a
 -- player says, `GetChatPlayerIcon`, `GetChatPlayerColor` and `GetChatMessageColor`

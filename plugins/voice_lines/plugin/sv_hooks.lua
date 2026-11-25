@@ -75,13 +75,6 @@ function VoiceLines:ChatMessageSent(message_data, receivers)
   self:play(message_data.sender, category, line, receivers, voice_line.volume)
 end
 
---- Keeps the voice line of a message out of the copies that are sent to the clients.
--- @param _listener [Player the player the copy is for]
--- @param message_data [Map the copy of the message data]
-function VoiceLines:AdjustChatMessageData(_listener, message_data)
-  message_data.voice_line = nil
-end
-
 --- Replaces a radio message that says a voice line with the text of the line, and one that is
 -- a chain with the text of its first line, marked with the chain. Lines whose text is an
 -- action are not said over the radio.

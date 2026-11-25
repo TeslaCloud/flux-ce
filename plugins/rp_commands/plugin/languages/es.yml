@@ -73,10 +73,14 @@ es:
       me_color:
         name: Color de las acciones
         desc: Color de las acciones en el chat dentro del personaje y de la burbuja de escritura de un jugador que está realizando una.
+      max_static_texts:
+        name: "Textos fijos por jugador"
+        desc: "Cuántos textos fijos puede tener colocados un jugador a la vez con el comando its."
   error:
     roll:
       invalid: "No se puede tirar eso: {message}"
     its_too_close: ¡Demasiado cerca de otros textos fijos!
+    its_limit: "Has alcanzado el límite de textos fijos ({limit})."
     speak:
       dead: No puedes hablar ni actuar mientras estás muerto.
       knocked_out: No puedes hablar ni actuar mientras estás inconsciente.

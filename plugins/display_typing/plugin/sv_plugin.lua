@@ -7,7 +7,8 @@
 -- observer mode, to players who have turned typing bubbles off, or more often than every
 -- `relay_interval` seconds per typing player. The text itself is only passed on if the
 -- client has reported it as text that others may see and the 'display_typing_exact_message' config
--- is enabled; otherwise the receivers get its outline.
+-- is enabled, and only to the players within the range the `GetTypingTextRange` hook gives for
+-- it; the other receivers get its outline.
 
 local cable_send = Cable.send
 
@@ -107,8 +108,19 @@ function DisplayTyping:set_typing(actor, text, exact, kind_id)
   local range = math.Clamp(kind and kind.range or 1, 0, self.max_range)
 
   local outline = self:outline(text)
+  local text_range
 
-  if !exact then
+  if exact then
+    --- Asks how far the text that a player is typing may be sent as it is. Called on the
+    -- server for every report of a text that others may see; the players who see the bubble
+    -- from farther away receive the outline of the text (see `DisplayTyping:outline`) in its
+    -- place. The RolePlay Commands plugin gives a whisper the range it is heard within.
+    -- @param actor [Player the typing player]
+    -- @param text [String the text being typed]
+    -- @param kind_id [String ID of the kind of speech the client has reported, or nil]
+    -- @return [Number distance in units; nil sends the text to everyone who sees the bubble]
+    text_range = tonumber(hook.Run('GetTypingTextRange', actor, text, kind_id))
+  else
     text = outline
   end
 
@@ -117,7 +129,7 @@ function DisplayTyping:set_typing(actor, text, exact, kind_id)
     typists[actor] = state
   end
 
-  if state.text != text or state.exact != exact or state.range != range then
+  if state.text != text or state.exact != exact or state.range != range or state.text_range != text_range then
     state.dirty = true
   end
 
@@ -125,6 +137,7 @@ function DisplayTyping:set_typing(actor, text, exact, kind_id)
   state.outline = outline
   state.exact = exact
   state.range = range
+  state.text_range = text_range
   state.expires = now + self.idle_timeout
 
   if started then
@@ -175,8 +188,9 @@ function DisplayTyping:stop_typing(actor)
 end
 
 --- Brings the players near a typing player up to date. Works out who should see the typing
--- now, tells the players who no longer should that it is over, and sends the state to the
--- players who have come into range, or to everyone in range if it has changed.
+-- now and whether they get the text or its outline, tells the players who have left the range
+-- that it is over, and sends the state to the players who have come into range or have
+-- crossed the range of the text, or to everyone in range if it has changed.
 -- @param actor [Player the typing player]
 -- @param state [Map typing state of the player]
 -- @param now [Number current CurTime()]
@@ -185,28 +199,38 @@ function DisplayTyping:relay(actor, state, now)
   state.next_scan = now + self.scan_interval
 
   local previous = state.recipients
-  local current, everyone, added, removed = {}, {}, {}, {}
-  local everyone_count, added_count, removed_count = 0, 0, 0
+  local exact = state.exact and self:live_text_allowed()
+  local dirty = state.dirty
+  local current, text_receivers, outline_receivers, removed = {}, {}, {}, {}
+  local text_count, outline_count, removed_count = 0, 0, 0
 
   if self:can_display(actor) then
     local ragdoll = self:get_ragdoll(actor)
     local origin = ragdoll and ragdoll:WorldSpaceCenter() or actor:EyePos()
     local radius = self:get_range() * state.range
     local enter, leave = (radius * 1.15) ^ 2, (radius * 1.35) ^ 2
+    local text_range = state.text_range
+    local text_range_sqr = text_range and text_range * text_range
 
     for _, target in player.Iterator() do
-      local was_recipient = previous[target]
+      if target != actor and self:can_receive(target) then
+        local was_sent = previous[target]
+        local distance = origin:DistToSqr(target:EyePos())
 
-      if target != actor and self:can_receive(target)
-      and origin:DistToSqr(target:EyePos()) <= (was_recipient and leave or enter) then
-        current[target] = true
+        if distance <= (was_sent and leave or enter) then
+          local sent = (exact and (!text_range_sqr or distance <= text_range_sqr)) ? 'text' : 'outline'
 
-        everyone_count += 1
-        everyone[everyone_count] = target
+          current[target] = sent
 
-        if !was_recipient then
-          added_count += 1
-          added[added_count] = target
+          if dirty or was_sent != sent then
+            if sent == 'text' then
+              text_count += 1
+              text_receivers[text_count] = target
+            else
+              outline_count += 1
+              outline_receivers[outline_count] = target
+            end
+          end
         end
       end
     end
@@ -220,20 +244,19 @@ function DisplayTyping:relay(actor, state, now)
   end
 
   state.recipients = current
+  state.dirty = false
 
   local index = actor:EntIndex()
-  local exact = state.exact and self:live_text_allowed()
 
   if removed_count > 0 then
     cable_send(removed, 'fl_typing_stop', index)
   end
 
-  local receivers = (state.dirty or state.sent_exact != exact) and everyone or added
+  if text_count > 0 then
+    cable_send(text_receivers, 'fl_typing_update', index, state.text, true)
+  end
 
-  state.dirty = false
-  state.sent_exact = exact
-
-  if #receivers > 0 then
-    cable_send(receivers, 'fl_typing_update', index, exact and state.text or state.outline, exact)
+  if outline_count > 0 then
+    cable_send(outline_receivers, 'fl_typing_update', index, state.outline, false)
   end
 end

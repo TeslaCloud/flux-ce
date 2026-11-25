@@ -5,19 +5,10 @@ local function live_text_setting_visible(_setting)
   return ClientSettings:get('display_typing_bubbles') and DisplayTyping:live_text_allowed()
 end
 
---- Registers the client settings of the plugin: whether the player sees typing bubbles at
--- all, which the server is told so that it does not send them anything, and whether the
--- bubbles show the text as it is typed.
+--- Registers the client setting of whether the bubbles show the text as it is typed. The
+-- networked 'display_typing_bubbles' setting, whether the player sees typing bubbles at all,
+-- is registered on both realms by the main file of the plugin.
 function DisplayTyping:RegisterClientSettings()
-  ClientSettings:register_setting('display_typing_bubbles', {
-    type = 'boolean',
-    default = true,
-    category = 'settings.categories.chat',
-    name = 'settings.display_typing.bubbles.name',
-    description = 'settings.display_typing.bubbles.desc',
-    networked = true
-  })
-
   ClientSettings:register_setting('display_typing_live_text', {
     type = 'boolean',
     default = true,

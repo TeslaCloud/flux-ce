@@ -49,4 +49,6 @@ ru:
       no_commands_found: Команды не найдены.
       more_above: "Ещё {count} выше"
       more_below: "Ещё {count} ниже"
+      message_to: "Для {name}"
+      message_from: "От {name}"
       everyone: весь сервер

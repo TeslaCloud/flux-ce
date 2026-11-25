@@ -9,7 +9,9 @@
 -- are dead, hidden or in observer mode are not shown as typing at all. When the
 -- 'display_typing_exact_message' config is disabled, or the text is a command that no plugin has
 -- claimed as speech, the text itself never leaves the client: only its outline is sent (see
--- `DisplayTyping:outline`), which is enough for hooks to tell the kind of speech.
+-- `DisplayTyping:outline`), which is enough for hooks to tell the kind of speech. The players
+-- beyond the range that the server-side `GetTypingTextRange` hook gives for a text receive its
+-- outline as well.
 --
 -- The kind of speech is decided on the client by the `GetTypingKind` hook, which returns the
 -- ID of a kind registered with `DisplayTyping:register_kind`, or false for no bubble. The
@@ -175,6 +177,15 @@ end
 
 DisplayTyping:register_kind('typing', {
   name = 'ui.hud.display_typing.typing'
+})
+
+ClientSettings:register_setting('display_typing_bubbles', {
+  type = 'boolean',
+  default = true,
+  category = 'settings.categories.chat',
+  name = 'settings.display_typing.bubbles.name',
+  description = 'settings.display_typing.bubbles.desc',
+  networked = true
 })
 
 require_relative 'cl_plugin'

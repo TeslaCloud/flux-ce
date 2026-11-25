@@ -73,10 +73,14 @@ fr:
       me_color:
         name: "Couleur des actions"
         desc: "Couleur des actions dans le chat RP et de la bulle de saisie d'un joueur qui en fait une."
+      max_static_texts:
+        name: "Textes fixes par joueur"
+        desc: "Combien de textes fixes un joueur peut avoir placés en même temps avec la commande its."
   error:
     roll:
       invalid: "Impossible de faire ce jet : {message}"
     its_too_close: "Trop près d'autres textes fixes !"
+    its_limit: "Vous avez atteint la limite de textes fixes ({limit})."
     speak:
       dead: "Vous ne pouvez ni parler ni agir tant que vous êtes mort."
       knocked_out: "Vous ne pouvez ni parler ni agir tant que vous êtes inconscient."

@@ -49,4 +49,6 @@ es:
       no_commands_found: ¡No se encontraron comandos!
       more_above: "{count} más arriba"
       more_below: "{count} más abajo"
+      message_to: "Para {name}"
+      message_from: "De {name}"
       everyone: todos

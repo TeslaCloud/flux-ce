@@ -73,10 +73,14 @@ en:
       me_color:
         name: Action Color
         desc: Color of actions in in-character chat and of the typing bubble of a player who is performing one.
+      max_static_texts:
+        name: "Static Texts per Player"
+        desc: "How many static texts a player may have placed at the same time with the its command."
   error:
     roll:
       invalid: "Cannot roll that: {message}"
     its_too_close: Too close to other static texts!
+    its_limit: "You have reached the limit of static texts ({limit})."
     speak:
       dead: You cannot speak or act while you are dead.
       knocked_out: You cannot speak or act while you are unconscious.

@@ -14,5 +14,9 @@ CMD.no_console = true
 -- @param actor [Player player running the command]
 -- @param text [String the whisper, as it was typed]
 function CMD:on_run(actor, text)
+  text = Chatbox.check_command_text(actor, text)
+
+  if !text then return end
+
   Chatbox.player_say(actor, RPCommands:wrap_speech('whisper', text))
 end

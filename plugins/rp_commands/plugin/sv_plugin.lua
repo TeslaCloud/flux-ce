@@ -72,11 +72,11 @@ function RPCommands:check_ooc_cooldown(actor, kind)
   return true
 end
 
---- Checks whether a player may send a message to the OOC or LOOC chat right now: asks the
--- PlayerCanUseOOC hook, then checks the cooldown. A muted player is told how long their mute
--- still lasts.
+--- Checks whether a player may send a message to the OOC or LOOC chat, or a private message,
+-- right now: asks the PlayerCanUseOOC hook, then checks the cooldown of the OOC and LOOC chats.
+-- A muted player is told how long their mute still lasts.
 -- @param actor [Player]
--- @param kind [String 'ooc' or 'looc']
+-- @param kind [String 'ooc', 'looc' or 'message']
 -- @param text [String the message]
 -- @return [Boolean]
 function RPCommands:can_use_ooc(actor, kind, text)
@@ -85,7 +85,8 @@ function RPCommands:can_use_ooc(actor, kind, text)
   -- plugin's own handler refuses players with an OOC mute, who are told how long it still
   -- lasts; any other handler that refuses should tell the player why.
   -- @param actor [Player the player who writes]
-  -- @param kind [String 'ooc' for the chat that everyone reads, 'looc' for the local one]
+  -- @param kind [String 'ooc' for the chat that everyone reads, 'looc' for the local one,
+  --   'message' for a private message sent with the `message` command]
   -- @param text [String the message without its prefix]
   -- @return [Boolean return false to refuse the message]
   if hook.Run('PlayerCanUseOOC', actor, kind, text) == false then
@@ -197,9 +198,10 @@ function RPCommands:say_ooc(actor, text, team_chat)
 end
 
 --- Sends a message to the LOOC chat, which is read by the players within the talk radius.
--- The line never shows a Steam avatar: it is tied to a character that the readers can see,
--- and the avatar would tell them who plays it. The GetPlayerOOCName hook can replace the
--- name of the character on the line.
+-- The line shows the character of the player under the name each reader knows it by, like a
+-- line of in character speech, and never a Steam avatar: it is tied to a character that the
+-- readers can see, and the avatar would tell them who plays it. The GetPlayerOOCName hook can
+-- replace the name of the character on the line.
 -- @param actor [Player the player who writes]
 -- @param text [String the message]
 -- @param team_chat=nil [Boolean whether the message was sent to the team chat]
@@ -214,7 +216,7 @@ function RPCommands:say_looc(actor, text, team_chat)
     hook.Run('GetChatPlayerIcon', actor, text, team_chat) or {},
     Color('red'):lighten(100), '[LOOC] ',
     hook.Run('GetChatPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
-    actor:Nick(),
+    actor,
     ': ',
     Color('white'),
     text,
@@ -228,8 +230,8 @@ function RPCommands:say_looc(actor, text, team_chat)
 
   --- Lets plugins replace the name a player is shown under in the local OOC chat, for
   -- example to keep the members of a faction anonymous. Called on the server for every
-  -- message a player sends to the LOOC chat; by default the line shows the name of the
-  -- player's character.
+  -- message a player sends to the LOOC chat; by default the line shows the character of the
+  -- player under the name each reader knows it by.
   -- @param actor [Player the player who writes]
   -- @return [String the name to show instead]
   local ooc_name = hook.Run('GetPlayerOOCName', actor)

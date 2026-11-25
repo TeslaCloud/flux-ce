@@ -10,7 +10,9 @@ CMD.arguments = 1
 CMD.arg_types = { 'text' }
 CMD.no_console = true
 
---- Places a static text at the player's position unless another one is within 50 units, with a 5 second cooldown.
+--- Places a static text at the player's position unless another one is within 50 units, with
+-- a 5 second cooldown. A player may have as many static texts as the
+-- 'rp_commands_max_static_texts' config allows.
 -- @param actor [Player player running the command]
 -- @param text [String the static text, as it was typed]
 function CMD:on_run(actor, text)
@@ -22,9 +24,21 @@ function CMD:on_run(actor, text)
     return
   end
 
+  local limit = Config.get('rp_commands_max_static_texts', 10)
+
+  if RPCommands:count_static_texts(actor:SteamID()) >= limit then
+    actor:notify('error.its_limit', { limit = limit })
+
+    return
+  end
+
+  text = Chatbox.check_command_text(actor, text:chomp(' '))
+
+  if !text then return end
+
   local pos = actor:GetPos()
 
-  text = Chatbox.limit_text(text:chomp(' ')):spelling()
+  text = text:spelling()
 
   for _, text_data in pairs(RPCommands.texts) do
     if text_data.pos:DistToSqr(pos) <= 2500 then

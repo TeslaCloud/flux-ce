@@ -33,6 +33,14 @@ configs:
     category: rp_commands
     type: boolean
     default_value: true
+  rp_commands_max_static_texts:
+    name: config.rp_commands.max_static_texts.name
+    description: config.rp_commands.max_static_texts.desc
+    category: rp_commands
+    type: number
+    min_value: 0
+    max_value: 1000
+    default_value: 10
   rp_commands_roll_versus:
     name: config.rp_commands.roll_versus.name
     description: config.rp_commands.roll_versus.desc

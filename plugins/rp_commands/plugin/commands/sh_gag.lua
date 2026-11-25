@@ -1,6 +1,7 @@
 --- The `gag` staff command: `/gag add <player> <duration> [reason]` mutes players in the OOC
--- and LOOC chats for a time, and `/gag remove <player>` lifts the mute. The mute is kept in
--- the player data as a real time, so it lasts through restarts and reconnects.
+-- and LOOC chats and in private messages for a time, and `/gag remove <player>` lifts the
+-- mute. The mute is kept in the player data as a real time, so it lasts through restarts and
+-- reconnects.
 
 CMD.name = 'Gag'
 CMD.description = 'command.gag.description'

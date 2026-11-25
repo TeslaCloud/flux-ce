@@ -102,10 +102,10 @@ end
 
 --- Rolls what the argument of the command asks for, for one player.
 -- @param target [Player player to roll for]
--- @param formula [String Dice formula, used when there is no rollable]
+-- @param ast=nil [Table formula parsed by `Dice.parse`, used when there is no rollable]
 -- @param rollable=nil [Map id and kind of a stat or a skill to roll instead]
 -- @return [Map result of the roll, or nil and String the error]
-local function roll_for(target, formula, rollable)
+local function roll_for(target, ast, rollable)
   if rollable then
     if rollable.kind == 'skill' then
       return target:roll_skill(rollable.id)
@@ -114,7 +114,7 @@ local function roll_for(target, formula, rollable)
     return target:roll_attribute(rollable.id)
   end
 
-  return Dice.roll(formula, get_variables(target))
+  return Dice.evaluate(ast, get_variables(target))
 end
 
 --- Finds the player a roll is made against: the living player the caller is looking at, or
@@ -178,23 +178,28 @@ end
 -- @param text=nil [String what to roll, as it was typed; a pair of double quotes around all of
 --   it is left out]
 function CMD:on_run(actor, text)
-  if !Chatbox.is_submitting() and !Chatbox.check_interval(actor) then return end
+  text = Chatbox.check_command_text(actor, text or '')
 
-  text = (text or ''):strip()
+  if !text then return end
+
+  text = text:strip()
 
   local formula, rollable = resolve((text:match('^"([^"]*)"$') or text):strip())
+  local ast
 
   if !rollable then
-    local ast, err = Dice.parse(formula)
+    local parse_error
+
+    ast, parse_error = Dice.parse(formula)
 
     if !ast then
-      actor:notify('error.roll.invalid', { message = tostring(err) })
+      actor:notify('error.roll.invalid', { message = tostring(parse_error) })
 
       return
     end
   end
 
-  local result, err = roll_for(actor, formula, rollable)
+  local result, err = roll_for(actor, ast, rollable)
 
   if !result then
     actor:notify('error.roll.invalid', { message = tostring(err) })
@@ -209,7 +214,7 @@ function CMD:on_run(actor, text)
   adjust_roll(actor, result, formula, opponent)
 
   if opponent then
-    opponent_result = roll_for(opponent, formula, rollable)
+    opponent_result = roll_for(opponent, ast, rollable)
 
     if opponent_result then
       adjust_roll(opponent, opponent_result, formula, actor)

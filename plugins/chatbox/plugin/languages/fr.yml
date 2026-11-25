@@ -49,4 +49,6 @@ fr:
       no_commands_found: "Aucune commande trouvée !"
       more_above: "{count} de plus au-dessus"
       more_below: "{count} de plus en dessous"
+      message_to: "À {name}"
+      message_from: "De {name}"
       everyone: "tout le monde"
