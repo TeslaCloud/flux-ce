@@ -97,20 +97,27 @@ function ActiveRecord.Database:change(table_name)
 end
 
 --- Creates the database named in the settings and disconnects the adapter afterward.
--- Only PostgreSQL is supported; on MySQL instructions are printed instead.
+-- Only PostgreSQL is supported; on MySQL and SQLite an error says what to do instead.
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:setup(settings)
   local adapter = ActiveRecord.adapter
-  adapter:sync(true)
 
-  if adapter:is_postgres() then
-    ActiveRecord.adapter:connect {
-      host = settings.host,
-      user = settings.user,
-      port = settings.port,
-      password = settings.password,
-      database = 'postgres'
-    }
+  if adapter:is_mysql() then
+    error('ActiveRecord - MySQL databases are not created automatically: create it in a MySQL client with '
+      ..'CREATE DATABASE '..tostring(settings.database)..';', 0)
+  elseif !adapter:is_postgres() then
+    error('ActiveRecord - SQLite has no database to create: its tables live in the sv.db file, where '
+      ..'db:migrate or the start of the server creates them.', 0)
+  end
+
+  adapter:sync(true)
+  ActiveRecord.adapter:connect {
+    host = settings.host,
+    user = settings.user,
+    port = settings.port,
+    password = settings.password,
+    database = 'postgres'
+  }
 
     local database = ActiveRecord.adapter:quote(settings.database)
 
@@ -132,38 +139,24 @@ function ActiveRecord.Database:setup(settings)
       print_query('Create Database ('..time..'s)', 'Success!')
       print 'Please restart your server for changes to take effect!'
     end)
-  elseif adapter:is_mysql() then
-    ErrorNoHalt('MySQL does not support automatic database creation (yet), sorry!\n')
-    ErrorNoHalt(
-      'Please go to your MySQL terminal and use this to create the database:\nmysql> create database '..
-        settings.database..'\n(without the "mysql>" part)\n'
-    )
-  end
 
   ActiveRecord.adapter:disconnect()
   ActiveRecord.adapter:sync(false)
 end
 
 --- Drops the database named in the settings and disconnects the adapter afterward.
--- Only PostgreSQL is supported, through its 'template1' database; on MySQL and SQLite
--- instructions are printed instead.
+-- Only PostgreSQL is supported, through its 'template1' database; on MySQL and SQLite an
+-- error says what to do instead.
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:drop_database(settings)
   local adapter = ActiveRecord.adapter
 
   if adapter:is_mysql() then
-    ErrorNoHalt('MySQL does not support automatic database removal, sorry!\n')
-    ErrorNoHalt(
-      'Please go to your MySQL terminal and use this to drop the database:\nmysql> drop database '..
-        settings.database..'\n(without the "mysql>" part)\n'
-    )
-
-    return
+    error('ActiveRecord - MySQL databases are not dropped automatically: drop it in a MySQL client with '
+      ..'DROP DATABASE '..tostring(settings.database)..';', 0)
   elseif !adapter:is_postgres() then
-    ErrorNoHalt('SQLite keeps the tables in the sv.db file of the server and has no database to drop. '..
-      'Use ar_recreate_schema to wipe them.\n')
-
-    return
+    error('ActiveRecord - SQLite has no database to drop: to wipe its tables, delete the sv.db file while the '
+      ..'server is stopped, or enter ar_recreate_schema twice in the server console.', 0)
   end
 
   ActiveRecord.adapter:sync(true)
