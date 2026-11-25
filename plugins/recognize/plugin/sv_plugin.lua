@@ -215,15 +215,15 @@ function Recognition:rename_character(character_id, old_name, new_name)
   Recognize:where({ target_id = character_id, name = old_name }):update_all({ name = new_name })
 end
 
---- Turns the name a player has asked to be known by into one that can be stored: control
--- characters become spaces, the name is trimmed and cut to `Recognition.max_name_length`
--- characters.
+--- Turns the name a player has asked to be known by into one that can be stored: it is
+-- normalized as character names are (see `Characters.normalize_name`) and cut to
+-- `Recognition.max_name_length` characters.
 -- @param name [String]
 -- @return [String the name, or nil if nothing is left of it or it is not valid UTF-8]
 function Recognition:clean_name(name)
   if !isstring(name) then return end
 
-  name = string.Trim((name:gsub('%c', ' ')))
+  name = Characters.normalize_name(name)
 
   local length = utf8.len(name)
 
