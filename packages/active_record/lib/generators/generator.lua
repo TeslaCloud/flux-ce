@@ -55,7 +55,7 @@ function ActiveRecord.generate_create_func(obj, type, def)
     local changes = s._schema_changes or {}
 
     s._schema_changes = changes
-    changes[#changes + 1] = { name, type, s.def, args }
+    changes[#changes + 1] = { name, type, s.def }
 
     ActiveRecord.adapter:create_column(s, name, args, obj, type, def)
   end
@@ -74,7 +74,7 @@ function ActiveRecord.apply_schema_changes(query)
 
   if ActiveRecord.ready then
     for _, change in ipairs(query._schema_changes or {}) do
-      ActiveRecord.add_to_schema(query.table_name, change[1], change[2], change[3], change[4])
+      ActiveRecord.add_to_schema(query.table_name, change[1], change[2], change[3])
     end
   end
 

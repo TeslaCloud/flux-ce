@@ -58,9 +58,9 @@ local next_column_id = 1
 
 --- Turns the SQL of a column default back into the value that the migration gave, which
 -- ActiveRecord::Query#handle_create_args wrote into the SQL as it is: 'true' and 'false'
--- become booleans and the text of a number becomes the number. Anything else, such as a
--- quoted string literal or an SQL expression, is SQL text in the migration as well and stays
--- as it is.
+-- become booleans and the text of a finite number becomes the number. Anything else, such as
+-- a quoted string literal, an SQL expression or 'inf', is SQL text in the migration as well and
+-- stays as it is.
 -- @param sql [String]
 -- @return [Boolean/Number/String]
 local function parse_default(sql)
@@ -70,9 +70,9 @@ local function parse_default(sql)
     return false
   end
 
-  local number = tonumber(sql)
+  local number = sql:find('^%-?%d') and tonumber(sql)
 
-  if number and tostring(number) == sql then
+  if number and number - number == 0 and tostring(number) == sql then
     return number
   end
 
@@ -105,23 +105,25 @@ local function parse_definition(definition)
 end
 
 --- Registers a column in the in-memory schema, inserting a row into the 'ar_schema'
--- table if the column is new. Throws an error if ActiveRecord is not ready yet.
+-- table if the column is new. Its null option and default are read from the definition, as
+-- ActiveRecord.restore_schema reads them, so that the schema is the same in the process that
+-- adds the column and in one that restores it. Throws an error if ActiveRecord is not ready
+-- yet.
 -- @param table_name [String database table the column belongs to]
 -- @param column_name [String]
 -- @param type [String abstract column type, e.g. 'string', 'integer' or 'datetime']
 -- @param definition=nil [String SQL definition of the column, including its NOT NULL
 --   and DEFAULT clauses; the adapter's definition of the type if not given]
--- @param options=nil [Map column options: null (Boolean) and default]
-function ActiveRecord.add_to_schema(table_name, column_name, type, definition, options)
+function ActiveRecord.add_to_schema(table_name, column_name, type, definition)
   if !ActiveRecord.ready then
     error('Attempt to edit the schema too early!')
   end
 
   definition = definition or ActiveRecord.adapter.types[type] or ''
-  options = options or {}
 
   local t = ActiveRecord.schema[table_name] or {}
-  local column = { type = type, null = options.null, default = options.default }
+  local null, default = parse_definition(definition)
+  local column = { type = type, null = null, default = default }
 
   if t[column_name] then
     column.id = t[column_name].id
