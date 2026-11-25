@@ -11,6 +11,13 @@ Cable.receive('fl_key_show_list', function(keys, entity)
   frame:MakePopup()
   frame:SetTitle(t'ui.key.title')
 
+  local hint = vgui.Create('DLabel', frame)
+  hint:SetText(t'ui.key.loaded_only')
+  hint:SetWrap(true)
+  hint:SetAutoStretchVertical(true)
+  hint:DockMargin(2, 0, 2, 4)
+  hint:Dock(TOP)
+
   local list = vgui.Create('DScrollPanel', frame)
   list:Dock(FILL)
 
@@ -84,11 +91,9 @@ Cable.receive('fl_key_copy', function(_instance_id)
   selector:set_text(t'ui.key.copy.message')
   selector:set_value(t'ui.key.copy.select')
 
-  if keys then
-    for _, key_item in pairs(keys) do
-      selector:add_choice('['..key_item.instance_id..']'..t(key_item:get_name()), function()
-        Cable.send('fl_key_copy', key_item.instance_id)
-      end)
-    end
+  for _, key_item in pairs(keys) do
+    selector:add_choice('['..key_item.instance_id..']'..t(key_item:get_name()), function()
+      Cable.send('fl_key_copy', key_item.instance_id)
+    end)
   end
 end)

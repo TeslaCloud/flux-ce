@@ -29,6 +29,7 @@ en:
   ui:
     key:
       title: Keys
+      loaded_only: Only the keys of characters that are on the server are listed.
       delete:
         title: Unbound key
         message: Are you sure that you want to unbind this key from the door?

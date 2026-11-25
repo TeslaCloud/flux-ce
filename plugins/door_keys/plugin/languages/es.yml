@@ -29,6 +29,7 @@ es:
   ui:
     key:
       title: Llaves
+      loaded_only: Solo se muestran las llaves de los personajes que están en el servidor.
       delete:
         title: Desvincular llave
         message: ¿Seguro que quieres desvincular esta llave de la puerta?

@@ -11,11 +11,9 @@ function DoorKeys:select_key(entity)
   selector:set_text(t'ui.key.add.message')
   selector:set_value(t'ui.key.add.select')
 
-  if keys then
-    for _, key_item in pairs(keys) do
-      selector:add_choice('['..key_item.instance_id..'] '..t(key_item:get_name()), function()
-        Cable.send('fl_key_add', key_item.instance_id, entity)
-      end)
-    end
+  for _, key_item in pairs(keys) do
+    selector:add_choice('['..key_item.instance_id..'] '..t(key_item:get_name()), function()
+      Cable.send('fl_key_add', key_item.instance_id, entity)
+    end)
   end
 end

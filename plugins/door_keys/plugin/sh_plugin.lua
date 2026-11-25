@@ -1,12 +1,14 @@
 --- Door Keys adds keys that belong to doors. Staff with the 'manage_doors' permission create
 -- a key for a door, add existing keys to it, list its keys and take them off it from the keys
 -- property of the door menu. A player with a key molding kit uses up a key blank to copy one of
--- their keys. Holding a key lets a player lock and unlock every door it belongs to.
--- `AdjustKeyCopy` lets plugins change the copy of a key before the player receives it.
+-- their keys. Holding a key lets a player lock and unlock every door it belongs to, and the
+-- doors linked with them, on the map of those doors. `AdjustKeyCopy` lets plugins change the
+-- copy of a key before the player receives it.
 
 PLUGIN:set_global('DoorKeys')
 
 require_relative 'cl_plugin'
+require_relative 'sv_plugin'
 require_relative 'sv_hooks'
 
 Item.set_category_icon('item.category.keys', 'icon16/key.png')

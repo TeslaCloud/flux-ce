@@ -34,7 +34,7 @@ Cable.receive('fl_key_create', function(actor, entity)
 
   if !item_obj then return end
 
-  item_obj:set_data('doors', { entity:MapCreationID() })
+  item_obj:set_data('doors', { DoorKeys:get_door_entry(entity) })
 
   if give_new_item(actor, item_obj) then
     actor:notify('notification.key.create')
@@ -86,8 +86,11 @@ Cable.receive('fl_key_remove', function(actor, instance_id, entity)
   if !item_obj then return end
 
   local doors = table.Copy(item_obj:get_data('doors', {}))
+  local index = DoorKeys:find_door_entry(doors, entity)
 
-  table.RemoveByValue(doors, entity:MapCreationID())
+  if index then
+    table.remove(doors, index)
+  end
 
   item_obj:set_data('doors', doors)
   actor:notify('notification.key.remove')
@@ -100,11 +103,10 @@ Cable.receive('fl_key_add', function(actor, instance_id, entity)
 
   if !item_obj then return end
 
-  local door_id = entity:MapCreationID()
   local doors = table.Copy(item_obj:get_data('doors', {}))
 
-  if !table.HasValue(doors, door_id) then
-    table.insert(doors, door_id)
+  if !DoorKeys:find_door_entry(doors, entity) then
+    table.insert(doors, DoorKeys:get_door_entry(entity))
   end
 
   item_obj:set_data('doors', doors)
@@ -114,13 +116,12 @@ end)
 Cable.receive('fl_key_show_list', function(actor, entity)
   if !can_manage_keys(actor, entity) then return end
 
-  local door_id = entity:MapCreationID()
   local keys = {}
   local instances = Item.find_all_instances('key')
 
   if instances then
     for instance_id, key_item in pairs(instances) do
-      if table.HasValue(key_item:get_data('doors', {}), door_id) then
+      if DoorKeys:find_door_entry(key_item:get_data('doors', {}), entity) then
         Item.network_item(actor, instance_id)
         table.insert(keys, instance_id)
       end

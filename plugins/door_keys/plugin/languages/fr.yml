@@ -29,6 +29,7 @@ fr:
   ui:
     key:
       title: "Clés"
+      loaded_only: "Seules les clés des personnages présents sur le serveur sont listées."
       delete:
         title: "Dissocier la clé"
         message: "Voulez-vous vraiment dissocier cette clé de la porte ?"
