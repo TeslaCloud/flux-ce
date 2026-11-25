@@ -1,5 +1,6 @@
 --- Client side of the Ragdoll plugin: draws the screen overlay of a fallen or knocked out
--- player and sends the getup command when a fallen player presses jump. The get up timer
+-- player, sends the getup command when a fallen player presses jump and moves the view to
+-- the eyes of the ragdoll of the local player. The get up timer
 -- itself is a timed action called 'getup', whose progress bar is drawn by
 -- `Flux.TimedAction`.
 
@@ -73,5 +74,54 @@ function Ragdoll:HUDPaint()
     end
 
     draw.SimpleText(text, text_font, scrw * 0.5 - w * 0.5, y, Theme.get_color('text'))
+  end
+end
+
+--- Name of the head bone that the view falls back to on models without an 'eyes'
+-- attachment.
+local head_bone = 'ValveBiped.Bip01_Head1'
+
+--- Finds where the eyes of a ragdoll are: its 'eyes' attachment, or the head bone of
+-- models that have no such attachment.
+-- @param entity [Entity the ragdoll]
+-- @return [Vector position, Angle direction; nothing if neither is found]
+local function find_eyes(entity)
+  local index = entity:LookupAttachment('eyes')
+
+  if index > 0 then
+    local data = entity:GetAttachment(index)
+
+    if data then
+      return data.Pos, data.Ang
+    end
+  end
+
+  local bone = entity:LookupBone(head_bone)
+
+  if bone then
+    return entity:GetBonePosition(bone)
+  end
+end
+
+--- Moves the view to the eyes of the player's ragdoll while they have one and are not
+-- drawn in third person.
+-- @param client [Player]
+-- @param origin [Vector]
+-- @param angles [Angle]
+-- @param fov [Number]
+-- @return [Map view table, or nil if the view is left alone]
+function Ragdoll:CalcView(client, origin, angles, fov)
+  local entity = client:GetDTEntity(ENT_RAGDOLL)
+
+  if IsValid(entity) and entity:IsRagdoll() and !client:ShouldDrawLocalPlayer() then
+    local view = GAMEMODE.BaseClass:CalcView(client, origin, angles, fov) or {}
+    local pos, ang = find_eyes(entity)
+
+    if pos then
+      view.origin = pos
+      view.angles = ang
+    end
+
+    return view
   end
 end
