@@ -2,10 +2,6 @@
 -- value of a config. The sender needs the permission to edit configs, and every change that
 -- has an effect is announced to the staff.
 
-local function config_values_equal(first, second)
-  return first == second or (istable(first) and istable(second) and table.equal(first, second))
-end
-
 --- Finds the config that a request of the config editor is about, if its sender may edit
 -- it: they need the permission to edit configs, and the config has to exist and must not
 -- be hidden, since the editor never lists hidden configs.
@@ -52,7 +48,7 @@ Cable.receive('fl_config_change', function(actor, key, value)
     return
   end
 
-  if pending or had_pending or !config_values_equal(old_value, result) then
+  if pending or had_pending or !Config.values_equal(old_value, result) then
     announce_config_change(actor, key, result, pending)
   end
 end)
@@ -70,7 +66,7 @@ Cable.receive('fl_config_reset', function(actor, key)
     return
   end
 
-  if pending or had_pending or !config_values_equal(old_value, result) then
+  if pending or had_pending or !Config.values_equal(old_value, result) then
     announce_config_change(actor, key, result, pending)
   end
 end)

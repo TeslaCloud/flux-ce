@@ -108,9 +108,16 @@ local function default_value(definition)
   return copy_value(definition.default_value)
 end
 
-local function values_equal(first, second)
+--- Tells whether two config values are equal: the same value, or two tables with the same
+-- contents, as two colors or lists with equal entries are.
+-- @param first [Any]
+-- @param second [Any]
+-- @return [Boolean]
+function Config.values_equal(first, second)
   return first == second or (istable(first) and istable(second) and table.equal(first, second))
 end
+
+local values_equal = Config.values_equal
 
 --- Tells whether `Config.read` puts the default value of a definition into a config: when the
 -- config has no value yet, or when it was never changed in game and still holds the default of
