@@ -44,27 +44,6 @@ local function get_state(actor)
   return state
 end
 
---- Checks whether a position is inside of one of the polygons of an area, the way the Areas
--- API checks the position of a player.
--- @param pos [Vector position of the player]
--- @param area [Map the area]
--- @return [Boolean]
-local function position_in_area(pos, area)
-  if !istable(area.polys) then return false end
-
-  local z = pos.z + 16
-
-  for _, poly in ipairs(area.polys) do
-    local first_vertex = poly[1]
-
-    if first_vertex and z > first_vertex.z and z < area.maxh and util.vector_in_poly(pos, poly) then
-      return true
-    end
-  end
-
-  return false
-end
-
 --- Checks whether a player passes through the transfer areas without being moved: while in
 -- noclip outside of a vehicle, or hidden by the Observer plugin.
 -- @param actor [Player]
@@ -260,7 +239,7 @@ function SrcdsProxy:update_transfer_state(actor, state, stored, cur_time)
   for area_id in pairs(handled) do
     local area = stored[area_id]
 
-    if !area or !position_in_area(pos, area) then
+    if !area or !Areas.contains(area, pos) then
       handled[area_id] = nil
     end
   end
@@ -301,7 +280,7 @@ function SrcdsProxy:enter_transfer_areas_at(actor, areas)
   for _, area in ipairs(areas) do
     local handled = state and state.handled[area.id]
 
-    if !handled and position_in_area(pos, area) then
+    if !handled and Areas.contains(area, pos) then
       self:enter_transfer_area(actor, area)
 
       state = states[actor]

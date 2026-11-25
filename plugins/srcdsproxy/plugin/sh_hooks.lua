@@ -4,7 +4,7 @@
 
 local function build_tool_mode()
   local mode = {}
-  mode.title = t'tool.proxy_area.title'
+  mode.title = 'tool.proxy_area.title'
   mode.area_type = SrcdsProxy.transfer_area_type
   mode.ClientConVar = {
     height = '512',
@@ -49,8 +49,7 @@ local function build_tool_mode()
   -- @return [Boolean true if an area was registered, nil otherwise]
   function mode:OnRightClick(tool)
     if tool.area then
-      tool.area:register()
-      tool.area = nil
+      Area:register_tool_area(tool)
 
       return true
     end
