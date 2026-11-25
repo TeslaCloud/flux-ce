@@ -78,8 +78,15 @@ local color_label_outline = Color(0, 0, 0)
 local view = {}
 local view_angles = Angle(0, 0, 0)
 local camera_trace = {}
+local camera_trace_result = {}
 local aim_trace = {}
-local zero_offset = Vector(0, 0, 0)
+local wanted_pos = Vector(0, 0, 0)
+local origin_pos = Vector(0, 0, 0)
+local scratch_vector = Vector(0, 0, 0)
+local command_angles = Angle(0, 0, 0)
+local stored_view_angles = Angle(0, 0, 0)
+
+camera_trace.output = camera_trace_result
 
 ThirdPerson.camera_angles = ThirdPerson.camera_angles or Angle(0, 0, 0)
 ThirdPerson.camera_offset = ThirdPerson.camera_offset or Vector(0, 0, 0)
@@ -206,7 +213,7 @@ function ThirdPerson:CreateMove(user_cmd)
       user_cmd:SetViewAngles(angles)
     end
 
-    self.camera_angles = Angle(angles.p, angles.y, 0)
+    self.camera_angles:SetUnpacked(angles.p, angles.y, 0)
     self.was_orbiting = false
     self.orbiting = false
     self.last_view_angles = nil
@@ -220,13 +227,12 @@ function ThirdPerson:CreateMove(user_cmd)
   local last_angles = self.last_view_angles
 
   if !self.was_orbiting or !last_angles then
-    camera_angles = Angle(
+    camera_angles:SetUnpacked(
       math.Clamp(math.NormalizeAngle(angles.p), min_pitch, max_pitch),
       math.NormalizeAngle(angles.y),
       0
     )
 
-    self.camera_angles = camera_angles
     self.was_orbiting = true
   else
     camera_angles.p = math.Clamp(camera_angles.p + math.AngleDifference(angles.p, last_angles.p), min_pitch, max_pitch)
@@ -237,7 +243,8 @@ function ThirdPerson:CreateMove(user_cmd)
   self.orbiting = true
 
   if user_cmd:CommandNumber() == 0 then
-    self.last_view_angles = Angle(angles.p, angles.y, 0)
+    stored_view_angles:SetUnpacked(angles.p, angles.y, 0)
+    self.last_view_angles = stored_view_angles
 
     return
   end
@@ -252,12 +259,14 @@ function ThirdPerson:CreateMove(user_cmd)
     self.aiming = false
     self.firing = false
 
-    new_angles = Angle(camera_angles.p, camera_angles.y, 0)
+    command_angles:SetUnpacked(camera_angles.p, camera_angles.y, 0)
+    new_angles = command_angles
   end
 
   user_cmd:SetViewAngles(new_angles)
 
-  self.last_view_angles = Angle(new_angles.p, new_angles.y, 0)
+  stored_view_angles:SetUnpacked(new_angles.p, new_angles.y, 0)
+  self.last_view_angles = stored_view_angles
 end
 
 --- Places the camera while the third person view is on, and while it eases back into the first
@@ -269,12 +278,15 @@ end
 -- is traced from the eyes to the camera so that it stops in front of walls, and the view
 -- becomes first person when the camera ends up too close to the eyes. Picks up the shoulder
 -- from the `third_person_shoulder` client setting whenever the view is turned on.
+-- Leaves the view alone in a vehicle, which has a view of its own, and while the
+-- `ShouldMapsceneRender` hook shows the map scene. The vectors and the trace result are kept
+-- at file level and reused every frame.
 -- @param client [Player]
 -- @param pos [Vector]
 -- @param angles [Angle]
 -- @param fov [Number]
--- @return [Map view table, or nil while the first person view is shown or the player looks
---   through another entity]
+-- @return [Map view table, or nil while the first person view is shown, the player looks
+--   through another entity or sits in a vehicle, or the map scene is shown]
 function ThirdPerson:CalcView(client, pos, angles, fov)
   local enabled = self:is_enabled(client)
 
@@ -284,7 +296,7 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
 
   self.was_enabled = enabled
 
-  if GetViewEntity() != client then return end
+  if GetViewEntity() != client or client:InVehicle() or hook.Run('ShouldMapsceneRender') then return end
 
   local frame_time = FrameTime()
   local blend = math.Approach(self.blend, enabled ? 1 : 0, frame_time / blend_duration)
@@ -292,7 +304,7 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
   self.blend = blend
 
   if blend <= 0 then
-    self.camera_offset = zero_offset
+    self.camera_offset:Zero()
 
     return
   end
@@ -311,8 +323,18 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
 
   local eased = blend * blend * (3 - 2 * blend)
   local forward, right, up = camera_angles:Forward(), camera_angles:Right(), camera_angles:Up()
-  local wanted =
-    pos - forward * (self.camera_distance * eased) + right * (self.camera_side * eased) + up * (self.camera_up * eased)
+  local wanted = wanted_pos
+
+  wanted:Set(pos)
+  scratch_vector:Set(forward)
+  scratch_vector:Mul(-self.camera_distance * eased)
+  wanted:Add(scratch_vector)
+  scratch_vector:Set(right)
+  scratch_vector:Mul(self.camera_side * eased)
+  wanted:Add(scratch_vector)
+  scratch_vector:Set(up)
+  scratch_vector:Mul(self.camera_up * eased)
+  wanted:Add(scratch_vector)
 
   camera_trace.start = pos
   camera_trace.endpos = wanted
@@ -333,7 +355,12 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
 
   self.collision_fraction = collision
 
-  local origin = pos + (wanted - pos) * collision
+  local origin = origin_pos
+
+  origin:Set(wanted)
+  origin:Sub(pos)
+  origin:Mul(collision)
+  origin:Add(pos)
 
   view_angles:Set(camera_angles)
   view_angles.r = 0
@@ -345,14 +372,17 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
     view.origin = pos
     view.drawviewer = false
 
-    self.camera_offset = zero_offset
+    self.camera_offset:Zero()
   else
-    local offset = origin - pos
+    local offset = scratch_vector
+
+    offset:Set(origin)
+    offset:Sub(pos)
 
     view.origin = origin
     view.drawviewer = true
 
-    self.camera_offset = Vector(offset:Dot(forward), offset:Dot(right), offset:Dot(up))
+    self.camera_offset:SetUnpacked(offset:Dot(forward), offset:Dot(right), offset:Dot(up))
   end
 
   return view

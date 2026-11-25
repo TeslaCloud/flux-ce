@@ -35,8 +35,6 @@ PLUGIN:set_global('ThirdPerson')
 --- How long, in seconds, the weapon stays raised after the last aim or fire input.
 ThirdPerson.raise_grace = 1.5
 
-local band = bit.band
-
 --- Weapons whose secondary attack the aim never takes when the Raise Weapon plugin, which
 -- knows about the fixed state of a weapon, is not loaded.
 local blocked_weapons = {
@@ -113,8 +111,8 @@ end
 -- @param weapon [Weapon active weapon of the player, which may not be valid]
 -- @return [Boolean aiming, Boolean firing]
 function ThirdPerson:read_input(buttons, weapon)
-  local aiming = band(buttons, IN_ATTACK2) != 0 and self:owns_secondary_attack(weapon)
-  local firing = band(buttons, IN_ATTACK) != 0
+  local aiming = (buttons & IN_ATTACK2) != 0 and self:owns_secondary_attack(weapon)
+  local firing = (buttons & IN_ATTACK) != 0
 
   return aiming, firing
 end

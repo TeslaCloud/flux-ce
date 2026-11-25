@@ -1,6 +1,6 @@
 --- Server side of the Third Person plugin: the `fl_third_person` console command, which
--- toggles the view of the player who runs it, and the raising and lowering of the weapon of
--- a player in third person control.
+-- toggles the view of the player who runs it at most four times a second, and the raising and
+-- lowering of the weapon of a player in third person control.
 --
 -- While the control is in effect, the weapon is raised while the player aims or fires and
 -- lowered `ThirdPerson.raise_grace` seconds after they last did; this overrides the reload
@@ -15,6 +15,11 @@
 concommand.Add('fl_third_person', function(actor)
   if !IsValid(actor) then return end
 
+  local cur_time = CurTime()
+
+  if (actor.fl_next_third_person or 0) > cur_time then return end
+
+  actor.fl_next_third_person = cur_time + 0.25
   actor:set_nv('fl_third_person', !actor:get_nv('fl_third_person', false))
 end)
 
