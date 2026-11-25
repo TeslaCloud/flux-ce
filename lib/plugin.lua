@@ -822,6 +822,52 @@ function Plugin.register(obj)
   load_cache[obj.id] = true
 end
 
+--- Loads a plugin whose info has been read: requires its dependencies, then includes its extra
+-- folders and its main file and registers it. Part of `Plugin.include`, which keeps the plugin
+-- on the stack of plugins being included while this runs.
+-- @param id [String plugin ID]
+-- @param path [String plugin folder or .lua file]
+-- @param data [Map plugin info]
+-- @return [Map plugin info, or nil if a dependency is missing or unavailable]
+local function load_plugin(id, path, data)
+  for _, dependency in ipairs(data.depends) do
+    if !Plugin.require(dependency) or is_unavailable(dependency, true) then
+      if !is_unavailable(dependency, true) then
+        ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"
+          ..tostring(dependency).."'!\n")
+      elseif SERVER then
+        print("Not loading the '"..tostring(path).."' plugin: the '"..tostring(dependency)
+          .."' plugin is not available.")
+      end
+
+      mark_unloaded(data, 'dependency')
+
+      return
+    end
+  end
+
+  PLUGIN = PluginInstance.new(id, data)
+
+  if stored[path] then
+    PLUGIN = stored[path]
+  end
+
+  Plugin.include_folders(data.folder)
+
+  if !data.single_file then
+    require_relative(data.folder..'/'..data.plugin_main)
+  else
+    if file.Exists(path, 'LUA') then
+      require_relative(path)
+    end
+  end
+
+  PLUGIN:register()
+  PLUGIN = nil
+
+  return data
+end
+
 --- Includes a plugin from a folder or from a single .lua file and registers it.
 -- Reads plugin.yml on the server, checks the plugin's environment and dependencies, includes
 -- its extra folders and its main file. The PLUGIN global is set while the plugin loads.
@@ -829,7 +875,9 @@ end
 -- for another environment or was not loaded because of its own dependencies. A folder without
 -- a plugin.yml is skipped with an error, and so is a plugin whose ID another path has loaded
 -- already. In development the keys of plugin.yml that the loader does not know and a
--- `depends` that is not a list are reported.
+-- `depends` that is not a list are reported. An error raised while the plugin loads is raised
+-- again once the plugin has left the stack of plugins being included, which
+-- `Plugin.include_schema` also empties when it starts.
 -- @param path [String plugin folder or .lua file, relative to the LUA search path]
 -- @return [Map plugin info, or nil if the plugin was not loaded (already loaded, disabled,
 --   wrong environment or missing dependency)]
@@ -931,44 +979,15 @@ function Plugin.include(path)
   data.depends = depends
   include_stack[#include_stack + 1] = Plugin.normalize_id(id)
 
-  for _, dependency in ipairs(depends) do
-    if !Plugin.require(dependency) or is_unavailable(dependency, true) then
-      if !is_unavailable(dependency, true) then
-        ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"
-          ..tostring(dependency).."'!\n")
-      elseif SERVER then
-        print("Not loading the '"..tostring(path).."' plugin: the '"..tostring(dependency)
-          .."' plugin is not available.")
-      end
+  local success, result = pcall(load_plugin, id, path, data)
 
-      mark_unloaded(data, 'dependency')
-      include_stack[#include_stack] = nil
-
-      return
-    end
-  end
-
-  PLUGIN = PluginInstance.new(id, data)
-
-  if stored[path] then
-    PLUGIN = stored[path]
-  end
-
-  Plugin.include_folders(data.folder)
-
-  if !data.single_file then
-    require_relative(data.folder..'/'..data.plugin_main)
-  else
-    if file.Exists(path, 'LUA') then
-      require_relative(path)
-    end
-  end
-
-  PLUGIN:register()
-  PLUGIN = nil
   include_stack[#include_stack] = nil
 
-  return data
+  if !success then
+    error(result, 0)
+  end
+
+  return result
 end
 
 --- Works out the plugins a schema depends on from the keys of its .yml file: the plugins of
@@ -1117,6 +1136,8 @@ function Plugin.include_schema()
   local file_path = 'gamemodes/'..schema_path..'/'..schema_path..'.yml'
   local deps = {}
   local schema_yml, profiles, origins
+
+  include_stack = {}
 
   if SERVER then
     Plugin.load_disabled()
