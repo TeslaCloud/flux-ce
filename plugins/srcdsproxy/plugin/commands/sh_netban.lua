@@ -15,6 +15,29 @@ CMD.category = 'permission.categories.proxy'
 CMD.aliases = { 'proxyban' }
 CMD.no_console = true
 
+--- Has the proxy ban the targets, or their addresses, from the network and notifies staff
+-- with the `command.netban.<subcommand>.message` phrase. A second argument that is not a
+-- duration is the start of the reason.
+-- @param cmd [Command the subcommand that runs: add or addip]
+-- @param actor [Player the caller]
+-- @param verb [String the proxy verb: 'ban' or 'banip']
+-- @param target [String player name, target selector, SteamID, address or subnet]
+-- @param duration=nil [String ban duration, or the start of the reason]
+-- @param reason=nil [String the rest of the reason, as it was typed]
+local function ban(cmd, actor, verb, target, duration, reason)
+  local entries = SrcdsProxy:ban(actor, verb, target, duration, reason)
+
+  if !entries then return end
+
+  local details = reason and duration..' '..reason or duration or ''
+
+  cmd:notify_staff('command.netban.'..cmd.name..'.message', {
+    player = get_player_name(actor),
+    target = SrcdsProxy:targets_to_string(entries),
+    details = details != '' and details or 'ui.no_reason'
+  })
+end
+
 local add = CMD:subcommand('add')
 add.description = 'command.netban.add.description'
 add.syntax = 'command.netban.add.syntax'
@@ -22,24 +45,13 @@ add.arguments = 1
 add.arg_types = { 'player', 'proxy_duration', 'text' }
 add.player_arg = false
 
---- Has the proxy ban the targets from the network and notifies staff. A second argument that
--- is not a duration is the start of the reason.
+--- Has the proxy ban the targets from the network and notifies staff.
 -- @param actor [Player the caller]
 -- @param target [String player name, target selector, SteamID, address or subnet]
 -- @param duration=nil [String ban duration, or the start of the reason]
 -- @param reason=nil [String the rest of the reason, as it was typed]
 function add:on_run(actor, target, duration, reason)
-  local entries = SrcdsProxy:ban(actor, 'ban', target, duration, reason)
-
-  if !entries then return end
-
-  local details = reason and duration..' '..reason or duration or ''
-
-  self:notify_staff('command.netban.add.message', {
-    player = get_player_name(actor),
-    target = SrcdsProxy:targets_to_string(entries),
-    details = details != '' and details or 'ui.no_reason'
-  })
+  ban(self, actor, 'ban', target, duration, reason)
 end
 
 local addip = CMD:subcommand('addip')
@@ -49,24 +61,13 @@ addip.arguments = 1
 addip.arg_types = { 'player', 'proxy_duration', 'text' }
 addip.player_arg = false
 
---- Has the proxy ban the addresses of the targets from the network and notifies staff. A
--- second argument that is not a duration is the start of the reason.
+--- Has the proxy ban the addresses of the targets from the network and notifies staff.
 -- @param actor [Player the caller]
 -- @param target [String player name, target selector or SteamID]
 -- @param duration=nil [String ban duration, or the start of the reason]
 -- @param reason=nil [String the rest of the reason, as it was typed]
 function addip:on_run(actor, target, duration, reason)
-  local entries = SrcdsProxy:ban(actor, 'banip', target, duration, reason)
-
-  if !entries then return end
-
-  local details = reason and duration..' '..reason or duration or ''
-
-  self:notify_staff('command.netban.addip.message', {
-    player = get_player_name(actor),
-    target = SrcdsProxy:targets_to_string(entries),
-    details = details != '' and details or 'ui.no_reason'
-  })
+  ban(self, actor, 'banip', target, duration, reason)
 end
 
 local remove = CMD:subcommand('remove')
