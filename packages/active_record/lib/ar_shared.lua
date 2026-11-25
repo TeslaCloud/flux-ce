@@ -17,7 +17,7 @@ if !ActiveRecord.Base then
     'class_extended', 'dump', 'where', 'where_not',
     'first', 'last', 'all', 'order', 'find', 'find_by',
     'limit', 'skip', 'preload', '_process_child', '_fetch_relations',
-    'load_relations', 'run_query', 'expect', 'get', 'fetch', 'rescue',
+    'load_relations', 'run_query', 'expect', 'get', 'fetch', 'rescue', 'on_error',
     'update_all', 'delete_all', 'destroy', 'save', 'has', 'has_many',
     'has_one', 'belongs_to'
   }

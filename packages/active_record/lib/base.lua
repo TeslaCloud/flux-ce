@@ -134,6 +134,28 @@ local function bind_list(values, list)
 end
 
 --- @ignore
+-- Quotes a column name of a condition, leaving anything that is not a plain name, such as
+-- an SQL expression, as it is.
+local function column_sql(column)
+  if isstring(column) and column:find('^[%a_][%w_]*$') then
+    return sql_quote_name(column)
+  end
+
+  return column
+end
+
+--- @ignore
+-- Builds an IN or NOT IN condition, which an empty list turns into a condition that is never
+-- or always true, since an empty IN () is no valid SQL on every database.
+local function in_list(values, column, list, negate)
+  if #list == 0 then
+    return negate ? '1 = 1' : '1 = 0'
+  end
+
+  return column_sql(column)..(negate ? ' NOT IN (' : ' IN (')..bind_list(values, list)..')'
+end
+
+--- @ignore
 -- Adds the relation names of a preload specification to a preload tree, which maps every
 -- relation name to the tree of its own nested relations. A specification is a relation name,
 -- or a table whose list part holds specifications and whose hash part maps relation names to
@@ -207,7 +229,8 @@ end
 -- Object:where({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
 -- ```
 -- @param condition [String/Map column name, SQL condition (which may use ? placeholders),
---   or a hash of column-value pairs in which a List value stands for IN (...)]
+--   or a hash of column-value pairs in which a List value stands for IN (...); an empty
+--   List matches no row]
 -- @param ... [Vararg value to compare the column with (nil stands for IS NULL), or the
 --   values that replace the ? placeholders]
 -- @return [ActiveRecord::Base query object]
@@ -222,10 +245,10 @@ function ActiveRecord.Base:where(condition, ...)
       values = args
       query_str = condition
     elseif arg_count == 1 and args[1] == nil then
-      query_str = condition..' IS NULL'
+      query_str = column_sql(condition)..' IS NULL'
     else
       values = args
-      query_str = condition..' = ?'
+      query_str = column_sql(condition)..' = ?'
     end
   elseif istable(condition) then
     local parts = {}
@@ -234,10 +257,10 @@ function ActiveRecord.Base:where(condition, ...)
 
     for column, value in pairs(condition) do
       if !istable(value) then
-        parts[#parts + 1] = column..' = ?'
+        parts[#parts + 1] = column_sql(column)..' = ?'
         values[#values + 1] = value
       else
-        parts[#parts + 1] = column..' IN ('..bind_list(values, value)..')'
+        parts[#parts + 1] = in_list(values, column, value, false)
       end
     end
 
@@ -261,7 +284,8 @@ end
 -- Object:where_not({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
 -- ```
 -- @param condition [String/Map column name, SQL condition (which may use ? placeholders),
---   or a hash of column-value pairs in which a List value stands for NOT IN (...)]
+--   or a hash of column-value pairs in which a List value stands for NOT IN (...); an
+--   empty List matches every row]
 -- @param ... [Vararg value to compare the column with (nil stands for IS NOT NULL), or
 --   the values that replace the ? placeholders]
 -- @return [ActiveRecord::Base query object]
@@ -276,10 +300,10 @@ function ActiveRecord.Base:where_not(condition, ...)
       values = args
       query_str = 'NOT ('..condition..')'
     elseif arg_count == 1 and args[1] == nil then
-      query_str = condition..' IS NOT NULL'
+      query_str = column_sql(condition)..' IS NOT NULL'
     else
       values = args
-      query_str = 'NOT ('..condition..' = ?)'
+      query_str = 'NOT ('..column_sql(condition)..' = ?)'
     end
   elseif istable(condition) then
     local parts = {}
@@ -288,10 +312,10 @@ function ActiveRecord.Base:where_not(condition, ...)
 
     for column, value in pairs(condition) do
       if !istable(value) then
-        parts[#parts + 1] = column..' != ?'
+        parts[#parts + 1] = column_sql(column)..' != ?'
         values[#values + 1] = value
       else
-        parts[#parts + 1] = column..' NOT IN ('..bind_list(values, value)..')'
+        parts[#parts + 1] = in_list(values, column, value, true)
       end
     end
 
@@ -366,7 +390,7 @@ end
 -- Object:find_by('id', 1, function(obj) ... end):fetch()
 -- ```
 -- @param column [String]
--- @param value [Any value to look for, converted to a string]
+-- @param value [Any value to look for]
 -- @param callback=nil [Function passed to #expect, receives the object that was found, or nil
 --   when nothing was found]
 -- @return [ActiveRecord::Base query object]
@@ -478,7 +502,8 @@ local relation_batch_size = 500
 -- @param nested [Map preload tree of the loaded objects, nil to load no nested relations]
 -- @param callback [Function called once the relation of every object has been loaded]
 -- @param offset=0 [Number amount of objects whose relation has been loaded already]
-local function fetch_relation(relation, objects, nested, callback, offset)
+-- @param on_error=nil [Function called with the error text if a query fails]
+local function fetch_relation(relation, objects, nested, callback, offset, on_error)
   offset = offset or 0
 
   local child = relation.child
@@ -516,7 +541,7 @@ local function fetch_relation(relation, objects, nested, callback, offset)
 
   local function proceed()
     if last < #objects then
-      return fetch_relation(relation, objects, nested, callback, last)
+      return fetch_relation(relation, objects, nested, callback, last, on_error)
     end
 
     callback()
@@ -530,6 +555,10 @@ local function fetch_relation(relation, objects, nested, callback, offset)
 
   if nested then
     query:preload(nested)
+  end
+
+  if on_error then
+    query:on_error(on_error)
   end
 
   query:get(function(rows)
@@ -564,8 +593,9 @@ end
 -- @param preloads [Map preload tree: relation names mapped to the trees of their nested
 --   relations]
 -- @param callback [Function called with the objects once their relations have been loaded]
+-- @param on_error=nil [Function called with the error text if one of the queries fails]
 -- @return [ActiveRecord::Base(self)]
-function ActiveRecord.Base:_fetch_relations(objects, preloads, callback)
+function ActiveRecord.Base:_fetch_relations(objects, preloads, callback, on_error)
   local names = table.GetKeys(preloads)
   local index = 0
 
@@ -582,7 +612,9 @@ function ActiveRecord.Base:_fetch_relations(objects, preloads, callback)
 
     local nested = preloads[name]
 
-    fetch_relation(find_relation(self.relations, name), objects, next(nested) != nil and nested or nil, load_next)
+    fetch_relation(
+      find_relation(self.relations, name), objects, next(nested) != nil and nested or nil, load_next, 0, on_error
+    )
   end
 
   load_next()
@@ -633,19 +665,21 @@ function ActiveRecord.Base:load_relations(preloads, callback)
 end
 
 --- @warning [Internal]
--- Runs the query based on the query map of the query object and flushes the query map.
--- The callback, the #rescue callback and the conditions are taken from the query object
--- when the query is sent. When nothing is found, the #rescue callback is called with a new
--- object if there is one, and the callback with an empty list otherwise. The relations
--- named with #preload are loaded before the callback is called.
+-- Runs the query based on the query map of the query object and flushes the query map; a
+-- query without conditions loads every row. The callback, the #rescue and #on_error
+-- callbacks and the conditions are taken from the query object when the query is sent.
+-- When nothing is found, the #rescue callback is called with a new object if there is one,
+-- and the callback with an empty list otherwise. The relations named with #preload are
+-- loaded before the callback is called.
 -- @param callback [Function called with a List of the loaded objects]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:run_query(callback)
   local query_map = self.query_map
 
-  if istable(query_map) and #query_map > 0 then
+  if istable(query_map) then
     local query = ActiveRecord.Database:select(self.table_name)
     local rescue = self._rescue
+    local on_error = self._on_error
     local preloads = nil
 
     for _, entry in ipairs(query_map) do
@@ -670,6 +704,11 @@ function ActiveRecord.Base:run_query(callback)
 
     self.query_map = a{}
     self._rescue = nil
+    self._on_error = nil
+
+    if on_error then
+      query:on_error(on_error)
+    end
 
     query:callback(function(results, query_str, time, bindings)
       print_query(self.class_name..' Load ('..time..'s)', query_str, bindings)
@@ -677,10 +716,12 @@ function ActiveRecord.Base:run_query(callback)
       local found = istable(results) and #results > 0
 
       if !found and isfunction(rescue) then
-        rescue(self.class.new())
+        local object = self.class.new()
 
-        if isfunction(self.created) then
-          self:created()
+        rescue(object)
+
+        if isfunction(object.created) then
+          object:created()
         end
 
         return
@@ -701,7 +742,7 @@ function ActiveRecord.Base:run_query(callback)
       end
 
       ar_add_indent()
-      self:_fetch_relations(objects, preloads, callback)
+      self:_fetch_relations(objects, preloads, callback, on_error)
       ar_sub_indent()
     end)
 
@@ -821,6 +862,26 @@ function ActiveRecord.Base:rescue(callback)
   return query:fetch()
 end
 
+--- Names the function that is called when the query, or one of the queries that load its
+-- preloaded relations, fails. Without it a failed query is only reported in the console and
+-- neither the #expect, #get nor #rescue callback is called.
+-- ```
+-- User:where('steam_id', steam_id):expect(function(user)
+--   ...
+-- end):on_error(function(error_text)
+--   ...
+-- end):fetch()
+-- ```
+-- @param callback [Function receives the error text]
+-- @return [ActiveRecord::Base query object]
+function ActiveRecord.Base:on_error(callback)
+  local query = query_of(self)
+
+  query._on_error = callback
+
+  return query
+end
+
 --- @ignore
 -- Collects the WHERE conditions of a query map into a query of the Database layer for
 -- #update_all and #delete_all, and raises an error at their caller for a LIMIT or OFFSET,
@@ -838,8 +899,9 @@ local function apply_conditions(query, query_map, method)
 end
 
 --- Changes columns of every row that the conditions of the query match, with a single
--- UPDATE and without loading any object, and sets their `updated_at` as #save does. Objects
--- that are loaded already keep their values. Without conditions every row is changed.
+-- UPDATE and without loading any object, and sets their `updated_at` as #save does if the
+-- table has the column. Objects that are loaded already keep their values. Without
+-- conditions every row is changed.
 -- ```
 -- User:where('steam_id', steam_id):update_all({ role = 'admin' }, function() ... end)
 -- ```
@@ -864,7 +926,7 @@ function ActiveRecord.Base:update_all(fields, callback)
     statement:update(column, value)
   end
 
-  if fields.updated_at == nil then
+  if fields.updated_at == nil and schema.updated_at then
     statement:update('updated_at', to_datetime(os.time()))
   end
 
@@ -917,7 +979,58 @@ local except = {
   id = true, created_at = true, updated_at = true
 }
 
-local function gen_callback(self, insert)
+local text_types = {
+  string = true, text = true
+}
+
+--- @ignore
+-- Reads the value of a column default as the schema keeps it, which is the SQL after DEFAULT
+-- or the value given to the column in its migration, and converts it to the type of the
+-- column. A default that is an SQL expression rather than a value reads as nil.
+local function default_value(column)
+  local default = column.default
+
+  if isstring(default) then
+    local quoted = default:match("^'(.*)'$")
+    local lower = default:lower()
+
+    if quoted then
+      default = quoted:gsub("''", "'")
+    elseif lower == 'true' or lower == 'false' then
+      default = lower == 'true'
+    else
+      default = tonumber(default)
+    end
+  end
+
+  if default == nil then return end
+
+  if text_types[column.type] then
+    return tostring(default)
+  end
+
+  return ActiveRecord.str_to_type(default, column.type)
+end
+
+local function report_save(callback, success, error_text)
+  if isfunction(callback) then
+    callback(success, error_text)
+  end
+end
+
+--- @ignore
+-- Calls the callbacks of the saves that were asked for while an insert was running.
+local function report_pending(self, success, error_text)
+  local callbacks = self._save_pending_callbacks
+
+  self._save_pending_callbacks = nil
+
+  for _, callback in ipairs(callbacks or {}) do
+    callback(success, error_text)
+  end
+end
+
+local function gen_callback(self, insert, callback)
   return function(result, query, time, bindings)
     print_query(self.class_name..' '..(insert ? 'Create' : 'Update')..' ('..time..'s)', query, bindings)
     self.saving = false
@@ -958,24 +1071,52 @@ local function gen_callback(self, insert)
       ar_sub_indent()
     end
 
+    report_save(callback, true)
+
     if self._save_pending then
+      local callbacks = self._save_pending_callbacks
+
       self._save_pending = nil
-      self:save()
+      self._save_pending_callbacks = nil
+
+      self:save(callbacks and function(success, error_text)
+        for _, pending in ipairs(callbacks) do
+          pending(success, error_text)
+        end
+      end)
     end
   end
 end
 
 --- Saves the object to the database.
--- This is the function that actually commits data to the database. Once the row is
--- written, the objects of the loaded `has_many` and `has_one` relations are saved as well;
--- a relation that was not loaded is nil and left alone, so its rows stay as they are.
+-- This is the function that actually commits data to the database. An object that is not
+-- in the database yet is inserted with the columns that it has a value for: the database
+-- gives the others their default, and the object takes the defaults that are plain values
+-- over. An object that has been loaded is updated with every column. The `created_at` and
+-- `updated_at` columns are set if the table has them. Once the row is written, the objects
+-- of the loaded `has_many` and `has_one` relations are saved as well; a relation that was
+-- not loaded is nil and left alone, so its rows stay as they are. An object that has been
+-- destroyed is not saved.
 -- ```
 -- local obj = Object.new()
 --   obj.money = 100
 -- obj:save()
+--
+-- obj:save(function(success, error_text)
+--   if !success then print(error_text) end
+-- end)
 -- ```
+-- @param callback=nil [Function called once the row has been written, after the
+--   `after_save` callback of the object, with true; or with false and the error text if
+--   the object is not valid, has been destroyed or could not be written]
 -- @return [ActiveRecord::Base(self)]
-function ActiveRecord.Base:save()
+function ActiveRecord.Base:save(callback)
+  if self._destroyed then
+    report_save(callback, false, self.class_name..' has been destroyed')
+
+    return self
+  end
+
   if self.before_save then
     self:before_save(self.fetched)
   end
@@ -995,20 +1136,44 @@ function ActiveRecord.Base:save()
 
       local type_to_db = ActiveRecord.type_to_db
       local now = to_datetime(os.time())
+      local unset = nil
       local query = ActiveRecord.Database:insert(self.table_name)
         for column, data in pairs(schema) do
           if except[column] then continue end
 
-          query:insert(column, type_to_db(self[column], data.type))
+          if self[column] == nil then
+            self[column] = default_value(data)
+          end
+
+          local value = type_to_db(self[column], data.type)
+
+          if value != nil then
+            query:insert(column, value)
+          else
+            unset = unset or column
+          end
         end
 
-        query:insert('created_at', now)
-        query:insert('updated_at', now)
-        query:callback(gen_callback(self, true))
-        query:on_error(function()
+        if schema.created_at then
+          query:insert('created_at', now)
+        end
+
+        if schema.updated_at then
+          query:insert('updated_at', now)
+        end
+
+        if #query.insert_list == 0 and unset then
+          query:insert(unset, nil)
+        end
+
+        query:callback(gen_callback(self, true, callback))
+        query:on_error(function(error_text)
           self.fetched = false
           self.saving = false
           self._save_pending = nil
+
+          report_save(callback, false, error_text)
+          report_pending(self, false, error_text)
         end)
       query:execute()
     elseif self.id then
@@ -1022,42 +1187,74 @@ function ActiveRecord.Base:save()
           query:update(column, type_to_db(self[column], data.type))
         end
 
-        query:update('updated_at', to_datetime(os.time()))
-        query:callback(gen_callback(self, false))
-        query:on_error(function()
+        if schema.updated_at then
+          query:update('updated_at', to_datetime(os.time()))
+        end
+
+        query:callback(gen_callback(self, false, callback))
+        query:on_error(function(error_text)
           self.saving = false
+
+          report_save(callback, false, error_text)
         end)
       query:execute()
     elseif in_flight then
       self._save_pending = true
+
+      if isfunction(callback) then
+        local callbacks = self._save_pending_callbacks or {}
+
+        self._save_pending_callbacks = callbacks
+        callbacks[#callbacks + 1] = callback
+      end
     else
       self.saving = false
 
       ErrorNoHalt(self.class_name..' does not have a valid ID after saving. This should never happen!\n')
       ErrorNoHalt('Please report this issue to TeslaCloud along with your logs.\n')
+
+      report_save(callback, false, self.class_name..' has no ID')
     end
   end, function(model, column, err_code)
     if model.invalid then
       model:invalid(column, err_code)
     end
+
+    report_save(callback, false, tostring(column)..' failed the '..tostring(err_code)..' validation')
   end)
 
   return self
 end
 
 --- Deletes the current object from the database. The rows of its relations are left to
--- the foreign keys of the database.
+-- the foreign keys of the database. The object is not saved again afterward: #save does
+-- nothing for it, unless the row could not be deleted.
 -- @warning [Once done, do not attempt saving the object again, since it will cause unpredictable behavior]
 -- ```
 -- obj:destroy()
 -- -- do not use the object after this point.
+--
+-- obj:destroy(function(success, error_text) ... end)
 -- ```
-function ActiveRecord.Base:destroy()
+-- @param callback=nil [Function called once the row has been deleted with true, or with
+--   false and the error text if it could not be]
+function ActiveRecord.Base:destroy(callback)
   local class_name = self.class_name
+
+  self._destroyed = true
+
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('id', self.id)
     query:callback(function(_result, query_str, time, bindings)
       print_query(class_name..' Delete ('..time..'s)', query_str, bindings)
+
+      report_save(callback, true)
+    end)
+
+    query:on_error(function(error_text)
+      self._destroyed = nil
+
+      report_save(callback, false, error_text)
     end)
   query:execute()
 end
