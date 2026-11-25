@@ -138,7 +138,16 @@ function PANEL:get_current_text_color()
   if !self.enabled then
     local style = Lumen.Layout.style_of(self)
 
-    return style.disabled_color or color:darken(60)
+    if style.disabled_color then
+      return style.disabled_color
+    end
+
+    if self.darken_source != color then
+      self.darken_source = color
+      self.darkened = color:darken(60)
+    end
+
+    return self.darkened
   end
 
   return color
