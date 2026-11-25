@@ -22,9 +22,9 @@
 -- (`Lumen.Layout`) from the `style` prop (`Lumen.Style`).
 --
 -- This file holds the registry of templates. `Lumen.define` stores a compiled template under
--- its ID, on the server when the `lumen` pipeline reads the file and on the client when the
--- generated files are loaded; `Lumen.load` compiles and runs a template from a string, which is
--- handy in the console and in tests.
+-- its ID, on the server when the `lumen` pipeline reads the file (`lib/sv_lumen.lua`) and on
+-- the client when the generated files are loaded (`lib/cl_lumen.lua`); `Lumen.load` compiles
+-- and runs a template from a string, which is handy in the console and in tests.
 -- @module [Lumen]
 
 local templates = istable(Lumen) and Lumen.templates or {}
@@ -44,8 +44,11 @@ local isfunction = isfunction
 local tostring   = tostring
 local pcall      = pcall
 
-local chunk_header = 'local use_state, use_effect, use_ref, use_memo = '..
-  'Lumen.use_state, Lumen.use_effect, Lumen.use_ref, Lumen.use_memo '
+--- The code that runs in front of every template and puts the hooks `use_state`, `use_effect`,
+-- `use_ref` and `use_memo` in scope. It has no newline, so the lines of a template keep their
+-- numbers.
+Lumen.chunk_header = 'local use_state, use_effect, use_ref, use_memo = '..
+  'Lumen.use_state, Lumen.use_effect, Lumen.use_ref, Lumen.use_memo; '
 
 --- Compiles a template to Lua code without raising errors.
 -- @param source [String template source]
@@ -53,10 +56,14 @@ local chunk_header = 'local use_state, use_effect, use_ref, use_memo = '..
 -- @return [String Lua code, or nil if the template is malformed, String the error message in
 --   that case]
 function Lumen.compile(source, name)
+  name = name or 'lumen'
+
   local success, result = pcall(Lumen.Compiler.compile, source, name)
 
   if !success then
-    return nil, tostring(result)
+    result = tostring(result)
+
+    return nil, result:start_with(name..':') ? result : name..': '..result
   end
 
   return result
@@ -64,17 +71,22 @@ end
 
 --- Turns compiled template code into the value the template returns: its component, usually.
 -- The code is run with the hooks `use_state`, `use_effect`, `use_ref` and `use_memo` in scope.
--- @param code [String Lua code, as returned by Lumen.compile]
+-- @param code [String/Function Lua code, as returned by Lumen.compile, or the function that a
+--   generated client file holds for a template, which has the hooks in scope already]
 -- @param name='lumen' [String name used in error messages]
 -- @return [Any what the template returns, or nil if it does not compile or fails to run, String
 --   the error message in that case]
 function Lumen.evaluate(code, name)
   name = name or 'lumen'
 
-  local chunk = CompileString(chunk_header..code, name, false)
+  local chunk = code
 
   if !isfunction(chunk) then
-    return nil, tostring(chunk)
+    chunk = CompileString(Lumen.chunk_header..code, name, false)
+
+    if !isfunction(chunk) then
+      return nil, tostring(chunk)
+    end
   end
 
   local success, result = pcall(chunk, name)
@@ -113,7 +125,8 @@ end
 -- forgets its component, so that the next `Lumen.component` call evaluates the new code.
 -- @param id [String template ID]
 -- @param path [String path of the template file, used in error messages]
--- @param code [String compiled Lua code, nil if the template did not compile]
+-- @param code [String/Function compiled Lua code, or the function that runs it on the client;
+--   nil if the template did not compile]
 -- @param err=nil [String why the template did not compile]
 -- @return [Map the stored template]
 function Lumen.define(id, path, code, err)
@@ -242,114 +255,4 @@ function Lumen.map(list, callback)
   end
 
   return results
-end
-
-if SERVER then
-  --- Reads a template file, compiles it and stores it under the given ID. Templates whose
-  -- compilation fails are stored with their error, so that the clients can report it.
-  -- @param id [String template ID]
-  -- @param file_name [String path of the file relative to the Lua search path, such as
-  --   PACKAGE.__path__..'views/lumen/help.lumen']
-  -- @return [Map the stored template, or nil if the file could not be read]
-  function Lumen.include_file(id, file_name)
-    local path = 'gamemodes/'..file_name
-    local source = File.read(path)
-
-    if !source then
-      ErrorNoHalt("Lumen: could not read the '"..file_name.."' template!\n")
-
-      return
-    end
-
-    local existing = templates[id]
-
-    if existing and existing.path and existing.path != file_name then
-      ErrorNoHalt("Lumen: the '"..id.."' template of '"..file_name.."' replaces the one of '"..existing.path.."'!\n")
-    end
-
-    local code, err = Lumen.compile(source, file_name)
-
-    if err then
-      ErrorNoHalt('Lumen: '..err..'\n')
-    end
-
-    file_paths[file_name] = id
-
-    return Lumen.define(id, file_name, code, err)
-  end
-
-  local function bracket_level(text)
-    local depth = 0
-
-    while text:find(']'..string.rep('=', depth)..']', 1, true) do
-      depth += 1
-    end
-
-    return string.rep('=', depth)
-  end
-
-  --- Generates the Lua code that gives a template to the clients. The clients include the
-  -- generated files before Lumen itself loads, so the code only fills `Flux.lumen_sources`,
-  -- which Lumen reads once it is there.
-  -- @param template [Map a stored template]
-  -- @return [String Lua code]
-  function Lumen.generate_client_code(template)
-    local lines = {
-      'Flux.lumen_sources = Flux.lumen_sources or {}\n',
-      'Flux.lumen_sources['..string.format('%q', template.id)..'] = {\n',
-      '  path = '..string.format('%q', template.path or template.id)..',\n'
-    }
-
-    if template.code then
-      local level = bracket_level(template.code)
-
-      lines[#lines + 1] = '  code = ['..level..'[\n'..template.code..'\n]'..level..']'
-    else
-      lines[#lines + 1] = '  error = '..string.format('%q', tostring(template.error))
-    end
-
-    lines[#lines + 1] = '\n}\n'
-
-    return table.concat(lines)
-  end
-
-  local function write_client_files()
-    for id, template in pairs(templates) do
-      Flux.write_client_file('3_lumen_'..id..'.lua', Lumen.generate_client_code(template))
-    end
-  end
-
-  Pipeline.register('lumen', function(id, file_name, _pipe)
-    Lumen.include_file(id, file_name)
-  end)
-
-  --- Hook handlers of Lumen, registered as `LumenHooks`.
-  local hooks = {}
-
-  --- Writes the compiled templates along with the other files that get sent to the clients.
-  function hooks:WriteClientFiles()
-    write_client_files()
-  end
-
-  Plugin.add_hooks('LumenHooks', hooks)
-
-  concommand.Add('lumen_reload', function(actor)
-    if IsValid(actor) then return end
-
-    print('Recompiling Lumen templates...')
-
-    for file_name, id in pairs(file_paths) do
-      Lumen.include_file(id, file_name)
-    end
-
-    write_client_files()
-
-    print('Done. Clients get the new templates when they reconnect.')
-  end)
-else
-  if istable(Flux) and istable(Flux.lumen_sources) then
-    for id, source in pairs(Flux.lumen_sources) do
-      Lumen.define(id, source.path, source.code, source.error)
-    end
-  end
 end
