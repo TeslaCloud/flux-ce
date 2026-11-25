@@ -28,8 +28,8 @@ local function change_usergroup(target, group, role_id, silent)
   if !external then
     target:set_nv('role', role_id)
 
-    if old_role and role and old_role:on_role_taken(target, role) == nil
-      and role:on_role_set(target, old_role) == nil then
+    if (!old_role or old_role:on_role_taken(target, role) == nil)
+      and (!role or role:on_role_set(target, old_role) == nil) then
       target:save_usergroup()
     end
   end
@@ -83,15 +83,47 @@ function player_meta:SetUserGroup(group, silent)
   end
 end
 
---- Writes the player's current name and role to their database record, if they have one.
--- The blank record of a bot is never saved. `Player:set_role_id` calls it only while Bolt
--- is the admin mod; another admin mod that Bolt defers to saves its own groups.
+--- Writes the player's current name and role to their database record, if they have one
+-- and either has changed. The blank record of a bot is never saved. `Player:set_role_id`
+-- calls it only while Bolt is the admin mod; another admin mod that Bolt defers to saves its
+-- own groups.
 function player_meta:save_usergroup()
-  if self.record and !self:IsBot() then
-    self.record.name = self:name()
-    self.record.role = self:get_role()
-    self.record:save()
+  local record = self.record
+
+  if !record or self:IsBot() then return end
+
+  local name, role_id = self:name(), self:get_role()
+
+  if record.fetched and record.name == name and record.role == role_id then return end
+
+  record.name = name
+  record.role = role_id
+  record:save()
+end
+
+--- Returns the list of permission records of a relation of the player's user record, for
+-- setting one of them. Reports an error in the console while the record has not loaded.
+-- @param target [Player]
+-- @param relation [String 'permissions' or 'temp_permissions']
+-- @return [List<Permission/TempPermission> the records, nil while the user record has not
+--   loaded]
+local function permission_rows(target, relation)
+  local record = target.record
+
+  if !record then
+    ErrorNoHalt('The permissions of '..tostring(target)..' cannot be set before their user record has loaded!\n')
+
+    return
   end
+
+  local rows = record[relation]
+
+  if !rows then
+    rows = {}
+    record[relation] = rows
+  end
+
+  return rows
 end
 
 --- Replaces the player's networked table of individual permissions. Does not touch the
@@ -102,29 +134,35 @@ function player_meta:set_permissions(perm_table)
 end
 
 --- Sets one of the player's individual permissions: updates the Permission records on the
--- player's database record (PERM_NO destroys the record and takes it off the list) and the
--- networked table, then runs the PlayerPermissionChanged hook.
+-- player's database record and writes the change to the database right away (PERM_NO
+-- destroys the record and takes it off the list), updates the networked table, then runs the
+-- PlayerPermissionChanged hook. Does nothing but report an error while the player's record
+-- has not loaded.
 -- @param perm_id [String permission ID]
 -- @param value [Number PERM_ALLOW or PERM_NEVER, or PERM_NO to remove the permission]
 function player_meta:set_permission(perm_id, value)
+  local rows = permission_rows(self, 'permissions')
+
+  if !rows then return end
+
   local create = true
 
-  if self.record.permissions then
-    for index, perm_row in pairs(self.record.permissions) do
-      if perm_row.permission_id == perm_id then
-        create = false
+  for index, perm_row in ipairs(rows) do
+    if perm_row.permission_id == perm_id then
+      create = false
 
-        if value != PERM_NO then
-          if value != perm_row.object then
-            perm_row.object = value
-          end
-        else
-          perm_row:destroy()
-          table.remove(self.record.permissions, index)
+      if value != PERM_NO then
+        if value != perm_row.object then
+          perm_row.object = value
+
+          Bolt:save_user_permission(self, perm_row)
         end
-
-        break
+      else
+        Bolt:destroy_permission_record(perm_row)
+        table.remove(rows, index)
       end
+
+      break
     end
   end
 
@@ -132,7 +170,9 @@ function player_meta:set_permission(perm_id, value)
     local perm = Permission.new()
       perm.permission_id = perm_id
       perm.object = value
-    table.insert(self.record.permissions, perm)
+    table.insert(rows, perm)
+
+    Bolt:save_user_permission(self, perm)
   end
 
   local perm_table = self:get_permissions()
@@ -168,41 +208,45 @@ end
 -- permissions until it expires. Updates the TempPermission records and the networked table.
 -- Giving the value the player already has temporarily adds the duration to the time that is
 -- left, up to `Bolt.max_temp_duration` from now; any other value starts counting from now.
--- The config is sent to the player again if that has changed their right to edit configs,
--- and the PlayerTempPermissionChanged hook runs.
+-- The change is written to the database right away. The config is sent to the player again
+-- if that has changed their right to edit configs, and the PlayerTempPermissionChanged hook
+-- runs. Does nothing but report an error while the player's record has not loaded.
 -- @param perm_id [String permission ID]
 -- @param value [Number PERM_ value, normally PERM_ALLOW or PERM_NEVER]
 -- @param duration [Number seconds until the permission expires]
 function player_meta:set_temp_permission(perm_id, value, duration)
-  local expires = os.time() + duration
-  local create = true
+  local rows = permission_rows(self, 'temp_permissions')
 
-  if self.record.temp_permissions then
-    for _, perm_row in pairs(self.record.temp_permissions) do
-      if perm_row.permission_id == perm_id then
-        create = false
+  if !rows then return end
 
-        if perm_row.object == value then
-          expires = math.min(math.max(time_from_timestamp(perm_row.expires) or 0, os.time()) + duration,
-            os.time() + Bolt.max_temp_duration)
-        else
-          perm_row.object = value
-        end
+  local now = os.time()
+  local expires = now + duration
+  local changed
 
-        perm_row.expires = to_datetime(expires)
-
-        break
+  for _, perm_row in ipairs(rows) do
+    if perm_row.permission_id == perm_id then
+      if perm_row.object == value then
+        expires = Bolt:extend_expiry(time_from_timestamp(perm_row.expires), duration, now)
+      else
+        perm_row.object = value
       end
-    end
 
-    if create then
-      local temp_perm = TempPermission.new()
-        temp_perm.permission_id = perm_id
-        temp_perm.object = value
-        temp_perm.expires = to_datetime(expires)
-      table.insert(self.record.temp_permissions, temp_perm)
+      perm_row.expires = to_datetime(expires)
+      changed = perm_row
+
+      break
     end
   end
+
+  if !changed then
+    changed = TempPermission.new()
+      changed.permission_id = perm_id
+      changed.object = value
+      changed.expires = to_datetime(expires)
+    table.insert(rows, changed)
+  end
+
+  Bolt:save_user_permission(self, changed)
 
   local perm_table = self:get_temp_permissions()
 

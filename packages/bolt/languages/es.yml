@@ -201,6 +201,7 @@ es:
     banned:
       temporary: "Estás baneado de este servidor. Motivo: {reason}. El baneo termina en {time}."
       permanent: "Estás baneado permanentemente de este servidor. Motivo: {reason}."
+    ban_not_yours: "No puedes levantar el baneo de {target}, porque lo puso alguien sobre quien no puedes actuar."
     character_permission:
       no_character: Ninguno de estos jugadores tiene un personaje cargado.
       not_set: "No hay nada establecido para el permiso {permission} de los personajes de estos jugadores."
@@ -210,11 +211,14 @@ es:
     no_permission: No tienes permiso para hacer eso.
     permission_not_set: "No hay nada asignado para el permiso {permission} de estos jugadores."
     permission_not_valid: "¡'{permission}' no es un permiso válido!"
-    permission_not_yours: "No puedes conceder ni retirar el permiso {permission}, porque tú no lo tienes."
+    permission_not_yours: "No puedes cambiar el permiso {permission} de nadie, porque tú no lo tienes."
+    permission_own: "No puedes cambiar tus propios permisos."
+    role_too_high: "No puedes dar el rol {group}, porque está por encima del tuyo."
     send_same: No se puede enviar a un jugador hasta sí mismo.
     slay: Ninguno de estos jugadores está vivo.
     user_not_found: "Nadie con el Steam ID '{steam_id}' ha entrado nunca en este servidor."
   notification:
+    admin_hint: "Nadie puede administrar este servidor todavía. Para ser su administrador, entra en él y ejecuta flc role set <tu nombre> admin en esta consola, con el nombre entre comillas dobles si tiene espacios, o pon tu SteamID (STEAM_0:X:Y) en bolt_root_steamid en el archivo config/settings.yml de tu schema y reinicia el servidor."
     announcement: "[Anuncio] {text}"
     character_permission:
       granted: "Se ha concedido a tu personaje el permiso {permission}."
@@ -228,6 +232,7 @@ es:
       granted: "Te han concedido el permiso {permission}."
       revoked: "Te han denegado el permiso {permission}."
       reset: "Tu permiso {permission} se ha restablecido a lo que permite tu rol."
+    player_connected: "{name} se ha conectado al servidor."
     plugin_disabled: "{player} ha desactivado el plugin {plugin}. Seguirá cargado hasta que se reinicie el servidor."
     plugin_enabled: "{player} ha activado el plugin {plugin}. Se cargará cuando se reinicie el servidor."
     return: Has vuelto a tu posición anterior.

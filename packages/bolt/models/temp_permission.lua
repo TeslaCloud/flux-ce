@@ -5,3 +5,9 @@
 class 'TempPermission' extends 'ActiveRecord::Base'
 
 TempPermission:belongs_to 'User'
+
+--- Called by ActiveRecord once the record has been inserted, see
+-- `Bolt:permission_record_created`.
+function TempPermission:after_create()
+  Bolt:permission_record_created(self)
+end

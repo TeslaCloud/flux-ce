@@ -6,15 +6,8 @@
 
 class 'CharacterTempPermission' extends 'ActiveRecord::Base'
 
---- Called by ActiveRecord once the record has been inserted. The character permission
--- functions mark a record whose insert is still running when it is changed or deleted: a
--- changed record is saved again with its current values, and a deleted one is deleted.
+--- Called by ActiveRecord once the record has been inserted, see
+-- `Bolt:permission_record_created`.
 function CharacterTempPermission:after_create()
-  if self.destroy_on_create then
-    self:destroy()
-  elseif self.save_on_create then
-    self.save_on_create = nil
-
-    self:save()
-  end
+  Bolt:permission_record_created(self)
 end

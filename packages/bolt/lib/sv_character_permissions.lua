@@ -40,28 +40,6 @@ local function get_records(character, field)
   return records
 end
 
---- Writes a permission record to the database. A record whose insert has not returned yet is
--- saved again as soon as it has been inserted, with the values it has by then.
--- @param record [CharacterPermission/CharacterTempPermission]
-local function save_record(record)
-  if record.id or !record.fetched then
-    record:save()
-  else
-    record.save_on_create = true
-  end
-end
-
---- Deletes a permission record from the database. A record whose insert has not returned yet
--- is deleted as soon as it has been inserted.
--- @param record [CharacterPermission/CharacterTempPermission]
-local function destroy_record(record)
-  if record.id then
-    record:destroy()
-  elseif record.fetched then
-    record.destroy_on_create = true
-  end
-end
-
 --- Returns the active character of a player, if it is a saved character record.
 -- @param target [Player]
 -- @return [Character the active character, nil if none is loaded]
@@ -169,7 +147,7 @@ function Bolt:set_character_permission(character, perm_id, value)
 
     if record.permission_id == perm_id then
       if found or value == PERM_NO then
-        destroy_record(record)
+        Bolt:destroy_permission_record(record)
 
         table.remove(records, index)
       else
@@ -178,7 +156,7 @@ function Bolt:set_character_permission(character, perm_id, value)
         if tonumber(record.object) != value then
           record.object = value
 
-          save_record(record)
+          Bolt:save_permission_record(record)
         end
       end
     end
@@ -225,22 +203,21 @@ function Bolt:set_character_temp_permission(character, perm_id, value, duration)
 
     if record.permission_id == perm_id then
       if found then
-        destroy_record(record)
+        Bolt:destroy_permission_record(record)
 
         table.remove(records, index)
       else
         found = true
 
         if tonumber(record.object) == value then
-          expires = math.min(math.max(time_from_timestamp(record.expires) or 0, now) + duration,
-            now + self.max_temp_duration)
+          expires = self:extend_expiry(time_from_timestamp(record.expires), duration, now)
         else
           record.object = value
         end
 
         record.expires = to_datetime(expires)
 
-        save_record(record)
+        Bolt:save_permission_record(record)
       end
     end
   end
@@ -275,7 +252,7 @@ function Bolt:delete_character_temp_permission(character, perm_id)
 
   for index = #records, 1, -1 do
     if records[index].permission_id == perm_id then
-      destroy_record(records[index])
+      Bolt:destroy_permission_record(records[index])
 
       table.remove(records, index)
 
@@ -304,7 +281,7 @@ function Bolt:remove_expired_character_permissions(character)
     local record = records[index]
 
     if (time_from_timestamp(record.expires) or 0) <= now then
-      destroy_record(record)
+      Bolt:destroy_permission_record(record)
 
       table.remove(records, index)
 

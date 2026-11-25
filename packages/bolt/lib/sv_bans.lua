@@ -65,7 +65,8 @@ end
 -- -- Permanently ban somebody by SteamID, on behalf of an admin.
 -- Bolt:ban('STEAM_0:1:12345', 0, 'Cheating', false, actor)
 -- ```
--- @param target [Player/String the player to ban, or a SteamID]
+-- @param target [Player/String the player to ban, or a SteamID in any case and with any
+--   universe digit; anything else raises an error]
 -- @param duration=0 [Number ban length in seconds, 0 for a permanent ban]
 -- @param reason='N/A' [String text or language phrase]
 -- @param prevent_kick=false [Boolean do not kick the banned player]
@@ -73,9 +74,19 @@ end
 -- @param name=nil [String name to store with the ban of a SteamID whose owner is not on
 --   the server; the name of an earlier ban of that SteamID or else the SteamID itself by
 --   default]
--- @return [Ban the ban record, or nil if target is neither a valid player nor a string]
+-- @return [Ban the ban record, or nil if target is an invalid player]
 function Bolt:ban(target, duration, reason, prevent_kick, admin, name)
-  if !isstring(target) and !IsValid(target) then return end
+  if isstring(target) then
+    target = player.normalize_steam_id(target)
+
+    if !player.is_steam_id(target) then
+      error("Bolt:ban takes a player or a SteamID, not '"..target.."'")
+    end
+  elseif !isentity(target) then
+    error('Bolt:ban takes a player or a SteamID, not '..type(target))
+  elseif !IsValid(target) then
+    return
+  end
 
   duration = duration or 0
   reason = reason or 'N/A'
@@ -83,7 +94,7 @@ function Bolt:ban(target, duration, reason, prevent_kick, admin, name)
   local steam_id = target
 
   if isstring(target) then
-    local online = player.is_steam_id(target) and player.find(target)
+    local online = player.find(target)
 
     if IsValid(online) then
       target = online
@@ -106,6 +117,152 @@ function Bolt:ban(target, duration, reason, prevent_kick, admin, name)
   return obj
 end
 
+--- Checks whether a timed ban has run out and may be lifted.
+-- @param steam_id [String SteamID the ban belongs to]
+-- @param entry [Ban]
+-- @param ip [String address its owner connects from, nil when they are not connecting]
+-- @param name [String name of its owner]
+-- @return [Boolean]
+local function should_expire(steam_id, entry, ip, name)
+  local unban_time = time_from_timestamp(entry.unban_time)
+
+  return tonumber(entry.duration) != 0 and unban_time != nil and unban_time <= os_time() and
+    --- Called on the server when a timed ban has expired and Bolt is about to lift it: when
+    -- its owner connects or joins, and for every expired ban once the bans have been loaded.
+    -- @param steam_id [String SteamID the ban belongs to]
+    -- @param ip [String Address the player connects from; nil for a ban that expires while
+    --   the bans are loaded]
+    -- @param name [String Name of the player, or the name stored with the ban]
+    -- @return [Boolean Return false to keep the ban, so that the player is rejected with
+    --   the reason of the ban]
+    Plugin.call('ShouldExpireBan', steam_id, ip, name) != false
+end
+
+--- Finds the ban that keeps a SteamID off the server. A timed ban that has expired is lifted
+-- instead, see the ShouldExpireBan hook.
+-- @param steam_id [String SteamID of the player who connects or joins]
+-- @param ip [String address the player connects from]
+-- @param name [String player name]
+-- @return [Ban the ban to enforce, nil if there is none]
+function Bolt:get_enforced_ban(steam_id, ip, name)
+  local entry = bans[steam_id]
+
+  --- Called on the server when a player who connects or joins has a ban on record, before
+  -- the ban is enforced or lifted.
+  -- @param steam_id [String SteamID the ban belongs to]
+  -- @param ip [String Address the player connects from]
+  -- @param name [String Name of the player]
+  -- @return [Boolean Return false to ignore the ban, so that Bolt neither
+  --   rejects the player nor lifts the ban]
+  if !entry or Plugin.call('ShouldCheckBan', steam_id, ip, name) == false then return end
+
+  if should_expire(steam_id, entry, ip, name) then
+    self:remove_ban(steam_id)
+
+    return
+  end
+
+  return entry
+end
+
+--- Kicks a player who is on the server if their SteamID, or that of the owner of the game
+-- they play through family sharing, has a ban to enforce, see `Bolt:get_enforced_ban`. This
+-- catches the players who were banned while they were still connecting, those who connected
+-- before the bans had been loaded and those who borrow the game of a banned player.
+-- @param target [Player]
+-- @return [Boolean true if the player has been kicked]
+function Bolt:kick_if_banned(target)
+  if !IsValid(target) or target:IsBot() then return false end
+
+  local ip, name = target:IPAddress(), target:steam_name()
+  local entry = self:get_enforced_ban(target:SteamID(), ip, name)
+  local owner_id64 = target:OwnerSteamID64()
+
+  if !entry and owner_id64 != '0' and owner_id64 != target:SteamID64() then
+    entry = self:get_enforced_ban(util.SteamIDFrom64(owner_id64), ip, name)
+  end
+
+  if !entry then return false end
+
+  target:Kick(self:get_ban_message(entry, Flux.Lang:get_player_lang(target)))
+
+  return true
+end
+
+--- Lifts the timed bans that have expired while their owners were away, see the
+-- ShouldExpireBan hook.
+function Bolt:remove_expired_bans()
+  for steam_id, entry in pairs(bans) do
+    if should_expire(steam_id, entry, nil, entry.name) then
+      self:remove_ban(steam_id)
+    end
+  end
+end
+
+--- Lifts the ban of a SteamID on behalf of a player who may lift it: the server console, a
+-- root player, the player who placed the ban, or anybody who may act on that player, by
+-- `Bolt:check_immunity` while they are on the server and `Bolt:check_offline_target` while
+-- they are not. A ban placed from the server console or by code is only lifted by the console
+-- and by root players. Does not check permissions. The player is told when the SteamID is not
+-- banned or when they may not lift the ban.
+-- @param actor [Player the player who lifts the ban, an invalid entity for the server console]
+-- @param steam_id [String SteamID whose ban to lift]
+-- @param callback=nil [Function called with the column values of the deleted ban record once
+--   the ban has been lifted]
+function Bolt:lift_ban(actor, steam_id, callback)
+  local entry = bans[steam_id]
+
+  if !entry then
+    Flux.Player:notify(actor, 'error.not_banned', { steam_id = steam_id })
+
+    return
+  end
+
+  local function lift(allowed)
+    if bans[steam_id] != entry then
+      self:lift_ban(actor, steam_id, callback)
+
+      return
+    end
+
+    if !allowed then
+      Flux.Player:notify(actor, 'error.ban_not_yours', { target = tostring(entry.name or steam_id) })
+
+      return
+    end
+
+    local _, data = self:remove_ban(steam_id)
+
+    if callback then
+      callback(data)
+    end
+  end
+
+  local admin_steam_id = entry.admin_steam_id
+
+  if !IsValid(actor) or actor:is_root() or actor:SteamID() == admin_steam_id then
+    lift(true)
+
+    return
+  end
+
+  if !player.is_steam_id(admin_steam_id) then
+    lift(false)
+
+    return
+  end
+
+  local admin = player.find(admin_steam_id)
+
+  if IsValid(admin) then
+    lift(self:check_immunity(actor, admin))
+
+    return
+  end
+
+  self:check_offline_target(actor, admin_steam_id, 'ban', lift)
+end
+
 --- Deletes the ban record of a SteamID from the database and from the ban cache, so that
 -- the player can connect again right away and a later ban gets a record of its own. Runs
 -- the BanRemoved hook if there was a ban.
@@ -122,8 +279,8 @@ function Bolt:remove_ban(steam_id)
     bans[steam_id] = nil
 
     --- Called on the server after a ban has been lifted: by the `ban remove` command, from
-    -- the ban list of the admin panel, or because it has expired by the time its owner
-    -- tried to join.
+    -- the ban list of the admin panel, or because it has expired, which Bolt notices when its
+    -- owner tries to join and when the bans are loaded.
     -- @param steam_id [String SteamID that is no longer banned]
     -- @param data [Map Column values of the deleted ban record]
     hook.Run('BanRemoved', steam_id, dump)

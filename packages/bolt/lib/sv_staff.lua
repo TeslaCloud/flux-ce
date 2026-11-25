@@ -1,6 +1,6 @@
---- Server side of what Bolt does to players who are not on the server: looking up the
--- stored user of a SteamID, checking the immunity of whoever acts on them, changing their
--- stored role, and finding the targets of the commands that also take a SteamID
+--- Server side of what Bolt does to players who are not on the server: the root SteamIDs,
+-- looking up the stored user of a SteamID, checking the immunity of whoever acts on them,
+-- changing their stored role, and finding the targets of the commands that also take a SteamID
 -- (`ban add` and `role remove`).
 -- Also lists the staff: the players on the server with the `staff` permission, who receive
 -- the chat messages of the Staff and Report commands, and for the staff page of the admin
@@ -62,9 +62,35 @@ function Bolt:set_stored_role(steam_id, role_id, callback, old_role, silent)
   end)
 end
 
---- Checks whether a player may act on somebody who is not on the server. The server console
--- and root players may act on anyone; nobody else may act on a SteamID from the
--- bolt_root_steamid config, or on a holder of a role whose immunity is not lower than their own.
+--- Checks whether a SteamID is listed in the bolt_root_steamid config, which makes its owner a
+-- root player when they join. A SteamID matches in any case and with any universe digit, on
+-- either side.
+-- @param steam_id [String]
+-- @return [Boolean]
+function Bolt:is_root_steam_id(steam_id)
+  local root_steamid = Config.get('bolt_root_steamid')
+
+  steam_id = player.normalize_steam_id(steam_id)
+
+  if isstring(root_steamid) then
+    return player.normalize_steam_id(root_steamid) == steam_id
+  elseif istable(root_steamid) then
+    for _, entry in pairs(root_steamid) do
+      if player.normalize_steam_id(entry) == steam_id then
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
+--- Checks whether a player may act on somebody who is not on the server, going by the role
+-- stored for them. The server console and root players may act on anyone; nobody else may act
+-- on a SteamID from the bolt_root_steamid config, or on a holder of a role whose immunity is
+-- not lower than their own. While Bolt defers to another admin mod, the stored role is not
+-- kept up to date and only the console and root players pass; `Bolt:check_offline_target`
+-- asks CAMI then.
 -- @param actor [Player the player performing the action, an invalid entity for the server
 --   console]
 -- @param steam_id [String SteamID of whoever is acted on]
@@ -75,36 +101,80 @@ function Bolt:can_target_offline(actor, steam_id, role_id)
     return true
   end
 
-  if self:is_root_steam_id(steam_id) then
+  if self:uses_external_admin() or self:is_root_steam_id(steam_id) then
     return false
   end
 
   return self:check_role_immunity(actor, role_id or 'user')
 end
 
---- Looks up the stored user of a SteamID on behalf of a player and runs the callback if the
--- player may act on them. A player who may not is told that the target has a higher
--- immunity. Nothing happens if the player has left by the time the answer arrives.
+--- Looks up the stored user of a SteamID and decides whether a player may act on them. While
+-- Bolt is the admin mod that is `Bolt:can_target_offline`. While Bolt defers to another admin
+-- mod, CAMI is asked whether a player who is not root has the permission of the action on
+-- the SteamID (`CAMI.SteamIDHasAccess`), so that the admin mod that keeps the usergroups
+-- judges the immunity; when no admin mod answers, CAMI refuses. A SteamID from the
+-- bolt_root_steamid config is refused without asking.
 -- @param actor [Player the player performing the action, an invalid entity for the server
 --   console]
 -- @param steam_id [String SteamID of whoever is acted on]
--- @param callback [Function called with the `User` record that Bolt:find_user finds, or with
---   nil if nobody with that SteamID has ever joined]
-function Bolt:with_offline_target(actor, steam_id, callback)
+-- @param perm_id [String permission of the action, such as 'ban']
+-- @param callback [Function called with true if the player may act on the SteamID and false
+--   otherwise, and with the `User` record that Bolt:find_user finds, or nil if nobody with
+--   that SteamID has ever joined; not called if the player has left by the time the answer
+--   arrives]
+function Bolt:check_offline_target(actor, steam_id, perm_id, callback)
   local from_console = !IsValid(actor)
 
   self:find_user(steam_id, function(user)
     if !from_console and !IsValid(actor) then return end
 
-    if !self:can_target_offline(actor, steam_id, user and user.role) then
-      Flux.Player:notify(actor, 'error.command.higher_immunity', {
-        target = user and user.name or steam_id
-      })
+    if self:can_target_offline(actor, steam_id, user and user.role) then
+      callback(true, user)
 
       return
     end
 
-    callback(user)
+    if !self:uses_external_admin() or self:is_root_steam_id(steam_id) then
+      callback(false, user)
+
+      return
+    end
+
+    local answered = false
+
+    CAMI.SteamIDHasAccess(actor:SteamID(), perm_id, function(has_access)
+      if answered then return end
+
+      answered = true
+
+      if IsValid(actor) then
+        callback(has_access == true, user)
+      end
+    end, steam_id)
+  end)
+end
+
+--- Looks up the stored user of a SteamID on behalf of a player and runs the callback if the
+-- player may act on them, see `Bolt:check_offline_target`. A player who may not is told that
+-- the target has a higher immunity. Nothing happens if the player has left by the time the
+-- answer arrives.
+-- @param actor [Player the player performing the action, an invalid entity for the server
+--   console]
+-- @param steam_id [String SteamID of whoever is acted on]
+-- @param perm_id [String permission of the action, such as 'ban']
+-- @param callback [Function called with the `User` record that Bolt:find_user finds, or with
+--   nil if nobody with that SteamID has ever joined]
+function Bolt:with_offline_target(actor, steam_id, perm_id, callback)
+  self:check_offline_target(actor, steam_id, perm_id, function(allowed, user)
+    if allowed then
+      callback(user)
+
+      return
+    end
+
+    Flux.Player:notify(actor, 'error.command.higher_immunity', {
+      target = user and user.name or steam_id
+    })
   end)
 end
 
@@ -207,7 +277,7 @@ function Bolt:demote_steam_id(actor, steam_id, callback)
     return
   end
 
-  self:with_offline_target(actor, steam_id, function(user)
+  self:with_offline_target(actor, steam_id, 'role', function(user)
     if !user then
       Flux.Player:notify(actor, 'error.user_not_found', { steam_id = steam_id })
 

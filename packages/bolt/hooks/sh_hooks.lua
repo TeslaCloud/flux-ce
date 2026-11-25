@@ -27,12 +27,13 @@ function hooks:PlayerHasPermission(actor, action, object)
   return Bolt:can(actor, action, object)
 end
 
---- Reports whether the player was flagged as root, which happens when their SteamID is listed
--- in the bolt_root_steamid config.
+--- Reports whether the player was flagged as root, which the server does when their SteamID is
+-- listed in the bolt_root_steamid config. The flag is a networked variable that only the root
+-- player receives, so on the client the local player is the only one known to be root.
 -- @param target [Player]
 -- @return [Boolean true for root players, nil otherwise]
 function hooks:PlayerIsRoot(target)
-  return target.can_anything
+  return target:get_nv('bolt_root')
 end
 
 --- Keeps players without the 'context_menu' permission from using the properties of

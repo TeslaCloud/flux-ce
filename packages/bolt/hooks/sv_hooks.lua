@@ -4,12 +4,15 @@
 -- expiry of temporary permissions, applying and deleting the permissions of characters, giving
 -- or stripping the tool gun and the physgun as permissions change.
 
+local voice_check_interval = 1
+
 local hooks = {}
 
---- Checks connecting players against the ban cache. A timed ban that has expired is lifted
--- and the connection left to the other checks, such as the server password; any other ban
--- rejects the connection with the message of Bolt:get_ban_message, which names its reason
--- and the time it has left, including a ban whose end time cannot be read.
+--- Checks connecting players against the ban cache, see `Bolt:get_enforced_ban`. A timed ban
+-- that has expired is lifted and the connection left to the other checks, such as the server
+-- password; any other ban rejects the connection with the message of Bolt:get_ban_message,
+-- which names its reason and the time it has left, including a ban whose end time cannot be
+-- read.
 -- @param steam_id64 [String 64-bit SteamID of the connecting player]
 -- @param ip [String]
 -- @param _sv_pass [String server password]
@@ -18,32 +21,10 @@ local hooks = {}
 -- @return [Boolean false to reject (nothing otherwise), String rejection message (only when
 --   rejecting)]
 function hooks:CheckPassword(steam_id64, ip, _sv_pass, _cl_pass, name)
-  local steam_id = util.SteamIDFrom64(steam_id64)
-  local entry = Bolt:get_bans()[steam_id]
+  local entry = Bolt:get_enforced_ban(util.SteamIDFrom64(steam_id64), ip, name)
 
-  --- Called on the server when a connecting player has a ban on record, before the ban is
-  -- enforced or lifted.
-  -- @param steam_id [String SteamID of the connecting player]
-  -- @param ip [String Address the player connects from]
-  -- @param name [String Name of the connecting player]
-  -- @return [Boolean Return false to ignore the ban, so that Bolt neither
-  --   rejects the player nor lifts the ban]
-  if entry and Plugin.call('ShouldCheckBan', steam_id, ip, name) != false then
-    local unban_time = time_from_timestamp(entry.unban_time)
-
-    if tonumber(entry.duration) != 0 and unban_time and unban_time <= os.time() and
-       --- Called on the server when the temporary ban of a connecting player has expired
-       -- and Bolt is about to lift it and leave the connection to the other checks.
-       -- @param steam_id [String SteamID of the connecting player]
-       -- @param ip [String Address the player connects from]
-       -- @param name [String Name of the connecting player]
-       -- @return [Boolean Return false to keep the ban, so that the player is rejected with
-       --   the reason of the ban]
-       Plugin.call('ShouldExpireBan', steam_id, ip, name) != false then
-      Bolt:remove_ban(steam_id)
-    else
-      return false, Bolt:get_ban_message(entry)
-    end
+  if entry then
+    return false, Bolt:get_ban_message(entry)
   end
 end
 
@@ -98,24 +79,44 @@ function hooks:PlayerSpawnVehicle(actor, model, name, tab)
   return true
 end
 
---- Mutes talkers that lack the 'voice' permission.
+--- Mutes talkers that lack the 'voice' permission. The engine asks for every pair of players
+-- many times a second, so the answer is kept on the talker for a second, and forgotten as soon
+-- as their role or one of their permissions changes.
 -- @param _listener [Player the listener]
 -- @param talker [Player]
 -- @return [Boolean false if the talker may not be heard, nothing otherwise]
 function hooks:PlayerCanHearPlayersVoice(_listener, talker)
-  if !talker:can('voice') then
+  local cur_time = CurTime()
+
+  if (talker.bolt_voice_until or 0) <= cur_time then
+    talker.bolt_voice_muted = !talker:can('voice')
+    talker.bolt_voice_until = cur_time + voice_check_interval
+  end
+
+  if talker.bolt_voice_muted then
     return false
   end
 end
 
 --- Gives a player who has just connected the `user` role until their record has loaded,
--- without signaling CAMI. While Bolt defers to another admin mod, the usergroup is left to
--- that admin mod.
+-- without signaling CAMI, unless they are kicked for a ban first, see `Bolt:kick_if_banned`.
+-- While Bolt defers to another admin mod, the usergroup is left to that admin mod.
 -- @param actor [Player]
 function hooks:PlayerInitialSpawn(actor)
+  if Bolt:kick_if_banned(actor) then return end
+
   if !Bolt:uses_external_admin() then
     actor:set_role_id('user', true)
   end
+end
+
+--- Kicks a player whose SteamID, or that of the owner of the game they play through family
+-- sharing, is banned, once Steam has confirmed both, see `Bolt:kick_if_banned`.
+-- @param actor [Player]
+-- @param _steam_id [String]
+-- @param _unique_id [String]
+function hooks:PlayerAuthed(actor, _steam_id, _unique_id)
+  Bolt:kick_if_banned(actor)
 end
 
 --- Loads the individual and the temporary permissions of a player together with their user
@@ -140,20 +141,48 @@ function hooks:PlayerRecordCreated(_actor, record)
   record.banned = record.banned or false
 end
 
---- Loads all bans from the database into the ban cache.
+--- Prints how to become an administrator to the server console while nobody can manage the
+-- server: the bolt_root_steamid config is empty and no stored user has a role other than
+-- `user`.
+local function print_admin_hint()
+  local root_steamid = Config.get('bolt_root_steamid')
+
+  if (isstring(root_steamid) and root_steamid != '') or (istable(root_steamid) and next(root_steamid) != nil) then
+    return
+  end
+
+  User:where_not('role', 'user'):limit(1):get(function(users)
+    if #users == 0 then
+      MsgC(Color(255, 200, 0), t'notification.admin_hint', '\n')
+    end
+  end):fetch()
+end
+
+--- Loads all bans from the database into the ban cache, lifts the timed ones that have
+-- expired and kicks the players on the server who are banned. Then prints how to become an
+-- administrator while the server has none.
 function hooks:ActiveRecordReady()
   Ban:all():get(function(objects)
     for _, ban in ipairs(objects) do
       Bolt:record_ban(ban.steam_id, ban)
     end
   end):fetch()
+
+  Bolt:remove_expired_bans()
+
+  for _, client in player.Iterator() do
+    Bolt:kick_if_banned(client)
+  end
+
+  print_admin_hint()
 end
 
 --- Applies a loaded user record to the player: sets their role without signaling CAMI, makes
 -- the SteamIDs from the bolt_root_steamid config root admins, networks stored permissions,
--- sends the config again if the player turns out to be allowed to edit it and logs the
--- connection. When Bolt defers to another admin mod, the usergroup is left to that admin mod
--- and only the root flag is set.
+-- sends the config again if the player turns out to be allowed to edit it and tells everybody
+-- that the player has connected. When Bolt defers to another admin mod, the usergroup is left
+-- to that admin mod and only the root flag is set. The root flag is the `bolt_root` networked
+-- variable, which only the root player receives.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function hooks:PlayerRestored(actor, record)
@@ -164,11 +193,11 @@ function hooks:PlayerRestored(actor, record)
   end
 
   if Bolt:is_root_steam_id(actor:SteamID()) then
+    actor:set_private_nv('bolt_root', true)
+
     if sets_role then
       actor:set_role_id('admin', true)
     end
-
-    actor.can_anything = true
   end
 
   if record.permissions then
@@ -196,7 +225,10 @@ function hooks:PlayerRestored(actor, record)
 
   Bolt:update_config_access(actor)
 
-  Log:notify(actor:name()..' has connected to the server.', { action = 'player_events' })
+  local arguments = { name = actor:steam_name() }
+
+  Log:write(t('notification.player_connected', arguments), 'player_events')
+  Flux.Player:broadcast('notification.player_connected', arguments)
 end
 
 --- Remembers whether the player could edit configs when the config was first sent to them,
@@ -213,9 +245,11 @@ end
 -- @param actor [Player the caller]
 -- @param target [Player the player being targeted]
 -- @param can_equal=false [Boolean also pass when both roles have the same immunity]
--- @return [Boolean false if the caller may not target that player]
+-- @return [Boolean false if the caller may not target that player, nothing otherwise]
 function hooks:CommandCheckImmunity(actor, target, can_equal)
-  return Bolt:check_immunity(actor, target, can_equal)
+  if !Bolt:check_immunity(actor, target, can_equal) then
+    return false
+  end
 end
 
 --- Removes the expired temporary permissions of the player and of their active character.
@@ -232,20 +266,12 @@ function hooks:PlayerOneMinute(actor)
   Bolt:expire_character_permissions(actor)
 end
 
---- Gives or strips the tool gun or the physgun when the matching individual permission, or
--- the value that the active character sets for it, changes, going by what the player may do
--- now (character, individual and temporary permissions and role together): unsetting the
--- permission leaves the tool with a player whose role allows it, and PERM_NEVER takes it
--- away. Does nothing while the player is dead; they get the tools they are allowed when they
--- spawn. Any permission change also sends the config to the player again if it has changed
--- their right to edit configs.
+--- Gives or strips the weapon of the tool gun or the physgun permission, going by what a
+-- player may do now. Does nothing while the player is dead; they get the tools they are
+-- allowed when they spawn.
 -- @param target [Player]
--- @param perm_id [String permission ID]
--- @param _value [Number new PERM_ value]
-function hooks:PlayerPermissionChanged(target, perm_id, _value)
-  Bolt:update_config_access(target)
-
-  if perm_id != 'toolgun' and perm_id != 'physgun' then return end
+-- @param perm_id [String 'toolgun' or 'physgun']
+local function sync_tool(target, perm_id)
   if !target:Alive() then return end
 
   local weapon_class = perm_id == 'toolgun' ? 'gmod_tool' : 'weapon_physgun'
@@ -257,30 +283,49 @@ function hooks:PlayerPermissionChanged(target, perm_id, _value)
   end
 end
 
+--- Gives or strips the tool gun or the physgun when the matching individual permission, or
+-- the value that the active character sets for it, changes, going by what the player may do
+-- now (character, individual and temporary permissions and role together): unsetting the
+-- permission leaves the tool with a player whose role allows it, and PERM_NEVER takes it
+-- away. Does nothing while the player is dead; they get the tools they are allowed when they
+-- spawn. Any permission change also sends the config to the player again if it has changed
+-- their right to edit configs, and makes the voice check ask again.
+-- @param target [Player]
+-- @param perm_id [String permission ID]
+-- @param _value [Number new PERM_ value]
+function hooks:PlayerPermissionChanged(target, perm_id, _value)
+  target.bolt_voice_until = nil
+
+  Bolt:update_config_access(target)
+
+  if perm_id == 'toolgun' or perm_id == 'physgun' then
+    sync_tool(target, perm_id)
+  end
+end
+
+--- Makes the voice check ask again when a temporary permission of the player has changed.
+-- @param target [Player]
+-- @param _perm_id [String permission ID]
+-- @param _value [Number the temporary value, PERM_NO when it was removed]
+function hooks:PlayerTempPermissionChanged(target, _perm_id, _value)
+  target.bolt_voice_until = nil
+end
+
 --- Gives or strips the tool gun and the physgun after the player's role has changed, going
 -- by the 'toolgun' and 'physgun' permissions the player has now (role, individual, temporary
 -- and character permissions together). Does nothing while the player is dead; they get the
 -- tools they are allowed when they spawn. Also sends the config to the player again if the
--- new role has changed their right to edit configs.
+-- new role has changed their right to edit configs, and makes the voice check ask again.
 -- @param target [Player]
 -- @param _group [Role the player's new role, nil when no registered role stands for its usergroup]
 -- @param _old_group [Role the player's previous role, nil when no registered role stands for its usergroup]
 function hooks:PlayerUserGroupChanged(target, _group, _old_group)
+  target.bolt_voice_until = nil
+
   Bolt:update_config_access(target)
 
-  if !target:Alive() then return end
-
-  if target:can('toolgun') then
-    target:Give('gmod_tool')
-  else
-    target:StripWeapon('gmod_tool')
-  end
-
-  if target:can('physgun') then
-    target:Give('weapon_physgun')
-  else
-    target:StripWeapon('weapon_physgun')
-  end
+  sync_tool(target, 'toolgun')
+  sync_tool(target, 'physgun')
 end
 
 --- Supplies the icon of the player's role for their chat messages.

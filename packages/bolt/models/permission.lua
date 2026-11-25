@@ -5,3 +5,9 @@
 class 'Permission' extends 'ActiveRecord::Base'
 
 Permission:belongs_to 'User'
+
+--- Called by ActiveRecord once the record has been inserted, see
+-- `Bolt:permission_record_created`.
+function Permission:after_create()
+  Bolt:permission_record_created(self)
+end

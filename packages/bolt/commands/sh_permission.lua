@@ -10,6 +10,9 @@
 -- the caller the role of a player, the permissions set for them individually and those that
 -- their loaded character decides.
 --
+-- Callers can only grant, revoke or reset a permission they have themselves, and only root
+-- players can change their own permissions; the server console can change anything.
+--
 -- A permission is named by its ID or by the ID or an alias of the command it belongs to,
 -- exactly but in any case.
 
@@ -17,62 +20,6 @@ CMD.name = 'Permission'
 CMD.description = 'command.permission.description'
 CMD.category = 'permission.categories.player_management'
 CMD.aliases = { 'perm', 'perms', 'permissions' }
-
---- Sets a permission of the targeted players, for good or temporarily, notifies them and
--- staff. Callers can only set what they may do themselves; the server console can set
--- anything.
--- @param cmd [Command the subcommand that runs]
--- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param targets [List<Player> players whose permission is set]
--- @param permission_id [String permission ID, command ID or command alias]
--- @param duration_text [String duration as read by Bolt:interpret_ban_time, empty or a
---   permanent word such as 'perma' to set it for good]
--- @param value [Number PERM_ALLOW or PERM_NEVER]
-local function set_permission(cmd, actor, targets, permission_id, duration_text, value)
-  local permission = Bolt:find_command_permission(actor, permission_id)
-
-  if !permission then return end
-
-  if IsValid(actor) and !actor:can(permission.id) then
-    actor:notify('error.permission_not_yours', { permission = permission.id })
-
-    return
-  end
-
-  local valid, duration = Bolt:read_permission_duration(actor, duration_text)
-
-  if !valid then return end
-
-  local granted = value == PERM_ALLOW
-  local affected = {}
-
-  for _, target in ipairs(targets) do
-    if target.record then
-      if duration then
-        target:set_temp_permission(permission.id, value, duration)
-      else
-        target:set_permission(permission.id, value)
-      end
-
-      target:notify(granted ? 'notification.permission.granted' : 'notification.permission.revoked', {
-        permission = permission.id
-      })
-
-      table.insert(affected, target)
-    end
-  end
-
-  if #affected == 0 then return end
-
-  local phrase = 'command.permission.'..(granted ? 'grant' : 'revoke')..'.message'
-
-  cmd:notify_staff(duration and phrase..'_temporary' or phrase, {
-    player = get_player_name(actor),
-    target = util.player_list_to_string(affected),
-    permission = permission.id,
-    time = duration and Flux.Lang:duration(duration) or nil
-  })
-end
 
 local grant = CMD:subcommand('grant')
 grant.description = 'command.permission.grant.description'
@@ -88,7 +35,7 @@ grant.immunity = true
 -- @param ... [Vararg words of an optional duration as read by Bolt:interpret_ban_time, e.g.
 --   '2 hours'; the permission is granted for good without one]
 function grant:on_run(actor, targets, permission_id, ...)
-  set_permission(self, actor, targets, permission_id, table.concat({ ... }, ' '), PERM_ALLOW)
+  Bolt:set_command_permission(self, 'user', actor, targets, permission_id, table.concat({ ... }, ' '), PERM_ALLOW)
 end
 
 local revoke = CMD:subcommand('revoke')
@@ -105,7 +52,7 @@ revoke.immunity = true
 -- @param ... [Vararg words of an optional duration as read by Bolt:interpret_ban_time, e.g.
 --   '2 hours'; the permission is denied for good without one]
 function revoke:on_run(actor, targets, permission_id, ...)
-  set_permission(self, actor, targets, permission_id, table.concat({ ... }, ' '), PERM_NEVER)
+  Bolt:set_command_permission(self, 'user', actor, targets, permission_id, table.concat({ ... }, ' '), PERM_NEVER)
 end
 
 local reset = CMD:subcommand('reset')
@@ -115,46 +62,13 @@ reset.arguments = 2
 reset.arg_types = { 'player', 'permission' }
 reset.immunity = true
 
-local function has_own_value(target, permission_id)
-  return target:get_permission(permission_id) != PERM_NO or target:get_temp_permission(permission_id) != nil
-end
-
---- Resets the permission of the targeted players and notifies them and staff. An ID that is
--- not registered on the server is accepted as well if one of the targets has a value set for
--- it, which is the case for a permission of a plugin that is not loaded on the server.
+--- Resets the permission of the targeted players and notifies them and staff, see
+-- `Bolt:reset_command_permission`.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players whose permission is reset]
 -- @param permission_id [String permission ID, command ID or command alias]
 function reset:on_run(actor, targets, permission_id)
-  local permission = Bolt:find_permission(permission_id)
-  local id = permission and permission.id or tostring(permission_id)
-  local affected = {}
-
-  for _, client in ipairs(targets) do
-    if client.record and has_own_value(client, id) then
-      client:set_permission(id, PERM_NO)
-
-      Bolt:delete_temp_permission(client, id)
-
-      client:notify('notification.permission.reset', { permission = id })
-
-      table.insert(affected, client)
-    end
-  end
-
-  if #affected == 0 then
-    Flux.Player:notify(actor, permission ? 'error.permission_not_set' : 'error.permission_not_valid', {
-      permission = id
-    })
-
-    return
-  end
-
-  self:notify_staff('command.permission.reset.message', {
-    player = get_player_name(actor),
-    target = util.player_list_to_string(affected),
-    permission = id
-  })
+  Bolt:reset_command_permission(self, 'user', actor, targets, permission_id)
 end
 
 local list_cmd = CMD:subcommand('list')
@@ -176,35 +90,14 @@ function list_cmd:on_run(actor, targets)
   if !IsValid(target) then return end
 
   local name = get_player_name(target)
-  local allowed, denied = {}, {}
-  local temporary = 0
-
-  for perm_id, value in SortedPairs(target:get_permissions()) do
-    if value == PERM_ALLOW then
-      table.insert(allowed, perm_id)
-    elseif value == PERM_NEVER then
-      table.insert(denied, perm_id)
-    end
-  end
 
   Flux.Player:notify(actor, 'command.permission.list.role', {
     target = name,
     role = target:get_role()
   })
 
-  if #allowed > 0 then
-    Flux.Player:notify(actor, 'command.permission.list.allowed', {
-      target = name,
-      permissions = table.concat(allowed, ', ')
-    })
-  end
-
-  if #denied > 0 then
-    Flux.Player:notify(actor, 'command.permission.list.denied', {
-      target = name,
-      permissions = table.concat(denied, ', ')
-    })
-  end
+  local listed = Bolt:list_permission_values(actor, 'command.permission.list', 'target', name,
+    target:get_permissions())
 
   local character = Bolt:get_active_character(target)
 
@@ -242,23 +135,10 @@ function list_cmd:on_run(actor, targets)
     end
   end
 
-  for perm_id, entry in SortedPairs(target:get_temp_permissions()) do
-    local time_left = (tonumber(entry.expires) or 0) - os.time()
+  listed += Bolt:list_temp_permission_values(actor, 'command.permission.list', 'target', name,
+    target:get_temp_permissions())
 
-    if time_left > 0 and (entry.value == PERM_ALLOW or entry.value == PERM_NEVER) then
-      temporary += 1
-
-      local phrase = entry.value == PERM_ALLOW ? 'temporary_allowed' : 'temporary_denied'
-
-      Flux.Player:notify(actor, 'command.permission.list.'..phrase, {
-        target = name,
-        permission = perm_id,
-        time = Flux.Lang:duration(time_left)
-      })
-    end
-  end
-
-  if #allowed == 0 and #denied == 0 and temporary == 0 then
+  if listed == 0 then
     Flux.Player:notify(actor, 'command.permission.list.none', { target = name })
   end
 end

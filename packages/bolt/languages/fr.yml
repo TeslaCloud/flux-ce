@@ -201,6 +201,7 @@ fr:
     banned:
       temporary: "Vous êtes banni de ce serveur. Raison : {reason}. Le bannissement prend fin dans {time}."
       permanent: "Vous êtes banni définitivement de ce serveur. Raison : {reason}."
+    ban_not_yours: "Vous ne pouvez pas lever le bannissement de {target}, car il a été prononcé par quelqu'un sur qui vous ne pouvez pas agir."
     character_permission:
       no_character: "Aucun de ces joueurs n'a de personnage chargé."
       not_set: "Rien n'est défini pour la permission {permission} des personnages de ces joueurs."
@@ -210,11 +211,14 @@ fr:
     no_permission: "Vous n'avez pas la permission de faire cela."
     permission_not_set: "Rien n'est défini pour la permission {permission} de ces joueurs."
     permission_not_valid: "« {permission} » n'est pas une permission valide !"
-    permission_not_yours: "Vous ne pouvez pas accorder ni refuser la permission {permission}, car vous ne l'avez pas vous-même."
+    permission_not_yours: "Vous ne pouvez modifier la permission {permission} de personne, car vous ne l'avez pas vous-même."
+    permission_own: "Vous ne pouvez pas modifier vos propres permissions."
+    role_too_high: "Vous ne pouvez pas donner le rôle {group}, car il est au-dessus du vôtre."
     send_same: "Un joueur ne peut pas être envoyé auprès de lui-même."
     slay: "Aucun de ces joueurs n'est en vie."
     user_not_found: "Personne avec le Steam ID « {steam_id} » ne s'est jamais connecté à ce serveur."
   notification:
+    admin_hint: "Personne ne peut encore administrer ce serveur. Pour en devenir l'administrateur, rejoignez-le et lancez flc role set <votre nom> admin dans cette console, avec le nom entre guillemets doubles s'il contient des espaces, ou mettez votre SteamID (STEAM_0:X:Y) sous bolt_root_steamid dans le fichier config/settings.yml de votre schéma et redémarrez le serveur."
     announcement: "[Annonce] {text}"
     character_permission:
       granted: "Votre personnage a reçu la permission {permission}."
@@ -228,6 +232,7 @@ fr:
       granted: "La permission {permission} vous a été accordée."
       revoked: "La permission {permission} vous a été refusée."
       reset: "Votre permission {permission} a été réinitialisée selon ce que permet votre rôle."
+    player_connected: "{name} s'est connecté au serveur."
     plugin_disabled: "{player} a désactivé le plugin {plugin}. Il reste chargé jusqu'au redémarrage du serveur."
     plugin_enabled: "{player} a activé le plugin {plugin}. Il sera chargé après le redémarrage du serveur."
     return: "Vous avez été ramené à votre position précédente."

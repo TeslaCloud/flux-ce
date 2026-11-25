@@ -1,6 +1,7 @@
 --- Server-side receivers of the ban list page of the admin panel: sending a page of the ban
--- list, at most four times a second for each player, and lifting a ban. The sender needs the
--- 'ban' permission.
+-- list, at most four times a second for each player, and lifting a ban, which the sender may
+-- only do for the bans that `Bolt:lift_ban` lets them lift. The sender needs the 'ban'
+-- permission.
 
 local ban_list_interval = 0.25
 
@@ -20,14 +21,10 @@ Cable.receive('fl_bolt_unban', function(actor, steam_id)
   if !actor:can('ban') then return end
   if !isstring(steam_id) or steam_id == '' then return end
 
-  local success, data = Bolt:remove_ban(steam_id)
-
-  if success then
+  Bolt:lift_ban(actor, steam_id, function(data)
     Command:notify_staff('command.ban.remove.message', {
       player = get_player_name(actor),
       target = data.name
     })
-  else
-    actor:notify('error.not_banned', { steam_id = steam_id })
-  end
+  end)
 end)

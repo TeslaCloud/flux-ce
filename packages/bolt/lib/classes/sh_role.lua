@@ -130,13 +130,13 @@ end
 --- Called when the player's role is being set to this role. Return any non-nil value to keep the
 -- new role from being saved to the database.
 -- @param _target [Player]
--- @param _old_group [Role the player's previous role]
+-- @param _old_group [Role the player's previous role, nil when it is not registered]
 function Role:on_role_set(_target, _old_group) end
 
 --- Called when the player's role is taken or modified. Return any non-nil value to keep the new
 -- role from being saved to the database.
 -- @param _target [Player]
--- @param _new_group [Role the role the player is being given]
+-- @param _new_group [Role the role the player is being given, nil when it is not registered]
 function Role:on_role_taken(_target, _new_group) end
 
 --- Returns the role's ID.

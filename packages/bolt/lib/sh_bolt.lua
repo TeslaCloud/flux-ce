@@ -5,8 +5,8 @@
 -- Permissions are decided in layers, see `Bolt:get_permission_layer`: the player's and the
 -- active character's own permissions, where a denial wins, then the role.
 -- The immunity checks come in two kinds: `Bolt:check_immunity` compares two players who are on
--- the server, and `Bolt:check_role_immunity` together with `Bolt:is_root_steam_id` does the
--- same for somebody who is not, going by the role that is stored for them.
+-- the server, and `Bolt:check_role_immunity` together with the server's `Bolt:is_root_steam_id`
+-- does the same for somebody who is not, going by the role that is stored for them.
 
 local IsValid = IsValid
 local isstring = isstring
@@ -106,7 +106,9 @@ local function own_entries(perms)
 end
 
 --- Stores a role under the given ID, inheriting the permissions and unset fields of the role
--- named in data.base if that role is already registered. Roles registered earlier that are
+-- named in data.base if that role is already registered. A field counts as unset while it is
+-- nil or has the default of the Role class, which every role is created with, such as the
+-- immunity of 0 and the name 'Undefined'. Roles registered earlier that are
 -- based on the new role get its permissions too, except for the actions they set themselves.
 -- A role file whose ID is already registered adds its permissions to that role instead: the
 -- allowed and denied actions of data, with their callbacks, replace what the registered role
@@ -156,7 +158,9 @@ function Bolt:create_role(id, data)
       for key, value in pairs(copy) do
         if key == 'permissions' or key == 'own_permissions' then continue end
 
-        if !data[key] then
+        local own_value = data[key]
+
+        if own_value == nil or own_value == Role[key] then
           data[key] = value
         end
       end
@@ -475,6 +479,19 @@ function Bolt:is_temp_duration(duration)
   return isnumber(duration) and duration > 0 and duration <= self.max_temp_duration
 end
 
+--- Returns when a temporary permission ends once it is given again with the value it has:
+-- the duration is added to the time it has left, and it never lasts longer than
+-- `Bolt.max_temp_duration` from now.
+-- @param expires [Number unix timestamp at which it ends now, nil if it cannot be read]
+-- @param duration [Number seconds to add]
+-- @param now=os.time() [Number unix timestamp of now]
+-- @return [Number unix timestamp at which it ends]
+function Bolt:extend_expiry(expires, duration, now)
+  now = now or os_time()
+
+  return math.min(math.max(expires or 0, now) + duration, now + self.max_temp_duration)
+end
+
 --- Returns the role registered under the given ID.
 -- @param id [String role ID]
 -- @return [Role the role, or nil if there is none]
@@ -583,22 +600,6 @@ function Bolt:check_role_immunity(actor, role_id, can_equal)
   end
 
   return compare_immunity(self:get_group_role(actor:get_role()), self:find_group(role_id), can_equal)
-end
-
---- Checks whether a SteamID is listed in the bolt_root_steamid config, which makes its owner a
--- root player when they join.
--- @param steam_id [String]
--- @return [Boolean]
-function Bolt:is_root_steam_id(steam_id)
-  local root_steamid = Config.get('bolt_root_steamid')
-
-  if isstring(root_steamid) then
-    return root_steamid == steam_id
-  elseif istable(root_steamid) then
-    return table.HasValue(root_steamid, steam_id)
-  end
-
-  return false
 end
 
 local function lookup_permission(id)

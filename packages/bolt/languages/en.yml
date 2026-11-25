@@ -201,6 +201,7 @@ en:
     banned:
       temporary: "You are banned from this server. Reason: {reason}. The ban ends in {time}."
       permanent: "You are permanently banned from this server. Reason: {reason}."
+    ban_not_yours: "You cannot lift the ban of {target}, because it was placed by somebody you cannot act on."
     character_permission:
       no_character: None of these players has a character loaded.
       not_set: "Nothing is set for the {permission} permission of the characters of these players."
@@ -210,11 +211,14 @@ en:
     no_permission: You have no permissions to do that.
     permission_not_set: "Nothing is set for the {permission} permission of these players."
     permission_not_valid: "'{permission}' is not a valid permission!"
-    permission_not_yours: "You cannot grant or revoke the {permission} permission, because you do not have it yourself."
+    permission_not_yours: "You cannot change the {permission} permission of anybody, because you do not have it yourself."
+    permission_own: "You cannot change your own permissions."
+    role_too_high: "You cannot give the {group} role, because it ranks above your own."
     send_same: A player cannot be sent to themselves.
     slay: None of these players is alive.
     user_not_found: "Nobody with the Steam ID '{steam_id}' has ever joined this server."
   notification:
+    admin_hint: "Nobody can manage this server yet. To become its administrator, join it and run flc role set <your name> admin in this console, with the name in double quotes if it has spaces, or put your SteamID (STEAM_0:X:Y) under bolt_root_steamid in the config/settings.yml file of your schema and restart the server."
     announcement: "[Announcement] {text}"
     character_permission:
       granted: "Your character has been granted the {permission} permission."
@@ -228,6 +232,7 @@ en:
       granted: "You have been granted the {permission} permission."
       revoked: "You have been denied the {permission} permission."
       reset: "Your {permission} permission has been reset to what your role allows."
+    player_connected: "{name} has connected to the server."
     plugin_disabled: "{player} has disabled the {plugin} plugin. It stays loaded until the server restarts."
     plugin_enabled: "{player} has enabled the {plugin} plugin. It will be loaded after the server restarts."
     return: You have been returned to your previous position.
