@@ -4,6 +4,7 @@
 -- @module [Player]
 
 local player_meta = FindMetaTable('Player')
+local config_get = Config.get
 
 --- Raises or lowers the player's active weapon and runs the WeaponRaiseStateChanged hook.
 -- Does nothing clientside. The PlayerCanRaiseWeapon hook can veto the change, and a weapon
@@ -73,11 +74,11 @@ function player_meta:is_weapon_raised()
     return should_raise
   end
 
-  if Config.get('raise_gun_sprint_lowers_weapon') and self:running() then
+  if config_get('raise_gun_sprint_lowers_weapon') and self:running() then
     return false
   end
 
-  if !Config.get('raise_gun_enabled', true) then
+  if !config_get('raise_gun_enabled', true) then
     return true
   end
 

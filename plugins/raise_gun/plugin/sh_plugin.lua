@@ -45,6 +45,10 @@ BOOL_WEAPON_RAISED = 1
 
 RaiseGun.weapon_items = RaiseGun.weapon_items or {}
 
+--- Generation of the answers of `RaiseGun:get_fixed_state` that are remembered on the
+-- weapons; a weapon whose answer is of another generation is asked again.
+RaiseGun.fixed_state_generation = RaiseGun.fixed_state_generation or 1
+
 local blocked_weapons = {
   ['weapon_physgun'] = true,
   ['gmod_tool'] = true,
@@ -107,23 +111,40 @@ function RaiseGun:weapon_option(weapon, class, item_key, weapon_key)
   return weapon[weapon_key]
 end
 
+--- Works out what the fields of a weapon make of its raised state, see
+-- `RaiseGun:get_fixed_state`.
+-- @param weapon [Weapon]
+-- @return [Boolean true if the weapon is always raised, false if it is never raised, nil if
+--   it can be raised and lowered]
+local function find_fixed_state(weapon)
+  local class = weapon:GetClass()
+
+  if blocked_weapons[class] or RaiseGun:weapon_option(weapon, class, 'always_raised', 'AlwaysRaised') then
+    return true
+  end
+
+  if RaiseGun:weapon_option(weapon, class, 'never_raised', 'NeverRaised') then
+    return false
+  end
+end
+
 --- Tells whether the raised state of a weapon is fixed by the weapon itself.
 -- The physgun, gravity gun, tool gun and camera are always raised, and so is a weapon with
 -- the `always_raised` item field or the `AlwaysRaised` weapon field. A weapon with the
--- `never_raised` item field or the `NeverRaised` weapon field is never raised.
+-- `never_raised` item field or the `NeverRaised` weapon field is never raised. The answer is
+-- remembered on the weapon until the schema is loaded again.
 -- @param weapon [Weapon]
 -- @return [Boolean true if the weapon is always raised, false if it is never raised, nil if
 --   it can be raised and lowered]
 function RaiseGun:get_fixed_state(weapon)
-  local class = weapon:GetClass()
+  local generation = self.fixed_state_generation
 
-  if blocked_weapons[class] or self:weapon_option(weapon, class, 'always_raised', 'AlwaysRaised') then
-    return true
+  if weapon.fl_fixed_state_generation != generation then
+    weapon.fl_fixed_state = find_fixed_state(weapon)
+    weapon.fl_fixed_state_generation = generation
   end
 
-  if self:weapon_option(weapon, class, 'never_raised', 'NeverRaised') then
-    return false
-  end
+  return weapon.fl_fixed_state
 end
 
 --- Returns the time a weapon that has just been raised cannot fire for.
@@ -170,48 +191,6 @@ function RaiseGun:release_fire(weapon, next_fire)
   weapon.fl_fire_blocked = nil
 end
 
---- Forgets which items give which weapons, so that they are looked up again among the items
--- of the schema and the plugins that have just been loaded.
-function RaiseGun:SchemaLoaded()
-  self.weapon_items = {}
-end
-
---- Starts a one second timer that toggles the player's weapon raise when reload is pressed.
--- Does nothing while the `raise_gun_enabled` config is off.
--- @param actor [Player]
--- @param key [Number IN_ enum of the pressed key]
-function RaiseGun:KeyPress(actor, key)
-  if key == IN_RELOAD and config_get('raise_gun_enabled', true) then
-    timer.Create('fl_weapon_raise_'..actor:SteamID(), 1, 1, function()
-      if IsValid(actor) then
-        actor:toggle_weapon_raised()
-      end
-    end)
-  end
-end
-
---- Cancels the pending weapon raise toggle when reload is released.
--- @param actor [Player]
--- @param key [Number IN_ enum of the released key]
-function RaiseGun:KeyRelease(actor, key)
-  if key == IN_RELOAD then
-    timer.Remove('fl_weapon_raise_'..actor:SteamID())
-  end
-end
-
---- Tells the animation code whether to use the raised weapon animations for the player.
--- @param actor [Player]
--- @param _model [String the player's model]
--- @return [Boolean whether the player's weapon is raised]
-function RaiseGun:ShouldUseRaisedAnimations(actor, _model)
-  return actor:is_weapon_raised()
-end
-
---- Registers the WeaponRaised data table boolean on the player.
--- @param target [Player]
-function RaiseGun:PlayerSetupDataTables(target)
-  target:DTVar('Bool', BOOL_WEAPON_RAISED, 'WeaponRaised')
-end
-
 require_relative 'cl_hooks'
+require_relative 'sh_hooks'
 require_relative 'sv_hooks'

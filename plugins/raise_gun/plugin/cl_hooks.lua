@@ -85,12 +85,16 @@ function RaiseGun:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_ang
     eye_angles:RotateAroundAxis(eye_angles:Right(), rotation.r * fraction)
 
     if origin.x != 0 or origin.y != 0 or origin.z != 0 then
+      local forward, up = eye_angles:Forward(), eye_angles:Up()
+
       offset = lowered_offset
 
       offset:Set(eye_angles:Right())
       offset:Mul(origin.x)
-      offset:Add(eye_angles:Forward() * origin.y)
-      offset:Add(eye_angles:Up() * origin.z)
+      forward:Mul(origin.y)
+      offset:Add(forward)
+      up:Mul(origin.z)
+      offset:Add(up)
       offset:Mul(fraction)
     end
   end
@@ -128,7 +132,7 @@ function RaiseGun:StartCommand(_actor, user_cmd)
   -- @return [Boolean Return false to strip the primary and secondary attack keys from the
   --   command]
   if hook.Run('PlayerCanAttack') == false then
-    user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2)
+    user_cmd:RemoveKey(IN_ATTACK | IN_ATTACK2)
   end
 end
 

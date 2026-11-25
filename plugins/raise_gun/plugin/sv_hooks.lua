@@ -1,5 +1,29 @@
---- Server side of the Raise Weapon plugin: lowers the weapon a player switches to, blocks
--- the fire of a lowered weapon and lets a raised one fire again.
+--- Server side of the Raise Weapon plugin: toggles the raise of a weapon when the reload key
+-- is held, lowers the weapon a player switches to, blocks the fire of a lowered weapon and
+-- lets a raised one fire again.
+
+--- Starts a one second timer that toggles the player's weapon raise when reload is pressed.
+-- Does nothing while the `raise_gun_enabled` config is off.
+-- @param actor [Player]
+-- @param key [Number IN_ enum of the pressed key]
+function RaiseGun:KeyPress(actor, key)
+  if key == IN_RELOAD and Config.get('raise_gun_enabled', true) then
+    timer.Create('fl_weapon_raise_'..actor:EntIndex(), 1, 1, function()
+      if IsValid(actor) then
+        actor:toggle_weapon_raised()
+      end
+    end)
+  end
+end
+
+--- Cancels the pending weapon raise toggle when reload is released.
+-- @param actor [Player]
+-- @param key [Number IN_ enum of the released key]
+function RaiseGun:KeyRelease(actor, key)
+  if key == IN_RELOAD then
+    timer.Remove('fl_weapon_raise_'..actor:EntIndex())
+  end
+end
 
 --- Lowers the player's weapon whenever they switch weapons.
 -- @param actor [Player]
