@@ -22,6 +22,10 @@ local point_configs = {
   levels_boost_points = true
 }
 
+local experience_configs = {
+  levels_experience_per_level = true
+}
+
 local server_configs = {
   levels_server_progression = true,
   levels_server_days_per_level = true,
@@ -206,14 +210,17 @@ function Levels:GetPlayerMaxHealth(target, _max_health)
 end
 
 --- Applies the maximum health to every player when a health config changes, works out the
--- unspent points of every player again when a config of the level-up points changes, and
--- checks the server level and brings every character in line with its level cap and level
--- floor when a config of the server level changes.
+-- unspent points of every player again when a config of the level-up points changes, levels
+-- every character up with its kept experience as far as the level cap allows when the
+-- experience per level changes, and checks the server level and brings every character in
+-- line with its level cap and level floor when a config of the server level changes.
 -- @param key [String config key]
 -- @param _old_value [Any]
 -- @param _new_value [Any]
 function Levels:ConfigChanged(key, _old_value, _new_value)
-  if !server_configs[key] and !health_configs[key] and !point_configs[key] then return end
+  if !server_configs[key] and !health_configs[key] and !point_configs[key] and !experience_configs[key] then
+    return
+  end
 
   if server_configs[key] then
     Levels.check_server_level()
@@ -223,6 +230,8 @@ function Levels:ConfigChanged(key, _old_value, _new_value)
     if client:is_character_loaded() then
       if server_configs[key] then
         Levels.apply_server_level(client)
+      elseif experience_configs[key] then
+        Levels.catch_up(client)
       elseif health_configs[key] then
         self:apply_max_health(client)
       else

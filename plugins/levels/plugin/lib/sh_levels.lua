@@ -461,12 +461,10 @@ if SERVER then
     return max_health
   end
 
-  --- Levels up a player's character as far as its kept experience and the level cap allow,
-  -- taking the experience each level needs, and tells the player about the level reached.
-  -- Called when the level cap rises and when a character becomes active. Server only.
+  --- Levels up a player's character as far as its kept experience and the level cap allow.
   -- @param target [Player]
   -- @return [Boolean true if the character has gone up]
-  function Levels.catch_up(target)
+  local function catch_up(target)
     local character = get_character(target)
 
     if !character then return false end
@@ -474,9 +472,35 @@ if SERVER then
     local old_level = get_stored_level(character)
     local level, experience = Levels.advance(old_level, get_stored_experience(character), Levels.get_level_cap())
 
-    if level <= old_level or !Levels.update(target, level, experience, 'catch_up') then return false end
+    return level > old_level and Levels.update(target, level, experience, 'catch_up')
+  end
 
-    target:notify('notification.levels.level_up', { level = level })
+  --- Raises a player's character to the level floor if it is below it, keeping its
+  -- experience.
+  -- @param target [Player]
+  -- @return [Boolean true if the character was raised]
+  local function raise_to_floor(target)
+    local character = get_character(target)
+
+    if !character then return false end
+
+    local level = Levels.get_level_floor()
+
+    if get_stored_level(character) >= level then return false end
+
+    return Levels.update(target, level, get_stored_experience(character), 'level_floor')
+  end
+
+  --- Levels up a player's character as far as its kept experience and the level cap allow,
+  -- taking the experience each level needs, and tells the player about the level reached.
+  -- Called when the level cap rises, when the experience per level changes and when a
+  -- character becomes active. Server only.
+  -- @param target [Player]
+  -- @return [Boolean true if the character has gone up]
+  function Levels.catch_up(target)
+    if !catch_up(target) then return false end
+
+    target:notify('notification.levels.level_up', { level = target:get_level() })
 
     return true
   end
@@ -486,33 +510,31 @@ if SERVER then
   -- @param target [Player]
   -- @return [Boolean true if the character was raised]
   function Levels.raise_to_floor(target)
-    local character = get_character(target)
+    if !raise_to_floor(target) then return false end
 
-    if !character then return false end
-
-    local level = Levels.get_level_floor()
-
-    if get_stored_level(character) >= level then return false end
-
-    if !Levels.update(target, level, get_stored_experience(character), 'level_floor') then return false end
-
-    target:notify('notification.levels.level_up', { level = level })
+    target:notify('notification.levels.level_up', { level = target:get_level() })
 
     return true
   end
 
   --- Brings a player's character in line with the server level: first raises it to the
-  -- level floor (`Levels.raise_to_floor`), which keeps its experience, then spends its kept
-  -- experience on levels as far as the level cap allows (`Levels.catch_up`). The levels the
-  -- floor grants cost no experience, and since the floor is never above the cap, the
+  -- level floor, which keeps its experience, then spends its kept experience on levels as far
+  -- as the level cap allows, and tells the player once about the level reached. The levels
+  -- the floor grants cost no experience, and since the floor is never above the cap, the
   -- experience is never spent past the cap. Server only.
   -- @param target [Player]
   -- @return [Boolean true if the level has changed]
+  -- @see [Levels.raise_to_floor]
+  -- @see [Levels.catch_up]
   function Levels.apply_server_level(target)
-    local raised = Levels.raise_to_floor(target)
-    local caught_up = Levels.catch_up(target)
+    local raised = raise_to_floor(target)
+    local caught_up = catch_up(target)
 
-    return raised or caught_up
+    if !raised and !caught_up then return false end
+
+    target:notify('notification.levels.level_up', { level = target:get_level() })
+
+    return true
   end
 
   --- Returns the key of the data file of the server level: 'schemas/<schema folder>/levels',

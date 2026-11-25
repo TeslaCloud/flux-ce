@@ -86,6 +86,7 @@ en:
   error:
     levels:
       no_character: "{target} has no active character!"
+      unchanged: "Nothing has changed for {target}."
       no_active_character: You have no active character!
       invalid_skill: That is not a skill you can spend skill points on!
       invalid_stat: That is not a stat you can spend attribute points on!

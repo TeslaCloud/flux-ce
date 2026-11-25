@@ -86,6 +86,7 @@ es:
   error:
     levels:
       no_character: "¡{target} no tiene ningún personaje activo!"
+      unchanged: "No ha cambiado nada para {target}."
       no_active_character: ¡No tienes ningún personaje activo!
       invalid_skill: ¡Esa no es una habilidad en la que puedas gastar puntos de habilidad!
       invalid_stat: ¡Esa no es una estadística en la que puedas gastar puntos de atributo!

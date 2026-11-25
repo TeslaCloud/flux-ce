@@ -17,11 +17,12 @@ add.arg_types = { 'player', 'number' }
 
 --- Gives the experience to every target that has an active character, past the level cap
 -- if it is enough, raises those that fell below the level floor back to it, then notifies the
--- targets and staff.
+-- targets whose level or experience has changed and staff. A character at the highest level
+-- keeps no experience, so it is left out.
 -- @param actor [Player the player who ran the command, or an invalid entity for the console]
 -- @param targets [List<Player> players matched by the first command argument]
--- @param amount [String experience to give, parsed with tonumber and rounded; negative to
---   take experience away]
+-- @param amount [String/Number experience to give, parsed with tonumber and rounded; negative
+--   to take experience away]
 function add:on_run(actor, targets, amount)
   amount = tonumber(amount)
 
@@ -40,8 +41,7 @@ function add:on_run(actor, targets, amount)
   local changed = {}
 
   for _, target in ipairs(targets) do
-    if target:is_character_loaded() then
-      target:give_experience(amount, 'command', true)
+    if target:give_experience(amount, 'command', true) then
       target:notify(taken ? 'notification.levels.experience_taken' : 'notification.levels.experience_given', {
         amount = shown_amount
       })
@@ -53,7 +53,7 @@ function add:on_run(actor, targets, amount)
   end
 
   if #changed == 0 then
-    Flux.Player:notify(actor, 'error.levels.no_character', { target = util.player_list_to_string(targets) })
+    Flux.Player:notify(actor, 'error.levels.unchanged', { target = util.player_list_to_string(targets) })
 
     return
   end

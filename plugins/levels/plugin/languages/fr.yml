@@ -86,6 +86,7 @@ fr:
   error:
     levels:
       no_character: "{target} n'a aucun personnage actif !"
+      unchanged: "Rien n'a changé pour {target}."
       no_active_character: "Vous n'avez aucun personnage actif !"
       invalid_skill: "Ce n'est pas une compétence dans laquelle vous pouvez dépenser des points de compétence !"
       invalid_stat: "Ce n'est pas une caractéristique dans laquelle vous pouvez dépenser des points d'attribut !"
