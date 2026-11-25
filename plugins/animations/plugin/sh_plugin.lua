@@ -27,7 +27,6 @@ local leave_keys = IN_FORWARD | IN_BACK | IN_MOVELEFT | IN_MOVERIGHT | IN_JUMP
 local blocked_keys = IN_JUMP | IN_DUCK | IN_ATTACK | IN_ATTACK2
 local client_blocked_keys = IN_DUCK | IN_ATTACK | IN_ATTACK2
 local keep_jump_out = ~IN_JUMP
-local band = bit.band
 
 require_relative 'cl_hooks'
 require_relative 'sv_plugin'
@@ -56,8 +55,8 @@ function Animations:StartCommand(actor, user_cmd)
   local state = actor.animation_data
 
   if state then
-    local pressed = band(user_cmd:GetButtons(), leave_keys)
-    local held = band(state.held_keys or leave_keys, pressed)
+    local pressed = user_cmd:GetButtons() & leave_keys
+    local held = (state.held_keys or leave_keys) & pressed
 
     state.held_keys = held
 
@@ -87,7 +86,7 @@ function Animations:Move(actor, move_data)
   move_data:SetForwardSpeed(0)
   move_data:SetSideSpeed(0)
   move_data:SetUpSpeed(0)
-  move_data:SetButtons(band(move_data:GetButtons(), keep_jump_out))
+  move_data:SetButtons(move_data:GetButtons() & keep_jump_out)
 end
 
 --- Keeps an animating player rendered at the angle they started the animation at.
