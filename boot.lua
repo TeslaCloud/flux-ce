@@ -1,11 +1,12 @@
 --- Entry point of Flux, included by both gamemode files of the schema.
--- Defines `FLUX_PATH`, opens the `file` binary module on the server, without which startup is
--- aborted, then loads the environment, the standard library and the package manager and
--- includes the project, the package of the schema's own folder, whose specification depends
--- on `flux` and through it on every other package. Once the packages are in, the schema is
--- included. On a code refresh the hook and load caches of `Plugin` are cleared first, then
--- the project, the `flux` package and, unless the refresh is a lite one, the other
--- dependencies of the project are reloaded instead.
+-- Defines `FLUX_PATH` and runs the first stages of the boot that fpkg's tasks share
+-- (`lib/start.lua`: the `file` binary module on the server, the environment, the standard
+-- library and the package manager), which stop start-up when they fail. Then it includes the
+-- project, the package of the schema's own folder, whose specification depends on `flux` and
+-- through it on every other package. Once the packages are in, the schema is included. On a
+-- code refresh the hook and load caches of `Plugin` are cleared first, then the project, the
+-- `flux` package and, unless the refresh is a lite one, the other dependencies of the project
+-- are reloaded instead.
 
 AddCSLuaFile()
 
@@ -17,37 +18,9 @@ FLUX_PATH = project..'/packages/flux/'
 
 if SERVER then
   resource.AddWorkshop('1518849094')
-
-  --- Includes a module and returns a boolean depending on success.
-  -- Does not throw Lua errors: a failure is printed with the error `require` gave.
-  -- @param mod [String module name, as passed to require]
-  -- @return [Boolean success]
-  function require_module(mod)
-    local success, result = pcall(require, mod)
-
-    if !success then
-      ErrorNoHalt('Failed to open the "'..mod..'" module: '..tostring(result)..'\n')
-      return false
-    end
-
-    return true
-  end
-
-  if !require_module 'file' then
-    local is_64_bit = jit.arch == 'x64'
-    local platform = system.IsWindows() ? (is_64_bit ? 'win64' : 'win32') : (is_64_bit ? 'linux64' : 'linux')
-
-    ErrorNoHalt(
-      'The file module has failed to load!\nIt comes with the gmsv_file package, a dependency of Flux: run '..
-      '"fpkg install" to put gmsv_file_'..platform..'.dll in the garrysmod/lua/bin folder!\nAborting startup...\n'
-    )
-    return
-  end
 end
 
-include(FLUX_PATH..'lib/env.lua')
-include(FLUX_PATH..'lib/stdlib/sh_stdlib.lua')
-include(FLUX_PATH..'lib/package.lua')
+if !include(FLUX_PATH..'lib/start.lua') then return end
 
 local refresh = Flux.initialized
 
