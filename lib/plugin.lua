@@ -30,7 +30,9 @@
 -- `roleplay` or `sandbox` (the profiles of Flux, with those of a `profiles.yml` in the schema's
 -- `config` folder over them by ID, see `Flux.find_config`), adds plugins with `depends` and
 -- `depends_development` and leaves profile plugins out with `exclude` (see
--- `Plugin.resolve_schema_depends`).
+-- `Plugin.resolve_schema_depends`). `Plugin.walk_schema` makes the same decisions in the same
+-- order without including anything, which is how fpkg's tasks find the migrations of the
+-- plugins.
 --
 -- Plugins can be disabled. A disabled plugin is not included at all, neither on the server
 -- nor on the clients, and a plugin that depends on it is not loaded either, while the schema
@@ -67,6 +69,7 @@ local schema_depends = {}
 local disabled_loaded = false
 local pending_disabled
 local include_stack = {}
+local walker
 local default_extras = {
   'lib',
   'lib/meta',
@@ -824,7 +827,8 @@ end
 
 --- Loads a plugin whose info has been read: requires its dependencies, then includes its extra
 -- folders and its main file and registers it. Part of `Plugin.include`, which keeps the plugin
--- on the stack of plugins being included while this runs.
+-- on the stack of plugins being included while this runs. While `Plugin.walk_schema` runs, the
+-- plugin is passed to its callback and marked as loaded instead.
 -- @param id [String plugin ID]
 -- @param path [String plugin folder or .lua file]
 -- @param data [Map plugin info]
@@ -844,6 +848,13 @@ local function load_plugin(id, path, data)
 
       return
     end
+  end
+
+  if walker then
+    walker(data.folder)
+    load_cache[id] = true
+
+    return data
   end
 
   PLUGIN = PluginInstance.new(id, data)
@@ -1122,32 +1133,17 @@ local function dependency_source(schema_yml, profiles, origins, name, file_path)
   return file_path
 end
 
---- Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and
--- plugins, then registers it. Sets the SCHEMA global.
--- On the server the list of disabled plugins is loaded first; a dependency of the schema
--- that is disabled is left out without stopping the schema from loading. The dependencies
--- come from `Plugin.resolve_schema_depends`, and in development the resolved list is printed.
--- A profile that is not defined and a dependency that cannot be found throw an error, which
--- stops the boot. Runs the PreLoadPlugins, PluginsLoaded and SchemaLoaded hooks.
-function Plugin.include_schema()
-  local schema_info = Flux.get_schema_info()
+--- Requires the plugins the schema depends on, see `Plugin.resolve_schema_depends`. On the
+-- server they are read from the .yml file of the schema and the profiles, and in development
+-- the resolved list is printed; the client takes the list the server has shared. A dependency
+-- that is disabled is left out. A profile that is not defined and a dependency that cannot be
+-- found throw an error.
+-- @param schema_info [Map schema info, see Flux.get_schema_info]
+local function require_schema_depends(schema_info)
   local schema_path = schema_info.folder
-  local schema_folder = schema_path..'/schema'
   local file_path = 'gamemodes/'..schema_path..'/'..schema_path..'.yml'
   local deps = {}
   local schema_yml, profiles, origins
-
-  include_stack = {}
-
-  if SERVER then
-    Plugin.load_disabled()
-  end
-
-  --- Called at the start of `Plugin.include_schema`, before the dependencies of the schema,
-  -- the schema itself and its plugins are included.
-  -- Runs on both the server and the client, on boot and again on every code refresh. The
-  -- list of disabled plugins is known by then, see `Plugin.is_disabled`.
-  hook.Run('PreLoadPlugins')
 
   if SERVER and file.Exists(file_path, 'GAME') then
     Flux.dev_print('Reading and loading schema dependencies from '..file_path)
@@ -1183,17 +1179,42 @@ function Plugin.include_schema()
 
   schema_depends = istable(deps) and deps or {}
 
-  if istable(deps) then
-    for _, dependency in ipairs(deps) do
-      if !Plugin.require(dependency) and !is_unavailable(dependency) then
-        local source = schema_yml and dependency_source(schema_yml, profiles, origins, dependency, file_path)
+  for _, dependency in ipairs(schema_depends) do
+    if !Plugin.require(dependency) and !is_unavailable(dependency) then
+      local source = schema_yml and dependency_source(schema_yml, profiles, origins, dependency, file_path)
 
-        error("Unable to load the schema! The '"..tostring(dependency).."' plugin"
-          ..(source ? ', listed in '..source..',' : '')..' was found neither in '..FLUX_PATH
-          ..'plugins/ nor in '..schema_path..'/plugins/, nor is it a package!\n', 0)
-      end
+      error("Unable to load the schema! The '"..tostring(dependency).."' plugin"
+        ..(source ? ', listed in '..source..',' : '')..' was found neither in '..FLUX_PATH
+        ..'plugins/ nor in '..schema_path..'/plugins/, nor is it a package!\n', 0)
     end
   end
+end
+
+--- Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and
+-- plugins, then registers it. Sets the SCHEMA global.
+-- On the server the list of disabled plugins is loaded first; a dependency of the schema
+-- that is disabled is left out without stopping the schema from loading. The dependencies
+-- come from `Plugin.resolve_schema_depends`, and in development the resolved list is printed.
+-- A profile that is not defined and a dependency that cannot be found throw an error, which
+-- stops the boot. Runs the PreLoadPlugins, PluginsLoaded and SchemaLoaded hooks.
+function Plugin.include_schema()
+  local schema_info = Flux.get_schema_info()
+  local schema_path = schema_info.folder
+  local schema_folder = schema_path..'/schema'
+
+  include_stack = {}
+
+  if SERVER then
+    Plugin.load_disabled()
+  end
+
+  --- Called at the start of `Plugin.include_schema`, before the dependencies of the schema,
+  -- the schema itself and its plugins are included.
+  -- Runs on both the server and the client, on boot and again on every code refresh. The
+  -- list of disabled plugins is known by then, see `Plugin.is_disabled`.
+  hook.Run('PreLoadPlugins')
+
+  require_schema_depends(schema_info)
 
   SCHEMA = PluginInstance.new(schema_info.name, schema_info)
   SCHEMA._is_schema = true
@@ -1222,6 +1243,43 @@ function Plugin.include_schema()
   -- schema has been registered.
   -- Runs on both the server and the client.
   hook.Call('SchemaLoaded', GM)
+end
+
+--- Walks what `Plugin.include_schema` would load, in the same order and with the same
+-- decisions (profiles, the `depends` and `exclude` of the schema, the `depends`,
+-- `depends_development` and `environment` of every plugin.yml, disabled plugins, single-file
+-- plugins and the search paths), without running any plugin or schema code and without hooks.
+-- The callback gets the folder whose extra folders the server would include: that of every
+-- plugin that loads (a single-file plugin passes its file), of every package a plugin depends
+-- on and of the schema, at the point where the server includes them. fpkg's tasks register
+-- the migrations of the plugins with it. The plugins count as loaded afterward, so this is
+-- meant for a Lua state that has included no plugin, such as that of a task.
+-- ```
+-- Plugin.walk_schema(folder -> Pipeline.include_folder('migrations', folder..'/migrations/'))
+-- ```
+-- @realm [server]
+-- @param callback [Function called with the folder, relative to the LUA search path and
+--   without a trailing slash]
+function Plugin.walk_schema(callback)
+  local schema_info = Flux.get_schema_info()
+
+  include_stack = {}
+
+  Plugin.load_disabled()
+
+  walker = callback
+
+  local success, exception = pcall(function()
+    require_schema_depends(schema_info)
+    callback(schema_info.folder..'/schema')
+    Plugin.include_plugins(schema_info.folder..'/plugins')
+  end)
+
+  walker = nil
+
+  if !success then
+    error(exception, 0)
+  end
 end
 
 do
@@ -1303,6 +1361,12 @@ do
     end
 
     if Package:included(name) then
+      return true
+    elseif walker and Package:exists(name) then
+      local _spec_path, _name, folder = Package:find(name)
+
+      walker(folder:sub(1, -2))
+
       return true
     elseif Package:exists(name) then
       local success, err = pcall(Package.include, Package, name)
