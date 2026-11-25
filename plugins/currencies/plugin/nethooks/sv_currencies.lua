@@ -1,6 +1,8 @@
 --- Server-side receivers of the Currencies plugin: the requests of the money panel to give,
 -- drop and take money. Money can only be taken from an entity that has an inventory open for
 -- the player who asks: a container, or another player whose inventories are being viewed.
+-- The amounts and currencies are checked by `Entity:give_money_to` and `Entity:drop_money`;
+-- the receivers check that the entities they are sent are entities.
 
 local IsValid = IsValid
 local CurTime = CurTime
@@ -9,6 +11,8 @@ local cable_send = Cable.send
 local give_interval = 0.5
 
 Cable.receive('fl_currency_give', function(actor, amount, currency, target)
+  if target != nil and !isentity(target) then return end
+
   local cur_time = CurTime()
 
   if actor.next_money_give and actor.next_money_give > cur_time then
