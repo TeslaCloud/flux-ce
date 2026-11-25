@@ -45,6 +45,31 @@ local function safe_index(tab, idx)
   return tab[relative_clamp(idx, 1, #tab)]
 end
 
+local no_targets = {}
+local unknown_name = 'UNKNOWN WEAPON'
+local backdrop_color = Color(0, 0, 0)
+local border_color = Color(0, 0, 0)
+local entry_color = Color(255, 255, 255)
+
+--- Copies a color into one of the colors that are kept for drawing, at an opacity, so that
+-- drawing the selector does not create colors every frame.
+-- @param target [Color color to write to]
+-- @param source [Color color to copy]
+-- @param alpha [Number opacity from 0 to 255]
+-- @return [Color the target]
+local function tint(target, source, alpha)
+  target.r, target.g, target.b, target.a = source.r, source.g, source.b, alpha
+
+  return target
+end
+
+--- Returns the name a weapon is listed under in the selector.
+-- @param weapon [Weapon/Nil]
+-- @return [String]
+local function weapon_name(weapon)
+  return IsValid(weapon) and weapon:GetPrintName():utf8upper() or unknown_name
+end
+
 --- Hides the default weapon selection HUD.
 -- @param element [String name of the HUD element]
 -- @return [Boolean false for 'CHudWeaponSelection', nil otherwise]
@@ -67,7 +92,7 @@ function PLUGIN:HUDPaint()
       local step = (dir and 1) or -1
       local lerp_step = FrameTime() * 16 * clamp(abs(index_offset), 1, 100)
       local display = self.display
-      local targets = {}
+      local targets = no_targets
 
       if !display[1].target then
         targets = self:make_display(self.weapon_index - (index_offset - step), true)
@@ -90,6 +115,7 @@ function PLUGIN:HUDPaint()
           v.target = next.y
           v.scale_target = next.scale
           v.weapon = next.weapon
+          v.name = next.name
 
           if k == 3 + step then
             v.highlight = true
@@ -133,23 +159,22 @@ function PLUGIN:HUDPaint()
       w + padding * 2,
       h + padding * 2,
       Theme.get_option('corner_radius'),
-      ColorAlpha(backdrop, backdrop.a * fraction),
-      ColorAlpha(Theme.get_color('border_light'), 28 * fraction)
+      tint(backdrop_color, backdrop, backdrop.a * fraction),
+      tint(border_color, Theme.get_color('border_light'), 28 * fraction)
     )
 
     for k = 1, #display do
       local v = display[k]
-      local weapon = v.weapon
       local color
 
       if v.highlight then
-        color = ColorAlpha(Theme.get_color('accent_light'), cur_alpha)
+        color = tint(entry_color, Theme.get_color('accent_light'), cur_alpha)
       else
-        color = ColorAlpha(text_color, cur_alpha * v.scale / 1.3)
+        color = tint(entry_color, text_color, cur_alpha * v.scale / 1.3)
       end
 
       surface.draw_text_scaled(
-        (IsValid(weapon) and weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON',
+        IsValid(v.weapon) and v.name or unknown_name,
         font,
         v.x,
         v.y,
@@ -162,12 +187,12 @@ function PLUGIN:HUDPaint()
   end
 end
 
---- Fades the weapon selector in while it is in use, and fades it out and closes it after
--- five seconds without input.
+--- Fades the weapon selector in while it is in use, and fades it out over about two seconds and
+-- closes it after five seconds without input, at the same pace at any frame rate.
 function PLUGIN:Think()
   if self.is_open then
     if CurTime() - self.open_time > 5 then
-      self.cur_alpha = clamp(self.cur_alpha - 2, 0, 255)
+      self.cur_alpha = clamp(self.cur_alpha - FrameTime() * 120, 0, 255)
 
       if self.cur_alpha == 0 then
         self.is_open = false
@@ -198,12 +223,11 @@ do
       -- @param pressed [Boolean Whether the bind was pressed rather than released]
       -- @return [Boolean Return false to make the selector ignore the bind]
       if hook.Run('ShouldOpenWeaponSelect', client, bind, pressed) != false then
-        local cur_time = CurTime()
         local weapon_count = #client:GetWeapons()
         local old_index = self.weapon_index
         bind = bind:lower()
 
-        if weapon_count > 1 and (!self.next_change or self.next_change <= cur_time) then
+        if weapon_count > 1 then
           if bind:find('invprev') and pressed then
             self.weapon_index = relative_clamp(self.weapon_index - 1, 1, weapon_count)
 
@@ -262,8 +286,6 @@ do
 
             return true
           end
-
-          self.next_change = cur_time + 0.2
         end
       end
     end
@@ -299,7 +321,7 @@ function PLUGIN:WeaponSelected(_index)
 end
 
 --- Builds the five selector entries (two above and two below) around a weapon index.
--- Each entry is a table with the fields weapon, scale, x, y and highlight.
+-- Each entry is a table with the fields weapon, name, scale, x, y and highlight.
 -- @param index [Number index in the local player's weapon list; wraps around]
 -- @param tab=false [Boolean return the entries instead of storing them in self.display]
 -- @return [List<Map> the entries if tab is set, nil otherwise]
@@ -312,9 +334,11 @@ function PLUGIN:make_display(index, tab)
 
   for i = -2, 2 do
     local scale = 1.1 - abs(i * 0.25)
+    local weapon = safe_index(client_weapons, index + i)
 
     result[#result + 1] = {
-      weapon = safe_index(client_weapons, index + i),
+      weapon = weapon,
+      name = weapon_name(weapon),
       scale = scale,
       x = x,
       y = base_y + offsety - 36 * scale * 0.3,
