@@ -41,11 +41,14 @@ function Characters:PostPlayerSpawn(actor)
   end
 end
 
---- Keeps a player whose active character is banned from respawning.
+--- Keeps a player whose active character is banned from respawning, and a player who has to
+-- have a character (see `Characters.needs_character`) while they have none: loading a
+-- character spawns them.
 -- @param actor [Player]
--- @return [Boolean false while the active character is banned, otherwise nil]
+-- @return [Boolean false while the active character is banned or a needed character is
+--   missing, otherwise nil]
 function Characters:PlayerDeathThink(actor)
-  if actor:is_character_banned() then
+  if actor:is_character_banned() or (!actor:is_character_loaded() and Characters.needs_character(actor)) then
     return false
   end
 end
@@ -90,11 +93,14 @@ function Characters:SaveCharacterData(owner, character)
   end
 end
 
---- Saves the disconnecting player's character and stops any further saving of their data.
+--- Saves the disconnecting player's character together with their record. Once that has
+-- saved the record, the gamemode does not save it a second time; a player who leaves without
+-- a character has their record saved by the gamemode.
 -- @param actor [Player]
 function Characters:PlayerDisconnected(actor)
-  actor:save_character()
-  actor.should_save_data = false
+  if actor:save_character() then
+    actor.should_save_data = false
+  end
 end
 
 --- Sends the character list to the player as soon as they have initialized, then runs the
@@ -121,14 +127,6 @@ function Characters:PlayerRestored(actor)
   end)
 end
 
---- Replaces line breaks in the new character's physical description with ' | '.
--- @param _owner [Player]
--- @param char [Character the character being created]
--- @param _char_data [Map character creation data]
-function Characters:PostCreateCharacter(_owner, char, _char_data)
-  char.phys_desc = char.phys_desc:gsub('\n', ' | ')
-end
-
 --- Forwards the PostLoadCharacter hook to the player's client, passing the character ID.
 -- @param owner [Player]
 -- @param character [Character]
@@ -150,7 +148,7 @@ function Characters:ActiveCharacterSet(owner, character)
 
   owner:Spawn()
   owner:SetModel(character.model or Characters.default_model)
-  owner:SetSkin(character.skin or 1)
+  owner:SetSkin(character.skin or 0)
   owner:ScreenFade(SCREENFADE.IN, Color('white'), 2, 1)
 
   Characters.restore_vitals(owner, character)
@@ -164,11 +162,13 @@ function Characters:ActiveCharacterSet(owner, character)
   hook.Run('PostLoadCharacter', owner, character)
 end
 
---- Saves the player's current character before they switch to another one.
+--- Cancels the timed action of a player who switches to another character, so that it does
+-- not end on the character they switch to, and saves their current character.
 -- @param owner [Player]
 -- @param _new_char [Character]
 -- @param _old_char [Character]
 function Characters:PreSwitchCharacter(owner, _new_char, _old_char)
+  owner:cancel_timed_action()
   owner:save_character()
 end
 

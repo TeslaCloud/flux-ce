@@ -131,5 +131,6 @@ en:
       title: Physical Description
       message: "Describe how your character looks, in {min} to {max} characters."
       confirm: Change
+      none: This character has no physical description.
     tab_menu:
       main_menu: Main Menu

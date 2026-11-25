@@ -62,11 +62,13 @@ end
 --- Returns a field of the player's active character. On the client the value is read from
 -- the player's networked variable of the same name instead.
 -- @param id [String field name]
--- @param default=nil [Any value to return when the field is not set]
+-- @param default=nil [Any value to return when the field is not set or no character is active]
 -- @return [Any]
 function player_meta:get_character_var(id, default)
   if SERVER then
-    return self:get_character()[id] or default
+    local character = self:get_character()
+
+    return character and character[id] or default
   else
     return self:get_nv(id, default)
   end
@@ -102,9 +104,9 @@ function player_meta:is_character_banned()
 end
 
 --- Returns the physical description of the player's character.
--- @return [String the description, or a placeholder text if none is set]
+-- @return [String the description, or the 'ui.char_desc.none' text if none is set]
 function player_meta:get_phys_desc()
-  return self:get_character_var('phys_desc', 'This character has no description!')
+  return self:get_character_var('phys_desc') or t'ui.char_desc.none'
 end
 
 --- Returns the gender of the player's character as a string.
@@ -114,10 +116,11 @@ function player_meta:get_gender()
 end
 
 --- Returns all characters that belong to the player. Clients only know their own characters.
--- @return [List character records on the server, networked character data on the client]
+-- @return [List character records on the server, empty while the player has no record or
+--   no characters; networked character data on the client]
 function player_meta:get_all_characters()
   if SERVER then
-    return self.record.characters
+    return self.record?.characters ?? {}
   else
     self.characters = self.characters or {}
     return self.characters

@@ -17,14 +17,16 @@ Characters.default_model = 'models/humans/group01/male_02.mdl'
 
 Characters.taken_names = Characters.taken_names or {}
 
-local request_delay = 1
+--- Seconds a player waits between two requests of the same kind to the Characters plugin,
+-- such as creating a character or changing their description.
+Characters.request_delay = 1
 
---- Brings a character name to the form in which names are compared: lower case, without
--- surrounding whitespace and with every run of whitespace turned into a single space.
+--- Brings a character name to the form in which names are compared: the form of
+-- `Characters.normalize_name`, in lower case.
 -- @param name [String]
 -- @return [String]
-local function normalize_name(name)
-  return (string_trim(name):gsub('%s+', ' ')):utf8lower()
+local function comparison_key(name)
+  return Characters.normalize_name(name):utf8lower()
 end
 
 --- Returns the part of the generic data of a character that its owner receives: the keys
@@ -102,7 +104,7 @@ end
 function Characters.remember_name(name)
   if !isstring(name) then return end
 
-  local key = normalize_name(name)
+  local key = comparison_key(name)
 
   Characters.taken_names[key] = (Characters.taken_names[key] or 0) + 1
 end
@@ -113,7 +115,7 @@ end
 function Characters.forget_name(name)
   if !isstring(name) then return end
 
-  local key = normalize_name(name)
+  local key = comparison_key(name)
   local count = (Characters.taken_names[key] or 0) - 1
 
   Characters.taken_names[key] = count > 0 and count or nil
@@ -128,10 +130,10 @@ end
 function Characters.is_name_taken(name, except)
   if !isstring(name) then return false end
 
-  local key = normalize_name(name)
+  local key = comparison_key(name)
   local count = Characters.taken_names[key] or 0
 
-  if istable(except) and isstring(except.name) and normalize_name(except.name) == key then
+  if istable(except) and isstring(except.name) and comparison_key(except.name) == key then
     count -= 1
   end
 
@@ -147,7 +149,7 @@ end
 -- @param callback [Function receives a List<Character>, empty when nothing was found]
 -- @return [Any what the callback returns if a loaded character matches, nil otherwise]
 function Characters.find_by_name(name, callback)
-  local key = normalize_name(name)
+  local key = comparison_key(name)
   local found = {}
   local records = {}
 
@@ -168,7 +170,7 @@ function Characters.find_by_name(name, callback)
   for _, record in ipairs(records) do
     if istable(record.characters) then
       for _, character in ipairs(record.characters) do
-        if isstring(character.name) and normalize_name(character.name) == key then
+        if isstring(character.name) and comparison_key(character.name) == key then
           found[#found + 1] = character
         end
       end
@@ -450,7 +452,7 @@ function Characters.change_desc(actor, text)
     return false
   end
 
-  actor.next_desc_change = cur_time + request_delay
+  actor.next_desc_change = cur_time + Characters.request_delay
 
   Characters.set_desc(actor, new_desc)
   actor:notify('notification.desc_changed', { desc = new_desc })
@@ -494,9 +496,9 @@ function Characters.to_networkable(target, char)
     steam_id = target:SteamID(),
     name = char.name,
     gender = char.gender,
-    phys_desc = char.phys_desc or 'This character has no physical description set!',
+    phys_desc = char.phys_desc or t('ui.char_desc.none', nil, Flux.Lang:get_player_lang(target)),
     model = char.model or Characters.default_model,
-    skin = char.skin or 1,
+    skin = char.skin or 0,
     banned = tobool(char.banned),
     custom_data = get_networked_data(char)
   }
@@ -508,6 +510,8 @@ end
 -- own relations. Server only.
 -- @param target [Player the player whose data goes into the character]
 -- @param character [Character]
+-- @return [Boolean true when the record of the player has been handed to the database to be
+--   saved, false when the save was canceled or only the character of another record was saved]
 function Characters.save(target, character)
   if !IsValid(target) or !istable(character) or
      --- Lets plugins prepare for or prevent the saving of a character. Called on the
@@ -515,7 +519,7 @@ function Characters.save(target, character)
      -- @param owner [Player]
      -- @param character [Character the character that is about to be saved]
      -- @return [Boolean return false to cancel the save]
-     hook.Run('PreSaveCharacter', target, character) == false then return end
+     hook.Run('PreSaveCharacter', target, character) == false then return false end
 
   --- Called on the server right before the record of a player is saved together with a
   -- character. Handlers write the data they keep for the character into its fields.
@@ -523,7 +527,9 @@ function Characters.save(target, character)
   -- @param character [Character the character that is being saved]
   hook.Run('SaveCharacterData', target, character)
 
-  if istable(character.user) and character.user != target.record and isfunction(character.save) then
+  local other_record = istable(character.user) and character.user != target.record and isfunction(character.save)
+
+  if other_record then
     character:save()
   else
     target:save_player()
@@ -534,6 +540,8 @@ function Characters.save(target, character)
   -- @param owner [Player]
   -- @param character [Character the character that has been saved]
   hook.Run('PostSaveCharacter', target, character)
+
+  return !other_record
 end
 
 --- Destroys one of the player's characters, removes it from their record, frees its name
@@ -566,7 +574,9 @@ end
 -- characters; use `Characters.is_name_taken` first where that matters. Server only.
 -- @param target [Player]
 -- @param new_name [String ignored when it is not a string]
-function Characters.set_name(target, new_name)
+-- @param no_send=false [Boolean leave sending the character list to the player to the
+--   caller, which changes several fields at once]
+function Characters.set_name(target, new_name, no_send)
   if !isstring(new_name) then return end
 
   local char = target:get_character()
@@ -590,14 +600,18 @@ function Characters.set_name(target, new_name)
   -- @param old_name [String the name that was networked before the change]
   hook.Run('CharacterNameChanged', target, char, new_name, old_name)
 
-  Characters.send_to_client(target)
+  if !no_send then
+    Characters.send_to_client(target)
+  end
 end
 
 --- Changes the physical description of the player's active character, networks it and runs
 -- the CharacterDescChanged hook. Server only.
 -- @param target [Player]
 -- @param new_desc [String ignored when it is not a string]
-function Characters.set_desc(target, new_desc)
+-- @param no_send=false [Boolean leave sending the character list to the player to the
+--   caller, which changes several fields at once]
+function Characters.set_desc(target, new_desc, no_send)
   if !isstring(new_desc) then return end
 
   local char = target:get_character()
@@ -616,14 +630,18 @@ function Characters.set_desc(target, new_desc)
   -- @param old_desc [String the description that was networked before the change]
   hook.Run('CharacterDescChanged', target, char, new_desc, old_desc)
 
-  Characters.send_to_client(target)
+  if !no_send then
+    Characters.send_to_client(target)
+  end
 end
 
 --- Changes the model of the player and of their active character, networks it and runs the
 -- CharacterModelChanged hook. Server only.
 -- @param target [Player]
 -- @param model [String model path; ignored when it is not a string]
-function Characters.set_model(target, model)
+-- @param no_send=false [Boolean leave sending the character list to the player to the
+--   caller, which changes several fields at once]
+function Characters.set_model(target, model, no_send)
   if !isstring(model) then return end
 
   local char = target:get_character()
@@ -643,14 +661,19 @@ function Characters.set_model(target, model)
   -- @param old_model [String the model that was networked before the change]
   hook.Run('CharacterModelChanged', target, char, model, old_model)
 
-  Characters.send_to_client(target)
+  if !no_send then
+    Characters.send_to_client(target)
+  end
 end
 
 --- Changes the gender of the player's active character, networks it and runs the
--- CharacterGenderChanged hook. Server only.
+-- CharacterGenderChanged hook. The character list is sent to the player after the hook,
+-- so handlers that change other fields of the character need not send it. Server only.
 -- @param target [Player]
 -- @param new_gender [Number/String CHAR_GENDER_* value, or 'male', 'female' or 'no_gender']
-function Characters.set_gender(target, new_gender)
+-- @param no_send=false [Boolean leave sending the character list to the player to the
+--   caller, which changes several fields at once]
+function Characters.set_gender(target, new_gender, no_send)
   if isstring(new_gender) then
     new_gender = table.KeyFromValue(Characters.gender_names, new_gender)
   end
@@ -673,7 +696,9 @@ function Characters.set_gender(target, new_gender)
   -- @param old_gender [Number the CHAR_GENDER_* value that was networked before the change]
   hook.Run('CharacterGenderChanged', target, char, new_gender, old_gender)
 
-  Characters.send_to_client(target)
+  if !no_send then
+    Characters.send_to_client(target)
+  end
 end
 
 --- Creates a character for a player unless a PlayerCreateCharacter hook rejects the data.
@@ -693,7 +718,8 @@ end
 -- ```
 -- The new character belongs to the user record of the player unless a GetCharacterOwner hook
 -- hands it to another `User` record; only for a character of the player's own is their
--- character list sent to them again.
+-- character list sent to them again: as soon as the database has given the character its ID,
+-- and at once as well when that happens later.
 -- @param target [Player the player the character is created for, its owner unless a
 --   GetCharacterOwner hook names another record]
 -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin. Set
@@ -750,10 +776,29 @@ function Characters.create(target, data)
   -- @param char_data [Map creation data the character was built from]
   hook.Run('PostCreateCharacter', target, char, data)
 
+  local own_character = record == target.record
+
+  if own_character then
+    local after_create = char.after_create
+
+    --- Sends the character list to the owner again once the database has given the
+    -- character its ID, after the after_create callback that a PostCreateCharacter handler
+    -- may have set.
+    function char:after_create()
+      if isfunction(after_create) then
+        after_create(self)
+      end
+
+      if IsValid(target) then
+        Characters.send_to_client(target)
+      end
+    end
+  end
+
   Characters.remember_name(char.name)
   Characters.save(target, char)
 
-  if record == target.record then
+  if own_character and !char.id then
     Characters.send_to_client(target)
   end
 

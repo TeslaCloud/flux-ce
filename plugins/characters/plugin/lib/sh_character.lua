@@ -126,6 +126,75 @@ function Characters.limit_reached(target)
   return #target:get_all_characters() >= Characters.get_limit(target)
 end
 
+--- Byte patterns of the invisible characters that names drop: the soft hyphen, the combining
+-- grapheme joiner, the Arabic letter mark, the Hangul and Khmer fillers, the Mongolian
+-- variation selectors and vowel separator, the zero-width spaces and joiners, the direction
+-- marks, embeddings, overrides and isolates, the word joiner and the invisible operators,
+-- the variation selectors, the byte order mark, the interlinear annotation characters, the
+-- musical formatting characters and the tag characters.
+const invisible_name_patterns = {
+  '\xC2\xAD',
+  '\xCD\x8F',
+  '\xD8\x9C',
+  '\xE1\x85[\x9F\xA0]',
+  '\xE1\x9E[\xB4\xB5]',
+  '\xE1\xA0[\x8B-\x8F]',
+  '\xE2\x80[\x8B-\x8F\xAA-\xAE]',
+  '\xE2\x81[\xA0-\xAF]',
+  '\xE3\x85\xA4',
+  '\xEF\xB8[\x80-\x8F]',
+  '\xEF\xBB\xBF',
+  '\xEF\xBE\xA0',
+  '\xEF\xBF[\xB9-\xBB]',
+  '\xF0\x9D\x85[\xB3-\xBA]',
+  '\xF3\xA0[\x80\x81\x84-\x87][\x80-\xBF]'
+}
+
+--- Byte patterns of the characters that names turn into plain spaces: the C1 control
+-- characters, the no-break space, the Ogham space mark, the typographic spaces, the line and
+-- paragraph separators, the narrow no-break space, the medium mathematical space, the blank
+-- braille pattern and the ideographic space.
+const name_space_patterns = {
+  '\xC2[\x80-\xA0]',
+  '\xE1\x9A\x80',
+  '\xE2\x80[\x80-\x8A\xA8\xA9\xAF]',
+  '\xE2\x81\x9F',
+  '\xE2\xA0\x80',
+  '\xE3\x80\x80'
+}
+
+--- Brings a character name to the form in which it is stored: invisible characters such as
+-- zero-width spaces, joiners and direction marks are removed, Unicode spaces and control
+-- characters become spaces, every run of whitespace becomes a single space and the name is
+-- trimmed. Two names that look the same have the same normalized form.
+-- @param text [String]
+-- @return [String]
+function Characters.normalize_name(text)
+  for i = 1, #invisible_name_patterns do
+    text = text:gsub(invisible_name_patterns[i], '')
+  end
+
+  for i = 1, #name_space_patterns do
+    text = text:gsub(name_space_patterns[i], ' ')
+  end
+
+  return (string_trim((text:gsub('%c', ' '):gsub('%s+', ' '))))
+end
+
+--- Turns the gender that the character creation menu sends into a CHAR_GENDER_* value.
+-- @param gender [String 'male', 'female' or 'universal']
+-- @return [Number CHAR_GENDER_FEMALE for 'female', CHAR_GENDER_NONE for 'universal' and
+--   CHAR_GENDER_MALE for anything else]
+function Characters.creation_gender(gender)
+  if gender == 'female' then
+    return CHAR_GENDER_FEMALE
+  elseif gender == 'universal' then
+    return CHAR_GENDER_NONE
+  end
+
+  return CHAR_GENDER_MALE
+end
+
 --- Brings a physical description to the form in which it is stored: control characters other
 -- than line breaks become spaces, the text is trimmed and its line breaks become ' | '.
 -- @param text [String]

@@ -13,9 +13,9 @@ CMD.alias = 'setname'
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param name [String the new name as it was typed; a pair of double quotes around all of
---   it is left out and runs of whitespace become single spaces]
+--   it is left out and the rest is brought to the form of `Characters.normalize_name`]
 function CMD:on_run(actor, targets, name)
-  local new_name = (name:match('^"([^"]*)"$') or name):gsub('%s+', ' '):strip()
+  local new_name = Characters.normalize_name(name:match('^"([^"]*)"$') or name)
   local target = targets[1]
 
   if new_name == '' then

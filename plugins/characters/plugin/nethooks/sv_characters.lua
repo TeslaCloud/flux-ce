@@ -4,8 +4,6 @@
 -- `Characters.can_delete`, and a refused request is answered with a reason that the menu
 -- shows.
 
-local request_delay = 1
-
 --- Checks whether the player has sent a character request less than a second ago, and
 -- starts the wait for the next one when they have not.
 -- @param actor [Player]
@@ -17,7 +15,7 @@ local function is_throttled(actor)
     return true
   end
 
-  actor.next_character_request = cur_time + request_delay
+  actor.next_character_request = cur_time + Characters.request_delay
 
   return false
 end
@@ -41,12 +39,14 @@ MVC.handler('fl_create_character', function(actor, data)
     return
   end
 
+  actor.next_character_creation = cur_time + Characters.request_delay
+
   if isstring(data.name) then
-    data.name = string.Trim((data.name:gsub('%c', ' '):gsub('%s+', ' ')))
+    data.name = Characters.normalize_name(data.name)
   end
 
   if isstring(data.description) then
-    data.description = string.Trim((data.description:gsub('\r', ''):gsub('[%z\1-\9\11-\31\127]', ' ')))
+    data.description = Characters.normalize_desc(data.description)
   end
 
   local requested_name = data.name
@@ -64,8 +64,7 @@ MVC.handler('fl_create_character', function(actor, data)
 
   data.name_generated = data.name != requested_name
   data.description_generated = data.description != requested_description
-  data.gender = (data.gender == 'female' and CHAR_GENDER_FEMALE) or
-    (data.gender == 'universal' and CHAR_GENDER_NONE) or CHAR_GENDER_MALE
+  data.gender = Characters.creation_gender(data.gender)
   data.phys_desc = data.description
 
   local status = Characters.create(actor, data)
@@ -73,8 +72,6 @@ MVC.handler('fl_create_character', function(actor, data)
   Flux.dev_print('Creating character. Status: '..status)
 
   if status == CHAR_SUCCESS then
-    actor.next_character_creation = cur_time + request_delay
-
     respond_to { success = true, status = status }
 
     Flux.dev_print('Success')

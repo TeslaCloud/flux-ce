@@ -82,9 +82,13 @@ function player_meta:set_character_data(key, value)
 end
 
 --- Saves the player's active character, if they have one.
+-- @return [Boolean true when the record of the player has been handed to the database to be
+--   saved along with the character]
 -- @see [Characters.save]
 function player_meta:save_character()
   if self:is_character_loaded() then
-    Characters.save(self, self:get_character())
+    return Characters.save(self, self:get_character())
   end
+
+  return false
 end

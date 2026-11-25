@@ -6,6 +6,20 @@
 -- `collect_data`, and the collected char_data is what is sent to the server, together with
 -- the extra_data table that whoever opened the screen may set on it.
 
+--- Loads the first character of the local player once its entry in the character list has
+-- an ID. Until a list with the ID has arrived from the server, it waits for the next one.
+local function select_first_character()
+  local first = PLAYER:get_all_characters()[1]
+
+  if istable(first) and first.id then
+    hook.Remove('CharactersReceived', 'fl_select_first_character')
+
+    Cable.send('fl_player_select_character', first.id)
+  else
+    hook.Add('CharactersReceived', 'fl_select_first_character', select_first_character)
+  end
+end
+
 local PANEL = {}
 PANEL.char_data = {}
 
@@ -301,13 +315,11 @@ function PANEL:next_stage()
               timer.Simple(Theme.get_option('menu_anim_duration') * #self.stages, function()
                 --- Called on the client shortly after the local player has created a character
                 -- that is their only one, 1.5 seconds before that character is loaded
-                -- automatically.
+                -- automatically, or later when the server has not sent its ID yet.
                 -- @param char [Map networked data of the new character]
                 hook.Run('FirstCharacterCreated', chars[1])
 
-                timer.Simple(1.5, function()
-                  Cable.send('fl_player_select_character', chars[1].id)
-                end)
+                timer.Simple(1.5, select_first_character)
               end)
             end
           else

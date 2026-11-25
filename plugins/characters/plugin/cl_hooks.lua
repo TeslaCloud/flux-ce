@@ -311,5 +311,5 @@ end
 -- @param panel [Panel the character panel]
 -- @param char_data [Map networked character data]
 function Characters:CharacterPanelPopulated(panel, char_data)
-  panel.model.Entity:SetSkin(char_data.skin or 1)
+  panel.model.Entity:SetSkin(char_data.skin or 0)
 end
