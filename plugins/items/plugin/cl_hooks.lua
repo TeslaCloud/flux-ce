@@ -224,7 +224,7 @@ function Items:AddTabMenuItems(menu)
     priority = 30,
     callback = function(menu_panel, _button)
       local inv = menu_panel.active_panel
-      inv:SetTitle('Inventory')
+      inv:SetTitle(t'ui.tab_menu.inventory')
     end
   })
 end

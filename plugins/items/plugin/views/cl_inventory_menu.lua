@@ -171,55 +171,13 @@ function PANEL:rebuild()
   self.equipment_left:SetSize(math_scale_x(100), h)
   self.equipment_left:SetPos(self.player_model.x - self.equipment_left:GetWide() - math_scale_x(12))
 
-  self.equipment_helmet = PLAYER:get_inventory('equipment_helmet'):create_panel(self)
-  self.equipment_helmet:set_slot_size(math_scale(100))
-  self.equipment_helmet:set_title()
-  self.equipment_helmet:SizeToContents()
-  self.equipment_helmet:rebuild()
-  self.equipment_right:Add(self.equipment_helmet)
-
-  self.equipment_mask = PLAYER:get_inventory('equipment_mask'):create_panel(self)
-  self.equipment_mask:set_slot_size(math_scale(100))
-  self.equipment_mask:set_title()
-  self.equipment_mask:SizeToContents()
-  self.equipment_mask:rebuild()
-  self.equipment_right:Add(self.equipment_mask)
-
-  self.equipment_torso = PLAYER:get_inventory('equipment_torso'):create_panel(self)
-  self.equipment_torso:set_slot_size(math_scale(100))
-  self.equipment_torso:set_title()
-  self.equipment_torso:SizeToContents()
-  self.equipment_torso:rebuild()
-  self.equipment_right:Add(self.equipment_torso)
-
-  self.equipment_hands = PLAYER:get_inventory('equipment_hands'):create_panel(self)
-  self.equipment_hands:set_slot_size(math_scale(100))
-  self.equipment_hands:set_title()
-  self.equipment_hands:SizeToContents()
-  self.equipment_hands:rebuild()
-  self.equipment_right:Add(self.equipment_hands)
-
-  self.equipment_legs = PLAYER:get_inventory('equipment_legs'):create_panel(self)
-  self.equipment_legs:set_slot_size(math_scale(100))
-  self.equipment_legs:set_title()
-  self.equipment_legs:SizeToContents()
-  self.equipment_legs:rebuild()
-  self.equipment_right:Add(self.equipment_legs)
-
-  self.equipment_back = PLAYER:get_inventory('equipment_back'):create_panel(self)
-  self.equipment_back:set_slot_size(math_scale(100))
-  self.equipment_back:set_title()
-  self.equipment_back:SizeToContents()
-  self.equipment_back:rebuild()
-  self.equipment_left:Add(self.equipment_back)
-
-  self.equipment_accessories = PLAYER:get_inventory('equipment_accessories'):create_panel(self)
-  self.equipment_accessories:set_slot_size(math_scale(100))
-  self.equipment_accessories:set_slot_padding(math_scale(12))
-  self.equipment_accessories:set_title()
-  self.equipment_accessories:SizeToContents()
-  self.equipment_accessories:rebuild()
-  self.equipment_left:Add(self.equipment_accessories)
+  self:add_equipment_slot(self.equipment_right, 'equipment_helmet')
+  self:add_equipment_slot(self.equipment_right, 'equipment_mask')
+  self:add_equipment_slot(self.equipment_right, 'equipment_torso')
+  self:add_equipment_slot(self.equipment_right, 'equipment_hands')
+  self:add_equipment_slot(self.equipment_right, 'equipment_legs')
+  self:add_equipment_slot(self.equipment_left, 'equipment_back')
+  self:add_equipment_slot(self.equipment_left, 'equipment_accessories', math_scale(12))
 
   self.equipment_right:InvalidateLayout(true)
   self.equipment_right:SizeToContents()
@@ -229,29 +187,85 @@ function PANEL:rebuild()
   self.equipment_left:SizeToContents()
   self.equipment_left:SetPos(self.equipment_left.x, h * 0.5 - self.equipment_left:GetTall() * 0.5)
 
-  self.main_inventory = PLAYER:get_inventory('main_inventory'):create_panel(self)
-  self.main_inventory:SizeToContents()
-  self.main_inventory:rebuild()
+  self:create_storage(h)
 
-  self.pockets = PLAYER:get_inventory('pockets'):create_panel(self)
-  self.pockets:set_slot_size(math_scale(48))
-  self.pockets:SizeToContents()
+  local hotbar = PLAYER:get_inventory('hotbar')
 
-  local _title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
-  local x = self.equipment_left.x - self.main_inventory:GetWide() - math_scale(12)
-  local y = h * 0.5 - self.main_inventory:GetTall() * 0.5 - self.pockets:GetTall() * 0.5 - title_h * 0.5
+  if hotbar then
+    self.hotbar = hotbar:create_panel(self:GetParent())
+    self.hotbar:set_slot_size(math_scale(80))
+    self.hotbar:set_slot_padding(math_scale(8))
+    self.hotbar:draw_inventory_slots(true)
+    self.hotbar:SizeToContents()
+    self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math_scale(16))
+    self.hotbar:rebuild()
+  end
+end
 
-  self.main_inventory:SetPos(x, y)
-  self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math_scale(16))
-  self.pockets:rebuild()
+--- Adds the panel of one of the local player's equipment inventories to a column of the
+-- equipment slots and keeps it in the field of the panel named after the inventory type.
+-- Does nothing if the player has no such inventory.
+-- @param layout [Panel the DIconLayout of the column]
+-- @param inv_type [String type of the equipment inventory]
+-- @param slot_padding=nil [Number space between the slots of the inventory]
+function PANEL:add_equipment_slot(layout, inv_type, slot_padding)
+  local inventory = PLAYER:get_inventory(inv_type)
 
-  self.hotbar = PLAYER:get_inventory('hotbar'):create_panel(self:GetParent())
-  self.hotbar:set_slot_size(math_scale(80))
-  self.hotbar:set_slot_padding(math_scale(8))
-  self.hotbar:draw_inventory_slots(true)
-  self.hotbar:SizeToContents()
-  self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math_scale(16))
-  self.hotbar:rebuild()
+  if !inventory then return end
+
+  local panel = inventory:create_panel(self)
+  panel:set_slot_size(math_scale(100))
+
+  if slot_padding then
+    panel:set_slot_padding(slot_padding)
+  end
+
+  panel:set_title()
+  panel:SizeToContents()
+  panel:rebuild()
+
+  layout:Add(panel)
+
+  self[inv_type] = panel
+end
+
+--- Creates the panels of the local player's main inventory and pockets, to the left of the
+-- equipment slots, the pockets below the main inventory. Either is left out if the player
+-- does not have it.
+-- @param h [Number height of the panel]
+function PANEL:create_storage(h)
+  local main_inventory = PLAYER:get_inventory('main_inventory')
+  local pockets = PLAYER:get_inventory('pockets')
+  local main_w, main_h, pockets_h, title_h = 0, 0, 0, 0
+
+  if main_inventory then
+    self.main_inventory = main_inventory:create_panel(self)
+    self.main_inventory:SizeToContents()
+    self.main_inventory:rebuild()
+
+    main_w, main_h = self.main_inventory:GetSize()
+  end
+
+  if pockets then
+    self.pockets = pockets:create_panel(self)
+    self.pockets:set_slot_size(math_scale(48))
+    self.pockets:SizeToContents()
+
+    title_h = select(2, util.text_size(self.pockets.title, Theme.get_font('text_normal_large')))
+    pockets_h = self.pockets:GetTall()
+  end
+
+  local x = self.equipment_left.x - main_w - math_scale(12)
+  local y = h * 0.5 - main_h * 0.5 - pockets_h * 0.5 - title_h * 0.5
+
+  if IsValid(self.main_inventory) then
+    self.main_inventory:SetPos(x, y)
+  end
+
+  if IsValid(self.pockets) then
+    self.pockets:SetPos(x, y + main_h + title_h + math_scale(16))
+    self.pockets:rebuild()
+  end
 end
 
 vgui.Register('fl_inventory_menu', PANEL, 'fl_base_panel')

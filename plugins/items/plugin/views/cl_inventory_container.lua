@@ -39,48 +39,61 @@ function PANEL:Init()
     self:safe_remove()
   end
 
-  local own = PLAYER:get_inventories()
-
-  if own.main_inventory and own.pockets and own.hotbar then
-    self:create_own_inventories(own)
-  end
+  self:create_own_inventories(PLAYER:get_inventories())
 
   draw.set_blur_size(6)
   Flux.blur_update_fps = 0
 end
 
 --- Creates the panels of the local player's main inventory and pockets, at the center of
--- the screen, and of their hotbar at the bottom.
+-- the screen, and of their hotbar at the bottom. Those the player does not have are left
+-- out.
 -- @param own [Map the local player's inventories by type]
 function PANEL:create_own_inventories(own)
   local scrw, scrh = ScrW(), ScrH()
+  local main_w, main_h, pockets_h, title_h = 0, 0, 0, 0
 
-  self.main_inventory = own.main_inventory:create_panel(self)
-  self.main_inventory:set_title('ui.inventory.main_inventory')
-  self.main_inventory:SizeToContents()
-  self.main_inventory:rebuild()
+  if own.main_inventory then
+    self.main_inventory = own.main_inventory:create_panel(self)
+    self.main_inventory:set_title('ui.inventory.main_inventory')
+    self.main_inventory:SizeToContents()
+    self.main_inventory:rebuild()
 
-  self.pockets = own.pockets:create_panel(self)
-  self.pockets:set_slot_size(math_scale(48))
-  self.pockets:set_title('ui.inventory.pockets')
-  self.pockets:SizeToContents()
+    main_w, main_h = self.main_inventory:GetSize()
+  end
 
-  local _title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
-  local x = scrw * 0.5 - self.main_inventory:GetWide() - math_scale(8)
-  local y = scrh * 0.5 - self.main_inventory:GetTall() * 0.5 - self.pockets:GetTall() * 0.5 - title_h * 0.5
+  if own.pockets then
+    self.pockets = own.pockets:create_panel(self)
+    self.pockets:set_slot_size(math_scale(48))
+    self.pockets:set_title('ui.inventory.pockets')
+    self.pockets:SizeToContents()
 
-  self.main_inventory:SetPos(x, y)
-  self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math_scale(16))
-  self.pockets:rebuild()
+    title_h = select(2, util.text_size(self.pockets.title, Theme.get_font('text_normal_large')))
+    pockets_h = self.pockets:GetTall()
+  end
 
-  self.hotbar = own.hotbar:create_panel(self)
-  self.hotbar:set_slot_size(math_scale(80))
-  self.hotbar:set_slot_padding(math_scale(8))
-  self.hotbar:draw_inventory_slots(true)
-  self.hotbar:set_title('ui.inventory.hotbar')
-  self.hotbar:SizeToContents()
-  self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math_scale(16))
-  self.hotbar:rebuild()
+  local x = scrw * 0.5 - main_w - math_scale(8)
+  local y = scrh * 0.5 - main_h * 0.5 - pockets_h * 0.5 - title_h * 0.5
+
+  if IsValid(self.main_inventory) then
+    self.main_inventory:SetPos(x, y)
+  end
+
+  if IsValid(self.pockets) then
+    self.pockets:SetPos(x, y + main_h + title_h + math_scale(16))
+    self.pockets:rebuild()
+  end
+
+  if own.hotbar then
+    self.hotbar = own.hotbar:create_panel(self)
+    self.hotbar:set_slot_size(math_scale(80))
+    self.hotbar:set_slot_padding(math_scale(8))
+    self.hotbar:draw_inventory_slots(true)
+    self.hotbar:set_title('ui.inventory.hotbar')
+    self.hotbar:SizeToContents()
+    self.hotbar:SetPos(scrw * 0.5 - self.hotbar:GetWide() * 0.5, scrh - self.hotbar:GetTall() - math_scale(16))
+    self.hotbar:rebuild()
+  end
 end
 
 --- Draws the blurred and tinted background of the panel.
@@ -144,7 +157,8 @@ function PANEL:open_inventory(inventory_id)
 end
 
 --- Shows the inventories of another player next to the inventories of the local player, or
--- where those would be if the local player has none.
+-- where those would be if the local player has none. Inventories that the other player
+-- does not have are left out.
 -- @param owner [Player the player that the inventories belong to]
 -- @param inventory_ids [List<Number> ids of the inventories]
 function PANEL:open_player_inventories(owner, inventory_ids)
@@ -155,53 +169,105 @@ function PANEL:open_player_inventories(owner, inventory_ids)
 
   for _, inventory_id in pairs(inventory_ids) do
     local inventory = Inventories.find(inventory_id)
-    local inventory_panel = inventory:create_panel(self)
 
-    self.container[inventory.type] = inventory_panel
+    if inventory then
+      self.container[inventory.type] = inventory:create_panel(self)
+    end
   end
 
+  local container = self.container
+
+  self:lay_out_player_storage(container.main_inventory, container.pockets, container.hotbar)
+  self:lay_out_player_equipment(container.main_inventory or container.pockets)
+
+  for _, inventory_panel in pairs(container) do
+    inventory_panel:rebuild()
+  end
+end
+
+--- Sizes and positions the panels of the main inventory, the pockets and the hotbar of
+-- another player: next to those of the local player, or at the center of the screen if
+-- the local player has none. Any of them may be nil.
+-- @param main_inventory [Panel]
+-- @param pockets [Panel]
+-- @param hotbar [Panel]
+function PANEL:lay_out_player_storage(main_inventory, pockets, hotbar)
   local scrw, scrh = ScrW(), ScrH()
-  local main_inventory = self.container.main_inventory
-  local pockets = self.container.pockets
-  local hotbar = self.container.hotbar
+  local main_w, main_h, pockets_h = 0, 0, 0
 
-  main_inventory:set_title(self.player:name())
-  main_inventory:SizeToContents()
+  if main_inventory then
+    main_inventory:set_title(self.player:name())
+    main_inventory:SizeToContents()
 
-  pockets:set_slot_size(math_scale(48))
-  pockets:SizeToContents()
+    main_w, main_h = main_inventory:GetSize()
+  end
 
-  hotbar:set_slot_size(math_scale(80))
-  hotbar:set_slot_padding(math_scale(8))
-  hotbar:draw_inventory_slots(true)
-  hotbar:set_title('ui.inventory.hotbar')
-  hotbar:SizeToContents()
+  if pockets then
+    pockets:set_slot_size(math_scale(48))
+    pockets:SizeToContents()
 
-  if IsValid(self.main_inventory) then
-    local x = self.main_inventory.x + self.main_inventory:GetWide() + math_scale_x(12)
+    pockets_h = pockets:GetTall()
+  end
 
-    main_inventory:SetPos(x, self.main_inventory.y)
-    pockets:SetPos(x, self.pockets.y)
+  if hotbar then
+    hotbar:set_slot_size(math_scale(80))
+    hotbar:set_slot_padding(math_scale(8))
+    hotbar:draw_inventory_slots(true)
+    hotbar:set_title('ui.inventory.hotbar')
+    hotbar:SizeToContents()
+  end
 
-    self.hotbar:SetPos(scrw * 0.5 - self.hotbar:GetWide() - math_scale_x(6), self.hotbar.y)
-    hotbar:SetPos(scrw * 0.5 + math_scale_x(6), self.hotbar.y)
+  local title_h = select(2, util.text_size(t'ui.inventory.pockets', Theme.get_font('text_normal_large')))
+  local own_main, own_pockets, own_hotbar = self.main_inventory, self.pockets, self.hotbar
+  local x, y
+
+  if IsValid(own_main) then
+    x, y = own_main.x + own_main:GetWide() + math_scale_x(12), own_main.y
   else
-    local _title_w, title_h = util.text_size(t'ui.inventory.pockets', Theme.get_font('text_normal_large'))
-    local x = scrw * 0.5 - main_inventory:GetWide() - math_scale(8)
-    local y = scrh * 0.5 - main_inventory:GetTall() * 0.5 - pockets:GetTall() * 0.5 - title_h * 0.5
+    x = scrw * 0.5 - main_w - math_scale(8)
+    y = scrh * 0.5 - main_h * 0.5 - pockets_h * 0.5 - title_h * 0.5
+  end
 
+  if main_inventory then
     main_inventory:SetPos(x, y)
-    pockets:SetPos(x, y + main_inventory:GetTall() + title_h + math_scale(16))
+  end
+
+  if pockets then
+    pockets:SetPos(x, IsValid(own_pockets) and own_pockets.y or y + main_h + title_h + math_scale(16))
+  end
+
+  if !hotbar then return end
+
+  if IsValid(own_hotbar) then
+    own_hotbar:SetPos(scrw * 0.5 - own_hotbar:GetWide() - math_scale_x(6), own_hotbar.y)
+    hotbar:SetPos(scrw * 0.5 + math_scale_x(6), own_hotbar.y)
+  else
     hotbar:SetPos(scrw * 0.5 - hotbar:GetWide() * 0.5, scrh - hotbar:GetTall() - math_scale(16))
   end
+end
 
+--- Puts the panels of the equipment inventories of another player into two columns to the
+-- right of a panel of theirs. Equipment inventories the player does not have are left out.
+-- @param anchor [Panel the panel to the right of which the columns go; the columns go to the
+--   center of the screen if it is nil]
+function PANEL:lay_out_player_equipment(anchor)
+  local container = self.container
   local equipment_left = vgui.Create('DIconLayout', self)
   equipment_left:SetSpaceY(math_scale(12))
   equipment_left:SetSize(math_scale_x(64))
-  equipment_left:MoveRightOf(self.container.main_inventory, math_scale_x(12))
-  equipment_left:SetPos(equipment_left.x, self.container.main_inventory.y)
+
+  if anchor then
+    equipment_left:MoveRightOf(anchor, math_scale_x(12))
+    equipment_left:SetPos(equipment_left.x, anchor.y)
+  else
+    equipment_left:SetPos(ScrW() * 0.5, ScrH() * 0.25)
+  end
+
   equipment_left.add_slot = function(pnl, id)
-    local panel = self.container[id]
+    local panel = container[id]
+
+    if !panel then return end
+
     panel:set_title()
 
     if id == 'equipment_accessories' then
@@ -217,7 +283,7 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   equipment_right:SetSpaceY(math_scale(12))
   equipment_right:SetSize(math_scale_x(64))
   equipment_right:MoveRightOf(equipment_left, math_scale_x(12))
-  equipment_right:SetPos(equipment_right.x, self.container.main_inventory.y)
+  equipment_right:SetPos(equipment_right.x, equipment_left.y)
   equipment_right.add_slot = equipment_left.add_slot
 
   equipment_left:add_slot('equipment_back')
@@ -228,10 +294,6 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   equipment_right:add_slot('equipment_torso')
   equipment_right:add_slot('equipment_hands')
   equipment_right:add_slot('equipment_legs')
-
-  for _, inventory_panel in pairs(self.container) do
-    inventory_panel:rebuild()
-  end
 end
 
 --- Returns the ids of the inventories that are opened in the panel.
