@@ -1,7 +1,7 @@
-# Development image: the dedicated server and the binary modules, without Flux
-# and without a schema. The schema checkout is mounted as the gamemode and this
-# checkout as its "flux" package by docker-compose.yml, which is also where the
-# usage is described.
+# Development image: the dedicated server, the binary modules and their packages,
+# without Flux and without a schema. The schema checkout is mounted as the
+# gamemode and this checkout as its "flux" package by docker-compose.yml, which is
+# also where the usage is described.
 #
 # Everything up to and including the binary modules and the Lua library is the
 # same as in the Dockerfile, so the two images share those layers and the server
@@ -17,6 +17,16 @@ ARG LUA_SHARED_URL=https://data.nighty.cloud/gmod/lua_shared.so
 RUN mkdir /lua_shared && if [ -n "$LUA_SHARED_URL" ]; then \
       wget -q -O /lua_shared/lua_shared.so "$LUA_SHARED_URL"; \
     fi
+
+# The packages of the binary modules, which the entry point uses when the schema
+# checkout has no copy of them that the container can reach. The modules
+# themselves come from the dependencies repo. Build with "--no-cache-filter
+# gmsv_file,gmsv_pg" to pull in their newest versions.
+FROM alpine/git:2.54.1 AS gmsv_file
+RUN git clone --depth 1 https://github.com/Meow/gmsv_file.git /gmsv_file
+
+FROM alpine/git:2.54.1 AS gmsv_pg
+RUN git clone --depth 1 https://github.com/Meow/gmsv_pg.git /gmsv_pg
 
 FROM steamcmd/steamcmd:debian-trixie
 
@@ -54,6 +64,11 @@ RUN mkdir -p garrysmod/lua/_flux garrysmod/settings/flux \
 # a folder of its own, which can be mounted from the host without the file having
 # to exist beforehand.
 RUN ln -s /home/steam/sqlite/sv.db garrysmod/sv.db
+
+# The packages of the binary modules stay out of the gamemode folder, because a
+# tmpfs covers the packages folder of the schema.
+COPY --from=gmsv_file --chown=steam:steam /gmsv_file /home/steam/packages/gmsv_file
+COPY --from=gmsv_pg --chown=steam:steam /gmsv_pg /home/steam/packages/gmsv_pg
 
 COPY --chown=steam:steam --chmod=755 docker/entrypoint.sh /home/steam/entrypoint.sh
 

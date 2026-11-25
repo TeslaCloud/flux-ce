@@ -11,11 +11,14 @@
 # packages/flux inside it, so whatever packages/flux is in the schema checkout (a
 # link made by "fpkg link ../flux-ce", relative or absolute, a copy, or nothing),
 # the server always loads this checkout. The entry point links the other package
-# folders that "fpkg install" put into the schema checkout into the tmpfs. Links
-# of the schema checkout, such as gmsv_file linked with "fpkg link ../gmsv_file",
-# point outside of the container: add a bind mount of the folder each one
-# resolves to on the host to
-# /home/steam/flux_server/garrysmod/gamemodes/<schema>/packages/<id> in
+# folders that "fpkg install" put into the schema checkout into the tmpfs.
+#
+# The packages of the binary modules, gmsv_file and gmsv_pg, are part of the
+# image. The entry point uses the copy of the image for each one that is neither
+# a folder of the schema checkout nor mounted, so they need neither a link nor a
+# mount. Other links of the schema checkout, made with "fpkg link", point outside
+# of the container: add a bind mount of the folder each one resolves to on the
+# host to /home/steam/flux_server/garrysmod/gamemodes/<schema>/packages/<id> in
 # docker-compose.override.yml. The entry point names the ones it misses.
 #
 # The server is published on FLUX_PORT of every address of the host. It is kept

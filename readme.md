@@ -63,15 +63,13 @@ Things to keep in mind:
 If you are working on Flux or on a schema, use `docker-compose.yml` instead. It starts a server that runs your checkouts directly rather than a copy of them, in the `development` [environment](#environment), so the server reloads your code as you save it. The schema checkout is the gamemode and this checkout is mounted as its `flux` package.
 
 ```sh
-# Flux, the schema and gmsv_file are expected to be next to each other.
+# Flux and the schema are expected to be next to each other.
 git clone https://github.com/TeslaCloud/flux-ce.git
 git clone https://github.com/TeslaCloud/hl2rp.git
-git clone https://github.com/Meow/gmsv_file.git
 
-# Link the checkouts into the packages folder of the schema.
+# Link the checkout of Flux into the packages folder of the schema.
 cd hl2rp
 fpkg link ../flux-ce
-fpkg link ../gmsv_file
 fpkg install
 cd ../flux-ce
 
@@ -80,7 +78,7 @@ docker compose --profile postgres up    # PostgreSQL
 docker compose --profile mariadb up     # MariaDB
 ```
 
-* The stack always runs this checkout as the `flux` package, whatever `packages/flux` of the schema checkout is. The other packages that `fpkg install` put into the schema checkout are used as they are. A package that is a link made by `fpkg link`, such as `gmsv_file` above, needs a bind mount in `docker-compose.override.yml` (the comment at the top of `docker-compose.yml` shows where), and the container names the ones that are missing when it starts.
+* The stack always runs this checkout as the `flux` package, whatever `packages/flux` of the schema checkout is. The other packages that `fpkg install` put into the schema checkout are used as they are. `gmsv_file` and `gmsv_pg`, the packages of the binary modules, are part of the image and need neither a link nor a mount: when the schema checkout does not have one of them, or has a link made by `fpkg link` for it, the container uses the copy of the image and says so when it starts. Any other package that is a link made by `fpkg link` needs a bind mount in `docker-compose.override.yml` (the comment at the top of `docker-compose.yml` shows where), and the container names the ones that are missing when it starts.
 * The server is hidden from the server list. Join it with `connect localhost` (or the address of the machine) from the game console. `docker compose attach flux` opens the server console.
 * The database is picked by the profile, there is nothing to configure. The SQLite database is the `docker/sqlite/sv.db` file, everything else that the server stores is kept in Docker volumes. `docker compose down -v` deletes those.
 * To use another schema, another map or a Workshop collection, set the variables listed at the top of `docker-compose.yml`, for example `FLUX_SCHEMA=reborn docker compose up`. They can also be put into an `.env` file.
