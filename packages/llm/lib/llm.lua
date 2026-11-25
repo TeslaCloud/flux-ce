@@ -42,6 +42,8 @@
 --     return ErrorNoHalt('LLM request failed: '..err.message..'\n')
 --   end
 --
+--   if !IsValid(officer) then return end
+--
 --   table.insert(history, response.message)
 --   officer:say(response.text)
 --
