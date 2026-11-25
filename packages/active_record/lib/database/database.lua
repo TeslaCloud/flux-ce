@@ -100,7 +100,8 @@ end
 -- database with the settings, runs a function with it and disconnects it afterward, also when
 -- the function raises. The adapter is in sync mode and raises the errors of its queries while
 -- the function runs; the adapter of ActiveRecord is left as it is. Raises an error when the
--- settings name no database, when the connection fails (see ActiveRecord.connect_adapter) and
+-- settings name no database, when the binary module of the adapter cannot be opened (see
+-- ActiveRecord.new_adapter), when the connection fails (see ActiveRecord.connect_adapter) and
 -- the error of the function.
 -- @param settings [Map database settings: host, user, port, password and database]
 -- @param callback [Function called with the connected adapter and the name of the database]
@@ -121,15 +122,13 @@ local function with_maintenance_database(settings, callback)
     database = 'postgres'
   }
 
-  ActiveRecord.connect_adapter(ActiveRecord.adapter.class.new(), maintenance, function(adapter)
+  ActiveRecord.connect_adapter(ActiveRecord.new_adapter(ActiveRecord.adapter.class), maintenance, function(adapter)
     adapter:sync(true)
     adapter:raise_errors(true)
 
     local success, exception = pcall(callback, adapter, name)
 
     adapter:disconnect()
-    adapter:raise_errors(false)
-    adapter:sync(false)
 
     if !success then
       error(exception, 0)

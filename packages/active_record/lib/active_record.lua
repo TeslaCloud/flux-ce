@@ -488,19 +488,11 @@ function ActiveRecord.establish_connection(config)
   ActiveRecord.adapter:connect(config, ActiveRecord.Adapters.Abstract.on_connected)
 end
 
---- Creates the adapter that database settings name and stores it in ActiveRecord.adapter,
--- without connecting it, as the tasks that need no connection (`db:create`, `db:drop`) want
--- it. Raises an error for an unknown adapter, and one with the reason when the binary module
--- of the adapter cannot be opened.
--- @param config [Map database settings, see ActiveRecord.establish_connection]
+--- Creates an adapter of a class without connecting it, after opening the binary module the
+-- class is built on. Raises an error with the reason when that module cannot be opened.
+-- @param adapter_class [Class an adapter class, such as ActiveRecord::Adapters::Pg]
 -- @return [ActiveRecord::Adapters::Abstract the adapter]
-function ActiveRecord.create_adapter(config)
-  local adapter_class, reason = find_adapter(config)
-
-  if !adapter_class then
-    error('ActiveRecord - '..reason, 0)
-  end
-
+function ActiveRecord.new_adapter(adapter_class)
   local binary_module = adapter_class.binary_module
 
   if binary_module then
@@ -512,8 +504,26 @@ function ActiveRecord.create_adapter(config)
     end
   end
 
+  return adapter_class.new()
+end
+
+--- Creates the adapter that database settings name and stores it in ActiveRecord.adapter,
+-- without connecting it, as the tasks that need no connection (`db:create`, `db:drop`) want
+-- it. Raises an error for an unknown adapter, and one with the reason when the binary module
+-- of the adapter cannot be opened (see ActiveRecord.new_adapter).
+-- @param config [Map database settings, see ActiveRecord.establish_connection]
+-- @return [ActiveRecord::Adapters::Abstract the adapter]
+function ActiveRecord.create_adapter(config)
+  local adapter_class, reason = find_adapter(config)
+
+  if !adapter_class then
+    error('ActiveRecord - '..reason, 0)
+  end
+
+  local adapter = ActiveRecord.new_adapter(adapter_class)
+
   ActiveRecord.connection_settings = config
-  ActiveRecord.adapter = adapter_class.new()
+  ActiveRecord.adapter = adapter
 
   return ActiveRecord.adapter
 end
