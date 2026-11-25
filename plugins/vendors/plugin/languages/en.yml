@@ -91,7 +91,7 @@ en:
           thanks: When a customer who has traded leaves
   vendor:
     default_name: Vendor
-    says: says
+    says: '{name} says: "{text}"'
     phrase:
       greeting: How can I help you?
       refuse: I cannot trade with you.

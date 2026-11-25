@@ -91,7 +91,7 @@ fr:
           thanks: "Quand un client qui a commercé s'en va"
   vendor:
     default_name: "Marchand"
-    says: "dit"
+    says: '{name} dit : « {text} »'
     phrase:
       greeting: "Que puis-je faire pour vous ?"
       refuse: "Je ne peux pas commercer avec vous."

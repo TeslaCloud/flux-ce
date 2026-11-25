@@ -40,7 +40,7 @@ function Vendors:say(vendor, actor, id)
 
   if text == '' then return end
 
-  local line = data.name..' '..(t('vendor.says', nil, lang))..': "'..text..'"'
+  local line = t('vendor.says', { name = data.name, text = text }, lang)
 
   if Chatbox then
     Chatbox.add_text(actor, Color(255, 255, 160), line)

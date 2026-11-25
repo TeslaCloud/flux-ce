@@ -8,6 +8,9 @@ local text_size = util.text_size
 
 local target_distance = 300
 local refresh_delay = 0.3
+local name_color = Color(255, 255, 255)
+local text_color = Color(255, 255, 255)
+local outline_color = Color(0, 0, 0)
 
 --- Returns the description of a vendor broken into lines that fit the target ID. The lines
 -- are kept on the entity and made again only when the description or the width changes.
@@ -71,20 +74,13 @@ function Vendors:HUDDrawTargetID()
   end
 
   local x, y = screen_pos.x, screen_pos.y - height
-  local outline_color = color_black:alpha(alpha)
-  local text_color = color_white:alpha(alpha)
+  local accent = Theme.get_color('accent_light')
 
-  draw.SimpleTextOutlined(
-    name,
-    name_font,
-    x - name_w * 0.5,
-    y,
-    Theme.get_color('accent_light'):alpha(alpha),
-    nil,
-    nil,
-    1,
-    outline_color
-  )
+  name_color.r, name_color.g, name_color.b, name_color.a = accent.r, accent.g, accent.b, alpha
+  text_color.a = alpha
+  outline_color.a = alpha
+
+  draw.SimpleTextOutlined(name, name_font, x - name_w * 0.5, y, name_color, nil, nil, 1, outline_color)
 
   y += name_h
 

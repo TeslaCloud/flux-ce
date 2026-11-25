@@ -39,7 +39,7 @@ local function adjust_price(actor, vendor, item_obj, price, selling)
 
   local adjusted = Vendors:clean_number(price_info.price, 0, max_price) or math.Clamp(price, 0, max_price)
 
-  return Vendors:round_money(currency, adjusted, !selling)
+  return Currencies:round(currency, adjusted, !selling)
 end
 
 --- Returns what a customer pays for an item that a vendor sells: the price set for it, or

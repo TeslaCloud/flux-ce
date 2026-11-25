@@ -11,7 +11,7 @@
 -- (phrase ID to text, '' for the default text). Always change the settings with
 -- `Vendors:apply`, which checks them. `Vendors.max_price` is the most an item may cost and
 -- the most money a vendor may hold, `Vendors.max_stock` the most of an item a vendor may
--- have.
+-- have; the buy-back rate is at most the maximum of the vendors_buy_rate config.
 
 if !Vendors then
   PLUGIN:set_global('Vendors')
@@ -27,23 +27,8 @@ Vendors.max_stock = 1_000_000
 local text_limits = { name = 64, description = 256, model = 192, animation = 64, phrase = 256 }
 local max_ids = 128
 
---- Cuts a text to a number of characters, or to that many bytes if it is not valid UTF-8.
--- @param text [String]
--- @param limit [Number]
--- @return [String]
-local function limit_text(text, limit)
-  if #text <= limit then return text end
-
-  local length = utf8.len(text)
-
-  if length and length <= limit then return text end
-
-  local success, cut = pcall(string.utf8sub, text, 1, limit)
-
-  return success and cut or text:sub(1, limit)
-end
-
---- Makes a clean single-line text out of a value received from a client or read from a save.
+--- Makes a clean single-line text out of a value received from a client or read from a save,
+-- with `string.clean_line`.
 -- @param value [Any]
 -- @param limit [Number maximum length in characters]
 -- @param fallback=nil [Any what to return if the value is not a string]
@@ -51,9 +36,16 @@ end
 local function clean_text(value, limit, fallback)
   if !isstring(value) then return fallback end
 
-  value = value:gsub('%c', ' ')
+  return value:clean_line(limit)
+end
 
-  return limit_text(value:Trim(), limit)
+--- Returns the highest buy-back rate a vendor may have: the maximum of the vendors_buy_rate
+-- config, so that a vendor never pays more for an item than it costs.
+-- @return [Number percent]
+local function get_max_buy_rate()
+  local definition = Config.get_definition('vendors_buy_rate')
+
+  return definition and tonumber(definition.max_value) or 100
 end
 
 --- Makes a finite number within a range out of a value received from a client or read from a
@@ -65,27 +57,9 @@ end
 function Vendors:clean_number(value, min, max)
   value = tonumber(value)
 
-  if !value or value != value or value == math.huge or value == -math.huge then return end
+  if !math.is_finite(value) then return end
 
   return math.Clamp(value, min, max)
-end
-
---- Rounds an amount of money to the decimals of a currency.
--- @param currency [String currency ID]
--- @param amount [Number]
--- @param down=false [Boolean round down instead of to the nearest value]
--- @return [Number]
-function Vendors:round_money(currency, amount, down)
-  local currency_data = isstring(currency) and Currencies:find_currency(currency)
-  local decimals = currency_data and currency_data.decimals or 0
-
-  if down then
-    local factor = 10 ^ decimals
-
-    return math.floor(amount * factor + 0.000001) / factor
-  end
-
-  return math.Round(amount, decimals)
 end
 
 --- Makes a clean item list out of the one received from a client or read from a save. The
@@ -107,7 +81,7 @@ local function clean_items(entries, currency, with_stock)
     if item_table and !item_table.is_base then
       local entry = istable(raw_entry) and raw_entry or {}
       local price = Vendors:clean_number(entry.price, 0, Vendors.max_price)
-      local cleaned = { price = price and Vendors:round_money(currency, price) or false }
+      local cleaned = { price = price and Currencies:round(currency, price) or false }
 
       if with_stock then
         local stock = Vendors:clean_number(entry.stock, 0, Vendors.max_stock)
@@ -161,7 +135,7 @@ function Vendors:get_default_data()
     animation = '',
     currency = Currencies:get_default_currency() or '',
     money = false,
-    buy_rate = self:clean_number(Config.get('vendors_buy_rate', 50), 0, 1000) or 50,
+    buy_rate = self:clean_number(Config.get('vendors_buy_rate', 50), 0, get_max_buy_rate()) or 50,
     sells = {},
     buys = {},
     factions = {},
@@ -207,10 +181,11 @@ function Vendors:sanitize(data, current)
   else
     local money = self:clean_number(data.money, 0, self.max_price)
 
-    result.money = money and self:round_money(result.currency, money) or false
+    result.money = money and Currencies:round(result.currency, money) or false
   end
 
-  result.buy_rate = self:clean_number(data.buy_rate, 0, 1000) or current.buy_rate
+  result.buy_rate = self:clean_number(data.buy_rate, 0, get_max_buy_rate())
+    or math.min(current.buy_rate, get_max_buy_rate())
   result.sells = data.sells != nil and clean_items(data.sells, result.currency, true) or current.sells
   result.buys = data.buys != nil and clean_items(data.buys, result.currency, false) or current.buys
   result.factions = data.factions != nil and clean_ids(data.factions) or current.factions

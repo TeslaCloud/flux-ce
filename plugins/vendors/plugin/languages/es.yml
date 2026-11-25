@@ -91,7 +91,7 @@ es:
           thanks: Cuando se va un cliente que ha comerciado
   vendor:
     default_name: Vendedor
-    says: dice
+    says: '{name} dice: "{text}"'
     phrase:
       greeting: ¿En qué puedo ayudarte?
       refuse: No puedo comerciar contigo.

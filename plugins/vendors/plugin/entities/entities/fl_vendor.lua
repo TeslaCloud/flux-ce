@@ -115,10 +115,11 @@ if SERVER then
     end
   end
 
-  --- Thinks every tick, which is what keeps the animation of the vendor advancing.
+  --- Thinks ten times a second, as the engine's own NPCs do, which is what keeps the
+  -- animation of the vendor advancing; the frames in between are interpolated by the clients.
   -- @return [Boolean always true, so that the next think time set here is used]
   function ENT:Think()
-    self:NextThink(CurTime())
+    self:NextThink(CurTime() + 0.1)
 
     return true
   end

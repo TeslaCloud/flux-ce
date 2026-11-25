@@ -17,7 +17,7 @@ local PANEL = {}
 local function to_amount(text)
   local value = tonumber(text)
 
-  if !value or value != value or value < 0 or value == math.huge then
+  if !math.is_finite(value) or value < 0 then
     return false
   end
 

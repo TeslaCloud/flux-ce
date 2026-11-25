@@ -68,7 +68,8 @@ function Vendors:buy(actor, vendor, item_id)
 
   --- Decides whether a player may buy an item from a vendor. Called on the server once the
   -- vendor is known to sell the item and to have it in stock, before the money and the
-  -- inventory of the player are checked.
+  -- inventory of the player are checked; those checks are made whatever the hook returns,
+  -- so returning true does not let a purchase through that they refuse.
   -- @param actor [Player The customer]
   -- @param vendor [Entity The vendor]
   -- @param item_table [Item The template of the item]
@@ -127,7 +128,7 @@ function Vendors:buy(actor, vendor, item_id)
   end
 
   if data.money then
-    data.money = self:round_money(currency, math.min(data.money + price, self.max_price))
+    data.money = Currencies:round(currency, math.min(data.money + price, self.max_price))
   end
 
   if entry.stock then
@@ -201,7 +202,9 @@ function Vendors:sell(actor, vendor, instance_id)
   local price = self:get_buy_price(vendor, item_obj, actor)
 
   --- Decides whether a player may sell an item to a vendor. Called on the server once the
-  -- vendor is known to take the item, before its money pool is checked.
+  -- vendor is known to take the item, before its money pool is checked; that check is made
+  -- whatever the hook returns, so returning true does not let a sale through that it
+  -- refuses.
   -- @param actor [Player The customer]
   -- @param vendor [Entity The vendor]
   -- @param item_obj [Item The item instance of the player]
@@ -244,7 +247,7 @@ function Vendors:sell(actor, vendor, instance_id)
   end
 
   if data.money then
-    data.money = self:round_money(currency, math.max(data.money - paid, 0))
+    data.money = Currencies:round(currency, math.max(data.money - paid, 0))
   end
 
   session.traded = true
