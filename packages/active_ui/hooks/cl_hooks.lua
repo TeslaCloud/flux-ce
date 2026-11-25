@@ -18,9 +18,9 @@ function GM:ForceDermaSkin()
   return 'Flux'
 end
 
---- Recreates the fonts and loads the active theme again, which runs its `on_loaded` methods
--- and the `ThemeLoaded` handlers, so that the fonts and the options of the theme fit the new
--- resolution.
+--- Recreates the fonts and loads the active theme again as resized, which runs its
+-- `on_loaded` methods and the `ThemeLoaded` handlers with `resized` set, so that the fonts and
+-- the options of the theme fit the resolution while the open panels stay open.
 -- @param _new_w [Number new screen width]
 -- @param _new_h [Number new screen height]
 -- @param _old_w [Number previous screen width]
@@ -31,7 +31,7 @@ function GM:ResolutionChanged(_new_w, _new_h, _old_w, _old_h)
   local theme_id = Theme.get_active_theme()
 
   if theme_id then
-    Theme.load_theme(theme_id)
+    Theme.load_theme(theme_id, true)
   end
 end
 

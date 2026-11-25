@@ -297,9 +297,11 @@ end
 -- and runs the 'ThemeLoaded' hook.
 -- It can be prevented with the 'ShouldThemeLoad' hook.
 -- @param theme_id [String ID of a registered theme]
+-- @param resized=false [Boolean true when the active theme is loaded again only because the
+--   screen resolution has changed; passed on to the 'ThemeLoaded' hook]
 -- @return [Boolean true if the theme has been loaded, false if it is not registered or the
 --   'ShouldThemeLoad' hook has prevented it]
-function Theme.load_theme(theme_id)
+function Theme.load_theme(theme_id, resized)
   local theme_table = Theme.find_theme(theme_id)
 
   if theme_table then
@@ -340,10 +342,15 @@ function Theme.load_theme(theme_id)
 
     --- Called on the client after a theme has become the active one: its `on_loaded` methods
     -- have run and its Derma skin has been applied. It is called again every time the theme is
-    -- reloaded. Plugins use it to add their own colors, fonts, options and panels to the
-    -- theme.
+    -- reloaded and after the screen resolution has changed. Plugins use it to add their own
+    -- colors, fonts, options and panels to the theme; sizes computed here follow the
+    -- resolution. Panels that are open stay open when the theme is loaded again for a
+    -- resolution change, so a handler that recreates open panels skips that when `resized`
+    -- is true.
     -- @param current_theme [ThemeBase the theme that has been loaded]
-    hook.Run('ThemeLoaded', current_theme)
+    -- @param resized [Boolean true when the active theme has been loaded again only because the
+    --   screen resolution has changed, false when a theme has been loaded or reloaded]
+    hook.Run('ThemeLoaded', current_theme, resized == true)
 
     return true
   end

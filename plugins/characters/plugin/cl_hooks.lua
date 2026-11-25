@@ -86,9 +86,12 @@ function Characters:IntroPanelRemoved()
 end
 
 --- Registers the main menu and character creation panels with the theme, and recreates the
--- main menu if it is currently open.
+-- main menu if it is currently open. After a change of the screen resolution the open menu is
+-- kept with what has been entered in it and only made to cover the screen again; its sidebar
+-- and its submenu keep their sizes until they are opened again.
 -- @param current_theme [ThemeBase]
-function Characters:ThemeLoaded(current_theme)
+-- @param resized [Boolean true when the theme has been loaded again for a resolution change]
+function Characters:ThemeLoaded(current_theme, resized)
   current_theme:add_panel('main_menu', function(_id, parent, ...)
     return vgui.Create('fl_main_menu', parent)
   end)
@@ -105,12 +108,18 @@ function Characters:ThemeLoaded(current_theme)
     return vgui.Create('fl_char_create_general', parent)
   end)
 
-  if IsValid(Flux.intro_panel) then
-    Flux.intro_panel:Remove()
+  if !IsValid(Flux.intro_panel) then return end
 
-    Flux.intro_panel = Theme.create_panel('main_menu')
-    Flux.intro_panel:MakePopup()
+  if resized then
+    Flux.intro_panel:SetSize(ScrW(), ScrH())
+
+    return
   end
+
+  Flux.intro_panel:Remove()
+
+  Flux.intro_panel = Theme.create_panel('main_menu')
+  Flux.intro_panel:MakePopup()
 end
 
 --- Adds the main menu entry to the tab menu.
