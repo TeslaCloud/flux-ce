@@ -8,6 +8,29 @@
 local create_panel = vgui.Create
 local play_sound = surface.PlaySound
 
+--- Asks for the name of a preset and saves the tree under it. Asks again while the name is
+-- blank.
+-- @param tree [Panel the fl_conditions panel]
+local function request_preset_name(tree)
+  Derma_StringRequest(t'ui.condition.save.title',
+  t'ui.condition.save.message',
+  '',
+  function(text)
+    if !IsValid(tree) then return end
+
+    if string.Trim(text) == '' then
+      return request_preset_name(tree)
+    end
+
+    Data.save('conditions/'..text, tree:get_conditions())
+
+    play_sound('garrysmod/ui_click.wav')
+  end,
+  function(_text)
+    play_sound('garrysmod/ui_click.wav')
+  end)
+end
+
 local PANEL = {}
 
 --- Creates the root node of the condition tree and the buttons
@@ -31,17 +54,7 @@ function PANEL:Init()
   self.save.DoClick = function(_btn)
     play_sound('garrysmod/ui_click.wav')
 
-    Derma_StringRequest(t'ui.condition.save.title',
-    t'ui.condition.save.message',
-    '',
-    function(text)
-      Data.save('conditions/'..text, self:get_conditions())
-
-      play_sound('garrysmod/ui_click.wav')
-    end,
-    function(_text)
-      play_sound('garrysmod/ui_click.wav')
-    end)
+    request_preset_name(self)
   end
 
   self.load = create_panel('fl_button', self)
@@ -86,8 +99,8 @@ function PANEL:update()
   self.load:SetPos(wide - button_wide * 2 - 4, 2)
 end
 
---- Opens the context menu of a node: adding a child condition and, for condition nodes,
--- setting the parameter and the operator or deleting the condition.
+--- Opens the context menu of a node: adding a child condition, listed by name, and, for
+-- condition nodes, setting the parameter and the operator or deleting the condition.
 -- @param panel [Panel the tree node that was right-clicked]
 -- @param _root=nil [Boolean whether the node is the root node, unused]
 -- @param _first=nil [Boolean whether the node has no child conditions, unused]
@@ -96,10 +109,18 @@ function PANEL:node_options(panel, _root, _first)
 
   local sub_menu = menu:AddSubMenu(t'ui.condition.add_condition')
 
+  local choices = {}
+
   for condition_id, condition_data in pairs(Conditions:get_all()) do
-    sub_menu:AddOption(t(condition_data.name), function()
-      self:add_condition(panel, condition_id)
-    end):SetIcon(condition_data.icon)
+    choices[#choices + 1] = { id = condition_id, name = t(condition_data.name), icon = condition_data.icon }
+  end
+
+  table.sort(choices, |a, b| -> a.name < b.name)
+
+  for _, choice in ipairs(choices) do
+    sub_menu:AddOption(choice.name, function()
+      self:add_condition(panel, choice.id)
+    end):SetIcon(choice.icon)
   end
 
   local id = panel.id
