@@ -20,22 +20,25 @@ StaticEnts.whitelisted_ents = whitelisted_ents
 --- Runs the PersistenceLoad hook once the map's entities have been created.
 function StaticEnts:InitPostEntity()
   --- Sandbox's `PersistenceLoad` hook, run by the plugin in place of Sandbox once the map's
-  -- entities have been created.
+  -- entities have been created and again after a map cleanup.
   -- Handlers spawn what they have saved; the plugin's own handler loads the static entities.
   hook.Run('PersistenceLoad')
 end
 
---- Runs the PersistenceSave hook when the server shuts down.
-function StaticEnts:ShutDown()
-  --- Sandbox's `PersistenceSave` hook, run by the plugin in place of Sandbox when the server
-  -- shuts down and whenever the framework saves its data.
-  -- Handlers save their persistent entities; the plugin's own handler saves the static
-  -- entities.
+--- Saves the static entities right before the map is cleaned up, so that they come back as
+-- they are.
+function StaticEnts:PreCleanupMap()
   hook.Run('PersistenceSave')
 end
 
+--- Spawns the static entities again once the map has been cleaned up, which removes them.
+function StaticEnts:PostCleanupMap()
+  hook.Run('PersistenceLoad')
+end
+
 --- Saves every persistent entity to the plugin data of the current schema and map, one
--- 'static/<class>' entry per entity class. Runs the PreSavePersistence hook first and the
+-- 'static/<class>' entry per entity class, and deletes the entry of every whitelisted class
+-- that has no persistent entity left. Runs the PreSavePersistence hook first and the
 -- PostSavePersistence hook once everything has been saved.
 function StaticEnts:PersistenceSave()
   --- Called on the server right before the static entities are copied and saved, so that
@@ -44,26 +47,18 @@ function StaticEnts:PersistenceSave()
   -- saved with the container.
   hook.Run('PreSavePersistence')
 
-  local entities = {}
-
-  for _, ent in ents.Iterator() do
-    if ent:GetPersistent() then
-      local ent_class = ent:GetClass()
-      entities[ent_class] = entities[ent_class] or {}
-      table.insert(entities[ent_class], ent)
-    end
-  end
-
-  local to_save = {}
-
-  for ent_class, class_entities in pairs(entities) do
-    to_save[ent_class] = duplicator.CopyEnts(class_entities)
-  end
+  local to_save = self:copy_persistent()
 
   for ent_class, save_data in pairs(to_save) do
     if !istable(save_data) then continue end
 
     Data.save_plugin('static/'..ent_class, save_data)
+  end
+
+  for ent_class in pairs(whitelisted_ents) do
+    if to_save[ent_class] == nil then
+      Data.delete_plugin('static/'..ent_class)
+    end
   end
 
   --- Called on the server right after the static entities have been copied and saved, so
@@ -118,8 +113,13 @@ function StaticEnts:PlayerSetEntityStatic(actor, is_static)
   actor:notify((is_static and 'notification.static.added') or 'notification.static.removed')
 end
 
---- Runs the PersistenceSave hook whenever the framework saves its data.
+--- Runs the PersistenceSave hook whenever the framework saves its data, which it also does
+-- when the server shuts down or changes the map.
 function StaticEnts:SaveData()
+  --- Sandbox's `PersistenceSave` hook, run by the plugin in place of Sandbox whenever the
+  -- framework saves its data, the shutdown included, and right before a map cleanup.
+  -- Handlers save their persistent entities; the plugin's own handler saves the static
+  -- entities.
   hook.Run('PersistenceSave')
 end
 

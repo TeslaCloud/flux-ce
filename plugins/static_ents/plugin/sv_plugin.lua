@@ -1,6 +1,32 @@
---- Server side of the Static Entities plugin: the persistence backup and its console command.
+--- Server side of the Static Entities plugin: the copy of the persistent entities, the
+-- persistence backup and its console command.
 
 const backup_interval = 30
+
+--- Copies every persistent entity on the map with the duplicator, by entity class.
+-- @return [Map the `duplicator.CopyEnts` copy of the persistent entities of every class,
+--   keyed by entity class]
+function StaticEnts:copy_persistent()
+  local entities = {}
+
+  for _, ent in ents.Iterator() do
+    if ent:GetPersistent() then
+      local ent_class = ent:GetClass()
+      local list = entities[ent_class] or {}
+
+      list[#list + 1] = ent
+      entities[ent_class] = list
+    end
+  end
+
+  local copies = {}
+
+  for ent_class, class_entities in pairs(entities) do
+    copies[ent_class] = duplicator.CopyEnts(class_entities)
+  end
+
+  return copies
+end
 
 --- Writes a copy of all persistent entities to the plugin data of the current schema and map,
 -- under 'static_backups/<timestamp>', and tells the player who has asked for it whether it
@@ -25,22 +51,7 @@ function StaticEnts:run_backup(actor)
 
   print('Running persistence backup, as requested by '..pn..' ('..sid..')')
 
-  local entities = {}
-
-  for _, ent in ents.Iterator() do
-    if ent:GetPersistent() then
-      local ent_class = ent:GetClass()
-      entities[ent_class] = entities[ent_class] or {}
-      table.insert(entities[ent_class], ent)
-    end
-  end
-
-  local to_save = {}
-
-  for ent_class, class_entities in pairs(entities) do
-    to_save[ent_class] = duplicator.CopyEnts(class_entities)
-  end
-
+  local to_save = self:copy_persistent()
   local target_dir = 'static_backups/'..to_timestamp(os.time())
   local status = true
 
