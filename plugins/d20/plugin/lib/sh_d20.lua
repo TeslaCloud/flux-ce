@@ -1,7 +1,10 @@
 --- Armor class and attack rolls of the D20 plugin. The armor class of a player or an NPC is
 -- what an attack roll against them has to reach to hit; an attack roll is a d20 plus the
--- attack modifier of the attacker. The armor class and the attack modifier are known on both
--- realms, the attack roll itself is made on the server.
+-- attack modifier of the attacker. The armor class and the attack modifier can be asked for on
+-- both realms, but the client knows the stats and the skills of the local player alone, so
+-- they are right on the server and, on the client, for the local player only; for other
+-- players the client counts their stats and skills at their defaults. The attack roll itself
+-- is made on the server.
 --
 -- This file is included before sh_plugin.lua, which is why it is the one that makes the
 -- plugin available as the `D20` global.
