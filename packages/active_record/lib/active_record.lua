@@ -56,6 +56,34 @@ include 'dumper.lua'
 -- the 'ar_schema' table.
 local next_column_id = 1
 
+--- Turns the SQL of a column default back into the value that the migration gave, which
+-- ActiveRecord::Query#handle_create_args wrote into the SQL as it is: 'true' and 'false'
+-- become booleans and the text of a number becomes the number. Anything else, such as a
+-- quoted string literal or an SQL expression, is SQL text in the migration as well and stays
+-- as it is.
+-- @param sql [String]
+-- @return [Boolean/Number/String]
+local function parse_default(sql)
+  if sql == 'true' then
+    return true
+  elseif sql == 'false' then
+    return false
+  end
+
+  local number = tonumber(sql)
+
+  if number and tostring(number) == sql then
+    return number
+  end
+
+  return sql
+end
+
+--- Reads the null option and the default of a column back from its SQL definition, as it is
+-- stored in the 'ar_schema' table.
+-- @param definition [String/Nil]
+-- @return [Boolean/Nil false for NOT NULL, true for DEFAULT NULL, Boolean/Number/String/Nil the
+--   default, see parse_default]
 local function parse_definition(definition)
   definition = tostring(definition or '')
 
@@ -67,6 +95,10 @@ local function parse_definition(definition)
   elseif default == 'NULL' then
     null = true
     default = nil
+  end
+
+  if default then
+    default = parse_default(default)
   end
 
   return null, default
