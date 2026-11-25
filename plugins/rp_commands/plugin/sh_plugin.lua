@@ -37,11 +37,16 @@ function RPCommands:RegisterPermissions()
   Bolt:register_permission('bypass_chat_cooldown', nil, nil, 'permission.categories.roleplay')
 end
 
---- Wraps a text in the markup of a speech command, the way the command itself says it.
+--- Wraps a text in the markup of a speech command, the way the command itself says it. The
+-- volume markup of the text stays outside the markup of `me` and `yell`: parentheses around the
+-- whole text, and for `me` the exclamation marks at its end. A whisper wraps the whole text.
 -- ```
 -- RPCommands:wrap_speech('me', 'waves') -- '*waves*'
+-- RPCommands:wrap_speech('me', '(waves)') -- '(*waves*)'
+-- RPCommands:wrap_speech('me', 'waves!!') -- '*waves*!!'
 -- RPCommands:wrap_speech('whisper', 'over here') -- '(over here)'
 -- RPCommands:wrap_speech('yell', 'run') -- 'run!!'
+-- RPCommands:wrap_speech('yell', '(hey)') -- '(hey!!)'
 -- ```
 -- @param id [String ID of the command: 'me', 'whisper' or 'yell']
 -- @param text [String text given to the command]
@@ -53,7 +58,22 @@ function RPCommands:wrap_speech(id, text)
     return text
   end
 
-  return markup[1]..text..markup[2]
+  local open, close = markup[1], markup[2]
+
+  if open != '(' then
+    local lead, inner, trail = text:match('^(%(+)(.-%S.-)(%)+)$')
+
+    if !lead then
+      lead = ''
+      inner, trail = text:match('^(.-[^!%s])(!!+)$')
+    end
+
+    if inner then
+      return lead..open..inner..close..trail
+    end
+  end
+
+  return open..text..close
 end
 
 --- Returns how far a phrase of a volume carries, compared to regular speech.

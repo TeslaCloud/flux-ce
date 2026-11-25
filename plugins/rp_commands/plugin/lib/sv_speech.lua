@@ -11,6 +11,9 @@ end
 local config_get = Config.get
 
 --- Splits a phrase into alternating speech and asterisk emote parts with quotes and colors.
+-- A part of nothing but whitespace after the first shown part keeps its turn in the alternation
+-- without being shown, so the actions on either side of it are joined into one:
+-- `*nods* *smiles*` is one action.
 -- @param text [String phrase]
 -- @return [Table chat message parts]
 function RPCommands:get_phrase_table(text)
@@ -19,13 +22,24 @@ function RPCommands:get_phrase_table(text)
   local text_parts = {}
   local pieces = text:split('*')
   local count = 0
+  local piece_is_emote = is_emote
+  local last_is_emote
 
   for i = 1, #pieces do
     local piece = pieces[i]
 
-    if piece != '' and piece:match('%S') then
-      count += 1
-      text_parts[count] = piece
+    if piece:match('%S') then
+      if count > 0 and last_is_emote == piece_is_emote then
+        text_parts[count] = text_parts[count]:strip()..' '..piece:strip()
+      else
+        count += 1
+        text_parts[count] = piece
+        last_is_emote = piece_is_emote
+      end
+
+      piece_is_emote = !piece_is_emote
+    elseif count > 0 and piece != '' then
+      piece_is_emote = !piece_is_emote
     end
   end
 
@@ -78,6 +92,8 @@ function RPCommands:get_phrase_table(text)
 end
 
 --- Formats an in character message, scaling its font size, verb and hearing radius by the phrase volume.
+-- The exclamation marks of a yell that follow the closing asterisk of an action (`*waves*!!`) are
+-- markup and left out of the line; those at the end of speech (`*waves* hey!!`) are shown.
 -- @param speaker [Player player speaking]
 -- @param text [String phrase]
 -- @return [Table chat message parts ending with the message data]
@@ -92,16 +108,16 @@ function RPCommands:format_message(speaker, text)
     speaker, ' '
   }
 
+  if volume > 0 and phrase:find('%*!+$') then
+    phrase = phrase:gsub('!+$', '')
+  end
+
   if !is_emote then
     msg_table[5] = volume == 0 and t'ui.chat.say' or (volume < 0 and t'ui.chat.whisper' or t'ui.chat.yell')
     msg_table[6] = ': '
 
     if volume == 3 then
       phrase = phrase:utf8upper()
-    end
-  else
-    if volume > 0 then
-      phrase = phrase:sub(1, -phrase:match('([!]+)$'):len() - 1)
     end
   end
 
