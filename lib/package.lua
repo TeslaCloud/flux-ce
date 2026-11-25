@@ -19,7 +19,7 @@ local search_paths = {
   '_flux/packages/'
 }
 
-if !Flux or (CLIENT and (!Flux or !Flux.shared or !Flux.shared.packages)) then
+if !Flux or (CLIENT and (!Flux.shared or !Flux.shared.packages)) then
   require_relative(FLUX_PATH..'lib/flux_struct')
 end
 
@@ -54,7 +54,9 @@ end
 --- Describes the current package's specification.
 -- A field may be given in its plural form, such as `authors` or `files`, and is stored under
 -- the singular one. Once the globals are set up, the dependencies are included. A package
--- without a `global`, such as the project manifest of a schema, creates none.
+-- without a `global`, such as the project manifest of a schema, creates none. The version
+-- requirement of a dependency (`'~> 0.9'` below) is checked by fpkg when it installs the
+-- packages; at runtime only the name counts.
 -- ```
 -- Package:describe(function(s)
 --   s.name        = 'Example Package'
@@ -362,17 +364,9 @@ function Package:is_version(version1, version2)
 end
 
 do
-  local function do_include(file_path, lib_path, full_path)
-    if istable(Package.installed[lib_path]) and !Package.installed[lib_path].metadata.reload then
-      return
-    end
+  local including = {}
 
-    local parent_package
-
-    if Package.current then
-      parent_package = Package.current
-    end
-
+  local function load_package(file_path, lib_path, full_path)
     Package.current = PackageInstance.new(file_path, lib_path, full_path)
     PACKAGE = Package.current
 
@@ -394,18 +388,49 @@ do
     if isfunction(Package.current.__installed__) then
       Package.current:__installed__()
     end
+  end
 
+  --- Includes the specification of a package and runs its `__installed__`, with the package as
+  -- `Package.current` and `PACKAGE`, which point back to the package that depends on it once it
+  -- is done, also when it fails. Throws an error for a package that depends on itself through
+  -- its chain of dependencies.
+  -- @param file_path [String path to the package's packagespec.lua]
+  -- @param lib_path [String name of the package]
+  -- @param full_path [String path to the package's folder]
+  local function do_include(file_path, lib_path, full_path)
+    if istable(Package.installed[lib_path]) and !Package.installed[lib_path].metadata.reload then
+      return
+    end
+
+    local cycle_start = table.KeyFromValue(including, lib_path)
+
+    if cycle_start then
+      error('Cyclic package dependency: '..table.concat(including, ' -> ', cycle_start)..' -> '..lib_path, 0)
+    end
+
+    local parent_package = Package.current
+
+    including[#including + 1] = lib_path
+
+    local success, err = pcall(load_package, file_path, lib_path, full_path)
+
+    including[#including] = nil
     Package.current = parent_package
     PACKAGE         = parent_package
+
+    if !success then
+      error(err, 0)
+    end
   end
 
   --- Attempts to include the package with the specified name.
   -- On the server the package is looked up with `Package:find`; a `packages` folder inside it
   -- is appended to the search paths before its specification runs. On the client the
   -- metadata the server sent is used. If no package with the matching name can be found,
-  -- throws an error.
+  -- throws an error that names the package depending on it and the folders searched.
   -- @param name [String package name, or path to the package's folder]
-  -- @param _version=nil [String ignored]
+  -- @param _version=nil [String version requirement, checked by fpkg at install time and
+  --   ignored here]
   -- @return [Boolean true if name is a .lua file, which is skipped; nothing otherwise]
   -- @see [Package:find]
   function Package:include(name, _version)
@@ -415,7 +440,20 @@ do
       local spec_path, _, full_path = self:find(name)
 
       if !spec_path then
-        error('could not load "'..name..'" (no package spec file found)')
+        local folders = {}
+
+        for index, path in ipairs(search_paths) do
+          folders[index] = path..name..'/'
+        end
+
+        folders[#folders + 1] = name:ensure_end('/')
+
+        local project = engine.ActiveGamemode()
+        local dependent = self.current ? ', a dependency of "'..self.current.metadata.lib_path..'"' : ''
+
+        error('could not load "'..name..'"'..dependent..': no packagespec.lua in '..table.concat(folders, ', ')
+          ..'\nRun "fpkg install" in gamemodes/'..project
+          ..', or "fpkg link <checkout>" for a development checkout.', 0)
       end
 
       if file.IsDir(full_path..'packages', 'LUA') then

@@ -43,7 +43,9 @@ end
 --- Specifies that a package is dependent on another package or plugin.
 -- Merely adds to the dependency list. Can be called with either : or .
 -- When called with a dot, the dependency is added to the package that is currently
--- being included (the PACKAGE global).
+-- being included (the PACKAGE global). A version requirement given after the name, as in
+-- `s.depends('flux', '~> 0.9')`, is checked by fpkg when it installs the packages and is
+-- ignored here.
 -- ```
 -- Package:describe(function(s)
 --   s.depends 'sfs'
