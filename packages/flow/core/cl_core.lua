@@ -26,23 +26,35 @@ local transform_scale   = Vector()
 local transform_angle   = Angle()
 local default_color     = Color(255, 255, 255)
 
+--- Creates the render target that the blurred copy of the screen is drawn into, and the
+-- material that shows it, at the size of the screen. Runs when the file loads and when the
+-- resolution changes.
+local function create_blur_target()
+  local w, h = ScrW(), ScrH()
+
+  Flux.rt_texture = GetRenderTarget('fl_rt_'..w..'x'..h, w, h, false)
+  Flux.blur_mat = CreateMaterial('fl_mat_'..w..'x'..h, 'UnlitGeneric', {
+    ['$basetexture'] = Flux.rt_texture
+  })
+end
+
 Flux.blur_material = Material('pp/blurscreen')
-Flux.rt_texture = GetRenderTarget('fl_rt_'..os.time(), ScrW(), ScrH(), false)
-Flux.blur_mat = CreateMaterial('fl_mat_'..os.time(), 'UnlitGeneric', {
-  ['$basetexture'] = Flux.rt_texture
-})
 Flux.blur_size = 12
 Flux.blur_passes = 8
 Flux.blur_update_fps = 24
 
-do
-  local center_x, center_y = ScrW() * 0.5, ScrH() * 0.5
+create_blur_target()
 
-  --- Returns the coordinates of the center of the screen. The values are computed once when
-  -- the file loads.
+--- Recreates the render target of the blur at the size of the changed resolution.
+hook.Add('ResolutionChanged', 'FluxBlurTarget', create_blur_target)
+
+do
+  local ScrW, ScrH = ScrW, ScrH
+
+  --- Returns the coordinates of the center of the screen, at its current resolution.
   -- @return [Number x, Number y]
   function ScrC()
-    return center_x, center_y
+    return ScrW() * 0.5, ScrH() * 0.5
   end
 end
 
@@ -166,15 +178,41 @@ do
   local cache = {}
   local cache_size = 0
   local max_cache_size = 512
+  local clamp, rad, cos, sin = math.Clamp, math.rad, math.cos, math.sin
+  local sector_points = {}
+  local sector_poly = {}
 
-  local function store_vertices(id, info)
-    if cache_size >= max_cache_size then
-      cache = {}
-      cache_size = 0
+  --- Finds the cached vertices of a circle, keyed by the arguments in nested tables, so
+  -- that looking them up builds no string.
+  -- @param x [Number]
+  -- @param y [Number]
+  -- @param radius [Number]
+  -- @param passes [Number]
+  -- @return [List<Map> the vertices, nil if they are not cached, Map the table to store them
+  --   in by y]
+  local function find_vertices(x, y, radius, passes)
+    local by_passes = cache[passes]
+
+    if !by_passes then
+      by_passes = {}
+      cache[passes] = by_passes
     end
 
-    cache[id] = info
-    cache_size += 1
+    local by_radius = by_passes[radius]
+
+    if !by_radius then
+      by_radius = {}
+      by_passes[radius] = by_radius
+    end
+
+    local by_x = by_radius[x]
+
+    if !by_x then
+      by_x = {}
+      by_radius[x] = by_x
+    end
+
+    return by_x[y], by_x
   end
 
   --- Draws a filled circle in the current surface draw color. Raises an error if x, y or
@@ -190,8 +228,12 @@ do
 
     passes = passes or 100
 
-    local id = x..'|'..y..'|'..radius..'|'..passes
-    local info = cache[id]
+    if cache_size >= max_cache_size then
+      cache = {}
+      cache_size = 0
+    end
+
+    local info, by_x = find_vertices(x, y, radius, passes)
 
     if !info then
       info = {}
@@ -200,20 +242,39 @@ do
         local deg_in_rad = i * math.pi / (passes * 0.5)
 
         info[i] = {
-          x = x + math.cos(deg_in_rad) * radius,
-          y = y + math.sin(deg_in_rad) * radius
+          x = x + cos(deg_in_rad) * radius,
+          y = y + sin(deg_in_rad) * radius
         }
       end
 
-      store_vertices(id, info)
+      by_x[y] = info
+      cache_size += 1
     end
 
     draw.NoTexture()
     surface.DrawPoly(info)
   end
 
+  --- Puts a vertex of a sector into the reused vertex list.
+  -- @param index [Number position of the vertex]
+  -- @param x [Number]
+  -- @param y [Number]
+  local function set_sector_point(index, x, y)
+    local point = sector_points[index]
+
+    if !point then
+      point = {}
+      sector_points[index] = point
+    end
+
+    point.x, point.y = x, y
+    sector_poly[index] = point
+  end
+
   --- Draws a filled sector of a circle in the current surface draw color, starting at the top
-  -- and going clockwise. Raises an error if percentage, x, y or radius is missing.
+  -- and going clockwise. Raises an error if percentage, x, y or radius is missing. The
+  -- vertices are computed on every call into a list that is reused, as the percentage
+  -- usually changes from frame to frame.
   -- @param percentage [Number how much of the circle to draw, from 0 to 100]
   -- @param x [Number screen x of the center]
   -- @param y [Number screen y of the center]
@@ -226,34 +287,27 @@ do
 
     passes = passes or 360
 
-    local id = percentage..'|'..x..'|'..y..'|'..radius..'|'..passes
-    local info = cache[id]
+    local start_angle, end_angle, step = -90, 360 / 100 * percentage - 90, 360 / passes
+    local count = 0
 
-    if !info then
-      info = {}
+    if start_angle != end_angle then
+      count = 1
+      set_sector_point(count, x, y)
+    end
 
-      local start_angle, end_angle, step = -90, 360 / 100 * percentage - 90, 360 / passes
+    for i = start_angle, end_angle + step, step do
+      local rads = rad(clamp(i, start_angle, end_angle))
 
-      if math.abs(start_angle - end_angle) != 0 then
-        info[1] = { x = x, y = y }
-      end
+      count += 1
+      set_sector_point(count, cos(rads) * radius + x, sin(rads) * radius + y)
+    end
 
-      local clamp, rad, cos, sin = math.Clamp, math.rad, math.cos, math.sin
-
-      for i = start_angle, end_angle + step, step do
-        local rads = rad(clamp(i, start_angle, end_angle))
-
-        info[#info + 1] = {
-          x = cos(rads) * radius + x,
-          y = sin(rads) * radius + y
-        }
-      end
-
-      store_vertices(id, info)
+    for i = #sector_poly, count + 1, -1 do
+      sector_poly[i] = nil
     end
 
     draw.NoTexture()
-    surface.DrawPoly(info)
+    surface.DrawPoly(sector_poly)
   end
 
   --- Draws a ring in the current surface draw color. Uses the stencil buffer.

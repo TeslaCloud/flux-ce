@@ -18,7 +18,14 @@ local color_loading_text = Color(240, 242, 248)
 local color_loading_bar = Color(36, 40, 52)
 local color_loading_fill = Color(164, 174, 255)
 local color_death_blood = Color(255, 0, 0, 200)
+local color_damage_flash = Color(255, 0, 0, 0)
+local color_target_line = Color(255, 255, 255)
+local color_target_outline = Color(0, 0, 0)
 local target_filter = {}
+local target_lines = {}
+local cone_search_interval = 0.1
+local next_cone_search = 0
+local cone_target
 
 timer.Remove('HintSystem_OpeningMenu')
 timer.Remove('HintSystem_Annoy1')
@@ -208,7 +215,9 @@ function GM:HUDPaint()
 
     if last_damage and last_damage > (cur_time - 0.3) then
       local alpha = math_clamp(255 - 255 * (cur_time - last_damage) * 3.75, 0, 200)
-      draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scrw, scrh, Color(255, 0, 0, alpha))
+
+      color_damage_flash.a = alpha
+      draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scrw, scrh, color_damage_flash)
       surface_set_draw_color(255, 210, 210, alpha)
       surface_draw_rect(0, 0, scrw, scrh)
     end
@@ -274,7 +283,9 @@ function GM:HUDPaintAlive(_cur_time, _scrw, _scrh)
     surface_set_draw_color(0, 0, 0, 180 * alpha / 255)
     surface.draw_circle_outline(x, y, 65, 5, 64)
 
-    surface_set_draw_color(Theme.get_color('text'):alpha(alpha))
+    local text_color = Theme.get_color('text')
+
+    surface_set_draw_color(text_color.r, text_color.g, text_color.b, alpha)
     surface.draw_circle_outline_partial(math_clamp(percentage, 0, 100), x, y, 64, 3, 64)
 
     PLAYER.circle_action_percentage = nil
@@ -289,10 +300,40 @@ function GM:HUDPaintDeathBackground(_cur_time, w, h)
   draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, w, h, color_death_blood)
 end
 
+--- Finds the entity within a narrow cone in front of the local player that is closest to
+-- the crosshair on the screen.
+-- @param client [Player the local player, who is never found]
+-- @param client_pos [Vector position of the camera]
+-- @param direction [Vector direction the local player looks in]
+-- @return [Entity the entity, nil if there is none]
+local function find_cone_target(client, client_pos, direction)
+  local entities = ents.FindInCone(client_pos, direction, 512, 0.98)
+  local center_x, center_y = ScrC()
+  local center_distance, found
+
+  for i = 1, #entities do
+    local v = entities[i]
+
+    if !IsValid(v) or v == client then continue end
+
+    local screen_pos = v:EyePos():ToScreen()
+    local dx, dy = screen_pos.x - center_x, screen_pos.y - center_y
+    local to_center = dx * dx + dy * dy
+
+    if !center_distance or to_center < center_distance then
+      center_distance = to_center
+      found = v
+    end
+  end
+
+  return found
+end
+
 --- Finds the entity the local player is looking at, or the one closest to the crosshair
--- within a narrow cone, and draws its target ID through the DrawPlayerTargetID hook, the
--- entity's own DrawTargetID method or the DrawEntityTargetID hook. The local player is never
--- a target, even when the camera of the third person view sees them.
+-- within a narrow cone, which is searched for ten times a second, and draws its target ID
+-- through the DrawPlayerTargetID hook, the entity's own DrawTargetID method or the
+-- DrawEntityTargetID hook. The local player is never a target, even when the camera of the
+-- third person view sees them.
 function GM:HUDDrawTargetID()
   local client = PLAYER
 
@@ -300,35 +341,26 @@ function GM:HUDDrawTargetID()
     local client_pos = EyePos()
     local trace = client:GetEyeTraceNoCursor()
     local trace_ent = trace.Entity
-    local ent, pos
+    local ent
 
     if IsValid(trace_ent) then
       ent = trace_ent
-      pos = trace_ent:EyePos()
     else
-      local entities = ents.FindInCone(client_pos, trace.Normal, 512, 0.98)
-      local center_x, center_y = ScrC()
-      local center_distance
+      local cur_time = CurTime()
 
-      for i = 1, #entities do
-        local v = entities[i]
+      if cur_time >= next_cone_search then
+        next_cone_search = cur_time + cone_search_interval
+        cone_target = find_cone_target(client, client_pos, trace.Normal)
+      end
 
-        if !IsValid(v) or v == client then continue end
-
-        local eye_pos = v:EyePos()
-        local screen_pos = eye_pos:ToScreen()
-        local dx, dy = screen_pos.x - center_x, screen_pos.y - center_y
-        local to_center = dx * dx + dy * dy
-
-        if !center_distance or to_center < center_distance then
-          center_distance = to_center
-          pos = eye_pos
-          ent = v
-        end
+      if IsValid(cone_target) then
+        ent = cone_target
       end
     end
 
     if ent then
+      local pos = ent:EyePos()
+
       target_filter[1], target_filter[2] = ent, client
 
       if util.vector_obstructed(client_pos, pos, target_filter) then return end
@@ -378,7 +410,7 @@ function GM:AdjustPlayerInfoLines(target, _x, _y, _distance, lines)
   lines['name'] = {
     text = target:name(),
     font = Theme.get_font('tooltip_large'),
-    color = Color('white'),
+    color = color_white,
     priority = 100
   }
 end
@@ -393,7 +425,9 @@ end
 function GM:DrawPlayerTargetID(target, x, y, distance)
   if distance >= 640 then return end
 
-  local lines = {}
+  local lines = target_lines
+
+  table.Empty(lines)
 
   --- Collects the lines of text shown in the target ID of a player. Called on the client
   -- every frame the gamemode draws a player's target ID. Handlers add or remove entries of
@@ -428,14 +462,19 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
   end
 
   local wrap_width = ScrW() * 0.33
-  local outline_color = Color(0, 0, 0, alpha)
+  local outline_color = color_target_outline
+  local color = color_target_line
   local text_size = util.text_size
   local draw_text_outlined = draw.SimpleTextOutlined
 
+  outline_color.a = alpha
+
   for _, entry in SortedPairsByMemberValue(lines, 'priority') do
     local font = entry.font or Theme.get_font('tooltip_small')
-    local color = entry.color and entry.color:alpha(alpha) or Color(255, 255, 255, alpha)
+    local entry_color = entry.color or color_white
     local wrapped = util.wrap_text(entry.text, font, wrap_width, 0)
+
+    color.r, color.g, color.b, color.a = entry_color.r, entry_color.g, entry_color.b, alpha
     local offset_x, offset_y = entry.offset_x or 0, entry.offset_y or 0
 
     for i = 1, #wrapped do
@@ -583,13 +622,16 @@ function GM:SpawnlistContentChanged()
   timer.Remove('HintSystem_EditingSpawnlistsSave')
 end
 
---- Asks the server to undo the last Flux undo entry of the local player.
+--- Asks the server to undo the last Flux undo entry of the local player, if their undo queue
+-- has any, as the server reports in the private `fl_undo_count` networked variable.
 -- @param _client [Player unused, the local player is always used]
 -- @return [Boolean true if the local player has entries in their undo queue, nil otherwise]
 function GM:PlayerSoftUndo(_client)
-  Cable.send('fl_undo_soft')
+  if PLAYER:get_nv('fl_undo_count', 0) > 0 then
+    Cable.send('fl_undo_soft')
 
-  if #Flux.Undo:get_player(PLAYER) > 0 then return true end
+    return true
+  end
 end
 
 do

@@ -4,11 +4,24 @@
 -- `Flux.Undo:set_player` sets its owner and `Flux.Undo:finish` puts it on top of the queue of
 -- the owner. `Flux.Undo:do_player` undoes the most recent entry of a player; Flux calls it on
 -- the server when the client of the player reports that they have pressed their undo key.
+-- The server keeps the size of the queue of a player in their private `fl_undo_count`
+-- networked variable, so that their client knows whether there is anything to undo.
 
 mod 'Flux::Undo'
 
-local queue = {}
+local queue = Flux.Undo.queue or {}
 local buffer = {}
+Flux.Undo.queue = queue
+
+--- Tells the client of a player how many entries their undo queue has.
+-- @param owner [Player]
+local function network_count(owner)
+  if CLIENT or !IsValid(owner) then return end
+
+  local owner_queue = queue[owner]
+
+  owner:set_private_nv('fl_undo_count', owner_queue and #owner_queue or 0)
+end
 
 --- Starts a new undo entry. Add callbacks to it with Flux.Undo#add, assign it to a player
 -- and finish it to put it into the undo queue of that player.
@@ -61,6 +74,8 @@ function Flux.Undo:finish()
 
     queue[owner] = owner_queue
     owner_queue[#owner_queue + 1] = buffer
+
+    network_count(owner)
   end
 
   buffer = {}
@@ -78,6 +93,8 @@ function Flux.Undo:remove(owner, id)
         table.remove(queue_table, index)
       end
     end
+
+    network_count(owner)
   end
 end
 
@@ -102,6 +119,8 @@ function Flux.Undo:do_player(owner)
 
   if owner_queue and #owner_queue > 0 then
     self:execute(table.remove(owner_queue))
+
+    network_count(owner)
   end
 end
 
