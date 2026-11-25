@@ -7,6 +7,8 @@
 -- @module [math]
 
 local floor = math.floor
+local min = math.min
+local max = math.max
 local math_huge = math.huge
 local ScrW = ScrW
 local ScrH = ScrH
@@ -91,9 +93,10 @@ function util.vectors_intersect(from, to, from2, to2)
   return true
 end
 
-const far_point = Vector(99_999, 99_999, 0)
-
---- Determines whether a 2D point is inside of a 2D polygon.
+--- Determines whether a 2D point is inside of a 2D polygon, with a crossing-number test that
+-- counts every edge by the half-open rule, so that vertices and horizontal edges are handled
+-- exactly. The polygon may be given clockwise or counter-clockwise and may be concave. A point
+-- exactly on an edge or on a vertex counts as inside.
 -- @param point [Vector point to check, only x and y are used]
 -- @param poly_vertices [List<Vector> vertices of the polygon, in order]
 -- @return [Boolean whether the point is inside, or nil if the arguments are invalid]
@@ -102,18 +105,30 @@ function util.vector_in_poly(point, poly_vertices)
     return
   end
 
-  local intersections = 0
+  local x, y = point.x, point.y
   local vertex_count = #poly_vertices
+  local last_vertex = poly_vertices[vertex_count]
+  local from_x, from_y = last_vertex.x, last_vertex.y
+  local inside = false
 
-  for index, vertex in ipairs(poly_vertices) do
-    local next_vert = poly_vertices[index % vertex_count + 1]
+  for index = 1, vertex_count do
+    local vertex = poly_vertices[index]
+    local to_x, to_y = vertex.x, vertex.y
 
-    if util.vectors_intersect(point, far_point, vertex, next_vert) then
-      intersections += 1
+    if (to_x - from_x) * (y - from_y) == (to_y - from_y) * (x - from_x)
+    and x >= min(from_x, to_x) and x <= max(from_x, to_x)
+    and y >= min(from_y, to_y) and y <= max(from_y, to_y) then
+      return true
     end
+
+    if (from_y > y) != (to_y > y) and x < from_x + (y - from_y) * (to_x - from_x) / (to_y - from_y) then
+      inside = !inside
+    end
+
+    from_x, from_y = to_x, to_y
   end
 
-  return intersections % 2 == 1
+  return inside
 end
 
 do
