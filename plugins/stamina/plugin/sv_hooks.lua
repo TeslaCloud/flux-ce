@@ -61,12 +61,19 @@ local function is_running(actor, stamina)
     and actor:KeyDown(IN_SPEED) and actor:GetVelocity():Length2DSqr() > (actor:GetWalkSpeed() * 0.9) ^ 2
 end
 
---- Keeps the stamina settings that the hooks cache in sync with changes of their config keys.
+--- Keeps the stamina settings that the hooks cache in sync with changes of their config keys,
+-- and has the run speed and the jump power that stamina allows applied again once the
+-- 'flow_run_speed' or the 'flow_jump_power' config has set them for everyone.
 -- @param key [String config key]
 -- @param _old_value [Any]
 -- @param new_value [Any]
 function Stamina:ConfigChanged(key, _old_value, new_value)
-  if key == 'stamina_max' then
+  if key == 'flow_run_speed' or key == 'flow_jump_power' then
+    for _, client in player.Iterator() do
+      client.stamina_run_speed = nil
+      client.stamina_jump_power = nil
+    end
+  elseif key == 'stamina_max' then
     max_stamina = new_value
   elseif key == 'stamina_jump_penalty' then
     jump_penalty = new_value
@@ -84,7 +91,7 @@ end
 -- @param actor [Player]
 -- @see [Stamina:PostLoadCharacter]
 function Stamina:PostPlayerSpawn(actor)
-  actor:set_nv('stamina', max_stamina)
+  self:set_stamina(actor, max_stamina)
 end
 
 --- Remembers which character the stamina of the player belongs to and, if the
@@ -136,7 +143,9 @@ function Stamina:SaveCharacterData(owner, character)
 end
 
 --- Starts and stops stamina drain and regeneration depending on whether the player is
--- running, and limits their jump power and run speed while stamina is low.
+-- running, and limits their jump power and run speed while stamina is low. The jump power and
+-- the run speed are only set when the value that the stamina of the player calls for changes,
+-- so that other code can change them in between.
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the tick]
 function Stamina:PlayerThink(actor, cur_time)
@@ -158,13 +167,21 @@ function Stamina:PlayerThink(actor, cur_time)
     end
   end
 
-  if cur_stam < jump_penalty then
-    actor:SetJumpPower(1)
-  else
-    actor:SetJumpPower(config_get('flow_jump_power'))
+  local jump_power = cur_stam < jump_penalty ? 1 : config_get('flow_jump_power')
+
+  if actor.stamina_jump_power != jump_power then
+    actor.stamina_jump_power = jump_power
+
+    actor:SetJumpPower(jump_power)
   end
 
-  actor:SetRunSpeed(get_run_speed(actor, cur_stam))
+  local run_speed = get_run_speed(actor, cur_stam)
+
+  if actor.stamina_run_speed != run_speed then
+    actor.stamina_run_speed = run_speed
+
+    actor:SetRunSpeed(run_speed)
+  end
 end
 
 --- Takes the jump penalty off the player's stamina and delays its regeneration when they

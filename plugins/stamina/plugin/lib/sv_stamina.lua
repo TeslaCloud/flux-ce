@@ -67,11 +67,12 @@ local function get_regen_amount(target)
 end
 
 --- Sets the player's stamina, clamped between 0 and the 'stamina_max' config value, and
--- networks it. Serverside only.
+-- networks it to the player alone, in the private 'stamina' networked variable. Serverside
+-- only.
 -- @param target [Player]
 -- @param stamina [Number]
 function Stamina:set_stamina(target, stamina)
-  target:set_nv('stamina', math.Clamp(stamina, 0, config_get('stamina_max', 100)))
+  target:set_private_nv('stamina', math.Clamp(stamina, 0, config_get('stamina_max', 100)))
 end
 
 --- Returns the player's current stamina. Serverside only.
