@@ -41,10 +41,10 @@ if SERVER then
     File.write('settings/flux/'..with_extension(key, '.json'), util.TableToJSON(value))
   end
 
-  --- Loads a table saved with Data.save from 'settings/flux/'. Throws an error in development
+  --- Loads a table saved with Data.save from 'settings/flux/'. Prints an error in development
   -- mode if the file does not exist and no default is specified.
   -- @param key [String name of the file, '.json' is added if it has no extension]
-  -- @param default=nil [Any returned if the file does not exist]
+  -- @param default=nil [Any returned if the file does not exist or does not hold valid JSON]
   -- @return [Map the loaded data, or the default]
   function Data.load(key, default)
     if !isstring(key) then return end
@@ -54,7 +54,7 @@ if SERVER then
     local path = 'settings/flux/'..key
 
     if file.Exists(path, 'GAME') then
-      return util.JSONToTable(File.read(path))
+      return util.JSONToTable(File.read(path) or '') ?? default
     elseif default != nil then
       return default
     elseif Flux.development then
@@ -84,10 +84,10 @@ else
     file.Write('flux/'..with_extension(key, '.dat'), util.TableToJSON(value))
   end
 
-  --- Loads a table saved with Data.save from the 'flux' data folder. Throws an error
+  --- Loads a table saved with Data.save from the 'flux' data folder. Prints an error
   -- in development mode if the file does not exist and no default is specified.
   -- @param key [String name of the file, '.dat' is added if it has no extension]
-  -- @param default=nil [Any returned if the file does not exist]
+  -- @param default=nil [Any returned if the file does not exist or does not hold valid JSON]
   -- @return [Map the loaded data, or the default]
   function Data.load(key, default)
     if !isstring(key) then return end
@@ -97,7 +97,7 @@ else
     local path = 'flux/'..key
 
     if file.Exists(path, 'DATA') then
-      return util.JSONToTable(file.Read(path, 'DATA'))
+      return util.JSONToTable(file.Read(path, 'DATA') or '') ?? default
     elseif default != nil then
       return default
     elseif Flux.development then
