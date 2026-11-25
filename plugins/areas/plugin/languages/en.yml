@@ -7,6 +7,12 @@ en:
       text: Area ID
       height: Height
       type: Type
+      mode: Tool Mode
+      text_area: Text Area
+      unknown_mode: Unknown Mode
+  error:
+    area:
+      too_few_points: An area needs at least three points.
   permission:
     manage_areas:
       name: Manage areas

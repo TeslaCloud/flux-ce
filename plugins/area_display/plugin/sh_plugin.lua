@@ -57,32 +57,15 @@ function AreaDisplay:find_text_area(id)
 end
 
 --- Finds every text area that a position is inside of.
--- @param pos [Vector position to check, 16 units are added to its height as the Areas API
---   does for players]
+-- @param pos [Vector position to check, as `Areas.contains` takes it]
 -- @return [List<Map> the text areas that contain the position, empty if there are none]
+-- @see [Areas.find_at]
 function AreaDisplay:find_text_areas_at(pos)
-  local found = {}
-  local height = pos.z + 16
-  local area_type = self.area_type
-
-  for _id, area in pairs(Areas.all()) do
-    if istable(area) and area.type == area_type and istable(area.polys) then
-      for _, poly in ipairs(area.polys) do
-        if height > poly[1].z and height < area.maxh and util.vector_in_poly(pos, poly) then
-          found[#found + 1] = area
-
-          break
-        end
-      end
-    end
-  end
-
-  return found
+  return Areas.find_at(pos, self.area_type)
 end
 
 --- Finds the text area that a position is inside of.
--- @param pos [Vector position to check, 16 units are added to its height as the Areas API
---   does for players]
+-- @param pos [Vector position to check, as `Areas.contains` takes it]
 -- @return [Map the first text area that contains the position, or nil if there is none]
 -- @see [AreaDisplay:find_text_areas_at]
 function AreaDisplay:find_text_area_at(pos)
@@ -94,7 +77,7 @@ end
 -- @return [Map the mode definition, ready for mode_list:Add]
 local function build_tool_mode()
   local mode = {}
-  mode.title = t'tool.area_display.title'
+  mode.title = 'tool.area_display.title'
   mode.area_type = AreaDisplay.area_type
   mode.ClientConVar = {
     height = '512',
@@ -144,8 +127,7 @@ local function build_tool_mode()
   --   area at the aimed position]
   function mode:OnRightClick(tool, trace)
     if tool.area then
-      tool.area:register()
-      tool.area = nil
+      Area:register_tool_area(tool)
 
       return true
     end

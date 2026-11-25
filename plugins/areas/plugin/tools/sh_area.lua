@@ -1,7 +1,7 @@
 --- The Area Tool creates and removes areas. Left click, right click and reload are passed on
 -- to the selected tool mode; modes are added by plugins through the `AddAreaToolModes`
 -- hook and picked from the list in the tool's settings panel. The tool requires the
--- `areas` permission, which each of its actions checks as well.
+-- `manage_areas` permission, which each of its actions checks as well.
 
 TOOL.Category = 'Flux'
 TOOL.Name = 'Area Tool'
@@ -77,7 +77,7 @@ if CLIENT then
     local mode_view = vgui.Create('DListView')
 
     mode_view:SetSize(30, DermaScale.scale(90))
-    mode_view:AddColumn('Tool Mode')
+    mode_view:AddColumn(t'tool.area.mode')
     mode_view:SetMultiSelect(false)
 
     --- Switches the area tool to the selected mode.
@@ -91,9 +91,9 @@ if CLIENT then
 
     for mode_id, mode_data in ipairs(mode_list) do
       if mode == mode_id then
-        mode_view:AddLine(' '..mode_id..' >> '..mode_data.title)
+        mode_view:AddLine(' '..mode_id..' >> '..t(mode_data.title))
       else
-        mode_view:AddLine(' '..mode_id..'  '..mode_data.title)
+        mode_view:AddLine(' '..mode_id..'  '..t(mode_data.title))
       end
     end
 

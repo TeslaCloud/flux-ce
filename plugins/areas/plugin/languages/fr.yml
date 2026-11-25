@@ -7,6 +7,12 @@ fr:
       text: "ID de la zone"
       height: "Hauteur"
       type: "Type"
+      mode: "Mode de l'outil"
+      text_area: "Zone de texte"
+      unknown_mode: "Mode inconnu"
+  error:
+    area:
+      too_few_points: "Une zone a besoin d'au moins trois points."
   permission:
     manage_areas:
       name: "Gérer les zones"

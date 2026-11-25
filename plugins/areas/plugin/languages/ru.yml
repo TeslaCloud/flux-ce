@@ -7,6 +7,12 @@ ru:
       text: ID зоны
       height: Высота
       type: Тип
+      mode: Режим инструмента
+      text_area: Текстовая зона
+      unknown_mode: Неизвестный режим
+  error:
+    area:
+      too_few_points: Зоне нужны как минимум три точки.
   permission:
     manage_areas:
       name: Управление зонами

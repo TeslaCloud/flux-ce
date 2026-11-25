@@ -3,8 +3,8 @@
 -- Every area has a type registered with `Areas.register_type`. The type's callback runs
 -- when a player enters or leaves an area of that type, on the server and on that player's
 -- client. An area is built with `Areas.create` and its `add_vertex` and `register`
--- methods, or drawn in game with the Area Tool. Registered areas are sent to all clients,
--- and the Areas API plugin saves them.
+-- methods, or drawn in game with the Area Tool. Registered areas are sent to all clients
+-- and saved. `Areas.contains` and `Areas.find_at` tell which areas a position is in.
 
 mod 'Areas'
 
@@ -12,10 +12,12 @@ local stored = Areas.stored or {}
 local callbacks = Areas.callbacks or {}
 local types = Areas.types or {}
 local top = Areas.top or 0
+local bounds = Areas.bounds or setmetatable({}, { __mode = 'k' })
 Areas.stored = stored
 Areas.callbacks = callbacks
 Areas.types = types
 Areas.top = top
+Areas.bounds = bounds
 
 --- Returns all registered areas.
 -- @return [Map area tables keyed by area id]
@@ -65,11 +67,132 @@ function Areas.get_by_type(type_id)
   return to_ret
 end
 
---- Creates an area builder, or fetches the already registered area with that id.
--- The returned table gains add_vertex(vect), finish_poly() and register() methods.
--- The first vertex of a polygon sets the floor height, the following ones are flattened
--- to it. finish_poly() closes the current polygon and starts a new one.
--- register() closes the current polygon and passes the area to Areas.register.
+--- Returns the horizontal bounding box of an area, computed once per area table.
+-- @param area [Map]
+-- @return [List the smallest x, the smallest y, the largest x and the largest y]
+local function get_bounds(area)
+  local box = bounds[area]
+
+  if box then return box end
+
+  local min_x, min_y, max_x, max_y = math.huge, math.huge, -math.huge, -math.huge
+
+  for _, poly in ipairs(area.polys) do
+    for _, vertex in ipairs(poly) do
+      local x, y = vertex.x, vertex.y
+
+      min_x = math.min(min_x, x)
+      min_y = math.min(min_y, y)
+      max_x = math.max(max_x, x)
+      max_y = math.max(max_y, y)
+    end
+  end
+
+  box = { min_x, min_y, max_x, max_y }
+  bounds[area] = box
+
+  return box
+end
+
+--- Checks whether a position is inside of an area: within one of its polygons, above the
+-- floor of that polygon and below the ceiling of the area. 16 units are added to the height
+-- of the position, so that the position of a player's feet counts as inside.
+-- @param area [Map the area]
+-- @param pos [Vector position to check]
+-- @return [Boolean]
+function Areas.contains(area, pos)
+  local polys = area.polys
+
+  if !istable(polys) then return false end
+
+  local box = get_bounds(area)
+  local x, y = pos.x, pos.y
+
+  if x < box[1] or x > box[3] or y < box[2] or y > box[4] then return false end
+
+  local z = pos.z + 16
+  local max_height = area.maxh
+
+  for i = 1, #polys do
+    local poly = polys[i]
+    local first_vertex = poly[1]
+
+    if first_vertex and z > first_vertex.z and z < max_height and util.vector_in_poly(pos, poly) then
+      return true
+    end
+  end
+
+  return false
+end
+
+--- Finds every area that a position is inside of.
+-- @param pos [Vector position to check, as `Areas.contains` takes it]
+-- @param type_id=nil [String only return the areas of this type; every type if nil]
+-- @return [List<Map> the areas that contain the position, empty if there are none]
+-- @see [Areas.contains]
+function Areas.find_at(pos, type_id)
+  local found = {}
+
+  for _, area in pairs(stored) do
+    if istable(area) and (type_id == nil or area.type == type_id) and Areas.contains(area, pos) then
+      found[#found + 1] = area
+    end
+  end
+
+  return found
+end
+
+--- The methods of the builders that Areas.create returns.
+local builder = Areas.builder or {}
+builder.__index = builder
+Areas.builder = builder
+
+--- Adds a vertex to the polygon currently being built. The first vertex of a polygon sets the
+-- floor and the ceiling of the area, the following ones are flattened to that floor.
+-- @param vect [Vector position of the vertex]
+function builder:add_vertex(vect)
+  local verts = self.verts
+  local count = #verts
+
+  if count == 0 then
+    self.minh = vect.z
+    self.maxh = self.minh + self.height
+  else
+    vect.z = self.minh
+  end
+
+  verts[count + 1] = vect
+end
+
+--- Stores the current vertices as a finished polygon and starts a new one.
+function builder:finish_poly()
+  local polys = self.polys
+
+  polys[#polys + 1] = self.verts
+  self.verts = {}
+end
+
+--- Finishes the current polygon if it has more than two vertices and registers the area.
+-- A registered builder becomes the stored area, without its methods, and is not used again.
+-- @return [Map the registered area, or nil if it has no polygon]
+function builder:register()
+  if #self.verts > 2 then self:finish_poly() end
+
+  local area = Areas.register(self.id, setmetatable(self, nil))
+
+  if !area then
+    setmetatable(self, builder)
+  end
+
+  return area
+end
+
+--- Creates an area builder: a new area, or a copy of the already registered area with that id.
+-- The stored area is not changed until the builder is registered.
+-- The builder has the add_vertex(vect), finish_poly() and register() methods, and every field
+-- set on it ends up in the area. The first vertex of a polygon sets the floor height, the
+-- following ones are flattened to it. finish_poly() closes the current polygon and starts a
+-- new one. register() closes the current polygon and passes the area to Areas.register.
 -- ```
 -- local area = Areas.create('town_square', 512, { type = 'textarea' })
 -- area.text = 'Town Square'
@@ -88,68 +211,40 @@ end
 -- area:register()
 -- ```
 -- @param id [String unique area id]
--- @param height=0 [Number height of the area above its first vertex]
+-- @param height=0 [Number height of the area above its first vertex; an existing area keeps
+--   its own]
 -- @param data=nil [Map extra fields to merge into a new area, e.g. { type = 'textarea' }.
 --   The type defaults to 'area']
--- @return [Map the area table with the builder methods]
+-- @return [Map the area builder]
 -- @see [Areas.register]
 function Areas.create(id, height, data)
-  data = data or {}
+  local existing = stored[id]
+  local area
 
-  local area = {}
-
-  if !stored[id] then
+  if existing then
+    area = table.Copy(existing)
     area.id = id
-    area.minh = 0
-    area.maxh = 0
-    area.height = height or 0
     area.verts = {}
-    area.polys = {}
-    area.type = data.type or 'area'
+  else
+    data = data or {}
+    area = {
+      id = id,
+      minh = 0,
+      maxh = 0,
+      height = height or 0,
+      verts = {},
+      polys = {},
+      type = data.type or 'area'
+    }
 
     table.Merge(area, data)
-  else
-    area = stored[id]
   end
 
-  --- Adds a vertex to the polygon currently being built. The first vertex sets the
-  -- area's base height, subsequent vertices are snapped to it.
-  -- @param vect [Vector position of the vertex]
-  function area:add_vertex(vect)
-    local verts = self.verts
-    local count = #verts
-
-    if count == 0 then
-      self.minh = vect.z
-      self.maxh = self.minh + self.height
-    else
-      vect.z = self.minh
-    end
-
-    verts[count + 1] = vect
-  end
-
-  --- Stores the current vertices as a finished polygon and starts a new one.
-  function area:finish_poly()
-    local polys = self.polys
-
-    polys[#polys + 1] = self.verts
-    self.verts = {}
-  end
-
-  --- Finishes the current polygon if it has more than two vertices and registers the area.
-  -- @return [Map the registered area]
-  function area:register()
-    if #self.verts > 2 then self:finish_poly() end
-
-    return Areas.register(id, self)
-  end
-
-  return area
+  return setmetatable(area, builder)
 end
 
 --- Stores the area under the given id, stripping any functions from it.
--- When called on the server the area is also sent to all clients.
+-- When called on the server the area is also sent to all clients and saved.
 -- @param id [String unique area id]
 -- @param data [Map area table as built by Areas.create; needs at least one polygon]
 -- @return [Map the stored area, or nil if an argument is missing or the area has no
@@ -157,7 +252,12 @@ end
 -- @see [Areas.create]
 function Areas.register(id, data)
   if !id or !data then return end
-  if #data.polys < 1 then return end
+
+  if !istable(data.polys) or #data.polys < 1 then
+    Flux.dev_print("Area '"..tostring(id).."' has no polygon with three vertices and is not registered.")
+
+    return
+  end
 
   data = table.remove_functions(data)
 
@@ -168,19 +268,26 @@ function Areas.register(id, data)
 
   if SERVER then
     Cable.send(nil, 'fl_area_register', id, data)
+    Areas.save()
   end
 
   return stored[id]
 end
 
 --- Removes the area with the given id.
--- When called on the server the removal is also sent to all clients.
+-- When called on the server, the players inside of the area leave it first, then the removal
+-- is sent to all clients and saved.
 -- @param id [String area id]
 function Areas.remove(id)
+  if SERVER and stored[id] then
+    Areas.leave_area(id, stored[id])
+  end
+
   stored[id] = nil
 
   if SERVER then
     Cable.send(nil, 'fl_area_remove', id)
+    Areas.save()
   end
 end
 

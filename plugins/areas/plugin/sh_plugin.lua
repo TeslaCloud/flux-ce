@@ -26,7 +26,7 @@ Area.tool_modes = {
   -- ```
   -- function PLUGIN:AddAreaToolModes(mode_list)
   --   local mode = {}
-  --   mode.title = 'Text Area'
+  --   mode.title = 'tool.area.text_area'
   --   mode.area_type = 'textarea'
   --   mode.ClientConVar = { height = '512' }
   --
@@ -41,35 +41,26 @@ Area.tool_modes = {
   -- end
   -- ```
   -- @param list [Map the Area.tool_modes table the mode is appended to]
-  -- @param data [Map mode definition: title, area_type, ClientConVar and the optional
-  --   functions OnLeftClick(mode, tool, trace), OnRightClick(mode, tool, trace),
-  --   OnReload(mode, tool, trace) and BuildCPanel(mode, panel). The default OnReload
+  -- @param data [Map mode definition: title (a phrase or plain text), area_type, ClientConVar
+  --   and the optional functions OnLeftClick(mode, tool, trace), OnRightClick(mode, tool,
+  --   trace), OnReload(mode, tool, trace) and BuildCPanel(mode, panel). The default OnReload
   --   removes the area of that type under the trace]
   Add = function(list, data)
     local vars = data.ClientConVar or data.ConVars or data.ClientConVars or data.ConVar
     local area_type = data.area_type or 'area'
 
     table.insert(list, {
-      title = data.title or 'Unknown Mode',
+      title = data.title or 'tool.area.unknown_mode',
       area_type = area_type,
       OnLeftClick = data.OnLeftClick,
       OnRightClick = data.OnRightClick,
       OnReload = data.OnReload or function(_mode, _tool, trace)
-        local pos = trace.HitPos
-        local z = pos.z + 16
+        local area = Areas.find_at(trace.HitPos, area_type)[1]
 
-        for _, area in pairs(Areas.all()) do
-          if istable(area.polys) and area.type == area_type then
-            for _, poly in ipairs(area.polys) do
-              local first_vertex = poly[1]
+        if area then
+          Areas.remove(area.id)
 
-              if first_vertex and z > first_vertex.z and z < area.maxh and util.vector_in_poly(pos, poly) then
-                Areas.remove(area.id)
-
-                return true
-              end
-            end
-          end
+          return true
         end
       end,
       BuildCPanel = data.BuildCPanel,
@@ -86,6 +77,22 @@ Area.tool_modes = {
   end
 }
 
+--- Registers the area that the area tool is building and forgets it. An area that does not
+-- have a polygon of three vertices is dropped, and the tool's owner is told so.
+-- @param tool [Tool the area tool]
+-- @return [Map the registered area, or nil if it has no polygon]
+function Area:register_tool_area(tool)
+  local area = tool.area:register()
+
+  tool.area = nil
+
+  if !area and SERVER then
+    tool:GetOwner():notify('error.area.too_few_points')
+  end
+
+  return area
+end
+
 --- Calls the AddAreaToolModes hook so that plugins can add their modes to the area tool.
 function Area:SchemaLoaded()
   --- Called on both realms once the schema has loaded. Add modes to the Area Tool here with
@@ -99,7 +106,7 @@ end
 -- @param mode_list [Map the Area.tool_modes table; modes are added with mode_list:Add]
 function Area:AddAreaToolModes(mode_list)
   local mode = {}
-  mode.title = 'Text Area'
+  mode.title = 'tool.area.text_area'
   mode.area_type = 'textarea'
   mode.ClientConVar = {
     height = '512',
@@ -133,8 +140,7 @@ function Area:AddAreaToolModes(mode_list)
   -- @return [Boolean true if an area was registered, nil otherwise]
   function mode:OnRightClick(tool, _trace)
     if tool.area then
-      tool.area:register()
-      tool.area = nil
+      Area:register_tool_area(tool)
 
       return true
     end
