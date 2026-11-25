@@ -6,7 +6,9 @@
 -- schema's gamemode folder and `config/environment.lua` of the Flux package (see
 -- `find_config_file`), and falls back to 'development' when the file returns nothing; in a task
 -- the `--env` flag of fpkg wins over the file. Any name other than 'development', 'production'
--- and 'test' stops the boot with an error. `FLUX_ENV_PATH` holds the path of that file.
+-- and 'test' stops the boot with an error. `FLUX_ENV_PATH` holds the path of that file, and
+-- `IS_PRODUCTION`, `IS_DEVELOPMENT` and `IS_TEST` tell the environment apart from then on, so
+-- that the package specifications, which run before the core of Flux, can use them.
 -- The server shares variables with clients through `add_client_env`, which appends `setenv`
 -- calls to the generated `lua/_flux/environment.lua` file that clients include here. Tasks
 -- never write that file, which belongs to the game server.
@@ -107,6 +109,15 @@ do
 
   setenv('FLUX_ENV', environment)
 end
+
+--- Whether Flux runs in the 'production' environment.
+IS_PRODUCTION = ENV['FLUX_ENV'] == 'production'
+
+--- Whether Flux runs in the 'development' or the 'test' environment.
+IS_DEVELOPMENT = !IS_PRODUCTION
+
+--- Whether Flux runs in the 'test' environment.
+IS_TEST = ENV['FLUX_ENV'] == 'test'
 
 if CLIENT then
   include '_flux/environment.lua'

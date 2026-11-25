@@ -1,5 +1,5 @@
 --- Core of the Flux package, included as a dependency by its package specification.
--- Sets the environment constants (`IS_PRODUCTION`, `IS_DEVELOPMENT` and `IS_TEST`), loads the
+-- Sets `Flux.development` from the environment constants of `lib/env.lua`, loads the
 -- `Pipeline`, `Plugin` and `Config` libraries, provides the version of Flux, debug output and
 -- the loaded schema (its folder, name, information and inclusion) and reloads the
 -- dependencies of the package on a code refresh. `boot.lua` includes the schema once every
@@ -13,10 +13,6 @@ AddCSLuaFile()
 if !Flux then
   require_relative 'flux_struct'
 end
-
-IS_PRODUCTION    = ENV['FLUX_ENV'] == 'production'
-IS_DEVELOPMENT   = !IS_PRODUCTION
-IS_TEST          = ENV['FLUX_ENV'] == 'test'
 
 Flux.development = !IS_PRODUCTION
 
