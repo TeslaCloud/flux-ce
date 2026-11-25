@@ -18,10 +18,12 @@ local tostring = tostring
 -- key is assigned by reference instead of being merged.
 -- @param dest [Map table to merge into, modified in place]
 -- @param source [Map table to take the values from]
+-- @param force_override=false [Boolean assign the tables of source by reference instead of
+--   merging them into the tables of dest]
 -- @return [Map dest]
-function table.Merge(dest, source)
+function table.Merge(dest, source, force_override)
   for key, value in pairs(source) do
-    if istable(value) and istable(dest[key]) and key != 'class' then
+    if !force_override and istable(value) and istable(dest[key]) and key != 'class' then
       table.Merge(dest[key], value)
     else
       dest[key] = value
@@ -184,27 +186,31 @@ do
   }
 
   --- Combines all elements of an array into a single value, by applying an operator to the
-  -- running result and each element in order. The running result starts at 0.
+  -- running result and each element in order. The running result starts with the first
+  -- element.
   -- ```
   -- table.reduce({ 1, 2, 3 }, '+') -- 6
-  -- table.reduce({ 1, 5, 3 }, function(result, v) return math.max(result, v) end) -- 5
+  -- table.reduce({ 2, 3, 4 }, '*') -- 24
+  -- table.reduce({ -5, -1, -3 }, math.max) -- -1
   -- ```
   -- @param tab [List]
   -- @param op [String/Function one of '+', '-', '*', '/', '**', '^' and '%', or a
   --   callback(result, value) that returns the new result]
-  -- @return [Any the final result, a Number for the built-in operators]
+  -- @return [Any the final result, the only element of an array of one, 0 for an empty array]
   function table.reduce(tab, op)
-    local sum = 0
+    local result = tab[1]
+
+    if result == nil then return 0 end
 
     if !isfunction(op) then
       op = ops[op]
     end
 
-    for _, value in ipairs(tab) do
-      sum = op(sum, value)
+    for index = 2, #tab do
+      result = op(result, tab[index])
     end
 
-    return sum
+    return result
   end
 end
 
@@ -240,7 +246,7 @@ end
 --   used instead of the duplicate check]
 -- @return [Map/List table of unique values]
 function table.uniq(tab, condition)
-  local t = a{}
+  local t = {}
   local vals = {}
 
   condition = condition or function(v) return vals[v] end
@@ -336,7 +342,7 @@ end
 -- @return [Map/List the filtered copy]
 -- @see [table.delete]
 function table.delete_if(tab, callback)
-  local new_tab = a{}
+  local new_tab = {}
 
   for key, value in pairs(tab) do
     if callback(key, value) != true then
@@ -369,7 +375,7 @@ end
 -- @return [Map/List the filtered copy]
 -- @see [table.keep]
 function table.keep_if(tab, callback)
-  local new_tab = a{}
+  local new_tab = {}
 
   for key, value in pairs(tab) do
     if callback(key, value) == true then
@@ -490,7 +496,7 @@ end
 -- @return [Map]
 -- @see [table.to_array]
 function table.to_hash(tab)
-  local h = a{}
+  local h = {}
 
   for _, entry in ipairs(tab) do
     if istable(entry) then
@@ -593,14 +599,15 @@ function s(what)
   return tab -> tab[what]
 end
 
---- Splits a string of words into an array. Words are separated by spaces or newlines.
+--- Splits a string of words into an array. Words are separated by any amount of whitespace:
+-- spaces, tabs and newlines.
 -- ```
 -- w'data ammo equipment' -- { 'data', 'ammo', 'equipment' }
 -- ```
--- @param str [String space-separated words]
+-- @param str [String whitespace-separated words]
 -- @return [List<String> words]
 function w(str)
-  return str:gsub('\n', ' '):gsub('  ', ' '):split(' ')
+  return string.Explode('%s+', str:Trim(), true)
 end
 
 --- Splits a string of space-separated words into a hash that has the words as its keys.

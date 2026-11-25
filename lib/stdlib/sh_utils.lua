@@ -4,8 +4,8 @@
 -- on the client, color and number conversions with `Color` and `math`. This file also holds
 -- general-purpose global functions: formatted printing, `txt` for indented multi-line text,
 -- error reporting with tracebacks, `enumerate` for creating enumerator globals and
--- `include_sandboxed` for running a file in a restricted environment, and the `game` helpers that
--- list the ammo types and the maps.
+-- `include_sandboxed` for running a file with a copy of the globals that lacks a few of them,
+-- and the `game` helpers that list the ammo types and the maps.
 -- @module [util]
 
 local ipairs = ipairs
@@ -149,7 +149,8 @@ end
 -- util.list_to_string(nil, nil, 1, 2, 3) -- '1, 2, 3'
 -- util.list_to_string(function(obj) return obj:name() end, ' and ', player1, player2)
 -- ```
--- @param callback=tostring [Function callback(object), returns the String to use for the object]
+-- @param callback=tostring [Function callback(object), returns the String to use for the object;
+--   an object for which it returns anything else is left out, together with its separator]
 -- @param separator=', ' [String text to put between the objects]
 -- @param ... [Vararg objects to list]
 -- @return [String the joined list]
@@ -162,23 +163,17 @@ function util.list_to_string(callback, separator, ...)
     separator = ', '
   end
 
-  local list = { ... }
-  local count = #list
   local pieces = {}
 
-  for index, element in ipairs(list) do
+  for _, element in ipairs({ ... }) do
     local text = callback(element)
 
     if isstring(text) then
       pieces[#pieces + 1] = text
     end
-
-    if index < count then
-      pieces[#pieces + 1] = separator
-    end
   end
 
-  return table.concat(pieces)
+  return table.concat(pieces, separator)
 end
 
 local function player_name_or_unknown(obj)
@@ -238,7 +233,8 @@ function util.remove_newlines(str)
 end
 
 --- Removes the common indentation and the surrounding blank lines from a multi-line string,
--- so that long texts can be indented together with the code around them.
+-- so that long texts can be indented together with the code around them. Lines without any
+-- indentation count, so that such a text is returned with its indentation as it is.
 -- ```
 -- print(txt[[
 --   Usage:
@@ -255,14 +251,11 @@ function txt(text)
   local output = {}
 
   for _, line in ipairs(lines) do
-    if line:match('^[%s]+$') then continue end
+    if line:match('^%s*$') then continue end
 
-    local indent = line:match('^([%s]+)')
-    if !indent then continue end
+    local indent = line:match('^(%s*)')
 
-    if !lowest_indent then lowest_indent = indent end
-
-    if indent:len() < lowest_indent:len() then
+    if !lowest_indent or indent:len() < lowest_indent:len() then
       lowest_indent = indent
     end
   end
@@ -271,7 +264,7 @@ function txt(text)
     output[#output + 1] = line:trim_start(lowest_indent)..'\n'
   end
 
-  return table.concat(output):chomp(' '):chomp('\n')
+  return (table.concat(output):TrimRight():gsub('^%s*\n', ''))
 end
 
 --- Returns the Steam name of a player, or the translated name of the console if the player is
@@ -339,7 +332,22 @@ local operators_symbol = {
   ['not'] = '!'
 }
 
---- Applies an operator to two values by the name of the operator.
+local function symbols_of(names)
+  local symbols = {}
+
+  for _, name in ipairs(names) do
+    symbols[name] = operators_symbol[name]
+  end
+
+  return symbols
+end
+
+local logical_operators = symbols_of(w'equal unequal and or not')
+local relational_operators = symbols_of(w'less greater less_equal greater_equal equal unequal')
+local equal_operators = symbols_of(w'equal unequal')
+
+--- Applies an operator to two values by the name of the operator. A name that is not one of
+-- the operators raises an error.
 -- ```
 -- util.process_operator('greater_equal', 5, 3) -- true
 -- ```
@@ -350,7 +358,13 @@ local operators_symbol = {
 -- @return [Any result of the operation, a Boolean for the comparisons and 'not']
 -- @see [util.get_operators]
 function util.process_operator(op, a, b)
-  return operators[op](a, b)
+  local operator = operators[op]
+
+  if !operator then
+    error("unknown operator '"..tostring(op).."'", 2)
+  end
+
+  return operator(a, b)
 end
 
 --- Returns the names of all operators that util.process_operator supports.
@@ -365,44 +379,25 @@ function util.get_operators()
   return list
 end
 
---- Returns the equality and logical operators together with their symbols.
+--- Returns the equality and logical operators together with their symbols. The table is
+-- shared by every caller and must not be modified.
 -- @return [Map operator name => String symbol, such as unequal => '!=']
 function util.get_logical_operators()
-  local list = {
-    equal = '==',
-    unequal = '!=',
-    ['and'] = '&&',
-    ['or'] = '||',
-    ['not'] = '!'
-  }
-
-  return list
+  return logical_operators
 end
 
---- Returns the comparison operators together with their symbols.
+--- Returns the comparison operators together with their symbols. The table is shared by every
+-- caller and must not be modified.
 -- @return [Map operator name => String symbol, such as less_equal => '<=']
 function util.get_relational_operators()
-  local list = {
-    less = '<',
-    greater = '>',
-    less_equal = '<=',
-    greater_equal = '>=',
-    equal = '==',
-    unequal = '!='
-  }
-
-  return list
+  return relational_operators
 end
 
---- Returns the equality operators together with their symbols.
+--- Returns the equality operators together with their symbols. The table is shared by every
+-- caller and must not be modified.
 -- @return [Map operator name => String symbol, such as equal => '==']
 function util.get_equal_operators()
-  local list = {
-    equal = '==',
-    unequal = '!='
-  }
-
-  return list
+  return equal_operators
 end
 
 --- Returns the symbol of an operator, such as '>=' for 'greater_equal'.
@@ -488,25 +483,31 @@ function error_with_traceback(msg)
   print_traceback()
 end
 
-local env = table.Copy(_G)
-local unsafe = w[[debug require setfenv getfenv File _G _R RunString
-                 CompileString rawget rawset rawequal setmetatable
-                 coroutine module package newproxy]]
+local sandbox_env
 
-for _, name in ipairs(unsafe) do
-  env[name] = nil
-end
-
-env['string']['dump'] = nil
-
---- Runs a Lua file in a restricted environment that has no access to unsafe globals such as
--- debug, require, RunString, CompileString, setmetatable or File.
--- The environment is a copy of the globals made when the standard library was loaded.
+--- Runs a Lua file with a copy of the globals that lacks debug, require, setfenv, getfenv, File,
+-- _G, _R, RunString, CompileString, rawget, rawset, rawequal, setmetatable, coroutine,
+-- module, package, newproxy and string.dump. This is no isolation: the file still reaches
+-- include, CompileFile, RunStringEx, file, http, game.ConsoleCommand and getmetatable, among
+-- others, so only files that are trusted may be run this way.
+-- The copy of the globals is made on the first call.
 -- @param f [String file path relative to the lua/ folder]
 -- @return [Vararg whatever the file returns]
 function include_sandboxed(f)
+  if !sandbox_env then
+    sandbox_env = table.Copy(_G)
+
+    for _, name in ipairs(w[[debug require setfenv getfenv File _G _R RunString
+                             CompileString rawget rawset rawequal setmetatable
+                             coroutine module package newproxy]]) do
+      sandbox_env[name] = nil
+    end
+
+    sandbox_env.string.dump = nil
+  end
+
   local c = CompileString(file.Read(f, 'LUA'), f)
-  debug.setfenv(c, env)
+  debug.setfenv(c, sandbox_env)
   return c()
 end
 
@@ -519,14 +520,14 @@ do
   -- --         0           1             2
   -- enumerate 'GENDER_MALE GENDER_FEMALE GENDER_OTHER'
   -- ```
-  -- @param enums [String space-separated enumerator names]
+  -- @param enums [String enumerator names separated by spaces, tabs or newlines]
   -- @param existing_enumerator=nil [String prefix of an earlier group (such as 'GENDER') to
   --   continue the numbering of, starting right after the highest enumerator of that group]
-  -- @return [Number highest enumerator, or nil if enums is not a string or is empty]
+  -- @return [Number highest enumerator, or nil if enums is not a string or has no names in it]
   function enumerate(enums, existing_enumerator)
-    if !isstring(enums) or enums:len() == 0 then return end
+    if !isstring(enums) then return end
 
-    local words = enums:upper():gsub('\n', ' '):split ' '
+    local words = string.Explode('%s+', enums:upper():Trim(), true)
     local first_valid_word = nil
     local enumerator = 0
 
@@ -535,7 +536,7 @@ do
     end
 
     for _, word in ipairs(words) do
-      if word != '' and word != ' ' then
+      if word != '' then
         if !first_valid_word then
           first_valid_word = word
         end
@@ -545,12 +546,12 @@ do
       end
     end
 
-    if enumerator > 0 then
-      local idx = first_valid_word:match('^([%w0-9]+)')
+    if !first_valid_word then return end
 
-      if idx then
-        enumerators[idx] = enumerator - 1
-      end
+    local idx = first_valid_word:match('^([%w0-9]+)')
+
+    if idx then
+      enumerators[idx] = enumerator - 1
     end
 
     return enumerator - 1
