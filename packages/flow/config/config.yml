@@ -70,6 +70,14 @@ configs:
     description: config.flow.data_save_interval.desc
     category: flow
     type: number
-    min_value: 0
+    min_value: 30
     max_value: 3600
     default_value: 360
+  flow_empty_restart_interval:
+    name: config.flow.empty_restart_interval.name
+    description: config.flow.empty_restart_interval.desc
+    category: flow
+    type: number
+    min_value: 0
+    max_value: 86400
+    default_value: 1800

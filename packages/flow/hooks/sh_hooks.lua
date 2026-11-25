@@ -14,9 +14,9 @@
 -- that are run with `Plugin.call` never reach the `GM` handlers.
 --
 -- The handlers are split by realm. The shared ones cover initialization, player animations,
--- the noclip and physics gun checks and the timers behind the periodic hooks (`LazyTick`,
--- `HalfSecond`, `OneSecond`, `OneMinute`); the server and the client ones are in the `sv_`
--- and `cl_` hook files.
+-- the noclip and physics gun checks, the weapon switches of frozen players and the timers
+-- behind the periodic hooks (`LazyTick`, `HalfSecond`, `OneSecond`, `OneMinute`); the server
+-- and the client ones are in the `sv_` and `cl_` hook files.
 
 --- Removes unused sandbox hooks and, on the server, imports the configuration from the
 -- settings, loads the config, connects to the database and registers the Discord webhooks.
@@ -501,6 +501,18 @@ function GM:PhysgunPickup(actor, entity)
   -- @param entity [Entity The entity being picked up]
   -- @return [Boolean Return true to allow the pickup]
   if hook.Run('PlayerCanPhysgunPickup', actor, entity) == true then
+    return true
+  end
+end
+
+--- Keeps a player who has been frozen with `Entity:freeze` from switching weapons, so that
+-- they cannot fire one that is not frozen.
+-- @param actor [Player]
+-- @param _old_weapon [Weapon]
+-- @param _new_weapon [Weapon]
+-- @return [Boolean true to block the switch while the player is frozen, nil otherwise]
+function GM:PlayerSwitchWeapon(actor, _old_weapon, _new_weapon)
+  if actor:is_frozen() then
     return true
   end
 end

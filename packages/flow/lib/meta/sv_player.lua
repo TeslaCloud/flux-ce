@@ -25,7 +25,8 @@ end
 
 --- Saves the database record of the player, together with their data table. Does nothing for
 -- bots. Can be prevented by returning false from the 'PreSavePlayerData' hook. Runs the
--- 'PostSavePlayerData' hook afterward. The data table is taken from the server's own copy
+-- 'PostSavePlayerData' hook afterward; nothing is saved while the record of the player is
+-- still loading. The data table is taken from the server's own copy
 -- and never from the networked variables, which are gone once the entity of a leaving
 -- player has been removed: without that copy the record keeps the data it already has.
 function player_meta:save_player()
@@ -38,18 +39,18 @@ function player_meta:save_player()
   --   `PostSavePlayerData` is not run either. Any other value lets it be saved]
   if hook.Run('PreSavePlayerData', self) == false then return end
 
-  if self.record then
-    local data = self.fl_player_data
+  if !self.record then return end
 
-    if istable(data) then
-      self.record.data = table.serialize(data)
-    end
+  local data = self.fl_player_data
 
-    self.record:save()
+  if istable(data) then
+    self.record.data = table.serialize(data)
   end
 
+  self.record:save()
+
   --- Called on the server after `Player:save_player` has saved the database record of a
-  -- player. Not called for bots.
+  -- player. Not called for bots, nor for a player whose record has not been loaded yet.
   -- @param actor [Player The player who has been saved]
   hook.Run('PostSavePlayerData', self)
 end

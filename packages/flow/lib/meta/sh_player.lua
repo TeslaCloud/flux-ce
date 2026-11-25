@@ -3,7 +3,8 @@
 -- `Player:SetModel` announces model changes with the `PlayerModelChanged` hook, and the
 -- permission checks (`Player:can`, `Player:is_root`) are answered by hooks that Bolt
 -- implements. The rest covers the initialization state, the data table of a player,
--- client-side notifications and sounds, freezing, and actions: every player has one current
+-- client-side notifications and sounds, freezing, the reach and line of sight checks
+-- (`Player:is_in_reach`, `Player:can_see`), and actions: every player has one current
 -- action, registered with `Flux.register_action`, which the gamemode runs on each
 -- `PlayerThink`; `Flux.TimedAction` builds actions that take time on top of it.
 -- The server-only half adds saving and restoring of the player's database record.
@@ -12,6 +13,9 @@ local player_meta = FindMetaTable('Player')
 local IsValid = IsValid
 local isstring = isstring
 local istable = istable
+local trace_line = util.TraceLine
+local sight_result = {}
+local sight_trace = { output = sight_result }
 
 --- Checks whether the player has finished loading in and has been initialized by Flux.
 -- @return [Boolean]
@@ -139,21 +143,11 @@ if CLIENT then
   -- Clientside variant.
   -- @param message [String text or language phrase]
   -- @param arguments=nil [Map values to substitute into the phrase; strings are translated,
-  --   entities are replaced with their names]
+  --   entities are replaced with their names (see `Flux.Lang:translate_arguments`)]
   -- @param color=color_white [Color]
   function player_meta:notify(message, arguments, color)
-    if istable(arguments) then
-      for key, value in pairs(arguments) do
-        if isstring(value) then
-          arguments[key] = t(value)
-        elseif isentity(value) and IsValid(value) then
-          arguments[key] = value:get_name()
-        end
-      end
-    end
-
     color = color and Color(color.r, color.g, color.b) or color_white
-    message = t(message, arguments)
+    message = t(message, Flux.Lang:translate_arguments(arguments))
 
     Flux.Notification:add(message, 8, nil, color != color_white and color or nil)
 
@@ -254,18 +248,20 @@ function player_meta:freeze_gun()
   end
 end
 
---- Lets the player fire their active weapon again and unfreezes the weapon.
+--- Lets the player fire their active weapon again and unfreezes it, along with every other
+-- weapon of the player that is still frozen.
 -- @see [Entity#unfreeze]
 function player_meta:unfreeze_gun()
-  local weapon = self:GetActiveWeapon()
+  local active_weapon = self:GetActiveWeapon()
+  local next_fire = CurTime() + 0.1
 
-  if IsValid(weapon) then
-    local next_fire = CurTime() + 0.1
+  for _, weapon in ipairs(self:GetWeapons()) do
+    if weapon == active_weapon or weapon:is_frozen() then
+      weapon:SetNextPrimaryFire(next_fire)
+      weapon:SetNextSecondaryFire(next_fire)
 
-    weapon:SetNextPrimaryFire(next_fire)
-    weapon:SetNextSecondaryFire(next_fire)
-
-    weapon:unfreeze()
+      weapon:unfreeze()
+    end
   end
 end
 
@@ -350,6 +346,28 @@ function player_meta:is_in_reach(entity, distance)
   local eye_pos = self:EyePos()
 
   return eye_pos:DistToSqr(entity:NearestPoint(eye_pos)) <= distance * distance
+end
+
+--- Checks whether nothing is in the way between the eyes of the player and the center of an
+-- entity: a line traced from the eyes toward the center of the entity hits that entity or
+-- nothing at all. The player does not block the line.
+-- ```
+-- if !actor:is_in_reach(entity) or !actor:can_see(entity) then
+--   return false, 'error.too_far'
+-- end
+-- ```
+-- @param entity [Entity]
+-- @return [Boolean false if the entity is invalid or something else blocks the line]
+function player_meta:can_see(entity)
+  if !IsValid(entity) then return false end
+
+  sight_trace.start = self:EyePos()
+  sight_trace.endpos = entity:WorldSpaceCenter()
+  sight_trace.filter = self
+
+  trace_line(sight_trace)
+
+  return !sight_result.Hit or sight_result.Entity == entity
 end
 
 --- Checks whether the player has a permission. The decision is made by the

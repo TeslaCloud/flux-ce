@@ -84,7 +84,7 @@ end
 -- @see [Log:write]
 function Log:print(message, action, object, subject)
   return self:write(message, action, object, subject, function(logged_message, logged_action, _object, _subject)
-    local prefix = isstring(logged_action) and logged_action:capitalize()..' - ' or ''
+    local prefix = logged_action != '' ? (logged_action:capitalize()..' - ') : ''
 
     replication_data = { type = 'print' }
 
@@ -117,7 +117,7 @@ end
 -- @see [Log:write]
 function Log:colored(color, message, action, object, subject)
   return self:write(message, action, object, subject, function(logged_message, logged_action, _object, _subject)
-    MsgC(color, (isstring(logged_action) and logged_action:capitalize()..' - ' or '')..logged_message)
+    MsgC(color, (logged_action != '' ? (logged_action:capitalize()..' - ') : '')..logged_message)
 
     replication_data = { type = 'colored', color = color }
 
@@ -127,14 +127,15 @@ function Log:colored(color, message, action, object, subject)
   end)
 end
 
---- Records a log entry and shows the message to every player as a notification.
+--- Records a log entry and shows the message to every player as a notification, which is
+-- translated for each of them. The entry holds the message translated to English.
 -- Server only.
 -- @param message [String text or language phrase of the notification]
 -- @param arguments [Map arguments of the phrase; its action, object and subject fields are
 --   used for the log entry]
 -- @return [Log the Log class, for chaining]
 function Log:notify(message, arguments)
-  self:write(message, arguments.action, arguments.object, arguments.subject)
+  self:write(t(message, arguments), arguments.action, arguments.object, arguments.subject)
   Flux.Player:broadcast(message, arguments)
   return self
 end

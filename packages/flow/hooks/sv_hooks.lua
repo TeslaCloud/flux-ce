@@ -14,6 +14,15 @@ local player_iterator = player.Iterator
 
 DEFINE_BASECLASS('gamemode_base')
 
+--- Returns the crouched walk speed of a player as the engine takes it: a fraction of the
+-- walk speed, which is treated as at least 1.
+-- @param crouch_speed [Number crouched walk speed in units per second]
+-- @param walk_speed [Number walk speed in units per second]
+-- @return [Number]
+local function crouch_fraction(crouch_speed, walk_speed)
+  return crouch_speed / math.max(walk_speed, 1)
+end
+
 --- Does nothing, which disables the default handling of a player's death.
 -- @param _victim [Player the player who died]
 -- @param _attacker [Entity]
@@ -90,7 +99,7 @@ function GM:PlayerSpawn(actor)
 
   local walk_speed = config_get('flow_walk_speed')
 
-  actor:SetCrouchedWalkSpeed(config_get('flow_crouch_speed') / walk_speed)
+  actor:SetCrouchedWalkSpeed(crouch_fraction(config_get('flow_crouch_speed'), walk_speed))
   actor:SetWalkSpeed(walk_speed)
   actor:SetJumpPower(config_get('flow_jump_power'))
   actor:SetRunSpeed(config_get('flow_run_speed'))
@@ -183,11 +192,10 @@ function GM:PlayerSetModel(actor)
   end
 end
 
---- Marks the player as initialized and, shortly after, runs PlayerInitialized on their client.
+--- Runs PlayerInitialized on the client of the player, shortly after the server has
+-- initialized them.
 -- @param actor [Player]
 function GM:PlayerInitialized(actor)
-  actor:set_initialized(true)
-
   timer.Simple(0.25, function()
     hook.run_client(actor, 'PlayerInitialized')
   end)
@@ -215,7 +223,7 @@ function GM:PlayerDeathThink(actor)
 end
 
 --- Saves the data of the player unless their should_save_data field is false, tells all
--- clients about the disconnect and logs it.
+-- clients about the disconnect and logs it, naming the player by their Steam name.
 -- @param actor [Player]
 function GM:PlayerDisconnected(actor)
   if actor.should_save_data != false then
@@ -224,7 +232,7 @@ function GM:PlayerDisconnected(actor)
 
   Cable.send(nil, 'fl_player_disconnected', actor:EntIndex())
 
-  Log:notify(actor:name()..' has disconnected from the server.', { action = 'player_events' })
+  Log:notify('notification.player_disconnected', { player = actor:steam_name(), action = 'player_events' })
 end
 
 --- Clears the networked variables of the removed entity before passing the event on to the
@@ -282,21 +290,14 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnProp(actor, model)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_props') then
-    return false
-  end
+  if !actor:can('spawn_props') then return false end
 
   --- Called on the server when a player tries to spawn a prop, after the gamemode has
   -- checked that they have the `spawn_props` permission.
   -- @param actor [Player The player spawning the prop]
   -- @param model [String Model of the prop]
   -- @return [Boolean Return false to prevent the prop from being spawned]
-  if hook.Run('PlayerCanSpawnProp', actor, model) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnProp', actor, model) != false
 end
 
 --- Decides whether a player may spawn a prop, ragdoll or effect.
@@ -308,10 +309,7 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnObject(actor, model, skin)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_entities') then
-    return false
-  end
+  if !actor:can('spawn_entities') then return false end
 
   --- Called on the server when a player tries to spawn a prop, a ragdoll or an effect,
   -- after the gamemode has checked that they have the `spawn_entities` permission.
@@ -319,11 +317,7 @@ function GM:PlayerSpawnObject(actor, model, skin)
   -- @param model [String Model of the object]
   -- @param skin [Number Skin of the object]
   -- @return [Boolean Return false to prevent the object from being spawned]
-  if hook.Run('PlayerCanSpawnObject', actor, model, skin) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnObject', actor, model, skin) != false
 end
 
 --- Decides whether a player may spawn an NPC.
@@ -335,10 +329,7 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnNPC(actor, npc, weapon)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_npcs') then
-    return false
-  end
+  if !actor:can('spawn_npcs') then return false end
 
   --- Called on the server when a player tries to spawn an NPC, after the gamemode has
   -- checked that they have the `spawn_npcs` permission.
@@ -346,11 +337,7 @@ function GM:PlayerSpawnNPC(actor, npc, weapon)
   -- @param npc [String Type of the NPC]
   -- @param weapon [String Class of the weapon given to the NPC]
   -- @return [Boolean Return false to prevent the NPC from being spawned]
-  if hook.Run('PlayerCanSpawnNPC', actor, npc, weapon) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnNPC', actor, npc, weapon) != false
 end
 
 --- Decides whether a player may spawn an effect.
@@ -361,21 +348,14 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnEffect(actor, model)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_entities') then
-    return false
-  end
+  if !actor:can('spawn_entities') then return false end
 
   --- Called on the server when a player tries to spawn an effect, after the gamemode has
   -- checked that they have the `spawn_entities` permission.
   -- @param actor [Player The player spawning the effect]
   -- @param model [String Model of the effect]
   -- @return [Boolean Return false to prevent the effect from being spawned]
-  if hook.Run('PlayerCanSpawnEffect', actor, model) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnEffect', actor, model) != false
 end
 
 --- Decides whether a player may spawn a vehicle.
@@ -388,10 +368,7 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnVehicle(actor, model, name, tab)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_vehicles') then
-    return false
-  end
+  if !actor:can('spawn_vehicles') then return false end
 
   --- Called on the server when a player tries to spawn a vehicle, after the gamemode has
   -- checked that they have the `spawn_vehicles` permission.
@@ -400,11 +377,7 @@ function GM:PlayerSpawnVehicle(actor, model, name, tab)
   -- @param name [String Name of the vehicle in the vehicle list]
   -- @param tab [Map Vehicle table from the vehicle list]
   -- @return [Boolean Return false to prevent the vehicle from being spawned]
-  if hook.Run('PlayerCanSpawnVehicle', actor, model, name, tab) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnVehicle', actor, model, name, tab) != false
 end
 
 --- Decides whether a player may spawn a weapon.
@@ -416,10 +389,7 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnSWEP(actor, weapon, swep)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_sweps') then
-    return false
-  end
+  if !actor:can('spawn_sweps') then return false end
 
   --- Called on the server when a player tries to spawn a weapon, after the gamemode has
   -- checked that they have the `spawn_sweps` permission.
@@ -427,11 +397,7 @@ function GM:PlayerSpawnSWEP(actor, weapon, swep)
   -- @param weapon [String Class of the weapon]
   -- @param swep [Map Information about the weapon from the weapon list]
   -- @return [Boolean Return false to prevent the weapon from being spawned]
-  if hook.Run('PlayerCanSpawnSWEP', actor, weapon, swep) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnSWEP', actor, weapon, swep) != false
 end
 
 --- Decides whether a player may spawn a scripted entity.
@@ -442,21 +408,14 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnSENT(actor, class)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_entities') then
-    return false
-  end
+  if !actor:can('spawn_entities') then return false end
 
   --- Called on the server when a player tries to spawn a scripted entity, after the
   -- gamemode has checked that they have the `spawn_entities` permission.
   -- @param actor [Player The player spawning the entity]
   -- @param class [String Class of the entity]
   -- @return [Boolean Return false to prevent the entity from being spawned]
-  if hook.Run('PlayerCanSpawnSENT', actor, class) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnSENT', actor, class) != false
 end
 
 --- Decides whether a player may spawn a ragdoll.
@@ -467,21 +426,14 @@ end
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnRagdoll(actor, model)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_ragdolls') then
-    return false
-  end
+  if !actor:can('spawn_ragdolls') then return false end
 
   --- Called on the server when a player tries to spawn a ragdoll, after the gamemode has
   -- checked that they have the `spawn_ragdolls` permission.
   -- @param actor [Player The player spawning the ragdoll]
   -- @param model [String Model of the ragdoll]
   -- @return [Boolean Return false to prevent the ragdoll from being spawned]
-  if hook.Run('PlayerCanSpawnRagdoll', actor, model) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanSpawnRagdoll', actor, model) != false
 end
 
 --- Decides whether a player may give themselves a weapon.
@@ -493,10 +445,7 @@ end
 -- @return [Boolean whether giving the weapon is allowed]
 function GM:PlayerGiveSWEP(actor, weapon, swep)
   if !IsValid(actor) then return true end
-
-  if !actor:can('spawn_sweps') then
-    return false
-  end
+  if !actor:can('spawn_sweps') then return false end
 
   --- Called on the server when a player tries to give themselves a weapon from the spawn
   -- menu, after the gamemode has checked that they have the `spawn_sweps` permission.
@@ -504,11 +453,7 @@ function GM:PlayerGiveSWEP(actor, weapon, swep)
   -- @param weapon [String Class of the weapon]
   -- @param swep [Map Information about the weapon from the weapon list]
   -- @return [Boolean Return false to prevent the weapon from being given]
-  if hook.Run('PlayerCanGiveSWEP', actor, weapon, swep) == false then
-    return false
-  end
-
-  return true
+  return hook.Run('PlayerCanGiveSWEP', actor, weapon, swep) != false
 end
 
 --- Lets the base gamemode freeze the entity if the player has the physgun_freeze permission
@@ -556,8 +501,9 @@ function GM:PlayerTakeDamage(victim, _damage_info)
 end
 
 --- Saves the data with Flux.save_data every flow_data_save_interval seconds, for the first time
--- about ten seconds after the server has started. Also checks every half an hour whether the
--- server is empty and reloads the map if it is, unless ShouldServerAutoRestart returns false.
+-- about ten seconds after the server has started. Also checks every
+-- flow_empty_restart_interval seconds whether the server is empty and reloads the map if it is,
+-- unless that config is 0 or ShouldServerAutoRestart returns false.
 function GM:OneSecond()
   local cur_time = CurTime()
   local sys_time = SysTime()
@@ -570,14 +516,19 @@ function GM:OneSecond()
     Flux.next_save_data = cur_time + config_get('flow_data_save_interval', 360)
   end
 
-  if !Flux.next_player_count_check then
-    Flux.next_player_count_check = sys_time + 1800
+  local restart_interval = config_get('flow_empty_restart_interval', 1800)
+
+  if restart_interval <= 0 then
+    Flux.next_player_count_check = nil
+  elseif !Flux.next_player_count_check then
+    Flux.next_player_count_check = sys_time + restart_interval
   elseif Flux.next_player_count_check <= sys_time then
-    Flux.next_player_count_check = sys_time + 1800
+    Flux.next_player_count_check = sys_time + restart_interval
 
     if player.GetCount() == 0 then
       --- Asks whether the empty server may reload the current map. Called on the server every
-      -- half an hour, if no players are connected at that moment.
+      -- flow_empty_restart_interval seconds (half an hour by default, never when the config is
+      -- 0), if no players are connected at that moment.
       -- @return [Boolean Return false to prevent the map from being reloaded]
       if hook.Run('ShouldServerAutoRestart') != false then
         Flux.dev_print('Server is empty, restarting...')
@@ -597,11 +548,16 @@ end
 hook.Add('OnReloaded', 'WriteClientFiles', Flux.write_client_files)
 
 --- Saves everything when the server shuts down or changes the map: runs Flux.save_data
--- and saves the data of every player. Flux.shutting_down is true from the start, so
+-- and saves the data of every player, with the database adapter in sync mode, so that the
+-- queries are done before the map unloads. Flux.shutting_down is true from the start, so
 -- that the save handlers and the code which runs while the map unloads (an entity's
 -- OnRemove, for example) can tell.
 function GM:ShutDown()
   Flux.shutting_down = true
+
+  if ActiveRecord.adapter then
+    ActiveRecord.adapter:sync(true)
+  end
 
   Flux.save_data()
 
@@ -641,8 +597,9 @@ function GM:PlayerThink(actor, _cur_time)
   end
 end
 
---- Passes chat messages that start with a command prefix to the command interpreter and
--- hides them from the chat.
+--- Passes chat messages that start with a command prefix to the command interpreter, unless
+-- the player runs commands too fast (see `Flux.Command:is_throttled`), and hides them from
+-- the chat.
 -- @param actor [Player]
 -- @param text [String the chat message]
 -- @param _team_chat [Boolean whether the message was sent to the team chat]
@@ -651,7 +608,9 @@ function GM:PlayerSay(actor, text, _team_chat)
   local is_command, length = Flux.Command:is_command(tostring(text))
 
   if is_command then
-    Flux.Command:interpret(actor, text:utf8sub(1 + length, utf8.len(text)))
+    if !Flux.Command:is_throttled(actor) then
+      Flux.Command:interpret(actor, text:utf8sub(1 + length, utf8.len(text)))
+    end
 
     return ''
   end
@@ -695,21 +654,25 @@ function GM:PlayerSwitchFlashlight(actor, on)
 end
 
 --- Applies changes of the flow_walk_speed, flow_run_speed, flow_crouch_speed and flow_jump_power
--- configs to every player.
+-- configs to every player. The crouched walk speed, which the engine takes as a fraction of
+-- the walk speed, is recomputed when either of them changes.
 -- @param key [String key of the config that has changed]
 -- @param _old_value [Any]
 -- @param new_value [Any]
 function GM:ConfigChanged(key, _old_value, new_value)
   if key == 'flow_walk_speed' then
+    local crouched_speed = crouch_fraction(config_get('flow_crouch_speed'), new_value)
+
     for _, client in player_iterator() do
       client:SetWalkSpeed(new_value)
+      client:SetCrouchedWalkSpeed(crouched_speed)
     end
   elseif key == 'flow_run_speed' then
     for _, client in player_iterator() do
       client:SetRunSpeed(new_value)
     end
   elseif key == 'flow_crouch_speed' then
-    local crouched_speed = new_value / config_get('flow_walk_speed')
+    local crouched_speed = crouch_fraction(new_value, config_get('flow_walk_speed'))
 
     for _, client in player_iterator() do
       client:SetCrouchedWalkSpeed(crouched_speed)
