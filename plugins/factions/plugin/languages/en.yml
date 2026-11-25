@@ -6,10 +6,12 @@ en:
         description: "Add a player to a faction whitelist."
         syntax: "<target> <faction>"
         message: "{player} has added {target} to the {faction} whitelist."
+        none: "None of these players could be added to the {faction} whitelist: they are on it already or their data has not loaded yet."
       remove:
         description: "Remove a player from a faction whitelist."
         syntax: "<target> <faction>"
         message: "{player} has removed {target} from the {faction} whitelist."
+        none: "None of these players is on the {faction} whitelist."
     setfaction:
       description: "Set a character's faction. Factions: {factions}"
       syntax: "<target> <faction>"
@@ -60,6 +62,11 @@ en:
     rank_changed: Your faction rank was set to {rank}.
     whitelist_taken: You have lost access to the {faction} faction.
     whitelist_given: You have been granted access to the {faction} faction.
+  faction:
+    unknown:
+      title: "Unknown Faction"
+      description: "This faction has no description."
+      phys_desc: "This faction has no default physical description."
   ui:
     char_create:
       faction: Faction

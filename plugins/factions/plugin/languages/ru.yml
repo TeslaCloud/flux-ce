@@ -6,10 +6,12 @@ ru:
         description: "Дает игроку доступ к фракции."
         syntax: "<игрок> <фракция>"
         message: "{player} дает {target} доступ к фракции {faction}."
+        none: "Ни одному из этих игроков не удалось дать доступ к фракции {faction}: он у них уже есть или их данные еще не загружены."
       remove:
         description: "Убирает у игрока доступ к фракции."
         syntax: "<игрок> <фракция>"
         message: "{player} забирает у {target} доступ к фракции {faction}."
+        none: "Ни у одного из этих игроков нет доступа к фракции {faction}."
     setfaction:
       description: "Установить фракцию персонажа. Фракции: {factions}"
       syntax: "<игрок> <фракция>"
@@ -60,6 +62,11 @@ ru:
     rank_changed: Ваш ранг во фракции был изменен на {rank}.
     whitelist_taken: Вы потеряли доступ к фракции {faction}.
     whitelist_given: Вы получили доступ к фракции {faction}.
+  faction:
+    unknown:
+      title: "Неизвестная фракция"
+      description: "У этой фракции нет описания."
+      phys_desc: "У этой фракции нет описания внешности по умолчанию."
   ui:
     char_create:
       faction: Фракция

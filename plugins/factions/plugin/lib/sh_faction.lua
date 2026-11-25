@@ -52,8 +52,9 @@ local function get_authority(faction_table, rank, value)
   end
 end
 
---- Registers a faction: fills in the default name, description and color, sets up its team
--- and assigns the animation class of each of its models and of the models of its ranks.
+--- Registers a faction: fills in the default name and description (the 'faction.unknown.*'
+-- phrases) and color, sets up its team and assigns the animation class of each of its
+-- models and of the models of its ranks.
 -- ```
 -- local faction = Faction.new('citizen')
 -- faction.name = 'Citizen'
@@ -70,8 +71,8 @@ function Factions.add_faction(id, data)
   if !id or !data then return end
 
   data.faction_id = id:to_id() or (data.name and data.name:to_id())
-  data.name = data.name or 'Unknown Faction'
-  data.description = data.description or 'This faction has no description!'
+  data.name = data.name or 'faction.unknown.title'
+  data.description = data.description or 'faction.unknown.description'
   data.color = data.color or Color(255, 255, 255)
   data.limit = tonumber(data.limit) or 0
   data.max_characters = tonumber(data.max_characters) or 0

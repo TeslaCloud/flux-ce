@@ -6,20 +6,26 @@ local istable = istable
 local player_meta = FindMetaTable('Player')
 
 --- Moves the player into a faction: resets the rank to the default rank of the faction,
--- sets the team, adjusts gender, regenerates the name, adjusts the model, gives the default
--- description of a faction that does not let players write one, and runs both factions'
--- leave and join callbacks. A player who comes from a faction without names of its own
--- (has_name false) into one with them gets a name from `Characters.random_name` when one
--- is offered, so they do not keep the name the old faction generated. The player then
--- gets the weapons, the maximum health and armor and the rank model of the new faction,
--- and NPCs feel about them as that faction says. The rank is set here rather than with
--- `Player:set_rank`, so only the PlayerFactionChanged hook reports the move. Neither the
--- limit of the faction nor its can_transfer callback is checked; see
+-- sets the team, adjusts gender, regenerates the name from the base name of the character
+-- (see `Factions.apply_name`), adjusts the model, gives the default description of a faction
+-- that does not let players write one, sends the character list to the player once and runs
+-- both factions' leave and join callbacks. A player who comes from a faction without names
+-- of its own (has_name false) into one with them gets a name from `Characters.random_name`
+-- as their base name when one is offered, so they do not keep the name the old faction
+-- generated. The player then gets the weapons, the maximum health and armor and the rank
+-- model of the new faction, and NPCs feel about them as that faction says. The rank is set
+-- here rather than with `Player:set_rank`, so only the PlayerFactionChanged hook reports the
+-- move. Neither the limit of the faction nor its can_transfer callback is checked; see
 -- `Factions.can_transfer`. Server only.
--- @param id [String ID of a registered faction]
+-- @param id [String ID of a registered faction; any other value raises an error]
 function player_meta:set_faction(id)
   local old_faction = self:get_faction()
   local faction_table = Factions.find_by_id(id)
+
+  if !faction_table then
+    error('set_faction: unknown faction \''..tostring(id)..'\'', 2)
+  end
+
   local char = self:get_character()
   local default_rank = faction_table:get_default_rank()
 
@@ -34,24 +40,26 @@ function player_meta:set_faction(id)
   self:SetTeam(faction_table.team_id)
 
   if !faction_table.has_gender then
-    Characters.set_gender(self, CHAR_GENDER_NONE)
+    Characters.set_gender(self, CHAR_GENDER_NONE, true)
   elseif !old_faction or !old_faction.has_gender then
-    Characters.set_gender(self, math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
+    Characters.set_gender(self, math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE), true)
   end
 
-  local char_name
+  local base_name
 
   if old_faction and !old_faction.has_name and faction_table.has_name then
-    char_name = Characters.random_name(self, id, self:get_nv('gender', CHAR_GENDER_NONE))
+    base_name = Characters.random_name(self, id, self:get_nv('gender', CHAR_GENDER_NONE))
   end
 
-  Characters.set_name(self, faction_table:generate_name(self, default_rank, nil, char_name))
+  Factions.apply_name(self, faction_table, default_rank, base_name, true)
 
-  Characters.set_model(self, faction_table:get_random_model(self))
+  Characters.set_model(self, faction_table:get_random_model(self), true)
 
   if !faction_table.has_description then
-    Characters.set_desc(self, Factions.get_default_description(faction_table, self))
+    Characters.set_desc(self, Factions.get_default_description(faction_table, self), true)
   end
+
+  Characters.send_to_client(self)
 
   if old_faction then
     old_faction:on_player_leave(self)
@@ -75,9 +83,10 @@ function player_meta:set_faction(id)
 end
 
 --- Sets the player's rank in their current faction, networks it, regenerates their name
--- from the faction's name template and gives them the model, the weapons and the maximum
--- health and armor of the rank. The limit of the rank is not checked, and nothing happens
--- to a player who is not a member of a registered faction. Server only.
+-- from the faction's name template and the base name of the character (see
+-- `Factions.apply_name`) and gives them the model, the weapons and the maximum health and
+-- armor of the rank. The limit of the rank is not checked, and nothing happens to a player
+-- who is not a member of a registered faction. Server only.
 -- @param rank [Number rank index, 1 being the lowest; ignored if the faction has no such rank]
 function player_meta:set_rank(rank)
   local faction_table = Factions.get_membership(self)
@@ -89,7 +98,7 @@ function player_meta:set_rank(rank)
   self:get_character().rank = rank
   self:set_nv('rank', rank)
 
-  Characters.set_name(self, faction_table:generate_name(self, rank))
+  Factions.apply_name(self, faction_table, rank)
 
   Factions.apply_membership(self)
 
@@ -130,56 +139,68 @@ function player_meta:demote_rank()
   return false
 end
 
---- Whitelists the player for a faction by adding a Whitelist record to their user record
--- and networking the updated list. Does nothing if they already have it or have no user
--- record, as is the case for bots. Server only.
+--- Whitelists the player for a faction: adds a Whitelist record to their user record, saves
+-- it at once when the user record is in the database already, and networks the updated list
+-- to the player. Does nothing if they already have it or have no user record, as is the case
+-- for bots. Server only.
 -- @param faction_id [String]
+-- @return [Boolean true when the player has been given the whitelist]
 function player_meta:give_whitelist(faction_id)
-  if !istable(self.record) or !istable(self.record.whitelists) then return end
-
-  if !self:has_whitelist(faction_id) then
-    local whitelist = Whitelist.new()
-      whitelist.faction_id = faction_id
-    table.insert(self.record.whitelists, whitelist)
-
-    local whitelist_table = self:get_nv('whitelists', {})
-      table.insert(whitelist_table, faction_id)
-    self:set_nv('whitelists', whitelist_table)
+  if !istable(self.record) or !istable(self.record.whitelists) or self:has_whitelist(faction_id) then
+    return false
   end
+
+  local whitelist = Whitelist.new()
+    whitelist.faction_id = faction_id
+  table.insert(self.record.whitelists, whitelist)
+
+  if self.record.id then
+    whitelist.user_id = self.record.id
+    whitelist:save()
+  end
+
+  local whitelist_table = self:get_nv('whitelists', {})
+    table.insert(whitelist_table, faction_id)
+  self:set_private_nv('whitelists', whitelist_table)
+
+  return true
 end
 
 --- Removes the player's whitelist for a faction, destroying its Whitelist record and
--- networking the updated list. A player who is playing a character of that faction and
--- may no longer load it (see `Factions:PlayerCanUseCharacter`) loses it at once: it is
--- saved and dropped, the player is spawned again and gets the main menu with the reason.
--- Server only.
+-- networking the updated list to the player. A player who is playing a character of that
+-- faction and may not load it without the whitelist (see `Factions:PlayerCanUseCharacter`)
+-- loses it at once: it is saved and dropped, the player is spawned again and gets the main
+-- menu with the reason. Server only.
 -- @param faction_id [String]
+-- @return [Boolean true when the player had the whitelist and has lost it]
 function player_meta:take_whitelist(faction_id)
-  if self:has_whitelist(faction_id) then
-    for index, whitelist in pairs(self.record.whitelists) do
-      if whitelist.faction_id == faction_id then
-        whitelist:destroy()
-        table.remove(self.record.whitelists, index)
+  if !self:has_whitelist(faction_id) then return false end
 
-        break
-      end
-    end
+  for index, whitelist in pairs(self.record.whitelists) do
+    if whitelist.faction_id == faction_id then
+      whitelist:destroy()
+      table.remove(self.record.whitelists, index)
 
-    local whitelist_table = self:get_nv('whitelists', {})
-      table.RemoveByValue(whitelist_table, faction_id)
-    self:set_nv('whitelists', whitelist_table)
-
-    local character = self.current_character
-
-    if character and character.faction == faction_id then
-      local allowed, reason, arguments = Factions:PlayerCanUseCharacter(self, character)
-
-      if allowed == false then
-        self:clear_active_character()
-        self:Spawn()
-
-        Characters.open_menu(self, reason, arguments)
-      end
+      break
     end
   end
+
+  local whitelist_table = self:get_nv('whitelists', {})
+    table.RemoveByValue(whitelist_table, faction_id)
+  self:set_private_nv('whitelists', whitelist_table)
+
+  local character = self.current_character
+
+  if character and character.faction == faction_id then
+    local allowed, reason, arguments = Factions:PlayerCanUseCharacter(self, character)
+
+    if allowed == false then
+      self:clear_active_character()
+      self:Spawn()
+
+      Characters.open_menu(self, reason, arguments)
+    end
+  end
+
+  return true
 end

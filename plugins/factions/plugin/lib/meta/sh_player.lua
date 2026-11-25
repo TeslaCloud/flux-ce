@@ -28,9 +28,13 @@ function player_meta:get_faction()
 end
 
 --- Returns the player's rank in their faction as an index into the faction's rank list.
--- @return [Number rank index; on the client -1 when no rank has been networked]
+-- On the server it is read from the active character, and from the networked rank when the
+-- player has no character or the character no rank.
+-- @return [Number rank index; -1 when no rank has been networked]
 function player_meta:get_rank()
-  return SERVER and self:get_character().rank or self:get_nv('rank', -1)
+  local rank = SERVER and self:get_character()?.rank
+
+  return rank or self:get_nv('rank', -1)
 end
 
 --- Returns the ID of the player's current rank. Errors if the player has no faction or rank.
@@ -91,7 +95,7 @@ end
 
 --- Returns the faction whitelists of the player.
 -- @return [List Whitelist records on the server, empty for a player without a user record;
---   whitelisted faction IDs on the client]
+--   whitelisted faction IDs on the client, which knows those of the local player alone]
 function player_meta:get_whitelists()
   if SERVER then
     return istable(self.record) and self.record.whitelists or {}

@@ -4,7 +4,9 @@
 -- choose a name, description and gender of their own, and whether a whitelist is needed to
 -- join. The plugin makes the choice of a faction the first stage of character creation,
 -- generates character names from the name template of the faction, groups the scoreboard by
--- faction, and adds commands that change factions, ranks and whitelists.
+-- faction, and adds commands that change factions, ranks and whitelists. Every character
+-- keeps a base name, the name its player chose (see `Factions.get_base_name`), which the
+-- name template builds on whenever the rank or the faction of the character changes.
 --
 -- A faction can also limit how many of its members, or holders of one of its ranks, may be
 -- online at once, which is checked when a character is loaded, and how many characters one

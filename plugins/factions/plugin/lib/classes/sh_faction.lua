@@ -37,10 +37,10 @@ local random_name_keys = {
 -- name length limits.
 const random_name_attempts = 8
 
---- Creates a faction with default settings: no ranks, no models, no limits, no loadout, name,
--- description and gender enabled, and the '{rank} {name}' name template, which may also
--- contain {data:key} to insert a value set with `Faction:set_data`. Fields are left unset
--- when no ID is given.
+--- Creates a faction with default settings: the 'faction.unknown.*' phrases as its name and
+-- descriptions, no ranks, no models, no limits, no loadout, name, description and gender
+-- enabled, and the '{rank} {name}' name template, which may also contain {data:key} to
+-- insert a value set with `Faction:set_data`. Fields are left unset when no ID is given.
 -- ```
 -- local faction = Faction.new('citizen')
 -- faction.name = 'Citizen'
@@ -79,9 +79,9 @@ function Faction:init(id)
   if !id then return end
 
   self.faction_id = id:to_id()
-  self.name = 'Unknown Faction'
-  self.description = 'This faction has no description set!'
-  self.phys_desc = 'This faction has no default physical description set!'
+  self.name = 'faction.unknown.title'
+  self.description = 'faction.unknown.description'
+  self.phys_desc = 'faction.unknown.phys_desc'
   self.whitelisted = false
   self.color = Color(255, 255, 255)
   self.material = nil
@@ -411,25 +411,26 @@ function Faction:add_rank(id, name_filter, data)
 end
 
 --- Builds a character name for a player from the faction's name template, which may contain
--- {name}, {rank}, {data:key} and {callback:method} placeholders. A faction that defines
+-- {name}, {rank}, {data:key} and {callback:method} placeholders. {name} becomes the name
+-- passed in, and {rank} the name filter of the rank; either becomes an empty string when
+-- there is none. The result is brought to the form of `Characters.normalize_name`, so the
+-- spaces around an empty placeholder disappear. A faction that defines
 -- make_name(target, char_name, rank, default_data) bypasses the template.
 -- ```
 -- FACTION.name_template = '{data:unit} {rank} {name}'
 -- FACTION:set_data('unit', 'C17')
 -- FACTION:add_rank('officer', 'Ofc.')
 --
--- -- For a player named 'John Doe':
--- FACTION:generate_name(target, 'officer') -- 'C17 Ofc. John Doe'
+-- FACTION:generate_name(target, 'officer', nil, 'John Doe') -- 'C17 Ofc. John Doe'
 -- ```
 -- @param target [Player]
 -- @param rank [Number/String rank index or rank ID used for {rank}]
 -- @param default_data=nil [Map values for {data:key} that override the faction's own data]
--- @param char_name=nil [String name used for {name} in place of the player's current name]
+-- @param char_name=nil [String name used for {name}, such as the base name of the character
+--   (see `Factions.get_base_name`)]
 -- @return [String the generated name; the player's current name if a ShouldNameGenerate
 --   hook returns false]
 function Faction:generate_name(target, rank, default_data, char_name)
-  char_name = char_name or target:name()
-
   default_data = default_data or {}
 
   --- Decides whether a character name is generated for a player. Called by
@@ -437,8 +438,7 @@ function Faction:generate_name(target, rank, default_data, char_name)
   -- plugin itself returns false for bots.
   -- @param target [Player]
   -- @param faction [Faction the faction that generates the name]
-  -- @param char_name [String the name used for {name}: the one passed to `Faction:generate_name`,
-  --   or the current name of the player]
+  -- @param char_name [String the name used for {name}, nil when there is none]
   -- @param rank [Number/String rank index or rank ID the name is generated for]
   -- @param default_data [Map values for the {data:key} placeholders of the template]
   -- @return [Boolean return false to keep the current name of the player]
@@ -455,13 +455,17 @@ function Faction:generate_name(target, rank, default_data, char_name)
   end
 
   if final_name:find('{rank}') then
+    local rank_name = ''
+
     for index, rank_table in ipairs(self.rank) do
       if rank_table.id == rank or index == rank then
-        final_name = final_name:replace('{rank}', rank_table.name)
+        rank_name = rank_table.name
 
         break
       end
     end
+
+    final_name = final_name:replace('{rank}', rank_name)
   end
 
   local helpers = string.find_all(final_name, '{([%w_]+):([%w_]+)}')
@@ -484,7 +488,7 @@ function Faction:generate_name(target, rank, default_data, char_name)
     end
   end
 
-  return final_name
+  return Characters.normalize_name(final_name)
 end
 
 --- Stores a value on the faction for use as {data:key} in the name template. Both the key

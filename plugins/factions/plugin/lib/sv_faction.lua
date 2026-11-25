@@ -1,7 +1,8 @@
 --- Server side of the `Factions` functions: who may be moved into a faction, the default
--- description of its members, the character counts that character creation shows, and what
--- the members of a faction get from the faction and their rank: weapons, maximum health and
--- armor, a model and the feelings of NPCs.
+-- description of its members, the base names that the name templates of factions build on,
+-- the character counts that character creation shows, and what the members of a faction get
+-- from the faction and their rank: weapons, maximum health and armor, a model and the
+-- feelings of NPCs.
 
 local IsValid = IsValid
 local isnumber = isnumber
@@ -100,7 +101,52 @@ end
 -- @param target=nil [Player the player whose language is used; English without one]
 -- @return [String]
 function Factions.get_default_description(faction_table, target)
-  return t(faction_table.phys_desc or '', nil, Flux.Lang:get_player_lang(target))
+  return t(faction_table:get_phys_desc() or '', nil, Flux.Lang:get_player_lang(target))
+end
+
+--- Returns the base name of the active character of a player: the name that the name
+-- templates of factions put in for {name}. It is the name the player chose when they
+-- created the character, the random name it was given in a faction without names of its own,
+-- or the name it was given last with `Characters.set_name` from outside the Factions plugin.
+-- A character that has no base name stored takes its current name as its base name, which
+-- is stored with it from then on. Server only.
+-- @param target [Player]
+-- @return [String the base name, nil when the player has no active character]
+function Factions.get_base_name(target)
+  local character = target:get_character()
+
+  if !character then return end
+
+  local base_name = Characters.get_custom_data(character, 'base_name')
+
+  if !isstring(base_name) then
+    base_name = character.name
+
+    Characters.set_custom_data(character, 'base_name', base_name)
+  end
+
+  return base_name
+end
+
+--- Names the active character of a player after the name template of a faction for a rank,
+-- with the base name of the character in place of {name}, and keeps that base name stored
+-- on the character. Server only.
+-- @param target [Player]
+-- @param faction_table [Faction]
+-- @param rank [Number rank index]
+-- @param base_name=nil [String a base name to give the character; the stored one by default]
+-- @param no_send=false [Boolean leave sending the character list to the player to the caller]
+-- @see [Factions.get_base_name]
+function Factions.apply_name(target, faction_table, rank, base_name, no_send)
+  base_name = base_name or Factions.get_base_name(target)
+
+  Characters.set_name(target, faction_table:generate_name(target, rank, nil, base_name), no_send)
+
+  local character = target:get_character()
+
+  if character then
+    Characters.set_custom_data(character, 'base_name', base_name)
+  end
 end
 
 --- Networks to a player how many characters they have in each faction, which lets their

@@ -141,7 +141,9 @@ end
 -- requests of clients never carry a rank (see Factions:PreCreateCharacter), so their
 -- characters start at the default rank unless the on_character_create callback of the
 -- faction has set one. A faction or rank that sets a maximum health or armor makes the
--- character start with them.
+-- character start with them. The base name of the character (see `Factions.get_base_name`)
+-- is the name the player chose, or in a faction without names of its own the random name
+-- that Factions:PreCreateCharacter has picked.
 -- @param owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
@@ -157,6 +159,12 @@ function Factions:PostCreateCharacter(owner, char, char_data)
   char.rank = rank or 1
 
   if faction_table then
+    if faction_table.has_name then
+      Characters.set_custom_data(char, 'base_name', char_data.name)
+    else
+      Characters.set_custom_data(char, 'base_name', char_data.base_name)
+    end
+
     local max_health = faction_table:get_max_health(char.rank)
     local max_armor = faction_table:get_max_armor(char.rank)
 
@@ -178,8 +186,8 @@ function Factions:AdjustPlayerRecordPreloads(preloads)
   preloads[#preloads + 1] = 'whitelists'
 end
 
---- Networks the IDs of the factions the player is whitelisted for, and how many characters
--- they have in each faction.
+--- Networks to the player the IDs of the factions they are whitelisted for, and how many
+-- characters they have in each faction.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function Factions:PlayerRestored(actor, record)
@@ -190,7 +198,7 @@ function Factions:PlayerRestored(actor, record)
       table.insert(whitelists, whitelist.faction_id)
     end
 
-    actor:set_nv('whitelists', whitelists)
+    actor:set_private_nv('whitelists', whitelists)
   end
 
   self.send_character_counts(actor)
@@ -223,7 +231,8 @@ function Factions:OnEntityCreated(entity)
 end
 
 --- Gives the player a random model of their faction that matches the new gender. A player
--- whose faction is not registered keeps their model.
+-- whose faction is not registered keeps their model. The character list is left for
+-- `Characters.set_gender` to send.
 -- @param owner [Player]
 -- @param _char [Character]
 -- @param _new_gender [Number CHAR_GENDER_* value]
@@ -232,7 +241,20 @@ function Factions:CharacterGenderChanged(owner, _char, _new_gender, _old_gender)
   local faction_table = owner:get_faction()
 
   if faction_table then
-    Characters.set_model(owner, faction_table:get_random_model(owner))
+    Characters.set_model(owner, faction_table:get_random_model(owner), true)
+  end
+end
+
+--- Makes a name that the active character of a player has been given from outside the
+-- Factions plugin its base name, which the name templates of factions build on from then
+-- on. `Factions.apply_name` puts the base name back after it has named a character.
+-- @param _owner [Player]
+-- @param char [Character the active character, nil if the player has none]
+-- @param new_name [String]
+-- @param _old_name [String]
+function Factions:CharacterNameChanged(_owner, char, new_name, _old_name)
+  if char then
+    Characters.set_custom_data(char, 'base_name', new_name)
   end
 end
 
@@ -289,23 +311,30 @@ function Factions:PlayerCanUseCharacter(actor, character)
   end
 end
 
---- Cleans up the creation data a client has sent: discards the rank, which a client has no
--- say in, generates a name from the faction's name template when the data has no name or
--- the faction does not let players pick one, and replaces the description with the default
--- description of a faction that does not let players write one. The Characters plugin
--- counts a replaced name or description as generated, which frees the description from the
--- length limits that apply to the ones players write.
+--- Cleans up the creation data a client has sent: discards the rank and the base name, which
+-- a client has no say in, and replaces the description with the default description of a
+-- faction that does not let players write one. A faction that does not let players pick a
+-- name (has_name false) names the character from its name template, with a random name from
+-- `Characters.random_name` in place of {name}, or an empty one when no random name is
+-- offered; that random name becomes the base_name field of the data. The Characters plugin
+-- counts a replaced name or description as generated, which lets the name repeat the name
+-- of another character and frees the description from the length limits that apply to the
+-- ones players write.
 -- @param actor [Player]
 -- @param data [Map character creation data, modified in place]
 function Factions:PreCreateCharacter(actor, data)
   data.rank = nil
+  data.base_name = nil
 
   local faction_table = isstring(data.faction) and Factions.find_by_id(data.faction)
 
   if !faction_table then return end
 
-  if !faction_table.has_name or !string.presence(data.name) then
-    data.name = faction_table:generate_name(actor, faction_table:get_default_rank())
+  if !faction_table.has_name then
+    local gender = faction_table.has_gender and Characters.creation_gender(data.gender) or CHAR_GENDER_NONE
+
+    data.base_name = Characters.random_name(actor, faction_table.faction_id, gender)
+    data.name = faction_table:generate_name(actor, faction_table:get_default_rank(), nil, data.base_name)
   end
 
   if !faction_table.has_description then
@@ -313,18 +342,18 @@ function Factions:PreCreateCharacter(actor, data)
   end
 end
 
---- Rejects character creation when the chosen faction is not registered or requires a
--- whitelist that the player does not have, when the player already has as many characters
--- of the faction as it allows (neither applies when `Factions.can_bypass_creation_limits`
--- lets the player past them), when the gender does not fit the faction (a faction with
--- genders needs a male or female character, any other faction a genderless one), when the
--- model is not one of the faction's models for that gender, or when the on_character_create
--- callback of the faction refuses the character.
+--- Rejects character creation when the chosen faction is not registered (CHAR_ERR_FACTION) or
+-- requires a whitelist that the player does not have (CHAR_ERR_FACTION_WHITELIST), when the
+-- player already has as many characters of the faction as it allows (neither applies when
+-- `Factions.can_bypass_creation_limits` lets the player past them), when the gender does not
+-- fit the faction (a faction with genders needs a male or female character, any other
+-- faction a genderless one), when the model is not one of the faction's models for that
+-- gender, or when the on_character_create callback of the faction refuses the character.
 -- @param actor [Player]
 -- @param data [Map character creation data]
--- @return [Number CHAR_ERR_FACTION, CHAR_ERR_FACTION_LIMIT, CHAR_ERR_GENDER, CHAR_ERR_MODEL,
---   CHAR_ERR_FACTION_REFUSED or the code the callback of the faction returned when the data
---   is rejected, otherwise nil]
+-- @return [Number CHAR_ERR_FACTION, CHAR_ERR_FACTION_WHITELIST, CHAR_ERR_FACTION_LIMIT,
+--   CHAR_ERR_GENDER, CHAR_ERR_MODEL, CHAR_ERR_FACTION_REFUSED or the code the callback of the
+--   faction returned when the data is rejected, otherwise nil]
 function Factions:PlayerCreateCharacter(actor, data)
   local faction_table = isstring(data.faction) and Factions.find_by_id(data.faction)
 
@@ -334,7 +363,7 @@ function Factions:PlayerCreateCharacter(actor, data)
 
   if !Factions.can_bypass_creation_limits(actor, data) then
     if faction_table.whitelisted and !actor:has_whitelist(data.faction) then
-      return CHAR_ERR_FACTION
+      return CHAR_ERR_FACTION_WHITELIST
     end
 
     if Factions.character_limit_reached(actor, data.faction) then

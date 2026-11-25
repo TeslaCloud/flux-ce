@@ -6,10 +6,12 @@ fr:
         description: "Ajoute un joueur à la liste blanche d'une faction."
         syntax: "<cible> <faction>"
         message: "{player} a ajouté {target} à la liste blanche de la faction {faction}."
+        none: "Aucun de ces joueurs n'a pu être ajouté à la liste blanche de la faction {faction} : ils y figurent déjà ou leurs données ne sont pas encore chargées."
       remove:
         description: "Retire un joueur de la liste blanche d'une faction."
         syntax: "<cible> <faction>"
         message: "{player} a retiré {target} de la liste blanche de la faction {faction}."
+        none: "Aucun de ces joueurs n'est sur la liste blanche de la faction {faction}."
     setfaction:
       description: "Change la faction d'un personnage. Factions : {factions}"
       syntax: "<cible> <faction>"
@@ -60,6 +62,11 @@ fr:
     rank_changed: "Votre grade dans la faction est désormais {rank}."
     whitelist_taken: "Vous avez perdu l'accès à la faction {faction}."
     whitelist_given: "Vous avez obtenu l'accès à la faction {faction}."
+  faction:
+    unknown:
+      title: "Faction inconnue"
+      description: "Cette faction n'a pas de description."
+      phys_desc: "Cette faction n'a pas de description physique par défaut."
   ui:
     char_create:
       faction: "Faction"

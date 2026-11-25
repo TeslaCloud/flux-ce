@@ -83,6 +83,15 @@ function Factions:GetCharacterCreationModels(char_data)
   return faction_table:get_gender_models(char_data.gender)
 end
 
+--- Returns where the category of a faction goes on the scoreboard: the team ID of the
+-- faction, which follows the order in which the factions were registered. Categories that
+-- are not factions, such as the players online, go last.
+-- @param id [String faction ID or category key]
+-- @return [Number]
+local function category_order(id)
+  return Factions.find_by_id(id)?.team_id or math.huge
+end
+
 --- Takes the players that the scoreboard does not list (see `fl_scoreboard:should_show_player`)
 -- out of the lists of players that the faction categories are built from.
 local function remove_hidden_players(panel, players_table)
@@ -96,7 +105,8 @@ local function remove_hidden_players(panel, players_table)
 end
 
 --- Rebuilds the scoreboard with the players grouped into one collapsible category per
--- faction, replacing the default player list.
+-- faction, ordered by the team IDs of the factions with the players online last, replacing
+-- the default player list.
 -- @param panel [Panel the scoreboard]
 -- @param w [Number]
 -- @param h [Number]
@@ -158,7 +168,12 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
   remove_hidden_players(panel, players_table)
 
-  for id, members in pairs(players_table) do
+  local category_ids = table.GetKeys(players_table)
+
+  table.sort(category_ids, |a, b| -> category_order(a) < category_order(b))
+
+  for _, id in ipairs(category_ids) do
+    local members = players_table[id]
     local faction = (id == 'players_online' and t'ui.scoreboard.players_online') or Factions.find_by_id(id)
 
     if table.Count(members) == 0 then continue end
@@ -216,8 +231,9 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 end
 
 --- Supplies the error text shown when character creation fails because of the faction: no
--- faction was chosen, the player has too many characters of it, or the faction has refused
--- the character, in which case the reason the server has sent is shown if there is one.
+-- faction was chosen, the player is not on the whitelist of the faction, the player has too
+-- many characters of it, or the faction has refused the character, in which case the reason
+-- the server has sent is shown if there is one.
 -- @param _success [Boolean]
 -- @param status [Number CHAR_* status code sent by the server]
 -- @return [String translated error for the CHAR_ERR_FACTION codes, otherwise nil]
@@ -228,6 +244,8 @@ function Factions:GetCharacterCreationErrorText(_success, status)
 
   if status == CHAR_ERR_FACTION then
     return t'error.faction.not_selected'
+  elseif status == CHAR_ERR_FACTION_WHITELIST then
+    return t'ui.char_create.no_whitelist'
   elseif status == CHAR_ERR_FACTION_LIMIT then
     return t'ui.char_create.faction_limit'
   elseif status == CHAR_ERR_FACTION_REFUSED then
