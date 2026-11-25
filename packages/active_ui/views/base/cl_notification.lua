@@ -1,11 +1,12 @@
 --- A notification popup (`fl_notification`): lines of text on a rounded card with an accent
 -- stripe, over a blurred background, that fade in and out.
 -- Set it up with `set_text`, `set_text_color` and `set_background_color`, and call
--- `set_lifetime` to start the timers that slide it off the right edge of the screen and remove
--- it. Notifications are normally created through `Flux.Notification:add`, which also queues
--- and positions them. A theme can take over the drawing with its `PaintNotificationContainer`
+-- `set_lifetime` to start the timer that dismisses it, or `dismiss` to make it leave at once.
+-- Notifications are normally created through `Flux.Notification:add`, which also queues and
+-- positions them. A theme can take over the drawing with its `PaintNotificationContainer`
 -- and `PaintNotificationText` hooks.
 
+local with_alpha = Theme.with_alpha
 local default_surface_color = Color(30, 33, 44)
 local default_border_color = Color(74, 80, 104)
 
@@ -89,15 +90,15 @@ function PANEL:Paint(width, height)
     local border = Theme.get_color('border', default_border_color)
 
     draw.blur_panel(self, cur_alpha)
-    draw.RoundedBox(radius, 0, 0, width, height, ColorAlpha(border, border.a * fraction))
-    draw.RoundedBox(radius - 1, 1, 1, width - 2, height - 2, ColorAlpha(surface_color, 240 * fraction))
+    draw.RoundedBox(radius, 0, 0, width, height, with_alpha(border, border.a * fraction))
+    draw.RoundedBox(radius - 1, 1, 1, width - 2, height - 2, with_alpha(surface_color, 240 * fraction))
     draw.RoundedBoxEx(
       radius - 1,
       1,
       1,
       self.stripe,
       height - 2,
-      ColorAlpha(accent, 255 * fraction),
+      with_alpha(accent, 255 * fraction),
       true,
       false,
       true,
@@ -108,7 +109,7 @@ function PANEL:Paint(width, height)
   if !Theme.hook('PaintNotificationText', self, width, height) then
     local lines = self.notification_text
     local font = Theme.get_font('menu_normal')
-    local color = ColorAlpha(self:get_text_color(), cur_alpha)
+    local color = with_alpha(self:get_text_color(), cur_alpha)
     local line_height = self.font_size + math.scale(2)
     local cur_y = self.padding_y
     local x = self.stripe + self.padding_x
@@ -133,24 +134,40 @@ function PANEL:set_background_color(col)
   self.background_color = col
 end
 
---- Sets how long the notification stays up. Starts timers that slide it off the right edge
--- of the screen 1.5 seconds before the end and remove it once the time is up.
+--- Sets how long the notification stays up. Starts the timer that dismisses it 1.5 seconds
+-- before the end.
 -- @param time [Number lifetime in seconds]
 function PANEL:set_lifetime(time)
-  timer.Simple(time, function()
+  timer.Simple(time - 1.5, function()
+    if IsValid(self) then
+      self:dismiss()
+    end
+  end)
+
+  self.lifetime = time
+end
+
+--- Makes the notification leave: it fades out, slides off the right edge of the screen and is
+-- removed 1.5 seconds later, while the other notifications move up into its place. Does
+-- nothing if it is leaving already.
+function PANEL:dismiss()
+  if self.leaving then return end
+
+  self.leaving = true
+  self.lifetime = math.min(self.lifetime, CurTime() - self.creation_time + 1.5)
+
+  local _x, y = self:GetPos()
+
+  self:Stop()
+  self:MoveTo(ScrW(), y, 0.5)
+
+  timer.Simple(1.5, function()
     if IsValid(self) then
       self:safe_remove()
     end
   end)
 
-  timer.Simple(time - 1.5, function()
-    if IsValid(self) then
-      local _x, y = self:GetPos()
-      self:MoveTo(ScrW(), y, 0.5)
-    end
-  end)
-
-  self.lifetime = time
+  Flux.Notification:reposition()
 end
 
 --- Sets the notification text and resizes the panel to fit it. Newline characters split

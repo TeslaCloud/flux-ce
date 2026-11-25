@@ -1,19 +1,33 @@
 --- On-screen notifications: short messages that slide in at the top right corner of the
 -- screen. `Flux.Notification:add` queues a message, either plain text or a language phrase.
--- Queued messages are displayed one after another as `fl_notification` panels, each one
--- pushing the older ones down, and disappear after their lifetime.
--- `Flux.Notification:add_popup` creates a single notification at a given position instead. On
--- the client `Player:notify` displays its message through this library; server code sends
--- notifications with `Player:notify` or `Flux.Player:notify`.
+-- Queued messages are displayed one after another as `fl_notification` panels, the newest at
+-- the top, and disappear after their lifetime. At most six are on the screen at a time: the
+-- oldest one leaves early to make room for the next one, and the others move up into the place
+-- of one that leaves. `Flux.Notification:add_popup` creates a single notification at a given
+-- position instead. On the client `Player:notify` displays its message through this library;
+-- server code sends notifications with `Player:notify` or `Flux.Player:notify`.
 
 mod 'Flux::Notification'
 
 local display = {}
 local queue = {}
 local queue_locked = false
+local max_displayed = 6
 
---- Displays the next queued notification in the top right corner of the screen and pushes
--- the older ones down. Does nothing while another notification is still sliding in.
+--- Takes the notifications that are leaving or have been removed off the stack.
+local function prune_display()
+  for index = #display, 1, -1 do
+    local panel = display[index]
+
+    if !IsValid(panel) or panel.leaving then
+      table.remove(display, index)
+    end
+  end
+end
+
+--- Displays the next queued notification at the top right corner of the screen, below which
+-- the older ones are stacked, and makes the oldest one leave if there are more than six. Does
+-- nothing while another notification is still sliding in.
 function Flux.Notification:process_queue()
   local notification = queue[1]
 
@@ -21,7 +35,6 @@ function Flux.Notification:process_queue()
     queue_locked = true
 
     local text, lifetime = notification.text, notification.lifetime
-    local scrw = ScrW()
     lifetime = lifetime or 8
     text = t(text) or ''
 
@@ -30,18 +43,18 @@ function Flux.Notification:process_queue()
     panel:set_lifetime(lifetime)
     panel:set_text_color(notification.text_color)
     panel:set_background_color(notification.back_color)
-
-    local w, h = panel:GetSize()
-    local margin = math.scale(12)
-    local x = scrw - w - margin
-    panel:SetPos(x, -h)
-    panel:MoveTo(x, margin, 0.15)
-
-    self:reposition(h)
+    panel:SetPos(ScrW() - panel:GetWide() - math.scale(12), -panel:GetTall())
 
     display[#display + 1] = panel
 
     table.remove(queue, 1)
+    prune_display()
+
+    if #display > max_displayed then
+      display[1]:dismiss()
+    else
+      self:reposition()
+    end
 
     timer.Simple(0.25, function()
       queue_locked = false
@@ -82,22 +95,22 @@ function Flux.Notification:add_popup(text, lifetime, x, y, text_color, back_colo
   end
 end
 
---- Moves all of the displayed notifications down to make room for a new one.
--- @param offset [Number height of the new notification in pixels]
-function Flux.Notification:reposition(offset)
-  if !isnumber(offset) then return end
+--- Stacks the displayed notifications from the top right corner of the screen down, the
+-- newest at the top, and moves each one to its place. Notifications that are leaving or have
+-- been removed are taken off the stack first, so that the others close the gap.
+function Flux.Notification:reposition()
+  local margin = math.scale(12)
+  local gap = math.scale(6)
+  local scrw = ScrW()
+  local y = margin
 
-  local shift = offset + math.scale(6)
+  prune_display()
 
   for index = #display, 1, -1 do
     local panel = display[index]
 
-    if IsValid(panel) then
-      local x, y = panel:GetPos()
+    panel:MoveTo(scrw - panel:GetWide() - margin, y, 0.15)
 
-      panel:MoveTo(x, y + shift, 0.1)
-    else
-      table.remove(display, index)
-    end
+    y += panel:GetTall() + gap
   end
 end
