@@ -21,16 +21,11 @@ add.arg_types = { 'player', 'number' }
 -- keeps no experience, so it is left out.
 -- @param actor [Player the player who ran the command, or an invalid entity for the console]
 -- @param targets [List<Player> players matched by the first command argument]
--- @param amount [String/Number experience to give, parsed with tonumber and rounded; negative
---   to take experience away]
+-- @param amount [Number experience to give, rounded; negative to take experience away]
 function add:on_run(actor, targets, amount)
-  amount = tonumber(amount)
+  amount = math.Round(amount)
 
-  if amount and amount == amount then
-    amount = math.Round(amount)
-  end
-
-  if !amount or amount != amount or amount == 0 then
+  if amount == 0 then
     Flux.Player:notify(actor, 'error.invalid_value')
 
     return

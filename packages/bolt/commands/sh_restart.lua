@@ -12,11 +12,9 @@ CMD.alias = 'maprestart'
 
 --- Restarts the current map after an optional delay and notifies staff.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param delay=0 [String delay in seconds]
+-- @param delay=0 [Number delay in seconds; a negative one counts as 0]
 function CMD:on_run(actor, delay)
-  delay = tonumber(delay)
-
-  if !delay or delay != delay or delay < 0 or delay == math.huge then
+  if !delay or delay < 0 then
     delay = 0
   end
 

@@ -13,10 +13,10 @@ CMD.aliases = { 'forcefallover', 'plyfall' }
 --- Makes every living target that is not ragdolled fall over, and notifies the staff.
 -- @param actor [Player the caller; not valid when run from the server console]
 -- @param targets [List<Player> players to knock down]
--- @param delay=0 [String/Number seconds after which the targets get up by themselves,
+-- @param delay=0 [Number seconds after which the targets get up by themselves,
 --   clamped between 0 and 60; with 0 they stay down until they get up themselves]
 function CMD:on_run(actor, targets, delay)
-  delay = math.clamp(tonumber(delay) or 0, 0, 60)
+  delay = math.clamp(delay or 0, 0, 60)
 
   for _, target in ipairs(targets) do
     if IsValid(target) and target:Alive() and !target:is_ragdolled() then

@@ -15,10 +15,10 @@ CMD.aliases = { 'plygetup' }
 -- up right away.
 -- @param actor [Player the caller; not valid when run from the server console]
 -- @param targets [List<Player> players to get up]
--- @param delay=0 [String/Number seconds before the targets get up, clamped between
+-- @param delay=0 [Number seconds before the targets get up, clamped between
 --   0 and 60]
 function CMD:on_run(actor, targets, delay)
-  delay = math.clamp(tonumber(delay) or 0, 0, 60)
+  delay = math.clamp(delay or 0, 0, 60)
 
   for _, target in ipairs(targets) do
     if IsValid(target) and target:Alive() and target:is_ragdolled() then

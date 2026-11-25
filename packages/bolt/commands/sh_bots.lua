@@ -15,9 +15,9 @@ add.arg_types = { 'number' }
 
 --- Adds bots to the server, one every 0.2 seconds, and notifies staff.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
--- @param amount=1 [String number of bots to add, clamped to 1-128]
+-- @param amount=1 [Number number of bots to add, clamped to 1-128]
 function add:on_run(actor, amount)
-  amount = math.clamp((tonumber(amount) or 1), 1, 128)
+  amount = math.clamp(amount or 1, 1, 128)
 
   self:notify_staff('command.bots.add.message', {
     player = get_player_name(actor),

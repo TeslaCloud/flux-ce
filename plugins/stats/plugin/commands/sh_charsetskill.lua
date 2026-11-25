@@ -20,18 +20,11 @@ end
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param skill_id [String ID of the skill to set, in any case]
--- @param value [String/Number new rank, parsed with tonumber]
+-- @param value [Number new rank]
 function CMD:on_run(actor, targets, skill_id, value)
   skill_id = skill_id:to_id()
 
   local skill = Skills.find(skill_id)
-  value = tonumber(value)
-
-  if !value then
-    Flux.Player:notify(actor, 'error.invalid_value')
-
-    return
-  end
 
   if !skill then
     Flux.Player:notify(actor, 'error.skill_not_valid', { skill = skill_id })

@@ -45,16 +45,9 @@ end
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_text [String ID of the attribute to set]
--- @param value [String/Number new level, parsed with tonumber]
+-- @param value [Number new level]
 function set:on_run(actor, targets, attribute_text, value)
   local attribute_id, attribute = find_attribute(attribute_text)
-  value = tonumber(value)
-
-  if !value then
-    Flux.Player:notify(actor, 'error.invalid_value')
-
-    return
-  end
 
   if !attribute then
     Flux.Player:notify(actor, 'error.attribute_not_valid', { attribute = attribute_id })
@@ -106,28 +99,21 @@ end
 
 --- Gives every target a boost to an attribute, then notifies the targets who got it and
 -- staff, with the value as the boost keeps it. A duration of 0 gives a boost that does not
--- expire. Rejects invalid values, durations and attributes that are not boostable.
+-- expire. Rejects invalid durations and attributes that are not boostable.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_text [String ID of the attribute to boost]
--- @param value [String/Number number of levels to add, parsed with tonumber]
+-- @param value [Number number of levels to add]
 -- @param duration [String boost length as read by Bolt:interpret_ban_time, e.g. '30'
 --   (minutes), '2 hours' or 'perma']
 function boost:on_run(actor, targets, attribute_text, value, duration)
   local attribute_id, attribute = find_attribute(attribute_text)
   duration = Bolt:interpret_ban_time(duration)
-  value = tonumber(value)
 
   if !isnumber(duration) then
     Flux.Player:notify(actor, 'error.invalid_time', {
       time = tostring(duration)
     })
-
-    return
-  end
-
-  if !value then
-    Flux.Player:notify(actor, 'error.invalid_value')
 
     return
   end

@@ -14,10 +14,10 @@ CMD.aliases = { 'plyknockout', 'forceknockout' }
 -- with the caller as the attacker of the knockout hooks, and notifies the staff.
 -- @param actor [Player the caller; not valid when run from the server console]
 -- @param targets [List<Player> players to knock out]
--- @param delay=0 [String/Number seconds after which the targets come to, clamped between
+-- @param delay=0 [Number seconds after which the targets come to, clamped between
 --   0 and 600; with 0 they stay knocked out until someone gets them up]
 function CMD:on_run(actor, targets, delay)
-  delay = math.clamp(tonumber(delay) or 0, 0, 600)
+  delay = math.clamp(delay or 0, 0, 600)
 
   local options = { attacker = IsValid(actor) and actor or nil }
 

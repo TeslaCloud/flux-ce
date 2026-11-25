@@ -13,7 +13,7 @@ CMD.no_console = true
 -- back on their feet. Notifies the player instead if they cannot: they are dead, not fallen
 -- over, knocked out, already getting up, or kept down by the PlayerCanGetUp hook.
 -- @param actor [Player the caller]
--- @param delay=nil [String/Number seconds it takes to get up, clamped between the
+-- @param delay=nil [Number seconds it takes to get up, clamped between the
 --   ragdoll_getup_time config and 60]
 function CMD:on_run(actor, delay)
   if !actor:get_up(delay) then

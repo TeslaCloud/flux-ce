@@ -89,17 +89,9 @@ end
 -- and staff.
 -- @param actor [Player the player who ran the command, or an invalid entity for the console]
 -- @param targets [List<Player> players matched by the first command argument]
--- @param level [String new level, parsed with tonumber and kept between the level floor and
---   the highest level]
+-- @param level [Number new level, rounded and kept between the level floor and the highest
+--   level]
 function set:on_run(actor, targets, level)
-  level = tonumber(level)
-
-  if !level or level != level then
-    Flux.Player:notify(actor, 'error.invalid_value')
-
-    return
-  end
-
   level = math.clamp(math.Round(level), Levels.get_level_floor(), Levels.get_max_level())
 
   local changed = {}

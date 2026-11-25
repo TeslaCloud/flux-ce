@@ -62,17 +62,8 @@ end
 
 --- Sets the server level and notifies staff.
 -- @param actor [Player the player who ran the command, or an invalid entity for the console]
--- @param level [String new server level, parsed with tonumber, rounded and kept between -1
---   and the highest level]
+-- @param level [Number new server level, rounded and kept between -1 and the highest level]
 function set:on_run(actor, level)
-  level = tonumber(level)
-
-  if !level or level != level then
-    Flux.Player:notify(actor, 'error.invalid_value')
-
-    return
-  end
-
   level = math.clamp(math.Round(level), -1, Levels.get_max_level())
 
   if !Levels.set_server_level(level) then

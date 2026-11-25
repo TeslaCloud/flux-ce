@@ -13,7 +13,7 @@ CMD.no_console = true
 -- player instead if they are dead, already ragdolled, in a vehicle or noclipping, or if they
 -- have used the command less than the ragdoll_fall_cooldown config ago.
 -- @param actor [Player the caller]
--- @param delay=nil [String/Number seconds until the player gets up, clamped between the
+-- @param delay=nil [Number seconds until the player gets up, clamped between the
 --   ragdoll_getup_time config and 60]
 function CMD:on_run(actor, delay)
   if !actor:Alive() or actor:is_ragdolled() or actor:InVehicle() or actor:GetMoveType() == MOVETYPE_NOCLIP then
@@ -33,7 +33,7 @@ function CMD:on_run(actor, delay)
 
   local minimum = Config.get('ragdoll_getup_time', 4)
 
-  delay = math.clamp(tonumber(delay) or 0, minimum, math.max(minimum, 60))
+  delay = math.clamp(delay or 0, minimum, math.max(minimum, 60))
 
   if actor:set_ragdoll_state(RAGDOLL_FALLENOVER, delay) then
     actor.next_fall = cur_time + Config.get('ragdoll_fall_cooldown', 5)

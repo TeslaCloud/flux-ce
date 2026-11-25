@@ -14,9 +14,9 @@ CMD.aliases = { 'plysethealth', 'hp' }
 -- when the value is not a number from 1 to 2147483647.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to set the health of]
--- @param text [String the health, rounded down]
-function CMD:on_run(actor, targets, text)
-  local value = math.floor(tonumber(text) or 0)
+-- @param health [Number the health, rounded down]
+function CMD:on_run(actor, targets, health)
+  local value = math.floor(health)
 
   if !(value >= 1 and value <= 2_147_483_647) then
     Flux.Player:notify(actor, 'error.invalid_value')
