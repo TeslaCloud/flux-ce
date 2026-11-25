@@ -55,15 +55,18 @@ function Bolt:record_ban(id, obj)
   bans[id] = obj
 end
 
---- Bans a player or a SteamID and saves the ban to the database. The banned player is
--- kicked if they are on the server, whether they were given as a player or as a SteamID,
--- unless prevent_kick is set. The owner of the SteamID does not have to be on the server,
--- or to have ever joined it.
+--- Bans a player or a SteamID and saves the ban to the database, replacing a ban the SteamID
+-- has already. The banned player is kicked if they are on the server, whether they were given
+-- as a player or as a SteamID, unless prevent_kick is set. Does not check who may change an
+-- existing ban; `Bolt:place_ban` does that for a ban placed on behalf of a player. The owner
+-- of the SteamID does not have to be on the server, or to have ever joined it.
 -- ```
 -- -- Ban an online player for a day.
 -- Bolt:ban(target, 60 * 60 * 24, 'Prop spam')
--- -- Permanently ban somebody by SteamID, on behalf of an admin.
--- Bolt:ban('STEAM_0:1:12345', 0, 'Cheating', false, actor)
+-- -- Permanently ban somebody by SteamID.
+-- Bolt:ban('STEAM_0:1:12345', 0, 'Cheating')
+-- -- The same on behalf of a player, who has to be allowed to change an earlier ban.
+-- Bolt:place_ban(actor, 'STEAM_0:1:12345', 0, 'Cheating')
 -- ```
 -- @param target [Player/String the player to ban, or a SteamID in any case and with any
 --   universe digit; anything else raises an error]
@@ -199,55 +202,30 @@ function Bolt:remove_expired_bans()
   end
 end
 
---- Lifts the ban of a SteamID on behalf of a player who may lift it: the server console, a
--- root player, the player who placed the ban, or anybody who may act on that player, by
--- `Bolt:check_immunity` while they are on the server and `Bolt:check_offline_target` while
--- they are not. A ban placed from the server console or by code is only lifted by the console
--- and by root players. Does not check permissions. The player is told when the SteamID is not
--- banned or when they may not lift the ban.
--- @param actor [Player the player who lifts the ban, an invalid entity for the server console]
--- @param steam_id [String SteamID whose ban to lift]
--- @param callback=nil [Function called with the column values of the deleted ban record once
---   the ban has been lifted]
-function Bolt:lift_ban(actor, steam_id, callback)
+--- Decides whether a player may change the ban that a SteamID has, by lifting it or by
+-- banning the SteamID again: the server console, a root player, the player who placed the
+-- ban, or anybody who may act on that player, by `Bolt:check_immunity` while they are on the
+-- server and `Bolt:check_offline_target` while they are not. A ban placed from the server
+-- console or by code can only be changed by the console and by root players. Anybody may act
+-- on a SteamID without a ban. When the ban is replaced while the answer is awaited, the
+-- question is asked again for the new ban.
+-- @param actor [Player the player who acts, an invalid entity for the server console]
+-- @param steam_id [String SteamID whose ban is changed]
+-- @param callback [Function called with true if the player may change the ban and false
+--   otherwise, and with the ban, nil if there is none; not called if the player has left by
+--   the time the answer arrives]
+function Bolt:check_ban_access(actor, steam_id, callback)
   local entry = bans[steam_id]
+  local admin_steam_id = entry and entry.admin_steam_id
 
-  if !entry then
-    Flux.Player:notify(actor, 'error.not_banned', { steam_id = steam_id })
-
-    return
-  end
-
-  local function lift(allowed)
-    if bans[steam_id] != entry then
-      self:lift_ban(actor, steam_id, callback)
-
-      return
-    end
-
-    if !allowed then
-      Flux.Player:notify(actor, 'error.ban_not_yours', { target = tostring(entry.name or steam_id) })
-
-      return
-    end
-
-    local _, data = self:remove_ban(steam_id)
-
-    if callback then
-      callback(data)
-    end
-  end
-
-  local admin_steam_id = entry.admin_steam_id
-
-  if !IsValid(actor) or actor:is_root() or actor:SteamID() == admin_steam_id then
-    lift(true)
+  if !entry or !IsValid(actor) or actor:is_root() or actor:SteamID() == admin_steam_id then
+    callback(true, entry)
 
     return
   end
 
   if !player.is_steam_id(admin_steam_id) then
-    lift(false)
+    callback(false, entry)
 
     return
   end
@@ -255,12 +233,80 @@ function Bolt:lift_ban(actor, steam_id, callback)
   local admin = player.find(admin_steam_id)
 
   if IsValid(admin) then
-    lift(self:check_immunity(actor, admin))
+    callback(self:check_immunity(actor, admin), entry)
 
     return
   end
 
-  self:check_offline_target(actor, admin_steam_id, 'ban', lift)
+  self:check_offline_target(actor, admin_steam_id, 'ban', function(allowed)
+    if bans[steam_id] != entry then
+      self:check_ban_access(actor, steam_id, callback)
+
+      return
+    end
+
+    callback(allowed, entry)
+  end)
+end
+
+--- Bans a player or a SteamID on behalf of a player, see `Bolt:ban`, unless the SteamID has a
+-- ban already that the player may not change, see `Bolt:check_ban_access`, in which case the
+-- player is told so. Does not check permissions or the immunity against the banned player. A
+-- player who leaves while the answer is awaited is banned by their SteamID.
+-- @param actor [Player the player who bans, an invalid entity for the server console]
+-- @param target [Player/String the player to ban, or a SteamID]
+-- @param duration=0 [Number ban length in seconds, 0 for a permanent ban]
+-- @param reason='N/A' [String text or language phrase]
+-- @param name=nil [String name to store with the ban of a SteamID whose owner is not on the
+--   server, see Bolt#ban]
+-- @param callback=nil [Function called with the ban record once the ban has been placed, or
+--   with nil if the player may not change the existing ban]
+function Bolt:place_ban(actor, target, duration, reason, name, callback)
+  local is_player = !isstring(target) and IsValid(target)
+  local steam_id = is_player and target:SteamID() or player.normalize_steam_id(target)
+
+  self:check_ban_access(actor, steam_id, function(allowed, entry)
+    local obj
+
+    if allowed then
+      obj = self:ban((is_player and !IsValid(target)) and steam_id or target, duration, reason, false, actor, name)
+    else
+      Flux.Player:notify(actor, 'error.ban_not_yours', { target = tostring(entry.name or steam_id) })
+    end
+
+    if callback then
+      callback(obj)
+    end
+  end)
+end
+
+--- Lifts the ban of a SteamID on behalf of a player who may change it, see
+-- `Bolt:check_ban_access`. Does not check permissions. The player is told when the SteamID is
+-- not banned or when they may not lift the ban.
+-- @param actor [Player the player who lifts the ban, an invalid entity for the server console]
+-- @param steam_id [String SteamID whose ban to lift]
+-- @param callback=nil [Function called with the column values of the deleted ban record once
+--   the ban has been lifted]
+function Bolt:lift_ban(actor, steam_id, callback)
+  if !bans[steam_id] then
+    Flux.Player:notify(actor, 'error.not_banned', { steam_id = steam_id })
+
+    return
+  end
+
+  self:check_ban_access(actor, steam_id, function(allowed, entry)
+    if !entry then
+      Flux.Player:notify(actor, 'error.not_banned', { steam_id = steam_id })
+    elseif !allowed then
+      Flux.Player:notify(actor, 'error.ban_not_yours', { target = tostring(entry.name or steam_id) })
+    else
+      local _, data = self:remove_ban(steam_id)
+
+      if callback then
+        callback(data)
+      end
+    end
+  end)
 end
 
 --- Deletes the ban record of a SteamID from the database and from the ban cache, so that

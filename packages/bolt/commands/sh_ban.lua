@@ -2,8 +2,9 @@
 -- `/ban add <target or SteamID> <duration> [reason]` bans the targeted players for a duration
 -- such as `30` (minutes), `"2 hours"` or `perma`, with an optional reason, and kicks them.
 -- Given a SteamID that belongs to nobody on the server, it bans that SteamID, whether its owner
--- has ever joined or not. `/ban remove <SteamID>` lifts the ban of a SteamID, if the caller
--- may act on the player who placed it, see `Bolt:lift_ban`. Both need the `ban` permission.
+-- has ever joined or not. A SteamID that is banned already is only banned again by a caller
+-- who may change its ban, see `Bolt:check_ban_access`. `/ban remove <SteamID>` lifts the ban
+-- of a SteamID, if the caller may act on the player who placed it, see `Bolt:lift_ban`. Both need the `ban` permission.
 --
 -- `ban add` finds its targets itself instead of setting `immunity`, because the command
 -- interpreter only knows the players who are on the server.
@@ -28,7 +29,9 @@ add.player_arg = false
 -- The caller needs a higher immunity than every target: for a SteamID that goes by the role
 -- stored for it, or by the answer of CAMI while Bolt defers to another admin mod (see
 -- `Bolt:check_offline_target`), and a SteamID from the bolt_root_steamid config can only be
--- banned by a root player or from the server console.
+-- banned by a root player or from the server console. A target that is banned already is
+-- only banned again if the caller may change that ban, see `Bolt:place_ban`; staff hear of
+-- the targets that have been banned.
 -- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param target [String exact player name, target selector or SteamID]
 -- @param duration [String ban length as read by Bolt:interpret_ban_time, e.g. '30' or 'perma']
@@ -53,27 +56,40 @@ function add:on_run(actor, target, duration, reason)
 
   if targets then
     local names = util.player_list_to_string(targets)
+    local banned, pending = {}, #targets
 
     for _, client in ipairs(targets) do
-      Bolt:ban(client, ban_time, reason, false, actor)
-    end
+      local client_name = client:name()
 
-    self:notify_staff(message, {
-      player = get_player_name(actor),
-      target = names,
-      time = Flux.Lang:duration(ban_time),
-      reason = reason
-    })
+      Bolt:place_ban(actor, client, ban_time, reason, nil, function(obj)
+        pending -= 1
+
+        if obj then
+          banned[#banned + 1] = client_name
+        end
+
+        if pending > 0 or #banned == 0 then return end
+
+        self:notify_staff(message, {
+          player = get_player_name(actor),
+          target = #banned == #targets ? names : table.concat(banned, ', '),
+          time = Flux.Lang:duration(ban_time),
+          reason = reason
+        })
+      end)
+    end
   elseif steam_id then
     Bolt:with_offline_target(actor, steam_id, 'ban', function(user)
-      Bolt:ban(steam_id, ban_time, reason, false, actor, user and user.name)
+      Bolt:place_ban(actor, steam_id, ban_time, reason, user and user.name, function(obj)
+        if !obj then return end
 
-      self:notify_staff(message, {
-        player = get_player_name(actor),
-        target = user and user.name or steam_id,
-        time = Flux.Lang:duration(ban_time),
-        reason = reason
-      })
+        self:notify_staff(message, {
+          player = get_player_name(actor),
+          target = user and user.name or steam_id,
+          time = Flux.Lang:duration(ban_time),
+          reason = reason
+        })
+      end)
     end)
   end
 end
