@@ -18,8 +18,8 @@
 -- are not spent yet are kept in the `skill_points` and `attribute_points` character data,
 -- which the owner receives, and are spent one at a time with `Player:spend_skill_point` and
 -- `Player:spend_attribute_point`, each raising a skill or a stat of the Stats plugin by one
--- level. Clients ask for that with the `fl_levels_spend_skill` and
--- `fl_levels_spend_attribute` messages.
+-- level unless the `PlayerCanSpendPoint` hook refuses it. Clients ask for that with the
+-- `fl_levels_spend_skill` and `fl_levels_spend_attribute` messages.
 --
 -- The maximum health of a character grows with its level and its endurance, see
 -- `Levels:get_max_health`. The plugin applies it whenever one of them changes and when the

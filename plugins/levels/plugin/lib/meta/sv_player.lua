@@ -63,21 +63,18 @@ function player_meta:set_level(level)
 
   if !level then return false end
 
-  local changed = Levels.update(self, level, 0, 'level_set')
-
-  Levels.update_points(self)
-
-  return changed
+  return Levels.update(self, level, 0, 'level_set')
 end
 
 --- Spends one unspent point on a skill or a stat, raising it by one.
 -- @param target [Player]
 -- @param id [String ID of the skill or the stat]
 -- @param pool_key [String character data key of the unspent points]
--- @param handlers [Map functions that work on the skill or the stat: find (taking the ID
---   and returning the definition, nil if it is not registered), get (taking the player
---   and the ID and returning the Number current value without boosts) and raise (taking
---   the player and the ID and raising the value by one)]
+-- @param handlers [Map kind (String 'skill' or 'attribute') and the functions that work on
+--   the skill or the stat: find (taking the ID and returning the definition, nil if it is
+--   not registered), get (taking the player and the ID and returning the Number current
+--   value without boosts) and raise (taking the player and the ID and raising the value by
+--   one)]
 -- @param errors [Map phrases to return: invalid, empty and maxed]
 -- @return [Boolean true if the point was spent, String phrase of the reason otherwise]
 local function spend_point(target, id, pool_key, handlers, errors)
@@ -88,6 +85,18 @@ local function spend_point(target, id, pool_key, handlers, errors)
   local definition = isstring(id) and handlers.find(id)
 
   if !definition or definition.hidden then
+    return false, errors.invalid
+  end
+
+  --- Decides on the server whether a player may spend a point on a skill or a stat that is
+  -- registered and not hidden. The `ShouldShowSkill` and `ShouldShowAttribute` hooks only
+  -- hide a skill or a stat from the character sheet on the client; a plugin that hides one
+  -- from a player also refuses the points here.
+  -- @param actor [Player The player who spends the point]
+  -- @param kind [String 'skill' or 'attribute']
+  -- @param definition [SkillBase/AttributeBase The skill or the stat]
+  -- @return [Boolean Return false to refuse the point]
+  if hook.Run('PlayerCanSpendPoint', target, handlers.kind, definition) == false then
     return false, errors.invalid
   end
 
@@ -118,12 +127,14 @@ local function spend_point(target, id, pool_key, handlers, errors)
 end
 
 local skill_handlers = {
+  kind = 'skill',
   find = id -> Skills.find(id),
   get = |target, id| -> target:get_skill(id),
   raise = function(target, id) target:increase_skill(id, 1) end
 }
 
 local attribute_handlers = {
+  kind = 'attribute',
   find = id -> Attributes.find(id),
   get = |target, id| -> target:get_attribute(id, true),
   raise = function(target, id) target:increase_attribute(id, 1) end
@@ -131,8 +142,8 @@ local attribute_handlers = {
 
 --- Spends one unspent skill point of the player's character on a skill of the Stats
 -- plugin, raising it by one rank. Refused when the skill is not registered or is hidden,
--- the character has no skill points left or the skill is at its highest rank. Server
--- only.
+-- the PlayerCanSpendPoint hook refuses it, the character has no skill points left or the
+-- skill is at its highest rank. Server only.
 -- @param skill_id [String ID of the skill]
 -- @return [Boolean true if the point was spent, String phrase of the reason otherwise:
 --   'error.levels.no_active_character', 'error.levels.invalid_skill',
@@ -148,8 +159,8 @@ end
 
 --- Spends one unspent attribute point of the player's character on a stat of the Stats
 -- plugin, raising it by one level. Refused when the stat is not registered or is hidden,
--- the character has no attribute points left or the stat is at its highest level. Server
--- only.
+-- the PlayerCanSpendPoint hook refuses it, the character has no attribute points left or the
+-- stat is at its highest level. Server only.
 -- @param stat_id [String attribute ID of the stat]
 -- @return [Boolean true if the point was spent, String phrase of the reason otherwise:
 --   'error.levels.no_active_character', 'error.levels.invalid_stat',
