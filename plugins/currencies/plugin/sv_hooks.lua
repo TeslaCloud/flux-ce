@@ -1,7 +1,8 @@
 --- Server-side hooks of the Currencies plugin: they load the balances together with the
 -- characters, give new characters their balances, network the balances of characters and
--- containers, hold the default rules for giving, dropping and picking up money, and save
--- and load the money that lies in the world.
+-- containers, hold the default rules for giving, dropping and picking up money, save and
+-- load the money that lies in the world and drop the money of a container whose items are
+-- dropped when it is removed.
 
 local IsValid = IsValid
 local CurTime = CurTime
@@ -22,7 +23,7 @@ end
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
 function Currencies:PostCreateCharacter(owner, char, char_data)
-  for currency_id, currency_data in pairs(Currencies.all()) do
+  for currency_id in pairs(Currencies.all()) do
     local amount = self:get_starting_amount(currency_id)
 
     --- Lets plugins decide how much of a currency a new character starts with, for instance
@@ -38,8 +39,8 @@ function Currencies:PostCreateCharacter(owner, char, char_data)
     --   the decimals of the currency and never below 0. Return nothing to keep the amount]
     local result = hook.Run('GetStartingMoney', owner, char, currency_id, amount, char_data)
 
-    if isnumber(result) and result == result and result != math.huge then
-      amount = math.max(0, math.round(result, currency_data.decimals or 0))
+    if math.is_finite(result) then
+      amount = math.max(0, self:round(currency_id, result))
     end
 
     local currency = Currency.new()
@@ -70,7 +71,8 @@ function Currencies:SaveData()
   self.money_dirty = nil
 end
 
---- Networks the currency balances of the newly active character to the player entity.
+--- Networks the currency balances of the newly active character to the player, and to
+-- nobody else.
 -- @param owner [Player]
 -- @param character [Character]
 function Currencies:ActiveCharacterSet(owner, character)
@@ -82,14 +84,26 @@ function Currencies:ActiveCharacterSet(owner, character)
     end
   end
 
-  owner:set_nv('fl_currencies', currencies)
+  owner:set_private_nv('fl_currencies', currencies)
 end
 
 --- Clears the networked currency balances of a player who drops their character.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
 function Currencies:ActiveCharacterCleared(owner, _character)
-  owner:set_nv('fl_currencies', {})
+  owner:set_private_nv('fl_currencies', {})
+end
+
+--- Stops sending the balances of a player to someone who has closed the inventories of
+-- that player.
+-- @param _actor [Player the player who has closed the inventory]
+-- @param inventory [Inventory]
+function Currencies:InventoryClosed(_actor, inventory)
+  local owner = inventory.owner
+
+  if IsValid(owner) and owner:IsPlayer() then
+    self:update_balance_recipients(owner)
+  end
 end
 
 --- Blocks money pickup while the player or the money entity is on its pickup cooldown.
@@ -108,61 +122,15 @@ function Currencies:PlayerCanPickupMoney(actor, entity)
   end
 end
 
---- Checks that the amount is a positive, finite number with no more decimals than the
--- currency has (a whole number for a currency without decimals), that the currency exists
--- and that the entity can afford it. An amount with too many decimals is refused rather
--- than rounded, so that both sides of a transfer always change by exactly the same sum.
--- @param actor [Entity the entity that parts with the money, a player or a container]
--- @param amount [Number]
--- @param currency [String currency ID]
--- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
-function Currencies:CanEntitySpendMoney(actor, amount, currency)
-  if !isnumber(amount) or amount != amount or amount <= 0 or amount == math.huge then
-    return false, 'error.invalid_amount'
-  end
-
-  local currency_data = isstring(currency) and Currencies:find_currency(currency)
-
-  if !currency_data then
-    return false, 'error.invalid_currency'
-  end
-
-  if math.round(amount, currency_data.decimals or 0) != amount then
-    return false, 'error.invalid_amount'
-  end
-
-  if !actor:has_money(currency, amount) then
-    return false, 'error.not_enough_money'
-  end
-end
-
---- Checks that the player may transfer the money, that the drop position is within 120
--- units of their eyes and that they are neither on pickup cooldown nor have dropped money
--- less than half a second ago.
+--- Checks that the drop position is within 120 units of the player's eyes and that they
+-- are neither on pickup cooldown nor have dropped money less than half a second ago.
 -- @param actor [Player]
--- @param amount [Number]
--- @param currency [String currency ID]
+-- @param _amount [Number]
+-- @param _currency [String currency ID]
 -- @param pos [Vector position the money would be dropped at]
 -- @param _trace [Map eye trace result of the player]
--- @return [Boolean false when not allowed, String error phrase if there is one; nothing
---   when allowed]
-function Currencies:PlayerCanDropMoney(actor, amount, currency, pos, _trace)
-  --- Asks whether an entity may part with an amount of money. Called on the server by the
-  -- default handlers of PlayerCanDropMoney and CanEntityGiveMoney, before their own checks. The
-  -- handler of the Currencies plugin refuses amounts that are not positive, finite numbers
-  -- with at most as many decimals as the currency has, unknown currencies and amounts the
-  -- entity cannot afford.
-  -- @param actor [Entity the entity that drops or gives the money: a player, or a container
-  --   that money is taken out of]
-  -- @param amount [Number]
-  -- @param currency [String currency ID]
-  -- @return [Boolean return false to refuse, String error phrase for the player]
-  local success, err = hook.Run('CanEntitySpendMoney', actor, amount, currency)
-
-  if success == false then
-    return false, err
-  end
-
+-- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
+function Currencies:PlayerCanDropMoney(actor, _amount, _currency, pos, _trace)
   if pos:DistToSqr(actor:EyePos()) > reach_sqr then
     return false, 'error.too_far'
   end
@@ -170,7 +138,7 @@ function Currencies:PlayerCanDropMoney(actor, amount, currency, pos, _trace)
   local cur_time = CurTime()
 
   if actor.next_money_pickup and actor.next_money_pickup > cur_time then
-    return false
+    return false, 'error.wait'
   end
 
   if actor.next_money_drop and actor.next_money_drop > cur_time then
@@ -178,24 +146,14 @@ function Currencies:PlayerCanDropMoney(actor, amount, currency, pos, _trace)
   end
 end
 
---- Checks that the giver may transfer the money and that the target is valid, is not the
--- giver, is able to contain money and is within 120 units of the giver's eyes.
+--- Checks that the target is able to contain money and is within 120 units of the giver's
+-- eyes.
 -- @param actor [Entity the entity giving the money, normally a player]
 -- @param target [Entity the receiver]
--- @param amount [Number]
--- @param currency [String currency ID]
+-- @param _amount [Number]
+-- @param _currency [String currency ID]
 -- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
-function Currencies:CanEntityGiveMoney(actor, target, amount, currency)
-  local success, err = hook.Run('CanEntitySpendMoney', actor, amount, currency)
-
-  if success == false then
-    return false, err
-  end
-
-  if !IsValid(target) or target == actor then
-    return false, 'error.invalid_entity'
-  end
-
+function Currencies:CanEntityGiveMoney(actor, target, _amount, _currency)
   if !hook.Run('CanEntityContainMoney', target) then
     return false, 'error.invalid_entity'
   end
@@ -229,4 +187,31 @@ function Currencies:PreOpenContainer(entity)
   end
 
   entity:set_nv('fl_currencies', entity.currencies)
+end
+
+--- Drops the money of a removed container next to where it was, when its items are dropped
+-- as well; otherwise the money goes with the container, as its items do. The money is
+-- dropped on the next tick, with the items.
+-- @param entity [Entity the container prop that is being removed]
+-- @param spilled [Boolean true if the items of the container are dropped on the ground]
+function Currencies:ContainerRemoved(entity, spilled)
+  local balances = entity.currencies
+
+  if !spilled or !istable(balances) then return end
+
+  local origin = entity:WorldSpaceCenter()
+
+  timer.Simple(0, function()
+    local dropped = false
+
+    for currency_id, amount in pairs(balances) do
+      if isnumber(amount) and amount > 0 and IsValid(self:spawn_money(currency_id, amount, origin)) then
+        dropped = true
+      end
+    end
+
+    if dropped then
+      self:queue_money_save()
+    end
+  end)
 end

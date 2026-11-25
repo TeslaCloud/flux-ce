@@ -3,8 +3,7 @@
 -- PrePlayerPickupMoney hook prevents that. It is created by `Currencies:spawn_money`, which is
 -- what `Entity:drop_money` puts the money of a player into the world with. While the
 -- currencies_save_dropped_money config is on, the Currencies plugin saves these entities and puts them
--- back when the map is loaded again; a pickup marks the saved money as out of date, so that
--- the next data save writes what is left.
+-- back when the map is loaded again; they are saved again a second after a pickup.
 
 AddCSLuaFile()
 
@@ -98,6 +97,9 @@ if SERVER then
     end
   end
 else
+  local title_color = Color(255, 255, 255)
+  local outline_color = Color(0, 0, 0)
+
   --- Draws the entity's model.
   function ENT:Draw()
     self:DrawModel()
@@ -115,21 +117,23 @@ else
 
     if !currency_data or !amount then return end
 
-    local title = t(currency_data.name)..' x '..amount
+    local name = t(currency_data.name)
+
+    if self.target_name != name or self.target_amount != amount then
+      self.target_name = name
+      self.target_amount = amount
+      self.target_title = name..' x '..amount
+    end
+
+    local title = self.target_title
     local alpha = 255 - 255 * (distance / 300)
     local font = Theme.get_font('tooltip_large')
     local text_w = util.text_size(title, font)
+    local accent = Theme.get_color('accent_light')
 
-    draw.SimpleTextOutlined(
-      title,
-      font,
-      x - text_w * 0.5,
-      y,
-      Theme.get_color('accent_light'):alpha(alpha),
-      nil,
-      nil,
-      1,
-      color_black:alpha(alpha)
-    )
+    title_color.r, title_color.g, title_color.b, title_color.a = accent.r, accent.g, accent.b, alpha
+    outline_color.a = alpha
+
+    draw.SimpleTextOutlined(title, font, x - text_w * 0.5, y, title_color, nil, nil, 1, outline_color)
   end
 end

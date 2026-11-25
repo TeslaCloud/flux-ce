@@ -37,7 +37,7 @@ en:
   ui:
     currency:
       menu:
-        give: Give
+        give: Give {currency}
       title: Money
       give:
         title: Give money

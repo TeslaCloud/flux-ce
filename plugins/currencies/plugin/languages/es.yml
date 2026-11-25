@@ -37,7 +37,7 @@ es:
   ui:
     currency:
       menu:
-        give: Dar
+        give: Dar {currency}
       title: Dinero
       give:
         title: Dar dinero

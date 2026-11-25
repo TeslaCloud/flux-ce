@@ -37,7 +37,7 @@ ru:
   ui:
     currency:
       menu:
-        give: Дать
+        give: Дать {currency}
       title: Деньги
       give:
         title: Дать деньги

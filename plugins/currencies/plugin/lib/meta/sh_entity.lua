@@ -8,25 +8,32 @@
 -- which can refuse it, and the GetReceivedMoney hook, which can change the amount, whatever
 -- the money comes from: another player, a container, money picked up from the ground or a
 -- plugin. `Entity:set_money` sets a balance directly and does not run those hooks.
+--
+-- The balances of a player are sent to that player only, and to the players who have one of
+-- their inventories open while they do. A change of the balance of a character is saved a
+-- second later.
 
 local Color = Color
+local is_finite = math.is_finite
+
+const no_balances = {}
 
 do
   local entity_meta = FindMetaTable('Entity')
 
   --- Returns how much of a currency the entity holds.
-  -- @param currency [String currency ID]
+  -- @param currency [String currency ID, letter case is ignored]
   -- @return [Number amount, 0 if the currency is not registered]
   function entity_meta:get_money(currency)
     if Currencies:find_currency(currency) then
-      return self:get_nv('fl_currencies', {})[currency] or 0
+      return self:get_nv('fl_currencies', no_balances)[currency:lower()] or 0
     end
 
     return 0
   end
 
   --- Checks whether the entity holds at least the given amount of a currency.
-  -- @param currency [String currency ID]
+  -- @param currency [String currency ID, letter case is ignored]
   -- @param value [Number]
   -- @return [Boolean]
   function entity_meta:has_money(currency, value)
@@ -45,15 +52,80 @@ do
   end
 
   if SERVER then
-    --- Rounds an amount of money to the decimals of a currency, the way set_money rounds a
-    -- balance.
+    --- Checks an amount of money that an entity is about to part with, before anything else
+    -- is asked: the amount has to be a positive, finite number with no more decimals than the
+    -- currency has (a whole number for a currency without decimals), the currency has to be
+    -- registered and the entity has to hold the amount. An amount with too many decimals is
+    -- refused rather than rounded, so that both sides of a transfer always change by exactly
+    -- the same sum. Then runs the CanEntitySpendMoney hook.
+    -- @param entity [Entity the entity that parts with the money, a player or a container]
     -- @param currency [String currency ID]
-    -- @param value [Number]
-    -- @return [Number the rounded amount, or value itself if the currency is not registered]
-    local function round_amount(currency, value)
-      local currency_data = Currencies:find_currency(currency)
+    -- @param value [Any the amount]
+    -- @return [Boolean true if the amount may be spent; false and String error phrase, which
+    --   a hook may leave out, otherwise]
+    local function check_spend(entity, currency, value)
+      if !is_finite(value) or value <= 0 then
+        return false, 'error.invalid_amount'
+      end
 
-      return currency_data and math.round(value, currency_data.decimals or 0) or value
+      if !Currencies:find_currency(currency) then
+        return false, 'error.invalid_currency'
+      end
+
+      if Currencies:round(currency, value) != value then
+        return false, 'error.invalid_amount'
+      end
+
+      if !entity:has_money(currency, value) then
+        return false, 'error.not_enough_money'
+      end
+
+      --- Asks whether an entity may part with an amount of money. Called on the server by
+      -- `Entity:drop_money` and `Entity:give_money_to` once the amount is known to be a
+      -- positive, finite number with at most as many decimals as the currency has, in a
+      -- registered currency, that the entity holds, and before PlayerCanDropMoney or
+      -- CanEntityGiveMoney.
+      -- @param actor [Entity the entity that drops or gives the money: a player, or a container
+      --   that money is taken out of]
+      -- @param amount [Number]
+      -- @param currency [String currency ID]
+      -- @return [Boolean return false to refuse, String error phrase for the player]
+      local allowed, err = hook.Run('CanEntitySpendMoney', entity, value, currency)
+
+      if allowed == false then
+        return false, err
+      end
+
+      return true
+    end
+
+    --- Saves the balance record of a character a second from now, so that a changed balance
+    -- reaches the database without waiting for the next save of the character. Changes of
+    -- the same balance within that second are saved together. A character that has not been
+    -- saved yet gets its records with its own first save.
+    -- @param char [Character]
+    -- @param record [Currency the record of the balance that has changed]
+    local function queue_record_save(char, record)
+      local char_id = char.id
+
+      if !char_id then return end
+
+      timer.Create('fl_money_save_'..char_id..'_'..record.currency_id, 1, 1, function()
+        record.character_id = char_id
+        record:save()
+      end)
+    end
+
+    --- Sets the networked balances of an entity. The balances of a player stay private to
+    -- the recipients they have, which are the player alone until others are added.
+    -- @param entity [Entity]
+    -- @param balances [Map amounts keyed by currency ID]
+    local function network_balances(entity, balances)
+      if entity:IsPlayer() and !entity:get_nv_recipients('fl_currencies') then
+        entity:set_private_nv('fl_currencies', balances)
+      else
+        entity:set_nv('fl_currencies', balances)
+      end
     end
 
     --- Works out how much of the money that an entity is about to be given it really gets:
@@ -67,7 +139,7 @@ do
     -- @return [Number the amount to add, which is never below 0 once a hook has changed it;
     --   false if a hook has refused the money]
     local function adjust_received(entity, currency, value, source)
-      value = round_amount(currency, value)
+      value = Currencies:round(currency, value)
 
       if value > 0 then
         --- Decides whether an entity may receive money it is about to be given. Called on the
@@ -101,8 +173,8 @@ do
         --   nothing to leave the amount as it is]
         local result = hook.Run('GetReceivedMoney', entity, currency, value, source)
 
-        if isnumber(result) and result == result and result != math.huge then
-          return math.max(0, round_amount(currency, result))
+        if is_finite(result) then
+          return math.max(0, Currencies:round(currency, result))
         end
       end
 
@@ -110,60 +182,63 @@ do
     end
 
     --- Sets how much of a currency the entity holds, rounded to the currency's decimals and
-    -- never below 0, networks it and runs the EntityMoneyChanged hook. A character that was
-    -- created before the currency was registered gets its `Currency` record here, as long
-    -- as the ID is spelled the way the currency is registered. Server only.
-    -- @param currency [String currency ID; nothing happens if it is not registered]
-    -- @param value [Number new amount]
+    -- never below 0, networks it and runs the EntityMoneyChanged hook. The balance of a
+    -- character is saved a second later; a character that was created before the currency
+    -- was registered gets its `Currency` record here. Server only.
+    -- @param currency [String currency ID, letter case is ignored; nothing happens if it is
+    --   not registered]
+    -- @param value [Number new amount; nothing happens if it is not a finite number]
     function entity_meta:set_money(currency, value)
-      local currency_data = Currencies:find_currency(currency)
+      if !Currencies:find_currency(currency) or !is_finite(value) then return end
 
-      if currency_data then
-        local old_value = self:get_money(currency)
+      currency = currency:lower()
 
-        value = math.max(0, math.round(value, currency_data.decimals or 0))
+      local old_value = self:get_money(currency)
 
-        local currency_table = self:get_nv('fl_currencies', {})
-        currency_table[currency] = value
+      value = math.max(0, Currencies:round(currency, value))
 
-        if self:IsPlayer() then
-          local char = self:get_character()
-          local records = char and char.currencies
+      local currency_table = self:get_nv('fl_currencies', {})
+      currency_table[currency] = value
 
-          if istable(records) then
-            local found = false
+      if self:IsPlayer() then
+        local char = self:get_character()
+        local records = char and char.currencies
 
-            for _, record in pairs(records) do
-              if record.currency_id == currency then
-                record.amount = value
-                found = true
+        if istable(records) then
+          local record
 
-                break
-              end
-            end
+          for _, v in pairs(records) do
+            if v.currency_id == currency then
+              record = v
 
-            if !found and Currencies:all()[currency] then
-              local record = Currency.new()
-                record.currency_id = currency
-                record.amount = value
-              table.insert(records, record)
+              break
             end
           end
-        else
-          self.currencies = self.currencies or {}
-          self.currencies[currency] = value
+
+          if !record then
+            record = Currency.new()
+              record.currency_id = currency
+            table.insert(records, record)
+          end
+
+          record.amount = value
+
+          queue_record_save(char, record)
         end
-
-        self:set_nv('fl_currencies', currency_table)
-
-        --- Called on the server after the amount of a currency that an entity holds has been
-        -- set and networked.
-        -- @param entity [Entity the player or other entity whose balance was set]
-        -- @param currency [String currency ID]
-        -- @param value [Number the new amount]
-        -- @param old_value [Number the amount before the change]
-        hook.Run('EntityMoneyChanged', self, currency, value, old_value)
+      else
+        self.currencies = self.currencies or {}
+        self.currencies[currency] = value
       end
+
+      network_balances(self, currency_table)
+
+      --- Called on the server after the amount of a currency that an entity holds has been
+      -- set and networked.
+      -- @param entity [Entity the player or other entity whose balance was set]
+      -- @param currency [String currency ID in lower case]
+      -- @param value [Number the new amount]
+      -- @param old_value [Number the amount before the change]
+      hook.Run('EntityMoneyChanged', self, currency, value, old_value)
     end
 
     --- Adds an amount that `adjust_received` has returned to the balance of an entity and
@@ -198,10 +273,10 @@ do
     --   actor:take_money('tokens', 50)
     -- end
     -- ```
-    -- @param currency [String currency ID]
+    -- @param currency [String currency ID, letter case is ignored]
     -- @param value [Number amount to remove]
     function entity_meta:take_money(currency, value)
-      self:set_money(currency, self:get_money(currency) - round_amount(currency, value))
+      self:set_money(currency, self:get_money(currency) - Currencies:round(currency, value))
     end
 
     --- Adds money to the entity. The amount is rounded to the currency's decimals before it
@@ -216,15 +291,16 @@ do
     --   actor:notify('error.money_refused')
     -- end
     -- ```
-    -- @param currency [String currency ID]
+    -- @param currency [String currency ID, letter case is ignored]
     -- @param value [Number amount to add]
     -- @param source=nil [Any what the money comes from, for the hooks: the entity that gives
     --   it (a player, a container or the fl_money entity that is picked up), or a string
     --   that names the reason]
     -- @return [Number the amount that was added, which a hook may have changed, 0 if the
-    --   currency is not registered; false if a hook has refused the money]
+    --   currency is not registered or the amount is not a finite number; false if a hook has
+    --   refused the money]
     function entity_meta:give_money(currency, value, source)
-      if !Currencies:find_currency(currency) then
+      if !Currencies:find_currency(currency) or !is_finite(value) then
         return 0
       end
 
@@ -240,31 +316,42 @@ do
     end
 
     --- Drops money from a player as an fl_money entity where they are looking, at most 120 units
-    -- away; if they look at another player the money is given to that player. Server only.
+    -- away; if they look at another player the money is given to that player. The amount is
+    -- checked first, before any hook is asked: it has to be a positive, finite number with
+    -- no more decimals than the currency has, and the player has to hold it. Server only.
     -- ```
     -- local success, err = actor:drop_money('tokens', 50)
     --
-    -- if success == false then
+    -- if success == false and err then
     --   actor:notify(err)
     -- end
     -- ```
-    -- @param currency [String currency ID]
-    -- @param value [Number amount to drop; by default it has to be positive and may not have
-    --   more decimals than the currency]
-    -- @return [Boolean false when the drop is refused, String error phrase; nothing otherwise]
+    -- @param currency [String currency ID, letter case is ignored]
+    -- @param value [Number amount to drop]
+    -- @return [Boolean false when the drop is refused, String error phrase, which a hook that
+    --   refuses the drop may leave out; nothing otherwise]
     function entity_meta:drop_money(currency, value)
       if !self:IsPlayer() then return false, 'error.invalid_entity' end
 
       local trace = self:GetEyeTraceNoCursor()
+
+      if IsValid(trace.Entity) and trace.Entity:IsPlayer() then
+        return self:give_money_to(trace.Entity, currency, value)
+      end
+
+      local allowed, reason = check_spend(self, currency, value)
+
+      if !allowed then
+        return false, reason
+      end
+
       local pos = trace.HitPos
+      local normal = trace.HitNormal
       local eye_pos = self:EyePos()
 
       if eye_pos:DistToSqr(pos) > 14_400 then
         pos = eye_pos + trace.Normal * 119
-      end
-
-      if IsValid(trace.Entity) and trace.Entity:IsPlayer() then
-        return self:give_money_to(trace.Entity, currency, value)
+        normal = nil
       end
 
       --- Decides whether a player may drop money on the ground. Called on the server by
@@ -284,7 +371,7 @@ do
       end
 
       local currency_data = Currencies:find_currency(currency)
-      local money_ent = Currencies:spawn_money(currency, value, pos)
+      local money_ent = Currencies:spawn_money(currency, value, pos, nil, normal)
 
       if !IsValid(money_ent) then
         return false, 'error.invalid_amount'
@@ -300,22 +387,24 @@ do
     end
 
     --- Moves money from this entity to another one if the CanEntityGiveMoney hook allows it, and
-    -- notifies the players involved. The CanEntityReceiveMoney and GetReceivedMoney hooks are
+    -- notifies the players involved. The amount is checked first, before any hook is asked:
+    -- it has to be a positive, finite number with no more decimals than the currency has, and
+    -- this entity has to hold it. The CanEntityReceiveMoney and GetReceivedMoney hooks are
     -- run for the receiver before anything is moved, so they can refuse the transfer or lower
     -- what arrives; the giver is then charged the full amount and the receiver gets what the
     -- hooks have left, which is reported with the EntityMoneyReceived hook. Server only.
     -- ```
     -- local success, err = actor:give_money_to(target, 'tokens', 50)
     --
-    -- if success == false then
+    -- if success == false and err then
     --   actor:notify(err)
     -- end
     -- ```
     -- @param target=nil [Entity receiver; a player gives to the entity they look at when nil]
-    -- @param currency [String currency ID]
-    -- @param value [Number amount to move; by default it has to be positive and may not have
-    --   more decimals than the currency]
-    -- @return [Boolean false when the transfer is refused, String error phrase; nothing otherwise]
+    -- @param currency [String currency ID, letter case is ignored]
+    -- @param value [Number amount to move]
+    -- @return [Boolean false when the transfer is refused, String error phrase, which a hook
+    --   that refuses the transfer may leave out; nothing otherwise]
     function entity_meta:give_money_to(target, currency, value)
       if !target and self:IsPlayer() then
         local trace = self:GetEyeTraceNoCursor()
@@ -323,11 +412,20 @@ do
         target = trace.Entity
       end
 
+      local allowed, reason = check_spend(self, currency, value)
+
+      if !allowed then
+        return false, reason
+      end
+
+      if !IsValid(target) or target == self then
+        return false, 'error.invalid_entity'
+      end
+
       --- Decides whether money may be moved from one entity to another. Called on the server
-      -- by `Entity:give_money_to` before anything is moved.
+      -- by `Entity:give_money_to` before anything is moved, once the amount has been checked.
       -- @param giver [Entity the entity the money is taken from, a player or a container]
-      -- @param target [Entity the receiver; it may be invalid when a player gives money to
-      --   whatever they are looking at]
+      -- @param target [Entity the receiver, a valid entity other than the giver]
       -- @param amount [Number]
       -- @param currency [String currency ID]
       -- @return [Boolean return false to refuse the transfer, String error phrase that
@@ -339,11 +437,6 @@ do
       end
 
       local currency_data = Currencies:find_currency(currency)
-
-      if !currency_data then
-        return false, 'error.invalid_currency'
-      end
-
       local received = adjust_received(target, currency, value, self)
 
       if received == false then

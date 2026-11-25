@@ -1,11 +1,15 @@
 --- Client side of the Currencies plugin: attaches money panels to the inventory of the player
--- and to opened containers, and adds the options to give money to the player interaction menu.
+-- and to opened containers, keeps them up to date and adds the options to give money to the
+-- player interaction menu. The open money panels are listed in `Flux.money_panels`.
 
 local IsValid = IsValid
 local t = t
 local scale = math.scale
 
---- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel.
+Flux.money_panels = Flux.money_panels or {}
+
+--- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel. The
+-- server is asked for the balances of another player whose inventories are shown.
 -- @param panel [Panel the inventory panel that was rebuilt]
 function Currencies:InventoryRebuilt(panel)
   if panel:get_inventory_type() == 'pockets' then
@@ -13,6 +17,10 @@ function Currencies:InventoryRebuilt(panel)
 
     if !IsValid(panel.money) then
       local owner = Inventories.find(panel:get_inventory_id()).owner
+
+      if IsValid(owner) and owner:IsPlayer() and owner != PLAYER then
+        Cable.send('fl_currency_watch', owner)
+      end
 
       panel.money = self:create_panel(owner, parent)
     else
@@ -57,6 +65,19 @@ function Currencies:ContainerOpened(panel, inventory_id)
   panel.container_money:SetPos(inv_panel.x, inv_panel.y + inv_panel:GetTall() + text_h + scale(8))
 end
 
+--- Rebuilds the money panels of an entity when its balances change.
+-- @param entity [Entity the entity whose variable has changed]
+-- @param key [String variable name]
+function Currencies:NetVarChanged(entity, key)
+  if key != 'fl_currencies' then return end
+
+  for _, money_panel in ipairs(Flux.money_panels) do
+    if IsValid(money_panel) and money_panel.entity == entity then
+      money_panel:rebuild()
+    end
+  end
+end
+
 --- Adds a money submenu to the player interactions with a 'give' option for every currency
 -- that is not hidden or that the local player owns.
 -- @param options [List<Map> options of the interaction menu, changed in place]
@@ -65,31 +86,29 @@ function Currencies:AdjustPlayerInteractions(options, target)
   local money_options = {}
   local client = PLAYER
 
-  for currency_id, currency_data in pairs(Currencies.all()) do
-    local amount = client:get_money(currency_id) or 0
+  for _, currency_id in ipairs(self:get_visible(client)) do
+    local currency_data = self:find_currency(currency_id)
 
-    if !currency_data.hidden or currency_data.hidden and amount > 0 then
-      money_options[#money_options + 1] = {
-        id = 'give_'..currency_id,
-        text = t'ui.currency.menu.give'..' '..t(currency_data.name),
-        callback = function()
-          Derma_StringRequest(
-            t'ui.currency.give.title',
-            t('ui.currency.give.message', { currency = t(currency_data.name) }),
-            '',
-            function(text)
-              local value = tonumber(text)
+    money_options[#money_options + 1] = {
+      id = 'give_'..currency_id,
+      text = t('ui.currency.menu.give', { currency = t(currency_data.name) }),
+      callback = function()
+        Derma_StringRequest(
+          t'ui.currency.give.title',
+          t('ui.currency.give.message', { currency = t(currency_data.name) }),
+          '',
+          function(text)
+            local value = tonumber(text)
 
-              if value and value > 0 then
-                Cable.send('fl_currency_give', value, currency_id, target)
-              else
-                client:notify('error.invalid_amount')
-              end
+            if value and value > 0 then
+              Cable.send('fl_currency_give', value, currency_id, target)
+            else
+              client:notify('error.invalid_amount')
             end
-          )
-        end
-      }
-    end
+          end
+        )
+      end
+    }
   end
 
   options[#options + 1] = {
@@ -115,7 +134,6 @@ function Currencies:create_panel(entity, parent)
     end
   end
 
-  Flux.money_panels = Flux.money_panels or {}
   table.insert(Flux.money_panels, money_panel)
 
   return money_panel

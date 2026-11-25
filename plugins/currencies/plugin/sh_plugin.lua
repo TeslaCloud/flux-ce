@@ -50,11 +50,18 @@ do
   --   model_table = { [500] = 'models/props_c17/briefcase001a.mdl' }
   -- })
   -- ```
-  -- @param id [String currency ID; use lower case, lookups lower-case the ID they are given]
+  -- @param id [String currency ID; it is stored in lower case, and lookups lower-case the ID
+  --   they are given]
   -- @param data [Map currency definition: name, symbol, decimals, hidden, starting_amount,
   --   model, model_table]
   function Currencies:register_currency(id, data)
-    stored[id] = data
+    if !isstring(id) or id == '' or !istable(data) then
+      ErrorNoHalt('Currencies: register_currency needs a currency ID and a table that defines the currency.\n')
+
+      return
+    end
+
+    stored[id:lower()] = data
   end
 
   --- Returns every registered currency.
@@ -67,7 +74,49 @@ do
   -- @param id [String currency ID, letter case is ignored]
   -- @return [Map currency definition, or nil if it is not registered]
   function Currencies:find_currency(id)
-    return stored[id:lower()]
+    return isstring(id) and stored[id:lower()] or nil
+  end
+
+  --- Rounds an amount of money to the decimals of a currency.
+  -- ```
+  -- Currencies:round('tokens', 12.5)       -- 13 for a currency without decimals
+  -- Currencies:round('tokens', 12.5, true) -- 12
+  -- ```
+  -- @param id [String currency ID, letter case is ignored; a currency that is not registered
+  --   has no decimals]
+  -- @param amount [Number]
+  -- @param down=false [Boolean round down instead of to the nearest value, for amounts that
+  --   are paid out]
+  -- @return [Number the rounded amount]
+  function Currencies:round(id, amount, down)
+    local currency_data = self:find_currency(id)
+    local decimals = currency_data and currency_data.decimals or 0
+
+    if down then
+      local factor = 10 ^ decimals
+
+      return math.floor(amount * factor + 0.000001) / factor
+    end
+
+    return math.round(amount, decimals)
+  end
+
+  --- Returns the currencies that are shown for the money of an entity: those that are not
+  -- hidden, and the hidden ones that the entity holds money in.
+  -- @param entity [Entity the player or container whose money is shown]
+  -- @return [List<String> currency IDs, sorted]
+  function Currencies:get_visible(entity)
+    local ids = {}
+
+    for currency_id, currency_data in pairs(stored) do
+      if !currency_data.hidden or entity:get_money(currency_id) > 0 then
+        ids[#ids + 1] = currency_id
+      end
+    end
+
+    table.sort(ids)
+
+    return ids
   end
 
   --- Returns the ID of the default currency: the one named by the `currencies_default` config
@@ -136,7 +185,7 @@ do
       amount = override
     end
 
-    return math.max(0, math.round(amount, currency_data.decimals or 0))
+    return math.max(0, self:round(lower_id, amount))
   end
 
   --- Returns the model that an amount of a currency has while it lies in the world: the
@@ -171,14 +220,11 @@ end
 -- @param actor [Player the player who is typing, nil for the server console]
 -- @return [List<String> currency IDs, sorted]
 local function complete_currency(actor)
-  local show_all = !IsValid(actor) or actor:can('staff')
-  local ids = {}
-
-  for currency_id, currency_data in pairs(stored) do
-    if show_all or !currency_data.hidden or actor:get_money(currency_id) > 0 then
-      ids[#ids + 1] = currency_id
-    end
+  if IsValid(actor) and !actor:can('staff') then
+    return Currencies:get_visible(actor)
   end
+
+  local ids = table.GetKeys(stored)
 
   table.sort(ids)
 

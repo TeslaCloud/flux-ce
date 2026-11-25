@@ -1,32 +1,29 @@
 --- Server-side receivers of the Currencies plugin: the requests of the money panel to give,
--- drop and take money. Money can only be taken from an entity that has an inventory open for
--- the player who asks: a container, or another player whose inventories are being viewed.
+-- drop and take money, and to be sent the balances of another player. Money can only be
+-- taken from, and the balances of a player only be seen of, an entity that has an inventory
+-- open for the player who asks: a container, or another player whose inventories are being
+-- viewed.
 
 local IsValid = IsValid
-local pairs = pairs
+local CurTime = CurTime
 local cable_send = Cable.send
 
---- Finds an inventory of an entity that is open for a player, which is what entitles the
--- player to take the money of that entity.
--- @param actor [Player the player who wants the money]
--- @param entity [Entity the container or the player that holds the money]
--- @return [Inventory the open inventory, or nil if the entity has none open for the player]
-local function find_open_inventory(actor, entity)
-  if entity:IsPlayer() then
-    for _, inventory in pairs(entity:get_inventories()) do
-      if inventory:has_receiver(actor) then
-        return inventory
-      end
-    end
-  elseif entity.inventory and entity.inventory:has_receiver(actor) then
-    return entity.inventory
-  end
-end
+local give_interval = 0.5
 
 Cable.receive('fl_currency_give', function(actor, amount, currency, target)
+  local cur_time = CurTime()
+
+  if actor.next_money_give and actor.next_money_give > cur_time then
+    actor:notify('error.wait')
+
+    return
+  end
+
+  actor.next_money_give = cur_time + give_interval
+
   local success, err = actor:give_money_to(target, currency, amount)
 
-  if success == false then
+  if success == false and err then
     actor:notify(err)
   end
 
@@ -36,7 +33,7 @@ end)
 Cable.receive('fl_currency_drop', function(actor, amount, currency)
   local success, err = actor:drop_money(currency, amount)
 
-  if success == false then
+  if success == false and err then
     actor:notify(err)
   end
 
@@ -44,17 +41,24 @@ Cable.receive('fl_currency_drop', function(actor, amount, currency)
 end)
 
 Cable.receive('fl_currency_take', function(actor, entity, amount, currency)
-  if !IsValid(entity) or entity == actor then return end
+  if !isentity(entity) or !IsValid(entity) or entity == actor then return end
 
-  local inventory = find_open_inventory(actor, entity)
+  local inventory = Currencies:find_open_inventory(actor, entity)
 
   if !inventory then return end
 
   local success, err = entity:give_money_to(actor, currency, amount)
 
-  if success == false then
+  if success == false and err then
     actor:notify(err)
   end
 
   cable_send(inventory.receivers, 'fl_rebuild_currency_panel')
+end)
+
+Cable.receive('fl_currency_watch', function(actor, target)
+  if !isentity(target) or !IsValid(target) or !target:IsPlayer() or target == actor then return end
+  if !Currencies:find_open_inventory(actor, target) then return end
+
+  Currencies:update_balance_recipients(target)
 end)

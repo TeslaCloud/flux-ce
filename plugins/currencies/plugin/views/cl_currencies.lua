@@ -80,75 +80,74 @@ function PANEL:rebuild()
   local font = Theme.get_font('text_normal')
   local line_height = math.scale(30)
 
-  for currency_id, currency_data in pairs(Currencies.all()) do
-    local amount = self.entity:get_money(currency_id) or 0
+  for _, currency_id in ipairs(Currencies:get_visible(self.entity)) do
+    local currency_data = Currencies:find_currency(currency_id)
+    local amount = self.entity:get_money(currency_id)
 
-    if !currency_data.hidden or currency_data.hidden and amount > 0 then
-      local line = vgui.Create('DPanel', self)
-      line:SetPaintBackground(false)
+    local line = vgui.Create('DPanel', self)
+    line:SetPaintBackground(false)
 
-      local label = vgui.Create('DLabel', line)
-      label:SetText(t(currency_data.name)..': '..amount..' '..(currency_data.symbol or ''))
-      label:SetFont(font)
-      label:SetTextColor(Theme.get_color('text'))
-      label:SizeToContents()
-      label:Dock(FILL)
+    local label = vgui.Create('DLabel', line)
+    label:SetText(t(currency_data.name)..': '..amount..' '..(currency_data.symbol or ''))
+    label:SetFont(font)
+    label:SetTextColor(Theme.get_color('text'))
+    label:SizeToContents()
+    label:Dock(FILL)
 
-      local button_size = line_height - math.scale(4)
-      local w = label:GetWide() + math.scale(16)
+    local button_size = line_height - math.scale(4)
+    local w = label:GetWide() + math.scale(16)
 
-      if amount > 0 then
-        if self.entity == client then
-          create_line_button(line, button_size, 'fa-hand-holding-usd', t'ui.currency.give.title', function()
-            local target = client:GetEyeTraceNoCursor().Entity
+    if amount > 0 then
+      if self.entity == client then
+        create_line_button(line, button_size, 'fa-hand-holding-usd', t'ui.currency.give.title', function()
+          local target = client:GetEyeTraceNoCursor().Entity
 
-            request_amount(
-              t'ui.currency.give.title',
-              t('ui.currency.give.message', { currency = t(currency_data.name) }),
-              '',
-              function(value)
-                cable_send('fl_currency_give', value, currency_id, target)
-              end
-            )
-          end)
+          request_amount(
+            t'ui.currency.give.title',
+            t('ui.currency.give.message', { currency = t(currency_data.name) }),
+            '',
+            function(value)
+              cable_send('fl_currency_give', value, currency_id, target)
+            end
+          )
+        end)
 
-          create_line_button(line, button_size, 'coins', t'ui.currency.drop.title', function()
-            request_amount(
-              t'ui.currency.drop.title',
-              t('ui.currency.drop.message', { currency = t(currency_data.name) }),
-              '',
-              function(value)
-                cable_send('fl_currency_drop', value, currency_id)
-              end
-            )
-          end)
+        create_line_button(line, button_size, 'coins', t'ui.currency.drop.title', function()
+          request_amount(
+            t'ui.currency.drop.title',
+            t('ui.currency.drop.message', { currency = t(currency_data.name) }),
+            '',
+            function(value)
+              cable_send('fl_currency_drop', value, currency_id)
+            end
+          )
+        end)
 
-          w += (button_size + math.scale(4)) * 2
-        else
-          create_line_button(line, button_size, 'angle-double-left', t'ui.currency.take.title', function()
-            request_amount(
-              t'ui.currency.take.title',
-              t('ui.currency.take.message', { currency = t(currency_data.name) }),
-              amount,
-              function(value)
-                cable_send('fl_currency_take', self.entity, value, currency_id)
-              end
-            )
-          end)
+        w += (button_size + math.scale(4)) * 2
+      else
+        create_line_button(line, button_size, 'angle-double-left', t'ui.currency.take.title', function()
+          request_amount(
+            t'ui.currency.take.title',
+            t('ui.currency.take.message', { currency = t(currency_data.name) }),
+            amount,
+            function(value)
+              cable_send('fl_currency_take', self.entity, value, currency_id)
+            end
+          )
+        end)
 
-          w = w + button_size + math.scale(4)
-        end
+        w = w + button_size + math.scale(4)
       end
-
-      line:SetSize(w, line_height)
-      line:Dock(TOP)
-
-      if line:GetWide() > self.max_w then
-        self.max_w = line:GetWide()
-      end
-
-      self.max_h += line:GetTall()
     end
+
+    line:SetSize(w, line_height)
+    line:Dock(TOP)
+
+    if line:GetWide() > self.max_w then
+      self.max_w = line:GetWide()
+    end
+
+    self.max_h += line:GetTall()
   end
 
   self:SizeToContents()

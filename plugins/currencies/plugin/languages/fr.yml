@@ -37,7 +37,7 @@ fr:
   ui:
     currency:
       menu:
-        give: "Donner"
+        give: "Donner {currency}"
       title: "Argent"
       give:
         title: "Donner de l'argent"

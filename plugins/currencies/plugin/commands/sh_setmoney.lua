@@ -23,18 +23,10 @@ end
 --- Sets the balance of a currency for every target and notifies the targets and staff.
 -- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
--- @param amount [String new balance, parsed with tonumber; negative values become 0]
+-- @param amount [Number new balance; negative values become 0]
 -- @param currency=nil [String currency ID; the default currency is used when it is
 --   omitted, see `Currencies:get_default_currency`]
 function CMD:on_run(actor, targets, amount, currency)
-  amount = tonumber(amount)
-
-  if !amount then
-    actor:notify('error.invalid_value')
-
-    return
-  end
-
   amount = math.max(0, amount)
   currency = Currencies:resolve_currency(currency)
 

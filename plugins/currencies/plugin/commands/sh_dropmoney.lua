@@ -11,32 +11,15 @@ CMD.aliases = { 'dropcash', 'droptokens' }
 --- Returns the translated command description with the available currency IDs listed.
 -- @return [String]
 function CMD:get_description()
-  local currencies = {}
-
-  for currency_id, currency_data in pairs(Currencies:all()) do
-    if !currency_data.hidden or PLAYER:get_money(currency_id) > 0 then
-      table.insert(currencies, currency_id)
-    end
-  end
-
-  return t(self.description, { currencies = table.concat(currencies, ', ') })
+  return t(self.description, { currencies = table.concat(Currencies:get_visible(PLAYER), ', ') })
 end
 
 --- Drops money in front of the player, or hands it to the player they are looking at.
 -- @param actor [Player the player who ran the command]
--- @param amount [String amount to drop, parsed with tonumber]
+-- @param amount [Number amount to drop]
 -- @param currency=nil [String currency ID; the default currency is used when it is
 --   omitted, see `Currencies:get_default_currency`]
 function CMD:on_run(actor, amount, currency)
-  amount = tonumber(amount)
-
-  if !amount then
-    actor:notify('error.invalid_value')
-
-    return
-  end
-
-  amount = math.max(0, amount)
   currency = Currencies:resolve_currency(currency)
 
   if !currency then
@@ -47,7 +30,7 @@ function CMD:on_run(actor, amount, currency)
 
   local success, err = actor:drop_money(currency, amount)
 
-  if success == false then
+  if success == false and err then
     actor:notify(err)
   end
 end
