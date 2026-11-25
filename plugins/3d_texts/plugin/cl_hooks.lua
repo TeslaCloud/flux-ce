@@ -23,18 +23,6 @@ local preview_bar_color = Color(255, 255, 255, 40)
 local preview_invalid_color = Color(255, 0, 0, 40)
 local placeholder_name = Material('vgui/wave'):GetName()
 
---- Copies a color into one of the colors that are kept for drawing, at an opacity, so that
--- drawing does not create colors every frame.
--- @param target [Color color to write to]
--- @param source [Color color to copy]
--- @param alpha [Number opacity from 0 to 255]
--- @return [Color the target]
-local function tint(target, source, alpha)
-  target.r, target.g, target.b, target.a = source.r, source.g, source.b, alpha
-
-  return target
-end
-
 --- Draws the bars of the boxed text styles 7, 8 and 9 around a text box.
 -- @param style [Number text style]
 -- @param x [Number left edge of the box]
@@ -211,7 +199,9 @@ function SurfaceText:PostDrawOpaqueRenderables(depth, skybox)
           if style == 10 then
             draw_blur_box(box_x, box_y, box_w, h + 32, back_color)
           elseif style != 8 and style != 9 then
-            rounded_box(0, box_x, box_y, box_w, h + 32, tint(box_color, back_color, clamp(fade_alpha, 0, box_alpha)))
+            local fill_color = box_color:copy_from(back_color, clamp(fade_alpha, 0, box_alpha))
+
+            rounded_box(0, box_x, box_y, box_w, h + 32, fill_color)
           end
 
           bar_color.a = clamp(fade_alpha, 0, box_alpha)
@@ -220,7 +210,7 @@ function SurfaceText:PostDrawOpaqueRenderables(depth, skybox)
         end
 
         if style != 3 then
-          simple_text(text, font, pos_x, pos_y, tint(dark_text_color, cache.dark_color, clamp(fade_alpha, 0, 100)))
+          simple_text(text, font, pos_x, pos_y, dark_text_color:copy_from(cache.dark_color, clamp(fade_alpha, 0, 100)))
         end
       end_3d2d()
     end
@@ -234,7 +224,7 @@ function SurfaceText:PostDrawOpaqueRenderables(depth, skybox)
     end
 
     start_3d2d(cache.front_pos, angle, text_scale)
-      simple_text(text, font, pos_x, pos_y, tint(text_draw_color, text_color, fade_alpha))
+      simple_text(text, font, pos_x, pos_y, text_draw_color:copy_from(text_color, fade_alpha))
     end_3d2d()
   end
 

@@ -46,18 +46,6 @@ Cinematics.queue = queue
 Cinematics.state = state
 Cinematics.defaults = defaults
 
---- Copies a color into one of the colors that are kept for drawing, at an opacity, so that
--- drawing a cinematic does not create colors every frame.
--- @param target [Color color to write to]
--- @param source [Color color to copy]
--- @param alpha [Number opacity from 0 to 255]
--- @return [Color the target]
-local function tint(target, source, alpha)
-  target.r, target.g, target.b, target.a = source.r, source.g, source.b, alpha
-
-  return target
-end
-
 --- Queues a cinematic for the local player. It is played once the cinematics queued before it
 -- are over. The texts are translated when the cinematic is queued, so each of them can be a
 -- language phrase or plain text.
@@ -335,7 +323,7 @@ function Cinematics:draw(scrw, scrh)
       font,
       center_x,
       scrh - band_height * 0.5 - text_height * 0.5,
-      tint(caption_color, text_color, alpha)
+      caption_color:copy_from(text_color, alpha)
     )
   end
 
@@ -351,12 +339,12 @@ function Cinematics:draw(scrw, scrh)
       local title_color = current.title_color or current.color or get_color('cinematic_title', color_white)
 
       y = draw.lines_outlined(
-        lines.title, title_font, center_x, y, tint(title_draw_color, title_color, alpha)
+        lines.title, title_font, center_x, y, title_draw_color:copy_from(title_color, alpha)
       ) + gap
     end
 
     if lines.subtitle then
-      draw.lines_outlined(lines.subtitle, subtitle_font, center_x, y, tint(caption_color, text_color, alpha))
+      draw.lines_outlined(lines.subtitle, subtitle_font, center_x, y, caption_color:copy_from(text_color, alpha))
     end
   end
 end

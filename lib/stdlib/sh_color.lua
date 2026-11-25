@@ -1,8 +1,9 @@
 --- Extensions of the Color metatable and of the global `Color` function.
 -- `Color` also accepts hexadecimal strings and CSS color names here, and colors gain methods
 -- that return adjusted copies: `Color:darken`, `Color:lighten`, `Color:saturate`,
--- `Color:desaturate` and `Color:alpha`. `LerpColor` interpolates between two colors, and the
--- `util` library gets `util.hex_to_color`, `util.string_to_color`, `util.to_color` and
+-- `Color:desaturate` and `Color:alpha`; `Color:copy_from` changes a color in place instead,
+-- for a color that is reused. `LerpColor` interpolates between two colors, and the `util`
+-- library gets `util.hex_to_color`, `util.string_to_color`, `util.to_color` and
 -- `util.text_color_from_base`.
 -- @module [Color]
 
@@ -332,6 +333,23 @@ end
 -- @return [Color]
 function color_meta:alpha(amt)
   return ColorAlpha(self, amt or 255)
+end
+
+--- Copies the red, green and blue of another color into this color with another alpha, and
+-- returns this color. Code that draws every frame keeps one color and fills it this way
+-- instead of creating a color per frame.
+-- ```
+-- local draw_color = Color(255, 255, 255)
+--
+-- surface.SetDrawColor(draw_color:copy_from(Theme.get_color('accent'), 128))
+-- ```
+-- @param source [Color the color to copy]
+-- @param alpha [Number the alpha, 0-255]
+-- @return [Color this color]
+function color_meta:copy_from(source, alpha)
+  self.r, self.g, self.b, self.a = source.r, source.g, source.b, alpha
+
+  return self
 end
 
 --- Linearly interpolates between two colors, alpha included.

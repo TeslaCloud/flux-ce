@@ -51,18 +51,6 @@ local backdrop_color = Color(0, 0, 0)
 local border_color = Color(0, 0, 0)
 local entry_color = Color(255, 255, 255)
 
---- Copies a color into one of the colors that are kept for drawing, at an opacity, so that
--- drawing the selector does not create colors every frame.
--- @param target [Color color to write to]
--- @param source [Color color to copy]
--- @param alpha [Number opacity from 0 to 255]
--- @return [Color the target]
-local function tint(target, source, alpha)
-  target.r, target.g, target.b, target.a = source.r, source.g, source.b, alpha
-
-  return target
-end
-
 --- Returns the name a weapon is listed under in the selector.
 -- @param weapon [Weapon/Nil]
 -- @return [String]
@@ -159,8 +147,8 @@ function PLUGIN:HUDPaint()
       w + padding * 2,
       h + padding * 2,
       Theme.get_option('corner_radius'),
-      tint(backdrop_color, backdrop, backdrop.a * fraction),
-      tint(border_color, Theme.get_color('border_light'), 28 * fraction)
+      backdrop_color:copy_from(backdrop, backdrop.a * fraction),
+      border_color:copy_from(Theme.get_color('border_light'), 28 * fraction)
     )
 
     for k = 1, #display do
@@ -168,9 +156,9 @@ function PLUGIN:HUDPaint()
       local color
 
       if v.highlight then
-        color = tint(entry_color, Theme.get_color('accent_light'), cur_alpha)
+        color = entry_color:copy_from(Theme.get_color('accent_light'), cur_alpha)
       else
-        color = tint(entry_color, text_color, cur_alpha * v.scale / 1.3)
+        color = entry_color:copy_from(text_color, cur_alpha * v.scale / 1.3)
       end
 
       surface.draw_text_scaled(
