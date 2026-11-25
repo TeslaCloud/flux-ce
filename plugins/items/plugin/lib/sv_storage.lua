@@ -82,12 +82,12 @@ local instances = Item.instances
 Item.id_blocks = Item.id_blocks or {}
 Item.dirty = Item.dirty or {}
 Item.deleted = Item.deleted or {}
+Item.storage_state = Item.storage_state or { reserving = false, writes_pending = 0 }
 
 local id_blocks = Item.id_blocks
 local dirty = Item.dirty
 local deleted = Item.deleted
-local reserving = false
-local writes_pending = 0
+local storage_state = Item.storage_state
 
 --- Runs a function with the database adapter in sync mode, so that the queries started in
 -- it are done when it returns. The adapter waits for the queries started before as well.
@@ -307,11 +307,11 @@ function Item.generate_id()
     table.remove(id_blocks, 1)
   end
 
-  if !reserving and ids_left() < block_size * 0.5 then
-    reserving = true
+  if !storage_state.reserving and ids_left() < block_size * 0.5 then
+    storage_state.reserving = true
 
     reserve_block(function()
-      reserving = false
+      storage_state.reserving = false
     end)
   end
 
@@ -847,10 +847,10 @@ local function write_batch(entries, deleted_ids, failures)
     entry.item.writes_in_flight = (entry.item.writes_in_flight or 0) + 1
   end
 
-  writes_pending += 1
+  storage_state.writes_pending += 1
 
   local function finish(committed)
-    writes_pending -= 1
+    storage_state.writes_pending -= 1
 
     local aborted = adapter:is_postgres() and (first_failed != nil or deletes_failed)
 
@@ -904,13 +904,13 @@ end
 -- @param failures [List<Item> collects the instances that could not be written]
 local function write_solo(entry, failures)
   entry.item.writes_in_flight = (entry.item.writes_in_flight or 0) + 1
-  writes_pending += 1
+  storage_state.writes_pending += 1
 
   write_entry(entry, to_datetime(os.time()), function()
-    writes_pending -= 1
+    storage_state.writes_pending -= 1
     written(entry)
   end, function()
-    writes_pending -= 1
+    storage_state.writes_pending -= 1
     not_written(entry, true, failures)
   end)
 end
@@ -928,7 +928,7 @@ function Item.save(items, sync)
   if !storage_ready() then return {} end
 
   if sync then
-    local drained = ActiveRecord.adapter:wait_until(|| -> writes_pending == 0)
+    local drained = ActiveRecord.adapter:wait_until(|| -> storage_state.writes_pending == 0)
 
     if !drained then
       ErrorNoHalt('Earlier item writes are still running, the items are written anyway.\n')
